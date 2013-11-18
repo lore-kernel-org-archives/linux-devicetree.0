@@ -1,145 +1,109 @@
-From: "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv3] ASoC: Add support for BCM2835
-Date: Mon, 18 Nov 2013 12:08:22 +0000
-Message-ID: <1384776479.14845.208.camel@smile>
-References: <5289F9DF.8060406@koalo.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RFC v5 4/5] dma: mpc512x: register for device tree
+ channel lookup
+Date: Mon, 18 Nov 2013 12:09:57 +0000
+Message-ID: <20131118120957.GH30853@e106331-lin.cambridge.arm.com>
+References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
+ <1383290374-17484-5-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5289F9DF.8060406-oZ8rN/sblLk@public.gmane.org>
-Content-Language: en-US
-Content-ID: <6DB828C271FD3848B21FBB4ED8069004-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1383290374-17484-5-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDEzLTExLTE4IGF0IDEyOjI4ICswMTAwLCBGbG9yaWFuIE1laWVyIHdyb3RlOg0K
-PiBUaGlzIGRyaXZlciBhZGRzIHN1cHBvcnQgZm9yIGRpZ2l0YWwgYXVkaW8gKEkyUykNCj4gZm9y
-IHRoZSBCQ00yODM1IFNvQyB0aGF0IGlzIHVzZWQgYnkgdGhlDQo+IFJhc3BiZXJyeSBQaS4gRXh0
-ZXJuYWwgYXVkaW8gY29kZWNzIGNhbiBiZQ0KPiBjb25uZWN0ZWQgdG8gdGhlIFJhc3BiZXJyeSBQ
-aSB2aWEgUDUgaGVhZGVyLg0KPiANCj4gSXQgcmVsaWVzIG9uIGN5Y2xpYyBETUEgZW5naW5lIHN1
-cHBvcnQgZm9yIEJDTTI4MzUuDQoNCkZldyBjb21tZW50cyBiZWxvdy4NCg0KW10NCg0KPiArc3Rh
-dGljIHZvaWQgYmNtMjgzNV9pMnNfc3RvcF9jbG9jayhzdHJ1Y3QgYmNtMjgzNV9pMnNfZGV2ICpk
-ZXYpDQo+ICt7DQo+ICsJdWludDMyX3QgY2xrcmVnOw0KPiArCWludCB0aW1lb3V0ID0gMTAwMDsN
-Cj4gKw0KPiArCS8qIFN0b3AgY2xvY2sgKi8NCj4gKwlyZWdtYXBfdXBkYXRlX2JpdHMoZGV2LT5j
-bGtfcmVnbWFwLCBCQ00yODM1X0NMS19QQ01DVExfUkVHLA0KPiArCQkJQkNNMjgzNV9DTEtfUEFT
-U1dEX01BU0sgfCBCQ00yODM1X0NMS19FTkFCLA0KPiArCQkJQkNNMjgzNV9DTEtfUEFTU1dEKTsN
-Cj4gKw0KPiArCS8qIFdhaXQgZm9yIHRoZSBCVVNZIGZsYWcgZ29pbmcgZG93biAqLw0KPiArCXdo
-aWxlICh0aW1lb3V0ID4gMCkgew0KPiArCQl0aW1lb3V0LS07DQoNCndoaWxlICgtLXRpbWVvdXQp
-IHsNCg0KPiArDQo+ICsJCXJlZ21hcF9yZWFkKGRldi0+Y2xrX3JlZ21hcCwgQkNNMjgzNV9DTEtf
-UENNQ1RMX1JFRywgJmNsa3JlZyk7DQo+ICsJCWlmICghKGNsa3JlZyAmIEJDTTI4MzVfQ0xLX0JV
-U1kpKQ0KPiArCQkJYnJlYWs7DQo+ICsJfQ0KPiArDQo+ICsJaWYgKHRpbWVvdXQgPD0gMCkgew0K
-DQppZiAoIXRpbWVvdXQpIHsNCg0KW10NCg0KPiArc3RhdGljIHZvaWQgYmNtMjgzNV9pMnNfY2xl
-YXJfZmlmb3Moc3RydWN0IGJjbTI4MzVfaTJzX2RldiAqZGV2LA0KPiArCQkJCSAgICBib29sIHR4
-LCBib29sIHJ4KQ0KPiArew0KDQpbXQ0KDQo+ICsJLyogV2FpdCBmb3IgdGhlIFNZTkMgZmxhZyBj
-aGFuZ2luZyBpdCdzIHN0YXRlICovDQo+ICsJd2hpbGUgKHRpbWVvdXQgPiAwKSB7DQo+ICsJCXRp
-bWVvdXQtLTsNCg0Kd2hpbGUgKC0tdGltZW91dCkgew0KDQo+ICsJCXJlZ21hcF9yZWFkKGRldi0+
-aTJzX3JlZ21hcCwgQkNNMjgzNV9JMlNfQ1NfQV9SRUcsICZjc3JlZyk7DQo+ICsJCWlmICgoY3Ny
-ZWcgJiBCQ00yODM1X0kyU19TWU5DKSAhPSBzeW5jdmFsKQ0KPiArCQkJYnJlYWs7DQo+ICsJfQ0K
-PiArDQo+ICsJaWYgKHRpbWVvdXQgPD0gMCkNCg0KaWYgKCF0aW1lb3V0KQ0KDQpbXQ0KDQo+ICtz
-dGF0aWMgaW50IGJjbTI4MzVfaTJzX2h3X3BhcmFtcyhzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0g
-KnN1YnN0cmVhbSwNCj4gKwkJCQkgc3RydWN0IHNuZF9wY21faHdfcGFyYW1zICpwYXJhbXMsDQo+
-ICsJCQkJIHN0cnVjdCBzbmRfc29jX2RhaSAqZGFpKQ0KPiArew0KPiArCXN0cnVjdCBiY20yODM1
-X2kyc19kZXYgKmRldiA9IHNuZF9zb2NfZGFpX2dldF9kcnZkYXRhKGRhaSk7DQo+ICsNCj4gKwl1
-bnNpZ25lZCBpbnQgc2FtcGxpbmdfcmF0ZSA9IHBhcmFtc19yYXRlKHBhcmFtcyk7DQo+ICsJdW5z
-aWduZWQgaW50IGRhdGFfbGVuZ3RoLCBkYXRhX2RlbGF5LCBiY2xrX3JhdGlvOw0KPiArCXVuc2ln
-bmVkIGludCBjaDFwb3MsIGNoMnBvcywgbW9kZSwgZm9ybWF0Ow0KPiArCXVuc2lnbmVkIGludCBt
-YXNoID0gQkNNMjgzNV9DTEtfTUFTSF8xOw0KPiArCXVuc2lnbmVkIGludCBkaXZpLCBkaXZmLCB0
-YXJnZXRfZnJlcXVlbmN5Ow0KPiArCWludCBjbGtfc3JjID0gLTE7DQo+ICsJdW5zaWduZWQgaW50
-IG1hc3RlciA9IGRldi0+Zm10ICYgU05EX1NPQ19EQUlGTVRfTUFTVEVSX01BU0s7DQo+ICsJdWlu
-dDMyX3QgYml0X21hc3RlciA9CShtYXN0ZXIgPT0gU05EX1NPQ19EQUlGTVRfQ0JTX0NGUw0KPiAr
-CQkJCQl8fCBtYXN0ZXIgPT0gU05EX1NPQ19EQUlGTVRfQ0JTX0NGTSk7DQoNCmJvb2wgPw0KDQo+
-ICsNCj4gKwl1aW50MzJfdCBmcmFtZV9tYXN0ZXIgPQkobWFzdGVyID09IFNORF9TT0NfREFJRk1U
-X0NCU19DRlMNCg0KU28sIGlmIG1hc3RlciA9PSBTTkRfU09DX0RBSUZNVF9DQlNfQ0ZTIGJvdGgg
-Yml0X21hc3RlciBhbmQgZnJhbWVfbWFzdGVyDQp3aWxsIGJlIHRydWUuIElzIGl0IGNvcnJlY3Q/
-DQoNCj4gKwkJCQkJfHwgbWFzdGVyID09IFNORF9TT0NfREFJRk1UX0NCTV9DRlMpOw0KDQpEaXR0
-by4NCg0KPiArCXVpbnQzMl90IGNzcmVnOw0KPiArDQo+ICsJLyoNCj4gKwkgKiBJZiBhIHN0cmVh
-bSBpcyBhbHJlYWR5IGVuYWJsZWQsDQo+ICsJICogdGhlIHJlZ2lzdGVycyBhcmUgYWxyZWFkeSBz
-ZXQgcHJvcGVybHkuDQo+ICsJICovDQo+ICsJcmVnbWFwX3JlYWQoZGV2LT5pMnNfcmVnbWFwLCBC
-Q00yODM1X0kyU19DU19BX1JFRywgJmNzcmVnKTsNCj4gKw0KPiArCWlmIChjc3JlZyAmIChCQ00y
-ODM1X0kyU19UWE9OIHwgQkNNMjgzNV9JMlNfUlhPTikpDQo+ICsJCXJldHVybiAwOw0KPiArDQoN
-Cj4gKwlpZiAoYmNtMjgzNV9jbGtfZnJlcVtjbGtfc3JjXSAlIHRhcmdldF9mcmVxdWVuY3kgPT0g
-MA0KPiArCQkJJiYgYml0X21hc3RlciAmJiBmcmFtZV9tYXN0ZXIpIHsNCj4gKwkJZGl2aSA9IGJj
-bTI4MzVfY2xrX2ZyZXFbY2xrX3NyY10vdGFyZ2V0X2ZyZXF1ZW5jeTsNCj4gKwkJZGl2ZiA9IDA7
-DQo+ICsJfSBlbHNlIHsNCj4gKwkJdWludDY0X3QgZGl2aWRlbmQ7DQo+ICsNCj4gKwkJaWYgKCFk
-ZXYtPmJjbGtfcmF0aW8pIHsNCj4gKwkJCS8qDQo+ICsJCQkgKiBPdmVyd3JpdGUgYmNsa19yYXRp
-bywgYmVjYXVzZSB0aGUNCj4gKwkJCSAqIGFib3ZlIHRyaWNrIGlzIG5vdCBuZWVkZWQgb3IgY2Fu
-DQo+ICsJCQkgKiBub3QgYmUgdXNlZC4NCj4gKwkJCSAqLw0KPiArCQkJYmNsa19yYXRpbyA9IDIq
-ZGF0YV9sZW5ndGg7DQoNCj0gMiAqIGRhdGFfbGVuZ3RoOw0KDQo+ICsJCX0NCj4gKw0KPiArCQl0
-YXJnZXRfZnJlcXVlbmN5ID0gc2FtcGxpbmdfcmF0ZSpiY2xrX3JhdGlvOw0KPiArDQo+ICsJCWNs
-a19zcmMgPSBCQ00yODM1X0NMS19TUkNfUExMRDsNCj4gKwkJbWFzaCA9IEJDTTI4MzVfQ0xLX01B
-U0hfMTsNCj4gKw0KPiArCQlkaXZpZGVuZCA9IGJjbTI4MzVfY2xrX2ZyZXFbY2xrX3NyY107DQo+
-ICsJCWRpdmlkZW5kICo9IDEwMjQ7DQo+ICsJCWRvX2RpdihkaXZpZGVuZCwgdGFyZ2V0X2ZyZXF1
-ZW5jeSk7DQo+ICsJCWRpdmkgPSBkaXZpZGVuZCAvIDEwMjQ7DQo+ICsJCWRpdmYgPSBkaXZpZGVu
-ZCAlIDEwMjQ7DQoNCjEwMjQgaXMgYSBtYWdpYyBudW1iZXI/DQpDb3VsZCB5b3UgdXNlIHNoaWZ0
-cyBhbmQgYml0d2lzZSBBTkRzIGhlcmU/DQoNCj4gKwljaDFwb3MgPSBkYXRhX2RlbGF5Ow0KPiAr
-CWNoMnBvcyA9IGJjbGtfcmF0aW8vMitkYXRhX2RlbGF5Ow0KDQonIC8gMiArICcNCg0KW10NCg0K
-PiArCW1vZGUgfD0gQkNNMjgzNV9JMlNfRkxFTihiY2xrX3JhdGlvLTEpOw0KPiArCW1vZGUgfD0g
-QkNNMjgzNV9JMlNfRlNMRU4oYmNsa19yYXRpby8yKTsNCg0KRGl0dG8uIFNwYWNlcyBhcmUgbWlz
-c2VkLg0KDQpbXQ0KDQo+ICsJY2FzZSBTTkRfU09DX0RBSUZNVF9JQl9JRjoNCj4gKwkJLyogQm90
-aCAtIHRoZXJlZm9yZSwgbm9uZSBmb3IgQkNNKi8NCg0KJ00gKi8nDQoNCj4gKwkJYnJlYWs7DQo+
-ICsJY2FzZSBTTkRfU09DX0RBSUZNVF9OQl9JRjoNCj4gKwkJLyoNCj4gKwkJICogSW52ZXJ0IG9u
-bHkgZnJhbWUgc3luYyAtIHRoZXJlZm9yZSwNCj4gKwkJICogSW52ZXJ0IG9ubHkgYml0IGNsb2Nr
-IGZvciBCQ00NCg0KU29tZXRoaW5nIHdyb25nIHdpdGggY2FzaW5nIGluIHRoZSBjb21tZW50YXJ5
-Lg0KDQo+ICsJCSAqLw0KPiArCQltb2RlIHw9IEJDTTI4MzVfSTJTX0NMS0k7DQo+ICsJCWJyZWFr
-Ow0KPiArCWNhc2UgU05EX1NPQ19EQUlGTVRfSUJfTkY6DQo+ICsJCS8qDQo+ICsJCSAqIEludmVy
-dCBvbmx5IGJpdCBjbG9jayAtIHRoZXJlZm9yZSwNCj4gKwkJICogSW52ZXJ0IG9ubHkgZnJhbWUg
-c3luYyBmb3IgQkNNDQoNCkRpdHRvLg0KDQo+ICsJCSAqLw0KPiArCQltb2RlIHw9IEJDTTI4MzVf
-STJTX0ZTSTsNCj4gKwkJYnJlYWs7DQo+ICsJZGVmYXVsdDoNCj4gKwkJcmV0dXJuIC1FSU5WQUw7
-DQo+ICsJfQ0KPiArDQo+ICsJcmVnbWFwX3dyaXRlKGRldi0+aTJzX3JlZ21hcCwgQkNNMjgzNV9J
-MlNfTU9ERV9BX1JFRywgbW9kZSk7DQo+ICsNCj4gKw0KDQpSZWR1bmRhbnQgZW1wdHkgbGluZS4N
-Cg0KW10NCg0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gKw0KDQpEaXR0by4NCg0K
-W10NCg0KPiArc3RhdGljIGludCBiY20yODM1X2kyc19zdGFydHVwKHN0cnVjdCBzbmRfcGNtX3N1
-YnN0cmVhbSAqc3Vic3RyZWFtLA0KPiArCQkJICAgICAgIHN0cnVjdCBzbmRfc29jX2RhaSAqZGFp
-KQ0KPiArew0KPiArCXN0cnVjdCBiY20yODM1X2kyc19kZXYgKmRldiA9IHNuZF9zb2NfZGFpX2dl
-dF9kcnZkYXRhKGRhaSk7DQo+ICsNCj4gKwlpZiAoIWRhaS0+YWN0aXZlKSB7DQo+ICsJCS8qIFNo
-b3VsZCB0aGlzIHN0aWxsIGJlIHJ1bm5pbmcgc3RvcCBpdCAqLw0KPiArCQliY20yODM1X2kyc19z
-dG9wX2Nsb2NrKGRldik7DQo+ICsNCj4gKwkJLyogRW5hYmxlIFBDTSBibG9jayAqLw0KPiArCQly
-ZWdtYXBfdXBkYXRlX2JpdHMoZGV2LT5pMnNfcmVnbWFwLCBCQ00yODM1X0kyU19DU19BX1JFRywN
-Cj4gKwkJCQlCQ00yODM1X0kyU19FTiwgQkNNMjgzNV9JMlNfRU4pOw0KPiArDQo+ICsJCS8qDQo+
-ICsJCSAqIERpc2FibGUgU1RCWQ0KDQpEb3QgaXMgbWlzc2luZz8NCg0KPiArCQkgKiBSZXF1aXJl
-cyBhdCBsZWFzdCA0IFBDTSBjbG9jayBjeWNsZXMgdG8gdGFrZSBlZmZlY3QNCj4gKwkJICovDQo+
-ICsJCXJlZ21hcF91cGRhdGVfYml0cyhkZXYtPmkyc19yZWdtYXAsIEJDTTI4MzVfSTJTX0NTX0Ff
-UkVHLA0KPiArCQkJCUJDTTI4MzVfSTJTX1NUQlksIEJDTTI4MzVfSTJTX1NUQlkpOw0KPiArCX0N
-Cj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KDQoNCg0KPiArc3RhdGljIHZvaWQgYmNtMjgzNV9p
-MnNfc2h1dGRvd24oc3RydWN0IHNuZF9wY21fc3Vic3RyZWFtICpzdWJzdHJlYW0sDQo+ICsJCXN0
-cnVjdCBzbmRfc29jX2RhaSAqZGFpKQ0KPiArew0KPiArCXN0cnVjdCBiY20yODM1X2kyc19kZXYg
-KmRldiA9IHNuZF9zb2NfZGFpX2dldF9kcnZkYXRhKGRhaSk7DQo+ICsNCj4gKwliY20yODM1X2ky
-c19zdG9wKGRldiwgc3Vic3RyZWFtLCBkYWkpOw0KPiArDQo+ICsJLyogSWYgYm90aCBzdHJlYW1z
-IGFyZSBzdG9wcGVkLCBkaXNhYmxlIG1vZHVsZSBhbmQgY2xvY2sgKi8NCj4gKwlpZiAoIWRhaS0+
-YWN0aXZlKSB7DQoNCmlmIChkYWktPmFjdGl2ZSkNCiByZXR1cm47DQoNCj4gKwkJLyogRGlzYWJs
-ZSB0aGUgbW9kdWxlICovDQo+ICsJCXJlZ21hcF91cGRhdGVfYml0cyhkZXYtPmkyc19yZWdtYXAs
-IEJDTTI4MzVfSTJTX0NTX0FfUkVHLA0KPiArCQkJCUJDTTI4MzVfSTJTX0VOLCAwKTsNCj4gKw0K
-PiArCQkvKg0KPiArCQkgKiBTdG9wcGluZyBjbG9jayBpcyBuZWNlc3NhcnksIGJlY2F1c2Ugc3Rv
-cCBkb2VzDQo+ICsJCSAqIG5vdCBzdG9wIHRoZSBjbG9jayB3aGVuIFNORF9TT0NfREFJRk1UX0NP
-TlQNCj4gKwkJICovDQo+ICsJCWJjbTI4MzVfaTJzX3N0b3BfY2xvY2soZGV2KTsNCj4gKwl9DQo+
-ICt9DQo+ICsNCg0KW10NCg0KPiArc3RhdGljIGludCBiY20yODM1X2kyc19wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiArew0KPiArCXN0cnVjdCBiY20yODM1X2kyc19kZXYg
-KmRldjsNCj4gKwlpbnQgaTsNCj4gKwlpbnQgcmV0Ow0KPiArCXN0cnVjdCByZWdtYXAgKnJlZ21h
-cFsyXTsNCj4gKwlzdHJ1Y3QgcmVzb3VyY2UgKm1lbVsyXTsNCj4gKw0KPiArCS8qIFJlcXVlc3Qg
-Ym90aCBpb2FyZWFzICovDQo+ICsJZm9yIChpID0gMDsgaSA8PSAxOyBpKyspIHsNCj4gKwkJdm9p
-ZCBfX2lvbWVtICpiYXNlOw0KPiArDQo+ICsJCW1lbVtpXSA9IHBsYXRmb3JtX2dldF9yZXNvdXJj
-ZShwZGV2LCBJT1JFU09VUkNFX01FTSwgaSk7DQoNCj4gKwkJaWYgKCFtZW1baV0pIHsNCj4gKwkJ
-CWRldl9lcnIoJnBkZXYtPmRldiwgIkkyUyBwcm9iZTogTWVtb3J5IHJlc291cmNlIGNvdWxkIG5v
-dCBiZSBmb3VuZC5cbiIpOw0KPiArCQkJcmV0dXJuIC1FTk9ERVY7DQo+ICsJCX0NCg0KVW5uZWVk
-ZWQgbWVzc2FnaW5nIGFuZCBjaGVjay4NCg0KPiArDQo+ICsJCWJhc2UgPSBkZXZtX2lvcmVtYXBf
-cmVzb3VyY2UoJnBkZXYtPmRldiwgbWVtW2ldKTsNCj4gKwkJaWYgKCFiYXNlKSB7DQoNCkl0IHJl
-dHVybnMgRVJSX1BUUi4NClRodXMsDQoNCmlmIChJU19FUlIoYmFzZSkNCnJldHVybiBQVFJfRVJS
-KGJhc2UpDQoNCg0KPiArCQkJZGV2X2VycigmcGRldi0+ZGV2LCAiSTJTIHByb2JlOiBpb3JlbWFw
-IGZhaWxlZC5cbiIpOw0KDQpVbm5lZWRlZCBtZXNzYWdpbmcuDQoNCj4gKwkJCXJldHVybiAtRU5P
-TUVNOw0KDQpXcm9uZyBlcnJvciBjb2RlLiBTZWUgYWJvdmUuDQoNCg0KLS0gDQpBbmR5IFNoZXZj
-aGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGludGVsLmNvbT4NCkludGVsIEZpbmxhbmQgT3kNCi0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQpJbnRlbCBGaW5sYW5kIE95ClJlZ2lzdGVyZWQgQWRkcmVzczogUEwgMjgxLCAw
-MDE4MSBIZWxzaW5raSAKQnVzaW5lc3MgSWRlbnRpdHkgQ29kZTogMDM1NzYwNiAtIDQgCkRvbWlj
-aWxlZCBpbiBIZWxzaW5raSAKClRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgbWF5IGNv
-bnRhaW4gY29uZmlkZW50aWFsIG1hdGVyaWFsIGZvcgp0aGUgc29sZSB1c2Ugb2YgdGhlIGludGVu
-ZGVkIHJlY2lwaWVudChzKS4gQW55IHJldmlldyBvciBkaXN0cmlidXRpb24KYnkgb3RoZXJzIGlz
-IHN0cmljdGx5IHByb2hpYml0ZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZApyZWNpcGll
-bnQsIHBsZWFzZSBjb250YWN0IHRoZSBzZW5kZXIgYW5kIGRlbGV0ZSBhbGwgY29waWVzLgo=
+On Fri, Nov 01, 2013 at 07:19:33AM +0000, Alexander Popov wrote:
+> From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+> 
+> register the controller for device tree based lookup of DMA channels
+> (non-fatal for backwards compatibility with older device trees), provide
+> the '#dma-cells' property in the shared mpc5121.dtsi file, and introduce
+> a bindings document for the MPC512x DMA controller
+> 
+> Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+> ---
+>  .../devicetree/bindings/dma/mpc512x-dma.txt        | 55 ++++++++++++++++++++++
+>  arch/powerpc/boot/dts/mpc5121.dtsi                 |  1 +
+>  drivers/dma/mpc512x_dma.c                          | 21 +++++++--
+>  3 files changed, 74 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/mpc512x-dma.txt b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+> new file mode 100644
+> index 0000000..a4867d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+> @@ -0,0 +1,55 @@
+> +* Freescale MPC512x DMA Controller
+> +
+> +The DMA controller in the Freescale MPC512x SoC can move blocks of
+> +memory contents between memory and peripherals or memory to memory.
+> +
+> +Refer to the "Generic DMA Controller and DMA request bindings" description
+> +in the dma.txt file for a more detailled discussion of the binding.  The
+> +MPC512x DMA engine binding follows the common scheme, but doesn't provide
+> +support for the optional channels and requests counters (those values are
+> +derived from the detected hardware features) and has a fixed client
+> +specifier length of 1 integer cell (the value is the DMA channel, since
+> +the DMA controller uses a fixed assignment of request lines per channel).
 
+The fact that #dma-cells must be <1> isn't a difference from the
+standard binding, and needs not be described here. The meaning of the
+value should be in your description of #dma-cells below.
+
+I'm not sure it's worth mentioning optional channels / request counters.
+If anything, it would be better to update dma.txt to move the "Optional
+properties" to something like "Suggested properties"...
+
+> +
+> +
+> +DMA controller node properties:
+> +
+> +Required properties:
+> +- compatible:		should be "fsl,mpc5121-dma"
+> +- reg:			address and size of the DMA controller's register set
+> +- interrupts:		interrupt spec for the DMA controller
+> +
+> +Optional properties:
+> +- #dma-cells:		must be <1>, describes the number of integer cells
+> +			needed to specify the 'dmas' property in client nodes,
+> +			strongly recommended since common client helper code
+> +			uses this property
+
+Rather than redundantly describing what the standard property means, it
+would be better to describe what the cell actually means (i.e. which
+value maps to which DMA channel in hardware, how many their are, etc).
+
+> +
+> +Example:
+> +
+> +	dma0: dma@14000 {
+> +		compatible = "fsl,mpc5121-dma";
+> +		reg = <0x14000 0x1800>;
+> +		interrupts = <65 0x8>;
+> +		#dma-cells = <1>;
+> +	};
+> +
+> +
+> +Client node properties:
+> +
+> +Required properties:
+> +- dmas:			list of DMA specifiers, consisting each of a handle
+> +			for the DMA controller and integer cells to specify
+> +			the channel used within the DMA controller
+> +- dma-names:		list of identifier strings for the DMA specifiers,
+> +			client device driver code uses these strings to
+> +			have DMA channels looked up at the controller
+> +
+
+I don't think its necessary or helpful to describe the client binding
+here, it's in dma.txt
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
