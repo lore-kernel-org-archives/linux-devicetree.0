@@ -1,46 +1,54 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: ARM topic: Is DT on ARM the solution, or is there something better?
-Date: Mon, 18 Nov 2013 10:16:13 -0700
-Message-ID: <528A4B5D.8050809@wwwdotorg.org>
-References: <52644A9E.3060007@wwwdotorg.org> <20131118122644.GA26046@ulmo.nvidia.com> <20131118134022.26EE7C409EC@trevor.secretlab.ca> <20131118135727.GD14306@sirena.org.uk> <20131118152920.GL26046@ulmo.nvidia.com> <20131118155022.GB28334@sirena.org.uk> <20131118160626.GN26046@ulmo.nvidia.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 2/3] misc: bmp085: Add DT bindings for EOC gpio line and
+ direct irq.
+Date: Mon, 18 Nov 2013 18:17:47 +0100
+Message-ID: <20131118171747.GM17929@book.gsilab.sittig.org>
+References: <1384465609-26485-1-git-send-email-marek@goldelico.com>
+ <20131115153015.GD24831@e106331-lin.cambridge.arm.com>
+ <CAAfyv346pUa9k3+9jdBX+EK8cV9GenaBxrAnVnKsbUPBoNBqrQ@mail.gmail.com>
+ <201311181238.40349.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131118160626.GN26046-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201311181238.40349.arnd-r2nGTMty4D4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2013 09:06 AM, Thierry Reding wrote:
-...
-> Part of my point was that you could possibly still use the same IP
-> with only a modified (standard) register interface. That way no
-> licensing of third party IP would be needed. You'd only need to
-> rewrite parts of the IP to make it look (and behave) like the
-> standard one.
+[ trimmed Cc: list for DT ]
+[ is the bindings/gpio/8xxx_gpio.txt document incomplete? ]
+
+On Mon, Nov 18, 2013 at 12:38 +0100, Arnd Bergmann wrote:
 > 
-> That's exactly how 16550-compatible UARTs work, isn't it? Or even
-> the way that USB (EHCI, ...) work. There's a standardize register
-> interface, possibly with a way for vendor-specific extensions, but
-> the interface itself doesn't need to be licensed, so there are no
-> additional costs to supporting the standard interface. There are
-> only the advantages of being able to reuse a well-tested body of
-> code.
+> See Documentation/devicetree/bindings/gpio/8xxx_gpio.txt for an
+> example of a device whose interrupt line is connected to a gpio
+> controller. The key here is to set the "interrupt-parent" to
+> the gpio node and have the irq specifier define an interrupt
+> local to that node.
 
-Your idea would be great if it could be made to work in practice. I'm
-not convinced how possible this would be, without ARM mandating it in
-their contractual licensing terms, or large customers mandating it in
-order to use SoCs for their flagship designs.
+I was wondering whether the gpio-controller nodes lack both the
+'interrupt-controller' boolean flag as well as the
+'#interrupt-cells = <2>' property.  The former may be optional,
+I'm not certain there.  But the latter should be a hard
+requirement without which the 'funkyfpga' references cannot get
+parsed I'm afraid.
 
-The one fly in the ointment is that even in cases where there are
-standard register interfaces, there are always quirks in how vendors
-implement those interfaces, so HW ends up being 90-99.5% compliant
-with the interface, but with subtle differences. Take a look at
-Tegra's SDHCI, EHCI and PCIe controllers for examples! Still, I
-suppose that even with that caveat, having a 90% identical driver
-compared to a 0% identical driver would be better than where we are today.
+Am I missing something?  Did I get the names right?  Shall I send
+a patch?  Is the code working without those specs since it
+assumes knowledge that was not specified in the device tree?  And
+would this be against the idea that the binding should be
+"complete" and independent of who is interpreting the data?  Or
+is the binding document just incomplete?
+
+
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
