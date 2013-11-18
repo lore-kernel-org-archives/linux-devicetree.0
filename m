@@ -1,105 +1,60 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 5/6] watchdog: davinci: reuse driver for keystone arch
-Date: Mon, 18 Nov 2013 19:18:58 +0200
-Message-ID: <1384795139-19466-6-git-send-email-ivan.khoronzhuk@ti.com>
-References: <1384795139-19466-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 01/31] ARM: tegra: add missing clock documentation to
+ DT bindings
+Date: Mon, 18 Nov 2013 10:36:19 -0700
+Message-ID: <528A5013.3060006@wwwdotorg.org>
+References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org> <1384548866-13141-2-git-send-email-swarren@wwwdotorg.org> <9892703.gTmEHyqaYb@ax5200p>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384795139-19466-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Strashko Grygorii <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9892703.gTmEHyqaYb@ax5200p>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The keystone arch use the same IP watchdog, so add "ti,keystone-wdt"
-compatible and correct identity.
+On 11/16/2013 03:00 PM, Marc Dietrich wrote:
+> Hi Stephen,
+> 
+> On Friday 15 November 2013 13:53:56 Stephen Warren wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> Many of the Tegra DT binding documents say nothing about the clocks or
+>> clock-names properties, yet those are present and required in DT files.
+>> This patch simply updates the documentation file to match the implicit
+>> definition of the binding, based on real-world DT content.
+>>
+>> All Tegra bindings that mention clocks are updated to have consistent
+>> wording and formatting of the clock-related properties.
 
-The Keystone arch is using clocks in DT and source clock for watchdog
-has to be specified, so add this to binding.
+>> diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
----
- .../devicetree/bindings/watchdog/davinci-wdt.txt   |   11 +++++++++--
- drivers/watchdog/Kconfig                           |    4 ++--
- drivers/watchdog/davinci_wdt.c                     |    3 ++-
- 3 files changed, 13 insertions(+), 5 deletions(-)
+(Thanks for pointing out the duplicate entries; I'll fix those.)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
-index e450134..0f1aa99 100644
---- a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
-@@ -1,16 +1,23 @@
--DaVinci Watchdog Timer (WDT) Controller
-+Texas Instruments DaVinci/Keystone Watchdog Timer (WDT) Controller
- 
- Required properties:
--- compatible : Should be "ti,davinci-wdt"
-+- compatible : Should be "ti,davinci-wdt" or "ti,keystone-wdt"
- - reg : Should contain WDT registers location and length
-+- clocks : phandle reference to the controller clock.
-+	   Required only for Keystone arch. See clock-bindings.txt
- 
- Optional properties:
- - timeout-sec : Contains the watchdog timeout in seconds
- 
-+Documentation:
-+Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
-+Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
-+
- Examples:
- 
- wdt: wdt@2320000 {
- 	compatible = "ti,davinci-wdt";
- 	reg = <0x02320000 0x80>;
- 	timeout-sec = <30>;
-+	clocks = <&clkwdtimer0>;
- };
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index d7db13d..addfc2c 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -270,12 +270,12 @@ config IOP_WATCHDOG
- 
- config DAVINCI_WATCHDOG
- 	tristate "DaVinci watchdog"
--	depends on ARCH_DAVINCI
-+	depends on ARCH_DAVINCI || ARCH_KEYSTONE
- 	select WATCHDOG_CORE
- 	select WATCHDOG_NOWAYOUT
- 	help
- 	  Say Y here if to include support for the watchdog timer
--	  in the DaVinci DM644x/DM646x processors.
-+	  in the DaVinci DM644x/DM646x or Keystone processors.
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called davinci_wdt.
- 
-diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
-index 55deaf8..a6d365a 100644
---- a/drivers/watchdog/davinci_wdt.c
-+++ b/drivers/watchdog/davinci_wdt.c
-@@ -143,7 +143,7 @@ static unsigned int davinci_wdt_get_timeleft(struct watchdog_device *wdd)
- 
- static const struct watchdog_info davinci_wdt_info = {
- 	.options = WDIOF_KEEPALIVEPING,
--	.identity = "DaVinci Watchdog",
-+	.identity = "DaVinci/Keystone Watchdog",
- };
- 
- static const struct watchdog_ops davinci_wdt_ops = {
-@@ -212,6 +212,7 @@ static int davinci_wdt_remove(struct platform_device *pdev)
- 
- static const struct of_device_id davinci_wdt_of_match[] = {
- 	{ .compatible = "ti,davinci-wdt", },
-+	{ .compatible = "ti,keystone-wdt", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, davinci_wdt_of_match);
--- 
-1.7.9.5
+>> +  - clocks : Must contain an entry for each entry in clock-names.
+>> +    See ../clocks/clock-bindings.txt for details.
+>> +  - clock-names : Must include the following entries:
+>> +    (This property may be omitted if the only clock in the list is "3d")
+>> +    - 3d
+>> +      This MUST be the first entry.
+> 
+> why? isn't the purpose of names that the order is irrelevant?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If we used names from the start, then the order would be irrelevant.
+
+However, this binding didn't use names from the start, and hence the
+order of appearance in "clocks" is part of the original binding.
+"clock-names" only became part of the binding when the second clock was
+introduced.
+
+We can either: (a) document the existing requirements as I have done, or
+(b) go through all the bindings and drivers and make potentially
+incompatible changes so that all ordering is purely defined by
+"clock-names". I was tempted to do (b) for cleanliness, but didn't want
+to push my luck on too many ABI-incompatible changes. (b) /might/ also
+affect more drivers than this series already does, thus bloating it even
+more:-(
+
+P.S. only quoting the parts of the patch you're replying to makes it a
+lot easier and quicker to find your replies.
