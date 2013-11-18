@@ -1,56 +1,74 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: [PATCH] input: touchscreen: ti_am335x_tsc: warn about incorrect spelling
-Date: Mon, 18 Nov 2013 09:29:01 -0600
-Message-ID: <1384788541-16338-1-git-send-email-balbi@ti.com>
-References: <20131118114029.GD30853@e106331-lin.cambridge.arm.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
+ better?
+Date: Mon, 18 Nov 2013 16:29:21 +0100
+Message-ID: <20131118152920.GL26046@ulmo.nvidia.com>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131118122644.GA26046@ulmo.nvidia.com>
+ <20131118134022.26EE7C409EC@trevor.secretlab.ca>
+ <20131118135727.GD14306@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131118114029.GD30853@e106331-lin.cambridge.arm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, dmitry.torokhov@gmail.com, rob.herring@calxeda.com, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, bcousson@baylibre.com, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, Felipe Balbi <balbi@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="f54savKjS/tSNRaU"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131118135727.GD14306-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In the hopes that people run new kernels on
-their devices, let's add a warning message
-asking users to have their DTS file fixed.
 
-The goal is that by Linux 4.0 we will be
-able to remove support for the bogus version
-of our touchscreen's DTS.
+--f54savKjS/tSNRaU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Felipe Balbi <balbi@ti.com>
----
+On Mon, Nov 18, 2013 at 01:57:27PM +0000, Mark Brown wrote:
+> On Mon, Nov 18, 2013 at 01:40:22PM +0000, Grant Likely wrote:
+>=20
+> > Some hardware does that. That's what OHCI, EHCI, UHCI, XHCI, SDHCI, and
+> > similar are all about. It always helps when well understood hardware
+> > follows a register interface. It doesn't work for everything, but I
+> > agree it would be good to have preferred hw interfaces for SPI & I2C.
+>=20
+> You'd need something class based like USB, there's such massive
+> variation in what the hardware is trying to do and the tradeoffs.  A big
+> issue is that especially with I2C many of the devices are primarily
+> analogue devices implemnted in larger processes where the cost of adding
+> additional digital logic can have a noticeable effect on the area and
+> hence cost of the silicon.
 
-Here you go, I've added your Suggested-by Mark,
-if you wish I can remove or change to something
-else.
+My comments were mostly regarding the interface controllers. Those which
+generate the same bus transactions but need different drivers on every
+SoC. I suspect that the same costs don't apply (or at least not to the
+same extent) to SoCs.
 
-cheers
+Thierry
 
- drivers/input/touchscreen/ti_am335x_tsc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+--f54savKjS/tSNRaU
+Content-Type: application/pgp-signature
 
-diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
-index b61df9d..91302cd 100644
---- a/drivers/input/touchscreen/ti_am335x_tsc.c
-+++ b/drivers/input/touchscreen/ti_am335x_tsc.c
-@@ -354,9 +354,12 @@ static int titsc_parse_dt(struct platform_device *pdev,
- 	 */
- 	err = of_property_read_u32(node, "ti,coordinate-readouts",
- 			&ts_dev->coordinate_readouts);
--	if (err < 0)
-+	if (err < 0) {
-+		dev_warn(&pdev->dev, "please use 'ti,coordinate-readouts' instead\n");
- 		err = of_property_read_u32(node, "ti,coordiante-readouts",
- 				&ts_dev->coordinate_readouts);
-+	}
-+
- 	if (err < 0)
- 		return err;
- 
--- 
-1.8.4.GIT
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
+iQIcBAEBAgAGBQJSijJQAAoJEN0jrNd/PrOh28EP/joNivci+QGrcJqXlT1SkBaQ
+Ah1GSk98FjQM+jH/N6iVXzV3ybYdAyUp3mWh2SzrXa5GLah1/VhPz4kvBR4cWb6v
+hIMwrqGt+LT+xS19U/fpN7YgXvVKgU4CUE+gLeEx8/p3SPJ+KN0svjV2B4Gs/x9c
+olLaS4Zo11Uv5rT2UWcrCe5OyMpq8PR4NBQswFQxssOUeSLCwX8c4gSbh2areJVS
+5AImgCyyH06jxk3cAuS1IOnAwflZoZSjOu7XzzFFeL403SBbgvPcf9R4bM4Kz7Vi
+Yy79r4+w6MwRZjKke85Zf1tF2OY5NsqSYDi+4SpMRsF3cfmZI5r1yLahdacfQp84
+CdTN1UsnnhRocXUDth2CJ9naqatfUf20H7OIWshUFt2gMr8pEXegu1axFDMDPm2i
+O8L87lzrZwgmD3bpYRQZanW42V/XqMVdPg9Y55D9scSmLYa7Gf8WX/u6O1e7/A6i
+WLKTDmbkFNnnhhqj63a0fPMLT2yx4frIkW50YS8lTiCtgUcKvroVTZyrCv+kwqnW
+HL+jo9GeFY8+7qCKOytRx6Y1gMov8wmRDUDgwkmYPPn6TFBENijxN+SKLzJYycB0
+2NyOG3Fx87kLno3vpgIx/5CDhSiyCfYPGCNCJjiSQMM4W40/LPlv+NhqXxxR9Srr
+QSsC7a8201AeitN89sQe
+=f/e6
+-----END PGP SIGNATURE-----
+
+--f54savKjS/tSNRaU--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
