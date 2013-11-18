@@ -1,139 +1,141 @@
-From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH] itg3200: add dt support.
-Date: Tue, 19 Nov 2013 09:56:25 +1100
-Message-ID: <20131119095625.1fc4f66f@notabene.brown>
-References: <20131101154854.2d7d1432@notabene.brown>
-	<20131118115742.GG30853@e106331-lin.cambridge.arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 3/7] gpio: davinci: use irqdomain
+Date: Tue, 19 Nov 2013 00:06:02 +0100
+Message-ID: <CACRpkda7h4hsMYv_2gdrY+JB80kHu3BkS5OOGyGhEZFc_UkCig@mail.gmail.com>
+References: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com>
+	<1383905510-31760-4-git-send-email-prabhakar.csengg@gmail.com>
+	<CACRpkdaJg4wqtD5xhPVrHJHxFoVwau6jidbOuQ9xFSK_6drxPQ@mail.gmail.com>
+	<528A2565.4000802@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=PGP-SHA1;
- boundary="Sig_/2Sjbqu0a89jxgN+JCgh_INP"; protocol="application/pgp-signature"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131118115742.GG30853-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Manuel Stahl <manuel.stahl-GeUHRtUQU7nSyEMIgutvibNAH6kLmebB@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <528A2565.4000802@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Sekhar Nori <nsekhar@ti.com>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/2Sjbqu0a89jxgN+JCgh_INP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 18, 2013 at 3:34 PM, Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+> On 11/18/2013 03:11 PM, Linus Walleij wrote:
 
-On Mon, 18 Nov 2013 11:57:42 +0000 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrot=
-e:
+>> I think we recently established that map creating cannot be done
+>> in gpio_to_irq* functions as that will not work properly if you request
+>> an IRQ from device tree without first obtaining the IRQ from the GPIO
+>> number with this function.
+>
+> Why? Could you point on corresponding thread, pls?
 
-> On Fri, Nov 01, 2013 at 04:48:54AM +0000, NeilBrown wrote:
-> >=20
-> >=20
-> > No new configuration, just a 'compatible' string and documentation.
-> >=20
-> > Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/iio/gyro/itg3200.txt b/D=
-ocumentation/devicetree/bindings/iio/gyro/itg3200.txt
-> > new file mode 100644
-> > index 000000000000..4581620632df
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/gyro/itg3200.txt
-> > @@ -0,0 +1,20 @@
-> > +* InvenSense ITG3200 3-axis gyroscope
-> > +
-> > +Required properties:
-> > +
-> > +  - compatible : "invensense,itg3200"
-> > +  - reg : I2C address, typically 0x68
-> > +
-> > +Optional properties:
-> > +
-> > +  - interrupt-parent : should be the phandle for the interrupt control=
-ler
-> > +  - interrupts : interrupt mapping for GPIO IRQ
->=20
-> Why is this a "GPIO IRQ"? This device das no GPIO. The fact that it
-> might be wired to a GPIO controller has nothing to do with the ITG3200,
-> and shouldn't be a concern of its binding.
->=20
+All that contain this:
+"gpio: interrupt consistency check for OF GPIO IRQs"
+http://marc.info/?l=linux-kernel&w=2&r=1&s=interrupt+consistency&q=b
 
-You are of course correct.  I'll resubmit with that word removed.
+> Current call tree is:
+> irq_create_of_mapping()
+> |-hwirq = omain->ops->xlate()
+> |-irq_create_mapping(domain, hwirq)
 
-I probably copied it from bma180.txt without thinking.
+OK that works for the pure device-tree scenario so mostly
+this is OK.
 
-/home/git/linux$ git grep 'GPIO IRQ' Documentation/devicetree/bindings/
-Documentation/devicetree/bindings/gpio/8xxx_gpio.txt: - interrupts : Interr=
-upt mapping for GPIO IRQ.
-Documentation/devicetree/bindings/gpio/gpio-xilinx.txt:- interrupts : Inter=
-rupt mapping for GPIO IRQ.
-Documentation/devicetree/bindings/gpio/pl061-gpio.txt:- interrupts : Interr=
-upt mapping for GPIO IRQ.
-Documentation/devicetree/bindings/iio/accel/bma180.txt:  - interrupts : int=
-errupt mapping for GPIO IRQ, it should by configured wi
-Documentation/devicetree/bindings/iio/light/apds9300.txt:  - interrupts : i=
-nterrupt mapping for GPIO IRQ
+The problem that appear is if someone is using platform data-provided
+IRQs off the irq_chip without calling gpio_to_irq() on the GPIO line
+first. This has been determined to be legal to do, so preferably
+create the map when registering the lines.
 
-Both bma180.txt and apds9300.txt seem to use the phrase "GPIO IRQ"
-inappropriately.
+>> Also: please write a patch that marks the IRQ lines.
+>> Call gpio_lock_as_irq(*gpio_chip, offset); in the
+>> irqchip startup/shutdown functions. (Can be a separate
+>> patch.)
+>
+> It seems, some misunderstanding is here. So I'd like to clarify few points
+> and would be very appreciate for your comments:
+> 1) This patch itself will work unless we switch to DT (as in the following
+> patch)
 
-Thanks,
-NeilBrown
+Sure.... but this does not seem to have much to do
+with my request to use gpio_lock_as_irq().
 
-> Thanks,
-> Mark.
->=20
-> > +
-> > +Example:
-> > +
-> > +itg3200@68 {
-> > +	compatible =3D "invensense,itg3200";
-> > +	reg =3D <0x68>;
-> > +	interrupt-parent =3D <&gpio2>;
-> > +	interrupts =3D <24 IRQ_TYPE_EDGE_RISING>;
-> > +};
-> > diff --git a/drivers/iio/gyro/itg3200_core.c b/drivers/iio/gyro/itg3200=
-_core.c
-> > index 4d3f3b92b361..1ed3003ef41a 100644
-> > --- a/drivers/iio/gyro/itg3200_core.c
-> > +++ b/drivers/iio/gyro/itg3200_core.c
-> > @@ -374,10 +374,17 @@ static const struct i2c_device_id itg3200_id[] =
-=3D {
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, itg3200_id);
-> > =20
-> > +static const struct of_device_id itg3200_of_match[] =3D {
-> > +	{ .compatible =3D "invensense,itg3200", },
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, itg3200_of_match);
-> > +
-> >  static struct i2c_driver itg3200_driver =3D {
-> >  	.driver =3D {
-> >  		.owner  =3D THIS_MODULE,
-> >  		.name	=3D "itg3200",
-> > +		.of_match_table =3D of_match_ptr(itg3200_of_match),
-> >  	},
-> >  	.id_table	=3D itg3200_id,
-> >  	.probe		=3D itg3200_probe,
->=20
+> 2) After this patch the following object structure will be created during
+> Davinci GPIO driver initialization (DA850 has 144 IRQ lines):
+> - gpio_chip0(0..31)
+>   |- irq_domain1
+> - gpio_chip1(32..63)
+>   |- irq_domain2
+> - gpio_chip2(64..95)
+>   |- irq_domain3
+> - gpio_chip3(96..127)
+>   |- irq_domain4
+> - gpio_chip4(128..143)
+>   |- irq_domain5
 
+OK that's nice.
 
---Sig_/2Sjbqu0a89jxgN+JCgh_INP
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
+> 3) But in case of DT only one GPIO controller node will be created
+> Example:
+> gpio: gpio@1e26000 {
+>         compatible = "ti,dm6441-gpio";
+>         gpio-controller;
+>         reg = <0x226000 0x1000>;
+>         interrupt-parent = <&intc>;
+>         interrupts = <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
+>                 44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
+>                 46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
+>                 48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
+>                 50 IRQ_TYPE_EDGE_BOTH>;
+>         interrupt-controller;
+>         #interrupt-cells = <2>;
+>         ti,ngpio = <144>;
+>         ti,davinci-gpio-unbanked = <0>;
+> }
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Yep...
 
-iQIVAwUBUoqbGTnsnt1WYoG5AQLImw//YENjBlmsOuSTQjxBRsw0GQj3d6L8qkz2
-+Kj6I+BzukQKwIoREiJNnQN4qaxnTcCE+oHxGp8fydMn+baEt4NaZn9f302UpAID
-YXRnJMr98g2CxkHhqcXvk6LqwKtGfcEe/UmhbsRckDtoOdaj0LcnhFWtrcV32RTw
-15hWRaoBQAdoP16KGi4DujVReznmcUuNbi5XpbsCGw+UMhKJZRzfxyrGCgx3Mtzm
-QTggen2APv4a66EyDiCQgOJT/Az9BhtGHULSoE6Q8OEvba4c+8GuCHNBO6Fmoc1f
-k7eYnBLbEasSvtL561P4FDCXyaf7TSfseNK8GTB63yhp7TA5Gw5yasOqYc0muQAN
-cFZmOY2uDS2maot07YDBe7WMYauRNNwxDfpXrT9fbwulEKtBjE+rgMMWacC4FFSi
-FyvrD3rS01ETuJzS/PonQHVJlJhCzUVIiNzRSK5yW45hyv/cGSNF6oY/F9uCKRLG
-6W6ii2AnX4NHfA4esLuYa6hZuZWRW4OT1SaV7jYy04JhcYPDf6O95GTFCA8bdN+J
-x1jhCBb/PwjQVLA5AGagfmv+ugnnLgDjzNfLtjeOzHVe6OXQgXllDgzDSaLMNzdW
-b0irWbXCKgQqHAwlKpKgHSfuJ+uXi3cXkY2RgNT0iKco51Gc8DuzfBm+NVWEb18C
-NWkO0RKACnY=
-=oVOV
------END PGP SIGNATURE-----
+> 4) As result, to make GPIO bindings/mappings work - we'll need to implement
+> .of_xlate() callback per GPIO chip, which will provide us with valid valid
+> gpio_chip and offset of gpio inside chip
+> (It was discussed before and supposed to be done as next step).
 
---Sig_/2Sjbqu0a89jxgN+JCgh_INP--
+Yeah.. this is usually a bit tricky.
+
+> For example, gpio_chip3 and offset=15 should be selected:
+> devA {
+>    gpios = <&gpio 111 GPIO_ACTIVE_HIGH>;
+> }
+>
+> 5) What should be done to make GPIO IRQ bindings/mappings work?
+>
+> Example:
+> devB {
+>    interrupt-parent = <&gpio>;
+>    interrupts = <111 IRQ_TYPE_EDGE_BOTH>;
+> }
+>
+> Should we implement one IRQ domain per all GPIO chips (per GPIO controller)?
+
+I don't know, I cannot really see where the problem is.
+
+The IRQ domain is for translationg hardware numbers such as bit offsets
+into Linux IRQ numbers and nothing else, so I'd suggest that as long as
+the thing you are translating/mapping is something simple like a bit
+index you're doing the right thing.
+
+If it becomes something complex where that index is not just a bit
+but an index into an array of registers at various locations it is
+abusing the irqdomain.
+
+So I think you should create one irqdomain per GPIO instance
+or bank or whatever you want to call it: like if there is this one
+register with 32 bits, then it gets its own IRQdomain.
+
+I think you should try to keep the 5 irqdomains, but whatever
+gives the simplest code is usually the right answer, and
+divide-and-conquer (split down the problem) is usually a good
+idea.
+
+How the GPIO block(s) are represented in the device tree is
+another totally separate issue about hardware description,
+do not let the device tree model your driver structure.
+
+Yours,
+Linus Walleij
