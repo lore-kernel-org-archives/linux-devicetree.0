@@ -1,238 +1,240 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv7] dmaengine: Add support for BCM2835
-Date: Mon, 18 Nov 2013 14:41:55 +0000
-Message-ID: <20131118144155.GJ30853@e106331-lin.cambridge.arm.com>
-References: <5288E327.8050809@koalo.de>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [lm-sensors] [PATCHv9 02/20] thermal: introduce device tree parser
+Date: Mon, 18 Nov 2013 10:45:02 -0400
+Message-ID: <528A27EE.9090604@ti.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>  <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>  <20131115090736.4f360dc8@endymion.delvare> <1384754650.2316.32.camel@rzhang-lenovo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <5288E327.8050809@koalo.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Florian Meier <florian.meier@koalo.de>
-Cc: devicetree <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Vinod Koul <vinod.koul@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="cS4dWoBMcPp72AHaaoV2xdAjjHbVefF7C"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1384754650.2316.32.camel@rzhang-lenovo>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: Jean Delvare <khali@linux-fr.org>, Eduardo Valentin <eduardo.valentin@ti.com>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, devicetree@vger.kernel.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 17, 2013 at 03:39:19PM +0000, Florian Meier wrote:
-> Add support for DMA controller of BCM2835 as used in the Raspberry Pi.
-> Currently it only supports cyclic DMA.
-> 
-> Signed-off-by: Florian Meier <florian.meier@koalo.de>
-> ---
-> 
-> This version includes some more style improvements
-> suggested in the previous thread.
-> 
->  .../devicetree/bindings/dma/bcm2835-dma.txt        |   56 ++
->  drivers/dma/Kconfig                                |    6 +
->  drivers/dma/Makefile                               |    1 +
->  drivers/dma/bcm2835-dma.c                          |  736 ++++++++++++++++++++
->  4 files changed, 799 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/bcm2835-dma.txt
->  create mode 100644 drivers/dma/bcm2835-dma.c
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
-> new file mode 100644
-> index 0000000..7d91019
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/bcm2835-dma.txt
-> @@ -0,0 +1,56 @@
-> +* BCM2835 DMA controller
-> +
-> +Required properties:
-> +- compatible: Should be "brcm,bcm2835-dma".
-> +- reg: Should contain DMA registers location and length.
-> +- interrupts: Should contain the DMA interrupts associated
-> +               to the DMA channels in ascending order.
-> +               First cell is the IRQ bank.
-> +               Second cell is the IRQ number.
+--cS4dWoBMcPp72AHaaoV2xdAjjHbVefF7C
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The format of the cells is a property of the interrupt parent, not of
-the DMA controller. It shouldn't be described here.
+Hello Jean,
 
-> +- #dma-cells: Must be <1>, used to represent the number of integer cells in
-> +               the dmas property of client devices.
+I will try to complement what Rui's already commented.
 
-A brief description of the set of sane values of the dma-specifier cell
-would be better.
+On 18-11-2013 02:04, Zhang Rui wrote:
+> On =E4=BA=94, 2013-11-15 at 09:07 +0100, Jean Delvare wrote:
+>> Hi Eduardo,
+>>
+>> On Tue, 12 Nov 2013 15:46:04 -0400, Eduardo Valentin wrote:
+>>> This patch introduces a device tree bindings for
+>>> describing the hardware thermal behavior and limits.
+>>> Also a parser to read and interpret the data and feed
+>>> it in the thermal framework is presented.
+>>>
+>>> This patch introduces a thermal data parser for device
+>>> tree. The parsed data is used to build thermal zones
+>>> and thermal binding parameters. The output data
+>>> can then be used to deploy thermal policies.
+>>>
+>>> This patch adds also documentation regarding this
+>>> API and how to define tree nodes to use
+>>> this infrastructure.
+>>>
+>>> Note that, in order to be able to have control
+>>> on the sensor registration on the DT thermal zone,
+>>> it was required to allow changing the thermal zone
+>>> .get_temp callback. For this reason, this patch
+>>> also removes the 'const' modifier from the .ops
+>>> field of thermal zone devices.
+>>>
+>>> Cc: Zhang Rui <rui.zhang@intel.com>
+>>> Cc: linux-pm@vger.kernel.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+>>> ---
+>>> (...)
+>>> +static int of_thermal_get_trend(struct thermal_zone_device *tz, int =
+trip,
+>>> +				enum thermal_trend *trend)
+>>> +{
+>>> +	struct __thermal_zone *data =3D tz->devdata;
+>>> +	long dev_trend;
+>>> +	int r;
+>>> +
+>>> +	if (!data->get_trend)
+>>> +		return -EINVAL;
+>>> +
+>>> +	r =3D data->get_trend(data->sensor_data, &dev_trend);
+>>> +	if (r)
+>>> +		return r;
+>>> +
+>>> +	/* TODO: These intervals might have some thresholds, but in core co=
+de */
+>>> +	if (dev_trend > 0)
+>>> +		*trend =3D THERMAL_TREND_RAISING;
+>>> +	else if (dev_trend < 0)
+>>> +		*trend =3D THERMAL_TREND_DROPPING;
+>>> +	else
+>>> +		*trend =3D THERMAL_TREND_STABLE;
+>>> +
+>>> +	return 0;
+>>> +}
+>>
+>> I don't like the whole trend thing.
+>>
+>> I've been writing hwmon drivers for the past decade and I've never see=
+n
+>> a thermal sensor device being able to report trends. And as a rule of
+>> thumb, if the hardware can't do it then the (hardware-specific) driver=
+s
+>> should not report it.
 
-How many channels does the DMA controller have?
+In fact, I would agree with you that it is not common to see such
+devices. What I've already seen is that HW provides is usually artifacts
+that may help on computing such statistic data. And in that case it may
+be the case that the data coming from the HW may have less noise, such
+as system overhead, than that computed by the caller.
 
-> +- brcm,dma-channel-mask: Bit mask representing the channels
-> +                        not used by the firmware.
+However, it is also the case that such artifacts do not work without a
+proper platform dependent configuration step, such as update interval
+and size of the history window.
 
-Which bits correspond to which channels?
+>=20
+> I agree that a sensor device should not be able to report trends. But
+> currently, the thermal zone driver is not only a sensor driver, it also=
 
-How many channels are likely to be reserved out of how many in total?
+> owns the platform thermal cooling strategy.
+> And some platforms do have this kind of knowledge, right?
+> e.g. ACPI spec provides an equation for processor passive cooling (ACPI=
 
-Are they likely to be an arbitrary set, or some contiguous range?
+> Spec 5.0 11.1.5).
+>=20
 
-> +
-> +Example:
-> +
-> +dma: dma@7e007000 {
-> +       compatible = "brcm,bcm2835-dma";
-> +       reg = <0x7e007000 0xf00>;
-> +       interrupts = <1 16
-> +                     1 17
-> +                     1 18
-> +                     1 19
-> +                     1 20
-> +                     1 21
-> +                     1 22
-> +                     1 23
-> +                     1 24
-> +                     1 25
-> +                     1 26
-> +                     1 27
-> +                     1 28>;
+Just a complementary point here, The design of current thermal framework
+is so that get_trend is zone specific, and thus, it has to consider the
+cooling strategy owned by the driver, like the update interval. And
+besides, in case the driver does not know how to compute the trend, the
+framework, the caller of that callback, also provides default behavior.
 
-Please bracket these individually.
-
-> +
-> +       #dma-cells = <1>;
-> +       brcm,dma-channel-mask = <0x7f35>;
-> +};
-> +
-> +DMA clients connected to the BCM2835 DMA controller must use the format
-> +described in the dma.txt file, using a two-cell specifier for each channel:
-> +a phandle plus one integer cells.
-> +The two cells in order are:
-> +
-> +1. A phandle pointing to the DMA controller.
-> +2. The DREQ number.
-
-This description is unnecessary, and technically wrong (the phandle
-isn't part of the specifier, as the specifier goes with the phandle).
-
-> +
-> +Example:
-> +
-> +bcm2835_i2s: i2s@7e203000 {
-> +       compatible = "brcm,bcm2835-i2s";
-> +       reg = < 0x7e203000 0x20
-> +               0x7e101098 0x02>;
-> +
-> +       dmas = <&dma 2
-> +               &dma 3>;
-
-Brackets please.
-
-[...]
-
-> +struct bcm2835_dma_cb {
-> +       uint32_t info;
-> +       uint32_t src;
-> +       uint32_t dst;
-> +       uint32_t length;
-> +       uint32_t stride;
-> +       uint32_t next;
-> +       uint32_t pad[2];
-
-s/uint32_t/u32/ here and elsewhere.
-
-[...]
-
-> +static void bcm2835_dma_start_desc(struct bcm2835_chan *c)
-> +{
-> +       struct virt_dma_desc *vd = vchan_next_desc(&c->vc);
-> +       struct bcm2835_desc *d;
-> +
-> +       if (!vd) {
-> +               c->desc = NULL;
-> +               return;
-> +       }
-> +
-> +       list_del(&vd->node);
-> +
-> +       c->desc = d = to_bcm2835_dma_desc(&vd->tx);
-> +
-> +       dsb();  /* ARM data synchronization (push) operation */
-
-We all know what a dsb is. What you should explain is _why_ the dsb is
-here. As this is sat under drivers, it would be nicer to use an
-architecture generic barrier rather than dsb() directly.
-
-> +
-> +       writel(d->control_block_base_phys, c->chan_base + BCM2835_DMA_ADDR);
-> +       writel(BCM2835_DMA_ACTIVE, c->chan_base + BCM2835_DMA_CS);
-> +}
-> +
-> +static irqreturn_t bcm2835_dma_callback(int irq, void *data)
-> +{
-> +       struct bcm2835_chan *c = data;
-> +       struct bcm2835_desc *d;
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&c->vc.lock, flags);
-> +
-> +       /* Acknowledge interrupt */
-> +       writel(BCM2835_DMA_INT, c->chan_base + BCM2835_DMA_CS);
-> +
-> +       d = c->desc;
-> +
-> +       if (d) {
-> +               /* TODO Only works for cyclic DMA */
-> +               vchan_cyclic_callback(&d->vd);
-> +       }
-> +
-> +       /* Keep the DMA engine running */
-> +       dsb(); /* ARM synchronization barrier */
-
-Better explanation please.
-
-> +       writel(BCM2835_DMA_ACTIVE, c->chan_base + BCM2835_DMA_CS);
-> +
-> +       spin_unlock_irqrestore(&c->vc.lock, flags);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int bcm2835_dma_alloc_chan_resources(struct dma_chan *chan)
-> +{
-> +       struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
-> +
-> +       dev_dbg(c->vc.chan.device->dev,
-> +                       "Allocating DMA channel %i\n", c->ch);
-
-Why not %d? It's far more common...
+The purpose of this series is to split the data that is platform
+dependent and allow designers to write those data points in device tree.
+That is why the "glue layer" still keeps the get_trend.
 
 
-[...]
+>>
+>> Hwmon devices (and drivers) report temperature values, and sometimes
+>> historical min/max. They can do that because these are facts that need=
 
-> +       if (pdev->dev.of_node) {
-> +               /* Request DMA channel mask from device tree */
-> +               if (of_property_read_u32(pdev->dev.of_node,
-> +                               "brcm,dma-channel-mask",
-> +                               &chans_available)) {
-> +                       dev_err(&pdev->dev, "Failed to get channel mask\n");
-> +                       bcm2835_dma_free(od);
-> +                       return -EINVAL;
-> +               }
+>> no interpretation.
+>>
+>> Defining a trend, however, requires care and, more importantly,
+>> decisions.
 
-As of_property_read_u32 has an implicit check on np, you don't need to
-first check pdev->dev.of_node.
 
-> +       } else {
-> +               dev_err(&pdev->dev, "Failed to get channel mask. No device tree.\n");
-> +               bcm2835_dma_free(od);
-> +               return -EINVAL;
-> +       }
-> +
-> +       /* Do not use the FIQ and BULK channels */
-> +       chans_available &= ~0xD;
+Maybe your concern is the fact that it would be very hard to provide a
+trend from a hwmon driver? And that I agree, unless the device provides
+artifacts. But that is not the case for all users of this API. For
+instance, some versions of TI SoC bandgap sensors may have historical
+buffers and cumulative values. But obviously, these features would work
+only if proper configuration is agreed.
 
-A couple of #defines would be nice, along with an explanation as to
-why...
+>=20
+> We had the assumption that we will get an interrupt when the firmware
+> thinks there is an temperature change that should be noticed by OS.
+>=20
+>>  For example, consider a thermal sensor which reports 50=C2=B0C at
+>> time t, then 47=C2=B0C at time t+3s,
+>=20
+> does firmware thinks this should be noticed by OS?
+> If no, there is no interrupt and this temperature change is totally
+> transparent to the OS at all.
+> If yes, the thermal core will check if the system is overheating, if
+> yes, it throttles the devices, and if no, do nothing.
+>=20
+>>  then 48=C2=B0C at time t+6s. At t+7s someone
+>> asks for the trend,
+>=20
+> the trend is needed when platform thermal driver calls
+> thermal_zone_device_update(), and mostly following a temperature change=
 
-Thanks,
-Mark.
+> interrupt.
+>=20
+>>  what should the driver reply?
+>>  If you consider only
+>> the last 5 seconds, temperature is raising. If you consider the last 1=
+0
+>> seconds instead, temperature is dropping. How would the driver know
+>> what time frame the caller is interested in?
+>>
+>> Another example: "small" temperature variations. If temperatures varie=
+s
+>> by 1=C2=B0C in my kitchen's oven, I'd call it stable. If my body tempe=
+rature
+>> varies by 1=C2=B0C, I'd call it non-stable, and my doctor for an appoi=
+ntment
+>> also ;-)
+>>
+>=20
+>> My point is that only the caller, and not the driver, knows how to
+>> convert a series of measurements into a trend. So I don't think driver=
+s
+
+Agreed here. However, the caller can also instruct the device to help on
+the computation based on historical values. And historical values can be
+configured also by the caller.
+
+>> should implement anything like get_trend(). Whatever piece of code
+>> needs to establish a trend should call get_temp() repeatedly, store th=
+e
+>> results and do its own analysis of the data.
+>>
+> I think the key problem is that,
+> the thermal subsystem just provides a basic/minimum thermal control
+> framework in kernel, and it is totally platform independent. And any
+> platform driver can use this framework to do some basic thermal control=
+
+> easily but just telling thermal core if the thermal core should take
+> some cooling actions (trip points + trend + current temperature) and ho=
+w
+> (by choosing thermal governors).
+>=20
+> So if you want to do more precise thermal control, you'd better disable=
+
+> kernel thermal control and do it in userspace. In this case,
+> the .get_trend() will never be invoked at all.
+> Further more, I'm indeed considering introduce platform specific therma=
+l
+> governors, so that platform thermal driver can tell thermal core what t=
+o
+> do at a certain point.
+>=20
+> thanks,
+> rui
+>=20
+>=20
+>=20
+
+
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
+
+
+--cS4dWoBMcPp72AHaaoV2xdAjjHbVefF7C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlKKJ+4ACgkQCXcVR3XQvP0CNwD/dmNlvLGSoMdyDQ1gn6cEotoG
+u6UjjKJQYeqeyWgrbgQA/Avo7zGbLvfoKphA0m6+XVAQC5fZkKKIw00IBCgOIGJz
+=hUNh
+-----END PGP SIGNATURE-----
+
+--cS4dWoBMcPp72AHaaoV2xdAjjHbVefF7C--
