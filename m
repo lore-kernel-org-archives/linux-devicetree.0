@@ -1,59 +1,72 @@
-From: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: device tree cpu node 'compatible' string when using
- KVM_ARM_PREFERRED_TARGET vcpu
-Date: Mon, 18 Nov 2013 12:14:47 -0800
-Message-ID: <20131118201447.GC9314@cbox>
-References: <CAFEAcA9nmruvf52A4whSTbZFRBhtcCAxvdn5PCJjRGF0ouUWWw@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RFC PATCH V2 1/2] dtc: add 'compat' output option, prints
+ board string
+Date: Mon, 18 Nov 2013 15:24:33 -0500
+Message-ID: <20131118202433.GK10335@titan.lakedaemon.net>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+ <cover.1384798508.git.jason@lakedaemon.net>
+ <728deb9bbeab491a728da077aa5e47c0e01bccf8.1384798508.git.jason@lakedaemon.net>
+ <528A63EE.8050401@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAFEAcA9nmruvf52A4whSTbZFRBhtcCAxvdn5PCJjRGF0ouUWWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <528A63EE.8050401-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org" <kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 07:40:22PM +0000, Peter Maydell wrote:
-> The KVM API has an ioctl KVM_ARM_PREFERRED_TARGET which we can use
-> to create virtual CPUs of whatever the host CPU's "preferred" type
-> is (typically "same as host"). This allows userspace to create a
-> VCPU for best performance without having to have specific knowledge
-> about that CPU.
+On Mon, Nov 18, 2013 at 12:01:02PM -0700, Stephen Warren wrote:
+> On 11/18/2013 11:38 AM, Jason Cooper wrote:
+> > Consumers of the Linux kernel's build products are beginning to hardcode
+> > the filenames of the dtbs generated.  Since the dtb filenames are
+> > currently the dts filename s/dts/dtb/, this prevents the kernel
+> > community from renaming dts files as needed.
+> > 
+> > Let's provide a consistent naming structure for consumers to script
+> > against.  Or at least, as consistent as the dts properties themselves.
+> > 
+> > With this patch, adding the '-O compat' option to the dtc commandline
+> > will cause dtc to parse the provided file, and print out the board
+> > compatible string to stdout.
+> > 
+> > This will facilitate an 'installdtbs.sh' script in the kernel for naming
+> > dtb files by their compatible string, eg:
+> > 
+> > $ dtc -I dtb -O compat arch/arm/boot/dts/armada-370-mirabox.dtb
+> > globalscale,mirabox
+> > 
+> > This change will also simplify distribution install scripts that need to
+> > search through many dtbs to find the right one for a target board.
+> > 
+> > Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> > ---
+> > changes since v1:
+> >  - made patch against in-tree dtc code to facilitate testing
 > 
-> However there's a slight wrinkle when userspace comes to create the
-> device tree to pass to the guest kernel. The device tree binding
-> for v7 says that the cpu nodes in the device tree must have a
-> "compatible" string, and the only valid values it lists all nail
-> things down to an exact CPU model. Requiring userspace to have
-> an explicit mapping table of target values to dtb compat strings
-> defeats the point of userspace not having to have hardcoded knowledge
-> of all CPU types.
+> I assume this patch would first get applied to the upstream dtc, then
+> back-ported into the kernel though?
 > 
-> This problem doesn't exist for v8, because there the compat
-> string is always "arm,arm-v8", indicating that the kernel
-> doesn't care beyond "this is a v8 CPU of some kind".
-> 
-> In fact I'm told that for v7 the kernel doesn't care either (both
-> because it needs to know about the CPU type much earlier than it
-> has access to information in the dtb and also because this is
-> all probeable via ID registers anyhow). So the obvious solution
-> would be for userspace to pass a 'compatible' string "arm,arm-v7"
-> (which the kernel will ignore anyway).
-> 
-> Does anybody see a problem with this approach? If it seems like a
-> good plan, how do we go about getting it put into the official
-> device tree binding docs?
+> I wonder if dtc is the correct place to put this feature at all though.
+> It seems like a tiny standalone utility using libfdt would be better.
+> Actually, perhaps the existing fdtget utility (which seems to be
+> scripts/dtc/fdtget.c in the kernel although I don't know if it's built
+> by the kernel yet) can be used rather than creating a new one? Using
+> fdtget seems like it'd allow more flexibility later, if the naming rules
+> change, via scripting rather than having to edit the dtc source code.
 
-I think it sounds like the only viable approach.
+yep, just tested it.  It was easier to build fdtget in the dtc source
+tree, but the result was suitable:
 
-I guess we simply add it as an option to
-Documentation/devicetree/bindings/arm/cpus.txt as a patch and send it to
-lakml?  Am I missing some more difficult aspect here?  (assuming this
-doesn't have to go through any DT stable tree thingy or anything like
-that - it's a one-liner after all).
+$ ./fdtget ../linux/arch/arm/boot/dts/armada-370-mirabox.dtb / compatible
+globalscale,mirabox marvell,armada370 marvell,armada-370-xp
 
--Christoffer
+Thanks for the pointer.
+
+thx,
+
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
