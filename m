@@ -1,43 +1,57 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/7] ARM: shmobile: Use interrupt macros in SoC DT files
-Date: Tue, 19 Nov 2013 02:50 +0100
-Message-ID: <2390430.hJVcfjsIq8@avalon>
-References: <1383999839-3339-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1383999839-3339-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20131119013852.GE17628@verge.net.au>
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] itg3200: add dt support.
+Date: Tue, 19 Nov 2013 02:49:38 +0100
+Message-ID: <20131119014938.GA20782@earth.universe>
+References: <20131119113013.39dae3cd@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131119013852.GE17628@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131119113013.39dae3cd-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Cc: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Manuel Stahl <manuel.stahl-GeUHRtUQU7nSyEMIgutvibNAH6kLmebB@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
 
-On Tuesday 19 November 2013 10:38:52 Simon Horman wrote:
-> On Sat, Nov 09, 2013 at 01:23:54PM +0100, Laurent Pinchart wrote:
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> > 
-> >  arch/arm/boot/dts/r8a73a4.dtsi | 108 ++++++++++++++++++++++++----------
-> >  arch/arm/boot/dts/r8a7740.dtsi | 106 +++++++++++++++++-----------------
-> >  arch/arm/boot/dts/r8a7778.dtsi |  44 +++++++-------
-> >  arch/arm/boot/dts/r8a7779.dtsi |  42 +++++++-------
-> >  arch/arm/boot/dts/r8a7790.dtsi |  58 ++++++++++---------
-> >  arch/arm/boot/dts/r8a7791.dtsi |  49 ++++++++--------
-> >  arch/arm/boot/dts/sh73a0.dtsi  | 128 +++++++++++++++++++-----------------
-> >  7 files changed, 299 insertions(+), 236 deletions(-)
-> 
-> There was some fuzz when applying the arch/arm/boot/dts/r8a7778.dtsi hunks
-> of this patch. The result that I have queued up is as follows. Please
-> double-check it.
+--4Ckj6UjgE2iN1+kY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'll resend the patch. Which branch should I base it on ?
+Hi,
 
--- 
-Regards,
+On Tue, Nov 19, 2013 at 11:30:13AM +1100, NeilBrown wrote:
+> No new configuration, just a 'compatible' string and
+> documentation.
 
-Laurent Pinchart
+itg3200 looks like a candidate for the list of trivial i2c
+devices [0] to me.
 
+[0] Documentation/devicetree/bindings/i2c/trivial-devices.txt
+
+-- Sebastian
+
+--4Ckj6UjgE2iN1+kY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSisOyAAoJENju1/PIO/qac5cP/iCPHuNN8ht8/7Iezs6XWBis
+qXaWY64apj93jpbXAsMtjQB4A8QcboJEvLAZeZycOC4h4C36VtWpe7iOM/j0Ty83
+rgMtOVhU88s7QSigk1DUymG4gcudm7qX+iRCdmHP4YVtesY1uGELKWPKnnrkTmpW
+T0wYC05zg2ENiGcBdz0+gb2Xj2wG9LMcV7cHJjoRIWSLiNCN3Zu3OJR/adhdJjv3
+ggtA+pqAwoBn73JwGMooE6u6nhX3jzgEJU+J8uu+VLcuUTL544pBJpPw6VJBFjVp
+AQFH8JnF5Ykpi4XgVYnc12QuhDroLJk6xbaQNq4s/NvSaGj6mMBxdTT6SqKR4+AC
+tgCcbsPcp6sbrkHZ0S9rZbMefwbtArrnKGb2SBd3abnshPRPRsk3paVfJ3tx198w
+OvTiJeUCNgrHHRdpeoCRy8B5nS1KMOvV7QnaSHX70vyBXJkSqdD14TIx+MjY43QN
+61Y/7/AEWmhEfAIyCnpFlFwI4v8JIPFmUg26GAyFgGqbRvSRkPCIFEjjFkqr46qW
+I01R715BEjDjZ9ZFwGoWZHDc6sFbhTeScmp4yHpOVIYExRCWIs+NQs1gTEfBGhgi
+lDW4qKM0DMDH6ExXhkUqI/c+iLLw7JMefFSLI8qE0/xiakOnmTV4ZgDVobghTqJQ
+Szg0wyj+eWPUeqAp0jRh
+=aIxF
+-----END PGP SIGNATURE-----
+
+--4Ckj6UjgE2iN1+kY--
