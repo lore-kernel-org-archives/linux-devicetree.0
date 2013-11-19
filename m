@@ -1,188 +1,191 @@
-From: Jean Delvare <khali@linux-fr.org>
-Subject: Re: [PATCHv5 06/20] hwmon: lm75: expose to thermal fw via DT nodes
-Date: Tue, 19 Nov 2013 10:39:48 +0100
-Message-ID: <20131119103948.0ec9daba@endymion.delvare>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
-	<1384285582-16933-7-git-send-email-eduardo.valentin@ti.com>
-	<20131115084354.656452b9@endymion.delvare>
-	<528A23DD.2070406@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/3] Phy: Exynos: Add Exynos5250 sata phy driver
+Date: Tue, 19 Nov 2013 15:22:47 +0530
+Message-ID: <528B34EF.3030108@ti.com>
+References: <1380609183-21430-1-git-send-email-yuvaraj.cd@samsung.com>	<1380609183-21430-3-git-send-email-yuvaraj.cd@samsung.com>	<524AC56C.1060501@ti.com>	<CA+NduCAwnqz4_YNoVnpfV3O6fn=2QTdv4zgEdYRv4qjMRvWeag@mail.gmail.com>	<52846442.2020307@ti.com> <CAKuRcOK8XDKGsY3w2fwnrqtyH2HN0LjrqE6AoE0dSkaVOy5ozA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <528A23DD.2070406@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <CAKuRcOK8XDKGsY3w2fwnrqtyH2HN0LjrqE6AoE0dSkaVOy5ozA@mail.gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
+Cc: Yuvaraj Cd <yuvaraj.lkml@gmail.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, linux-ide@vger.kernel.org, "ks.giri@samsung.com" <ks.giri@samsung.com>, Vasanth Ananthan <vasanth.a@samsung.com>, Rob Herring <rob.herring@calxeda.com>, aditya.ps@samsung.com, Grant Likely <grant.likely@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, s.nawrocki@samsung.com, tj@kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
-
-On Mon, 18 Nov 2013 10:27:41 -0400, Eduardo Valentin wrote:
-> The patch series have been looked and contributed by several people and
-> a couple o maintainers now. Starts to be way better than the original
-> RFC. The core idea still holds though.
-
-I have no objection to the core idea, it's great :-)
-
-> >> (...)
-> >>  /*-----------------------------------------------------------------------*/
-> >>  
-> >> +static inline long lm75_reg_to_mc(s16 temp, u8 resolution)
-> >> +{
-> >> +	return ((temp >> (16 - resolution)) * 1000) >> (resolution - 8);
-> >> +}
-> >> +
-> >>  /* sysfs attributes for hwmon */
-> >>  
-> >> +static int lm75_read_temp(void *dev, long *temp)
-> >> +{
-> >> +	struct lm75_data *data = lm75_update_device(dev);
-> >> +
-> >> +	if (IS_ERR(data))
-> >> +		return PTR_ERR(data);
-> >> +
-> >> +	*temp = lm75_reg_to_mc(data->temp[0], data->resolution);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >>  static ssize_t show_temp(struct device *dev, struct device_attribute *da,
-> >>  			 char *buf)
-> >>  {
-> >>  	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
-> >>  	struct lm75_data *data = lm75_update_device(dev);
-> >> -	long temp;
-> >>  
-> >>  	if (IS_ERR(data))
-> >>  		return PTR_ERR(data);
-> >>  
-> >> -	temp = ((data->temp[attr->index] >> (16 - data->resolution)) * 1000)
-> >> -	       >> (data->resolution - 8);
-> >> -
-> >> -	return sprintf(buf, "%ld\n", temp);
-> >> +	return sprintf(buf, "%ld\n", lm75_reg_to_mc(data->temp[attr->index],
-> >> +						    data->resolution));
-> >>  }
-> > 
-> > I am a bit worried by this. I did expect that you'd have to split a
-> > piece of show_temp() into one separate function, not two. Here you have
-> > quite some redundancy between lm75_read_temp and show_temp. Sure these
-> > are small functions so the duplicate code is limited, but if you
-> > multiply by the number of hwmon drivers which are candidates for this
-> > change, this all adds up.
+On Friday 15 November 2013 11:17 AM, Yuvaraj Kumar wrote:
+> On Thu, Nov 14, 2013 at 11:18 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> Hi,
+>>
+>> On Monday 07 October 2013 07:35 PM, Yuvaraj Cd wrote:
+>>> On Tue, Oct 1, 2013 at 6:21 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>> On Tuesday 01 October 2013 12:03 PM, Yuvaraj Kumar C D wrote:
+>>>>> This patch adds the sata phy driver for Exynos5250.Exynos5250 sata
+>>>>> phy comprises of CMU and TRSV blocks which are of I2C register Map.
+>>>>> So this patch also adds a i2c client driver, which is used configure
+>>>>> the CMU and TRSV block of exynos5250 SATA PHY.
+>>>>
+>>>> Why not make the Exynos5250 sata phy as a i2c client driver instead?
+>>>>>
+>>>>> This patch incorporates the generic phy framework to deal with sata
+>>>>> phy.
+>>>>>
+>>>>> This patch depends on the below patch
+>>>>>       [1].drivers: phy: add generic PHY framework
+>>>>>               by Kishon Vijay Abraham I<kishon@ti.com>
+>>>>>
+>>>>> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+>>>>> Signed-off-by: Girish K S <ks.giri@samsung.com>
+>>>>> Signed-off-by: Vasanth Ananthan <vasanth.a@samsung.com>
+>>>>> ---
+>>>>>  drivers/phy/Kconfig                      |    6 +
+>>>>>  drivers/phy/Makefile                     |    1 +
+>>>>>  drivers/phy/exynos/Kconfig               |    5 +
+>>>>>  drivers/phy/exynos/Makefile              |    5 +
+>>>>>  drivers/phy/exynos/exynos5250_phy_i2c.c  |   53 +++++++
+>>>>>  drivers/phy/exynos/sata_phy_exynos5250.c |  248 ++++++++++++++++++++++++++++++
+>>>>>  drivers/phy/exynos/sata_phy_exynos5250.h |   33 ++++
+>>>>>  7 files changed, 351 insertions(+)
+>>>>>  create mode 100644 drivers/phy/exynos/Kconfig
+>>>>>  create mode 100644 drivers/phy/exynos/Makefile
+>>>>>  create mode 100644 drivers/phy/exynos/exynos5250_phy_i2c.c
+>>>>>  create mode 100644 drivers/phy/exynos/sata_phy_exynos5250.c
+>>>>>  create mode 100644 drivers/phy/exynos/sata_phy_exynos5250.h
+>>>>>
+>>>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>>>>> index 5f85909..ab3d1c6 100644
+>>>>> --- a/drivers/phy/Kconfig
+>>>>> +++ b/drivers/phy/Kconfig
+>>>>> @@ -11,3 +11,9 @@ menuconfig GENERIC_PHY
+>>>>>         devices present in the kernel. This layer will have the generic
+>>>>>         API by which phy drivers can create PHY using the phy framework and
+>>>>>         phy users can obtain reference to the PHY.
+>>>>> +
+>>>>> +if GENERIC_PHY
+>>>>
+>>>> NAK. Just select GENERIC_PHY from your driver Kconfig.
+>>>>> +
+>>>>> +source "drivers/phy/exynos/Kconfig"
+>>>>> +
+>>>>> +endif
+>>>>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>>>>> index 9e9560f..e0223d7 100644
+>>>>> --- a/drivers/phy/Makefile
+>>>>> +++ b/drivers/phy/Makefile
+>>>>> @@ -3,3 +3,4 @@
+>>>>>  #
+>>>>>
+>>>>>  obj-$(CONFIG_GENERIC_PHY)    += phy-core.o
+>>>>> +obj-$(CONFIG_PHY_SAMSUNG_SATA)       += exynos/
+>>>>
+>>>> simply have phy-exynos5250 in drivers/phy.
+>>> ok.
+>>>>> diff --git a/drivers/phy/exynos/Kconfig b/drivers/phy/exynos/Kconfig
+>>>>> new file mode 100644
+>>>>> index 0000000..fa125fb
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/phy/exynos/Kconfig
+>>>>> @@ -0,0 +1,5 @@
+>>>>> +config PHY_SAMSUNG_SATA
+>>>>> +     tristate "Samsung Sata SerDes/PHY driver"
+>>>>> +     help
+>>>>> +       Support for Samsung sata SerDes/Phy found on Samsung
+>>>>> +       SoCs.
+>>>>> diff --git a/drivers/phy/exynos/Makefile b/drivers/phy/exynos/Makefile
+>>>>> new file mode 100644
+>>>>> index 0000000..50dc7eb
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/phy/exynos/Makefile
+>>>>> @@ -0,0 +1,5 @@
+>>>>> +#
+>>>>> +# Makefile for the exynos phy drivers.
+>>>>> +#
+>>>>> +ccflags-y := -Idrivers/phy/exynos
+>>>>> +obj-$(CONFIG_PHY_SAMSUNG_SATA)       += sata_phy_exynos5250.o exynos5250_phy_i2c.o
+>>>>> diff --git a/drivers/phy/exynos/exynos5250_phy_i2c.c b/drivers/phy/exynos/exynos5250_phy_i2c.c
+>>>>> new file mode 100644
+>>>>> index 0000000..9c75d3b
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/phy/exynos/exynos5250_phy_i2c.c
+>>>>> @@ -0,0 +1,53 @@
+>>>>> +/*
+>>>>> + * Copyright (C) 2013 Samsung Electronics Co.Ltd
+>>>>> + * Author:
+>>>>> + *   Yuvaraj C D <yuvaraj.cd@samsung.com>
+>>>>> + *
+>>>>> + * This program is free software; you can redistribute  it and/or modify it
+>>>>> + * under  the terms of  the GNU General  Public License as published by the
+>>>>> + * Free Software Foundation;  either version 2 of the  License, or (at your
+>>>>> + * option) any later version.
+>>>>> + *
+>>>>> + */
+>>>>> +
+>>>>> +#include <linux/kernel.h>
+>>>>> +#include <linux/i2c.h>
+>>>>> +#include <linux/module.h>
+>>>>> +#include "sata_phy_exynos5250.h"
+>>>>> +
+>>>>> +static int exynos_sata_i2c_probe(struct i2c_client *client,
+>>>>> +             const struct i2c_device_id *i2c_id)
+>>>>> +{
+>>>>> +     sataphy_attach_i2c_client(client);
+>>>>> +
+>>>>> +     dev_info(&client->adapter->dev,
+>>>>> +             "attached %s into i2c adapter successfully\n",
+>>>>> +             client->name);
+>>>>> +
+>>>>> +     return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int exynos_sata_i2c_remove(struct i2c_client *client)
+>>>>> +{
+>>>>> +     dev_info(&client->adapter->dev,
+>>>>> +             "detached %s from i2c adapter successfully\n",
+>>>>> +             client->name);
+>>>>> +
+>>>>> +     return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static const struct i2c_device_id phy_i2c_device_match[] = {
+>>>>> +     { "sata-phy-i2c", 0 },
+>>>>> +};
+>>>>> +MODULE_DEVICE_TABLE(of, phy_i2c_device_match);
+>>>>> +
+>>>>> +struct i2c_driver sataphy_i2c_driver = {
+>>>>> +     .probe    = exynos_sata_i2c_probe,
+>>>>> +     .id_table = phy_i2c_device_match,
+>>>>> +     .remove         = exynos_sata_i2c_remove,
+>>>>> +     .driver   = {
+>>>>> +             .name = "sata-phy-i2c",
+>>>>> +             .owner = THIS_MODULE,
+>>>>> +             .of_match_table = (void *)phy_i2c_device_match,
+>>>>> +             },
+>>>>> +};
+>>>>
+>>>> As I just mentioned above, we can merge this driver with the below one.
+>>> True, Initially it was merged.But already existing drivers of which
+>>> are of similar to this kind were done in this way.
+>>> Please refer  /drivers/gpu/drm//exynos/exynos_hdmiphy.c
+>>
+>> Can you point to any discussions where it was decided to go with this approach?
+> Sorry,what I meant is exynos_hdmiphy.c is already exist in the
+> mainline with this approach.
 > 
-> Can you please elaborate a bit more on which way you think the code
-> above shall be improved? Are you suggesting we should make show_temp
-> call lm75_read_temp?
+> Initially it was merged on my local patches(Not upstreamed).But after
+> referring to the
+> exynos_hdmiphy.c driver and with lot of internal discussions ,it was
+> decided to go with
 
-Yes, that's pretty much what I had in mind.
+I don't have any idea about the internal discussions whatever you had. IMO
+Exynos5250 sata phy driver should be modelled as an i2c client driver if you
+don't have a good reason to do otherwise.
 
-> On this specific case, I believe the code
-> duplication is minor, although I haven't measured.
+Thanks
+Kishon
 
-I do agree the duplication in a single driver is minor. However I
-expect more hwmon drivers to be converted to cooperate with the thermal
-subsystem in the future. Duplicated code adds up, in terms of build
-time, storage space and run-time memory consumption. Plus it hurts CPU
-caching even though I don't expect these code paths to be particularly
-hot.
-
-OTOH I suppose that the compiler will inline lm75_reg_to_mc() in this
-specific case, saving one function call. It wouldn't possibly inline
-lm75_read_temp() so it is quite possible that your implementation
-actually performs better than what I am suggesting.
-
-We're speaking of hardly measurable differences anyway. My other point
-below is probably more important...
-
-> >>  
-> >>  static ssize_t set_temp(struct device *dev, struct device_attribute *da,
-> >> @@ -271,6 +288,13 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
-> >>  		goto exit_remove;
-> >>  	}
-> >>  
-> >> +	data->tz = thermal_zone_of_sensor_register(&client->dev,
-> >> +						   0,
-> >> +						   &client->dev,
-> >> +						   lm75_read_temp, NULL);
-> > 
-> > I am also worried by this interface. Basically a separate callback
-> > function (here lm75_read_temp) is needed for every thermal input. Some
-> > hwmon drivers have many of these! This will result in duplicate code
+> the already existing approach.
 > 
-> The code registering a callback can actually have a private data, in
-> case you need to differentiate between inputs or in case you need to
-> derive specific data in order to access the correct input.
+>>
+>> Thanks
+>> Kishon
 
-Are you talking about void *dev? OK, you can virtually pass anything in
-that pointer, but...
-
-> > again. If you could just pass a sensor ID as an extra parameter to
-> > lm75_read_temp, you could use the same callback for all sensors. This
-> 
-> Wouldn't the private pointer be enough?
-
-I am worried that this won't be practical at all for the real world
-cases. I expect that most drivers will need to pass the device plus one
-index-like value. Having a single void pointer for that is certainly
-flexible but it will also be inefficient, as every driver will have to
-define its own custom structure to embed the needed information. You
-_do_ pass a sensor_id to thermal_zone_of_sensor_register() so it
-shouldn't be hard to pass it to the callback function(s) as well
-(assuming the indexing in the device tree matches the one done by the
-driver - I certainly hope so.) I'd even suggest passing the device
-unconditionally too, as I just can't see how a driver could do without
-it. If you pass the right parameters then you may not even need a void
-pointer.
-
-> I think it is a matter of checking what is the best way for the
-> candidates of users of this new API.
-
-I agree. But two drivers are probably too few to make an educated
-decision, I suppose we'll need to convert some more to get a clearer
-view. Note that most things can be changed later if needed, so my
-comments aren't meant to block the integration of your patches. 
-
-> In theory it is enough to hold the
-> ID on the data structure you pass through the void * parameter. However,
-> that would cause less impact if you have the users of the API already
-> structured in that way. Let me know what is best for your case.
-
-We do not have that structure (struct device *, int index) ready yet,
-so we'd have to add it to every driver with more than one input. We
-could have a generic structure for that in some header file, to avoid
-the duplicated work, but if we need to do that, I'd say this is a good
-hint that we settled for the wrong API in the first place.
-
-> > (...)
-> > I also note the lack of support for limits. Thermal zones can have
-> > limits, and the various hwmon drivers do support that, yet your
-> > interface offers no possibility to expose them. Wouldn't that be useful?
-
-No comment on that? I'd expect the get_temp() callback to take an extra
-parameter so that it can return the value of a specific subfeature, for
-example INPUT, HOT, CRITICAL etc. Or leave get_temp() as is but add a
-get_trip_temp() callback to retrieve limit information (not sure if
-thermal zones can have more than one limit?)
-
-I think thermal zones support hysteresis as well, and so do many hwmon
-drivers. It seems unfortunate that your proposed "bridge" between the
-hwmon and thermal subsystems doesn't map all the features which are
-supported on both sides.
-
-> >> +	if (IS_ERR(data->tz))
-> >> +		data->tz = NULL;
-> > 
-> > If you are doing that in all drivers, I would question the point of
-> > having thermal_zone_of_sensor_register() return a PTR_ERR in the first
-> > place.
-> 
-> Yeah, maybe it should simply return NULL in the fail path and drivers
-> would not need to bother about it. What do you think?
-
-I think exactly what I wrote above, no more no less. I don't think I
-can add anything, and the decision is up to you.
-
--- 
-Jean Delvare
