@@ -1,65 +1,121 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/5] Documentation: dt: Add kona-pwm binding
-Date: Tue, 19 Nov 2013 13:56:54 +0000
-Message-ID: <20131119135654.GL5914@e106331-lin.cambridge.arm.com>
-References: <1384800901-21711-1-git-send-email-tim.kryger@linaro.org>
- <1384800901-21711-2-git-send-email-tim.kryger@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384800901-21711-2-git-send-email-tim.kryger@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tim Kryger <tim.kryger@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linaro Patches List <patches@linaro.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC PATCH V2 1/2] dtc: add 'compat' output option, prints board string
+Date: Tue, 19 Nov 2013 13:58:54 +0000
+Message-ID: <20131119135854.6A40EC4079D@trevor.secretlab.ca>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <cover. 1384798508.git.jason@lakedaemon.net> < 728deb9bbeab491a728da077aa5e47c0e01bccf8.1384798508.git.jason@lakedaemon. net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <728deb9bbeab491a728da077aa5e47c0e01bccf8.1384798508.git.jason@lakedaemon.n et>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 06:54:57PM +0000, Tim Kryger wrote:
-> Add the binding description for the kona-pwm block found on Broadcom's
-> mobile SoCs.
+On Mon, 18 Nov 2013 18:38:14 +0000, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> Consumers of the Linux kernel's build products are beginning to hardcode
+> the filenames of the dtbs generated.  Since the dtb filenames are
+> currently the dts filename s/dts/dtb/, this prevents the kernel
+> community from renaming dts files as needed.
 > 
-> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
-> Reviewed-by: Alex Elder <elder@linaro.org>
-> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> Let's provide a consistent naming structure for consumers to script
+> against.  Or at least, as consistent as the dts properties themselves.
+> 
+> With this patch, adding the '-O compat' option to the dtc commandline
+> will cause dtc to parse the provided file, and print out the board
+> compatible string to stdout.
+
+Can you use the fdtget tool here instead? It will parse and return
+property values for a given .dtb.
+
+It certainly makes sense to post this here for the purpose of review,
+but any changes to dtc need to be against the upstream dtc repository.
+
+g.
+
+
+> This will facilitate an 'installdtbs.sh' script in the kernel for naming
+> dtb files by their compatible string, eg:
+> 
+> $ dtc -I dtb -O compat arch/arm/boot/dts/armada-370-mirabox.dtb
+> globalscale,mirabox
+> 
+> This change will also simplify distribution install scripts that need to
+> search through many dtbs to find the right one for a target board.
+> 
+> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 > ---
->  .../devicetree/bindings/pwm/bcm-kona-pwm.txt       | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+> changes since v1:
+>  - made patch against in-tree dtc code to facilitate testing
+>  - dtc prints compatible string to stdout now, instead of creating symlink
+>     - should be more flexible for end-users
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt b/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
-> new file mode 100644
-> index 0000000..5c3ea1b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
-> @@ -0,0 +1,24 @@
-> +Broadcom's PWM Controller Device Tree bindings
+>  scripts/dtc/dtc.c      | 3 +++
+>  scripts/dtc/dtc.h      | 1 +
+>  scripts/dtc/flattree.c | 9 +++++++++
+>  3 files changed, 13 insertions(+)
+> 
+> diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
+> index a375683c1534..89264bb0a3dd 100644
+> --- a/scripts/dtc/dtc.c
+> +++ b/scripts/dtc/dtc.c
+> @@ -68,6 +68,7 @@ static void  __attribute__ ((noreturn)) usage(void)
+>  	fprintf(stderr, "\t\tOutput formats are:\n");
+>  	fprintf(stderr, "\t\t\tdts - device tree source text\n");
+>  	fprintf(stderr, "\t\t\tdtb - device tree blob\n");
+> +	fprintf(stderr, "\t\t\tcompat - print board compatible string\n");
+>  	fprintf(stderr, "\t\t\tasm - assembler source\n");
+>  	fprintf(stderr, "\t-V <output version>\n");
+>  	fprintf(stderr, "\t\tBlob version to produce, defaults to %d (relevant for dtb\n\t\tand asm output only)\n", DEFAULT_FDT_VERSION);
+> @@ -250,6 +251,8 @@ int main(int argc, char *argv[])
+>  		dt_to_blob(outf, bi, outversion);
+>  	} else if (streq(outform, "asm")) {
+>  		dt_to_asm(outf, bi, outversion);
+> +	} else if (streq(outform, "compat")) {
+> +		dt_to_compat(bi);
+>  	} else if (streq(outform, "null")) {
+>  		/* do nothing */
+>  	} else {
+> diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
+> index 3e42a071070e..d4e47c697c2f 100644
+> --- a/scripts/dtc/dtc.h
+> +++ b/scripts/dtc/dtc.h
+> @@ -255,6 +255,7 @@ void process_checks(int force, struct boot_info *bi);
+>  
+>  void dt_to_blob(FILE *f, struct boot_info *bi, int version);
+>  void dt_to_asm(FILE *f, struct boot_info *bi, int version);
+> +void dt_to_compat(struct boot_info *bi);
+>  
+>  struct boot_info *dt_from_blob(const char *fname);
+>  
+> diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
+> index 665dad7bb465..bdbd3d7e8964 100644
+> --- a/scripts/dtc/flattree.c
+> +++ b/scripts/dtc/flattree.c
+> @@ -577,6 +577,15 @@ void dt_to_asm(FILE *f, struct boot_info *bi, int version)
+>  	data_free(strbuf);
+>  }
+>  
+> +void dt_to_compat(struct boot_info *bi)
+> +{
+> +	struct property *prop;
 > +
-> +Broadcom's Kona PWM Controller has 6 channels
+> +	prop = get_property(bi->dt, "compatible");
 > +
-> +Required Properties :
-> +- compatible: should be "brcm,kona-pwm"
-> +- reg: physical base address and length of the controller's registers
-> +- clocks: clock specifier for the kona pwm external clock
+> +	printf("%s\n", prop->val.val);
+> +}
+> +
+>  struct inbuf {
+>  	char *base, *limit, *ptr;
+>  };
+> -- 
+> 1.8.4.3
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Minor nit: phandle + clock-specifier pair
-
-> +- #pwm-cells: should be 2.  The first cell specifies the per-chip index
-> +  of the PWM to use and the second cell is the period in nanoseconds.
-> +
-> +Refer to pwm/pwm.txt for generic pwm controller node properties.
-> +
-> +Refer to clocks/clock-bindings.txt for generic clock consumer
-> +properties
-> +
-> +Example:
-> +
-> +pwm: pwm@3e01a000 {
-> +	compatible = "brcm,bcm11351-pwm", "brcm,kona-pwm";
-> +	reg = <0x3e01a000 0xc4>;
-> +	clocks = <&pwm_clk>;
-> +	#pwm-cells = <2>;
-> +};
-
-Otherwise this looks fine.
-
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
