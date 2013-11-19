@@ -1,132 +1,90 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH V4] kbuild: dtbs_install: new make target
-Date: Tue, 19 Nov 2013 21:27:55 +0000
-Message-ID: <1384896475-8744-1-git-send-email-jason@lakedaemon.net>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384201760-16785-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2] ARM: ux500: decomission the non-DT MTU init sequence
+Date: Tue, 19 Nov 2013 22:27:51 +0100
+Message-ID: <1384896471-9384-1-git-send-email-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Unlike other build products in the Linux kernel, there is no 'make
-*install' mechanism to put devicetree blobs in a standard place.
+The MTU is now only initialized using the native clocksource
+device tree matching.
 
-This patch is an attempt to fix this problem.  Akin to 'make install',
-this creates a new make target, dtbs_install.  The script that gets
-called defers to a distribution or user supplied installdtbs binary,
-if found in the system.  Otherwise, the default action is to install a
-given dtb into
-
-  /lib/modules/${kernel_version}/devicetree/${dts_filename}.dtb
-
-This is done to keep dtbs from different kernel versions separate until
-things have settled down.  Once the dtbs are stable, and not so strongly
-linked to the kernel version, the devicetree files will most likely move
-to their own repo.  Users will need to upgrade install scripts at that
-time.
-
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-Question: should I make a note about the filenames not being considered an ABI,
-or just let it be?
+ arch/arm/mach-ux500/timer.c | 28 ++--------------------------
+ 1 file changed, 2 insertions(+), 26 deletions(-)
 
-changes since v3:
- - drop renaming files to ${compat}.dtb (rmk/swarren)
- - move installdtbs.sh to ./scripts/ (gcl)
-
-changes since v2:
- - use fdtget instead of a modified dtc to get the board compat string
-
-changes since v1:
- - added this patch
-
- Makefile               |  3 ++-
- arch/arm/Makefile      |  4 ++++
- scripts/installdtbs.sh | 33 +++++++++++++++++++++++++++++++++
- 3 files changed, 39 insertions(+), 1 deletion(-)
- create mode 100644 scripts/installdtbs.sh
-
-diff --git a/Makefile b/Makefile
-index 920ad07180c9..29d609e972d6 100644
---- a/Makefile
-+++ b/Makefile
-@@ -339,6 +339,7 @@ OBJDUMP		= $(CROSS_COMPILE)objdump
- AWK		= awk
- GENKSYMS	= scripts/genksyms/genksyms
- INSTALLKERNEL  := installkernel
-+INSTALLDTBS    := installdtbs
- DEPMOD		= /sbin/depmod
- PERL		= perl
- CHECK		= sparse
-@@ -391,7 +392,7 @@ KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(S
- export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
- export ARCH SRCARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC
- export CPP AR NM STRIP OBJCOPY OBJDUMP
--export MAKE AWK GENKSYMS INSTALLKERNEL PERL UTS_MACHINE
-+export MAKE AWK GENKSYMS INSTALLKERNEL INSTALLDTBS PERL UTS_MACHINE
- export HOSTCXX HOSTCXXFLAGS LDFLAGS_MODULE CHECK CHECKFLAGS
+diff --git a/arch/arm/mach-ux500/timer.c b/arch/arm/mach-ux500/timer.c
+index ca60bbd9361b..1a9051b6f932 100644
+--- a/arch/arm/mach-ux500/timer.c
++++ b/arch/arm/mach-ux500/timer.c
+@@ -10,7 +10,6 @@
+ #include <linux/clocksource.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+-#include <linux/platform_data/clocksource-nomadik-mtu.h>
  
- export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS LDFLAGS
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index c99b1086d83d..6c7abfc5eb5e 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -314,6 +314,10 @@ PHONY += dtbs
- dtbs: scripts
- 	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) dtbs
+ #include <asm/smp_twd.h>
  
-+dtbs_install: dtbs
-+	$(CONFIG_SHELL) $(srctree)/scripts/installdtbs.sh $(KERNELRELEASE) \
-+	"$(MODLIB)/devicetree" "$(srctree)/$(boot)/dts"
-+
- # We use MRPROPER_FILES and CLEAN_FILES now
- archclean:
- 	$(Q)$(MAKE) $(clean)=$(boot)
-diff --git a/scripts/installdtbs.sh b/scripts/installdtbs.sh
-new file mode 100644
-index 000000000000..11027f00c3a4
---- /dev/null
-+++ b/scripts/installdtbs.sh
-@@ -0,0 +1,33 @@
-+#!/bin/sh
-+#
-+# This file is subject to the terms and conditions of the GNU General Public
-+# License.  See the file "COPYING" in the main directory of this archive
-+# for more details.
-+#
-+# Copyright (C) 1995 by Linus Torvalds
-+#
-+# Adapted from code in arch/i386/boot/Makefile by H. Peter Anvin
-+#
-+# Further adapted from arch/x86/boot/install.sh by Jason Cooper
-+#
-+# "make dtbs_install" script
-+#
-+# Arguments:
-+#   $1 - kernel version
-+#   $2 - default install path (blank if root directory)
-+#   $3 - directory containing dtbs
-+#
-+
-+# User may have a custom install script
-+
-+if [ -x ~/bin/${INSTALLDTBS} ]; then exec ~/bin/${INSTALLDTBS} "$@"; fi
-+if [ -x /sbin/${INSTALLDTBS} ]; then exec /sbin/${INSTALLDTBS} "$@"; fi
-+
-+# Default install
-+[ -d "$2" ] && rm -rf "$2"
-+
-+mkdir -p "$2"
-+
-+for dtb in `find "$3" -name "*.dtb"`; do
-+	cp "$dtb" "$2/${dtb##*/}"
-+done
+@@ -44,17 +43,14 @@ const static struct of_device_id prcmu_timer_of_match[] __initconst = {
+ 
+ void __init ux500_timer_init(void)
+ {
+-	void __iomem *mtu_timer_base;
+ 	void __iomem *prcmu_timer_base;
+ 	void __iomem *tmp_base;
+ 	struct device_node *np;
+ 
+-	if (cpu_is_u8500_family() || cpu_is_ux540_family()) {
+-		mtu_timer_base = __io_address(U8500_MTU0_BASE);
++	if (cpu_is_u8500_family() || cpu_is_ux540_family())
+ 		prcmu_timer_base = __io_address(U8500_PRCMU_TIMER_4_BASE);
+-	} else {
++	else
+ 		ux500_unknown_soc();
+-	}
+ 
+ 	np = of_find_matching_node(NULL, prcmu_timer_of_match);
+ 	if (!np)
+@@ -67,26 +63,6 @@ void __init ux500_timer_init(void)
+ 	prcmu_timer_base = tmp_base;
+ 
+ dt_fail:
+-	/* Doing it the old fashioned way. */
+-
+-	/*
+-	 * Here we register the timerblocks active in the system.
+-	 * Localtimers (twd) is started when both cpu is up and running.
+-	 * MTU register a clocksource, clockevent and sched_clock.
+-	 * Since the MTU is located in the VAPE power domain
+-	 * it will be cleared in sleep which makes it unsuitable.
+-	 * We however need it as a timer tick (clockevent)
+-	 * during boot to calibrate delay until twd is started.
+-	 * RTC-RTT have problems as timer tick during boot since it is
+-	 * depending on delay which is not yet calibrated. RTC-RTT is in the
+-	 * always-on powerdomain and is used as clockevent instead of twd when
+-	 * sleeping.
+-	 * The PRCMU timer 4 register a clocksource and
+-	 * sched_clock with higher rating then MTU since is always-on.
+-	 *
+-	 */
+-	if (!of_have_populated_dt())
+-		nmdk_timer_init(mtu_timer_base, IRQ_MTU0);
+ 	clksrc_dbx500_prcmu_init(prcmu_timer_base);
+ 	ux500_twd_init();
+ }
 -- 
-1.8.4.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.3.1
