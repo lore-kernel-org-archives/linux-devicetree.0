@@ -1,29 +1,83 @@
-From: Jean Delvare <khali@linux-fr.org>
-Subject: Re: [lm-sensors] [PATCHv9 02/20] thermal: introduce device tree
- parser
-Date: Tue, 19 Nov 2013 15:43:30 +0100
-Message-ID: <20131119154330.1951a978@endymion.delvare>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
-	<1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
-	<20131115090736.4f360dc8@endymion.delvare>
-	<1384754650.2316.32.camel@rzhang-lenovo>
-	<528A27EE.9090604@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <528A27EE.9090604@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, devicetree@vger.kernel.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, grant.likely@linaro.org
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v3 0/8] Renesas R-Car Gen2 Common Clock Framework support
+Date: Tue, 19 Nov 2013 15:45:39 +0100
+Message-ID: <1384872347-11724-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Eduardo, Rui,
+Hello,
 
-I don't want to enter a long discussion here. I don't see get_trend()
-being implemented by any currently existing hwmon driver. But if you
-think future monitoring chips will be different and will be able to
-implement get_trend(), well, you'll know better.
+This is the third version of the CCF clock drivers for the Renesas R-Car
+R8A7790 (H2) and R8A7791 (M2) SoCs.
+
+The patches are pretty self-explanatory and described in their respective
+commit message. The R8A7790 and R8A7791 datasheets are unfortunately not
+publicly available.
+
+The code is available in my git tree at
+
+        git://linuxtv.org/pinchartl/fbdev.git clocks/ccf/rcar-gen2
+
+The branch is based on the clk-prepare patches I've posted earlier on the list
+("[PATCH 00/12] Prepare various SH/R Mobile/Car drivers for CCF migration"),
+themselves rebased on top of renesas-devel-v3.12-20131119.
+
+Changes compared to v2:
+
+- Fixed I2C MSTP clocks parents (hp -> p)
+- Added Z and Z2 clocks
+- Added r8a7791 clocks to DT
+
+Changes compared to v1:
+
+- The core CPG clocks driver now supports the r8a7791 SoC in addition to the
+r8a7790. They are collectively refered to as 'R-Car Gen2'. The driver has thus
+been renamed to clk-rcar-gen2.c. The DT bindings have been updated accordingly.
+- Several MSTP clocks have been added to the r8a7790-clock.h header and a new
+header has been added for the r8a7791
+- The r8a7790 dtsi patches that add and reference clocks have been added to
+this series.
+
+Cc: devicetree@vger.kernel.org
+
+Laurent Pinchart (8):
+  clk: shmobile: Add R-Car Gen2 clocks support
+  clk: shmobile: Add DIV6 clock support
+  clk: shmobile: Add MSTP clock support
+  ARM: shmobile: r8a7790: Add clock index macros for DT sources
+  ARM: shmobile: r8a7791: Add clock index macros for DT sources
+  ARM: shmobile: r8a7790: Add clocks
+  ARM: shmobile: r8a7790: Reference clocks
+  ARM: shmobile: r8a7791: Add clocks
+
+ .../bindings/clock/renesas,cpg-div6-clocks.txt     |  28 ++
+ .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  48 +++
+ .../clock/renesas,rcar-gen2-cpg-clocks.txt         |  32 ++
+ arch/arm/boot/dts/r8a7790.dtsi                     | 326 +++++++++++++++++++++
+ arch/arm/boot/dts/r8a7791.dtsi                     | 312 ++++++++++++++++++++
+ drivers/clk/shmobile/Makefile                      |   7 +-
+ drivers/clk/shmobile/clk-div6.c                    | 185 ++++++++++++
+ drivers/clk/shmobile/clk-mstp.c                    | 229 +++++++++++++++
+ drivers/clk/shmobile/clk-rcar-gen2.c               | 298 +++++++++++++++++++
+ include/dt-bindings/clock/r8a7790-clock.h          | 100 +++++++
+ include/dt-bindings/clock/r8a7791-clock.h          | 105 +++++++
+ include/linux/clk/shmobile.h                       |  19 ++
+ 12 files changed, 1688 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+ create mode 100644 drivers/clk/shmobile/clk-div6.c
+ create mode 100644 drivers/clk/shmobile/clk-mstp.c
+ create mode 100644 drivers/clk/shmobile/clk-rcar-gen2.c
+ create mode 100644 include/dt-bindings/clock/r8a7790-clock.h
+ create mode 100644 include/dt-bindings/clock/r8a7791-clock.h
+ create mode 100644 include/linux/clk/shmobile.h
 
 -- 
-Jean Delvare
+Regards,
+
+Laurent Pinchart
+
