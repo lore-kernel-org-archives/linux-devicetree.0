@@ -1,72 +1,62 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] Revert support for reserved memory regions defined in
- device tree
-Date: Tue, 19 Nov 2013 13:27:53 +0100
-Message-ID: <528B5949.20204@samsung.com>
-References: <1381476448-14548-1-git-send-email-m.szyprowski@samsung.com>
- <20131030134702.19B57C402A0@trevor.secretlab.ca>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
+Date: Tue, 19 Nov 2013 12:28:01 +0000
+Message-ID: <20131119122801.GL16735@n2100.arm.linux.org.uk>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <cover.1384798508.git.jason@lakedaemon.net> <eaf050fbd62803784856a4f37d4b332f7778e22c.1384798508.git.jason@lakedaemon.net> <528A65DF.8060000@wwwdotorg.org> <20131118191955.GG10335@titan.lakedaemon.net> <528A6944.3070303@wwwdotorg.org> <20131118192852.GI10335@titan.lakedaemon.net> <528A6CA3.9030904@wwwdotorg.org> <20131118195243.GJ10335@titan.lakedaemon.net> <528A98C8.9040803@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20131030134702.19B57C402A0-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <528A98C8.9040803-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant!
+On Mon, Nov 18, 2013 at 03:46:32PM -0700, Stephen Warren wrote:
+> Again, the point is not that it's hard to write the script. As you
+> demonstrated, it's easy. The problem is that then, everybody has to do
+> something different for Tegra, forever. No matter how small the actual
+> cost of doing it is, it's still non-scalable to require that everyone
+> know about this special case. I'm not convinced the issue would be
+> isolated to Tegra either.
 
-On 2013-10-30 14:47, Grant Likely wrote:
-> On Fri, 11 Oct 2013 09:27:26 +0200, Marek Szyprowski<m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>  wrote:
-> > Hi all!
-> >
-> > Benjamin Herrenschmidt pointed a few issues in the proposed design of
-> > device tree bindings for contiguous memory allocator and reserved memory
-> > regions:
-> >https://lkml.org/lkml/2013/9/15/151
-> >http://www.spinics.net/lists/arm-kernel/msg273548.html
-> >
-> > Some time has passed, but there is still no consensus on the bindings
-> > for the reserved memory and various drawback of this solution has been
-> > shown, so in my opinion the best I can do now is to revert them
-> > completely and start from scratch again later.
->
-> Hi Marek,
->
-> At the ARM summit last week in Edinburgh, several of us sat down and
-> hammered out a new proposal for handling reserved memory regions based
-> on the work that you started here. Below you will find a new binding
-> document. I started looking at implementing this, but haven't made much
-> progress.
->
-> Please take a look and let me know what you think.
->
-> Also, while I'm thinking about it, I took another look at the code and I
-> think the code supporting reserved regions should go directly into
-> drivers/of/fdt.c and drivers/of/memory.c.  Also, the reserved regions
-> parsing should be enabled unconditionally insted of filtered by (DMA_CMA
-> || (HAVE_GENERIC_DMA_COHERENT && HAVE_MEMBLOCK). If the hardware
-> description says to reserve a region, then the kernel must always do so,
-> even if it doesn't actually use it for anything.
+That's why there's the facility to allow an override to the script,
+just like there's the facility to override the default script when
+running "make install".
 
-Thanks for discussing this item. I'm really sorry for the late reply, but
-various 'more_imporant_things(tm)' have eaten me completely last weeks.
+The script which the kernel uses is just a template for what kernel
+developers expect to be the common case.  That's not necessarily what
+most distros do.
 
-The proposal look good for me. I'm not convinced that we really need the
-support for 'reg' property, as the fixed memory region is a special case
-of generic dynamic allocation specified by the size and alloc-ranges, but
-I assume that there have been already a long discussion about this, so I
-accept the common consensus.
+In fact, most distros today provide their own installation script which
+gets run automatically when you do "make install" which copies the
+kernel and then rebuilds an initramfs with everything appropriate for
+that kernel inside.
 
-Grant: have you started working on the code, which implements such binding?
-If not, I will try to start do it and post the code soon for review.
+Even the distro script can be overridden with a script in ~/bin by the
+user running "make install" (which therefore doesn't even have to be
+root if installing it into a location accessible by the user.)
 
-Best regards
--- 
-Marek Szyprowski
-Samsung R&D Institute Poland
+This is really no different.  If the as-supplied-by-the-kernel script
+doesn't fit your needs, you are free to override it.
 
+What this gives us is the facility for distros to _sanely_ hook into
+the kernel build process to obtain the DT files if they so wish.
+
+As for renaming the files from what we have in the kernel, I'd say...
+why bother.  What if we have two DT blobs with the same compatible
+string (which is not unlikely when you have two configurations for a
+platform)?  I'd recommend keeping the names in the kernel tree when
+installing.  If a distro needs to find the compatible string, then
+that's a bit of parsing they should do.  Otherwise, we lose the ability
+to tell users "you need this DT blob file called X" because X will
+depend whether it's been installed or not.
+
+And in some cases where getting the wrong DT blob could end up quite
+literally destroying your hardware (eg, by setting an LDO regulator to
+bypass mode), it's extremely important that anything here is _simple_
+and doesn't involve lots of indirection.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
