@@ -1,84 +1,88 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
-Date: Tue, 19 Nov 2013 09:23:36 -0500
-Message-ID: <20131119142336.GA28859@titan.lakedaemon.net>
-References: <cover.1384798508.git.jason@lakedaemon.net>
- <eaf050fbd62803784856a4f37d4b332f7778e22c.1384798508.git.jason@lakedaemon.net>
- <528A65DF.8060000@wwwdotorg.org>
- <20131118191955.GG10335@titan.lakedaemon.net>
- <528A6944.3070303@wwwdotorg.org>
- <20131118192852.GI10335@titan.lakedaemon.net>
- <528A6CA3.9030904@wwwdotorg.org>
- <20131118195243.GJ10335@titan.lakedaemon.net>
- <528A98C8.9040803@wwwdotorg.org>
- <20131119122801.GL16735@n2100.arm.linux.org.uk>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: ACPI vs DT at runtime
+Date: Tue, 19 Nov 2013 14:38:40 +0000
+Message-ID: <20131119143840.GN5914@e106331-lin.cambridge.arm.com>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+ <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
+ <20131115175241.GB27174@quad.lixom.net>
+ <20131119113015.GH5914@e106331-lin.cambridge.arm.com>
+ <alpine.DEB.2.02.1311191304260.27757@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20131119122801.GL16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <alpine.DEB.2.02.1311191304260.27757@kaball.uk.xensource.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Cc: Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Russell,
+On Tue, Nov 19, 2013 at 01:56:26PM +0000, Stefano Stabellini wrote:
+> On Tue, 19 Nov 2013, Mark Rutland wrote:
+> > > We all know DT considerably better to a point where I would recommend
+> > > that they flash a DTB in their UEFI firmware instead of go with ACPI. For
+> > > simple hardware and basic devices we've got most bindings sorted out by
+> > > now, and we've decided on backwards compatibility from here on out.
+> > 
+> > If a vendor does this, with a DTB that correctly describes their
+> > hardware then I am not against it (and would prefer this case to mapping
+> > from ACPI to DT).
+> 
+> I think that the firmware passing a DTB to the bootloader/kernel is the
+> best option we have.
+> 
+> 
+> > For that case we will also require a nailed-down boot
+> > protocol that allows for either DTB or ACPI.
+> 
+> The latest documentation patch for the "arm/arm64 UEFI boot protocol"
+> implies that UEFI on ARM is already capable of passing a DTB to the
+> kernel:
+> 
+> "The implementation depends on receiving information about the UEFI
+> environment in a Flattened Device Tree (FDT) - so is only available with
+> CONFIG_OF."
+> 
+> Maybe we just need to better document it?
 
-On Tue, Nov 19, 2013 at 12:28:01PM +0000, Russell King - ARM Linux wrote:
-> As for renaming the files from what we have in the kernel, I'd say...
-> why bother.
+Yes, we just need to document it.
 
-When I first read your email, I agreed, and started down the path of
-dropping the rename, then...
+As far as I'm aware, there are two ways we might boot the kernel:
 
-> What if we have two DT blobs with the same compatible string (which is
-> not unlikely when you have two configurations for a platform)?
+1) Via the current boot protocol, passing a DTB in a particular
+register.
 
-If a board has two different, especially destructive, configurations, it
-should have two different compatible strings.  Especially since 90% (I'm
-swagging) of a distro's use of dtbs is to upgrade the dtb on an already
-installed system.  They'll most likely pull the board compatible string
-from /proc/device-tree/compatible, and then go hunt for the dtb.
+2) As an EFI application. As I understand it in this case the DTB will
+be saved in a system table (I may have got the terminology wrong here),
+and the EFI stub will need to look it up to pass it to the kernel.
 
-That's why I prefer to rename the dtbs, it removes the need to parse the
-dtb (fdtget *isn't* currently built/installed by default in dtc), and it
-allows distros, for the most common use case, to easily find a matching
-dtb on an existing system.
+As long as that's well defined and does not preclude ACPI, then I am
+happy.
 
-In the event that an already deployed dtb is found to have an alternate
-rev (with or without destructive changes), on our side, we add a more
-specific compatible string and a new dts for the new rev.  The distro
-dtb upgrader detects it's on a 'globalscale,mirabox' and sees that the
-options are now globalscale,mirabox-rev1.dtb and
-globalscale,mirabox-rev2.dtb.  It throws up a user prompt asking the
-user to determine which board rev it's on.  Or, if safe to do so, it
-programatically determines which rev it is on and updates the dtb.
+> 
+> 
+> > (only one at a time)
+> 
+> I would not go as far as requiring that only one is available.
+> Certainly I would mandate that either of them are independently complete
+> and sufficient to describe the platform.
 
-> I'd recommend keeping the names in the kernel tree when installing.
-> If a distro needs to find the compatible string, then that's a bit of
-> parsing they should do.  Otherwise, we lose the ability to tell users
-> "you need this DT blob file called X" because X will depend whether
-> it's been installed or not.
+At that point we need to choose one to prefer. This will be a completely
+arbitrary choice, but as in the EFI case we would expect a DTB stub (for
+passing some options in /chosen), preferring the DT if it's more than a
+stub would make sense to me.
 
-All I'm suggesting doing is extending the same standard we have for
-compatible strings at the node level to the board level.  If we don't
-change the filename, then we *have* to extend the consistent naming to
-the dts files as well.
+The key point is that the kernel will rely solely on one of them to
+provide hardware description.
 
-I think it's just as easy to say "you need globalscale,mirabox-rev1 now"
-as anything else.
-
-> And in some cases where getting the wrong DT blob could end up quite
-> literally destroying your hardware (eg, by setting an LDO regulator to
-> bypass mode), it's extremely important that anything here is _simple_
-> and doesn't involve lots of indirection.
-
-kept for context, above.
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
