@@ -1,63 +1,45 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V4] kbuild: dtbs_install: new make target
-Date: Tue, 19 Nov 2013 14:58:05 -0700
-Message-ID: <528BDEED.8080708@wwwdotorg.org>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <1384896475-8744-1-git-send-email-jason@lakedaemon.net>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: gpio-generic DT bindings?
+Date: Tue, 19 Nov 2013 23:17:46 +0100
+Message-ID: <CAMuHMdVuC5nJizr9Q2JXQCC=FtJkEvLa5iftBoa6Zd7B3XVojA@mail.gmail.com>
+References: <CAMuHMdU9F_EjA+ZF0mn4PW3HDJ9rkM_84SHiDKkWwWr7MLJKJA@mail.gmail.com>
+	<528BDF57.8080400@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384896475-8744-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <528BDF57.8080400-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2013 02:27 PM, Jason Cooper wrote:
-> Unlike other build products in the Linux kernel, there is no 'make
-> *install' mechanism to put devicetree blobs in a standard place.
-> 
-> This patch is an attempt to fix this problem.  Akin to 'make install',
-> this creates a new make target, dtbs_install.  The script that gets
-> called defers to a distribution or user supplied installdtbs binary,
-> if found in the system.  Otherwise, the default action is to install a
-> given dtb into
-> 
->   /lib/modules/${kernel_version}/devicetree/${dts_filename}.dtb
+On Tue, Nov 19, 2013 at 10:59 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 11/19/2013 02:45 PM, Geert Uytterhoeven wrote:
+>> This topic seems to come up from time to time.
+>> Unfortunately the last time it coincided with the move of the mailing list
+>> from ozlabs to vger, causing the mailing list archives not to have captured
+>> the full discussion.
+>>
+>> Is there anything definitive/usable out there?
+>
+> What do you mean by "gpio-generic DT bindings"? A generic binding for a
+> controller, or something else? I think it's best to have a specific
+> binding for each individual controller, so it's always possible to know
+> exactly which controller is present. Now, all the binding definitions
+> should all look the same or as similar as possible for consistency...
 
-I still don't see why you wouldn't install the files in
-/lib/devicetrees, but I suppose that location is fine.
+I mean DT bindings and DT support for drivers/gpio/gpio-generic.c.
 
-> This is done to keep dtbs from different kernel versions separate until
-> things have settled down.  Once the dtbs are stable, and not so strongly
-> linked to the kernel version, the devicetree files will most likely move
-> to their own repo.  Users will need to upgrade install scripts at that
-> time.
-> 
-> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> ---
-> Question: should I make a note about the filenames not being considered an ABI,
-> or just let it be?
+Gr{oetje,eeting}s,
 
-I still believe they're an ABI.
+                        Geert
 
-I guess Grant meant that they aren't an ABI to the kernel at run-time,
-unlike the content which is an ABI. That's fine.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-However, I believe the files certainly are an ABI to any script that
-takes them from the "make dtbs_install" output directory.
-
-Perhaps the best resolution is to just say nothing and let it be:-)
-
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-
-> +dtbs_install: dtbs
-> +	$(CONFIG_SHELL) $(srctree)/scripts/installdtbs.sh $(KERNELRELEASE) \
-> +	"$(MODLIB)/devicetree" "$(srctree)/$(boot)/dts"
-
-I still think this rule should be in Makefile not arch/arm/Makefile.
-
-Aside from those couple of issues, this version looks OK to me.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
