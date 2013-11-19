@@ -1,72 +1,68 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCHv5 3/9] ARM: tegra: create a DT header defining SWGROUP ID
-Date: Tue, 19 Nov 2013 14:36:54 -0700
-Message-ID: <528BD9F6.3080008@wwwdotorg.org>
-References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com>
-	<1384853593-32202-4-git-send-email-hdoyu@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1384853593-32202-4-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: ux500: decomission custom SMP TWD timer init
+Date: Tue, 19 Nov 2013 22:39:10 +0100
+Message-ID: <1384897150-16830-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2013 02:33 AM, Hiroshi Doyu wrote:
-> Create a header file to define the swgroup IDs used by the IOMMU(SMMU)
-> binding. "swgroup" is a group of H/W clients which a Tegra SoC
-> supports. This unique ID can be used to calculate MC_SMMU_<swgroup
-> name>_ASID_0 register offset and MC_<swgroup name>_HOTRESET_*_0
-> register bit. This will allow the same header to be used by both
-> device tree files, and drivers implementing this binding, which
-> guarantees that the two stay in sync. This also makes device trees
-> more readable by using names instead of magic numbers. For HOTRESET
-> bit shifting we need another conversion table, which will come later.
+Rely solely on device tree matching to detect and probe the
+SMP TWD timer and remove this custom hack.
 
-> diff --git a/include/dt-bindings/memory/tegra-swgroup.h b/include/dt-bindings/memory/tegra-swgroup.h
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/mach-ux500/timer.c | 22 +---------------------
+ 1 file changed, 1 insertion(+), 21 deletions(-)
 
-> +#define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
-> +
-> +#define TWO_U32_OF_U64(x)	((x) & ~0UL) ((x) >> 32)
-> +#define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
-> +#define TEGRA_SWGROUP_CELLS(x)	TWO_U32_OF_U64(TEGRA_SWGROUP_BIT(x))
+diff --git a/arch/arm/mach-ux500/timer.c b/arch/arm/mach-ux500/timer.c
+index 1a9051b6f932..87efda0aa348 100644
+--- a/arch/arm/mach-ux500/timer.c
++++ b/arch/arm/mach-ux500/timer.c
+@@ -11,31 +11,11 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ 
+-#include <asm/smp_twd.h>
+-
+ #include "setup.h"
+-#include "irqs.h"
+ 
+ #include "db8500-regs.h"
+ #include "id.h"
+ 
+-#ifdef CONFIG_HAVE_ARM_TWD
+-static DEFINE_TWD_LOCAL_TIMER(u8500_twd_local_timer,
+-			      U8500_TWD_BASE, IRQ_LOCALTIMER);
+-
+-static void __init ux500_twd_init(void)
+-{
+-	struct twd_local_timer *twd_local_timer;
+-
+-	/* Use this to switch local timer base if changed in new ASICs */
+-	twd_local_timer = &u8500_twd_local_timer;
+-
+-	clocksource_of_init();
+-}
+-#else
+-#define ux500_twd_init()	do { } while(0)
+-#endif
+-
+ const static struct of_device_id prcmu_timer_of_match[] __initconst = {
+ 	{ .compatible = "stericsson,db8500-prcmu-timer-4", },
+ 	{ },
+@@ -64,5 +44,5 @@ void __init ux500_timer_init(void)
+ 
+ dt_fail:
+ 	clksrc_dbx500_prcmu_init(prcmu_timer_base);
+-	ux500_twd_init();
++	clocksource_of_init();
+ }
+-- 
+1.8.3.1
 
-This still doesn't actually compile in dtc:
-
-$ cat > tmp.dts <<ENDOFHERE
-/dts-v1/;
-
-#define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
-
-#define TWO_U32_OF_U64(x)	((x) & ~0UL) ((x) >> 32)
-#define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
-#define TEGRA_SWGROUP_CELLS(x)	TWO_U32_OF_U64(TEGRA_SWGROUP_BIT(x))
-
-/ {
-    prop = <TEGRA_SWGROUP_CELLS(PPCS2)>;
-};
-ENDOFHERE
-
-$ gcc -nostdinc -undef -D__DTS__ -E -x assembler-with-cpp -o tmp.dts.i \
-	tmp.dts
-
-$ ./scripts/dtc/dtc -O dts -o tmp-compiled.dts -I dts tmp.dts.i
-Error: tmp.dts:10.35-36 integer value out of range 0000000000000020 \
-	(32 bits)
-FATAL ERROR: Syntax error parsing input tree
-
-The reason is that "& ~0UL" expands to "& 0xffffffffffffffff" since dtc
-doesn't know about the size difference between UL and ULL. You need to
-change that to "& 0xffffffff" and it works, at least in dtc.
-
-Please test!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
