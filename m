@@ -1,37 +1,110 @@
-From: Tom Rini <trini-l0cyMroinI0@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Tue, 19 Nov 2013 14:06:04 -0500
-Message-ID: <20131119190604.GH420@bill-the-cat>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
- <20131115175241.GB27174@quad.lixom.net>
- <20131119113015.GH5914@e106331-lin.cambridge.arm.com>
- <201311191505.33636.arnd@arndb.de>
- <20131119152157.GO5914@e106331-lin.cambridge.arm.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] pinctrl: samsung: Allow grouping multiple pinmux/pinconf
+ nodes
+Date: Tue, 19 Nov 2013 12:10:01 -0700
+Message-ID: <528BB789.5020201@wwwdotorg.org>
+References: <1384881034-10520-1-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131119152157.GO5914-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1384881034-10520-1-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Doug Anderson <dianders@chromium.org>, Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2013 at 03:21:57PM +0000, Mark Rutland wrote:
-[snip]
-> I think that with ACPI systems the data we would have to convert is
-> going to be larger and more varied than that. Given we already have code
-> in the kernel for handling ACPI, I believe it would be more valuable to
-> leverage that and support ACPI directly in those places which require it
+On 11/19/2013 10:10 AM, Tomasz Figa wrote:
+> One of remaining limitations of current pinctrl-samsung driver was
+> the inability to parse multiple pinmux/pinconf group nodes grouped
+> inside a single device tree node. It made defining groups of pins for
+> single purpose, but with different parameters very inconvenient.
+> 
+> This patch implements Tegra-like support for grouping multiple pinctrl
+> groups inside one device tree node, by completely changing the way
+> pin groups and functions are parsed from device tree.
 
-I'll bite.  How realistic a proprosition is that?  When I've talked with
-a few folks here and there they say, roughly, that "the ARM bit" being
-set means it's a whole new ball game, and no, they don't expect to be
-able to re-use a lot of the existing code.
+> The code creating
+> pinctrl maps from DT nodes has been borrowed from pinctrl-tegra,
 
--- 
-Tom
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+A lot of the Tegra code has been slightly generalized and put into
+pinconf-generic.c. Can the Samsung driver be converted to use that core
+code rather than adding another copy of it? Perhaps this isn't possible
+given the backwards-compatibility requirements that allow either 1- or
+2-level nodes though, although I imagine that could be added to the core
+code. One thing you'd certainly need to do is enhance the code in
+pinconf-generic.c so that you could substitute your own
+pinconf_generic_parse_dt_config() function or dt_params[] table, to
+allow for the SoC-specific property names, but I doubt that's too hard.
+Tegra could be converted then too:-)
+
+> while
+> the initial creation of groups and functions has been completely
+> rewritten with following assumptions:
+>  - each group consists of just one pin and does not depend on data
+>    from device tree,
+>  - each function is represented by a device tree child node of the
+>    pin controller, which in turn can contain multiple child nodes
+>    for pins that need to have different configuration values.
+
+OK, I think that sounds reasonable.
+
+> Device Tree bindings are fully backwards compatible. New functionality
+> can be used by defining a new pinctrl group consisting of several child
+> nodes, as on following example:
+> 
+> 	sd4_bus8: sd4-bus-width8 {
+> 		part-1 {
+> 			samsung,pins = "gpk0-3", "gpk0-4",
+> 					"gpk0-5", "gpk0-6";
+> 			samsung,pin-function = <3>;
+> 			samsung,pin-pud = <3>;
+> 			samsung,pin-drv = <3>;
+> 		};
+> 		part-2 {
+> 			samsung,pins = "gpk1-3", "gpk1-4",
+> 					"gpk1-5", "gpk1-6";
+> 			samsung,pin-function = <4>;
+> 			samsung,pin-pud = <4>;
+> 			samsung,pin-drv = <3>;
+> 		};
+> 	};
+
+OK, that all looks great!
+
+> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+
+The DT changes fully, and the code a little briefly,
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
+
+Just a minor comment below,
+
+> diff --git a/drivers/pinctrl/pinctrl-samsung.c b/drivers/pinctrl/pinctrl-samsung.c
+
+> +static int samsung_pinctrl_create_function(struct device *dev,
+> +				struct samsung_pinctrl_drv_data *drvdata,
+> +				struct device_node *func_np,
+> +				struct samsung_pmx_func *func)
+...
+> +	for (i = 0; i < npins; ++i) {
+> +		const char *gname;
+> +		char *gname_copy;
+> +
+> +		ret = of_property_read_string_index(func_np, "samsung,pins",
+> +							i, &gname);
+> +		if (ret) {
+> +			dev_err(dev,
+> +				"failed to read pin name %d from %s node\n",
+> +				i, func_np->name);
+> +			return ret;
+>  		}
+> +
+> +		gname_copy = devm_kzalloc(dev, strlen(gname) + 1, GFP_KERNEL);
+> +		if (!gname_copy)
+> +			return -ENOMEM;
+> +		strcpy(gname_copy, gname);
+
+Is the lifetime of the string "returned" by
+of_property_read_string_index() really so short that you must copy the
+string? I'd be tempted just to store the pointer, although perhaps you
+need to get() the node so that's safe.
