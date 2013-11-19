@@ -1,119 +1,72 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] clksrc: delete nomadik MTU non-DT boot path
-Date: Tue, 19 Nov 2013 22:28:19 +0100
-Message-ID: <1384896499-9428-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv5 3/9] ARM: tegra: create a DT header defining SWGROUP ID
+Date: Tue, 19 Nov 2013 14:36:54 -0700
+Message-ID: <528BD9F6.3080008@wwwdotorg.org>
+References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com>
+	<1384853593-32202-4-git-send-email-hdoyu@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1384853593-32202-4-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Both platforms using the MTU (Nomadik and Ux500) have now been
-converted to use device tree exclusively, thus let us delete
-this platform data header and make this driver a fully
-self-contained DT-only driver.
+On 11/19/2013 02:33 AM, Hiroshi Doyu wrote:
+> Create a header file to define the swgroup IDs used by the IOMMU(SMMU)
+> binding. "swgroup" is a group of H/W clients which a Tegra SoC
+> supports. This unique ID can be used to calculate MC_SMMU_<swgroup
+> name>_ASID_0 register offset and MC_<swgroup name>_HOTRESET_*_0
+> register bit. This will allow the same header to be used by both
+> device tree files, and drivers implementing this binding, which
+> guarantees that the two stay in sync. This also makes device trees
+> more readable by using names instead of magic numbers. For HOTRESET
+> bit shifting we need another conversion table, which will come later.
 
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-Daniel/tglx: seeking an ACK from either of you guys to take this
-in the ux500-devicetree branch where the last user is deleted.
----
- drivers/clocksource/nomadik-mtu.c                  | 23 +++++-----------------
- .../linux/platform_data/clocksource-nomadik-mtu.h  |  9 ---------
- 2 files changed, 5 insertions(+), 27 deletions(-)
- delete mode 100644 include/linux/platform_data/clocksource-nomadik-mtu.h
+> diff --git a/include/dt-bindings/memory/tegra-swgroup.h b/include/dt-bindings/memory/tegra-swgroup.h
 
-diff --git a/drivers/clocksource/nomadik-mtu.c b/drivers/clocksource/nomadik-mtu.c
-index ed7b73b508e0..f00b5c9ce8b6 100644
---- a/drivers/clocksource/nomadik-mtu.c
-+++ b/drivers/clocksource/nomadik-mtu.c
-@@ -20,7 +20,6 @@
- #include <linux/jiffies.h>
- #include <linux/delay.h>
- #include <linux/err.h>
--#include <linux/platform_data/clocksource-nomadik-mtu.h>
- #include <linux/sched_clock.h>
- #include <asm/mach/time.h>
- 
-@@ -103,7 +102,7 @@ static int nmdk_clkevt_next(unsigned long evt, struct clock_event_device *ev)
- 	return 0;
- }
- 
--void nmdk_clkevt_reset(void)
-+static void nmdk_clkevt_reset(void)
- {
- 	if (clkevt_periodic) {
- 		/* Timer: configure load and background-load, and fire it up */
-@@ -144,7 +143,7 @@ static void nmdk_clkevt_mode(enum clock_event_mode mode,
- 	}
- }
- 
--void nmdk_clksrc_reset(void)
-+static void nmdk_clksrc_reset(void)
- {
- 	/* Disable */
- 	writel(0, mtu_base + MTU_CR(0));
-@@ -192,8 +191,8 @@ static struct irqaction nmdk_timer_irq = {
- 	.dev_id		= &nmdk_clkevt,
- };
- 
--static void __init __nmdk_timer_init(void __iomem *base, int irq,
--				     struct clk *pclk, struct clk *clk)
-+static void __init nmdk_timer_init(void __iomem *base, int irq,
-+				   struct clk *pclk, struct clk *clk)
- {
- 	unsigned long rate;
- 
-@@ -245,18 +244,6 @@ static void __init __nmdk_timer_init(void __iomem *base, int irq,
- 	register_current_timer_delay(&mtu_delay_timer);
- }
- 
--void __init nmdk_timer_init(void __iomem *base, int irq)
--{
--	struct clk *clk0, *pclk0;
--
--	pclk0 = clk_get_sys("mtu0", "apb_pclk");
--	BUG_ON(IS_ERR(pclk0));
--	clk0 = clk_get_sys("mtu0", NULL);
--	BUG_ON(IS_ERR(clk0));
--
--	__nmdk_timer_init(base, irq, pclk0, clk0);
--}
--
- static void __init nmdk_timer_of_init(struct device_node *node)
- {
- 	struct clk *pclk;
-@@ -280,7 +267,7 @@ static void __init nmdk_timer_of_init(struct device_node *node)
- 	if (irq <= 0)
- 		panic("Can't parse IRQ");
- 
--	__nmdk_timer_init(base, irq, pclk, clk);
-+	nmdk_timer_init(base, irq, pclk, clk);
- }
- CLOCKSOURCE_OF_DECLARE(nomadik_mtu, "st,nomadik-mtu",
- 		       nmdk_timer_of_init);
-diff --git a/include/linux/platform_data/clocksource-nomadik-mtu.h b/include/linux/platform_data/clocksource-nomadik-mtu.h
-deleted file mode 100644
-index 80088973b734..000000000000
---- a/include/linux/platform_data/clocksource-nomadik-mtu.h
-+++ /dev/null
-@@ -1,9 +0,0 @@
--#ifndef __PLAT_MTU_H
--#define __PLAT_MTU_H
--
--void nmdk_timer_init(void __iomem *base, int irq);
--void nmdk_clkevt_reset(void);
--void nmdk_clksrc_reset(void);
--
--#endif /* __PLAT_MTU_H */
--
--- 
-1.8.3.1
+> +#define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
+> +
+> +#define TWO_U32_OF_U64(x)	((x) & ~0UL) ((x) >> 32)
+> +#define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
+> +#define TEGRA_SWGROUP_CELLS(x)	TWO_U32_OF_U64(TEGRA_SWGROUP_BIT(x))
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This still doesn't actually compile in dtc:
+
+$ cat > tmp.dts <<ENDOFHERE
+/dts-v1/;
+
+#define TEGRA_SWGROUP_PPCS2	32	/* 0xab0 */
+
+#define TWO_U32_OF_U64(x)	((x) & ~0UL) ((x) >> 32)
+#define TEGRA_SWGROUP_BIT(x)	(1ULL << TEGRA_SWGROUP_##x)
+#define TEGRA_SWGROUP_CELLS(x)	TWO_U32_OF_U64(TEGRA_SWGROUP_BIT(x))
+
+/ {
+    prop = <TEGRA_SWGROUP_CELLS(PPCS2)>;
+};
+ENDOFHERE
+
+$ gcc -nostdinc -undef -D__DTS__ -E -x assembler-with-cpp -o tmp.dts.i \
+	tmp.dts
+
+$ ./scripts/dtc/dtc -O dts -o tmp-compiled.dts -I dts tmp.dts.i
+Error: tmp.dts:10.35-36 integer value out of range 0000000000000020 \
+	(32 bits)
+FATAL ERROR: Syntax error parsing input tree
+
+The reason is that "& ~0UL" expands to "& 0xffffffffffffffff" since dtc
+doesn't know about the size difference between UL and ULL. You need to
+change that to "& 0xffffffff" and it works, at least in dtc.
+
+Please test!
