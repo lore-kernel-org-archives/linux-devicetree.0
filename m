@@ -1,268 +1,72 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v3 2/8] clk: shmobile: Add DIV6 clock support
-Date: Tue, 19 Nov 2013 15:45:41 +0100
-Message-ID: <1384872347-11724-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1384872347-11724-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1384872347-11724-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Tue, 19 Nov 2013 15:59:18 +0100
+Message-ID: <20131119145917.GC24997@rocoto.smurfnet.nu>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+ <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
+ <20131115175241.GB27174@quad.lixom.net>
+ <20131119113015.GH5914@e106331-lin.cambridge.arm.com>
+ <alpine.DEB.2.02.1311191304260.27757@kaball.uk.xensource.com>
+ <20131119143840.GN5914@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131119143840.GN5914-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DIV6 clocks are divider gate clocks controlled through a single
-register. The divider is expressed on 6 bits, hence the name, and can
-take values from 1/1 to 1/64.
+On Tue, Nov 19, 2013 at 02:38:40PM +0000, Mark Rutland wrote:
+> > > For that case we will also require a nailed-down boot
+> > > protocol that allows for either DTB or ACPI.
+> > 
+> > The latest documentation patch for the "arm/arm64 UEFI boot protocol"
+> > implies that UEFI on ARM is already capable of passing a DTB to the
+> > kernel:
+> > 
+> > "The implementation depends on receiving information about the UEFI
+> > environment in a Flattened Device Tree (FDT) - so is only available with
+> > CONFIG_OF."
+> > 
+> > Maybe we just need to better document it?
+> 
+> Yes, we just need to document it.
 
-Those clocks are found on Renesas ARM SoCs.
+Better document it than what is currently in Booting?
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- .../bindings/clock/renesas,cpg-div6-clocks.txt     |  28 ++++
- drivers/clk/shmobile/Makefile                      |   1 +
- drivers/clk/shmobile/clk-div6.c                    | 185 +++++++++++++++++++++
- 3 files changed, 214 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
- create mode 100644 drivers/clk/shmobile/clk-div6.c
-
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-new file mode 100644
-index 0000000..952e373
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-@@ -0,0 +1,28 @@
-+* Renesas CPG DIV6 Clock
-+
-+The CPG DIV6 clocks are variable factor clocks provided by the Clock Pulse
-+Generator (CPG). They clock input is divided by a configurable factor from 1
-+to 64.
-+
-+Required Properties:
-+
-+  - compatible: Must be one of the following
-+    - "renesas,r8a7790-div6-clock" for R8A7790 (R-Car H2) DIV6 clocks
-+    - "renesas,r8a7791-div6-clock" for R8A7791 (R-Car M2) DIV6 clocks
-+    - "renesas,cpg-div6-clock" for generic DIV6 clocks
-+  - reg: Base address and length of the memory resource used by the DIV6 clock
-+  - clocks: Reference to the parent clock
-+  - #clock-cells: Must be 0
-+  - clock-output-names: The name of the clock as a free-form string
-+
-+
-+Example
-+-------
-+
-+	sd2_clk: sd2_clk@e6150078 {
-+		compatible = "renesas,r8a7790-div6-clock", "renesas,cpg-div6-clock";
-+		reg = <0 0xe6150078 0 4>;
-+		clocks = <&pll1_div2_clk>;
-+		#clock-cells = <0>;
-+		clock-output-names = "sd2";
-+	};
-diff --git a/drivers/clk/shmobile/Makefile b/drivers/clk/shmobile/Makefile
-index 40d88e6..eded163 100644
---- a/drivers/clk/shmobile/Makefile
-+++ b/drivers/clk/shmobile/Makefile
-@@ -1,6 +1,7 @@
- obj-$(CONFIG_ARCH_EMEV2)		+= clk-emev2.o
- obj-$(CONFIG_ARCH_R8A7790)		+= clk-rcar-gen2.o
- obj-$(CONFIG_ARCH_R8A7791)		+= clk-rcar-gen2.o
-+obj-$(CONFIG_ARCH_SHMOBILE_MULTI)	+= clk-div6.o
+> As far as I'm aware, there are two ways we might boot the kernel:
  
- # for emply built-in.o
- obj-n	:= dummy
-diff --git a/drivers/clk/shmobile/clk-div6.c b/drivers/clk/shmobile/clk-div6.c
-new file mode 100644
-index 0000000..aac4756
---- /dev/null
-+++ b/drivers/clk/shmobile/clk-div6.c
-@@ -0,0 +1,185 @@
-+/*
-+ * r8a7790 Common Clock Framework support
-+ *
-+ * Copyright (C) 2013  Renesas Solutions Corp.
-+ *
-+ * Contact: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#define CPG_DIV6_CKSTP		BIT(8)
-+#define CPG_DIV6_DIV(d)		((d) & 0x3f)
-+#define CPG_DIV6_DIV_MASK	0x3f
-+
-+/**
-+ * struct div6_clock - MSTP gating clock
-+ * @hw: handle between common and hardware-specific interfaces
-+ * @reg: IO-remapped register
-+ * @div: divisor value (1-64)
-+ */
-+struct div6_clock {
-+	struct clk_hw hw;
-+	void __iomem *reg;
-+	unsigned int div;
-+};
-+
-+#define to_div6_clock(_hw) container_of(_hw, struct div6_clock, hw)
-+
-+static int cpg_div6_clock_enable(struct clk_hw *hw)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+
-+	clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
-+
-+	return 0;
-+}
-+
-+static void cpg_div6_clock_disable(struct clk_hw *hw)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+
-+	/* DIV6 clocks require the divisor field to be non-zero when stopping
-+	 * the clock.
-+	 */
-+	clk_writel(CPG_DIV6_CKSTP | CPG_DIV6_DIV(CPG_DIV6_DIV_MASK),
-+		   clock->reg);
-+}
-+
-+static int cpg_div6_clock_is_enabled(struct clk_hw *hw)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+
-+	return !(clk_readl(clock->reg) & CPG_DIV6_CKSTP);
-+}
-+
-+static unsigned long cpg_div6_clock_recalc_rate(struct clk_hw *hw,
-+						unsigned long parent_rate)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+	unsigned int div = (clk_readl(clock->reg) & CPG_DIV6_DIV_MASK) + 1;
-+
-+	return parent_rate / div;
-+}
-+
-+static unsigned int cpg_div6_clock_calc_div(unsigned long rate,
-+					    unsigned long parent_rate)
-+{
-+	unsigned int div;
-+
-+	div = DIV_ROUND_CLOSEST(parent_rate, rate);
-+	return clamp_t(unsigned int, div, 1, 64);
-+}
-+
-+static long cpg_div6_clock_round_rate(struct clk_hw *hw, unsigned long rate,
-+				      unsigned long *parent_rate)
-+{
-+	unsigned int div = cpg_div6_clock_calc_div(rate, *parent_rate);
-+
-+	return *parent_rate / div;
-+}
-+
-+static int cpg_div6_clock_set_rate(struct clk_hw *hw, unsigned long rate,
-+				   unsigned long parent_rate)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+	unsigned int div = cpg_div6_clock_calc_div(rate, parent_rate);
-+
-+	clock->div = div;
-+
-+	/* Only program the new divisor if the clock isn't stopped. */
-+	if (!(clk_readl(clock->reg) & CPG_DIV6_CKSTP))
-+		clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops cpg_div6_clock_ops = {
-+	.enable = cpg_div6_clock_enable,
-+	.disable = cpg_div6_clock_disable,
-+	.is_enabled = cpg_div6_clock_is_enabled,
-+	.recalc_rate = cpg_div6_clock_recalc_rate,
-+	.round_rate = cpg_div6_clock_round_rate,
-+	.set_rate = cpg_div6_clock_set_rate,
-+};
-+
-+static void __init cpg_div6_clock_init(struct device_node *np)
-+{
-+	struct clk_init_data init;
-+	struct div6_clock *clock;
-+	const char *parent_name;
-+	const char *name;
-+	struct clk *clk;
-+	int ret;
-+
-+	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
-+	if (!clock) {
-+		pr_err("%s: failed to allocate %s DIV6 clock\n",
-+		       __func__, np->name);
-+		return;
-+	}
-+
-+	/* Remap the clock register and read the divisor. Disabling the
-+	 * clock overwrites the divisor, so we need to cache its value for the
-+	 * enable operation.
-+	 */
-+	clock->reg = of_iomap(np, 0);
-+	if (clock->reg == NULL) {
-+		pr_err("%s: failed to map %s DIV6 clock register\n",
-+		       __func__, np->name);
-+		goto error;
-+	}
-+
-+	clock->div = (clk_readl(clock->reg) & CPG_DIV6_DIV_MASK) + 1;
-+
-+	/* Parse the DT properties. */
-+	ret = of_property_read_string(np, "clock-output-names", &name);
-+	if (ret < 0) {
-+		pr_err("%s: failed to get %s DIV6 clock output name\n",
-+		       __func__, np->name);
-+		goto error;
-+	}
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+	if (parent_name == NULL) {
-+		pr_err("%s: failed to get %s DIV6 clock parent name\n",
-+		       __func__, np->name);
-+		goto error;
-+	}
-+
-+	/* Register the clock. */
-+	init.name = name;
-+	init.ops = &cpg_div6_clock_ops;
-+	init.flags = CLK_IS_BASIC;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+
-+	clock->hw.init = &init;
-+
-+	clk = clk_register(NULL, &clock->hw);
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: failed to register %s DIV6 clock (%ld)\n",
-+		       __func__, np->name, PTR_ERR(clk));
-+		goto error;
-+	}
-+
-+	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+
-+	return;
-+
-+error:
-+	if (clock->reg)
-+		iounmap(clock->reg);
-+	kfree(clock);
-+}
-+CLK_OF_DECLARE(cpg_div6_clk, "renesas,cpg-div6-clock", cpg_div6_clock_init);
--- 
-1.8.3.2
+Nope, just one.
 
+> 1) Via the current boot protocol, passing a DTB in a particular
+> register.
+ 
+This is the only bit relevant to the kernel proper. It does not change
+with UEFI/ACPI.
+
+> 2) As an EFI application. As I understand it in this case the DTB will
+> be saved in a system table (I may have got the terminology wrong here),
+> and the EFI stub will need to look it up to pass it to the kernel.
+ 
+This applies only to the stub itself, and relates to dealing with a
+firmware that provides a preloaded tree. As well as an obscurity
+relating to _stub_ command line passing.
+
+It has also not been included in the patch sets sent out so far.
+
+> As long as that's well defined and does not preclude ACPI, then I am
+> happy.
+
+This is already well defined. I'll agree it may not be explicit enough.
+If we do need any documentation changes, I feel they belong in Booting,
+to explain that a minimal DT will be used even with ACPI in order _not_
+to break the existing boot protocol.
+
+/
+    Leif
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
