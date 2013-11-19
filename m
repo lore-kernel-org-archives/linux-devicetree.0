@@ -1,48 +1,90 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: [PATCH] pinctrl: samsung: Allow pin value to be initialized using
- pinfunc.
-Date: Tue, 19 Nov 2013 18:15:51 +0100
-Message-ID: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Doug Anderson <dianders@chromium.org>, Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <t.figa@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something better?
+Date: Tue, 19 Nov 2013 10:27:40 -0700
+Message-ID: <528B9F8C.5080202@wwwdotorg.org>
+References: <52644A9E.3060007@wwwdotorg.org> <20131118122644.GA26046@ulmo.nvidia.com> <20131118134022.26EE7C409EC@trevor.secretlab.ca> <20131118135727.GD14306@sirena.org.uk> <20131118152920.GL26046@ulmo.nvidia.com> <20131118155022.GB28334@sirena.org.uk> <20131118160626.GN26046@ulmo.nvidia.com> <528A4B5D.8050809@wwwdotorg.org> <20131119093504.GF31504@ulmo.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131119093504.GF31504-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch extends the range of settings configurable via pinfunc API
-to cover pin value as well. This allows configuration of default values
-of pins.
+On 11/19/2013 02:35 AM, Thierry Reding wrote:
+> On Mon, Nov 18, 2013 at 10:16:13AM -0700, Stephen Warren wrote:
+>> On 11/18/2013 09:06 AM, Thierry Reding wrote: ...
+>>> Part of my point was that you could possibly still use the same
+>>> IP with only a modified (standard) register interface. That way
+>>> no licensing of third party IP would be needed. You'd only need
+>>> to rewrite parts of the IP to make it look (and behave) like
+>>> the standard one.
+>>> 
+>>> That's exactly how 16550-compatible UARTs work, isn't it? Or
+>>> even the way that USB (EHCI, ...) work. There's a standardize
+>>> register interface, possibly with a way for vendor-specific
+>>> extensions, but the interface itself doesn't need to be
+>>> licensed, so there are no additional costs to supporting the
+>>> standard interface. There are only the advantages of being able
+>>> to reuse a well-tested body of code.
+>> 
+>> Your idea would be great if it could be made to work in
+>> practice.
+> 
+> This wasn't really my idea, so I can't take all the credit for it.
+> =)
+> 
+>> I'm not convinced how possible this would be, without ARM
+>> mandating it in their contractual licensing terms, or large
+>> customers mandating it in order to use SoCs for their flagship
+>> designs.
+> 
+> I don't think ARM mandating this is necessary. In the end it boils
+> down to faster time to market, doesn't it? I mean if you have a
+> device that exposes a standard set of registers and a driver for
+> that standard set already exists, then it's very little work to get
+> the device working with it. You also save a lot of work on
+> validation.
 
-Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt | 1 +
- drivers/pinctrl/pinctrl-samsung.c                             | 1 +
- 2 files changed, 2 insertions(+)
+I get the impression that many silicon vendors simply do what they
+want when there aren't constraints that dictate otherwise. The
+benefits of upstream SW aren't valued by everyone, let alone the
+benefits of the HW equivalent - the standardized registers we're
+talking about. As such, without some force pushing for
+standardization, people won't do it. That force would need to be
+either ARM, or the customers/partners/ecosystem consuming the SoCs.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-index fe34cbb..ed4cc9c 100644
---- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-@@ -74,6 +74,7 @@ Required Properties:
-   "samsung,pins" property of the child node. The following pin configuration
-   properties are supported.
- 
-+  - samsung,pin-val: Initial value of pin output buffer.
-   - samsung,pin-pud: Pull up/down configuration.
-   - samsung,pin-drv: Drive strength configuration.
-   - samsung,pin-pud-pdn: Pull up/down configuration in power down mode.
-diff --git a/drivers/pinctrl/pinctrl-samsung.c b/drivers/pinctrl/pinctrl-samsung.c
-index c752de4..6b2194a 100644
---- a/drivers/pinctrl/pinctrl-samsung.c
-+++ b/drivers/pinctrl/pinctrl-samsung.c
-@@ -47,6 +47,7 @@ static struct pin_config {
- 	{ "samsung,pin-drv", PINCFG_TYPE_DRV },
- 	{ "samsung,pin-con-pdn", PINCFG_TYPE_CON_PDN },
- 	{ "samsung,pin-pud-pdn", PINCFG_TYPE_PUD_PDN },
-+	{ "samsung,pin-val", PINCFG_TYPE_DAT },
- };
- 
- /* Global list of devices (struct samsung_pinctrl_drv_data) */
--- 
-1.8.4.2
+And note that we already have drivers in our product kernels (and
+simplified drivers upstream) for all this HW already, so switching
+register interface would actually be more work at least in the short term.
+
+Likely the best way to drive this forward is to talk to our silicon
+engineers and try and drive this through them. If you can persuade
+them, perhaps it can trickle back up to ARM and across other vendors.
+If you as an NVIDIA employee can't persuade the NVIDIA HW designers, I
+don't expect you could persuade other HW vendors:-)
+
+> The 16550 UART register set wasn't mandated by anyone as far as I
+> know, but still the majority of UART devices implement it. I guess
+> the same is true of EHCI or SDHCI.
+
+IIUC, the situation is a little different.
+
+A platform existed that used the 8250/16550. That product got into the
+market first (or created a new market). Others wanted to be compatible
+with the product, so had to implement compatible registers. Thus,
+everyone made their motherboard/chipset UARTs work the same.
+
+However, with ARM SoCs, there are multiple tens of vendors all
+developing products at once, and even for different markets, so the
+whole "must be compatible with this existing thing" driving force
+simply doesn't exist, simply because there is no one single "existing
+thing". Systems are also larger, and there are many more SW developers
+employed, so there's a bit more ability to deal with different HW too.
+It may not scale infinitely, but probably better than it did 30 years ago.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
