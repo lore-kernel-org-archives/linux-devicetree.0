@@ -1,90 +1,119 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2] ARM: ux500: decomission the non-DT MTU init sequence
-Date: Tue, 19 Nov 2013 22:27:51 +0100
-Message-ID: <1384896471-9384-1-git-send-email-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/2] clksrc: delete nomadik MTU non-DT boot path
+Date: Tue, 19 Nov 2013 22:28:19 +0100
+Message-ID: <1384896499-9428-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The MTU is now only initialized using the native clocksource
-device tree matching.
+Both platforms using the MTU (Nomadik and Ux500) have now been
+converted to use device tree exclusively, thus let us delete
+this platform data header and make this driver a fully
+self-contained DT-only driver.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/mach-ux500/timer.c | 28 ++--------------------------
- 1 file changed, 2 insertions(+), 26 deletions(-)
+Daniel/tglx: seeking an ACK from either of you guys to take this
+in the ux500-devicetree branch where the last user is deleted.
+---
+ drivers/clocksource/nomadik-mtu.c                  | 23 +++++-----------------
+ .../linux/platform_data/clocksource-nomadik-mtu.h  |  9 ---------
+ 2 files changed, 5 insertions(+), 27 deletions(-)
+ delete mode 100644 include/linux/platform_data/clocksource-nomadik-mtu.h
 
-diff --git a/arch/arm/mach-ux500/timer.c b/arch/arm/mach-ux500/timer.c
-index ca60bbd9361b..1a9051b6f932 100644
---- a/arch/arm/mach-ux500/timer.c
-+++ b/arch/arm/mach-ux500/timer.c
-@@ -10,7 +10,6 @@
- #include <linux/clocksource.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
+diff --git a/drivers/clocksource/nomadik-mtu.c b/drivers/clocksource/nomadik-mtu.c
+index ed7b73b508e0..f00b5c9ce8b6 100644
+--- a/drivers/clocksource/nomadik-mtu.c
++++ b/drivers/clocksource/nomadik-mtu.c
+@@ -20,7 +20,6 @@
+ #include <linux/jiffies.h>
+ #include <linux/delay.h>
+ #include <linux/err.h>
 -#include <linux/platform_data/clocksource-nomadik-mtu.h>
+ #include <linux/sched_clock.h>
+ #include <asm/mach/time.h>
  
- #include <asm/smp_twd.h>
- 
-@@ -44,17 +43,14 @@ const static struct of_device_id prcmu_timer_of_match[] __initconst = {
- 
- void __init ux500_timer_init(void)
- {
--	void __iomem *mtu_timer_base;
- 	void __iomem *prcmu_timer_base;
- 	void __iomem *tmp_base;
- 	struct device_node *np;
- 
--	if (cpu_is_u8500_family() || cpu_is_ux540_family()) {
--		mtu_timer_base = __io_address(U8500_MTU0_BASE);
-+	if (cpu_is_u8500_family() || cpu_is_ux540_family())
- 		prcmu_timer_base = __io_address(U8500_PRCMU_TIMER_4_BASE);
--	} else {
-+	else
- 		ux500_unknown_soc();
--	}
- 
- 	np = of_find_matching_node(NULL, prcmu_timer_of_match);
- 	if (!np)
-@@ -67,26 +63,6 @@ void __init ux500_timer_init(void)
- 	prcmu_timer_base = tmp_base;
- 
- dt_fail:
--	/* Doing it the old fashioned way. */
--
--	/*
--	 * Here we register the timerblocks active in the system.
--	 * Localtimers (twd) is started when both cpu is up and running.
--	 * MTU register a clocksource, clockevent and sched_clock.
--	 * Since the MTU is located in the VAPE power domain
--	 * it will be cleared in sleep which makes it unsuitable.
--	 * We however need it as a timer tick (clockevent)
--	 * during boot to calibrate delay until twd is started.
--	 * RTC-RTT have problems as timer tick during boot since it is
--	 * depending on delay which is not yet calibrated. RTC-RTT is in the
--	 * always-on powerdomain and is used as clockevent instead of twd when
--	 * sleeping.
--	 * The PRCMU timer 4 register a clocksource and
--	 * sched_clock with higher rating then MTU since is always-on.
--	 *
--	 */
--	if (!of_have_populated_dt())
--		nmdk_timer_init(mtu_timer_base, IRQ_MTU0);
- 	clksrc_dbx500_prcmu_init(prcmu_timer_base);
- 	ux500_twd_init();
+@@ -103,7 +102,7 @@ static int nmdk_clkevt_next(unsigned long evt, struct clock_event_device *ev)
+ 	return 0;
  }
+ 
+-void nmdk_clkevt_reset(void)
++static void nmdk_clkevt_reset(void)
+ {
+ 	if (clkevt_periodic) {
+ 		/* Timer: configure load and background-load, and fire it up */
+@@ -144,7 +143,7 @@ static void nmdk_clkevt_mode(enum clock_event_mode mode,
+ 	}
+ }
+ 
+-void nmdk_clksrc_reset(void)
++static void nmdk_clksrc_reset(void)
+ {
+ 	/* Disable */
+ 	writel(0, mtu_base + MTU_CR(0));
+@@ -192,8 +191,8 @@ static struct irqaction nmdk_timer_irq = {
+ 	.dev_id		= &nmdk_clkevt,
+ };
+ 
+-static void __init __nmdk_timer_init(void __iomem *base, int irq,
+-				     struct clk *pclk, struct clk *clk)
++static void __init nmdk_timer_init(void __iomem *base, int irq,
++				   struct clk *pclk, struct clk *clk)
+ {
+ 	unsigned long rate;
+ 
+@@ -245,18 +244,6 @@ static void __init __nmdk_timer_init(void __iomem *base, int irq,
+ 	register_current_timer_delay(&mtu_delay_timer);
+ }
+ 
+-void __init nmdk_timer_init(void __iomem *base, int irq)
+-{
+-	struct clk *clk0, *pclk0;
+-
+-	pclk0 = clk_get_sys("mtu0", "apb_pclk");
+-	BUG_ON(IS_ERR(pclk0));
+-	clk0 = clk_get_sys("mtu0", NULL);
+-	BUG_ON(IS_ERR(clk0));
+-
+-	__nmdk_timer_init(base, irq, pclk0, clk0);
+-}
+-
+ static void __init nmdk_timer_of_init(struct device_node *node)
+ {
+ 	struct clk *pclk;
+@@ -280,7 +267,7 @@ static void __init nmdk_timer_of_init(struct device_node *node)
+ 	if (irq <= 0)
+ 		panic("Can't parse IRQ");
+ 
+-	__nmdk_timer_init(base, irq, pclk, clk);
++	nmdk_timer_init(base, irq, pclk, clk);
+ }
+ CLOCKSOURCE_OF_DECLARE(nomadik_mtu, "st,nomadik-mtu",
+ 		       nmdk_timer_of_init);
+diff --git a/include/linux/platform_data/clocksource-nomadik-mtu.h b/include/linux/platform_data/clocksource-nomadik-mtu.h
+deleted file mode 100644
+index 80088973b734..000000000000
+--- a/include/linux/platform_data/clocksource-nomadik-mtu.h
++++ /dev/null
+@@ -1,9 +0,0 @@
+-#ifndef __PLAT_MTU_H
+-#define __PLAT_MTU_H
+-
+-void nmdk_timer_init(void __iomem *base, int irq);
+-void nmdk_clkevt_reset(void);
+-void nmdk_clksrc_reset(void);
+-
+-#endif /* __PLAT_MTU_H */
+-
 -- 
 1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
