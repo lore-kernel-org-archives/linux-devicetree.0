@@ -1,170 +1,30 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
-Date: Tue, 19 Nov 2013 15:39:23 -0500
-Message-ID: <20131119203923.GF28859@titan.lakedaemon.net>
-References: <20131118191955.GG10335@titan.lakedaemon.net>
- <528A6944.3070303@wwwdotorg.org>
- <20131118192852.GI10335@titan.lakedaemon.net>
- <528A6CA3.9030904@wwwdotorg.org>
- <20131118195243.GJ10335@titan.lakedaemon.net>
- <528A98C8.9040803@wwwdotorg.org>
- <20131119122801.GL16735@n2100.arm.linux.org.uk>
- <528BB109.2060201@wwwdotorg.org>
- <20131119185729.GD28859@titan.lakedaemon.net>
- <528BC1A3.70202@wwwdotorg.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 01/10] dma: ste_dma40: Expand DT binding to accept
+ 'high-priority channel' flag
+Date: Tue, 19 Nov 2013 22:02:21 +0100
+Message-ID: <CACRpkdZKKeTOReMey5+yOeX+4-7vPWgnKx-b8p68ECdweXpQug@mail.gmail.com>
+References: <1384859269-19801-1-git-send-email-lee.jones@linaro.org>
+	<1384859269-19801-2-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <528BC1A3.70202-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1384859269-19801-2-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2013 at 12:53:07PM -0700, Stephen Warren wrote:
-> On 11/19/2013 11:57 AM, Jason Cooper wrote:
-> > On Tue, Nov 19, 2013 at 11:42:17AM -0700, Stephen Warren wrote:
-> >> On 11/19/2013 05:28 AM, Russell King - ARM Linux wrote:
-> >>> On Mon, Nov 18, 2013 at 03:46:32PM -0700, Stephen Warren wrote:
-> >>>> Again, the point is not that it's hard to write the script. As you
-> >>>> demonstrated, it's easy. The problem is that then, everybody has to do
-> >>>> something different for Tegra, forever. No matter how small the actual
-> >>>> cost of doing it is, it's still non-scalable to require that everyone
-> >>>> know about this special case. I'm not convinced the issue would be
-> >>>> isolated to Tegra either.
-> >>>
-> >>> That's why there's the facility to allow an override to the script,
-> >>> just like there's the facility to override the default script when
-> >>> running "make install".
-> >>
-> >> Again, you are completely missing the point about that not scaling at all.
-> >>
-> >> But I will go and investigate what it takes to support renaming the
-> >> DTBs. Everyone (using Tegra) will have to update their bootloader, but
-> >> perhaps that can be dealt with.
-> > 
-> > Setting aside the idea of hard-coding filenames into any bootloader
-> > binary, did you catch that the proposed solution would allow you to
-> > continue using the dts filenames as they currently are?
-> 
-> I don't consider requiring people to install a custom /sbin/installdtbs
-> in order to override renaming done by the default in-kernel
-> scripts/installdtbs a solution.
+On Tue, Nov 19, 2013 at 12:07 PM, Lee Jones <lee.jones@linaro.org> wrote:
 
-Russell's point about not creating policy for userspace is on the mark.
-*I* think the most-specific compatible string should be unique per
-board, and thus would be a sane naming scheme.  But that is exactly as
-Russell said making policy for userspace.  If you said as much, I missed
-it.  Sorry about that.
+> This is used for MSP (audio) devices which is about to be fully DT:ed.
+>
+> Cc: devicetree@vger.kernel.org
+> Acked-by: Vinod Koul <vinod.koul@intel.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Now, off on a tangent...
+Since this was ACKed by Vinod I have applied it to the ux500-devicetree
+branch.
 
-> > I must admit I'm a bit mystified as to what Tegra is doing that this
-> > breaks it so horribly...
-> 
-> The idea is that a disto boot process runs as follow:
-> 
-> * U-Boot runs and initializes.
-> 
-> * U-Boot searches the boot disk (or any disk that could be a boot disk)
-> for e.g. /boot/boot.scr, and executes it.
-> 
-> * boot.scr loads the kernel, initrd, DTB, sets up the command-line, and
-> boots the kernel.
-> 
-> A few points to make here:
-> 
-> a) There must be a boot.scr or similar on disk, to provide a way for
-> distros to parameterize the boot process. At the very least they need to
-> configure the kernel command-line, specify whether an initrd is used at
-> all, etc.
-> 
-> b) boot.scr is responsible for loading the zImage etc. from disk, rather
-> than the default U-Boot environment doing this. This allows distros
-> complete flexibility re: where to put the zImage etc. on disk. On distro
-> might store a single copy in /boot/zImage, another might use
-> /boot/zImage-${kernelversion}, another might use
-> /boot/${kernelversion}/zImage, etc. By putting the onus on boot.scr to
-> do the loading, the distro has complete flexibility in file naming here.
-> 
-> c) There are a number of system-specific parameters required to
-> implement zImage/DTB loading. For example, the SDRAM address that they
-> should be loaded to. Distros shouldn't have to detect which board
-> they're running on and calculate the values of all those parameters.
-> Instead, U-Boot should provide the values to boot.scr, by setting
-> certain standard variables in the environment.
-> 
-> For example, the zImage gets loaded to $kernel_addr_r, the DTB to
-> $fdt_addr_r, etc.
-> 
-> d) Finally, boot.scr needs to load the DTB. This requires knowing which
-> DTB to load. Again, the distro shouldn't have to detect which board
-> they're running on, and either install the correct DTB to a static
-> filename, or make a decision on the DTB filename to load. Instead,
-> distros should simply install all DTBs generated by the kernel build,
-> and use some run-time information to calculate the DTB filename using a
-> completely HW-agnostic and generic algorithm.
-> 
-> To support this, U-Boot can be configured to add certain standard
-> environment variables to the default environment. These define which SoC
-> and board the code is running on. These are ${soc} and ${board}. If you
-> then calculate the DTB filename as ${soc}-${board}.dtb, that should work
-> anywhere. This is why keeping the current in-kernel DTB filenames is
-> important, so they match the assumption that this algorithm works.
-> 
-> Note: if the firmware contains an embedded DTB, boot.scr could detect
-> this e.g. by the standard variable $fdt_addr being set, and hence skiip
-> loading a DTB. IIRC, this is how Calxeda boards are set up.
-
-Ok, so the ${soc}-${board} is a work-around until all bootloaders are
-providing a dtb, or until all bootloaders are providing a stable dtb?
-
-I ask because in tinkering with pxa-impedance-matcher [1], I've setup
-selecting from many dtbs at boot (linked in, no fs support) by
-specifying the desired board compatible string on the kernel
-commandline (patches still a wip).  The impedance-matcher then scans
-through the provided dtbs looking for a match.
-
-It's a hack, and only useful until bootloaders are providing dtbs.  If
-the dtb is upgradable, then it goes away earlier.  If the dtb isn't,
-then it'll be around longer.  It's goal is to keep silly code out of the
-kernel (non-standard atag-to-fdt translation, other bootloader
-workarounds).  Perhaps it'll be used to translate ACPI into DT for a
-bit... :)
-
-> So finally, if the kernel "make dtbs_install" starts renaming DTB files,
-> then I need to adjust the boot.scr we're using to use some other
-> algorithm to calculate the DTB filename. Given the filename isn't then
-> purely derived from ${soc} and ${board}, I probably need to set up some
-> additional (or replacement) variables in the standard U-Boot environment
-> that contain the extra fields required to calculate the DTB filename.
-> The existing ${vendor} might work. However, it'd be simplest if I just
-> had U-Boot export something like ${dtb_filename}, which contained the
-> (or a list of) filenames to try.
-> 
-> You can take a look at my boot.scr generation tool at:
-> https://github.com/NVIDIA/tegra-uboot-scripts
-> 
-> That probably works on the Raspberry Pi too (since I set up the Pi's
-> U-Boot port to work the same way) and likely would require minimal
-> changes to work on at least some TI and Calxeda boards.
-> 
-> The idea is that eventually, and board that wants to support a generic
-> distro booting on it would export the standard variables I mentioned
-> above, have a default U-Boot environment that simply searched for and
-> executed boot.scr, and distros would use a generic boot.scr as generated
-> by the tool I linked to above.
-
-Thanks for the detailed explanation.  I'll post a non-RFC version in the
-next few days.
-
-thx,
-
-Jason.
-
-[1] https://github.com/zonque/pxa-impedance-matcher.git
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
