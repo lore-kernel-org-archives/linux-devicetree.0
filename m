@@ -1,77 +1,192 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH 1/6] watchdog: davinci: change driver to use WDT core
-Date: Tue, 19 Nov 2013 18:17:32 +0200
-Message-ID: <528B8F1C.3090506@ti.com>
-References: <1384795139-19466-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1384795139-19466-2-git-send-email-ivan.khoronzhuk@ti.com>
- <528AF349.9070902@roeck-us.net>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 3/7] gpio: davinci: use irqdomain
+Date: Tue, 19 Nov 2013 18:22:54 +0200
+Message-ID: <528B905E.6000206@ti.com>
+References: <1383905510-31760-1-git-send-email-prabhakar.csengg@gmail.com>	<1383905510-31760-4-git-send-email-prabhakar.csengg@gmail.com>	<CACRpkdaJg4wqtD5xhPVrHJHxFoVwau6jidbOuQ9xFSK_6drxPQ@mail.gmail.com>	<528A2565.4000802@ti.com>
+	<CACRpkda7h4hsMYv_2gdrY+JB80kHu3BkS5OOGyGhEZFc_UkCig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <528AF349.9070902@roeck-us.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Wim Van Sebroeck <wim@iguana.be>, Sekhar Nori <nsekhar@ti.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <CACRpkda7h4hsMYv_2gdrY+JB80kHu3BkS5OOGyGhEZFc_UkCig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2013 07:12 AM, Guenter Roeck wrote:
-> On 11/18/2013 09:18 AM, Ivan Khoronzhuk wrote:
->> To reduce code duplicate and increase code readability use WDT core
->> code to handle WDT interface.
->>
->> Remove io_lock as the WDT core uses mutex to lock each wdt device.
->> Remove wdt_state as the WDT core track state with its own variable.
->>
->> The watchdog_init_timeout() can read timeout value from timeout-sec
->> property if the passed value is out of bounds. The heartbeat is
->> initialized in next way. If heartbeat is not set thought module
->> parameter, try to read it's value from WDT node timeout-sec property.
->> If node has no one, use default value.
->>
->> The heartbeat is hold in wdd->timeout by WDT core, so use it in
->> order to set timeout period.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> ---
->>   drivers/watchdog/Kconfig       |    2 +
->>   drivers/watchdog/davinci_wdt.c |  152
->> ++++++++++------------------------------
->>   2 files changed, 39 insertions(+), 115 deletions(-)
->>
->> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->> index d1d53f3..d7db13d 100644
->> --- a/drivers/watchdog/Kconfig
->> +++ b/drivers/watchdog/Kconfig
->> @@ -271,6 +271,8 @@ config IOP_WATCHDOG
->>   config DAVINCI_WATCHDOG
->>       tristate "DaVinci watchdog"
->>       depends on ARCH_DAVINCI
->> +    select WATCHDOG_CORE
->> +    select WATCHDOG_NOWAYOUT
+On 11/19/2013 01:06 AM, Linus Walleij wrote:
+> On Mon, Nov 18, 2013 at 3:34 PM, Grygorii Strashko
+> <grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
+>> On 11/18/2013 03:11 PM, Linus Walleij wrote:
 >
-> Is this mandatory, ie is it correct that the watchdog can not be stopped
-> once started ?
+>>> I think we recently established that map creating cannot be done
+>>> in gpio_to_irq* functions as that will not work properly if you request
+>>> an IRQ from device tree without first obtaining the IRQ from the GPIO
+>>> number with this function.
+>>
+>> Why? Could you point on corresponding thread, pls?
 >
-> Assuming it is,
+> All that contain this:
+> "gpio: interrupt consistency check for OF GPIO IRQs"
+> http://marc.info/?l=linux-kernel&w=2&r=1&s=interrupt+consistency&q=b
 
-Yes, it is. Davinci WDT can't be stopped and once it's expired - it can 
-be rearmed only after hardware reset.
+Thanks.
 
 >
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>> Current call tree is:
+>> irq_create_of_mapping()
+>> |-hwirq = omain->ops->xlate()
+>> |-irq_create_mapping(domain, hwirq)
 >
+> OK that works for the pure device-tree scenario so mostly
+> this is OK.
+>
+> The problem that appear is if someone is using platform data-provided
+> IRQs off the irq_chip without calling gpio_to_irq() on the GPIO line
+> first. This has been determined to be legal to do, so preferably
+> create the map when registering the lines.
 
-Thanks a lot for your review.
+Ok, I understand. It may fail in case if someone will define/calculate
+  IRQ number for device manually in board code, like:
+  dev_irq = (DA850_N_CP_INTC_IRQ + gpioN)
+
+Also, looks like It is possible to fail if Main/arch IRQ controller
+code doesn't make call of irq_alloc_descs() during init, so
+allocated_irqs will be empty.
+
+Actually, the irq_find_mapping() was called before from 
+gpio_to_irq_banked() in v4 of this series - than It was changed
+according to my comment, to get maximum benefits of using linear IRQ
+domain.
+
+Before recommending that, I've checked Davinci platform code and didn't
+find any risk places - BUT, Seems my findings need to be confirmed by
+Sekhar.
+
+I purpose to move forward as is if above will be confirmed. Otherwise,
+we can switch to use irq_domain_add_legacy().
+
+>
+>>> Also: please write a patch that marks the IRQ lines.
+>>> Call gpio_lock_as_irq(*gpio_chip, offset); in the
+>>> irqchip startup/shutdown functions. (Can be a separate
+>>> patch.)
+>>
+>> It seems, some misunderstanding is here. So I'd like to clarify few points
+>> and would be very appreciate for your comments:
+>> 1) This patch itself will work unless we switch to DT (as in the following
+>> patch)
+>
+> Sure.... but this does not seem to have much to do
+> with my request to use gpio_lock_as_irq().
+
+Oh no. Your request about gpio_lock_as_irq() is absolutely valid :)
+And it has to be added
+
+>
+>> 2) After this patch the following object structure will be created during
+>> Davinci GPIO driver initialization (DA850 has 144 IRQ lines):
+>> - gpio_chip0(0..31)
+>>    |- irq_domain1
+>> - gpio_chip1(32..63)
+>>    |- irq_domain2
+>> - gpio_chip2(64..95)
+>>    |- irq_domain3
+>> - gpio_chip3(96..127)
+>>    |- irq_domain4
+>> - gpio_chip4(128..143)
+>>    |- irq_domain5
+>
+> OK that's nice.
+>
+>> 3) But in case of DT only one GPIO controller node will be created
+>> Example:
+>> gpio: gpio@1e26000 {
+>>          compatible = "ti,dm6441-gpio";
+>>          gpio-controller;
+>>          reg = <0x226000 0x1000>;
+>>          interrupt-parent = <&intc>;
+>>          interrupts = <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
+>>                  44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
+>>                  46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
+>>                  48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
+>>                  50 IRQ_TYPE_EDGE_BOTH>;
+>>          interrupt-controller;
+>>          #interrupt-cells = <2>;
+>>          ti,ngpio = <144>;
+>>          ti,davinci-gpio-unbanked = <0>;
+>> }
+>
+> Yep...
+>
+>> 4) As result, to make GPIO bindings/mappings work - we'll need to implement
+>> .of_xlate() callback per GPIO chip, which will provide us with valid valid
+>> gpio_chip and offset of gpio inside chip
+>> (It was discussed before and supposed to be done as next step).
+>
+> Yeah.. this is usually a bit tricky.
+>
+>> For example, gpio_chip3 and offset=15 should be selected:
+>> devA {
+>>     gpios = <&gpio 111 GPIO_ACTIVE_HIGH>;
+>> }
+>>
+>> 5) What should be done to make GPIO IRQ bindings/mappings work?
+>>
+>> Example:
+>> devB {
+>>     interrupt-parent = <&gpio>;
+>>     interrupts = <111 IRQ_TYPE_EDGE_BOTH>;
+>> }
+>>
+>> Should we implement one IRQ domain per all GPIO chips (per GPIO controller)?
+>
+> I don't know, I cannot really see where the problem is.
+>
+> The IRQ domain is for translationg hardware numbers such as bit offsets
+> into Linux IRQ numbers and nothing else, so I'd suggest that as long as
+> the thing you are translating/mapping is something simple like a bit
+> index you're doing the right thing.
+>
+> If it becomes something complex where that index is not just a bit
+> but an index into an array of registers at various locations it is
+> abusing the irqdomain.
+>
+> So I think you should create one irqdomain per GPIO instance
+> or bank or whatever you want to call it: like if there is this one
+> register with 32 bits, then it gets its own IRQdomain.
+>
+> I think you should try to keep the 5 irqdomains, but whatever
+> gives the simplest code is usually the right answer, and
+> divide-and-conquer (split down the problem) is usually a good
+> idea.
+>
+> How the GPIO block(s) are represented in the device tree is
+> another totally separate issue about hardware description,
+> do not let the device tree model your driver structure.
+
+Thanks for you comments, but looks like I have to be more specific :)
+
+How irq_find_host() will look for proper IRQ domain in our case?
+And will it work at all, taking into account that all (5) IRQ domains
+will have the same value of "of_node" property?
+of_irq_to_resource()
+|-irq_of_parse_and_map()
+   |-irq_create_of_mapping()
+     |-irq_find_host(irq_data->np)
+  where np will point on GPIO node.
+
+As result my question is about what do DT core frameworks allow or not
+allow to do? And according to that implementation of driver can be
+changed.
 
 Regards,
 -grygorii
