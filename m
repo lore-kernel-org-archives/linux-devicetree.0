@@ -1,96 +1,119 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
-Date: Tue, 19 Nov 2013 12:27:01 -0700
-Message-ID: <528BBB85.8050507@wwwdotorg.org>
-References: <eaf050fbd62803784856a4f37d4b332f7778e22c.1384798508.git.jason@lakedaemon.net> <528A65DF.8060000@wwwdotorg.org> <20131118191955.GG10335@titan.lakedaemon.net> <528A6944.3070303@wwwdotorg.org> <20131118192852.GI10335@titan.lakedaemon.net> <528A6CA3.9030904@wwwdotorg.org> <20131118195243.GJ10335@titan.lakedaemon.net> <528A98C8.9040803@wwwdotorg.org> <20131119122801.GL16735@n2100.arm.linux.org.uk> <528BB109.2060201@wwwdotorg.org> <20131119185212.GO16735@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: [PFC PATCH] xtensa: standardize devicetree compatible strings
+Date: Tue, 19 Nov 2013 21:29:23 +0200
+Message-ID: <c1b7541980d0e58fc09f3be04b960d3e6037a207.1384889248.git.baruch@tkos.co.il>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131119185212.GO16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2013 11:52 AM, Russell King - ARM Linux wrote:
-> On Tue, Nov 19, 2013 at 11:42:17AM -0700, Stephen Warren wrote:
->> On 11/19/2013 05:28 AM, Russell King - ARM Linux wrote:
->>> On Mon, Nov 18, 2013 at 03:46:32PM -0700, Stephen Warren wrote:
->>>> Again, the point is not that it's hard to write the script. As you
->>>> demonstrated, it's easy. The problem is that then, everybody has to do
->>>> something different for Tegra, forever. No matter how small the actual
->>>> cost of doing it is, it's still non-scalable to require that everyone
->>>> know about this special case. I'm not convinced the issue would be
->>>> isolated to Tegra either.
->>>
->>> That's why there's the facility to allow an override to the script,
->>> just like there's the facility to override the default script when
->>> running "make install".
->>
->> Again, you are completely missing the point about that not scaling at all.
-> 
-> No I'm not.  What you're looking for is perfection.  Perfection is something
-> we can't have here - we can have "good enough".
+The recommended compatible string format, according to the ePAPR v1.1 standard,
+is "manufacturer,model". Change the xtensa cpu and pic compatible strings to
+"cdns,xtensa-cpu" and "cdns,xtensa-pic" respectively. Also, change the boards
+compatible strings in a similar way. Accept older non-standard compatible
+strings for now, to not break existing installations.
 
-For the issue I care about, it's not hard to have perfection. Why
-wouldn't I want that.
+Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+---
 
-Reading your comments below, I think we're talking about slightly
-different aspects of the problem though.
+Should we just remove support for the old compatible strings?
+---
+ arch/xtensa/boot/dts/lx60.dts        | 2 +-
+ arch/xtensa/boot/dts/ml605.dts       | 2 +-
+ arch/xtensa/boot/dts/xtfpga.dtsi     | 6 +++---
+ arch/xtensa/kernel/irq.c             | 5 ++++-
+ arch/xtensa/platforms/xtfpga/setup.c | 3 +++
+ 5 files changed, 12 insertions(+), 6 deletions(-)
 
-> Look, the problem is very simple: we have a bunch of DT descriptions in
-> the kernel, which we build to a blob.  We don't want distributions poking
-> around in the kernel source tree to retrieve these blobs, so we provide
-> a way to install them somewhere.
+diff --git a/arch/xtensa/boot/dts/lx60.dts b/arch/xtensa/boot/dts/lx60.dts
+index 2eab365..a0f8b8a 100644
+--- a/arch/xtensa/boot/dts/lx60.dts
++++ b/arch/xtensa/boot/dts/lx60.dts
+@@ -3,7 +3,7 @@
+ /include/ "xtfpga-flash-4m.dtsi"
+ 
+ / {
+-	compatible = "xtensa,lx60";
++	compatible = "cdns,xtensa-lx60";
+ 	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x04000000>;
+diff --git a/arch/xtensa/boot/dts/ml605.dts b/arch/xtensa/boot/dts/ml605.dts
+index 6ed51d6..905c3a5 100644
+--- a/arch/xtensa/boot/dts/ml605.dts
++++ b/arch/xtensa/boot/dts/ml605.dts
+@@ -3,7 +3,7 @@
+ /include/ "xtfpga-flash-16m.dtsi"
+ 
+ / {
+-	compatible = "xtensa,ml605";
++	compatible = "cdns,xtensa-ml605";
+ 	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x08000000>;
+diff --git a/arch/xtensa/boot/dts/xtfpga.dtsi b/arch/xtensa/boot/dts/xtfpga.dtsi
+index 7eda6ec..46b4f5e 100644
+--- a/arch/xtensa/boot/dts/xtfpga.dtsi
++++ b/arch/xtensa/boot/dts/xtfpga.dtsi
+@@ -1,5 +1,5 @@
+ / {
+-	compatible = "xtensa,xtfpga";
++	compatible = "cdns,xtensa-xtfpga";
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 	interrupt-parent = <&pic>;
+@@ -17,7 +17,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		cpu@0 {
+-			compatible = "xtensa,cpu";
++			compatible = "cdns,xtensa-cpu";
+ 			reg = <0>;
+ 			/* Filled in by platform_setup from FPGA register
+ 			 * clock-frequency = <100000000>;
+@@ -26,7 +26,7 @@
+ 	};
+ 
+ 	pic: pic {
+-		compatible = "xtensa,pic";
++		compatible = "cdns,xtensa-pic";
+ 		/* one cell: internal irq number,
+ 		 * two cells: second cell == 0: internal irq number
+ 		 *            second cell == 1: external irq number
+diff --git a/arch/xtensa/kernel/irq.c b/arch/xtensa/kernel/irq.c
+index 6f4f974..7b64a9d 100644
+--- a/arch/xtensa/kernel/irq.c
++++ b/arch/xtensa/kernel/irq.c
+@@ -202,7 +202,10 @@ void __init init_IRQ(void)
+ 
+ #ifdef CONFIG_OF
+ 	/* The interrupt controller device node is mandatory */
+-	intc = of_find_compatible_node(NULL, NULL, "xtensa,pic");
++	intc = of_find_compatible_node(NULL, NULL, "cdns,xtensa-pic");
++	/* Try the deprecated compatible string */
++	if (!intc)
++		intc = of_find_compatible_node(NULL, NULL, "xtensa,pic");
+ 	BUG_ON(!intc);
+ 
+ 	root_domain = irq_domain_add_linear(intc, NR_IRQS,
+diff --git a/arch/xtensa/platforms/xtfpga/setup.c b/arch/xtensa/platforms/xtfpga/setup.c
+index 74bb74f..288af60 100644
+--- a/arch/xtensa/platforms/xtfpga/setup.c
++++ b/arch/xtensa/platforms/xtfpga/setup.c
+@@ -168,6 +168,9 @@ void __init platform_calibrate_ccount(void)
+ 	long clk_freq = 0;
+ #ifdef CONFIG_OF
+ 	struct device_node *cpu =
++		of_find_compatible_node(NULL, NULL, "cdns,xtensa-cpu");
++	/* Try the deprecated compatible string */
++	if (!cpu)
+ 		of_find_compatible_node(NULL, NULL, "xtensa,cpu");
+ 	if (cpu) {
+ 		u32 freq;
+-- 
+1.8.4.2
 
-Sure. I have no problem at all if the kernel implemnts a "make
-dtbs_install" target. It certainly should.
-
-> The installation should just copy the blobs to a path in the filesystem
-> _or_ allow a distro to hook into the installation process, just like we
-> provide for the installation of the zImage.  That is our job done.  We
-> should do *nothing* more.
-
-OK, if you're arguing that there should be absolutely zero renaming at
-all under any circumstances, I'm fine with that.
-
-My argument was that the proposed renaming step (renaming the DTBs based
-on the top-level compatible) is not appropriate for Tegra, even if it is
-what some other platforms might want. My issue could be addressed by any of:
-
-a) Never renaming anything. I believe this is what you're arguing for.
-
-b) Having some kind of in-kernel list of DTs that do get renamed, and
-those that don't. Tegra DTs would be in the latter don't-rename list.
-
-c) Simply renaming any DT source files in the kernel that are perceived
-to have the wrong name currently, rather than renaming during each "make
-dtbs_install". Tegra DTs currently have the correct name, so wouldn't be
-renamed.
-
-I'm fine with any of those solutions. (a) or (c) seem simplest to me.
-
-> If we start doing more than that, we're getting into the realms of
-> distribution policy, and that's something we should not be involved in.
-> 
-> This is precisely the reason why we don't get involved with working out
-> what steps are needed to install a kernel zImage onto a target: that
-> is _not_ the kernel's job to work out that you may need to package it
-> up and maybe copy it over to a TFTP server, or maybe copy it onto a SD
-> card, or maybe place it in /boot and do a certain number of other
-> steps.
-> 
-> All that the kernel build's job here is to provide the results of the
-> kernel build.  It is not about working out which DT blob is right for
-> any particular platform.
-
-For the record, I was never talking about the kernel selecting a
-particular DTB to install, or a particular DTB for a target. I assume
-that "make dtbs_install" always installs all DTBs that the kernel built.
-The discussion in this thread has been about (re-)naming not selecting
-DTBs. It's up to some out-of-kernel process to pick which (or all) of
-those to actually use.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
