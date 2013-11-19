@@ -1,48 +1,42 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Tue, 19 Nov 2013 10:12:17 +0100
-Message-ID: <20131119091216.GA4412@netboy>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
- <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
- <5289A356.4060004@jonmasters.org>
- <20131118150052.GC24408@sirena.org.uk>
- <20131118191336.GB5886@quad.lixom.net>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv5 1/9] of: introduce of_property_for_earch_phandle_with_args()
+Date: Tue, 19 Nov 2013 11:33:05 +0200
+Message-ID: <1384853593-32202-2-git-send-email-hdoyu@nvidia.com>
+References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131118191336.GB5886-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384853593-32202-1-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 11:13:36AM -0800, Olof Johansson wrote:
-> 
-> I know people have been frustrated that they need to keep the DT in sync with
-> the kernel. But we've always been upfront with the requirement, and why we've
-> been having it. We're now changing this requirement, which should help sort out
-> practically all of the concerns at hand.
+The following pattern of code is tempting:
 
-Sorry, but this really gets my goat. When have you been upfront about
-the unstable DT idea? Was it when you suddenly, retrospectively
-announced this as a fact?
+  for (i = 0; !of_parse_phandle_with_args(np, list, cells, i, args); i++)
 
-   http://thread.gmane.org/gmane.linux.kernel/1532141
+Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+v5:
+New patch for v5.
+---
+ include/linux/of.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-I asked nicely for a pointer to some documentation of this so-called
-decision,
-
-   http://thread.gmane.org/gmane.linux.kernel/1532141
-
-and all I could hear was the crickets. It really looks like you guys
-have been making this up as you went along.
-
-Thanks,
-Richard
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 276c546..131fef5 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -613,6 +613,9 @@ static inline int of_property_read_u32(const struct device_node *np,
+ 		s;						\
+ 		s = of_prop_next_string(prop, s))
+ 
++#define of_property_for_each_phandle_with_args(np, list, cells, i, args) \
++	for (i = 0; !of_parse_phandle_with_args(np, list, cells, i, args); i++)
++
+ #if defined(CONFIG_PROC_FS) && defined(CONFIG_PROC_DEVICETREE)
+ extern void proc_device_tree_add_node(struct device_node *, struct proc_dir_entry *);
+ extern void proc_device_tree_add_prop(struct proc_dir_entry *pde, struct property *prop);
+-- 
+1.8.1.5
