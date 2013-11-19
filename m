@@ -1,64 +1,50 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
-Date: Tue, 19 Nov 2013 13:57:29 -0500
-Message-ID: <20131119185729.GD28859@titan.lakedaemon.net>
-References: <eaf050fbd62803784856a4f37d4b332f7778e22c.1384798508.git.jason@lakedaemon.net>
- <528A65DF.8060000@wwwdotorg.org>
- <20131118191955.GG10335@titan.lakedaemon.net>
- <528A6944.3070303@wwwdotorg.org>
- <20131118192852.GI10335@titan.lakedaemon.net>
- <528A6CA3.9030904@wwwdotorg.org>
- <20131118195243.GJ10335@titan.lakedaemon.net>
- <528A98C8.9040803@wwwdotorg.org>
- <20131119122801.GL16735@n2100.arm.linux.org.uk>
- <528BB109.2060201@wwwdotorg.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using pinfunc.
+Date: Tue, 19 Nov 2013 10:59:39 -0800
+Message-ID: <CAD=FV=XS0dbE7zfgDGVdp84h4fHH6tfO8aN_HNh1LbOjYy51aQ@mail.gmail.com>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
+	<528BB1F2.4080107@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <528BB109.2060201-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <528BB1F2.4080107@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Tomasz Figa <t.figa@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2013 at 11:42:17AM -0700, Stephen Warren wrote:
-> On 11/19/2013 05:28 AM, Russell King - ARM Linux wrote:
-> > On Mon, Nov 18, 2013 at 03:46:32PM -0700, Stephen Warren wrote:
-> >> Again, the point is not that it's hard to write the script. As you
-> >> demonstrated, it's easy. The problem is that then, everybody has to do
-> >> something different for Tegra, forever. No matter how small the actual
-> >> cost of doing it is, it's still non-scalable to require that everyone
-> >> know about this special case. I'm not convinced the issue would be
-> >> isolated to Tegra either.
-> > 
-> > That's why there's the facility to allow an override to the script,
-> > just like there's the facility to override the default script when
-> > running "make install".
-> 
-> Again, you are completely missing the point about that not scaling at all.
-> 
-> But I will go and investigate what it takes to support renaming the
-> DTBs. Everyone (using Tegra) will have to update their bootloader, but
-> perhaps that can be dealt with.
+On Tue, Nov 19, 2013 at 10:46 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 11/19/2013 10:15 AM, Tomasz Figa wrote:
+>> This patch extends the range of settings configurable via pinfunc API
+>> to cover pin value as well. This allows configuration of default values
+>> of pins.
+>
+> Shouldn't there be a driver that acquires the GPIO that's output to the
+> pin, and configures the output value? IIRC there have been previous
+> discussions re: having a list of e.g. initial GPIO output values in DT,
+> and that was rejected, and this patch seems to be doing almost the exact
+> same thing, just at the pinctrl level rather than GPIO level.
+>
+> That all said, I admit this could be a useful feature...
 
-Setting aside the idea of hard-coding filenames into any bootloader
-binary, did you catch that the proposed solution would allow you to
-continue using the dts filenames as they currently are?
+I haven't followed all of the previous discussions, but I know I've
+run into scenarios where something like this would be useful.  The one
+that comes to mind is:
 
-The find command in my example /sbin/installdtbs script spits out the
-in-tree dtb filename as it currently stands, and then you do what you
-want with it in your script.  Including, copying it, filename intact,
-into the location of your choice.  How could that possibly require you
-to upgrade your bootloader?
+* We've got GPIOs that default at bootup to a pulled up input since
+the default state of the pin should be "high".
 
-I must admit I'm a bit mystified as to what Tegra is doing that this
-breaks it so horribly...
+* These pins are really intended to be outputs, like an "enable",
+"reset", or "power down" line for a peripheral.  The pullup is strong
+enough to give us a good default state but we really want outputs.
 
-thx,
+* We'd like to provide this GPIO to a peripheral through device tree.
+...and we'd like all the pinmux to be setup automatically so we use
+pinctrl-names = "default".
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+* If we set the pinmux up as "output" then there's a chance that the
+line will glitch at bootup since the pinmux happens (changing the pin
+to output) before the driver has a chance to run.
+
+
+Does that sound like the same scenario you're trying to solve Tomasz?
