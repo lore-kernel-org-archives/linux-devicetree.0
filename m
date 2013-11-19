@@ -1,49 +1,41 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH] of: unflatten_and_copy: handle NULL initial_boot_params
-Date: Tue, 19 Nov 2013 12:58:12 +0000
-Message-ID: <1384865892-28659-1-git-send-email-james.hogan@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arch-owner@vger.kernel.org>
-Sender: linux-arch-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, James Hogan <james.hogan@imgtec.com>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 7/7] ARM: shmobile: armadillo-reference: Use low level IRQ for ST1231
+Date: Tue, 19 Nov 2013 13:59:49 +0100
+Message-ID: <1384865989-12875-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1383999839-3339-8-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1383999839-3339-8-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Check whether initial_boot_params is NULL before dereferencing it in
-unflatten_and_copy_device_tree() for the case where no device tree is
-available but the arch can still boot to a minimal usable system without
-it.
+The device is configured to generate an active-low interrupt signal that
+needs to be acknowledged by the host. Configure the IRQ to trigger on
+low level.
 
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arch@vger.kernel.org
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- drivers/of/fdt.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 2fa024b97c43..ac4983955e6d 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -922,8 +922,14 @@ void __init unflatten_device_tree(void)
-  */
- void __init unflatten_and_copy_device_tree(void)
- {
--	int size = __be32_to_cpu(initial_boot_params->totalsize);
--	void *dt = early_init_dt_alloc_memory_arch(size,
-+	int size;
-+	void *dt;
-+
-+	if (!initial_boot_params)
-+		return;
-+
-+	size = __be32_to_cpu(initial_boot_params->totalsize);
-+	dt = early_init_dt_alloc_memory_arch(size,
- 		__alignof__(struct boot_param_header));
- 
- 	if (dt) {
+Changes since v1:
+
+- Fixed typo (IRQ_TYPE_LOW_LEVEL -> IRQ_TYPE_LEVEL_LOW)
+
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+index aef425f..7b80f19 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+@@ -95,7 +95,7 @@
+ 		compatible = "sitronix,st1232";
+ 		reg = <0x55>;
+ 		interrupt-parent = <&irqpin1>;
+-		interrupts = <2 IRQ_TYPE_NONE>; /* IRQ10: hwirq 2 on irqpin1 */
++		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 		pinctrl-0 = <&st1232_pins>;
+ 		pinctrl-names = "default";
+ 		gpios = <&pfc 166 GPIO_ACTIVE_LOW>;
 -- 
-1.8.1.2
+1.8.3.2
+
