@@ -1,119 +1,158 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: [PFC PATCH] xtensa: standardize devicetree compatible strings
-Date: Tue, 19 Nov 2013 21:29:23 +0200
-Message-ID: <c1b7541980d0e58fc09f3be04b960d3e6037a207.1384889248.git.baruch@tkos.co.il>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
+Date: Tue, 19 Nov 2013 12:53:07 -0700
+Message-ID: <528BC1A3.70202@wwwdotorg.org>
+References: <eaf050fbd62803784856a4f37d4b332f7778e22c.1384798508.git.jason@lakedaemon.net> <528A65DF.8060000@wwwdotorg.org> <20131118191955.GG10335@titan.lakedaemon.net> <528A6944.3070303@wwwdotorg.org> <20131118192852.GI10335@titan.lakedaemon.net> <528A6CA3.9030904@wwwdotorg.org> <20131118195243.GJ10335@titan.lakedaemon.net> <528A98C8.9040803@wwwdotorg.org> <20131119122801.GL16735@n2100.arm.linux.org.uk> <528BB109.2060201@wwwdotorg.org> <20131119185729.GD28859@titan.lakedaemon.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131119185729.GD28859-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The recommended compatible string format, according to the ePAPR v1.1 standard,
-is "manufacturer,model". Change the xtensa cpu and pic compatible strings to
-"cdns,xtensa-cpu" and "cdns,xtensa-pic" respectively. Also, change the boards
-compatible strings in a similar way. Accept older non-standard compatible
-strings for now, to not break existing installations.
+On 11/19/2013 11:57 AM, Jason Cooper wrote:
+> On Tue, Nov 19, 2013 at 11:42:17AM -0700, Stephen Warren wrote:
+>> On 11/19/2013 05:28 AM, Russell King - ARM Linux wrote:
+>>> On Mon, Nov 18, 2013 at 03:46:32PM -0700, Stephen Warren wrote:
+>>>> Again, the point is not that it's hard to write the script. As you
+>>>> demonstrated, it's easy. The problem is that then, everybody has to do
+>>>> something different for Tegra, forever. No matter how small the actual
+>>>> cost of doing it is, it's still non-scalable to require that everyone
+>>>> know about this special case. I'm not convinced the issue would be
+>>>> isolated to Tegra either.
+>>>
+>>> That's why there's the facility to allow an override to the script,
+>>> just like there's the facility to override the default script when
+>>> running "make install".
+>>
+>> Again, you are completely missing the point about that not scaling at all.
+>>
+>> But I will go and investigate what it takes to support renaming the
+>> DTBs. Everyone (using Tegra) will have to update their bootloader, but
+>> perhaps that can be dealt with.
+> 
+> Setting aside the idea of hard-coding filenames into any bootloader
+> binary, did you catch that the proposed solution would allow you to
+> continue using the dts filenames as they currently are?
 
-Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
----
+I don't consider requiring people to install a custom /sbin/installdtbs
+in order to override renaming done by the default in-kernel
+scripts/installdtbs a solution.
 
-Should we just remove support for the old compatible strings?
----
- arch/xtensa/boot/dts/lx60.dts        | 2 +-
- arch/xtensa/boot/dts/ml605.dts       | 2 +-
- arch/xtensa/boot/dts/xtfpga.dtsi     | 6 +++---
- arch/xtensa/kernel/irq.c             | 5 ++++-
- arch/xtensa/platforms/xtfpga/setup.c | 3 +++
- 5 files changed, 12 insertions(+), 6 deletions(-)
+Think of a distro that wants to support 5 different SoCs. If they
+install a custom /sbin/installdtbs that does zero renaming, then they'll
+get the desired DTB names for Tegra, but perhaps not for other SoCs. If
+the don't install a custom /sbin/installdtbs that does zero renaming,
+then they'll perhaps get the desired DTB names for SoCs other than
+Tegra, but won't for Tegra.
 
-diff --git a/arch/xtensa/boot/dts/lx60.dts b/arch/xtensa/boot/dts/lx60.dts
-index 2eab365..a0f8b8a 100644
---- a/arch/xtensa/boot/dts/lx60.dts
-+++ b/arch/xtensa/boot/dts/lx60.dts
-@@ -3,7 +3,7 @@
- /include/ "xtfpga-flash-4m.dtsi"
- 
- / {
--	compatible = "xtensa,lx60";
-+	compatible = "cdns,xtensa-lx60";
- 	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x04000000>;
-diff --git a/arch/xtensa/boot/dts/ml605.dts b/arch/xtensa/boot/dts/ml605.dts
-index 6ed51d6..905c3a5 100644
---- a/arch/xtensa/boot/dts/ml605.dts
-+++ b/arch/xtensa/boot/dts/ml605.dts
-@@ -3,7 +3,7 @@
- /include/ "xtfpga-flash-16m.dtsi"
- 
- / {
--	compatible = "xtensa,ml605";
-+	compatible = "cdns,xtensa-ml605";
- 	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x08000000>;
-diff --git a/arch/xtensa/boot/dts/xtfpga.dtsi b/arch/xtensa/boot/dts/xtfpga.dtsi
-index 7eda6ec..46b4f5e 100644
---- a/arch/xtensa/boot/dts/xtfpga.dtsi
-+++ b/arch/xtensa/boot/dts/xtfpga.dtsi
-@@ -1,5 +1,5 @@
- / {
--	compatible = "xtensa,xtfpga";
-+	compatible = "cdns,xtensa-xtfpga";
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 	interrupt-parent = <&pic>;
-@@ -17,7 +17,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		cpu@0 {
--			compatible = "xtensa,cpu";
-+			compatible = "cdns,xtensa-cpu";
- 			reg = <0>;
- 			/* Filled in by platform_setup from FPGA register
- 			 * clock-frequency = <100000000>;
-@@ -26,7 +26,7 @@
- 	};
- 
- 	pic: pic {
--		compatible = "xtensa,pic";
-+		compatible = "cdns,xtensa-pic";
- 		/* one cell: internal irq number,
- 		 * two cells: second cell == 0: internal irq number
- 		 *            second cell == 1: external irq number
-diff --git a/arch/xtensa/kernel/irq.c b/arch/xtensa/kernel/irq.c
-index 6f4f974..7b64a9d 100644
---- a/arch/xtensa/kernel/irq.c
-+++ b/arch/xtensa/kernel/irq.c
-@@ -202,7 +202,10 @@ void __init init_IRQ(void)
- 
- #ifdef CONFIG_OF
- 	/* The interrupt controller device node is mandatory */
--	intc = of_find_compatible_node(NULL, NULL, "xtensa,pic");
-+	intc = of_find_compatible_node(NULL, NULL, "cdns,xtensa-pic");
-+	/* Try the deprecated compatible string */
-+	if (!intc)
-+		intc = of_find_compatible_node(NULL, NULL, "xtensa,pic");
- 	BUG_ON(!intc);
- 
- 	root_domain = irq_domain_add_linear(intc, NR_IRQS,
-diff --git a/arch/xtensa/platforms/xtfpga/setup.c b/arch/xtensa/platforms/xtfpga/setup.c
-index 74bb74f..288af60 100644
---- a/arch/xtensa/platforms/xtfpga/setup.c
-+++ b/arch/xtensa/platforms/xtfpga/setup.c
-@@ -168,6 +168,9 @@ void __init platform_calibrate_ccount(void)
- 	long clk_freq = 0;
- #ifdef CONFIG_OF
- 	struct device_node *cpu =
-+		of_find_compatible_node(NULL, NULL, "cdns,xtensa-cpu");
-+	/* Try the deprecated compatible string */
-+	if (!cpu)
- 		of_find_compatible_node(NULL, NULL, "xtensa,cpu");
- 	if (cpu) {
- 		u32 freq;
--- 
-1.8.4.2
+Assuming we ever rename DTBs at all, there are a couple ways to solve this:
 
+a) Require everyone who runs "make dtbs_install" (and who cares about
+multiple SoCs, i.e. all distros at least) to install (and perhaps write)
+their own custom /sbin/installdtbs that only renames some DTBs.
+
+b) Just put the correct logic in the in-kernel installdtbs script, so
+nobody has to do anything; it "just works" out-of-the-box.
+
+> The find command in my example /sbin/installdtbs script spits out the
+> in-tree dtb filename as it currently stands, and then you do what you
+> want with it in your script.  Including, copying it, filename intact,
+> into the location of your choice.  How could that possibly require you
+> to upgrade your bootloader?
+
+A "solution" that requires people to install custom scripts to undo
+renaming that shouldn't be happening in the first place just isn't
+workable; there's too much communication and support cost associated
+with it.
+
+So, if the renaming during "make dtbs_install" absolutely has to happen,
+then I guess I'd just have to live with it, and force everyone to
+upgrade their bootloader instead.
+
+> I must admit I'm a bit mystified as to what Tegra is doing that this
+> breaks it so horribly...
+
+The idea is that a disto boot process runs as follow:
+
+* U-Boot runs and initializes.
+
+* U-Boot searches the boot disk (or any disk that could be a boot disk)
+for e.g. /boot/boot.scr, and executes it.
+
+* boot.scr loads the kernel, initrd, DTB, sets up the command-line, and
+boots the kernel.
+
+A few points to make here:
+
+a) There must be a boot.scr or similar on disk, to provide a way for
+distros to parameterize the boot process. At the very least they need to
+configure the kernel command-line, specify whether an initrd is used at
+all, etc.
+
+b) boot.scr is responsible for loading the zImage etc. from disk, rather
+than the default U-Boot environment doing this. This allows distros
+complete flexibility re: where to put the zImage etc. on disk. On distro
+might store a single copy in /boot/zImage, another might use
+/boot/zImage-${kernelversion}, another might use
+/boot/${kernelversion}/zImage, etc. By putting the onus on boot.scr to
+do the loading, the distro has complete flexibility in file naming here.
+
+c) There are a number of system-specific parameters required to
+implement zImage/DTB loading. For example, the SDRAM address that they
+should be loaded to. Distros shouldn't have to detect which board
+they're running on and calculate the values of all those parameters.
+Instead, U-Boot should provide the values to boot.scr, by setting
+certain standard variables in the environment.
+
+For example, the zImage gets loaded to $kernel_addr_r, the DTB to
+$fdt_addr_r, etc.
+
+d) Finally, boot.scr needs to load the DTB. This requires knowing which
+DTB to load. Again, the distro shouldn't have to detect which board
+they're running on, and either install the correct DTB to a static
+filename, or make a decision on the DTB filename to load. Instead,
+distros should simply install all DTBs generated by the kernel build,
+and use some run-time information to calculate the DTB filename using a
+completely HW-agnostic and generic algorithm.
+
+To support this, U-Boot can be configured to add certain standard
+environment variables to the default environment. These define which SoC
+and board the code is running on. These are ${soc} and ${board}. If you
+then calculate the DTB filename as ${soc}-${board}.dtb, that should work
+anywhere. This is why keeping the current in-kernel DTB filenames is
+important, so they match the assumption that this algorithm works.
+
+Note: if the firmware contains an embedded DTB, boot.scr could detect
+this e.g. by the standard variable $fdt_addr being set, and hence skiip
+loading a DTB. IIRC, this is how Calxeda boards are set up.
+
+
+So finally, if the kernel "make dtbs_install" starts renaming DTB files,
+then I need to adjust the boot.scr we're using to use some other
+algorithm to calculate the DTB filename. Given the filename isn't then
+purely derived from ${soc} and ${board}, I probably need to set up some
+additional (or replacement) variables in the standard U-Boot environment
+that contain the extra fields required to calculate the DTB filename.
+The existing ${vendor} might work. However, it'd be simplest if I just
+had U-Boot export something like ${dtb_filename}, which contained the
+(or a list of) filenames to try.
+
+You can take a look at my boot.scr generation tool at:
+https://github.com/NVIDIA/tegra-uboot-scripts
+
+That probably works on the Raspberry Pi too (since I set up the Pi's
+U-Boot port to work the same way) and likely would require minimal
+changes to work on at least some TI and Calxeda boards.
+
+The idea is that eventually, and board that wants to support a generic
+distro booting on it would export the standard variables I mentioned
+above, have a default U-Boot environment that simply searched for and
+executed boot.scr, and distros would use a generic boot.scr as generated
+by the tool I linked to above.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
