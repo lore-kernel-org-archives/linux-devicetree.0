@@ -1,61 +1,58 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv3 1/2] Input: twl4030-keypad - add device tree support
-Date: Tue, 19 Nov 2013 13:50:31 +0100
-Message-ID: <20131119125031.GA14587@amd.pavel.ucw.cz>
-References: <1383948866-32672-1-git-send-email-sre@debian.org>
- <1383948866-32672-2-git-send-email-sre@debian.org>
- <20131111221941.GB23331@amd.pavel.ucw.cz>
- <20131112032506.GA30028@earth.universe>
- <20131117182840.GA30012@xo-6d-61-c0.localdomain>
- <20131118035815.GA3311@core.coreip.homeip.net>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 7/7] ARM: shmobile: armadillo-reference: Use low level IRQ for ST1231
+Date: Tue, 19 Nov 2013 13:52:27 +0100
+Message-ID: <4182325.G3k8SsHnK4@avalon>
+References: <1383999839-3339-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1383999839-3339-8-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20131119025629.GA14794@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131118035815.GA3311@core.coreip.homeip.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20131119025629.GA14794@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hi Simon,
 
-> > > DRIVER              CODE                        DOCUMENTATION
-> > > twl4030-keypad      linux,input-no-autorepeat   linux,keypad-no-autorepeat
-> > > omap4-keypad        linux,input-no-autorepeat   linux,keypad-no-autorepeat
-> > > samsung-keypad      linux,input-no-autorepeat   linux,keypad-no-autorepeat
-> > > stmpe-keypad        st,no-autorepeat            st,no-autorepeat
-> > > spear-keyboard      autorepeat                  autorepeat
-> > > tca8418-keypad      keypad,autorepeat           --- not documented ---
-> > > gpio-matrix-keypad  linux,no-autorepeat         linux,no-autorepeat
-> > > gpio-keys-polled    autorepeat                  autorepeat
-> > > gpio-keys           autorepeat                  --- no documentation ---
-> > > 
-> > > Any suggestions how to continue fixing this mess? I guess first of
-> > > all the documentation of omap4-keypad, samsung-keypad and of course
-> > > the new twl4030-keypad driver should be fixed.
-> > > 
-> > > Next it would be nice to choose one standard property name for this
-> > > and use it for twl4030-keypad. I suggest to use "linux,input-no-autorepeat".
+On Tuesday 19 November 2013 11:56:29 Simon Horman wrote:
+> On Sat, Nov 09, 2013 at 01:23:59PM +0100, Laurent Pinchart wrote:
+> > The device is configured to generate an active-low interrupt signal that
+> > needs to be acknowledged by the host. Configure the IRQ to trigger on
+> > low level.
 > > 
-> > I'd suggest just simple "autorepeat", so that we get rid of ugly double-negation.
-> The idea was that majority of setups want autorepeat so in the absence
-> of the property autorepeat is turned on.
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> > ---
+> > 
+> >  arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> > b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts index
+> > aef425f..04e9d49 100644
+> > --- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> > +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> > @@ -95,7 +95,7 @@
+> >  		compatible = "sitronix,st1232";
+> >  		reg = <0x55>;
+> >  		interrupt-parent = <&irqpin1>;
+> > -		interrupts = <2 IRQ_TYPE_NONE>; /* IRQ10: hwirq 2 on irqpin1 */
+> > +		interrupts = <2 IRQ_TYPE_LOW_LEVEL>;
+> 
+> I believe this should be IRQ_TYPE_LEVEL_LOW.
+> 
+> I have dequeued this patch for now.
 
-I see... but autorepeat on by default makes sense on devices that are
-usually querty keybaords, but does not make sense on devices that are
-usually phone keypads or power buttons.
+My bad, I've tested level low trigger first, then falling edge trigger, and 
+switched back to low level without recompiling the patch. Sorry about that, 
+I'll resend now.
 
-So my proposal is:
-
-1) driver decides if it makes sense to autorepeat by default or not.
-
-2) dts says autorepeat=0 or autorepeat=1
-
-That way, we get dts that get chance to work on other OSes, get rid of
-double negations, and get right defaults when autorepeat is not
-specified.
-								Pavel
+> >  		pinctrl-0 = <&st1232_pins>;
+> >  		pinctrl-names = "default";
+> >  		gpios = <&pfc 166 GPIO_ACTIVE_LOW>;
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Regards,
+
+Laurent Pinchart
+
