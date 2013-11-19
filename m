@@ -1,45 +1,61 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: ACPI vs DT at runtime
-Date: Tue, 19 Nov 2013 13:48:44 +0100
-Message-ID: <201311191348.44660.arnd@arndb.de>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.
- com> <20131118213256.8EC15C401C6@trevor.secretlab.ca>
- <201311182247.03540.david.goodenough@btconnect.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCHv3 1/2] Input: twl4030-keypad - add device tree support
+Date: Tue, 19 Nov 2013 13:50:31 +0100
+Message-ID: <20131119125031.GA14587@amd.pavel.ucw.cz>
+References: <1383948866-32672-1-git-send-email-sre@debian.org>
+ <1383948866-32672-2-git-send-email-sre@debian.org>
+ <20131111221941.GB23331@amd.pavel.ucw.cz>
+ <20131112032506.GA30028@earth.universe>
+ <20131117182840.GA30012@xo-6d-61-c0.localdomain>
+ <20131118035815.GA3311@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201311182247.03540.david.goodenough@btconnect.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, David Goodenough <david.goodenough@btconnect.com>, Grant Likely <grant.likely@secretlab.ca>, Jon Masters <jonathan@jonmasters.org>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131118035815.GA3311@core.coreip.homeip.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 18 November 2013, David Goodenough wrote:
-> Would it not be possible to have ACPI read the hardware configuration
-> from the DT, and provide whatever services it wants, while also allowing
-> the kernel to retain the DT for its hardware config?  I suppose the only
-> thing that would be needed would be some way to mark paricular bits of
-> hardware (I am largely thinking of the things lmsensors deals with) as
-> being used by ACPI and being off limits to the kernel.
+Hi!
 
-While that may be possible, I don't see what problem that solves. Nobody
-has so far explained what problem they want to solve by using ACPI. The
-only reason we are discussing this is Jon's statement that "everybody
-will use it". For any specific thing you might want to do in ACPI while
-leaving the rest in DT, I suspect there is an easier solution in using
-just DT.
+> > > DRIVER              CODE                        DOCUMENTATION
+> > > twl4030-keypad      linux,input-no-autorepeat   linux,keypad-no-autorepeat
+> > > omap4-keypad        linux,input-no-autorepeat   linux,keypad-no-autorepeat
+> > > samsung-keypad      linux,input-no-autorepeat   linux,keypad-no-autorepeat
+> > > stmpe-keypad        st,no-autorepeat            st,no-autorepeat
+> > > spear-keyboard      autorepeat                  autorepeat
+> > > tca8418-keypad      keypad,autorepeat           --- not documented ---
+> > > gpio-matrix-keypad  linux,no-autorepeat         linux,no-autorepeat
+> > > gpio-keys-polled    autorepeat                  autorepeat
+> > > gpio-keys           autorepeat                  --- no documentation ---
+> > > 
+> > > Any suggestions how to continue fixing this mess? I guess first of
+> > > all the documentation of omap4-keypad, samsung-keypad and of course
+> > > the new twl4030-keypad driver should be fixed.
+> > > 
+> > > Next it would be nice to choose one standard property name for this
+> > > and use it for twl4030-keypad. I suggest to use "linux,input-no-autorepeat".
+> > 
+> > I'd suggest just simple "autorepeat", so that we get rid of ugly double-negation.
+> The idea was that majority of setups want autorepeat so in the absence
+> of the property autorepeat is turned on.
 
-Since you seem to have something specific in mind, can you elaborate on
-why you think lmsensors (or any other device you can think of) would
-benefit from ACPI?
+I see... but autorepeat on by default makes sense on devices that are
+usually querty keybaords, but does not make sense on devices that are
+usually phone keypads or power buttons.
 
-	Arnd
+So my proposal is:
+
+1) driver decides if it makes sense to autorepeat by default or not.
+
+2) dts says autorepeat=0 or autorepeat=1
+
+That way, we get dts that get chance to work on other OSes, get rid of
+double negations, and get right defaults when autorepeat is not
+specified.
+								Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
