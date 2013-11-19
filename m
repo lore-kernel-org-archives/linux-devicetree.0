@@ -1,240 +1,406 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 3/8] clk: shmobile: Add MSTP clock support
-Date: Tue, 19 Nov 2013 18:19:36 +0000
-Message-ID: <20131119181936.GR5914@e106331-lin.cambridge.arm.com>
-References: <1384872347-11724-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1384872347-11724-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <20131119162821.GQ5914@e106331-lin.cambridge.arm.com>
- <22339309.IPGV28414M@avalon>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Tue, 19 Nov 2013 10:19:59 -0800
+Message-ID: <20131119181959.GA20967@quad.lixom.net>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+ <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
+ <20131115175241.GB27174@quad.lixom.net>
+ <20131119113015.GH5914@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <22339309.IPGV28414M@avalon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mike Turquette <mturquette@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
+In-Reply-To: <20131119113015.GH5914-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2013 at 05:00:40PM +0000, Laurent Pinchart wrote:
-> Hi Mark,
-> 
-> Thank you for the quick review, much appreciated.
-> 
-> On Tuesday 19 November 2013 16:28:21 Mark Rutland wrote:
-> > On Tue, Nov 19, 2013 at 02:45:42PM +0000, Laurent Pinchart wrote:
-> > > MSTP clocks are gate clocks controlled through a register that handles
-> > > up to 32 clocks. The register is often sparsely populated.
-> > 
-> > Does that mean some clocks aren't wired up, or that some clocks don't
-> > exist at all?
-> 
-> It means that some of the bits don't control anything.
-> 
-> > What is the behaviour of the unpopulated bits?
-> 
-> According to the datasheet they're reserved, read-only, and read an 
-> unspecified value that is to be written back without modification when writing 
-> the register.
+On Tue, Nov 19, 2013 at 11:30:15AM +0000, Mark Rutland wrote:
+> On Fri, Nov 15, 2013 at 05:52:41PM +0000, Olof Johansson wrote:
+> > On Fri, Nov 15, 2013 at 09:57:17AM +0000, Mark Rutland wrote:
+> > > On Fri, Nov 15, 2013 at 01:44:10AM +0000, Olof Johansson wrote:
+> > > > The more I start to see early UEFI/ACPI code, the more I am cer=
+tain
+> > > > that we want none of that crap in the kernel. It's making thing=
+s
+> > > > considerably messier, while we're already very busy trying to c=
+onvert
+> > > > everything over and enable DT -- we'll be preempting that effor=
+t just
+> > > > to add even more boilerplate everywhere and total progress will=
+ be
+> > > > hurt.
+> > >
+> > > We are certainly under a lot of pressure with the device tree mig=
+ration,
+> > > and I agree that adding another information source is going to be=
+ a
+> > > source of pain. However, I'd argue that we're going to encounter =
+pain
+> > > regardless of which approach we take.
+> > >
+> > > I'm of the opinion that the only way we should support ACPI is as=
+ a
+> > > first-class citizen. We don't need to modify every driver and sub=
+system
+> > > to support ACPI, only those necessary to support the minimal set =
+of
+> > > platforms using ACPI. ACPI is new in the arm space, and we can en=
+force
+> > > quality standards on ACPI _now_ above what we're allowing for DT,=
+ and
+> > > avoid future problems.
+> >
+> > It's obvious from the very first submission, from a vendor that has=
+ worked
+> > closely with "the community" (i.e. one enterprise distro at least),=
+ that this
+> > is completely new territory for _everyone_ involved. There's no way=
+ that we can
+> > enforce quality standards for ACPI yet -- we don't know what they l=
+ook like!
+> > Nobody knows how to design a good ACPI implementation or binding.
+>=20
+> If we don't know what quality standards we require for ACPI, then I
+> would rather see ACPI delayed until we are more comfortable with it t=
+han
+> to enforce an arbitrary set of rules required to enable mapping it to
+> device tree.
 
-Ok.
+That's essentially what we're saying here: ACPI isn't ready, let's use =
+DT while
+it's sorted out and if someone wants to try to require ACPI at some lev=
+el
+today, they should figure out how to translate it into DT. In reality, =
+it might
+be easiest to ship a static DT file while ACPI is being developed and s=
+orted
+out.
 
-> 
-> > > Those clocks are found on Renesas ARM SoCs.
-> > > 
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Laurent Pinchart
-> > > <laurent.pinchart+renesas@ideasonboard.com>
-> > > ---
-> > > 
-> > >  .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  48 +++++
-> > >  drivers/clk/shmobile/Makefile                      |   1 +
-> > >  drivers/clk/shmobile/clk-mstp.c                    | 229 ++++++++++++++++
-> > >  3 files changed, 278 insertions(+)
-> > >  create mode 100644
-> > >  Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> > >  create mode 100644 drivers/clk/shmobile/clk-mstp.c
-> > > 
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> > > b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt new
-> > > file mode 100644
-> > > index 0000000..126b17e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> > > @@ -0,0 +1,48 @@
-> > > +* Renesas CPG Module Stop (MSTP) Clocks
-> > > +
-> > > +The CPG can gate SoC device clocks. The gates are organized in groups of
-> > > up to
-> > > +32 gates.
-> > > +
-> > > +This device tree binding describes a single 32 gate clocks group per
-> > > node.
-> > > +Clocks are referenced by user nodes by the MSTP node phandle and the
-> > > clock
-> > > +index in the group, from 0 to 31.
-> > > +
-> > > +Required Properties:
-> > > +
-> > > +  - compatible: Must be one of the following
-> > > +    - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate
-> > > clocks
-> > > +    - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP gate
-> > > clocks
-> > > +    - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
-> > > +  - reg: Base address and length of the memory resource used by the MSTP
-> > > +    clocks
-> > 
-> > There are two entries in the example, the code seems to assume they are
-> > particular registers, but this implies one.
-> 
-> There can be one or two registers, depending on the hardware. The first 
-> register is always required and controls the clocks, the second register is 
-> optional (in the sense that it's not implemented for some of the MSTP 
-> instances) and reports the clock status.
+I think we're getting bogged down by the hypothetical AML-in-DT case. W=
+e won't
+know if we want/need it until we see what kind of stuff vendors think t=
+hey will
+need to do in AML. On x86 it's mostly used to abstract out per-board
+differences, not whole SoC behavior. It also depends on how much of the=
+ir
+hardware differences the silicon vendors decide to punt to software to =
+manage
+-- that's going to work a lot less well in this type of environment tha=
+n it
+does on 32-bit today.
 
-Ok. The documentation should note this.
+> > Oh wait, there's people who have been doing this for years. Microso=
+ft. They
+> > should be the ones driving this and taking the pain for it. Once th=
+e platform
+> > is enabled for their needs, we'll sort it out at our end. After all=
+, that has
+> > worked reasonably well for x86 platforms.
+>=20
+> I'm not sure it's entirely reasonable to assume that Microsoft will
+> swoop in and develop standards that are useful to us or even applicab=
+le
+> to the vast majority of the systems that are likely to exist. If they
+> do, then we will (by the expectation that Linux should be able to run
+> wherever another OS can) have to support whatever standards they may
+> create.
+>=20
+> Regardless of whether we place support for it into Linux, we should
+> certainly be spending time now attempting to understand ACPI, what it
+> does and does not provide, and how it can be moved towards something
+> that fulfils our needs and we can support long-term. We should certai=
+nly
+> not be taking a back seat approach.
+>=20
+> Outside of the ARM Linux community there is work ongoing to change AC=
+PI
+> to better suit the level of variation we seem in the ARM space (see
+> Darren Hart's presentation from ELCE [1]). We need to be involved now=
+ in
+> order to make sure that this is actually generally applicable.
 
-> 
-> > Are these not part of a larger bank of registers?
-> 
-> They are. Here's the memory map for the r8a7791 for instance.
-> 
-> MSTPSR0		H'E615 0030
-> MSTPSR1		H'E615 0038
-> MSTPSR2		H'E615 0040
-> MSTPSR3		H'E615 0048
-> MSTPSR4		H'E615 004C
-> MSTPSR5		H'E615 003C
-> MSTPSR6		H'E615 01C0
-> MSTPSR7		H'E615 01C4
-> MSTPSR8		H'E615 09A0
-> MSTPSR9		H'E615 09A4
-> MSTPSR10		H'E615 09A8
-> MSTPSR11		H'E615 09AC
-> 
-> SMSTPCR0		H'E615 0130
-> SMSTPCR1		H'E615 0134
-> SMSTPCR2		H'E615 0138
-> SMSTPCR3		H'E615 013C
-> SMSTPCR4		H'E615 0140
-> SMSTPCR5		H'E615 0144
-> SMSTPCR6		H'E615 0148
-> SMSTPCR7		H'E615 014C
-> SMSTPCR8		H'E615 0990
-> SMSTPCR9		H'E615 0994
-> SMSTPCR10		H'E615 0998
-> SMSTPCR11		H'E615 099C
-> 
-> I've pondered whether we should use a single device node for all the MSTP 
-> clocks, but I don't think it would be very practical. Not only would we need 
-> to encode all bit positions, we also would have to encode register offsets in 
-> DT. This would become pretty messy in a single node.
-> 
-> > > +  - clocks: Reference to the parent clocks
-> > 
-> > How many, and what do they correspond to?
-> 
-> What about
-> 
-> - clocks: Reference to the parent clocks, one per output clock. The parents 
-> must appear in the same order as the output clocks.
+I agree that there should be engagement, but not at the expense of forw=
+ard
+progress using the technologies we're finally sorting out how to use
+successfully. In other words, we should continue enabling DT on these
+platforms while ACPI happens in the background for now. People who
+will longer-term depend on ACPI should of course get engaged in that,
+but things aren't going to work well if they=A0abandon working on the
+short-to-medium term solutions of continued DT usage.
 
-That sounds reasonable.
+> > If we knew exactly what we wanted, it'd be a different story. _We
+> > don't_. We're into year FOUR of the device tree conversion and we'r=
+e just
+> > now reaching a point where we think we know what a good solution lo=
+oks
+> > like. The first two years were easy -- they were the trivial device=
+s we're
+> > now talking about on ACPI. After that it got harder. Going through =
+all
+> > of that again with ACPI? No. No way. Microsoft gets to do it and wh=
+ile
+> > they're busy sorting it out, we'll boot with device tree.
+>=20
+> Until ACPI is able to provide all the necessary information, and has
+> suitable standard mechanisms for describing the horrible portions we =
+are
+> only just figuring out how to describe in DT, then ACPI is eitehr no
+> better or worse than DT, and should not be used.
+>=20
+> However, we should be looking into it so that when portions of it
+> eventually appear we have enough of an understanding to cull the
+> obviously broken parts.
 
-> 
-> > > +  - #clock-cells: Must be 1
-> > > +  - clock-output-names: The name of the clocks as free-form strings
-> > > +  - renesas,indices: Indices of the gate clocks into the group (0 to 31)
-> > 
-> > The description of this property doesn't describe half of what it means.
-> > I believe something like the below does:
-> > 
-> > - renesas,indices: A list of clock IDs (single cells), one for each
-> >   clock present. Each entry may correspond to a clock-output-names entry
-> >   at the same index, and its location in the list defines the
-> >   corresponding clock-specifier for the entry.
-> 
-> I might be mistaken, but doesn't "its location in the list defines the 
-> corresponding clock-specifier for the entry" imply that clock specifiers use 
-> the location in the list as the clock ID instead of the numerical value of the 
-> indices entry ? Each entry in the renesas,indices list corresponds to one 
-> clocks entry and one clock-output-names entry, and clock users reference an 
-> MSTP clock using the value of its indices entry, not the position of the 
-> entry.
+I think we're in full agreement on this.
 
-Sorry, the code confused me. Having read over it again, I'm even more
-confused.
+> I would also expect that _any_ ACPI support we would accept would not
+> rely on any board-specific support code whatsoever -- either everythi=
+ng
+> comes from ACPI or the platform doesn't boot. If we allow board files
+> for a transitionary period to ACPI we'd be making the same mistake we
+> did with DT.
 
-You said the registers were sparesly populated, but the code assumes
-that the bits start at 0 and the set of populated bits are contiguous,
-which is not what I would describe that as sparse. Are the bits always
-contiguous?
+I don't think anyone is arguing for board files here, that's a dead end=
+=2E :-)
+There might however be quirks needed for drivers here and there, at lea=
+st for
+new platforms (chipsets), errata workarounds, etc. That's expected, and=
+ it's
+something that they need on x86 today as well.
 
-I thought the bits in the register were truly sparse (i.e. you could
-have two bits which were at either end of the register), and the indices
-property allowed you to define the set of bits which were valid.
+> > Once they're done, we'll figure out how to enable new hardware. Sur=
+e, someone
+> > needs to keep them sane and participate in the standardization proc=
+ess, but we
+> > don't have to drag the whole kernel through it.
+>=20
+> To me, reworking the AML code and drivers to support AML + DT feels l=
+ike
+> dragging the whole kernel through it. I would rather see ACPI in full=
+ or
+> no ACPI than a gigantic ARM-specific set of changes to general
+> infrastructure that we'd expect to deprecate in future once we
+> understand (the future state of) ACPI.
 
-As far as I can see from cpg_mstp_clocks_init and
-cpg_mstp_clock_register, the indices property assings the set of IDs for
-consumers to use, and I don't see what the point of that is if we
-already have a well-defined linear index (the bit position in the
-register) which we could use instead, which also makes the binding and
-code simpler.
+I think we're getting bogged down in details here, unfortunately. Let's=
+ see
+what people have in mind to implement in AML before we go too far down =
+this
+path. In theory it could be a nightmare to deal with it given the featu=
+re set
+and complexity of AML, but in reality chances are we can do quite well =
+with
+just device-tree (as Arnd and others have been arguing as well).
 
-> 
-> > I'd imagine we have a few sparse clocks by now, and we might be able to
-> > make this more uniform. But I may be mistaken.
-> > 
-> > [...]
-> > 
-> > > +static int cpg_mstp_clock_endisable(struct clk_hw *hw, bool enable)
-> > > +{
-> > > +	struct mstp_clock *clock = to_mstp_clock(hw);
-> > > +	struct mstp_clock_group *group = clock->group;
-> > > +	u32 bitmask = BIT(clock->bit_index);
-> > > +	unsigned long flags;
-> > > +	unsigned int i;
-> > > +	u32 value;
-> > > +
-> > > +	spin_lock_irqsave(&group->lock, flags);
-> > > +
-> > > +	value = clk_readl(group->smstpcr);
-> > > +	if (enable)
-> > > +		value &= ~bitmask;
-> > > +	else
-> > > +		value |= bitmask;
-> > > +	clk_writel(value, group->smstpcr);
-> > > +
-> > > +	spin_unlock_irqrestore(&group->lock, flags);
-> > > +
-> > > +	if (!enable || !group->mstpsr)
-> > > +		return 0;
-> > > +
-> > > +	for (i = 1000; i > 0; --i) {
-> > > +		if (!(clk_readl(group->mstpsr) & bitmask))
-> > > +			break;
-> > > +		cpu_relax();
-> > > +	}
-> > 
-> > Any particular reason for 1000 times? Is there a known minimum time to
-> > switch a clock between disabled and enabled? A comment would be nice.
-> 
-> There's no particular reason, the datasheet doesn't provide any useful 
-> information. I've just copied that value from existing C code.
+So I think we can postpone much of this debate until we actually have e=
+xamples
+of what people will use in the real world.
 
-Any chance it might work without?
 
-Thanks,
-Mark.
+[pruning out some double quotes and more AML-related arguments here]
+
+
+> > Also, we can either have some of our better people sort out the ACP=
+I-to-DT
+> > translation and management, and get it done right, or we can rely o=
+n all the
+> > vendors to get ACPI right in all their drivers. While some of them =
+will,
+> > I suspect we'll be more successful driving this from a common place=
+=2E It
+> > also gives us a place to stick all the fixups for broken firmware,
+> > since the first generations of ARM servers are bound to have them.
+>=20
+> This common place is going to end up handling arbitrarily different
+> idioms in each format (e.g. how GPIOs are represented), and is almost
+> certainly going to become a sprawling mess. Also having "all the fixu=
+ps"
+> in there makes this sound like an every-single-board file, which is
+> something I think everyone would like to avoid.
+
+Yeah, it would need to be generic enough to not require per-board chang=
+es.
+Again, let's see how things turn out in reality before we go too far do=
+wn that
+path, doing it on theoretical needs is going to overly complicate thing=
+s.
+
+[...]
+
+> > Nobody is expecting there to be zero work for new drivers with ACPI=
+;
+> > after all, the driver itself still has to be written. We're talking=
+ differences
+> > from board to board and system to system here, which we can definit=
+ely handle
+> > through a translator as well.
+> >
+> > And, as you say, if the first platforms are going to be trivial and=
+ easy to
+> > implement with ACPI, then doing a translation for them will be simp=
+le too.
+>=20
+> This may be true. I worry that by working on this assumption we will
+> lead people to do the wrong thing by focusing on short-term gain (i.e=
+=2E
+> placing board-specific hacks all other drivers and not handling the
+> general case), rather than getting a long term solution together.
+
+There's going to be need for both, and we can't sacrifice work on the
+short-to-medium term solution because I really don't want things to
+stumble right away. As Jon is saying, lots of companies are spending
+significant resources on this, and we need to make sure things are as
+successful as possible right out the door.
+
+That means not restricting short-term solutions with promises/wishes/ho=
+pes
+that things will magically get sorted out by themselves down the
+road. Given the initial output from the ACPI side of things, that's way
+too scary a bet to make.
+
+> > Shipping a firmware with ACPI is really no different from shipping =
+a firmware
+> > with a flashed device tree. Whatever bugs or strange things the ven=
+dor chooses
+> > to do in there, we'll have to live with forever.
+> >
+> > We all know DT considerably better to a point where I would recomme=
+nd
+> > that they flash a DTB in their UEFI firmware instead of go with ACP=
+I. For
+> > simple hardware and basic devices we've got most bindings sorted ou=
+t by
+> > now, and we've decided on backwards compatibility from here on out.
+>=20
+> If a vendor does this, with a DTB that correctly describes their
+> hardware then I am not against it (and would prefer this case to mapp=
+ing
+> from ACPI to DT). For that case we will also require a nailed-down bo=
+ot
+> protocol that allows for either DTB or ACPI (only one at a time).
+
+UEFI already allows this, as far as I know? Even if both are passed, we=
+ can
+easily make DT take precedence over ACPI, just like DT overrides ATAGs =
+today.
+
+> > > > It might be done via having a skeleton/framework DT for the ven=
+dor
+> > > > platform that is updated via UEFI/ACPI data, or it might be
+> > > > constructed entirely out of tables coming from firmware. I don'=
+t care
+> > > > about the methods for how it is done, but I do feel strongly th=
+at we
+> > > > should _not_ introduce a second API for everything. I can't thi=
+nk of a
+> > > > single good reason to do it.
+> > >
+> > > Where does this skeleton/framework come from? Within the kernel?
+> >
+> > Since there might need to be runtime modifications done to the tree=
+ based on
+> > ACPI events, it seems to make sense to do it in the kernel, so that=
+ translation
+> > state and such can be kept around for use by the runtime modificati=
+on parts.
+> >
+> > Having it extractable out of the kernel tree for testing purposes w=
+ould be
+> > greatly appreciated, so it can be ran through valgrind, add testcas=
+es, etc.
+>=20
+> This is still sounding awfully complicated.
+
+Yes, but so is doing a native ACPI implementation. Anyway, let's hold o=
+ff until
+we know what we're actually going to need.
+
+> > There are no known best practices with ACPI. It's a complete fumbli=
+ng
+> > around in the dark right now. We're complaining about reviewer band=
+with
+> > on DT -- do we have a single reviewer for ACPI on ARM that actually
+> > knows what a good solution looks like? I don't think so.
+>=20
+> There are many people in the Linux community who have ACPI experience=
+=2E
+> They may not be active on the ARM side, but it's not fair to say ther=
+e
+> are no known best practices. I will agree that for the level of
+> variation we're likely to expect we are pushing the boundaries.
+
+Right -- as we've seen with DT where it was easy-peasy on PowerPC since=
+ there
+were only 2-4 real vendors involved, things get substantially more comp=
+licated
+when you increase that by an order of magnitude. In this case, we'd be
+increasing it with an order of magnitude _and_ bring in their firmware
+engineers to be involved too (since we would no longer have control ove=
+r what
+gets put into the tables).
+
+While there are people who have a lot of ACPI experience today, the env=
+ironment
+around it (community/participants and technical diversity) _and_ the ne=
+w need
+for more complex things is new to everybody. As we've seen with DT, we =
+can't
+always rely on the existing people to have capacity for the onslaught o=
+f
+activity that will come down the pipe.
+
+> > So, until there's strong evidence that ACPI is actually going to be
+> > a sane solution, in other words, until someone has shipped a system
+> > that uses it (with Windows) and does it successfully without being
+> > a hot mess, we shouldn't litter the kernel with it.
+>=20
+> Again, I'm not sure that we should rely on Windows as our saviour fro=
+m
+> insanity. A lot of the issues we are going to encounter are going to =
+be
+> in vendor-specific code (i.e. drivers), and I do not believe that is
+> solved by having a single entity in charge of the general frameworks
+> those are built upon.
+
+As mentioned in other replies in the thread, I was a bit careless in ho=
+w
+I phrased this. We can't just wait until they're done, but we also shou=
+ldn't
+do it all ourselves. And we definitely shouldn't bet our house on it re=
+sulting
+in a useable solution at this point.
+
+> > Vendors can standardise of UEFI if they want, but I would much rath=
+er
+> > see them bundle DTB images with their firmware today, than rely on =
+early
+> > buggy and still-early-on-the-learning-curve ACPI bindings that we t=
+hen
+> > have to live with forever.
+>=20
+> I agree that today a DTB is preferable to an ACPI implementation.
+>=20
+> I think that mapping from ACPI =3D> DT is less sane than building sup=
+port
+> for ACPI, and is not going to help us in the long term.
+
+I think it'll depend on what will actually be needed on real systems. A=
+nd
+I'm not making many assumptions on long term here -- we can't let that
+distract us from getting the first few years sorted out first.
+
+> I think that we need to be involved in ACPI from today if we have any
+> hope of having something sane in future.
+
+We agree more than we disagree on this whole discussion, I believe.
+
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
