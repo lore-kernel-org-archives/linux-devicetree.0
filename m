@@ -1,45 +1,64 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 0/2] Revert support for reserved memory regions defined
- in device tree
-Date: Wed, 20 Nov 2013 09:01:44 +1100
-Message-ID: <1384898504.26969.48.camel@pasglop>
-References: <1381476448-14548-1-git-send-email-m.szyprowski@samsung.com>
- < 20131030134702.19B57C402A0@trevor.secretlab.ca>
- <528B5949.20204@samsung.com >
- <20131119151418.8BB2BC4079D@trevor.secretlab.ca>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V4] kbuild: dtbs_install: new make target
+Date: Tue, 19 Nov 2013 14:58:05 -0700
+Message-ID: <528BDEED.8080708@wwwdotorg.org>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <1384896475-8744-1-git-send-email-jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131119151418.8BB2BC4079D@trevor.secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Laura Abbott <lauraa@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Marc <marc.ceeeee@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Ian Campbell <ian.campbell@citrix.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384896475-8744-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2013-11-19 at 15:14 +0000, Grant Likely wrote:
-> > The proposal look good for me. I'm not convinced that we really need the
-> > support for 'reg' property, as the fixed memory region is a special case
-> > of generic dynamic allocation specified by the size and alloc-ranges, but
-> > I assume that there have been already a long discussion about this, so I
-> > accept the common consensus.
+On 11/19/2013 02:27 PM, Jason Cooper wrote:
+> Unlike other build products in the Linux kernel, there is no 'make
+> *install' mechanism to put devicetree blobs in a standard place.
 > 
-> It is absolutely necessary for some use cases. For example, a
-> framebuffer enabled by firmware and passed onto the kernel for
-> flicker-free boot. Some platforms have fixed regions that cannot be
-> moved up.
+> This patch is an attempt to fix this problem.  Akin to 'make install',
+> this creates a new make target, dtbs_install.  The script that gets
+> called defers to a distribution or user supplied installdtbs binary,
+> if found in the system.  Otherwise, the default action is to install a
+> given dtb into
+> 
+>   /lib/modules/${kernel_version}/devicetree/${dts_filename}.dtb
 
-Arguably that could be covered with alloc-range and size by making the range be
-the reg property content basically (and thus size == size of range) but I
-prefer the reg property, it's a clearer statement of intent.
+I still don't see why you wouldn't install the files in
+/lib/devicetrees, but I suppose that location is fine.
 
-Cheers,
-Ben.
+> This is done to keep dtbs from different kernel versions separate until
+> things have settled down.  Once the dtbs are stable, and not so strongly
+> linked to the kernel version, the devicetree files will most likely move
+> to their own repo.  Users will need to upgrade install scripts at that
+> time.
+> 
+> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> ---
+> Question: should I make a note about the filenames not being considered an ABI,
+> or just let it be?
+
+I still believe they're an ABI.
+
+I guess Grant meant that they aren't an ABI to the kernel at run-time,
+unlike the content which is an ABI. That's fine.
+
+However, I believe the files certainly are an ABI to any script that
+takes them from the "make dtbs_install" output directory.
+
+Perhaps the best resolution is to just say nothing and let it be:-)
+
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+
+> +dtbs_install: dtbs
+> +	$(CONFIG_SHELL) $(srctree)/scripts/installdtbs.sh $(KERNELRELEASE) \
+> +	"$(MODLIB)/devicetree" "$(srctree)/$(boot)/dts"
+
+I still think this rule should be in Makefile not arch/arm/Makefile.
+
+Aside from those couple of issues, this version looks OK to me.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
