@@ -1,216 +1,125 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv5 9/9] [FOR TEST] ARM: dt: tegra30: add "iommus" binding
-Date: Tue, 19 Nov 2013 11:33:13 +0200
-Message-ID: <1384853593-32202-10-git-send-email-hdoyu@nvidia.com>
-References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: ARM topic: Is DT on ARM the solution, or is there something
+ better?
+Date: Tue, 19 Nov 2013 10:35:05 +0100
+Message-ID: <20131119093504.GF31504@ulmo.nvidia.com>
+References: <52644A9E.3060007@wwwdotorg.org>
+ <20131118122644.GA26046@ulmo.nvidia.com>
+ <20131118134022.26EE7C409EC@trevor.secretlab.ca>
+ <20131118135727.GD14306@sirena.org.uk>
+ <20131118152920.GL26046@ulmo.nvidia.com>
+ <20131118155022.GB28334@sirena.org.uk>
+ <20131118160626.GN26046@ulmo.nvidia.com>
+ <528A4B5D.8050809@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1384853593-32202-1-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WlEyl6ow+jlIgNUh"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <528A4B5D.8050809-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-"iommus" binding implies that a device can be attached to IOMMU
-devices. An iommu device needs to set #iommus-cells in it. "iommus"
-can have multiple iommu device phandles as below if needed.
 
-  iommus = <&smmu arg1 arg2>,
-  	   <&gart arg1 arg2>;
+--WlEyl6ow+jlIgNUh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Not yet ready for merge. Need to add iommus for other devices.
+On Mon, Nov 18, 2013 at 10:16:13AM -0700, Stephen Warren wrote:
+> On 11/18/2013 09:06 AM, Thierry Reding wrote:
+> ...
+> > Part of my point was that you could possibly still use the same IP
+> > with only a modified (standard) register interface. That way no
+> > licensing of third party IP would be needed. You'd only need to
+> > rewrite parts of the IP to make it look (and behave) like the
+> > standard one.
+> >=20
+> > That's exactly how 16550-compatible UARTs work, isn't it? Or even
+> > the way that USB (EHCI, ...) work. There's a standardize register
+> > interface, possibly with a way for vendor-specific extensions, but
+> > the interface itself doesn't need to be licensed, so there are no
+> > additional costs to supporting the standard interface. There are
+> > only the advantages of being able to reuse a well-tested body of
+> > code.
+>=20
+> Your idea would be great if it could be made to work in practice.
 
-Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-v5:
-Use "iommus=" instead of "mmu-masters".
----
- arch/arm/boot/dts/tegra30.dtsi | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+This wasn't really my idea, so I can't take all the credit for it. =3D)
 
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index 2bd55cf..03b7887 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -1,6 +1,7 @@
- #include <dt-bindings/clock/tegra30-car.h>
- #include <dt-bindings/gpio/tegra-gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/memory/tegra-swgroup.h>
- 
- #include "skeleton.dtsi"
- 
-@@ -92,6 +93,7 @@
- 		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>, /* syncpt */
- 			     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>; /* general */
- 		clocks = <&tegra_car TEGRA30_CLK_HOST1X>;
-+		iommus = <&smmu TEGRA_SWGROUP_CELLS(HC)>;
- 
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -103,6 +105,7 @@
- 			reg = <0x54040000 0x00040000>;
- 			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&tegra_car TEGRA30_CLK_MPE>;
-+			iommus = <&smmu TEGRA_SWGROUP_CELLS(MPE)>;
- 		};
- 
- 		vi {
-@@ -110,6 +113,7 @@
- 			reg = <0x54080000 0x00040000>;
- 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&tegra_car TEGRA30_CLK_VI>;
-+			iommus = <&smmu TEGRA_SWGROUP_CELLS(VI)>;
- 		};
- 
- 		epp {
-@@ -117,6 +121,7 @@
- 			reg = <0x540c0000 0x00040000>;
- 			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&tegra_car TEGRA30_CLK_EPP>;
-+			iommus = <&smmu TEGRA_SWGROUP_CELLS(EPP)>;
- 		};
- 
- 		isp {
-@@ -124,6 +129,7 @@
- 			reg = <0x54100000 0x00040000>;
- 			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&tegra_car TEGRA30_CLK_ISP>;
-+			iommus = <&smmu TEGRA_SWGROUP_CELLS(ISP)>;
- 		};
- 
- 		gr2d {
-@@ -131,6 +137,7 @@
- 			reg = <0x54140000 0x00040000>;
- 			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&tegra_car TEGRA30_CLK_GR2D>;
-+			iommus = <&smmu TEGRA_SWGROUP_CELLS(G2)>;
- 		};
- 
- 		gr3d {
-@@ -139,6 +146,8 @@
- 			clocks = <&tegra_car TEGRA30_CLK_GR3D
- 				  &tegra_car TEGRA30_CLK_GR3D2>;
- 			clock-names = "3d", "3d2";
-+			iommus = <&smmu TEGRA_SWGROUP_CELLS(NV)
-+						TEGRA_SWGROUP_CELLS(NV2)>;
- 		};
- 
- 		dc@54200000 {
-@@ -148,6 +157,7 @@
- 			clocks = <&tegra_car TEGRA30_CLK_DISP1>,
- 				 <&tegra_car TEGRA30_CLK_PLL_P>;
- 			clock-names = "disp1", "parent";
-+			iommus = <&smmu TEGRA_SWGROUP_CELLS(DC)>;
- 
- 			rgb {
- 				status = "disabled";
-@@ -161,6 +171,7 @@
- 			clocks = <&tegra_car TEGRA30_CLK_DISP2>,
- 				 <&tegra_car TEGRA30_CLK_PLL_P>;
- 			clock-names = "disp2", "parent";
-+			iommus = <&smmu TEGRA_SWGROUP_CELLS(DCB)>;
- 
- 			rgb {
- 				status = "disabled";
-@@ -317,6 +328,7 @@
- 		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
- 		nvidia,dma-request-selector = <&apbdma 8>;
- 		clocks = <&tegra_car TEGRA30_CLK_UARTA>;
-+		iommus = <&smmu TEGRA_SWGROUP_CELLS(PPCS)>;
- 		status = "disabled";
- 	};
- 
-@@ -327,6 +339,7 @@
- 		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
- 		nvidia,dma-request-selector = <&apbdma 9>;
- 		clocks = <&tegra_car TEGRA30_CLK_UARTB>;
-+		iommus = <&smmu TEGRA_SWGROUP_CELLS(PPCS)>;
- 		status = "disabled";
- 	};
- 
-@@ -337,6 +350,7 @@
- 		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
- 		nvidia,dma-request-selector = <&apbdma 10>;
- 		clocks = <&tegra_car TEGRA30_CLK_UARTC>;
-+		iommus = <&smmu TEGRA_SWGROUP_CELLS(PPCS)>;
- 		status = "disabled";
- 	};
- 
-@@ -347,6 +361,7 @@
- 		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
- 		nvidia,dma-request-selector = <&apbdma 19>;
- 		clocks = <&tegra_car TEGRA30_CLK_UARTD>;
-+		iommus = <&smmu TEGRA_SWGROUP_CELLS(PPCS)>;
- 		status = "disabled";
- 	};
- 
-@@ -357,6 +372,7 @@
- 		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
- 		nvidia,dma-request-selector = <&apbdma 20>;
- 		clocks = <&tegra_car TEGRA30_CLK_UARTE>;
-+		iommus = <&smmu TEGRA_SWGROUP_CELLS(PPCS)>;
- 		status = "disabled";
- 	};
- 
-@@ -525,7 +541,7 @@
- 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
--	iommu {
-+	smmu: iommu {
- 		compatible = "nvidia,tegra30-smmu";
- 		reg = <0x7000f010 0x02c
- 		       0x7000f1f0 0x010
-@@ -533,6 +549,7 @@
- 		nvidia,#asids = <4>;		/* # of ASIDs */
- 		dma-window = <0 0x40000000>;	/* IOVA start & length */
- 		nvidia,ahb = <&ahb>;
-+		#iommu-cells = <2>;
- 	};
- 
- 	ahub {
-@@ -605,6 +622,7 @@
- 		reg = <0x78000000 0x200>;
- 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&tegra_car TEGRA30_CLK_SDMMC1>;
-+		iommus = <&smmu TEGRA_SWGROUP_CELLS(PPCS)>;
- 		status = "disabled";
- 	};
- 
-@@ -613,6 +631,7 @@
- 		reg = <0x78000200 0x200>;
- 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&tegra_car TEGRA30_CLK_SDMMC2>;
-+		iommus = <&smmu TEGRA_SWGROUP_CELLS(PPCS)>;
- 		status = "disabled";
- 	};
- 
-@@ -621,6 +640,7 @@
- 		reg = <0x78000400 0x200>;
- 		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&tegra_car TEGRA30_CLK_SDMMC3>;
-+		iommus = <&smmu TEGRA_SWGROUP_CELLS(PPCS)>;
- 		status = "disabled";
- 	};
- 
-@@ -629,6 +649,7 @@
- 		reg = <0x78000600 0x200>;
- 		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&tegra_car TEGRA30_CLK_SDMMC4>;
-+		iommus = <&smmu TEGRA_SWGROUP_CELLS(PPCS)>;
- 		status = "disabled";
- 	};
- 
--- 
-1.8.1.5
+> I'm not convinced how possible this would be, without ARM mandating it
+> in their contractual licensing terms, or large customers mandating it
+> in order to use SoCs for their flagship designs.
+
+I don't think ARM mandating this is necessary. In the end it boils down
+to faster time to market, doesn't it? I mean if you have a device that
+exposes a standard set of registers and a driver for that standard set
+already exists, then it's very little work to get the device working
+with it. You also save a lot of work on validation.
+
+The 16550 UART register set wasn't mandated by anyone as far as I know,
+but still the majority of UART devices implement it. I guess the same is
+true of EHCI or SDHCI.
+
+Some aspects could possibly be solved by making them parts of a bus
+specification I guess. If bus specifications made some provisions for
+controlling the power, reset, clocking and other aspects of the IP on
+that bus, that would make quite a few things easier. That isn't a new
+idea of course, it's been done in other systems, such as PCI, before.
+
+> The one fly in the ointment is that even in cases where there are
+> standard register interfaces, there are always quirks in how vendors
+> implement those interfaces, so HW ends up being 90-99.5% compliant
+> with the interface, but with subtle differences. Take a look at
+> Tegra's SDHCI, EHCI and PCIe controllers for examples! Still, I
+> suppose that even with that caveat, having a 90% identical driver
+> compared to a 0% identical driver would be better than where we are
+> today.
+
+Yes, that's true. The Linux 8250 driver, while generally dealing with
+the same register set, still requires an awful amount of code and data
+tables to make it work on the myriad of devices out there. And the set
+of registers is pretty small compared to other types of hardware.
+
+I guess in the end it boils down to a redistribution of the workload.
+While I think we're doing a pretty good job with adding hardware support
+in the Linux kernel, we're still struggling to keep up with new hardware
+being continually added. One solution to that problem is to keep adding
+massive amounts of software engineers to keep up with the changes in
+hardware. Typically this has the side-effect of making the delta between
+upstream and downstream kernels larger, unfortunately.
+
+Another solution, the one discussed here, is to move more complexity
+into hardware, therefore reducing the workload of software engineers by
+making the job of hardware engineers harder.
+
+Thierry
+
+--WlEyl6ow+jlIgNUh
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSizDIAAoJEN0jrNd/PrOhea4P/R0heq/29KGN8L0/qg0wnkFz
+wH1QGHHafpeeB7MlmoceS6mZhjodgBj1HwYvIgd+fMX73Ew3z6aVBsNjpqylTcu0
+E3eYbXC5fsi1Wf2bM+H29sSAljIOa9eKxgv/DnM5uNVo0LmDzKi8otDRaYbhMHlv
+fZh5BOhu2K3qAjxVL+WUr5vY/17cXYM5kOfJ0eX6lJ76bVHW1IsiDy0p6ogOSD0h
+ohnEqRRgSVH+ylJ6+2mlT6xj+N1+CgDzd2DAO47IqK14ku/m7nhYUB+MGt+tv7z8
+Z6yD+oD6T/sX38HjVeN/wmRkw0IalpLIpEFFaF3Bcrdh1juDDy/ujjFTaHFfSkZV
+o0GgwItN7ef/Ai9nYcm0o33HEZGCPKHBEphpA7qomn8xP0WvrhkVulwwxnl9hd0k
+EGej7zwwWVcUZt2daUtDELFrJ+Wyq2h49wCKeuOEGE2lw18Kkl2Pq7CUOSm1dQ2i
+r0Un7dzlAtGTlXQu1qM7dmO0no5dCIdwYZsWUat4Iy8pvpIs2Kd1NGtLxbI6tOOl
+fI21Oq3x53uoMHklI7jhdBEEkFmC5uOZx/Tnf7LiABJLdKBRZDijfy+qt6r7EOB+
+D6kutEROW3QzHayCtvReLCaLc/tP9tVvPygpYkXKaYmRsArWWwb4PgbbvfM4TYyZ
+Ek/TGy0v0H5q1K1ANnrq
+=Fp5C
+-----END PGP SIGNATURE-----
+
+--WlEyl6ow+jlIgNUh--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
