@@ -1,112 +1,77 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
-Subject: Re: [PATCH RFC 00/10] ARM: STi: Add dwmac glue and reset controller
-Date: Tue, 19 Nov 2013 06:28:42 +0100
-Message-ID: <528AF70A.7080603@st.com>
-References: <1384264311-7308-1-git-send-email-srinivas.kandagatla@st.com>
+From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v2] itg3200: add dt support.
+Date: Tue, 19 Nov 2013 16:48:39 +1100
+Message-ID: <20131119164839.7cd3f4f1@notabene.brown>
+References: <20131119113013.39dae3cd@notabene.brown>
+	<20131119014938.GA20782@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1384264311-7308-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: srinivas.kandagatla@st.com
-Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, stephen.gallimore@st.com, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-pm@vger.kernel.org
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_//XwP1PsStxcHcGrjfeISlYD"; protocol="application/pgp-signature"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131119014938.GA20782-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Manuel Stahl <manuel.stahl-GeUHRtUQU7nSyEMIgutvibNAH6kLmebB@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2013 2:51 PM, srinivas.kandagatla@st.com wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
->
-> Hi All,
->
-> This patch series adds Ethernet support to STi series SOCs STiH415 and STiH416.
-> STi SOC series integrates dwmac IP from synopsis, however there is a hardware
-> glue on top of this standard IP, this glue needs to configured before the
-> actual dwmac can be used.
-> To add this a new driver dwmac-sti is introduced whose responsibility is to
-> configure dwmac glue and before dwmac driver, this is achieved by making dwmac
-> device node as child to ethernet glue node. Inspired by usb/dwc3.
-> Also the glue needs to come out of softreset which is why we have added a
-> softreset controller to driver which looked perfectly neat, rather then
-> driving the softreset bit from the glue driver.
->
-> Also as part of power management in glue driver, I found that there was no
-> function to determine if the child device is a wakeup source or not.
-> I have added a new api device_child_may_wakeup API which could be useful for
-> drivers like this. "PM / wakeup : Introduce device_child_may_wakeup" patch has
-> that new API and "net: stmmac:sti: Add STi SOC glue driver." glue driver uses
-> this new API.
->
-> The reason for combining all these patches in a same series is because of
-> dependencies.
->
-> This patch series is tested on B2000 and B2020 boards with STiH415, STiH416
-> SOC on ethernet 100/1000 Links.
->
-> Comments?
+--Sig_//XwP1PsStxcHcGrjfeISlYD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hello Srini
-ll these patches are ok for me and, as you know, I have already started
-using them while porting other SoC. Glue logic is mandatory now!
+On Tue, 19 Nov 2013 02:49:38 +0100 Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
 
-Thanks
-peppe
+> Hi,
+>=20
+> On Tue, Nov 19, 2013 at 11:30:13AM +1100, NeilBrown wrote:
+> > No new configuration, just a 'compatible' string and
+> > documentation.
+>=20
+> itg3200 looks like a candidate for the list of trivial i2c
+> devices [0] to me.
+>=20
+> [0] Documentation/devicetree/bindings/i2c/trivial-devices.txt
+>=20
+> -- Sebastian
 
->
-> Thanks,
-> srini
->
-> Srinivas Kandagatla (6):
->    drivers: reset: stih415: add softreset controller
->    drivers: reset: stih416: add softreset controller
->    PM / wakeup : Introduce device_child_may_wakeup
->    net: stmmac:sti: Add STi SOC glue driver.
->    ARM: STi: Add STiH415 ethernet support.
->    ARM: STi: Add STiH416 ethernet support.
->
-> Stephen Gallimore (4):
->    drivers: reset: STi SoC system configuration reset controller support
->    drivers: reset: Reset controller driver for STiH415
->    drivers: reset: Reset controller driver for STiH416
->    ARM: STi: Add reset controller support to mach-sti Kconfig
->
->   .../devicetree/bindings/net/sti-dwmac.txt          |   45 +++
->   .../devicetree/bindings/reset/st,sti-powerdown.txt |   46 +++
->   .../devicetree/bindings/reset/st,sti-softreset.txt |   45 +++
->   arch/arm/boot/dts/stih415-clock.dtsi               |   14 +
->   arch/arm/boot/dts/stih415-pinctrl.dtsi             |   82 ++++++
->   arch/arm/boot/dts/stih415.dtsi                     |   67 +++++
->   arch/arm/boot/dts/stih416-clock.dtsi               |   14 +
->   arch/arm/boot/dts/stih416-pinctrl.dtsi             |  106 +++++++
->   arch/arm/boot/dts/stih416.dtsi                     |   69 +++++
->   arch/arm/boot/dts/stih41x-b2000.dtsi               |   32 +++
->   arch/arm/boot/dts/stih41x-b2020.dtsi               |   33 +++
->   arch/arm/mach-sti/Kconfig                          |    3 +
->   drivers/base/power/wakeup.c                        |   23 ++
->   drivers/net/ethernet/stmicro/stmmac/Makefile       |    1 +
->   drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c    |  294 ++++++++++++++++++++
->   drivers/reset/Kconfig                              |    2 +
->   drivers/reset/Makefile                             |    3 +
->   drivers/reset/sti/Kconfig                          |   15 +
->   drivers/reset/sti/Makefile                         |    4 +
->   drivers/reset/sti/reset-stih415.c                  |   99 +++++++
->   drivers/reset/sti/reset-stih416.c                  |  101 +++++++
->   drivers/reset/sti/reset-syscfg.c                   |  186 ++++++++++++
->   drivers/reset/sti/reset-syscfg.h                   |   69 +++++
->   .../dt-bindings/reset-controller/stih415-resets.h  |   23 ++
->   .../dt-bindings/reset-controller/stih416-resets.h  |   25 ++
->   include/linux/pm_wakeup.h                          |    1 +
->   26 files changed, 1402 insertions(+), 0 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/net/sti-dwmac.txt
->   create mode 100644 Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
->   create mode 100644 Documentation/devicetree/bindings/reset/st,sti-softreset.txt
->   create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c
->   create mode 100644 drivers/reset/sti/Kconfig
->   create mode 100644 drivers/reset/sti/Makefile
->   create mode 100644 drivers/reset/sti/reset-stih415.c
->   create mode 100644 drivers/reset/sti/reset-stih416.c
->   create mode 100644 drivers/reset/sti/reset-syscfg.c
->   create mode 100644 drivers/reset/sti/reset-syscfg.h
->   create mode 100644 include/dt-bindings/reset-controller/stih415-resets.h
->   create mode 100644 include/dt-bindings/reset-controller/stih416-resets.h
->
+Hmmm... a file that isn't referenced anywhere else in the kernel
+documentation so is unlikely to be found except by people who know it is
+there....
 
+I can see that having lots of files for trivial devices is rather clumsy, b=
+ut
+there must be a better way.
+I don't suppose we could just put the documentation in the device-driver fi=
+le
+in some format similar to kernel-doc and just extract it if it is wanted
+separately?  I think people read code a lot more than they read
+documentation. I know I do.
+
+But I can re-send with an update to trivial-devices.txt is that is what is
+wanted.
+
+Thanks,
+NeilBrown
+
+--Sig_//XwP1PsStxcHcGrjfeISlYD
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIVAwUBUor7tznsnt1WYoG5AQJVxhAAtjwgPu/xThBn/uG19TfyH9EPA3r0LUSr
+1YXQTcK5iI7soYxSXAbYLZDyGVk/JEd7a6+78/zADRG1YH5WiZHSLo9ns9sJ6lNF
+/VGz6SxrSVctrps4sowsIeZCHLuW8hPGQpTRCrQMO/pclZnoERwlYOIMXNO8bAD2
+UrGACHZcUiMZDWztwAmgsapAmKRFjW4+RS+XSthiLbDVgErSjJoI6mtJcwz1pj3E
+flKEaQhGtD8t8awtjZHYbAQbBlBgwLn9LyfsRcBmoiX7AQ6Rn1DuOIOzojye+PGO
+PYng8ks08Dq5R6h3TuM0vEOZphf5uK26lLbjkSnygMFWYxCuVzvnFqW06Tjq41ch
+A8GbQZPA6iGo9oaFNCX/Z5AOTEo7xXPydvzfMAoM3YBKHAtqujpFOBq7NA13rPVF
+gSwNRPgudabj7Ffbr+pUilLonYjwI+KGfvsIlCwUlr15oqMVexwdkxAWRAjLnI5/
+hCeiV/dEBXzSweaERYehEkFwUQUY21EA4TZwPmSmhkGL7pqfT3UNulkNEzNJIEH+
+VO8L4qbrT0j+nPYWiFAZ68MdcTalcRe2N3Sj2xeeDrQqdmSlXj+p6D4miXAp0zTq
+jbbJfqpDGRhh1I9q4dNWaqhIEZFq16ZiNAAVvtdL5cWNr+G7CoEPUxlTlB4XToCg
+1+Yg30BvvOM=
+=Yxmd
+-----END PGP SIGNATURE-----
+
+--Sig_//XwP1PsStxcHcGrjfeISlYD--
