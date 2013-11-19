@@ -1,69 +1,52 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
-Date: Tue, 19 Nov 2013 19:53:13 +0000
-Message-ID: <20131119195313.GQ16735@n2100.arm.linux.org.uk>
-References: <20131118191955.GG10335@titan.lakedaemon.net> <528A6944.3070303@wwwdotorg.org> <20131118192852.GI10335@titan.lakedaemon.net> <528A6CA3.9030904@wwwdotorg.org> <20131118195243.GJ10335@titan.lakedaemon.net> <528A98C8.9040803@wwwdotorg.org> <20131119122801.GL16735@n2100.arm.linux.org.uk> <528BB109.2060201@wwwdotorg.org> <20131119185212.GO16735@n2100.arm.linux.org.uk> <528BBB85.8050507@wwwdotorg.org>
+Date: Tue, 19 Nov 2013 14:54:40 -0500
+Message-ID: <20131119195439.GE28859@titan.lakedaemon.net>
+References: <20131118192852.GI10335@titan.lakedaemon.net>
+ <528A6CA3.9030904@wwwdotorg.org>
+ <20131118195243.GJ10335@titan.lakedaemon.net>
+ <528A98C8.9040803@wwwdotorg.org>
+ <20131119122801.GL16735@n2100.arm.linux.org.uk>
+ <20131119142336.GA28859@titan.lakedaemon.net>
+ <20131119150212.GM16735@n2100.arm.linux.org.uk>
+ <20131119152047.GB28859@titan.lakedaemon.net>
+ <20131119152146.GN16735@n2100.arm.linux.org.uk>
+ <20131119192246.GP16735@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <528BBB85.8050507-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20131119192246.GP16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2013 at 12:27:01PM -0700, Stephen Warren wrote:
-> On 11/19/2013 11:52 AM, Russell King - ARM Linux wrote:
-> > The installation should just copy the blobs to a path in the filesystem
-> > _or_ allow a distro to hook into the installation process, just like we
-> > provide for the installation of the zImage.  That is our job done.  We
-> > should do *nothing* more.
+On Tue, Nov 19, 2013 at 07:22:46PM +0000, Russell King - ARM Linux wrote:
+> On Tue, Nov 19, 2013 at 03:21:46PM +0000, Russell King - ARM Linux wrote:
+> > On Tue, Nov 19, 2013 at 10:20:47AM -0500, Jason Cooper wrote:
+> > > By "That" are you referring to extending the standard for compatible
+> > > strings to the board level, or forcing consistent naming on the dts
+> > > files?
+> > 
+> > A consistent file naming on both the dtb and dts files.
 > 
-> OK, if you're arguing that there should be absolutely zero renaming at
-> all under any circumstances, I'm fine with that.
+> It's time to knock the idea of naming the DT blobs after the compatible
+> string on its head as well.  That's really not going to work.  Just
+> leave the filenames as is, and move the problem into userspace to solve.
 
-That's what I'm arguing for.  Consider what happens when we need to
-identify a specific DT blob to be used for a board:
+Ack, I was working my way towards that anyway.
 
-"For the Zynteknology Amazingboard, you need to use the DT file
-imx6dl-amazingboard.dtb".
+> See - by doing this, you are building policy into the kernel build
+> system and potentially taking away choice from userspace.
 
-What happens if we have an installation system which renames the files?
+And this is my reason for dropping the idea.  Thanks for clarifying it
+for me.  I'll submit a non-RFC version that just copies the files
+without the name change.
 
-"For the Zynteknology Amazingboard, you need to use the DT file
-imx6dl-amazingboard.dtb, but this may also be named
-zynteknology,amazingboard.dtb on installation".
+thx,
 
-Now, the user has to work out which of two filenames instead of just one,
-and it becomes a lot harder - it's not difficult for _us_ developers, but
-from the user point of view, it is, because there is now two things they
-have to deal with, and a greater chance of making an error.
-
-Now, as for using the compatible strings, if you look at the email I just
-sent previously, I've shown why naming DT blobs by their compatible string
-is a stupid thing to do.  I'll go further: it's an idiotic thing which
-can't work.
-
-We already have DT blobs which contain a _range_ of compatible strings.
-Does that mean we always choose the first compatible string?  If you're
-using that to match up a DT blob, you've just failed because what if
-your platform needs to match against the second compatible string?
-
-Use symlinks for all compatible strings?  Well, what if you have two DT
-blobs which contain the same compatible string?  Yes, we do have lots
-which fall into this case already.
-
-Hence, naming files by compatible string _can't_ ever work sanely.  It
-assumes that compatible strings are unique.  They plainly aren't.
-
-So, I think we keep the existing naming scheme and just copy the files
-as is to the installation location.  Anything more than that is a
-"distro" choice - if a distro wants to offer the user a list of DT
-images to use, the distro needs a tool which parses the compatible
-strings, works out which of the files match the target, and present the
-user with that choice - because we already have the case where there is
-no 1:1 relationship between files and board.
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
