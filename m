@@ -1,105 +1,51 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: ux500: decomission the non-DT MTU init sequence
-Date: Wed, 20 Nov 2013 00:33:09 +0100
-Message-ID: <528BF535.1030504@linaro.org>
-References: <1384896471-9384-1-git-send-email-linus.walleij@linaro.org>	<528BE8F2.3030507@linaro.org> <CACRpkdab=1xJtcAg-_oUBr_jC5DgDre-f9jxuzDnZmXGFShvLw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdab=1xJtcAg-_oUBr_jC5DgDre-f9jxuzDnZmXGFShvLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Loc Ho <lho@apm.com>
+Subject: [PATCH v2 0/4] ata: Add APM X-Gene SoC 6.0Gbps SATA PHY support
+Date: Tue, 19 Nov 2013 16:53:13 -0700
+Message-ID: <1384905197-3566-1-git-send-email-lho@apm.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2013 11:55 PM, Linus Walleij wrote:
-> On Tue, Nov 19, 2013 at 11:40 PM, Daniel Lezcano
-> <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 11/19/2013 10:27 PM, Linus Walleij wrote:
->
->>> -       if (!of_have_populated_dt())
->>> -               nmdk_timer_init(mtu_timer_base, IRQ_MTU0);
->>
->> If no timer have been defined in the dt [or wrongly defined], is the=
-re a
->> message to tell the user what is wrong ?
->
-> Isn't that a question to be asked about a whole lot of such
-> clocksource drivers and ARM platforms?
+ata: Add APM X-Gene SoC 6.0Gbps SATA PHY support
 
-Yes, I did the comment based on your patch but I agree it must be=20
-addressed in a global manner.
+This patch adds support for APM X-Gene SoC 6.0Gbps SATA PHY. This is the
+physical layer interface for the corresponding SATA host controller. This
+driver uses the new PHY generic framework posted by Kishon Vijay Abrahm.
+In addition, the new PHY generic framework is patched to provide an
+function to set the speed of the PHY.
 
-> Most DT-only ARM platforms rely on
-> arch/arm/kernel/time.c to call clocksource_of_init() if the
-> machine_desc->init_time() hook is not set and has zero
-> code to handle any such situation.
->
-> So I guess what you're asking is whether we should patch
-> clocksource_of_init() to warn if it cannot find any
-> matching clock sources, like this:
->
->  From e55cf038b238d96b28d9fb01b5b6cdf345990d53 Mon Sep 17 00:00:00 20=
-01
-> From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Date: Tue, 19 Nov 2013 23:52:56 +0100
-> Subject: [PATCH] clksrc-of: warn if no clock sources are found
->
-> Many platforms rely on clocksource_of_init() being implicitly
-> called for registering clock sources and will get zero warnings
-> if no working clock source is available. Let's print a critical
-> error message if no clock source is found.
->
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+v2
+* Remove port knowledge from functions
+* Make all functions static
+* Remove ID completely
+* Make resource requirement based on compatible type
+* Rename override PHY parameters with more descriptive name
+* Add override PHY parameter for per controller, per port, and per speed
+* Patch the generic PHY frame to expose set_speed operation
 
-Yes, it sounds right to do this.
+v1
+* Initial version
 
-Thanks !
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Tuan Phan <tphan@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+Loc Ho (4):
+  PHY: Add function set_speed to generic PHY framework
+  Documentation: Add APM X-Gene SoC 6.0Gbps SATA PHY driver binding
+    documentation
+  ata: add APM X-Gene SoC 6.0Gbps SATA PHY driver
+  arm64: Add APM X-Gene SoC 6.0Gbps SATA PHY DTS entries
 
-   -- Daniel
+ .../devicetree/bindings/ata/apm-xgene-phy.txt      |   61 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   28 +
+ drivers/ata/Kconfig                                |    6 +
+ drivers/ata/Makefile                               |    1 +
+ drivers/ata/sata_xgene_phy.c                       | 2067 ++++++++++++++++++++
+ include/linux/phy/phy.h                            |   22 +
+ 6 files changed, 2185 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/apm-xgene-phy.txt
+ create mode 100644 drivers/ata/sata_xgene_phy.c
 
-> ---
->   drivers/clocksource/clksrc-of.c | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/clocksource/clksrc-of.c b/drivers/clocksource/cl=
-ksrc-of.c
-> index 35639cf4e5a2..a30b42c3ac3b 100644
-> --- a/drivers/clocksource/clksrc-of.c
-> +++ b/drivers/clocksource/clksrc-of.c
-> @@ -28,6 +28,7 @@ void __init clocksource_of_init(void)
->       struct device_node *np;
->       const struct of_device_id *match;
->       clocksource_of_init_fn init_func;
-> +    unsigned clocksources =3D 0;
->
->       for_each_matching_node_and_match(np, __clksrc_of_table, &match)=
- {
->           if (!of_device_is_available(np))
-> @@ -36,5 +37,8 @@ void __init clocksource_of_init(void)
->           init_func =3D match->data;
->           init_func(np);
->           of_node_put(np);
-> +        clocksources++;
->       }
-> +    if (!clocksources)
-> +        pr_crit("%s: no matching clocksources found\n", __func__);
->   }
->
-
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
