@@ -1,50 +1,36 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 01/10] dma: ste_dma40: Expand DT binding to accept
- 'high-priority channel' flag
-Date: Tue, 19 Nov 2013 11:07:40 +0000
-Message-ID: <1384859269-19801-2-git-send-email-lee.jones@linaro.org>
-References: <1384859269-19801-1-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1384859269-19801-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linus.walleij@linaro.org, Lee Jones <lee.jones@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 2/9] arc: Use NULL as the default DTB
+Date: Tue, 19 Nov 2013 12:12:27 +0100
+Message-ID: <1384859554-27268-2-git-send-email-geert@linux-m68k.org>
+References: <5283A000.8090007@gmail.com>
+ <1384859554-27268-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1384859554-27268-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree@vger.kernel.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, Vineet Gupta <vgupta@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-This is used for MSP (audio) devices which is about to be fully DT:ed.
+early_init_dt_scan() now takes care of falling back to the built-in DTB.
 
-Cc: devicetree@vger.kernel.org
-Acked-by: Vinod Koul <vinod.koul@intel.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Vineet Gupta <vgupta@synopsys.com>
 ---
- Documentation/devicetree/bindings/dma/ste-dma40.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arc/kernel/setup.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/ste-dma40.txt b/Documentation/devicetree/bindings/dma/ste-dma40.txt
-index a8c21c2..1f5729f 100644
---- a/Documentation/devicetree/bindings/dma/ste-dma40.txt
-+++ b/Documentation/devicetree/bindings/dma/ste-dma40.txt
-@@ -50,6 +50,9 @@ Each dmas request consists of 4 cells:
-         0x00000008: Use fixed channel:
-                 Use automatic channel selection when unset
-                 Use DMA request line number when set
-+        0x00000010: Set channel as high priority:
-+                Normal priority when unset
-+                High priority when set
- 
- Example:
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index ef705d0f50f5..481e11240e12 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -314,7 +314,7 @@ void setup_processor(void)
+ void __init setup_arch(char **cmdline_p)
+ {
+ 	/* This also populates @boot_command_line from /bootargs */
+-	machine_desc = setup_machine_fdt(&__dtb_start);
++	machine_desc = setup_machine_fdt(NULL);
+ 	if (!machine_desc)
+ 		panic("Embedded DT invalid\n");
  
 -- 
-1.8.1.2
+1.7.9.5
