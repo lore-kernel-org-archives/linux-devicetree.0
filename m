@@ -1,26 +1,38 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH 1/9] dt: Handle passed/built-in DT selection in early_init_dt_scan()
-Date: Tue, 19 Nov 2013 13:27:28 +0000
-Message-ID: <528B6740.1030402@imgtec.com>
-References: <5283A000.8090007@gmail.com> <1384859554-27268-1-git-send-email-geert@linux-m68k.org>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH RFC] ARM/dts: am335x-boneblack: Add HDMI
+	audio support
+Date: Tue, 19 Nov 2013 15:29:26 +0200
+Message-ID: <528B67B6.6040706@ti.com>
+References: <cover.1384863282.git.jsarha@ti.com>
+ <18d71a32fb46d34197fd2e0ec5dc8ebc36371704.1384863282.git.jsarha@ti.com>
+ <528B617A.4080102@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1384859554-27268-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <528B617A.4080102@baylibre.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Benoit Cousson <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/11/13 11:12, Geert Uytterhoeven wrote:
-> Let early_init_dt_scan() fall-back to the built-in DT if no DT was passed,
-> or if it's invalid, so architectures don't have to duplicate this logic.
-> 
-> Suggested-by: Rob Herring <rob.herring@calxeda.com>
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+On 11/19/2013 03:02 PM, Benoit Cousson wrote:
+> A side question related to audio cape support on BBB. In the "official"
+> 3.8.13 CircuitCo version the HDMI audio support was breaking the
+> audio-cape support due to some bad hacks in the mcasp driver.
+>
+> Is this still the case with you series?
 
-Reviewed-by: James Hogan <james.hogan@imgtec.com>
+My patches do not touch davinci-mcasp at all and the davinci-evm changes 
+should be backwards compatible. So if the audio-cape was working before 
+my patches should not break it.
 
-Thanks
-James
+Best regards,
+Jyri
