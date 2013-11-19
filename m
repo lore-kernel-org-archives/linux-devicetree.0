@@ -1,51 +1,65 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Tue, 19 Nov 2013 13:56:26 +0000
-Message-ID: <alpine.DEB.2.02.1311191304260.27757@kaball.uk.xensource.com>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com> <20131115095717.GC1709@e106331-lin.cambridge.arm.com> <20131115175241.GB27174@quad.lixom.net> <20131119113015.GH5914@e106331-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/5] Documentation: dt: Add kona-pwm binding
+Date: Tue, 19 Nov 2013 13:56:54 +0000
+Message-ID: <20131119135654.GL5914@e106331-lin.cambridge.arm.com>
+References: <1384800901-21711-1-git-send-email-tim.kryger@linaro.org>
+ <1384800901-21711-2-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131119113015.GH5914-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1384800901-21711-2-git-send-email-tim.kryger@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tim Kryger <tim.kryger@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linaro Patches List <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Nov 2013, Mark Rutland wrote:
-> > We all know DT considerably better to a point where I would recommend
-> > that they flash a DTB in their UEFI firmware instead of go with ACPI. For
-> > simple hardware and basic devices we've got most bindings sorted out by
-> > now, and we've decided on backwards compatibility from here on out.
+On Mon, Nov 18, 2013 at 06:54:57PM +0000, Tim Kryger wrote:
+> Add the binding description for the kona-pwm block found on Broadcom's
+> mobile SoCs.
 > 
-> If a vendor does this, with a DTB that correctly describes their
-> hardware then I am not against it (and would prefer this case to mapping
-> from ACPI to DT).
+> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Alex Elder <elder@linaro.org>
+> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> ---
+>  .../devicetree/bindings/pwm/bcm-kona-pwm.txt       | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt b/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+> new file mode 100644
+> index 0000000..5c3ea1b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+> @@ -0,0 +1,24 @@
+> +Broadcom's PWM Controller Device Tree bindings
+> +
+> +Broadcom's Kona PWM Controller has 6 channels
+> +
+> +Required Properties :
+> +- compatible: should be "brcm,kona-pwm"
+> +- reg: physical base address and length of the controller's registers
+> +- clocks: clock specifier for the kona pwm external clock
 
-I think that the firmware passing a DTB to the bootloader/kernel is the
-best option we have.
+Minor nit: phandle + clock-specifier pair
 
+> +- #pwm-cells: should be 2.  The first cell specifies the per-chip index
+> +  of the PWM to use and the second cell is the period in nanoseconds.
+> +
+> +Refer to pwm/pwm.txt for generic pwm controller node properties.
+> +
+> +Refer to clocks/clock-bindings.txt for generic clock consumer
+> +properties
+> +
+> +Example:
+> +
+> +pwm: pwm@3e01a000 {
+> +	compatible = "brcm,bcm11351-pwm", "brcm,kona-pwm";
+> +	reg = <0x3e01a000 0xc4>;
+> +	clocks = <&pwm_clk>;
+> +	#pwm-cells = <2>;
+> +};
 
-> For that case we will also require a nailed-down boot
-> protocol that allows for either DTB or ACPI.
+Otherwise this looks fine.
 
-The latest documentation patch for the "arm/arm64 UEFI boot protocol"
-implies that UEFI on ARM is already capable of passing a DTB to the
-kernel:
-
-"The implementation depends on receiving information about the UEFI
-environment in a Flattened Device Tree (FDT) - so is only available with
-CONFIG_OF."
-
-Maybe we just need to better document it?
-
-
-> (only one at a time)
-
-I would not go as far as requiring that only one is available.
-Certainly I would mandate that either of them are independently complete
-and sufficient to describe the platform.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mark.
