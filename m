@@ -1,50 +1,65 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] clksrc: delete nomadik MTU non-DT boot path
-Date: Wed, 20 Nov 2013 10:03:36 +0100
-Message-ID: <528C7AE8.1040204@linaro.org>
-References: <1384896499-9428-1-git-send-email-linus.walleij@linaro.org>	<528BE9C1.8000409@linaro.org>	<20131120085218.GE19953@lee--X1>	<528C79E5.2020209@linaro.org> <CACRpkdbZeHDj_jgcJ7QH_+mwQqP6ZaKqGNjP6j37txAeq2DnsQ@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH RFC 1/4] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Wed, 20 Nov 2013 14:34:14 +0530
+Message-ID: <528C7B0E.3080401@ti.com>
+References: <1383205544-32244-1-git-send-email-gautam.vivek@samsung.com>	<1383205544-32244-2-git-send-email-gautam.vivek@samsung.com>	<527744B2.4090303@ti.com>	<030d01ced946$d6e23490$84a69db0$%debski@samsung.com>	<52779D28.9000905@ti.com>	<CAFp+6iH7vQ-OtMFL4pyr4tFDRchH4oh1Z0753WNgrHiUzj+kzw@mail.gmail.com>	<00fe01ceda0a$941957a0$bc4c06e0$%debski@samsung.com>	<000001ceda17$f41c2030$dc546090$%han@samsung.com>	<000101ceda1f$04ca6f20$0e5f4d60$%han@samsung.com>	<CAFp+6iFAZab35F-MOOZHcHpzSEOL=51gWBK2KZbOJS+0731GJQ@mail.gmail.com>	<000301ceda84$1d648bf0$582da3d0$%han@samsung.com>	<5280BB65.5040305@ti.com> <CAFp+6iGKpzOHjwnSMvSgTehzPLQMB8madoYqMk5JPSAZfSGSTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbZeHDj_jgcJ7QH_+mwQqP6ZaKqGNjP6j37txAeq2DnsQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iGKpzOHjwnSMvSgTehzPLQMB8madoYqMk5JPSAZfSGSTg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, Kamil Debski <k.debski@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Felipe Balbi <balbi@ti.com>, Julius Werner <jwerner@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/2013 10:01 AM, Linus Walleij wrote:
-> On Wed, Nov 20, 2013 at 9:59 AM, Daniel Lezcano
-> <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 11/20/2013 09:52 AM, Lee Jones wrote:
->
->>>> A sidenote: there is a comment in arch/arm/mach-ux500/timer.c
->>>> "/* TODO: Once MTU has been DT:ed place code above into else. */"
->>>> but I did not see any changes related to this TODO.
->>>
->>> You mean similar to this one:
->>>     https://lkml.org/lkml/2013/11/6/118
+On Wednesday 20 November 2013 02:27 PM, Vivek Gautam wrote:
+> Hi Kishon,
+> 
+> 
+> On Mon, Nov 11, 2013 at 4:41 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> Hi,
+> sorry for the delayed response.
+> 
 >>
->> Yes :)
->
-> It's applied in my tree as well, problem solved!
+>> On Wednesday 06 November 2013 05:37 AM, Jingoo Han wrote:
+>>> On Wednesday, November 06, 2013 2:58 AM, Vivek Gautam wrote:
+>>>> On Tue, Nov 5, 2013 at 5:33 PM, Jingoo Han <jg1.han@samsung.com> wrote:
+>>>
+>>> [.....]
+>>>
+>>>>> USB3.0 PHY consists of two blocks such as 3.0 block and 2.0 block.
+>>>>> This USB3.0 PHY can support UTMI+ and PIPE3 interface for 3.0 block
+>>>>> and 2.0 block, respectively.
+>>>>>
+>>>>> Conclusion:
+>>>>>
+>>>>>    1) USB2.0 PHY: USB2.0 HOST, USB2.0 Device
+>>>>>                        Base address: 0x1213 0000
+>>>>>
+>>>>>    2) USB3.0 PHY: USB3.0 DRD (3.0 HOST & 3.0 Device)
+>>>>>                        Base address: 0x1210 0000
+>>>>>                        2.0 block(UTMI+) & 3.0 block(PIPE3)
+>>>>
+>>>> And this is of course the PHY used by DWC3 controller, which works at
+>>>> both High speed as well as Super Speed.
+>>>> Right ?
+>>>
+>>> Right.
+>>>
+>>> While 3.0 block(PIPE3) can be used for Super Speed, 2.0 block(UTMI+)
+>>> can be used for High speed.
+>>
+>> It should then come under *single IP muliple PHY* category similar to what
+>> Sylwester has done.
+> 
+> Do you mean that i should be including PHY IDs for UTMI+ phy and PIPE3
+> phy present in this PHY block ?
+> AFAICS the two phys (UTMI+ and PIPE3) do not really have separate
+> registers to program, and that's the reason
+> we program the entire PHY in a shot.
 
-Ok, cool.
+you mean you program the same set of bits for UTMI+ and PIPE3?
 
-Thanks !
-   -- Daniel
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
