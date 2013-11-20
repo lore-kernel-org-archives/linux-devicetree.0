@@ -1,7 +1,7 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH 5/7] mtd: nand: davinci: move bindings under mtd
-Date: Wed, 20 Nov 2013 17:22:23 +0200
-Message-ID: <1384960945-14528-6-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [PATCH 1/7] mtd: nand: davinci: fix driver registration
+Date: Wed, 20 Nov 2013 17:22:19 +0200
+Message-ID: <1384960945-14528-2-git-send-email-ivan.khoronzhuk@ti.com>
 References: <1384960945-14528-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,121 +12,38 @@ To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>,
 Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Move bindings under mtd. Do this in order to make davinci-nand
-driver usable by keystone architecture.
+When kernel is booted using DT, there is no guarantee that Davinci
+NAND device has been created already at the time when driver init
+function is executed. Therefore, platform_driver_probe() can't be used
+because this may result the Davinci NAND driver will never be probed.
+The driver probing has to be made with core mechanism.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 ---
- .../devicetree/bindings/arm/davinci/nand.txt       |   46 --------------------
- .../devicetree/bindings/mtd/davinci-nand.txt       |   46 ++++++++++++++++++++
- 2 files changed, 46 insertions(+), 46 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
- create mode 100644 Documentation/devicetree/bindings/mtd/davinci-nand.txt
+ drivers/mtd/nand/davinci_nand.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-deleted file mode 100644
-index 3545ea7..0000000
---- a/Documentation/devicetree/bindings/arm/davinci/nand.txt
-+++ /dev/null
-@@ -1,46 +0,0 @@
--* Texas Instruments Davinci NAND
--
--This file provides information, what the device node for the
--davinci nand interface contain.
--
--Required properties:
--- compatible: "ti,davinci-nand";
--- reg : contain 2 offset/length values:
--        - offset and length for the access window
--        - offset and length for accessing the aemif control registers
--- ti,davinci-chipselect: Indicates on the davinci_nand driver which
--                         chipselect is used for accessing the nand.
--
--Recommended properties :
--- ti,davinci-mask-ale: mask for ale
--- ti,davinci-mask-cle: mask for cle
--- ti,davinci-mask-chipsel: mask for chipselect
--- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
--		- "none"
--		- "soft"
--		- "hw"
--- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
--- ti,davinci-nand-buswidth: buswidth 8 or 16
--- ti,davinci-nand-use-bbt: use flash based bad block table support.
--
--nand device bindings may contain additional sub-nodes describing
--partitions of the address space. See partition.txt for more detail.
--
--Example(da850 EVM ):
--nand_cs3@62000000 {
--	compatible = "ti,davinci-nand";
--	reg = <0x62000000 0x807ff
--		0x68000000 0x8000>;
--	ti,davinci-chipselect = <1>;
--	ti,davinci-mask-ale = <0>;
--	ti,davinci-mask-cle = <0>;
--	ti,davinci-mask-chipsel = <0>;
--	ti,davinci-ecc-mode = "hw";
--	ti,davinci-ecc-bits = <4>;
--	ti,davinci-nand-use-bbt;
--
--	partition@180000 {
--		label = "ubifs";
--		reg = <0x180000 0x7e80000>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-new file mode 100644
-index 0000000..3545ea7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-@@ -0,0 +1,46 @@
-+* Texas Instruments Davinci NAND
-+
-+This file provides information, what the device node for the
-+davinci nand interface contain.
-+
-+Required properties:
-+- compatible: "ti,davinci-nand";
-+- reg : contain 2 offset/length values:
-+        - offset and length for the access window
-+        - offset and length for accessing the aemif control registers
-+- ti,davinci-chipselect: Indicates on the davinci_nand driver which
-+                         chipselect is used for accessing the nand.
-+
-+Recommended properties :
-+- ti,davinci-mask-ale: mask for ale
-+- ti,davinci-mask-cle: mask for cle
-+- ti,davinci-mask-chipsel: mask for chipselect
-+- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
-+		- "none"
-+		- "soft"
-+		- "hw"
-+- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
-+- ti,davinci-nand-buswidth: buswidth 8 or 16
-+- ti,davinci-nand-use-bbt: use flash based bad block table support.
-+
-+nand device bindings may contain additional sub-nodes describing
-+partitions of the address space. See partition.txt for more detail.
-+
-+Example(da850 EVM ):
-+nand_cs3@62000000 {
-+	compatible = "ti,davinci-nand";
-+	reg = <0x62000000 0x807ff
-+		0x68000000 0x8000>;
-+	ti,davinci-chipselect = <1>;
-+	ti,davinci-mask-ale = <0>;
-+	ti,davinci-mask-cle = <0>;
-+	ti,davinci-mask-chipsel = <0>;
-+	ti,davinci-ecc-mode = "hw";
-+	ti,davinci-ecc-bits = <4>;
-+	ti,davinci-nand-use-bbt;
-+
-+	partition@180000 {
-+		label = "ubifs";
-+		reg = <0x180000 0x7e80000>;
-+	};
-+};
+diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+index b77a01e..d87213f 100644
+--- a/drivers/mtd/nand/davinci_nand.c
++++ b/drivers/mtd/nand/davinci_nand.c
+@@ -877,6 +877,7 @@ static int __exit nand_davinci_remove(struct platform_device *pdev)
+ }
+ 
+ static struct platform_driver nand_davinci_driver = {
++	.probe		= nand_davinci_probe,
+ 	.remove		= __exit_p(nand_davinci_remove),
+ 	.driver		= {
+ 		.name	= "davinci_nand",
+@@ -886,7 +887,7 @@ static struct platform_driver nand_davinci_driver = {
+ };
+ MODULE_ALIAS("platform:davinci_nand");
+ 
+-module_platform_driver_probe(nand_davinci_driver, nand_davinci_probe);
++module_platform_driver(nand_davinci_driver);
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Texas Instruments");
 -- 
 1.7.9.5
