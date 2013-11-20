@@ -1,52 +1,49 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v8 0/4] pinctrl: imx27: imx27 pincontrol driver
-Date: Wed, 20 Nov 2013 09:45:47 +0100
-Message-ID: <1384937151-11160-1-git-send-email-mpa@pengutronix.de>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] clksrc: delete nomadik MTU non-DT boot path
+Date: Wed, 20 Nov 2013 08:52:18 +0000
+Message-ID: <20131120085218.GE19953@lee--X1>
+References: <1384896499-9428-1-git-send-email-linus.walleij@linaro.org>
+ <528BE9C1.8000409@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <528BE9C1.8000409-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 19 Nov 2013, Daniel Lezcano wrote:
 
-This version has some commit message updates. It still depends on the pinctrl driver patch [1].
+> On 11/19/2013 10:28 PM, Linus Walleij wrote:
+> >Both platforms using the MTU (Nomadik and Ux500) have now been
+> >converted to use device tree exclusively, thus let us delete
+> >this platform data header and make this driver a fully
+> >self-contained DT-only driver.
+> >
+> >Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> >Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>=20
+> Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>=20
+> A sidenote: there is a comment in arch/arm/mach-ux500/timer.c
+> "/* TODO: Once MTU has been DT:ed place code above into else. */"
+> but I did not see any changes related to this TODO.
 
-Regards,
+You mean similar to this one:
+  https://lkml.org/lkml/2013/11/6/118
 
-Markus
-
-[1] [PATCH] pinctrl: imx1-core populate subdevices
-    <1384193987-20740-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-    http://thread.gmane.org/gmane.linux.drivers.devicetree/51584
-
-
-Changes in v8:
- - Update commit messages to describe updated patch content
-
-Changes in v7:
- - Added patch for imx27-pingrp.h
- - Pin nodes moved to board dts files
- - gpio nodes in imx27.dtsi moved to iomux node
-
-
-Markus Pargmann (4):
-  ARM: dts: imx27 iomux device node
-  ARM: dts: imx27 phyCARD-S pinctrl
-  ARM: dts: imx27 phycore move uart1 to rdk
-  ARM: dts: imx27 phycore pinctrl
-
- arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts |  43 ++++++++
- arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts |  16 +++
- arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts   |  23 +++++
- arch/arm/boot/dts/imx27-phytec-phycore-som.dts   |  20 +++-
- arch/arm/boot/dts/imx27.dtsi                     | 125 ++++++++++++-----------
- 5 files changed, 165 insertions(+), 62 deletions(-)
-
--- 
-1.8.4.2
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
