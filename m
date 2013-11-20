@@ -1,27 +1,52 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v2 4/4] arm64: Add APM X-Gene SoC 6.0Gbps SATA PHY DTS entries
-Date: Tue, 19 Nov 2013 16:08:42 -0800
-Message-ID: <CAPw-ZTm8a2jj1ggu0wBgEgaZFphTpAsSROXE0_BjQFqH12crYw@mail.gmail.com>
-References: <1384905197-3566-1-git-send-email-lho@apm.com>
-	<1384905197-3566-2-git-send-email-lho@apm.com>
-	<1384905197-3566-3-git-send-email-lho@apm.com>
-	<1384905197-3566-4-git-send-email-lho@apm.com>
-	<1384905197-3566-5-git-send-email-lho@apm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 00/29] Add OF support to the sh-sci serial port driver
+Date: Wed, 20 Nov 2013 09:18:37 +0900
+Message-ID: <20131120001836.GB7391@verge.net.au>
+References: <1384054421-13357-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20131119015539.GA9186@verge.net.au>
+ <1673549.kq3QFrtT8Z@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1384905197-3566-5-git-send-email-lho@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jon Masters <jcm@redhat.com>, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1673549.kq3QFrtT8Z@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
- Hi,
+On Tue, Nov 19, 2013 at 02:12:43PM +0100, Laurent Pinchart wrote:
+> Hi Simon,
+> 
+> On Tuesday 19 November 2013 10:55:39 Simon Horman wrote:
+> > On Sun, Nov 10, 2013 at 04:33:12AM +0100, Laurent Pinchart wrote:
+> > > Hello,
+> > > 
+> > > This is the second version of the patch set adds device tree bindings for
+> > > the sh sci serial port devices and adds OF parsing to the sh-sci driver.
+> > > 
+> > > The bindings are based on Bastian Hecht's proposal (see
+> > > http://www.spinics.net/lists/arm-kernel/msg228129.html). The approach
+> > > taken here is more minimalistic: instead of describing all hardware
+> > > characteristics that vary between the SCI device revisions in DT (such as
+> > > registers layout), that information is stored in the driver and selected
+> > > based on the compatible property value. Only SCI revisions used on ARM
+> > > devices are supported through DT, as DT support for SuperH is nowhere
+> > > down the line.
+> > > 
+> > > Patches 01/29 to 06/29 clean up the sh-sci driver.
+> > 
+> > It seems to me that these could be queued up by Greg.
+> > Let me know if you would like me to pass them on to him.
+> > I'm quite happy for you to do that yourself. Or to wait.
+> > Its entirely up to you.
+> > 
+> > In any case for those patches:
+> > 
+> > Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+> Thank you. I'll resend the series with the DT bindings updated for r8a7791 and 
+> will ask Greg to pick the patches up and provide a stable branch with patches 
+> 01/29 to 07/29.
 
-> +                       txbooster = <0x2 0x2 0x2 0x2 0x2 0x2>;
-> +                       txskew = <0xa 0xa 0xa 0xa 0xa 0xa>;
-[Loc Ho]
-These isn't correct. They should be txboostgain and txeyetuning. I
-will fix these in the next version.
-
--Loc
+Thanks, that sounds great.
