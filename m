@@ -1,31 +1,45 @@
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Device Tree Maturity Project
-Date: Wed, 20 Nov 2013 07:06:30 -0600
-Message-ID: <528CB3D6.8080808@calxeda.com>
-References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail.com> <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
+Date: Wed, 20 Nov 2013 13:10:04 +0000
+Message-ID: <20131120131004.ACA1BC4079D@trevor.secretlab.ca>
+References: <528A6944.3070303@wwwdotorg.org> <20131118192852.GI10335@titan. lakedaemon.net> <528A6CA3.9030904@wwwdotorg.org> <20131118195243.GJ10335@ titan.lakedaemon.net> <528A98C8.9040803@wwwdotorg.org> <20131119122801. GL16735@n2100.arm.linux.org.uk> <20131119142336.GA28859@titan.lakedaemon. net> <20131119150212.GM16735@n2100.arm.linux.org.uk> <20131119152047. GB28859@titan.lakedaemon.net> <20131119152146.GN16735@n2100.arm.linux.org. uk> <20131119192246.GP16735@n2100.arm.linux.org.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20131119192246.GP16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/2013 05:56 AM, Grant Likely wrote:
-> On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
-> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> To help keep track of what is going on, I would like to have a short
->> stand up meeting once a week. Looking at my calendar, I can make
->> 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
+On Tue, 19 Nov 2013 19:22:46 +0000, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Tue, Nov 19, 2013 at 03:21:46PM +0000, Russell King - ARM Linux wrote:
+> > On Tue, Nov 19, 2013 at 10:20:47AM -0500, Jason Cooper wrote:
+> > > By "That" are you referring to extending the standard for compatible
+> > > strings to the board level, or forcing consistent naming on the dts
+> > > files?
+> > 
+> > A consistent file naming on both the dtb and dts files.
 > 
-> Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
+> It's time to knock the idea of naming the DT blobs after the compatible
+> string on its head as well.  That's really not going to work.  Just
+> leave the filenames as is, and move the problem into userspace to solve.
+> 
+[...]
+> 
+> Just use the filenames we already have in the kernel tree.  Let userspace
+> parse the DT blobs for the compatible strings - it can then provide the
+> user with the choice of all and _also_ show that certain of DT blobs
+> may be compatible with a range of boards as well.
 
-That's 6:00PST.
+Yes, the consistent filename format is a non-problem. The files that
+exist already have names. Nothing else is going to use them. Done. It
+makes total sense to require that new files follow some sane naming
+convention, but it is a mistake to project that back and say all
+existing files must also be renamed.
 
-Any of those days work for me.
+Sure it may look untidy, particularly to those of us with
+obsessive-compulsive tendencies, but it isn't actually a problem.
 
-Rob
+g.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
