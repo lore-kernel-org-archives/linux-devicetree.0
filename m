@@ -1,68 +1,70 @@
-From: boris brezillon <b.brezillon@overkiz.com>
-Subject: Re: [PATCH 1/9] ARM: at91/dt: add rm9200 spi0 chip select pins definitions
-Date: Wed, 20 Nov 2013 16:59:49 +0100
-Message-ID: <528CDC75.1010404@overkiz.com>
-References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com> <1377687742-10618-1-git-send-email-b.brezillon@overkiz.com> <20131120145609.GC14627@ns203013.ovh.net>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v4] ASoC: simple-card: add Device Tree
+ support
+Date: Wed, 20 Nov 2013 16:02:03 +0000
+Message-ID: <20131120160203.GI2674@sirena.org.uk>
+References: <87txharb3o.wl%kuninori.morimoto.gx@renesas.com>
+ <8738oiog00.wl%kuninori.morimoto.gx@renesas.com>
+ <20131003104248.GI27287@sirena.org.uk>
+ <87fvsh2966.wl%kuninori.morimoto.gx@renesas.com>
+ <20131024171758.GA2461@kartoffel>
+ <87iowm9jwv.wl%kuninori.morimoto.gx@renesas.com>
+ <20131115155028.GE24831@e106331-lin.cambridge.arm.com>
+ <CAL_JsqKLd4CbfD6PifXrwWxbyJqnvAViYkXQ63TBniQBPPzp4g@mail.gmail.com>
+ <87li0ldso8.wl%kuninori.morimoto.gx@renesas.com>
+ <CAL_Jsq+ZsrU5S6B_V8ruLK141LxTR2fd9Re5EWmp47LY+ALDow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131120145609.GC14627@ns203013.ovh.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Joachim Eastwood <manabian@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="N9w8F9fpXfXEoJS4"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+ZsrU5S6B_V8ruLK141LxTR2fd9Re5EWmp47LY+ALDow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/11/2013 15:56, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 13:02 Wed 28 Aug     , Boris BREZILLON wrote:
->> Add spi0 cs pinctrl pins definitions.
->>
->> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
->> ---
->>   arch/arm/boot/dts/at91rm9200.dtsi |   20 ++++++++++++++++++++
->>   1 file changed, 20 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/at91rm9200.dtsi b/arch/arm/boot/dts/at91rm9200.dtsi
->> index f770655..69b76c7 100644
->> --- a/arch/arm/boot/dts/at91rm9200.dtsi
->> +++ b/arch/arm/boot/dts/at91rm9200.dtsi
->> @@ -486,6 +486,26 @@
->>   							 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA1 periph A SPI0_MOSI pin */
->>   							 AT91_PIOA 2 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PA2 periph A SPI0_SPCK pin */
->>   					};
->> +
->> +					pinctrl_spi0_cs0: spi0_cs0-0 {
->> +						atmel,pins =
->> +							<AT91_PIOA 3 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PA3 periph A SPI0_NPCS0 pin */
->> +					};
->> +
->> +					pinctrl_spi0_cs1: spi0_cs1-0 {
->> +						atmel,pins =
->> +							<AT91_PIOA 4 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;	/* PA4 GPIO SPI0_NPCS1 pin */
->> +					};
->> +
->> +					pinctrl_spi0_cs2: spi0_cs2-0 {
->> +						atmel,pins =
->> +							<AT91_PIOA 5 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;	/* PA5 GPIO SPI0_NPCS2 pin */
->> +					};
->> +
->> +					pinctrl_spi0_cs3: spi0_cs3-0 {
->> +						atmel,pins =
->> +							<AT91_PIOA 6 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;	/* PA6 GPIO SPI0_NPCS3 pin */
->> +					};
-> nack the pin are not multidrive there is only one master
-Right, this is a mistake.
 
-But the pins should be configured as OUTPUT with HIGH level
-(see 
-http://lxr.free-electrons.com/source/arch/arm/mach-at91/at91rm9200_devices.c#L589).
+--N9w8F9fpXfXEoJS4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
-> Best Regards,
-> J.
->>   				};
->>   
->>   				pioA: gpio@fffff400 {
->> -- 
->> 1.7.9.5
->>
+On Wed, Nov 20, 2013 at 08:20:19AM -0600, Rob Herring wrote:
+
+> Second, you need to define in this binding document what simple means.
+> What properties of the audio subsystem make it simple? The h/w has and
+> doesn't have what? How do I decide if my platform can or should use
+> this binding?
+
+I think it's reasonable to just say that a simple device is one that can
+use this binding and that if that is not possible we need to make a
+taste based decision at the time between extending this binding or using
+a new one.
+
+--N9w8F9fpXfXEoJS4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSjNz4AAoJELSic+t+oim9r2UP/01+tI0TXW3mSkKqWrLlaE5c
+LoBz6+Z34jcITekHjX+sXvgRhFYV6qmBsnQoB664vXpmMMXQ8mIki0oiepX/++hk
+TgJdv1vRdsEA/sxkf5OMmSSq0qAJlEMv7IwLbSGBmyIfNuFgQOZrHAe/WgBIdgz9
+2Wo7lnrDV3CYSUG8LtwU9m7otU0dUZrquoRGUMklyLTw14tM8FmyQZ0HIMl3GtzN
+ezPmF6/Xvd+L+JxdVG8XoMtZCPjMW+BQRkceLwpCqw+v33gN+oEjcXv0pVOwHogM
+EKRRNcImJIvO3mLnSgiHiFE2XYCl/kajUylZHKIVblYBke2bT5ldqaApuWJ3Dw9u
+WNj9jDpqPTd/XluH7GV9nX3ylyZOeRibwQPR+8///a9X4676OXF9AAB6gQji98dp
+E/b9zknEwG6kcMSoUZCyc3doCB8H7vgdAIhqbyz675AGAIEXp+jVtYUWeFAPPWze
+1arFZW7ZMEzfQgOrKlzpQHPsDYanyAYrlA5hgNkYA6yB095V9pZzC2MJ471a5Dws
+JTYeGUfjgj5hwaC3ghNF3WKYCUa9H6Tv8hbO4fODaTUO6W1XSzl927mg8dcpTl9S
+pvZKbRnarIGh1qtJYxSdllIuYT274GFWLYgGalLj/jQuQatFmem7RwPA+KJhu0yN
+R27prZjTtOA2tcb6P6Kj
+=PDlk
+-----END PGP SIGNATURE-----
+
+--N9w8F9fpXfXEoJS4--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
