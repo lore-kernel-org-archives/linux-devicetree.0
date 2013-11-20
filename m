@@ -1,79 +1,100 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: gpio-generic DT bindings?
-Date: Wed, 20 Nov 2013 09:15:12 -0700
-Message-ID: <528CE010.3090301@wwwdotorg.org>
-References: <CAMuHMdU9F_EjA+ZF0mn4PW3HDJ9rkM_84SHiDKkWwWr7MLJKJA@mail.gmail.com> <528BDF57.8080400@wwwdotorg.org> <CAMuHMdVuC5nJizr9Q2JXQCC=FtJkEvLa5iftBoa6Zd7B3XVojA@mail.gmail.com> <528BE85C.60101@wwwdotorg.org> <20131120154409.GM420@bill-the-cat>
+From: boris brezillon <b.brezillon@overkiz.com>
+Subject: Re: [PATCH 5/9] ARM: at91/dt: add mmc0 slot0 support to at91rm9200ek
+ board
+Date: Wed, 20 Nov 2013 17:14:51 +0100
+Message-ID: <528CDFFB.1020601@overkiz.com>
+References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com> <1377687995-10758-1-git-send-email-b.brezillon@overkiz.com> <20131120145926.GE14627@ns203013.ovh.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131120154409.GM420@bill-the-cat>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tom Rini <trini-l0cyMroinI0@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131120145926.GE14627@ns203013.ovh.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Joachim Eastwood <manabian@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/2013 08:44 AM, Tom Rini wrote:
-> On Tue, Nov 19, 2013 at 03:38:20PM -0700, Stephen Warren wrote:
->> On 11/19/2013 03:17 PM, Geert Uytterhoeven wrote:
->>> On Tue, Nov 19, 2013 at 10:59 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>>> On 11/19/2013 02:45 PM, Geert Uytterhoeven wrote:
->>>>> This topic seems to come up from time to time.
->>>>> Unfortunately the last time it coincided with the move of the mailing list
->>>>> from ozlabs to vger, causing the mailing list archives not to have captured
->>>>> the full discussion.
->>>>>
->>>>> Is there anything definitive/usable out there?
->>>>
->>>> What do you mean by "gpio-generic DT bindings"? A generic binding for a
->>>> controller, or something else? I think it's best to have a specific
->>>> binding for each individual controller, so it's always possible to know
->>>> exactly which controller is present. Now, all the binding definitions
->>>> should all look the same or as similar as possible for consistency...
->>>
->>> I mean DT bindings and DT support for drivers/gpio/gpio-generic.c.
+On 20/11/2013 15:59, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 13:06 Wed 28 Aug     , Boris BREZILLON wrote:
+>> Add slot0 of mmc0 pinctrl pins definitions:
+>>   - detect pin
+>>   - write protect pin
+>>   - enable slot0 pin: this pin is connected to an external switch which
+>>     enable mmc0 slot0 or spi dataflash connected to cs3
 >>
->> We should have DT bindings for particular HW, not for a driver. After
->> all, DT describes HW, not a particular OS's driver.
+>> The mmc0 device is not enabled, as it depends on the choosen functionnality
+>> (spi cs3 or mmc0 slot0).
 >>
->> The path to adding DT support to gpio-generic.c is to define a binding
->> for the particular HW you're interested in (which would quite likely
->> only contain compatible, reg, and perhaps some other standard properties
->> like interrupts, clocks, power domains, etc.). There would be one
->> binding and compatible value for each different HW block you want to
->> support, although they could all share the same schema and definition.
->> Then update gpio-generic.c to bind to that (those) compatible value(s),
->> and have some kind of table that maps from compatible value to whatever
->> configuration structure gpio-generic.c uses internally.
-> 
-> This I think is the rub that Geert is getting at.  The driver is
-> generic.
+>> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+>> ---
+>>   arch/arm/boot/dts/at91rm9200ek.dts |   35 +++++++++++++++++++++++++++++++++++
+>>   1 file changed, 35 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/at91rm9200ek.dts b/arch/arm/boot/dts/at91rm9200ek.dts
+>> index f2d6d79..2bad423 100644
+>> --- a/arch/arm/boot/dts/at91rm9200ek.dts
+>> +++ b/arch/arm/boot/dts/at91rm9200ek.dts
+>> @@ -39,6 +39,23 @@
+>>   						atmel,pins = <AT91_PIOD 5 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;
+>>   					};
+>>   				};
+>> +
+>> +				mmc0 {
+>> +					pinctrl_mmc0_slot0_detect: mmc0_slot0_detect-0 {
+>> +						atmel,pins =
+>> +							<AT91_PIOB 27 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
+>> +					};
+>> +
+>> +					pinctrl_mmc0_slot0_write_protect: mmc0_slot0_write_protect-0 {
+>> +						atmel,pins =
+>> +							<AT91_PIOA 17 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
+>> +					};
+>> +
+>> +					pinctrl_mmc0_slot0_switch: mmc0_slot0_switch-0 {
+>> +						atmel,pins =
+>> +							<AT91_PIOB 22 AT91_PERIPH_GPIO (AT91_PINCTRL_OUTPUT | AT91_PINCTRL_OUTPUT_VAL(1))>;
+>> +					};
+> nack this is a regulator the pinctrl API is not done for gpio default value
 
-That's an OS-specific implementation detail that doesn't affect DT.
+I know this can be represented as a regulator, but looking at the 
+datasheet, this looks more
+like a switch than a regulator.
 
-> You feed it a little info and it Just Works.
+Anyway, why didn't you told me that when I proposed the OUTPUT support 
+for at91 pinctrl driver ?
+And BTW pinctrl OUTPUT config is already supported by some pinctrl drivers
+( 
+http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt#L159).
 
-But, this information historically is a platform data structure in a
-board file, right? That means that historically for every new board
-using the driver, you needed to edit kernel code (the board file) to
-provide that platform data. If with DT you still need to edit kernel
-code (the driver) to add support for the HW. So, the situation with DT
-is no worse that the situation with board files.
-
-> Having to patch
-> the generic driver N times for vendor,foo-gpio would be a step
-> backwards.
-
-In fact, with DT you now edit the driver once per SoC/chip that embeds a
-particular GPIO controller IP block, rather than once per board that
-uses the IP block. That's likely a lower number of code edits, so you
-have gained something already.
-
-> How do we have a binding here that lets us be as flexible as
-> we are today?
-
-I think we already have that - something better in fact.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +				};
+>>   			};
+>>   
+>>   			dbgu: serial@fffff200 {
+>> @@ -84,6 +101,24 @@
+>>   					reg = <0>;
+>>   				};
+>>   			};
+>> +
+>> +			mmc0: mmc@fffb4000 {
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				pinctrl-0 = <&pinctrl_mmc0_clk
+>> +					     &pinctrl_mmc0_slot0_cmd_dat0
+>> +					     &pinctrl_mmc0_slot0_dat1_3
+>> +					     &pinctrl_mmc0_slot0_detect
+>> +					     &pinctrl_mmc0_slot0_write_protect
+>> +					     &pinctrl_mmc0_slot0_switch>;
+>> +
+>> +				slot0: slot@0 {
+>> +					reg = <0>;
+>> +					bus-width = <4>;
+>> +					cd-gpios = <&pioB 27 GPIO_ACTIVE_HIGH>;
+>> +					wp-gpios = <&pioA 17 GPIO_ACTIVE_HIGH>;
+>> +				};
+>> +			};
+>>   		};
+>>   
+>>   		usb0: ohci@00300000 {
+>> -- 
+>> 1.7.9.5
+>>
