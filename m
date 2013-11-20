@@ -1,87 +1,84 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv5 2/9] driver/core: populate devices in order for IOMMUs
-Date: Wed, 20 Nov 2013 15:03:59 +0100
-Message-ID: <20131120.160359.1043627108929095327.hdoyu@nvidia.com>
-References: <528BD6A7.3030908@wwwdotorg.org><20131120.051708.396722414386125310.hdoyu@nvidia.com><20131120131447.GA8279@ulmo.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20131120131447.GA8279-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 0/5] mfd: max14577: Add max14577 MFD drivers
+Date: Wed, 20 Nov 2013 15:12:07 +0100
+Message-ID: <1384956732-19526-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote @ Wed, 20 Nov 2013 14:14:48 +0100:
-....
-> > Does the above mean the following?
-> > 
-> > int of_iommu_attach(struct device *dev)
-> > {
-> > 	int i;
-> > 	struct of_phandle_args args;
-> > 
-> > 	of_property_for_each_phandle_with_args(dev->of_node, "iommus",
-> > 					       "#iommu-cells", i, &args)
-> > 		if (!args->np->dev->driver)
-> > 			return -EPROBE_DEFER;
-> > 	return 0;
-> > }
-> 
-> Not quite. The above would only check that a driver was bound to the
-> device. But if that device isn't an IOMMU then this doesn't help you.
+Hi,
 
-I thought that, as long as a device is a normal one, it's ok to let it
-go to be populated. We only care about that, IOMMU devices comes
-first, and clients should come later than IOMMUs, for population. In
-the above if all IOMMUs are not populated, client devices are always
-deferred. "args->np->dev" always points an IOMMU device in a
-loop. Otherwise(no "iommus=") it goes out from the loop immediately.
+This is second version of patchset adding drivers for MAXIM 14577 chip.
+The chip contains Micro-USB Interface Circuit and Li+ Battery Charger.
+It contains accessory and USB charger detection logic. It supports USB 2.0
+Hi-Speed, UART and stereo audio signals over Micro-USB connector.
 
-+#define of_property_for_each_phandle_with_args(np, list, cells, i, args) \
-+	 for (i = 0; !of_parse_phandle_with_args(np, list, cells, i, args); i++)
+The battery charger is compliant with the USB Battery Charging Specification
+Revision 1.1. It has also SFOUT LDO output for powering USB devices.
 
-> The standard way to solve this issue is to add the IOMMU to a global
-> list upon registration. Typically subsystems have some way to do that
-> already,
+The patchset consists of following drivers:
+1. MFD core driver.
+2. Extcon driver for the MUIC (Micro USB Interface Controller).
+3. Charger driver using power supply class.
+4. Regulator driver for SFOUT and charger.
+5. Documentation of device tree bindings.
 
-Your implementation has some possibiity that we could construct any
-hierarchy of IOMMUs.
+The patchset is rebased on latest Linus' tree (vv3.12-10710-gb4789b8) however
+testing was mostly done on 3.10.
 
-> already, but it seems like IOMMU doesn't. It looks like that's one of
-> the side-effects of the assumption that there will always only be a
-> single IOMMU (per bus).
 
-There's the following case at least we have already had.
+Changes since v1:
+-----------------
+1. Applied comments from review (Mark Brown, Mark Rutland).
+2. Removed any DT bindings which are not needed.
+3. Removed "wakeup" node from bindings.
+4. Fixed interrupt handling during resume. This lead to removal of the weird
+   IRQ/GPIO code discussed during review.
+5. Minor fixes pointed by checkpatch, added authors.
+6. Use of_get_child_by_name() for accessing regulators bindings.
+7. Added documentation of bindings (fifth patch).
 
-"memory controller"---"smmu_a"---bus--+--"smmu_b"--"device_a"
-                                      |
-                                      |
-                                      +--"device_b"
 
-"smmu_b" isn't related to a bus at all.
+Best regards,
+Krzysztof Kozlowski
 
-> There's also no base object that IOMMU drivers implement, which is the
-> way it's usually done in other subsystems. The absence of that makes it
-> more difficult. I suspect the easiest way to do that would be to add a
-> new type, something like this:
-....
 
-> With that you can use of_find_iommu_by_node() in the loop to check
-> whether an IOMMU has really been registered.
+Chanwoo Choi (2):
+  mfd: max14577: Add max14577 MFD driver core
+  extcon: max14577: Add extcon-max14577 driver to support MUIC device
 
-Do you think if it's acceptable to see if a device is populated or not
-via "dev->driver"[1]? Grant Likely proposed to use flag[2] instead of
-struct device[2], though.
+Krzysztof Kozlowski (3):
+  charger: max14577: Add charger support for Maxim 14577
+  regulator: max14577: Add regulator driver for Maxim 14577
+  mfd: max14577: Add device tree bindings document
 
-[1] http://lists.linuxfoundation.org/pipermail/iommu/2013-July/006023.html
-[2] http://lists.linuxfoundation.org/pipermail/iommu/2013-October/006763.html
+ Documentation/devicetree/bindings/mfd/max14577.txt |   49 ++
+ drivers/extcon/Kconfig                             |   10 +
+ drivers/extcon/Makefile                            |    1 +
+ drivers/extcon/extcon-max14577.c                   |  806 ++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   13 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/max14577-irq.c                         |  245 ++++++
+ drivers/mfd/max14577.c                             |  216 ++++++
+ drivers/power/Kconfig                              |    7 +
+ drivers/power/Makefile                             |    1 +
+ drivers/power/max14577_charger.c                   |  323 ++++++++
+ drivers/regulator/Kconfig                          |    7 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/max14577.c                       |  282 +++++++
+ include/linux/mfd/max14577-private.h               |  317 ++++++++
+ include/linux/mfd/max14577.h                       |   72 ++
+ 16 files changed, 2351 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
+ create mode 100644 drivers/extcon/extcon-max14577.c
+ create mode 100644 drivers/mfd/max14577-irq.c
+ create mode 100644 drivers/mfd/max14577.c
+ create mode 100644 drivers/power/max14577_charger.c
+ create mode 100644 drivers/regulator/max14577.c
+ create mode 100644 include/linux/mfd/max14577-private.h
+ create mode 100644 include/linux/mfd/max14577.h
+
+-- 
+1.7.9.5
