@@ -1,34 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 00/31] ARM: tegra: use common reset and DMA bindings
-Date: Wed, 20 Nov 2013 16:37:36 +0100
-Message-ID: <201311201637.36733.arnd@arndb.de>
-References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org>
+From: Tom Rini <trini-l0cyMroinI0@public.gmane.org>
+Subject: Re: gpio-generic DT bindings?
+Date: Wed, 20 Nov 2013 10:44:09 -0500
+Message-ID: <20131120154409.GM420@bill-the-cat>
+References: <CAMuHMdU9F_EjA+ZF0mn4PW3HDJ9rkM_84SHiDKkWwWr7MLJKJA@mail.gmail.com>
+ <528BDF57.8080400@wwwdotorg.org>
+ <CAMuHMdVuC5nJizr9Q2JXQCC=FtJkEvLa5iftBoa6Zd7B3XVojA@mail.gmail.com>
+ <528BE85C.60101@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, Marc Dietrich <marvin24@gmx.de>, Bjorn Helgaas <bhelgaas@google.com>, linux-i2c@vger.kernel.org, ac100@lists.launchpad.net, devel@driverdev.osuosl.org, Stephen Warren <swarren@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alan Stern <stern@rowland.harvard.edu>, linux-serial@vger.kernel.org, linux-input@vger.kernel.org, treding@nvidia.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Julian Andres Klode <jak@jak-linux.org>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, linux-tegra@vger.kernel.org, Terje
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <528BE85C.60101-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 November 2013, Stephen Warren wrote:
-> This series implements a common reset framework driver for Tegra, and
-> updates all relevant Tegra drivers to use it. It also removes the custom
-> DMA bindings and replaced them with the standard DMA DT bindings.
+On Tue, Nov 19, 2013 at 03:38:20PM -0700, Stephen Warren wrote:
+> On 11/19/2013 03:17 PM, Geert Uytterhoeven wrote:
+> > On Tue, Nov 19, 2013 at 10:59 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> >> On 11/19/2013 02:45 PM, Geert Uytterhoeven wrote:
+> >>> This topic seems to come up from time to time.
+> >>> Unfortunately the last time it coincided with the move of the mailing list
+> >>> from ozlabs to vger, causing the mailing list archives not to have captured
+> >>> the full discussion.
+> >>>
+> >>> Is there anything definitive/usable out there?
+> >>
+> >> What do you mean by "gpio-generic DT bindings"? A generic binding for a
+> >> controller, or something else? I think it's best to have a specific
+> >> binding for each individual controller, so it's always possible to know
+> >> exactly which controller is present. Now, all the binding definitions
+> >> should all look the same or as similar as possible for consistency...
+> > 
+> > I mean DT bindings and DT support for drivers/gpio/gpio-generic.c.
+> 
+> We should have DT bindings for particular HW, not for a driver. After
+> all, DT describes HW, not a particular OS's driver.
+> 
+> The path to adding DT support to gpio-generic.c is to define a binding
+> for the particular HW you're interested in (which would quite likely
+> only contain compatible, reg, and perhaps some other standard properties
+> like interrupts, clocks, power domains, etc.). There would be one
+> binding and compatible value for each different HW block you want to
+> support, although they could all share the same schema and definition.
+> Then update gpio-generic.c to bind to that (those) compatible value(s),
+> and have some kind of table that maps from compatible value to whatever
+> configuration structure gpio-generic.c uses internally.
 
-The series is rather long, so I may have missed it, but I think you need one
-more patch to the apbdma binding to document the use of #dma-cells, what
-value it has, and what the format of the dma specifiers in slave drivers
-needs to be.
+This I think is the rub that Geert is getting at.  The driver is
+generic.  You feed it a little info and it Just Works.  Having to patch
+the generic driver N times for vendor,foo-gpio would be a step
+backwards.  How do we have a binding here that lets us be as flexible as
+we are today?
 
-	Arnd
+-- 
+Tom
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
