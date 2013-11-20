@@ -1,76 +1,67 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] Input: Add new driver for GPIO beeper
-Date: Tue, 19 Nov 2013 13:32:39 -0800
-Message-ID: <20131119213239.GC25784@core.coreip.homeip.net>
-References: <1384250833-4600-1-git-send-email-shc_work@mail.ru>
- <20131112101544.GD2976@e106331-lin.cambridge.arm.com>
- <1384253277.731839001@f27.i.mail.ru>
- <20131112105930.GE2976@e106331-lin.cambridge.arm.com>
- <52828042.4050501@wwwdotorg.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/9] ARM: at91/dt: add rm9200 spi0 chip select pins
+ definitions
+Date: Wed, 20 Nov 2013 15:56:09 +0100
+Message-ID: <20131120145609.GC14627@ns203013.ovh.net>
+References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
+ <1377687742-10618-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52828042.4050501@wwwdotorg.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexander Shiyan <shc_work@mail.ru>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+In-Reply-To: <1377687742-10618-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2013 at 12:23:46PM -0700, Stephen Warren wrote:
-> On 11/12/2013 03:59 AM, Mark Rutland wrote:
-> > On Tue, Nov 12, 2013 at 10:47:57AM +0000, Alexander Shiyan wrote:
-> >> Hello.
-> >>
-> >>> On Tue, Nov 12, 2013 at 10:07:13AM +0000, Alexander Shiyan wrote:
-> >>>> This patch adds a new driver for the beeper controlled via GPIO pin.
-> >>>> The driver does not depend on the architecture and is positioned as
-> >>>> a replacement for the specific drivers that are used for this function.
-> >>>>
-> >>>> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-> >> ...
-> >>>> diff --git a/Documentation/devicetree/bindings/input/gpio-beeper.txt b/Documentation/devicetree/bindings/input/gpio-beeper.txt
-> >> ...
-> >>>> +Example:
-> >>>> +
-> >>>> +beeper: input@0 {
-> >>>> +	compatible = "gpio-beeper";
-> >>>> +	reg = <0>;
-> >>>> +	gpios = <&gpio3 23 0>;
-> >>>> +};
-> >>>
-> >>> What are the reg / unit-address for?
-> >>
-> >> Just an example from "simple-bus" container.
-> > 
-> > If they have no meaning, they should go. They're unnecessary and make
-> > things more confusing.
-> > 
-> > I'd expect the example to be:
-> > 
-> > beeper: beeper {
-> > 	compatible = "gpio-beeper";
-> > 	gpios - <&gpio3 23 0>;
-> > };
-> > 
-> > And if we have multiple beepers, something like:
-> > 
-> > beeper0: beeper0 { ... };
-> > beeper1: beeper1 { ... };
+On 13:02 Wed 28 Aug     , Boris BREZILLON wrote:
+> Add spi0 cs pinctrl pins definitions.
 > 
-> DT node names aren't meant to encode identity though. What we've done in
-> the past for nodes without a reg where multiple instances were desired
-> is to put them into simple-bus and add a reg, so:
+> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/at91rm9200.dtsi |   20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> beeper0: beeper@0 { reg = <0>; ... };
-> beeper1: beeper@1 { reg = <1>; ... };
-> 
-> Of course, if there's only one of them, then it could just be "beeper"
-> with no reg. The binding and example should probably reflect that simple
-> case.
+> diff --git a/arch/arm/boot/dts/at91rm9200.dtsi b/arch/arm/boot/dts/at91rm9200.dtsi
+> index f770655..69b76c7 100644
+> --- a/arch/arm/boot/dts/at91rm9200.dtsi
+> +++ b/arch/arm/boot/dts/at91rm9200.dtsi
+> @@ -486,6 +486,26 @@
+>  							 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA1 periph A SPI0_MOSI pin */
+>  							 AT91_PIOA 2 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PA2 periph A SPI0_SPCK pin */
+>  					};
+> +
+> +					pinctrl_spi0_cs0: spi0_cs0-0 {
+> +						atmel,pins =
+> +							<AT91_PIOA 3 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PA3 periph A SPI0_NPCS0 pin */
+> +					};
+> +
+> +					pinctrl_spi0_cs1: spi0_cs1-0 {
+> +						atmel,pins =
+> +							<AT91_PIOA 4 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;	/* PA4 GPIO SPI0_NPCS1 pin */
+> +					};
+> +
+> +					pinctrl_spi0_cs2: spi0_cs2-0 {
+> +						atmel,pins =
+> +							<AT91_PIOA 5 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;	/* PA5 GPIO SPI0_NPCS2 pin */
+> +					};
+> +
+> +					pinctrl_spi0_cs3: spi0_cs3-0 {
+> +						atmel,pins =
+> +							<AT91_PIOA 6 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;	/* PA6 GPIO SPI0_NPCS3 pin */
+> +					};
+nack the pin are not multidrive there is only one master
 
-So do we have an agreement on bindings? Otherwise the driver looks good
-to me.
-
--- 
-Dmitry
+Best Regards,
+J.
+>  				};
+>  
+>  				pioA: gpio@fffff400 {
+> -- 
+> 1.7.9.5
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
