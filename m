@@ -1,95 +1,84 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V4] kbuild: dtbs_install: new make target
-Date: Wed, 20 Nov 2013 12:08:45 -0500
-Message-ID: <20131120170845.GJ28859@titan.lakedaemon.net>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
- <1384896475-8744-1-git-send-email-jason@lakedaemon.net>
- <528BDEED.8080708@wwwdotorg.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 5/9] ARM: at91/dt: add mmc0 slot0 support to at91rm9200ek
+ board
+Date: Wed, 20 Nov 2013 18:20:23 +0100
+Message-ID: <20131120172023.GI14627@ns203013.ovh.net>
+References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
+ <1377687995-10758-1-git-send-email-b.brezillon@overkiz.com>
+ <20131120145926.GE14627@ns203013.ovh.net>
+ <528CDFFB.1020601@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <528BDEED.8080708-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <528CDFFB.1020601-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2013 at 02:58:05PM -0700, Stephen Warren wrote:
-> On 11/19/2013 02:27 PM, Jason Cooper wrote:
-> > Unlike other build products in the Linux kernel, there is no 'make
-> > *install' mechanism to put devicetree blobs in a standard place.
-> > 
-> > This patch is an attempt to fix this problem.  Akin to 'make install',
-> > this creates a new make target, dtbs_install.  The script that gets
-> > called defers to a distribution or user supplied installdtbs binary,
-> > if found in the system.  Otherwise, the default action is to install a
-> > given dtb into
-> > 
-> >   /lib/modules/${kernel_version}/devicetree/${dts_filename}.dtb
+On 17:14 Wed 20 Nov     , boris brezillon wrote:
+> On 20/11/2013 15:59, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >On 13:06 Wed 28 Aug     , Boris BREZILLON wrote:
+> >>Add slot0 of mmc0 pinctrl pins definitions:
+> >>  - detect pin
+> >>  - write protect pin
+> >>  - enable slot0 pin: this pin is connected to an external switch which
+> >>    enable mmc0 slot0 or spi dataflash connected to cs3
+> >>
+> >>The mmc0 device is not enabled, as it depends on the choosen functionnality
+> >>(spi cs3 or mmc0 slot0).
+> >>
+> >>Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+> >>---
+> >>  arch/arm/boot/dts/at91rm9200ek.dts |   35 +++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 35 insertions(+)
+> >>
+> >>diff --git a/arch/arm/boot/dts/at91rm9200ek.dts b/arch/arm/boot/dts/at91rm9200ek.dts
+> >>index f2d6d79..2bad423 100644
+> >>--- a/arch/arm/boot/dts/at91rm9200ek.dts
+> >>+++ b/arch/arm/boot/dts/at91rm9200ek.dts
+> >>@@ -39,6 +39,23 @@
+> >>  						atmel,pins = <AT91_PIOD 5 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;
+> >>  					};
+> >>  				};
+> >>+
+> >>+				mmc0 {
+> >>+					pinctrl_mmc0_slot0_detect: mmc0_slot0_detect-0 {
+> >>+						atmel,pins =
+> >>+							<AT91_PIOB 27 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
+> >>+					};
+> >>+
+> >>+					pinctrl_mmc0_slot0_write_protect: mmc0_slot0_write_protect-0 {
+> >>+						atmel,pins =
+> >>+							<AT91_PIOA 17 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
+> >>+					};
+> >>+
+> >>+					pinctrl_mmc0_slot0_switch: mmc0_slot0_switch-0 {
+> >>+						atmel,pins =
+> >>+							<AT91_PIOB 22 AT91_PERIPH_GPIO (AT91_PINCTRL_OUTPUT | AT91_PINCTRL_OUTPUT_VAL(1))>;
+> >>+					};
+> >nack this is a regulator the pinctrl API is not done for gpio default value
 > 
-> I still don't see why you wouldn't install the files in
-> /lib/devicetrees, but I suppose that location is fine.
+> I know this can be represented as a regulator, but looking at the
+> datasheet, this looks more
+> like a switch than a regulator.
 
-Hmm, after sleeping on it a night, I've come around.  If we install to
-/lib/devicetree/${kernel_version}/, then when the devicetree moves to
-it's own repo, it should be able to install to /lib/devicetree.
+so you load the dt via user space and use the regulator NOT the pinctrl
 
-So this:
- 1) hints at the still strong connection between a dtb and the kernel
-    version
- 2) doesn't sound odd like installing dtbs into a modules directory
- 3) allows a future independent repository to install
-    non-kernel-version-dependent dtbs in a sane location.
+I do not want to see gpio control via pinctrl as we have no tracability of it
+in gpio lib what so ever
 
-I'm still not in favor of installing to /boot/anything since /boot is
-often a separate, small partition.  I even set mine not to automount.
-The number and size of dtbs is only going to grow.  Better to install
-them in a location with lots of space, and /lib is used to having the
-kernel modules installed in it.
-
-> > This is done to keep dtbs from different kernel versions separate until
-> > things have settled down.  Once the dtbs are stable, and not so strongly
-> > linked to the kernel version, the devicetree files will most likely move
-> > to their own repo.  Users will need to upgrade install scripts at that
-> > time.
-> > 
-> > Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> > ---
-> > Question: should I make a note about the filenames not being considered an ABI,
-> > or just let it be?
 > 
-> I still believe they're an ABI.
-> 
-> I guess Grant meant that they aren't an ABI to the kernel at run-time,
-> unlike the content which is an ABI. That's fine.
-> 
-> However, I believe the files certainly are an ABI to any script that
-> takes them from the "make dtbs_install" output directory.
-> 
-> Perhaps the best resolution is to just say nothing and let it be:-)
+> Anyway, why didn't you told me that when I proposed the OUTPUT
+> support for at91 pinctrl driver ?
 
-Fine by me.
+you never get my Ack for this and I'm the pinctrl-at91 maintainer
 
-> > diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> 
-> > +dtbs_install: dtbs
-> > +	$(CONFIG_SHELL) $(srctree)/scripts/installdtbs.sh $(KERNELRELEASE) \
-> > +	"$(MODLIB)/devicetree" "$(srctree)/$(boot)/dts"
-> 
-> I still think this rule should be in Makefile not arch/arm/Makefile.
+so NACK
 
-d*mn.  I sent this version too quick.  Thanks for catching that.  I
-didn't expand my test coverage after moving installdtbs.sh.
-
-> Aside from those couple of issues, this version looks OK to me.
-
-Great!  Hopefully Linus won't have any concerns when it passes through
-him.
-
-thx,
-
-Jason.
+Best Regards,
+J.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
