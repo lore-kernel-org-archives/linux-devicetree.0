@@ -1,72 +1,47 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v2 2/4] Documentation: Add APM X-Gene SoC 6.0Gbps SATA PHY
- driver binding documentation
-Date: Wed, 20 Nov 2013 12:07:45 -0800
-Message-ID: <CAPw-ZTnvbLRN1v6Oyhyf=zXBuiOZQquDs6qx8PzF3cX_GnPTGw@mail.gmail.com>
-References: <1384905197-3566-1-git-send-email-lho@apm.com>
-	<1384905197-3566-2-git-send-email-lho@apm.com>
-	<1384905197-3566-3-git-send-email-lho@apm.com>
-	<20131120094328.GS5914@e106331-lin.cambridge.arm.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/7] Davinci nand driver fixes and updates
+Date: Wed, 20 Nov 2013 22:13:34 +0200
+Message-ID: <528D17EE.50402@ti.com>
+References: <1384960945-14528-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <20131120094328.GS5914@e106331-lin.cambridge.arm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "olof@lixom.net" <olof@lixom.net>, "tj@kernel.org" <tj@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jcm@redhat.com" <jcm@redhat.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384960945-14528-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
->> +- compatible         : Shall be "apm,xgene-ahci-phy" or
->> +                       "apm,xgene-ahci-phy2". The "apm,xgene-ahci-phy"
->> +                       describes an port shared with SGMII Ethernet port.
->> +                       The "apm,xgene-ahci-phy2" describes an port not
->> +                       shared with SGMII and the PLL located at another
->> +                       memory resource region.
+On 11/20/2013 05:22 PM, Ivan Khoronzhuk wrote:
+> This series contains fixes and updates of Davinci nand driver, in
+> order to prepare it to be reused for Keystone platform.
 >
-> Is there not a better name available than "apm,xgene-ahci-phy2"?
-[Loc Ho]
-I will name it apm,xgene-ahci-phyx.
-
->> +- reg                        : First PHY memory resource
->> +                       Second separate PHY PLL clock memory resource if
->> +                       type "apm,xgene-ahci-phy2"
+> V1:
+> https://lkml.org/lkml/2013/11/11/352
 >
-> Is ths PLL actually part of the PHY, or does it just feed the PHY?
-[Loc Ho]
-This is always the PLL clock macro in each IP. For the 3rd controller,
-we require an extra clock macro and can NOT use the original clock
-macro as it is not mux'ed with the SGMII port.
+> Ivan Khoronzhuk (7):
+>    mtd: nand: davinci: fix driver registration
+>    mtd: nand: davinci: return ENOMEM if memory allocation is failed
+>    mtd: nand: davinci: check required ti,davinci-chipselect property
+>    mtd: nand: davinci: simplify error handling
+>    mtd: nand: davinci: move bindings under mtd
+>    mtd: nand: davinci: extend description of bindings
+>    mtd: nand: davinci: adjust DT properties to MTD generic
+
+For overall series:
+Reviewed-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 
 >
->> +- txeyetuning                : Manual control to fine tune the capture of the serial
->> +                       bit lines from the automatic calibrated position.
->> +                       Two set of 3-tuple setting for Gen1, Gen2, and Gen3.
->> +                       Range from 0 to 0x7f. Default is 0xa.
+>   .../devicetree/bindings/arm/davinci/nand.txt       |   46 ----------
+>   .../devicetree/bindings/mtd/davinci-nand.txt       |   92 ++++++++++++++++++++
+>   drivers/mtd/nand/davinci_nand.c                    |   68 +++++++--------
+>   3 files changed, 126 insertions(+), 80 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
+>   create mode 100644 Documentation/devicetree/bindings/mtd/davinci-nand.txt
 >
-> If you have a property for which the name consists of multiple words,
-> split the words with '-'.
->
-> What does this actually mean?
->
-> What units are these values in?
->
-> What effect do those values have?
-[Loc Ho]
-Will provide in next version.
 
->
->> +- txeyedirection     : Eye tuning manual control direction. 0 means sample
->> +                       data earlier than the nominal sampling point. 1 means
->> +                       sample data later than the nominal sampling point.
->> +                       Two set of 3-tuple setting for Gen1, Gen2, and Gen3.
->> +                       Default is 0x0.
->
-> Likewise, use '-'.
->
-> s/than/then/ ?
-[Loc Ho]
-I believe that than is appropriate here a we are doing an comparison.
-
--Loc
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
