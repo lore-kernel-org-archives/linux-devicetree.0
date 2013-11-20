@@ -1,48 +1,39 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Wed, 20 Nov 2013 07:40:57 +0100
-Message-ID: <20131120064056.GB5272@netboy>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
- <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
- <5289A356.4060004@jonmasters.org>
- <20131118150052.GC24408@sirena.org.uk>
- <20131118191336.GB5886@quad.lixom.net>
- <20131119091216.GA4412@netboy>
- <20131119184827.GD20967@quad.lixom.net>
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC v5 2/5] dma: mpc512x: add support for peripheral transfers
+Date: Wed, 20 Nov 2013 10:49:08 +0400
+Message-ID: <CAF0T0X6c9101zbp3kofjLOQDpFdutDJQ+ciHiCcRnCV_sxn4uQ@mail.gmail.com>
+References: <1383290374-17484-1-git-send-email-a13xp0p0v88@gmail.com>
+	<1383290374-17484-3-git-send-email-a13xp0p0v88@gmail.com>
+	<20131111201024.GR17929@book.gsilab.sittig.org>
+	<CAF0T0X5mCEiS88YGGjSS6oGU5RaQ=2PEQFL533OjpQzmc398rA@mail.gmail.com>
+	<20131114205810.GH17929@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131119184827.GD20967-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+In-Reply-To: <20131114205810.GH17929-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2013 at 10:48:27AM -0800, Olof Johansson wrote:
-> 
-> This is just a tangent and a distraction anyway: You should know by
-> now that we've decided to keep backwards compatibility going forward,
-> so any argument about why we did it differently before is leading nowhere.
+2013/11/15 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
+> As for the not yet addressed feedback:  From the top of my head I
+> can think of the execute comment which contradicts the code
+> (which suggests that at least one of them is wrong), and the data
+> type mismatch in the config routine (where code just happens to
+> work by coincidence).  And in bypassing I noticed that your
+> recent submission has coding style issues (braces, indentation),
+> which should no longer happen after several iterations as you
+> should know how to prepare and check the next version.
+I'll doublecheck this and return with improved code.
 
-Yes, I know it is tangent, but the tone in which you address people
-(like Jon Masters) who complain about DT quality is really not fair.
+> Without feedback, reviewers
+> may see several submissions which suffer from the same issues,
+> and expect more to show up and thus feel that their feedback is
+> getting ignored.  Which quickly becomes tiring.
+Thanks for your patience and comprehensive replies.
 
-When DT for arm was first proposed, I argued against it in vain.
-Since then, I have really, truly tried my best to keep on top of the
-DT discussions on the arm list, because everyone working on the arm
-platform will have to know DT intimately, whether they want to or not.
-
-Now, I never saw any proclamation or discussion about "DT is in flux"
-on the arm list. If I had, I surely would have complained, and loudly.
-AFAICT, this decision was made in rather private circles, but you talk
-as if this was abundantly clear. *It was not.*
-
-Or if it was announced in some way, just show me where. Otherwise,
-please stop the "we were upfront about this from day one" excuses.
-
-Thanks,
-Richard
+Best regards,
+Alexander.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
