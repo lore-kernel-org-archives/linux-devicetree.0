@@ -1,63 +1,65 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [rtc-linux] [PATCHv2] rtc: Add support for Intersil ISL12057 I2C
- RTC chip
-Date: Wed, 20 Nov 2013 12:45:20 +0000
-Message-ID: <20131120124520.GA2674@sirena.org.uk>
-References: <87k3g5l9gw.fsf@natisbad.org>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized
+ using pinfunc.
+Date: Wed, 20 Nov 2013 12:51:21 +0000
+Message-ID: <20131120125121.GB2674@sirena.org.uk>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
+ <528BB1F2.4080107@wwwdotorg.org>
+ <CAD=FV=XS0dbE7zfgDGVdp84h4fHH6tfO8aN_HNh1LbOjYy51aQ@mail.gmail.com>
+ <528BB913.6080409@wwwdotorg.org>
+ <CAH9JG2UjnL5bZzNUuJhWY3GpwPD=rJvR2O4Hcpm33G+prSS=BA@mail.gmail.com>
+ <528BFD28.3050909@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IlmwW192PJ8CjiJ7"
-Return-path: <linux-doc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="Ghfi4GlmwTrWkODx"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87k3g5l9gw.fsf@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: rtc-linux@googlegroups.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Kent Yoder <key@linux.vnet.ibm.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, Jason Cooper <jason@lakedaemon.net>
+In-Reply-To: <528BFD28.3050909@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Kyungmin Park <kmpark@infradead.org>, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Tomasz Figa <t.figa@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
---IlmwW192PJ8CjiJ7
+--Ghfi4GlmwTrWkODx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Nov 18, 2013 at 09:51:27PM +0100, Arnaud Ebalard wrote:
+On Tue, Nov 19, 2013 at 05:07:04PM -0700, Stephen Warren wrote:
+> On 11/19/2013 05:02 PM, Kyungmin Park wrote:
 
-> +/* Block read. Returns 0 on success, or a negative errno. */
-> +static int isl12057_i2c_read_regs(struct i2c_client *client, u8 reg, u8 buf[],
-> +				  unsigned len)
+> > Some pins are not connected (NC). At that cases, there's no drivers to
+> > handle it. To reduce power leakage, it sets proper configuration with
+> > values instead of reset values.
 
-This looks like the device would work well with regmap (8 bit register,
-8 bit data).  This would save a bit of code here both for the I/O
-functions and also for some of the debugging functionality you have
-below like the proc file.
+> Hmm. Shouldn't board firmware configure that kind of thing?
 
-> +	dev_info(dev, "chip found, driver version " DRV_VERSION "\n");
+> (Of course, some firmware is starting to use DT to configure itself, so
+> that just shifts the DT discussion, but anyway).
 
-This sort of print is generally frowned upon - it's not adding anything
-to the message already displayed by the RTC core on registration.  It's
-probably best to remove the driver version too, the kernel is already
-versioned.
+Even if it's not sometimes the firmware is intended to be thin with
+configuration punted to the OS.
 
---IlmwW192PJ8CjiJ7
+--Ghfi4GlmwTrWkODx
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSjK7dAAoJELSic+t+oim9JJEP/in9RKL60cnxRgXsHyHR6F3d
-IydUj4BFoaobmMkWjbJSwWEk7BJcXBVBQ5Np/29Juy6RgFKaepV/DbaghEBTigAu
-4QV9rmpS589aYrQyPShjKtZcqG0ekh5XwAj1v8MDF4alA6aXA/+QljLmlgzbtTvj
-scyQVxvU6Au6CpLLR6/4Thpv3Q7v81jRa0/pFGrm2+9MRlbounbmpmZQhNjq64qk
-dpDuYz0bmc81wctOhp9Yvaja2+MWPz8+wtXWM1y0ZfhrppYDOnhXtpVECJdyKwNs
-dbfTBqXAyEkhu9C8tFDUvmXA91df1MB7l8qdiTSnG4RHISdNo8Sgh06VL8ll3jz9
-drKFD2SLYZhoYuRXXGMck2MebR8udBqxRU+KXmy7ZMAsPKGApw5ZAdQ7I/z40vYR
-ynoWVTgDPx/LS5RVqu/913d90SHql7syDX6BeVPtGdPWf9A1ztPqeZGce0VQkI/m
-S+c57yL67h4m4lxWIwnmTH09SqWO2eTUJERo67GDQPayYU/0BT0ebOuw01LyR/2E
-p9q3Dv8oZHu3xjHJjF0ppvPU1rIy9VIYFBtAoDyVyGHYMztmK16qjW1aaVd67e2j
-5DyvnWsfqj6Qm0cSXiLKi/1v7Y1d8ehSfs8H7QxKHwk/kEsKUjMZ4QJn4GRJpLKC
-32pxtPc4g+yNmuSON2Q+
-=H5pO
+iQIcBAEBAgAGBQJSjLBGAAoJELSic+t+oim9O3kQAIvdeY7tzGmzEuyfDcnqDUZ4
+y9t9LFMCjDRDyT+m8ggfFId66s1bx8U4HAvXygMo/M56ThVZ2AjdzNc0pbSvC1+e
+kYGxfmXv2yYDcypmqQQZndZuIhCHBDOOjbFskkHYfqe588wzdFsBMjdo9hPAzxF1
+T9eXKSADHLMcthw/cCsLGkgzn64uIQS1S0faNOle82Vzc1qqL63/HktAfnp95gwc
+d1WxvdGbr5pUekFrdPDzisir5L5GKfBc0LC+dogWBqU0LWhDRSl6RgBJpHjilfnJ
+KLdpo3TcIcLNxAOEGqZuR/tF3FP1yCk8LHZiGjqFTJ6svKio8HYtdXMDiY2Wjua0
+qLhpwSobBpVLIUO5o46ytj28f49lKwL9yYt8riWr8aZmQTvlWGSrjR2H6cx/7KZf
+RgO9GAdcRGbSzL3Ax1Oz9yGN2S8AOVsvPkyt3Yiph/8R42xu4t51DpyC99cku5CO
+Lklh7HX2tfIRXPzQrPSzzmt2Pj8wUmEbl5Et0WrtmI3TKTSOwc7NUQc4yqlB468T
+Y/PmooXeWIk7a/ZLYHFSvfAZoqsUggxmg1tIIDh3Dt3vzGkEmnEepQ+S0ce3MGxy
+Phj+kQrC4BDrzi5czymLIORG5IEcYvFwCfzDJyf13QaD1glbdX7neZOAq9rwKy8P
+zcTkxZI7R2nYVKbbHnrF
+=f5LR
 -----END PGP SIGNATURE-----
 
---IlmwW192PJ8CjiJ7--
+--Ghfi4GlmwTrWkODx--
