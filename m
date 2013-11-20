@@ -1,41 +1,42 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Device Tree Maturity Project
-Date: Wed, 20 Nov 2013 11:55:10 +0000
-Message-ID: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 3/4] ata: add APM X-Gene SoC 6.0Gbps SATA PHY driver
+Date: Wed, 20 Nov 2013 13:06:56 +0100
+Message-ID: <40736575.jvgUcOHqUx@wuerfel>
+References: <1384905197-3566-1-git-send-email-lho@apm.com>
+ <1384905197-3566-4-git-send-email-lho@apm.com>
+ <20131120113704.GT5914@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131120113704.GT5914@e106331-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Suman Tripathi <stripathi@apm.com>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "jcm@redhat.com" <jcm@redhat.com>, "tj@kernel.org" <tj@kernel.org>, Loc Ho <lho@apm.com>, "olof@lixom.net" <olof@lixom.net>, Tuan Phan <tphan@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Wednesday 20 November 2013 11:37:05 Mark Rutland wrote:
+> > +static void phy_rd(void *addr, u32 *val)
+> > +{
+> > +       *val = readl(addr);
+> > +#if defined(XGENE_DBG1_CSR)
+> > +       pr_debug("SATAPHY CSR RD: 0x%p value: 0x%08x\n", addr, *val);
+> 
+> Can you not use dev_dbg here as you do elsehere?
+> 
+> Either that or make your own debug print function, with the ifdefs
+> hidden in its definition.
+> 
 
-Following up from the ARM summit in Edinburgh last month[1], there
-were a number of things identified as needing to be improved or fixed
-in short order. I've started a list of the things that are important
-to be resolved[2]. To try and avoid getting stalled and having the
-exact same discussion over again in 6 months time, I would like to
-kick of a short lived project to work through as many of them as
-possible. I think 3 months would be a good target.
+pr_debug() is already conditional on #ifdef DEBUG, the extra #if
+can just get removed here.
 
-To help keep track of what is going on, I would like to have a short
-stand up meeting once a week. Looking at my calendar, I can make
-14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
-know that's quite early for those of you on the American Pacific
-coast. Unfortunately I cannot reliably make any meetings after 2:45
-UTC. It can be later if someone else will volunteer to moderate the
-meetings.
-
-Anyone who wants to be involved, please email me and I'll give you
-write access to the spreadsheet[2] and add you to the meeting invite.
-Also let me know which day works best for you.
-
-g.
-
-[1] http://www.spinics.net/lists/arm-kernel/msg285148.html
-[2] https://docs.google.com/spreadsheet/ccc?key=0ArznbucQARK6dEUxbVRjME1DcUFudGQwTjZIdkMtSVE&usp=sharing
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
