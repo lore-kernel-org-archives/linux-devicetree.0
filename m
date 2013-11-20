@@ -1,185 +1,181 @@
-From: <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v7] clk: corenet: Adds the clock binding
-Date: Wed, 20 Nov 2013 17:04:49 +0800
-Message-ID: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 09/10] ARM: dts: omap3-beagle-xm: Add USB Host support
+Date: Wed, 20 Nov 2013 12:32:28 +0200
+Message-ID: <528C8FBC.7020407@ti.com>
+References: <1380012836-29900-1-git-send-email-rogerq@ti.com>
+ <1380012836-29900-10-git-send-email-rogerq@ti.com> <528BD2AF.2030607@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <528BD2AF.2030607@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>, balbi@ti.com, bcousson@baylibre.com, tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, p.zabel@pengutronix.de, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Nishant,
 
-Adds the clock bindings for Freescale PowerPC CoreNet platforms
+On 11/19/2013 11:05 PM, Nishanth Menon wrote:
+> 
+> 
+> On 09/24/2013 03:53 AM, Roger Quadros wrote:
+>> Provide RESET GPIO and Power regulator for the USB PHY,
+>> the USB Host port mode and the PHY device for the controller.
+>> Also provide pin multiplexer information for USB host pins.
+>>
+>> We also relocate omap3_pmx_core pin definations so that they
+>> are close to omap3_pmx_wkup pin definations.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+> 
+> just using this thread, but a question ->
+> 
+> I am kernel * master                                   dec8e46 Merge
+> tag 'arc-v3.13-rc1-part2' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc
+> 
+> and I see that VAUX2 which supplies USB_1V8[1] is not enabled -> I did
+> a quick patch and it did seem to work (Usb keyboard, networking, mouse
+> etc on my ehci ports seems to come up good) - any suggestions how we'd
+> like to handle this?
 
-Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-v7:
-	- refined some properties' definitions
-v6:
-	- splited the previous patch into 2 parts, one is for binding(this one),
-	  the other is for DTS modification(will submit once this gets accepted)
-	- fixed typo
-	- refined #clock-cells and clock-output-names properties
-	- removed fixed-clock compatible string
-v5:
-	- refine the binding document
-	- update the compatible string
-v4:
-	- add binding document
-	- update compatible string
-	- update the reg property
-v3:
-	- fix typo
-v2:
-	- add t4240, b4420, b4860 support
-	- remove pll/4 clock from p2041, p3041 and p5020 board
- .../devicetree/bindings/clock/corenet-clock.txt    | 128 +++++++++++++++++++++
- 1 file changed, 128 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/corenet-clock.txt
+It worked for me without your patch. It could be that u-boot is enabling
+that regulator for me. I'm on u-boot-v2013.10.
 
-diff --git a/Documentation/devicetree/bindings/clock/corenet-clock.txt b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-new file mode 100644
-index 0000000..609ba2b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-@@ -0,0 +1,128 @@
-+* Clock Block on Freescale CoreNet Platforms
-+
-+Freescale CoreNet chips take primary clocking input from the external
-+SYSCLK signal. The SYSCLK input (frequency) is multiplied using
-+multiple phase locked loops (PLL) to create a variety of frequencies
-+which can then be passed to a variety of internal logic, including
-+cores and peripheral IP blocks.
-+Please refer to the Reference Manual for details.
-+
-+1. Clock Block Binding
-+
-+Required properties:
-+- compatible: Should contain a specific clock block compatible string
-+	and a single chassis clock compatible string.
-+	Clock block strings include, but not limited to, one of the:
-+	* "fsl,p2041-clockgen"
-+	* "fsl,p3041-clockgen"
-+	* "fsl,p4080-clockgen"
-+	* "fsl,p5020-clockgen"
-+	* "fsl,p5040-clockgen"
-+	* "fsl,t4240-clockgen"
-+	* "fsl,b4420-clockgen"
-+	* "fsl,b4860-clockgen"
-+	Chassis clock strings include:
-+	* "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
-+	* "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
-+- reg: Offset and length of the clock register set
-+
-+Recommended properties:
-+- ranges: Allows valid translation between child's address space and
-+	parent's. Must be present if the device has sub-nodes.
-+- #address-cells: Specifies the number of cells used to represent
-+	physical base addresses.  Must be present if the device has
-+	sub-nodes and set to 1 if present
-+- #size-cells: Specifies the number of cells used to represent
-+	the size of an address. Must be present if the device has
-+	sub-nodes and set to 1 if present
-+
-+2. Clock Provider/Consumer Binding
-+
-+Most of the bindings are from the common clock binding[1].
-+ [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : Should include one of the following:
-+	* "fsl,qoriq-core-pll-1.0" for core PLL clocks (v1.0)
-+    * "fsl,qoriq-core-pll-2.0" for core PLL clocks (v2.0)
-+    * "fsl,qoriq-core-mux-1.0" for core mux clocks (v1.0)
-+    * "fsl,qoriq-core-mux-2.0" for core mux clocks (v2.0)
-+	* "fsl,qoriq-sysclk-1.0": for input system clock (v1.0)
-+	* "fsl,qoriq-sysclk-2.0": for input system clock (v2.0)
-+- #clock-cells: From common clock binding. The number of cells in a
-+	clock-specifier. Should be <0> for "fsl,qoriq-sysclk-[1,2].0"
-+	clocks, or <1> for "fsl,qoriq-core-pll-[1,2].0" clocks.
-+	For "fsl,qoriq-core-pll-[1,2].0" clocks, the single
-+	clock-specifier cell may take the following values:
-+	* 0 - equal to the PLL frequency
-+	* 1 - equal to the PLL frequency divided by 2
-+	* 2 - equal to the PLL frequency divided by 4
-+
-+Recommended properties:
-+- clocks: Should be the phandle of input parent clock
-+- clock-names: From common clock binding, indicates the clock name
-+- clock-output-names: From common clock binding, indicates the names of
-+	output clocks
-+- reg: Should be the offset and length of clock block base address.
-+	The length should be 4.
-+
-+Example for clock block and clock provider:
-+/ {
-+	clockgen: global-utilities@e1000 {
-+		compatible = "fsl,p5020-clockgen", "fsl,qoriq-clockgen-1.0";
-+		ranges = <0x0 0xe1000 0x1000>;
-+		reg = <0xe1000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		sysclk: sysclk {
-+			#clock-cells = <0>;
-+			compatible = "fsl,qoriq-sysclk-1.0";
-+			clock-output-names = "sysclk";
-+		}
-+
-+		pll0: pll0@800 {
-+			#clock-cells = <1>;
-+			reg = <0x800 0x4>;
-+			compatible = "fsl,qoriq-core-pll-1.0";
-+			clocks = <&sysclk>;
-+			clock-output-names = "pll0", "pll0-div2";
-+		};
-+
-+		pll1: pll1@820 {
-+			#clock-cells = <1>;
-+			reg = <0x820 0x4>;
-+			compatible = "fsl,qoriq-core-pll-1.0";
-+			clocks = <&sysclk>;
-+			clock-output-names = "pll1", "pll1-div2";
-+		};
-+
-+		mux0: mux0@0 {
-+			#clock-cells = <0>;
-+			reg = <0x0 0x4>;
-+			compatible = "fsl,qoriq-core-mux-1.0";
-+			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
-+			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
-+			clock-output-names = "cmux0";
-+		};
-+
-+		mux1: mux1@20 {
-+			#clock-cells = <0>;
-+			reg = <0x20 0x4>;
-+			compatible = "fsl,qoriq-core-mux-1.0";
-+			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
-+			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
-+			clock-output-names = "cmux1";
-+		};
-+	};
-+  }
-+
-+Example for clock consumer:
-+
-+/ {
-+	cpu0: PowerPC,e5500@0 {
-+		...
-+		clocks = <&mux0>;
-+		...
-+	};
-+  }
--- 
-1.8.0
+In any case, your patch seems the right thing to do. We should take it in
+the rc cycle.
+
+> 
+> --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
+> +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
+> @@ -169,6 +169,14 @@
+>         bus-width = <8>;
+>  };
+> 
+> +&vaux2 {
+> +       regulator-name = "HubPower";
+> +       regulator-min-microvolt = <1800000>;
+> +       regulator-max-microvolt = <1800000>;
+> +       regulator-always-on;
+> +};
+> +
+> +
+> 
+> [1]
+> https://github.com/CircuitCo/BeagleBoard-xM-RevC/blob/master/BeagleBoard-xM_revC_SCH.pdf?raw=true
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
+
+> 
+>>  arch/arm/boot/dts/omap3-beagle-xm.dts |   65 ++++++++++++++++++++++++++++-----
+>>  1 files changed, 56 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
+>> index afdb164..b081f5a 100644
+>> --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
+>> +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
+>> @@ -69,6 +69,23 @@
+>>  		};
+>>  
+>>  	};
+>> +
+>> +	/* HS USB Port 2 Power */
+>> +	hsusb2_power: hsusb2_power_reg {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "hsusb2_vbus";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		gpio = <&twl_gpio 18 0>;	/* GPIO LEDA */
+>> +		startup-delay-us = <70000>;
+>> +	};
+>> +
+>> +	/* HS USB Host PHY on PORT 2 */
+>> +	hsusb2_phy: hsusb2_phy {
+>> +		compatible = "usb-nop-xceiv";
+>> +		reset-gpios = <&gpio5 19 GPIO_ACTIVE_LOW>; /* gpio_147 */
+>> +		vcc-supply = <&hsusb2_power>;
+>> +	};
+>>  };
+>>  
+>>  &omap3_pmx_wkup {
+>> @@ -79,6 +96,37 @@
+>>  	};
+>>  };
+>>  
+>> +&omap3_pmx_core {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <
+>> +			&hsusbb2_pins
+>> +	>;
+>> +
+>> +	uart3_pins: pinmux_uart3_pins {
+>> +		pinctrl-single,pins = <
+>> +			0x16e (PIN_INPUT | PIN_OFF_WAKEUPENABLE | MUX_MODE0) /* uart3_rx_irrx.uart3_rx_irrx */
+>> +			0x170 (PIN_OUTPUT | MUX_MODE0) /* uart3_tx_irtx.uart3_tx_irtx OUTPUT | MODE0 */
+>> +		>;
+>> +	};
+>> +
+>> +	hsusbb2_pins: pinmux_hsusbb2_pins {
+>> +		pinctrl-single,pins = <
+>> +			0x5c0 (PIN_OUTPUT | MUX_MODE3)		/* etk_d10.hsusb2_clk */
+>> +			0x5c2 (PIN_OUTPUT | MUX_MODE3)		/* etk_d11.hsusb2_stp */
+>> +			0x5c4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d12.hsusb2_dir */
+>> +			0x5c6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d13.hsusb2_nxt */
+>> +			0x5c8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d14.hsusb2_data0 */
+>> +			0x5cA (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d15.hsusb2_data1 */
+>> +			0x1a4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi1_cs3.hsusb2_data2 */
+>> +			0x1a6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_clk.hsusb2_data7 */
+>> +			0x1a8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_simo.hsusb2_data4 */
+>> +			0x1aa (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_somi.hsusb2_data5 */
+>> +			0x1ac (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_cs0.hsusb2_data6 */
+>> +			0x1ae (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_cs1.hsusb2_data3 */
+>> +		>;
+>> +	};
+>> +};
+>> +
+>>  &i2c1 {
+>>  	clock-frequency = <2600000>;
+>>  
+>> @@ -148,15 +196,6 @@
+>>  	power = <50>;
+>>  };
+>>  
+>> -&omap3_pmx_core {
+>> -	uart3_pins: pinmux_uart3_pins {
+>> -		pinctrl-single,pins = <
+>> -			0x16e (PIN_INPUT | PIN_OFF_WAKEUPENABLE | MUX_MODE0) /* uart3_rx_irrx.uart3_rx_irrx */
+>> -			0x170 (PIN_OUTPUT | MUX_MODE0) /* uart3_tx_irtx.uart3_tx_irtx OUTPUT | MODE0 */
+>> -		>;
+>> -	};
+>> -};
+>> -
+>>  &uart3 {
+>>  	pinctrl-names = "default";
+>>  	pinctrl-0 = <&uart3_pins>;
+>> @@ -166,3 +205,11 @@
+>>  	pinctrl-names = "default";
+>>  	pinctrl-0 = <&gpio1_pins>;
+>>  };
+>> +
+>> +&usbhshost {
+>> +	port2-mode = "ehci-phy";
+>> +};
+>> +
+>> +&usbhsehci {
+>> +	phys = <0 &hsusb2_phy>;
+>> +};
+>>
+> 
+> 
