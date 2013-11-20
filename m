@@ -1,84 +1,88 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 5/9] ARM: at91/dt: add mmc0 slot0 support to at91rm9200ek
- board
-Date: Wed, 20 Nov 2013 18:20:23 +0100
-Message-ID: <20131120172023.GI14627@ns203013.ovh.net>
-References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
- <1377687995-10758-1-git-send-email-b.brezillon@overkiz.com>
- <20131120145926.GE14627@ns203013.ovh.net>
- <528CDFFB.1020601@overkiz.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: gpio-generic DT bindings?
+Date: Wed, 20 Nov 2013 18:20:44 +0100
+Message-ID: <CAMuHMdVriN6sOSOdyfU4rPQddqOo9E6QiArcfUXDooL2KBd4og@mail.gmail.com>
+References: <CAMuHMdU9F_EjA+ZF0mn4PW3HDJ9rkM_84SHiDKkWwWr7MLJKJA@mail.gmail.com>
+	<528BDF57.8080400@wwwdotorg.org>
+	<CAMuHMdVuC5nJizr9Q2JXQCC=FtJkEvLa5iftBoa6Zd7B3XVojA@mail.gmail.com>
+	<528BE85C.60101@wwwdotorg.org>
+	<20131120154409.GM420@bill-the-cat>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <528CDFFB.1020601-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20131120154409.GM420@bill-the-cat>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tom Rini <trini-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17:14 Wed 20 Nov     , boris brezillon wrote:
-> On 20/11/2013 15:59, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >On 13:06 Wed 28 Aug     , Boris BREZILLON wrote:
-> >>Add slot0 of mmc0 pinctrl pins definitions:
-> >>  - detect pin
-> >>  - write protect pin
-> >>  - enable slot0 pin: this pin is connected to an external switch which
-> >>    enable mmc0 slot0 or spi dataflash connected to cs3
-> >>
-> >>The mmc0 device is not enabled, as it depends on the choosen functionnality
-> >>(spi cs3 or mmc0 slot0).
-> >>
-> >>Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-> >>---
-> >>  arch/arm/boot/dts/at91rm9200ek.dts |   35 +++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 35 insertions(+)
-> >>
-> >>diff --git a/arch/arm/boot/dts/at91rm9200ek.dts b/arch/arm/boot/dts/at91rm9200ek.dts
-> >>index f2d6d79..2bad423 100644
-> >>--- a/arch/arm/boot/dts/at91rm9200ek.dts
-> >>+++ b/arch/arm/boot/dts/at91rm9200ek.dts
-> >>@@ -39,6 +39,23 @@
-> >>  						atmel,pins = <AT91_PIOD 5 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;
-> >>  					};
-> >>  				};
-> >>+
-> >>+				mmc0 {
-> >>+					pinctrl_mmc0_slot0_detect: mmc0_slot0_detect-0 {
-> >>+						atmel,pins =
-> >>+							<AT91_PIOB 27 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
-> >>+					};
-> >>+
-> >>+					pinctrl_mmc0_slot0_write_protect: mmc0_slot0_write_protect-0 {
-> >>+						atmel,pins =
-> >>+							<AT91_PIOA 17 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-> >>+					};
-> >>+
-> >>+					pinctrl_mmc0_slot0_switch: mmc0_slot0_switch-0 {
-> >>+						atmel,pins =
-> >>+							<AT91_PIOB 22 AT91_PERIPH_GPIO (AT91_PINCTRL_OUTPUT | AT91_PINCTRL_OUTPUT_VAL(1))>;
-> >>+					};
-> >nack this is a regulator the pinctrl API is not done for gpio default value
-> 
-> I know this can be represented as a regulator, but looking at the
-> datasheet, this looks more
-> like a switch than a regulator.
+On Wed, Nov 20, 2013 at 4:44 PM, Tom Rini <trini-l0cyMroinI0@public.gmane.org> wrote:
+> On Tue, Nov 19, 2013 at 03:38:20PM -0700, Stephen Warren wrote:
+>> On 11/19/2013 03:17 PM, Geert Uytterhoeven wrote:
+>> > On Tue, Nov 19, 2013 at 10:59 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> >> On 11/19/2013 02:45 PM, Geert Uytterhoeven wrote:
+>> >>> This topic seems to come up from time to time.
+>> >>> Unfortunately the last time it coincided with the move of the mailing list
+>> >>> from ozlabs to vger, causing the mailing list archives not to have captured
+>> >>> the full discussion.
+>> >>>
+>> >>> Is there anything definitive/usable out there?
+>> >>
+>> >> What do you mean by "gpio-generic DT bindings"? A generic binding for a
+>> >> controller, or something else? I think it's best to have a specific
+>> >> binding for each individual controller, so it's always possible to know
+>> >> exactly which controller is present. Now, all the binding definitions
+>> >> should all look the same or as similar as possible for consistency...
+>> >
+>> > I mean DT bindings and DT support for drivers/gpio/gpio-generic.c.
+>>
+>> We should have DT bindings for particular HW, not for a driver. After
+>> all, DT describes HW, not a particular OS's driver.
+>>
+>> The path to adding DT support to gpio-generic.c is to define a binding
+>> for the particular HW you're interested in (which would quite likely
+>> only contain compatible, reg, and perhaps some other standard properties
+>> like interrupts, clocks, power domains, etc.). There would be one
+>> binding and compatible value for each different HW block you want to
+>> support, although they could all share the same schema and definition.
+>> Then update gpio-generic.c to bind to that (those) compatible value(s),
+>> and have some kind of table that maps from compatible value to whatever
+>> configuration structure gpio-generic.c uses internally.
+>
+> This I think is the rub that Geert is getting at.  The driver is
+> generic.  You feed it a little info and it Just Works.  Having to patch
+> the generic driver N times for vendor,foo-gpio would be a step
+> backwards.  How do we have a binding here that lets us be as flexible as
+> we are today?
 
-so you load the dt via user space and use the regulator NOT the pinctrl
+Indeed. Is there really a need to name all simple GPIO drivers that provide
+two register banks ("data" and "data direction") differently using a
+"vendor,ipblock" tuple? What about something like "linux,gpio-generic"?
 
-I do not want to see gpio control via pinctrl as we have no tracability of it
-in gpio lib what so ever
+In particular, I want to use it for openrisc GPIO. Currently it uses its own
+very simple driver
+(http://git.openrisc.net/cgit.cgi/jonas/linux/tree/drivers/gpio/jbtrivial.c),
+while there already exists a simple driver called gpio-generic
+in mainline. But gpio-generic doesn't have DT support yet.
 
-> 
-> Anyway, why didn't you told me that when I proposed the OUTPUT
-> support for at91 pinctrl driver ?
+People tried adding DT support before:
+  - https://lkml.org/lkml/2013/2/26/70, which was shot down last year.
+  - http://www.spinics.net/lists/devicetree/msg00696.html, which also refers
+    to simple-gpio, but unfortunately I can't read the whole thread as most of
+    it happened during the ozlabs->vger transition of the mailing list.
 
-you never get my Ack for this and I'm the pinctrl-at91 maintainer
+Thanks!
 
-so NACK
+Gr{oetje,eeting}s,
 
-Best Regards,
-J.
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
