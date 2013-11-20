@@ -1,38 +1,102 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 0/3] Reuse davinci-nand driver for Keystone arch
-Date: Wed, 20 Nov 2013 18:24:56 +0200
-Message-ID: <1384964699-15134-1-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [PATCH 2/3] mtd: nand: davinci: don't set timings if AEMIF is used
+Date: Wed, 20 Nov 2013 18:24:58 +0200
+Message-ID: <1384964699-15134-3-git-send-email-ivan.khoronzhuk@ti.com>
+References: <1384964699-15134-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384964699-15134-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series contains updates of Davinci nand driver, in order to be
-reused for Keystone platform.
+The problem that the set timings code contains the call of Davinci
+platform function davinci_aemif_setup_timing() which is not
+accessible if kernel is built for Keystone only.
 
-Depends on:
-- Davinci nand driver fixes and updates:
-  https://lkml.org/lkml/2013/11/20/271
+The Keysone platform is going to use TI AEMIF driver.
+If TI AEMIF is used we don't need to set timings and bus width.
+It is done by AEMIF driver (drivers/memory/ti-aemfi.c).
 
-- Introduce AEMIF driver for Davinci/Keystone archs:
-  http://lkml.org/lkml/2013/11/11/352
+The timings code has to be removed together with Davinci aemif
+platform code (aemif.c), once Davinci will be converted to DT and use
+ti-aemif.c driver.
 
-V1:
-https://lkml.org/lkml/2013/11/11/352
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+---
+ drivers/mtd/nand/davinci_nand.c |   48 +++++++++++++++++++++++++--------------
+ 1 file changed, 31 insertions(+), 17 deletions(-)
 
-Ivan Khoronzhuk (3):
-  mtd: nand: davinci: reuse driver for Keystone arch
-  mtd: nand: davinci: don't set timings if AEMIF is used
-  mtd: nand: davinci: don't request AEMIF address range
-
- .../devicetree/bindings/mtd/davinci-nand.txt       |    8 +--
- drivers/mtd/nand/Kconfig                           |    6 +--
- drivers/mtd/nand/davinci_nand.c                    |   57 +++++++++++++-------
- 3 files changed, 45 insertions(+), 26 deletions(-)
-
+diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+index 8459720..e904364 100644
+--- a/drivers/mtd/nand/davinci_nand.c
++++ b/drivers/mtd/nand/davinci_nand.c
+@@ -605,6 +605,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 	int				ret;
+ 	uint32_t			val;
+ 	nand_ecc_modes_t		ecc_mode;
++	bool aemif = IS_ENABLED(CONFIG_TI_AEMIF);
+ 
+ 	pdata = nand_davinci_get_pdata(pdev);
+ 	if (IS_ERR(pdata))
+@@ -741,25 +742,38 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/*
+-	 * Setup Async configuration register in case we did not boot from
+-	 * NAND and so bootloader did not bother to set it up.
++	 * TODO:
++	 * This is temp solution to support Davinci platform and it has to be
++	 * removed once Davinci will be updated to use ti-aemif.c driver.
+ 	 */
+-	val = davinci_nand_readl(info, A1CR_OFFSET + info->core_chipsel * 4);
+-
+-	/* Extended Wait is not valid and Select Strobe mode is not used */
+-	val &= ~(ACR_ASIZE_MASK | ACR_EW_MASK | ACR_SS_MASK);
+-	if (info->chip.options & NAND_BUSWIDTH_16)
+-		val |= 0x1;
+-
+-	davinci_nand_writel(info, A1CR_OFFSET + info->core_chipsel * 4, val);
++	if (!aemif) {
++		/*
++		 * Setup Async configuration register in case we did not boot
++		 * from NAND and so bootloader did not bother to set it up.
++		 */
++		val = davinci_nand_readl(info, A1CR_OFFSET +
++					 info->core_chipsel * 4);
+ 
+-	ret = 0;
+-	if (info->timing)
+-		ret = davinci_aemif_setup_timing(info->timing, info->base,
+-							info->core_chipsel);
+-	if (ret < 0) {
+-		dev_dbg(&pdev->dev, "NAND timing values setup fail\n");
+-		goto err;
++		/*
++		 * Extended Wait is not valid and Select Strobe mode is not
++		 * used
++		 */
++		val &= ~(ACR_ASIZE_MASK | ACR_EW_MASK | ACR_SS_MASK);
++		if (info->chip.options & NAND_BUSWIDTH_16)
++			val |= 0x1;
++
++		davinci_nand_writel(info, A1CR_OFFSET +
++				    info->core_chipsel * 4, val);
++
++		ret = 0;
++		if (info->timing)
++			ret = davinci_aemif_setup_timing(info->timing,
++							 info->base,
++							 info->core_chipsel);
++		if (ret < 0) {
++			dev_dbg(&pdev->dev, "NAND timing values setup fail\n");
++			goto err;
++		}
+ 	}
+ 
+ 	spin_lock_irq(&davinci_nand_lock);
 -- 
 1.7.9.5
 
