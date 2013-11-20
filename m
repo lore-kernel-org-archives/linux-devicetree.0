@@ -1,134 +1,94 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] openrisc: Add DTS and defconfig for DE0-Nano
-Date: Wed, 20 Nov 2013 14:45:26 -0600
-Message-ID: <CAL_JsqLuaOqw2X7dcwnJbnTvO30pbV4=5TLfEygEeB6gBw3G_A@mail.gmail.com>
-References: <1384029451-16555-1-git-send-email-geert@linux-m68k.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/9] dt: Handle passed/built-in DT selection in early_init_dt_scan()
+Date: Wed, 20 Nov 2013 14:50:53 -0600
+Message-ID: <CAL_Jsq+ri0rVg-urU74cE__tor7WSu_0xexUDzQHc+o=Qo8E3A@mail.gmail.com>
+References: <5283A000.8090007@gmail.com>
+	<1384859554-27268-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384029451-16555-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, linux-ZwoEplunGu2h2975yA52AaxOck334EZe@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Mehall <contact-U/VwWUtD1TkEIRV9q1A9vg@public.gmane.org>, Marek Czerski <ma.czerski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1384859554-27268-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 9, 2013 at 2:37 PM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> Add a DTS and defconfig for the Terasic DE0-Nano Development and Education
-> Board running ORPSoC.  This board contains an Altera Cyclone IV FPGA with
-> support chips and I/O.
+On Tue, Nov 19, 2013 at 5:12 AM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> Let early_init_dt_scan() fall-back to the built-in DT if no DT was passed,
+> or if it's invalid, so architectures don't have to duplicate this logic.
 >
-> The DTS was derived from published versions by Kevin Mehall and Marek
-> Czerski.
->
-> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Cc: Kevin Mehall <contact-U/VwWUtD1TkEIRV9q1A9vg@public.gmane.org>
-> Cc: Marek Czerski <ma.czerski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Suggested-by: Rob Herring <rob.herring@calxeda.com>
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 > ---
-> Notable changes:
->   - Change flash0 to spansion,s25sl064p, due to kernel message
->     m25p80 spi32766.0: found s25sl064p, expected m25p10
->   - Use reg-shift instead of regstep for i2c0, due to kernel message
->     ocores-i2c a0000000.ocores: regstep property deprecated, use reg-shift
->
->  arch/openrisc/boot/dts/de0_nano.dts      |  158 ++++++++++++++++++++++++++++++
->  arch/openrisc/configs/de0_nano_defconfig |   86 ++++++++++++++++
->  2 files changed, 244 insertions(+)
->  create mode 100644 arch/openrisc/boot/dts/de0_nano.dts
->  create mode 100644 arch/openrisc/configs/de0_nano_defconfig
->
-> diff --git a/arch/openrisc/boot/dts/de0_nano.dts b/arch/openrisc/boot/dts/de0_nano.dts
-> new file mode 100644
-> index 000000000000..42f91b5184d9
-> --- /dev/null
-> +++ b/arch/openrisc/boot/dts/de0_nano.dts
-> @@ -0,0 +1,158 @@
-> +/dts-v1/;
-> +/ {
-> +       compatible = "opencores,de0_nano";
 
-This string needs to be documented.
+Looks good to me. I can take this series if you want to send me a pull
+request. In any case, for the series:
 
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +       interrupt-parent = <&pic>;
-> +
-> +       chosen {
-> +               bootargs = "console=uart,mmio,0x90000000,115200";
-> +       };
-> +
-> +       memory@0 {
-> +               device_type = "memory";
-> +               reg = <0x00000000 0x02000000>;
-> +       };
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               cpu@0 {
-> +                       compatible = "opencores,or1200-rtlsvn481";
-> +                       reg = <0>;
-> +                       clock-frequency = <50000000>;
-> +               };
-> +       };
-> +
-> +       /*
-> +        * OR1K PIC is built into CPU and accessed via special purpose
-> +        * registers.  It is not addressable and, hence, has no 'reg'
-> +        * property.
-> +        */
-> +       pic: pic {
-> +               compatible = "opencores,or1k-pic";
-> +               #interrupt-cells = <1>;
-> +               interrupt-controller;
-> +       };
-> +
-> +       serial0: serial@90000000 {
-
-These memory mapped devices should be under a bus node of some sort.
-Typically a "simple-bus" node.
-
-> +               compatible = "opencores,uart16550-rtlsvn105", "ns16550a";
-
-This needs to be documented. Same comment applies to all compatible strings.
-
-> +               reg = <0x90000000 0x100>;
-> +               interrupts = <2>;
-> +               clock-frequency = <50000000>;
-> +       };
-> +
-> +       i2c0: ocores@a0000000 {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               compatible = "opencores,i2c-ocores";
-> +               reg = <0xa0000000 0x8>;
-> +               interrupts = <10>;
-> +               clock-frequency = <50000000>;
-> +
-> +               reg-shift = <0>;        /* 8 bit registers */
-> +               reg-io-width = <1>;     /* 8 bit read/write */
-> +
-> +               adxl34x@1d {
-> +                       compatible = "adxl34x";
-> +                       reg = <0x1d>;
-> +                       interrupts = <26>;
-> +               };
-> +               eeprom@50 {
-> +                       compatible = "at24,24c02";
-> +                       reg = <0x50>;
-> +                       pagesize = <8>;
-> +               };
-> +       };
-> +
-> +       spi0: spi0@b0000000 {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               compatible = "opencores,spi-simple";
-
-Is this different than "opencores,tiny-spi-rtlsvn2"? Is "simple"
-something I can correlate to a specific version of h/w?
+Reviewed-by: Rob Herring <rob.herring@calxeda.com>
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>  drivers/of/fdt.c       |   24 +++++++++++++++++-------
+>  include/linux/of_fdt.h |    1 +
+>  2 files changed, 18 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 2fa024b97c43..a797cd43bc8b 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -868,18 +868,28 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
+>
+>  bool __init early_init_dt_scan(void *params)
+>  {
+> -       if (!params)
+> -               return false;
+> -
+>         /* Setup flat device-tree pointer */
+>         initial_boot_params = params;
+>
+> -       /* check device tree validity */
+> -       if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
+> -               initial_boot_params = NULL;
+> -               return false;
+> +       /* check passed device tree validity */
+> +       if (initial_boot_params &&
+> +           be32_to_cpu(initial_boot_params->magic) == OF_DT_HEADER) {
+> +               pr_info("FDT at %p\n", initial_boot_params);
+> +               goto found;
+> +       }
+> +
+> +       /* check built-in device tree validity */
+> +       initial_boot_params = &__dtb_start;
+> +       if (__dtb_end != (void *)&__dtb_start &&
+> +           be32_to_cpu(initial_boot_params->magic) == OF_DT_HEADER) {
+> +               pr_info("Compiled-in FDT at %p\n", initial_boot_params);
+> +               goto found;
+>         }
+>
+> +       initial_boot_params = NULL;
+> +       return false;
+> +
+> +found:
+>         /* Retrieve various information from the /chosen node */
+>         of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
+>
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index aabc49f3e403..6c4a60454854 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -59,6 +59,7 @@ struct boot_param_header {
+>
+>  /* For kernels with a built-in device tree */
+>  extern struct boot_param_header __dtb_start;
+> +extern char __dtb_end[];
+>
+>  #if defined(CONFIG_OF_FLATTREE)
+>
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
