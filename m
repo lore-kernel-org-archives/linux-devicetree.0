@@ -1,147 +1,185 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/4] Documentation: Add APM X-Gene SoC 6.0Gbps SATA
- PHY driver binding documentation
-Date: Wed, 20 Nov 2013 09:43:28 +0000
-Message-ID: <20131120094328.GS5914@e106331-lin.cambridge.arm.com>
-References: <1384905197-3566-1-git-send-email-lho@apm.com>
- <1384905197-3566-2-git-send-email-lho@apm.com>
- <1384905197-3566-3-git-send-email-lho@apm.com>
+From: <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v7] clk: corenet: Adds the clock binding
+Date: Wed, 20 Nov 2013 17:04:49 +0800
+Message-ID: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1384905197-3566-3-git-send-email-lho@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Loc Ho <lho@apm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Suman Tripathi <stripathi@apm.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "jcm@redhat.com" <jcm@redhat.com>, "tj@kernel.org" <tj@kernel.org>, "olof@lixom.net" <olof@lixom.net>, Tuan Phan <tphan@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2013 at 11:53:15PM +0000, Loc Ho wrote:
-> Documentation: Add APM X-Gene SoC 6.0Gbps SATA PHY driver binding documentation
-> 
-> Document the DTS binding for the X-Gene SoC SATA PHY driver.
-> 
-> Signed-off-by: Loc Ho <lho@apm.com>
-> Signed-off-by: Tuan Phan <tphan@apm.com>
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> ---
->  .../devicetree/bindings/ata/apm-xgene-phy.txt      |   61 ++++++++++++++++++++
->  1 files changed, 61 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/ata/apm-xgene-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/apm-xgene-phy.txt b/Documentation/devicetree/bindings/ata/apm-xgene-phy.txt
-> new file mode 100644
-> index 0000000..bbae164
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ata/apm-xgene-phy.txt
-> @@ -0,0 +1,61 @@
-> +* APM X-Gene 6.0 Gb/s SATA PHY nodes
-> +
-> +SATA PHY nodes are defined to describe on-chip Serial ATA PHY. Each SATA PHY
-> +(pair of PHY) has its own node.
-> +
-> +Required properties:
-> +- compatible		: Shall be "apm,xgene-ahci-phy" or
-> +			  "apm,xgene-ahci-phy2". The "apm,xgene-ahci-phy"
-> +			  describes an port shared with SGMII Ethernet port.
-> +			  The "apm,xgene-ahci-phy2" describes an port not
-> +			  shared with SGMII and the PLL located at another
-> +			  memory resource region.
+From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Is there not a better name available than "apm,xgene-ahci-phy2"?
+Adds the clock bindings for Freescale PowerPC CoreNet platforms
 
-> +- reg			: First PHY memory resource
-> +			  Second separate PHY PLL clock memory resource if
-> +			  type "apm,xgene-ahci-phy2"
+Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+v7:
+	- refined some properties' definitions
+v6:
+	- splited the previous patch into 2 parts, one is for binding(this one),
+	  the other is for DTS modification(will submit once this gets accepted)
+	- fixed typo
+	- refined #clock-cells and clock-output-names properties
+	- removed fixed-clock compatible string
+v5:
+	- refine the binding document
+	- update the compatible string
+v4:
+	- add binding document
+	- update compatible string
+	- update the reg property
+v3:
+	- fix typo
+v2:
+	- add t4240, b4420, b4860 support
+	- remove pll/4 clock from p2041, p3041 and p5020 board
+ .../devicetree/bindings/clock/corenet-clock.txt    | 128 +++++++++++++++++++++
+ 1 file changed, 128 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/corenet-clock.txt
 
-Is ths PLL actually part of the PHY, or does it just feed the PHY?
+diff --git a/Documentation/devicetree/bindings/clock/corenet-clock.txt b/Documentation/devicetree/bindings/clock/corenet-clock.txt
+new file mode 100644
+index 0000000..609ba2b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/corenet-clock.txt
+@@ -0,0 +1,128 @@
++* Clock Block on Freescale CoreNet Platforms
++
++Freescale CoreNet chips take primary clocking input from the external
++SYSCLK signal. The SYSCLK input (frequency) is multiplied using
++multiple phase locked loops (PLL) to create a variety of frequencies
++which can then be passed to a variety of internal logic, including
++cores and peripheral IP blocks.
++Please refer to the Reference Manual for details.
++
++1. Clock Block Binding
++
++Required properties:
++- compatible: Should contain a specific clock block compatible string
++	and a single chassis clock compatible string.
++	Clock block strings include, but not limited to, one of the:
++	* "fsl,p2041-clockgen"
++	* "fsl,p3041-clockgen"
++	* "fsl,p4080-clockgen"
++	* "fsl,p5020-clockgen"
++	* "fsl,p5040-clockgen"
++	* "fsl,t4240-clockgen"
++	* "fsl,b4420-clockgen"
++	* "fsl,b4860-clockgen"
++	Chassis clock strings include:
++	* "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
++	* "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
++- reg: Offset and length of the clock register set
++
++Recommended properties:
++- ranges: Allows valid translation between child's address space and
++	parent's. Must be present if the device has sub-nodes.
++- #address-cells: Specifies the number of cells used to represent
++	physical base addresses.  Must be present if the device has
++	sub-nodes and set to 1 if present
++- #size-cells: Specifies the number of cells used to represent
++	the size of an address. Must be present if the device has
++	sub-nodes and set to 1 if present
++
++2. Clock Provider/Consumer Binding
++
++Most of the bindings are from the common clock binding[1].
++ [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible : Should include one of the following:
++	* "fsl,qoriq-core-pll-1.0" for core PLL clocks (v1.0)
++    * "fsl,qoriq-core-pll-2.0" for core PLL clocks (v2.0)
++    * "fsl,qoriq-core-mux-1.0" for core mux clocks (v1.0)
++    * "fsl,qoriq-core-mux-2.0" for core mux clocks (v2.0)
++	* "fsl,qoriq-sysclk-1.0": for input system clock (v1.0)
++	* "fsl,qoriq-sysclk-2.0": for input system clock (v2.0)
++- #clock-cells: From common clock binding. The number of cells in a
++	clock-specifier. Should be <0> for "fsl,qoriq-sysclk-[1,2].0"
++	clocks, or <1> for "fsl,qoriq-core-pll-[1,2].0" clocks.
++	For "fsl,qoriq-core-pll-[1,2].0" clocks, the single
++	clock-specifier cell may take the following values:
++	* 0 - equal to the PLL frequency
++	* 1 - equal to the PLL frequency divided by 2
++	* 2 - equal to the PLL frequency divided by 4
++
++Recommended properties:
++- clocks: Should be the phandle of input parent clock
++- clock-names: From common clock binding, indicates the clock name
++- clock-output-names: From common clock binding, indicates the names of
++	output clocks
++- reg: Should be the offset and length of clock block base address.
++	The length should be 4.
++
++Example for clock block and clock provider:
++/ {
++	clockgen: global-utilities@e1000 {
++		compatible = "fsl,p5020-clockgen", "fsl,qoriq-clockgen-1.0";
++		ranges = <0x0 0xe1000 0x1000>;
++		reg = <0xe1000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		sysclk: sysclk {
++			#clock-cells = <0>;
++			compatible = "fsl,qoriq-sysclk-1.0";
++			clock-output-names = "sysclk";
++		}
++
++		pll0: pll0@800 {
++			#clock-cells = <1>;
++			reg = <0x800 0x4>;
++			compatible = "fsl,qoriq-core-pll-1.0";
++			clocks = <&sysclk>;
++			clock-output-names = "pll0", "pll0-div2";
++		};
++
++		pll1: pll1@820 {
++			#clock-cells = <1>;
++			reg = <0x820 0x4>;
++			compatible = "fsl,qoriq-core-pll-1.0";
++			clocks = <&sysclk>;
++			clock-output-names = "pll1", "pll1-div2";
++		};
++
++		mux0: mux0@0 {
++			#clock-cells = <0>;
++			reg = <0x0 0x4>;
++			compatible = "fsl,qoriq-core-mux-1.0";
++			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
++			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
++			clock-output-names = "cmux0";
++		};
++
++		mux1: mux1@20 {
++			#clock-cells = <0>;
++			reg = <0x20 0x4>;
++			compatible = "fsl,qoriq-core-mux-1.0";
++			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
++			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
++			clock-output-names = "cmux1";
++		};
++	};
++  }
++
++Example for clock consumer:
++
++/ {
++	cpu0: PowerPC,e5500@0 {
++		...
++		clocks = <&mux0>;
++		...
++	};
++  }
+-- 
+1.8.0
 
-> +- #phy-cells		: Shall be 0
-> +
-> +Optional properties:
-> +- status		: Shall be "ok" if enabled or "na" if disabled. Default
-> +			  is "ok".
 
-Do not use "na", use the standard "disabled".
-
-> +- txeyetuning		: Manual control to fine tune the capture of the serial
-> +			  bit lines from the automatic calibrated position.
-> +			  Two set of 3-tuple setting for Gen1, Gen2, and Gen3.
-> +			  Range from 0 to 0x7f. Default is 0xa.
-
-If you have a property for which the name consists of multiple words,
-split the words with '-'. 
-
-What does this actually mean?
-
-What units are these values in? 
-
-What effect do those values have?
-
-> +- txeyedirection	: Eye tuning manual control direction. 0 means sample
-> +			  data earlier than the nominal sampling point. 1 means
-> +			  sample data later than the nominal sampling point.
-> +			  Two set of 3-tuple setting for Gen1, Gen2, and Gen3.
-> +			  Default is 0x0.
-
-Likewise, use '-'.
-
-s/than/then/ ?
-
-> +- txboostgain		: Frequency boost and DC gain control. Two set of
-> +			  3-tuple setting for Gen1, Gen2, and Gen3. Range is
-> +			  between 0 to 0x1f. Default is 0x3.
-
-Use '-'.
-
-What units are these values in?
-
-> +- txspeed		: Tx operating speed. Two set of 3-tuple for
-> +			  Gen1 (0x1), Gen2 (0x3), and Gen3 (0x7). Default is
-> +			  0x7.
-
-
-Units?
-
-> +
-> +NOTE: PHY override parameters are board specific setting.
-> +
-> +Example:
-> +		sataphy0: sataphy@1f210000 {
-> +			compatible = "apm,xgene-ahci-phy";
-> +			reg = <0x0 0x1f210000 0x0 0x10000>;
-> +			#phy-cells = <0>;
-> +			status = "na";
-
-Please eradicate all instances of "na".
-
-> +		};
-> +
-> +		sataphy1: sataphy@1f220000 {
-> +			compatible = "apm,xgene-ahci-phy";
-> +			reg = <0x0 0x1f220000 0x0 0x10000>;
-> +			#phy-cells = <0>;
-> +			status = "ok";
-> +		};
-> +
-> +		sataphy2: sataphy@1f230000 {
-> +			compatible = "apm,xgene-ahci-phy2";
-> +			reg = <0x0 0x1f230000 0x0 0x10000
-> +			       0x0 0x1f2d0000 0x0 0x10000 >;
-
-Nit: bracket list entries individually, and don't apply random spacing:
-
-reg = <0x0 0x1f230000 0x0 0x10000>,
-      <0x0 0x1f2d0000 0x0 0x10000>;
-
-Thanks,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
