@@ -1,39 +1,56 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v2 3/4] ata: add APM X-Gene SoC 6.0Gbps SATA PHY driver
-Date: Wed, 20 Nov 2013 14:23:07 -0800
-Message-ID: <CAPw-ZTmGvjyfgpiJy-9G26g5KDVmkYv85418H3RgCPCnq_0CTg@mail.gmail.com>
-References: <1384905197-3566-1-git-send-email-lho@apm.com>
-	<1384905197-3566-4-git-send-email-lho@apm.com>
-	<20131120150658.GB28946@htj.dyndns.org>
-	<201311201641.20230.arnd@arndb.de>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 2/3] misc: bmp085: Add DT bindings for EOC gpio line and
+ direct irq.
+Date: Thu, 21 Nov 2013 00:23:10 +0100
+Message-ID: <20131120232310.GS17929@book.gsilab.sittig.org>
+References: <1384465609-26485-1-git-send-email-marek@goldelico.com>
+ <201311181238.40349.arnd@arndb.de>
+ <20131118171747.GM17929@book.gsilab.sittig.org>
+ <201311182328.40743.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <201311201641.20230.arnd@arndb.de>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tejun Heo <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Suman Tripathi <stripathi@apm.com>, Linux SCSI List <linux-scsi@vger.kernel.org>, Jon Masters <jcm@redhat.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Tuan Phan <tphan@apm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201311182328.40743.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Nov 18, 2013 at 23:28 +0100, Arnd Bergmann wrote:
+> 
+> [ ... incomplete 8xxx gpio binding document ... ]
+> 
+> You are absolutely right, I picked an example that was actually
+> wrong.
+> 
+> [ ... ]
+> 
+> I think the problem is that this particular controller is never
+> used in "interrupts" properties, so nobody noticed the mistake.
+> It probably still works for gpio references and drivers using
+> gpio_to_irq on those numbers.
 
-> On Wednesday 20 November 2013, Tejun Heo wrote:
->> On Tue, Nov 19, 2013 at 04:53:16PM -0700, Loc Ho wrote:
->> > This patch adds support for APM X-Gene SoC 6.0Gbps SATA PHY. This is the
->> > physical layer interface for the corresponding SATA host controller. This
->> > driver uses the new PHY generic framework posted by Kishon Vijay Abrahm.
->>
->> Hmm... this is related to ahci but isn't even a libata driver and is
->> the first such driver proposed.  Are we sure drivers/ata is the best
->> home for this?  Shouldn't we create a separate directory somewhere?
->> It's confusing, at least to me, to have non-libata driver under
->> drivers/ata.
->
-> It needs to be in drivers/phy, which is currently being prepared for
-> the next merge window and which contains the generic interface used
-> in this driver.
-[Loc Ho]
-I will move it to drivers/phy. The PHY framework did make it to the
-final release of 3.12.00.
+Actually that very GPIO module _is_ being used as an IRQ
+controller as well.  The MPC5121 is one of those (not explicitly
+listed) compatibles.  The mpc5121.dtsi correctly declares the
+GPIO module as both a GPIO as well as an IRQ controller, and the
+ac14xx.dts board does use GPIO lines as IRQs.
 
--Loc
+Which suggests that the issue is just incomplete documentation.
+And that an incomplete binding document does not prevent correct
+use of the binding. :)  And more importantly that the use of DT
+is so intuitive that people get things right without looking at
+the docs. :-]
+
+
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
