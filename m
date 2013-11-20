@@ -1,78 +1,41 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv5 10/20] arm: dts: add omap4430 thermal data
-Date: Wed, 20 Nov 2013 13:32:45 +0100
-Message-ID: <20131120123245.GA3242@amd.pavel.ucw.cz>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
- <1384285582-16933-11-git-send-email-eduardo.valentin@ti.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 0/4] pinctrl: imx27: imx27 pincontrol driver
+Date: Wed, 20 Nov 2013 20:40:27 +0800
+Message-ID: <20131120124025.GB22308@S2101-09.ap.freescale.net>
+References: <1384937151-11160-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1384285582-16933-11-git-send-email-eduardo.valentin@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1384937151-11160-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-HI!
+On Wed, Nov 20, 2013 at 09:45:47AM +0100, Markus Pargmann wrote:
+> Hi,
+> 
+> This version has some commit message updates. It still depends on the pinctrl driver patch [1].
 
-> This patch changes the dtsi entry on omap4430 to contain
-> the thermal data. This data will enable the passive
-> cooling with CPUfreq cooling device at 100C and the
-> system will do a thermal shutdown at 125C.
->=20
-> Cc: "Beno=EEt Cousson" <bcousson@baylibre.com>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: linux-omap@vger.kernel.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
-> ---
->  arch/arm/boot/dts/omap443x.dtsi | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/omap443x.dtsi b/arch/arm/boot/dts/omap=
-443x.dtsi
-> index bcf455e..e9c97d6 100644
-> --- a/arch/arm/boot/dts/omap443x.dtsi
-> +++ b/arch/arm/boot/dts/omap443x.dtsi
-> @@ -12,7 +12,7 @@
-> =20
->  / {
->  	cpus {
-> -		cpu@0 {
-> +		cpu0: cpu@0 {
->  			/* OMAP443x variants OPP50-OPPNT */
->  			operating-points =3D <
->  				/* kHz    uV */
+Linus,
 
-I see you also add labels to various other entries...
+I'm about to apply the series.  Is it okay for me to pull in your
+'devel' branch at commit 5fab718 (pinctrl: imx1-core populate
+subdevices) now?  Or should I at least wait a few days for you to
+rebase your branch on 3.13-rc1 after it becomes available?
 
-> @@ -25,9 +25,15 @@
->  		};
->  	};
-> =20
-> -	bandgap {
-> +	thermal-zones{
+Actually, you can still rebase your branch before I send my branches to
+arm-soc folks around -rc6.  But you need to let me know, so that I can
+rebuild my branches.
 
-You may want to include space here.
+Shawn
 
-> +		#include "omap4-cpu-thermal.dtsi"
-> +	};
-> +
-> +	bandgap: bandgap {
->  		reg =3D <0x4a002260 0x4
->  		       0x4a00232C 0x4>;
->  		compatible =3D "ti,omap4430-bandgap";
-> +
-> +		#thermal-sensor-cells =3D <0>;
->  	};
->  };
+> [1] [PATCH] pinctrl: imx1-core populate subdevices
+>     <1384193987-20740-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>     http://thread.gmane.org/gmane.linux.drivers.devicetree/51584
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
