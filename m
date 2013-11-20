@@ -1,94 +1,134 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/9] dt: Handle passed/built-in DT selection in early_init_dt_scan()
-Date: Wed, 20 Nov 2013 14:50:53 -0600
-Message-ID: <CAL_Jsq+ri0rVg-urU74cE__tor7WSu_0xexUDzQHc+o=Qo8E3A@mail.gmail.com>
-References: <5283A000.8090007@gmail.com>
-	<1384859554-27268-1-git-send-email-geert@linux-m68k.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1384859554-27268-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-arch-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v1 1/1] dt: binding: reword PowerPC 8xxx GPIO documentation
+Date: Wed, 20 Nov 2013 22:34:53 +0100
+Message-ID: <1384983293-11002-1-git-send-email-gsi@denx.de>
+References: <201311182328.40743.arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201311182328.40743.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Rob Herring@" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2013 at 5:12 AM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Let early_init_dt_scan() fall-back to the built-in DT if no DT was passed,
-> or if it's invalid, so architectures don't have to duplicate this logic.
->
-> Suggested-by: Rob Herring <rob.herring@calxeda.com>
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
+re-format and re-word the device tree binding documentation for MPC8xxx
+and compatibles, reference the common document for interrupt controllers
+and remove outdated duplicate SoC specific information
 
-Looks good to me. I can take this series if you want to send me a pull
-request. In any case, for the series:
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring@ <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+---
 
-Reviewed-by: Rob Herring <rob.herring@calxeda.com>
+This change should improve the "flow" of the 8xxx GPIO binding document,
+starting with an overview, then discussing specific properties, and then
+collecting examples at the end.  Re-formatting should improve readability
+of enumerations.
 
-Rob
+I was not certain whether the kinds of changes to the document warrant a
+split into several patches, separating whitespace/reformatting and the
+content update.  For the moment I went with a single patch to not
+overcomplicate matters.
 
->  drivers/of/fdt.c       |   24 +++++++++++++++++-------
->  include/linux/of_fdt.h |    1 +
->  2 files changed, 18 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 2fa024b97c43..a797cd43bc8b 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -868,18 +868,28 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
->
->  bool __init early_init_dt_scan(void *params)
->  {
-> -       if (!params)
-> -               return false;
-> -
->         /* Setup flat device-tree pointer */
->         initial_boot_params = params;
->
-> -       /* check device tree validity */
-> -       if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
-> -               initial_boot_params = NULL;
-> -               return false;
-> +       /* check passed device tree validity */
-> +       if (initial_boot_params &&
-> +           be32_to_cpu(initial_boot_params->magic) == OF_DT_HEADER) {
-> +               pr_info("FDT at %p\n", initial_boot_params);
-> +               goto found;
-> +       }
-> +
-> +       /* check built-in device tree validity */
-> +       initial_boot_params = &__dtb_start;
-> +       if (__dtb_end != (void *)&__dtb_start &&
-> +           be32_to_cpu(initial_boot_params->magic) == OF_DT_HEADER) {
-> +               pr_info("Compiled-in FDT at %p\n", initial_boot_params);
-> +               goto found;
->         }
->
-> +       initial_boot_params = NULL;
-> +       return false;
-> +
-> +found:
->         /* Retrieve various information from the /chosen node */
->         of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
->
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index aabc49f3e403..6c4a60454854 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -59,6 +59,7 @@ struct boot_param_header {
->
->  /* For kernels with a built-in device tree */
->  extern struct boot_param_header __dtb_start;
-> +extern char __dtb_end[];
->
->  #if defined(CONFIG_OF_FLATTREE)
->
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Putting the interrupt-parent before the interrupts specifiers is a thing
+of personal taste -- I'm a fan of hierarchy, finding the specific detail
+first and then the addendum "oh, by the way, it's that other parent"
+keeps confusing me as much as top-posting in email does. :)
+
+Feel free to tell me when I got terminology wrong.  This is the only
+real issue that may remain after this change IMO.
+
+ .../devicetree/bindings/gpio/8xxx_gpio.txt         |   59 ++++++++++++--------
+ 1 file changed, 35 insertions(+), 24 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt b/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
+index b0019eb5330e..7788e8df3a15 100644
+--- a/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
+@@ -5,16 +5,41 @@ This is for the non-QE/CPM/GUTs GPIO controllers as found on
+ 
+ Every GPIO controller node must have #gpio-cells property defined,
+ this information will be used to translate gpio-specifiers.
++See bindings/gpio/gpio.txt for details of how to specify GPIO
++information for devices.
++
++The GPIO module usually is connected to the SoC's internal interrupt
++controller, see bindings/interrupt-controller/interrupts.txt (the
++interrupt client nodes section) for details how to specify this GPIO
++module's interrupt.
++
++The GPIO module may serve as another interrupt controller (cascaded to
++the SoC's internal interrupt controller).  See the interrupt controller
++nodes section in bindings/interrupt-controller/interrupts.txt for
++details.
+ 
+ Required properties:
+-- compatible : "fsl,<CHIP>-gpio" followed by "fsl,mpc8349-gpio" for
+-  83xx, "fsl,mpc8572-gpio" for 85xx and "fsl,mpc8610-gpio" for 86xx.
+-- #gpio-cells : Should be two. The first cell is the pin number and the
+-  second cell is used to specify optional parameters (currently unused).
+- - interrupts : Interrupt mapping for GPIO IRQ.
+- - interrupt-parent : Phandle for the interrupt controller that
+-   services interrupts for this device.
+-- gpio-controller : Marks the port as GPIO controller.
++- compatible:		"fsl,<CHIP>-gpio" followed by "fsl,mpc8349-gpio"
++			for 83xx, "fsl,mpc8572-gpio" for 85xx and
++			"fsl,mpc8610-gpio" for 86xx.
++- #gpio-cells:		Should be two. The first cell is the pin number
++			and the second cell is used to specify optional
++			parameters (currently unused).
++- interrupt-parent:	Phandle for the interrupt controller that
++			services interrupts for this device.
++- interrupts:		Interrupt mapping for GPIO IRQ.
++- gpio-controller:	Marks the port as GPIO controller.
++
++Optional properties:
++- interrupt-controller:	Empty boolean property which marks the GPIO
++			module as an IRQ controller.
++- #interrupt-cells:	Number of integer cells required to specify an
++			interrupt within this interrupt controller.  The
++			first cell defines the pin number, the second
++			cell defines additional flags (trigger type,
++			trigger polarity).  Note that the specific set
++			of trigger conditions supported by the GPIO
++			module depends on the actual SoC.
+ 
+ Example of gpio-controller nodes for a MPC8347 SoC:
+ 
+@@ -36,25 +61,11 @@ Example of gpio-controller nodes for a MPC8347 SoC:
+ 		gpio-controller;
+ 	};
+ 
+-See booting-without-of.txt for details of how to specify GPIO
+-information for devices.
+-
+-To use GPIO pins as interrupt sources for peripherals, specify the
+-GPIO controller as the interrupt parent and define GPIO number +
+-trigger mode using the interrupts property, which is defined like
+-this:
+-
+-interrupts = <number trigger>, where:
+- - number: GPIO pin (0..31)
+- - trigger: trigger mode:
+-	2 = trigger on falling edge
+-	3 = trigger on both edges
+-
+-Example of device using this is:
++Example of a peripheral using the GPIO module as an IRQ controller:
+ 
+ 	funkyfpga@0 {
+ 		compatible = "funky-fpga";
+ 		...
+-		interrupts = <4 3>;
+ 		interrupt-parent = <&gpio1>;
++		interrupts = <4 3>;
+ 	};
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
