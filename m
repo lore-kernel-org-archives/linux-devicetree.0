@@ -1,49 +1,50 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH 1/7] mtd: nand: davinci: fix driver registration
-Date: Wed, 20 Nov 2013 17:22:19 +0200
-Message-ID: <1384960945-14528-2-git-send-email-ivan.khoronzhuk@ti.com>
-References: <1384960945-14528-1-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [PATCH 0/7] Davinci nand driver fixes and updates
+Date: Wed, 20 Nov 2013 17:22:18 +0200
+Message-ID: <1384960945-14528-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1384960945-14528-1-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
 To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-When kernel is booted using DT, there is no guarantee that Davinci
-NAND device has been created already at the time when driver init
-function is executed. Therefore, platform_driver_probe() can't be used
-because this may result the Davinci NAND driver will never be probed.
-The driver probing has to be made with core mechanism.
+This series contains fixes and updates of Davinci nand driver, in
+order to prepare it to be reused for Keystone platform.
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
----
- drivers/mtd/nand/davinci_nand.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+V1:
+https://lkml.org/lkml/2013/11/11/352
 
-diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
-index b77a01e..d87213f 100644
---- a/drivers/mtd/nand/davinci_nand.c
-+++ b/drivers/mtd/nand/davinci_nand.c
-@@ -877,6 +877,7 @@ static int __exit nand_davinci_remove(struct platform_device *pdev)
- }
- 
- static struct platform_driver nand_davinci_driver = {
-+	.probe		= nand_davinci_probe,
- 	.remove		= __exit_p(nand_davinci_remove),
- 	.driver		= {
- 		.name	= "davinci_nand",
-@@ -886,7 +887,7 @@ static struct platform_driver nand_davinci_driver = {
- };
- MODULE_ALIAS("platform:davinci_nand");
- 
--module_platform_driver_probe(nand_davinci_driver, nand_davinci_probe);
-+module_platform_driver(nand_davinci_driver);
- 
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Texas Instruments");
+Ivan Khoronzhuk (7):
+  mtd: nand: davinci: fix driver registration
+  mtd: nand: davinci: return ENOMEM if memory allocation is failed
+  mtd: nand: davinci: check required ti,davinci-chipselect property
+  mtd: nand: davinci: simplify error handling
+  mtd: nand: davinci: move bindings under mtd
+  mtd: nand: davinci: extend description of bindings
+  mtd: nand: davinci: adjust DT properties to MTD generic
+
+ .../devicetree/bindings/arm/davinci/nand.txt       |   46 ----------
+ .../devicetree/bindings/mtd/davinci-nand.txt       |   92 ++++++++++++++++++++
+ drivers/mtd/nand/davinci_nand.c                    |   68 +++++++--------
+ 3 files changed, 126 insertions(+), 80 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
+ create mode 100644 Documentation/devicetree/bindings/mtd/davinci-nand.txt
+
 -- 
 1.7.9.5
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
