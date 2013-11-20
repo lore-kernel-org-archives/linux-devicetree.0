@@ -1,38 +1,62 @@
-From: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Device Tree Maturity Project
-Date: Wed, 20 Nov 2013 13:32:12 +0000
-Message-ID: <1384954332.6071.29.camel@kazak.uk.xensource.com>
-References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail.com>
-	 <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com>
-	 <528CB3D6.8080808@calxeda.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using
+ pinfunc.
+Date: Wed, 20 Nov 2013 14:38:57 +0100
+Message-ID: <1751377.1AvsyJs1NG@amdc1227>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
+ <528BB1F2.4080107@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <528CB3D6.8080808-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82?= Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <528BB1F2.4080107@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Doug Anderson <dianders@chromium.org>, Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-11-20 at 07:06 -0600, Rob Herring wrote:
-> On 11/20/2013 05:56 AM, Grant Likely wrote:
-> > On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
-> > <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> >> To help keep track of what is going on, I would like to have a short
-> >> stand up meeting once a week. Looking at my calendar, I can make
-> >> 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
-> > 
-> > Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
+Hi Stephen,
+
+On Tuesday 19 of November 2013 11:46:10 Stephen Warren wrote:
+> On 11/19/2013 10:15 AM, Tomasz Figa wrote:
+> > This patch extends the range of settings configurable via pinfunc API
+> > to cover pin value as well. This allows configuration of default values
+> > of pins.
 > 
-> That's 6:00PST.
+> Shouldn't there be a driver that acquires the GPIO that's output to the
+> pin, and configures the output value? IIRC there have been previous
+> discussions re: having a list of e.g. initial GPIO output values in DT,
+> and that was rejected, and this patch seems to be doing almost the exact
+> same thing, just at the pinctrl level rather than GPIO level.
+
+Well, on the contrary, I remember a discussion about specifying initial
+clock tree configuration in DT (on Linaro Connect in Dublin, but AFAIR
+also on the ML before. Through analogy, I would extend this to initial
+pin settins. However maybe the use cases behind this will make things
+clearer.
+
 > 
-> Any of those days work for me.
+> That all said, I admit this could be a useful feature...
 
-Me too.
+Two specific things I had in mind with this have been:
 
+ - pins of the SoC unused on particular boards, which often need different
+   configuration depending on pin bank, SoC revision and so on. I know
+   that _ideally_ this should be done by "firmware", but I believe we
+   have enough historic experience to know that we shouldn't expect from
+   the bootloader more than that it just loads us, as the name would
+   suggest (and I have even had experience with bootloaders that couldn't
+   properly do this basic task, screwing up, for example, by leaving MMU
+   turned on before jumping to the kernel).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ - initializing safe default state of all pins on the board, to cope with
+   configurations when not all drivers are enabled. As an example, take an
+   embedded board with a little of flash storage, where the kernel has to
+   be really small, so not all SoC drivers can be compiled into it. Moving
+   the responsibility of setting initial pin states to drivers would leave
+   pins of inexistent drivers unconfigured.
+
+I don't think I need to explain why misconfigured pins are a bad thing.
+
+Best regards,
+Tomasz
