@@ -1,66 +1,41 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] memory: ti-aemif: add bindings for AEMIF driver
-Date: Wed, 20 Nov 2013 21:03:06 +0200
-Message-ID: <528D076A.8070806@ti.com>
-References: <1384962416-14862-1-git-send-email-ivan.khoronzhuk@ti.com> <1384962416-14862-3-git-send-email-ivan.khoronzhuk@ti.com> <20131120182102.GK14627@ns203013.ovh.net>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v2 3/4] ata: add APM X-Gene SoC 6.0Gbps SATA PHY driver
+Date: Wed, 20 Nov 2013 11:16:30 -0800
+Message-ID: <CAPw-ZTkrqcmtVP8Y2utzAmL0bsMzQtyxnnuE5+PnYNowvYpvZw@mail.gmail.com>
+References: <1384905197-3566-1-git-send-email-lho@apm.com>
+	<1384905197-3566-2-git-send-email-lho@apm.com>
+	<1384905197-3566-3-git-send-email-lho@apm.com>
+	<1384905197-3566-4-git-send-email-lho@apm.com>
+	<CACVXFVPnRCtaFULYf307gfu4jvYpV7cgFOjmq5fOgyfb0Gp+SA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131120182102.GK14627-HVbc7XotTAhnXn40ka+A6Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <CACVXFVPnRCtaFULYf307gfu4jvYpV7cgFOjmq5fOgyfb0Gp+SA@mail.gmail.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Ming Lei <tom.leiming@gmail.com>
+Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Suman Tripathi <stripathi@apm.com>, Linux SCSI List <linux-scsi@vger.kernel.org>, Jon Masters <jcm@redhat.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Tuan Phan <tphan@apm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/2013 08:21 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->> +				the chip select signal.
->> +				Minimum value is 1 (0 treated as 1).
->> +
->> +- ti,cs-wsetup:		write setup width, ns
->> +				Time between the beginning of a memory cycle
->> +				and the activation of write strobe.
->> +				Minimum value is 1 (0 treated as 1).
->> +
->> +- ti,cs-wstrobe:	write strobe width, ns
->> +				Time between the activation and deactivation of
->> +				the write strobe.
->> +				Minimum value is 1 (0 treated as 1).
->> +
->> +- ti,cs-whold:		write hold width, ns
->> +				Time between the deactivation of the write
->> +				strobe and the end of the cycle (which may be
->> +				either an address change or the deactivation of
->> +				the chip select signal.
->> +				Minimum value is 1 (0 treated as 1).
->> +
->> +If any of the above parameters are absent, current parameter value will be taken
->> +from the corresponding HW reg.
->> +
->> +The name for cs node must be in format csN, where N is the cs number.
-> 
-> this is wired we should use reg instead to represent the cs as done for SPI
-> or a an other property
-> 
-> Best Regards,
-> J.
-> 
+Hi,
 
-Ok, I will add new property cs-chipselect like following :
+I will move to the official GIT for 3.12.00 instead rc7. It is the
+same as Linux-next GIT.
 
-ti,cs-chipselect:	number of chipselect. Indicates on the
-			aemif driver which chipselect is used
-			for accessing the memory.
-			For compatibles "ti,davinci-aemif" and 
-			"ti,keystone-aemif" it can be in range [0-3].
-			For compatible "ti,omap-L138-aemif" range is [2-5].
+-Loc
 
-Is it OK?
-
--- 
-Regards,
-Ivan Khoronzhuk
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Nov 20, 2013 at 12:57 AM, Ming Lei <tom.leiming@gmail.com> wrote:
+> On Wed, Nov 20, 2013 at 7:53 AM, Loc Ho <lho@apm.com> wrote:
+>> +
+>> +       sprintf(name, "xgene-ahci-phy-%08X", (u32) ctx->csr_phys);
+>> +       ctx->phy = devm_phy_create(ctx->dev, (u32) ctx->csr_phys,
+>> +                                  &xgene_phy_ops, name);
+>
+> The devm_phy_create() API has changed, so suggest you make your
+> patch against -next tree.
+>
+> Thanks,
+> --
+> Ming Lei
+>
+> --
+> Ming Lei
