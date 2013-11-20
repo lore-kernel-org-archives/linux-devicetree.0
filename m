@@ -1,92 +1,51 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 8/9] ARM: at91/dt: add new at91rm9200ek_mmc board
-Date: Wed, 20 Nov 2013 18:27:22 +0100
-Message-ID: <20131120172722.GJ14627@ns203013.ovh.net>
-References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
- <1377693456-11133-1-git-send-email-b.brezillon@overkiz.com>
- <20131120150255.GH14627@ns203013.ovh.net>
- <528CE3E6.1040802@overkiz.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Wed, 20 Nov 2013 17:43:58 +0000
+Message-ID: <alpine.DEB.2.02.1311201737410.3198@kaball.uk.xensource.com>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail. com> <20131115095717.GC1709@e106331-lin.cambridge.arm.com> <20131120134942.95DBFC4079D@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <528CE3E6.1040802@overkiz.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: boris brezillon <b.brezillon@overkiz.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Joachim Eastwood <manabian@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131120134942.95DBFC4079D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17:31 Wed 20 Nov     , boris brezillon wrote:
-> On 20/11/2013 16:02, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >On 14:37 Wed 28 Aug     , Boris BREZILLON wrote:
-> >>Add a new at91rm9200ek_mmc board (based on at91rm9200ek board) which enables
-> >>mmc0/slot0.
-> >no for multiple dts
-> >
-> >this need to handle at user space level
+On Wed, 20 Nov 2013, Grant Likely wrote:
+> On Fri, 15 Nov 2013 09:57:17 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Fri, Nov 15, 2013 at 01:44:10AM +0000, Olof Johansson wrote:
+> > > The more I start to see early UEFI/ACPI code, the more I am certain
+> > > that we want none of that crap in the kernel. It's making things
+> > > considerably messier, while we're already very busy trying to convert
+> > > everything over and enable DT -- we'll be preempting that effort just
+> > > to add even more boilerplate everywhere and total progress will be
+> > > hurt.
+> > 
+> > We are certainly under a lot of pressure with the device tree migration,
+> > and I agree that adding another information source is going to be a
+> > source of pain. However, I'd argue that we're going to encounter pain
+> > regardless of which approach we take.
+> > 
+> > I'm of the opinion that the only way we should support ACPI is as a
+> > first-class citizen. We don't need to modify every driver and subsystem
+> > to support ACPI, only those necessary to support the minimal set of
+> > platforms using ACPI. ACPI is new in the arm space, and we can enforce
+> > quality standards on ACPI _now_ above what we're allowing for DT, and
+> > avoid future problems.
 > 
-> You mean, by controlling the regulator using the sysfs interface, or
-> by loading
-> only the appropriate driver ?
-load the partial dts via userspace
-> 
-> What if both drivers are loaded (or not compiled as modules) ?
-> This will lead to one device being unusable (and maybe even worst)...
-> 
-this will never be the case
-
-Best Regards,
-J.
-> Please explain what you had in mind ?
-> 
-> >
-> >Best Regards,
-> >J.
-> >>Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
-> >>---
-> >>  arch/arm/boot/dts/at91rm9200ek_mmc.dts |   23 +++++++++++++++++++++++
-> >>  1 file changed, 23 insertions(+)
-> >>  create mode 100644 arch/arm/boot/dts/at91rm9200ek_mmc.dts
-> >>
-> >>diff --git a/arch/arm/boot/dts/at91rm9200ek_mmc.dts b/arch/arm/boot/dts/at91rm9200ek_mmc.dts
-> >>new file mode 100644
-> >>index 0000000..c87a861
-> >>--- /dev/null
-> >>+++ b/arch/arm/boot/dts/at91rm9200ek_mmc.dts
-> >>@@ -0,0 +1,23 @@
-> >>+/*
-> >>+ * at91rm9200ek.dts - Device Tree file for Atmel AT91RM9200 evaluation kit with
-> >>+ *                    an MMC slot
-> >>+ *
-> >>+ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
-> >>+ *
-> >>+ * Licensed under GPLv2 only
-> >>+ */
-> >>+/dts-v1/;
-> >>+#include "at91rm9200ek.dts"
-> >>+
-> >>+/ {
-> >>+	model = "Atmel AT91RM9200 evaluation kit with MMC slot";
-> >>+	compatible = "atmel,at91rm9200ek-mmc", "atmel,at91rm9200ek", "atmel,at91rm9200";
-> >>+
-> >>+	ahb {
-> >>+		apb {
-> >>+			mmc0: mmc@fffb4000 {
-> >>+				status = "okay";
-> >>+			};
-> >>+		};
-> >>+	};
-> >>+};
-> >>-- 
-> >>1.7.9.5
-> >>
-> 
+> Translated ACPI tables really don't make any sense at all. While the
+> models are similar in some regards, they are very different in others
+> and any translator (I suspect) would become very complicated to deal
+> with all the edge cases.
+ 
+If it turns out that we can't translate the ACPI tables dynamically, we
+could maintain a repository of "manually" translated DTSes for all the
+systems that do not ship with device tree.  Given that DTBs are fairly
+small, we could stick them all in an initrd or another binary loaded by
+the bootloader so that Linux and/or Xen can select the right one at boot
+time.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
