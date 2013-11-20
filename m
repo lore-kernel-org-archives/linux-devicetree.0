@@ -1,68 +1,73 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH v2 4/4] arm64: Add APM X-Gene SoC 6.0Gbps SATA PHY DTS entries
-Date: Tue, 19 Nov 2013 16:53:17 -0700
-Message-ID: <1384905197-3566-5-git-send-email-lho@apm.com>
-References: <1384905197-3566-1-git-send-email-lho@apm.com>
- <1384905197-3566-2-git-send-email-lho@apm.com>
- <1384905197-3566-3-git-send-email-lho@apm.com>
- <1384905197-3566-4-git-send-email-lho@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1384905197-3566-4-git-send-email-lho@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Kyungmin Park <kmpark@infradead.org>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using pinfunc.
+Date: Wed, 20 Nov 2013 09:02:04 +0900
+Message-ID: <CAH9JG2UjnL5bZzNUuJhWY3GpwPD=rJvR2O4Hcpm33G+prSS=BA@mail.gmail.com>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
+	<528BB1F2.4080107@wwwdotorg.org>
+	<CAD=FV=XS0dbE7zfgDGVdp84h4fHH6tfO8aN_HNh1LbOjYy51aQ@mail.gmail.com>
+	<528BB913.6080409@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <528BB913.6080409@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Tomasz Figa <t.figa@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-arm64: Add APM X-Gene SoC 6.0Gbps SATA PHY DTS entries
+On Wed, Nov 20, 2013 at 4:16 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 11/19/2013 11:59 AM, Doug Anderson wrote:
+>> On Tue, Nov 19, 2013 at 10:46 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>> On 11/19/2013 10:15 AM, Tomasz Figa wrote:
+>>>> This patch extends the range of settings configurable via pinfunc API
+>>>> to cover pin value as well. This allows configuration of default values
+>>>> of pins.
+>>>
+>>> Shouldn't there be a driver that acquires the GPIO that's output to the
+>>> pin, and configures the output value? IIRC there have been previous
+>>> discussions re: having a list of e.g. initial GPIO output values in DT,
+>>> and that was rejected, and this patch seems to be doing almost the exact
+>>> same thing, just at the pinctrl level rather than GPIO level.
+>>>
+>>> That all said, I admit this could be a useful feature...
+>>
+>> I haven't followed all of the previous discussions, but I know I've
+>> run into scenarios where something like this would be useful.  The one
+>> that comes to mind is:
+>>
+>> * We've got GPIOs that default at bootup to a pulled up input since
+>> the default state of the pin should be "high".
+>>
+>> * These pins are really intended to be outputs, like an "enable",
+>> "reset", or "power down" line for a peripheral.  The pullup is strong
+>> enough to give us a good default state but we really want outputs.
+>>
+>> * We'd like to provide this GPIO to a peripheral through device tree.
+>> ...and we'd like all the pinmux to be setup automatically so we use
+>> pinctrl-names = "default".
+>>
+>> * If we set the pinmux up as "output" then there's a chance that the
+>> line will glitch at bootup since the pinmux happens (changing the pin
+>> to output) before the driver has a chance to run.
+>
+> I think that last point should be addressed by having a driver that owns
+> the GPIO set it to the desired output level, and the implementation of
+Some pins are not connected (NC). At that cases, there's no drivers to
+handle it. To reduce power leakage, it sets proper configuration with
+values instead of reset values.
 
-This patch adds the DTS entries for the APM X-Gene SoC 6.0Gbps SATA PHY
-driver. The PHY for controller 0 and 1 are enabled by default.
+Thank you,
+Kyungmin Park
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Tuan Phan <tphan@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   28 ++++++++++++++++++++++++++++
- 1 files changed, 28 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 359d7b6..1d1c8bc 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -193,5 +193,33 @@
- 			reg = <0x0 0x17000014 0x0 0x100>;
- 			mask = <0x1>;
- 		};
-+
-+		sataphy0: sataphy@1f210000 {
-+			compatible = "apm,xgene-ahci-phy";
-+			reg = <0x0 0x1f210000 0x0 0x10000>;
-+			#phy-cells = <0>;
-+			status = "na";
-+			txbooster = <0x2 0x2 0x2 0x2 0x2 0x2>;
-+			txskew = <0xa 0xa 0xa 0xa 0xa 0xa>;
-+		};
-+
-+		sataphy1: sataphy@1f220000 {
-+			compatible = "apm,xgene-ahci-phy";
-+			reg = <0x0 0x1f220000 0x0 0x10000>;
-+			#phy-cells = <0>;
-+			status = "ok";
-+			txbooster = <0x2 0x2 0x2 0x2 0x2 0x2>;
-+			txskew = <0xa 0xa 0xa 0x5 0x5 0x5>;
-+		};
-+
-+		sataphy2: sataphy@1f230000 {
-+			compatible = "apm,xgene-ahci-phy2";
-+			reg = <0x0 0x1f230000 0x0 0x10000
-+			       0x0 0x1f2d0000 0x0 0x10000>;
-+			#phy-cells = <0>;
-+			status = "ok";
-+			txbooster = <0x3 0x3 0x3 0x3 0x3 0x3>;
-+			txskew = <0xa 0xa 0xa 0xc 0xc 0xc>;
-+		};
- 	};
- };
--- 
-1.5.5
-
+> the SoC's GPIO driver communicate with the pinctrl driver (which might
+> be the same driver; not sure here) so that gpio_direction_output()
+> causes the pinctrl HW to be programmed as output only after the GPIO HW
+> is programmed as output and with the correct output value. In this
+> scenario, the pinctrl default state wouldn't touch the pin's
+> input/output setting; that operation would be deferred until the driver
+> set up the GPIO as an output.
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
