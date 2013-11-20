@@ -1,80 +1,24 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 4/4] arm64: Add APM X-Gene SoC 6.0Gbps SATA PHY DTS
- entries
-Date: Wed, 20 Nov 2013 11:39:21 +0000
-Message-ID: <20131120113921.GU5914@e106331-lin.cambridge.arm.com>
-References: <1384905197-3566-1-git-send-email-lho@apm.com>
- <1384905197-3566-2-git-send-email-lho@apm.com>
- <1384905197-3566-3-git-send-email-lho@apm.com>
- <1384905197-3566-4-git-send-email-lho@apm.com>
- <1384905197-3566-5-git-send-email-lho@apm.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Device Tree Maturity Project
+Date: Wed, 20 Nov 2013 11:56:39 +0000
+Message-ID: <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com>
+References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384905197-3566-5-git-send-email-lho@apm.com>
-Content-Language: en-US
-Sender: linux-scsi-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: "olof@lixom.net" <olof@lixom.net>, "tj@kernel.org" <tj@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jcm@redhat.com" <jcm@redhat.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2013 at 11:53:17PM +0000, Loc Ho wrote:
-> arm64: Add APM X-Gene SoC 6.0Gbps SATA PHY DTS entries
-> 
-> This patch adds the DTS entries for the APM X-Gene SoC 6.0Gbps SATA PHY
-> driver. The PHY for controller 0 and 1 are enabled by default.
-> 
-> Signed-off-by: Loc Ho <lho@apm.com>
-> Signed-off-by: Tuan Phan <tphan@apm.com>
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> ---
->  arch/arm64/boot/dts/apm-storm.dtsi |   28 ++++++++++++++++++++++++++++
->  1 files changed, 28 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-> index 359d7b6..1d1c8bc 100644
-> --- a/arch/arm64/boot/dts/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
-> @@ -193,5 +193,33 @@
->  			reg = <0x0 0x17000014 0x0 0x100>;
->  			mask = <0x1>;
->  		};
-> +
-> +		sataphy0: sataphy@1f210000 {
-> +			compatible = "apm,xgene-ahci-phy";
-> +			reg = <0x0 0x1f210000 0x0 0x10000>;
-> +			#phy-cells = <0>;
-> +			status = "na";
+On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
+<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> To help keep track of what is going on, I would like to have a short
+> stand up meeting once a week. Looking at my calendar, I can make
+> 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
 
-s/"na"/"disabled"/g
-
-> +			txbooster = <0x2 0x2 0x2 0x2 0x2 0x2>;
-> +			txskew = <0xa 0xa 0xa 0xa 0xa 0xa>;
-> +		};
-> +
-> +		sataphy1: sataphy@1f220000 {
-> +			compatible = "apm,xgene-ahci-phy";
-> +			reg = <0x0 0x1f220000 0x0 0x10000>;
-> +			#phy-cells = <0>;
-> +			status = "ok";
-> +			txbooster = <0x2 0x2 0x2 0x2 0x2 0x2>;
-> +			txskew = <0xa 0xa 0xa 0x5 0x5 0x5>;
-
-I don't recall seeing txskew in the binding document or code, but I see
-you've noticed too.
-
-> +		};
-> +
-> +		sataphy2: sataphy@1f230000 {
-> +			compatible = "apm,xgene-ahci-phy2";
-> +			reg = <0x0 0x1f230000 0x0 0x10000
-> +			       0x0 0x1f2d0000 0x0 0x10000>;
-
-Nit: please bracket entries individually:
-
-reg = <0x0 0x1f230000 0x0 0x10000>,
-      <0x0 0x1f2d0000 0x0 0x10000>;
-
-Thanks,
-Mark.
+Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
