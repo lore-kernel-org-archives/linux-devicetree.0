@@ -1,88 +1,84 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4] ASoC: simple-card: add Device Tree
- support
-Date: Wed, 20 Nov 2013 16:24:03 +0000
-Message-ID: <20131120162403.GA22479@e106331-lin.cambridge.arm.com>
-References: <87txharb3o.wl%kuninori.morimoto.gx@renesas.com>
- <8738oiog00.wl%kuninori.morimoto.gx@renesas.com>
- <20131003104248.GI27287@sirena.org.uk>
- <87fvsh2966.wl%kuninori.morimoto.gx@renesas.com>
- <20131024171758.GA2461@kartoffel>
- <87iowm9jwv.wl%kuninori.morimoto.gx@renesas.com>
- <20131115155028.GE24831@e106331-lin.cambridge.arm.com>
- <87li0m7d7c.wl%kuninori.morimoto.gx@renesas.com>
- <20131118113617.GC30853@e106331-lin.cambridge.arm.com>
- <87mwl1du71.wl%kuninori.morimoto.gx@renesas.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH 1/3] mtd: nand: davinci: reuse driver for Keystone arch
+Date: Wed, 20 Nov 2013 18:24:57 +0200
+Message-ID: <1384964699-15134-2-git-send-email-ivan.khoronzhuk@ti.com>
+References: <1384964699-15134-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <87mwl1du71.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Takashi Iwai <tiwai@suse.de>, Simon <horms@verge.net.au>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1384964699-15134-1-git-send-email-ivan.khoronzhuk@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 19, 2013 at 02:03:21AM +0000, Kuninori Morimoto wrote:
-> 
-> Hi Mark Rutland
-> 
-> Thank you for your feedback
-> 
-> > > It means "if system doesn't support common clock".
-> > > I will fix it
-> > 
-> > When you say "doesn't support common clock", you mean the code for that
-> > platform is incompatible with the common clock framework? It seems very
-> > messy to allow a Linux-internal implementation detail (which is expected
-> > to change) to leak into a binding...
-> 
-> Some CPU doesn't support common clock, like PowerPC (?)
-> This is Mark (Brown) comment
-> 
-> --------------------
-> So, ideally.  However we have to consider the fact that the clock API
-> isn't reliably available makes this harder than it should be.  Even
-> among the DT using platforms at least PowerPC still uses a custom clock
-> API.  We could just use this as a carrot to push people to convert
-> though.
-> ---------------------
+The Keystone arch has compatible nand device, so reuse it.
+In case with Keystone it depends on TI_AEMIF because AEMIF
+driver is responsible to set timings.
 
-I would be happier if we could unify the common clock infrastructure, it
-would make this kind of thing a lot lessy messy. However, I'm not
-against the system-clock-frequency property for now.
+See http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
 
-> 
-> 
-> > > > > +		of_property_read_u32(np,
-> > > > > +				     "system-clock-frequency",
-> > > > > +				     &dai->sysclk);
-> > > > 
-> > > > What it this isn't present?
-> > > 
-> > > If sysclk doesn't have common clock support
-> > 
-> > Huh? That's not what I asked.
-> > 
-> > What if the dt has neither a clock or a system-clock-frequency property?
-> 
-> OK, sorry for my English
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+---
+ .../devicetree/bindings/mtd/davinci-nand.txt       |    8 +++++---
+ drivers/mtd/nand/Kconfig                           |    6 +++---
+ drivers/mtd/nand/davinci_nand.c                    |    1 +
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-Sorry for the confusion, I'll try to be less ambiguous in future :)
-
-What I was trying to get at here is that if there is neither a clock or
-a system-clock-frequency property in the device tree, dai->sysclk will
-not have been initialised in this path. Is this a valid case, and will
-dai->sysclk have a well-defined, sane value?
-
-Thanks,
-Mark.
+diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+index befaa5b..cfb18ab 100644
+--- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+@@ -1,14 +1,16 @@
+-Device tree bindings for Texas instruments Davinci NAND controller
++Device tree bindings for Texas instruments Davinci/Keystone NAND controller
+ 
+-This file provides information, what the device node for the davinci NAND
+-interface contains.
++This file provides information, what the device node for the davinci/keystone
++NAND interface contains.
+ 
+ Documentation:
+ Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
++Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
+ 
+ Required properties:
+ 
+ - compatible:			"ti,davinci-nand"
++				"ti,keystone-nand"
+ 
+ - reg:				Contains 2 offset/length values:
+ 				- offset and length for the access window.
+diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+index d885298..8bf69c7 100644
+--- a/drivers/mtd/nand/Kconfig
++++ b/drivers/mtd/nand/Kconfig
+@@ -492,11 +492,11 @@ config MTD_NAND_SH_FLCTL
+ 	  for NAND Flash using FLCTL.
+ 
+ config MTD_NAND_DAVINCI
+-        tristate "Support NAND on DaVinci SoC"
+-        depends on ARCH_DAVINCI
++        tristate "Support NAND on DaVinci/Keystone SoC"
++        depends on ARCH_DAVINCI || (ARCH_KEYSTONE && TI_AEMIF)
+         help
+ 	  Enable the driver for NAND flash chips on Texas Instruments
+-	  DaVinci processors.
++	  DaVinci/Keystone processors.
+ 
+ config MTD_NAND_TXX9NDFMC
+ 	tristate "NAND Flash support for TXx9 SoC"
+diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+index f7b21b8..8459720 100644
+--- a/drivers/mtd/nand/davinci_nand.c
++++ b/drivers/mtd/nand/davinci_nand.c
+@@ -523,6 +523,7 @@ static struct nand_ecclayout hwecc4_2048 __initconst = {
+ #if defined(CONFIG_OF)
+ static const struct of_device_id davinci_nand_of_match[] = {
+ 	{.compatible = "ti,davinci-nand", },
++	{.compatible = "ti,keystone-nand", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
+-- 
+1.7.9.5
