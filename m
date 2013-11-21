@@ -1,101 +1,55 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Thu, 21 Nov 2013 09:58:22 -0800
-Message-ID: <20131121175822.GA9590@quad.lixom.net>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
- <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
- <20131115175241.GB27174@quad.lixom.net>
- <20131119113015.GH5914@e106331-lin.cambridge.arm.com>
- <20131121162944.F087FC406A3@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131121162944.F087FC406A3-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: [PATCH v6 0/6] gpio: daVinci: cleanup and feature enhancement
+Date: Thu, 21 Nov 2013 23:45:25 +0530
+Message-ID: <1385057731-4348-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2013 at 04:29:44PM +0000, Grant Likely wrote:
-> On Tue, 19 Nov 2013 11:30:15 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Fri, Nov 15, 2013 at 05:52:41PM +0000, Olof Johansson wrote: > > On Fri, Nov 15, 2013 at 09:57:17AM +0000, Mark Rutland wrote:
-> > > > On Fri, Nov 15, 2013 at 01:44:10AM +0000, Olof Johansson wrote:
-> > The UEFI spec pulls in portions of ACPI. I do not know the full extent
-> > of the interaction between the two, but I know that they are not
-> > completely decoupled. As you have pointed out we are not experienced
-> > with ACPI or UEFI, so I don't think we can make statements that one is
-> > perfectly fine without the other.
-> 
-> Not actually. The UEFI spec does define how to pass ACPI, but it can
-> boot the system without any ACPI at all. Merging UEFI support should
-> pretty much be a non-issue.
-> 
-> > > > I think that trying to shoe-horn ACPI-derived information into device
-> > > > tree is fundamentally the wrong approach. I don't think it encourages
-> > > > best practices, and I don't think it's beneficial to the long term
-> > > > health of Linux or the ecosystem as a whole.
-> > >
-> > > There are no known best practices with ACPI. It's a complete fumbling
-> > > around in the dark right now. We're complaining about reviewer bandwith
-> > > on DT -- do we have a single reviewer for ACPI on ARM that actually
-> > > knows what a good solution looks like? I don't think so.
-> > 
-> > There are many people in the Linux community who have ACPI experience.
-> > They may not be active on the ARM side, but it's not fair to say there
-> > are no known best practices. I will agree that for the level of
-> > variation we're likely to expect we are pushing the boundaries.
-> 
-> We are pushing a lot of boundaries and doing things on ACPI that have
-> never been done before. SPI, GPIOs, Clocks, Regulators, composite
-> devices, key-value properties. All brand new territory, and the Linux
-> world is driving a lot of it.
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 
-This is a bit of a surprise and a significant concern.
+This patch series does the following
+1> Ports the driver to use irqdomain.
+2> Adds dt binding support for gpio-davinci.
+3> Adds DA850 dt support goio.
 
-The whole point behind ACPI is that it's supposed to abstract away nearly
-all of that, and _not_ expose clocks, regulators and other things to
-the kernel. If we're going to expose it, then we might as well go all
-the way and do it with DT.
+Changes for v6:
+1: GPIO driver now migrated to irq domain legacy.
+2: Fixed review comments pointed by Grygorii.
+3: Included Ack's.
 
-Exposing all the low-level details of the platform is very much an
-embedded mindset today. Servers don't do it with DT, nor with ACPI
-today. So if you're going to build a platform for servers that is
-modelled after what's done successfully so far, then sticking to that
-basic concept seems like an appropriate thing to do.
+This patch series is based on following fixup series
+http://us.generation-nt.com/answer/patch-0-2-davinci-gpio-fixes-help-212978272.html
 
-> > > So, until there's strong evidence that ACPI is actually going to be
-> > > a sane solution, in other words, until someone has shipped a system
-> > > that uses it (with Windows) and does it successfully without being
-> > > a hot mess, we shouldn't litter the kernel with it.
-> > 
-> > Again, I'm not sure that we should rely on Windows as our saviour from
-> > insanity. A lot of the issues we are going to encounter are going to be
-> > in vendor-specific code (i.e. drivers), and I do not believe that is
-> > solved by having a single entity in charge of the general frameworks
-> > those are built upon.
-> 
-> Personally, I think the issue of ACPI support should be taken on a
-> patch-by-patch basis. A lot of the things that need to be done are quite
-> discrete and fairly well contained. If the patches don't look that way
-> then push back on them. For the parts that look ready, go ahead and
-> merge it. Push back on the ones that don't.
+This patch series has been tested for both banked and Un-banked GPIO.
 
-The additional abstractions that are now pushed onto us has impact for
-everybody, and will cause churn on a lot of drivers. Things such as
-moving to named resources, etc. While it's easy to say "let's take the
-patches one by one", that also means nobody keeps an eye on the bigger
-picture and whether the whole thing makes sense or not.
+KV Sujith (3):
+  gpio: davinci: add OF support
+  ARM: davinci: da850: add GPIO DT node
+  ARM: davinci: da850 evm: add GPIO pinumux entries DT node
 
-So, I think we need both. Of course we're going to review patches as
-they're posted (the alternative doesn't make sense). But we also need
-to know what the end goal is. Nobody is presenting that today, and until
-we know how steep the slippery slope will get (based on what we can see
-so far), we shouldn't start down it.
+Lad, Prabhakar (3):
+  gpio: davinci: use readl/writel instead of __raw_*
+  This patch converts the davinci gpio driver to use irqdomain    
+    support.
+  gpio: davinci: remove unused variable intc_irq_num
 
+ .../devicetree/bindings/gpio/gpio-davinci.txt      |   41 +++++
+ arch/arm/boot/dts/da850-evm.dts                    |   20 +++
+ arch/arm/boot/dts/da850.dtsi                       |   14 ++
+ arch/arm/mach-davinci/da830.c                      |    1 -
+ arch/arm/mach-davinci/da850.c                      |    1 -
+ arch/arm/mach-davinci/dm355.c                      |    1 -
+ arch/arm/mach-davinci/dm365.c                      |    1 -
+ arch/arm/mach-davinci/dm644x.c                     |    1 -
+ arch/arm/mach-davinci/dm646x.c                     |    1 -
+ drivers/gpio/gpio-davinci.c                        |  173 ++++++++++++++------
+ include/linux/platform_data/gpio-davinci.h         |    3 +-
+ 11 files changed, 195 insertions(+), 62 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.7.9.5
+
