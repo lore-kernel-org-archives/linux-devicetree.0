@@ -1,88 +1,136 @@
-From: Sebastian Reichel <sre@ring0.de>
-Subject: Re: [RFCv2 3/3] ARM: dts: N900: Add SSI information
-Date: Fri, 22 Nov 2013 00:38:48 +0100
-Message-ID: <20131121233847.GB9772@earth.universe>
-References: <1379277856-24571-1-git-send-email-sre@debian.org>
- <1379277856-24571-4-git-send-email-sre@debian.org>
- <20131121013858.GK10317@atomide.com>
- <20131121022125.GA2445@earth.universe>
- <20131121204654.GB10023@atomide.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 3/3] ARM: OMAP2+: Fix eMMC on n900 with device tree
+Date: Thu, 21 Nov 2013 15:57:29 -0800
+Message-ID: <20131121235729.GD10023@atomide.com>
+References: <1385059866-10646-1-git-send-email-tony@atomide.com>
+ <1385059866-10646-4-git-send-email-tony@atomide.com>
+ <20131121231751.GA9772@earth.universe>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131121204654.GB10023@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@deeprootsystems.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?iso-8859-1?Q?'Beno=EEt?= Cousson' <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+In-Reply-To: <20131121231751.GA9772@earth.universe>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
+* Sebastian Reichel <sre@debian.org> [131121 15:18]:
+> Hi Tony,
+> 
+> On Thu, Nov 21, 2013 at 10:51:06AM -0800, Tony Lindgren wrote:
+> > Looks like we need to configure the regulators and use the pdata
+> > quirk to make eMMC work with device tree.
+> > 
+> > It seems that mostly vmmc2 is used, and only some earlier revisions
+> > like the macro board used vaux3.
+> > 
+> > Note that we can add support for the macro board later as needed
+> > by including the common n900 .dts file and configuring the vaux3
+> > instead of vmmc2, and adding support for the smc91x Ethernet.
+> >
+> > ---
+> > 
+> > Can you guys please test this on production n900 devices?
+> > 
+> > I've tested it with my old macro board where I had to patch in vaux3
+> > instead of vmmc2. I think there's some confusion in the legacy code
+> > comments, or else I'm confused. In any case, vaux3 works for the macro
+> > board, and I suspect that the production versions have vmmc2.
+> > 
+> > If this does not work and vaux3 as regulator works, please also dump
+> > out the system_rev from your board.
+> 
+> The good news is, that I got eMMC working :) The bad news is, that it
+> did not work with your patch :( I included my DTS nodes below. The
+> phone is HW/System revision 0x2101.
 
---4SFOXa2GPu3tIq4H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oh ok, I must have parsed the revisions wrong way then, and the macro
+I tried it on must be something newer than I thought :)
+ 
+> I have a second N900, which has HW revision 0x2204. I did not yet test
+> the patch with this phone, but legacy code also seems to use vaux3 for
+> it. Seems like we need two n900.dts files?
 
-On Thu, Nov 21, 2013 at 12:46:55PM -0800, Tony Lindgren wrote:
-> * Sebastian Reichel <sre@debian.org> [131120 18:22]:
-> > On Wed, Nov 20, 2013 at 05:38:59PM -0800, Tony Lindgren wrote:
-> >=20
-> > In the public documentation of the omaps all SSI related stuff is
-> > missing and memory areas are marked as reserved. I could not find
-> > out how to receive the NDA version, so the following is purely
-> > speculation based on the code.
-> >=20
-> > If I understand it right the HW looks like this:
-> >=20
-> > +-----------------+
-> > |    GDD (DMA)    | <- this one is currently called ssi-controller
-> > +--------+--------+
-> > | Port 1 | Port 2 | <- these are currently called ssi-port
-> > +--------+--------+
-> >=20
-> > I think the GDD part must be enabled while Port 1 or Port 2 is
-> > enabled. The last RFC driver from Carlos did not even split up the
-> > irq/memory areas into different platform devices, but just requested
-> > all of them in one ssi platform device.
->=20
-> Might be worth checking. If these blocks have the revision and SYSC
-> register in the beginning of their address space like all omap modules,
-> then they are completely separate blocks and can idle independently.
+Well let's use just vaux3 then with a comment to the .dts file if that
+works also on your 0x2204. It works on my 0x0010 too.
 
-This does not seem to be the case.
-I think this is just one big IP-Core, which provides two ports.
+I folded in your changes to the updated patch below. Care to reply with
+your Signed-off-by too assuming it works also on your 0x2204 n900?
 
-> The fact that they have separate interrutps makes me think that's the
-> case, otherwise there would be just interrupt(s) at the ssi-controllel
-> level.
+Regards,
 
-The original driver from Carlos had all IRQs in one big platform
-device. I created the ports subdevices, since it looked cleaner
-than naming resources "port1_mpu_irq0".
+Tony 
 
--- Sebastian
 
---4SFOXa2GPu3tIq4H
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+From: Tony Lindgren <tony@atomide.com>
+Date: Wed, 20 Nov 2013 18:03:39 -0800
+Subject: [PATCH] ARM: OMAP2+: Fix eMMC on n900 with device tree
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Looks like we need to configure the regulators and use the pdata
+quirk to make eMMC work with device tree.
 
-iQIcBAEBCAAGBQJSjpmHAAoJENju1/PIO/qafX0P/RthfLl7kCxXOEZT11RLuyrh
-uf49kagc8yNjtRaOK25ft8EYbmQbxCyZtrqEm+Xnv3PF/us9EjTYeTrDmVJ7Sh/0
-1mLtDZHyS4yq11m1u3z1xfQtOwdJWTHmLeWNBGvOfaFHa0xa7AaVK8D/4FBes2tA
-/7NHh2oEU4SzJCyHtQLWUOxJ7tONoNZxdhQZD5g9FiJ+kpQuqSICnJ1LuFaOjaVd
-VPFH1/OTzOrDp8XW+l7AcRPHH5FYBUKR8fkebpivTH2b+Ayg+MV9EPVwaAlcFBxw
-pfHh+Y8eMOX+HJoVb80OHldqN5YdSKmUGPByn3meFsEiriMWLtcp1hU0w9o3qQ6r
-h9Vu7jn+Fw7FCpdf10VsL7b/4Xn+mHV+dFuM+BH5vYnmpAkfMxZl+SoGAAh2E+/N
-8CUV51InahaZ5SGdTbCygMxB5mCIIxj+hUEd8TfK6m2EKZhUXv2CZ28PfRcEQV8m
-ZxdWy5WLXbCITNBZFzhQCzz5LniFDqG9sPma0+pahRw4axM1CRUeGIcgKsiWKZtz
-YRVd07t2xDamVJT8uJFLdJLysBmRPp/bcx+hiLqTV/wM2g6zV9y6dEsX8zheXXxM
-CHUkS+5bzxaBZXowlxu4zx1Vsfiyp/1654UiIQAjaT2EYDh22r7DJ+HjYPUx+821
-5Sb+nl6ZAKuqR68xf5d6
-=+LA4
------END PGP SIGNATURE-----
+It seems that mostly vaux3 is used, and only some earlier revisions
+used vmmc2. This has been tested to work on devices where the
+system_rev passed by the bootloader has versions 0x0010 and 0x2101.
 
---4SFOXa2GPu3tIq4H--
+Cc: devicetree@vger.kernel.org
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Sebastian Reichel <sre@debian.org>
+[tony@atomide.com: updated with pinctrl changes and comments from Sebastian]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index c4f20bf..c2c306d 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -125,6 +125,21 @@
+ 		>;
+ 	};
+ 
++	mmc2_pins: pinmux_mmc2_pins {
++		pinctrl-single,pins = <
++			0x128 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_clk */
++			0x12a (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_cmd */
++			0x12c (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc2_dat0 */
++			0x12e (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat1 */
++			0x130 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat2 */
++			0x132 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat3 */
++			0x134 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat4 */
++			0x136 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat5 */
++			0x138 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat6 */
++			0x13a (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat7 */
++		>;
++	};
++
+ 	display_pins: pinmux_display_pins {
+ 		pinctrl-single,pins = <
+ 			0x0d4 (PIN_OUTPUT | MUX_MODE4)		/* RX51_LCD_RESET_GPIO */
+@@ -358,8 +373,14 @@
+ 	cd-gpios = <&gpio6 0 GPIO_ACTIVE_HIGH>; /* 160 */
+ };
+ 
++/* most boards use vaux3, only some old versions use vmmc2 instead */
+ &mmc2 {
+-	status = "disabled";
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_pins>;
++	vmmc-supply = <&vaux3>;
++	vmmc_aux-supply = <&vsim>;
++	bus-width = <8>;
++	non-removable;
+ };
+ 
+ &mmc3 {
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index 10c7145..39f020c 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -139,6 +139,7 @@ struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
+ 
+ static struct pdata_init pdata_quirks[] __initdata = {
+ #ifdef CONFIG_ARCH_OMAP3
++	{ "nokia,omap3-n900", hsmmc2_internal_input_clk, },
+ 	{ "nokia,omap3-n9", hsmmc2_internal_input_clk, },
+ 	{ "nokia,omap3-n950", hsmmc2_internal_input_clk, },
+ 	{ "isee,omap3-igep0020", omap3_igep0020_legacy_init, },
