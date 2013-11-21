@@ -1,77 +1,61 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/9] dt: Handle passed/built-in DT selection in early_init_dt_scan()
-Date: Thu, 21 Nov 2013 18:49:08 +0100
-Message-ID: <CAMuHMdXjROx-LqNkq_GhNp4M-iYvDXV6X4j7EkgQGdkUmAMvhg@mail.gmail.com>
-References: <5283A000.8090007@gmail.com>
-	<CAMuHMdXfsB_Ewz9sUPZaAjFaQGTGeqMiD8mJ0tCoH1uFLYGoxw@mail.gmail.com>
-	<20131121155348.66751C406A3@trevor.secretlab.ca>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v4 2/4] Documentation:: Add documentation for APM X-Gene
+ SoC SATA host controller DTS binding
+Date: Thu, 21 Nov 2013 09:49:42 -0800
+Message-ID: <CAPw-ZTmyUjqcHhcqpjvwY-+xOKSyJh1MwA=KgjdDzmWpPXE3GA@mail.gmail.com>
+References: <1385014298-15700-1-git-send-email-lho@apm.com>
+	<1385014298-15700-2-git-send-email-lho@apm.com>
+	<1385014298-15700-3-git-send-email-lho@apm.com>
+	<201311211316.03647.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20131121155348.66751C406A3@trevor.secretlab.ca>
-Sender: linux-arch-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <201311211316.03647.arnd@arndb.de>
+Sender: linux-ide-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jon Masters <jcm@redhat.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2013 at 4:53 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
->> My changes don't change the current behavior much: currently
->> early_init_dt_scan() is already called with &__dtb_start in several places.
->> If this is broken, it's already broken.
+Hi,
+
+>> +SATA host controller nodes are defined to describe on-chip Serial ATA
+>> +controllers. Each SATA controller (pair of ports) have its own node.
+>> +
+>> +Required properties:
+>> +- compatible         : Shall be "apm,xgene-ahci"
+>> +- reg                        : First memory resource shall be the AHCI memory
+>> +                       resource.
+>> +                       Second memory resource shall be the host controller
+>> +                       memory resource.
+>> +- interrupt-parent   : Interrupt controller
+>> +- interrupts         : Interrupt mapping for SATA host controller IRQ
+>> +- clocks             : Reference to the clock entry
+>> +- phys                       : PHY reference
+>> +- phy-names          : Name of the PHY reference. The name should be
+>> +                       formed by "sataphy" plus lower case hex for the
+>> +                       lower 32-bit PHY CSR address (2nd memory resource)
 >
-> Yes, but it is called on platforms that already make that assumption
-> that __dtb_start must be copied and therefore call
-> unflatten_and_copy_devicetree(). This change makes *all* platforms do
-> that. That breaks arm, arm64, c6x, microblaze, some mips platforms, and
-> powerpc!
-
-arm, arm64, and powerpc don't have builtin DTBs, hence no change.
-microblaze and c6x already did "early_init_devtree(&__dtb_start)" before.
-
-That leaves mips, which has DT handling in too many variants, which I
-didn't all verify.
-
->> > memory. The dtb section can also potentially contain multiple .dtb
->> > blobs. In the use case that you care about you are probably only
->>
->> Multiple dtb blobs are currently handled in platform-specific code, which
->> passes the right dtb to early_init_dt_scan().
+> I've tried to explain this before, but apparently you missed the point:
 >
-> The problem is that it makes the default dt completely random because
-> the generic code still deferrences __dtb_start.
-
-Only if no DT was passed by the bootloader. And only if there really
-is something at __dtb_start. Before it would fail if no DTB was passed
-by the bootloader.
-
->> > thinking about one, but it is entirely possible for device drivers to
->> > have a dtb linked in which may break this if it gets linked in a
->> > different order. The specific example I'm thinking about is I want to
->> > have the DT selftest code load an overlay to get testcase data from a
->> > dtb blob.
->> >
->> > The other concern I have here is that I don't really want this to be the
->> > default on a lot of platforms. ARM and PowerPC for instance should only
->> > get the default dtb from the boot wrapper. It needs to be configurable
->> > in some way.
->>
->> On ARM and PowerPC, the section is empty, hence &__dbt_start ==
->> &__dtb_end.
+> Any "*-names" property is supposed to be the identifier inside the device you
+> are describing, *not* an identifier for what it points to, as that already
+> has a name. The idea is that the driver can ask for phy (or clock, irq,
+> memory, etc) "foo" here, with foo identifying the functionality in the
+> device. If you only have one phy, you probably don't want to name it at
+> all. If you imagine a device that was connected to two different phys
+> depending on the mode it's used in (e.g. SATA-II vs SATA-6G), you would
+> list this as
 >
-> There is no guarantee that that will always be so. The patch makes some
-> poor assumtions, but they shouldn't be difficult to fix.
+>  - phy-names            : one name per references in the "phys" property.
+>                           valid names are "sata-ii" and "sata-6g".
+>
+> If the generic phy subsystem requires you to name this, I'd suggest either
+> changing the phy subsystem to make the name optional, or to just call it
+> "serdes", as that is the kind of phy you are connected to.
+>
+> Does this make more sense to you now?
+>
+[Loc Ho]
+Okay... Got it. I will name it as 'sata-6g'
 
-OK, how to proceed?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-Loc
