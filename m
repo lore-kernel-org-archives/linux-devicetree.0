@@ -1,54 +1,81 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv5 1/9] of: introduce of_property_for_earch_phandle_with_args()
-Date: Thu, 21 Nov 2013 12:43:28 +0000
-Message-ID: <20131121124328.46BC1C40A2C@trevor.secretlab.ca>
-References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com> < 1384853593-32202-2-git-send-email-hdoyu@nvidia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384853593-32202-2-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC PATCH 1/2] driver core: introduce module_platform_driver_match_and_probe
+Date: Thu, 21 Nov 2013 12:47:36 +0000
+Message-ID: <20131121124736.6EBEBC40A2C@trevor.secretlab.ca>
+References: <1383113571-13029-1-git-send-email-robherring2@gmail.com> < 1383113571-13029-2-git-send-email-robherring2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1383113571-13029-2-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Nov 2013 11:33:05 +0200, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> The following pattern of code is tempting:
+On Wed, 30 Oct 2013 01:12:50 -0500, Rob Herring <robherring2@gmail.com> wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
 > 
->   for (i = 0; !of_parse_phandle_with_args(np, list, cells, i, args); i++)
+> Introduce a helper to match, create and probe a platform device. This
+> is for drivers such as cpuidle or cpufreq that typically don't have a
+> bus device node and need to match on a system-level compatible property.
 > 
-> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 
-That's a very minimal commit message. Can you elaborate please.
+Oh, ick. Please no. If a platform_device isn't getting created for a
+device tree node, then we should be asking why it isn't getting created
+and fix the core logic rather than trying to bodge it in the driver init
+code.
+
+We should never be creating and registering devices in module init code.
+We've spent the last 4 years trying to get away from that.
+
+g.
 
 > ---
-> v5:
-> New patch for v5.
-> ---
->  include/linux/of.h | 3 +++
->  1 file changed, 3 insertions(+)
+>  include/linux/platform_device.h | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 > 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 276c546..131fef5 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -613,6 +613,9 @@ static inline int of_property_read_u32(const struct device_node *np,
->  		s;						\
->  		s = of_prop_next_string(prop, s))
+> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+> index ce8e4ff..0b4b1c9 100644
+> --- a/include/linux/platform_device.h
+> +++ b/include/linux/platform_device.h
+> @@ -12,6 +12,7 @@
+>  #define _PLATFORM_DEVICE_H_
 >  
-> +#define of_property_for_each_phandle_with_args(np, list, cells, i, args) \
-> +	for (i = 0; !of_parse_phandle_with_args(np, list, cells, i, args); i++)
+>  #include <linux/device.h>
+> +#include <linux/err.h>
+>  #include <linux/mod_devicetable.h>
+>  
+>  #define PLATFORM_DEVID_NONE	(-1)
+> @@ -241,6 +242,28 @@ extern struct platform_device *platform_create_bundle(
+>  	struct resource *res, unsigned int n_res,
+>  	const void *data, size_t size);
+>  
+> +/*
+> + * module_platform_driver_match_and_probe() - Helper macro for drivers without
+> + * a bus device node and need to match on an arbitrary compatible property.
+> + * This eliminates a lot of boilerplate.  Each module may only use this macro
+> + * once, and calling it replaces module_init() and module_exit()
+> + */
+> +#define module_platform_driver_match_and_probe(__platform_driver, __platform_probe) \
+> +static int __init __platform_driver##_init(void) \
+> +{ \
+> +	if (of_find_matching_node(NULL, (__platform_driver).driver.of_match_table)) \
+> +		return PTR_ERR_OR_ZERO(platform_create_bundle(&(__platform_driver), \
+> +			__platform_probe, NULL, 0, NULL, 0)); \
+> +	else \
+> +		return -ENODEV;	\
+> +} \
+> +module_init(__platform_driver##_init); \
+> +static void __exit __platform_driver##_exit(void) \
+> +{ \
+> +	platform_driver_unregister(&(__platform_driver)); \
+> +} \
+> +module_exit(__platform_driver##_exit);
 > +
-
-That works, but pretty darn inefficient. We need an iterator version of
-of_parse_phandle_with_args() to loop over all the entries.
-
->  #if defined(CONFIG_PROC_FS) && defined(CONFIG_PROC_DEVICETREE)
->  extern void proc_device_tree_add_node(struct device_node *, struct proc_dir_entry *);
->  extern void proc_device_tree_add_prop(struct proc_dir_entry *pde, struct property *prop);
+>  /* early platform driver interface */
+>  struct early_platform_driver {
+>  	const char *class_str;
 > -- 
-> 1.8.1.5
+> 1.8.1.2
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
