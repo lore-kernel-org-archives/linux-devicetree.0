@@ -1,68 +1,77 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH v2] of: unflatten_and_copy: handle NULL initial_boot_params
-Date: Thu, 21 Nov 2013 13:49:51 +0000
-Message-ID: <528E0F7F.7010901@imgtec.com>
-References: <1385041454-32385-1-git-send-email-james.hogan@imgtec.com>
+From: Balaji T K <balajitk@ti.com>
+Subject: [PATCH 1/2] ARM: dts: omap4-panda-common: Fix pin muxing for wl12xx
+Date: Thu, 21 Nov 2013 19:20:03 +0530
+Message-ID: <1385041804-19115-2-git-send-email-balajitk@ti.com>
+References: <1385041804-19115-1-git-send-email-balajitk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1385041454-32385-1-git-send-email-james.hogan@imgtec.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org
-Cc: James Hogan <james.hogan@imgtec.com>, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1385041804-19115-1-git-send-email-balajitk@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: bcousson@baylibre.com, devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, tony@atomide.com, linux-arm-kernel@lists.infradead.org, Balaji T K <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21/11/13 13:44, James Hogan wrote:
-> Check whether initial_boot_params is NULL before dereferencing it in
-> unflatten_and_copy_device_tree() for the case where no device tree is
-> available but the arch can still boot to a minimal usable system without
-> it. In this case also log a warning for when the kernel log buffer is
-> obtainable.
-> 
-> Signed-off-by: James Hogan <james.hogan@imgtec.com>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arch@vger.kernel.org
+pin mux wl12xx_gpio and wl12xx_pins should be part of omap4_pmx_core
+and not omap4_pmx_wkup. So, move wl12xx_* to omap4_pmx_core.
 
-Hmm, sorry, I forgot to add Grant's:
-Acked-by: Grant Likely <grant.likely@linaro.org>
+Fix the following error message:
+pinctrl-single 4a31e040.pinmux: mux offset out of range: 0x38 (0x38)
+pinctrl-single 4a31e040.pinmux: could not add functions for pinmux_wl12xx_pins 56x
 
-(from v1)
+SDIO card is not detected after moving pin mux to omap4_pmx_core since
+sdmmc5_clk pull is disabled. Enable Pull up on sdmmc5_clk to detect SDIO card.
 
-Cheers
-James
+Signed-off-by: Balaji T K <balajitk@ti.com>
+---
+ arch/arm/boot/dts/omap4-panda-common.dtsi |   20 ++++++++++----------
+ 1 files changed, 10 insertions(+), 10 deletions(-)
 
-> ---
-> v2:
->  * Log a warning for those who can obtain the kernel log buffer (Grant
->    Likely).
-> ---
->  drivers/of/fdt.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 2fa024b97c43..758b4f8b30b7 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -922,8 +922,16 @@ void __init unflatten_device_tree(void)
->   */
->  void __init unflatten_and_copy_device_tree(void)
->  {
-> -	int size = __be32_to_cpu(initial_boot_params->totalsize);
-> -	void *dt = early_init_dt_alloc_memory_arch(size,
-> +	int size;
-> +	void *dt;
-> +
-> +	if (!initial_boot_params) {
-> +		pr_warn("No valid device tree found, continuing without\n");
-> +		return;
-> +	}
-> +
-> +	size = __be32_to_cpu(initial_boot_params->totalsize);
-> +	dt = early_init_dt_alloc_memory_arch(size,
->  		__alignof__(struct boot_param_header));
->  
->  	if (dt) {
-> 
+diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+index 298e850..88c6a05 100644
+--- a/arch/arm/boot/dts/omap4-panda-common.dtsi
++++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+@@ -246,15 +246,6 @@
+ 			0xf0 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c4_sda */
+ 		>;
+ 	};
+-};
+-
+-&omap4_pmx_wkup {
+-	led_wkgpio_pins: pinmux_leds_wkpins {
+-		pinctrl-single,pins = <
+-			0x1a (PIN_OUTPUT | MUX_MODE3)	/* gpio_wk7 */
+-			0x1c (PIN_OUTPUT | MUX_MODE3)	/* gpio_wk8 */
+-		>;
+-	};
+ 
+ 	/*
+ 	 * wl12xx GPIO outputs for WLAN_EN, BT_EN, FM_EN, BT_WAKEUP
+@@ -274,7 +265,7 @@
+ 		pinctrl-single,pins = <
+ 			0x38 (PIN_INPUT | MUX_MODE3)		/* gpmc_ncs2.gpio_52 */
+ 			0x3a (PIN_INPUT | MUX_MODE3)		/* gpmc_ncs3.gpio_53 */
+-			0x108 (PIN_OUTPUT | MUX_MODE0)		/* sdmmc5_clk.sdmmc5_clk */
++			0x108 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc5_clk.sdmmc5_clk */
+ 			0x10a (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc5_cmd.sdmmc5_cmd */
+ 			0x10c (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc5_dat0.sdmmc5_dat0 */
+ 			0x10e (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc5_dat1.sdmmc5_dat1 */
+@@ -284,6 +275,15 @@
+ 	};
+ };
+ 
++&omap4_pmx_wkup {
++	led_wkgpio_pins: pinmux_leds_wkpins {
++		pinctrl-single,pins = <
++			0x1a (PIN_OUTPUT | MUX_MODE3)	/* gpio_wk7 */
++			0x1c (PIN_OUTPUT | MUX_MODE3)	/* gpio_wk8 */
++		>;
++	};
++};
++
+ &i2c1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c1_pins>;
+-- 
+1.7.5.4
+
