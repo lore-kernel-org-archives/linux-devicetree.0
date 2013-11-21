@@ -1,70 +1,28 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH] arm64: Add APM X-Gene SoC SATA host controller DTS entries
-Date: Wed, 20 Nov 2013 23:11:38 -0700
-Message-ID: <1385014298-15700-5-git-send-email-lho@apm.com>
-References: <1385014298-15700-1-git-send-email-lho@apm.com>
- <1385014298-15700-2-git-send-email-lho@apm.com>
- <1385014298-15700-3-git-send-email-lho@apm.com>
- <1385014298-15700-4-git-send-email-lho@apm.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1385014298-15700-4-git-send-email-lho@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH V4] kbuild: dtbs_install: new make target
+Date: Thu, 21 Nov 2013 07:48:59 +0000
+Message-ID: <20131121074859.4CF60C4077A@trevor.secretlab.ca>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> < 1384896475-8744-1-git-send-email-jason@lakedaemon.net> <528BDEED.8080708@ wwwdotorg.org> <20131120170845.GJ28859@titan.lakedaemon.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131120170845.GJ28859-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-arm64: Add APM X-Gene SoC SATA host controller DTS entries
+On Wed, 20 Nov 2013 12:08:45 -0500, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> I'm still not in favor of installing to /boot/anything since /boot is
+> often a separate, small partition.  I even set mine not to automount.
+> The number and size of dtbs is only going to grow.  Better to install
+> them in a location with lots of space, and /lib is used to having the
+> kernel modules installed in it.
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Tuan Phan <tphan@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   33 +++++++++++++++++++++++++++++++++
- 1 files changed, 33 insertions(+), 0 deletions(-)
+This is just the kernel default action. It can be overridden with a
+local script or an environment variable. /boot definitely makes more
+sense that /lib.
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 359d7b6..592485c 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -193,5 +193,38 @@
- 			reg = <0x0 0x17000014 0x0 0x100>;
- 			mask = <0x1>;
- 		};
-+
-+		sata0: sata@1a000000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a000000 0x0 0x100000>,
-+			      <0x0 0x1f210000 0x0 0x10000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x86 0x4>;
-+			status = "disabled";
-+			phys = <&sataphy0>;
-+			phy-names = "sataphy1f210000";
-+		};
-+
-+		sata1: sata@1a400000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a400000 0x0 0x100000>,
-+			      <0x0 0x1f220000 0x0 0x10000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x87 0x4>;
-+			status = "ok";
-+			phys = <&sataphy1>;
-+			phy-names = "sataphy1f220000";
-+		};
-+
-+		sata2: sata@1a800000 {
-+			compatible = "apm,xgene-ahci";
-+			reg = <0x0 0x1a800000 0x0 0x100000>,
-+			      <0x0 0x1f230000 0x0 0x10000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x88 0x4>;
-+			status = "ok";
-+			phys = <&sataphy2>;
-+			phy-names = "sataphy1f230000";
-+		};
- 	};
- };
--- 
-1.5.5
-
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
