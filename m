@@ -1,84 +1,191 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH 2/2] of: add initcall with match boilerplate helpers
-Date: Thu, 21 Nov 2013 17:23:14 -0600
-Message-ID: <CAL_JsqKHZtidrzJPH+c-zyFUQNsxtEKxOYg+Nzyo9JYNDNexug@mail.gmail.com>
-References: <1383113571-13029-1-git-send-email-robherring2@gmail.com>
-	<1383113571-13029-3-git-send-email-robherring2@gmail.com>
-	<20131121125007.17A8FC40A2C@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131121125007.17A8FC40A2C@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V5] kbuild: dtbs_install: new make target
+Date: Thu, 21 Nov 2013 17:31:49 -0600
+Message-ID: <653B066B-5B24-4817-86EF-D4D9F129123D@codeaurora.org>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> <1385062552-9882-1-git-send-email-jason@lakedaemon.net>
+Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385062552-9882-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2013 at 6:50 AM, Grant Likely <grant.likely@linaro.org> wrote:
-> On Wed, 30 Oct 2013 01:12:51 -0500, Rob Herring <robherring2@gmail.com> wrote:
->> From: Rob Herring <rob.herring@calxeda.com>
->>
->> Add boilerplate helpers to create initcalls which are conditional on
->> matching on devicetree properties.
->>
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
->> ---
->>  include/linux/of.h | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index f95aee3..a1327c9 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -592,6 +592,18 @@ static inline int of_property_read_u32(const struct device_node *np,
->>               s;                                              \
->>               s = of_prop_next_string(prop, s))
->>
->> +#define of_initcall_match(__func, __lvl, __match) \
->> +static int __init __func##_init(void) \
->> +{ \
->> +     if (of_find_matching_node(NULL, __match)) \
->> +             return __func(); \
->> +     else \
->> +             return -ENODEV; \
->> +} \
->> +__lvl(__func##_init);
->> +
->> +#define of_module_init_match(__func, __match) of_initcall_match(__func, module_init, __match)
->> +
->
-> I'm not sure why this is necessary. I don't particularly have a problem
-> with it, but I wouldn't normally try to filter out device drivers when
-> the probe code simply won't get called.
->
-> Considering it's paired with the previous patch that creates devices in
-> the module init call, I'm assuming it is to support that use case. If so
-> then I don't think it is a good idea. If there is another use case then
-> maybe.
 
-This is for cases that are not drivers. Again, the motivation is how
-do I do initialization on arm64 where there is not already some
-conditional initialization hook. My approach to solve this is by
-eliminating the machine_desc for highbank. While I don't really have a
-need to do this on highbank itself, I do have a need for some of the
-same functions present in mach-highbank for arm64.
+On Nov 21, 2013, at 1:35 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
 
-I realized quickly going down this path that I would have a repeated
-pattern and that there's already a few other examples in the kernel of
-something like this:
+> Unlike other build products in the Linux kernel, there is no 'make
+> *install' mechanism to put devicetree blobs in a standard place.
+>=20
+> This patch is an attempt to fix this problem.  Akin to 'make install'=
+,
+> this creates a new make target, dtbs_install.  The script that gets
+> called defers to a distribution or user supplied installdtbs binary,
+> if found in the system.  Otherwise, the default action is to install =
+a
+> given dtb into
+>=20
+>  /boot/devicetrees/${kernel_version}/${dts_filename}.dtb
+>=20
+> This is done to keep dtbs from different kernel versions separate unt=
+il
+> things have settled down.  Once the dtbs are stable, and not so stron=
+gly
+> linked to the kernel version, the devicetree files will most likely m=
+ove
+> to their own repo.  Users will need to upgrade install scripts at tha=
+t
+> time.
+>=20
+> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> ---
+> changes since v4:
+> - move make target from arch/arm/Makefile to Makefile (swarren)
+> - change default install location to /boot/devicetrees/$KERNVER (swar=
+ren/gcl)
+> - add INSTALL_DTBS_PATH for changing build root (jac)
+>=20
+> changes since v3:
+> - drop renaming files to ${compat}.dtb (rmk/swarren)
+> - move installdtbs.sh to ./scripts/ (gcl)
+>=20
+> changes since v2:
+> - use fdtget instead of a modified dtc to get the board compat string
+>=20
+> changes since v1:
+> - added this patch
+>=20
+> Makefile               | 20 +++++++++++++++++++-
+> scripts/installdtbs.sh | 33 +++++++++++++++++++++++++++++++++
+> 2 files changed, 52 insertions(+), 1 deletion(-)
+> create mode 100644 scripts/installdtbs.sh
+>=20
+> diff --git a/Makefile b/Makefile
+> index 920ad07180c9..bd28cb211411 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -339,6 +339,7 @@ OBJDUMP		=3D $(CROSS_COMPILE)objdump
+> AWK		=3D awk
+> GENKSYMS	=3D scripts/genksyms/genksyms
+> INSTALLKERNEL  :=3D installkernel
+> +INSTALLDTBS    :=3D installdtbs
+> DEPMOD		=3D /sbin/depmod
+> PERL		=3D perl
+> CHECK		=3D sparse
+> @@ -391,7 +392,7 @@ KERNELVERSION =3D $(VERSION)$(if $(PATCHLEVEL),.$=
+(PATCHLEVEL)$(if $(SUBLEVEL),.$(S
+> export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
+> export ARCH SRCARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS L=
+D CC
+> export CPP AR NM STRIP OBJCOPY OBJDUMP
+> -export MAKE AWK GENKSYMS INSTALLKERNEL PERL UTS_MACHINE
+> +export MAKE AWK GENKSYMS INSTALLKERNEL INSTALLDTBS PERL UTS_MACHINE
+> export HOSTCXX HOSTCXXFLAGS LDFLAGS_MODULE CHECK CHECKFLAGS
+>=20
+> export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS LDFLA=
+GS
+> @@ -704,6 +705,15 @@ export KBUILD_IMAGE ?=3D vmlinux
+> export	INSTALL_PATH ?=3D /boot
+>=20
+> #
+> +# INSTALL_DTBS_PATH specifies a prefix for relocations required by b=
+uild roots.
+> +# Like INSTALL_MOD_PATH, it isn't defined in the Makefile, but can b=
+e passed as
+> +# an argument if needed.
+> +#
 
-static int __init some_initcall(void)
-{
-  if (of_machine_is_compatible("my-awesume-board"))
-    return -ENODEV;
+Nit, do we want to match INSTALL_MOD_PATH and drop the =92S=92 for INST=
+ALL_DTB_PATH?
 
-  /* do some init stuff... */
-}
+> +
+> +DTBBOOT =3D $(INSTALL_DTBS_PATH)/boot/devicetrees/$(KERNELRELEASE)
+> +export DTBBOOT
+> +
+> +#
+> # INSTALL_MOD_PATH specifies a prefix to MODLIB for module directory
+> # relocations required by build roots.  This is not defined in the
+> # makefile but the argument can be passed to make if needed.
+> @@ -914,6 +924,14 @@ firmware_install: FORCE
+> 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.fwinst obj=3Dfirmware __f=
+w_install
+>=20
+> # -------------------------------------------------------------------=
+--------
+> +# devicetree install
+> +PHONY +=3D dtbs_install
+> +
+> +dtbs_install:
+> +	$(CONFIG_SHELL) $(srctree)/scripts/installdtbs.sh $(KERNELRELEASE) =
+\
+> +	"$(DTBBOOT)" "$(srctree)"
+> +
+> +# ------------------------------------------------------------------=
+---------
+> # Kernel headers
+>=20
+> #Default location for installed headers
+> diff --git a/scripts/installdtbs.sh b/scripts/installdtbs.sh
+> new file mode 100644
+> index 000000000000..11027f00c3a4
+> --- /dev/null
+> +++ b/scripts/installdtbs.sh
+> @@ -0,0 +1,33 @@
+> +#!/bin/sh
+> +#
+> +# This file is subject to the terms and conditions of the GNU Genera=
+l Public
+> +# License.  See the file "COPYING" in the main directory of this arc=
+hive
+> +# for more details.
+> +#
+> +# Copyright (C) 1995 by Linus Torvalds
+> +#
+> +# Adapted from code in arch/i386/boot/Makefile by H. Peter Anvin
+> +#
+> +# Further adapted from arch/x86/boot/install.sh by Jason Cooper
+> +#
+> +# "make dtbs_install" script
+> +#
+> +# Arguments:
+> +#   $1 - kernel version
+> +#   $2 - default install path (blank if root directory)
+> +#   $3 - directory containing dtbs
+> +#
+> +
+> +# User may have a custom install script
+> +
+> +if [ -x ~/bin/${INSTALLDTBS} ]; then exec ~/bin/${INSTALLDTBS} "$@";=
+ fi
+> +if [ -x /sbin/${INSTALLDTBS} ]; then exec /sbin/${INSTALLDTBS} "$@";=
+ fi
+> +
+> +# Default install
+> +[ -d "$2" ] && rm -rf "$2"
+> +
+> +mkdir -p "$2"
+> +
+> +for dtb in `find "$3" -name "*.dtb"`; do
+> +	cp "$dtb" "$2/${dtb##*/}"
+> +done
+> --=20
+> 1.8.4.4
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-There are some examples using this here [1][2].
+--=20
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
+ed by The Linux Foundation
 
-Rob
-
-[1] https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/commit/?h=highbank-rm-mach-desc&id=2920f2082f51128dc28348756a1727fe0d13b5a8
-[2] https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/commit/?h=highbank-rm-mach-desc&id=1acc8c4d023506e22d0abaad84a74a34c36fecfb
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
