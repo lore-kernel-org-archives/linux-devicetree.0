@@ -1,48 +1,45 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv2] rtc: Add support for Intersil ISL12057 I2C RTC chip
-Date: Thu, 21 Nov 2013 23:00:51 +0100
-Message-ID: <87txf576uk.fsf@natisbad.org>
-References: <87k3g5l9gw.fsf@natisbad.org>
+From: delicious quinoa <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH v7] gpio: add a driver for the Synopsys DesignWare APB
+ GPIO block
+Date: Thu, 21 Nov 2013 16:21:15 -0600
+Message-ID: <CANk1AXSFr+qzSLq-06TGyZkD=RBdQp3qwkvSXCbCtDQcqHqzPg@mail.gmail.com>
+References: <1384984090-6772-1-git-send-email-delicious.quinoa@gmail.com>
+	<528DFC81.2070000@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <87k3g5l9gw.fsf@natisbad.org> (Arnaud Ebalard's message of "Mon,
-	18 Nov 2013 21:51:27 +0100")
+In-Reply-To: <528DFC81.2070000@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Kent Yoder <key@linux.vnet.ibm.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@stericsson.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jamie Iles <jamie@jamieiles.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Thu, Nov 21, 2013 at 6:28 AM, Sebastian Hesselbarth
+<sebastian.hesselbarth@gmail.com> wrote:
+> On 11/20/2013 10:48 PM, Alan Tull wrote:
+>>
+>> From: Jamie Iles <jamie@jamieiles.com>
+>>
+>> The Synopsys DesignWare block is used in some ARM devices (picoxcell)
+>> and can be configured to provide multiple banks of GPIO pins.
+>>
+>> Signed-off-by: Alan Tull <atull@altera.com>
+>
+>
+> Alan,
+>
+> I haven't looked as close as in the last reviews, but I think it is
+> fine to have this version as a start. We can add platform_data and
+> CONFIG_REG parsing later.
+>
+> Thanks for the patience, you can add my
+>
+> Reviewed-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>
 
-Sorry for the delay, but I was somehow removed from the recipients in
-your reply. As I am not subscribed to rtc-linux, can you keep me in Cc:
-next time?
+Thanks Sebastian!
 
-> On Mon, Nov 18, 2013 at 09:51:27PM +0100, Arnaud Ebalard wrote: 
-> 
-> > +/* Block read. Returns 0 on success, or a negative errno. */ 
-> > +static int isl12057_i2c_read_regs(struct i2c_client *client, u8 reg, u8 buf[], 
-> > +                                  unsigned len) 
-> 
-> This looks like the device would work well with regmap (8 bit register, 
-> 8 bit data).  This would save a bit of code here both for the I/O 
-> functions and also for some of the debugging functionality you have 
-> below like the proc file. 
+Now I see one screwup on my part here - I did not mean to include
+socfpga.dtsi changes in this patch.
 
-Well, I am not familiar with regmap but if you can point me some simple
-rtc driver in existing ones which uses regmap, I will take a look and
-come with a regmap-based v3.
-
-> > +        dev_info(dev, "chip found, driver version " DRV_VERSION "\n"); 
-> 
-> This sort of print is generally frowned upon - it's not adding anything 
-> to the message already displayed by the RTC core on registration.  It's 
-> probably best to remove the driver version too, the kernel is already 
-> versioned. 
-
-ok, will do.
-
-Cheers,
-
-a+
+Alan
