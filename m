@@ -1,95 +1,50 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 10/12] mtd: nand: davinci: don't set timings if AEMIF
- is used
-Date: Thu, 21 Nov 2013 22:37:32 +0530
-Message-ID: <528E3DD4.7030607@ti.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
- <1384187188-5776-11-git-send-email-ivan.khoronzhuk@ti.com>
- <4F5844B3A985794BA902E12C070812375F8D53@DNCE04.ent.ti.com>
- <528307F0.6000805@ti.com> <52838941.4060207@ti.com> <5284ABB9.70608@ti.com>
- <5284DFE7.70308@ti.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv6+ 01/13] of: introduce
+ of_property_for_earch_phandle_with_args()
+Date: Thu, 21 Nov 2013 18:17:20 +0100
+Message-ID: <20131121.191720.1487772262083864095.hdoyu@nvidia.com>
+References: <1385041249-7705-1-git-send-email-hdoyu@nvidia.com><1385041249-7705-2-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <5284DFE7.70308@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
- Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Landley <rob@landley.net>, "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385041249-7705-2-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/14/2013 8:06 PM, Santosh Shilimkar wrote:
-> On Thursday 14 November 2013 05:53 AM, Nori, Sekhar wrote:
->> On Wednesday 13 November 2013 07:44 PM, Santosh Shilimkar wrote:
->>> On Wednesday 13 November 2013 12:02 AM, Sekhar Nori wrote:
->>>> On Monday 11 November 2013 10:40 PM, Khoronzhuk, Ivan wrote:
->>>>> If Davinci AEMIF is used we don't need to set timings and bus width.
->>>>> It is done by AEMIF driver (drivers/memory/davinci-aemfi.c).
->>>>>
->>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>>>> ---
->>>>>  drivers/mtd/nand/davinci_nand.c |   22 +++++++++++++++-------
->>>>>  1 file changed, 15 insertions(+), 7 deletions(-)
->>>>>
->>>>> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
->>>>> index 4705214..879e915 100644
->>>>> --- a/drivers/mtd/nand/davinci_nand.c
->>>>> +++ b/drivers/mtd/nand/davinci_nand.c
->>>>> @@ -742,27 +742,35 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
->>>>>                 goto err_clk_enable;
->>>>>         }
->>>>>
->>>>> +#if !IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF)
->>>>
->>>> This is a hack! Just because AEMIF driver is enabled, it does not
->>>> guarantee that the timings have been setup by it. Instead of configuring
->>>> timings in two drivers, why not just convert everyone over to use the
->>>> new driver. Dont worry about breaking old platforms, I will help test
->>>> and ack them.
->>>>
->>> How about you take a stab at and convert the DaVinci code over to make
->>> use of new driver. We are trying to re-use as much as possible from the
->>> common drivers and also making an option so that the DaVinci arch can
->>> move over to these drivers if they want to.
->>
->> Sure I could.
->>
-> Thanks
-> 
->> Ivan,
->>
->> The AEMIF driver does not use platfrom_data currently. Is that something
->> you can add or you want me to take a stab at that as well?
->>
-> The AEMIF new driver is device tree only and thats the direction. So the
-> better thing would be to convert Davinci to DT and then make use of this
-> new driver. Thats how most of the new drivers used on arm socs are
-> moving. Adding platform data to new driver is a step in backward
-> direction so I would want to avoid that.
+Iterating over a property containing a list of phandles with arguments
+is a common operation for device drivers. This patch adds a new
+of_property_for_each_phandle_with_args() macro to make the iteration
+simpler.
 
-Yes, that would be the ideal way. But the reality is that there is close
-to zero chance of all the DaVinci platforms using AEMIF ever getting
-converted to DT. This means that we will never be able to get rid of
-this piece of code.
+Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+v6+:
+Use the description, which Grant Likely proposed, to be full enough
+that a future reader can figure out why a patch was written.
+  http://lists.linuxfoundation.org/pipermail/iommu/2013-November/007062.html
 
-I do agree platform data is not the direction you want to take on ARM
-but at the same time its not really a deprecated mechanism as far as the
-broader kernel is concerned.
+v5:
+New patch for v5.
+---
+ include/linux/of.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-So, can we consider adding platform data mechanism to the AEMIF driver?
-
-Thanks,
-Sekhar
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 276c546..131fef5 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -613,6 +613,9 @@ static inline int of_property_read_u32(const struct device_node *np,
+ 		s;						\
+ 		s = of_prop_next_string(prop, s))
+ 
++#define of_property_for_each_phandle_with_args(np, list, cells, i, args) \
++	for (i = 0; !of_parse_phandle_with_args(np, list, cells, i, args); i++)
++
+ #if defined(CONFIG_PROC_FS) && defined(CONFIG_PROC_DEVICETREE)
+ extern void proc_device_tree_add_node(struct device_node *, struct proc_dir_entry *);
+ extern void proc_device_tree_add_prop(struct proc_dir_entry *pde, struct property *prop);
+-- 
+1.8.1.5
