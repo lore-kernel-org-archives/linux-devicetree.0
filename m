@@ -1,39 +1,39 @@
-From: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Thu, 21 Nov 2013 17:01:22 +0000
-Message-ID: <20131121170122.GB22960@srcf.ucam.org>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
- <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
- <20131115175241.GB27174@quad.lixom.net>
- <20131119113015.GH5914@e106331-lin.cambridge.arm.com>
- <20131121162944.F087FC406A3@trevor.secretlab.ca>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCH v3 6/8] ARM: dts: add pbias-supply
+Date: Thu, 21 Nov 2013 09:03:51 -0800
+Message-ID: <20131121170351.GN10317@atomide.com>
+References: <20130613174554.GB1403@sirena.org.uk>
+ <1385043627-30439-1-git-send-email-balajitk@ti.com>
+ <1385043627-30439-7-git-send-email-balajitk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131121162944.F087FC406A3-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1385043627-30439-7-git-send-email-balajitk@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>
+Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2013 at 04:29:44PM +0000, Grant Likely wrote:
+* Balaji T K <balajitk@ti.com> [131121 06:21]:
+> Add pbias-supply to mmc1/sd card.
+...
 
-> Personally, I think the issue of ACPI support should be taken on a
-> patch-by-patch basis. A lot of the things that need to be done are quite
-> discrete and fairly well contained. If the patches don't look that way
-> then push back on them. For the parts that look ready, go ahead and
-> merge it. Push back on the ones that don't.
+> --- a/arch/arm/boot/dts/dra7-evm.dts
+> +++ b/arch/arm/boot/dts/dra7-evm.dts
+> @@ -261,6 +261,7 @@
+>  &mmc1 {
+>  	status = "okay";
+>  	vmmc-supply = <&ldo1_reg>;
+> +	pbias-supply = <&pbias_regulator>;
+>  	bus-width = <4>;
+>  };
 
-I think the most valuable thing in ACPI is the static data tables. 
-Things like BERT, EINJ, HEST, MPST and the various other bits of RAS 
-functionality have value in the ARM world, and being able to share the 
-implementation is a benefit. But that can be implemented without 
-worrying about using ACPI for device discovery or interfacing.
+You may not need to patch this in at all. I think the PBIAS is there
+only for the first slot and it's hardwired so it's always there. If
+that's the case, then you can just always request it. Or use the
+compatible flag if needed.
 
--- 
-Matthew Garrett | mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Tony
