@@ -1,28 +1,112 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Thu, 21 Nov 2013 19:01:26 +0000
-Message-ID: <20131121190126.GZ16735@n2100.arm.linux.org.uk>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com> <20131115095717.GC1709@e106331-lin.cambridge.arm.com> <20131115175241.GB27174@quad.lixom.net> <20131119113015.GH5914@e106331-lin.cambridge.arm.com> <20131121162944.F087FC406A3@trevor.secretlab.ca> <20131121175822.GA9590@quad.lixom.net> <20131121185408.GX16735@n2100.arm.linux.org.uk> <CAOesGMgzUSMDy99XojipfRd5OM88UhfbCYO0aoc5m-Q8Fwnddg@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv5 2/9] driver/core: populate devices in order for IOMMUs
+Date: Thu, 21 Nov 2013 12:04:18 -0700
+Message-ID: <528E5932.1070105@wwwdotorg.org>
+References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com> <
+	1384853593-32202-3-git-send-email-hdoyu@nvidia.com>
+	<20131121131558.E5B82C40A2C@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMgzUSMDy99XojipfRd5OM88UhfbCYO0aoc5m-Q8Fwnddg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131121131558.E5B82C40A2C-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2013 at 10:59:41AM -0800, Olof Johansson wrote:
-> On Thu, Nov 21, 2013 at 10:54 AM, Russell King - ARM Linux
-> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> > This depends what you want from ACPI, and what market ACPI is being
-> > targetted at.
+On 11/21/2013 06:15 AM, Grant Likely wrote:
+> On Tue, 19 Nov 2013 11:33:06 +0200, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> IOMMU devices on the bus need to be poplulated first, then iommu
+>> master devices are done later.
+>>
+>> With CONFIG_OF_IOMMU, "iommus=" DT binding would be used to identify
+>> whether a device can be an iommu msater or not. If a device can, we'll
+>> defer to populate that device till an iommu device is populated. Once
+>> an iommu device is populated, "dev->bus->iommu_ops" is set in the
+>> bus. Then, those defered iommu master devices are populated and
+>> configured for IOMMU with help of the already populated iommu device
+>> via iommu_ops->add_device(). Multiple IOMMUs can be listed on this
+>> "iommus" binding so that a device can have multiple IOMMUs attached.
+>>
+>> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> v5:
+>> Use "iommus=" binding instread of arm,smmu's "#stream-id-cells".
+>>
+>> v4:
+>> This is newly added, and the successor of the following RFC:
+>>   [RFC][PATCHv3+ 1/2] driver/core: Add of_iommu_attach()
+>>   http://lists.linuxfoundation.org/pipermail/iommu/2013-November/006914.html
+>> ---
+>>  drivers/base/dd.c        |  5 +++++
+>>  drivers/iommu/of_iommu.c | 22 ++++++++++++++++++++++
+>>  include/linux/of_iommu.h |  7 +++++++
+>>  3 files changed, 34 insertions(+)
+>>
+>> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+>> index 35fa368..6e892d4 100644
+>> --- a/drivers/base/dd.c
+>> +++ b/drivers/base/dd.c
+>> @@ -25,6 +25,7 @@
+>>  #include <linux/async.h>
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/pinctrl/devinfo.h>
+>> +#include <linux/of_iommu.h>
+>>  
+>>  #include "base.h"
+>>  #include "power/power.h"
+>> @@ -273,6 +274,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+>>  
+>>  	dev->driver = drv;
+>>  
+>> +	ret = of_iommu_attach(dev);
+>> +	if (ret)
+>> +		goto probe_failed;
+>> +
+>>  	/* If using pinctrl, bind pins now before probing */
+>>  	ret = pinctrl_bind_pins(dev);
+>>  	if (ret)
 > 
-> We're talking ACPI on servers here.
+> I'm very concerned about this approach. Hooking into the core probe
+> path for things like this is not going to scale well. I'm not thrilled
+> with the pinctrl hook being here either, but that is already merged. :-(
+> Also, hooking in here is going affect every single device device driver
+> probe path, and a large number of them are never, ever, going to have
+> iommu interactions.
+> 
+> There needs to be a less invasive way of doing what you want. I still
+> feel like the individual device drivers themselves need to be aware that
+> they might be hooking through an IOMMU. Or, if they are hooking through
+> a bus like PCIe, then have the PCIe bus defer creating child devices
+> until the IOMMU is configured and in place.
 
-Now read the rest of my email, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I general though, couldn't any MMIO on-SoC device potentially be
+affected by an IOMMU? The point of putting the call to of_iommu_attach()
+here rather than inside individual driver's probe() is to avoid
+requiring "every" driver having to paste more boiler-plate into probe().
+
+Perhaps what we need is a flag in struct device to indicate that the
+driver/device is MMIO, and hence potentially affected by an IOMMU. would
+the following work better for you?
+
++	if (drv->is_mmio) { // let's bikeshed on the field name:-)
++		ret = of_iommu_attach(dev);
++		if (ret)
++			goto probe_failed;
++	}
+
+I've often thought that struct device_driver (or similar) should declare
+the set of resources that a device needs (e.g. a list of GPIO names,
+regulator names, etc.), so that the driver core can parse all these
+standard properties from DT/... before calling the custom probe()
+function for all the non-standard stuff. This "is_mmio" flag would fit
+into that model well.
