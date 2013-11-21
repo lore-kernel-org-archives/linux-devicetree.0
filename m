@@ -1,44 +1,103 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 5/9] ARM: at91/dt: add mmc0 slot0 support to at91rm9200ek board
-Date: Thu, 21 Nov 2013 10:48:37 +0100
-Message-ID: <CACRpkdboBg4YOnMNiar0DDBVnoky=zNky+Pzyp1=P_POtH15qQ@mail.gmail.com>
-References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
-	<1377687995-10758-1-git-send-email-b.brezillon@overkiz.com>
-	<20131120145926.GE14627@ns203013.ovh.net>
-	<528CDFFB.1020601@overkiz.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 1/5] mfd: max14577: Add max14577 MFD driver core
+Date: Thu, 21 Nov 2013 11:31:49 +0100
+Message-ID: <1385029909.26695.5.camel@AMDC1943>
+References: <1384956732-19526-1-git-send-email-k.kozlowski@samsung.com>
+ <1384956732-19526-2-git-send-email-k.kozlowski@samsung.com>
+ <20131120153103.GG2674@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <528CDFFB.1020601@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: boris brezillon <b.brezillon@overkiz.com>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Joachim Eastwood <manabian@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <20131120153103.GG2674@sirena.org.uk>
+References: <1384956732-19526-1-git-send-email-k.kozlowski@samsung.com>
+ <1384956732-19526-2-git-send-email-k.kozlowski@samsung.com>
+ <20131120153103.GG2674@sirena.org.uk>
+In-reply-to: <20131120153103.GG2674@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2013 at 5:14 PM, boris brezillon
-<b.brezillon@overkiz.com> wrote:
-> On 20/11/2013 15:59, Jean-Christophe PLAGNIOL-VILLARD wrote:
->> On 13:06 Wed 28 Aug     , Boris BREZILLON wrote:
+On Wed, 2013-11-20 at 15:31 +0000, Mark Brown wrote:
+> On Wed, Nov 20, 2013 at 03:12:08PM +0100, Krzysztof Kozlowski wrote:
+> 
+> > +static irqreturn_t max14577_irq_thread(int irq, void *data)
+> > +{
+> > +	struct max14577 *max14577 = data;
+> > +	u8 irq_reg[MAX14577_IRQ_REGS_NUM] = {0};
+> > +	u8 tmp_irq_reg[MAX14577_IRQ_REGS_NUM] = {};
+> > +	int i, cur_irq;
+> > +
+> > +	max14577_bulk_read(max14577->regmap, MAX14577_REG_INT1,
+> > +			&tmp_irq_reg[MAX14577_IRQ_INT1],
+> > +			MAX14577_IRQ_REGS_NUM);
+> 
+> All this interrupt handling looks like a straight copy of the regmap
+> code?
 
->>> mmc0_slot0_switch-0 {
->>> +                                               atmel,pins =
->>> +                                                       <AT91_PIOB 22
->>> AT91_PERIPH_GPIO (AT91_PINCTRL_OUTPUT | AT91_PINCTRL_OUTPUT_VAL(1))>;
->>> +                                       };
->>
->> nack this is a regulator the pinctrl API is not done for gpio default
->> value
->
-> I know this can be represented as a regulator, but looking at the datasheet,
-> this looks more like a switch than a regulator.
+You are right, I will convert it to regmap_irq_chip.
 
-No matter whether it's a switch or a GPIO regulator it seems we
-are in violent agreement that it should not be controlled by the
-pin control states at least.
+> > +int max14577_irq_resume(struct max14577 *max14577)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	if (max14577->irq && max14577->irq_domain)
+> > +		ret = max14577_irq_thread(0, max14577);
+> 
+> Are you sure that this is not going to race nastily if the interrupt
+> goes off during resume?
 
-Start with making it a GPIO then you can figure out whether
-a GPIO regulator or drivers/extcon/extcon-gpio.c should be
-used.
+I believe this code came from max77693. At least it looks very similar.
+Also it seems it was a fast workaround for interrupt occurring during
+device resume (before I2C bus resume). Handling this interrupt failed
+and interrupt registers were not cleared.
 
-Yours,
-Linus Walleij
+This code is not needed now, especially after using regmap IRQ handling.
+
+> 
+> > +
+> > +	return ret >= 0 ? 0 : ret;
+> 
+> This check isn't a triumph of legibility.  
+
+OK.
+
+> 
+> > +	if (IS_ERR_OR_NULL(pdata)) {
+> > +		dev_err(&i2c->dev, "No platform data found: %ld\n",
+> > +				PTR_ERR(pdata));
+> > +		return -EINVAL;
+> > +	}
+> 
+> Why IS_ERR_OR_NULL().
+
+Right, it should be just check for null.
+
+> 
+> > +#else
+> > +#define max14577_suspend	NULL
+> > +#define max14577_resume		NULL
+> > +#endif /* CONFIG_PM */
+> 
+> You don't need these since you use SIMPLE_DEV_PM_OPS().
+
+OK.
+
+> 
+> > +#else
+> > +#define max14577_dt_match	NULL
+> > +#endif
+> 
+> Similarly here.
+
+OK.
+
+Thanks for comments.
+
+Best regards,
+Krzysztof
+
+
+
+
