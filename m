@@ -1,36 +1,45 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Device Tree Maturity Project
-Date: Thu, 21 Nov 2013 17:22:49 +0000
-Message-ID: <1385054569.3333.48.camel@hornet>
-References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail.com>
-	 <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 1/2] ARM: dts: omap4-panda-common: Fix pin muxing for
+ wl12xx
+Date: Thu, 21 Nov 2013 11:27:49 -0600
+Message-ID: <528E4295.2040109@ti.com>
+References: <1385041804-19115-1-git-send-email-balajitk@ti.com> <1385041804-19115-2-git-send-email-balajitk@ti.com> <20131121165823.GM10317@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131121165823.GM10317@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Balaji T K <balajitk@ti.com>
+Cc: bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-11-20 at 11:56 +0000, Grant Likely wrote:
-> On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
-> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > To help keep track of what is going on, I would like to have a shor=
-t
-> > stand up meeting once a week. Looking at my calendar, I can make
-> > 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
->=20
-> Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
+On 11/21/2013 10:58 AM, Tony Lindgren wrote:
+> * Balaji T K <balajitk@ti.com> [131121 05:51]:
+>> pin mux wl12xx_gpio and wl12xx_pins should be part of omap4_pmx_core
+>> and not omap4_pmx_wkup. So, move wl12xx_* to omap4_pmx_core.
+>>
+>> Fix the following error message:
+>> pinctrl-single 4a31e040.pinmux: mux offset out of range: 0x38 (0x38)
+>> pinctrl-single 4a31e040.pinmux: could not add functions for pinmux_wl12xx_pins 56x
 
-All fine for me.
+Why is the led pins moved then?
 
-Pawe=C5=82
+>> SDIO card is not detected after moving pin mux to omap4_pmx_core since
+>> sdmmc5_clk pull is disabled. Enable Pull up on sdmmc5_clk to detect SDIO card.
+> Cool, does this fix the issue with the WLAN not coming up after a warm reset
+> on panda?
+>
+> Regards,
+>
+> Tony
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+------------------
+Dan Murphy
+
