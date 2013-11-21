@@ -1,55 +1,76 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv5 4/9] iommu/tegra: smmu: register device to iommu dynamically
-Date: Thu, 21 Nov 2013 13:23:22 +0000
-Message-ID: <20131121132322.EFDD1C40A2C@trevor.secretlab.ca>
-References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com> < 1384853593-32202-5-git-send-email-hdoyu@nvidia.com> <528BDAAA.4000203@ wwwdotorg.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <528BDAAA.4000203-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH] of: unflatten_and_copy: handle NULL initial_boot_params
+Date: Thu, 21 Nov 2013 13:33:46 +0000
+Message-ID: <528E0BBA.6050002@imgtec.com>
+References: <1384865892-28659-1-git-send-email-james.hogan@imgtec.com> <20131121123927.34EAEC40A2C@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20131121123927.34EAEC40A2C@trevor.secretlab.ca>
+Sender: linux-arch-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Nov 2013 14:39:54 -0700, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 11/19/2013 02:33 AM, Hiroshi Doyu wrote:
-> > platform_devices are registered as IOMMU'able dynamically via
-> > add_device() and remove_device().
-> > 
-> > Tegra SMMU can have multiple address spaces(AS). IOMMU'able devices
-> > can belong to one of them. Multiple IOVA maps are created at boot-up,
-> > which can be attached to devices later. We reserve 2 of them for
-> > static assignment, AS[0] for system default, AS[1] for AHB clusters as
-> > protected domain from others, where there are many traditional
-> > pheripheral devices like USB, SD/MMC. They should be isolated from
-> > some smart devices like host1x for system robustness. Even if smart
-> > devices behaves wrongly, the traditional devices(SD/MMC, USB) wouldn't
-> > be affected, and the system could continue most likely. DMA API(ARM)
-> > needs ARM_DMA_USE_IOMMU to be enabled.
+On 21/11/13 12:39, Grant Likely wrote:
+> On Tue, 19 Nov 2013 12:58:12 +0000, James Hogan <james.hogan@imgtec.com> wrote:
+>> Check whether initial_boot_params is NULL before dereferencing it in
+>> unflatten_and_copy_device_tree() for the case where no device tree is
+>> available but the arch can still boot to a minimal usable system without
+>> it.
+>>
+>> Signed-off-by: James Hogan <james.hogan@imgtec.com>
+>> Cc: Grant Likely <grant.likely@linaro.org>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-arch@vger.kernel.org
+>> ---
+>>  drivers/of/fdt.c | 10 ++++++++--
+>>  1 file changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index 2fa024b97c43..ac4983955e6d 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -922,8 +922,14 @@ void __init unflatten_device_tree(void)
+>>   */
+>>  void __init unflatten_and_copy_device_tree(void)
+>>  {
+>> -	int size = __be32_to_cpu(initial_boot_params->totalsize);
+>> -	void *dt = early_init_dt_alloc_memory_arch(size,
+>> +	int size;
+>> +	void *dt;
+>> +
+>> +	if (!initial_boot_params)
+>> +		return;
 > 
-> > diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-> 
-> > +static int smmu_iommu_add_device(struct device *dev)
-> > +{
-> > +	int err = -EPROBE_DEFER;
-> > +	u32 swgroups = dev->platform_data;
-> > +	struct dma_iommu_mapping *map = NULL;
-> > +
-> > +	if (test_bit(TEGRA_SWGROUP_PPCS, swgroups))
-> > +		map = smmu_handle->map[SYSTEM_PROTECTED];
-> > +	else
-> > +		map = smmu_handle->map[SYSTEM_DEFAULT];
-> > +
-> > +	if (map)
-> > +		err = arm_iommu_attach_device(dev, map);
-> > +	else
-> > +		return -EPROBE_DEFER;
-> 
-> Given that patch 2 exists, if this test fails, then surely the
-> appropriate error code is some fatal error, not -EPROBE_DEFER; any
-> deferrals should have happened long before this point.
+> Worth logging a message for those who can obtain the kernel log
+> buffer?
 
-Will need to be revisited. Patching into the core really_probe() like
-patch #2 does is a really bad approach which would mean that returning
-EPROBE_DEFER is appropriate here.
+Yes, sounds reasonable (especially since for Meta the platform name detected from DT doesn't get logged in this case and I still get the console out via JTAG probe).
+I'll post a v2 adding this:
 
-g.
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index ac4983955e6d..758b4f8b30b7 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -925,8 +925,10 @@ void __init unflatten_and_copy_device_tree(void)
+ 	int size;
+ 	void *dt;
+ 
+-	if (!initial_boot_params)
++	if (!initial_boot_params) {
++		pr_warn("No valid device tree found, continuing without\n");
+ 		return;
++	}
+ 
+ 	size = __be32_to_cpu(initial_boot_params->totalsize);
+ 	dt = early_init_dt_alloc_memory_arch(size,
+
+> Otherwise:
+> 
+> Acked-by: Grant Likely <grant.likely@linaro.org>
+
+Thanks
+James
