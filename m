@@ -1,65 +1,49 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: [PATCH v6 6/6] ARM: davinci: da850 evm: add GPIO pinumux entries DT node
-Date: Thu, 21 Nov 2013 23:45:31 +0530
-Message-ID: <1385057731-4348-7-git-send-email-prabhakar.csengg@gmail.com>
-References: <1385057731-4348-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1385057731-4348-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Thu, 21 Nov 2013 18:16:08 +0000
+Message-ID: <20131121181608.1DDDCC406A3@trevor.secretlab.ca>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail. com> <20131115095717.GC1709@e106331-lin.cambridge.arm.com> <5289A356. 4060004@jonmasters.org> <20131118150052.GC24408@sirena.org.uk> < 20131118191336.GB5886@quad.lixom.net> <20131119091216.GA4412@netboy> < 20131119184827.GD20967@quad.lixom.net> <20131120064056.GB5272@netboy>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131120064056.GB5272@netboy>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: KV Sujith <sujithkv@ti.com>
+On Wed, 20 Nov 2013 07:40:57 +0100, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Nov 19, 2013 at 10:48:27AM -0800, Olof Johansson wrote:
+> > 
+> > This is just a tangent and a distraction anyway: You should know by
+> > now that we've decided to keep backwards compatibility going forward,
+> > so any argument about why we did it differently before is leading nowhere.
+> 
+> Yes, I know it is tangent, but the tone in which you address people
+> (like Jon Masters) who complain about DT quality is really not fair.
+> 
+> When DT for arm was first proposed, I argued against it in vain.
+> Since then, I have really, truly tried my best to keep on top of the
+> DT discussions on the arm list, because everyone working on the arm
+> platform will have to know DT intimately, whether they want to or not.
+> 
+> Now, I never saw any proclamation or discussion about "DT is in flux"
+> on the arm list. If I had, I surely would have complained, and loudly.
+> AFAICT, this decision was made in rather private circles, but you talk
+> as if this was abundantly clear. *It was not.*
+> 
+> Or if it was announced in some way, just show me where. Otherwise,
+> please stop the "we were upfront about this from day one" excuses.
 
-Add GPIO DT node and pinmux entries for DA850 EVM. GPIO is
-configurable differently on different boards. So add GPIO
-pinmuxing in dts file.
+No, I cannot point at any one place where it was stated outright. My
+memory is not that good. There were lots of times the stability of DT
+bindings was discussed, and I certainly have told people on the mailing
+list to keep their dtb updated while we are figuring out things like
+clock bindings and adding functionality. I'm sorry that it wasn't more
+clear. As has already been said in this thread, when the DT migration
+started, we didn't know how it should all look and work. It took time to
+figure out what was sane and what was not.
 
-Signed-off-by: KV Sujith <sujithkv@ti.com>
-Signed-off-by: Philip Avinash <avinashphilip@ti.com>
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
----
- arch/arm/boot/dts/da850-evm.dts |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 588ce58..f82c129 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -17,6 +17,21 @@
- 	soc {
- 		pmx_core: pinmux@1c14120 {
- 			status = "okay";
-+
-+			gpio_pins: pinmux_gpio_pins {
-+				pinctrl-single,bits = <
-+					/* GPIO2_4 GPIO2_6 */
-+					0x18 0x00008080 0x0000f0f0
-+					/* GPIO2_8 GPIO2_15 */
-+					0x14 0x80000008 0xf000000f
-+					/* GPIO3_12 GPIO3_13 */
-+					0x1C 0x00008800 0x0000ff00
-+					/* GPIO4_0 GPIO4_1 */
-+					0x28 0x88000000 0xff000000
-+					/* GPIO6_9 GPIO6_10 GPIO6_13 */
-+					0x34 0x08800800 0x0ff00f00
-+				>;
-+			};
- 		};
- 		serial0: serial@1c42000 {
- 			status = "okay";
-@@ -101,6 +116,11 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&mii_pins>;
- 		};
-+		gpio: gpio@1e26000 {
-+			status = "okay";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&gpio_pins>;
-+		};
- 	};
- 	nand_cs3@62000000 {
- 		status = "okay";
--- 
-1.7.9.5
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
