@@ -1,71 +1,73 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v10 0/7] ARM: support for Trusted Foundations secure monitor
-Date: Thu, 21 Nov 2013 10:51:09 -0800
-Message-ID: <CAOesGMgB_FUDkD9=wgZgreaspEyKoSqpkpGZtzuUjb=G6m_nEg@mail.gmail.com>
-References: <1383819106-1400-1-git-send-email-acourbot@nvidia.com>
-	<52828EF5.6090909@wwwdotorg.org>
-	<CAOesGMhatp9ZQr=eTCtQ_9a_E9LXKdTCzJd+P7Sy9Ut9wtvnsA@mail.gmail.com>
-	<5282E068.1070608@nvidia.com>
-	<CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw@mail.gmail.com>
-	<528E5596.7090606@wwwdotorg.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Thu, 21 Nov 2013 18:53:18 +0000
+Message-ID: <20131121185318.GG8120@sirena.org.uk>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+ <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
+ <20131115175241.GB27174@quad.lixom.net>
+ <20131119113015.GH5914@e106331-lin.cambridge.arm.com>
+ <20131121162944.F087FC406A3@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <528E5596.7090606@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Alex Courbot <acourbot@nvidia.com>, Russell King <linux@arm.linux.org.uk>, Tomasz Figa <t.figa@samsung.com>, Dave Martin <Dave.Martin@arm.com>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jt0yj30bxbg11sci"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131121162944.F087FC406A3-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2013 at 10:48 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> (Russell, a question for you at the bottom)
->
-> On 11/13/2013 10:57 AM, Olof Johansson wrote:
->> On Tue, Nov 12, 2013 at 6:14 PM, Alex Courbot <acourbot@nvidia.com> wrote:
->>> On 11/13/2013 05:38 AM, Olof Johansson wrote:
-> ...
->>>> I pinged Russell, and he brought up the fact that there were earlier
->>>> requests to move it to drivers/firmware. It would make sense to try to
->>>> get that done before merging, especially if you anticipate someone
->>>> using TF on 64-bit platforms.
->>>
->>> IIRC when we discussed this point your last comment was as follows:
->>
->> Touche. :) Thanks for the reminder.
->>
->>> On Tue, Oct 29, 2013 at 6:55 AM, Olof Johansson <olof@lixom.net> wrote:
->>>> I think we can probably merge this under arch/arm now, and when we
->>>> figure out what needs to be common with ARM64 we can move it out to a
->>>> good location. It might be that mostly just a header file with ABI
->>>> conventions needs to be shared, not actual implementation, for
->>>> example.
->>>
->>> So I thought we agreed on that. If in the end we prefer to move the ARM
->>> firmware interface into drivers/firmware, I'm fine with that too (Tomasz
->>> also confirmed he would be ok with it) but I wonder if that would not be
->>> somehow premature.
-> ...
->> Well, as I already said I'm ok with things going into arch/arm to
->> start with, as long as Russell is.
-> ...
->
-> Russell, the patch Alex sent to move firmware_ops into drivers/firmware
-> was rejected, so I don't think we can update this series to move the
-> code there instead.
->
-> So, are you OK with merging this series as-is, in arch/arm/firmware? If
-> you could ack the patch/series to indicate that, it would be awesome.
 
-Sorry, this was stuck on my to-read-and-reply list.
+--jt0yj30bxbg11sci
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I think merging for arch/arm is what makes sense here, even if we end
-up at some point in the future moving it out. Only time will tell if
-that makes sense or not, and it's not going to be a big deal to handle
-at that time.
+On Thu, Nov 21, 2013 at 04:29:44PM +0000, Grant Likely wrote:
 
-An ack from Russell would be appreciated, or we'd need to set up a
-shared branch given the Tegra dependencies that would go on top.
-Either is ok with me.
+> We are pushing a lot of boundaries and doing things on ACPI that have
+> never been done before. SPI, GPIOs, Clocks, Regulators, composite
+> devices, key-value properties. All brand new territory, and the Linux
+> world is driving a lot of it.
 
+Indeed, and at a subsystem and platform independent driver level we do
+have the x86 embedded platforms working with ACPI right now so Linux is
+going to need to cope with some of this regardless of what people end up
+doing for ARM servers - Intel are sending me patches for ACPI support in
+ASoC for example.
 
--Olof
+> Personally, I think the issue of ACPI support should be taken on a
+> patch-by-patch basis. A lot of the things that need to be done are quite
+> discrete and fairly well contained. If the patches don't look that way
+> then push back on them. For the parts that look ready, go ahead and
+> merge it. Push back on the ones that don't.
+
++1.
+
+--jt0yj30bxbg11sci
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSjlabAAoJELSic+t+oim9y98P/3ULYqBPIn1nM+h3jXBpQ8yE
++qX7Sawi4P3/55PcKrIDMsyCm2oK0r6emr0cqZnLg8cdmov7i2lZOR9dfho4GJ6q
+P8BLqOmbllvGu/+cteeQuHGDyeNrKFv+Lct+KOihZBeVLl7AnWI6UYDvP6OQ0tJk
+lsKbCds+0pOdpcjMJbjgBSrYCOsAJ1Udagkqk2QGB+eDr101ApeabS9gCUCrEqw5
+nrH4VTJ0l/ueQnF7fA0vbVP3hyFN0keyvGAhPsirj1pnx1WzkqAU4py5EcjIlau3
+/UWKYVIQDYl/+y3/dOGhA99i4yA80hT/Y3dKYrRDRjcINZSwTynbptDdpEBfK6Nq
+1XIT85RiKjFzSTBHyOUWnr5R5cOMLwklIgjvnGNrZiXe3jpUFnOnY1QbQC8F3JSv
+lBDkKXrGn2DaWoMqzyP+i/X4Yq96Hiql+frK/ZrzCaaMogpiCd4+N6rocy1f6NXn
+hVfYTuQl0BkJqoUcnQrnKl9RTIWFEmQr/vxWHPzgR20SNJIiOrtP+p5vmOehi2R9
+evpl6oG5g/hSlXtcvTMEGtPt6ZIIvow4UxwCQO2t0jeAkJCw/Z/6rUVsstrxA+nT
+YZbskcs7nZhF3D5NHLlfwH9Xh80LTYtV72yGHVeG/NL8/17UkhO+bCwCboYsR3yJ
+k0xzGGuDuh1FsQagXqXL
+=BHWR
+-----END PGP SIGNATURE-----
+
+--jt0yj30bxbg11sci--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
