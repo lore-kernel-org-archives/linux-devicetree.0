@@ -1,122 +1,75 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/5] mfd: max14577: Add max14577 MFD driver core
-Date: Thu, 21 Nov 2013 12:20:11 +0000
-Message-ID: <20131121122011.GD23067@lee--X1>
-References: <1384956732-19526-1-git-send-email-k.kozlowski@samsung.com>
- <1384956732-19526-2-git-send-email-k.kozlowski@samsung.com>
- <20131121103408.GA22536@lee--X1>
- <1385034199.748.21.camel@AMDC1943>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385034199.748.21.camel@AMDC1943>
-Sender: linux-doc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/9] dt: Handle passed/built-in DT selection in early_init_dt_scan()
+Date: Thu, 21 Nov 2013 12:21:48 +0000
+Message-ID: <20131121122148.1B43DC40A2C@trevor.secretlab.ca>
+References: <5283A000.8090007@gmail.com> < 1384859554-27268-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1384859554-27268-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree@vger.kernel.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-> Thanks for pointing these out however after using regmap_irq_chip who=
-le
-> file won't be needed anymore.
+On Tue, 19 Nov 2013 12:12:26 +0100, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> Let early_init_dt_scan() fall-back to the built-in DT if no DT was passed,
+> or if it's invalid, so architectures don't have to duplicate this logic.
+> 
+> Suggested-by: Rob Herring <rob.herring@calxeda.com>
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> ---
+>  drivers/of/fdt.c       |   24 +++++++++++++++++-------
+>  include/linux/of_fdt.h |    1 +
+>  2 files changed, 18 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 2fa024b97c43..a797cd43bc8b 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -868,18 +868,28 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
+>  
+>  bool __init early_init_dt_scan(void *params)
+>  {
+> -	if (!params)
+> -		return false;
+> -
+>  	/* Setup flat device-tree pointer */
+>  	initial_boot_params = params;
+>  
+> -	/* check device tree validity */
+> -	if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
+> -		initial_boot_params = NULL;
+> -		return false;
+> +	/* check passed device tree validity */
+> +	if (initial_boot_params &&
+> +	    be32_to_cpu(initial_boot_params->magic) == OF_DT_HEADER) {
+> +		pr_info("FDT at %p\n", initial_boot_params);
+> +		goto found;
+> +	}
+> +
+> +	/* check built-in device tree validity */
+> +	initial_boot_params = &__dtb_start;
+> +	if (__dtb_end != (void *)&__dtb_start &&
+> +	    be32_to_cpu(initial_boot_params->magic) == OF_DT_HEADER) {
+> +		pr_info("Compiled-in FDT at %p\n", initial_boot_params);
+> +		goto found;
 
-That's fine.
+__dtb_start is in an init section which is discarded after initcalls.
+For this to work, the dtb needs to be copied into a region of allocated
+memory. The dtb section can also potentially contain multiple .dtb
+blobs. In the use case that you care about you are probably only
+thinking about one, but it is entirely possible for device drivers to
+have a dtb linked in which may break this if it gets linked in a
+different order. The specific example I'm thinking about is I want to
+have the DT selftest code load an overlay to get testcase data from a
+dtb blob.
 
-> > > +static int max14577_i2c_probe(struct i2c_client *i2c,
-> > > +			      const struct i2c_device_id *id)
-> > > +{
-> > > +	struct max14577 *max14577;
-> > > +	struct max14577_platform_data *pdata =3D dev_get_platdata(&i2c-=
->dev);
-> > > +	u8 reg_data;
-> > > +	int ret =3D 0;
-> > > +
-> > > +	if (i2c->dev.of_node) {
-> >=20
-> > Can you pull this out. It looks neater as the top as:
-> >   struct device_node *np =3D i2c->dev.of_node;
->=20
-> I am not sure if I understand you correctly. You would like to change
-> this to:
-> -------------------------
-> static int max14577_i2c_probe(struct i2c_client *i2c,
->                               const struct i2c_device_id *id)
-> {
->         struct max14577 *max14577;
->         struct max14577_platform_data *pdata =3D
-> dev_get_platdata(&i2c->dev);
->         struct device_node *np =3D i2c->dev.of_node;
->         u8 reg_data;
->         int ret =3D 0;
->=20
->         if (np) {
->                 pdata =3D devm_kzalloc(&i2c->dev,
->                                 sizeof(struct max14577_platform_data)=
-,
->                                 GFP_KERNEL);
-> -------------------------
-> The variable 'np' would be used only once.
+The other concern I have here is that I don't really want this to be the
+default on a lot of platforms. ARM and PowerPC for instance should only
+get the default dtb from the boot wrapper. It needs to be configurable
+in some way.
 
-I know, but it's more in keeping with the rest of the subsystem.
+Instead of using __dtb_start, it would probably solve both of the above
+problems if the build-in DTB has a specific label identifying it as the
+default DT.
 
-> > > +
-> > > +	ret =3D mfd_add_devices(max14577->dev, -1, max14577_devs,
-> > > +			ARRAY_SIZE(max14577_devs), NULL, 0, NULL);
-> >=20
-> > You should be passing the irqdomain as the final parameter here.
->=20
-> I replaced the IRQ handling with regmap_irq_chip so this would look l=
-ike
-> this:
-> -------------------------
->         ret =3D mfd_add_devices(max14577->dev, -1, max14577_devs,
->                         ARRAY_SIZE(max14577_devs), NULL, 0,
->                         regmap_irq_get_domain(max14577->irq_data));
-> -------------------------
-> Am I correct?
-
-if regmap_irq_get_domain() returns an irqdomain, then yes.
-
-> > > +	return i2c_add_driver(&max14577_i2c_driver);
-> > > +}
-> > > +subsys_initcall(max14577_i2c_init);
-> > > +
-> > > +static void __exit max14577_i2c_exit(void)
-> > > +{
-> > > +	i2c_del_driver(&max14577_i2c_driver);
-> > > +}
-> > > +module_exit(max14577_i2c_exit);
-> >=20
-> > >>>>>>>>>>>>>>>>>>>>>>
-> >=20
-> > Remove all this and replace with:
-> >   module_i2c_driver(max14577_i2c_driver);
->=20
-> The subsys_initcall is needed. Marek Szyprowski replied to this here:
-> http://thread.gmane.org/gmane.linux.drivers.devicetree/51903/focus=3D=
-1594651
-
-Okay, but this will need to be changed when USB Gadget starts to
-support -EPROBE_DEFER
-
-> > > +struct max14577_regulator_platform_data {
-> > > +	int id;
-> > > +	struct regulator_init_data *initdata;
-> > > +	struct device_node *of_node;
-> >=20
-> > Do you ever set this? What's the point of it is it's set in the dev=
-ice?
->=20
-> Do you mean the whole struct max14577_regulator_platform_data or only
-> some member of it (of_node?)?
-
-Initially only the of_node. Usually MFD children are able to call back
-into their parent to fetch these details. Also mfd_add_device() goes
-out of its way to fill in the child's own of_node.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+g.
