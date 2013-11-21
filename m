@@ -1,39 +1,95 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC PATCH v3 6/8] ARM: dts: add pbias-supply
-Date: Thu, 21 Nov 2013 09:03:51 -0800
-Message-ID: <20131121170351.GN10317@atomide.com>
-References: <20130613174554.GB1403@sirena.org.uk>
- <1385043627-30439-1-git-send-email-balajitk@ti.com>
- <1385043627-30439-7-git-send-email-balajitk@ti.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 10/12] mtd: nand: davinci: don't set timings if AEMIF
+ is used
+Date: Thu, 21 Nov 2013 22:37:32 +0530
+Message-ID: <528E3DD4.7030607@ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
+ <1384187188-5776-11-git-send-email-ivan.khoronzhuk@ti.com>
+ <4F5844B3A985794BA902E12C070812375F8D53@DNCE04.ent.ti.com>
+ <528307F0.6000805@ti.com> <52838941.4060207@ti.com> <5284ABB9.70608@ti.com>
+ <5284DFE7.70308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385043627-30439-7-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <5284DFE7.70308@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
+ Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Landley <rob@landley.net>, "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Balaji T K <balajitk@ti.com> [131121 06:21]:
-> Add pbias-supply to mmc1/sd card.
-...
+On 11/14/2013 8:06 PM, Santosh Shilimkar wrote:
+> On Thursday 14 November 2013 05:53 AM, Nori, Sekhar wrote:
+>> On Wednesday 13 November 2013 07:44 PM, Santosh Shilimkar wrote:
+>>> On Wednesday 13 November 2013 12:02 AM, Sekhar Nori wrote:
+>>>> On Monday 11 November 2013 10:40 PM, Khoronzhuk, Ivan wrote:
+>>>>> If Davinci AEMIF is used we don't need to set timings and bus width.
+>>>>> It is done by AEMIF driver (drivers/memory/davinci-aemfi.c).
+>>>>>
+>>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>>>> ---
+>>>>>  drivers/mtd/nand/davinci_nand.c |   22 +++++++++++++++-------
+>>>>>  1 file changed, 15 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+>>>>> index 4705214..879e915 100644
+>>>>> --- a/drivers/mtd/nand/davinci_nand.c
+>>>>> +++ b/drivers/mtd/nand/davinci_nand.c
+>>>>> @@ -742,27 +742,35 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+>>>>>                 goto err_clk_enable;
+>>>>>         }
+>>>>>
+>>>>> +#if !IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF)
+>>>>
+>>>> This is a hack! Just because AEMIF driver is enabled, it does not
+>>>> guarantee that the timings have been setup by it. Instead of configuring
+>>>> timings in two drivers, why not just convert everyone over to use the
+>>>> new driver. Dont worry about breaking old platforms, I will help test
+>>>> and ack them.
+>>>>
+>>> How about you take a stab at and convert the DaVinci code over to make
+>>> use of new driver. We are trying to re-use as much as possible from the
+>>> common drivers and also making an option so that the DaVinci arch can
+>>> move over to these drivers if they want to.
+>>
+>> Sure I could.
+>>
+> Thanks
+> 
+>> Ivan,
+>>
+>> The AEMIF driver does not use platfrom_data currently. Is that something
+>> you can add or you want me to take a stab at that as well?
+>>
+> The AEMIF new driver is device tree only and thats the direction. So the
+> better thing would be to convert Davinci to DT and then make use of this
+> new driver. Thats how most of the new drivers used on arm socs are
+> moving. Adding platform data to new driver is a step in backward
+> direction so I would want to avoid that.
 
-> --- a/arch/arm/boot/dts/dra7-evm.dts
-> +++ b/arch/arm/boot/dts/dra7-evm.dts
-> @@ -261,6 +261,7 @@
->  &mmc1 {
->  	status = "okay";
->  	vmmc-supply = <&ldo1_reg>;
-> +	pbias-supply = <&pbias_regulator>;
->  	bus-width = <4>;
->  };
+Yes, that would be the ideal way. But the reality is that there is close
+to zero chance of all the DaVinci platforms using AEMIF ever getting
+converted to DT. This means that we will never be able to get rid of
+this piece of code.
 
-You may not need to patch this in at all. I think the PBIAS is there
-only for the first slot and it's hardwired so it's always there. If
-that's the case, then you can just always request it. Or use the
-compatible flag if needed.
+I do agree platform data is not the direction you want to take on ARM
+but at the same time its not really a deprecated mechanism as far as the
+broader kernel is concerned.
 
-Regards,
+So, can we consider adding platform data mechanism to the AEMIF driver?
 
-Tony
+Thanks,
+Sekhar
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
