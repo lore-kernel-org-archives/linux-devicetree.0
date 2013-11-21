@@ -1,78 +1,79 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv5 2/9] driver/core: populate devices in order for IOMMUs
-Date: Thu, 21 Nov 2013 13:15:58 +0000
-Message-ID: <20131121131558.E5B82C40A2C@trevor.secretlab.ca>
-References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com> < 1384853593-32202-3-git-send-email-hdoyu@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384853593-32202-3-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 3/4] ata: Add APM X-Gene SoC SATA host controller driver
+Date: Thu, 21 Nov 2013 14:20:28 +0100
+Message-ID: <201311211420.28509.arnd@arndb.de>
+References: <1384465153-29902-1-git-send-email-lho@apm.com>
+ <201311151448.16279.arnd@arndb.de>
+ <CAPw-ZTmaz3nnV3ThRgecT_RaYYW0bmfWvL8Kr-S3z1aKyUWc+w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPw-ZTmaz3nnV3ThRgecT_RaYYW0bmfWvL8Kr-S3z1aKyUWc+w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Loc Ho <lho@apm.com>
+Cc: devicetree@vger.kernel.org, Suman Tripathi <stripathi@apm.com>, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, Jon Masters <jcm@redhat.com>, Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Olof Johansson <olof@lixom.net>, Tuan Phan <tphan@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Nov 2013 11:33:06 +0200, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> IOMMU devices on the bus need to be poplulated first, then iommu
-> master devices are done later.
-> 
-> With CONFIG_OF_IOMMU, "iommus=" DT binding would be used to identify
-> whether a device can be an iommu msater or not. If a device can, we'll
-> defer to populate that device till an iommu device is populated. Once
-> an iommu device is populated, "dev->bus->iommu_ops" is set in the
-> bus. Then, those defered iommu master devices are populated and
-> configured for IOMMU with help of the already populated iommu device
-> via iommu_ops->add_device(). Multiple IOMMUs can be listed on this
-> "iommus" binding so that a device can have multiple IOMMUs attached.
-> 
-> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> v5:
-> Use "iommus=" binding instread of arm,smmu's "#stream-id-cells".
-> 
-> v4:
-> This is newly added, and the successor of the following RFC:
->   [RFC][PATCHv3+ 1/2] driver/core: Add of_iommu_attach()
->   http://lists.linuxfoundation.org/pipermail/iommu/2013-November/006914.html
-> ---
->  drivers/base/dd.c        |  5 +++++
->  drivers/iommu/of_iommu.c | 22 ++++++++++++++++++++++
->  include/linux/of_iommu.h |  7 +++++++
->  3 files changed, 34 insertions(+)
-> 
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 35fa368..6e892d4 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -25,6 +25,7 @@
->  #include <linux/async.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pinctrl/devinfo.h>
-> +#include <linux/of_iommu.h>
->  
->  #include "base.h"
->  #include "power/power.h"
-> @@ -273,6 +274,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->  
->  	dev->driver = drv;
->  
-> +	ret = of_iommu_attach(dev);
-> +	if (ret)
-> +		goto probe_failed;
-> +
->  	/* If using pinctrl, bind pins now before probing */
->  	ret = pinctrl_bind_pins(dev);
->  	if (ret)
+On Saturday 16 November 2013, Loc Ho wrote:
 
-I'm very concerned about this approach. Hooking into the core probe
-path for things like this is not going to scale well. I'm not thrilled
-with the pinctrl hook being here either, but that is already merged. :-(
-Also, hooking in here is going affect every single device device driver
-probe path, and a large number of them are never, ever, going to have
-iommu interactions.
 
-There needs to be a less invasive way of doing what you want. I still
-feel like the individual device drivers themselves need to be aware that
-they might be hooking through an IOMMU. Or, if they are hooking through
-a bus like PCIe, then have the PCIe bus defer creating child devices
-until the IOMMU is configured and in place.
+> >
+> > config SATA_XGENE
+> >         tristate "APM X-Gene 6.0Gbps SATA host controller support"
+> >         depends on ARM64 || COMPILE_TEST
+> >         ...
+> >
+> [Loc Ho]
+> Okay. How about this?
+> 
+>  depends on ARM64 || COMPILE_TEST
+>  select SATA_XGENE_PHY && SATA_AHCI_PLATFORM
 
-g.
+I think you already found the mistake withis and corrected this in v4.
+
+> > The interface you are looking for is pr_debug() or dev_dbg(), which get
+> > built-in only if the DEBUG macro is set.
+> >
+> > In a lot of cases, it's actually best to remove debug output like this from
+> > the driver once you have it working  -- whoever is debugging problems in
+> > the driver next might need completely different debugging information or
+> > can add them back easily if needed.
+> >
+> > It's your choice if you want to use pr_debug() or remove that output
+> > entirely. If you remove it, best remove the helper functions entirely
+> > and use readl/writel directly.
+> [Loc Ho]
+> I would like to keep this function for now until this driver actual
+> being used in production. I will use pr_debug.
+
+Ok.
+
+> >> diff --git a/drivers/ata/sata_xgene.h b/drivers/ata/sata_xgene.h
+> >> new file mode 100644
+> >> index 0000000..51e73f6
+> >> --- /dev/null
+> >> +++ b/drivers/ata/sata_xgene.h
+> >
+> > This file should probably just be folded into the driver, since it contains no
+> > interfaces between  modules, just internal definitions.
+> [Loc Ho]
+> I can get rip this header file now. But in the future I may need to
+> add this back as I intended this driver to also support running from
+> our co-processor (ARMv7 32-bit). For that, I will need anothe file and
+> other function that will need knowledge of the context structure and
+> etc.
+
+Hmm, is the code for that coprocessor compiled from the kernel source?
+If not, it shouldn't really make a difference as it won't live in a shared
+code repository.
+
+	Arnd
