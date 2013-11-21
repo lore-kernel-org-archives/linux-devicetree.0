@@ -1,46 +1,77 @@
-From: Taras Kondratiuk <taras.kondratiuk-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 00/10] Reuse davinci-nand driver for Keystone arch
-Date: Thu, 21 Nov 2013 19:45:06 +0200
-Message-ID: <CAArO44tOemuo0PyWMuwwGBb77Lt4_pqbDoKWzROLBi0HGC8F7A@mail.gmail.com>
-References: <1385033305-13179-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/9] dt: Handle passed/built-in DT selection in early_init_dt_scan()
+Date: Thu, 21 Nov 2013 18:49:08 +0100
+Message-ID: <CAMuHMdXjROx-LqNkq_GhNp4M-iYvDXV6X4j7EkgQGdkUmAMvhg@mail.gmail.com>
+References: <5283A000.8090007@gmail.com>
+	<CAMuHMdXfsB_Ewz9sUPZaAjFaQGTGeqMiD8mJ0tCoH1uFLYGoxw@mail.gmail.com>
+	<20131121155348.66751C406A3@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385033305-13179-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20131121155348.66751C406A3@trevor.secretlab.ca>
+Sender: linux-arch-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 November 2013 13:28, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org> wrote:
-> This series contains fixes and updates of Davinci nand driver in
-> order to reuse it for Keystone platform.
+On Thu, Nov 21, 2013 at 4:53 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+>> My changes don't change the current behavior much: currently
+>> early_init_dt_scan() is already called with &__dtb_start in several places.
+>> If this is broken, it's already broken.
 >
-> The series is combination of two following series:
-> - Davinci nand driver fixes and updates:
->   https://lkml.org/lkml/2013/11/20/271
-> - Reuse davinci-nand driver for Keystone arch
->   https://lkml.org/lkml/2013/11/20/315
+> Yes, but it is called on platforms that already make that assumption
+> that __dtb_start must be copied and therefore call
+> unflatten_and_copy_devicetree(). This change makes *all* platforms do
+> that. That breaks arm, arm64, c6x, microblaze, some mips platforms, and
+> powerpc!
+
+arm, arm64, and powerpc don't have builtin DTBs, hence no change.
+microblaze and c6x already did "early_init_devtree(&__dtb_start)" before.
+
+That leaves mips, which has DT handling in too many variants, which I
+didn't all verify.
+
+>> > memory. The dtb section can also potentially contain multiple .dtb
+>> > blobs. In the use case that you care about you are probably only
+>>
+>> Multiple dtb blobs are currently handled in platform-specific code, which
+>> passes the right dtb to early_init_dt_scan().
 >
-> Ivan Khoronzhuk (10):
->   mtd: nand: davinci: fix driver registration
->   mtd: nand: davinci: return ENOMEM if memory allocation is failed
->   mtd: nand: davinci: check required ti,davinci-chipselect property
->   mtd: nand: davinci: simplify error handling
->   mtd: nand: davinci: move bindings under mtd
->   mtd: nand: davinci: extend description of bindings
->   mtd: nand: davinci: adjust DT properties to MTD generic
->   mtd: nand: davinci: reuse driver for Keystone arch
->   mtd: nand: davinci: don't set timings if AEMIF is used
->   mtd: nand: davinci: don't request AEMIF address range
+> The problem is that it makes the default dt completely random because
+> the generic code still deferrences __dtb_start.
 
-For all series:
-Reviewed-by: Taras Kondratiuk <taras-l0cyMroinI0@public.gmane.org>
+Only if no DT was passed by the bootloader. And only if there really
+is something at __dtb_start. Before it would fail if no DTB was passed
+by the bootloader.
 
--- 
-Regards,
-Taras Kondratiuk
+>> > thinking about one, but it is entirely possible for device drivers to
+>> > have a dtb linked in which may break this if it gets linked in a
+>> > different order. The specific example I'm thinking about is I want to
+>> > have the DT selftest code load an overlay to get testcase data from a
+>> > dtb blob.
+>> >
+>> > The other concern I have here is that I don't really want this to be the
+>> > default on a lot of platforms. ARM and PowerPC for instance should only
+>> > get the default dtb from the boot wrapper. It needs to be configurable
+>> > in some way.
+>>
+>> On ARM and PowerPC, the section is empty, hence &__dbt_start ==
+>> &__dtb_end.
+>
+> There is no guarantee that that will always be so. The patch makes some
+> poor assumtions, but they shouldn't be difficult to fix.
+
+OK, how to proceed?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
