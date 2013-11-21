@@ -1,59 +1,99 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC PATCH V2 2/2] kbuild: dtbs_install: new make target
-Date: Thu, 21 Nov 2013 07:50:35 +0000
-Message-ID: <20131121075035.3075EC4077A@trevor.secretlab.ca>
-References: <528A6CA3.9030904@wwwdotorg.org> <20131118195243.GJ10335@titan. lakedaemon.net> <528A98C8.9040803@wwwdotorg.org> <20131119122801.GL16735@ n2100.arm.linux.org.uk> <20131119142336.GA28859@titan.lakedaemon.net> < 20131119150212.GM16735@n2100.arm.linux.org.uk> <20131119152047.GB28859@ titan.lakedaemon.net> <20131119152146.GN16735@n2100.arm.linux.org.uk> < 20131119192246.GP16735@n2100.arm.linux.org.uk> <20131120131004.ACA1BC4079D@ trevor.secretlab.ca> <20131120135617.GS16735@n2100.arm.linux.org.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131120135617.GS16735-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCHv9][ 3/3] ARM: dts: cpuimx35 Add touchscreen support.
+Date: Thu, 21 Nov 2013 09:00:52 +0100
+Message-ID: <20131121090052.1684db75@ipc1.ka-ro>
+References: <1383916659-9988-1-git-send-email-denis@eukrea.com>
+	<1383916659-9988-3-git-send-email-denis@eukrea.com>
+	<20131121050922.GF18477@ns203013.ovh.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20131121050922.GF18477@ns203013.ovh.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Denis Carikli <denis@eukrea.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Eric B??nard <eric@eukrea.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Nov 2013 13:56:18 +0000, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> On Wed, Nov 20, 2013 at 01:10:04PM +0000, Grant Likely wrote:
-> > On Tue, 19 Nov 2013 19:22:46 +0000, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> > > On Tue, Nov 19, 2013 at 03:21:46PM +0000, Russell King - ARM Linux wrote:
-> > > > On Tue, Nov 19, 2013 at 10:20:47AM -0500, Jason Cooper wrote:
-> > > > > By "That" are you referring to extending the standard for compatible
-> > > > > strings to the board level, or forcing consistent naming on the dts
-> > > > > files?
-> > > > 
-> > > > A consistent file naming on both the dtb and dts files.
-> > > 
-> > > It's time to knock the idea of naming the DT blobs after the compatible
-> > > string on its head as well.  That's really not going to work.  Just
-> > > leave the filenames as is, and move the problem into userspace to solve.
-> > > 
-> > [...]
-> > > 
-> > > Just use the filenames we already have in the kernel tree.  Let userspace
-> > > parse the DT blobs for the compatible strings - it can then provide the
-> > > user with the choice of all and _also_ show that certain of DT blobs
-> > > may be compatible with a range of boards as well.
-> > 
-> > Yes, the consistent filename format is a non-problem. The files that
-> > exist already have names. Nothing else is going to use them. Done.
-> 
-> Grant, you have the wrong end of the stick.  This discussion is about
-> what happens when files from
-> 
-> 	$(objtree)/arch/arm/boot/dts
-> 
-> get installed into
-> 
-> 	/lib/modules/$(kernelversion)/...
-> 
-> and their renaming from the filenames we already have in arch/arm/boot/dts
-> to a filename generated from the compatible string.
+Hi,
 
-Umm, I don't follow where we're having a disconnect. That is what I'm
-talking about. I'm arguing that renaming the files with installing them
-is a bad idea. Are you not arguing the same here?
+Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 14:17 Fri 08 Nov     , Denis Carikli wrote:
+> > Cc: Rob Herring <rob.herring@calxeda.com>
+> > Cc: Pawel Moll <pawel.moll@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Stephen Warren <swarren@wwwdotorg.org>
+> > Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> > Cc: Grant Likely <grant.likely@linaro.org>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Cc: linux-input@vger.kernel.org
+> > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
+> > Cc: Shawn Guo <shawn.guo@linaro.org>
+> > Cc: Eric B=C3=A9nard <eric@eukrea.com>
+> > Signed-off-by: Denis Carikli <denis@eukrea.com>
+> > ---
+> > ChangeLog v8->v9:
+> > - Added Grant Likely in the cc list.
+> > - Adapted to the removal of the pinctrl properties in the tsc2007 d=
+ocumentation.
+> > - Fixed the gpios property (before, it was set to active high by er=
+ror).
+> >=20
+> > ChangeLog v7->v8:
+> > - Added Shawn Guo in the cc list.
+> > ---
+> >  arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi |   21 ++++++++++++++=
++++++++
+> >  1 file changed, 21 insertions(+)
+> >=20
+> > diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/ar=
+m/boot/dts/imx35-eukrea-cpuimx35.dtsi
+> > index b9cb5a5..f25a40f 100644
+> > --- a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+> > +++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+> > @@ -36,6 +36,27 @@
+> >  		compatible =3D "nxp,pcf8563";
+> >  		reg =3D <0x51>;
+> >  	};
+> > +
+> > +	tsc2007: tsc2007@48 {
+> > +		compatible =3D "ti,tsc2007";
+> > +		reg =3D <0x48>;
+> > +		interrupt-parent =3D <&gpio3>;
+> > +		interrupts =3D <0x2 0x8>;
+> > +		gpios =3D <&gpio3 2 1>;
+> as explain on the binding drop this gpios this is an IRQ not a gpio
+>=20
+> NACK
+The driver needs an interrupt to get notified about pendown events and
+needs to poll the pendown signal to find out when the pen has been
+lifted. Both the interrupt and the pendown signal happen to be
+signalled on the same pin. Thus, IMO it is perfectly well to have the
+interrupt property as well as the gpios property here.
 
-g.
+How would you tell the driver which pin to poll for detecting the pen
+up event?
 
+Having a platform callback with hardcoded GPIO numbers is not an option=
+=2E
+
+
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
+
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
