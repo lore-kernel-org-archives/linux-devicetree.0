@@ -1,76 +1,45 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH] of: unflatten_and_copy: handle NULL initial_boot_params
-Date: Thu, 21 Nov 2013 13:33:46 +0000
-Message-ID: <528E0BBA.6050002@imgtec.com>
-References: <1384865892-28659-1-git-send-email-james.hogan@imgtec.com> <20131121123927.34EAEC40A2C@trevor.secretlab.ca>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 1/5] mfd: max14577: Add max14577 MFD driver core
+Date: Thu, 21 Nov 2013 14:34:18 +0100
+Message-ID: <1385040858.748.27.camel@AMDC1943>
+References: <1384956732-19526-1-git-send-email-k.kozlowski@samsung.com>
+ <1384956732-19526-2-git-send-email-k.kozlowski@samsung.com>
+ <20131121103408.GA22536@lee--X1> <1385034199.748.21.camel@AMDC1943>
+ <20131121122011.GD23067@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20131121123927.34EAEC40A2C@trevor.secretlab.ca>
-Sender: linux-arch-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <20131121122011.GD23067@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21/11/13 12:39, Grant Likely wrote:
-> On Tue, 19 Nov 2013 12:58:12 +0000, James Hogan <james.hogan@imgtec.com> wrote:
->> Check whether initial_boot_params is NULL before dereferencing it in
->> unflatten_and_copy_device_tree() for the case where no device tree is
->> available but the arch can still boot to a minimal usable system without
->> it.
->>
->> Signed-off-by: James Hogan <james.hogan@imgtec.com>
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: Rob Herring <rob.herring@calxeda.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-arch@vger.kernel.org
->> ---
->>  drivers/of/fdt.c | 10 ++++++++--
->>  1 file changed, 8 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index 2fa024b97c43..ac4983955e6d 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -922,8 +922,14 @@ void __init unflatten_device_tree(void)
->>   */
->>  void __init unflatten_and_copy_device_tree(void)
->>  {
->> -	int size = __be32_to_cpu(initial_boot_params->totalsize);
->> -	void *dt = early_init_dt_alloc_memory_arch(size,
->> +	int size;
->> +	void *dt;
->> +
->> +	if (!initial_boot_params)
->> +		return;
+
+On Thu, 2013-11-21 at 12:20 +0000, Lee Jones wrote:
+(...)
+> > > > +struct max14577_regulator_platform_data {
+> > > > +	int id;
+> > > > +	struct regulator_init_data *initdata;
+> > > > +	struct device_node *of_node;
+> > > 
+> > > Do you ever set this? What's the point of it is it's set in the device?
+> > 
+> > Do you mean the whole struct max14577_regulator_platform_data or only
+> > some member of it (of_node?)?
 > 
-> Worth logging a message for those who can obtain the kernel log
-> buffer?
+> Initially only the of_node. Usually MFD children are able to call back
+> into their parent to fetch these details. Also mfd_add_device() goes
+> out of its way to fill in the child's own of_node.
 
-Yes, sounds reasonable (especially since for Meta the platform name detected from DT doesn't get logged in this case and I still get the console out via JTAG probe).
-I'll post a v2 adding this:
+The of_node is needed for regulator driver. It is passed in struct regulator_config
+to devm_regulator_register():
+	config.of_node = pdata->regulators[i].of_node;
+	info->regulators[i] = devm_regulator_register(&pdev->dev,
+	                              &supported_regulators[id], &config);
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index ac4983955e6d..758b4f8b30b7 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -925,8 +925,10 @@ void __init unflatten_and_copy_device_tree(void)
- 	int size;
- 	void *dt;
- 
--	if (!initial_boot_params)
-+	if (!initial_boot_params) {
-+		pr_warn("No valid device tree found, continuing without\n");
- 		return;
-+	}
- 
- 	size = __be32_to_cpu(initial_boot_params->totalsize);
- 	dt = early_init_dt_alloc_memory_arch(size,
 
-> Otherwise:
-> 
-> Acked-by: Grant Likely <grant.likely@linaro.org>
+Best regards,
+Krzysztof
 
-Thanks
-James
