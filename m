@@ -1,35 +1,46 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/9] dt: Handle passed/built-in DT selection in early_init_dt_scan()
-Date: Thu, 21 Nov 2013 18:42:58 +0100
-Message-ID: <CAMuHMdWYkaLD2h=oet1w+wB+2wePmnpWWMawrBh7o=KAJym5pg@mail.gmail.com>
-References: <5283A000.8090007@gmail.com>
-	<1384859554-27268-1-git-send-email-geert@linux-m68k.org>
-	<20131121122148.1B43DC40A2C@trevor.secretlab.ca>
-	<CAMuHMdXfsB_Ewz9sUPZaAjFaQGTGeqMiD8mJ0tCoH1uFLYGoxw@mail.gmail.com>
-	<CAL_JsqJVteJuaD0PRMHSR9cVcMJTSNj4wXtYiftG=-pYSR9vsQ@mail.gmail.com>
+From: Taras Kondratiuk <taras.kondratiuk-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 00/10] Reuse davinci-nand driver for Keystone arch
+Date: Thu, 21 Nov 2013 19:45:06 +0200
+Message-ID: <CAArO44tOemuo0PyWMuwwGBb77Lt4_pqbDoKWzROLBi0HGC8F7A@mail.gmail.com>
+References: <1385033305-13179-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJVteJuaD0PRMHSR9cVcMJTSNj4wXtYiftG=-pYSR9vsQ@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385033305-13179-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2013 at 6:38 PM, Rob Herring <robherring2@gmail.com> wrote:
-> I really don't like saying one arch can have built-in dtb and another
-> one can't. Either we allow it or we don't. If this is a bad feature,
-> then why did we let multiple arches implement it.
+On 21 November 2013 13:28, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org> wrote:
+> This series contains fixes and updates of Davinci nand driver in
+> order to reuse it for Keystone platform.
+>
+> The series is combination of two following series:
+> - Davinci nand driver fixes and updates:
+>   https://lkml.org/lkml/2013/11/20/271
+> - Reuse davinci-nand driver for Keystone arch
+>   https://lkml.org/lkml/2013/11/20/315
+>
+> Ivan Khoronzhuk (10):
+>   mtd: nand: davinci: fix driver registration
+>   mtd: nand: davinci: return ENOMEM if memory allocation is failed
+>   mtd: nand: davinci: check required ti,davinci-chipselect property
+>   mtd: nand: davinci: simplify error handling
+>   mtd: nand: davinci: move bindings under mtd
+>   mtd: nand: davinci: extend description of bindings
+>   mtd: nand: davinci: adjust DT properties to MTD generic
+>   mtd: nand: davinci: reuse driver for Keystone arch
+>   mtd: nand: davinci: don't set timings if AEMIF is used
+>   mtd: nand: davinci: don't request AEMIF address range
 
-... and did we put it in asm-generic, so now _every_ arch has __dtb_start.
+For all series:
+Reviewed-by: Taras Kondratiuk <taras-l0cyMroinI0@public.gmane.org>
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+-- 
+Regards,
+Taras Kondratiuk
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
