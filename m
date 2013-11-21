@@ -1,43 +1,30 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: Re: [PATCH V9 0/3] Add watchdog DT nodes and use syscon regmap
- interface to configure pmu registers
-Date: Thu, 21 Nov 2013 10:49:25 +0530
-Message-ID: <CAL1wa8c98vBNVKz081dBNHXfd8RvGohgFJPwJ0vJihYeMGmr2w@mail.gmail.com>
-References: <1384768189-2839-1-git-send-email-l.krishna@samsung.com> <1552959.6e3zcBLbjf@amdc1227>
+From: "Management" <chokayri-39ZsbGIQGT7zB/pVwUXKuQ@public.gmane.org>
+Subject: (unknown)
+Date: Thu, 21 Nov 2013 05:53:05 -0000 (WET)
+Message-ID: <058ab3fee00b9ef4466138a0ef047872.squirrel@webmail.wanadoo.net.ma>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1552959.6e3zcBLbjf@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Wim Van Sebroeck <wim@iguana.be>, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, linux-watchdog@vger.kernel.org, cpgs@samsung.com, Sachin Kamat <sachin.kamat@linaro.org>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Subject: 
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Wim Van Sebroeck,
+This is an automatic message by the system to let you know that you have
+to confirm your account information. An Attempt has been made to login
+from a new computer. For the security of your account.
 
-Can you please review this series and take necessary action.
+Your Email account will be frozen temporary after 48 hours in order to
+protect it.
 
-Best Wishes,
-Leela Krishna.
+The account will continue to be frozen until it is confirmed.Once you have
+updated your account records, your information will be confirmed and your
+account will start to work as normal once again. The process does not take
+more than 5 minutes To proceed to confirm your account information Click
+on this link or copy and paste in your browser tab:
+http://666-17-79187.webs.com/
 
-On Mon, Nov 18, 2013 at 4:35 PM, Tomasz Figa <t.figa@samsung.com> wrote:
-> Hi Leela,
->
-> On Monday 18 of November 2013 15:19:46 Leela Krishna Amudala wrote:
->> This patchset does the following things
->>       - Adds pmusysreg device node to exynos5.dtsi file
->>       - Adds watchdog DT nodes to Exynos5250 and 5420
->>       - Uses syscon regmap interface to configure pmu registers
->>         to mask/unmask enable/disable of watchdog.
->
-> For the whole series:
->
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
->
-> Best regards,
-> Tomasz
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
