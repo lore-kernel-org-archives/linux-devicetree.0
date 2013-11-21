@@ -1,80 +1,75 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/9] dt: Handle passed/built-in DT selection in early_init_dt_scan()
-Date: Thu, 21 Nov 2013 15:53:48 +0000
-Message-ID: <20131121155348.66751C406A3@trevor.secretlab.ca>
-References: <5283A000.8090007@gmail.com> < 1384859554-27268-1-git-send-email-geert@linux-m68k.org> <20131121122148. 1B43DC40A2C@trevor.secretlab.ca> < CAMuHMdXfsB_Ewz9sUPZaAjFaQGTGeqMiD8mJ0tCoH1uFLYGoxw@mail.gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXfsB_Ewz9sUPZaAjFaQGTGeqMiD8mJ0tCoH1uFLYGoxw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv5 1/9] of: introduce
+	of_property_for_earch_phandle_with_args()
+Date: Thu, 21 Nov 2013 15:56:49 +0000
+Message-ID: <20131121155649.48C96C406A3@trevor.secretlab.ca>
+References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com> <
+	1384853593-32202-2-git-send-email-hdoyu@nvidia.com>
+	<20131121124328. 46BC1C40A2C@trevor.secretlab.ca>
+	<20131121151218.befbb483c0cf09cdcd4cd4dd@ nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131121151218.befbb483c0cf09cdcd4cd4dd-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Nov 2013 14:42:27 +0100, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Nov 21, 2013 at 1:21 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
-> >>  bool __init early_init_dt_scan(void *params)
-> >>  {
-> >> -     if (!params)
-> >> -             return false;
-> >> -
-> >>       /* Setup flat device-tree pointer */
-> >>       initial_boot_params = params;
-> >>
-> >> -     /* check device tree validity */
-> >> -     if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
-> >> -             initial_boot_params = NULL;
-> >> -             return false;
-> >> +     /* check passed device tree validity */
-> >> +     if (initial_boot_params &&
-> >> +         be32_to_cpu(initial_boot_params->magic) == OF_DT_HEADER) {
-> >> +             pr_info("FDT at %p\n", initial_boot_params);
-> >> +             goto found;
-> >> +     }
-> >> +
-> >> +     /* check built-in device tree validity */
-> >> +     initial_boot_params = &__dtb_start;
-> >> +     if (__dtb_end != (void *)&__dtb_start &&
-> >> +         be32_to_cpu(initial_boot_params->magic) == OF_DT_HEADER) {
-> >> +             pr_info("Compiled-in FDT at %p\n", initial_boot_params);
-> >> +             goto found;
-> >
-> > __dtb_start is in an init section which is discarded after initcalls.
-> > For this to work, the dtb needs to be copied into a region of allocated
+On Thu, 21 Nov 2013 15:12:18 +0200, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On Thu, 21 Nov 2013 13:43:28 +0100
+> Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 > 
-> My changes don't change the current behavior much: currently
-> early_init_dt_scan() is already called with &__dtb_start in several places.
-> If this is broken, it's already broken.
-
-Yes, but it is called on platforms that already make that assumption
-that __dtb_start must be copied and therefore call
-unflatten_and_copy_devicetree(). This change makes *all* platforms do
-that. That breaks arm, arm64, c6x, microblaze, some mips platforms, and
-powerpc!
-
-> > memory. The dtb section can also potentially contain multiple .dtb
-> > blobs. In the use case that you care about you are probably only
+> > On Tue, 19 Nov 2013 11:33:05 +0200, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> > > The following pattern of code is tempting:
+> > > 
+> > >   for (i = 0; !of_parse_phandle_with_args(np, list, cells, i, args); i++)
+> > > 
+> > > Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > 
+> > That's a very minimal commit message. Can you elaborate please.
 > 
-> Multiple dtb blobs are currently handled in platform-specific code, which
-> passes the right dtb to early_init_dt_scan().
-
-The problem is that it makes the default dt completely random because
-the generic code still deferrences __dtb_start.
-
-> > thinking about one, but it is entirely possible for device drivers to
-> > have a dtb linked in which may break this if it gets linked in a
-> > different order. The specific example I'm thinking about is I want to
-> > have the DT selftest code load an overlay to get testcase data from a
-> > dtb blob.
-> >
-> > The other concern I have here is that I don't really want this to be the
-> > default on a lot of platforms. ARM and PowerPC for instance should only
-> > get the default dtb from the boot wrapper. It needs to be configurable
-> > in some way.
+> The above can be:
 > 
-> On ARM and PowerPC, the section is empty, hence &__dbt_start ==
-> &__dtb_end.
+> "
+>   The following pattern of code is tempting to add a new member for
+>   of_property_for_each_*() family as an idiom.
+>   
+>     for (i = 0;
+>         !of_parse_phandle_with_args(np, list, cells, i, args); i++)
+>                   <do something with "args">;
+> "
 
-There is no guarantee that that will always be so. The patch makes some
-poor assumtions, but they shouldn't be difficult to fix.
+I really do like commit messages to be full enough that a future reader
+can figure out why a patch was written. ie:
+
+	"Iterating over a property containing a list of phandles with
+	arguments is a common operation for device drivers. This patch
+	adds a new of_property_for_each_phandle_with_args() macro to
+	make the iteration simpler."
 
 g.
+
+> 
+> Actual usage is here:
+> 
+>         int i;
+>         struct of_phandle_args args;
+> 
+>         of_property_for_each_phandle_with_args(dev->of_node, "iommus",
+>                                                "#iommu-cells", i, &args) {
+>                 pr_debug("%s(i=%d) %s\n", __func__, i, dev_name(dev));
+> 
+>                 if (!of_find_iommu_by_node(args.np))
+>                         return -EPROBE_DEFER;
+> 
+> Is this acceptable?
