@@ -1,35 +1,53 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Thu, 21 Nov 2013 18:38:02 +0000
-Message-ID: <20131121183802.3A4B5C40753@trevor.secretlab.ca>
-References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail. com> <20131115095717.GC1709@e106331-lin.cambridge.arm.com> <20131115175241. GB27174@quad.lixom.net> <20131119113015.GH5914@e106331-lin.cambridge.arm. com> <20131121162944.F087FC406A3@trevor.secretlab.ca> <20131121170122. GB22960@srcf.ucam.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131121170122.GB22960-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v10 0/7] ARM: support for Trusted Foundations secure monitor
+Date: Thu, 21 Nov 2013 11:48:54 -0700
+Message-ID: <528E5596.7090606@wwwdotorg.org>
+References: <1383819106-1400-1-git-send-email-acourbot@nvidia.com>	<52828EF5.6090909@wwwdotorg.org>	<CAOesGMhatp9ZQr=eTCtQ_9a_E9LXKdTCzJd+P7Sy9Ut9wtvnsA@mail.gmail.com>	<5282E068.1070608@nvidia.com> <CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Nov 2013 17:01:22 +0000, Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org> wrote:
-> On Thu, Nov 21, 2013 at 04:29:44PM +0000, Grant Likely wrote:
-> 
-> > Personally, I think the issue of ACPI support should be taken on a
-> > patch-by-patch basis. A lot of the things that need to be done are quite
-> > discrete and fairly well contained. If the patches don't look that way
-> > then push back on them. For the parts that look ready, go ahead and
-> > merge it. Push back on the ones that don't.
-> 
-> I think the most valuable thing in ACPI is the static data tables. 
-> Things like BERT, EINJ, HEST, MPST and the various other bits of RAS 
-> functionality have value in the ARM world, and being able to share the 
-> implementation is a benefit. But that can be implemented without 
-> worrying about using ACPI for device discovery or interfacing.
+(Russell, a question for you at the bottom)
 
-/complete digression.../ As far as static tables are concerned, it would
-be trivial to pull those into a DT system.
+On 11/13/2013 10:57 AM, Olof Johansson wrote:
+> On Tue, Nov 12, 2013 at 6:14 PM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 11/13/2013 05:38 AM, Olof Johansson wrote:
+...
+>>> I pinged Russell, and he brought up the fact that there were earlier
+>>> requests to move it to drivers/firmware. It would make sense to try to
+>>> get that done before merging, especially if you anticipate someone
+>>> using TF on 64-bit platforms.
+>>
+>> IIRC when we discussed this point your last comment was as follows:
+> 
+> Touche. :) Thanks for the reminder.
+> 
+>> On Tue, Oct 29, 2013 at 6:55 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>> I think we can probably merge this under arch/arm now, and when we
+>>> figure out what needs to be common with ARM64 we can move it out to a
+>>> good location. It might be that mostly just a header file with ABI
+>>> conventions needs to be shared, not actual implementation, for
+>>> example.
+>>
+>> So I thought we agreed on that. If in the end we prefer to move the ARM
+>> firmware interface into drivers/firmware, I'm fine with that too (Tomasz
+>> also confirmed he would be ok with it) but I wonder if that would not be
+>> somehow premature.
+...
+> Well, as I already said I'm ok with things going into arch/arm to
+> start with, as long as Russell is.
+...
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Russell, the patch Alex sent to move firmware_ops into drivers/firmware
+was rejected, so I don't think we can update this series to move the
+code there instead.
+
+So, are you OK with merging this series as-is, in arch/arm/firmware? If
+you could ack the patch/series to indicate that, it would be awesome.
+Thanks.
