@@ -1,43 +1,23 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v3 3/4] ata: Add APM X-Gene SoC SATA host controller driver
-Date: Thu, 21 Nov 2013 11:01:04 -0800
-Message-ID: <CAPw-ZTnRbZid1Bzg6r62LjoEPRWpbDU7TAg=d=qVazEWVaUGjA@mail.gmail.com>
-References: <1384465153-29902-1-git-send-email-lho@apm.com>
-	<201311151448.16279.arnd@arndb.de>
-	<CAPw-ZTmaz3nnV3ThRgecT_RaYYW0bmfWvL8Kr-S3z1aKyUWc+w@mail.gmail.com>
-	<201311211420.28509.arnd@arndb.de>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v10 0/7] ARM: support for Trusted Foundations secure
+	monitor
+Date: Thu, 21 Nov 2013 19:00:51 +0000
+Message-ID: <20131121190051.GY16735@n2100.arm.linux.org.uk>
+References: <1383819106-1400-1-git-send-email-acourbot@nvidia.com> <52828EF5.6090909@wwwdotorg.org> <CAOesGMhatp9ZQr=eTCtQ_9a_E9LXKdTCzJd+P7Sy9Ut9wtvnsA@mail.gmail.com> <5282E068.1070608@nvidia.com> <CAOesGMgcvTFD4u9b7T5HNhuJe_PQyV25Ei++v8hG8AsY_rOdyw@mail.gmail.com> <528E5596.7090606@wwwdotorg.org> <CAOesGMgB_FUDkD9=wgZgreaspEyKoSqpkpGZtzuUjb=G6m_nEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <201311211420.28509.arnd@arndb.de>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jon Masters <jcm@redhat.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMgB_FUDkD9=wgZgreaspEyKoSqpkpGZtzuUjb=G6m_nEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Nov 21, 2013 at 10:51:09AM -0800, Olof Johansson wrote:
+> An ack from Russell would be appreciated, or we'd need to set up a
+> shared branch given the Tegra dependencies that would go on top.
+> Either is ok with me.
 
->> >> diff --git a/drivers/ata/sata_xgene.h b/drivers/ata/sata_xgene.h
->> >> new file mode 100644
->> >> index 0000000..51e73f6
->> >> --- /dev/null
->> >> +++ b/drivers/ata/sata_xgene.h
->> >
->> > This file should probably just be folded into the driver, since it contains no
->> > interfaces between  modules, just internal definitions.
->> [Loc Ho]
->> I can get rip this header file now. But in the future I may need to
->> add this back as I intended this driver to also support running from
->> our co-processor (ARMv7 32-bit). For that, I will need anothe file and
->> other function that will need knowledge of the context structure and
->> etc.
->
-> Hmm, is the code for that coprocessor compiled from the kernel source?
-> If not, it shouldn't really make a difference as it won't live in a shared
-> code repository.
->
-[Loc Ho]
-The co-processors are just ARM based core and the same kernel can be
-build to support it. Let's not worry about this yet.
-
--Loc
+Note that I'm *not* looking at anything new until after the merge window
+has closed, so I'm not acking or reviewing anything at the moment.
