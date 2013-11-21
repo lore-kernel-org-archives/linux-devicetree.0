@@ -1,96 +1,58 @@
 From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
 Subject: Re: [PATCH v1 1/1] dt: binding: reword PowerPC 8xxx GPIO
  documentation
-Date: Thu, 21 Nov 2013 09:30:14 +0100
-Message-ID: <20131121083014.GT17929@book.gsilab.sittig.org>
+Date: Thu, 21 Nov 2013 09:34:38 +0100
+Message-ID: <20131121083438.GU17929@book.gsilab.sittig.org>
 References: <201311182328.40743.arnd@arndb.de>
  <1384983293-11002-1-git-send-email-gsi@denx.de>
- <CAL_JsqJvxA240QEreWPp2L+eNFQmhp0XV=qmO4QXqTga+RFuCQ@mail.gmail.com>
+ <201311210149.43944.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJvxA240QEreWPp2L+eNFQmhp0XV=qmO4QXqTga+RFuCQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <201311210149.43944.arnd-r2nGTMty4D4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Rob Herring@" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Rob Herring@" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2013 at 17:50 -0600, Rob Herring wrote:
+On Thu, Nov 21, 2013 at 01:49 +0100, Arnd Bergmann wrote:
 > 
-> On Wed, Nov 20, 2013 at 3:34 PM, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org> wrote:
+> On Wednesday 20 November 2013, Gerhard Sittig wrote:
 > > re-format and re-word the device tree binding documentation for MPC8xxx
 > > and compatibles, reference the common document for interrupt controllers
 > > and remove outdated duplicate SoC specific information
-> >
-> > [ ... ]
-> >
-> > diff --git a/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt b/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
-> > index b0019eb5330e..7788e8df3a15 100644
-> > --- a/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
-> > +++ b/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
-> > @@ -5,16 +5,41 @@ This is for the non-QE/CPM/GUTs GPIO controllers as found on
-> >
-> > [ ... ]
-> >
-> >  Required properties:
-> > -- compatible : "fsl,<CHIP>-gpio" followed by "fsl,mpc8349-gpio" for
-> > -  83xx, "fsl,mpc8572-gpio" for 85xx and "fsl,mpc8610-gpio" for 86xx.
-> > -- #gpio-cells : Should be two. The first cell is the pin number and the
-> > -  second cell is used to specify optional parameters (currently unused).
-> > - - interrupts : Interrupt mapping for GPIO IRQ.
-> > - - interrupt-parent : Phandle for the interrupt controller that
-> > -   services interrupts for this device.
-> > -- gpio-controller : Marks the port as GPIO controller.
-> > +- compatible:          "fsl,<CHIP>-gpio" followed by "fsl,mpc8349-gpio"
+> > 
+> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Rob Herring@ <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > Cc: Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> > Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
 > 
-> Can you use <chip> here. Only because I'm developing some
-> documentation checking scripts and handle that already.
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-will do
+thank you for the feedback and for the ACK
 
-> 
-> > +                       for 83xx, "fsl,mpc8572-gpio" for 85xx and
-> 
-> s/and/or/
-
-will do
-
-> 
-> > +                       "fsl,mpc8610-gpio" for 86xx.
-> > +- #gpio-cells:         Should be two. The first cell is the pin number
-> > +                       and the second cell is used to specify optional
-> > +                       parameters (currently unused).
-> > +- interrupt-parent:    Phandle for the interrupt controller that
-> > +                       services interrupts for this device.
-> > +- interrupts:          Interrupt mapping for GPIO IRQ.
-> > +- gpio-controller:     Marks the port as GPIO controller.
-> > +
 > > +Optional properties:
-> > +- interrupt-controller:        Empty boolean property which marks the GPIO
-> > +                       module as an IRQ controller.
-> > +- #interrupt-cells:    Number of integer cells required to specify an
+> > +- interrupt-controller:	Empty boolean property which marks the GPIO
+> > +			module as an IRQ controller.
+> > +- #interrupt-cells:	Number of integer cells required to specify an
+> > +			interrupt within this interrupt controller.  The
+> > +			first cell defines the pin number, the second
+> > +			cell defines additional flags (trigger type,
+> > +			trigger polarity).  Note that the specific set
+> > +			of trigger conditions supported by the GPIO
+> > +			module depends on the actual SoC.
 > 
-> Should start with "Should be two."
+> Nitpicking: I think you need to add that #interrupt-cells must be <2>
+> if present. I'd also suggest adding these two to the example section
+> of the binding while you're at it.
 
 will do
 
-> 
-> > +                       interrupt within this interrupt controller.  The
-> > +                       first cell defines the pin number, the second
-> > +                       cell defines additional flags (trigger type,
-> > +                       trigger polarity).  Note that the specific set
-> > +                       of trigger conditions supported by the GPIO
-> > +                       module depends on the actual SoC.
-> 
-> You mean what values are supported vary, not the meaning of the values right?
-
-yes, encoding of trigger conditions is specified in the common
-document and the values remain the same, but the set of possible
-values which apply to a SoC are individual
-
-
-thank you for the feedback
+and I assume that your ACK still applies after I have addressed
+the feedback from you and from Rob
 
 
 virtually yours
