@@ -1,313 +1,65 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 1/5] mfd: max14577: Add max14577 MFD driver core
-Date: Thu, 21 Nov 2013 12:43:19 +0100
-Message-ID: <1385034199.748.21.camel@AMDC1943>
-References: <1384956732-19526-1-git-send-email-k.kozlowski@samsung.com>
- <1384956732-19526-2-git-send-email-k.kozlowski@samsung.com>
- <20131121103408.GA22536@lee--X1>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/4] Documentation:: Add documentation for APM X-Gene
+ SoC SATA host controller DTS binding
+Date: Thu, 21 Nov 2013 13:16:03 +0100
+Message-ID: <201311211316.03647.arnd@arndb.de>
+References: <1385014298-15700-1-git-send-email-lho@apm.com>
+ <1385014298-15700-2-git-send-email-lho@apm.com>
+ <1385014298-15700-3-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20131121103408.GA22536@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1385014298-15700-3-git-send-email-lho@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Loc Ho <lho@apm.com>
+Cc: devicetree@vger.kernel.org, Suman Tripathi <stripathi@apm.com>, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, jcm@redhat.com, tj@kernel.org, olof@lixom.net, Tuan Phan <tphan@apm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2013-11-21 at 10:34 +0000, Lee Jones wrote:
-> <snip>
-> 
-> > +/**
-> > + * After resuming from suspend it may happen that IRQ is signalled but
-> > + * IRQ GPIO is not high. Also the interrupt registers won't have any data
-> > + * (all of them equal to 0x00).
-> > + *
-> > + * In such case retry few times reading the interrupt registers.
-> > + */
-> > +#define IRQ_READ_REG_RETRY_CNT		5
-> 
-> Where is this used?
-> 
-> <snip>
-> 
-> > +#define DECLARE_IRQ(idx, _group, _mask)		\
-> > +	[(idx)] = { .group = (_group), .mask = (_mask) }
-> 
-> I'm pretty sure the parentheses are supurfluous.
-> 
-> > +static const inline struct max14577_irq_data *
-> > irq_to_max14577_irq(struct max14577 *max14577, int irq)
-> 
-> We should tab this back out.
-> 
-> > +{
-> > +	struct irq_data *data = irq_get_irq_data(irq);
-> > +	return &max14577_irqs[data->hwirq];
-> 
-> Shouldn't you be using irq_create_mapping() or irq_find_mapping() here?
-> 
-> > +static void max14577_irq_mask(struct irq_data *data)
-> > +{
-> > +	struct max14577 *max14577 = irq_get_chip_data(data->irq);
-> 
->                                     irq_data_get_irq_chip_data(data); ?
-> 
-> > +	const struct max14577_irq_data *irq_data =
-> > +	    irq_to_max14577_irq(max14577, data->irq);
-> > +
-> > +	if (!irq_data)
-> > +		return;
-> > +
-> > +	if (irq_data->group >= MAX14577_IRQ_REGS_NUM)
-> > +		return;
-> > +
-> > +	max14577->irq_masks_cur[irq_data->group] &= ~irq_data->mask;
-> > +}
-> 
-> <snip>
-> 
-> > +int max14577_irq_resume(struct max14577 *max14577)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	if (max14577->irq && max14577->irq_domain)
-> > +		ret = max14577_irq_thread(0, max14577);
-> > +
-> > +	return ret >= 0 ? 0 : ret;
-> 
-> Please open this out to something more easily comprehensible.
+On Thursday 21 November 2013, Loc Ho wrote:
+> +SATA host controller nodes are defined to describe on-chip Serial ATA
+> +controllers. Each SATA controller (pair of ports) have its own node.
+> +
+> +Required properties:
+> +- compatible		: Shall be "apm,xgene-ahci"
+> +- reg			: First memory resource shall be the AHCI memory
+> +			  resource.
+> +			  Second memory resource shall be the host controller
+> +			  memory resource.
+> +- interrupt-parent	: Interrupt controller
+> +- interrupts		: Interrupt mapping for SATA host controller IRQ
+> +- clocks		: Reference to the clock entry
+> +- phys			: PHY reference
+> +- phy-names		: Name of the PHY reference. The name should be
+> +			  formed by "sataphy" plus lower case hex for the
+> +			  lower 32-bit PHY CSR address (2nd memory resource)
 
-Thanks for pointing these out however after using regmap_irq_chip whole
-file won't be needed anymore.
+I've tried to explain this before, but apparently you missed the point:
 
-(...)
+Any "*-names" property is supposed to be the identifier inside the device you
+are describing, *not* an identifier for what it points to, as that already
+has a name. The idea is that the driver can ask for phy (or clock, irq,
+memory, etc) "foo" here, with foo identifying the functionality in the
+device. If you only have one phy, you probably don't want to name it at
+all. If you imagine a device that was connected to two different phys
+depending on the mode it's used in (e.g. SATA-II vs SATA-6G), you would
+list this as
 
-> > +static int max14577_i2c_probe(struct i2c_client *i2c,
-> > +			      const struct i2c_device_id *id)
-> > +{
-> > +	struct max14577 *max14577;
-> > +	struct max14577_platform_data *pdata = dev_get_platdata(&i2c->dev);
-> > +	u8 reg_data;
-> > +	int ret = 0;
-> > +
-> > +	if (i2c->dev.of_node) {
-> 
-> Can you pull this out. It looks neater as the top as:
->   struct device_node *np = i2c->dev.of_node;
+ - phy-names		: one name per references in the "phys" property.
+			  valid names are "sata-ii" and "sata-6g".
 
-I am not sure if I understand you correctly. You would like to change
-this to:
--------------------------
-static int max14577_i2c_probe(struct i2c_client *i2c,
-                              const struct i2c_device_id *id)
-{
-        struct max14577 *max14577;
-        struct max14577_platform_data *pdata =
-dev_get_platdata(&i2c->dev);
-        struct device_node *np = i2c->dev.of_node;
-        u8 reg_data;
-        int ret = 0;
+If the generic phy subsystem requires you to name this, I'd suggest either
+changing the phy subsystem to make the name optional, or to just call it
+"serdes", as that is the kind of phy you are connected to.
 
-        if (np) {
-                pdata = devm_kzalloc(&i2c->dev,
-                                sizeof(struct max14577_platform_data),
-                                GFP_KERNEL);
--------------------------
-The variable 'np' would be used only once.
+Does this make more sense to you now?
 
-
-> 
-> > +		pdata = devm_kzalloc(&i2c->dev,
-> > +				sizeof(struct max14577_platform_data),
-> 
-> I prefer:
->   sizeof(*pdata),
-
-OK. Line will be shorter. I will change this patter also in other
-places.
-
-> 
-> > +				GFP_KERNEL);
-> > +		if (!pdata)
-> > +			return -ENOMEM;
-> > +		i2c->dev.platform_data = pdata;
-> > +	}
-> > +
-> > +	if (IS_ERR_OR_NULL(pdata)) {
-> 
-> It's not likely to be an ERR, just do:
->  if (!pdata) {
-
-OK.
-
-
-> > +		dev_err(&i2c->dev, "No platform data found: %ld\n",
-> > +				PTR_ERR(pdata));
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	max14577 = devm_kzalloc(&i2c->dev, sizeof(struct max14577), GFP_KERNEL);
-> > +	if (!max14577)
-> > +		return -ENOMEM;
-> > +
-> > +	i2c_set_clientdata(i2c, max14577);
-> > +	max14577->pdata = pdata;
-> 
-> How many different places do you want to store this?
-> 
-> > +	max14577->dev = &i2c->dev;
-> 
-> You're storing dev here anyway.
-> 
-> Remove the pdata property and get it from dev when/if you require it.
-
-OK.
-
-
-> > +	max14577->i2c = i2c;
-> > +	max14577->irq = i2c->irq;
-> > +
-> > +	max14577->regmap = devm_regmap_init_i2c(i2c, &max14577_regmap_config);
-> > +	if (IS_ERR(max14577->regmap)) {
-> > +		ret = PTR_ERR(max14577->regmap);
-> > +		dev_err(max14577->dev, "Failed to allocate register map: %d\n",
-> > +				ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = max14577_read_reg(max14577->regmap, MAX14577_REG_DEVICEID,
-> > +			&reg_data);
-> > +	if (ret) {
-> > +		dev_err(max14577->dev, "Device not found on this channel: %d\n",
-> > +				ret);
-> > +		return ret;
-> > +	}
-> > +	max14577->vendor_id = (reg_data & 0x7);
-> > +	max14577->device_id = ((reg_data & 0xF8) >> 0x3);
-> > +	dev_info(max14577->dev, "Device ID: 0x%x, vendor: 0x%x\n",
-> > +			max14577->device_id, max14577->vendor_id);
-> > +
-> > +	ret = max14577_irq_init(max14577);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = mfd_add_devices(max14577->dev, -1, max14577_devs,
-> > +			ARRAY_SIZE(max14577_devs), NULL, 0, NULL);
-> 
-> You should be passing the irqdomain as the final parameter here.
-
-I replaced the IRQ handling with regmap_irq_chip so this would look like
-this:
--------------------------
-        ret = mfd_add_devices(max14577->dev, -1, max14577_devs,
-                        ARRAY_SIZE(max14577_devs), NULL, 0,
-                        regmap_irq_get_domain(max14577->irq_data));
--------------------------
-Am I correct?
-
-
-> > +	if (ret < 0)
-> > +		goto err_mfd;
-> > +
-> > +	device_init_wakeup(max14577->dev, 1);
-> > +
-> > +	return 0;
-> > +
-> > +err_mfd:
-> > +	max14577_irq_exit(max14577);
-> > +	return ret;
-> > +}
-> > +
-> > +static int max14577_i2c_remove(struct i2c_client *i2c)
-> > +{
-> > +	struct max14577 *max14577 = i2c_get_clientdata(i2c);
-> > +
-> > +	mfd_remove_devices(max14577->dev);
-> > +	max14577_irq_exit(max14577);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct i2c_device_id max14577_i2c_id[] = {
-> > +	{ MAX14577_MFD_DEV_NAME, 0 },
-> 
-> Can you use the proper name here, these types of defines are pretty ugly.
-
-OK.
-
-> <snip>
-> 
-> > +#ifdef CONFIG_OF
-> > +static struct of_device_id max14577_dt_match[] = {
-> > +	{ .compatible = "maxim,max14577", },
-> > +	{},
-> > +};
-> > +#else
-> > +#define max14577_dt_match	NULL
-> > +#endif
-> 
-> You don't need to do this and use of_match_ptr().
-> 
-> Remove the #ifdef.
-
-Yes, Mark also pointed this.
-
-> 
-> > +static SIMPLE_DEV_PM_OPS(max14577_pm, max14577_suspend, max14577_resume);
-> > +
-> > +static struct i2c_driver max14577_i2c_driver = {
-> > +	.driver = {
-> > +		.name = MAX14577_MFD_DEV_NAME,
-> 
-> Can you use the proper name here, these types of defines are pretty ugly.
-
-OK.
-
-> 
-> > +		.owner = THIS_MODULE,
-> > +		.pm = &max14577_pm,
-> > +		.of_match_table = of_match_ptr(max14577_dt_match),
-> > +	},
-> > +	.probe = max14577_i2c_probe,
-> > +	.remove = max14577_i2c_remove,
-> > +	.id_table = max14577_i2c_id,
-> > +};
-> 
-> >>>>>>>>>>>>>>>>>>>>>>
-> 
-> > +static int __init max14577_i2c_init(void)
-> > +{
-> > +	return i2c_add_driver(&max14577_i2c_driver);
-> > +}
-> > +subsys_initcall(max14577_i2c_init);
-> > +
-> > +static void __exit max14577_i2c_exit(void)
-> > +{
-> > +	i2c_del_driver(&max14577_i2c_driver);
-> > +}
-> > +module_exit(max14577_i2c_exit);
-> 
-> >>>>>>>>>>>>>>>>>>>>>>
-> 
-> Remove all this and replace with:
->   module_i2c_driver(max14577_i2c_driver);
-
-The subsys_initcall is needed. Marek Szyprowski replied to this here:
-http://thread.gmane.org/gmane.linux.drivers.devicetree/51903/focus=1594651
-
-
-(...)
-
-> > +struct max14577_regulator_platform_data {
-> > +	int id;
-> > +	struct regulator_init_data *initdata;
-> > +	struct device_node *of_node;
-> 
-> Do you ever set this? What's the point of it is it's set in the device?
-
-Do you mean the whole struct max14577_regulator_platform_data or only
-some member of it (of_node?)?
-
-Best regards,
-Krzysztof
+	Arnd
