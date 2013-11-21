@@ -1,43 +1,106 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] irqchip: versatile FPGA: support cascaded interrupts from DT
-Date: Thu, 21 Nov 2013 23:54:36 +0100
-Message-ID: <CACRpkdYYELxiMzqmPbZNQUp0YPxOH=98-QnU2Q_JLWcGHOwTFA@mail.gmail.com>
-References: <1380893106-7550-1-git-send-email-linus.walleij@linaro.org>
-	<CACRpkda6XcEA3xri116q=U26Cm3BeMWv4Us40FCyxGj3o+DAFw@mail.gmail.com>
-	<alpine.DEB.2.02.1311212226280.30673@ionos.tec.linutronix.de>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: [PATCHv2] ARM: mvebu: Add RN104 SATA LEDs driven via NXP PCA9554 I2C to GPIO muxer
+Date: Fri, 22 Nov 2013 00:00:12 +0100
+Message-ID: <87mwkx4ayr.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1311212226280.30673@ionos.tec.linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2013 at 10:27 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> On Thu, 21 Nov 2013, Linus Walleij wrote:
->> On Fri, Oct 4, 2013 at 3:25 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
->>
->> > The Versatile FPGA interrupt controller supports cascading interrupts,
->> > i.e. that its output is connected to the input of another interrupt
->> > controller. This makes it possible to pass a parent interrupt from
->> > the device tree and print it in the boot log if applicable.
->> >
->> > Cc: Thomas Gleixner <tglx@linutronix.de>
->> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->> > ---
->> > TGLX: I can take this through ARM SoC if you're happy with it
->> > and prefer it that way, but it merges just as fine as it is on
->> > the IRQ tree.
->>
->> Ping on this!
->
-> by all means, I can't find the original patch anywhere in my mail
-> folders. Can you bounce it to me please?
 
-Hm it is not in the marc archives either, what is this now..
+NETGEAR ReadyNAS 104 has a NXP PCA9554 I2C to GPIO chip. Among the 8 GPIO
+lines the chip makes available, four are used on the device to control
+the SATA LEDs (the four remaining ones are used for SATA disk presence).
+This patch adds DT entries for NXP PCA9554 and the four SATA GPIO LEDs.
 
-Anyway I've resent it.
+Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+---
+Hi Jason,
 
-Yours,
-Linus Walleij
+For some reason, I have forgotten this one in my drafts folder and
+noticed that just now. It goes on top of 45e8815f (ARM: mvebu: Add
+Netgear ReadyNAS 104 board) which is now sitting in Linus tree.
+
+If you wonder why NETGEAR was short on GPIO lines from the Armada 370
+SoC and had to add this, the answer is: the front Winstar WH1602 LCD
+consumes 7 lines.
+
+Changes since v1:
+
+ Following comments from Sebastian:
+  - Changed values for macros for GPIO voltage level
+
+Cheers,
+
+a+
+
+ arch/arm/boot/dts/armada-370-netgear-rn104.dts | 32 ++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+index b0b32f5..e65c24c 100644
+--- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
++++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+@@ -12,6 +12,7 @@
+ /dts-v1/;
+ 
+ #include "armada-370.dtsi"
++#include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+ 	model = "NETGEAR ReadyNAS 104";
+@@ -123,6 +124,13 @@
+ 					fan_startv = <1>;
+ 					pwm_polarity = <0>;
+ 				};
++
++				pca9554: pca9554@23 {
++					compatible = "nxp,pca9554";
++					gpio-controller;
++					#gpio-cells = <2>;
++					reg = <0x23>;
++				};
+ 			};
+ 		};
+ 	};
+@@ -154,6 +162,30 @@
+ 			gpios = <&gpio2 0 1>;    /* GPIO 64 Active Low */
+ 			linux,default-trigger = "keep";
+ 		};
++
++		sata1_led {
++			label = "rn104:blue:sata1";
++			gpios = <&pca9554 0 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++
++		sata2_led {
++			label = "rn104:blue:sata2";
++			gpios = <&pca9554 1 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++
++		sata3_led {
++			label = "rn104:blue:sata3";
++			gpios = <&pca9554 2 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++
++		sata4_led {
++			label = "rn104:blue:sata4";
++			gpios = <&pca9554 3 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
+ 	};
+ 
+ 	gpio_keys {
+-- 
+1.8.4.rc3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
