@@ -1,77 +1,57 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: [RFC PATCH v3 8/8] mmc: omap_hsmmc: remove pbias workaround
-Date: Thu, 21 Nov 2013 19:50:27 +0530
-Message-ID: <1385043627-30439-9-git-send-email-balajitk@ti.com>
-References: <20130613174554.GB1403@sirena.org.uk>
- <1385043627-30439-1-git-send-email-balajitk@ti.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 4/5] regulator: max14577: Add regulator driver for Maxim
+ 14577
+Date: Thu, 21 Nov 2013 15:27:13 +0100
+Message-ID: <1385044033.748.29.camel@AMDC1943>
+References: <1384956732-19526-1-git-send-email-k.kozlowski@samsung.com>
+ <1384956732-19526-5-git-send-email-k.kozlowski@samsung.com>
+ <3176793.htnYthLYeH@amdc1032> <3987325.g4jkYp0g0H@amdc1032>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1385043627-30439-1-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org
-Cc: tony@atomide.com, Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <3987325.g4jkYp0g0H@amdc1032>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Anton Vorontsov <anton@enomsg.org>, linux-doc@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-remove pbias workaround
+On Wed, 2013-11-20 at 18:58 +0100, Bartlomiej Zolnierkiewicz wrote:
+> Err..
+> 
+> > I'm missing something obvious "info" is redundant and can be removed
+> > altogether.
+> > 
+> > Best regards,
+> > --
+> > Bartlomiej Zolnierkiewicz
+> > Samsung R&D Institute Poland
+> > Samsung Electronics
+> > 
+> > > +	for (i = 0; i < pdata->num_regulators; i++) {
+> > > +		int id = pdata->regulators[i].id;
+> > > +
+> > > +		config.init_data = pdata->regulators[i].initdata;
+> > > +		config.of_node = pdata->regulators[i].of_node;
+> > > +
+> > > +		info->regulators[i] = devm_regulator_register(&pdev->dev,
+> > > +				&supported_regulators[id], &config);
+> > > +		if (IS_ERR(info->regulators[i])) {
+> 
+> This code actually reads from "info" but it can be fixed trivially
+> to not require "info".
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
----
- drivers/mmc/host/omap_hsmmc.c |   20 +-------------------
- 1 files changed, 1 insertions(+), 19 deletions(-)
+You're right, it can be removed. The info was a left-over from 3.10
+where there isn't devm_regulator_register(). Thanks for review.
 
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 0a390f8..0f0aa5d 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -170,7 +170,6 @@ struct omap_hsmmc_host {
- 	struct	regulator	*vcc_aux;
- 	struct	regulator	*pbias;
- 	bool			pbias_enabled;
--	int			pbias_disable;
- 	void	__iomem		*base;
- 	resource_size_t		mapbase;
- 	spinlock_t		irq_lock; /* Prevent races with irq handler */
-@@ -267,13 +266,6 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
- 	 */
- 	if (!host->vcc)
- 		return 0;
--	/*
--	 * With DT, never turn OFF the regulator for MMC1. This is because
--	 * the pbias cell programming support is still missing when
--	 * booting with Device tree
--	 */
--	if (host->pbias_disable && !vdd)
--		return 0;
- 
- 	if (mmc_slot(host).before_set_reg)
- 		mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
-@@ -1541,13 +1533,7 @@ static void omap_hsmmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 		 * of external transceiver; but they all handle 1.8V.
- 		 */
- 		if ((OMAP_HSMMC_READ(host->base, HCTL) & SDVSDET) &&
--			(ios->vdd == DUAL_VOLT_OCR_BIT) &&
--			/*
--			 * With pbias cell programming missing, this
--			 * can't be allowed on MMC1 when booting with device
--			 * tree.
--			 */
--			!host->pbias_disable) {
-+			(ios->vdd == DUAL_VOLT_OCR_BIT)) {
- 				/*
- 				 * The mmc_select_voltage fn of the core does
- 				 * not seem to set the power_mode to
-@@ -1880,10 +1866,6 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
- 
- 	omap_hsmmc_context_save(host);
- 
--	/* This can be removed once we support PBIAS with DT */
--	if (host->dev->of_node && res->start == 0x4809c000)
--		host->pbias_disable = 1;
--
- 	host->dbclk = clk_get(&pdev->dev, "mmchsdb_fck");
- 	/*
- 	 * MMC can still work without debounce clock.
--- 
-1.7.5.4
 
+Best regards,
+Krzysztof
