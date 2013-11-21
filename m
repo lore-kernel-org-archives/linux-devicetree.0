@@ -1,79 +1,55 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 3/4] ata: Add APM X-Gene SoC SATA host controller driver
-Date: Thu, 21 Nov 2013 14:20:28 +0100
-Message-ID: <201311211420.28509.arnd@arndb.de>
-References: <1384465153-29902-1-git-send-email-lho@apm.com>
- <201311151448.16279.arnd@arndb.de>
- <CAPw-ZTmaz3nnV3ThRgecT_RaYYW0bmfWvL8Kr-S3z1aKyUWc+w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPw-ZTmaz3nnV3ThRgecT_RaYYW0bmfWvL8Kr-S3z1aKyUWc+w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Loc Ho <lho@apm.com>
-Cc: devicetree@vger.kernel.org, Suman Tripathi <stripathi@apm.com>, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, Jon Masters <jcm@redhat.com>, Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Olof Johansson <olof@lixom.net>, Tuan Phan <tphan@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv5 4/9] iommu/tegra: smmu: register device to iommu dynamically
+Date: Thu, 21 Nov 2013 13:23:22 +0000
+Message-ID: <20131121132322.EFDD1C40A2C@trevor.secretlab.ca>
+References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com> < 1384853593-32202-5-git-send-email-hdoyu@nvidia.com> <528BDAAA.4000203@ wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <528BDAAA.4000203-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 16 November 2013, Loc Ho wrote:
-
-
-> >
-> > config SATA_XGENE
-> >         tristate "APM X-Gene 6.0Gbps SATA host controller support"
-> >         depends on ARM64 || COMPILE_TEST
-> >         ...
-> >
-> [Loc Ho]
-> Okay. How about this?
+On Tue, 19 Nov 2013 14:39:54 -0700, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 11/19/2013 02:33 AM, Hiroshi Doyu wrote:
+> > platform_devices are registered as IOMMU'able dynamically via
+> > add_device() and remove_device().
+> > 
+> > Tegra SMMU can have multiple address spaces(AS). IOMMU'able devices
+> > can belong to one of them. Multiple IOVA maps are created at boot-up,
+> > which can be attached to devices later. We reserve 2 of them for
+> > static assignment, AS[0] for system default, AS[1] for AHB clusters as
+> > protected domain from others, where there are many traditional
+> > pheripheral devices like USB, SD/MMC. They should be isolated from
+> > some smart devices like host1x for system robustness. Even if smart
+> > devices behaves wrongly, the traditional devices(SD/MMC, USB) wouldn't
+> > be affected, and the system could continue most likely. DMA API(ARM)
+> > needs ARM_DMA_USE_IOMMU to be enabled.
 > 
->  depends on ARM64 || COMPILE_TEST
->  select SATA_XGENE_PHY && SATA_AHCI_PLATFORM
+> > diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+> 
+> > +static int smmu_iommu_add_device(struct device *dev)
+> > +{
+> > +	int err = -EPROBE_DEFER;
+> > +	u32 swgroups = dev->platform_data;
+> > +	struct dma_iommu_mapping *map = NULL;
+> > +
+> > +	if (test_bit(TEGRA_SWGROUP_PPCS, swgroups))
+> > +		map = smmu_handle->map[SYSTEM_PROTECTED];
+> > +	else
+> > +		map = smmu_handle->map[SYSTEM_DEFAULT];
+> > +
+> > +	if (map)
+> > +		err = arm_iommu_attach_device(dev, map);
+> > +	else
+> > +		return -EPROBE_DEFER;
+> 
+> Given that patch 2 exists, if this test fails, then surely the
+> appropriate error code is some fatal error, not -EPROBE_DEFER; any
+> deferrals should have happened long before this point.
 
-I think you already found the mistake withis and corrected this in v4.
+Will need to be revisited. Patching into the core really_probe() like
+patch #2 does is a really bad approach which would mean that returning
+EPROBE_DEFER is appropriate here.
 
-> > The interface you are looking for is pr_debug() or dev_dbg(), which get
-> > built-in only if the DEBUG macro is set.
-> >
-> > In a lot of cases, it's actually best to remove debug output like this from
-> > the driver once you have it working  -- whoever is debugging problems in
-> > the driver next might need completely different debugging information or
-> > can add them back easily if needed.
-> >
-> > It's your choice if you want to use pr_debug() or remove that output
-> > entirely. If you remove it, best remove the helper functions entirely
-> > and use readl/writel directly.
-> [Loc Ho]
-> I would like to keep this function for now until this driver actual
-> being used in production. I will use pr_debug.
-
-Ok.
-
-> >> diff --git a/drivers/ata/sata_xgene.h b/drivers/ata/sata_xgene.h
-> >> new file mode 100644
-> >> index 0000000..51e73f6
-> >> --- /dev/null
-> >> +++ b/drivers/ata/sata_xgene.h
-> >
-> > This file should probably just be folded into the driver, since it contains no
-> > interfaces between  modules, just internal definitions.
-> [Loc Ho]
-> I can get rip this header file now. But in the future I may need to
-> add this back as I intended this driver to also support running from
-> our co-processor (ARMv7 32-bit). For that, I will need anothe file and
-> other function that will need knowledge of the context structure and
-> etc.
-
-Hmm, is the code for that coprocessor compiled from the kernel source?
-If not, it shouldn't really make a difference as it won't live in a shared
-code repository.
-
-	Arnd
+g.
