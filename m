@@ -1,34 +1,39 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/2] ARM: dts: omap4-panda-common: Fix pin muxing for
- wl12xx
-Date: Thu, 21 Nov 2013 08:58:23 -0800
-Message-ID: <20131121165823.GM10317@atomide.com>
-References: <1385041804-19115-1-git-send-email-balajitk@ti.com>
- <1385041804-19115-2-git-send-email-balajitk@ti.com>
+From: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Thu, 21 Nov 2013 17:01:22 +0000
+Message-ID: <20131121170122.GB22960@srcf.ucam.org>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail.com>
+ <20131115095717.GC1709@e106331-lin.cambridge.arm.com>
+ <20131115175241.GB27174@quad.lixom.net>
+ <20131119113015.GH5914@e106331-lin.cambridge.arm.com>
+ <20131121162944.F087FC406A3@trevor.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1385041804-19115-2-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20131121162944.F087FC406A3-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Balaji T K <balajitk@ti.com> [131121 05:51]:
-> pin mux wl12xx_gpio and wl12xx_pins should be part of omap4_pmx_core
-> and not omap4_pmx_wkup. So, move wl12xx_* to omap4_pmx_core.
-> 
-> Fix the following error message:
-> pinctrl-single 4a31e040.pinmux: mux offset out of range: 0x38 (0x38)
-> pinctrl-single 4a31e040.pinmux: could not add functions for pinmux_wl12xx_pins 56x
-> 
-> SDIO card is not detected after moving pin mux to omap4_pmx_core since
-> sdmmc5_clk pull is disabled. Enable Pull up on sdmmc5_clk to detect SDIO card.
+On Thu, Nov 21, 2013 at 04:29:44PM +0000, Grant Likely wrote:
 
-Cool, does this fix the issue with the WLAN not coming up after a warm reset
-on panda?
+> Personally, I think the issue of ACPI support should be taken on a
+> patch-by-patch basis. A lot of the things that need to be done are quite
+> discrete and fairly well contained. If the patches don't look that way
+> then push back on them. For the parts that look ready, go ahead and
+> merge it. Push back on the ones that don't.
 
-Regards,
+I think the most valuable thing in ACPI is the static data tables. 
+Things like BERT, EINJ, HEST, MPST and the various other bits of RAS 
+functionality have value in the ARM world, and being able to share the 
+implementation is a benefit. But that can be implemented without 
+worrying about using ACPI for device discovery or interfacing.
 
-Tony
+-- 
+Matthew Garrett | mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
