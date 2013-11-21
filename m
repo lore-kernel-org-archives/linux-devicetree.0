@@ -1,113 +1,325 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH v3 3/8] regulator: add pbias regulator support
-Date: Thu, 21 Nov 2013 14:46:23 +0000
-Message-ID: <20131121144623.GA8120@sirena.org.uk>
-References: <1385043627-30439-4-git-send-email-balajitk@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
+Date: Thu, 21 Nov 2013 15:57:53 +0100
+Message-ID: <1574695.YAEZXuUskK@amdc1227>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
+ <25668725.sMcoUCgCKk@flatron> <52861F46.8020900@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385043627-30439-4-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, tony@atomide.com
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <52861F46.8020900@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Friday 15 of November 2013 09:19:02 Eduardo Valentin wrote:
+> Hello Tomasz,
+> 
+> On 14-11-2013 09:40, Tomasz Figa wrote:
+> > On Thursday 14 of November 2013 07:31:04 Eduardo Valentin wrote:
+> >> On 13-11-2013 12:57, Tomasz Figa wrote:
+> >>> Hi Eduardo,
+> >>>
+> >>
+> >> Hello Tomaz
+> >>
+> >>> On Tuesday 12 of November 2013 15:46:04 Eduardo Valentin wrote:
+> >>>> This patch introduces a device tree bindings for
+> >>>> describing the hardware thermal behavior and limits.
+> >>>> Also a parser to read and interpret the data and feed
+> >>>> it in the thermal framework is presented.
+> >>> [snip]
+> >>>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..59f5bd2
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+> >>>> @@ -0,0 +1,586 @@
+> >>> [snip]
+> >>>> +* Cooling device nodes
+> >>>> +
+> >>>> +Cooling devices are nodes providing control on power dissipation. There
+> >>>> +are essentially two ways to provide control on power dissipation. First
+> >>>> +is by means of regulating device performance, which is known as passive
+> >>>> +cooling. A typical passive cooling is a CPU that has dynamic voltage and
+> >>>> +frequency scaling (DVFS), and uses lower frequencies as cooling states.
+> >>>> +Second is by means of activating devices in order to remove
+> >>>> +the dissipated heat, which is known as active cooling, e.g. regulating
+> >>>> +fan speeds. In both cases, cooling devices shall have a way to determine
+> >>>> +the state of cooling in which the device is.
+> >>>> +
+> >>>> +Required properties:
+> >>>> +- cooling-min-state:	An integer indicating the smallest
+> >>>> +  Type: unsigned	cooling state accepted. Typically 0.
+> >>>> +  Size: one cell
+> >>>
+> >>> Could you explain (just in a reply) what a cooling state is and what are
+> >>> the min and max values used for?
+> >>
+> >> Cooling state is an unsigned integer which represents heat control that
+> >> a cooling device implies.
+> > 
+> > OK. So you have a cooling device and it can have multiple cooling states,
+> > like a cooling fan that has multiple speed levels. Did I understand this
+> > correctly?
+> > 
+> > IMHO this should be also explained in the documentation above, possibly
+> > with one or two examples.
+> 
+> 
+> There are more than one example in this file. Even explaining why
+> cooling min and max are used, and the difference of min and max
+> properties that appear in cooling device and those present in a cooling
+> specifier. Cooling devices and cooling state are described in the
+> paragraph above.
 
---EeQfGwPcQSOJBaQU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I mean, the definition I commented about is completely confusing. You
+should rewrite it in a more readable way. For example, "Cooling state is
+an unsigned integer which represents level of cooling performance of
+a thermal device." would be much more meaningful, if I understood the
+whole idea of "cooling state" correctly.
 
-On Thu, Nov 21, 2013 at 07:50:22PM +0530, Balaji T K wrote:
+By example I mean simply listing one or two possible practical meanings,
+like "(e.g. speed level of a cooling fan, performance throttling level of
+CPU)".
 
-> +static int pbias_regulator_set_voltage(struct regulator_dev *dev,
-> +			int min_uV, int max_uV, unsigned *selector)
-> +{
-> +	struct pbias_regulator_data *data = rdev_get_drvdata(dev);
-> +	const struct pbias_bit_map *bmap = data->bmap;
-> +	int ret, vmode;
-> +
-> +	if (min_uV <= 1800000)
-> +		vmode = 0;
-> +	else if (min_uV > 1800000)
-> +		vmode = bmap->vmode;
-> +
-> +	ret = regmap_update_bits(data->syscon, data->pbias_reg,
-> +						bmap->vmode, vmode);
-> +	data->voltage = min_uV;
+> 
+> > 
+> >>
+> >>>
+> >>>> +
+> >>>> +- cooling-max-state:	An integer indicating the largest
+> >>>> +  Type: unsigned	cooling state accepted.
+> >>>> +  Size: one cell
+> >>>> +
+> >>>> +- #cooling-cells:	Used to provide cooling device specific information
+> >>>> +  Type: unsigned	while referring to it. Must be at least 2, in order
+> >>>> +  Size: one cell      	to specify minimum and maximum cooling state used
+> >>>> +			in the reference. The first cell is the minimum
+> >>>> +			cooling state requested and the second cell is
+> >>>> +			the maximum cooling state requested in the reference.
+> >>>> +			See Cooling device maps section below for more details
+> >>>> +			on how consumers refer to cooling devices.
+> >>>> +
+> >>>> +* Trip points
+> >>>> +
+> >>>> +The trip node is a node to describe a point in the temperature domain
+> >>>> +in which the system takes an action. This node describes just the point,
+> >>>> +not the action.
+> >>>> +
+> >>>> +Required properties:
+> >>>> +- temperature:		An integer indicating the trip temperature level,
+> >>>> +  Type: signed		in millicelsius.
+> >>>> +  Size: one cell
+> >>>> +
+> >>>> +- hysteresis:		A low hysteresis value on temperature property (above).
+> >>>> +  Type: unsigned	This is a relative value, in millicelsius.
+> >>>> +  Size: one cell
+> >>>
+> >>> What about replacing temperature and hysteresis with a single temperature
+> >>> property that can be either one cell for 0 hysteresis or two cells to
+> >>> specify lower and upper range of temperatures?
+> >>
+> >> What is the problem with using two properties? I think we loose
+> >> representation by gluing two properties into one just because one cell.
+> > 
+> > Ranges is the representation widely used in other bindings. In addition
+> 
+> Well that sentence is arguable. It is not like all properties in DT are
+> standardized as ranges, is it?
 
-> +static int pbias_regulator_get_voltage(struct regulator_dev *rdev)
-> +{
-> +	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
-> +
-> +	return data->voltage;
-> +}
+No, they are not, but property range is a common concept of representing
+range of some values.
 
-These don't match up with each other - the get and set voltage calls
-should reflect what the hardware state is, not what was requested by the
-caller.  You should be able to use the regmap helpers I think.
+Anyway, I won't insist on this, as it's just a minor detail. However I'd
+like to see comments from more people on this.
 
-> +static int pbias_regulator_enable(struct regulator_dev *rdev)
-> +{
-> +	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
-> +	const struct pbias_bit_map *bmap = data->bmap;
-> +	int ret;
-> +
-> +	ret = regmap_update_bits(data->syscon, data->pbias_reg,
-> +					bmap->enable_mask, bmap->enable);
+> 
+> > I believe a range is more representative - when reading a DTS you don't
+> > need to think whether the hysteresis is in temperature units, percents or
+> > something else and also is less ambiguous, because you have clearly
+> > defined lower and upper bounds in one place.
+> 
+> It is the other way around. For a person designing a thermal
+> representation for a specific board it is intuitive to think about
+> hysteresis in this case. It is a better representation because we are
+> really talking about a hysteresis here in order to give some room for
+> the system to react on temporary temperature transitions around that
+> point. It is possible to use ranges as you are suggesting, but it
+> becomes confusing.
+> 
 
-regulator_enable_regmap() and similarly for disable() and is_enabled().
+Probably it depends on what you are used to. I'd like to see opinion
+of more people on this.
 
-> +	supply_name = initdata->constraints.name;
-> +
-> +	of_property_read_u32(np, "startup-delay-us", &startup_delay);
-> +	ret = of_property_read_u32(np, "pbias-reg-offset",
-> +				   &drvdata->pbias_reg);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "no pbias-reg-offset property set\n");
-> +		return ret;
-> +	}
+> 
+> > 
+> >>
+> >>>
+> >>>> +
+> >>>> +- type:			a string containing the trip type. Supported values are:
+> >>>> +	"active":	A trip point to enable active cooling
+> >>>> +	"passive":	A trip point to enable passive cooling
+> >>>
+> >>> The two above seem to be implying action, as opposed to the general
+> >>> comment about trip points.
+> >>
+> >> They do not imply action, they specify type of trip.
+> > 
+> > For me "A trip point to enable active cooling" means that when this trip
+> > point is crossed, active cooling must be enabled. What is it if not
+> > implying action?
+> 
+> But within a board there could be more than one active cooling actions
+> that could be done, it is not a 1 to 1 relation. Same thing applies to
+> passive cooling. The binding does not imply a specific action. Just the
+> trip type.
 
-This looks like it should be added as a standard property for overridig
-the regulator delay if it can't be set based on the compatible string
-alone due to board dependencies.  Do something like what's done for
-regulator-ramp-delay.
+I'd prefer the "active" and "passive" states to be renamed an their
+descriptions rephrased. In general, the idea of having just four trip
+point types seems like bound to a single specific hardware platform.
 
-> +err_regulator:
-> +	kfree(drvdata->desc.name);
-> +	return ret;
+That's a wild guess, but maybe having an unsigned integer to represent
+trip point "attention level" would be a better idea?
 
-devm_kzalloc().
+> 
+> > 
+> >>
+> >>>
+> >>>> +	"hot":		A trip point to notify emergency
+> >>>> +	"critical":	Hardware not reliable.
+> >>>> +  Type: string
+> >>>> +
+> >>> [snip]
+> >>>> +* Examples
+> >>>> +
+> >>>> +Below are several examples on how to use thermal data descriptors
+> >>>> +using device tree bindings:
+> >>>> +
+> >>>> +(a) - CPU thermal zone
+> >>>> +
+> >>>> +The CPU thermal zone example below describes how to setup one thermal zone
+> >>>> +using one single sensor as temperature source and many cooling devices and
+> >>>> +power dissipation control sources.
+> >>>> +
+> >>>> +#include <dt-bindings/thermal/thermal.h>
+> >>>> +
+> >>>> +cpus {
+> >>>> +	/*
+> >>>> +	 * Here is an example of describing a cooling device for a DVFS
+> >>>> +	 * capable CPU. The CPU node describes its four OPPs.
+> >>>> +	 * The cooling states possible are 0..3, and they are
+> >>>> +	 * used as OPP indexes. The minimum cooling state is 0, which means
+> >>>> +	 * all four OPPs can be available to the system. The maximum
+> >>>> +	 * cooling state is 3, which means only the lowest OPPs (198MHz@0.85V)
+> >>>> +	 * can be available in the system.
+> >>>> +	 */
+> >>>> +	cpu0: cpu@0 {
+> >>>> +		...
+> >>>> +		operating-points = <
+> >>>> +			/* kHz    uV */
+> >>>> +			970000  1200000
+> >>>> +			792000  1100000
+> >>>> +			396000  950000
+> >>>> +			198000  850000
+> >>>> +		>;
+> >>>> +		cooling-min-state = <0>;
+> >>>> +		cooling-max-state = <3>;
+> >>>> +		#cooling-cells = <2>; /* min followed by max */
+> >>>
+> >>> I believe you don't need the min- and max-state properties here then. Your
+> >>> thermal core can simply query the cpufreq driver (which would be a cooling
+> >>> device here) about the range of states it supports
+> >>
+> >> This binding is not supposed to be aware of cpufreq, which is Linux
+> >> specific implementation.
+> > 
+> > I didn't say anything about making the binding aware of cpufreq, but
+> > instead about getting rid of redundancy of data, that can be provided
+> > by respective drivers anyway.
+> 
+> There are cases in which cooling devices don't need to use all states
+> for cooling, because either lower states does not provide cooling
+> effectiveness or higher states must be avoided at all. So, allowing
+> drivers to report this thermal info is possible, but questionable
+> design, as you would be spreading the thermal info. Besides, for the
+> example I gave, the driver would need to know board specifics, as the
+> range of states would vary anyway across board.
 
-> +static int __init pbias_regulator_init(void)
-> +{
-> +	return platform_driver_register(&pbias_regulator_driver);
-> +}
-> +subsys_initcall(pbias_regulator_init);
+One thing is the allowed range of cooling states supported by the
+cooling device and another is the range of states that are usable on
+given board. The former is a property of the cooling device that
+in most cases is implied by its compatible string, so to eliminate the
+bad data redundancy, you should not make the user respecify that. The
+latter you have as a part of your cooling device specifier tuple.
 
-module_platform_driver().
+As an example of this, see PWM, GPIO or IRQ bindings. You don't have
+{pwm-channel,pwm-duty,interrupt,gpio}-{min,max} properties, because this
+is not needed by respective PWM, GPIO or IRQ drivers, as they already
+know these parameters.
 
---EeQfGwPcQSOJBaQU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> 
+> > 
+> >>
+> >> Besides, the cpufreq layer is populated by data already specified in DT.
+> >> .
+> >>>
+> >>>> +	};
+> >>>> +	...
+> >>>> +};
+> >>>> +
+> >>>> +&i2c1 {
+> >>>> +	...
+> >>>> +	/*
+> >>>> +	 * A simple fan controller which supports 10 speeds of operation
+> >>>> +	 * (represented as 0-9).
+> >>>> +	 */
+> >>>> +	fan0: fan@0x48 {
+> >>>> +		...
+> >>>> +		cooling-min-state = <0>;
+> >>>> +		cooling-max-state = <9>;
+> >>>
+> >>> This is similar. The fan driver will probaby know about available
+> >>> fan speed levels and be able to report the range of states to thermal
+> >>> core.
+> >>
+> >> Then we loose also the flexibility to assign cooling states to trip
+> >> points, as described in this binding.
+> > 
+> > I don't think you got my point correctly.
+> > 
+> > Let's say you have a CPU, which has 4 operating points. You don't need
+> > to specify that min state is 0 and max state is 4, because it is implied
+> > by the list of operating points.
+> 
+> Please read my explanation above.
+> 
+> > 
+> > Same goes for a fan controller that has, let's say, an 8-bit PWM duty
+> > cycle register, which in turn allows 256 different speed states. This
+> > implies that min state for it is 0 and max state 255 and you don't need
+> > to specify this in DT.
+> 
+> ditto.
+> 
+> > 
+> > Now, both a CPU and fan controller will have their thermal drivers, which
+> > can report to the thermal core what ranges of cooling states they support,
+> > which again makes it wrong to specify such data in DT.
+> 
+> 
+> Please also read the examples I gave in the thermal binding. There are
+> case that the designer may want to assign a range of states to
+> temperature trip points. This binding is flexible enough to cover for
+> that situation. And without the representation of these limits it would
+> be hard to read the binding. It is not redundant data, please check the
+> documentation.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+I don't see any problem with just dropping the min and max properties.
+All the use cases you listed above will still work, as you have the
+cooling state limits included in cooling device specifier.
 
-iQIcBAEBAgAGBQJSjhy8AAoJELSic+t+oim9FgAP/3DOgHLOu5/FReSkZ4DAWUDe
-2exoaRwlJ4FUtcpuN69vIcBWkONOZtwEhlVdsGOvHUTOuEP3g/jpaEHs5n2QhZir
-BHC79OtJ9Q14MaCTyJw3Qrflh8WkMi2bHiGrq8RxTCkRIO+8FQxiiWMHipMzvsM5
-ISmZXn6ipykCnl8dJwcJXhHpjkmxerimHQN4jfjhCggrpirxpw9h/mtwQNm22+lx
-Jd3EuoU14/3us+8rFsm+mGueiR/1hTHdrgEZk2KKAV27DuLfc/U9tQZECBhFDawW
-HKXj4BBdRTY55umLh+YvilBJdjXyUC+Dz2dzC7FIfrK3acOBzhHoh8cOkDHSiIdv
-vVMz/jRucHGZX5w/EJg3rsse5YDIpBZCzkK7YjWeNH24VZAkwylb18VMeQYGU7I/
-f0/hFbFmLml14+m9glD1yyJdSKogdE1Sg3/Yx617kveY9hHUEY/ql7FyP7i9r6BE
-fYEtJ7wiY4SSsrUXdKmKV1MtqvJaKUWpcdYKypLa+CM6ViAVGz2s+NncIY5lsBCB
-Mzy2/y9f5gLmpQgCmYTEHrSu1vTpk1rA9FEl2O7h7ja7TLvMA1HtogW8uhYwgTx+
-lsjq8jknhlZXCh2wZSpLr+tXCKeH8bAeqL0t6rBLQkMsZDG5yHq5our/6tJ+ACFS
-DNq9ZBTS64UgujKqmb26
-=bIz+
------END PGP SIGNATURE-----
-
---EeQfGwPcQSOJBaQU--
+Best regards,
+Tomasz
