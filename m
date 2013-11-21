@@ -1,54 +1,54 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of: unflatten_and_copy: handle NULL initial_boot_params
-Date: Thu, 21 Nov 2013 12:39:27 +0000
-Message-ID: <20131121123927.34EAEC40A2C@trevor.secretlab.ca>
-References: <1384865892-28659-1-git-send-email-james.hogan@imgtec.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1384865892-28659-1-git-send-email-james.hogan@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, James Hogan <james.hogan@imgtec.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv5 1/9] of: introduce of_property_for_earch_phandle_with_args()
+Date: Thu, 21 Nov 2013 12:43:28 +0000
+Message-ID: <20131121124328.46BC1C40A2C@trevor.secretlab.ca>
+References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com> < 1384853593-32202-2-git-send-email-hdoyu@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384853593-32202-2-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Nov 2013 12:58:12 +0000, James Hogan <james.hogan@imgtec.com> wrote:
-> Check whether initial_boot_params is NULL before dereferencing it in
-> unflatten_and_copy_device_tree() for the case where no device tree is
-> available but the arch can still boot to a minimal usable system without
-> it.
+On Tue, 19 Nov 2013 11:33:05 +0200, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> The following pattern of code is tempting:
 > 
-> Signed-off-by: James Hogan <james.hogan@imgtec.com>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arch@vger.kernel.org
+>   for (i = 0; !of_parse_phandle_with_args(np, list, cells, i, args); i++)
+> 
+> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+That's a very minimal commit message. Can you elaborate please.
+
 > ---
->  drivers/of/fdt.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+> v5:
+> New patch for v5.
+> ---
+>  include/linux/of.h | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 2fa024b97c43..ac4983955e6d 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -922,8 +922,14 @@ void __init unflatten_device_tree(void)
->   */
->  void __init unflatten_and_copy_device_tree(void)
->  {
-> -	int size = __be32_to_cpu(initial_boot_params->totalsize);
-> -	void *dt = early_init_dt_alloc_memory_arch(size,
-> +	int size;
-> +	void *dt;
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 276c546..131fef5 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -613,6 +613,9 @@ static inline int of_property_read_u32(const struct device_node *np,
+>  		s;						\
+>  		s = of_prop_next_string(prop, s))
+>  
+> +#define of_property_for_each_phandle_with_args(np, list, cells, i, args) \
+> +	for (i = 0; !of_parse_phandle_with_args(np, list, cells, i, args); i++)
 > +
-> +	if (!initial_boot_params)
-> +		return;
 
-Worth logging a message for those who can obtain the kernel log
-buffer?
+That works, but pretty darn inefficient. We need an iterator version of
+of_parse_phandle_with_args() to loop over all the entries.
 
-Otherwise:
+>  #if defined(CONFIG_PROC_FS) && defined(CONFIG_PROC_DEVICETREE)
+>  extern void proc_device_tree_add_node(struct device_node *, struct proc_dir_entry *);
+>  extern void proc_device_tree_add_prop(struct proc_dir_entry *pde, struct property *prop);
+> -- 
+> 1.8.1.5
+> 
 
-Acked-by: Grant Likely <grant.likely@linaro.org>
-
-But see my comments on Geert's "dt: Handle passed/built-in DT selection
-in early_init_dt_scan()" patch.
-
-g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
