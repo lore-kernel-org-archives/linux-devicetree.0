@@ -1,110 +1,84 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCH 3/3] ARM: OMAP2+: Fix eMMC on n900 with device tree
-Date: Fri, 22 Nov 2013 00:17:52 +0100
-Message-ID: <20131121231751.GA9772@earth.universe>
-References: <1385059866-10646-1-git-send-email-tony@atomide.com>
- <1385059866-10646-4-git-send-email-tony@atomide.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH 2/2] of: add initcall with match boilerplate helpers
+Date: Thu, 21 Nov 2013 17:23:14 -0600
+Message-ID: <CAL_JsqKHZtidrzJPH+c-zyFUQNsxtEKxOYg+Nzyo9JYNDNexug@mail.gmail.com>
+References: <1383113571-13029-1-git-send-email-robherring2@gmail.com>
+	<1383113571-13029-3-git-send-email-robherring2@gmail.com>
+	<20131121125007.17A8FC40A2C@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385059866-10646-4-git-send-email-tony@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Aaro Koskinen <aaro.koskinen@iki.fi>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131121125007.17A8FC40A2C@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Tony,
-
-On Thu, Nov 21, 2013 at 10:51:06AM -0800, Tony Lindgren wrote:
-> Looks like we need to configure the regulators and use the pdata
-> quirk to make eMMC work with device tree.
->=20
-> It seems that mostly vmmc2 is used, and only some earlier revisions
-> like the macro board used vaux3.
->=20
-> Note that we can add support for the macro board later as needed
-> by including the common n900 .dts file and configuring the vaux3
-> instead of vmmc2, and adding support for the smc91x Ethernet.
+On Thu, Nov 21, 2013 at 6:50 AM, Grant Likely <grant.likely@linaro.org> wrote:
+> On Wed, 30 Oct 2013 01:12:51 -0500, Rob Herring <robherring2@gmail.com> wrote:
+>> From: Rob Herring <rob.herring@calxeda.com>
+>>
+>> Add boilerplate helpers to create initcalls which are conditional on
+>> matching on devicetree properties.
+>>
+>> Cc: Grant Likely <grant.likely@linaro.org>
+>> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+>> ---
+>>  include/linux/of.h | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index f95aee3..a1327c9 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -592,6 +592,18 @@ static inline int of_property_read_u32(const struct device_node *np,
+>>               s;                                              \
+>>               s = of_prop_next_string(prop, s))
+>>
+>> +#define of_initcall_match(__func, __lvl, __match) \
+>> +static int __init __func##_init(void) \
+>> +{ \
+>> +     if (of_find_matching_node(NULL, __match)) \
+>> +             return __func(); \
+>> +     else \
+>> +             return -ENODEV; \
+>> +} \
+>> +__lvl(__func##_init);
+>> +
+>> +#define of_module_init_match(__func, __match) of_initcall_match(__func, module_init, __match)
+>> +
 >
-> ---
->=20
-> Can you guys please test this on production n900 devices?
->=20
-> I've tested it with my old macro board where I had to patch in vaux3
-> instead of vmmc2. I think there's some confusion in the legacy code
-> comments, or else I'm confused. In any case, vaux3 works for the macro
-> board, and I suspect that the production versions have vmmc2.
->=20
-> If this does not work and vaux3 as regulator works, please also dump
-> out the system_rev from your board.
+> I'm not sure why this is necessary. I don't particularly have a problem
+> with it, but I wouldn't normally try to filter out device drivers when
+> the probe code simply won't get called.
+>
+> Considering it's paired with the previous patch that creates devices in
+> the module init call, I'm assuming it is to support that use case. If so
+> then I don't think it is a good idea. If there is another use case then
+> maybe.
 
-The good news is, that I got eMMC working :) The bad news is, that it
-did not work with your patch :( I included my DTS nodes below. The
-phone is HW/System revision 0x2101.
+This is for cases that are not drivers. Again, the motivation is how
+do I do initialization on arm64 where there is not already some
+conditional initialization hook. My approach to solve this is by
+eliminating the machine_desc for highbank. While I don't really have a
+need to do this on highbank itself, I do have a need for some of the
+same functions present in mach-highbank for arm64.
 
-I have a second N900, which has HW revision 0x2204. I did not yet test
-the patch with this phone, but legacy code also seems to use vaux3 for
-it. Seems like we need two n900.dts files?
+I realized quickly going down this path that I would have a repeated
+pattern and that there's already a few other examples in the kernel of
+something like this:
 
---- DTS nodes working on the 0x2101 board ---
+static int __init some_initcall(void)
+{
+  if (of_machine_is_compatible("my-awesume-board"))
+    return -ENODEV;
 
-&omap3_pmx_core {
-	mmc2_pins: pinmux_mmc2_pins {
-		pinctrl-single,pins =3D <
-			0x128 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_clk */
-			0x12a (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_cmd */
-			0x12c (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc2_dat0 */
-			0x12e (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat1 */
-			0x130 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat2 */
-			0x132 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat3 */
-			0x134 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat4 */
-			0x136 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat5 */
-			0x138 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat6 */
-			0x13a (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat7 */
-		>;
-	};
-};
+  /* do some init stuff... */
+}
 
-&mmc2 {
-    pinctrl-names =3D "default";
-    pinctrl-0 =3D <&mmc2_pins>;
+There are some examples using this here [1][2].
 
-    vmmc-supply =3D <&vaux3>;
-    vmmc_aux-supply =3D <&vsim>;
-    bus-width =3D <8>;
-    non-removable;
-};
+Rob
 
--- Sebastian
-
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSjpSeAAoJENju1/PIO/qawmUP/0TwNvomoNlOM4IV9rhkX6oY
-kRLhH2uJ+lpLihUEKHORrRIrircRe+A+57XOMw/y4em00/wKcERQzGCn6he5fpyo
-oad1oYGm8v4sPatob/1Gjy9viWiNW/y1eW+/oOrI7+eZElXvW4O09BGlXJU5wFYy
-IaBq6Q6mBtS7w5/olcH+0mIuXFEnrGW6v7fK53F6EjMsbjHYE9I8fU51WDrJ1W/I
-+GVQ6TDiv4BUTQjQKhc2MBTz9yMAjB5FovnrNB/0UE13AdeAxp1E7h6w3sO9eoUV
-5EzCL4riC044llsgmZih8yTh2H7yDSyIDRBt55YURZCTR+LuhmG7L/HCQqH73kvY
-GPKiWV+gqTKuTIQosbnO7Kt8OSHseJLGWQ3u7XSzWC+dZQMzNE0XlH5H3ItA1Enl
-l+ZQ4d/rLnLwxpH63AgQ/a6udvV89xH/pdH6G6Ra1M0NymY6TWqFZJzD3HKCw523
-VCl1nQgFcEIKMHriL3O/avq50KAqb0KZ4tVhjVGLlR2pK4JWF4GLX4zYOD4bw7/G
-HW7dE7djguf/Rgew6Opv/hNpxawGsEzjY0nQmm0a178C+YgKfSHOGAbxiifiZ7hR
-NaKljLDCyBlLA8KVqaV2E0/R4InQScXZz/X1E1J+I5s9u2tRsMemflDrb0+L8b8N
-8Ildt5oxA/t/MkWvtRld
-=zzN8
------END PGP SIGNATURE-----
-
---jRHKVT23PllUwdXP--
+[1] https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/commit/?h=highbank-rm-mach-desc&id=2920f2082f51128dc28348756a1727fe0d13b5a8
+[2] https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/commit/?h=highbank-rm-mach-desc&id=1acc8c4d023506e22d0abaad84a74a34c36fecfb
