@@ -1,42 +1,82 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: Device Tree Maturity Project
-Date: Thu, 21 Nov 2013 10:01:28 -0600
-Message-ID: <EDF67F98-8851-451E-9C6B-7AF9997D7F3F@codeaurora.org>
-References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail.com> <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Thu, 21 Nov 2013 16:29:44 +0000
+Message-ID: <20131121162944.F087FC406A3@trevor.secretlab.ca>
+References: <CAOesGMjKeRb=fFJM0MabDihbEiCGM4EqW9D5i_6-RFxTnpB4Qw@mail.gmail. com> <20131115095717.GC1709@e106331-lin.cambridge.arm.com> <20131115175241. GB27174@quad.lixom.net> <20131119113015.GH5914@e106331-lin.cambridge.arm. com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20131119113015.GH5914-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 19 Nov 2013 11:30:15 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Fri, Nov 15, 2013 at 05:52:41PM +0000, Olof Johansson wrote: > > On Fri, Nov 15, 2013 at 09:57:17AM +0000, Mark Rutland wrote:
+> > > On Fri, Nov 15, 2013 at 01:44:10AM +0000, Olof Johansson wrote:
+> The UEFI spec pulls in portions of ACPI. I do not know the full extent
+> of the interaction between the two, but I know that they are not
+> completely decoupled. As you have pointed out we are not experienced
+> with ACPI or UEFI, so I don't think we can make statements that one is
+> perfectly fine without the other.
 
-On Nov 20, 2013, at 5:56 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
-rote:
+Not actually. The UEFI spec does define how to pass ACPI, but it can
+boot the system without any ACPI at all. Merging UEFI support should
+pretty much be a non-issue.
 
-> On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
-> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> To help keep track of what is going on, I would like to have a short
->> stand up meeting once a week. Looking at my calendar, I can make
->> 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
->=20
-> Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
+> > > I think that trying to shoe-horn ACPI-derived information into device
+> > > tree is fundamentally the wrong approach. I don't think it encourages
+> > > best practices, and I don't think it's beneficial to the long term
+> > > health of Linux or the ecosystem as a whole.
+> >
+> > There are no known best practices with ACPI. It's a complete fumbling
+> > around in the dark right now. We're complaining about reviewer bandwith
+> > on DT -- do we have a single reviewer for ACPI on ARM that actually
+> > knows what a good solution looks like? I don't think so.
+> 
+> There are many people in the Linux community who have ACPI experience.
+> They may not be active on the ARM side, but it's not fair to say there
+> are no known best practices. I will agree that for the level of
+> variation we're likely to expect we are pushing the boundaries.
 
-I=92d vote for either Tue or Thur.  Friday evenings conflicts with beer=
- drinking ;)
+We are pushing a lot of boundaries and doing things on ACPI that have
+never been done before. SPI, GPIOs, Clocks, Regulators, composite
+devices, key-value properties. All brand new territory, and the Linux
+world is driving a lot of it.
 
-- k
+> > So, until there's strong evidence that ACPI is actually going to be
+> > a sane solution, in other words, until someone has shipped a system
+> > that uses it (with Windows) and does it successfully without being
+> > a hot mess, we shouldn't litter the kernel with it.
+> 
+> Again, I'm not sure that we should rely on Windows as our saviour from
+> insanity. A lot of the issues we are going to encounter are going to be
+> in vendor-specific code (i.e. drivers), and I do not believe that is
+> solved by having a single entity in charge of the general frameworks
+> those are built upon.
 
---=20
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
-ed by The Linux Foundation
+Personally, I think the issue of ACPI support should be taken on a
+patch-by-patch basis. A lot of the things that need to be done are quite
+discrete and fairly well contained. If the patches don't look that way
+then push back on them. For the parts that look ready, go ahead and
+merge it. Push back on the ones that don't.
 
+> > Vendors can standardise of UEFI if they want, but I would much rather
+> > see them bundle DTB images with their firmware today, than rely on early
+> > buggy and still-early-on-the-learning-curve ACPI bindings that we then
+> > have to live with forever.
+> 
+> I agree that today a DTB is preferable to an ACPI implementation.
+> 
+> I think that mapping from ACPI => DT is less sane than building support
+> for ACPI, and is not going to help us in the long term.
+> 
+> I think that we need to be involved in ACPI from today if we have any
+> hope of having something sane in future.
+
++1
+
+g.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
