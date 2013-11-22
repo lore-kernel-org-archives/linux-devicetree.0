@@ -1,67 +1,80 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: Add DT entry for ReadyNAS Duo v2 to use
- gpio-poweroff driver
-Date: Fri, 22 Nov 2013 08:41:13 -0500
-Message-ID: <20131122134113.GF29241@titan.lakedaemon.net>
-References: <87iovl4ahq.fsf@natisbad.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv4] ASoC: Add support for BCM2835
+Date: Fri, 22 Nov 2013 14:05:19 +0000
+Message-ID: <20131122140519.GN14725@sirena.org.uk>
+References: <528E4E4A.20403@koalo.de>
+ <528F5CE3.30105@koalo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87iovl4ahq.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1933143428570225189=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <528F5CE3.30105@koalo.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Florian Meier <florian.meier@koalo.de>
+Cc: devicetree <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Stephen Warren <swarren@wwwdotorg.org>, Liam Girdwood <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2013 at 12:10:25AM +0100, Arnaud Ebalard wrote:
-> 
-> Without that fix, at the end of the shutdown process, the board is
-> still powered (led glowing, fan running, ...).
-> 
-> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-> ---
-> Hi,
-> 
-> I have prepared some cleanup patches for existing ReadyNAS .dts files
-> which I intend to send for review in the next fex days. The GPIO
-> voltage level is still a value below but the cleanup patch for this
-> .dts will handle that globally.
-> 
->  arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
-> index e6a102c..4e3cae1 100644
-> --- a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
-> +++ b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
-> @@ -60,6 +60,10 @@
->  				marvell,pins = "mpp29";
->  				marvell,function = "gpio";
->  			};
-> +			pmx_poweroff: pmx-poweroff {
-> +				marvell,pins = "mpp30";
-> +				marvell,function = "gpio";
-> +			};
->  		};
->  
->  		clocks {
-> @@ -158,6 +162,13 @@
->  		};
->  	};
->  
-> +	gpio-poweroff {
-> +		compatible = "gpio-poweroff";
-> +		pinctrl-0 = <&pmx_poweroff>;
-> +		pinctrl-names = "default";
-> +		gpios = <&gpio0 30 1>;
 
-GPIO_... ?
+--===============1933143428570225189==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5FetH82qe0Z6y/zI"
+Content-Disposition: inline
 
-thx,
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--5FetH82qe0Z6y/zI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Nov 22, 2013 at 02:32:19PM +0100, Florian Meier wrote:
+> > +	dev = devm_kzalloc(&pdev->dev, sizeof(*dev),
+> > +			   GFP_KERNEL);
+> > +	if (IS_ERR(base))
+> > +		return PTR_ERR(base);
+
+> Found a typo here, should be IS_ERR(dev) and PTR_ERR(dev).
+
+No, it should be a check for NULL and returning -ENOMEM.
+
+> Is the patch acceptable apart from that now?
+
+Not looked yet.
+
+--5FetH82qe0Z6y/zI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSj2ScAAoJELSic+t+oim9zCAP/1zcMpvVJkYKLvp/7mOKlugP
+ercKdvPV12HmeNnjiHyzJemq4qjlAsShvsxX6lYZmuofLFzO9pxA+isiiq+9LqDI
+eLO0QXCXnVywpn+B5w76XPr5EzAwm1p6WyPIS0TXRGrAy/27qY42+LG6MG5IA5Sb
+Htc+Xx5BttNH5mTf0t5OpU7+zWyac3t2B5e/RJ+6ru0IpnA9Z4C3pgiosW8SBrUL
+mEQk+msKKryQ2nObVjiIK0QAdEKhg5pGn4/VYFebAUYV/xzM7+xSCpWu62vcHMAY
+msvam5ztE+27Dow63aop75V1JzPIhNY3XYk/T3TY56XDQ2rCrT2G3Q44JmztM1Xk
+cIebndq29Ub4wY91QN5B2HBm2dJtLT8+3wf8WlS03QiEHpNIj5T+HlGs0LAtKVFK
+5SVyOf7Ojeks7iYPplp98v33Z3lEdqmex4oTJjazHfdz75xA2SH7Ap9m1XnMRSVS
+f8TpKMcYXS35NhueVvf/yt2ddKiWzNQ8I01ZwjrJLJtoPgdfdf+Cd/PMgjvenJB0
+Az7FryN+VSZrV9SUpmjEFpd79XilESSlz32QK6W76KnUTZJe6opERmL15R41el9r
+zmm52IcG2GoSJeiIs7f/Std6rg1/M2183X1QORfs0JT+JTrLAOsju1yzzEKGVNHw
+G8mzWLMskQgZEGdAyoz0
+=0yDE
+-----END PGP SIGNATURE-----
+
+--5FetH82qe0Z6y/zI--
+
+--===============1933143428570225189==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1933143428570225189==--
