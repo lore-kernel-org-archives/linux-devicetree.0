@@ -1,83 +1,113 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] memory: ti-aemif: add bindings for AEMIF driver
-Date: Fri, 22 Nov 2013 19:42:47 +0100
-Message-ID: <20131122184247.GO14627@ns203013.ovh.net>
-References: <1384962416-14862-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1384962416-14862-3-git-send-email-ivan.khoronzhuk@ti.com>
- <20131120182102.GK14627@ns203013.ovh.net>
- <528D076A.8070806@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH] of: Add simple panel device tree binding
+Date: Fri, 22 Nov 2013 19:41:54 +0100
+Message-ID: <1385145714-3022-1-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <528D076A.8070806-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 21:03 Wed 20 Nov     , ivan.khoronzhuk wrote:
-> On 11/20/2013 08:21 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >> +				the chip select signal.
-> >> +				Minimum value is 1 (0 treated as 1).
-> >> +
-> >> +- ti,cs-wsetup:		write setup width, ns
-> >> +				Time between the beginning of a memory cycle
-> >> +				and the activation of write strobe.
-> >> +				Minimum value is 1 (0 treated as 1).
-> >> +
-> >> +- ti,cs-wstrobe:	write strobe width, ns
-> >> +				Time between the activation and deactivation of
-> >> +				the write strobe.
-> >> +				Minimum value is 1 (0 treated as 1).
-> >> +
-> >> +- ti,cs-whold:		write hold width, ns
-> >> +				Time between the deactivation of the write
-> >> +				strobe and the end of the cycle (which may be
-> >> +				either an address change or the deactivation of
-> >> +				the chip select signal.
-> >> +				Minimum value is 1 (0 treated as 1).
-> >> +
-> >> +If any of the above parameters are absent, current parameter value will be taken
-> >> +from the corresponding HW reg.
-> >> +
-> >> +The name for cs node must be in format csN, where N is the cs number.
-> > 
-> > this is wired we should use reg instead to represent the cs as done for SPI
-> > or a an other property
-> > 
-> > Best Regards,
-> > J.
-> > 
-> 
-> Ok, I will add new property cs-chipselect like following :
-> 
-> ti,cs-chipselect:	number of chipselect. Indicates on the
-> 			aemif driver which chipselect is used
-> 			for accessing the memory.
-> 			For compatibles "ti,davinci-aemif" and 
-> 			"ti,keystone-aemif" it can be in range [0-3].
-> 			For compatible "ti,omap-L138-aemif" range is [2-5].
-> 
-> Is it OK?
+This binding specifies a set of common properties for display panels. It
+can be used as a basis by bindings for specific panels.
 
-yes
+Bindings for three specific panels are provided to show how the simple
+panel binding can be used.
 
-I just have one issue the whole memory concept
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+This binding has already been discussed earlier. Both Laurent and Tomi
+seemed to be generally fine with this. The fact that the binding targets
+simple (dumb) panels only and the reduced set of properties make it easy
+to be extended in backwards-compatible ways should the need arise, while
+at the same time allowing to support a wide variety of panels out there.
 
-for me we should do as done on pinctrl have a phandle on the device that
-require it and handle it at device core level
+ .../devicetree/bindings/panel/auo,b101aw03.txt      |  7 +++++++
+ .../bindings/panel/chunghwa,claa101wb03.txt         |  7 +++++++
+ .../bindings/panel/panasonic,vvx10f004b00.txt       |  7 +++++++
+ .../devicetree/bindings/panel/simple-panel.txt      | 21 +++++++++++++++++++++
+ 4 files changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/panel/auo,b101aw03.txt
+ create mode 100644 Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
+ create mode 100644 Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
+ create mode 100644 Documentation/devicetree/bindings/panel/simple-panel.txt
 
-as the memory controller is not necessarely on the same bus as the memory
-device them selves
-
-Best Regards,
-J.
-> 
-> -- 
-> Regards,
-> Ivan Khoronzhuk
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/panel/auo,b101aw03.txt b/Documentation/devicetree/bindings/panel/auo,b101aw03.txt
+new file mode 100644
+index 000000000000..72e088a4fb3a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/auo,b101aw03.txt
+@@ -0,0 +1,7 @@
++AU Optronics Corporation 10.1" WSVGA TFT LCD panel
++
++Required properties:
++- compatible: should be "auo,b101aw03"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt b/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
+new file mode 100644
+index 000000000000..0ab2c05a4c22
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
+@@ -0,0 +1,7 @@
++Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
++
++Required properties:
++- compatible: should be "chunghwa,claa101wb03"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt b/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
+new file mode 100644
+index 000000000000..d328b0341bf4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
+@@ -0,0 +1,7 @@
++Panasonic Corporation 10.1" WUXGA TFT LCD panel
++
++Required properties:
++- compatible: should be "panasonic,vvx10f004b00"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/panel/simple-panel.txt b/Documentation/devicetree/bindings/panel/simple-panel.txt
+new file mode 100644
+index 000000000000..1341bbf4aa3d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/simple-panel.txt
+@@ -0,0 +1,21 @@
++Simple display panel
++
++Required properties:
++- power-supply: regulator to provide the supply voltage
++
++Optional properties:
++- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
++- enable-gpios: GPIO pin to enable or disable the panel
++- backlight: phandle of the backlight device attached to the panel
++
++Example:
++
++	panel: panel {
++		compatible = "cptt,claa101wb01";
++		ddc-i2c-bus = <&panelddc>;
++
++		power-supply = <&vdd_pnl_reg>;
++		enable-gpios = <&gpio 90 0>;
++
++		backlight = <&backlight>;
++	};
+-- 
+1.8.4.2
