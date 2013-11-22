@@ -1,62 +1,165 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MyAzLzVdIGNoYXJnZXI6IG1heDE0NTc3OiBBZGQgY2hh?=
- =?UTF-8?B?cmdlciBzdXBwb3J0IGZvciBNYXhpbSAxNDU3Nw==?=
-Date: Fri, 22 Nov 2013 12:54:36 +0400
-Message-ID: <1385110476.285183224@f131.i.mail.ru>
-References: <1385109972-28059-1-git-send-email-k.kozlowski@samsung.com>
- <1385109972-28059-4-git-send-email-k.kozlowski@samsung.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH 2/4 v10] thermal: samsung: change base_common to more
+ meaningful base_second
+Date: Fri, 22 Nov 2013 14:26:48 +0530
+Message-ID: <CAHfPSqA9w_2FoycJnKGosuTLi6R+0Bwpe_+zx-tp-0JegD7smw@mail.gmail.com>
+References: <1378268629-2886-2-git-send-email-ch.naveen@samsung.com> <1384866291-16034-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1385109972-28059-4-git-send-email-k.kozlowski@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?S3J6eXN6dG9mIEtvemxvd3NraQ==?= <k.kozlowski@samsung.com>
-Cc: devicetree@vger.kernel.org, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?U2FtdWVsIE9ydGl6?= <sameo@linux.intel.com>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>, =?UTF-8?B?QmFydGxvbWllaiBab2xuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, =?UTF-8?B?TGVlIEpvbmVz?= <lee.jones@linaro.org>, =?UTF-8?B?TWFyayBCcm93bg==?= <broonie@kernel.org>, =?UTF-8?B?QW50b24gVm9yb250c292?= <anton@enomsg.org>, linux-doc@vger.kernel.org, =?UTF-8?B?TGlhbSBHaXJkd29vZA==?= <lgirdwood@gmail.com>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, =?UTF-8?B?Q2hhbndvbyBDaG9p?= <cw00.choi@samsung.com>, =?UTF-8?B?S3l1bmdtaW4gUGFyaw==?= <kyungmin.park@samsung.com>, =?UTF-8?B?TXl1bmdKb28gSGFt?= <myungjoo.ham@samsung.com>, =?UTF-8?B?Um9iIExhbmRsZXk=?= <rob@landley.net>=?UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1384866291-16034-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: linux-pm@vger.kernel.org, rui.zhang@intel.com, eduardo.valentin@ti.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-> MAX14577 chip is a multi-function device which includes MUIC, charger
-> and voltage regulator. The driver is located in drivers/mfd.
-> 
-> This patch supports battery charging control of MAX14577 chip and
-> provides power supply class information to userspace.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-...
-> diff --git a/drivers/power/max14577_charger.c b/drivers/power/max14577_charger.c
-...
-> +static struct platform_driver max14577_charger_driver = {
-> +	.driver = {
-> +		.owner	= THIS_MODULE,
-> +		.name	= "max14577-charger",
-> +	},
-> +	.probe		= max14577_charger_probe,
-> +	.remove		= max14577_charger_remove,
-> +};
-> +
-> +static int __init max14577_charger_init(void)
-> +{
-> +	return platform_driver_register(&max14577_charger_driver);
-> +}
-> +
-> +static void __exit max14577_charger_exit(void)
-> +{
-> +	platform_driver_unregister(&max14577_charger_driver);
-> +}
-> +
-> +module_init(max14577_charger_init);
-> +module_exit(max14577_charger_exit);
+Hello All,
 
-Replace "module_init" & "module_exit" with module_platform_driver here.
+On 19 November 2013 18:34, Naveen Krishna Chatradhi
+<ch.naveen@samsung.com> wrote:
+> On Exynos5440 and Exynos5420 there are registers common
+> across the TMU channels.
+>
+> To support that, we introduced a ADDRESS_MULTIPLE flag in the
+> driver and the 2nd set of register base and size are provided
+> in the "reg" property of the node.
+>
+> As per Amit's suggestion, this patch changes the base_common
+> to base_second and SHARED_MEMORY to ADDRESS_MULTIPLE.
+>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Acked-by: Amit Daniel Kachhap <amit.daniel@samsung.com>
+> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> ---
+> Changes since v9:
+> Just respinning
+>
+> Changes since v8:
+>  None
+>  .../devicetree/bindings/thermal/exynos-thermal.txt       |    4 ++--
+>  drivers/thermal/samsung/exynos_tmu.c                     |   14 +++++++-------
+>  drivers/thermal/samsung/exynos_tmu.h                     |    4 ++--
+>  drivers/thermal/samsung/exynos_tmu_data.c                |    2 +-
+>  4 files changed, 12 insertions(+), 12 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> index 284f530..116cca0 100644
+> --- a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> @@ -11,8 +11,8 @@
+>  - reg : Address range of the thermal registers. For soc's which has multiple
+>         instances of TMU and some registers are shared across all TMU's like
+>         interrupt related then 2 set of register has to supplied. First set
+> -       belongs to each instance of TMU and second set belongs to common TMU
+> -       registers.
+> +       belongs to each instance of TMU and second set belongs to second set
+> +       of common TMU registers.
+>  - interrupts : Should contain interrupt for thermal system
+>  - clocks : The main clock for TMU device
+>  - clock-names : Thermal system clock name
+> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+> index c493245..bbd0fc3 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.c
+> +++ b/drivers/thermal/samsung/exynos_tmu.c
+> @@ -41,7 +41,7 @@
+>   * @id: identifier of the one instance of the TMU controller.
+>   * @pdata: pointer to the tmu platform/configuration data
+>   * @base: base address of the single instance of the TMU controller.
+> - * @base_common: base address of the common registers of the TMU controller.
+> + * @base_second: base address of the common registers of the TMU controller.
+>   * @irq: irq number of the TMU controller.
+>   * @soc: id of the SOC type.
+>   * @irq_work: pointer to the irq work structure.
+> @@ -56,7 +56,7 @@ struct exynos_tmu_data {
+>         int id;
+>         struct exynos_tmu_platform_data *pdata;
+>         void __iomem *base;
+> -       void __iomem *base_common;
+> +       void __iomem *base_second;
+>         int irq;
+>         enum soc_type soc;
+>         struct work_struct irq_work;
+> @@ -297,7 +297,7 @@ skip_calib_data:
+>         }
+>         /*Clear the PMIN in the common TMU register*/
+>         if (reg->tmu_pmin && !data->id)
+> -               writel(0, data->base_common + reg->tmu_pmin);
+> +               writel(0, data->base_second + reg->tmu_pmin);
+>  out:
+>         clk_disable(data->clk);
+>         mutex_unlock(&data->lock);
+> @@ -454,7 +454,7 @@ static void exynos_tmu_work(struct work_struct *work)
+>
+>         /* Find which sensor generated this interrupt */
+>         if (reg->tmu_irqstatus) {
+> -               val_type = readl(data->base_common + reg->tmu_irqstatus);
+> +               val_type = readl(data->base_second + reg->tmu_irqstatus);
+>                 if (!((val_type >> data->id) & 0x1))
+>                         goto out;
+>         }
+> @@ -579,7 +579,7 @@ static int exynos_map_dt_data(struct platform_device *pdev)
+>          * Check if the TMU shares some registers and then try to map the
+>          * memory of common registers.
+>          */
+> -       if (!TMU_SUPPORTS(pdata, SHARED_MEMORY))
+> +       if (!TMU_SUPPORTS(pdata, ADDRESS_MULTIPLE))
+>                 return 0;
+>
+>         if (of_address_to_resource(pdev->dev.of_node, 1, &res)) {
+> @@ -587,9 +587,9 @@ static int exynos_map_dt_data(struct platform_device *pdev)
+>                 return -ENODEV;
+>         }
+>
+> -       data->base_common = devm_ioremap(&pdev->dev, res.start,
+> +       data->base_second = devm_ioremap(&pdev->dev, res.start,
+>                                         resource_size(&res));
+> -       if (!data->base_common) {
+> +       if (!data->base_second) {
+>                 dev_err(&pdev->dev, "Failed to ioremap memory\n");
+>                 return -ENOMEM;
+>         }
+> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
+> index 980859a..0d6b32f 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.h
+> +++ b/drivers/thermal/samsung/exynos_tmu.h
+> @@ -60,7 +60,7 @@ enum soc_type {
+>   *                     state(active/idle) can be checked.
+>   * TMU_SUPPORT_EMUL_TIME - This features allows to set next temp emulation
+>   *                     sample time.
+> - * TMU_SUPPORT_SHARED_MEMORY - This feature tells that the different TMU
+> + * TMU_SUPPORT_ADDRESS_MULTIPLE - This feature tells that the different TMU
+>   *                     sensors shares some common registers.
+>   * TMU_SUPPORT - macro to compare the above features with the supplied.
+>   */
+> @@ -70,7 +70,7 @@ enum soc_type {
+>  #define TMU_SUPPORT_FALLING_TRIP               BIT(3)
+>  #define TMU_SUPPORT_READY_STATUS               BIT(4)
+>  #define TMU_SUPPORT_EMUL_TIME                  BIT(5)
+> -#define TMU_SUPPORT_SHARED_MEMORY              BIT(6)
+> +#define TMU_SUPPORT_ADDRESS_MULTIPLE           BIT(6)
+>
+>  #define TMU_SUPPORTS(a, b)     (a->features & TMU_SUPPORT_ ## b)
+>
+> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
+> index 7cdb04e..1d27069 100644
+> --- a/drivers/thermal/samsung/exynos_tmu_data.c
+> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+> @@ -255,7 +255,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
+>         .type = SOC_ARCH_EXYNOS5440, \
+>         .registers = &exynos5440_tmu_registers, \
+>         .features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_FALLING_TRIP | \
+> -                       TMU_SUPPORT_MULTI_INST | TMU_SUPPORT_SHARED_MEMORY),
+> +                       TMU_SUPPORT_MULTI_INST | TMU_SUPPORT_ADDRESS_MULTIPLE),
+>
+>  struct exynos_tmu_init_data const exynos5440_default_tmu_data = {
+>         .tmu_data = {
+> --
+> 1.7.10.4
+>
+Any update on this patch set, its been
+Acked by Amit and Reviewed-by Bartlomiej Zolnierkiewicz
 
----
+
+-- 
+Shine bright,
+(: Nav :)
