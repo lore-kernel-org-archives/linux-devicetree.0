@@ -1,123 +1,146 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Add simple panel device tree binding
-Date: Fri, 22 Nov 2013 14:05:47 -0600
-Message-ID: <CAL_Jsq+b1r1Hx_U2=XamfXuQWS144j-VcScLF9-T6Nz_OpZn8Q@mail.gmail.com>
-References: <1385145714-3022-1-git-send-email-treding@nvidia.com>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: [PATCH 1/4] kirkwood: NETGEAR ReadyNAS Duo v2 .dts file cleanup
+Date: Fri, 22 Nov 2013 21:05:50 +0100
+Message-ID: <994c811dc436d1c4ae312a269b4ee438be510f6f.1385148929.git.arno@natisbad.org>
+References: <cover.1385148929.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385145714-3022-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <cover.1385148929.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+References: <cover.1385148929.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2013 at 12:41 PM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This binding specifies a set of common properties for display panels. It
-> can be used as a basis by bindings for specific panels.
->
-> Bindings for three specific panels are provided to show how the simple
-> panel binding can be used.
->
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Thanks for a "simple" binding that actually provides specific h/w information.
+The patch does some cleanup work on NETGEAR ReadyNAS Duo v2 .dts
+file. Changes are listed below:
 
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+ - Converted GPIO voltage level from value to macros
+ - Converted all numeric input key values to macros
+ - Made button node names more explicit
+ - Added compatible string for PHY (marvell,mv88e1318s)
+ - Added header for the file to describe content and author
+ - Made G762 clock node name unique by including g762 in it
+ - Fixed all node names and labels to use respectively '-' and '_'
+ - Removed useless clocks and gpio-keys properties
 
-Rob
+Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+---
+ .../boot/dts/kirkwood-netgear_readynas_duo_v2.dts  | 50 +++++++++++++---------
+ 1 file changed, 29 insertions(+), 21 deletions(-)
 
-> ---
-> This binding has already been discussed earlier. Both Laurent and Tomi
-> seemed to be generally fine with this. The fact that the binding targets
-> simple (dumb) panels only and the reduced set of properties make it easy
-> to be extended in backwards-compatible ways should the need arise, while
-> at the same time allowing to support a wide variety of panels out there.
->
->  .../devicetree/bindings/panel/auo,b101aw03.txt      |  7 +++++++
->  .../bindings/panel/chunghwa,claa101wb03.txt         |  7 +++++++
->  .../bindings/panel/panasonic,vvx10f004b00.txt       |  7 +++++++
->  .../devicetree/bindings/panel/simple-panel.txt      | 21 +++++++++++++++++++++
->  4 files changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/auo,b101aw03.txt
->  create mode 100644 Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
->  create mode 100644 Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
->  create mode 100644 Documentation/devicetree/bindings/panel/simple-panel.txt
->
-> diff --git a/Documentation/devicetree/bindings/panel/auo,b101aw03.txt b/Documentation/devicetree/bindings/panel/auo,b101aw03.txt
-> new file mode 100644
-> index 000000000000..72e088a4fb3a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/auo,b101aw03.txt
-> @@ -0,0 +1,7 @@
-> +AU Optronics Corporation 10.1" WSVGA TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "auo,b101aw03"
-> +
-> +This binding is compatible with the simple-panel binding, which is specified
-> +in simple-panel.txt in this directory.
-> diff --git a/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt b/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
-> new file mode 100644
-> index 000000000000..0ab2c05a4c22
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
-> @@ -0,0 +1,7 @@
-> +Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "chunghwa,claa101wb03"
-> +
-> +This binding is compatible with the simple-panel binding, which is specified
-> +in simple-panel.txt in this directory.
-> diff --git a/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt b/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
-> new file mode 100644
-> index 000000000000..d328b0341bf4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
-> @@ -0,0 +1,7 @@
-> +Panasonic Corporation 10.1" WUXGA TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "panasonic,vvx10f004b00"
-> +
-> +This binding is compatible with the simple-panel binding, which is specified
-> +in simple-panel.txt in this directory.
-> diff --git a/Documentation/devicetree/bindings/panel/simple-panel.txt b/Documentation/devicetree/bindings/panel/simple-panel.txt
-> new file mode 100644
-> index 000000000000..1341bbf4aa3d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/simple-panel.txt
-> @@ -0,0 +1,21 @@
-> +Simple display panel
-> +
-> +Required properties:
-> +- power-supply: regulator to provide the supply voltage
-> +
-> +Optional properties:
-> +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-> +- enable-gpios: GPIO pin to enable or disable the panel
-> +- backlight: phandle of the backlight device attached to the panel
-> +
-> +Example:
-> +
-> +       panel: panel {
-> +               compatible = "cptt,claa101wb01";
-> +               ddc-i2c-bus = <&panelddc>;
-> +
-> +               power-supply = <&vdd_pnl_reg>;
-> +               enable-gpios = <&gpio 90 0>;
-> +
-> +               backlight = <&backlight>;
-> +       };
-> --
-> 1.8.4.2
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
+index 551bfed..65d0587 100644
+--- a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
++++ b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
+@@ -1,5 +1,17 @@
++/*
++ * Device Tree file for NETGEAR ReadyNAS Duo v2
++ *
++ * Copyright (C) 2013, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
++
+ /dts-v1/;
+ 
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include "kirkwood.dtsi"
+ #include "kirkwood-6282.dtsi"
+@@ -68,10 +80,7 @@
+ 		};
+ 
+ 		clocks {
+-		       #address-cells = <1>;
+-		       #size-cells = <0>;
+-
+-		       g762_clk: fixedclk {
++		       g762_clk: g762-oscillator {
+ 				 compatible = "fixed-clock";
+ 				 #clock-cells = <0>;
+ 				 clock-frequency = <8192>;
+@@ -117,49 +126,47 @@
+ 
+ 		power_led {
+ 			label = "status:blue:power_led";
+-			gpios = <&gpio0 31 1>;   /* GPIO 31 Active Low */
++			gpios = <&gpio0 31 GPIO_ACTIVE_LOW>;
+ 			linux,default-trigger = "default-on";
+ 		};
+ 		activity_led {
+ 			label = "status:blue:activity_led";
+-			gpios = <&gpio1 6 1>;    /* GPIO 38 Active Low */
++			gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
+ 		};
+ 		disk1_led {
+ 			label = "status:blue:disk1_led";
+-			gpios = <&gpio0 23 1>;   /* GPIO 23 Active Low */
++			gpios = <&gpio0 23 GPIO_ACTIVE_LOW>;
+ 		};
+ 		disk2_led {
+ 			label = "status:blue:disk2_led";
+-			gpios = <&gpio0 22 1>;   /* GPIO 22 Active Low */
++			gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;
+ 		};
+ 		backup_led {
+ 			label = "status:blue:backup_led";
+-			gpios = <&gpio0 29 1>;   /* GPIO 29 Active Low*/
++			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
+ 		};
+ 	};
+ 
+-	gpio_keys {
++	gpio-keys {
+ 		compatible = "gpio-keys";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		pinctrl-0 = <&pmx_button_power &pmx_button_backup
+ 			     &pmx_button_reset>;
+ 		pinctrl-names = "default";
+ 
+-		button@1 {
++		power-button {
+ 			label = "Power Button";
+-			linux,code = <116>;     /* KEY_POWER */
+-			gpios = <&gpio1 15 1>;
++			linux,code = <KEY_POWER>;
++			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+ 		};
+-		button@2 {
++		reset-button {
+ 			label = "Reset Button";
+-			linux,code = <0x198>;   /* KEY_RESTART */
+-			gpios = <&gpio0 13 1>;
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
+ 		};
+-		button@3 {
++		backup-button {
+ 			label = "Backup Button";
+-			linux,code = <133>;     /* KEY_COPY */
+-			gpios = <&gpio1 13 1>;
++			linux,code = <KEY_COPY>;
++			gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+ 		};
+ 	};
+ 
+@@ -224,6 +231,7 @@
+ 
+ 	ethphy0: ethernet-phy@0 {
+ 		device_type = "ethernet-phy";
++		compatible = "marvell,88e1318s";
+ 		reg = <0>;
+ 	};
+ };
+-- 
+1.8.4.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
