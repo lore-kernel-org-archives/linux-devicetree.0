@@ -1,97 +1,98 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCHv5 2/9] driver/core: populate devices in order for IOMMUs
-Date: Fri, 22 Nov 2013 10:35:58 -0700
-Message-ID: <528F95FE.7080406@wwwdotorg.org>
-References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com> < 1384853593-32202-3-git-send-email-hdoyu@nvidia.com> <20131121131558. E5B82C40A2C@trevor.secretlab.ca> <528E5932.1070105@wwwdotorg.org> <20131122074111.155E2C40753@trevor.secretlab.ca>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 10/12] mtd: nand: davinci: don't set timings if AEMIF
+ is used
+Date: Fri, 22 Nov 2013 12:38:23 -0500
+Message-ID: <528F968F.40306@ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>, <1384187188-5776-11-git-send-email-ivan.khoronzhuk@ti.com> <4F5844B3A985794BA902E12C070812375F8D53@DNCE04.ent.ti.com> <528307F0.6000805@ti.com> <52838941.4060207@ti.com> <5284ABB9.70608@ti.com> <5284DFE7.70308@ti.com> <528E3DD4.7030607@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131122074111.155E2C40753-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <528E3DD4.7030607-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: "Khoronzhuk, Ivan" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/2013 12:41 AM, Grant Likely wrote:
-> On Thu, 21 Nov 2013 12:04:18 -0700, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 11/21/2013 06:15 AM, Grant Likely wrote:
->>> On Tue, 19 Nov 2013 11:33:06 +0200, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>> IOMMU devices on the bus need to be poplulated first, then iommu
->>>> master devices are done later.
->>>>
->>>> With CONFIG_OF_IOMMU, "iommus=" DT binding would be used to identify
->>>> whether a device can be an iommu msater or not. If a device can, we'll
->>>> defer to populate that device till an iommu device is populated. Once
->>>> an iommu device is populated, "dev->bus->iommu_ops" is set in the
->>>> bus. Then, those defered iommu master devices are populated and
->>>> configured for IOMMU with help of the already populated iommu device
->>>> via iommu_ops->add_device(). Multiple IOMMUs can be listed on this
->>>> "iommus" binding so that a device can have multiple IOMMUs attached.
->>>>
->>>> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>> v5:
->>>> Use "iommus=" binding instread of arm,smmu's "#stream-id-cells".
->>>>
->>>> v4:
->>>> This is newly added, and the successor of the following RFC:
->>>>   [RFC][PATCHv3+ 1/2] driver/core: Add of_iommu_attach()
->>>>   http://lists.linuxfoundation.org/pipermail/iommu/2013-November/006914.html
->>>> ---
->>>>  drivers/base/dd.c        |  5 +++++
->>>>  drivers/iommu/of_iommu.c | 22 ++++++++++++++++++++++
->>>>  include/linux/of_iommu.h |  7 +++++++
->>>>  3 files changed, 34 insertions(+)
->>>>
->>>> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
->>>> index 35fa368..6e892d4 100644
->>>> --- a/drivers/base/dd.c
->>>> +++ b/drivers/base/dd.c
->>>> @@ -25,6 +25,7 @@
->>>>  #include <linux/async.h>
->>>>  #include <linux/pm_runtime.h>
->>>>  #include <linux/pinctrl/devinfo.h>
->>>> +#include <linux/of_iommu.h>
->>>>  
->>>>  #include "base.h"
->>>>  #include "power/power.h"
->>>> @@ -273,6 +274,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->>>>  
->>>>  	dev->driver = drv;
->>>>  
->>>> +	ret = of_iommu_attach(dev);
->>>> +	if (ret)
->>>> +		goto probe_failed;
->>>> +
->>>>  	/* If using pinctrl, bind pins now before probing */
->>>>  	ret = pinctrl_bind_pins(dev);
->>>>  	if (ret)
+On Thursday 21 November 2013 12:07 PM, Nori, Sekhar wrote:
+> On 11/14/2013 8:06 PM, Santosh Shilimkar wrote:
+>> On Thursday 14 November 2013 05:53 AM, Nori, Sekhar wrote:
+>>> On Wednesday 13 November 2013 07:44 PM, Santosh Shilimkar wrote:
+>>>> On Wednesday 13 November 2013 12:02 AM, Sekhar Nori wrote:
+>>>>> On Monday 11 November 2013 10:40 PM, Khoronzhuk, Ivan wrote:
+>>>>>> If Davinci AEMIF is used we don't need to set timings and bus width.
+>>>>>> It is done by AEMIF driver (drivers/memory/davinci-aemfi.c).
+>>>>>>
+>>>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+>>>>>> ---
+>>>>>>  drivers/mtd/nand/davinci_nand.c |   22 +++++++++++++++-------
+>>>>>>  1 file changed, 15 insertions(+), 7 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+>>>>>> index 4705214..879e915 100644
+>>>>>> --- a/drivers/mtd/nand/davinci_nand.c
+>>>>>> +++ b/drivers/mtd/nand/davinci_nand.c
+>>>>>> @@ -742,27 +742,35 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+>>>>>>                 goto err_clk_enable;
+>>>>>>         }
+>>>>>>
+>>>>>> +#if !IS_ENABLED(CONFIG_TI_DAVINCI_AEMIF)
+>>>>>
+>>>>> This is a hack! Just because AEMIF driver is enabled, it does not
+>>>>> guarantee that the timings have been setup by it. Instead of configuring
+>>>>> timings in two drivers, why not just convert everyone over to use the
+>>>>> new driver. Dont worry about breaking old platforms, I will help test
+>>>>> and ack them.
+>>>>>
+>>>> How about you take a stab at and convert the DaVinci code over to make
+>>>> use of new driver. We are trying to re-use as much as possible from the
+>>>> common drivers and also making an option so that the DaVinci arch can
+>>>> move over to these drivers if they want to.
 >>>
->>> I'm very concerned about this approach. Hooking into the core probe
->>> path for things like this is not going to scale well. I'm not thrilled
->>> with the pinctrl hook being here either, but that is already merged. :-(
->>> Also, hooking in here is going affect every single device device driver
->>> probe path, and a large number of them are never, ever, going to have
->>> iommu interactions.
+>>> Sure I could.
 >>>
->>> There needs to be a less invasive way of doing what you want. I still
->>> feel like the individual device drivers themselves need to be aware that
->>> they might be hooking through an IOMMU. Or, if they are hooking through
->>> a bus like PCIe, then have the PCIe bus defer creating child devices
->>> until the IOMMU is configured and in place.
+>> Thanks
 >>
->> I general though, couldn't any MMIO on-SoC device potentially be
->> affected by an IOMMU? The point of putting the call to of_iommu_attach()
->> here rather than inside individual driver's probe() is to avoid
->> requiring "every" driver having to paste more boiler-plate into probe().
+>>> Ivan,
+>>>
+>>> The AEMIF driver does not use platfrom_data currently. Is that something
+>>> you can add or you want me to take a stab at that as well?
+>>>
+>> The AEMIF new driver is device tree only and thats the direction. So the
+>> better thing would be to convert Davinci to DT and then make use of this
+>> new driver. Thats how most of the new drivers used on arm socs are
+>> moving. Adding platform data to new driver is a step in backward
+>> direction so I would want to avoid that.
 > 
-> It seems more that IOMMU attachment is closer to being a property of the
-> bus rather than a property of the device itself. In that context it
-> would make more sense for the bus device to hold off child device
-> registration or probing until the IOMMU is available. That keeps the
-> logic out of both the core code and the individual device drivers.
+> Yes, that would be the ideal way. But the reality is that there is close
+> to zero chance of all the DaVinci platforms using AEMIF ever getting
+> converted to DT. This means that we will never be able to get rid of
+> this piece of code.
+>
+Well that means some of those platforms support will get deprecated
+soon considering other basic frameworks like irq, timer wheel etc
+is assuming the DT direction. But its your call because if you
+want those platforms to live, you need to convert them to DT.
+ 
+> I do agree platform data is not the direction you want to take on ARM
+> but at the same time its not really a deprecated mechanism as far as the
+> broader kernel is concerned.
+> 
+> So, can we consider adding platform data mechanism to the AEMIF driver?
+> 
+Sorry but answer is "NO". If the above hack is really bothering you,
+we can actually rip out the above code in question and move it
+to mach-davinci. Infact thats the best direction to make the
+mtd nandn driver independent of any platform quirks(dt, pdata etc)
 
-The bus structure that DT and Linux know about is the register bus.
-There's no reason that devices have to emit their master transactions
-onto that same bus, or onto only that same bus.
+Ivan already has a patch to do that and he is going to post
+that patch. With that patch, we won't need $subject patch.
+
+Regards,
+Santosh
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
