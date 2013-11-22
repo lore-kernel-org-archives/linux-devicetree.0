@@ -1,63 +1,37 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: add ARMv8 PMU binding
-Date: Fri, 22 Nov 2013 15:43:31 -0600
-Message-ID: <528FD003.8090607@gmail.com>
-References: <1385155032-9032-1-git-send-email-robherring2@gmail.com> <A8B9EAD7-0DBA-46D7-963F-30DEA0575EE2@codeaurora.org>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/2] Add support for hym8563 rtcs
+Date: Fri, 22 Nov 2013 22:54:06 +0100
+Message-ID: <201311222254.07730.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <A8B9EAD7-0DBA-46D7-963F-30DEA0575EE2-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/2013 03:38 PM, Kumar Gala wrote:
->=20
-> On Nov 22, 2013, at 3:17 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
-e:
->=20
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> Add missing "arm,armv8-pmuv3" compatible property for ARMv8 PMU.
->>
->> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->> ---
->> Documentation/devicetree/bindings/arm/pmu.txt | 1 +
->> 1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documen=
-tation/devicetree/bindings/arm/pmu.txt
->> index 343781b..3e1e498 100644
->> --- a/Documentation/devicetree/bindings/arm/pmu.txt
->> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
->> @@ -7,6 +7,7 @@ representation in the device tree should be done as =
-under:-
->> Required properties:
->>
->> - compatible : should be one of
->> +	"arm,armv8-pmuv3=94
->=20
-> what about arm,armv8-pmu-v3?
+This series adds support for the Haoyu Microelectronics HYM8563 rtc. This
+chip is often used in designs around the Cortex-A9 SoCs from Rockchip to
+provide rtc functionality and the 32kHz suspend clock the SoC needs.
 
-I'm just documenting what is already being used:
+Heiko Stuebner (2):
+  Documentation: dt: Add dt hym8563 binding
+  rtc: add hym8563 rtc-driver
 
-arch/arm64/boot/dts/foundation-v8.dts:          compatible =3D
-"arm,armv8-pmuv3";
-arch/arm64/boot/dts/rtsm_ve-aemv8a.dts:         compatible =3D
-"arm,armv8-pmuv3";
+ .../devicetree/bindings/rtc/haoyu,hym8563.txt      |   29 +
+ drivers/rtc/Kconfig                                |   11 +
+ drivers/rtc/Makefile                               |    1 +
+ drivers/rtc/rtc-hym8563.c                          |  619 ++++++++++++++++++++
+ 4 files changed, 660 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
+ create mode 100644 drivers/rtc/rtc-hym8563.c
 
-Do we want to change those?
-
-Rob
+-- 
+1.7.10.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
