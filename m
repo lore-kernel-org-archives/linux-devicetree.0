@@ -1,39 +1,100 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] ARM: kirkwood: ReadyNAS Duo v2 .dts cleanup
-Date: Fri, 22 Nov 2013 11:05:13 -0500
-Message-ID: <20131122160513.GK29241@titan.lakedaemon.net>
-References: <87li0ge9te.fsf@natisbad.org>
- <20131122153800.GJ29241@titan.lakedaemon.net>
- <87txf4ctq3.fsf@natisbad.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] clocksource: Do not drop unheld reference on device node
+Date: Fri, 22 Nov 2013 17:16:09 +0100
+Message-ID: <20131122161607.GA5088@ulmo.nvidia.com>
+References: <1382136588-15320-1-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87txf4ctq3.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1382136588-15320-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2013 at 05:00:04PM +0100, Arnaud Ebalard wrote:
-> 
-> Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> writes:
-> 
-> > On Fri, Nov 22, 2013 at 04:27:09PM +0100, Arnaud Ebalard wrote:
-> >> The patch does some cleanup work on NETGEAR ReadyNAS Duo v2 .dts
-> >> file. Changes are listed below:
-> >
-> > Can you do the whitespace cleanup as a separate patch, and do all your
-> > boards in one go?
-> 
-> Just to be sure: one patch per board for non-whitespace and a single one
-> for fixing whitespaces for all boards? All in same serie.
 
-One for the whitespace, boards can be separate.
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thx,
+On Sat, Oct 19, 2013 at 12:49:48AM +0200, Thierry Reding wrote:
+> When booting a recent kernel on ARM with OF_DYNAMIC enabled, the kernel
+> warns about the following:
+>=20
+> 	[    0.000000] ERROR: Bad of_node_put() on /timer@50004600
+> 	[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.12.0-rc5-next=
+-20131017-00077-gedfd827-dirty #406
+> 	[    0.000000] [<c0015b68>] (unwind_backtrace+0x0/0xf4) from [<c00117e4>=
+] (show_stack+0x10/0x14)
+> 	[    0.000000] [<c00117e4>] (show_stack+0x10/0x14) from [<c055f734>] (du=
+mp_stack+0x9c/0xc8)
+> 	[    0.000000] [<c055f734>] (dump_stack+0x9c/0xc8) from [<c03b47d4>] (of=
+_node_release+0x90/0x9c)
+> 	[    0.000000] [<c03b47d4>] (of_node_release+0x90/0x9c) from [<c03b5084>=
+] (of_find_matching_node_and_match+0x78/0xb4)
+> 	[    0.000000] [<c03b5084>] (of_find_matching_node_and_match+0x78/0xb4) =
+=66rom [<c07887c8>] (clocksource_of_init+0x60/0x70)
+> 	[    0.000000] [<c07887c8>] (clocksource_of_init+0x60/0x70) from [<c076e=
+99c>] (start_kernel+0x1f4/0x33c)
+> 	[    0.000000] [<c076e99c>] (start_kernel+0x1f4/0x33c) from [<80008074>]=
+ (0x80008074)
+>=20
+> This is caused by clocksource_of_init() dropping a reference on the
+> device node that it never took. The reference taken by the loop is
+> implicitly dropped on subsequent iterations. See the implementation of
+> and the comment on top of the of_find_matching_node_and_match()
+> function for reference (no pun intended).
+>=20
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/clocksource/clksrc-of.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-Jason.
+Can someone look at this?
+
+Thierry
+
+> diff --git a/drivers/clocksource/clksrc-of.c b/drivers/clocksource/clksrc=
+-of.c
+> index 35639cf4..b9ddd9e 100644
+> --- a/drivers/clocksource/clksrc-of.c
+> +++ b/drivers/clocksource/clksrc-of.c
+> @@ -35,6 +35,5 @@ void __init clocksource_of_init(void)
+> =20
+>  		init_func =3D match->data;
+>  		init_func(np);
+> -		of_node_put(np);
+>  	}
+>  }
+> --=20
+> 1.8.4
+>=20
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSj4NHAAoJEN0jrNd/PrOhAGUP+weM+fqWtxuCOVkeo1ycV82N
+AytcVFwRYmyu1ImSntQfrmZtbKi5qaGGp/8IPcAEgRwsYWgFkzZ9lvJiDNFPF5qc
+sAukrmpG8OmLHOhaviTW1YuWye8yAHQD3zasdqLFnzd7W3tixjzNf/Ff2+Zv0n7e
+maCAx3wYhDCls0pLDf/iD3mAEJQW0e3mrraEJ4fVwyPCt5gdTsekAhrOuCUt4dWb
+aQoPA7oMEOJKmCxiMRDnkVO31e0LlWJkve0UyD9//d2j1sj6npRi/B3mgpCfFzKq
+BkWOEXw6/VWVB77APFpbQkbk25YFmjtYi7HVlx/jRh69sLsxBd82UbywS+vQUt2o
+Nor+Mg7f9ujiSWk2jSmLQ2QOMZZUxKwhkcT+tYYv5sfVhljDc1Mr2OLyzZYMx/ld
+jNUFAkgnMrA6sgJ1jDDIDSPz1aUI9hGgJecLbHdE/SezLrT0Ip6N+BBzWa0O8bba
+HURw8gBKWmUl9vABi3E9QRBjh8N2WEDBC3B9JtmdwEdTObmvXUT8eMMYCtqLs/2O
+WL2SLpEx9aeJOeIXJ0UrtxwYC0SgEWGNqsQvvoAbUQMH4PsaTRWxz9vG9LpauZVL
+Z4YQOInF6MMo/2QWo+bWtuMV/96DFebJP81vGEFekzPZIdR1ozToiXqmP0rn5Ldm
+nlL0m9WvpqFChC+W7DrI
+=iCiS
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
