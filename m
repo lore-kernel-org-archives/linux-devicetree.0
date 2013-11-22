@@ -1,112 +1,40 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: mvebu: NETGEAR ReadyNAS 104 .dts file cleanup
-Date: Fri, 22 Nov 2013 14:36:10 -0700
-Message-ID: <20131122213610.GC30358@obsidianresearch.com>
-References: <cover.1385148929.git.arno@natisbad.org>
- <bd899cfc2b0b3d22a7442d76b3901ca81ca86f11.1385148929.git.arno@natisbad.org>
-Mime-Version: 1.0
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: add GIC-400 binding
+Date: Fri, 22 Nov 2013 15:38:02 -0600
+Message-ID: <96D40B82-CB92-4E97-B2A7-862F0FBA5388@codeaurora.org>
+References: <1385155055-9242-1-git-send-email-robherring2@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <bd899cfc2b0b3d22a7442d76b3901ca81ca86f11.1385148929.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1385155055-9242-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2013 at 09:07:01PM +0100, Arnaud Ebalard wrote:
->  			mdio {
->  				phy0: ethernet-phy@0 {
-> +					compatible = "marvell,88e1318s";
->  					reg = <0>;
->  				};
->  
->  				phy1: ethernet-phy@1 {
-> +					compatible = "marvell,88e1318s";
->  					reg = <1>;
->  				};
->  			};
 
-Just an inquiry, are these compatible strings OK?
+On Nov 22, 2013, at 3:17 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Documentation/devicetree/bindings/net/phy.txt doesn't really give
-guidance.
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> 
+> Add "arm,gic-400" compatible property for ARM GIC-400 IP.
+> 
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> ---
+> Documentation/devicetree/bindings/arm/gic.txt | 1 +
+> 1 file changed, 1 insertion(+)
 
-For self-discoverable busses I would expect to see a structured
-compatible string, or property, that encodes the phy-id - such as what
-the PCI binding does with vid/did:
+Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-"compatible" Construct a list of names in most-specific to
-             least-specific order. The names shall be derived from
-	     values of the Vendor ID, Device ID, Subsystem Vendor ID,
-	     Subsystem ID, Revision ID and Class Code bytes, and shall
-             have the following form, and be placed in the list in the
-             following order:
+- k
 
-  pciVVVV,DDDD.SSSS.ssss.RR (1)
-
-So, I would think something like this:
-
-compatible = "ethernet-phy-id0141,0e90"; /* Marvell 88E1318 */
-
-?
-
-A big rational for this is that the kernel already has complete
-infrastructure for matching drivers to the numeric phy-id.
-
-I have a small patch to make the OF mdio bus scanner get the phy-id
-from DT. I didn't use compatible string in this patch, but it would be
-easy to change, and this demonstrates what we could do with a
-structured compatible string (attached).
-
-Grant? Rob? I could make some patches for this if you agree.
-
-Regards,
-Jason
-
->From 1aab2047b6dfb8b814673718dfa7ef0ea0c7a0ef Mon Sep 17 00:00:00 2001
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Date: Thu, 12 Sep 2013 17:36:13 -0600
-Subject: [PATCH] of_mdio: Allow the DT to specify the phy ID and avoid
- autoprobing
-
-This makes the generic of_mdiobus_register parse the DT property
-'phy-id'. If present it should be the numeric constant that matches the
-phy-id register normally readable through MDIO.
-
-When the ID is given the phy autoprobing is defeated and the phy is
-created directly.
-
-This is necessary to support phy's that cannot be autoprobed when
-of_mdiobus_register is called. Specifically, my case has the phy in
-reset at that time, the reset is only released once the ethernet
-driver starts.
-
-Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
----
- drivers/of/of_mdio.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index d5a57a9..dbe6932 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -81,7 +81,12 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 
- 		is_c45 = of_device_is_compatible(child,
- 						 "ethernet-phy-ieee802.3-c45");
--		phy = get_phy_device(mdio, addr, is_c45);
-+		paddr = of_get_property(child, "phy-id", &len);
-+		if (paddr && len <= sizeof(*paddr) && !is_c45)
-+			phy = phy_device_create(mdio, addr, be32_to_cpup(paddr),
-+						0, NULL);
-+		else
-+			phy = get_phy_device(mdio, addr, is_c45);
- 
- 		if (!phy || IS_ERR(phy)) {
- 			dev_err(&mdio->dev,
 -- 
-1.8.1.2
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
