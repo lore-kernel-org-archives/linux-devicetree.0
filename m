@@ -1,432 +1,1614 @@
-From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Subject: Re: [PATCH 3/4 v10] thermal: samsung: Add TMU support for Exynos5420 SoCs
-Date: Fri, 22 Nov 2013 14:25:58 +0530
-Message-ID: <CAHfPSqBTRFr+3TUzcTC96c9GbgS-F8-s1w=1__Er3teL3T5V0A@mail.gmail.com>
-References: <1378268629-2886-3-git-send-email-ch.naveen@samsung.com> <1384866325-16110-1-git-send-email-ch.naveen@samsung.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3] WAN: Adding support for Lantiq PEF2256 E1 chipset (FALC56)
+Date: Fri, 22 Nov 2013 10:10:30 +0100 (CET)
+Message-ID: <20131122091030.82FCA1A4DE5@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1384866325-16110-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: linux-pm@vger.kernel.org, rui.zhang@intel.com, eduardo.valentin@ti.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Krzysztof Halasa <khc@pm.waw.pl>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.orgdevicetree@vger.kernel.org, jerome.chantelauze.ext@c-s.fr
 List-Id: devicetree@vger.kernel.org
 
-Hello All,
+The patch adds WAN support for Lantiq FALC56 - PEF2256 E1 Chipset.
 
-On 19 November 2013 18:35, Naveen Krishna Chatradhi
-<ch.naveen@samsung.com> wrote:
-> Exynos5420 has 5 TMU channels, the TRIMINFO register is
-> misplaced for TMU channels 2, 3 and 4
-> TRIMINFO at 0x1006c000 contains data for TMU channel 3
-> TRIMINFO at 0x100a0000 contains data for TMU channel 4
-> TRIMINFO at 0x10068000 contains data for TMU channel 2
->
-> This patch
-> 1 Adds the neccessary register changes and arch information
->    to support Exynos5420 SoCs.
-> 2. Handles the gate clock for misplaced TRIMINFO register
-> 3. Updates the Documentation at
->    Documentation/devicetree/bindings/thermal/exynos-thermal.txt
->
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> Acked-by: Amit Daniel Kachhap <amit.daniel@samsung.com>
-> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> ---
-> Changes since v9:
-> Just respinning
->
-> Changes since v8:
-> 1. rewrote the Documentation for device tree bindings
-> 2. Merged the https://lkml.org/lkml/2013/11/7/262 (as this is a fix)
-> 3. introduces "samsung,exynos5420-tmu-triminfo" and
->    "samsung,exynos5420-tmu-triminfo-clk" to handle the TMU channels on
->    Exynos5420 more appropriately
->
->  .../devicetree/bindings/thermal/exynos-thermal.txt |   45 +++++++++
->  drivers/thermal/samsung/exynos_tmu.c               |   58 ++++++++++-
->  drivers/thermal/samsung/exynos_tmu.h               |    2 +
->  drivers/thermal/samsung/exynos_tmu_data.c          |  106 ++++++++++++++++++++
->  drivers/thermal/samsung/exynos_tmu_data.h          |    8 ++
->  5 files changed, 215 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
-> index 116cca0..5055b31 100644
-> --- a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
-> @@ -6,6 +6,11 @@
->                "samsung,exynos4412-tmu"
->                "samsung,exynos4210-tmu"
->                "samsung,exynos5250-tmu"
-> +              "samsung,exynos5420-tmu" for TMU channel 0, 1 on Exynos5420
-> +              "samsung,exynos5420-tmu-triminfo" for TMU channel 2 Exynos5420
-> +                       (Must pass triminfo base)
-> +              "samsung,exynos5420-tmu-triminfo-clk" for TMU channel 3 and 4
-> +                       Exynos5420 (Must pass triminfo base and triminfo clock)
->                "samsung,exynos5440-tmu"
->  - interrupt-parent : The phandle for the interrupt controller
->  - reg : Address range of the thermal registers. For soc's which has multiple
-> @@ -13,6 +18,18 @@
->         interrupt related then 2 set of register has to supplied. First set
->         belongs to each instance of TMU and second set belongs to second set
->         of common TMU registers.
-> +
-> +  NOTE: On Exynos5420, the TRIMINFO register is misplaced for TMU
-> +       channels 2, 3 and 4
-> +       Use "samsung,exynos5420-tmu-triminfo" in cases, there is a misplaced
-> +       register but no need of another clock to access that base.
-> +       Use "samsung,exynos5420-tmu-triminfo-clk" in cases where there is a misplaced
-> +       register and we need another clock to access that base.
-> +
-> +       TRIMINFO at 0x1006c000 contains data for TMU channel 3
-> +       TRIMINFO at 0x100a0000 contains data for TMU channel 4
-> +       TRIMINFO at 0x10068000 contains data for TMU channel 2
-> +
->  - interrupts : Should contain interrupt for thermal system
->  - clocks : The main clock for TMU device
->  - clock-names : Thermal system clock name
-> @@ -43,6 +60,34 @@ Example 2):
->                 clock-names = "tmu_apbif";
->         };
->
-> +Example 3): (In case of Exynos5420 "with misplaced TRIMINFO register")
-> +       /* tmu for CPU2 */
-> +       tmu@10068000 {
-> +               compatible = "samsung,exynos5420-tmu-triminfo";
-> +               reg = <0x10068000 0x100>, <0x1006c000 0x4>;
-> +               interrupts = <0 184 0>;
-> +               clocks = <&clock 318>;
-> +               clock-names = "tmu_apbif";
-> +       };
-> +
-> +       /* tmu for CPU3 */
-> +       tmu@1006c000 {
-> +               compatible = "samsung,exynos5420-tmu-triminfo-clk";
-> +               reg = <0x1006c000 0x100>, <0x100a0000 0x4>;
-> +               interrupts = <0 185 0>;
-> +               clocks = <&clock 318>;
-> +               clock-names = "tmu_apbif", "tmu_triminfo_apbif";
-> +       };
-> +
-> +       /* tmu for GPU */
-> +       tmu@100a0000 {
-> +               compatible = "samsung,exynos5420-tmu-triminfo-clk";
-> +               reg = <0x100a0000 0x100>, <0x10068000 0x4>;
-> +               interrupts = <0 215 0>;
-> +               clocks = <&clock 318>;
-> +               clock-names = "tmu_apbif", "tmu_triminfo_apbif";
-> +       };
-> +
->  Note: For multi-instance tmu each instance should have an alias correctly
->  numbered in "aliases" node.
->
-> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-> index bbd0fc3..826647c 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.c
-> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> @@ -47,6 +47,7 @@
->   * @irq_work: pointer to the irq work structure.
->   * @lock: lock to implement synchronization.
->   * @clk: pointer to the clock structure.
-> + * @clk_sec: pointer to the clock structure for accessing the base_second.
->   * @temp_error1: fused value of the first point trim.
->   * @temp_error2: fused value of the second point trim.
->   * @regulator: pointer to the TMU regulator structure.
-> @@ -61,7 +62,7 @@ struct exynos_tmu_data {
->         enum soc_type soc;
->         struct work_struct irq_work;
->         struct mutex lock;
-> -       struct clk *clk;
-> +       struct clk *clk, *clk_sec;
->         u8 temp_error1, temp_error2;
->         struct regulator *regulator;
->         struct thermal_sensor_conf *reg_conf;
-> @@ -152,6 +153,8 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
->
->         mutex_lock(&data->lock);
->         clk_enable(data->clk);
-> +       if (!IS_ERR(data->clk_sec))
-> +               clk_enable(data->clk_sec);
->
->         if (TMU_SUPPORTS(pdata, READY_STATUS)) {
->                 status = readb(data->base + reg->tmu_status);
-> @@ -186,7 +189,13 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
->                         EXYNOS5440_EFUSE_SWAP_OFFSET + reg->triminfo_data);
->                 }
->         } else {
-> -               trim_info = readl(data->base + reg->triminfo_data);
-> +               /* On exynos5420 the triminfo register is in the shared space */
-> +               if (data->soc == SOC_ARCH_EXYNOS5420_TRIMINFO ||
-> +                       data->soc == SOC_ARCH_EXYNOS5420_TRIMINFO_CLK)
-> +                       trim_info = readl(data->base_second +
-> +                                                       reg->triminfo_data);
-> +               else
-> +                       trim_info = readl(data->base + reg->triminfo_data);
->         }
->         data->temp_error1 = trim_info & EXYNOS_TMU_TEMP_MASK;
->         data->temp_error2 = ((trim_info >> reg->triminfo_85_shift) &
-> @@ -301,6 +310,8 @@ skip_calib_data:
->  out:
->         clk_disable(data->clk);
->         mutex_unlock(&data->lock);
-> +       if (!IS_ERR(data->clk_sec))
-> +               clk_disable(data->clk_sec);
->
->         return ret;
->  }
-> @@ -452,12 +463,16 @@ static void exynos_tmu_work(struct work_struct *work)
->         const struct exynos_tmu_registers *reg = pdata->registers;
->         unsigned int val_irq, val_type;
->
-> +       if (!IS_ERR(data->clk_sec))
-> +               clk_enable(data->clk_sec);
->         /* Find which sensor generated this interrupt */
->         if (reg->tmu_irqstatus) {
->                 val_type = readl(data->base_second + reg->tmu_irqstatus);
->                 if (!((val_type >> data->id) & 0x1))
->                         goto out;
->         }
-> +       if (!IS_ERR(data->clk_sec))
-> +               clk_disable(data->clk_sec);
->
->         exynos_report_trigger(data->reg_conf);
->         mutex_lock(&data->lock);
-> @@ -498,6 +513,18 @@ static const struct of_device_id exynos_tmu_match[] = {
->                 .data = (void *)EXYNOS5250_TMU_DRV_DATA,
->         },
->         {
-> +               .compatible = "samsung,exynos5420-tmu",
-> +               .data = (void *)EXYNOS5420_TMU_DRV_DATA,
-> +       },
-> +       {
-> +               .compatible = "samsung,exynos5420-tmu-triminfo",
-> +               .data = (void *)EXYNOS5420_TMU_DRV_DATA,
-> +       },
-> +       {
-> +               .compatible = "samsung,exynos5420-tmu-triminfo-clk",
-> +               .data = (void *)EXYNOS5420_TMU_DRV_DATA,
-> +       },
-> +       {
->                 .compatible = "samsung,exynos5440-tmu",
->                 .data = (void *)EXYNOS5440_TMU_DRV_DATA,
->         },
-> @@ -628,13 +655,31 @@ static int exynos_tmu_probe(struct platform_device *pdev)
->                 return  PTR_ERR(data->clk);
->         }
->
-> +       data->clk_sec = devm_clk_get(&pdev->dev, "tmu_apbif_triminfo");
-> +       if (IS_ERR(data->clk_sec)) {
-> +               if (data->soc == SOC_ARCH_EXYNOS5420_TRIMINFO_CLK) {
-> +                       dev_err(&pdev->dev, "Failed to get triminfo clock\n");
-> +                       return PTR_ERR(data->clk_sec);
-> +               }
-> +       } else {
-> +               ret = clk_prepare(data->clk_sec);
-> +               if (ret) {
-> +                       dev_err(&pdev->dev, "Failed to get clock\n");
-> +                       return ret;
-> +               }
-> +       }
-> +
->         ret = clk_prepare(data->clk);
-> -       if (ret)
-> -               return ret;
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Failed to get clock\n");
-> +               goto err_clk_sec;
-> +       }
->
->         if (pdata->type == SOC_ARCH_EXYNOS4210 ||
->             pdata->type == SOC_ARCH_EXYNOS4412 ||
->             pdata->type == SOC_ARCH_EXYNOS5250 ||
-> +           pdata->type == SOC_ARCH_EXYNOS5420_TRIMINFO ||
-> +           pdata->type == SOC_ARCH_EXYNOS5420_TRIMINFO_CLK ||
->             pdata->type == SOC_ARCH_EXYNOS5440)
->                 data->soc = pdata->type;
->         else {
-> @@ -703,6 +748,9 @@ static int exynos_tmu_probe(struct platform_device *pdev)
->         return 0;
->  err_clk:
->         clk_unprepare(data->clk);
-> +err_clk_sec:
-> +       if (!IS_ERR(data->clk_sec))
-> +               clk_unprepare(data->clk_sec);
->         return ret;
->  }
->
-> @@ -715,6 +763,8 @@ static int exynos_tmu_remove(struct platform_device *pdev)
->         exynos_unregister_thermal(data->reg_conf);
->
->         clk_unprepare(data->clk);
-> +       if (!IS_ERR(data->clk_sec))
-> +               clk_unprepare(data->clk_sec);
->
->         if (!IS_ERR(data->regulator))
->                 regulator_disable(data->regulator);
-> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
-> index 0d6b32f..f2eb3ac 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.h
-> +++ b/drivers/thermal/samsung/exynos_tmu.h
-> @@ -43,6 +43,8 @@ enum soc_type {
->         SOC_ARCH_EXYNOS4210 = 1,
->         SOC_ARCH_EXYNOS4412,
->         SOC_ARCH_EXYNOS5250,
-> +       SOC_ARCH_EXYNOS5420_TRIMINFO,
-> +       SOC_ARCH_EXYNOS5420_TRIMINFO_CLK,
->         SOC_ARCH_EXYNOS5440,
->  };
->
-> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
-> index 1d27069..ff79c9a 100644
-> --- a/drivers/thermal/samsung/exynos_tmu_data.c
-> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
-> @@ -194,6 +194,112 @@ struct exynos_tmu_init_data const exynos5250_default_tmu_data = {
->  };
->  #endif
->
-> +#if defined(CONFIG_SOC_EXYNOS5420)
-> +static const struct exynos_tmu_registers exynos5420_tmu_registers = {
-> +       .triminfo_data = EXYNOS_TMU_REG_TRIMINFO,
-> +       .triminfo_25_shift = EXYNOS_TRIMINFO_25_SHIFT,
-> +       .triminfo_85_shift = EXYNOS_TRIMINFO_85_SHIFT,
-> +       .tmu_ctrl = EXYNOS_TMU_REG_CONTROL,
-> +       .buf_vref_sel_shift = EXYNOS_TMU_REF_VOLTAGE_SHIFT,
-> +       .buf_vref_sel_mask = EXYNOS_TMU_REF_VOLTAGE_MASK,
-> +       .therm_trip_mode_shift = EXYNOS_TMU_TRIP_MODE_SHIFT,
-> +       .therm_trip_mode_mask = EXYNOS_TMU_TRIP_MODE_MASK,
-> +       .therm_trip_en_shift = EXYNOS_TMU_THERM_TRIP_EN_SHIFT,
-> +       .buf_slope_sel_shift = EXYNOS_TMU_BUF_SLOPE_SEL_SHIFT,
-> +       .buf_slope_sel_mask = EXYNOS_TMU_BUF_SLOPE_SEL_MASK,
-> +       .core_en_shift = EXYNOS_TMU_CORE_EN_SHIFT,
-> +       .tmu_status = EXYNOS_TMU_REG_STATUS,
-> +       .tmu_cur_temp = EXYNOS_TMU_REG_CURRENT_TEMP,
-> +       .threshold_th0 = EXYNOS_THD_TEMP_RISE,
-> +       .threshold_th1 = EXYNOS_THD_TEMP_FALL,
-> +       .tmu_inten = EXYNOS_TMU_REG_INTEN,
-> +       .inten_rise0_shift = EXYNOS_TMU_INTEN_RISE0_SHIFT,
-> +       .inten_rise1_shift = EXYNOS_TMU_INTEN_RISE1_SHIFT,
-> +       .inten_rise2_shift = EXYNOS_TMU_INTEN_RISE2_SHIFT,
-> +       /* INTEN_RISE3 Not availble in exynos5420 */
-> +       .inten_rise3_shift = EXYNOS_TMU_INTEN_RISE3_SHIFT,
-> +       .inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
-> +       .tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
-> +       .tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
-> +       .intclr_fall_shift = EXYNOS5420_TMU_CLEAR_FALL_INT_SHIFT,
-> +       .intclr_rise_shift = EXYNOS_TMU_RISE_INT_SHIFT,
-> +       .intclr_rise_mask = EXYNOS_TMU_RISE_INT_MASK,
-> +       .intclr_fall_mask = EXYNOS_TMU_FALL_INT_MASK,
-> +       .emul_con = EXYNOS_EMUL_CON,
-> +       .emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
-> +       .emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
-> +       .emul_time_mask = EXYNOS_EMUL_TIME_MASK,
-> +};
-> +
-> +#define __EXYNOS5420_TMU_DATA  \
-> +       .threshold_falling = 10, \
-> +       .trigger_levels[0] = 85, \
-> +       .trigger_levels[1] = 103, \
-> +       .trigger_levels[2] = 110, \
-> +       .trigger_levels[3] = 120, \
-> +       .trigger_enable[0] = true, \
-> +       .trigger_enable[1] = true, \
-> +       .trigger_enable[2] = true, \
-> +       .trigger_enable[3] = false, \
-> +       .trigger_type[0] = THROTTLE_ACTIVE, \
-> +       .trigger_type[1] = THROTTLE_ACTIVE, \
-> +       .trigger_type[2] = SW_TRIP, \
-> +       .trigger_type[3] = HW_TRIP, \
-> +       .max_trigger_level = 4, \
-> +       .gain = 8, \
-> +       .reference_voltage = 16, \
-> +       .noise_cancel_mode = 4, \
-> +       .cal_type = TYPE_ONE_POINT_TRIMMING, \
-> +       .efuse_value = 55, \
-> +       .min_efuse_value = 40, \
-> +       .max_efuse_value = 100, \
-> +       .first_point_trim = 25, \
-> +       .second_point_trim = 85, \
-> +       .default_temp_offset = 50, \
-> +       .freq_tab[0] = { \
-> +               .freq_clip_max = 800 * 1000, \
-> +               .temp_level = 85, \
-> +       }, \
-> +       .freq_tab[1] = { \
-> +               .freq_clip_max = 200 * 1000, \
-> +               .temp_level = 103, \
-> +       }, \
-> +       .freq_tab_count = 2, \
-> +       .registers = &exynos5420_tmu_registers, \
-> +
-> +#define EXYNOS5420_TMU_DATA \
-> +       __EXYNOS5420_TMU_DATA \
-> +       .type = SOC_ARCH_EXYNOS5250, \
-> +       .features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD | \
-> +                       TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
-> +                       TMU_SUPPORT_EMUL_TIME)
-> +
-> +#define EXYNOS5420_TMU_DATA_SHARED \
-> +       __EXYNOS5420_TMU_DATA \
-> +       .type = SOC_ARCH_EXYNOS5420_TRIMINFO, \
-> +       .features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD | \
-> +                       TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
-> +                       TMU_SUPPORT_EMUL_TIME | TMU_SUPPORT_ADDRESS_MULTIPLE)
-> +
-> +#define EXYNOS5420_TMU_DATA_SHARED_CLK \
-> +       __EXYNOS5420_TMU_DATA \
-> +       .type = SOC_ARCH_EXYNOS5420_TRIMINFO_CLK, \
-> +       .features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD | \
-> +                       TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
-> +                       TMU_SUPPORT_EMUL_TIME | TMU_SUPPORT_ADDRESS_MULTIPLE)
-> +
-> +struct exynos_tmu_init_data const exynos5420_default_tmu_data = {
-> +       .tmu_data = {
-> +               { EXYNOS5420_TMU_DATA },
-> +               { EXYNOS5420_TMU_DATA },
-> +               { EXYNOS5420_TMU_DATA_SHARED },
-> +               { EXYNOS5420_TMU_DATA_SHARED_CLK },
-> +               { EXYNOS5420_TMU_DATA_SHARED_CLK },
-> +       },
-> +       .tmu_count = 5,
-> +};
-> +#endif
-> +
->  #if defined(CONFIG_SOC_EXYNOS5440)
->  static const struct exynos_tmu_registers exynos5440_tmu_registers = {
->         .triminfo_data = EXYNOS5440_TMU_S0_7_TRIM,
-> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
-> index d9495a4..41f06dc 100644
-> --- a/drivers/thermal/samsung/exynos_tmu_data.h
-> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
-> @@ -72,6 +72,7 @@
->  #define EXYNOS_TMU_CLEAR_RISE_INT      0x111
->  #define EXYNOS_TMU_CLEAR_FALL_INT      (0x111 << 12)
->  #define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT        12
-> +#define EXYNOS5420_TMU_CLEAR_FALL_INT_SHIFT    16
->  #define EXYNOS5440_TMU_CLEAR_FALL_INT_SHIFT    4
->  #define EXYNOS_TMU_TRIP_MODE_SHIFT     13
->  #define EXYNOS_TMU_TRIP_MODE_MASK      0x7
-> @@ -156,6 +157,13 @@ extern struct exynos_tmu_init_data const exynos5250_default_tmu_data;
->  #define EXYNOS5250_TMU_DRV_DATA (NULL)
->  #endif
->
-> +#if defined(CONFIG_SOC_EXYNOS5420)
-> +extern struct exynos_tmu_init_data const exynos5420_default_tmu_data;
-> +#define EXYNOS5420_TMU_DRV_DATA (&exynos5420_default_tmu_data)
-> +#else
-> +#define EXYNOS5420_TMU_DRV_DATA (NULL)
-> +#endif
-> +
->  #if defined(CONFIG_SOC_EXYNOS5440)
->  extern struct exynos_tmu_init_data const exynos5440_default_tmu_data;
->  #define EXYNOS5440_TMU_DRV_DATA (&exynos5440_default_tmu_data)
-> --
-> 1.7.10.4
->
-Any update on this patch set, its been
-Acked by Amit and Reviewed-by Bartlomiej Zolnierkiewicz
+Signed-off-by: Jerome Chantelauze <jerome.chantelauze.ext@c-s.fr>
+Acked-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-
--- 
-Shine bright,
-(: Nav :)
+diff -urN a/drivers/net/wan/pef2256.c b/drivers/net/wan/pef2256.c
+--- a/drivers/net/wan/pef2256.c	1970-01-01 01:00:00.000000000 +0100
++++ b/drivers/net/wan/pef2256.c	2013-10-13 13:05:01.000000000 +0200
+@@ -0,0 +1,1113 @@
++/* drivers/net/wan/pef2256.c : a PEF2256 HDLC driver for Linux
++ *
++ * This software may be used and distributed according to the terms of=
+ the
++ * GNU General Public License.
++ */
++
++#include <linux/module.h>
++#include <linux/sched.h>
++#include <linux/types.h>
++#include <linux/errno.h>
++#include <linux/list.h>
++#include <linux/ioport.h>
++#include <linux/kernel.h>
++#include <linux/mm.h>
++#include <linux/slab.h>
++
++#include <linux/cache.h>
++#include <asm/byteorder.h>
++#include <linux/uaccess.h>
++#include <linux/io.h>
++#include <asm/irq.h>
++
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/string.h>
++
++#include <linux/if_arp.h>
++#include <linux/netdevice.h>
++#include <linux/skbuff.h>
++#include <linux/delay.h>
++#include <linux/hdlc.h>
++#include <linux/mutex.h>
++#include <linux/of_device.h>
++#include <linux/etherdevice.h>
++#include "pef2256.h"
++
++static int pef2256_open(struct net_device *netdev);
++static int pef2256_close(struct net_device *netdev);
++
++/* helper function - Read a register */
++static u8 pef2256_r8(struct pef2256_dev_priv *priv, u32 offset)
++{
++	return ioread8(priv->ioaddr + offset);
++}
++
++/* helper function - Write a value to a register */
++static void pef2256_w8(struct pef2256_dev_priv *priv, u32 offset, u8 v=
+al)
++{
++	iowrite8(val, priv->ioaddr + offset);
++}
++
++/* helper function - Clear bits in a register */
++static void pef2256_c8(struct pef2256_dev_priv *priv, u32 offset, u8 m=
+ask)
++{
++	u8 val =3D pef2256_r8(priv, offset);
++	iowrite8(val & ~mask, priv->ioaddr + offset);
++}
++
++/* helper function - Set bits in a register */
++static void pef2256_s8(struct pef2256_dev_priv *priv, u32 offset, u8 m=
+ask)
++{
++	u8 val =3D pef2256_r8(priv, offset);
++	iowrite8(val | mask, priv->ioaddr + offset);
++}
++
++static void config_hdlc_timeslot(struct pef2256_dev_priv *priv, int ts=
+)
++{
++	static struct {
++		u32 ttr;
++		u32 rtr;
++	} regs[] =3D {
++		{ TTR1, RTR1 },
++		{ TTR2, RTR2 },
++		{ TTR3, RTR3 },
++		{ TTR4, RTR4 },
++	};
++	int cfg_bit =3D 1 << (31 - ts);
++	int reg_bit =3D 1 << (7 - (ts % 8));
++	int j =3D ts / 8;
++
++	if (j >=3D 4)
++		return;
++
++	if (priv->Tx_TS & cfg_bit)
++		pef2256_s8(priv, regs[j].ttr, 1 << reg_bit);
++
++	if (priv->Rx_TS & cfg_bit)
++		pef2256_s8(priv, regs[j].rtr, 1 << reg_bit);
++}
++
++
++/* Setting up HDLC channel */
++static void config_hdlc(struct pef2256_dev_priv *priv)
++{
++	int TS_idx;
++	u8 dummy;
++
++	/* Read to remove pending IT */
++	dummy =3D pef2256_r8(priv, ISR0);
++	dummy =3D pef2256_r8(priv, ISR1);
++	dummy =3D pef2256_r8(priv, ISR2);
++
++	/* Mask HDLC 1 Transmit IT */
++	pef2256_s8(priv, IMR1, IMR1_XPR);
++	pef2256_s8(priv, IMR1, IMR1_XDU);
++	pef2256_s8(priv, IMR1, IMR1_ALLS);
++
++	/* Mask HDLC 1 Receive IT */
++	pef2256_s8(priv, IMR0, IMR0_RPF);
++	pef2256_s8(priv, IMR0, IMR0_RME);
++	pef2256_s8(priv, IMR1, IMR1_RDO);
++
++	/* Mask errors IT */
++	pef2256_s8(priv, IMR0, IMR0_PDEN);
++	pef2256_s8(priv, IMR2, IMR2_LOS);
++	pef2256_s8(priv, IMR2, IMR2_AIS);
++
++	udelay(FALC_HW_CMD_DELAY_US);
++
++	/* MODE.HRAC =3D 0 (Receiver inactive)
++	 * MODE.DIV =3D 0 (Data normal operation)
++	 * for FALC V2.2 : MODE.HDLCI =3D 0 (normal operation)
++	 * MODE.MDS2:0 =3D 100 (No address comparison)
++	 * MODE.HRAC =3D 1 (Receiver active)
++	 */
++	pef2256_w8(priv, MODE, 1 << 3);
++	/* CCR1.EITS =3D 1 (Enable internal Time Slot 31:0 Signaling)
++	 * CCR1.XMFA =3D 0 (No transmit multiframe alignment)
++	 * CCR1.RFT1:0 =3D 00 (RFIFO is 32 bytes)
++	 * setting up Interframe Time Fill
++	 * CCR1.ITF =3D 1 (Interframe Time Fill Continuous flag)
++	 */
++	pef2256_w8(priv, CCR1, 0x10 | (1 << 3));
++	/* CCR2.XCRC =3D 0 (Transmit CRC ON)
++	 * CCR2.RCRC =3D 0 (Receive CRC ON, no write in RFIFO)
++	 * CCR2.RADD =3D 0 (No write address in RFIFO)
++	 */
++	pef2256_w8(priv, CCR2, 0x00);
++
++	udelay(FALC_HW_CMD_DELAY_US);
++
++	/* MODE.HRAC =3D 0 (Receiver inactive)
++	 * MODE.DIV =3D 0 (Data normal operation)
++	 * for FALC V2.2 : MODE.HDLCI =3D 0 (normal operation)
++	 * MODE.MDS2:0 =3D 100 (No address comparison)
++	 * MODE.HRAC =3D 1 (Receiver active)
++	 */
++	pef2256_w8(priv, MODE, 1 << 3);
++	/* CCR1.EITS =3D 1 (Enable internal Time Slot 31:0 Signaling)
++	 * CCR1.XMFA =3D 0 (No transmit multiframe alignment)
++	 * CCR1.RFT1:0 =3D 00 (RFIFO is 32 bytes)
++	 * setting up Interframe Time Fill
++	 * CCR1.ITF =3D 1 (Interframe Time Fill Continuous flag)
++	 */
++	pef2256_w8(priv, CCR1, 0x10 | (1 << 3));
++	/* CCR2.XCRC =3D 0 (Transmit CRC ON)
++	 * CCR2.RCRC =3D 0 (Receive CRC ON, no write in RFIFO)
++	 * CCR2.RADD =3D 0 (No write address in RFIFO)
++	 */
++	pef2256_w8(priv, CCR2, 0x00);
++
++	udelay(FALC_HW_CMD_DELAY_US);
++
++	/* MODE.HRAC =3D 0 (Receiver inactive)
++	 * MODE.DIV =3D 0 (Data normal operation)
++	 * for FALC V2.2 : MODE.HDLCI =3D 0 (normal operation)
++	 * MODE.MDS2:0 =3D 100 (No address comparison)
++	 * MODE.HRAC =3D 1 (Receiver active)
++	 */
++	pef2256_w8(priv, MODE, 1 << 3);
++	/* CCR1.EITS =3D 1 (Enable internal Time Slot 31:0 Signaling)
++	 * CCR1.XMFA =3D 0 (No transmit multiframe alignment)
++	 * CCR1.RFT1:0 =3D 00 (RFIFO is 32 bytes)
++	 * setting up Interframe Time Fill
++	 * CCR1.ITF =3D 1 (Interframe Time Fill Continuous flag)
++	 */
++	pef2256_w8(priv, CCR1, 0x10 | (1 << 3));
++	/* CCR2.XCRC =3D 0 (Transmit CRC ON)
++	 * CCR2.RCRC =3D 0 (Receive CRC ON, no write in RFIFO)
++	 * CCR2.RADD =3D 0 (No write address in RFIFO)
++	 */
++	pef2256_w8(priv, CCR2, 0x00);
++
++	udelay(FALC_HW_CMD_DELAY_US);
++
++	/* Init  Time Slot select */
++	pef2256_w8(priv, TTR1, 0x00);
++	pef2256_w8(priv, TTR2, 0x00);
++	pef2256_w8(priv, TTR3, 0x00);
++	pef2256_w8(priv, TTR4, 0x00);
++	pef2256_w8(priv, RTR1, 0x00);
++	pef2256_w8(priv, RTR2, 0x00);
++	pef2256_w8(priv, RTR3, 0x00);
++	pef2256_w8(priv, RTR4, 0x00);
++	/* Set selected TS bits */
++	/* Starting at TS 1, TS 0 is reserved */
++	for (TS_idx =3D 1; TS_idx < 32; TS_idx++)
++		config_hdlc_timeslot(priv, TS_idx);
++
++	udelay(FALC_HW_CMD_DELAY_US);
++
++	/* Unmask HDLC 1 Transmit IT */
++	pef2256_c8(priv, IMR1, IMR1_XPR);
++	pef2256_c8(priv, IMR1, IMR1_XDU);
++	pef2256_c8(priv, IMR1, IMR1_ALLS);
++
++	/* Unmask HDLC 1 Receive IT */
++	pef2256_c8(priv, IMR0, IMR0_RPF);
++	pef2256_c8(priv, IMR0, IMR0_RME);
++	pef2256_c8(priv, IMR1, IMR1_RDO);
++
++	/* Unmask errors IT */
++	pef2256_c8(priv, IMR0, IMR0_PDEN);
++	pef2256_c8(priv, IMR2, IMR2_LOS);
++	pef2256_c8(priv, IMR2, IMR2_AIS);
++}
++
++
++static void init_falc(struct pef2256_dev_priv *priv)
++{
++	int version;
++
++	/* Get controller version */
++	version =3D priv->component_id;
++
++	/* Init FALC56 */
++	/* RCLK output : DPLL clock, DCO-X enabled, DCO-X internal reference
++	 * clock
++	 */
++	pef2256_w8(priv, CMR1, 0x00);
++	/* SCLKR selected, SCLKX selected, receive synchro pulse sourced by
++	 * SYPR, transmit synchro pulse sourced by SYPX
++	 */
++	pef2256_w8(priv, CMR2, 0x00);
++	/* NRZ coding, no alarm simulation */
++	pef2256_w8(priv, FMR0, 0x00);
++	/* E1 double frame format, 2 Mbit/s system data rate, no AIS
++	 * transmission to remote end or system interface, payload loop
++	 * off, transmit remote alarm on
++	 */
++	pef2256_w8(priv, FMR1, 0x00);
++	pef2256_w8(priv, FMR2, 0x02);
++	/* E1 default for LIM2 */
++	pef2256_w8(priv, LIM2, 0x20);
++	if (priv->mode =3D=3D MASTER_MODE)
++		/* SEC input, active high */
++		pef2256_w8(priv, GPC1, 0x00);
++	else
++		/* FSC output, active high */
++		pef2256_w8(priv, GPC1, 0x40);
++	/* internal second timer, power on */
++	pef2256_w8(priv, GCR, 0x00);
++	/* slave mode, local loop off, mode short-haul */
++	if (version =3D=3D VERSION_1_2)
++		pef2256_w8(priv, LIM0, 0x00);
++	else
++		pef2256_w8(priv, LIM0, 0x08);
++	/* analog interface selected, remote loop off */
++	pef2256_w8(priv, LIM1, 0x00);
++	if (version =3D=3D VERSION_1_2) {
++		/* function of ports RP(A to D) : output receive sync pulse
++		 * function of ports XP(A to D) : output transmit line clock
++		 */
++		pef2256_w8(priv, PC1, 0x77);
++		pef2256_w8(priv, PC2, 0x77);
++		pef2256_w8(priv, PC3, 0x77);
++		pef2256_w8(priv, PC4, 0x77);
++	} else {
++		/* function of ports RP(A to D) : output high
++		 * function of ports XP(A to D) : output high
++		 */
++		pef2256_w8(priv, PC1, 0xAA);
++		pef2256_w8(priv, PC2, 0xAA);
++		pef2256_w8(priv, PC3, 0xAA);
++		pef2256_w8(priv, PC4, 0xAA);
++	}
++	/* function of port RPA : input SYPR
++	 * function of port XPA : input SYPX
++	 */
++	pef2256_w8(priv, PC1, 0x00);
++	/* SCLKR, SCLKX, RCLK configured to inputs,
++	 * XFMS active low, CLK1 and CLK2 pin configuration
++	 */
++	pef2256_w8(priv, PC5, 0x00);
++	pef2256_w8(priv, PC6, 0x00);
++	/* the receive clock offset is cleared
++	 * the receive time slot offset is cleared
++	 */
++	pef2256_w8(priv, RC0, 0x00);
++	pef2256_w8(priv, RC1, 0x9C);
++	/* 2.048 MHz system clocking rate, receive buffer 2 frames, transmit
++	 * buffer bypass, data sampled and transmitted on the falling edge of
++	 * SCLKR/X, automatic freeze signaling, data is active in the first
++	 * channel phase
++	 */
++	pef2256_w8(priv, SIC1, 0x00);
++	pef2256_w8(priv, SIC2, 0x00);
++	pef2256_w8(priv, SIC3, 0x00);
++	/* channel loop-back and single frame mode are disabled */
++	pef2256_w8(priv, LOOP, 0x00);
++	/* all bits of the transmitted service word are cleared */
++	pef2256_w8(priv, XSW, 0x1F);
++	/* spare bit values are cleared */
++	pef2256_w8(priv, XSP, 0x00);
++	/* no transparent mode active */
++	pef2256_w8(priv, TSWM, 0x00);
++	/* the transmit clock offset is cleared
++	 * the transmit time slot offset is cleared
++	 */
++	pef2256_w8(priv, XC0, 0x00);
++	pef2256_w8(priv, XC1, 0x9C);
++	/* transmitter in tristate mode */
++	pef2256_w8(priv, XPM2, 0x40);
++	/* transmit pulse mask */
++	if (version !=3D VERSION_1_2)
++		pef2256_w8(priv, XPM0, 0x9C);
++
++	if (version =3D=3D VERSION_1_2) {
++		/* master clock is 16,384 MHz (flexible master clock) */
++		pef2256_w8(priv, GCM2, 0x58);
++		pef2256_w8(priv, GCM3, 0xD2);
++		pef2256_w8(priv, GCM4, 0xC2);
++		pef2256_w8(priv, GCM5, 0x07);
++		pef2256_w8(priv, GCM6, 0x10);
++	} else {
++		/* master clock is 16,384 MHz (flexible master clock) */
++		pef2256_w8(priv, GCM2, 0x18);
++		pef2256_w8(priv, GCM3, 0xFB);
++		pef2256_w8(priv, GCM4, 0x0B);
++		pef2256_w8(priv, GCM5, 0x01);
++		pef2256_w8(priv, GCM6, 0x0B);
++		pef2256_w8(priv, GCM7, 0xDB);
++		pef2256_w8(priv, GCM8, 0xDF);
++	}
++
++	/* master mode */
++	if (priv->mode =3D=3D MASTER_MODE)
++		pef2256_s8(priv, LIM0, LIM0_MAS);
++
++	/* transmit line in normal operation */
++	pef2256_c8(priv, XPM2, XPM2_XLT);
++
++	if (version =3D=3D VERSION_1_2) {
++		/* receive input threshold =3D 0,21V */
++		pef2256_s8(priv, LIM1, LIM1_RIL0);
++		pef2256_c8(priv, LIM1, LIM1_RIL1);
++		pef2256_s8(priv, LIM1, LIM1_RIL2);
++	} else {
++		/* receive input threshold =3D 0,21V */
++		pef2256_c8(priv, LIM1, LIM1_RIL0);
++		pef2256_c8(priv, LIM1, LIM1_RIL1);
++		pef2256_s8(priv, LIM1, LIM1_RIL2);
++	}
++	/* transmit line coding =3D HDB3 */
++	pef2256_s8(priv, FMR0, FMR0_XC0);
++	pef2256_s8(priv, FMR0, FMR0_XC1);
++	/* receive line coding =3D HDB3 */
++	pef2256_s8(priv, FMR0, FMR0_RC0);
++	pef2256_s8(priv, FMR0, FMR0_RC1);
++	/* detection of LOS alarm =3D 176 pulses (soit (10 + 1) * 16) */
++	pef2256_w8(priv, PCD, 10);
++	/* recovery of LOS alarm =3D 22 pulses (soit 21 + 1) */
++	pef2256_w8(priv, PCR, 21);
++	/* DCO-X center frequency =3D> CMR2.DCOXC */
++	pef2256_s8(priv, CMR2, CMR2_DCOXC);
++	if (priv->mode =3D=3D SLAVE_MODE) {
++		/* select RCLK source =3D 2M */
++		pef2256_c8(priv, CMR1, CMR1_RS0);
++		pef2256_s8(priv, CMR1, CMR1_RS1);
++		/* disable switching RCLK -> SYNC */
++		pef2256_s8(priv, CMR1, CMR1_DCS);
++	}
++	if (version !=3D VERSION_1_2)
++		/* during inactive channel phase RDO into tri-state mode */
++		pef2256_s8(priv, SIC3, 1 << 5);
++	if (!strcmp(priv->rising_edge_sync_pulse, "transmit")) {
++		/* rising edge sync pulse transmit */
++		pef2256_c8(priv, SIC3, SIC3_RESR);
++		pef2256_s8(priv, SIC3, SIC3_RESX);
++	} else {
++		/* rising edge sync pulse receive */
++		pef2256_c8(priv, SIC3, SIC3_RESX);
++		pef2256_s8(priv, SIC3, SIC3_RESR);
++	}
++	/* transmit offset counter =3D 4
++	 *  =3D> XC0.XCO10:8 =3D 000 (bits 2, 1 et 0);
++	 *     XC1.XCO7:0 =3D 4 (bits 7 ... 0)
++	 */
++	pef2256_w8(priv, XC1, 4);
++	/* receive offset counter =3D 4
++	 * =3D> RC0.RCO10:8 =3D 000 (bits 2, 1 et 0);
++	 *    RC1.RCO7:0 =3D 4 (bits 7 ... 0)
++	 */
++	pef2256_w8(priv, RC1, 4);
++
++	/* Clocking rate for FALC56 */
++
++	/* Nothing to do for clocking rate 2M  */
++
++	/* clocking rate 4M  */
++	if (priv->clock_rate =3D=3D CLOCK_RATE_4M)
++		pef2256_s8(priv, SIC1, SIC1_SSC0);
++
++	/* clocking rate 8M  */
++	if (priv->clock_rate =3D=3D CLOCK_RATE_8M)
++		pef2256_s8(priv, SIC1, SIC1_SSC1);
++
++	/* clocking rate 16M  */
++	if (priv->clock_rate =3D=3D CLOCK_RATE_16M) {
++		pef2256_s8(priv, SIC1, SIC1_SSC0);
++		pef2256_s8(priv, SIC1, SIC1_SSC1);
++	}
++
++	/* data rate for FALC56 */
++
++	/* Nothing to do for data rate 2M on the system data bus */
++
++	/* data rate 4M on the system data bus */
++	if (priv->data_rate =3D=3D DATA_RATE_4M)
++		pef2256_s8(priv, FMR1, FMR1_SSD0);
++
++	/* data rate 8M on the system data bus */
++	if (priv->data_rate =3D=3D DATA_RATE_8M)
++		pef2256_s8(priv, SIC1, SIC1_SSD1);
++
++	/* data rate 16M on the system data bus */
++	if (priv->data_rate =3D=3D DATA_RATE_16M) {
++		pef2256_s8(priv, FMR1, FMR1_SSD0);
++		pef2256_s8(priv, SIC1, SIC1_SSD1);
++	}
++
++	/* channel phase for FALC56 */
++
++	/* Nothing to do for channel phase 1 */
++
++	if (priv->channel_phase =3D=3D CHANNEL_PHASE_2)
++		pef2256_s8(priv, SIC2, SIC2_SICS0);
++
++	if (priv->channel_phase =3D=3D CHANNEL_PHASE_3)
++		pef2256_s8(priv, SIC2, SIC2_SICS1);
++
++	if (priv->channel_phase =3D=3D CHANNEL_PHASE_4) {
++		pef2256_s8(priv, SIC2, SIC2_SICS0);
++		pef2256_s8(priv, SIC2, SIC2_SICS1);
++	}
++
++	if (priv->channel_phase =3D=3D CHANNEL_PHASE_5)
++		pef2256_s8(priv, SIC2, SIC2_SICS2);
++
++	if (priv->channel_phase =3D=3D CHANNEL_PHASE_6) {
++		pef2256_s8(priv, SIC2, SIC2_SICS0);
++		pef2256_s8(priv, SIC2, SIC2_SICS2);
++	}
++
++	if (priv->channel_phase =3D=3D CHANNEL_PHASE_7) {
++		pef2256_s8(priv, SIC2, SIC2_SICS1);
++		pef2256_s8(priv, SIC2, SIC2_SICS2);
++	}
++
++	if (priv->channel_phase =3D=3D CHANNEL_PHASE_8) {
++		pef2256_s8(priv, SIC2, SIC2_SICS0);
++		pef2256_s8(priv, SIC2, SIC2_SICS1);
++		pef2256_s8(priv, SIC2, SIC2_SICS2);
++	}
++
++	if (priv->mode =3D=3D SLAVE_MODE)
++		/* transmit buffer size =3D 2 frames */
++		pef2256_s8(priv, SIC1, SIC1_XBS1);
++
++	/* transmit in multiframe */
++	pef2256_s8(priv, FMR1, FMR1_XFS);
++	/* receive in multiframe */
++	pef2256_s8(priv, FMR2, FMR2_RFS1);
++	/* Automatic transmission of submultiframe status */
++	pef2256_s8(priv, XSP, XSP_AXS);
++
++	/* error counter mode toutes les 1s */
++	pef2256_s8(priv, FMR1, FMR1_ECM);
++	/* error counter mode COFA =3D> GCR.ECMC =3D 1 (bit 4) */
++	pef2256_s8(priv, GCR, GCR_ECMC);
++	/* errors in service words with no influence */
++	pef2256_s8(priv, RC0, RC0_SWD);
++	/* 4 consecutive incorrect FAS =3D loss of sync */
++	pef2256_s8(priv, RC0, RC0_ASY4);
++	/* Si-Bit in service word from XDI */
++	pef2256_s8(priv, XSW, XSW_XSIS);
++	/* Si-Bit in FAS word from XDI */
++	pef2256_s8(priv, XSP, XSP_XSIF);
++
++	/* port RCLK is output */
++	pef2256_s8(priv, PC5, PC5_CRP);
++	/* visibility of the masked interrupts */
++	pef2256_s8(priv, GCR, GCR_VIS);
++	/* reset lines
++	 *  =3D> CMDR.RRES =3D 1 (bit 6); CMDR.XRES =3D 1 (bit 4);
++	 *     CMDR.SRES =3D 1 (bit 0)
++	 */
++	pef2256_w8(priv, CMDR, 0x51);
++}
++
++static ssize_t fs_attr_mode_show(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct net_device *ndev =3D dev_get_drvdata(dev);
++	struct pef2256_dev_priv *priv =3D dev_to_hdlc(ndev)->priv;
++
++	return sprintf(buf, "%d\n", priv->mode);
++}
++
++
++static ssize_t fs_attr_mode_store(struct device *dev,
++			struct device_attribute *attr,  const char *buf,
++			size_t count)
++{
++	struct net_device *ndev =3D dev_get_drvdata(dev);
++	struct pef2256_dev_priv *priv =3D dev_to_hdlc(ndev)->priv;
++	long int value;
++	int ret =3D kstrtol(buf, 10, &value);
++	int reconfigure =3D (value !=3D priv->mode);
++
++	if (value !=3D MASTER_MODE && value !=3D SLAVE_MODE)
++		ret =3D -EINVAL;
++
++	if (ret < 0)
++		netdev_info(ndev, "Invalid mode (0 or 1 expected\n");
++	else {
++		priv->mode =3D value;
++		if (reconfigure && netif_carrier_ok(ndev))
++			init_falc(priv);
++	}
++
++	return strnlen(buf, count);
++}
++
++static DEVICE_ATTR(mode, S_IRUGO | S_IWUSR, fs_attr_mode_show,
++						fs_attr_mode_store);
++
++
++
++static ssize_t fs_attr_Tx_TS_show(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct net_device *ndev =3D dev_get_drvdata(dev);
++	struct pef2256_dev_priv *priv =3D dev_to_hdlc(ndev)->priv;
++
++	return sprintf(buf, "0x%08x\n", priv->Tx_TS);
++}
++
++
++static ssize_t fs_attr_Tx_TS_store(struct device *dev,
++			struct device_attribute *attr,  const char *buf,
++			size_t count)
++{
++	struct net_device *ndev =3D dev_get_drvdata(dev);
++	struct pef2256_dev_priv *priv =3D dev_to_hdlc(ndev)->priv;
++	unsigned long value;
++	int ret =3D kstrtoul(buf, 16, (long int *)&value);
++	int reconfigure =3D (value !=3D priv->mode);
++
++	/* TS 0 is reserved */
++	if (ret < 0 || value > TS_0)
++		ret =3D -EINVAL;
++
++	if (ret < 0)
++		netdev_info(ndev, "Invalid Tx_TS (hex number > 0 and < 0x80000000 ex=
+pected\n");
++	else {
++		priv->Tx_TS =3D value;
++		if (reconfigure && netif_carrier_ok(ndev))
++			config_hdlc(priv);
++	}
++
++	return strnlen(buf, count);
++}
++
++static DEVICE_ATTR(Tx_TS, S_IRUGO | S_IWUSR, fs_attr_Tx_TS_show,
++			fs_attr_Tx_TS_store);
++
++
++static ssize_t fs_attr_Rx_TS_show(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct net_device *ndev =3D dev_get_drvdata(dev);
++	struct pef2256_dev_priv *priv =3D dev_to_hdlc(ndev)->priv;
++
++	return sprintf(buf, "0x%08x\n", priv->Rx_TS);
++}
++
++
++static ssize_t fs_attr_Rx_TS_store(struct device *dev,
++			struct device_attribute *attr,  const char *buf,
++			size_t count)
++{
++	struct net_device *ndev =3D dev_get_drvdata(dev);
++	struct pef2256_dev_priv *priv =3D dev_to_hdlc(ndev)->priv;
++	unsigned long value;
++	int ret =3D kstrtoul(buf, 16, &value);
++	int reconfigure =3D (value !=3D priv->mode);
++
++	/* TS 0 is reserved */
++	if (ret < 0 || value > TS_0)
++		ret =3D -EINVAL;
++
++	if (ret < 0)
++		netdev_info(ndev, "Invalid Rx_TS (hex number > 0 and < 0x80000000 ex=
+pected\n");
++	else {
++		priv->Rx_TS =3D value;
++		if (reconfigure && netif_carrier_ok(ndev))
++			config_hdlc(priv);
++	}
++
++	return strnlen(buf, count);
++}
++
++static DEVICE_ATTR(Rx_TS, S_IRUGO | S_IWUSR, fs_attr_Rx_TS_show,
++	 fs_attr_Rx_TS_store);
++
++
++static void pef2256_fifo_ack(struct pef2256_dev_priv *priv)
++{
++	pef2256_s8(priv, CMDR, 1 << 7);
++}
++
++
++static void pef2256_rx(struct pef2256_dev_priv *priv)
++{
++	int idx;
++
++	/* RDO has been received -> wait for RME */
++	if (priv->stats.rx_bytes =3D=3D -1) {
++		pef2256_fifo_ack(priv);
++
++		if (priv->r_isr0 & ISR0_RME)
++			priv->stats.rx_bytes =3D 0;
++
++		return;
++	}
++
++	/* RPF : a block is available in the receive FIFO */
++	if (priv->r_isr0 & ISR0_RPF) {
++		for (idx =3D 0; idx < 32; idx++)
++			priv->rx_buff[priv->stats.rx_bytes + idx] =3D
++				pef2256_r8(priv, RFIFO + (idx & 1));
++
++		pef2256_fifo_ack(priv);
++
++		priv->stats.rx_bytes +=3D 32;
++	}
++
++	/* RME : Message end : Read the receive FIFO */
++	if (priv->r_isr0 & ISR0_RME) {
++		/* Get size of last block */
++		int size =3D pef2256_r8(priv, RBCL) & 0x1F;
++
++		/* Read last block */
++		for (idx =3D 0; idx < size; idx++)
++			priv->rx_buff[priv->stats.rx_bytes + idx] =3D
++				pef2256_r8(priv, RFIFO + (idx & 1));
++
++		pef2256_fifo_ack(priv);
++
++		priv->stats.rx_bytes +=3D size;
++
++		/* Packet received */
++		if (priv->stats.rx_bytes > 0) {
++			struct sk_buff *skb =3D
++				dev_alloc_skb(priv->stats.rx_bytes);
++
++			if (!skb) {
++				priv->stats.rx_bytes =3D 0;
++				priv->netdev->stats.rx_dropped++;
++				return;
++			}
++			memcpy(skb->data, priv->rx_buff, priv->stats.rx_bytes);
++			skb_put(skb, priv->stats.rx_bytes);
++			priv->stats.rx_bytes =3D 0;
++			skb->protocol =3D hdlc_type_trans(skb, priv->netdev);
++			priv->netdev->stats.rx_packets++;
++			priv->netdev->stats.rx_bytes +=3D skb->len;
++			netif_rx(skb);
++		}
++	}
++}
++
++
++static void pef2256_tx(struct pef2256_dev_priv *priv)
++{
++	int idx, size;
++	u8 *tx_buff =3D priv->tx_skb->data;
++
++	/* ALLS : transmit all done */
++	if (priv->r_isr1 & ISR1_ALLS) {
++		priv->netdev->stats.tx_packets++;
++		priv->netdev->stats.tx_bytes +=3D priv->tx_skb->len;
++		priv->tx_skb =3D NULL;
++		priv->stats.tx_bytes =3D 0;
++		netif_wake_queue(priv->netdev);
++	} else
++		/* XPR : write a new block in transmit FIFO */
++		if (priv->stats.tx_bytes < priv->tx_skb->len) {
++			size =3D priv->tx_skb->len - priv->stats.tx_bytes;
++			if (size > 32)
++				size =3D 32;
++
++			for (idx =3D 0; idx < size; idx++)
++				pef2256_w8(priv, XFIFO + (idx & 1),
++					tx_buff[priv->stats.tx_bytes + idx]);
++
++			priv->stats.tx_bytes +=3D size;
++
++			if (priv->stats.tx_bytes =3D=3D priv->tx_skb->len)
++				pef2256_s8(priv, CMDR, (1 << 3) | (1 << 1));
++			else
++				pef2256_s8(priv, CMDR, 1 << 3);
++		}
++}
++
++static void pef2256_errors(struct pef2256_dev_priv *priv)
++{
++	if (pef2256_r8(priv, FRS1) & FRS1_PDEN ||
++	    pef2256_r8(priv, FRS0) & (FRS0_LOS | FRS0_AIS)) {
++		if (priv->tx_skb) {
++			priv->netdev->stats.tx_errors++;
++			priv->tx_skb =3D NULL;
++			priv->stats.tx_bytes =3D 0;
++			netif_wake_queue(priv->netdev);
++		}
++		if (priv->stats.rx_bytes > 0) {
++			priv->netdev->stats.rx_errors++;
++			priv->stats.rx_bytes =3D 0;
++		}
++		netif_carrier_off(priv->netdev);
++	} else
++		netif_carrier_on(priv->netdev);
++}
++
++static irqreturn_t pef2256_irq(int irq, void *dev_priv)
++{
++	struct pef2256_dev_priv *priv =3D (struct pef2256_dev_priv *)dev_priv=
+;
++	u8 r_gis;
++
++	r_gis =3D pef2256_r8(priv, GIS);
++
++	priv->r_isr0 =3D priv->r_isr1 =3D 0;
++
++	/* We only care about ISR0, ISR1 and ISR2 */
++	/* ISR0 */
++	if (r_gis & GIS_ISR0)
++		priv->r_isr0 =3D
++			pef2256_r8(priv, ISR0) & ~(pef2256_r8(priv, IMR0));
++
++	/* ISR1 */
++	if (r_gis & GIS_ISR1)
++		priv->r_isr1 =3D
++			pef2256_r8(priv, ISR1) & ~(pef2256_r8(priv, IMR1));
++
++	/* ISR2 */
++	if (r_gis & GIS_ISR2)
++		priv->r_isr2 =3D
++			pef2256_r8(priv, ISR2) & ~(pef2256_r8(priv, IMR2));
++
++	/* An error status has changed */
++	if (priv->r_isr0 & ISR0_PDEN || priv->r_isr2 & ISR2_LOS ||
++	    priv->r_isr2 & ISR2_AIS)
++		pef2256_errors(priv);
++
++	/* RDO : Receive data overflow -> RX error */
++	if (priv->r_isr1 & ISR1_RDO) {
++		pef2256_fifo_ack(priv);
++		priv->netdev->stats.rx_errors++;
++		/* RME received ? */
++		if (priv->r_isr0 & ISR0_RME)
++			priv->stats.rx_bytes =3D 0;
++		else
++			priv->stats.rx_bytes =3D -1;
++	} else
++		/* RPF or RME : FIFO received */
++		if (priv->r_isr0 & (ISR0_RPF | ISR0_RME))
++			pef2256_rx(priv);
++
++	/* XDU : Transmit data underrun -> TX error */
++	if (priv->r_isr1 & ISR1_XDU) {
++		priv->netdev->stats.tx_errors++;
++		priv->tx_skb =3D NULL;
++		netif_wake_queue(priv->netdev);
++	} else
++		/* XPR or ALLS : FIFO sent */
++		if (priv->r_isr1 & (ISR1_XPR | ISR1_ALLS))
++			pef2256_tx(priv);
++
++	return IRQ_HANDLED;
++}
++
++
++static int pef2256_open(struct net_device *netdev)
++{
++	struct pef2256_dev_priv *priv =3D dev_to_hdlc(netdev)->priv;
++	int ret;
++	u8 dummy;
++
++	if (priv->component_id =3D=3D VERSION_UNDEF) {
++		dev_err(priv->dev, "Composant ident (%X/%X) =3D %d\n",
++			pef2256_r8(priv, VSTR), pef2256_r8(priv, WID),
++				priv->component_id);
++		return -ENODEV;
++	}
++
++	ret =3D hdlc_open(netdev);
++	if (ret)
++		return ret;
++
++	/* We mask HDLC 1 receive/transmit IT to prevent the component sendin=
+g
++	 * such interrupts before it is initialized and configured.
++	*/
++
++	/* Read to remove pending IT */
++	dummy =3D pef2256_r8(priv, ISR0);
++	dummy =3D pef2256_r8(priv, ISR1);
++	dummy =3D pef2256_r8(priv, ISR2);
++
++	/* Mask HDLC 1 Transmit IT */
++	pef2256_s8(priv, IMR1, IMR1_XPR);
++	pef2256_s8(priv, IMR1, IMR1_XDU);
++	pef2256_s8(priv, IMR1, IMR1_ALLS);
++
++	/* Mask HDLC 1 Receive IT */
++	pef2256_s8(priv, IMR0, IMR0_RPF);
++	pef2256_s8(priv, IMR0, IMR0_RME);
++	pef2256_s8(priv, IMR1, IMR1_RDO);
++
++	/* Mask errors IT */
++	pef2256_s8(priv, IMR0, IMR0_PDEN);
++	pef2256_s8(priv, IMR2, IMR2_LOS);
++	pef2256_s8(priv, IMR2, IMR2_AIS);
++
++	ret =3D request_irq(priv->irq, pef2256_irq, 0, "e1-wan", priv);
++	if (ret) {
++		dev_err(priv->dev, "Cannot request irq. Device seems busy.\n");
++		hdlc_close(netdev);
++		return -EBUSY;
++	}
++
++	init_falc(priv);
++
++	priv->tx_skb =3D NULL;
++	priv->stats.rx_bytes =3D 0;
++
++	config_hdlc(priv);
++
++	netif_start_queue(netdev);
++	pef2256_errors(priv);
++
++	return 0;
++}
++
++
++static int pef2256_close(struct net_device *netdev)
++{
++	struct pef2256_dev_priv *priv =3D dev_to_hdlc(netdev)->priv;
++
++	netif_stop_queue(netdev);
++	netif_carrier_off(netdev);
++	hdlc_close(netdev);
++	free_irq(priv->irq, priv);
++
++	return 0;
++}
++
++
++
++static netdev_tx_t pef2256_start_xmit(struct sk_buff *skb,
++					  struct net_device *netdev)
++{
++	struct pef2256_dev_priv *priv =3D dev_to_hdlc(netdev)->priv;
++	int idx, size;
++	u8 *tx_buff =3D skb->data;
++
++	priv->tx_skb =3D skb;
++	priv->stats.tx_bytes =3D 0;
++
++	size =3D priv->tx_skb->len - priv->stats.tx_bytes;
++	if (size > 32)
++		size =3D 32;
++
++	for (idx =3D 0; idx < size; idx++)
++		pef2256_w8(priv, XFIFO + (idx & 1),
++			tx_buff[priv->stats.tx_bytes + idx]);
++
++	priv->stats.tx_bytes +=3D size;
++
++	pef2256_s8(priv, CMDR, 1 << 3);
++	if (priv->stats.tx_bytes =3D=3D priv->tx_skb->len)
++		pef2256_s8(priv, CMDR, 1 << 1);
++
++	netif_stop_queue(netdev);
++	return NETDEV_TX_OK;
++}
++
++static const struct net_device_ops pef2256_ops =3D {
++	.ndo_open       =3D pef2256_open,
++	.ndo_stop       =3D pef2256_close,
++	.ndo_change_mtu =3D hdlc_change_mtu,
++	.ndo_start_xmit =3D hdlc_start_xmit,
++	.ndo_do_ioctl   =3D hdlc_ioctl,
++};
++
++
++static int pef2256_hdlc_attach(struct net_device *netdev,
++				unsigned short encoding, unsigned short parity)
++{
++	struct pef2256_dev_priv *priv =3D dev_to_hdlc(netdev)->priv;
++
++	if (encoding !=3D ENCODING_NRZ &&
++	    encoding !=3D ENCODING_NRZI &&
++	    encoding !=3D ENCODING_FM_MARK &&
++	    encoding !=3D ENCODING_FM_SPACE &&
++	    encoding !=3D ENCODING_MANCHESTER)
++		return -EINVAL;
++
++	if (parity !=3D PARITY_NONE &&
++	    parity !=3D PARITY_CRC16_PR0_CCITT &&
++	    parity !=3D PARITY_CRC16_PR1_CCITT &&
++	    parity !=3D PARITY_CRC32_PR0_CCITT &&
++	    parity !=3D PARITY_CRC32_PR1_CCITT)
++		return -EINVAL;
++
++	priv->encoding =3D encoding;
++	priv->parity =3D parity;
++	return 0;
++}
++
++
++static int pef2256_probe(struct platform_device *pdev)
++{
++	struct pef2256_dev_priv *priv;
++	int ret =3D -ENOMEM;
++	struct net_device *netdev;
++	hdlc_device *hdlc;
++	struct device_node *np =3D (&pdev->dev)->of_node;
++	const char *str_data;
++
++	if (!pdev->dev.of_node)
++		return -EINVAL;
++
++	dev_err(&pdev->dev, "Found PEF2256\n");
++
++	priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return ret;
++
++	priv->dev =3D &pdev->dev;
++
++	if (of_property_read_u32(np, "clock-rate", &priv->clock_rate)) {
++		dev_err(&pdev->dev, "failed to read clock-rate -> using 8Mhz\n");
++		priv->clock_rate =3D CLOCK_RATE_8M;
++	}
++
++	if (of_property_read_u32(np, "data-rate", &priv->data_rate)) {
++		dev_err(&pdev->dev, "failed to read data-rate -> using 8Mb\n");
++		priv->data_rate =3D DATA_RATE_8M;
++	}
++
++	if (of_property_read_u32(np, "channel-phase", &priv->channel_phase)) =
+{
++		dev_err(&pdev->dev, "failed to read channel phase -> using 0\n");
++		priv->channel_phase =3D CHANNEL_PHASE_0;
++	}
++
++	if (of_property_read_string(np, "rising-edge-sync-pulse", &str_data))=
+ {
++		dev_err(&pdev->dev,
++"failed to read rising edge sync pulse -> using \"transmit\"\n");
++		strcpy(priv->rising_edge_sync_pulse, "transmit");
++	} else if (strcmp(str_data, "transmit") &&
++		   strcmp(str_data, "receive")) {
++		dev_err(&pdev->dev,
++"invalid rising edge sync pulse \"%s\" -> using \"transmit\"\n", str_d=
+ata);
++		strcpy(priv->rising_edge_sync_pulse, "transmit");
++	} else
++		strncpy(priv->rising_edge_sync_pulse, str_data, 10);
++
++	priv->irq =3D platform_get_irq(pdev, 0);
++	if (!priv->irq) {
++		dev_err(priv->dev, "no irq defined\n");
++		goto free_priv;
++	}
++
++	priv->ioaddr =3D of_iomap(np, 0);
++	if (!priv->ioaddr) {
++		dev_err(&pdev->dev, "of_iomap failed\n");
++		goto free_priv;
++	}
++
++	/* Get the component Id */
++	priv->component_id =3D VERSION_UNDEF;
++	if (pef2256_r8(priv, VSTR) =3D=3D 0x00) {
++		if ((pef2256_r8(priv, WID) & WID_IDENT_1) =3D=3D
++			WID_IDENT_1_2)
++			priv->component_id =3D VERSION_1_2;
++	} else if (pef2256_r8(priv, VSTR) =3D=3D 0x05) {
++		if ((pef2256_r8(priv, WID) & WID_IDENT_2) =3D=3D
++			WID_IDENT_2_1)
++			priv->component_id =3D VERSION_2_1;
++		else if ((pef2256_r8(priv, WID) & WID_IDENT_2) =3D=3D
++			WID_IDENT_2_2)
++			priv->component_id =3D VERSION_2_2;
++	}
++
++	priv->tx_skb =3D NULL;
++
++	/* Default settings ; Rx and Tx use TS 1, mode =3D MASTER */
++	priv->Rx_TS =3D 0x40000000;
++	priv->Tx_TS =3D 0x40000000;
++	priv->mode =3D 0;
++
++	netdev =3D alloc_hdlcdev(priv);
++	if (!netdev) {
++		dev_err(&pdev->dev, "alloc_hdlcdev failed\n");
++		ret =3D -ENOMEM;
++		goto free_regs;
++	}
++
++	priv->netdev =3D netdev;
++	hdlc =3D dev_to_hdlc(netdev);
++	netdev->netdev_ops =3D &pef2256_ops;
++	SET_NETDEV_DEV(netdev, &pdev->dev);
++	hdlc->attach =3D pef2256_hdlc_attach;
++	hdlc->xmit =3D pef2256_start_xmit;
++
++	dev_set_drvdata(&pdev->dev, netdev);
++
++	ret =3D register_hdlc_device(netdev);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Can't register hdlc device\n");
++		goto free_dev;
++	}
++
++	/* These files are required to configure HDLC : mode
++	 * (master or slave), time slots used to transmit and
++	 * receive data. They are mandatory.
++	 */
++	ret =3D device_create_file(priv->dev, &dev_attr_mode);
++	ret |=3D device_create_file(priv->dev, &dev_attr_Tx_TS);
++	ret |=3D device_create_file(priv->dev, &dev_attr_Rx_TS);
++
++	if (ret)
++		goto remove_files;
++
++	return 0;
++
++remove_files:
++	device_remove_file(priv->dev, &dev_attr_Tx_TS);
++	device_remove_file(priv->dev, &dev_attr_Rx_TS);
++	device_remove_file(priv->dev, &dev_attr_mode);
++
++	unregister_hdlc_device(priv->netdev);
++free_dev:
++	free_netdev(priv->netdev);
++free_regs:
++	iounmap(priv->ioaddr);
++free_priv:;
++	kfree(priv);
++
++	return ret;
++}
++
++
++static int pef2256_remove(struct platform_device *pdev)
++{
++	struct net_device *ndev =3D dev_get_drvdata(&pdev->dev);
++	struct pef2256_dev_priv *priv =3D dev_to_hdlc(ndev)->priv;
++
++
++	device_remove_file(priv->dev, &dev_attr_Tx_TS);
++	device_remove_file(priv->dev, &dev_attr_Rx_TS);
++	device_remove_file(priv->dev, &dev_attr_mode);
++
++	unregister_hdlc_device(priv->netdev);
++
++	free_netdev(priv->netdev);
++
++	iounmap(priv->ioaddr);
++
++	kfree(priv);
++
++	kfree(pdev);
++	return 0;
++}
++
++static const struct of_device_id pef2256_match[] =3D {
++	{
++		.compatible =3D "lantiq,pef2256",
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, pef2256_match);
++
++
++static struct platform_driver pef2256_driver =3D {
++	.probe		=3D pef2256_probe,
++	.remove		=3D pef2256_remove,
++	.driver		=3D {
++		.name	=3D "pef2256",
++		.owner	=3D THIS_MODULE,
++		.of_match_table	=3D pef2256_match,
++	},
++};
++
++
++module_platform_driver(pef2256_driver);
++
++/* GENERAL INFORMATIONS */
++MODULE_AUTHOR("CHANTELAUZE Jerome - April 2013");
++MODULE_VERSION("0.1");
++MODULE_DESCRIPTION("Lantiq PEF 2256 E1 Controller");
++MODULE_LICENSE("GPL");
+diff -urN a/drivers/net/wan/pef2256.h b/drivers/net/wan/pef2256.h
+--- a/drivers/net/wan/pef2256.h	1970-01-01 01:00:00.000000000 +0100
++++ b/drivers/net/wan/pef2256.h	2013-10-13 13:06:00.000000000 +0200
+@@ -0,0 +1,327 @@
++/* drivers/net/wan/pef2256.c : a PEF2256 HDLC driver for Linux
++ *
++ * This software may be used and distributed according to the terms of=
+ the
++ * GNU General Public License.
++ */
++
++#ifndef _PEF2256_H
++#define _PEF2256_H
++
++#define MASTER_MODE 0
++#define SLAVE_MODE  1
++
++#define CHANNEL_PHASE_0 0
++#define CHANNEL_PHASE_1 1
++#define CHANNEL_PHASE_2 2
++#define CHANNEL_PHASE_3 3
++#define CHANNEL_PHASE_4 4
++#define CHANNEL_PHASE_5 5
++#define CHANNEL_PHASE_6 6
++#define CHANNEL_PHASE_7 7
++#define CHANNEL_PHASE_8 8
++
++#define CLOCK_RATE_2M 2
++#define CLOCK_RATE_4M 4
++#define CLOCK_RATE_8M 8
++#define CLOCK_RATE_16M 16
++
++#define DATA_RATE_2M 2
++#define DATA_RATE_4M 4
++#define DATA_RATE_8M 8
++#define DATA_RATE_16M 16
++
++#define RX_TIMEOUT 500
++
++#define TS_0 0x80000000
++
++/* The hardware requires a delay up to 2*32*125 usec to take commands
++ * into account
++ */
++#define FALC_HW_CMD_DELAY_US (2 * 32 * 125)
++
++enum versions {
++	VERSION_UNDEF =3D 0,
++	VERSION_1_2 =3D 0x12,
++	VERSION_2_1 =3D 0x21,
++	VERSION_2_2 =3D 0x22,
++};
++
++#define WID_IDENT_1		0x03
++#define WID_IDENT_1_2		0x03
++#define WID_IDENT_2		0xC0
++#define WID_IDENT_2_1		0x00
++#define WID_IDENT_2_2		0x40
++
++/* Registers' bits */
++#define GIS_ISR0			1
++#define GIS_ISR1			(1 << 1)
++#define GIS_ISR2			(1 << 2)
++#define ISR0_RPF			1
++#define ISR0_PDEN			(1 << 1)
++#define ISR0_RME			(1 << 7)
++#define ISR1_XPR			1
++#define ISR1_XDU			(1 << 4)
++#define ISR1_ALLS			(1 << 5)
++#define ISR1_RDO			(1 << 6)
++#define ISR2_LOS			(1 << 2)
++#define ISR2_AIS			(1 << 3)
++#define IMR0_RPF			1
++#define IMR0_PDEN			1
++#define IMR0_RME			(1 << 7)
++#define IMR1_XPR			1
++#define IMR1_XDU			(1 << 4)
++#define IMR1_ALLS			(1 << 5)
++#define IMR1_RDO			(1 << 6)
++#define IMR2_LOS			(1 << 2)
++#define IMR2_AIS			(1 << 3)
++#define LIM0_MAS			1
++#define LIM1_RIL0			(1 << 4)
++#define LIM1_RIL1			(1 << 5)
++#define LIM1_RIL2			(1 << 6)
++#define FMR0_RC0			(1 << 4)
++#define FMR0_RC1			(1 << 5)
++#define FMR0_XC0			(1 << 6)
++#define FMR0_XC1			(1 << 7)
++#define FMR1_SSD0			(1 << 1)
++#define FMR1_ECM			(1 << 2)
++#define FMR1_XFS			(1 << 3)
++#define FMR2_RFS0			(1 << 6)
++#define FMR2_RFS1			(1 << 7)
++#define FRS0_AIS			(1 << 7)
++#define FRS0_LOS			(1 << 6)
++#define FRS1_PDEN			(1 << 6)
++#define CMR2_DCOXC			(1 << 5)
++#define CMR1_DCS			(1 << 3)
++#define CMR1_RS0			(1 << 4)
++#define CMR1_RS1			(1 << 5)
++#define SIC3_RESR			(1 << 2)
++#define SIC3_RESX			(1 << 3)
++#define SIC2_SICS0			(1 << 1)
++#define SIC2_SICS1			(1 << 2)
++#define SIC2_SICS2			(1 << 3)
++#define SIC1_XBS0			(1 << 1)
++#define SIC1_XBS1			(1 << 1)
++#define SIC1_SSC0			(1 << 3)
++#define SIC1_SSD1			(1 << 6)
++#define SIC1_SSC1			(1 << 7)
++#define XSP_XSIF			(1 << 2)
++#define XSP_AXS				(1 << 3)
++#define GCR_ECMC			(1 << 4)
++#define GCR_SCI				(1 << 6)
++#define GCR_VIS				(1 << 7)
++#define RC0_SWD				(1 << 7)
++#define RC0_ASY4			(1 << 6)
++#define XSW_XSIS			(1 << 7)
++#define PC5_CRP				1
++#define XPM2_XLT			(1 << 6)
++
++struct pef2256_dev_priv {
++	struct sk_buff *tx_skb;
++	struct device *dev;
++
++	void __iomem *ioaddr;
++	int component_id;
++	int mode;	/* MASTER or SLAVE */
++	int board_type;
++	int channel_phase;
++	int clock_rate;
++	int data_rate;
++	char rising_edge_sync_pulse[10];
++
++	u8 rx_buff[2048];
++
++	struct net_device_stats stats;
++
++	u32 Tx_TS;	/* Transmit Time Slots */
++	u32 Rx_TS;	/* Receive Time Slots */
++
++	unsigned short encoding;
++	unsigned short parity;
++	struct net_device *netdev;
++
++	int irq;
++
++	u8 r_isr0;			/* ISR0 register */
++	u8 r_isr1;			/* ISR1 register */
++	u8 r_isr2;			/* ISR2 register */
++};
++
++
++/* Framer E1 registers offsets */
++#define XFIFO	0x00	/* 0x00/0x01	Tx FIFO */
++#define RFIFO	0x00	/* 0x00/0x01	Rx FIFO */
++#define	CMDR	0x02	/* 0x02	Command Register */
++#define	MODE	0x03	/* 0x03	Mode Register */
++#define	RAH1	0x04	/* 0x04	Receive Address High 1 */
++#define	RAH2	0x05	/* 0x05	Receive Address High 2 */
++#define	RAL1	0x06	/* 0x06	Receive Address Low 1 */
++#define	RAL2	0x07	/* 0x07	Receive Address Low 2 */
++#define	IPC	0x08	/* 0x08	Interrupt Port Configuration */
++#define	CCR1	0x09	/* 0x09	Common Configuration Register 1 */
++#define	CCR2	0x0A	/* 0x0A	Common Configuration Register 2 */
++#define	Res1	0x0B	/* 0x0B	Free Register 1 */
++#define	RTR1	0x0C	/* 0x0C	Receive Time Slot Register 1 */
++#define	RTR2	0x0D	/* 0x0D	Receive Time Slot Register 2 */
++#define	RTR3	0x0E	/* 0x0E	Receive Time Slot Register 3 */
++#define	RTR4	0x0F	/* 0x0F	Receive Time Slot Register 4 */
++#define	TTR1	0x10	/* 0x10	Transmit Time Slot Register 1 */
++#define	TTR2	0x11	/* 0x11	Transmit Time Slot Register 2 */
++#define	TTR3	0x12	/* 0x12	Transmit Time Slot Register 3 */
++#define	TTR4	0x13	/* 0x13	Transmit Time Slot Register 4 */
++#define	IMR0	0x14	/* 0x14	Interrupt Mask Register 0 */
++#define	IMR1	0x15	/* 0x15	Interrupt Mask Register 1 */
++#define	IMR2	0x16	/* 0x16	Interrupt Mask Register 2 */
++#define	IMR3	0x17	/* 0x17	Interrupt Mask Register 3 */
++#define	IMR4	0x18	/* 0x18	Interrupt Mask Register 4 */
++#define	IMR5	0x19	/* 0x19	Interrupt Mask Register 5 */
++#define	Res2	0x1A	/* 0x1A	Free Register 2 */
++#define	IERR	0x1B	/* 0x1B	Single Bit Error Insertion Register */
++#define	FMR0	0x1C	/* 0x1C	Framer Mode Register 0 */
++#define	FMR1	0x1D	/* 0x1D	Framer Mode Register 1 */
++#define	FMR2	0x1E	/* 0x1E	Framer Mode Register 2 */
++#define	LOOP	0x1F	/* 0x1F	Channel Loop-Back */
++#define	XSW	0x20	/* 0x20	Transmit Service Word */
++#define	XSP	0x21	/* 0x21	Transmit Spare Bits */
++#define	XC0	0x22	/* 0x22	Transmit Control 0 */
++#define	XC1	0x23	/* 0x23	Transmit Control 1 */
++#define	RC0	0x24	/* 0x24	Receive Control 0 */
++#define	RC1	0x25	/* 0x25	Receive Control 1 */
++#define	XPM0	0x26	/* 0x26	Transmit Pulse Mask 0 */
++#define	XPM1	0x27	/* 0x27	Transmit Pulse Mask 1 */
++#define	XPM2	0x28	/* 0x28	Transmit Pulse Mask 2 */
++#define	TSWM	0x29	/* 0x29	Transparent Service Word Mask */
++#define	Res3	0x2A	/* 0x2A	Free Register 3 */
++#define	IDLE	0x2B	/* 0x2B	Idle Channel Code */
++#define	XSA4	0x2C	/* 0x2C	Transmit Sa4-Bit Register */
++#define	XSA5	0x2D	/* 0x2D	Transmit Sa5-Bit Register */
++#define	XSA6	0x2E	/* 0x2E	Transmit Sa6-Bit Register */
++#define	XSA7	0x2F	/* 0x2F	Transmit Sa7-Bit Register */
++#define	XSA8	0x30	/* 0x30	Transmit Sa8-Bit Register */
++#define	FMR3	0x31	/* 0x31	Framer Mode Register 3 */
++#define	ICB1	0x32	/* 0x32	Idle Channel Register 1 */
++#define	ICB2	0x33	/* 0x33	Idle Channel Register 2 */
++#define	ICB3	0x34	/* 0x34	Idle Channel Register 3 */
++#define	ICB4	0x35	/* 0x35	Idle Channel Register 4 */
++#define	LIM0	0x36	/* 0x36	Line Interface Mode 0 */
++#define	LIM1	0x37	/* 0x37	Line Interface Mode 1 */
++#define	PCD	0x38	/* 0x38	Pulse Count Detection */
++#define	PCR	0x39	/* 0x39	Pulse Count Recovery */
++#define	LIM2	0x3A	/* 0x3A	Line Interface Mode 2 */
++#define	LCR1	0x3B	/* 0x3B	Loop Code Register 1 */
++#define	LCR2	0x3C	/* 0x3C	Loop Code Register 2 */
++#define	LCR3	0x3D	/* 0x3D	Loop Code Register 3 */
++#define	SIC1	0x3E	/* 0x3E	System Interface Control 1 */
++#define	SIC2	0x3F	/* 0x3F	System Interface Control 2 */
++#define	SIC3	0x40	/* 0x40	System Interface Control 3 */
++#define	Res4	0x41	/* 0x41	Free Register 4 */
++#define	Res5	0x42	/* 0x42	Free Register 5 */
++#define	Res6	0x43	/* 0x43	Free Register 6 */
++#define	CMR1	0x44	/* 0x44	Clock Mode Register 1 */
++#define	CMR2	0x45	/* 0x45	Clock Mode Register 2 */
++#define	GCR	0x46	/* 0x46	Global Configuration Register */
++#define	ESM	0x47	/* 0x47	Errored Second Mask */
++#define	CMR3	0x48	/* 0x48	Clock Mode Register 3 en V2.2 */
++#define	RBD	0x49	/* 0x49	Receive Buffer Delay */
++#define	VSTR	0x4A	/* 0x4A	Version Status Regiter */
++#define	RES	0x4B	/* 0x4B	Receive Equalizer Status */
++#define	FRS0	0x4C	/* 0x4C	Framer Receive Status 0 */
++#define	FRS1	0x4D	/* 0x4D	Framer Receive Status 1 */
++#define	RSW	0x4E	/* 0x4E	Receive Service Word */
++#define	RSP	0x4F	/* 0x4F	Receive Spare Bits */
++#define	FEC	0x50	/* 0x50/0x51 Framing Error Counter */
++#define	CVC	0x52	/* 0x52/0x53 Code Violation Counter */
++#define	CEC1	0x54	/* 0x54/0x55 CRC Error Counter 1 */
++#define	EBC	0x56	/* 0x56/0x57 E-Bit Error Counter */
++#define	CEC2	0x58	/* 0x58/0x59 CRC Error Counter 2 */
++#define	CEC3	0x5A	/* 0x5A/0x5B CRC Error Counter 3 */
++#define	RSA4	0x5C	/* 0x5C	Receive Sa4-Bit Register */
++#define	RSA5	0x5D	/* 0x5D	Receive Sa5-Bit Register */
++#define	RSA6	0x5E	/* 0x5E	Receive Sa6-Bit Register */
++#define	RSA7	0x5F	/* 0x5F	Receive Sa7-Bit Register */
++#define DEC	0x60	/* 0x60 Common Register - Disable Error Counter */
++#define RSA8	0x60	/* 0x60 Common Register - Receive Sa8-Bit Regiter */
++#define	RSA6S	0x61	/* 0x61	Receive Sa6-Bit Status Register */
++#define	RSP1	0x62	/* 0x62	Receive Signaling Pointer 1 */
++#define	RSP2	0x63	/* 0x63	Receive Signaling Pointer 2 */
++#define	SIS	0x64	/* 0x64	Signaling Status Register */
++#define	RSIS	0x65	/* 0x65	Receive Signaling Status Register */
++#define	RBCL	0x66	/* 0x66	Receive Byte Control */
++#define	RBCH	0x67	/* 0x67	Receive Byte Control */
++#define	ISR0	0x68	/* 0x68	Interrupt Status Register 0 */
++#define	ISR1	0x69	/* 0x69	Interrupt Status Register 1 */
++#define	ISR2	0x6A	/* 0x6A	Interrupt Status Register 2 */
++#define	ISR3	0x6B	/* 0x6B	Interrupt Status Register 3 */
++#define	ISR4	0x6C	/* 0x6C	Interrupt Status Register 4 */
++#define	ISR5	0x6D	/* 0x6D	Interrupt Status Register 5 */
++#define	GIS	0x6E	/* 0x6E	Global Interrupt Status */
++#define	Res8	0x6F	/* 0x6F	Free Register 8 */
++#define	CAS1	0x70	/* 0x70	CAS Register 1 */
++#define	CAS2	0x71	/* 0x71	CAS Register 2 */
++#define	CAS3	0x72	/* 0x72	CAS Register 3 */
++#define	CAS4	0x73	/* 0x73	CAS Register 4 */
++#define	CAS5	0x74	/* 0x74	CAS Register 5 */
++#define	CAS6	0x75	/* 0x75	CAS Register 6 */
++#define	CAS7	0x76	/* 0x76	CAS Register 7 */
++#define	CAS8	0x77	/* 0x77	CAS Register 8 */
++#define	CAS9	0x78	/* 0x78	CAS Register 9 */
++#define	CAS10	0x79	/* 0x79	CAS Register 10 */
++#define	CAS11	0x7A	/* 0x7A	CAS Register 11 */
++#define	CAS12	0x7B	/* 0x7B	CAS Register 12 */
++#define	CAS13	0x7C	/* 0x7C	CAS Register 13 */
++#define	CAS14	0x7D	/* 0x7D	CAS Register 14 */
++#define	CAS15	0x7E	/* 0x7E	CAS Register 15 */
++#define	CAS16	0x7F	/* 0x7F	CAS Register 16 */
++#define	PC1	0x80	/* 0x80	Port Configuration 1 */
++#define	PC2	0x81	/* 0x81	Port Configuration 2 */
++#define	PC3	0x82	/* 0x82	Port Configuration 3 */
++#define	PC4	0x83	/* 0x83	Port Configuration 4 */
++#define	PC5	0x84	/* 0x84	Port Configuration 5 */
++#define	GPC1	0x85	/* 0x85	Global Port Configuration 1 */
++#define	PC6	0x86	/* 0x86	Port Configuration 6 */
++#define	CMDR2	0x87	/* 0x87	Command Register 2 */
++#define	CMDR3	0x88	/* 0x88	Command Register 3 */
++#define	CMDR4	0x89	/* 0x89	Command Register 4 */
++#define	Res9	0x8A	/* 0x8A	Free Register 9 */
++#define	CCR3	0x8B	/* 0x8B	Common Control Register 3 */
++#define	CCR4	0x8C	/* 0x8C	Common Control Register 4 */
++#define	CCR5	0x8D	/* 0x8D	Common Control Register 5 */
++#define	MODE2	0x8E	/* 0x8E	Mode Register 2 */
++#define	MODE3	0x8F	/* 0x8F	Mode Register 3 */
++#define	RBC2	0x90	/* 0x90	Receive Byte Count Register 2 */
++#define	RBC3	0x91	/* 0x91	Receive Byte Count Register 3 */
++#define	GCM1	0x92	/* 0x92	Global Counter Mode 1 */
++#define	GCM2	0x93	/* 0x93	Global Counter Mode 2 */
++#define	GCM3	0x94	/* 0x94	Global Counter Mode 3 */
++#define	GCM4	0x95	/* 0x95	Global Counter Mode 4 */
++#define	GCM5	0x96	/* 0x96	Global Counter Mode 5 */
++#define	GCM6	0x97	/* 0x97	Global Counter Mode 6 */
++#define SIS2_1	0x98	/* 0x98 V1.2 : Signaling Status Register 2 */
++#define GCM7	0x98	/* 0x98 V2.2 : Global Counter Mode 7 */
++#define RSIS2_1	0x99	/* 0x99 V1.2 : Rx Signaling Status Register 2 */
++#define GCM8	0x99	/* 0x99 V2.2 : Global Counter Mode 8 */
++#define	SIS3	0x9A	/* 0x9A	Signaling Status Register 3 */
++#define	RSIS3	0x9B	/* 0x9B	Receive Signaling Status Register 3 */
++#define XFIFO2	0x9C	/* 0x9C/0x9D	Tx FIFO 2 */
++#define RFIFO2	0x9C	/* 0x9C/0x9D	Rx FIFO 2 */
++#define XFIFO3	0x9E	/* 0x9E/0x9F	Tx FIFO 3 */
++#define RFIFO3	0x9E	/* 0x9E/0x9F	Rx FIFO 3 */
++#define	TSEO	0xA0	/* 0xA0	Time Slot Even/Odd select */
++#define	TSBS1	0xA1	/* 0xA1	Time Slot Bit select 1 */
++#define	TSBS2	0xA2	/* 0xA2	Time Slot Bit select 2 */
++#define	TSBS3	0xA3	/* 0xA3	Time Slot Bit select 3 */
++#define	TSS2	0xA4	/* 0xA4	Time Slot select 2 */
++#define	TSS3	0xA5	/* 0xA5	Time Slot select 3 */
++#define	Res10	0xA6	/* 0xA6	Free Register 10 */
++#define	Res11	0xA7	/* 0xA7	Free Register 11 */
++#define	TPC0	0xA8	/* 0xA8	Test Pattern Control Register 0 */
++#define	SIS2	0xA9	/* 0xA9	Signaling Status Register 2 (V2.2) */
++#define	RSIS2	0xAA	/* 0xAA	Rx Signaling Status Register 2 (V2.2) */
++#define	MFPI	0xAB	/* 0xAB	Multi Function Port Input Status */
++#define	Res12	0xAC	/* 0xAC	Free Register 12 */
++#define	Res13	0xAD	/* 0xAD	Free Register 13 */
++#define	Res14	0xAE	/* 0xAE	Free Register 14 */
++#define	GLC1	0xAF	/* 0xAF	Global Line Control Register 1 */
++#define Res15	0xB0	/* 0xB0/0xEB Free Registers */
++#define WID	0xEC	/* 0xEC	Identification Register */
++
++#endif /* _PEF2256_H */
+diff -urN a/Documentation/devicetree/bindings/net/pef2256.txt b/Documen=
+tation/devicetree/bindings/net/pef2256.txt
+--- a/Documentation/devicetree/bindings/net/pef2256.txt	1970-01-01 01:0=
+0:00.000000000 +0100
++++ b/Documentation/devicetree/bindings/net/pef2256.txt	2013-10-13 15:0=
+5:42.000000000 +0200
+@@ -0,0 +1,77 @@
++* Wan on Lantiq PEF2256 E1 controller, also known as FALC56
++
++This chip was originally called "Infineon PEF2256" before the transfer=
+ of the
++former "wire-line" business-unit into an own company.
++
++The PEF2256 is a E1/T1/J1 Framer and Line Interface Component for Long=
+- and
++Short-Haul Applications.
++Its datashhet can be downloaded at
++http://www.datasheetcatalog.com/datasheets_pdf/P/E/F/2/PEF2256E.shtml
++
++The FALC56 framer and line interface component is designed to fulfill =
+all
++required interfacing between analog E1 lines and the digital PCM syste=
+m
++highway, H.100/H.110 or H-MVIP bus.
++
++Required properties:
++- compatible: Should contain "lantiq,pef2256"
++- reg: Address and length of the register set for the device.
++  There should be a single continuous bank.
++- interrupts: Should contain the single interrupt used by the componen=
+t to
++  notify special events (error, data received, data transmitted, ...).
++
++Optional properties:
++
++These properties can be defined to adjust the system interface in E1 m=
+ode.
++
++The FALC56 offers a flexible feature for system designers where for tr=
+ansmit and
++receive direction different system clocks and system pulses are necess=
+ary. The
++interface to the receive system highway is realized by two data buses,=
+ one for
++the data RDO and one for the signaling data RSIG. The receive highway =
+is clocked
++on pin SCLKR, while the interface to the transmit system highway is
++independently clocked on pin SCLKX. The frequency of these working clo=
+cks and
++the data rate of 2.048/4.096/8.192/16.384 Mbit/s for the receive and t=
+ransmit
++system interface is programmable.
++
++- clock-rate:
++  Supported values are: 2 (2.048 Mhz), 4 (4.096 Mhz), 8 (8.192 Mhz),
++    16 (16.384 Mhz).
++  8 if not defined.
++
++- data-rate:
++  Supported values are: 2 (2.048 Mbit/sec), 4 (4.096 Mbit/sec),
++    8 (8.192 Mbit/sec), 16 (16.384 Mbit/sec).
++  8 if not defined.
++
++Adjusting the frame begin (time slot 0, bit 0) relative to SYPR/X or X=
+MFS is
++possible in the range of 0 to 125 =B5s. The minimum shift of varying t=
+he
++time slot 0 begin can be programmed between 1 bit and 1/8 bit dependin=
+g of the
++system clocking and data rate, e.g. with a clocking/data rate of 2.048=
+ MHz
++shifting is done bit by bit, while running the FALC56 with 16.384 MHz =
+and
++2.048 Mbit/s data rate it is done by 1/8 bit
++
++- channel-phase: First time slot transmission channel phase.
++  Supported values are: 0, 1, 2, 3, 4, 5, 6, 7. 8
++  0 if not defined.
++
++All transmit or receive system interface data and marker are clocked o=
+r sampled
++with the following active edge :
++* Latched with the first falling edge of the selected PCM highway cloc=
+k.
++* Latched with the first rising edge of the selected PCM highway clock=
+=2E
++The behaviour of "transmit" and "receive" signals is inverse.
++
++- rising-edge-sync-pulse: rising edge synchronous pulse.
++  Supported values are: "receive", "transmit".
++  "transmit" if not defined.
++
++Examples:
++
++	e1-wan@4,2000000 {
++		compatible =3D "lantiq,pef2256";
++		reg =3D <4 0x2000000 0xFF>;
++		interrupts =3D <8 1>;
++		interrupt-parent =3D <&PIC>;
++		clock-rate =3D <4>;
++		data-rate =3D <4>;
++		channel-phase =3D <1>;
++		rising-edge-sync-pulse =3D "transmit";
++	};
+diff -urN a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
+--- a/drivers/net/wan/Makefile	1970-01-01 01:00:00.000000000 +0100
++++ b/drivers/net/wan/Makefile	2013-10-13 13:05:01.000000000 +0200
+@@ -22,6 +22,7 @@
+ obj-$(CONFIG_COSA)		+=3D cosa.o
+ obj-$(CONFIG_FARSYNC)		+=3D farsync.o
+ obj-$(CONFIG_DSCC4)             +=3D dscc4.o
++obj-$(CONFIG_PEF2256)           +=3D pef2256.o
+ obj-$(CONFIG_X25_ASY)		+=3D x25_asy.o
+=20
+ obj-$(CONFIG_LANMEDIA)		+=3D lmc/
+diff -urN a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+--- a/drivers/net/wan/Kconfig	1970-01-01 01:00:00.000000000 +0100
++++ b/drivers/net/wan/Kconfig	2013-10-13 13:05:01.000000000 +0200
+@@ -266,6 +266,16 @@
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called farsync.
+=20
++config PEF2256
++	tristate "PEF2256 support"
++	depends on HDLC && OF && SYSFS
++	help
++	  Driver for Lantiq (ex. Infineon) FALC56 E1/T1/J1 Framer and
++	  Line Interface based on PEF2256 chipset.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called pef2256.
++
+ config DSCC4
+ 	tristate "Etinc PCISYNC serial board support"
+ 	depends on HDLC && PCI && m
