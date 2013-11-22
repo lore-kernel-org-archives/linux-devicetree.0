@@ -1,87 +1,72 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v3 4/5] regulator: max14577: Add regulator driver for Maxim
- 14577
-Date: Fri, 22 Nov 2013 14:00:44 +0100
-Message-ID: <5314519.ORHTDE3qkF@amdc1032>
-References: <1385109972-28059-1-git-send-email-k.kozlowski@samsung.com>
- <1385109972-28059-5-git-send-email-k.kozlowski@samsung.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V5] kbuild: dtbs_install: new make target
+Date: Fri, 22 Nov 2013 08:19:22 -0500
+Message-ID: <20131122131922.GC29241@titan.lakedaemon.net>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+ <1385062552-9882-1-git-send-email-jason@lakedaemon.net>
+ <653B066B-5B24-4817-86EF-D4D9F129123D@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1385109972-28059-5-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <653B066B-5B24-4817-86EF-D4D9F129123D@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-
-On Friday, November 22, 2013 09:46:11 AM Krzysztof Kozlowski wrote:
-
-[...]
-
-> +static int max14577_regulator_probe(struct platform_device *pdev)
-> +{
-> +	struct max14577 *max14577 = dev_get_drvdata(pdev->dev.parent);
-> +	struct max14577_platform_data *pdata = dev_get_platdata(max14577->dev);
-> +	int i, size;
-> +	struct regulator_config config = {};
-> +	struct regulator_dev **regulators;
-> +
-> +	if (!pdata) {
-> +		/* Parent must provide pdata */
-> +		dev_err(&pdev->dev, "No MFD driver platform data found.\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (max14577->dev->of_node) {
-> +		int ret = max14577_regulator_dt_parse_pdata(pdev, pdata);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	size = sizeof(struct regulator_dev *) * ARRAY_SIZE(supported_regulators);
-> +	regulators = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
-> +	if (!regulators) {
-> +		dev_err(&pdev->dev, "Cannot allocate memory for regulators\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	config.dev = &pdev->dev;
-> +	config.regmap = max14577->regmap;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(supported_regulators); i++) {
-> +		/*
-> +		 * Index of supported_regulators[] is also the id and must
-> +		 * match index of pdata->regulators[].
-> +		 */
-> +		config.init_data = pdata->regulators[i].initdata;
-> +		config.of_node = pdata->regulators[i].of_node;
-> +
-> +		regulators[i] = devm_regulator_register(&pdev->dev,
-> +				&supported_regulators[i], &config);
-> +		if (IS_ERR(regulators[i])) {
-> +			int ret = PTR_ERR(regulators[i]);
-
-This can be cleaned up further.  The code just needs a single "struct
-regulator_dev *regulator" (which can be declared inside "for" loop)
-instead of an array.
-
-> +			dev_err(&pdev->dev,
-> +					"Regulator init failed for ID %d with error: %d\n",
-> +					i, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
+T24gVGh1LCBOb3YgMjEsIDIwMTMgYXQgMDU6MzE6NDlQTSAtMDYwMCwgS3VtYXIgR2FsYSB3cm90
+ZToKPiBPbiBOb3YgMjEsIDIwMTMsIGF0IDE6MzUgUE0sIEphc29uIENvb3BlciA8amFzb25AbGFr
+ZWRhZW1vbi5uZXQ+IHdyb3RlOgo+ID4gZGlmZiAtLWdpdCBhL01ha2VmaWxlIGIvTWFrZWZpbGUK
+PiA+IGluZGV4IDkyMGFkMDcxODBjOS4uYmQyOGNiMjExNDExIDEwMDY0NAo+ID4gLS0tIGEvTWFr
+ZWZpbGUKPiA+ICsrKyBiL01ha2VmaWxlCj4gPiBAQCAtMzM5LDYgKzMzOSw3IEBAIE9CSkRVTVAJ
+CT0gJChDUk9TU19DT01QSUxFKW9iamR1bXAKPiA+IEFXSwkJPSBhd2sKPiA+IEdFTktTWU1TCT0g
+c2NyaXB0cy9nZW5rc3ltcy9nZW5rc3ltcwo+ID4gSU5TVEFMTEtFUk5FTCAgOj0gaW5zdGFsbGtl
+cm5lbAo+ID4gK0lOU1RBTExEVEJTICAgIDo9IGluc3RhbGxkdGJzCj4gPiBERVBNT0QJCT0gL3Ni
+aW4vZGVwbW9kCj4gPiBQRVJMCQk9IHBlcmwKPiA+IENIRUNLCQk9IHNwYXJzZQo+ID4gQEAgLTM5
+MSw3ICszOTIsNyBAQCBLRVJORUxWRVJTSU9OID0gJChWRVJTSU9OKSQoaWYgJChQQVRDSExFVkVM
+KSwuJChQQVRDSExFVkVMKSQoaWYgJChTVUJMRVZFTCksLiQoUwo+ID4gZXhwb3J0IFZFUlNJT04g
+UEFUQ0hMRVZFTCBTVUJMRVZFTCBLRVJORUxSRUxFQVNFIEtFUk5FTFZFUlNJT04KPiA+IGV4cG9y
+dCBBUkNIIFNSQ0FSQ0ggQ09ORklHX1NIRUxMIEhPU1RDQyBIT1NUQ0ZMQUdTIENST1NTX0NPTVBJ
+TEUgQVMgTEQgQ0MKPiA+IGV4cG9ydCBDUFAgQVIgTk0gU1RSSVAgT0JKQ09QWSBPQkpEVU1QCj4g
+PiAtZXhwb3J0IE1BS0UgQVdLIEdFTktTWU1TIElOU1RBTExLRVJORUwgUEVSTCBVVFNfTUFDSElO
+RQo+ID4gK2V4cG9ydCBNQUtFIEFXSyBHRU5LU1lNUyBJTlNUQUxMS0VSTkVMIElOU1RBTExEVEJT
+IFBFUkwgVVRTX01BQ0hJTkUKPiA+IGV4cG9ydCBIT1NUQ1hYIEhPU1RDWFhGTEFHUyBMREZMQUdT
+X01PRFVMRSBDSEVDSyBDSEVDS0ZMQUdTCj4gPiAKPiA+IGV4cG9ydCBLQlVJTERfQ1BQRkxBR1Mg
+Tk9TVERJTkNfRkxBR1MgTElOVVhJTkNMVURFIE9CSkNPUFlGTEFHUyBMREZMQUdTCj4gPiBAQCAt
+NzA0LDYgKzcwNSwxNSBAQCBleHBvcnQgS0JVSUxEX0lNQUdFID89IHZtbGludXgKPiA+IGV4cG9y
+dAlJTlNUQUxMX1BBVEggPz0gL2Jvb3QKPiA+IAo+ID4gIwo+ID4gKyMgSU5TVEFMTF9EVEJTX1BB
+VEggc3BlY2lmaWVzIGEgcHJlZml4IGZvciByZWxvY2F0aW9ucyByZXF1aXJlZCBieSBidWlsZCBy
+b290cy4KPiA+ICsjIExpa2UgSU5TVEFMTF9NT0RfUEFUSCwgaXQgaXNuJ3QgZGVmaW5lZCBpbiB0
+aGUgTWFrZWZpbGUsIGJ1dCBjYW4gYmUgcGFzc2VkIGFzCj4gPiArIyBhbiBhcmd1bWVudCBpZiBu
+ZWVkZWQuCj4gPiArIwo+IAo+IE5pdCwgZG8gd2Ugd2FudCB0byBtYXRjaCBJTlNUQUxMX01PRF9Q
+QVRIIGFuZCBkcm9wIHRoZSDigJlT4oCZIGZvciBJTlNUQUxMX0RUQl9QQVRIPwoKWWVhaCwgSSBj
+YW4gZ28gZWl0aGVyIHdheSBvbiB0aGlzIG9uZS4gIFNvLCBzdXJlLgoKdGh4LAoKSmFzb24uCgo+
+ID4gKwo+ID4gK0RUQkJPT1QgPSAkKElOU1RBTExfRFRCU19QQVRIKS9ib290L2RldmljZXRyZWVz
+LyQoS0VSTkVMUkVMRUFTRSkKPiA+ICtleHBvcnQgRFRCQk9PVAo+ID4gKwo+ID4gKyMKPiA+ICMg
+SU5TVEFMTF9NT0RfUEFUSCBzcGVjaWZpZXMgYSBwcmVmaXggdG8gTU9ETElCIGZvciBtb2R1bGUg
+ZGlyZWN0b3J5Cj4gPiAjIHJlbG9jYXRpb25zIHJlcXVpcmVkIGJ5IGJ1aWxkIHJvb3RzLiAgVGhp
+cyBpcyBub3QgZGVmaW5lZCBpbiB0aGUKPiA+ICMgbWFrZWZpbGUgYnV0IHRoZSBhcmd1bWVudCBj
+YW4gYmUgcGFzc2VkIHRvIG1ha2UgaWYgbmVlZGVkLgo+ID4gQEAgLTkxNCw2ICs5MjQsMTQgQEAg
+ZmlybXdhcmVfaW5zdGFsbDogRk9SQ0UKPiA+IAkkKFEpJChNQUtFKSAtZiAkKHNyY3RyZWUpL3Nj
+cmlwdHMvTWFrZWZpbGUuZndpbnN0IG9iaj1maXJtd2FyZSBfX2Z3X2luc3RhbGwKPiA+IAo+ID4g
+IyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+ICsjIGRldmljZXRyZWUgaW5zdGFsbAo+ID4gK1BIT05Z
+ICs9IGR0YnNfaW5zdGFsbAo+ID4gKwo+ID4gK2R0YnNfaW5zdGFsbDoKPiA+ICsJJChDT05GSUdf
+U0hFTEwpICQoc3JjdHJlZSkvc2NyaXB0cy9pbnN0YWxsZHRicy5zaCAkKEtFUk5FTFJFTEVBU0Up
+IFwKPiA+ICsJIiQoRFRCQk9PVCkiICIkKHNyY3RyZWUpIgo+ID4gKwo+ID4gKyMgLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tCj4gPiAjIEtlcm5lbCBoZWFkZXJzCj4gPiAKPiA+ICNEZWZhdWx0IGxvY2F0aW9u
+IGZvciBpbnN0YWxsZWQgaGVhZGVycwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
