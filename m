@@ -1,56 +1,194 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 2/5] extcon: max14577: Add extcon-max14577 driver to
- support MUIC device
-Date: Fri, 22 Nov 2013 10:35:33 +0000
-Message-ID: <20131122103533.GI14725@sirena.org.uk>
-References: <1385109972-28059-1-git-send-email-k.kozlowski@samsung.com>
- <1385109972-28059-3-git-send-email-k.kozlowski@samsung.com>
+From: Anup Patel <anup.patel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm: Support for platforms with split GIC cpu
+ interface registers.
+Date: Fri, 22 Nov 2013 16:06:26 +0530
+Message-ID: <CALrVBkvQrWmLMB-95B92XWLQwcrObmhgZd6WE59z+n_LpzQCbQ@mail.gmail.com>
+References: <1383300776.4332.3.camel@hastur.hellion.org.uk>
+	<1383300809-7527-2-git-send-email-ian.campbell@citrix.com>
+	<CAAhSdy0+AFrS8ZVwmM6Sx=qScx6d1DkQtc4+2SB3=PpsJiJDog@mail.gmail.com>
+	<CAAhSdy28OS+4QvFfEJ9o2MOGb6jS9Tjus_v7tsZTH9ZA3h=nRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="boAH8PqvUi1v1f55"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385109972-28059-3-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAhSdy28OS+4QvFfEJ9o2MOGb6jS9Tjus_v7tsZTH9ZA3h=nRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anup Patel <anup-aa5cPYPs4nSSZfiimGR9Ow@public.gmane.org>
+Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Kumar Sankaran <ksankaran-qTEPVZfXA3Y@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, vkale-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 22 November 2013 12:34, Anup Patel <anup-aa5cPYPs4nSSZfiimGR9Ow@public.gmane.org> wrote:
+> On Fri, Nov 22, 2013 at 12:24 PM, Anup Patel <anup-aa5cPYPs4nSSZfiimGR9Ow@public.gmane.org> wrote:
+>> On Fri, Nov 1, 2013 at 3:43 PM, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
+>>> At least one platform (APM Storm) places the two pages of the GIC cpu interface
+>>> (and the vcpu side) at non-contiguous locations. Document two additional
+>>> regions to cover this split and update the corresponding dtsi. Note that Linux
+>>> (including KVM) does not use any registers in the second page so there is no
+>>> associated code change here.  Xen will use these new regions, although I've not
+>>> written the corresponding code yet.
+>>>
+>>> The ordering of these new regs is slightly counter intuitive but is inteded to
+>>> be backward compatible. It is also assumed that all such systems will implement
+>>> the GIC virtualisation extensions.
+>>>
+>>> Add comments to all of the reg examples to help clarify what is going on.
+>>
+>> Adding Catalin, Marc Z, and Will D.
+>>
+>> I looked up the GIC-400 TRM (more specifically page 33 of
+>> DDI0471B_gic400_r0p1_trm.pdf) but could not find any info
+>> on additional page for CPU interface.
+>>
+>> Am I looking at the wrong doc?
+>
+> Never mind, found the GICC_DIR (offset 0x1000) register.
+>
+> --
+> Anup
+>
+>>
+>> --
+>> Anup
+>>
+>>>
+>>> Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> Cc: Kumar Sankaran <ksankaran-qTEPVZfXA3Y@public.gmane.org>
+>>> Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+>>> Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/gic.txt | 57 +++++++++++++++++++++------
+>>>  arch/arm64/boot/dts/apm-storm.dtsi            |  6 ++-
+>>>  2 files changed, 50 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+>>> index ea215e8..00836d9 100644
+>>> --- a/Documentation/devicetree/bindings/arm/gic.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+>>> @@ -38,7 +38,8 @@ Main node required properties:
+>>>
+>>>  - reg : Specifies base physical address(s) and size of the GIC registers. The
+>>>    first region is the GIC distributor register base and size. The 2nd region is
+>>> -  the GIC cpu interface register base and size.
+>>> +  the GIC cpu interface register base and size (See also "Split GIC
+>>> +  cpu interface", below).
+>>>
+>>>  Optional
+>>>  - interrupts   : Interrupt source of the parent interrupt controller on
+>>> @@ -56,8 +57,8 @@ Example:
+>>>                 #interrupt-cells = <3>;
+>>>                 #address-cells = <1>;
+>>>                 interrupt-controller;
+>>> -               reg = <0xfff11000 0x1000>,
+>>> -                     <0xfff10100 0x100>;
+>>> +               reg = <0xfff11000 0x1000>,      /* GIC Dist */
+>>> +                     <0xfff10100 0x100>;       /* GIC CPU */
+>>>         };
+>>>
+>>>
+>>> @@ -70,9 +71,11 @@ primary interrupt controller).
+>>>  Required properties:
+>>>
+>>>  - reg : Additional regions specifying the base physical address and
+>>> -  size of the VGIC registers. The first additional region is the GIC
+>>> -  virtual interface control register base and size. The 2nd additional
+>>> -  region is the GIC virtual cpu interface register base and size.
+>>> +  size of the VGIC registers. The first additional region (i.e. third
+>>> +  overall) is the GIC virtual interface control register base and
+>>> +  size. The 2nd additional region (i.e. forth overall) is the GIC
+>>> +  virtual cpu interface register base and size (See also "Split GIC
+>>> +  cpu interface", below).
+>>>
+>>>  - interrupts : VGIC maintenance interrupt.
+>>>
+>>> @@ -82,9 +85,41 @@ Example:
+>>>                 compatible = "arm,cortex-a15-gic";
+>>>                 #interrupt-cells = <3>;
+>>>                 interrupt-controller;
+>>> -               reg = <0x2c001000 0x1000>,
+>>> -                     <0x2c002000 0x2000>,
+>>> -                     <0x2c004000 0x2000>,
+>>> -                     <0x2c006000 0x2000>;
+>>> -               interrupts = <1 9 0xf04>;
+>>> +               reg = <0x2c001000 0x1000>,      /* GIC Dist */
+>>> +                     <0x2c002000 0x2000>,      /* GIC CPU */
+>>> +                     <0x2c004000 0x2000>,      /* GIC VCPU Control */
+>>> +                     <0x2c006000 0x2000>;      /* GIC VCPU1 */
+>>> +               interrupts = <1 9 0xf04>;       /* GIC Maintenence IRQ */
+>>> +       };
+>>> +
+>>> +* Split GIC cpu interface
+>>> +
+>>> +  The cpu interfaces (bare-metal in region 2 and virtual in region 4)
+>>> +  may be spread over two pages, with the GICC_DIR (Deactivate
+>>> +  Interrupt Register) register falling at the start of the second
+>>> +  page. If these pages are contiguous then this is described via the
+>>> +  size of the second and fourth entries as described above
+>>> +  (e.g. 0x2000 rather than 0x1000).
+>>> +
+>>> +  However if the two pages are not contiguous then two additional
+>>> +  regions are present (5th and 6th) describing the location of the the
+>>> +  second half of the GIC cpu interface and GIC virtual cpu interface
+>>> +  respectively.
+>>> +
+>>> +  It is assumed that all such systems will implement the GIC
+>>> +  virtualisation extensions.
+>>> +
+>>> +Example:
+>>> +
+>>> +       gic: interrupt-controller@78010000 {
+>>> +               compatible = "arm,cortex-a15-gic";
+>>> +               #interrupt-cells = <3>;
+>>> +               interrupt-controller;
+>>> +               reg = <0x78010000 0x1000>,      /* GIC Dist */
+>>> +                     <0x78020000 0x1000>,      /* GIC CPU1 */
+>>> +                     <0x78040000 0x2000>,      /* GIC VCPU Control */
+>>> +                     <0x78060000 0x1000>,      /* GIC VCPU1 */
+>>> +                     <0x78030000 0x1000>,      /* GIC CPU2 */
+>>> +                     <0x78070000 0x1000>;      /* GIC VCPU2 */
+>>> +               interrupts = <1 9 0xf04>;       /* GIC Maintenence IRQ */
+>>>         };
+>>> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
+>>> index bfdc578..b5d141a 100644
+>>> --- a/arch/arm64/boot/dts/apm-storm.dtsi
+>>> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
+>>> @@ -82,9 +82,11 @@
+>>>                 #interrupt-cells = <3>;
+>>>                 interrupt-controller;
+>>>                 reg = <0x0 0x78010000 0x0 0x1000>,      /* GIC Dist */
+>>> -                     <0x0 0x78020000 0x0 0x1000>,      /* GIC CPU */
+>>> +                     <0x0 0x78020000 0x0 0x1000>,      /* GIC CPU1 */
+>>>                       <0x0 0x78040000 0x0 0x2000>,      /* GIC VCPU Control */
+>>> -                     <0x0 0x78060000 0x0 0x2000>;      /* GIC VCPU */
+>>> +                     <0x0 0x78060000 0x0 0x1000>,      /* GIC VCPU1 */
+>>> +                     <0x0 0x78030000 0x0 0x1000>,      /* GIC CPU2 */
+>>> +                     <0x0 0x78070000 0x0 0x1000>;      /* GIC VCPU2 */
+>>>                 interrupts = <1 9 0xf04>;       /* GIC Maintenence IRQ */
+>>>         };
+>>>
+>>> --
+>>> 1.8.4.rc3
+>>>
 
---boAH8PqvUi1v1f55
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I have looked at the proposed device tree binding change
+from APM X-Gene perspective.
 
-On Fri, Nov 22, 2013 at 09:46:09AM +0100, Krzysztof Kozlowski wrote:
+This change looks good to me. (Vinayak ??)
 
-> +#define	DELAY_MS_DEFAULT		17000		/* unit: millisecond */
+Regards,
+Anup
 
-This delay is sufficiently large that the delayed work using it probably
-ought to use the power efficient workqueues instead of just a regular
-schedule_delayed_work().  This will mean that instead of being scheduled
-on the core which scheduled it the work can run on any CPU, avoiding the
-need to power up a currently idle CPU just to run the work.
-
---boAH8PqvUi1v1f55
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSjzNyAAoJELSic+t+oim9w/IP+wQa4UdcAp36KDye/BZezVYK
-XFHXJ5cQaJv0GPNRmrfH9nTAPblin2kE1gtF+zc+YEy8jqeDVWMVozdPzmxlASZh
-c7HqvprBnJuCy7Z1iOXwsTxlLXZwu/X1sEggdYbPgDCbMWy+BlDrldkKs2e9JAtl
-CR63fh1R4OZoWUKsxmNg+1kaGps7mV5nqGyBo6pUUiqCT/xmsFvm/Qg1Mx4+9qRx
-T6drwdc1IIdP4F4rcpne9X9miKLVx9T6OvAg+uAoZ97PFhz2S67sotOPLXuaGXj1
-repiEVjjYBmSyCNHtaFaDHga5IFam7KOKLmgMzVrCkcE9LTWPAI4gsOGvGemz3S0
-jFnGPOlO/rH4+4+Jgwb0ViAc54WTVBNc4JNXui5stl6yjrj54e7xfbsX6N39vS8Y
-IsQ8w/kCuGrHRsh21JezgA/MXmq0P7P6NO2/PR7aKKbRtU6kMA8tSh8Atl98mExI
-jO6cnmFvkbyPRSe5H2qXe8+/oZKQjmF5FBW1O/pevVeGqvu1/TS/1BoU+rQ1iCpe
-f7CyjL2yexvFnBwx5P0Hj7nFKd2B8q6aElR6S/uY5J/YbBWSWDQKw989hD3dyAQJ
-ivlir8tKW4QBqoKrJmCcCxkn0YATrtQvOTHS5UGecfbik3/BA6SFMnH+MYmKHH7U
-Qom+IQ3+b/EcpglcFMwy
-=vYTX
------END PGP SIGNATURE-----
-
---boAH8PqvUi1v1f55--
+>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
