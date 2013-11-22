@@ -1,168 +1,102 @@
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Subject: [PATCH] rtc: ds1511: add device-tree bindings
-Date: Fri, 22 Nov 2013 08:16:39 +0100
-Message-ID: <1385104599-7527-2-git-send-email-marcus.folkesson@gmail.com>
-References: <Marcus Folkesson <marcus.folkesson@gmail.com>
- <1385104599-7527-1-git-send-email-marcus.folkesson@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1385104599-7527-1-git-send-email-marcus.folkesson@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, a.zummo@towertech.it, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, Marcus Folkesson <marcus.folkesson@gmail.com>
+From: Li Xiubo <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv6 0/4] Add Freescale FTM PWM driver.
+Date: Fri, 22 Nov 2013 07:18:54 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F828C7A6E@039-SN2MPN1-012.039d.mgd.msft.net>
+References: <1384220218-12716-1-git-send-email-Li.Xiubo@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384220218-12716-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Compatible with ds1500, ds1501 and ds1511
+Hi Thierry,
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
----
- .../devicetree/bindings/rtc/maxim-ds1511.txt       |   18 +++++
- drivers/rtc/rtc-ds1511.c                           |   85 +++++++++++++++++---
- 2 files changed, 90 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/maxim-ds1511.txt
+Could you help review this series of patches please ? 
 
-diff --git a/Documentation/devicetree/bindings/rtc/maxim-ds1511.txt b/Documentation/devicetree/bindings/rtc/maxim-ds1511.txt
-new file mode 100644
-index 0000000..17fa356
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/maxim-ds1511.txt
-@@ -0,0 +1,18 @@
-+* Maxim Real Time Clock
-+
-+
-+Support for Maxim DS1500, DS1501 and DS1511 RTC.
-+
-+Required properties:
-+- compatible : Should be "maxim,ds1500-rtc", "maxim,ds1501-rtc" or "maxim,ds1511-rtc".
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- interrupts: IRQ line for the RTC.
-+
-+Example:
-+
-+rtc@10300 {
-+        compatible = "maxim,ds1511-rtc";
-+        reg = <0xd0010300 0x20>;
-+        interrupts = <50>;
-+};
-diff --git a/drivers/rtc/rtc-ds1511.c b/drivers/rtc/rtc-ds1511.c
-index 6a3fcfe..3778a8e 100644
---- a/drivers/rtc/rtc-ds1511.c
-+++ b/drivers/rtc/rtc-ds1511.c
-@@ -24,6 +24,9 @@
- #include <linux/platform_device.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
- 
- #define DRV_VERSION "0.6"
- 
-@@ -476,6 +479,52 @@ static struct bin_attribute ds1511_nvram_attr = {
- 	.write = ds1511_nvram_write,
- };
- 
-+
-+
-+#ifdef CONFIG_OF
-+static int ds1511_of_probe(struct platform_device *pdev,
-+	 struct rtc_plat_data *pdata)
-+{
-+	struct device *dev = &pdev->dev;
-+	u32 val;
-+	int ret;
-+	struct resource res;
-+
-+	ret = of_address_to_resource(&pdev->dev.of_node, 0, &res);
-+	if (ret)
-+		return -ENODEV;
-+
-+	pdata->size = resource_size(&res);
-+
-+	if (!devm_request_mem_region(&pdev->dev, res.start, pdata->size,
-+			pdev->name))
-+		return -EBUSY;
-+
-+	ds1511_base = devm_ioremap(&pdev->dev, res.start, pdata->size);
-+	if (!ds1511_base)
-+		return -ENOMEM;
-+
-+	pdata->ioaddr = ds1511_base;
-+	pdata->irq = irq_of_parse_and_map(&pdev->dev.of_node, 0);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rtc_of_match[] = {
-+	{ .compatible = "maxim,ds1500-rtc" },
-+	{ .compatible = "maxim,ds1501-rtc" },
-+	{ .compatible = "maxim,ds1511-rtc" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rtc_of_match);
-+
-+#else
-+static int ds1511_of_probe(struct platform_device *pdev, struct rtc_plat_data *pdata)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- static int ds1511_rtc_probe(struct platform_device *pdev)
- {
- 	struct rtc_device *rtc;
-@@ -483,22 +532,31 @@ static int ds1511_rtc_probe(struct platform_device *pdev)
- 	struct rtc_plat_data *pdata;
- 	int ret = 0;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		return -ENODEV;
--	}
- 	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
- 	if (!pdata)
- 		return -ENOMEM;
--	pdata->size = resource_size(res);
--	if (!devm_request_mem_region(&pdev->dev, res->start, pdata->size,
--			pdev->name))
--		return -EBUSY;
--	ds1511_base = devm_ioremap(&pdev->dev, res->start, pdata->size);
--	if (!ds1511_base)
--		return -ENOMEM;
--	pdata->ioaddr = ds1511_base;
--	pdata->irq = platform_get_irq(pdev, 0);
-+
-+	if (pdev->dev.of_node) {
-+		ret = ds1511_of_probe(pdev, pdata);
-+		if (ret < 0)
-+			return ret;
-+	} else if (!pdev) {
-+
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		if (!res) {
-+			return -ENODEV;
-+		}
-+		pdata->size = resource_size(res);
-+		if (!devm_request_mem_region(&pdev->dev, res->start, pdata->size,
-+				pdev->name))
-+			return -EBUSY;
-+		ds1511_base = devm_ioremap(&pdev->dev, res->start, pdata->size);
-+		if (!ds1511_base)
-+			return -ENOMEM;
-+		pdata->ioaddr = ds1511_base;
-+		pdata->irq = platform_get_irq(pdev, 0);
-+	} else
-+		return -ENODEV;
- 
- 	/*
- 	 * turn on the clock and the crystal, etc.
-@@ -575,6 +633,7 @@ static struct platform_driver ds1511_rtc_driver = {
- 	.driver		= {
- 		.name	= "ds1511",
- 		.owner	= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(rtc_of_match),
- 	},
- };
- 
--- 
-1.7.10.4
+And could it be merged into the PWM next tree?
+
+Thanks very much.
+
+--
+
+
+> Subject: [PATCHv6 0/4] Add Freescale FTM PWM driver.
+> 
+> Hello Thierry,
+> 
+> The series of patches for this version has been reviewed and acked
+> already.
+> To see each patch for detail.
+> 
+> 
+> ------------------
+> ------------------
+> 
+> This patch series is the Freescale FTM PWM implementation. And there are
+> 8 channels most supported by the FTM PWM. This implementation is only
+> compatible with device tree definition.
+> 
+> This patch series is based on linux-next and has been tested on Vybrid
+> VF610 Tower board using device tree.
+> 
+> 
+> 
+> Changes in v6:
+> - Nothing.
+> 
+> Changes in RFCv2 of PATVHv5:
+> - Remove "fsl,pwm-counter-clk".
+> 
+> Changes in v5:
+> - Remove active/idle pinctrl stuff.
+> 
+> Changes in v4:
+> - Check for the result and return an error for devm_kzalloc().
+> - Move pinmux setting from the SoC file to the board specific file.
+> - Revise the written mistake of 'ret |= FTMSC_CLKEXT;' --> 'reg |=
+> FTMSC_CLKEXT;'.
+> 
+> 
+> Changes in v3:
+> - Remove "availabe" field.
+> - Remove "fsl,pwm-avaliable-chs" property.
+> - ...
+> 
+> Changes in v2:
+> - Remove PWM CPWM/EPWM feature and sysfs.
+> - Remove some redundant code.
+> - Revise some code for more readable.
+> - Remove "fsl,pwm-clk-ps", "fsl,pwm-number", "fsl,pwm-channels",etc.
+> - Add "fsl,pwm-avaliable-chs", "fsl,pwm-counter-clk", etc.
+> - Support 8 channels default in dtsi file.
+> - Add counter clock source selection.
+> - Rename some function name, macro name, etc.
+> - Use PWM's and OF's existing function interfaces.
+> - Split clk_unprepare_enable to clk_unprepare and clk_enable,etc.
+> - ...
+> 
+> Added in v1:
+> - Add Freescale FTM PWM driver support.
+> - Add Freescale FTM PWM node for VF610.
+> - Enable Enables FTM PWM device for Vybrid VF610 TOWER.
+> - Add device tree bindings for Freescale.
+> 
+> 
+> 
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pwm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo info at
+> http://vger.kernel.org/majordomo-info.html
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
