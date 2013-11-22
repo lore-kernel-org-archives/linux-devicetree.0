@@ -1,73 +1,83 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 4/7] clocksource/cadence_ttc: Adjust interval in clock
- notifier
-Date: Fri, 22 Nov 2013 10:06:34 -0800
-Message-ID: <e1bb716e-96dc-4da0-ba92-3a5492b5ba59@CO1EHSMHS007.ehs.local>
-References: <1383945677-29674-1-git-send-email-soren.brinkmann@xilinx.com>
- <1383945677-29674-5-git-send-email-soren.brinkmann@xilinx.com>
- <52825779.2050106@linaro.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] memory: ti-aemif: add bindings for AEMIF driver
+Date: Fri, 22 Nov 2013 19:42:47 +0100
+Message-ID: <20131122184247.GO14627@ns203013.ovh.net>
+References: <1384962416-14862-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1384962416-14862-3-git-send-email-ivan.khoronzhuk@ti.com>
+ <20131120182102.GK14627@ns203013.ovh.net>
+ <528D076A.8070806@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52825779.2050106@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <528D076A.8070806-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+On 21:03 Wed 20 Nov     , ivan.khoronzhuk wrote:
+> On 11/20/2013 08:21 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >> +				the chip select signal.
+> >> +				Minimum value is 1 (0 treated as 1).
+> >> +
+> >> +- ti,cs-wsetup:		write setup width, ns
+> >> +				Time between the beginning of a memory cycle
+> >> +				and the activation of write strobe.
+> >> +				Minimum value is 1 (0 treated as 1).
+> >> +
+> >> +- ti,cs-wstrobe:	write strobe width, ns
+> >> +				Time between the activation and deactivation of
+> >> +				the write strobe.
+> >> +				Minimum value is 1 (0 treated as 1).
+> >> +
+> >> +- ti,cs-whold:		write hold width, ns
+> >> +				Time between the deactivation of the write
+> >> +				strobe and the end of the cycle (which may be
+> >> +				either an address change or the deactivation of
+> >> +				the chip select signal.
+> >> +				Minimum value is 1 (0 treated as 1).
+> >> +
+> >> +If any of the above parameters are absent, current parameter value will be taken
+> >> +from the corresponding HW reg.
+> >> +
+> >> +The name for cs node must be in format csN, where N is the cs number.
+> > 
+> > this is wired we should use reg instead to represent the cs as done for SPI
+> > or a an other property
+> > 
+> > Best Regards,
+> > J.
+> > 
+> 
+> Ok, I will add new property cs-chipselect like following :
+> 
+> ti,cs-chipselect:	number of chipselect. Indicates on the
+> 			aemif driver which chipselect is used
+> 			for accessing the memory.
+> 			For compatibles "ti,davinci-aemif" and 
+> 			"ti,keystone-aemif" it can be in range [0-3].
+> 			For compatible "ti,omap-L138-aemif" range is [2-5].
+> 
+> Is it OK?
 
-On Tue, Nov 12, 2013 at 05:29:45PM +0100, Daniel Lezcano wrote:
-> On 11/08/2013 10:21 PM, Soren Brinkmann wrote:
-> >The clockevent has to be reprogrammed if the timer's input
-> >clock frequency changes and the timer is in periodic mode, in order =
-to
-> >maintain the correct timer interval.
-> >
-> >Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> >---
-> >  drivers/clocksource/cadence_ttc_timer.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> >diff --git a/drivers/clocksource/cadence_ttc_timer.c b/drivers/clock=
-source/cadence_ttc_timer.c
-> >index a92350b55d32..68a336038d8f 100644
-> >--- a/drivers/clocksource/cadence_ttc_timer.c
-> >+++ b/drivers/clocksource/cadence_ttc_timer.c
-> >@@ -338,6 +338,10 @@ static int ttc_rate_change_clockevent_cb(struct=
- notifier_block *nb,
-> >  		/* update cached frequency */
-> >  		ttc->freq =3D ndata->new_rate;
-> >
-> >+		if (ttcce->ce.mode =3D=3D CLOCK_EVT_MODE_PERIODIC)
-> >+			ttc_set_interval(ttc, DIV_ROUND_CLOSEST(ttc->freq,
-> >+						PRESCALE * HZ));
-> >+
->=20
-> Couldn't be racy ?
-I guess you're right. What would be the proper way to resolve it? If we
-look at a little more code things look like this:
+yes
 
-	local_irq_save(flags);                                          =20
-	clockevents_update_freq(&ttcce->ce,                             =20
-	                ndata->new_rate / PRESCALE);                    =20
-	local_irq_restore(flags);                                       =20
-	                                                                =20
-	/* update cached frequency */                                   =20
-	ttc->freq =3D ndata->new_rate;                                    =20
-	                                                                =20
-	if (ttcce->ce.mode =3D=3D CLOCK_EVT_MODE_PERIODIC)                  =20
-	        ttc_set_interval(ttc, DIV_ROUND_CLOSEST(ttc->freq,      =20
-	                                PRESCALE * HZ));
+I just have one issue the whole memory concept
 
-Would it be enough to move the ttc_set_interval() call within the
-section where local IRQs are disabled? I have the feeling for this time=
-r
-the local_irq_save() may in general not be the right option since the
-timer is not CPU local.
-Should we probably change this do irq_disable(ttcce->ce.irq)?
+for me we should do as done on pinctrl have a phandle on the device that
+require it and handle it at device core level
 
-	Thanks,
-	S=C3=B6ren
+as the memory controller is not necessarely on the same bus as the memory
+device them selves
+
+Best Regards,
+J.
+> 
+> -- 
+> Regards,
+> Ivan Khoronzhuk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
