@@ -1,96 +1,357 @@
 From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v3 0/5] mfd: max14577: Add max14577 MFD drivers
-Date: Fri, 22 Nov 2013 09:46:07 +0100
-Message-ID: <1385109972-28059-1-git-send-email-k.kozlowski@samsung.com>
+Subject: [PATCH v3 4/5] regulator: max14577: Add regulator driver for Maxim
+ 14577
+Date: Fri, 22 Nov 2013 09:46:11 +0100
+Message-ID: <1385109972-28059-5-git-send-email-k.kozlowski@samsung.com>
+References: <1385109972-28059-1-git-send-email-k.kozlowski@samsung.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1385109972-28059-1-git-send-email-k.kozlowski@samsung.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+MAX14577 chip is a multi-function device which includes MUIC,
+charger and voltage regulator. The driver is located in drivers/mfd.
 
-This is third version of patchset adding drivers for MAXIM 14577 chip.
+This patch adds regulator driver for MAX14577 chip. There are two
+regulators in this chip:
+1. Safeout LDO with constant voltage output of 4.9V. It can be only
+   enabled or disabled.
+2. Current regulator for the charger. It provides current from 90mA up
+   to 950mA.
+Driver supports Device Tree.
 
-Description
------------
-The chip contains Micro-USB Interface Circuit and Li+ Battery Charger.
-It contains accessory and USB charger detection logic. It supports USB 2.0
-Hi-Speed, UART and stereo audio signals over Micro-USB connector.
-
-The battery charger is compliant with the USB Battery Charging Specification
-Revision 1.1. It has also SFOUT LDO output for powering USB devices.
-
-The patchset consists of following drivers:
-1. MFD core driver.
-2. Extcon driver for the MUIC (Micro USB Interface Controller).
-3. Charger driver using power supply class.
-4. Regulator driver for SFOUT and charger.
-5. Documentation of device tree bindings.
-
-The patchset is rebased on latest Linus' tree (v3.12-10928-g527d151) however
-testing was mostly done on 3.10.
-
-
-Changes since v2:
------------------
-1. Replaced max14577-irq.c with regmap_irq_chip, as suggested by Mark Brown.
-2. Applied suggestions from review (Mark Brown, Lee Jones).
-3. Regulator: Added registering unconditionally of all regulators (Mark Brown).
-4. Regulator: Removed the "struct max14577_regulator *info" (Bartlomiej
-   Zolnierkiewicz).
-5. Extcon: Removed work-around for hardware reboot (USB cable attached with
-   factory button set to D/L mode) as it is not needed.
-
-Changes since v1:
------------------
-1. Applied comments from review (Mark Brown, Mark Rutland).
-2. Removed any DT bindings which are not needed.
-3. Removed "wakeup" node from bindings.
-4. Fixed interrupt handling during resume. This lead to removal of the weird
-   IRQ/GPIO code discussed during review.
-5. Minor fixes pointed by checkpatch, added authors.
-6. Use of_get_child_by_name() for accessing regulators bindings.
-7. Added documentation of bindings (fifth patch).
-
-
-Best regards,
-Krzysztof Kozlowski
-
-
-Chanwoo Choi (2):
-  mfd: max14577: Add max14577 MFD driver core
-  extcon: max14577: Add extcon-max14577 driver to support MUIC device
-
-Krzysztof Kozlowski (3):
-  charger: max14577: Add charger support for Maxim 14577
-  regulator: max14577: Add regulator driver for Maxim 14577
-  mfd: max14577: Add device tree bindings document
-
- Documentation/devicetree/bindings/mfd/max14577.txt |   48 ++
- drivers/extcon/Kconfig                             |   10 +
- drivers/extcon/Makefile                            |    1 +
- drivers/extcon/extcon-max14577.c                   |  795 ++++++++++++++++++++
- drivers/mfd/Kconfig                                |   13 +
- drivers/mfd/Makefile                               |    1 +
- drivers/mfd/max14577.c                             |  241 ++++++
- drivers/power/Kconfig                              |    7 +
- drivers/power/Makefile                             |    1 +
- drivers/power/max14577_charger.c                   |  322 ++++++++
- drivers/regulator/Kconfig                          |    7 +
- drivers/regulator/Makefile                         |    1 +
- drivers/regulator/max14577.c                       |  272 +++++++
- include/linux/mfd/max14577-private.h               |  324 ++++++++
- include/linux/mfd/max14577.h                       |   69 ++
- 15 files changed, 2112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
- create mode 100644 drivers/extcon/extcon-max14577.c
- create mode 100644 drivers/mfd/max14577.c
- create mode 100644 drivers/power/max14577_charger.c
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ drivers/regulator/Kconfig    |    7 ++
+ drivers/regulator/Makefile   |    1 +
+ drivers/regulator/max14577.c |  272 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/max14577.h |    1 -
+ 4 files changed, 280 insertions(+), 1 deletion(-)
  create mode 100644 drivers/regulator/max14577.c
- create mode 100644 include/linux/mfd/max14577-private.h
- create mode 100644 include/linux/mfd/max14577.h
 
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index ce785f4..11ee053 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -249,6 +249,13 @@ config REGULATOR_LP8788
+ 	help
+ 	  This driver supports LP8788 voltage regulator chip.
+ 
++config REGULATOR_MAX14577
++	tristate "Maxim 14577 regulator"
++	depends on MFD_MAX14577
++	help
++	  This driver controls a Maxim 14577 regulator via I2C bus.
++	  The regulators include safeout LDO and current regulator 'CHARGER'.
++
+ config REGULATOR_MAX1586
+ 	tristate "Maxim 1586/1587 voltage regulator"
+ 	depends on I2C
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 01c597e..654bd43 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -35,6 +35,7 @@ obj-$(CONFIG_REGULATOR_LP872X) += lp872x.o
+ obj-$(CONFIG_REGULATOR_LP8788) += lp8788-buck.o
+ obj-$(CONFIG_REGULATOR_LP8788) += lp8788-ldo.o
+ obj-$(CONFIG_REGULATOR_LP8755) += lp8755.o
++obj-$(CONFIG_REGULATOR_MAX14577) += max14577.o
+ obj-$(CONFIG_REGULATOR_MAX1586) += max1586.o
+ obj-$(CONFIG_REGULATOR_MAX8649)	+= max8649.o
+ obj-$(CONFIG_REGULATOR_MAX8660) += max8660.o
+diff --git a/drivers/regulator/max14577.c b/drivers/regulator/max14577.c
+new file mode 100644
+index 0000000..d913bed
+--- /dev/null
++++ b/drivers/regulator/max14577.c
+@@ -0,0 +1,272 @@
++/*
++ * max14577.c - Regulator driver for the Maxim 14577
++ *
++ * Copyright (C) 2013 Samsung Electronics
++ * Krzysztof Kozlowski <k.kozlowski@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/mfd/max14577.h>
++#include <linux/mfd/max14577-private.h>
++#include <linux/regulator/of_regulator.h>
++
++struct max14577_regulator {
++	struct device *dev;
++	struct max14577 *max14577;
++	struct regulator_dev **regulators;
++};
++
++static int max14577_reg_is_enabled(struct regulator_dev *rdev)
++{
++	int rid = rdev_get_id(rdev);
++	struct regmap *rmap = rdev->regmap;
++	u8 reg_data;
++
++	switch (rid) {
++	case MAX14577_CHARGER:
++		max14577_read_reg(rmap, MAX14577_CHG_REG_CHG_CTRL2, &reg_data);
++		if ((reg_data & CHGCTRL2_MBCHOSTEN_MASK) == 0)
++			return 0;
++		max14577_read_reg(rmap, MAX14577_CHG_REG_STATUS3, &reg_data);
++		if ((reg_data & STATUS3_CGMBC_MASK) == 0)
++			return 0;
++		/* MBCHOSTEN and CGMBC are on */
++		return 1;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int max14577_reg_get_current_limit(struct regulator_dev *rdev)
++{
++	u8 reg_data;
++	struct regmap *rmap = rdev->regmap;
++
++	if (rdev_get_id(rdev) != MAX14577_CHARGER)
++		return -EINVAL;
++
++	max14577_read_reg(rmap, MAX14577_CHG_REG_CHG_CTRL4, &reg_data);
++
++	if ((reg_data & CHGCTRL4_MBCICHWRCL_MASK) == 0)
++		return MAX14577_REGULATOR_CURRENT_LIMIT_MIN;
++
++	reg_data = ((reg_data & CHGCTRL4_MBCICHWRCH_MASK) >>
++			CHGCTRL4_MBCICHWRCH_SHIFT);
++	return MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_START +
++		reg_data * MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_STEP;
++}
++
++static int max14577_reg_set_current_limit(struct regulator_dev *rdev,
++		int min_uA, int max_uA)
++{
++	int i, current_bits = 0xf;
++	u8 reg_data;
++
++	if (rdev_get_id(rdev) != MAX14577_CHARGER)
++		return -EINVAL;
++
++	if (min_uA > MAX14577_REGULATOR_CURRENT_LIMIT_MAX ||
++			max_uA < MAX14577_REGULATOR_CURRENT_LIMIT_MIN)
++		return -EINVAL;
++
++	if (max_uA < MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_START) {
++		/* Less than 200 mA, so set 90mA (turn only Low Bit off) */
++		u8 reg_data = 0x0 << CHGCTRL4_MBCICHWRCL_SHIFT;
++		return max14577_update_reg(rdev->regmap,
++				MAX14577_CHG_REG_CHG_CTRL4,
++				CHGCTRL4_MBCICHWRCL_MASK, reg_data);
++	}
++
++	/* max_uA is in range: <LIMIT_HIGH_START, inifinite>, so search for
++	 * valid current starting from LIMIT_MAX. */
++	for (i = MAX14577_REGULATOR_CURRENT_LIMIT_MAX;
++			i >= MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_START;
++			i -= MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_STEP) {
++		if (i <= max_uA)
++			break;
++		current_bits--;
++	}
++	BUG_ON(current_bits < 0); /* Cannot happen */
++	/* Turn Low Bit on (use range 200mA-950 mA) */
++	reg_data = 0x1 << CHGCTRL4_MBCICHWRCL_SHIFT;
++	/* and set proper High Bits */
++	reg_data |= current_bits << CHGCTRL4_MBCICHWRCH_SHIFT;
++
++	return max14577_update_reg(rdev->regmap, MAX14577_CHG_REG_CHG_CTRL4,
++			CHGCTRL4_MBCICHWRCL_MASK | CHGCTRL4_MBCICHWRCH_MASK,
++			reg_data);
++}
++
++static struct regulator_ops max14577_safeout_ops = {
++	.is_enabled		= regulator_is_enabled_regmap,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.list_voltage		= regulator_list_voltage_linear,
++};
++
++static struct regulator_ops max14577_charger_ops = {
++	.is_enabled		= max14577_reg_is_enabled,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.get_current_limit	= max14577_reg_get_current_limit,
++	.set_current_limit	= max14577_reg_set_current_limit,
++};
++
++static struct regulator_desc supported_regulators[] = {
++	[MAX14577_SAFEOUT] = {
++		.name = "SAFEOUT",
++		.id = MAX14577_SAFEOUT,
++		.ops = &max14577_safeout_ops,
++		.type = REGULATOR_VOLTAGE,
++		.owner = THIS_MODULE,
++		.n_voltages = 1,
++		.min_uV = MAX14577_REGULATOR_SAFEOUT_VOLTAGE,
++		.enable_reg = MAX14577_REG_CONTROL2,
++		.enable_mask = CTRL2_SFOUTORD_MASK,
++	},
++	[MAX14577_CHARGER] = {
++		.name = "CHARGER",
++		.id = MAX14577_CHARGER,
++		.ops = &max14577_charger_ops,
++		.type = REGULATOR_CURRENT,
++		.owner = THIS_MODULE,
++		.enable_reg = MAX14577_CHG_REG_CHG_CTRL2,
++		.enable_mask = CHGCTRL2_MBCHOSTEN_MASK,
++	},
++};
++
++#ifdef CONFIG_OF
++static int max14577_regulator_dt_parse_pdata(struct platform_device *pdev,
++					struct max14577_platform_data *pdata)
++{
++	struct max14577 *max14577 = dev_get_drvdata(pdev->dev.parent);
++	struct device_node *np;
++	struct max14577_regulator_platform_data *reg_pdata;
++	struct of_regulator_match rmatch;
++	int i, ret;
++
++	np = of_get_child_by_name(max14577->dev->of_node, "regulators");
++	if (!np)
++		return -EINVAL;
++
++	reg_pdata = devm_kzalloc(&pdev->dev, sizeof(*reg_pdata) *
++			     ARRAY_SIZE(supported_regulators), GFP_KERNEL);
++	if (!reg_pdata)
++		return -ENOMEM;
++
++	for (i = 0; i < ARRAY_SIZE(supported_regulators); i++) {
++		rmatch.name = supported_regulators[i].name;
++		ret = of_regulator_match(&pdev->dev, np, &rmatch, 1);
++		if (ret != 1)
++			continue;
++		dev_dbg(&pdev->dev, "Found regulator %d/%s\n",
++				supported_regulators[i].id,
++				supported_regulators[i].name);
++		reg_pdata[i].id = supported_regulators[i].id;
++		reg_pdata[i].initdata = rmatch.init_data;
++		reg_pdata[i].of_node = rmatch.of_node;
++	}
++
++	pdata->regulators = reg_pdata;
++
++	return 0;
++}
++#else
++static int max14577_regulator_dt_parse_pdata(struct platform_device *pdev,
++					struct max14577_platform_data *pdata)
++{
++	return 0;
++}
++#endif
++
++static int max14577_regulator_probe(struct platform_device *pdev)
++{
++	struct max14577 *max14577 = dev_get_drvdata(pdev->dev.parent);
++	struct max14577_platform_data *pdata = dev_get_platdata(max14577->dev);
++	int i, size;
++	struct regulator_config config = {};
++	struct regulator_dev **regulators;
++
++	if (!pdata) {
++		/* Parent must provide pdata */
++		dev_err(&pdev->dev, "No MFD driver platform data found.\n");
++		return -ENODEV;
++	}
++
++	if (max14577->dev->of_node) {
++		int ret = max14577_regulator_dt_parse_pdata(pdev, pdata);
++		if (ret)
++			return ret;
++	}
++
++	size = sizeof(struct regulator_dev *) * ARRAY_SIZE(supported_regulators);
++	regulators = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
++	if (!regulators) {
++		dev_err(&pdev->dev, "Cannot allocate memory for regulators\n");
++		return -ENOMEM;
++	}
++
++	config.dev = &pdev->dev;
++	config.regmap = max14577->regmap;
++
++	for (i = 0; i < ARRAY_SIZE(supported_regulators); i++) {
++		/*
++		 * Index of supported_regulators[] is also the id and must
++		 * match index of pdata->regulators[].
++		 */
++		config.init_data = pdata->regulators[i].initdata;
++		config.of_node = pdata->regulators[i].of_node;
++
++		regulators[i] = devm_regulator_register(&pdev->dev,
++				&supported_regulators[i], &config);
++		if (IS_ERR(regulators[i])) {
++			int ret = PTR_ERR(regulators[i]);
++			dev_err(&pdev->dev,
++					"Regulator init failed for ID %d with error: %d\n",
++					i, ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static struct platform_driver max14577_regulator_driver = {
++	.driver = {
++		   .owner = THIS_MODULE,
++		   .name = "max14577-regulator",
++		   },
++	.probe	= max14577_regulator_probe,
++};
++
++static int __init max14577_regulator_init(void)
++{
++	BUILD_BUG_ON(MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_START +
++			MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_STEP * 0xf !=
++			MAX14577_REGULATOR_CURRENT_LIMIT_MAX);
++	BUILD_BUG_ON(ARRAY_SIZE(supported_regulators) != MAX14577_REG_MAX);
++	return platform_driver_register(&max14577_regulator_driver);
++}
++subsys_initcall(max14577_regulator_init);
++
++static void __exit max14577_regulator_exit(void)
++{
++	platform_driver_unregister(&max14577_regulator_driver);
++}
++module_exit(max14577_regulator_exit);
++
++MODULE_AUTHOR("Krzysztof Kozlowski <k.kozlowski@samsung.com>");
++MODULE_DESCRIPTION("MAXIM 14577 regulator driver");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/max14577.h b/include/linux/mfd/max14577.h
+index 512d731..247b021 100644
+--- a/include/linux/mfd/max14577.h
++++ b/include/linux/mfd/max14577.h
+@@ -63,7 +63,6 @@ struct max14577_platform_data {
+ 
+ 	int (*set_gpio_pogo_cb) (int new_dev);
+ 
+-	int num_regulators;
+ 	struct max14577_regulator_platform_data *regulators;
+ };
+ 
 -- 
 1.7.9.5
 
