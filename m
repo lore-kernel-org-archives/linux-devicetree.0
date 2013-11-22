@@ -1,47 +1,104 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] ARM: kirkwood: ReadyNAS Duo v2 .dts cleanup
-Date: Fri, 22 Nov 2013 10:38:00 -0500
-Message-ID: <20131122153800.GJ29241@titan.lakedaemon.net>
-References: <87li0ge9te.fsf@natisbad.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87li0ge9te.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v4 0/5] mfd: max14577: Add max14577 MFD drivers
+Date: Fri, 22 Nov 2013 16:51:04 +0100
+Message-ID: <1385135469-27044-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Arnaud,
+Hi,
 
-On Fri, Nov 22, 2013 at 04:27:09PM +0100, Arnaud Ebalard wrote:
-> The patch does some cleanup work on NETGEAR ReadyNAS Duo v2 .dts
-> file. Changes are listed below:
+This is fourth version of patchset adding drivers for MAXIM 14577 chip.
 
-Can you do the whitespace cleanup as a separate patch, and do all your
-boards in one go?
+Description
+-----------
+The chip contains Micro-USB Interface Circuit and Li+ Battery Charger.
+It contains accessory and USB charger detection logic. It supports USB 2.0
+Hi-Speed, UART and stereo audio signals over Micro-USB connector.
 
->  - Converted GPIO voltage level from value to macros
->  - Converted all numeric input key values to macros
->  - Made button node names more explicit
->  - Added compatible string for PHY (marvell,mv88e1318s)
->  - Added header for the file to describe content and author
->  - Made G762 clock node name unique by including g762 in it
->  - Fixed all node names and labels to use respectively '-' and '_'
->  - Removed useless clocks and gpio-keys properties
+The battery charger is compliant with the USB Battery Charging Specification
+Revision 1.1. It has also SFOUT LDO output for powering USB devices.
 
-First patch
+The patchset consists of following drivers:
+1. MFD core driver.
+2. Extcon driver for the MUIC (Micro USB Interface Controller).
+3. Charger driver using power supply class.
+4. Regulator driver for SFOUT and charger.
+5. Documentation of device tree bindings.
 
->  - Fixed bad spacing
->  - Added some space between some nodes to improve readability
+The patchset is rebased on latest Linus' tree (v3.12-11097-ga5d6e63) however
+testing was mostly done on 3.10.
 
-Second patch, or last in series.
 
-thx,
+Changes since v3:
+-----------------
+1. Applied suggestions from Lee Jones and Alexander Shiyan.
+2. Extcon (2/5): Use system_power_efficient_wq for delayed cable detection
+   (pointed by Mark Brown).
+3. Regulator (4/5): Add compatible string to regulators node so MFD core will
+   match it to the driver. Simplify and fix DT parsing. (Lee Jones)
+4. Regulator (4/5): Get rid of regulators variable. (Bartlomiej Zolnierkiewicz).
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v2:
+-----------------
+1. Replaced max14577-irq.c with regmap_irq_chip, as suggested by Mark Brown.
+2. Applied suggestions from review (Mark Brown, Lee Jones).
+3. Regulator: Added registering unconditionally of all regulators (Mark Brown).
+4. Regulator: Removed the "struct max14577_regulator *info" (Bartlomiej
+   Zolnierkiewicz).
+5. Extcon: Removed work-around for hardware reboot (USB cable attached with
+   factory button set to D/L mode) as it is not needed.
+
+Changes since v1:
+-----------------
+1. Applied comments from review (Mark Brown, Mark Rutland).
+2. Removed any DT bindings which are not needed.
+3. Removed "wakeup" node from bindings.
+4. Fixed interrupt handling during resume. This lead to removal of the weird
+   IRQ/GPIO code discussed during review.
+5. Minor fixes pointed by checkpatch, added authors.
+6. Use of_get_child_by_name() for accessing regulators bindings.
+7. Added documentation of bindings (fifth patch).
+
+
+Best regards,
+Krzysztof Kozlowski
+
+Chanwoo Choi (2):
+  mfd: max14577: Add max14577 MFD driver core
+  extcon: max14577: Add extcon-max14577 driver to support MUIC device
+
+Krzysztof Kozlowski (3):
+  charger: max14577: Add charger support for Maxim 14577
+  regulator: max14577: Add regulator driver for Maxim 14577
+  mfd: max14577: Add device tree bindings document
+
+ Documentation/devicetree/bindings/mfd/max14577.txt |   48 ++
+ drivers/extcon/Kconfig                             |   10 +
+ drivers/extcon/Makefile                            |    1 +
+ drivers/extcon/extcon-max14577.c                   |  752 ++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   13 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/max14577.c                             |  244 +++++++
+ drivers/power/Kconfig                              |    7 +
+ drivers/power/Makefile                             |    1 +
+ drivers/power/max14577_charger.c                   |  311 ++++++++
+ drivers/regulator/Kconfig                          |    7 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/max14577.c                       |  268 +++++++
+ include/linux/mfd/max14577-private.h               |  330 +++++++++
+ include/linux/mfd/max14577.h                       |   69 ++
+ 15 files changed, 2063 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
+ create mode 100644 drivers/extcon/extcon-max14577.c
+ create mode 100644 drivers/mfd/max14577.c
+ create mode 100644 drivers/power/max14577_charger.c
+ create mode 100644 drivers/regulator/max14577.c
+ create mode 100644 include/linux/mfd/max14577-private.h
+ create mode 100644 include/linux/mfd/max14577.h
+
+-- 
+1.7.9.5
+
