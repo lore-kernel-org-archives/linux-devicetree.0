@@ -1,144 +1,143 @@
-From: Mauro Ribeiro <mdrjr0@gmail.com>
-Subject: Re: [PATCH v3 0/4] Exynos 5410 Dual cluster support
-Date: Fri, 22 Nov 2013 10:05:41 +0900
-Message-ID: <CAGc3s_ewd=YGwv5=2BiEKGGJ9bSy+9jHZr27e_rjAdOJrpWzVg@mail.gmail.com>
-References: <1383811969-32712-1-git-send-email-v.tyrtov@samsung.com>
-	<1951315.Ol55YFu91h@flatron>
-	<528CBF17.4020500@samsung.com>
+From: Yuantian Tang <Yuantian.Tang@freescale.com>
+Subject: RE: [PATCH v7] clk: corenet: Adds the clock binding
+Date: Fri, 22 Nov 2013 02:58:23 +0000
+Message-ID: <D07C73A334FF604B95B3CBD2A545D07B151207E8@039-SN2MPN1-012.039d.mgd.msft.net>
+References: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <528CBF17.4020500@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tarek Dakhran <t.dakhran@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Dave.Martin@arm.com, nicolas.pitre@linaro.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "galak@kernel.crashing.org" <galak@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On ODROID-XU XOMCCI is connected to VDD.
-
-Best Regards,
-Mauro
-
-On Wed, Nov 20, 2013 at 10:54 PM, Tarek Dakhran <t.dakhran@samsung.com> wrote:
-> Hi,
->
->
-> On 20.11.2013 03:23, Tomasz Figa wrote:
->>
->> Hi,
->>
->> On Thursday 07 of November 2013 12:12:45 Vyacheslav Tyrtov wrote:
->>>
->>> The series of patches represent support of Exynos 5410 SoC
->>>
->>> The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture
->>> Patches allow all 8 CPU cores (4 x A7 and 4 x A15) to run at the same
->>> time
->>>
->>> Patches add new platform description, support of clock controller,
->>> dual cluster support and device tree for Exynos 5410
->>>
->>> Has been build on v3.12.
->>> Has been tested on Exynos 5410 reference board (exynos_defconfig).
->>
->> I've applied the patches on top of today's linux-next and tried to boot
->> my ODROID-XU using exynos5410-smdk5410.dts and exynos_defconfig, but all
->> I can get is an imprecise external abort, when the kernel tries to jump
->> to init. Full boot log below. Any ideas?
->>
->> Best regards,
->> Tomasz
->>
->> 8><------------
->>
->> U-Boot 2012.07-g2bcb371 (Nov 19 2013 - 20:17:37) for Exynos5410
->>
->> CPU: Exynos5410 Rev2.3 [Samsung SOC on SMP Platform Base on ARM CortexA15]
->> APLL = 900MHz, KPLL = 600MHz
->
-> [snip]
->
->>    Starting kernel ...
->>
->> Uncompressing Linux... done, booting the kernel.
->> [    0.000000] Booting Linux on physical CPU 0x0
->> [    0.000000] Initializing cgroup subsys cpuset
->> [    0.000000] Initializing cgroup subsys cpu
->> [    0.000000] Initializing cgroup subsys cpuacct
->> [    0.000000] Linux version 3.12.0-next-20131119-00004-g27f3f5f-dirty
->> (tom3q@flatron) (gcc version 4.7.2 (Gentoo 4.7.2-r1 p1.6, pie-0.5.5) ) #11
->> SMP PREEMPT Wed Nov 20 00:08:02 CET 2013
->> [    0.000000] CPU: ARMv7 Processor [412fc0f3] revision 3 (ARMv7),
->> cr=10c5387d
->> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction
->> cache
->> [    0.000000] Machine model: Hardkernel ODROID-XU board based on
->> EXYNOS5410
->> [    0.000000] bootconsole [earlycon0] enabled
->> [    0.000000] debug: ignoring loglevel setting.
->> [    0.000000] Memory policy: Data cache writealloc
->> [    0.000000] CPU EXYNOS5410 (id 0xe5410023)
->> [    0.000000] On node 0 totalpages: 262144
->
-> [snip]
->
->> [    5.040000] isa bounce pool size: 16 pages
->> [    5.045000] mmcblk0: mmc1:e624 SU16G 14.8 GiB
->> [    5.050000]  mmcblk0: p1
->> [    5.120000] EXT3-fs (mmcblk0p1): error: couldn't mount because of
->> unsupported optional features (240)
->> [    5.125000] EXT2-fs (mmcblk0p1): error: couldn't mount because of
->> unsupported optional features (240)
->> [    5.145000] EXT4-fs (mmcblk0p1): mounted filesystem with ordered data
->> mode. Opts: (null)
->> [    5.150000] VFS: Mounted root (ext4 filesystem) readonly on device
->> 179:1.
->> [    5.165000] devtmpfs: mounted
->> [    5.170000] Freeing unused kernel memory: 228K (c0513000 - c054c000)
->> [    5.195000] Unhandled fault: imprecise external abort (0x1406) at
->> 0x00000000
->> [    5.210000] Kernel panic - not syncing: Attempted to kill init!
->> exitcode=0x00000007
->> [    5.210000]
->> [    5.210000] CPU: 2 PID: 1 Comm: init Not tainted
->> 3.12.0-next-20131119-00004-g27f3f5f-dirty #11
->> [    5.210000] [<c0014068>] (unwind_backtrace+0x0/0xf8) from [<c0011438>]
->> (show_stack+0x10/0x14)
->> [    5.210000] [<c0011438>] (show_stack+0x10/0x14) from [<c03a486c>]
->> (dump_stack+0x7c/0xbc)
->> [    5.210000] [<c03a486c>] (dump_stack+0x7c/0xbc) from [<c03a1e78>]
->> (panic+0x8c/0x1e4)
->> [    5.210000] [<c03a1e78>] (panic+0x8c/0x1e4) from [<c001f504>]
->> (do_exit+0x850/0x920)
->> [    5.210000] [<c001f504>] (do_exit+0x850/0x920) from [<c001f63c>]
->> (do_group_exit+0x3c/0xb0)
->> [    5.210000] [<c001f63c>] (do_group_exit+0x3c/0xb0) from [<c0029e1c>]
->> (get_signal_to_deliver+0x1d4/0x538)
->> [    5.210000] [<c0029e1c>] (get_signal_to_deliver+0x1d4/0x538) from
->> [<c0010974>] (do_signal+0x100/0x40c)
->> [    5.210000] [<c0010974>] (do_signal+0x100/0x40c) from [<c0010fb4>]
->> (do_work_pending+0x68/0xa8)
->> [    5.210000] [<c0010fb4>] (do_work_pending+0x68/0xa8) from [<c000e620>]
->> (work_pending+0xc/0x20)
->> [    5.300000] CPU3: stopping
->> [    5.300000] CPU: 3 PID: 0 Comm: swapper/3 Not tainted
->> 3.12.0-next-20131119-00004-g27f3f5f-dirty #11
->>
-> Tomasz, there is CCI on/off switcher on smdk5410 board, also there is XOMCCI
-> pin on SoC.
-> Looks like switcher on board controls the XOMCCI SoC pin.
->
-> When I turn switcher OFF, I getting the same problem you got.
-> Please, check the cci state on Odroid-XU Board, maybe it is turned off.
->
-> Best regards,
->     Tarek Dakhran
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
-> in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU2NvdHQsDQpEbyB5b3UgaGF2ZSBhbnkgY29tbWVudHMgYWJvdXQgdGhpcyBwYXRjaD8gSWYg
+bm90LCBwbGVhc2UgcGljayBpdCB1cC4NCg0KVGhhbmtzLA0KWXVhbnRpYW4NCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBUYW5nIFl1YW50aWFuLUIyOTk4Mw0KPiBTZW50
+OiAyMDEzxOoxMdTCMjDI1SDQx8bayP0gMTc6MDUNCj4gVG86IGdhbGFrQGtlcm5lbC5jcmFzaGlu
+Zy5vcmcNCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlz
+dHMub3psYWJzLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IFdvb2QgU2NvdHQtQjA3NDIx
+OyBncmFudC5saWtlbHlAc2VjcmV0bGFiLmNhOyBUYW5nDQo+IFl1YW50aWFuLUIyOTk4MzsgVGFu
+ZyBZdWFudGlhbi1CMjk5ODM7IExpIFlhbmctTGVvLVI1ODQ3Mg0KPiBTdWJqZWN0OiBbUEFUQ0gg
+djddIGNsazogY29yZW5ldDogQWRkcyB0aGUgY2xvY2sgYmluZGluZw0KPiANCj4gRnJvbTogVGFu
+ZyBZdWFudGlhbiA8eXVhbnRpYW4udGFuZ0BmcmVlc2NhbGUuY29tPg0KPiANCj4gQWRkcyB0aGUg
+Y2xvY2sgYmluZGluZ3MgZm9yIEZyZWVzY2FsZSBQb3dlclBDIENvcmVOZXQgcGxhdGZvcm1zDQo+
+IA0KPiBTaWduZWQtb2ZmLWJ5OiBUYW5nIFl1YW50aWFuIDxZdWFudGlhbi5UYW5nQGZyZWVzY2Fs
+ZS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IExpIFlhbmcgPGxlb2xpQGZyZWVzY2FsZS5jb20+DQo+
+IC0tLQ0KPiB2NzoNCj4gCS0gcmVmaW5lZCBzb21lIHByb3BlcnRpZXMnIGRlZmluaXRpb25zDQo+
+IHY2Og0KPiAJLSBzcGxpdGVkIHRoZSBwcmV2aW91cyBwYXRjaCBpbnRvIDIgcGFydHMsIG9uZSBp
+cyBmb3IgYmluZGluZyh0aGlzDQo+IG9uZSksDQo+IAkgIHRoZSBvdGhlciBpcyBmb3IgRFRTIG1v
+ZGlmaWNhdGlvbih3aWxsIHN1Ym1pdCBvbmNlIHRoaXMgZ2V0cw0KPiBhY2NlcHRlZCkNCj4gCS0g
+Zml4ZWQgdHlwbw0KPiAJLSByZWZpbmVkICNjbG9jay1jZWxscyBhbmQgY2xvY2stb3V0cHV0LW5h
+bWVzIHByb3BlcnRpZXMNCj4gCS0gcmVtb3ZlZCBmaXhlZC1jbG9jayBjb21wYXRpYmxlIHN0cmlu
+Zw0KPiB2NToNCj4gCS0gcmVmaW5lIHRoZSBiaW5kaW5nIGRvY3VtZW50DQo+IAktIHVwZGF0ZSB0
+aGUgY29tcGF0aWJsZSBzdHJpbmcNCj4gdjQ6DQo+IAktIGFkZCBiaW5kaW5nIGRvY3VtZW50DQo+
+IAktIHVwZGF0ZSBjb21wYXRpYmxlIHN0cmluZw0KPiAJLSB1cGRhdGUgdGhlIHJlZyBwcm9wZXJ0
+eQ0KPiB2MzoNCj4gCS0gZml4IHR5cG8NCj4gdjI6DQo+IAktIGFkZCB0NDI0MCwgYjQ0MjAsIGI0
+ODYwIHN1cHBvcnQNCj4gCS0gcmVtb3ZlIHBsbC80IGNsb2NrIGZyb20gcDIwNDEsIHAzMDQxIGFu
+ZCBwNTAyMCBib2FyZA0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY29yZW5ldC1j
+bG9jay50eHQgICAgfCAxMjgNCj4gKysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hh
+bmdlZCwgMTI4IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY29yZW5ldC0NCj4gY2xvY2sudHh0DQo+IA0K
+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nv
+cmVuZXQtY2xvY2sudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Ns
+b2NrL2NvcmVuZXQtY2xvY2sudHh0DQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAw
+MDAwMDAuLjYwOWJhMmINCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvY2xvY2svY29yZW5ldC1jbG9jay50eHQNCj4gQEAgLTAsMCArMSwx
+MjggQEANCj4gKyogQ2xvY2sgQmxvY2sgb24gRnJlZXNjYWxlIENvcmVOZXQgUGxhdGZvcm1zDQo+
+ICsNCj4gK0ZyZWVzY2FsZSBDb3JlTmV0IGNoaXBzIHRha2UgcHJpbWFyeSBjbG9ja2luZyBpbnB1
+dCBmcm9tIHRoZSBleHRlcm5hbA0KPiArU1lTQ0xLIHNpZ25hbC4gVGhlIFNZU0NMSyBpbnB1dCAo
+ZnJlcXVlbmN5KSBpcyBtdWx0aXBsaWVkIHVzaW5nDQo+ICttdWx0aXBsZSBwaGFzZSBsb2NrZWQg
+bG9vcHMgKFBMTCkgdG8gY3JlYXRlIGEgdmFyaWV0eSBvZiBmcmVxdWVuY2llcw0KPiArd2hpY2gg
+Y2FuIHRoZW4gYmUgcGFzc2VkIHRvIGEgdmFyaWV0eSBvZiBpbnRlcm5hbCBsb2dpYywgaW5jbHVk
+aW5nDQo+ICtjb3JlcyBhbmQgcGVyaXBoZXJhbCBJUCBibG9ja3MuDQo+ICtQbGVhc2UgcmVmZXIg
+dG8gdGhlIFJlZmVyZW5jZSBNYW51YWwgZm9yIGRldGFpbHMuDQo+ICsNCj4gKzEuIENsb2NrIEJs
+b2NrIEJpbmRpbmcNCj4gKw0KPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gKy0gY29tcGF0aWJs
+ZTogU2hvdWxkIGNvbnRhaW4gYSBzcGVjaWZpYyBjbG9jayBibG9jayBjb21wYXRpYmxlIHN0cmlu
+Zw0KPiArCWFuZCBhIHNpbmdsZSBjaGFzc2lzIGNsb2NrIGNvbXBhdGlibGUgc3RyaW5nLg0KPiAr
+CUNsb2NrIGJsb2NrIHN0cmluZ3MgaW5jbHVkZSwgYnV0IG5vdCBsaW1pdGVkIHRvLCBvbmUgb2Yg
+dGhlOg0KPiArCSogImZzbCxwMjA0MS1jbG9ja2dlbiINCj4gKwkqICJmc2wscDMwNDEtY2xvY2tn
+ZW4iDQo+ICsJKiAiZnNsLHA0MDgwLWNsb2NrZ2VuIg0KPiArCSogImZzbCxwNTAyMC1jbG9ja2dl
+biINCj4gKwkqICJmc2wscDUwNDAtY2xvY2tnZW4iDQo+ICsJKiAiZnNsLHQ0MjQwLWNsb2NrZ2Vu
+Ig0KPiArCSogImZzbCxiNDQyMC1jbG9ja2dlbiINCj4gKwkqICJmc2wsYjQ4NjAtY2xvY2tnZW4i
+DQo+ICsJQ2hhc3NpcyBjbG9jayBzdHJpbmdzIGluY2x1ZGU6DQo+ICsJKiAiZnNsLHFvcmlxLWNs
+b2NrZ2VuLTEuMCI6IGZvciBjaGFzc2lzIDEuMCBjbG9ja3MNCj4gKwkqICJmc2wscW9yaXEtY2xv
+Y2tnZW4tMi4wIjogZm9yIGNoYXNzaXMgMi4wIGNsb2Nrcw0KPiArLSByZWc6IE9mZnNldCBhbmQg
+bGVuZ3RoIG9mIHRoZSBjbG9jayByZWdpc3RlciBzZXQNCj4gKw0KPiArUmVjb21tZW5kZWQgcHJv
+cGVydGllczoNCj4gKy0gcmFuZ2VzOiBBbGxvd3MgdmFsaWQgdHJhbnNsYXRpb24gYmV0d2VlbiBj
+aGlsZCdzIGFkZHJlc3Mgc3BhY2UgYW5kDQo+ICsJcGFyZW50J3MuIE11c3QgYmUgcHJlc2VudCBp
+ZiB0aGUgZGV2aWNlIGhhcyBzdWItbm9kZXMuDQo+ICstICNhZGRyZXNzLWNlbGxzOiBTcGVjaWZp
+ZXMgdGhlIG51bWJlciBvZiBjZWxscyB1c2VkIHRvIHJlcHJlc2VudA0KPiArCXBoeXNpY2FsIGJh
+c2UgYWRkcmVzc2VzLiAgTXVzdCBiZSBwcmVzZW50IGlmIHRoZSBkZXZpY2UgaGFzDQo+ICsJc3Vi
+LW5vZGVzIGFuZCBzZXQgdG8gMSBpZiBwcmVzZW50DQo+ICstICNzaXplLWNlbGxzOiBTcGVjaWZp
+ZXMgdGhlIG51bWJlciBvZiBjZWxscyB1c2VkIHRvIHJlcHJlc2VudA0KPiArCXRoZSBzaXplIG9m
+IGFuIGFkZHJlc3MuIE11c3QgYmUgcHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcw0KPiArCXN1Yi1u
+b2RlcyBhbmQgc2V0IHRvIDEgaWYgcHJlc2VudA0KPiArDQo+ICsyLiBDbG9jayBQcm92aWRlci9D
+b25zdW1lciBCaW5kaW5nDQo+ICsNCj4gK01vc3Qgb2YgdGhlIGJpbmRpbmdzIGFyZSBmcm9tIHRo
+ZSBjb21tb24gY2xvY2sgYmluZGluZ1sxXS4NCj4gKyBbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4dA0KPiArDQo+ICtSZXF1aXJlZCBw
+cm9wZXJ0aWVzOg0KPiArLSBjb21wYXRpYmxlIDogU2hvdWxkIGluY2x1ZGUgb25lIG9mIHRoZSBm
+b2xsb3dpbmc6DQo+ICsJKiAiZnNsLHFvcmlxLWNvcmUtcGxsLTEuMCIgZm9yIGNvcmUgUExMIGNs
+b2NrcyAodjEuMCkNCj4gKyAgICAqICJmc2wscW9yaXEtY29yZS1wbGwtMi4wIiBmb3IgY29yZSBQ
+TEwgY2xvY2tzICh2Mi4wKQ0KPiArICAgICogImZzbCxxb3JpcS1jb3JlLW11eC0xLjAiIGZvciBj
+b3JlIG11eCBjbG9ja3MgKHYxLjApDQo+ICsgICAgKiAiZnNsLHFvcmlxLWNvcmUtbXV4LTIuMCIg
+Zm9yIGNvcmUgbXV4IGNsb2NrcyAodjIuMCkNCj4gKwkqICJmc2wscW9yaXEtc3lzY2xrLTEuMCI6
+IGZvciBpbnB1dCBzeXN0ZW0gY2xvY2sgKHYxLjApDQo+ICsJKiAiZnNsLHFvcmlxLXN5c2Nsay0y
+LjAiOiBmb3IgaW5wdXQgc3lzdGVtIGNsb2NrICh2Mi4wKQ0KPiArLSAjY2xvY2stY2VsbHM6IEZy
+b20gY29tbW9uIGNsb2NrIGJpbmRpbmcuIFRoZSBudW1iZXIgb2YgY2VsbHMgaW4gYQ0KPiArCWNs
+b2NrLXNwZWNpZmllci4gU2hvdWxkIGJlIDwwPiBmb3IgImZzbCxxb3JpcS1zeXNjbGstWzEsMl0u
+MCINCj4gKwljbG9ja3MsIG9yIDwxPiBmb3IgImZzbCxxb3JpcS1jb3JlLXBsbC1bMSwyXS4wIiBj
+bG9ja3MuDQo+ICsJRm9yICJmc2wscW9yaXEtY29yZS1wbGwtWzEsMl0uMCIgY2xvY2tzLCB0aGUg
+c2luZ2xlDQo+ICsJY2xvY2stc3BlY2lmaWVyIGNlbGwgbWF5IHRha2UgdGhlIGZvbGxvd2luZyB2
+YWx1ZXM6DQo+ICsJKiAwIC0gZXF1YWwgdG8gdGhlIFBMTCBmcmVxdWVuY3kNCj4gKwkqIDEgLSBl
+cXVhbCB0byB0aGUgUExMIGZyZXF1ZW5jeSBkaXZpZGVkIGJ5IDINCj4gKwkqIDIgLSBlcXVhbCB0
+byB0aGUgUExMIGZyZXF1ZW5jeSBkaXZpZGVkIGJ5IDQNCj4gKw0KPiArUmVjb21tZW5kZWQgcHJv
+cGVydGllczoNCj4gKy0gY2xvY2tzOiBTaG91bGQgYmUgdGhlIHBoYW5kbGUgb2YgaW5wdXQgcGFy
+ZW50IGNsb2NrDQo+ICstIGNsb2NrLW5hbWVzOiBGcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nLCBp
+bmRpY2F0ZXMgdGhlIGNsb2NrIG5hbWUNCj4gKy0gY2xvY2stb3V0cHV0LW5hbWVzOiBGcm9tIGNv
+bW1vbiBjbG9jayBiaW5kaW5nLCBpbmRpY2F0ZXMgdGhlIG5hbWVzIG9mDQo+ICsJb3V0cHV0IGNs
+b2Nrcw0KPiArLSByZWc6IFNob3VsZCBiZSB0aGUgb2Zmc2V0IGFuZCBsZW5ndGggb2YgY2xvY2sg
+YmxvY2sgYmFzZSBhZGRyZXNzLg0KPiArCVRoZSBsZW5ndGggc2hvdWxkIGJlIDQuDQo+ICsNCj4g
+K0V4YW1wbGUgZm9yIGNsb2NrIGJsb2NrIGFuZCBjbG9jayBwcm92aWRlcjoNCj4gKy8gew0KPiAr
+CWNsb2NrZ2VuOiBnbG9iYWwtdXRpbGl0aWVzQGUxMDAwIHsNCj4gKwkJY29tcGF0aWJsZSA9ICJm
+c2wscDUwMjAtY2xvY2tnZW4iLCAiZnNsLHFvcmlxLWNsb2NrZ2VuLTEuMCI7DQo+ICsJCXJhbmdl
+cyA9IDwweDAgMHhlMTAwMCAweDEwMDA+Ow0KPiArCQlyZWcgPSA8MHhlMTAwMCAweDEwMDA+Ow0K
+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gKwkJI3NpemUtY2VsbHMgPSA8MT47DQo+ICsN
+Cj4gKwkJc3lzY2xrOiBzeXNjbGsgew0KPiArCQkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KPiArCQkJ
+Y29tcGF0aWJsZSA9ICJmc2wscW9yaXEtc3lzY2xrLTEuMCI7DQo+ICsJCQljbG9jay1vdXRwdXQt
+bmFtZXMgPSAic3lzY2xrIjsNCj4gKwkJfQ0KPiArDQo+ICsJCXBsbDA6IHBsbDBAODAwIHsNCj4g
+KwkJCSNjbG9jay1jZWxscyA9IDwxPjsNCj4gKwkJCXJlZyA9IDwweDgwMCAweDQ+Ow0KPiArCQkJ
+Y29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29yZS1wbGwtMS4wIjsNCj4gKwkJCWNsb2NrcyA9IDwm
+c3lzY2xrPjsNCj4gKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiI7
+DQo+ICsJCX07DQo+ICsNCj4gKwkJcGxsMTogcGxsMUA4MjAgew0KPiArCQkJI2Nsb2NrLWNlbGxz
+ID0gPDE+Ow0KPiArCQkJcmVnID0gPDB4ODIwIDB4ND47DQo+ICsJCQljb21wYXRpYmxlID0gImZz
+bCxxb3JpcS1jb3JlLXBsbC0xLjAiOw0KPiArCQkJY2xvY2tzID0gPCZzeXNjbGs+Ow0KPiArCQkJ
+Y2xvY2stb3V0cHV0LW5hbWVzID0gInBsbDEiLCAicGxsMS1kaXYyIjsNCj4gKwkJfTsNCj4gKw0K
+PiArCQltdXgwOiBtdXgwQDAgew0KPiArCQkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KPiArCQkJcmVn
+ID0gPDB4MCAweDQ+Ow0KPiArCQkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29yZS1tdXgtMS4w
+IjsNCj4gKwkJCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDEgMD4sIDwmcGxs
+MSAxPjsNCj4gKwkJCWNsb2NrLW5hbWVzID0gInBsbDAiLCAicGxsMC1kaXYyIiwgInBsbDEiLCAi
+cGxsMS1kaXYyIjsNCj4gKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4MCI7DQo+ICsJCX07
+DQo+ICsNCj4gKwkJbXV4MTogbXV4MUAyMCB7DQo+ICsJCQkjY2xvY2stY2VsbHMgPSA8MD47DQo+
+ICsJCQlyZWcgPSA8MHgyMCAweDQ+Ow0KPiArCQkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29y
+ZS1tdXgtMS4wIjsNCj4gKwkJCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDEg
+MD4sIDwmcGxsMSAxPjsNCj4gKwkJCWNsb2NrLW5hbWVzID0gInBsbDAiLCAicGxsMC1kaXYyIiwg
+InBsbDEiLCAicGxsMS1kaXYyIjsNCj4gKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4MSI7
+DQo+ICsJCX07DQo+ICsJfTsNCj4gKyAgfQ0KPiArDQo+ICtFeGFtcGxlIGZvciBjbG9jayBjb25z
+dW1lcjoNCj4gKw0KPiArLyB7DQo+ICsJY3B1MDogUG93ZXJQQyxlNTUwMEAwIHsNCj4gKwkJLi4u
+DQo+ICsJCWNsb2NrcyA9IDwmbXV4MD47DQo+ICsJCS4uLg0KPiArCX07DQo+ICsgIH0NCj4gLS0N
+Cj4gMS44LjANCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9y
+ZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
