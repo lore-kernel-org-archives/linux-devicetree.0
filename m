@@ -1,34 +1,67 @@
-From: Florian Meier <florian.meier@koalo.de>
-Subject: Re: [PATCHv4] ASoC: Add support for BCM2835
-Date: Fri, 22 Nov 2013 14:32:19 +0100
-Message-ID: <528F5CE3.30105@koalo.de>
-References: <528E4E4A.20403@koalo.de>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Add DT entry for ReadyNAS Duo v2 to use
+ gpio-poweroff driver
+Date: Fri, 22 Nov 2013 08:41:13 -0500
+Message-ID: <20131122134113.GF29241@titan.lakedaemon.net>
+References: <87iovl4ahq.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <528E4E4A.20403@koalo.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lars-Peter Clausen <lars@metafoo.de>
-Cc: devicetree <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87iovl4ahq.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> +	dev = devm_kzalloc(&pdev->dev, sizeof(*dev),
-> +			   GFP_KERNEL);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
+On Fri, Nov 22, 2013 at 12:10:25AM +0100, Arnaud Ebalard wrote:
+> 
+> Without that fix, at the end of the shutdown process, the board is
+> still powered (led glowing, fan running, ...).
+> 
+> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> ---
+> Hi,
+> 
+> I have prepared some cleanup patches for existing ReadyNAS .dts files
+> which I intend to send for review in the next fex days. The GPIO
+> voltage level is still a value below but the cleanup patch for this
+> .dts will handle that globally.
+> 
+>  arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
+> index e6a102c..4e3cae1 100644
+> --- a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
+> +++ b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
+> @@ -60,6 +60,10 @@
+>  				marvell,pins = "mpp29";
+>  				marvell,function = "gpio";
+>  			};
+> +			pmx_poweroff: pmx-poweroff {
+> +				marvell,pins = "mpp30";
+> +				marvell,function = "gpio";
+> +			};
+>  		};
+>  
+>  		clocks {
+> @@ -158,6 +162,13 @@
+>  		};
+>  	};
+>  
+> +	gpio-poweroff {
+> +		compatible = "gpio-poweroff";
+> +		pinctrl-0 = <&pmx_poweroff>;
+> +		pinctrl-names = "default";
+> +		gpios = <&gpio0 30 1>;
 
-Found a typo here, should be IS_ERR(dev) and PTR_ERR(dev).
+GPIO_... ?
 
-Is the patch acceptable apart from that now?
+thx,
 
-Greetings,
-Florian
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
