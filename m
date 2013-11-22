@@ -1,171 +1,283 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: [PATCH 4/4] ARM: NETGEAR ReadyNAS Duo v2 and RN102 .dts file whitespace cleanup
-Date: Fri, 22 Nov 2013 21:07:39 +0100
-Message-ID: <9211978b60a76b321db0a5a934d9cb9f959519d9.1385148929.git.arno@natisbad.org>
-References: <cover.1385148929.git.arno@natisbad.org>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 2/2] memory: ti-aemif: add bindings for AEMIF driver
+Date: Fri, 22 Nov 2013 15:04:53 -0600
+Message-ID: <817E4263-5E61-4471-AED0-5C97FD2B902F@kernel.crashing.org>
+References: <1384962416-14862-1-git-send-email-ivan.khoronzhuk@ti.com> <1384962416-14862-3-git-send-email-ivan.khoronzhuk@ti.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1385148929.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1384962416-14862-3-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-This patch provides some whitespace cleanup for NETGEAR
-ReadyNAS Duo v2 and 102 .dts files:
+On Nov 20, 2013, at 9:46 AM, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org> w=
+rote:
 
- - Fixed bad whitespaces
- - Added spaces between nodes to improve readability
+> Add bindings for AEMIF controller drivers/memory/ti-aemif.c
+>=20
 
-Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
----
- arch/arm/boot/dts/armada-370-netgear-rn102.dts     |  1 +
- .../boot/dts/kirkwood-netgear_readynas_duo_v2.dts  | 48 ++++++++++++++--------
- 2 files changed, 32 insertions(+), 17 deletions(-)
+Binding shouldn=92t normally refer to code.
 
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-index 87cd003..1cbd338 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-@@ -64,6 +64,7 @@
- 					marvell,pins = "mpp57";
- 					marvell,function = "gpio";
- 				};
-+
- 				sata1_led_pin: sata1-led-pin {
- 					marvell,pins = "mpp15";
- 					marvell,function = "gpio";
-diff --git a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
-index 65d0587..0961e80 100644
---- a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
-+++ b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
-@@ -45,34 +45,42 @@
- 				marvell,pins = "mpp47";
- 				marvell,function = "gpio";
- 			};
-+
- 			pmx_button_backup: pmx-button-backup {
- 				marvell,pins = "mpp45";
- 				marvell,function = "gpio";
- 			};
-+
- 			pmx_button_reset: pmx-button-reset {
- 				marvell,pins = "mpp13";
- 				marvell,function = "gpio";
- 			};
-+
- 			pmx_led_blue_power: pmx-led-blue-power {
- 				marvell,pins = "mpp31";
- 				marvell,function = "gpio";
- 			};
-+
- 			pmx_led_blue_activity: pmx-led-blue-activity {
- 				marvell,pins = "mpp38";
- 				marvell,function = "gpio";
- 			};
-+
- 			pmx_led_blue_disk1: pmx-led-blue-disk1 {
- 				marvell,pins = "mpp23";
- 				marvell,function = "gpio";
- 			};
-+
- 			pmx_led_blue_disk2: pmx-led-blue-disk2 {
- 				marvell,pins = "mpp22";
- 				marvell,function = "gpio";
- 			};
-+
- 			pmx_led_blue_backup: pmx-led-blue-backup {
- 				marvell,pins = "mpp29";
- 				marvell,function = "gpio";
- 			};
-+
- 			pmx_poweroff: pmx-poweroff {
- 				marvell,pins = "mpp30";
- 				marvell,function = "gpio";
-@@ -129,18 +137,22 @@
- 			gpios = <&gpio0 31 GPIO_ACTIVE_LOW>;
- 			linux,default-trigger = "default-on";
- 		};
-+
- 		activity_led {
- 			label = "status:blue:activity_led";
- 			gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
- 		};
-+
- 		disk1_led {
- 			label = "status:blue:disk1_led";
- 			gpios = <&gpio0 23 GPIO_ACTIVE_LOW>;
- 		};
-+
- 		disk2_led {
- 			label = "status:blue:disk2_led";
- 			gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;
- 		};
-+
- 		backup_led {
- 			label = "status:blue:backup_led";
- 			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
-@@ -158,11 +170,13 @@
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
- 		};
-+
- 		reset-button {
- 			label = "Reset Button";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
- 		};
-+
- 		backup-button {
- 			label = "Backup Button";
- 			linux,code = <KEY_COPY>;
-@@ -177,23 +191,23 @@
- 		gpios = <&gpio0 30 GPIO_ACTIVE_LOW>;
- 	};
- 
--        regulators {
--                compatible = "simple-bus";
--                #address-cells = <1>;
--                #size-cells = <0>;
--
--                usb_power: regulator@1 {
--                        compatible = "regulator-fixed";
--                        reg = <1>;
--                        regulator-name = "USB 3.0 Power";
--                        regulator-min-microvolt = <5000000>;
--                        regulator-max-microvolt = <5000000>;
--                        enable-active-high;
--                        regulator-always-on;
--                        regulator-boot-on;
--                        gpio = <&gpio1 14 0>;
--                };
--        };
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usb3_regulator: usb3-regulator {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "USB 3.0 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio1 14 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
- };
- 
- &nand {
--- 
-1.8.4.4
+Just saying something like:
+
+Adding binging for TI Async External Memory Interface (AEMIF) controlle=
+r.
+
+
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+> ---
+> .../bindings/memory-controllers/ti-aemif.txt       |  198 +++++++++++=
++++++++++
+> 1 file changed, 198 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/memory-controlle=
+rs/ti-aemif.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/ti-=
+aemif.txt b/Documentation/devicetree/bindings/memory-controllers/ti-aem=
+if.txt
+> new file mode 100644
+> index 0000000..be0c0cb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.t=
+xt
+> @@ -0,0 +1,198 @@
+> +* Device tree bindings for Texas instruments AEMIF controller
+> +
+> +Th Async External Memory Interface (EMIF16/AEMIF) controller is inte=
+nded to
+
+The?
+
+> +provide a glue-less interface to a variety of asynchronous memory de=
+vices like
+> +ASRA M, NOR and NAND memory. A total of 256M bytes of any of these m=
+emories
+> +can be accessed at any given time via four chip selects with 64M byt=
+e access
+> +per chip select. Synchronous memories such as DDR1 SD RAM, SDR SDRAM
+> +and Mobile SDR are not supported.
+> +
+> +Documentation:
+> +Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
+> +OMAP-L138 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
+> +Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
+> +
+> +Required properties:
+> +
+> +- compatible:		"ti,davinci-aemif"
+> +			"ti,keystone-aemif"
+> +			"ti,omap-L138-aemif"
+> +
+> +- #address-cells:	Must be 2. The first cell is the memory partition
+> +			number. The 0 partition is for chip selects. And the
+> +			second cell is the offset into the partition, for the 0
+> +			partition it corresponds to chip select offset.
+> +
+
+Is the first cell just the chip select number?
+
+I=92m wondering if this is similar to FSL Localbus controller, see the =
+binding:
+
+bindings/powerpc/fsl/lbc.txt
+
+> +- #size-cells:		Must be set to 1.
+> +
+> +- reg:			contains offset/length value for AEMIF control registers
+> +			space.
+> +
+> +- ranges:		Must be set up to reflect the memory layout for 4
+> +			chipselects and for AEMIF control range.
+> +
+> +- clocks:		phandle reference to the controller clock. Required only
+> +			if clock tree data present in device tree.
+> +			See clock-bindings.txt
+> +
+> +- clock-names:		clock name. It has to be "aemif". Required only if c=
+lock
+> +			tree data present in device tree, in another case don't
+> +			use it.
+> +			See clock-bindings.txt
+> +
+> +- clock-ranges:		Empty property indicating that child nodes can inhe=
+rit
+> +			named clocks. Required only if clock tree data present
+> +			in device tree.
+> +			See clock-bindings.txt
+> +
+> +
+> +Child chip-select (cs) nodes contain the memory devices nodes connec=
+ted to
+> +such as NOR (e.g. cfi-flash) and NAND (ti,davinci-nand, see davinci-=
+nand.txt).
+> +There might be board specific devices like FPGAs.
+> +
+> +Required child cs node properties:
+> +
+> +- compatible:		"ti,aemif-cs"
+> +
+> +- #address-cells:	Must be 2. The first cell is the memory partition
+> +			number. The 0 partition is for chip selects. And the
+> +			second cell is the offset into the partition, for the 0
+> +			partition it corresponds to chip select offset.
+> +
+> +- #size-cells:		Must be 1.
+> +
+> +- ranges:		Empty property indicating that child nodes can inherit
+> +			memory layout.
+> +
+> +- clock-ranges:		Empty property indicating that child nodes can inhe=
+rit
+> +			named clocks. Required only if clock tree data present
+> +			in device tree.
+> +
+> +Optional child cs node properties:
+> +
+> +
+> +- ti,bus-width:			width of the asynchronous device's data bus
+> +				8 or 16 if not preset 8
+> +
+> +- ti,cs-ss:		enable/disable select strobe mode
+> +				In select strobe mode chip select behaves as
+> +				the strobe and is active only during the strobe
+> +				period. If present then enable.
+> +
+> +- ti,cs-ew:		enable/disable extended wait mode
+> +				if set, the controller monitors the EMIFWAIT pin
+> +				mapped to that chip select to determine if the
+> +				device wants to extend the strobe period. If
+> +				present then enable.
+> +
+> +- ti,cs-ta:		minimum turn around time, ns
+> +				Time between the end of one asynchronous memory
+> +				access and the start of another asynchronous
+> +				memory access. This delay is not incurred
+> +				between a read followed by read or a write
+> +				followed by a write to same chip select.
+> +
+> +- ti,cs-rsetup:		read setup width, ns
+> +				Time between the beginning of a memory cycle
+> +				and the activation of read strobe.
+> +				Minimum value is 1 (0 treated as 1).
+> +
+> +- ti,cs-rstobe:		read strobe width, ns
+> +				Time between the activation and deactivation of
+> +				the read strobe.
+> +				Minimum value is 1 (0 treated as 1).
+> +
+> +- ti,cs-rhold:		read hold width, ns
+> +				Time between the deactivation of the read
+> +				strobe and the end of the cycle (which may be
+> +				either an address change or the deactivation of
+> +				the chip select signal.
+> +				Minimum value is 1 (0 treated as 1).
+> +
+> +- ti,cs-wsetup:		write setup width, ns
+> +				Time between the beginning of a memory cycle
+> +				and the activation of write strobe.
+> +				Minimum value is 1 (0 treated as 1).
+> +
+> +- ti,cs-wstrobe:	write strobe width, ns
+> +				Time between the activation and deactivation of
+> +				the write strobe.
+> +				Minimum value is 1 (0 treated as 1).
+> +
+> +- ti,cs-whold:		write hold width, ns
+> +				Time between the deactivation of the write
+> +				strobe and the end of the cycle (which may be
+> +				either an address change or the deactivation of
+> +				the chip select signal.
+> +				Minimum value is 1 (0 treated as 1).
+> +
+> +If any of the above parameters are absent, current parameter value w=
+ill be taken
+> +from the corresponding HW reg.
+> +
+> +The name for cs node must be in format csN, where N is the cs number=
+=2E
+> +For compatibles "ti,davinci-aemif" and "ti,keystone-aemif" N =3D [0-=
+3].
+> +For compatible "ti,omap-L138-aemif" N =3D [2-5].
+> +
+> +Example for aemif, davinci nand and nor flash chip select shown belo=
+w.
+> +
+> +memory-controller@21000A00 {
+> +	compatible =3D "ti,keystone-aemif";
+> +	#address-cells =3D <2>;
+> +	#size-cells =3D <1>;
+> +	clocks =3D <&clkaemif 0>;
+> +	clock-names =3D "aemif";
+> +	clock-ranges;
+> +	reg =3D <0x2100A00 0x00000100>;
+> +	ranges =3D <0 0 0x70000000 0x10000000
+> +		  1 0 0x21000A00 0x0000100>;
+> +
+> +	nand:cs2 {
+> +		compatible =3D "ti,aemif-cs";
+> +		#address-cells =3D <2>;
+> +		#size-cells =3D <1>;
+> +		clock-ranges;
+> +		ranges;
+> +
+> +		/* all timings in nanoseconds */
+> +		ti,cs-ta =3D <0>;
+> +		ti,cs-rhold =3D <7>;
+> +		ti,cs-rstrobe =3D <42>;
+> +		ti,cs-rsetup =3D <14>;
+> +		ti,cs-whold =3D <7>;
+> +		ti,cs-wstrobe =3D <42>;
+> +		ti,cs-wsetup =3D <14>;
+> +
+> +		nand@0,0x8000000 {
+> +			compatible =3D "ti,davinci-nand";
+> +			reg =3D <0 0x8000000 0x4000000
+> +			       1 0x0000000 0x0000100>;
+> +
+> +			.. see davinci-nand.txt
+> +		};
+> +	};
+> +
+> +	nor:cs0 {
+> +		compatible =3D "ti,aemif-cs";
+> +		#address-cells =3D <2>;
+> +		#size-cells =3D <1>;
+> +		clock-ranges;
+> +		ranges;
+> +
+> +		/* all timings in nanoseconds */
+> +		ti,cs-ta =3D <0>;
+> +		ti,cs-rhold =3D <8>;
+> +		ti,cs-rstrobe =3D <40>;
+> +		ti,cs-rsetup =3D <14>;
+> +		ti,cs-whold =3D <7>;
+> +		ti,cs-wstrobe =3D <40>;
+> +		ti,cs-wsetup =3D <14>;
+> +		ti,cs-asize =3D <1>;
+> +
+> +		flash@0,0x0000000 {
+> +			compatible =3D "cfi-flash";
+> +			reg =3D <0 0x0000000 0x4000000>;
+> +
+> +			...
+> +		};
+> +	};
+> +};
+> --=20
+> 1.7.9.5
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
