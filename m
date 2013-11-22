@@ -1,109 +1,34 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v3 4/5] regulator: max14577: Add regulator driver for Maxim
- 14577
-Date: Fri, 22 Nov 2013 16:55:48 +0100
-Message-ID: <1385135748.27216.1.camel@AMDC1943>
-References: <1385109972-28059-1-git-send-email-k.kozlowski@samsung.com>
- <1385109972-28059-5-git-send-email-k.kozlowski@samsung.com>
- <20131122101551.GJ23067@lee--X1>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCH] ARM: kirkwood: ReadyNAS Duo v2 .dts cleanup
+Date: Fri, 22 Nov 2013 17:00:04 +0100
+Message-ID: <87txf4ctq3.fsf@natisbad.org>
+References: <87li0ge9te.fsf@natisbad.org>
+	<20131122153800.GJ29241@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <20131122101551.GJ23067@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131122153800.GJ29241-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org> (Jason Cooper's
+	message of "Fri, 22 Nov 2013 10:38:00 -0500")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-11-22 at 10:15 +0000, Lee Jones wrote:
-> > +#ifdef CONFIG_OF
-> > +static int max14577_regulator_dt_parse_pdata(struct platform_device *pdev,
-> > +					struct max14577_platform_data *pdata)
-> > +{
-> > +	struct max14577 *max14577 = dev_get_drvdata(pdev->dev.parent);
-> > +	struct device_node *np;
-> > +	struct max14577_regulator_platform_data *reg_pdata;
-> > +	struct of_regulator_match rmatch;
-> > +	int i, ret;
-> > +
-> > +	np = of_get_child_by_name(max14577->dev->of_node, "regulators");
-> > +	if (!np)
-> > +		return -EINVAL;
-> 
-> No need to do this. If instead you use a compatible string and set
-> it's MFD cell's .of_compatible property, the MFD core will set
-> pdev->dev.of_node for you.
-> 
-> > +	reg_pdata = devm_kzalloc(&pdev->dev, sizeof(*reg_pdata) *
-> > +			     ARRAY_SIZE(supported_regulators), GFP_KERNEL);
-> > +	if (!reg_pdata)
-> > +		return -ENOMEM;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(supported_regulators); i++) {
-> > +		rmatch.name = supported_regulators[i].name;
-> > +		ret = of_regulator_match(&pdev->dev, np, &rmatch, 1);
-> > +		if (ret != 1)
-> > +			continue;
-> > +		dev_dbg(&pdev->dev, "Found regulator %d/%s\n",
-> > +				supported_regulators[i].id,
-> > +				supported_regulators[i].name);
-> > +		reg_pdata[i].id = supported_regulators[i].id;
-> > +		reg_pdata[i].initdata = rmatch.init_data;
-> > +		reg_pdata[i].of_node = rmatch.of_node;
-> > +	}
-> > +
-> > +	pdata->regulators = reg_pdata;
-> > +
-> > +	return 0;
-> > +}
-> > +#else
-> > +static int max14577_regulator_dt_parse_pdata(struct platform_device *pdev,
-> > +					struct max14577_platform_data *pdata)
-> > +{
-> > +	return 0;
-> > +}
-> > +#endif
-> 
-> No need for this either. Just check for the device's of_node.
-> 
-> > +static int max14577_regulator_probe(struct platform_device *pdev)
-> > +{
-> > +	struct max14577 *max14577 = dev_get_drvdata(pdev->dev.parent);
-> > +	struct max14577_platform_data *pdata = dev_get_platdata(max14577->dev);
-> > +	int i, size;
-> > +	struct regulator_config config = {};
-> > +	struct regulator_dev **regulators;
-> > +
-> > +	if (!pdata) {
-> > +		/* Parent must provide pdata */
-> > +		dev_err(&pdev->dev, "No MFD driver platform data found.\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	if (max14577->dev->of_node) {
-> > +		int ret = max14577_regulator_dt_parse_pdata(pdev, pdata);
-> 
-> This will overwrite pdata which is wrong.
-> 
-> pdata should always take precedence over DT.
-> 
-> <snip>
-> 
-> > +	for (i = 0; i < ARRAY_SIZE(supported_regulators); i++) {
-> > +		/*
-> > +		 * Index of supported_regulators[] is also the id and must
-> > +		 * match index of pdata->regulators[].
-> > +		 */
-> > +		config.init_data = pdata->regulators[i].initdata;
-> > +		config.of_node = pdata->regulators[i].of_node;
-> 
-> I still thing this is superfluous. Why don't you run though the nodes
-> here instead of doing it in MFD and passing this stuff through?
 
-I have rewritten the regulator init code (and DT parsing). I think it
-reflects your comments. Please look at version 4 of patches.
+Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> writes:
 
-Best regards,
-Krzysztof
+> On Fri, Nov 22, 2013 at 04:27:09PM +0100, Arnaud Ebalard wrote:
+>> The patch does some cleanup work on NETGEAR ReadyNAS Duo v2 .dts
+>> file. Changes are listed below:
+>
+> Can you do the whitespace cleanup as a separate patch, and do all your
+> boards in one go?
 
+Just to be sure: one patch per board for non-whitespace and a single one
+for fixing whitespaces for all boards? All in same serie.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
