@@ -1,106 +1,61 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] clocksource: Do not drop unheld reference on device node
-Date: Fri, 22 Nov 2013 17:31:46 +0100
-Message-ID: <528F86F2.40706@linaro.org>
-References: <1382136588-15320-1-git-send-email-treding@nvidia.com> <20131122161607.GA5088@ulmo.nvidia.com>
+From: Sebastian Reichel <sre@ring0.de>
+Subject: Re: [PATCH 3/3] ARM: OMAP2+: Fix eMMC on n900 with device tree
+Date: Fri, 22 Nov 2013 17:35:33 +0100
+Message-ID: <20131122163532.GA32331@earth.universe>
+References: <1385059866-10646-1-git-send-email-tony@atomide.com>
+ <1385059866-10646-4-git-send-email-tony@atomide.com>
+ <20131121231751.GA9772@earth.universe>
+ <20131121235729.GD10023@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131122161607.GA5088@ulmo.nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?B?VXdl?= =?UTF-8?B?IEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, David Brown <davidb@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131121235729.GD10023@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/2013 05:16 PM, Thierry Reding wrote:
-> On Sat, Oct 19, 2013 at 12:49:48AM +0200, Thierry Reding wrote:
->> When booting a recent kernel on ARM with OF_DYNAMIC enabled, the ker=
-nel
->> warns about the following:
->>
->> 	[    0.000000] ERROR: Bad of_node_put() on /timer@50004600
->> 	[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.12.0-rc5=
--next-20131017-00077-gedfd827-dirty #406
->> 	[    0.000000] [<c0015b68>] (unwind_backtrace+0x0/0xf4) from [<c001=
-17e4>] (show_stack+0x10/0x14)
->> 	[    0.000000] [<c00117e4>] (show_stack+0x10/0x14) from [<c055f734>=
-] (dump_stack+0x9c/0xc8)
->> 	[    0.000000] [<c055f734>] (dump_stack+0x9c/0xc8) from [<c03b47d4>=
-] (of_node_release+0x90/0x9c)
->> 	[    0.000000] [<c03b47d4>] (of_node_release+0x90/0x9c) from [<c03b=
-5084>] (of_find_matching_node_and_match+0x78/0xb4)
->> 	[    0.000000] [<c03b5084>] (of_find_matching_node_and_match+0x78/0=
-xb4) from [<c07887c8>] (clocksource_of_init+0x60/0x70)
->> 	[    0.000000] [<c07887c8>] (clocksource_of_init+0x60/0x70) from [<=
-c076e99c>] (start_kernel+0x1f4/0x33c)
->> 	[    0.000000] [<c076e99c>] (start_kernel+0x1f4/0x33c) from [<80008=
-074>] (0x80008074)
->>
->> This is caused by clocksource_of_init() dropping a reference on the
->> device node that it never took. The reference taken by the loop is
->> implicitly dropped on subsequent iterations. See the implementation =
-of
->> and the comment on top of the of_find_matching_node_and_match()
->> function for reference (no pun intended).
->>
->> Signed-off-by: Thierry Reding <treding@nvidia.com>
->> ---
->>   drivers/clocksource/clksrc-of.c | 1 -
->>   1 file changed, 1 deletion(-)
->
-> Can someone look at this?
 
-Yes. Sounds like I missed it.
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This regression has been introduced by:
+On Thu, Nov 21, 2013 at 03:57:29PM -0800, Tony Lindgren wrote:
+> Well let's use just vaux3 then with a comment to the .dts file if that
+> works also on your 0x2204. It works on my 0x0010 too.
+>=20
+> I folded in your changes to the updated patch below. Care to reply with
+> your Signed-off-by too assuming it works also on your 0x2204 n900?
 
-commit 326e31eebe61dc838e031ea16968b2cfb43443e3
-Author: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-Date:   Tue Oct 1 11:00:53 2013 +0200
+It does work with the 0x2204 phone.
 
-     clocksource: Put nodes passed to CLOCKSOURCE_OF_DECLARE callbacks=20
-centrally
+Signed-off-by: Sebastian Reichel <sre@debian.org>
 
-     Instead of letting each driver call of_node_put do it centrally in=
- the
-     loop that also calls the CLOCKSOURCE_OF_DECLARE callbacks. This is=
- less
-     prone to error and also moves getting and putting the references=20
-into the
-     same function.
+-- Sebastian
 
-     Consequently all respective of_node_put calls in drivers are remov=
-ed.
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-     Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.=
-de>
-     Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-     Acked-by: David Brown <davidb@codeaurora.org>
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
 
+iQIcBAEBCAAGBQJSj4fTAAoJENju1/PIO/qaAdMP/2beEloN3FVcsaphDov110yP
+mKudvKF8MQBia2lkcSBsrI79ONwZOfZheZ0EGnHJWHELXxN2ax10d/dYbMhWB8pb
+hgn5bKxR72cjC0UOwMbTmS5Sk1hH8onaaEh228sBRttaf3/lItbJHZxENyhDe/ls
+h3ELyROwgE/v65Y/YUOUWZARx2sBUQyrj2lJZgpjenGRHyUH2xLXvSRyukZM8YEe
+wSxXTlL8TwhItWxrQwkKZwBMg7pxhRGwlgSfJxYv3efEFeL/wP2ujNTBBp7ZsRRU
+iN72mXdFgc4g1jTwADbIbmhffzqntEW39mFHKFyMtg1JBoZHlkxV6wv04wOo175c
+0vDs5hC+A/Vokxd6h5TiajFQnNb6K3kpBwrVL10rmjKz1q5/RCbh5N0e3++SZNku
+BcTLH/m5D1inBxdt9h0MlqTaavvMZZBH+FMe6sTBa9STDH9qkjesgRFT7DztW3hG
+c++ZOvsJ5eql9rDnGp1L/+kZ6UtE6GAvAPulcnq+FK7vbjOeBwUzA7XKUWZqRHFy
+4Oz2o02hcuApBwo6KtbNua5cDxtVP1WgAbFNCZC96wCt6MInouVk95nFjl3sZmPj
+BPnJQIfHiNV5vdCsABAH2IvQKK1Klom/t5qig9OJbxwYJflQaV3z/JQzFEi88/B8
+O4oDgthIubHLp+pmWb9c
+=6O0u
+-----END PGP SIGNATURE-----
 
->> diff --git a/drivers/clocksource/clksrc-of.c b/drivers/clocksource/c=
-lksrc-of.c
->> index 35639cf4..b9ddd9e 100644
->> --- a/drivers/clocksource/clksrc-of.c
->> +++ b/drivers/clocksource/clksrc-of.c
->> @@ -35,6 +35,5 @@ void __init clocksource_of_init(void)
->>
->>   		init_func =3D match->data;
->>   		init_func(np);
->> -		of_node_put(np);
->>   	}
->>   }
->> --
->> 1.8.4
->>
-
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+--KsGdsel6WgEHnImy--
