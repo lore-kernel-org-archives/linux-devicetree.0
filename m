@@ -1,136 +1,144 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/3] ARM: OMAP2+: Fix eMMC on n900 with device tree
-Date: Thu, 21 Nov 2013 15:57:29 -0800
-Message-ID: <20131121235729.GD10023@atomide.com>
-References: <1385059866-10646-1-git-send-email-tony@atomide.com>
- <1385059866-10646-4-git-send-email-tony@atomide.com>
- <20131121231751.GA9772@earth.universe>
+From: Mauro Ribeiro <mdrjr0@gmail.com>
+Subject: Re: [PATCH v3 0/4] Exynos 5410 Dual cluster support
+Date: Fri, 22 Nov 2013 10:05:41 +0900
+Message-ID: <CAGc3s_ewd=YGwv5=2BiEKGGJ9bSy+9jHZr27e_rjAdOJrpWzVg@mail.gmail.com>
+References: <1383811969-32712-1-git-send-email-v.tyrtov@samsung.com>
+	<1951315.Ol55YFu91h@flatron>
+	<528CBF17.4020500@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131121231751.GA9772@earth.universe>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Aaro Koskinen <aaro.koskinen@iki.fi>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <528CBF17.4020500@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tarek Dakhran <t.dakhran@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Dave.Martin@arm.com, nicolas.pitre@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre@debian.org> [131121 15:18]:
-> Hi Tony,
-> 
-> On Thu, Nov 21, 2013 at 10:51:06AM -0800, Tony Lindgren wrote:
-> > Looks like we need to configure the regulators and use the pdata
-> > quirk to make eMMC work with device tree.
-> > 
-> > It seems that mostly vmmc2 is used, and only some earlier revisions
-> > like the macro board used vaux3.
-> > 
-> > Note that we can add support for the macro board later as needed
-> > by including the common n900 .dts file and configuring the vaux3
-> > instead of vmmc2, and adding support for the smc91x Ethernet.
-> >
-> > ---
-> > 
-> > Can you guys please test this on production n900 devices?
-> > 
-> > I've tested it with my old macro board where I had to patch in vaux3
-> > instead of vmmc2. I think there's some confusion in the legacy code
-> > comments, or else I'm confused. In any case, vaux3 works for the macro
-> > board, and I suspect that the production versions have vmmc2.
-> > 
-> > If this does not work and vaux3 as regulator works, please also dump
-> > out the system_rev from your board.
-> 
-> The good news is, that I got eMMC working :) The bad news is, that it
-> did not work with your patch :( I included my DTS nodes below. The
-> phone is HW/System revision 0x2101.
+Hello,
 
-Oh ok, I must have parsed the revisions wrong way then, and the macro
-I tried it on must be something newer than I thought :)
- 
-> I have a second N900, which has HW revision 0x2204. I did not yet test
-> the patch with this phone, but legacy code also seems to use vaux3 for
-> it. Seems like we need two n900.dts files?
+On ODROID-XU XOMCCI is connected to VDD.
 
-Well let's use just vaux3 then with a comment to the .dts file if that
-works also on your 0x2204. It works on my 0x0010 too.
+Best Regards,
+Mauro
 
-I folded in your changes to the updated patch below. Care to reply with
-your Signed-off-by too assuming it works also on your 0x2204 n900?
-
-Regards,
-
-Tony 
-
-
-From: Tony Lindgren <tony@atomide.com>
-Date: Wed, 20 Nov 2013 18:03:39 -0800
-Subject: [PATCH] ARM: OMAP2+: Fix eMMC on n900 with device tree
-
-Looks like we need to configure the regulators and use the pdata
-quirk to make eMMC work with device tree.
-
-It seems that mostly vaux3 is used, and only some earlier revisions
-used vmmc2. This has been tested to work on devices where the
-system_rev passed by the bootloader has versions 0x0010 and 0x2101.
-
-Cc: devicetree@vger.kernel.org
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Sebastian Reichel <sre@debian.org>
-[tony@atomide.com: updated with pinctrl changes and comments from Sebastian]
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index c4f20bf..c2c306d 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -125,6 +125,21 @@
- 		>;
- 	};
- 
-+	mmc2_pins: pinmux_mmc2_pins {
-+		pinctrl-single,pins = <
-+			0x128 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_clk */
-+			0x12a (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_cmd */
-+			0x12c (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc2_dat0 */
-+			0x12e (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat1 */
-+			0x130 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat2 */
-+			0x132 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat3 */
-+			0x134 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat4 */
-+			0x136 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat5 */
-+			0x138 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat6 */
-+			0x13a (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat7 */
-+		>;
-+	};
-+
- 	display_pins: pinmux_display_pins {
- 		pinctrl-single,pins = <
- 			0x0d4 (PIN_OUTPUT | MUX_MODE4)		/* RX51_LCD_RESET_GPIO */
-@@ -358,8 +373,14 @@
- 	cd-gpios = <&gpio6 0 GPIO_ACTIVE_HIGH>; /* 160 */
- };
- 
-+/* most boards use vaux3, only some old versions use vmmc2 instead */
- &mmc2 {
--	status = "disabled";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins>;
-+	vmmc-supply = <&vaux3>;
-+	vmmc_aux-supply = <&vsim>;
-+	bus-width = <8>;
-+	non-removable;
- };
- 
- &mmc3 {
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 10c7145..39f020c 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -139,6 +139,7 @@ struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
- 
- static struct pdata_init pdata_quirks[] __initdata = {
- #ifdef CONFIG_ARCH_OMAP3
-+	{ "nokia,omap3-n900", hsmmc2_internal_input_clk, },
- 	{ "nokia,omap3-n9", hsmmc2_internal_input_clk, },
- 	{ "nokia,omap3-n950", hsmmc2_internal_input_clk, },
- 	{ "isee,omap3-igep0020", omap3_igep0020_legacy_init, },
+On Wed, Nov 20, 2013 at 10:54 PM, Tarek Dakhran <t.dakhran@samsung.com> wrote:
+> Hi,
+>
+>
+> On 20.11.2013 03:23, Tomasz Figa wrote:
+>>
+>> Hi,
+>>
+>> On Thursday 07 of November 2013 12:12:45 Vyacheslav Tyrtov wrote:
+>>>
+>>> The series of patches represent support of Exynos 5410 SoC
+>>>
+>>> The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture
+>>> Patches allow all 8 CPU cores (4 x A7 and 4 x A15) to run at the same
+>>> time
+>>>
+>>> Patches add new platform description, support of clock controller,
+>>> dual cluster support and device tree for Exynos 5410
+>>>
+>>> Has been build on v3.12.
+>>> Has been tested on Exynos 5410 reference board (exynos_defconfig).
+>>
+>> I've applied the patches on top of today's linux-next and tried to boot
+>> my ODROID-XU using exynos5410-smdk5410.dts and exynos_defconfig, but all
+>> I can get is an imprecise external abort, when the kernel tries to jump
+>> to init. Full boot log below. Any ideas?
+>>
+>> Best regards,
+>> Tomasz
+>>
+>> 8><------------
+>>
+>> U-Boot 2012.07-g2bcb371 (Nov 19 2013 - 20:17:37) for Exynos5410
+>>
+>> CPU: Exynos5410 Rev2.3 [Samsung SOC on SMP Platform Base on ARM CortexA15]
+>> APLL = 900MHz, KPLL = 600MHz
+>
+> [snip]
+>
+>>    Starting kernel ...
+>>
+>> Uncompressing Linux... done, booting the kernel.
+>> [    0.000000] Booting Linux on physical CPU 0x0
+>> [    0.000000] Initializing cgroup subsys cpuset
+>> [    0.000000] Initializing cgroup subsys cpu
+>> [    0.000000] Initializing cgroup subsys cpuacct
+>> [    0.000000] Linux version 3.12.0-next-20131119-00004-g27f3f5f-dirty
+>> (tom3q@flatron) (gcc version 4.7.2 (Gentoo 4.7.2-r1 p1.6, pie-0.5.5) ) #11
+>> SMP PREEMPT Wed Nov 20 00:08:02 CET 2013
+>> [    0.000000] CPU: ARMv7 Processor [412fc0f3] revision 3 (ARMv7),
+>> cr=10c5387d
+>> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction
+>> cache
+>> [    0.000000] Machine model: Hardkernel ODROID-XU board based on
+>> EXYNOS5410
+>> [    0.000000] bootconsole [earlycon0] enabled
+>> [    0.000000] debug: ignoring loglevel setting.
+>> [    0.000000] Memory policy: Data cache writealloc
+>> [    0.000000] CPU EXYNOS5410 (id 0xe5410023)
+>> [    0.000000] On node 0 totalpages: 262144
+>
+> [snip]
+>
+>> [    5.040000] isa bounce pool size: 16 pages
+>> [    5.045000] mmcblk0: mmc1:e624 SU16G 14.8 GiB
+>> [    5.050000]  mmcblk0: p1
+>> [    5.120000] EXT3-fs (mmcblk0p1): error: couldn't mount because of
+>> unsupported optional features (240)
+>> [    5.125000] EXT2-fs (mmcblk0p1): error: couldn't mount because of
+>> unsupported optional features (240)
+>> [    5.145000] EXT4-fs (mmcblk0p1): mounted filesystem with ordered data
+>> mode. Opts: (null)
+>> [    5.150000] VFS: Mounted root (ext4 filesystem) readonly on device
+>> 179:1.
+>> [    5.165000] devtmpfs: mounted
+>> [    5.170000] Freeing unused kernel memory: 228K (c0513000 - c054c000)
+>> [    5.195000] Unhandled fault: imprecise external abort (0x1406) at
+>> 0x00000000
+>> [    5.210000] Kernel panic - not syncing: Attempted to kill init!
+>> exitcode=0x00000007
+>> [    5.210000]
+>> [    5.210000] CPU: 2 PID: 1 Comm: init Not tainted
+>> 3.12.0-next-20131119-00004-g27f3f5f-dirty #11
+>> [    5.210000] [<c0014068>] (unwind_backtrace+0x0/0xf8) from [<c0011438>]
+>> (show_stack+0x10/0x14)
+>> [    5.210000] [<c0011438>] (show_stack+0x10/0x14) from [<c03a486c>]
+>> (dump_stack+0x7c/0xbc)
+>> [    5.210000] [<c03a486c>] (dump_stack+0x7c/0xbc) from [<c03a1e78>]
+>> (panic+0x8c/0x1e4)
+>> [    5.210000] [<c03a1e78>] (panic+0x8c/0x1e4) from [<c001f504>]
+>> (do_exit+0x850/0x920)
+>> [    5.210000] [<c001f504>] (do_exit+0x850/0x920) from [<c001f63c>]
+>> (do_group_exit+0x3c/0xb0)
+>> [    5.210000] [<c001f63c>] (do_group_exit+0x3c/0xb0) from [<c0029e1c>]
+>> (get_signal_to_deliver+0x1d4/0x538)
+>> [    5.210000] [<c0029e1c>] (get_signal_to_deliver+0x1d4/0x538) from
+>> [<c0010974>] (do_signal+0x100/0x40c)
+>> [    5.210000] [<c0010974>] (do_signal+0x100/0x40c) from [<c0010fb4>]
+>> (do_work_pending+0x68/0xa8)
+>> [    5.210000] [<c0010fb4>] (do_work_pending+0x68/0xa8) from [<c000e620>]
+>> (work_pending+0xc/0x20)
+>> [    5.300000] CPU3: stopping
+>> [    5.300000] CPU: 3 PID: 0 Comm: swapper/3 Not tainted
+>> 3.12.0-next-20131119-00004-g27f3f5f-dirty #11
+>>
+> Tomasz, there is CCI on/off switcher on smdk5410 board, also there is XOMCCI
+> pin on SoC.
+> Looks like switcher on board controls the XOMCCI SoC pin.
+>
+> When I turn switcher OFF, I getting the same problem you got.
+> Please, check the cci state on Odroid-XU Board, maybe it is turned off.
+>
+> Best regards,
+>     Tarek Dakhran
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
