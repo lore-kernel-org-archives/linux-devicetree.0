@@ -1,42 +1,30 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/5] mfd: max14577: Add max14577 MFD driver core
-Date: Fri, 22 Nov 2013 10:07:57 +0000
-Message-ID: <20131122100757.GI23067@lee--X1>
-References: <1385109972-28059-1-git-send-email-k.kozlowski@samsung.com>
- <1385109972-28059-2-git-send-email-k.kozlowski@samsung.com>
- <20131122093118.GH23067@lee--X1>
- <1385114292.29083.8.camel@AMDC1943>
+From: Taras Kondratiuk <taras.kondratiuk@linaro.org>
+Subject: Re: [PATCH v6 1/6] gpio: davinci: use readl/writel instead of __raw_*
+Date: Fri, 22 Nov 2013 12:08:51 +0200
+Message-ID: <CAArO44vmfkroE9w4KviOhjkPvg9bTX9pAtr3oxYjD9u_wVZXeg@mail.gmail.com>
+References: <1385057731-4348-1-git-send-email-prabhakar.csengg@gmail.com>
+	<1385057731-4348-2-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385114292.29083.8.camel@AMDC1943>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1385057731-4348-2-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > +static struct mfd_cell max14577_devs[] =3D {
-> > > +	{ .name =3D "max14577-muic", },
-> > > +	{ .name =3D "max14577-regulator", },
-> > > +	{ .name =3D "max14577-charger", },
-> > > +};
-> >=20
-> > If these all support device tree, shouldn't you be populating
-> > max14577_devs[x].of_compatible too? That way the MFD core will
-> > automatically setup your dev.of_node pointers for you?
->=20
-> Only the regulator driver uses bindings from DT and it searches for
-> "regulators" node in parent's node:
-> 	np =3D of_get_child_by_name(max14577->dev->of_node, "regulators");
-> I can add of_compatible but I think this won't be reflected in actual
-> DTS.
+On 21 November 2013 20:15, Prabhakar Lad <prabhakar.csengg@gmail.com> wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+>
+> This patch replaces the __raw_readl/writel with
+> readl and writel, Altough the code runs on ARMv5
+> based SOCs, changing this will help copying the code
+> for other uses.
 
-Well it should be. I'll reply to the other patch too.
+This replacement has a functional impact: it adds memory barriers.
+Please note this in the description.
+Also please add a bit of explanation on why do you need to add barriers.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+Regards,
+Taras Kondratiuk
