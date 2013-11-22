@@ -1,198 +1,80 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] rtc: ds1511: add device-tree bindings
-Date: Fri, 22 Nov 2013 09:26:06 +0000
-Message-ID: <20131122092606.GA7817@e106331-lin.cambridge.arm.com>
-References: <marcus.folkesson@gmail.com>
- <1385104599-7527-1-git-send-email-marcus.folkesson@gmail.com>
- <1385104599-7527-2-git-send-email-marcus.folkesson@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/5] mfd: max14577: Add max14577 MFD driver core
+Date: Fri, 22 Nov 2013 09:31:18 +0000
+Message-ID: <20131122093118.GH23067@lee--X1>
+References: <1385109972-28059-1-git-send-email-k.kozlowski@samsung.com>
+ <1385109972-28059-2-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1385104599-7527-2-git-send-email-marcus.folkesson@gmail.com>
+In-Reply-To: <1385109972-28059-2-git-send-email-k.kozlowski@samsung.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2013 at 07:16:39AM +0000, Marcus Folkesson wrote:
-> Compatible with ds1500, ds1501 and ds1511
-> 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+On Fri, 22 Nov 2013, Krzysztof Kozlowski wrote:
+
+> From: Chanwoo Choi <cw00.choi@samsung.com>
+>=20
+> This patch adds max14577 core/irq driver to support MUIC(Micro USB IC=
+)
+> device and charger device and support irq domain method to control
+> internal interrupt of max14577 device. Also, this patch supports DT
+> binding with max14577_i2c_parse_dt().
+>=20
+> The MAXIM 14577 chip contains Micro-USB Interface Circuit and Li+ Bat=
+tery
+> Charger. It contains accessory and USB charger detection logic. It su=
+pports
+> USB 2.0 Hi-Speed, UART and stereo audio signals over Micro-USB connec=
+tor.
+>=20
+> The battery charger is compliant with the USB Battery Charging Specif=
+ication
+> Revision 1.1. It has also SFOUT LDO output for powering USB devices.
+>=20
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 > ---
->  .../devicetree/bindings/rtc/maxim-ds1511.txt       |   18 +++++
->  drivers/rtc/rtc-ds1511.c                           |   85 +++++++++++++++++---
->  2 files changed, 90 insertions(+), 13 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/maxim-ds1511.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/maxim-ds1511.txt b/Documentation/devicetree/bindings/rtc/maxim-ds1511.txt
-> new file mode 100644
-> index 0000000..17fa356
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/maxim-ds1511.txt
-> @@ -0,0 +1,18 @@
-> +* Maxim Real Time Clock
-> +
-> +
-> +Support for Maxim DS1500, DS1501 and DS1511 RTC.
-> +
-> +Required properties:
-> +- compatible : Should be "maxim,ds1500-rtc", "maxim,ds1501-rtc" or "maxim,ds1511-rtc".
+>  drivers/mfd/Kconfig                  |   13 ++
+>  drivers/mfd/Makefile                 |    1 +
+>  drivers/mfd/max14577.c               |  241 ++++++++++++++++++++++++=
++
+>  include/linux/mfd/max14577-private.h |  324 ++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/max14577.h         |   70 ++++++++
+>  5 files changed, 649 insertions(+)
+>  create mode 100644 drivers/mfd/max14577.c
+>  create mode 100644 include/linux/mfd/max14577-private.h
+>  create mode 100644 include/linux/mfd/max14577.h
 
-I'd prefer each of these on an individial line:
+<snip>
 
-- compatible : Should contain one of:
-   * "maxim,ds1500-rtc"
-   * "maxim,ds1501-rtc"
-   * "maxim,ds1511-rtc"
-
-It would also be nice to have a description of how these differ, if
-possible.
-
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupts: IRQ line for the RTC.
-> +
-> +Example:
-> +
-> +rtc@10300 {
-> +        compatible = "maxim,ds1511-rtc";
-> +        reg = <0xd0010300 0x20>;
-> +        interrupts = <50>;
+> +static struct mfd_cell max14577_devs[] =3D {
+> +	{ .name =3D "max14577-muic", },
+> +	{ .name =3D "max14577-regulator", },
+> +	{ .name =3D "max14577-charger", },
 > +};
 
-Otherwise, the binding looks fine to me.
+If these all support device tree, shouldn't you be populating
+max14577_devs[x].of_compatible too? That way the MFD core will
+automatically setup your dev.of_node pointers for you?
 
-> diff --git a/drivers/rtc/rtc-ds1511.c b/drivers/rtc/rtc-ds1511.c
-> index 6a3fcfe..3778a8e 100644
-> --- a/drivers/rtc/rtc-ds1511.c
-> +++ b/drivers/rtc/rtc-ds1511.c
-> @@ -24,6 +24,9 @@
->  #include <linux/platform_device.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
->  
->  #define DRV_VERSION "0.6"
->  
-> @@ -476,6 +479,52 @@ static struct bin_attribute ds1511_nvram_attr = {
->  	.write = ds1511_nvram_write,
->  };
->  
-> +
-> +
-> +#ifdef CONFIG_OF
-> +static int ds1511_of_probe(struct platform_device *pdev,
-> +	 struct rtc_plat_data *pdata)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	u32 val;
-> +	int ret;
-> +	struct resource res;
-> +
-> +	ret = of_address_to_resource(&pdev->dev.of_node, 0, &res);
-> +	if (ret)
-> +		return -ENODEV;
-> +
+<snip>
 
-You can use platform_get_resource(pdev, IORESOURCE_MEM, 0) here as the
-platform bus OF code will have already parsed this out of the dt for
-you.
+> +	max14577->vendor_id =3D (reg_data & 0x7);
+> +	max14577->device_id =3D ((reg_data & 0xF8) >> 0x3);
 
-> +	pdata->size = resource_size(&res);
-> +
-> +	if (!devm_request_mem_region(&pdev->dev, res.start, pdata->size,
-> +			pdev->name))
-> +		return -EBUSY;
-> +
-> +	ds1511_base = devm_ioremap(&pdev->dev, res.start, pdata->size);
-> +	if (!ds1511_base)
-> +		return -ENOMEM;
-> +
-> +	pdata->ioaddr = ds1511_base;
-> +	pdata->irq = irq_of_parse_and_map(&pdev->dev.of_node, 0);
+I'm not too keen on these magic numbers, can you create #defines for
+them please? If there are any other interesting address, it might be
+worth creating some for those too.
 
-Similarly, platform_get_resource(pdev, IORESOURCE_IRQ, 0).
-
-There's no need to parse the dt twice.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id rtc_of_match[] = {
-> +	{ .compatible = "maxim,ds1500-rtc" },
-> +	{ .compatible = "maxim,ds1501-rtc" },
-> +	{ .compatible = "maxim,ds1511-rtc" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, rtc_of_match);
-> +
-> +#else
-> +static int ds1511_of_probe(struct platform_device *pdev, struct rtc_plat_data *pdata)
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif
-> +
->  static int ds1511_rtc_probe(struct platform_device *pdev)
->  {
->  	struct rtc_device *rtc;
-> @@ -483,22 +532,31 @@ static int ds1511_rtc_probe(struct platform_device *pdev)
->  	struct rtc_plat_data *pdata;
->  	int ret = 0;
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (!res) {
-> -		return -ENODEV;
-> -	}
->  	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->  	if (!pdata)
->  		return -ENOMEM;
-> -	pdata->size = resource_size(res);
-> -	if (!devm_request_mem_region(&pdev->dev, res->start, pdata->size,
-> -			pdev->name))
-> -		return -EBUSY;
-> -	ds1511_base = devm_ioremap(&pdev->dev, res->start, pdata->size);
-> -	if (!ds1511_base)
-> -		return -ENOMEM;
-> -	pdata->ioaddr = ds1511_base;
-> -	pdata->irq = platform_get_irq(pdev, 0);
-
-As the platform bus OF code parses everything for you, this should have
-been sufficient (with the rtc_of_match table wired up).
-
-> +
-> +	if (pdev->dev.of_node) {
-> +		ret = ds1511_of_probe(pdev, pdata);
-> +		if (ret < 0)
-> +			return ret;
-> +	} else if (!pdev) {
-
-You've already dereferenced pdev above, if this is necessary it's
-broken.
-
-How would this get called without a pdev? I believe it can't.
-
-> +
-> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +		if (!res) {
-> +			return -ENODEV;
-> +		}
-> +		pdata->size = resource_size(res);
-> +		if (!devm_request_mem_region(&pdev->dev, res->start, pdata->size,
-> +				pdev->name))
-> +			return -EBUSY;
-> +		ds1511_base = devm_ioremap(&pdev->dev, res->start, pdata->size);
-> +		if (!ds1511_base)
-> +			return -ENOMEM;
-> +		pdata->ioaddr = ds1511_base;
-> +		pdata->irq = platform_get_irq(pdev, 0);
-
-This all relies on pdev despite only being called when pdev is NULL, so
-it's broken.
-
-Thanks,
-Mark.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
