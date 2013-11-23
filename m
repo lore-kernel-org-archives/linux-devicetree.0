@@ -1,56 +1,37 @@
-From: Jean Delvare <khali@linux-fr.org>
-Subject: Re: [PATCHv5 06/20] hwmon: lm75: expose to thermal fw via DT nodes
-Date: Sat, 23 Nov 2013 19:38:08 +0100
-Message-ID: <20131123193808.46f303a8@endymion.delvare>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
-	<1384285582-16933-7-git-send-email-eduardo.valentin@ti.com>
-	<20131115084354.656452b9@endymion.delvare>
-	<528A23DD.2070406@ti.com>
-	<20131119103948.0ec9daba@endymion.delvare>
-	<528F6C10.5050704@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <528F6C10.5050704@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCH 3/5] DTS: ARM: OMAP3-N900: Add reset gpio to lcd node
+Date: Sat, 23 Nov 2013 21:57:22 +0100
+Message-ID: <1385240244-28629-4-git-send-email-sre@debian.org>
+References: <1385240244-28629-1-git-send-email-sre@debian.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1385240244-28629-1-git-send-email-sre@debian.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Nov 2013 10:37:04 -0400, Eduardo Valentin wrote:
-> Yeah, but I see your point. You probably want to have first code changes
-> done properly so that if we have code duplication, it does not spread
-> like a disease, like usually does. It is unavoidable to base new drivers
-> on existing ones. So better to get first converted drivers to be done
-> properly. I like this approach.
+This adds reset-gpio property to the Nokia N900's
+lcd node.
 
-Not only that, but also getting things right (as much as we are able
-to) at first avoids having to touch 20 already converted drivers when
-you attempt to convert the 21st one and it doesn't fit in the API.
+Signed-off-by: Sebastian Reichel <sre@debian.org>
+---
+ arch/arm/boot/dts/omap3-n900.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> (...)
-> OK. So I assume you are proposing something like:
-> 	.get_temp(struct device *dev, int id, long *temp);
-> 
-> right?
-
-Yes.
-
-> (...)
-> In the end of the day, the APIs and driver support will be really well
-> defined when we convert most of the drivers. But I would like to this in
-> a separated patch series.
-> 
-> What is your view? Are you OK if we integrate this series as a first
-> step of the complete process?
-
-Yes we are.
-
-> (...)
-> Thanks for the good feedback.
-
-You're welcome.
-
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index 6ad5ae9..ac725e0 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -585,6 +585,9 @@
+ 		spi-max-frequency = <6000000>;
+ 		reg = <2>;
+ 
++		label = "lcd";
++		reset-gpio = <&gpio3 26 GPIO_ACTIVE_HIGH>; /* 90 */
++
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&display_pins>;
+ 	};
 -- 
-Jean Delvare
+1.8.4.3
+
