@@ -1,86 +1,183 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio:light:tsl2563: Add DT support
-Date: Sat, 23 Nov 2013 13:06:06 +0100
-Message-ID: <20131123120606.GA21861@earth.universe>
-References: <1382565063-17083-1-git-send-email-sre@debian.org>
- <20131025191028.8C140C40422@trevor.secretlab.ca>
- <20131025230906.GB8657@earth.universe>
- <52909685.6040606@kernel.org>
+From: Peter Chen <Peter.Chen@freescale.com>
+Subject: RE: [PATCH] usb: chipidea: add support for USB OTG controller on
+ TI-NSPIRE
+Date: Sat, 23 Nov 2013 14:42:32 +0000
+Message-ID: <F281D0F91ED19E4D8E63A7504E8A64980411E099@039-SN2MPN1-021.039d.mgd.msft.net>
+References: <5290458b.87c5440a.4c57.ffffc9c8@mx.google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52909685.6040606-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bill Pemberton <wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5290458b.87c5440a.4c57.ffffc9c8@mx.google.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "dt.tangr@gmail.com" <dt.tangr@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 23, 2013 at 11:50:29AM +0000, Jonathan Cameron wrote:
-> On 10/26/13 00:09, Sebastian Reichel wrote:
-> > Hi Grant,
-> >=20
-> > On Fri, Oct 25, 2013 at 08:10:28PM +0100, Grant Likely wrote:
-> >>> +  - cover-comp-gain : integer used as multiplier for gain +         =
-             compensation (default =3D 1)
-> >>=20
-> >> Should be taos,cover-comp-gain
-> >=20
-> > Has been updated to "amstaos,cover-comp-gain" in the latest patches, se=
-e https://lkml.org/lkml/2013/10/25/59
-> >=20
-> >> Otherwise looks fine to me.
-> >=20
-> > Is this an acked-by?
-> It's good enough for me to take the patch  :)
-> >=20
-> >>> +	else if (np) +		of_property_read_u32_index(np, "cover-comp-gain", 0=
-, +							&chip->cover_comp_gain);
-> >>=20
-> >> of_property_read_u32() should be sufficient. You don't need the _index=
- variant.
-> >=20
-> > ah, I missed the function when skipping over linux/of.h. I will sent an=
-other update.
->
-> Did you do this? Latest I seem to have is V3 and that doesn't have
-> this change.
+ 
+> 
+> From: Daniel Tang <dt.tangr@gmail.com>
+> 
+> The USB controller in TI-NSPIRE calculators are based
+> off either Freescale's USB OTG controller or the USB
+> controller found in the IMX233, both of which are
+> Chipidea compatible.
+> 
+> This patch adds a device tree binding for the controller.
+> 
+> Signed-off-by: Daniel Tang <dt.tangr@gmail.com>
+> ---
+>  .../devicetree/bindings/usb/ci13xxx-nspire.txt     | 17 +++++
+>  drivers/usb/chipidea/Makefile                      |  1 +
+>  drivers/usb/chipidea/ci_hdrc_nspire.c              | 74
+> ++++++++++++++++++++++
+>  3 files changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-
+> nspire.txt
+>  create mode 100644 drivers/usb/chipidea/ci_hdrc_nspire.c
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-nspire.txt
+> b/Documentation/devicetree/bindings/usb/ci13xxx-nspire.txt
+> new file mode 100644
+> index 0000000..5ba8e90
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ci13xxx-nspire.txt
 
-Sorry, I forgot, that I still had work to do for this patch :(
+We have already renamed ci13xxx to ci_hdrc, please using ci-hdrc as
+prefix.
 
-> I've made the obvious change to your V3 and applied it.
+> @@ -0,0 +1,17 @@
+> +* TI-Nspire USB OTG Controller
+> +
+> +Required properties:
+> +- compatible: Should be "zevio,nspire-usb"
+> +- reg: Should contain registers location and length
+> +- interrupts: Should contain controller interrupt
+> +
+> +Recommended properies:
+> +- vbus-supply: regulator for vbus
+> +
+> +Examples:
+> +		usb0: usb@B0000000 {
+> +			reg = <0xB0000000 0x1000>;
+> +			compatible = "zevio,nspire-usb";
+> +			interrupts = <8>;
+> +			vbus-supply = <&vbus_reg>;
+> +		};
 
-Thanks for taking care of it.
+No clock information?
 
--- Sebastian
+> diff --git a/drivers/usb/chipidea/Makefile
+> b/drivers/usb/chipidea/Makefile
+> index a99d980..245ea4d 100644
+> --- a/drivers/usb/chipidea/Makefile
+> +++ b/drivers/usb/chipidea/Makefile
+> @@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_CHIPIDEA_DEBUG)	+= debug.o
+>  # Glue/Bridge layers go here
+> 
+>  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
+> +obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_nspire.o
+> 
+>  # PCI doesn't provide stubs, need to check
+>  ifneq ($(CONFIG_PCI),)
+> diff --git a/drivers/usb/chipidea/ci_hdrc_nspire.c
+> b/drivers/usb/chipidea/ci_hdrc_nspire.c
+> new file mode 100644
+> index 0000000..318761d
+> --- /dev/null
+> +++ b/drivers/usb/chipidea/ci_hdrc_nspire.c
+> @@ -0,0 +1,74 @@
+> +/*
+> + *	Copyright (C) 2013 Daniel Tang <tangrs@tangrs.id.au>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2, as
+> + * published by the Free Software Foundation.
+> + *
+> + * Based off drivers/usb/chipidea/ci_hdrc_msm.c
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/usb/gadget.h>
+> +#include <linux/usb/chipidea.h>
+> +
+> +#include "ci.h"
+> +
+> +static struct ci_hdrc_platform_data ci_hdrc_nspire_platdata = {
+> +	.name			= "ci_hdrc_nspire",
+> +	.flags			= CI_HDRC_REGS_SHARED,
+> +	.capoffset              = DEF_CAPOFFSET,
+> +};
+> +
 
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Please keep alignment for the assignment.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+> +static int ci_hdrc_nspire_probe(struct platform_device *pdev)
+> +{
+> +	struct platform_device *ci_pdev;
+> +
+> +	dev_dbg(&pdev->dev, "ci_hdrc_nspire_probe\n");
+> +
+> +	ci_pdev = ci_hdrc_add_device(&pdev->dev,
+> +				pdev->resource, pdev->num_resources,
+> +				&ci_hdrc_nspire_platdata);
+> +
+> +	if (IS_ERR(ci_pdev)) {
+> +		dev_err(&pdev->dev, "ci_hdrc_add_device failed!\n");
+> +		return PTR_ERR(ci_pdev);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, ci_pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ci_hdrc_nspire_remove(struct platform_device *pdev)
+> +{
+> +	struct platform_device *ci_pdev = platform_get_drvdata(pdev);
+> +
+> +	ci_hdrc_remove_device(ci_pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ci_hdrc_nspire_dt_ids[] = {
+> +	{ .compatible = "zevio,nspire-usb", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct platform_driver ci_hdrc_nspire_driver = {
+> +	.probe = ci_hdrc_nspire_probe,
+> +	.remove = ci_hdrc_nspire_remove,
+> +	.driver = {
+> +		.name = "nspire_usb",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = ci_hdrc_nspire_dt_ids,
+> +	},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, ci_hdrc_nspire_dt_ids);
+> +module_platform_driver(ci_hdrc_nspire_driver);
+> +
+> +MODULE_ALIAS("platform:nspire_usb");
+> +MODULE_ALIAS("platform:ci13xxx_nspire");
 
-iQIcBAEBCAAGBQJSkJouAAoJENju1/PIO/qa9J4P/iOU2SZH78u/hdaMUWsANdPU
-eXexPX7duUQAMn3Uxfi91k7Rgtob7VAJ9CZF2josPHqFak0moky4WRpydlqj55XH
-tJFIFlXPfZPvTNdkWpJFNOFX438Hz9wcrZuzfUKwXrUANRp9gzS4f4T35yrsFro2
-EzOTjHSFhn51l5YUL1/77fasRX2khAXb+jW458uvL7LCKRUhKXTQwd773Q43zyTQ
-7OMXnri4exJFj8YcHtKkDnxvbZFLqvM5Gh8zMfxQ8V4pmSuqZauyFVTEpBS3rW1A
-8vOPJTvsB9V81vQdnjA+Me6TNGvDoaoPlrMqVjKnpdjuaqd57DgGS9jYcxloEUoL
-xAOr+D5kkAAQUm9TS5ESaEU2mGf2XQZ/1FvK412kD2AT8C6pRLNaFRl4KIa2tkOe
-sG/rkImVA6bMvp6qv+L7TiPexbL+x/d2RPxJNYY2rFtf7tqm/BGJFrAYvo5h/9bw
-T/edFds+Y87KrLv1Vq3LRnuGiRma+cepiMqh8ooSfUFXNwLvWU8RE8HwZ78DWYO2
-9d51kbZoVhQruJgXDmWv4H3+AA7e3tLRcXja5QinP4si4GXsSlaOb6qhrmXmD2Yp
-DS4ct8GA1BM7eOs+wE699lsQvQzvGZFb+ZZUZ0xzlFJe6yaV9xNGMvQPcea2BZE3
-W/bAkO7/9AbAao5A9gu8
-=O9Sy
------END PGP SIGNATURE-----
+ci_hdrc_nspire
 
---4Ckj6UjgE2iN1+kY--
+Peter
+
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.8.1.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
