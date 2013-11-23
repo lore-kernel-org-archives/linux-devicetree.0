@@ -1,80 +1,145 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCH 3/4] ARM: mvebu: NETGEAR ReadyNAS 104 .dts file cleanup
-Date: Fri, 22 Nov 2013 23:22:33 +0100
-Message-ID: <878uwg5b6e.fsf@natisbad.org>
-References: <cover.1385148929.git.arno@natisbad.org>
-	<bd899cfc2b0b3d22a7442d76b3901ca81ca86f11.1385148929.git.arno@natisbad.org>
-	<20131122213610.GC30358@obsidianresearch.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] of/platform: Fix no irq domain found errors when
+ populating interrupts
+Date: Fri, 22 Nov 2013 16:43:35 -0800
+Message-ID: <20131123004334.GJ10023@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131122213610.GC30358-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> (Jason Gunthorpe's
-	message of "Fri, 22 Nov 2013 14:36:10 -0700")
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Currently we get the following kind of errors if we try to use
+interrupt phandles to irqchips that have not yet initialized:
 
-Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> writes:
+irq: no irq domain found for /ocp/pinmux@48002030 !
+WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171 of_device_alloc+0x144/0x184()
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.12.0-00038-g42a9708 #1012
+(show_stack+0x14/0x1c)
+(dump_stack+0x6c/0xa0)
+(warn_slowpath_common+0x64/0x84)
+(warn_slowpath_null+0x1c/0x24)
+(of_device_alloc+0x144/0x184)
+(of_platform_device_create_pdata+0x44/0x9c)
+(of_platform_bus_create+0xd0/0x170)
+(of_platform_bus_create+0x12c/0x170)
+(of_platform_populate+0x60/0x98)
+...
 
-> On Fri, Nov 22, 2013 at 09:07:01PM +0100, Arnaud Ebalard wrote:
->>  			mdio {
->>  				phy0: ethernet-phy@0 {
->> +					compatible = "marvell,88e1318s";
->>  					reg = <0>;
->>  				};
->>  
->>  				phy1: ethernet-phy@1 {
->> +					compatible = "marvell,88e1318s";
->>  					reg = <1>;
->>  				};
->>  			};
->
-> Just an inquiry, are these compatible strings OK?
->
-> Documentation/devicetree/bindings/net/phy.txt doesn't really give
-> guidance.
->
-> For self-discoverable busses I would expect to see a structured
-> compatible string, or property, that encodes the phy-id - such as what
-> the PCI binding does with vid/did:
->
-> "compatible" Construct a list of names in most-specific to
->              least-specific order. The names shall be derived from
-> 	     values of the Vendor ID, Device ID, Subsystem Vendor ID,
-> 	     Subsystem ID, Revision ID and Class Code bytes, and shall
->              have the following form, and be placed in the list in the
->              following order:
->
->   pciVVVV,DDDD.SSSS.ssss.RR (1)
->
-> So, I would think something like this:
->
-> compatible = "ethernet-phy-id0141,0e90"; /* Marvell 88E1318 */
+This is because we're wrongly trying to populate resources that are not
+yet available. It's perfectly valid to create irqchips dynamically,
+so let's fix up the issue by populating the interrupt resources based
+on a notifier call instead.
 
-The compatible string I put is based on this discussion:
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 
- http://www.spinics.net/lists/devicetree/msg11465.html
+---
 
-Now, considering the following:
+Rob & Grant, care to merge this for the -rc if this looks OK to you?
 
-arno@small:linux$ grep -R -88e1318s . | wc -l
-0
+These happen for example when using interrupts-extended for omap
+wake-up interrupts where the irq domain is created by pinctrl-single.c
+at module_init time.
 
-and also the fact that *in my case* the kernel does its job
-auto-detecting the PHY, I now also wonder how the kernel can
-use that info and what I get by adding the compatible string.
-
-Anyway, I'll wait for directions on how this should be fixed
-before sending a v2 of the set.
-
-Thanks for catching this, Jason.
-
-Cheers,
-
-a+
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -130,6 +130,56 @@ void of_device_make_bus_id(struct device *dev)
+ 	dev_set_name(dev, "%s.%d", node->name, magic - 1);
+ }
+ 
++/*
++ * The device interrupts are not necessarily available for all
++ * irqdomains initially so we need to populate them using a
++ * notifier.
++ */
++static int of_device_resource_notify(struct notifier_block *nb,
++				     unsigned long event, void *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct device_node *np = pdev->dev.of_node;
++	struct resource *res = pdev->resource;
++	struct resource *irqr = NULL;
++	int num_irq, i, found = 0;
++
++	if (event != BUS_NOTIFY_BIND_DRIVER)
++		return 0;
++
++	if (!np)
++		goto out;
++
++	num_irq = of_irq_count(np);
++	if (!num_irq)
++		goto out;
++
++	for (i = 0; i < pdev->num_resources; i++, res++) {
++		if (res->flags != IORESOURCE_IRQ ||
++		    res->start != -EPROBE_DEFER ||
++		    res->end != -EPROBE_DEFER)
++			continue;
++
++		if (!irqr)
++			irqr = res;
++		found++;
++	}
++
++	if (!found)
++		goto out;
++
++	if (found != num_irq) {
++		dev_WARN(dev, "error populating irq resources: %i != %i\n",
++			 found, num_irq);
++		goto out;
++	}
++
++	WARN_ON(of_irq_to_resource_table(np, irqr, num_irq) != num_irq);
++
++out:
++	return NOTIFY_DONE;
++}
++
+ /**
+  * of_device_alloc - Allocate and initialize an of_device
+  * @np: device node to assign to device
+@@ -168,7 +218,13 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 			rc = of_address_to_resource(np, i, res);
+ 			WARN_ON(rc);
+ 		}
+-		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
++
++		/* See of_device_resource_notify for populating interrupts */
++		for (i = 0; i < num_irq; i++, res++) {
++			res->flags = IORESOURCE_IRQ;
++			res->start = -EPROBE_DEFER;
++			res->end = -EPROBE_DEFER;
++		}
+ 	}
+ 
+ 	dev->dev.of_node = of_node_get(np);
+@@ -447,6 +503,8 @@ int of_platform_bus_probe(struct device_node *root,
+ }
+ EXPORT_SYMBOL(of_platform_bus_probe);
+ 
++static struct notifier_block resource_nb;
++
+ /**
+  * of_platform_populate() - Populate platform_devices from device tree data
+  * @root: parent of the first level to probe or NULL for the root of the tree
+@@ -478,6 +536,11 @@ int of_platform_populate(struct device_node *root,
+ 	if (!root)
+ 		return -EINVAL;
+ 
++	if (!resource_nb.notifier_call) {
++		resource_nb.notifier_call = of_device_resource_notify,
++			bus_register_notifier(&platform_bus_type, &resource_nb);
++	}
++
+ 	for_each_child_of_node(root, child) {
+ 		rc = of_platform_bus_create(child, matches, lookup, parent, true);
+ 		if (rc)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
