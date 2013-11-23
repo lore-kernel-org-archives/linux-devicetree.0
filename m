@@ -1,52 +1,163 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 5/7] clocksource/cadence_ttc: Overhaul clocksource
- frequency adjustment
-Date: Fri, 22 Nov 2013 17:30:59 -0800
-Message-ID: <8cbd0206-ca30-48ae-8820-7d5c23b6fa3a@CO9EHSMHS022.ehs.local>
-References: <1383945677-29674-1-git-send-email-soren.brinkmann@xilinx.com>
- <1383945677-29674-6-git-send-email-soren.brinkmann@xilinx.com>
- <52827B11.5040308@linaro.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when
+ populating interrupts
+Date: Fri, 22 Nov 2013 17:50:35 -0800
+Message-ID: <20131123015034.GP10023@atomide.com>
+References: <20131123004334.GJ10023@atomide.com>
+ <20131123005509.GJ16735@n2100.arm.linux.org.uk>
+ <20131123010850.GN10023@atomide.com>
+ <20131123011515.GO10023@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52827B11.5040308@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
+In-Reply-To: <20131123011515.GO10023-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 12, 2013 at 08:01:37PM +0100, Daniel Lezcano wrote:
-> On 11/08/2013 10:21 PM, Soren Brinkmann wrote:
-> >The currently used method adjusting the clocksource to a changing in=
-put
-> >frequency does not work on kernels from 3.11 on.
-> >The new approach is to keep the timer frequency as constant as possi=
-ble.
-> >I.e.
-> >  - due to the TTC's prescaler limitations, allow frequency changes
-> >    only if the frequency scales by a power of 2
-> >  - adjust the counter's divider on the fly when a frequency change
-> >    occurs
-> >
-> >When suspending though, the driver should not prevent rate changes i=
-n
-> >order to allow the system to enter its low power state. For that
-> >reason a PM notifier is added so rate changes can be ignored during
-> >suspend/resume.
->=20
-> It sounds very weird you have to add a PM notifier in this driver.
->=20
-> Have you been facing an issue or do you assume it could happen ?
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [131122 17:16]:
+> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [131122 17:09]:
+> > * Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> [131122 16:56]:
+> > > On Fri, Nov 22, 2013 at 04:43:35PM -0800, Tony Lindgren wrote:
+> > > > +		/* See of_device_resource_notify for populating interrupts */
+> > > > +		for (i = 0; i < num_irq; i++, res++) {
+> > > > +			res->flags = IORESOURCE_IRQ;
+> > > > +			res->start = -EPROBE_DEFER;
+> > > > +			res->end = -EPROBE_DEFER;
+> > > 
+> > > NAK.  Definitely a bad idea to start introducing magic values other into
+> > > resources.  Please don't do this.
+> > 
+> > Do you have any better ideas on how to sort out this issue then?
+> 
+> I guess we could allocate all the resources lazily here, I'll take a look
+> at that.
 
-As I said in my other email, we do have some issues related with
-suspend. The construct with the PM notifier seemed to work but since we
-upgraded our vendor tree to 3.12 I see issues with this code.
+Here's a version that allocates the resources lazily with the notifier.
+Seems to boot, need to play with it a bit more though to make sure we're
+not overwriting resources for any legacy devices.
 
-So, for now, I'll remove the PM notifier and associated code from this
-patch.
-I have to revisit the suspend case later.
+Regards,
 
-	Thanks,
-	S=C3=B6ren
+Tony
+
+
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -141,13 +141,47 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 				  struct device *parent)
+ {
+ 	struct platform_device *dev;
+-	int rc, i, num_reg = 0, num_irq;
+-	struct resource *res, temp_res;
+ 
+ 	dev = platform_device_alloc("", -1);
+ 	if (!dev)
+ 		return NULL;
+ 
++	dev->dev.of_node = of_node_get(np);
++#if defined(CONFIG_MICROBLAZE)
++	dev->dev.dma_mask = &dev->archdata.dma_mask;
++#endif
++	dev->dev.parent = parent;
++
++	if (bus_id)
++		dev_set_name(&dev->dev, "%s", bus_id);
++	else
++		of_device_make_bus_id(&dev->dev);
++
++	/* See of_device_resource_notify for populating the resources */
++
++	return dev;
++}
++EXPORT_SYMBOL(of_device_alloc);
++
++/*
++ * The device interrupts are not necessarily available for all
++ * irqdomains initially so we need to populate them using a
++ * notifier.
++ */
++static int of_device_resource_notify(struct notifier_block *nb,
++				     unsigned long event, void *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct device_node *np = pdev->dev.of_node;
++	int rc, i, num_reg = 0, num_irq;
++	struct resource *res, temp_res;
++
++	if (event != BUS_NOTIFY_BIND_DRIVER)
++		return 0;
++
++	if (!np)
++		goto out;
++
+ 	/* count the io and irq resources */
+ 	if (of_can_translate_address(np))
+ 		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+@@ -158,12 +192,12 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 	if (num_irq || num_reg) {
+ 		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
+ 		if (!res) {
+-			platform_device_put(dev);
+-			return NULL;
++			platform_device_put(pdev);
++			goto out;
+ 		}
+ 
+-		dev->num_resources = num_reg + num_irq;
+-		dev->resource = res;
++		pdev->num_resources = num_reg + num_irq;
++		pdev->resource = res;
+ 		for (i = 0; i < num_reg; i++, res++) {
+ 			rc = of_address_to_resource(np, i, res);
+ 			WARN_ON(rc);
+@@ -171,20 +205,9 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+ 	}
+ 
+-	dev->dev.of_node = of_node_get(np);
+-#if defined(CONFIG_MICROBLAZE)
+-	dev->dev.dma_mask = &dev->archdata.dma_mask;
+-#endif
+-	dev->dev.parent = parent;
+-
+-	if (bus_id)
+-		dev_set_name(&dev->dev, "%s", bus_id);
+-	else
+-		of_device_make_bus_id(&dev->dev);
+-
+-	return dev;
++out:
++	return NOTIFY_DONE;
+ }
+-EXPORT_SYMBOL(of_device_alloc);
+ 
+ /**
+  * of_platform_device_create_pdata - Alloc, initialize and register an of_device
+@@ -447,6 +470,8 @@ int of_platform_bus_probe(struct device_node *root,
+ }
+ EXPORT_SYMBOL(of_platform_bus_probe);
+ 
++static struct notifier_block resource_nb;
++
+ /**
+  * of_platform_populate() - Populate platform_devices from device tree data
+  * @root: parent of the first level to probe or NULL for the root of the tree
+@@ -478,6 +503,11 @@ int of_platform_populate(struct device_node *root,
+ 	if (!root)
+ 		return -EINVAL;
+ 
++	if (!resource_nb.notifier_call) {
++		resource_nb.notifier_call = of_device_resource_notify,
++			bus_register_notifier(&platform_bus_type, &resource_nb);
++	}
++
+ 	for_each_child_of_node(root, child) {
+ 		rc = of_platform_bus_create(child, matches, lookup, parent, true);
+ 		if (rc)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
