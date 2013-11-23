@@ -1,70 +1,323 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when
- populating interrupts
-Date: Sat, 23 Nov 2013 08:32:40 -0800
-Message-ID: <20131123163240.GW5928@atomide.com>
-References: <20131123004334.GJ10023@atomide.com>
- <20131123005509.GJ16735@n2100.arm.linux.org.uk>
- <20131123010850.GN10023@atomide.com>
- <20131123011515.GO10023@atomide.com>
- <20131123015034.GP10023@atomide.com>
- <CAL_JsqKV7K+QdLHS+3LtfcVx5Dpc7n6A8UwwNWKBP33Gs19c8g@mail.gmail.com>
+From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] iio: Add new driver dht11-gpio
+Date: Sat, 23 Nov 2013 18:44:21 +0100
+Message-ID: <E1VkHFl-00012T-4U@stardust.g4.wien.funkfeuer.at>
+References: <E1VYf74-0000gd-5Z@stardust.g4.wien.funkfeuer.at> <alpine.DEB.2.01.1310222030570.23009@pmeerw.net> <E1VYiDp-0000pb-1i@stardust.g4.wien.funkfeuer.at> <alpine.DEB.2.01.1310222210230.23009@pmeerw.net> <E1VYjUo-0000uN-OY@stardust.g4.wien.funkfeuer.at> <5267E795.7030804@metafoo.de> <E1VZfrE-0000lZ-Ma@stardust.g4.wien.funkfeuer.at> <52909438.8000602@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKV7K+QdLHS+3LtfcVx5Dpc7n6A8UwwNWKBP33Gs19c8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <52909438.8000602-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-ID: <3995.1385228661.1-rvrRdOlaWMmli2aaYNgTVBW+3FKk/ZpWT2auq/jSWdo@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [131123 07:43]:
-> On Fri, Nov 22, 2013 at 7:50 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [131122 17:16]:
-> >> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [131122 17:09]:
-> >> > * Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> [131122 16:56]:
-> >> > > On Fri, Nov 22, 2013 at 04:43:35PM -0800, Tony Lindgren wrote:
-> >> > > > +               /* See of_device_resource_notify for populating interrupts */
-> >> > > > +               for (i = 0; i < num_irq; i++, res++) {
-> >> > > > +                       res->flags = IORESOURCE_IRQ;
-> >> > > > +                       res->start = -EPROBE_DEFER;
-> >> > > > +                       res->end = -EPROBE_DEFER;
-> >> > >
-> >> > > NAK.  Definitely a bad idea to start introducing magic values other into
-> >> > > resources.  Please don't do this.
-> >> >
-> >> > Do you have any better ideas on how to sort out this issue then?
-> >>
-> >> I guess we could allocate all the resources lazily here, I'll take a look
-> >> at that.
-> >
-> > Here's a version that allocates the resources lazily with the notifier.
-> > Seems to boot, need to play with it a bit more though to make sure we're
-> > not overwriting resources for any legacy devices.
-> 
-> Have you seen Thierry's series[1]? While your approach is certainly
-> more concise, it seems like a work-around for the problem. I don't
-> think a notifier is the right long term solution.
+Jonathan Cameron writes:
+>On 10/25/13 12:47, Harald Geyer wrote:
+>> This driver handles DHT11 and DHT22 sensors.
+>>
+>> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+>
+> Hi Harald,
+>
+> I'm afraid I completely missed your posting of this version 2.
+>
+> Do feel free to pester me if I fail to say anything about a patch
+> for a couple of weeks.
 
-OK cool. I think we can fix the $Subject bug first without making all
-those changes, then do the rest of the reorg for v3.14.
+Well, was going to do so in a few days ... :)
 
-The bug is that we try to populate IRQ resources at a wrong time
-when they may not exist.
+> Anyhow
+>> ---
+>> changes since v1 (tested on DHT11):
+>> Add dependency on GPIOLIB
+>> Prefix all local preprocessor macros with DHT11_
+>> Rename STARTUP to START_TRANSMISSION
+>> Remove leading zeros
+>> Simplify channel disambiguation
+>> Remove obvious comments
+>> Make whitespace more consistent
+>> Strip unnecessary output and simplify error handling
+>> Fix spelling errors
+>>
+>> The v1 patch has been tested with DHT11 and DHT22 hardware.
+> There are a few redundant bits below that want to be dropped.
+>
+> The only real issue I have otherwise is with the naming.
+> I would expect *-gpio to be a driver providing gpios?
 
-Based on a quick look it seems we could combine Thierry's addition
-of the new function of_platform_probe(struct platform_device *pdev)
-and use that to allocate all resources at driver probe time like my
-patch is doing. And then there's no need for the notifier.
+At least there are 'leds-gpio' and 'w1-gpio' already.
+I was under the impression that drivers providing gpios
+start with 'gpio' like 'gpio-mxs' ...
 
-Regards,
+> Just go with dht11.  This applies to the bindings as well.
 
-Tony
+I'm happy to grab 'dht11' but am reluctant to do so because
+somebody might write a DHT11 driver using some other IO hardware
+then gpio. How would this be called then?
 
- 
-> [1] http://www.spinics.net/lists/arm-kernel/msg274110.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Also note that policy is now to cc the device tree list for
+> all patches changing or introducing bindings.
+>
+> I've cc'd them on this reply.
+
+Thanks.
+
+> Thanks,
+>
+> Jonathan
+>>
+>> Thanks,
+>> Harald
+>>
+>>  .../bindings/iio/humidity/dht11-gpio.txt           |   14 +
+>>  drivers/iio/Kconfig                                |    1 +
+>>  drivers/iio/Makefile                               |    1 +
+>>  drivers/iio/humidity/Kconfig                       |   15 +
+>>  drivers/iio/humidity/Makefile                      |    5 +
+>>  drivers/iio/humidity/dht11-gpio.c                  |  325 ++++++++++++++++++++
+>>  6 files changed, 361 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/humidity/dht11-gpio.txt
+>>  create mode 100644 drivers/iio/humidity/Kconfig
+>>  create mode 100644 drivers/iio/humidity/Makefile
+>>  create mode 100644 drivers/iio/humidity/dht11-gpio.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/humidity/dht11-gpio.txt b/Documentation/devicetree/bindings/iio/humidity/dht11-gpio.txt
+>> new file mode 100644
+>> index 0000000..ee8fa04
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/humidity/dht11-gpio.txt
+>> @@ -0,0 +1,14 @@
+>> +* DHT11 humidity/temperature sensor (and compatibles like DHT22)
+>> +
+>> +Required properties:
+>> +  - compatible: Should be "dht11-gpio"
+>> +  - gpios: Should specify the GPIO connected to the sensor's data
+>> +    line, see "gpios property" in
+>> +    Documentation/devicetree/bindings/gpio/gpio.txt.
+>> +
+>> +Example:
+>> +
+>> +humidity_sensor {
+>> +	compatible = "dht11-gpio";
+>> +	gpios = <&gpio0 6 0>;
+>> +}
+>> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+>> index 90cf0cd..a5ed882 100644
+>> --- a/drivers/iio/Kconfig
+>> +++ b/drivers/iio/Kconfig
+>> @@ -65,6 +65,7 @@ source "drivers/iio/common/Kconfig"
+>>  source "drivers/iio/dac/Kconfig"
+>>  source "drivers/iio/frequency/Kconfig"
+>>  source "drivers/iio/gyro/Kconfig"
+>> +source "drivers/iio/humidity/Kconfig"
+>>  source "drivers/iio/imu/Kconfig"
+>>  source "drivers/iio/light/Kconfig"
+>>  source "drivers/iio/magnetometer/Kconfig"
+>> diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
+>> index bcf7e9e..b3b5096 100644
+>> --- a/drivers/iio/Makefile
+>> +++ b/drivers/iio/Makefile
+>> @@ -18,6 +18,7 @@ obj-y += common/
+>>  obj-y += dac/
+>>  obj-y += gyro/
+>>  obj-y += frequency/
+>> +obj-y += humidity/
+>>  obj-y += imu/
+>>  obj-y += light/
+>>  obj-y += magnetometer/
+>> diff --git a/drivers/iio/humidity/Kconfig b/drivers/iio/humidity/Kconfig
+>> new file mode 100644
+>> index 0000000..bbc44f2
+>> --- /dev/null
+>> +++ b/drivers/iio/humidity/Kconfig
+>> @@ -0,0 +1,15 @@
+>> +#
+>> +# humidity sensor drivers
+>> +#
+>> +menu "Humidity sensors"
+>> +
+>> +config DHT11_GPIO
+> The _GPIO to my mind would normally imply that this as a driver
+> providing GPIOs rather than using them.
+
+I will change this according to the result of the naming
+discussion.
+
+>> +	tristate "DHT11 (and compatible sensors) driver"
+>> +	depends on GPIOLIB
+>> +	help
+>> +	  This driver supports reading data via a single interrupt
+>> +	  generating GPIO line. Currently tested are DHT11 and DHT22.
+>> +	  Other sensors should work as well as long as they speak the
+>> +	  same protocol.
+>> +
+>> +endmenu
+>> diff --git a/drivers/iio/humidity/Makefile b/drivers/iio/humidity/Makefile
+>> new file mode 100644
+>> index 0000000..5e8226f
+>> --- /dev/null
+>> +++ b/drivers/iio/humidity/Makefile
+>> @@ -0,0 +1,5 @@
+>> +#
+>> +# Makefile for IIO humidity sensor drivers
+>> +#
+>> +
+>> +obj-$(CONFIG_DHT11_GPIO) += dht11-gpio.o
+>> diff --git a/drivers/iio/humidity/dht11-gpio.c b/drivers/iio/humidity/dht11-gpio.c
+>> new file mode 100644
+>> index 0000000..3bb4d81
+>> --- /dev/null
+>> +++ b/drivers/iio/humidity/dht11-gpio.c
+>> @@ -0,0 +1,325 @@
+> ...
+> Don't bother with this comment.  If anyone wants it they can
+> add support :)
+>> +/* TODO?: Support systems without DT? */
+
+Ok.
+
+>> +
+>> +struct dht11_gpio {
+>> +	struct device			*dev;
+>> +
+>> +	int				gpio;
+>> +	int				irq;
+>> +
+>> +	struct completion		completion;
+>> +
+>> +	s64				timestamp;
+>> +	int				temperature;
+>> +	int				humidity;
+>> +
+>> +	/* num_edges: -1 means "no transmission in progress" */
+>> +	int				num_edges;
+>> +	struct {s64 ts; int value; }	edges[DHT11_EDGES_PER_READ];
+>> +};
+>> +
+> This isn't called anywhere and so should be removed from the driver.
+
+I will do so, if you think it's more apropriate. I figured that
+commenting it out is like removing but retaining a useful comment.
+Maybe prefix the whole comment with asterix to make it more obvious
+this actually is a comment?
+
+>> +/*
+>> + * dht11_edges_print: show the data as actually received by the
+>> + *                    driver.
+>> + * This is dead code, keeping it for now just in case somebody needs
+>> + * it for porting the driver to new sensor HW, etc.
+>> + *
+>> +static void dht11_edges_print(struct dht11_gpio *dht11)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 1; i < dht11->num_edges; ++i) {
+>> +		pr_err("dht11-gpio: %d: %lld ns %s\n", i,
+>> +			dht11->edges[i].ts - dht11->edges[i-1].ts,
+>> +			dht11->edges[i-1].value ? "high" : "low");
+>> +	}
+>> +}
+>> +*/
+> ...
+
+
+
+>> +static const struct of_device_id dht11_gpio_dt_ids[] = {
+>> +	{ .compatible = "dht11-gpio", },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, dht11_gpio_dt_ids);
+>> +
+>> +static int dht11_gpio_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *node = dev->of_node;
+>> +	struct dht11_gpio *dht11;
+>> +	struct iio_dev *iio;
+>> +	int ret;
+>> +
+>> +	iio = devm_iio_device_alloc(dev, sizeof(*dht11));
+>> +	if (!iio) {
+>> +		dev_err(dev, "Failed to allocate IIO device\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	dht11 = iio_priv(iio);
+>> +	dht11->dev = dev;
+>> +
+>> +	dht11->gpio = ret = of_get_gpio(node, 0);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +	ret = devm_gpio_request_one(dev, dht11->gpio, GPIOF_IN, pdev->name);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	dht11->irq = gpio_to_irq(dht11->gpio);
+>> +	if (dht11->irq < 0) {
+>> +		dev_err(dev, "GPIO %d has no interrupt\n", dht11->gpio);
+>> +		return -EINVAL;
+>> +	}
+>> +	ret = devm_request_irq(dev, dht11->irq, dht11_gpio_handle_irq,
+>> +				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+>> +				pdev->name, iio);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	dht11->timestamp = iio_get_time_ns() - DHT11_DATA_VALID_TIME - 1;
+>> +	dht11->num_edges = -1;
+>> +
+>> +	platform_set_drvdata(pdev, iio);
+>> +
+>> +	init_completion(&dht11->completion);
+>> +	iio->name = pdev->name;
+>> +	iio->dev.parent = &pdev->dev;
+>> +	iio->info = &dht11_gpio_iio_info;
+>> +	iio->modes = INDIO_DIRECT_MODE;
+>> +	iio->channels = dht11_gpio_chan_spec;
+>> +	iio->num_channels = ARRAY_SIZE(dht11_gpio_chan_spec);
+>> +
+>> +	return iio_device_register(iio);
+>> +}
+>> +
+>
+> Could use the new devm_iio_device_register() call and drop
+> this boilerplate.
+
+Yes, I'll send a v3 with this after the other issues are sorted
+out.
+
+Thanks,
+Harald
+
+>> +static int dht11_gpio_remove(struct platform_device *pdev)
+>> +{
+>> +	struct iio_dev *iio = platform_get_drvdata(pdev);
+>> +
+>> +	iio_device_unregister(iio);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver dht11_gpio_driver = {
+>> +	.driver = {
+>> +		.name	= DRIVER_NAME,
+>> +		.owner	= THIS_MODULE,
+>> +		.of_match_table = dht11_gpio_dt_ids,
+>> +	},
+>> +	.probe  = dht11_gpio_probe,
+>> +	.remove = dht11_gpio_remove,
+>> +};
+>> +
+>> +module_platform_driver(dht11_gpio_driver);
+>> +
+>> +MODULE_AUTHOR("Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>");
+>> +MODULE_DESCRIPTION("DHT11 humidity/temperature sensor driver");
+>> +MODULE_LICENSE("GPL v2");
+>> +
+>>
+>--
+>To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>More majordomo info at  http://vger.kernel.org/majordomo-info.html
