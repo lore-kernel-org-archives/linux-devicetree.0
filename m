@@ -1,33 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/3] mtd: nand: davinci: reuse driver for Keystone arch
-Date: Sat, 23 Nov 2013 19:15:29 +0100
-Message-ID: <201311231915.29643.arnd@arndb.de>
-References: <1384964699-15134-1-git-send-email-ivan.khoronzhuk@ti.com> <1384964699-15134-2-git-send-email-ivan.khoronzhuk@ti.com>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [PATCHv5 06/20] hwmon: lm75: expose to thermal fw via DT nodes
+Date: Sat, 23 Nov 2013 19:38:08 +0100
+Message-ID: <20131123193808.46f303a8@endymion.delvare>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
+	<1384285582-16933-7-git-send-email-eduardo.valentin@ti.com>
+	<20131115084354.656452b9@endymion.delvare>
+	<528A23DD.2070406@ti.com>
+	<20131119103948.0ec9daba@endymion.delvare>
+	<528F6C10.5050704@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1384964699-15134-2-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <528F6C10.5050704@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 20 November 2013, Ivan Khoronzhuk wrote:
-> --- a/drivers/mtd/nand/davinci_nand.c
-> +++ b/drivers/mtd/nand/davinci_nand.c
-> @@ -523,6 +523,7 @@ static struct nand_ecclayout hwecc4_2048 __initconst = {
->  #if defined(CONFIG_OF)
->  static const struct of_device_id davinci_nand_of_match[] = {
->         {.compatible = "ti,davinci-nand", },
-> +       {.compatible = "ti,keystone-nand", },
->         {},
->  };
->  MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
+On Fri, 22 Nov 2013 10:37:04 -0400, Eduardo Valentin wrote:
+> Yeah, but I see your point. You probably want to have first code changes
+> done properly so that if we have code duplication, it does not spread
+> like a disease, like usually does. It is unavoidable to base new drivers
+> on existing ones. So better to get first converted drivers to be done
+> properly. I like this approach.
 
-Same comment as for the watchdog driver: when the devices are actually compatible,
-the driver does not need to know the new string, the preferred method is to
-set both strings from the .dts file.
+Not only that, but also getting things right (as much as we are able
+to) at first avoids having to touch 20 already converted drivers when
+you attempt to convert the 21st one and it doesn't fit in the API.
 
-	Arnd
+> (...)
+> OK. So I assume you are proposing something like:
+> 	.get_temp(struct device *dev, int id, long *temp);
+> 
+> right?
+
+Yes.
+
+> (...)
+> In the end of the day, the APIs and driver support will be really well
+> defined when we convert most of the drivers. But I would like to this in
+> a separated patch series.
+> 
+> What is your view? Are you OK if we integrate this series as a first
+> step of the complete process?
+
+Yes we are.
+
+> (...)
+> Thanks for the good feedback.
+
+You're welcome.
+
+-- 
+Jean Delvare
