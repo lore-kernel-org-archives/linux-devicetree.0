@@ -1,56 +1,33 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: Fwd: [PATCH 6/8] watchdog: davinci: reuse driver for keystone arch
-Date: Sat, 23 Nov 2013 19:02:02 +0100
-Message-ID: <201311231902.02807.arnd@arndb.de>
-References: <1383680783-12114-7-git-send-email-ivan.khoronzhuk@ti.com>
- <527A28DE.4030906@ti.com>
+Subject: Re: [PATCH 1/3] mtd: nand: davinci: reuse driver for Keystone arch
+Date: Sat, 23 Nov 2013 19:15:29 +0100
+Message-ID: <201311231915.29643.arnd@arndb.de>
+References: <1384964699-15134-1-git-send-email-ivan.khoronzhuk@ti.com> <1384964699-15134-2-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <527A28DE.4030906@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1384964699-15134-2-git-send-email-ivan.khoronzhuk@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, Santosh Shilimkar <santosh.shilimkar@ti.com>, grant.likely@linaro.org, "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 November 2013, ivan.khoronzhuk wrote:
-
-> @@ -1,13 +1,20 @@
-> -DaVinci Watchdog Timer (WDT) Controller
-> +Texas Instruments DaVinci/Keystone Watchdog Timer (WDT) Controller
->  
->  Required properties:
-> -- compatible : Should be "ti,davinci-wdt"
-> +
-> +- compatible:          "ti,davinci-wdt"
-> +                       "ti,keystone-wdt"
-> +
->  - reg : Should contain WDT registers location and length
->  
-
-...
-
-> @@ -229,6 +229,7 @@ static int davinci_wdt_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id davinci_wdt_of_match[] = {
->         { .compatible = "ti,davinci-wdt", },
-> +       { .compatible = "ti,keystone-wdt", },
+On Wednesday 20 November 2013, Ivan Khoronzhuk wrote:
+> --- a/drivers/mtd/nand/davinci_nand.c
+> +++ b/drivers/mtd/nand/davinci_nand.c
+> @@ -523,6 +523,7 @@ static struct nand_ecclayout hwecc4_2048 __initconst = {
+>  #if defined(CONFIG_OF)
+>  static const struct of_device_id davinci_nand_of_match[] = {
+>         {.compatible = "ti,davinci-nand", },
+> +       {.compatible = "ti,keystone-nand", },
 >         {},
 >  };
->  MODULE_DEVICE_TABLE(of, davinci_wdt_of_match);
+>  MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
 
-You should clarify the compatible list here: It seems that the devices are fully
-compatible, so the driver should only need to check for "ti,davinci-wdt" as the
-compatible string, while the dtb files should list both "ti,davinci-wdt" and
-"ti,keystone-wdt" for keystone, but only the davinci string for davinci.
+Same comment as for the watchdog driver: when the devices are actually compatible,
+the driver does not need to know the new string, the preferred method is to
+set both strings from the .dts file.
 
 	Arnd
