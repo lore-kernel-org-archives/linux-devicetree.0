@@ -1,39 +1,56 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Fwd: [PATCH 7/8] watchdog: davinci: add "clocks" property
-Date: Sat, 23 Nov 2013 18:57:46 +0100
-Message-ID: <201311231857.47104.arnd@arndb.de>
-References: <1383680783-12114-8-git-send-email-ivan.khoronzhuk@ti.com> <527A28E8.4010204@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: Fwd: [PATCH 6/8] watchdog: davinci: reuse driver for keystone arch
+Date: Sat, 23 Nov 2013 19:02:02 +0100
+Message-ID: <201311231902.02807.arnd@arndb.de>
+References: <1383680783-12114-7-git-send-email-ivan.khoronzhuk@ti.com>
+ <527A28DE.4030906@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <527A28E8.4010204-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <527A28DE.4030906@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, Santosh Shilimkar <santosh.shilimkar@ti.com>, grant.likely@linaro.org, "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
 On Wednesday 06 November 2013, ivan.khoronzhuk wrote:
-> @@ -7,6 +7,10 @@ Required properties:
+
+> @@ -1,13 +1,20 @@
+> -DaVinci Watchdog Timer (WDT) Controller
+> +Texas Instruments DaVinci/Keystone Watchdog Timer (WDT) Controller
 >  
+>  Required properties:
+> -- compatible : Should be "ti,davinci-wdt"
+> +
+> +- compatible:          "ti,davinci-wdt"
+> +                       "ti,keystone-wdt"
+> +
 >  - reg : Should contain WDT registers location and length
 >  
-> +- clocks: phandle reference to the controller clock.
-> +         Required only for Keystone arch.
-> +         See clock-bindings.txt
-> +
->  Optional properties:
->  
->  - timeout-sec:         Contains the watchdog timeout in seconds
 
-I think it should really be listed under "Optional properties" and the
-reference to Keystone removed. Note how the binding would need
-to change otherwise if another platform started to use the clock, which
-is a little silly.
+...
+
+> @@ -229,6 +229,7 @@ static int davinci_wdt_remove(struct platform_device *pdev)
+>  
+>  static const struct of_device_id davinci_wdt_of_match[] = {
+>         { .compatible = "ti,davinci-wdt", },
+> +       { .compatible = "ti,keystone-wdt", },
+>         {},
+>  };
+>  MODULE_DEVICE_TABLE(of, davinci_wdt_of_match);
+
+You should clarify the compatible list here: It seems that the devices are fully
+compatible, so the driver should only need to check for "ti,davinci-wdt" as the
+compatible string, while the dtb files should list both "ti,davinci-wdt" and
+"ti,keystone-wdt" for keystone, but only the davinci string for davinci.
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
