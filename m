@@ -1,163 +1,150 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when
- populating interrupts
-Date: Fri, 22 Nov 2013 17:50:35 -0800
-Message-ID: <20131123015034.GP10023@atomide.com>
-References: <20131123004334.GJ10023@atomide.com>
- <20131123005509.GJ16735@n2100.arm.linux.org.uk>
- <20131123010850.GN10023@atomide.com>
- <20131123011515.GO10023@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131123011515.GO10023-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH] usb: chipidea: add support for USB OTG controller on TI-NSPIRE
+Date: Sat, 23 Nov 2013 17:04:16 +1100
+Message-ID: <5290458b.87c5440a.4c57.ffffc9c8@mx.google.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [131122 17:16]:
-> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [131122 17:09]:
-> > * Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> [131122 16:56]:
-> > > On Fri, Nov 22, 2013 at 04:43:35PM -0800, Tony Lindgren wrote:
-> > > > +		/* See of_device_resource_notify for populating interrupts */
-> > > > +		for (i = 0; i < num_irq; i++, res++) {
-> > > > +			res->flags = IORESOURCE_IRQ;
-> > > > +			res->start = -EPROBE_DEFER;
-> > > > +			res->end = -EPROBE_DEFER;
-> > > 
-> > > NAK.  Definitely a bad idea to start introducing magic values other into
-> > > resources.  Please don't do this.
-> > 
-> > Do you have any better ideas on how to sort out this issue then?
-> 
-> I guess we could allocate all the resources lazily here, I'll take a look
-> at that.
+From: Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Here's a version that allocates the resources lazily with the notifier.
-Seems to boot, need to play with it a bit more though to make sure we're
-not overwriting resources for any legacy devices.
+The USB controller in TI-NSPIRE calculators are based
+off either Freescale's USB OTG controller or the USB
+controller found in the IMX233, both of which are
+Chipidea compatible.
 
-Regards,
+This patch adds a device tree binding for the controller.
 
-Tony
+Signed-off-by: Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/usb/ci13xxx-nspire.txt     | 17 +++++
+ drivers/usb/chipidea/Makefile                      |  1 +
+ drivers/usb/chipidea/ci_hdrc_nspire.c              | 74 ++++++++++++++++++++++
+ 3 files changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-nspire.txt
+ create mode 100644 drivers/usb/chipidea/ci_hdrc_nspire.c
 
-
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -141,13 +141,47 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 				  struct device *parent)
- {
- 	struct platform_device *dev;
--	int rc, i, num_reg = 0, num_irq;
--	struct resource *res, temp_res;
- 
- 	dev = platform_device_alloc("", -1);
- 	if (!dev)
- 		return NULL;
- 
-+	dev->dev.of_node = of_node_get(np);
-+#if defined(CONFIG_MICROBLAZE)
-+	dev->dev.dma_mask = &dev->archdata.dma_mask;
-+#endif
-+	dev->dev.parent = parent;
+diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-nspire.txt b/Documentation/devicetree/bindings/usb/ci13xxx-nspire.txt
+new file mode 100644
+index 0000000..5ba8e90
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ci13xxx-nspire.txt
+@@ -0,0 +1,17 @@
++* TI-Nspire USB OTG Controller
 +
-+	if (bus_id)
-+		dev_set_name(&dev->dev, "%s", bus_id);
-+	else
-+		of_device_make_bus_id(&dev->dev);
++Required properties:
++- compatible: Should be "zevio,nspire-usb"
++- reg: Should contain registers location and length
++- interrupts: Should contain controller interrupt
 +
-+	/* See of_device_resource_notify for populating the resources */
++Recommended properies:
++- vbus-supply: regulator for vbus
 +
-+	return dev;
-+}
-+EXPORT_SYMBOL(of_device_alloc);
-+
++Examples:
++		usb0: usb@B0000000 {
++			reg = <0xB0000000 0x1000>;
++			compatible = "zevio,nspire-usb";
++			interrupts = <8>;
++			vbus-supply = <&vbus_reg>;
++		};
+diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+index a99d980..245ea4d 100644
+--- a/drivers/usb/chipidea/Makefile
++++ b/drivers/usb/chipidea/Makefile
+@@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_CHIPIDEA_DEBUG)	+= debug.o
+ # Glue/Bridge layers go here
+
+ obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
++obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_nspire.o
+
+ # PCI doesn't provide stubs, need to check
+ ifneq ($(CONFIG_PCI),)
+diff --git a/drivers/usb/chipidea/ci_hdrc_nspire.c b/drivers/usb/chipidea/ci_hdrc_nspire.c
+new file mode 100644
+index 0000000..318761d
+--- /dev/null
++++ b/drivers/usb/chipidea/ci_hdrc_nspire.c
+@@ -0,0 +1,74 @@
 +/*
-+ * The device interrupts are not necessarily available for all
-+ * irqdomains initially so we need to populate them using a
-+ * notifier.
++ *	Copyright (C) 2013 Daniel Tang <tangrs-wZPxy8ob7RQXC2x5gXVKYQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2, as
++ * published by the Free Software Foundation.
++ *
++ * Based off drivers/usb/chipidea/ci_hdrc_msm.c
++ *
 + */
-+static int of_device_resource_notify(struct notifier_block *nb,
-+				     unsigned long event, void *dev)
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/usb/gadget.h>
++#include <linux/usb/chipidea.h>
++
++#include "ci.h"
++
++static struct ci_hdrc_platform_data ci_hdrc_nspire_platdata = {
++	.name			= "ci_hdrc_nspire",
++	.flags			= CI_HDRC_REGS_SHARED,
++	.capoffset              = DEF_CAPOFFSET,
++};
++
++static int ci_hdrc_nspire_probe(struct platform_device *pdev)
 +{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct device_node *np = pdev->dev.of_node;
-+	int rc, i, num_reg = 0, num_irq;
-+	struct resource *res, temp_res;
++	struct platform_device *ci_pdev;
 +
-+	if (event != BUS_NOTIFY_BIND_DRIVER)
-+		return 0;
++	dev_dbg(&pdev->dev, "ci_hdrc_nspire_probe\n");
 +
-+	if (!np)
-+		goto out;
++	ci_pdev = ci_hdrc_add_device(&pdev->dev,
++				pdev->resource, pdev->num_resources,
++				&ci_hdrc_nspire_platdata);
 +
- 	/* count the io and irq resources */
- 	if (of_can_translate_address(np))
- 		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
-@@ -158,12 +192,12 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 	if (num_irq || num_reg) {
- 		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
- 		if (!res) {
--			platform_device_put(dev);
--			return NULL;
-+			platform_device_put(pdev);
-+			goto out;
- 		}
- 
--		dev->num_resources = num_reg + num_irq;
--		dev->resource = res;
-+		pdev->num_resources = num_reg + num_irq;
-+		pdev->resource = res;
- 		for (i = 0; i < num_reg; i++, res++) {
- 			rc = of_address_to_resource(np, i, res);
- 			WARN_ON(rc);
-@@ -171,20 +205,9 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
- 	}
- 
--	dev->dev.of_node = of_node_get(np);
--#if defined(CONFIG_MICROBLAZE)
--	dev->dev.dma_mask = &dev->archdata.dma_mask;
--#endif
--	dev->dev.parent = parent;
--
--	if (bus_id)
--		dev_set_name(&dev->dev, "%s", bus_id);
--	else
--		of_device_make_bus_id(&dev->dev);
--
--	return dev;
-+out:
-+	return NOTIFY_DONE;
- }
--EXPORT_SYMBOL(of_device_alloc);
- 
- /**
-  * of_platform_device_create_pdata - Alloc, initialize and register an of_device
-@@ -447,6 +470,8 @@ int of_platform_bus_probe(struct device_node *root,
- }
- EXPORT_SYMBOL(of_platform_bus_probe);
- 
-+static struct notifier_block resource_nb;
-+
- /**
-  * of_platform_populate() - Populate platform_devices from device tree data
-  * @root: parent of the first level to probe or NULL for the root of the tree
-@@ -478,6 +503,11 @@ int of_platform_populate(struct device_node *root,
- 	if (!root)
- 		return -EINVAL;
- 
-+	if (!resource_nb.notifier_call) {
-+		resource_nb.notifier_call = of_device_resource_notify,
-+			bus_register_notifier(&platform_bus_type, &resource_nb);
++	if (IS_ERR(ci_pdev)) {
++		dev_err(&pdev->dev, "ci_hdrc_add_device failed!\n");
++		return PTR_ERR(ci_pdev);
 +	}
 +
- 	for_each_child_of_node(root, child) {
- 		rc = of_platform_bus_create(child, matches, lookup, parent, true);
- 		if (rc)
++	platform_set_drvdata(pdev, ci_pdev);
++
++	return 0;
++}
++
++static int ci_hdrc_nspire_remove(struct platform_device *pdev)
++{
++	struct platform_device *ci_pdev = platform_get_drvdata(pdev);
++
++	ci_hdrc_remove_device(ci_pdev);
++
++	return 0;
++}
++
++static const struct of_device_id ci_hdrc_nspire_dt_ids[] = {
++	{ .compatible = "zevio,nspire-usb", },
++	{ /* sentinel */ }
++};
++
++static struct platform_driver ci_hdrc_nspire_driver = {
++	.probe = ci_hdrc_nspire_probe,
++	.remove = ci_hdrc_nspire_remove,
++	.driver = {
++		.name = "nspire_usb",
++		.owner = THIS_MODULE,
++		.of_match_table = ci_hdrc_nspire_dt_ids,
++	},
++};
++
++MODULE_DEVICE_TABLE(of, ci_hdrc_nspire_dt_ids);
++module_platform_driver(ci_hdrc_nspire_driver);
++
++MODULE_ALIAS("platform:nspire_usb");
++MODULE_ALIAS("platform:ci13xxx_nspire");
++MODULE_LICENSE("GPL v2");
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+1.8.1.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
