@@ -1,71 +1,64 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: [PATCH 3/3] dt: binding documentation for bq2415x charger
-Date: Sun, 24 Nov 2013 17:49:31 +0100
-Message-ID: <1385311771-447-4-git-send-email-sre@debian.org>
-References: <1385311771-447-1-git-send-email-sre@debian.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1385311771-447-1-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, freemangordon@abv.bg, aaro.koskinen@iki.fi, pavel@ucw.cz, Sebastian Reichel <sre@debian.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dove: Fix typo in device_type property of phy node
+Date: Sun, 24 Nov 2013 11:54:53 -0500
+Message-ID: <20131124165453.GF29241@titan.lakedaemon.net>
+References: <1384440899-3622-1-git-send-email-srinivas.kandagatla@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1384440899-3622-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding documentation for bq2415x charger.
+On Thu, Nov 14, 2013 at 02:54:59PM +0000, Srinivas Kandagatla wrote:
+> This patch fixes a typo for device_type property of phy node.
+> This can work as of today but once a checks are added in generic code
+> this typo will stop phy from working.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/dove.dtsi |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
 
-Signed-off-by: Sebastian Reichel <sre@debian.org>
----
- .../devicetree/bindings/power/bq2415x.txt          | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/bq2415x.txt
+Applied to mvebu/dt with Andrew's Ack.  I had to hand add it due to the
+reworking of dove.dtsi last time around.  I've attached my version, let
+me know if it looks amiss.
 
-diff --git a/Documentation/devicetree/bindings/power/bq2415x.txt b/Documentation/devicetree/bindings/power/bq2415x.txt
-new file mode 100644
-index 0000000..cb2e753
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/bq2415x.txt
-@@ -0,0 +1,43 @@
-+Binding for TI bq2415x Li-Ion Charger
-+
-+Required properties:
-+- compatible: Should contain one of the following:
-+ * "ti,bq24150"
-+ * "ti,bq24150"
-+ * "ti,bq24150a"
-+ * "ti,bq24151"
-+ * "ti,bq24151a"
-+ * "ti,bq24152"
-+ * "ti,bq24153"
-+ * "ti,bq24153a"
-+ * "ti,bq24155"
-+ * "ti,bq24156"
-+ * "ti,bq24156a"
-+ * "ti,bq24158"
-+- reg: integer, i2c address of the device
-+- ti,current-limit: integer, current limit in mA
-+- ti,weak-battery-voltage: integer, weak battery voltage threshold in mV
-+- ti,battery-regulation-voltage: integer, battery regulation voltage in mV
-+- ti,charge-current: integer, charging current in mA
-+- ti,termination-current: integer, termination current in mA
-+- ti,resistor-sense: integer, value of sensing resistor in milliohm
-+
-+Optional properties:
-+- ti,usb-charger-detection: phandle to usb charger detection device
-+			    (required for auto mode)
-+
-+Example from Nokia N900:
-+
-+bq24150a {
-+	compatible = "ti,bq24150a";
-+	reg = <0x6b>;
-+
-+	ti,current-limit = <100>;
-+	ti,weak-battery-voltage = <3400>;
-+	ti,battery-regulation-voltage = <4200>;
-+	ti,charge-current = <650>;
-+	ti,termination-current = <100>;
-+	ti,resistor-sense = <68>;
-+
-+	ti,usb-charger-detection = <&isp1704>;
-+};
--- 
-1.8.4.3
+thx,
+
+Jason.
+
+----------->8---------------------
+commit 9e52c63992c19b1d2e9a6b6b8ba61aaf35e9fd17
+Author: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Date:   Sun Nov 24 16:47:51 2013 +0000
+
+    ARM: dove: Fix typo in device_type property of phy node
+    
+    This patch fixes a typo for device_type property of phy node.
+    This can work as of today but once a checks are added in generic code
+    this typo will stop phy from working.
+    
+    Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+    Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+
+diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
+index 113a8bc7bee7..abd7a6fd77f1 100644
+--- a/arch/arm/boot/dts/dove.dtsi
++++ b/arch/arm/boot/dts/dove.dtsi
+@@ -559,7 +559,7 @@
+ 				status = "disabled";
+ 
+ 				ethphy: ethernet-phy {
+-					device-type = "ethernet-phy";
++					device_type = "ethernet-phy";
+ 					/* set phy address in board file */
+ 				};
+ 			};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
