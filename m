@@ -1,43 +1,38 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 1/2] ARM: kirkwood: provide pinctrl default to sdio
- nodes
-Date: Sun, 24 Nov 2013 11:59:32 -0500
-Message-ID: <20131124165932.GG29241@titan.lakedaemon.net>
-References: <1384525225-591-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCHv2] ARM: mvebu: Add RN104 SATA LEDs driven via NXP
+ PCA9554 I2C to GPIO muxer
+Date: Sun, 24 Nov 2013 12:16:48 -0500
+Message-ID: <20131124171648.GL29241@titan.lakedaemon.net>
+References: <87mwkx4ayr.fsf@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1384525225-591-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <87mwkx4ayr.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 15, 2013 at 03:20:24PM +0100, Sebastian Hesselbarth wrote:
-> SDIO controllers found on Marvell Kirkwood 6281/6282 SoCs require
-> pins to be muxed by pinctrl. As there is only one sane pinctrl
-> setting for this, provide default pinctrl properties to the controller
-> nodes.
+On Fri, Nov 22, 2013 at 12:00:12AM +0100, Arnaud Ebalard wrote:
 > 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> ---
-> I am not sending this two patches to each DT maintainer, as it is a
-> Kirkwood only thing, added the dt list for completeness.
+> NETGEAR ReadyNAS 104 has a NXP PCA9554 I2C to GPIO chip. Among the 8 GPIO
+> lines the chip makes available, four are used on the device to control
+> the SATA LEDs (the four remaining ones are used for SATA disk presence).
+> This patch adds DT entries for NXP PCA9554 and the four SATA GPIO LEDs.
 > 
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 > ---
->  arch/arm/boot/dts/kirkwood-6281.dtsi |    2 ++
->  arch/arm/boot/dts/kirkwood-6282.dtsi |    2 ++
->  2 files changed, 4 insertions(+), 0 deletions(-)
+> 
+>  arch/arm/boot/dts/armada-370-netgear-rn104.dts | 32 ++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
 
-Series applied to mvebu/dt
+Applied to mvebu/dt
 
 thx,
 
 Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
