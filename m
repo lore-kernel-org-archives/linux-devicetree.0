@@ -1,221 +1,149 @@
-From: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
-Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
-Date: Sun, 24 Nov 2013 17:04:52 +1000
-Message-ID: <CAEgOgz5BWzo-LGddjG6ZUtKt6GHxLmDUEndFOdVrn+1HTPvpGQ@mail.gmail.com>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
-	<1381869563-16083-10-git-send-email-grant.likely@linaro.org>
-	<CAEgOgz6=HhBkb2KtxcmHpNdE_0sNngw0NaL2SnLWj1opZkO3SA@mail.gmail.com>
-	<20131112065405.C75E8C42024@trevor.secretlab.ca>
-	<CAEgOgz6j8YsvFgq8ZbE20ocHPA0C-eUGBb7F1gNiVBvJXLa8_g@mail.gmail.com>
-	<20131112085038.B6A75C421BB@trevor.secretlab.ca>
-	<CAEgOgz4dM1zQdFpOkUwZqAUMUBe2eh3j1Ah0KgomVAOGgrPsVw@mail.gmail.com>
-	<20131113061425.667F9C41807@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131113061425.667F9C41807@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Michal Simek <monstr@monstr.eu>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
+From: dt.tangr@gmail.com
+Subject: [PATCHv2] usb: chipidea: add support for USB OTG controller on TI-NSPIRE
+Date: Sun, 24 Nov 2013 18:37:47 +1100
+Message-ID: <1385278667-91856-1-git-send-email-dt.tangr@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, Daniel Tang <dt.tangr@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2013 at 4:14 PM, Grant Likely <grant.likely@linaro.org> wrote:
-> On Wed, 13 Nov 2013 09:17:01 +1000, Peter Crosthwaite <peter.crosthwaite@xilinx.com> wrote:
->> On Tue, Nov 12, 2013 at 6:50 PM, Grant Likely <grant.likely@linaro.org> wrote:
->> > On Tue, 12 Nov 2013 17:49:37 +1000, Peter Crosthwaite <peter.crosthwaite@xilinx.com> wrote:
->> >> Hi Grant,
->> >>
->> >> On Tue, Nov 12, 2013 at 4:54 PM, Grant Likely <grant.likely@linaro.org> wrote:
->> >> > On Tue, 12 Nov 2013 08:58:15 +1000, Peter Crosthwaite <peter.crosthwaite@xilinx.com> wrote:
->> >> >> Hi Grant,
->> >> >>
->> >> >> On Wed, Oct 16, 2013 at 6:39 AM, Grant Likely <grant.likely@linaro.org> wrote:
->> >> >> > The standard interrupts property in device tree can only handle
->> >> >> > interrupts coming from a single interrupt parent. If a device is wired
->> >> >> > to multiple interrupt controllers, then it needs to be attached to a
->> >> >> > node with an interrupt-map property to demux the interrupt specifiers
->> >> >> > which is confusing. It would be a lot easier if there was a form of the
->> >> >> > interrupts property that allows for a separate interrupt phandle for
->> >> >> > each interrupt specifier.
->> >> >> >
->> >> >> > This patch does exactly that by creating a new interrupts-extended
->> >> >> > property which reuses the phandle+arguments pattern used by GPIOs and
->> >> >> > other core bindings.
->> >> >> >
->> >> >> > Signed-off-by: Grant Likely <grant.likely@linaro.org>
->> >> >> > Cc: Rob Herring <rob.herring@calxeda.com>
->> >> >> > ---
->> >> >> >  .../bindings/interrupt-controller/interrupts.txt   | 29 +++++++--
->> >> >> >  arch/arm/boot/dts/testcases/tests-interrupts.dtsi  | 16 +++++
->> >> >> >  arch/arm/boot/dts/versatile-ab.dts                 |  2 +-
->> >> >> >  arch/arm/boot/dts/versatile-pb.dts                 |  2 +-
->> >> >> >  drivers/of/irq.c                                   | 16 +++--
->> >> >> >  drivers/of/selftest.c                              | 70 ++++++++++++++++++++++
->> >> >> >  6 files changed, 122 insertions(+), 13 deletions(-)
->> >> >> >
->> >> >> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->> >> >> > index 72a06c0..1486497 100644
->> >> >> > --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->> >> >> > +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->> >> >> > @@ -4,16 +4,33 @@ Specifying interrupt information for devices
->> >> >> >  1) Interrupt client nodes
->> >> >> >  -------------------------
->> >> >> >
->> >> >> > -Nodes that describe devices which generate interrupts must contain an
->> >> >> > -"interrupts" property. This property must contain a list of interrupt
->> >> >> > -specifiers, one per output interrupt. The format of the interrupt specifier is
->> >> >> > -determined by the interrupt controller to which the interrupts are routed; see
->> >> >> > -section 2 below for details.
->> >> >> > +Nodes that describe devices which generate interrupts must contain an either an
->> >> >> > +"interrupts" property or an "interrupts-extended" property. These properties
->> >> >> > +contain a list of interrupt specifiers, one per output interrupt. The format of
->> >> >> > +the interrupt specifier is determined by the interrupt controller to which the
->> >> >> > +interrupts are routed; see section 2 below for details.
->> >> >> > +
->> >> >> > +  Example:
->> >> >> > +       interrupt-parent = <&intc1>;
->> >> >> > +       interrupts = <5 0>, <6 0>;
->> >> >> >
->> >> >> >  The "interrupt-parent" property is used to specify the controller to which
->> >> >> >  interrupts are routed and contains a single phandle referring to the interrupt
->> >> >> >  controller node. This property is inherited, so it may be specified in an
->> >> >> > -interrupt client node or in any of its parent nodes.
->> >> >> > +interrupt client node or in any of its parent nodes. Interrupts listed in the
->> >> >> > +"interrupts" property are always in reference to the node's interrupt parent.
->> >> >> > +
->> >> >> > +The "interrupts-extended" property is a special form for use when a node needs
->> >> >> > +to reference multiple interrupt parents. Each entry in this property contains
->> >> >> > +both the parent phandle and the interrupt specifier. "interrupts-extended"
->> >> >> > +should only be used when a device has multiple interrupt parents.
->> >> >> > +
->> >> >> > +  Example:
->> >> >> > +       interrupts-extended = <&intc1 5 1>, <&intc2 1 0>;
->> >> >> > +
->> >> >>
->> >> >> A slightly different but related problem I am trying to solve with
->> >> >> interrupt bindings, is to describe connection of a single device
->> >> >> interrupt line to multiple interrupts controller, whereas this binding
->> >> >> seems to be describing connection of different interrupt lines to
->> >> >> different controllers. Can this syntax accommodate my case is any way?
->> >> >>
->> >> >> Bascially I think I'm asking for multiple interrupt specifiers for a
->> >> >> single IRQ output if that's possible.
->> >> >>
->> >> >> Should I just be using the interrupt map syntax instead?
->> >> >>
->> >> >> interrupt-map-mask = < 0 0 63>;
->> >> >> interrupt-map = < 0 0 25 &intc0 ... >, < 0 0 25 &intc1 ... >,
->> >> >
->> >> > Interrupt map doesn't actually help you here either since the core code
->> >> > doesn't know what to do with it. It will probably only match and return
->> >> > one of the options.
->> >> >
->> >>
->> >> Yes I noticed that. Although we are a fair way off Linux patches for
->> >> this just yet and all I want to solve near-term is the hardware
->> >> description problem (what core Linux IRQ code is actually supposed to
->> >> do when given such a wiring setup is probably an open question).
->> >>
->> >> > What I would do is describe both in your interrupts property and make
->> >> > the driver know that the extra interrupt specifier is for the same
->> >> > interrupt output.
->> >> >
->> >>
->> >> So this is a little annoying, as ideally device drivers should not be
->> >> aware of their external connections. I'm trying to describe board (or
->> >> SoC) level wiring in hopefully a way that doesn't require individual
->> >> driver awareness. It also gets very messy when you have multiple
->> >> interrupt outputs that are each in themselves connected to multiple
->> >> interrupt controllers (which happens to be my situation). The meaning
->> >> of multiple tuples becomes ambiguous.
->> >>
->> >> Is the interrupt-map system I proposed acceptable long-term from just
->> >> a pure binding acceptability standpoint? The driver side solution is
->> >> also a large change pattern as I'm using this with Xilinx Zynq which
->> >> has a large number of peripherals, any of which could be
->> >> multiply-connected to both A9GIC and soft intc's in FPGA fabric.
->> >
->> > Well, it isn't actively dangerous, but it really isn't a very good
->> > description either. There is no information about what the difference
->> > would be between the different connection options. The kernel certainly
->> > cannot do anything intelligent with it.
->> >
->> > You'd probably be better off with an IRQ mux node and associated driver
->> > that chooses the appropriate connection and makes the behaviour
->> > transparent to the device driver. That way you'd have a place to embed
->> > the knowledge of how to make good decisions.
->> >
->>
->> Hi Grant,
->>
->> That sounds good, and it avoids me having to deal with that
->> interrupt-map crazyness. Here's a first attempt at this form of
->> syntax:
->>
->> foo_irq_mux {
->>     #interrupt-cells = 0;
->>     comaptible = "irq-mux";
->>     interrupts-extended = < &intc0 0 1 >,< &intc1 2 3 >;
->>     /* descision making info goes here */
->> };
->>
->> foo : foo@deadbeef {
->>     compatible = "vendor,foo";
->>     interrupts-extended = <&foo_irq_mux>;
->> }
->>
->>
->> It's going to get a little verbose once you start making multiple
->> connections as you need one mux per wire. Perhaps it could be cleaned
->> up by making the foo_irq_mux node(s) a child of foo?
->
-> It could, but then you need some way of attaching a driver to that node,
-> and that would require building knowledge into the driver again.
->
-> Can you boil it down to a couple of concrete examples? What is a
-> specific example of how the platform should decide which interrupt line
-> to use?
->
+From: Daniel Tang <dt.tangr@gmail.com>
 
-So i've spent some time playing with this. I now have a booting kernel
-with multiple root interrupt controllers and peripheral devices
-multiply-connected to both root controllers. But only one on of the
-controllers is used by Linux (as linux being able to use multiple
-intcs is a non-trivial problem). So the scheme I am using is to have
-one of these root intc's marked as disabled via
+Changelog v2:
+ * Rename ci13xxx to ci_hdrc
+ * Fixed alignment issues
 
-status = "disabled".
+The USB controller in TI-NSPIRE calculators are based off either Freescale's
+USB OTG controller or the USB controller found in the IMX233, both of which
+are Chipidea compatible.
 
-A few small patches to drivers/of/irq.c were needed to get Linux to
-ignore these marked-disabled intcs.
+This patch adds a device tree binding for the controller.
 
-It all looks rather silly at first glance, so it might be a good time
-to fill you in on why I am doing this. Two big reasons.
+Signed-off-by: Daniel Tang <dt.tangr@gmail.com>
+---
+ .../devicetree/bindings/usb/ci-hdrc-nspire.txt     | 17 +++++
+ drivers/usb/chipidea/Makefile                      |  1 +
+ drivers/usb/chipidea/ci_hdrc_nspire.c              | 74 ++++++++++++++++++++++
+ 3 files changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+ create mode 100644 drivers/usb/chipidea/ci_hdrc_nspire.c
 
-1 - Our cad tools generate complete system DTS's that match the
-hardware in the system. It is possible to design system with Xilinx
-CAD which have these multiply connected interrupts. Its awkward for us
-if there is no dts syntax to support the connectivity (despite Linux
-being unable to use it) so my thinking here is to generate the
-complete DTS then post-annotate (e.g. with tricks like status =
-"disabled") RE choices of what hardware Linux should use.
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+new file mode 100644
+index 0000000..5ba8e90
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+@@ -0,0 +1,17 @@
++* TI-Nspire USB OTG Controller
++
++Required properties:
++- compatible: Should be "zevio,nspire-usb"
++- reg: Should contain registers location and length
++- interrupts: Should contain controller interrupt
++
++Recommended properies:
++- vbus-supply: regulator for vbus
++
++Examples:
++		usb0: usb@B0000000 {
++			reg = <0xB0000000 0x1000>;
++			compatible = "zevio,nspire-usb";
++			interrupts = <8>;
++			vbus-supply = <&vbus_reg>;
++		};
+diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+index a99d980..245ea4d 100644
+--- a/drivers/usb/chipidea/Makefile
++++ b/drivers/usb/chipidea/Makefile
+@@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_CHIPIDEA_DEBUG)	+= debug.o
+ # Glue/Bridge layers go here
 
-2 - QEMU. I'm using DTS as a syntax for QEMU machine generation. These
-QEMU machines should generate the full hardware setup rather than just
-the Linux usable peripheral subset (I guess I'm kindof asking to be a
-non-linux consumer of dts here).
+ obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
++obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_nspire.o
 
-Working with Michal to get my patches in a list-ready state. Can you
-suggest a candidate tree we should base of for contributions to
-drivers/of/irq.c given your recent work?
+ # PCI doesn't provide stubs, need to check
+ ifneq ($(CONFIG_PCI),)
+diff --git a/drivers/usb/chipidea/ci_hdrc_nspire.c b/drivers/usb/chipidea/ci_hdrc_nspire.c
+new file mode 100644
+index 0000000..5d408c3
+--- /dev/null
++++ b/drivers/usb/chipidea/ci_hdrc_nspire.c
+@@ -0,0 +1,74 @@
++/*
++ *	Copyright (C) 2013 Daniel Tang <tangrs@tangrs.id.au>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2, as
++ * published by the Free Software Foundation.
++ *
++ * Based off drivers/usb/chipidea/ci_hdrc_msm.c
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/usb/gadget.h>
++#include <linux/usb/chipidea.h>
++
++#include "ci.h"
++
++static struct ci_hdrc_platform_data ci_hdrc_nspire_platdata = {
++	.name			= "ci_hdrc_nspire",
++	.flags			= CI_HDRC_REGS_SHARED,
++	.capoffset		= DEF_CAPOFFSET,
++};
++
++static int ci_hdrc_nspire_probe(struct platform_device *pdev)
++{
++	struct platform_device *ci_pdev;
++
++	dev_dbg(&pdev->dev, "ci_hdrc_nspire_probe\n");
++
++	ci_pdev = ci_hdrc_add_device(&pdev->dev,
++				pdev->resource, pdev->num_resources,
++				&ci_hdrc_nspire_platdata);
++
++	if (IS_ERR(ci_pdev)) {
++		dev_err(&pdev->dev, "ci_hdrc_add_device failed!\n");
++		return PTR_ERR(ci_pdev);
++	}
++
++	platform_set_drvdata(pdev, ci_pdev);
++
++	return 0;
++}
++
++static int ci_hdrc_nspire_remove(struct platform_device *pdev)
++{
++	struct platform_device *ci_pdev = platform_get_drvdata(pdev);
++
++	ci_hdrc_remove_device(ci_pdev);
++
++	return 0;
++}
++
++static const struct of_device_id ci_hdrc_nspire_dt_ids[] = {
++	{ .compatible = "zevio,nspire-usb", },
++	{ /* sentinel */ }
++};
++
++static struct platform_driver ci_hdrc_nspire_driver = {
++	.probe = ci_hdrc_nspire_probe,
++	.remove = ci_hdrc_nspire_remove,
++	.driver = {
++		.name = "nspire_usb",
++		.owner = THIS_MODULE,
++		.of_match_table = ci_hdrc_nspire_dt_ids,
++	},
++};
++
++MODULE_DEVICE_TABLE(of, ci_hdrc_nspire_dt_ids);
++module_platform_driver(ci_hdrc_nspire_driver);
++
++MODULE_ALIAS("platform:nspire_usb");
++MODULE_ALIAS("platform:ci_hdrc_nspire");
++MODULE_LICENSE("GPL v2");
+--
+1.8.1.3
 
-Regards,
-Peter
-
-> g.
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
