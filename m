@@ -1,64 +1,43 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dove: Fix typo in device_type property of phy node
-Date: Sun, 24 Nov 2013 11:54:53 -0500
-Message-ID: <20131124165453.GF29241@titan.lakedaemon.net>
-References: <1384440899-3622-1-git-send-email-srinivas.kandagatla@st.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 1/2] ARM: kirkwood: provide pinctrl default to sdio
+ nodes
+Date: Sun, 24 Nov 2013 11:59:32 -0500
+Message-ID: <20131124165932.GG29241@titan.lakedaemon.net>
+References: <1384525225-591-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1384440899-3622-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1384525225-591-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 14, 2013 at 02:54:59PM +0000, Srinivas Kandagatla wrote:
-> This patch fixes a typo for device_type property of phy node.
-> This can work as of today but once a checks are added in generic code
-> this typo will stop phy from working.
+On Fri, Nov 15, 2013 at 03:20:24PM +0100, Sebastian Hesselbarth wrote:
+> SDIO controllers found on Marvell Kirkwood 6281/6282 SoCs require
+> pins to be muxed by pinctrl. As there is only one sane pinctrl
+> setting for this, provide default pinctrl properties to the controller
+> nodes.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 > ---
->  arch/arm/boot/dts/dove.dtsi |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
+> I am not sending this two patches to each DT maintainer, as it is a
+> Kirkwood only thing, added the dt list for completeness.
+> 
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  arch/arm/boot/dts/kirkwood-6281.dtsi |    2 ++
+>  arch/arm/boot/dts/kirkwood-6282.dtsi |    2 ++
+>  2 files changed, 4 insertions(+), 0 deletions(-)
 
-Applied to mvebu/dt with Andrew's Ack.  I had to hand add it due to the
-reworking of dove.dtsi last time around.  I've attached my version, let
-me know if it looks amiss.
+Series applied to mvebu/dt
 
 thx,
 
 Jason.
-
------------>8---------------------
-commit 9e52c63992c19b1d2e9a6b6b8ba61aaf35e9fd17
-Author: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Date:   Sun Nov 24 16:47:51 2013 +0000
-
-    ARM: dove: Fix typo in device_type property of phy node
-    
-    This patch fixes a typo for device_type property of phy node.
-    This can work as of today but once a checks are added in generic code
-    this typo will stop phy from working.
-    
-    Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-    Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 113a8bc7bee7..abd7a6fd77f1 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -559,7 +559,7 @@
- 				status = "disabled";
- 
- 				ethphy: ethernet-phy {
--					device-type = "ethernet-phy";
-+					device_type = "ethernet-phy";
- 					/* set phy address in board file */
- 				};
- 			};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
