@@ -1,1310 +1,227 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH 1/3] pinctrl: Add Qualcomm TLMM driver
-Date: Sat, 23 Nov 2013 15:38:15 -0800
-Message-ID: <1385249897-16453-2-git-send-email-bjorn.andersson@sonymobile.com>
-References: <1385249897-16453-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 1/3] irqchip: irq-dove: Add PMU interrupt
+ controller.
+Date: Sat, 23 Nov 2013 22:34:33 -0500
+Message-ID: <20131124033433.GW29241@titan.lakedaemon.net>
+References: <1383820531-4387-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1385249897-16453-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1383820531-4387-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a pinctrl, pinmux, pinconf and gpiolib driver for the
-Qualcomm TLMM block.
+Thomas (tglx),
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
- drivers/pinctrl/Kconfig       |    6 +
- drivers/pinctrl/Makefile      |    1 +
- drivers/pinctrl/pinctrl-msm.c | 1118 +++++++++++++++++++++++++++++++++++++++++
- drivers/pinctrl/pinctrl-msm.h |  123 +++++
- 4 files changed, 1248 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-msm.c
- create mode 100644 drivers/pinctrl/pinctrl-msm.h
+On Thu, Nov 07, 2013 at 11:35:29AM +0100, Andrew Lunn wrote:
+> Dove has a Power Management Unit with its own interrupt
+> controller. This is chained on the main interrupt controller.  Add a
+> driver, making use of generic chip where possible.
+> 
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> cc: pawel.moll-5wv7dgnIgG8@public.gmane.org
+> cc: mark.rutland-5wv7dgnIgG8@public.gmane.org
+> cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+> cc: ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
+> ---
+>  .../interrupt-controller/marvell,dove-pmu-intc.txt |  17 +++
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-dove.c                         | 126 +++++++++++++++++++++
+>  3 files changed, 144 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,dove-pmu-intc.txt
+>  create mode 100644 drivers/irqchip/irq-dove.c
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index b6e864e..782b8d3 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -152,6 +152,12 @@ config PINCTRL_IMX28
- 	bool
- 	select PINCTRL_MXS
- 
-+config PINCTRL_MSM
-+	bool
-+	select PINMUX
-+	select PINCONF
-+	select GENERIC_PINCONF
-+
- config PINCTRL_NOMADIK
- 	bool "Nomadik pin controller driver"
- 	depends on ARCH_U8500 || ARCH_NOMADIK
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index 496d9bf..c0a809a 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_PINCTRL_FALCON)	+= pinctrl-falcon.o
- obj-$(CONFIG_PINCTRL_MXS)	+= pinctrl-mxs.o
- obj-$(CONFIG_PINCTRL_IMX23)	+= pinctrl-imx23.o
- obj-$(CONFIG_PINCTRL_IMX28)	+= pinctrl-imx28.o
-+obj-$(CONFIG_PINCTRL_MSM)	+= pinctrl-msm.o
- obj-$(CONFIG_PINCTRL_NOMADIK)	+= pinctrl-nomadik.o
- obj-$(CONFIG_PINCTRL_STN8815)	+= pinctrl-nomadik-stn8815.o
- obj-$(CONFIG_PINCTRL_DB8500)	+= pinctrl-nomadik-db8500.o
-diff --git a/drivers/pinctrl/pinctrl-msm.c b/drivers/pinctrl/pinctrl-msm.c
-new file mode 100644
-index 0000000..9cd8bd4
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-msm.c
-@@ -0,0 +1,1118 @@
-+/*
-+ * Copyright (c) 2013, Sony Mobile Communications AB.
-+ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2011-2012, NVIDIA CORPORATION.  All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/irqdomain.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pinctrl/machine.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/slab.h>
-+#include <linux/gpio.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/spinlock.h>
-+
-+#include "core.h"
-+#include "pinconf.h"
-+#include "pinctrl-msm.h"
-+#include "pinctrl-utils.h"
-+
-+/**
-+ * struct msm_pinctrl - state for a pinctrl-msm device
-+ * @dev:            device handle.
-+ * @pctrl:          pinctrl handle.
-+ * @domain:         irqdomain handle.
-+ * @chip:           gpiochip handle.
-+ * @irq:            Summary irq for the TLMM chip.
-+ * @lock:           Spinlock to protect register resources as well
-+ *                  as msm_pinctrl data structures.
-+ * @enabled_irqs:   Bitmap of currently enabled irqs.
-+ * @dual_edge_irqs: Bitmap of irqs that need sw emulated dual edge
-+ *                  detection.
-+ * @wake_irqs:      Bitmap of irqs with requested as wakeup source.
-+ * @soc;            Reference to soc_data of platform specific data.
-+ * @regs:           Base address for the TLMM register map.
-+ */
-+struct msm_pinctrl {
-+	struct device *dev;
-+	struct pinctrl_dev *pctrl;
-+	struct irq_domain *domain;
-+	struct gpio_chip chip;
-+	unsigned irq;
-+
-+	spinlock_t lock;
-+
-+	unsigned long *enabled_irqs;
-+	unsigned long *dual_edge_irqs;
-+	unsigned long *wake_irqs;
-+
-+	const struct msm_pinctrl_soc_data *soc;
-+	void __iomem *regs;
-+};
-+
-+static int msm_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pctrl->soc->ngroups;
-+}
-+
-+static const char *msm_get_group_name(struct pinctrl_dev *pctldev,
-+				      unsigned group)
-+{
-+	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pctrl->soc->groups[group].name;
-+}
-+
-+static int msm_get_group_pins(struct pinctrl_dev *pctldev,
-+			      unsigned group,
-+			      const unsigned **pins,
-+			      unsigned *num_pins)
-+{
-+	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*pins = pctrl->soc->groups[group].pins;
-+	*num_pins = pctrl->soc->groups[group].npins;
-+	return 0;
-+}
-+
-+static int msm_dt_subnode_to_map(struct pinctrl_dev *pctldev,
-+				 struct device_node *np,
-+				 struct pinctrl_map **map,
-+				 unsigned *reserved_maps,
-+				 unsigned *num_maps)
-+{
-+	struct device *dev = pctldev->dev;
-+	unsigned long *configs = NULL;
-+	struct property *prop;
-+	const char *function;
-+	unsigned num_configs = 0;
-+	const char *group;
-+	unsigned reserve;
-+	int ret;
-+
-+	ret = of_property_read_string(np, "qcom,function", &function);
-+	if (ret < 0) {
-+		/* EINVAL=missing, which is fine since it's optional */
-+		if (ret != -EINVAL)
-+			dev_err(dev, "unable to parse qcom,function\n");
-+		function = NULL;
-+	}
-+
-+	ret = pinconf_generic_parse_dt_config(np, &configs, &num_configs);
-+	if (ret) {
-+		dev_err(dev, "unable to parse properties\n");
-+		goto exit;
-+	}
-+
-+	reserve = 0;
-+	if (function != NULL)
-+		reserve++;
-+	if (num_configs)
-+		reserve++;
-+
-+	ret = of_property_count_strings(np, "qcom,pins");
-+	if (ret < 0) {
-+		dev_err(dev, "unable to parse qcom,pins");
-+		goto exit;
-+	}
-+	reserve *= ret;
-+
-+	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps,
-+					num_maps, reserve);
-+	if (ret < 0)
-+		goto exit;
-+
-+	of_property_for_each_string(np, "qcom,pins", prop, group) {
-+		if (function) {
-+			ret = pinctrl_utils_add_map_mux(pctldev, map,
-+					reserved_maps, num_maps, group,
-+					function);
-+			if (ret < 0)
-+				goto exit;
-+		}
-+
-+		if (num_configs) {
-+			ret = pinctrl_utils_add_map_configs(pctldev, map,
-+					reserved_maps, num_maps, group,
-+					configs, num_configs,
-+					PIN_MAP_TYPE_CONFIGS_GROUP);
-+			if (ret < 0)
-+				goto exit;
-+		}
-+	}
-+
-+	ret = 0;
-+
-+exit:
-+	kfree(configs);
-+	return ret;
-+}
-+
-+static int msm_dt_node_to_map(struct pinctrl_dev *pctldev,
-+			      struct device_node *np_config,
-+			      struct pinctrl_map **map,
-+			      unsigned *num_maps)
-+{
-+	unsigned reserved_maps;
-+	struct device_node *np;
-+	int ret;
-+
-+	reserved_maps = 0;
-+	*map = NULL;
-+	*num_maps = 0;
-+
-+	for_each_child_of_node(np_config, np) {
-+		ret = msm_dt_subnode_to_map(pctldev, np, map,
-+					    &reserved_maps, num_maps);
-+		if (ret < 0) {
-+			pinctrl_utils_dt_free_map(pctldev, *map,
-+					*num_maps);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct pinctrl_ops msm_pinctrl_ops = {
-+	.get_groups_count	= msm_get_groups_count,
-+	.get_group_name		= msm_get_group_name,
-+	.get_group_pins		= msm_get_group_pins,
-+	.dt_node_to_map		= msm_dt_node_to_map,
-+	.dt_free_map		= pinctrl_utils_dt_free_map,
-+};
-+
-+static int msm_get_functions_count(struct pinctrl_dev *pctldev)
-+{
-+	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pctrl->soc->nfunctions;
-+}
-+
-+static const char *msm_get_function_name(struct pinctrl_dev *pctldev,
-+					 unsigned function)
-+{
-+	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pctrl->soc->functions[function].name;
-+}
-+
-+static int msm_get_function_groups(struct pinctrl_dev *pctldev,
-+				   unsigned function,
-+				   const char * const **groups,
-+				   unsigned * const num_groups)
-+{
-+	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*groups = pctrl->soc->functions[function].groups;
-+	*num_groups = pctrl->soc->functions[function].ngroups;
-+	return 0;
-+}
-+
-+static int msm_pinmux_enable(struct pinctrl_dev *pctldev,
-+			     unsigned function,
-+			     unsigned group)
-+{
-+	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const struct msm_pingroup *g;
-+	unsigned long flags;
-+	u32 val;
-+	int i;
-+
-+	g = &pctrl->soc->groups[group];
-+
-+	if (WARN_ON(g->mux_bit < 0))
-+		return -EINVAL;
-+
-+	for (i = 0; i < ARRAY_SIZE(g->funcs); i++) {
-+		if (g->funcs[i] == function)
-+			break;
-+	}
-+
-+	if (WARN_ON(i == ARRAY_SIZE(g->funcs)))
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	val = readl(pctrl->regs + g->ctl_reg);
-+	val &= ~(0x7 << g->mux_bit);
-+	val |= i << g->mux_bit;
-+	writel(val, pctrl->regs + g->ctl_reg);
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return 0;
-+}
-+
-+static void msm_pinmux_disable(struct pinctrl_dev *pctldev,
-+			       unsigned function,
-+			       unsigned group)
-+{
-+	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const struct msm_pingroup *g;
-+	unsigned long flags;
-+	u32 val;
-+
-+	g = &pctrl->soc->groups[group];
-+
-+	if (WARN_ON(g->mux_bit < 0))
-+		return;
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	/* Clear the mux bits to select gpio mode */
-+	val = readl(pctrl->regs + g->ctl_reg);
-+	val &= ~(0x7 << g->mux_bit);
-+	writel(val, pctrl->regs + g->ctl_reg);
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+}
-+
-+static struct pinmux_ops msm_pinmux_ops = {
-+	.get_functions_count	= msm_get_functions_count,
-+	.get_function_name	= msm_get_function_name,
-+	.get_function_groups	= msm_get_function_groups,
-+	.enable			= msm_pinmux_enable,
-+	.disable		= msm_pinmux_disable,
-+};
-+
-+static int msm_config_reg(struct msm_pinctrl *pctrl,
-+			  const struct msm_pingroup *g,
-+			  unsigned param,
-+			  unsigned *reg,
-+			  unsigned *mask,
-+			  unsigned *bit)
-+{
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		*reg = g->ctl_reg;
-+		*bit = g->pull_bit;
-+		*mask = 3;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		*reg = g->ctl_reg;
-+		*bit = g->pull_bit;
-+		*mask = 3;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		*reg = g->ctl_reg;
-+		*bit = g->pull_bit;
-+		*mask = 3;
-+		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH:
-+		*reg = g->ctl_reg;
-+		*bit = g->drv_bit;
-+		*mask = 7;
-+		break;
-+	default:
-+		dev_err(pctrl->dev, "Invalid config param %04x\n", param);
-+		return -ENOTSUPP;
-+	}
-+
-+	if (*reg < 0) {
-+		dev_err(pctrl->dev, "Config param %04x not supported on group %s\n",
-+			param, g->name);
-+		return -ENOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static int msm_config_get(struct pinctrl_dev *pctldev,
-+			  unsigned int pin,
-+			  unsigned long *config)
-+{
-+	dev_err(pctldev->dev, "pin_config_set op not supported\n");
-+	return -ENOTSUPP;
-+}
-+
-+static int msm_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+				unsigned long *configs, unsigned num_configs)
-+{
-+	dev_err(pctldev->dev, "pin_config_set op not supported\n");
-+	return -ENOTSUPP;
-+}
-+
-+#define MSM_NO_PULL	0
-+#define MSM_PULL_DOWN	1
-+#define MSM_PULL_UP	3
-+
-+static const unsigned msm_regval_to_drive[] = { 2, 4, 6, 8, 10, 12, 14, 16 };
-+static const unsigned msm_drive_to_regval[] = { -1, -1, 0, -1, 1, -1, 2, -1, 3, -1, 4, -1, 5, -1, 6, -1, 7 };
-+
-+static int msm_config_group_get(struct pinctrl_dev *pctldev,
-+				unsigned int group,
-+				unsigned long *config)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned param = pinconf_to_config_param(*config);
-+	unsigned mask;
-+	unsigned arg;
-+	unsigned bit;
-+	unsigned reg;
-+	int ret;
-+	u32 val;
-+
-+	g = &pctrl->soc->groups[group];
-+
-+	ret = msm_config_reg(pctrl, g, param, &reg, &mask, &bit);
-+	if (ret < 0)
-+		return ret;
-+
-+	val = readl(pctrl->regs + reg);
-+	arg = (val >> bit) & mask;
-+
-+	/* Convert register value to pinconf value */
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		arg = arg == MSM_NO_PULL;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		arg = arg == MSM_PULL_DOWN;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		arg = arg == MSM_PULL_UP;
-+		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH:
-+		arg = msm_regval_to_drive[arg];
-+		break;
-+	default:
-+		dev_err(pctrl->dev, "Unsupported config parameter: %x\n",
-+			param);
-+		return -EINVAL;
-+	}
-+
-+	*config = pinconf_to_config_packed(param, arg);
-+
-+	return 0;
-+}
-+
-+static int msm_config_group_set(struct pinctrl_dev *pctldev,
-+				unsigned group,
-+				unsigned long *configs,
-+				unsigned num_configs)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned long flags;
-+	unsigned param;
-+	unsigned mask;
-+	unsigned arg;
-+	unsigned bit;
-+	unsigned reg;
-+	int ret;
-+	u32 val;
-+	int i;
-+
-+	g = &pctrl->soc->groups[group];
-+
-+	for (i = 0; i < num_configs; i++) {
-+		param = pinconf_to_config_param(configs[i]);
-+		arg = pinconf_to_config_argument(configs[i]);
-+
-+		ret = msm_config_reg(pctrl, g, param, &reg, &mask, &bit);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* Convert pinconf values to register values */
-+		switch (param) {
-+		case PIN_CONFIG_BIAS_DISABLE:
-+			arg = MSM_NO_PULL;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			arg = MSM_PULL_DOWN;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+			arg = MSM_PULL_UP;
-+			break;
-+		case PIN_CONFIG_DRIVE_STRENGTH:
-+			/* Check for invalid values */
-+			if (arg > ARRAY_SIZE(msm_drive_to_regval))
-+				arg = -1;
-+			else
-+				arg = msm_drive_to_regval[arg];
-+			break;
-+		default:
-+			dev_err(pctrl->dev, "Unsupported config parameter: %x\n",
-+				param);
-+			return -EINVAL;
-+		}
-+
-+		/* Range-check user-supplied value */
-+		if (arg & ~mask) {
-+			dev_err(pctrl->dev, "config %x: %x is invalid\n", param, arg);
-+			return -EINVAL;
-+		}
-+
-+		spin_lock_irqsave(&pctrl->lock, flags);
-+		val = readl(pctrl->regs + reg);
-+		val &= ~(mask << bit);
-+		val |= arg << bit;
-+		writel(val, pctrl->regs + reg);
-+		spin_unlock_irqrestore(&pctrl->lock, flags);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct pinconf_ops msm_pinconf_ops = {
-+	.pin_config_get		= msm_config_get,
-+	.pin_config_set		= msm_config_set,
-+	.pin_config_group_get	= msm_config_group_get,
-+	.pin_config_group_set	= msm_config_group_set,
-+};
-+
-+static struct pinctrl_desc msm_pinctrl_desc = {
-+	.pctlops = &msm_pinctrl_ops,
-+	.pmxops = &msm_pinmux_ops,
-+	.confops = &msm_pinconf_ops,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int msm_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl = container_of(chip, struct msm_pinctrl, chip);
-+	unsigned long flags;
-+	u32 val;
-+
-+	if (WARN_ON(offset >= pctrl->soc->ngroups))
-+		return -EINVAL;
-+
-+	g = &pctrl->soc->groups[offset];
-+
-+	if (WARN_ON(g->oe_bit < 0))
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	val = readl(pctrl->regs + g->ctl_reg);
-+	val &= ~BIT(g->oe_bit);
-+	writel(val, pctrl->regs + g->ctl_reg);
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int msm_gpio_direction_output(struct gpio_chip *chip, unsigned offset, int value)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl = container_of(chip, struct msm_pinctrl, chip);
-+	unsigned long flags;
-+	u32 val;
-+
-+	if (WARN_ON(offset >= pctrl->soc->ngroups))
-+		return -EINVAL;
-+
-+	g = &pctrl->soc->groups[offset];
-+
-+	if (WARN_ON(g->oe_bit < 0))
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	val = !!value << 1;
-+	writel(value ? BIT(g->out_bit) : 0, pctrl->regs + g->io_reg);
-+
-+	val = readl(pctrl->regs + g->ctl_reg);
-+	val |= BIT(g->oe_bit);
-+	writel(val, pctrl->regs + g->ctl_reg);
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int msm_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl = container_of(chip, struct msm_pinctrl, chip);
-+	u32 val;
-+
-+	if (WARN_ON(offset >= pctrl->soc->ngroups))
-+		return -EINVAL;
-+
-+	g = &pctrl->soc->groups[offset];
-+
-+	val = readl(pctrl->regs + g->io_reg);
-+	return val & BIT(g->in_bit);
-+}
-+
-+static void msm_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl = container_of(chip, struct msm_pinctrl, chip);
-+	unsigned long flags;
-+	u32 val;
-+
-+	if (WARN_ON(offset >= pctrl->soc->ngroups))
-+		return;
-+
-+	g = &pctrl->soc->groups[offset];
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	val = readl(pctrl->regs + g->io_reg);
-+	val |= BIT(g->out_bit);
-+	writel(val, pctrl->regs + g->io_reg);
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+}
-+
-+static int msm_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct msm_pinctrl *pctrl = container_of(chip, struct msm_pinctrl, chip);
-+
-+	return irq_create_mapping(pctrl->domain, offset);
-+}
-+
-+static int msm_gpio_request(struct gpio_chip *chip, unsigned offset)
-+{
-+	int gpio = chip->base + offset;
-+	return pinctrl_request_gpio(gpio);
-+}
-+
-+static void msm_gpio_free(struct gpio_chip *chip, unsigned offset)
-+{
-+	int gpio = chip->base + offset;
-+	return pinctrl_free_gpio(gpio);
-+}
-+
-+#ifdef CONFIG_DEBUG_FS
-+#include <linux/seq_file.h>
-+
-+static void msm_gpio_dbg_show_one(struct seq_file *s,
-+				  struct pinctrl_dev *pctldev,
-+				  struct gpio_chip *chip,
-+				  unsigned offset,
-+				  unsigned gpio)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl = container_of(chip, struct msm_pinctrl, chip);
-+	unsigned func;
-+	int is_out;
-+	int drive;
-+	int pull;
-+	u32 ctl_reg;
-+
-+	const char *pulls[] = {
-+		"no pull",
-+		"pull down",
-+		"keeper",
-+		"pull up"
-+	};
-+
-+	g = &pctrl->soc->groups[offset];
-+	ctl_reg = readl(pctrl->regs + g->ctl_reg);
-+
-+	is_out = !!(ctl_reg & BIT(g->oe_bit));
-+	func = (ctl_reg >> g->mux_bit) & 7;
-+	drive = (ctl_reg >> g->drv_bit) & 7;
-+	pull = (ctl_reg >> g->pull_bit) & 3;
-+
-+	seq_printf(s, " %-8s: %-3s %d", g->name, is_out ? "out" : "in", func);
-+	seq_printf(s, " %dmA", msm_regval_to_drive[drive]);
-+	seq_printf(s, " %s", pulls[pull]);
-+}
-+
-+static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
-+{
-+	unsigned gpio = chip->base;
-+	unsigned i;
-+
-+	for (i = 0; i < chip->ngpio; i++, gpio++) {
-+		msm_gpio_dbg_show_one(s, NULL, chip, i, gpio);
-+		seq_printf(s, "\n");
-+	}
-+}
-+
-+#else
-+#define msm_gpio_dbg_show NULL
-+#endif
-+
-+static struct gpio_chip msm_gpio_template = {
-+	.direction_input  = msm_gpio_direction_input,
-+	.direction_output = msm_gpio_direction_output,
-+	.get              = msm_gpio_get,
-+	.set              = msm_gpio_set,
-+	.to_irq           = msm_gpio_to_irq,
-+	.request          = msm_gpio_request,
-+	.free             = msm_gpio_free,
-+	.dbg_show         = msm_gpio_dbg_show,
-+};
-+
-+/* For dual-edge interrupts in software, since some hardware has no
-+ * such support:
-+ *
-+ * At appropriate moments, this function may be called to flip the polarity
-+ * settings of both-edge irq lines to try and catch the next edge.
-+ *
-+ * The attempt is considered successful if:
-+ * - the status bit goes high, indicating that an edge was caught, or
-+ * - the input value of the gpio doesn't change during the attempt.
-+ * If the value changes twice during the process, that would cause the first
-+ * test to fail but would force the second, as two opposite
-+ * transitions would cause a detection no matter the polarity setting.
-+ *
-+ * The do-loop tries to sledge-hammer closed the timing hole between
-+ * the initial value-read and the polarity-write - if the line value changes
-+ * during that window, an interrupt is lost, the new polarity setting is
-+ * incorrect, and the first success test will fail, causing a retry.
-+ *
-+ * Algorithm comes from Google's msmgpio driver.
-+ */
-+static void msm_gpio_update_dual_edge_pos(struct msm_pinctrl *pctrl,
-+					  const struct msm_pingroup *g,
-+					  struct irq_data *d)
-+{
-+	int loop_limit = 100;
-+	unsigned val, val2, intstat;
-+	unsigned pol;
-+
-+	do {
-+		val = readl(pctrl->regs + g->io_reg) & BIT(g->in_bit);
-+
-+		pol = readl(pctrl->regs + g->intr_cfg_reg);
-+		pol ^= BIT(g->intr_polarity_bit);
-+		writel(pol, pctrl->regs + g->intr_cfg_reg);
-+
-+		val2 = readl(pctrl->regs + g->io_reg) & BIT(g->in_bit);
-+		intstat = readl(pctrl->regs + g->intr_status_reg);
-+		if (intstat || (val == val2))
-+			return;
-+	} while (loop_limit-- > 0);
-+	dev_err(pctrl->dev, "dual-edge irq failed to stabilize, %#08x != %#08x\n",
-+		val, val2);
-+}
-+
-+static void msm_gpio_irq_mask(struct irq_data *d)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl;
-+	unsigned long flags;
-+	u32 val;
-+
-+	pctrl = irq_data_get_irq_chip_data(d);
-+	if (!pctrl)
-+		return;
-+
-+	if (WARN_ON(d->hwirq >= pctrl->soc->ngroups))
-+		return;
-+
-+	g = &pctrl->soc->groups[d->hwirq];
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	val = readl(pctrl->regs + g->intr_cfg_reg);
-+	val &= ~BIT(g->intr_enable_bit);
-+	writel(val, pctrl->regs + g->intr_cfg_reg);
-+
-+	clear_bit(d->hwirq, pctrl->enabled_irqs);
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+}
-+
-+static void msm_gpio_irq_unmask(struct irq_data *d)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl;
-+	unsigned long flags;
-+	u32 val;
-+
-+	pctrl = irq_data_get_irq_chip_data(d);
-+	if (!pctrl)
-+		return;
-+
-+	if (WARN_ON(d->hwirq >= pctrl->soc->ngroups))
-+		return;
-+
-+	g = &pctrl->soc->groups[d->hwirq];
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	val = readl(pctrl->regs + g->intr_status_reg);
-+	val &= ~BIT(g->intr_status_bit);
-+	writel(val, pctrl->regs + g->intr_status_reg);
-+
-+	val = readl(pctrl->regs + g->intr_cfg_reg);
-+	val |= BIT(g->intr_enable_bit);
-+	writel(val, pctrl->regs + g->intr_cfg_reg);
-+
-+	set_bit(d->hwirq, pctrl->enabled_irqs);
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+}
-+
-+static void msm_gpio_irq_ack(struct irq_data *d)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl;
-+	unsigned long flags;
-+	u32 val;
-+
-+	pctrl = irq_data_get_irq_chip_data(d);
-+	if (!pctrl)
-+		return;
-+
-+	if (WARN_ON(d->hwirq >= pctrl->soc->ngroups))
-+		return;
-+
-+	g = &pctrl->soc->groups[d->hwirq];
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	val = readl(pctrl->regs + g->intr_status_reg);
-+	val &= ~BIT(g->intr_status_bit);
-+	writel(val, pctrl->regs + g->intr_status_reg);
-+
-+	if (test_bit(d->hwirq, pctrl->dual_edge_irqs))
-+		msm_gpio_update_dual_edge_pos(pctrl, g, d);
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+}
-+
-+#define INTR_TARGET_PROC_APPS    4
-+
-+static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl;
-+	unsigned long flags;
-+	u32 val;
-+
-+	pctrl = irq_data_get_irq_chip_data(d);
-+	if (!pctrl)
-+		return -EINVAL;
-+
-+	if (WARN_ON(d->hwirq >= pctrl->soc->ngroups))
-+		return -EINVAL;
-+
-+	g = &pctrl->soc->groups[d->hwirq];
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	/*
-+	 * For hw without possibility of detecting both edges
-+	 */
-+	if (g->intr_detection_width == 1 && type == IRQ_TYPE_EDGE_BOTH)
-+		set_bit(d->hwirq, pctrl->dual_edge_irqs);
-+	else
-+		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
-+
-+	/* Route interrupts to application cpu */
-+	val = readl(pctrl->regs + g->intr_target_reg);
-+	val &= ~(7 << g->intr_target_bit);
-+	val |= INTR_TARGET_PROC_APPS << g->intr_target_bit;
-+	writel(val, pctrl->regs + g->intr_target_reg);
-+
-+	/* Update configuration for gpio.
-+	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
-+	 * internal circuitry of TLMM, toggling the RAW_STATUS
-+	 * could cause the INTR_STATUS to be set for EDGE interrupts.
-+	 */
-+	val = readl(pctrl->regs + g->intr_cfg_reg);
-+	val |= BIT(g->intr_raw_status_bit);
-+	if (g->intr_detection_width == 2) {
-+		val &= ~(3 << g->intr_detection_bit);
-+		val &= ~(1 << g->intr_polarity_bit);
-+		switch (type) {
-+		case IRQ_TYPE_EDGE_RISING:
-+			val |= 1 << g->intr_detection_bit;
-+			val |= BIT(g->intr_polarity_bit);
-+			break;
-+		case IRQ_TYPE_EDGE_FALLING:
-+			val |= 2 << g->intr_detection_bit;
-+			val |= BIT(g->intr_polarity_bit);
-+			break;
-+		case IRQ_TYPE_EDGE_BOTH:
-+			val |= 3 << g->intr_detection_bit;
-+			val |= BIT(g->intr_polarity_bit);
-+			break;
-+		case IRQ_TYPE_LEVEL_LOW:
-+			break;
-+		case IRQ_TYPE_LEVEL_HIGH:
-+			val |= BIT(g->intr_polarity_bit);
-+			break;
-+		}
-+	} else if (g->intr_detection_width == 1) {
-+		val &= ~(1 << g->intr_detection_bit);
-+		val &= ~(1 << g->intr_polarity_bit);
-+		switch (type) {
-+		case IRQ_TYPE_EDGE_RISING:
-+			val |= BIT(g->intr_detection_bit);
-+			val |= BIT(g->intr_polarity_bit);
-+			break;
-+		case IRQ_TYPE_EDGE_FALLING:
-+			val |= BIT(g->intr_detection_bit);
-+			break;
-+		case IRQ_TYPE_EDGE_BOTH:
-+			val |= BIT(g->intr_detection_bit);
-+			break;
-+		case IRQ_TYPE_LEVEL_LOW:
-+			break;
-+		case IRQ_TYPE_LEVEL_HIGH:
-+			val |= BIT(g->intr_polarity_bit);
-+			break;
-+		}
-+	} else {
-+		BUG();
-+	}
-+	writel(val, pctrl->regs + g->intr_cfg_reg);
-+
-+	if (test_bit(d->hwirq, pctrl->dual_edge_irqs))
-+		msm_gpio_update_dual_edge_pos(pctrl, g, d);
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_LEVEL_HIGH))
-+		__irq_set_handler_locked(d->irq, handle_level_irq);
-+	else if (type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
-+		__irq_set_handler_locked(d->irq, handle_edge_irq);
-+
-+	return 0;
-+}
-+
-+static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
-+{
-+	struct msm_pinctrl *pctrl;
-+	unsigned long flags;
-+	unsigned ngpio;
-+
-+	pctrl = irq_data_get_irq_chip_data(d);
-+	if (!pctrl)
-+		return -EINVAL;
-+
-+	ngpio = pctrl->chip.ngpio;
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	if (on) {
-+		if (bitmap_empty(pctrl->wake_irqs, ngpio))
-+			enable_irq_wake(pctrl->irq);
-+		set_bit(d->hwirq, pctrl->wake_irqs);
-+	} else {
-+		clear_bit(d->hwirq, pctrl->wake_irqs);
-+		if (bitmap_empty(pctrl->wake_irqs, ngpio))
-+			disable_irq_wake(pctrl->irq);
-+	}
-+
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return 0;
-+}
-+
-+static struct irq_chip msm_gpio_irq_chip = {
-+	.name           = "msmgpio",
-+	.irq_mask       = msm_gpio_irq_mask,
-+	.irq_unmask     = msm_gpio_irq_unmask,
-+	.irq_ack        = msm_gpio_irq_ack,
-+	.irq_set_type   = msm_gpio_irq_set_type,
-+	.irq_set_wake   = msm_gpio_irq_set_wake,
-+};
-+
-+static irqreturn_t msm_gpio_irq_handler(int irq, void *data)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl = data;
-+	struct irq_chip *chip = irq_get_chip(irq);
-+	struct irq_desc *desc = irq_to_desc(irq);
-+	int ngpio;
-+	u32 val;
-+	int i;
-+
-+	ngpio = pctrl->chip.ngpio;;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	for_each_set_bit(i, pctrl->enabled_irqs, ngpio) {
-+		g = &pctrl->soc->groups[i];
-+		val = readl(pctrl->regs + g->intr_status_reg);
-+		if (val & BIT(g->intr_status_bit))
-+			generic_handle_irq(msm_gpio_to_irq(&pctrl->chip, i));
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+	return IRQ_HANDLED;
-+}
-+
-+static int msm_gpio_irq_map(struct irq_domain *d, unsigned int irq,
-+			    irq_hw_number_t hwirq)
-+{
-+	struct msm_pinctrl *pctrl = d->host_data;
-+
-+	if (!pctrl)
-+		return -EINVAL;
-+
-+	irq_set_chip_and_handler(irq, &msm_gpio_irq_chip, handle_edge_irq);
-+	set_irq_flags(irq, IRQF_VALID);
-+	irq_set_chip_data(irq, pctrl);
-+	irq_set_irq_type(irq, IRQ_TYPE_EDGE_FALLING);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops msm_gpio_irq_simple_ops = {
-+	.map = msm_gpio_irq_map,
-+	.xlate = irq_domain_xlate_twocell,
-+};
-+
-+static int msm_gpio_init(struct msm_pinctrl *pctrl)
-+{
-+	struct gpio_chip *chip;
-+	int ret;
-+	int r;
-+
-+	chip = &pctrl->chip;
-+	chip->base = 0;
-+	chip->ngpio = pctrl->soc->gpio_range->npins;
-+	chip->label = dev_name(pctrl->dev);
-+	chip->dev = pctrl->dev;
-+	chip->owner = THIS_MODULE;
-+	chip->of_node = pctrl->dev->of_node;
-+
-+	pctrl->enabled_irqs = devm_kzalloc(pctrl->dev,
-+					   sizeof(unsigned long) * BITS_TO_LONGS(chip->ngpio),
-+					   GFP_KERNEL);
-+	if (!pctrl->enabled_irqs) {
-+		dev_err(pctrl->dev, "Failed to allocate enabled_irqs bitmap\n");
-+		return -ENOMEM;
-+	}
-+
-+	pctrl->dual_edge_irqs = devm_kzalloc(pctrl->dev,
-+					     sizeof(unsigned long) * BITS_TO_LONGS(chip->ngpio),
-+					     GFP_KERNEL);
-+	if (!pctrl->dual_edge_irqs) {
-+		dev_err(pctrl->dev, "Failed to allocate dual_edge_irqs bitmap\n");
-+		return -ENOMEM;
-+	}
-+
-+	pctrl->wake_irqs = devm_kzalloc(pctrl->dev,
-+					sizeof(unsigned long) * BITS_TO_LONGS(chip->ngpio),
-+					GFP_KERNEL);
-+	if (!pctrl->wake_irqs) {
-+		dev_err(pctrl->dev, "Failed to allocate wake_irqs bitmap\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = gpiochip_add(&pctrl->chip);
-+	if (ret) {
-+		dev_err(pctrl->dev, "Failed register gpiochip\n");
-+		return ret;
-+	}
-+
-+	pctrl->domain = irq_domain_add_simple(chip->of_node,
-+					      chip->ngpio,
-+					      0,
-+					      &msm_gpio_irq_simple_ops,
-+					      pctrl);
-+	if (!pctrl->domain) {
-+		dev_err(pctrl->dev, "Failed to register irq domain\n");
-+		r = gpiochip_remove(&pctrl->chip);
-+		return -ENOSYS;
-+	}
-+
-+	return 0;
-+}
-+
-+int msm_pinctrl_probe(struct platform_device *pdev,
-+		      const struct msm_pinctrl_soc_data *soc_data)
-+{
-+	struct msm_pinctrl *pctrl;
-+	struct resource *res;
-+	int ret;
-+	int r;
-+
-+	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
-+	if (!pctrl) {
-+		dev_err(&pdev->dev, "Can't allocate msm_pinctrl\n");
-+		return -ENOMEM;
-+	}
-+	pctrl->dev = &pdev->dev;
-+	pctrl->soc = soc_data;
-+	pctrl->chip = msm_gpio_template;
-+
-+	spin_lock_init(&pctrl->lock);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pctrl->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(pctrl->regs))
-+		return PTR_ERR(pctrl->regs);
-+
-+	pctrl->irq = platform_get_irq(pdev, 0);
-+	if (pctrl->irq < 0) {
-+		dev_err(&pdev->dev, "No interrupt defined for msmgpio\n");
-+		return pctrl->irq;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev,
-+			       pctrl->irq,
-+			       msm_gpio_irq_handler,
-+			       IRQF_TRIGGER_HIGH,
-+			       dev_name(&pdev->dev),
-+			       pctrl);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to request TLMM irq\n");
-+		return ret;
-+	}
-+
-+	ret = msm_gpio_init(pctrl);
-+	if (ret)
-+		return ret;
-+
-+	msm_pinctrl_desc.name = dev_name(&pdev->dev);
-+	msm_pinctrl_desc.pins = pctrl->soc->pins;
-+	msm_pinctrl_desc.npins = pctrl->soc->npins;
-+	pctrl->pctrl = pinctrl_register(&msm_pinctrl_desc, &pdev->dev, pctrl);
-+	if (!pctrl->pctrl) {
-+		dev_err(&pdev->dev, "Couldn't register pinctrl driver\n");
-+		irq_domain_remove(pctrl->domain);
-+		r = gpiochip_remove(&pctrl->chip);
-+		return -ENODEV;
-+	}
-+
-+	pinctrl_add_gpio_range(pctrl->pctrl, soc_data->gpio_range);
-+
-+	platform_set_drvdata(pdev, pctrl);
-+
-+	dev_dbg(&pdev->dev, "Probed Qualcomm pinctrl driver\n");
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(msm_pinctrl_probe);
-+
-+int msm_pinctrl_remove(struct platform_device *pdev)
-+{
-+	struct msm_pinctrl *pctrl = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	irq_domain_remove(pctrl->domain);
-+	ret = gpiochip_remove(&pctrl->chip);
-+	pinctrl_unregister(pctrl->pctrl);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(msm_pinctrl_remove);
-+
-diff --git a/drivers/pinctrl/pinctrl-msm.h b/drivers/pinctrl/pinctrl-msm.h
-new file mode 100644
-index 0000000..04546cd
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-msm.h
-@@ -0,0 +1,123 @@
-+/*
-+ * Copyright (c) 2013, Sony Mobile Communications AB.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef __PINCTRL_MSM_H__
-+#define __PINCTRL_MSM_H__
-+
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/machine.h>
-+
-+/**
-+ * struct msm_function - a pinmux function
-+ * @name:    Name of the pinmux function.
-+ * @groups:  List of pingroups for this function.
-+ * @ngroups: Number of entries in @groups.
-+ */
-+struct msm_function {
-+	const char *name;
-+	const char * const *groups;
-+	unsigned ngroups;
-+};
-+
-+/**
-+ * struct msm_pingroup - Qualcomm pingroup definition
-+ * @name:                 Name of the pingroup.
-+ * @pins:	          A list of pins assigned to this pingroup.
-+ * @npins:	          Number of entries in @pins.
-+ * @funcs:                A list of pinmux functions that can be selected for
-+ *                        this group. The index of the selected function is used
-+ *                        for programming the function selector.
-+ *                        Entries should be indices into the groups list of the
-+ *                        struct msm_pinctrl_soc_data.
-+ * @ctl_reg:              Offset of the register holding control bits for this group.
-+ * @io_reg:               Offset of the register holding input/output bits for this group.
-+ * @intr_cfg_reg:         Offset of the register holding interrupt configuration bits.
-+ * @intr_status_reg:      Offset of the register holding the status bits for this group.
-+ * @intr_target_reg:      Offset of the register specifying routing of the interrupts
-+ *                        from this group.
-+ * @mux_bit:              Offset in @ctl_reg for the pinmux function selection.
-+ * @pull_bit:             Offset in @ctl_reg for the bias configuration.
-+ * @drv_bit:              Offset in @ctl_reg for the drive strength configuration.
-+ * @oe_bit:               Offset in @ctl_reg for controlling output enable.
-+ * @in_bit:               Offset in @io_reg for the input bit value.
-+ * @out_bit:              Offset in @io_reg for the output bit value.
-+ * @intr_enable_bit:      Offset in @intr_cfg_reg for enabling the interrupt for this group.
-+ * @intr_status_bit:      Offset in @intr_status_reg for reading and acking the interrupt
-+ *                        status.
-+ * @intr_target_bit:      Offset in @intr_target_reg for configuring the interrupt routing.
-+ * @intr_raw_status_bit:  Offset in @intr_cfg_reg for the raw status bit.
-+ * @intr_polarity_bit:    Offset in @intr_cfg_reg for specifying polarity of the interrupt.
-+ * @intr_detection_bit:   Offset in @intr_cfg_reg for specifying interrupt type.
-+ * @intr_detection_width: Number of bits used for specifying interrupt type,
-+ *                        Should be 2 for SoCs that can detect both edges in hardware,
-+ *                        otherwise 1.
-+ */
-+struct msm_pingroup {
-+	const char *name;
-+	const unsigned *pins;
-+	unsigned npins;
-+
-+	unsigned funcs[8];
-+
-+	s16 ctl_reg;
-+	s16 io_reg;
-+	s16 intr_cfg_reg;
-+	s16 intr_status_reg;
-+	s16 intr_target_reg;
-+
-+	unsigned mux_bit:5;
-+
-+	unsigned pull_bit:5;
-+	unsigned drv_bit:5;
-+
-+	unsigned oe_bit:5;
-+	unsigned in_bit:5;
-+	unsigned out_bit:5;
-+
-+	unsigned intr_enable_bit:5;
-+	unsigned intr_status_bit:5;
-+
-+	unsigned intr_target_bit:5;
-+	unsigned intr_raw_status_bit:5;
-+	unsigned intr_polarity_bit:5;
-+	unsigned intr_detection_bit:5;
-+	unsigned intr_detection_width:5;
-+};
-+
-+/**
-+ * struct msm_pinctrl_soc_data - Qualcomm pin controller driver configuration
-+ * @pins:       An array describing all pins the pin controller affects.
-+ * @npins:      The number of entries in @pins.
-+ * @functions:  An array describing all mux functions the SoC supports.
-+ * @nfunctions: The number of entries in @functions.
-+ * @groups:     An array describing all pin groups the pin SoC supports.
-+ * @ngroups:    The numbmer of entries in @groups.
-+ * @gpio_range: The range of pingroups the driver should expose as GPIOs.
-+ */
-+struct msm_pinctrl_soc_data {
-+        const struct pinctrl_pin_desc *pins;
-+        unsigned npins;
-+        const struct msm_function *functions;
-+        unsigned nfunctions;
-+        const struct msm_pingroup *groups;
-+        unsigned ngroups;
-+	struct pinctrl_gpio_range *gpio_range;
-+};
-+
-+int msm_pinctrl_probe(struct platform_device *pdev,
-+		      const struct msm_pinctrl_soc_data *soc_data);
-+int msm_pinctrl_remove(struct platform_device *pdev);
-+
-+#endif
-+
--- 
-1.8.2.2
+Are you ok with this driver?  If so, would you like me to create a
+branch you can pull from?  Otherwise,
+
+Acked-by:  Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+
+thx,
+
+Jason.
+
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,dove-pmu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,dove-pmu-intc.txt
+> new file mode 100644
+> index 000000000000..1feb5825d372
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,dove-pmu-intc.txt
+> @@ -0,0 +1,17 @@
+> +Marvell Dove Power Management Unit interrupt controller
+> +
+> +Required properties:
+> +- compatible: shall be "marvell,dove-pmu-intc"
+> +- reg: base address of PMU interrupt registers starting with CAUSE register
+> +- interrupts: PMU interrupt of the main interrupt controller
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #interrupt-cells: number of cells to encode an interrupt source, shall be 1
+> +
+> +Example:
+> +	pmu_intc: pmu-interrupt-ctrl@d0050 {
+> +		compatible = "marvell,dove-pmu-intc";
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		reg = <0xd0050 0x8>;
+> +		interrupts = <33>;
+> +	};
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index c60b9010b152..f743006ce7ad 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -1,6 +1,7 @@
+>  obj-$(CONFIG_IRQCHIP)			+= irqchip.o
+>  
+>  obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
+> +obj-$(CONFIG_ARCH_DOVE)			+= irq-dove.o
+>  obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
+>  obj-$(CONFIG_ARCH_MMP)			+= irq-mmp.o
+>  obj-$(CONFIG_ARCH_MVEBU)		+= irq-armada-370-xp.o
+> diff --git a/drivers/irqchip/irq-dove.c b/drivers/irqchip/irq-dove.c
+> new file mode 100644
+> index 000000000000..788acd89848a
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-dove.c
+> @@ -0,0 +1,126 @@
+> +/*
+> + * Marvell Dove SoCs PMU IRQ chip driver.
+> + *
+> + * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <asm/exception.h>
+> +#include <asm/mach/irq.h>
+> +
+> +#include "irqchip.h"
+> +
+> +#define DOVE_PMU_IRQ_CAUSE	0x00
+> +#define DOVE_PMU_IRQ_MASK	0x04
+> +
+> +static void dove_pmu_irq_handler(unsigned int irq, struct irq_desc *desc)
+> +{
+> +	struct irq_domain *d = irq_get_handler_data(irq);
+> +	struct irq_chip_generic *gc = irq_get_domain_generic_chip(d, 0);
+> +	u32 stat = readl_relaxed(gc->reg_base + DOVE_PMU_IRQ_CAUSE) &
+> +		   gc->mask_cache;
+> +
+> +	while (stat) {
+> +		u32 hwirq = ffs(stat) - 1;
+> +
+> +		generic_handle_irq(irq_find_mapping(d, gc->irq_base + hwirq));
+> +		stat &= ~(1 << hwirq);
+> +	}
+> +}
+> +
+> +static void pmu_irq_ack(struct irq_data *d)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> +	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+> +	u32 mask = ~d->mask;
+> +
+> +	/*
+> +	 * The PMU mask register is not RW0C: it is RW.	 This means that
+> +	 * the bits take whatever value is written to them; if you write
+> +	 * a '1', you will set the interrupt.
+> +	 *
+> +	 * Unfortunately this means there is NO race free way to clear
+> +	 * these interrupts.
+> +	 *
+> +	 * So, let's structure the code so that the window is as small as
+> +	 * possible.
+> +	 */
+> +	irq_gc_lock(gc);
+> +	mask &= irq_reg_readl(gc->reg_base +  ct->regs.ack);
+> +	irq_reg_writel(mask, gc->reg_base +  ct->regs.ack);
+> +	irq_gc_unlock(gc);
+> +}
+> +
+> +static int __init dove_pmu_irq_init(struct device_node *np,
+> +				    struct device_node *parent)
+> +{
+> +	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+> +	struct resource r;
+> +	struct irq_domain *domain;
+> +	struct irq_chip_generic *gc;
+> +	int ret, irq, nrirqs = 7;
+> +
+> +	domain = irq_domain_add_linear(np, nrirqs,
+> +				       &irq_generic_chip_ops, NULL);
+> +	if (!domain) {
+> +		pr_err("%s: unable to add irq domain\n", np->name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = irq_alloc_domain_generic_chips(domain, nrirqs, 1, np->name,
+> +			     handle_level_irq, clr, 0, IRQ_GC_INIT_MASK_CACHE);
+> +	if (ret) {
+> +		pr_err("%s: unable to alloc irq domain gc\n", np->name);
+> +		return ret;
+> +	}
+> +
+> +	ret = of_address_to_resource(np, 0, &r);
+> +	if (ret) {
+> +		pr_err("%s: unable to get resource\n", np->name);
+> +		return ret;
+> +	}
+> +
+> +	if (!request_mem_region(r.start, resource_size(&r), np->name)) {
+> +		pr_err("%s: unable to request mem region\n", np->name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* Map the parent interrupt for the chained handler */
+> +	irq = irq_of_parse_and_map(np, 0);
+> +	if (irq <= 0) {
+> +		pr_err("%s: unable to parse irq\n", np->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	gc = irq_get_domain_generic_chip(domain, 0);
+> +	gc->reg_base = ioremap(r.start, resource_size(&r));
+> +	if (!gc->reg_base) {
+> +		pr_err("%s: unable to map resource\n", np->name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	gc->chip_types[0].regs.ack = DOVE_PMU_IRQ_CAUSE;
+> +	gc->chip_types[0].regs.mask = DOVE_PMU_IRQ_MASK;
+> +	gc->chip_types[0].chip.irq_ack = pmu_irq_ack;
+> +	gc->chip_types[0].chip.irq_mask = irq_gc_mask_clr_bit;
+> +	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_set_bit;
+> +
+> +	/* mask and clear all interrupts */
+> +	writel(0, gc->reg_base + DOVE_PMU_IRQ_MASK);
+> +	writel(0, gc->reg_base + DOVE_PMU_IRQ_CAUSE);
+> +
+> +	irq_set_handler_data(irq, domain);
+> +	irq_set_chained_handler(irq, dove_pmu_irq_handler);
+> +
+> +	return 0;
+> +}
+> +IRQCHIP_DECLARE(dove_pmu_intc,
+> +		"marvell,dove-pmu-intc", dove_pmu_irq_init);
+> -- 
+> 1.8.4.rc3
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
