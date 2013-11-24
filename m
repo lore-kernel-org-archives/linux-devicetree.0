@@ -1,42 +1,49 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when populating interrupts
-Date: Sun, 24 Nov 2013 21:27:57 +0000
-Message-ID: <20131124212757.7D224C402A3@trevor.secretlab.ca>
-References: <20131123004334.GJ10023@atomide.com> <20131123005509.GJ16735@ n2100.arm.linux.org.uk> <20131123010850.GN10023@atomide.com> < 20131123011515.GO10023@atomide.com> <20131123015034.GP10023@atomide.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131123015034.GP10023@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
+Date: Sun, 24 Nov 2013 21:32:12 +0000
+Message-ID: <20131124213212.226B8C402C3@trevor.secretlab.ca>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> < 1381869563-16083-10-git-send-email-grant.likely@linaro.org> < CAEgOgz6=HhBkb2KtxcmHpNdE_0sNngw0NaL2SnLWj1opZkO3SA@mail.gmail.com> < 20131112065405.C75E8C42024@trevor.secretlab.ca> < CAEgOgz6j8YsvFgq8ZbE20ocHPA0C-eUGBb7F1gNiVBvJXLa8_g@mail.gmail.com> < 20131112085038.B6A75C421BB@trevor.secretlab.ca> < CAEgOgz4dM1zQdFpOkUwZqAUMUBe2eh3j1Ah0KgomVAOGgrPsVw@mail.gmail.com> < 20131113061425.667F9C41807@trevor.secretlab.ca> < CAEgOgz5BWzo-LGddjG6ZUtKt6GHxLmDUEndFOdVrn+1HTPvpGQ@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEgOgz5BWzo-LGddjG6ZUtKt6GHxLmDUEndFOdVrn+1HTPvpGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Nov 2013 17:50:35 -0800, Tony Lindgren <tony@atomide.com> wrote:
-> * Tony Lindgren <tony@atomide.com> [131122 17:16]:
-> > * Tony Lindgren <tony@atomide.com> [131122 17:09]:
-> > > * Russell King - ARM Linux <linux@arm.linux.org.uk> [131122 16:56]:
-> > > > On Fri, Nov 22, 2013 at 04:43:35PM -0800, Tony Lindgren wrote:
-> > > > > +		/* See of_device_resource_notify for populating interrupts */
-> > > > > +		for (i = 0; i < num_irq; i++, res++) {
-> > > > > +			res->flags = IORESOURCE_IRQ;
-> > > > > +			res->start = -EPROBE_DEFER;
-> > > > > +			res->end = -EPROBE_DEFER;
-> > > > 
-> > > > NAK.  Definitely a bad idea to start introducing magic values other into
-> > > > resources.  Please don't do this.
-> > > 
-> > > Do you have any better ideas on how to sort out this issue then?
-> > 
-> > I guess we could allocate all the resources lazily here, I'll take a look
-> > at that.
+On Sun, 24 Nov 2013 17:04:52 +1000, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> On Wed, Nov 13, 2013 at 4:14 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Wed, 13 Nov 2013 09:17:01 +1000, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> >> It's going to get a little verbose once you start making multiple
+> >> connections as you need one mux per wire. Perhaps it could be cleaned
+> >> up by making the foo_irq_mux node(s) a child of foo?
+> >
+> > It could, but then you need some way of attaching a driver to that node,
+> > and that would require building knowledge into the driver again.
+> >
+> > Can you boil it down to a couple of concrete examples? What is a
+> > specific example of how the platform should decide which interrupt line
+> > to use?
+> >
 > 
-> Here's a version that allocates the resources lazily with the notifier.
-> Seems to boot, need to play with it a bit more though to make sure we're
-> not overwriting resources for any legacy devices.
+> So i've spent some time playing with this. I now have a booting kernel
+> with multiple root interrupt controllers and peripheral devices
+> multiply-connected to both root controllers. But only one on of the
+> controllers is used by Linux (as linux being able to use multiple
+> intcs is a non-trivial problem). So the scheme I am using is to have
+> one of these root intc's marked as disabled via
 
-Blurg. Using a notifier really feels like we don't have a good handle on
-a reasonable solution yet. Basically it means we're hooking into the
-driver core without /looking/ like we're hooking into the driver core. I
-don't think this is any better, but I don't have a better suggestion at
-the moment.   :-(
+Multiple intc's should be a solved problem. What issue are you seeing?
+Or is this a microblaze specific problem?
+
+> Working with Michal to get my patches in a list-ready state. Can you
+> suggest a candidate tree we should base of for contributions to
+> drivers/of/irq.c given your recent work?
+
+Linux-next. It is always linux-next.  :-)
 
 g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
