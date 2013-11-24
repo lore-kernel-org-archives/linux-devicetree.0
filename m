@@ -1,34 +1,42 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v4 29/31] ARM: mvebu: Add support for NAND controller
- in Armada 370/XP
-Date: Sat, 23 Nov 2013 22:42:38 -0500
-Message-ID: <20131124034238.GX29241@titan.lakedaemon.net>
-References: <1383837455-30721-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1383837455-30721-30-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCHv2] ARM: mvebu: Add Netgear ReadyNAS 2120 board
+Date: Sat, 23 Nov 2013 22:49:51 -0500
+Message-ID: <20131124034951.GY29241@titan.lakedaemon.net>
+References: <87ppq5flnb.fsf@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1383837455-30721-30-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <87ppq5flnb.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Willy Tarreau <w@1wt.eu>
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 07, 2013 at 12:17:33PM -0300, Ezequiel Garcia wrote:
-> The Armada 370 and Armada XP SoC have a NAND controller (aka NFCv2).
-> This commit adds support for it in Armada 370 and Armada XP SoC
-> common devicetree.
+On Tue, Nov 12, 2013 at 08:46:48PM +0100, Arnaud Ebalard wrote:
 > 
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> All hardware parts of the (mv78230 Armada XP based) NETGEAR ReadyNAS
+> 2120 are supported by mainline kernel (USB 3.0 and eSATA rear ports,
+> USB 2.0 front port, Gigabit controller and PHYs for the two rear ports,
+> serial port, LEDs, Buttons, 88SE9170 SATA controllers, three G762 fan
+> controllers, G751 temperature sensor) except for:
+> 
+>  - the Intersil ISL12057 I2C RTC Chip,
+>  - the Armada NAND controller.
+> 
+> Support for both of those is currently work in progress and does not
+> prevent boot.
+> 
+> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 > ---
->  arch/arm/boot/dts/armada-370-xp.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
+...
+>  arch/arm/boot/dts/Makefile                     |   1 +
+>  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 288 +++++++++++++++++++++++++
+>  2 files changed, 289 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
 
-Patches 29 (this one), 30 and 31 applied to mvebu/dt
-
-I'll be working on the core-divider clock issue over the next couple of
-days.
+Applied to mvebu/dt
 
 thx,
 
