@@ -1,50 +1,57 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCHv2] usb: chipidea: add support for USB OTG controller on
- TI-NSPIRE
-Date: Sun, 24 Nov 2013 18:12:06 +0800
-Message-ID: <20131124101205.GA30724@shlinux1.ap.freescale.net>
-References: <1385278667-91856-1-git-send-email-dt.tangr@gmail.com>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCHv2] ARM: mvebu: Add Netgear ReadyNAS 2120 board
+Date: Sun, 24 Nov 2013 12:52:58 +0100
+Message-ID: <87y54e819h.fsf@natisbad.org>
+References: <87ppq5flnb.fsf@natisbad.org>
+	<20131124034951.GY29241@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385278667-91856-1-git-send-email-dt.tangr@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: dt.tangr@gmail.com
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 24, 2013 at 06:37:47PM +1100, dt.tangr@gmail.com wrote:
-> From: Daniel Tang <dt.tangr@gmail.com>
-> 
-> Changelog v2:
->  * Rename ci13xxx to ci_hdrc
->  * Fixed alignment issues
-> 
-> The USB controller in TI-NSPIRE calculators are based off either Freescale's
-> USB OTG controller or the USB controller found in the IMX233, both of which
-> are Chipidea compatible.
-> 
-> This patch adds a device tree binding for the controller.
-> 
-> Signed-off-by: Daniel Tang <dt.tangr@gmail.com>
-> ---
+Hi,
 
-Please put the "Changelog v2" here, the change log should
-not be in commit log, it is for review purpose.
+Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> writes:
 
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, ci_hdrc_nspire_dt_ids);
-> +module_platform_driver(ci_hdrc_nspire_driver);
-> +
-> +MODULE_ALIAS("platform:nspire_usb");
-> +MODULE_ALIAS("platform:ci_hdrc_nspire");
+> On Tue, Nov 12, 2013 at 08:46:48PM +0100, Arnaud Ebalard wrote:
+>> 
+>> All hardware parts of the (mv78230 Armada XP based) NETGEAR ReadyNAS
+>> 2120 are supported by mainline kernel (USB 3.0 and eSATA rear ports,
+>> USB 2.0 front port, Gigabit controller and PHYs for the two rear ports,
+>> serial port, LEDs, Buttons, 88SE9170 SATA controllers, three G762 fan
+>> controllers, G751 temperature sensor) except for:
+>> 
+>>  - the Intersil ISL12057 I2C RTC Chip,
+>>  - the Armada NAND controller.
+>> 
+>> Support for both of those is currently work in progress and does not
+>> prevent boot.
+>> 
+>> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+>> ---
+> ...
+>>  arch/arm/boot/dts/Makefile                     |   1 +
+>>  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 288 +++++++++++++++++++++++++
+>>  2 files changed, 289 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+>
+> Applied to mvebu/dt
 
-Just curious, why you need to two alias?
+Thanks, Jason. Based on the response to the question raised by Jason
+Gunthorpe regarding PHY compatible string [1], I'll keep in mind to send
+you a patch at some point (.dts file for RN2120 also has compatible =
+"marvell,88e1318s") if needed.
 
--- 
+Cheers,
 
-Best Regards,
-Peter Chen
+a+
 
+[1]: http://www.spinics.net/lists/arm-kernel/msg288496.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
