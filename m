@@ -1,74 +1,34 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: [PATCH RESEND] ASoC: clk: probe defer when clock not yet ready
-Date: Mon, 25 Nov 2013 09:38:49 +0100
-Message-ID: <20131125093849.5fadc450@armhf>
+From: Denis Carikli <denis@eukrea.com>
+Subject: Re: [PATCHv9][ 1/3] Input: tsc2007: Add device tree support.
+Date: Mon, 25 Nov 2013 09:39:05 +0100
+Message-ID: <52930CA9.4060606@eukrea.com>
+References: <1383916659-9988-1-git-send-email-denis@eukrea.com>
+ <20131119211102.GA14888@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131119211102.GA14888@core.coreip.homeip.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, =?ISO-8859-1?Q?Eric_B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sascha Hauer <kernel@pengutronix.de>, linux-input@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, =?ISO-8859-1?Q?Lothar_Wa=DFmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-At probe time, a clock device may not be ready when some other device
-wants to use it.=20
+On 11/19/2013 10:11 PM, Dmitry Torokhov wrote:
+ > Input: tsc2007 misc fixes
+ >
+ > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+ >
+ > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-This patch lets the functions clk_get/devm_clk_get return a probe defer
-when the clock is defined in the DT but not yet available.
+Tested-by: Denis Carikli <denis@eukrea.com>
 
-It also fixes an erroneous call to clk_get_sys() when __clk_get() fails=
-=2E
-
-Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
----
-resend: - patch subject change from
-   [PATCH v3 1/2] ASoC: kirkwood: clk: probe defer when clock not yet r=
-eady
-	- base kernel 3.13.0-rc1
-v2: fix __clk_get() failure (from Russell King)
----
- drivers/clk/clk.c    | 2 +-
- drivers/clk/clkdev.c | 7 ++++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 2cf2ea6..41361c6 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2187,7 +2187,7 @@ EXPORT_SYMBOL_GPL(of_clk_del_provider);
- struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec)
- {
- 	struct of_clk_provider *provider;
--	struct clk *clk =3D ERR_PTR(-ENOENT);
-+	struct clk *clk =3D ERR_PTR(-EPROBE_DEFER);
-=20
- 	/* Check if we have such a provider in our array */
- 	mutex_lock(&of_clk_lock);
-diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-index 442a313..1f402b9 100644
---- a/drivers/clk/clkdev.c
-+++ b/drivers/clk/clkdev.c
-@@ -157,7 +157,12 @@ struct clk *clk_get(struct device *dev, const char=
- *con_id)
-=20
- 	if (dev) {
- 		clk =3D of_clk_get_by_name(dev->of_node, con_id);
--		if (!IS_ERR(clk) && __clk_get(clk))
-+		if (!IS_ERR(clk)) {
-+			if (!__clk_get(clk))
-+				clk =3D ERR_PTR(-ENOENT);
-+			return clk;
-+		}
-+		if (PTR_ERR(clk) =3D=3D -EPROBE_DEFER)
- 			return clk;
- 	}
-=20
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Denis.
