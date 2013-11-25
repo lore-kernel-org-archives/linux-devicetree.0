@@ -1,190 +1,77 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
-Date: Mon, 25 Nov 2013 15:14:21 +0000
-Message-ID: <20131125151421.GF32081@e106331-lin.cambridge.arm.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
- <25668725.sMcoUCgCKk@flatron>
- <52861F46.8020900@ti.com>
- <1574695.YAEZXuUskK@amdc1227>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: add ARMv8 PMU binding
+Date: Mon, 25 Nov 2013 09:24:46 -0600
+Message-ID: <CAL_JsqKArowT_DE8-vCJvmOSxjp+X9bngCXXsgjBK7G3wPZ7wA@mail.gmail.com>
+References: <1385155032-9032-1-git-send-email-robherring2@gmail.com>
+	<A8B9EAD7-0DBA-46D7-963F-30DEA0575EE2@codeaurora.org>
+	<528FD003.8090607@gmail.com>
+	<20131125091651.GA32081@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1574695.YAEZXuUskK@amdc1227>
-Content-Language: en-US
+In-Reply-To: <20131125091651.GA32081-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[...]
-
-> > >>>> +* Trip points
-> > >>>> +
-> > >>>> +The trip node is a node to describe a point in the temperature domain
-> > >>>> +in which the system takes an action. This node describes just the point,
-> > >>>> +not the action.
-> > >>>> +
-> > >>>> +Required properties:
-> > >>>> +- temperature:          An integer indicating the trip temperature level,
-> > >>>> +  Type: signed          in millicelsius.
-> > >>>> +  Size: one cell
-> > >>>> +
-> > >>>> +- hysteresis:           A low hysteresis value on temperature property (above).
-> > >>>> +  Type: unsigned        This is a relative value, in millicelsius.
-> > >>>> +  Size: one cell
-> > >>>
-> > >>> What about replacing temperature and hysteresis with a single temperature
-> > >>> property that can be either one cell for 0 hysteresis or two cells to
-> > >>> specify lower and upper range of temperatures?
-> > >>
-> > >> What is the problem with using two properties? I think we loose
-> > >> representation by gluing two properties into one just because one cell.
-> > >
-> > > Ranges is the representation widely used in other bindings. In addition
-> >
-> > Well that sentence is arguable. It is not like all properties in DT are
-> > standardized as ranges, is it?
+On Mon, Nov 25, 2013 at 3:16 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wr=
+ote:
+> On Fri, Nov 22, 2013 at 09:43:31PM +0000, Rob Herring wrote:
+>> On 11/22/2013 03:38 PM, Kumar Gala wrote:
+>> >
+>> > On Nov 22, 2013, at 3:17 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> w=
+rote:
+>> >
+>> >> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> >>
+>> >> Add missing "arm,armv8-pmuv3" compatible property for ARMv8 PMU.
+>> >>
+>> >> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> >> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+>> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+>> >> ---
+>> >> Documentation/devicetree/bindings/arm/pmu.txt | 1 +
+>> >> 1 file changed, 1 insertion(+)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Docu=
+mentation/devicetree/bindings/arm/pmu.txt
+>> >> index 343781b..3e1e498 100644
+>> >> --- a/Documentation/devicetree/bindings/arm/pmu.txt
+>> >> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
+>> >> @@ -7,6 +7,7 @@ representation in the device tree should be done =
+as under:-
+>> >> Required properties:
+>> >>
+>> >> - compatible : should be one of
+>> >> +  "arm,armv8-pmuv3=94
+>> >
+>> > what about arm,armv8-pmu-v3?
+>>
+>> I'm just documenting what is already being used:
+>>
+>> arch/arm64/boot/dts/foundation-v8.dts:          compatible =3D
+>> "arm,armv8-pmuv3";
+>> arch/arm64/boot/dts/rtsm_ve-aemv8a.dts:         compatible =3D
+>> "arm,armv8-pmuv3";
+>>
+>> Do we want to change those?
 >
-> No, they are not, but property range is a common concept of representing
-> range of some values.
+> It would probably have been nicer to have the '-' from the start, but
+> adding it now is only going to expand the set of compatible strings f=
+or
+> no appreciable benefit.
 >
-> Anyway, I won't insist on this, as it's just a minor detail. However I'd
-> like to see comments from more people on this.
+> I don't see any value in adding a new form of the string, and we can'=
+t
+> change the existing one as it's already in use.
 
-I'm happy with having these as separate properties.
-
-[...]
-
-> > >>>> +
-> > >>>> +- type:                 a string containing the trip type. Supported values are:
-> > >>>> +        "active":       A trip point to enable active cooling
-> > >>>> +        "passive":      A trip point to enable passive cooling
-> > >>>
-> > >>> The two above seem to be implying action, as opposed to the general
-> > >>> comment about trip points.
-> > >>
-> > >> They do not imply action, they specify type of trip.
-> > >
-> > > For me "A trip point to enable active cooling" means that when this trip
-> > > point is crossed, active cooling must be enabled. What is it if not
-> > > implying action?
-> >
-> > But within a board there could be more than one active cooling actions
-> > that could be done, it is not a 1 to 1 relation. Same thing applies to
-> > passive cooling. The binding does not imply a specific action. Just the
-> > trip type.
->
-> I'd prefer the "active" and "passive" states to be renamed an their
-> descriptions rephrased. In general, the idea of having just four trip
-> point types seems like bound to a single specific hardware platform.
->
-> That's a wild guess, but maybe having an unsigned integer to represent
-> trip point "attention level" would be a better idea?
-
-The set of names can be extended in future, and we can choose to have an
-attention-level property in future, and map the existing types to them.
-If we don't have something fundamantally better, I think this should be
-OK for now.
-
->
-> >
-> > >
-> > >>
-> > >>>
-> > >>>> +        "hot":          A trip point to notify emergency
-> > >>>> +        "critical":     Hardware not reliable.
-> > >>>> +  Type: string
-> > >>>> +
-> > >>> [snip]
-> > >>>> +* Examples
-> > >>>> +
-> > >>>> +Below are several examples on how to use thermal data descriptors
-> > >>>> +using device tree bindings:
-> > >>>> +
-> > >>>> +(a) - CPU thermal zone
-> > >>>> +
-> > >>>> +The CPU thermal zone example below describes how to setup one thermal zone
-> > >>>> +using one single sensor as temperature source and many cooling devices and
-> > >>>> +power dissipation control sources.
-> > >>>> +
-> > >>>> +#include <dt-bindings/thermal/thermal.h>
-> > >>>> +
-> > >>>> +cpus {
-> > >>>> +        /*
-> > >>>> +         * Here is an example of describing a cooling device for a DVFS
-> > >>>> +         * capable CPU. The CPU node describes its four OPPs.
-> > >>>> +         * The cooling states possible are 0..3, and they are
-> > >>>> +         * used as OPP indexes. The minimum cooling state is 0, which means
-> > >>>> +         * all four OPPs can be available to the system. The maximum
-> > >>>> +         * cooling state is 3, which means only the lowest OPPs (198MHz@0.85V)
-> > >>>> +         * can be available in the system.
-> > >>>> +         */
-> > >>>> +        cpu0: cpu@0 {
-> > >>>> +                ...
-> > >>>> +                operating-points = <
-> > >>>> +                        /* kHz    uV */
-> > >>>> +                        970000  1200000
-> > >>>> +                        792000  1100000
-> > >>>> +                        396000  950000
-> > >>>> +                        198000  850000
-> > >>>> +                >;
-> > >>>> +                cooling-min-state = <0>;
-> > >>>> +                cooling-max-state = <3>;
-> > >>>> +                #cooling-cells = <2>; /* min followed by max */
-> > >>>
-> > >>> I believe you don't need the min- and max-state properties here then. Your
-> > >>> thermal core can simply query the cpufreq driver (which would be a cooling
-> > >>> device here) about the range of states it supports
-> > >>
-> > >> This binding is not supposed to be aware of cpufreq, which is Linux
-> > >> specific implementation.
-> > >
-> > > I didn't say anything about making the binding aware of cpufreq, but
-> > > instead about getting rid of redundancy of data, that can be provided
-> > > by respective drivers anyway.
-> >
-> > There are cases in which cooling devices don't need to use all states
-> > for cooling, because either lower states does not provide cooling
-> > effectiveness or higher states must be avoided at all. So, allowing
-> > drivers to report this thermal info is possible, but questionable
-> > design, as you would be spreading the thermal info. Besides, for the
-> > example I gave, the driver would need to know board specifics, as the
-> > range of states would vary anyway across board.
->
-> One thing is the allowed range of cooling states supported by the
-> cooling device and another is the range of states that are usable on
-> given board. The former is a property of the cooling device that
-> in most cases is implied by its compatible string, so to eliminate the
-> bad data redundancy, you should not make the user respecify that. The
-> latter you have as a part of your cooling device specifier tuple.
->
-> As an example of this, see PWM, GPIO or IRQ bindings. You don't have
-> {pwm-channel,pwm-duty,interrupt,gpio}-{min,max} properties, because this
-> is not needed by respective PWM, GPIO or IRQ drivers, as they already
-> know these parameters.
-
-This is arguable. The {min,max} levels associated with a cooling state
-is essentially a recommendation of a sane set of values you might want
-to use the cooling device with.
-
-It could work using only the cooling device's information, but it might
-not be all that useful. The range might not represent a linear scale,
-and there might be secondary effects to consider (e.g. noise) that would
-affect the decision and would likely need to be considered by the
-particular drivers.
-
-The key question is where do we make the trade off? How much platform
-knowledge do we want each driver to have to handle, and how much are we
-happy to place in DT?
-
-It is possible to use the information from particular devices and ignore
-the {min,max} cooling state properties in future if that turns out to be
-better. I think that would be reasonable for now.
-
-Thanks,
-Mark.
+Is that an ack then?
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
