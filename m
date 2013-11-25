@@ -1,50 +1,104 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCH 3/4] ARM: mvebu: NETGEAR ReadyNAS 104 .dts file cleanup
-Date: Mon, 25 Nov 2013 23:03:36 +0100
-Message-ID: <87vbzgf8av.fsf@natisbad.org>
-References: <cover.1385148929.git.arno@natisbad.org>
-	<bd899cfc2b0b3d22a7442d76b3901ca81ca86f11.1385148929.git.arno@natisbad.org>
-	<20131122213610.GC30358@obsidianresearch.com>
-	<878uwg5b6e.fsf@natisbad.org>
-	<20131125194117.GA5413@obsidianresearch.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH V2 0/3] ARM: tegra: use common reset and DMA bindings
+Date: Mon, 25 Nov 2013 15:05:58 -0700
+Message-ID: <1385417161-5542-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131125194117.GA5413-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> (Jason Gunthorpe's
-	message of "Mon, 25 Nov 2013 12:41:17 -0700")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> writes:
+(((
+This is V2 of a small subset of a much larger series. All the driver
+code in the series has been ack'd, so I'm just missing acks for the DT
+bindings changes, which is all I'm reposting here. The changes in V2
+are minor typo-oriented changes. V1 was at:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-November/211699.html
+)))
 
-> On Fri, Nov 22, 2013 at 11:22:33PM +0100, Arnaud Ebalard wrote:
->
->> and also the fact that *in my case* the kernel does its job
->> auto-detecting the PHY, I now also wonder how the kernel can
->> use that info and what I get by adding the compatible string.
->
-> I think the main rational was to document what chip the phy is to
-> people who don't have the hardware...
->
-> You probably shouldn't delay your patch on this issue, document the
-> phy chip model in a comment?
+This series implements a common reset framework driver for Tegra, and
+updates all relevant Tegra drivers to use it. It also removes the custom
+DMA bindings and replaced them with the standard DMA DT bindings.
 
-Will do that.
+Historically, the Tegra clock driver has exported a custom API for module
+reset. This series removes that API, and transitions DT and drivers to
+the new reset framework.
 
-> Also, check if it is actually an S varient or not, they have the same
-> phy-id.. ;)
+The custom API used a "struct clk" to identify which module to reset, and
+consequently some DT bindings and drivers required clocks to be provided
+where they really needed just a reset identifier instead. Due to this
+known deficiency, I have always considered most Tegra bindings to be
+unstable. This series removes this excuse for instability, although I
+still consider some Tegra bindings unstable due to the need to convert to
+the common DMA bindings.
 
-On the chip, I have 88E1318-NNB2 (PNN1230_3JW 1209 A0P TW). I will see
-if I can find more info.
+Historically, Tegra DMA channels have been represented in DT using a
+custom nvidia,dma-request-selector property. Now that standard DMA DT
+bindings exist, convert all Tegra bindings, DTs, and drivers to use the
+standard instead.
 
-Cheers,
+This series makes a DT-ABI-incompatible change to:
+- Require reset specifiers in DT where relevant.
+- Require standard DMA specifiers.
+- Remove clock specifiers from DT where they were only needed for reset.
+- Remove legacy DMA specifier properties.
 
-a+
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I anticipate merging this whole series into the Tegra and arm-soc trees
+as its own branch, due to internal dependencies. This branch will be
+stable and can then be merged into any other subsystem trees should any
+conflicts arise.
+
+Cc: treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+Stephen Warren (3):
+  ARM: tegra: add missing clock documentation to DT bindings
+  ARM: tegra: document reset properties in DT bindings
+  ARM: tegra: document use of standard DMA DT bindings
+
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      |   1 +
+ .../bindings/clock/nvidia,tegra114-car.txt         |   4 +
+ .../bindings/clock/nvidia,tegra124-car.txt         |   4 +
+ .../bindings/clock/nvidia,tegra20-car.txt          |   4 +
+ .../bindings/clock/nvidia,tegra30-car.txt          |   4 +
+ .../devicetree/bindings/dma/tegra20-apbdma.txt     |  14 +++
+ .../bindings/gpu/nvidia,tegra20-host1x.txt         | 122 +++++++++++++++++++++
+ .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |  27 ++++-
+ .../bindings/input/nvidia,tegra20-kbc.txt          |   9 ++
+ .../bindings/mmc/nvidia,tegra20-sdhci.txt          |   9 ++
+ .../devicetree/bindings/nvec/nvidia,nvec.txt       |  12 ++
+ .../bindings/pci/nvidia,tegra20-pcie.txt           |  28 +++--
+ .../devicetree/bindings/pwm/nvidia,tegra20-pwm.txt |   9 ++
+ .../devicetree/bindings/rtc/nvidia,tegra20-rtc.txt |   3 +
+ .../bindings/serial/nvidia,tegra20-hsuart.txt      |  19 +++-
+ .../bindings/sound/nvidia,tegra-audio-alc5632.txt  |   7 +-
+ .../bindings/sound/nvidia,tegra-audio-rt5640.txt   |   7 +-
+ .../bindings/sound/nvidia,tegra-audio-wm8753.txt   |   7 +-
+ .../bindings/sound/nvidia,tegra-audio-wm8903.txt   |   7 +-
+ .../bindings/sound/nvidia,tegra-audio-wm9712.txt   |   7 +-
+ .../bindings/sound/nvidia,tegra20-ac97.txt         |  20 +++-
+ .../bindings/sound/nvidia,tegra20-i2s.txt          |  19 +++-
+ .../bindings/sound/nvidia,tegra30-ahub.txt         |  54 ++++++---
+ .../bindings/sound/nvidia,tegra30-i2s.txt          |  11 +-
+ .../bindings/spi/nvidia,tegra114-spi.txt           |  24 +++-
+ .../bindings/spi/nvidia,tegra20-sflash.txt         |  20 +++-
+ .../bindings/spi/nvidia,tegra20-slink.txt          |  20 +++-
+ .../bindings/timer/nvidia,tegra20-timer.txt        |   3 +
+ .../bindings/timer/nvidia,tegra30-timer.txt        |   3 +
+ .../bindings/usb/nvidia,tegra20-ehci.txt           |   7 +-
+ 30 files changed, 416 insertions(+), 69 deletions(-)
+
+-- 
+1.8.1.5
