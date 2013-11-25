@@ -1,75 +1,38 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: [PATCH RESEND v2] clk: probe defer when clock not yet ready
-Date: Mon, 25 Nov 2013 19:47:04 +0100
-Message-ID: <20131125194704.5a5922b7@armhf>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: mvebu: NETGEAR ReadyNAS 104 .dts file cleanup
+Date: Mon, 25 Nov 2013 12:41:17 -0700
+Message-ID: <20131125194117.GA5413@obsidianresearch.com>
+References: <cover.1385148929.git.arno@natisbad.org>
+ <bd899cfc2b0b3d22a7442d76b3901ca81ca86f11.1385148929.git.arno@natisbad.org>
+ <20131122213610.GC30358@obsidianresearch.com>
+ <878uwg5b6e.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <878uwg5b6e.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-At probe time, a clock device may not be ready when some other device
-wants to use it.=20
+On Fri, Nov 22, 2013 at 11:22:33PM +0100, Arnaud Ebalard wrote:
 
-This patch lets the functions clk_get/devm_clk_get return a probe defer
-when the clock is defined in the DT but not yet available.
+> and also the fact that *in my case* the kernel does its job
+> auto-detecting the PHY, I now also wonder how the kernel can
+> use that info and what I get by adding the compatible string.
 
-It also fixes an erroneous call to clk_get_sys() when __clk_get() fails=
-=2E
+I think the main rational was to document what chip the phy is to
+people who don't have the hardware...
 
-Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
----
-resend v2: remove ASoc from subject (thank you, Mark)
-resend: - patch subject change from
-   [PATCH v3 1/2] ASoC: kirkwood: clk: probe defer when clock not yet r=
-eady
-	- base kernel 3.13.0-rc1
-v2: fix __clk_get() failure (from Russell King)
----
- drivers/clk/clk.c    | 2 +-
- drivers/clk/clkdev.c | 7 ++++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+You probably shouldn't delay your patch on this issue, document the
+phy chip model in a comment?
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 2cf2ea6..41361c6 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2187,7 +2187,7 @@ EXPORT_SYMBOL_GPL(of_clk_del_provider);
- struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec)
- {
- 	struct of_clk_provider *provider;
--	struct clk *clk =3D ERR_PTR(-ENOENT);
-+	struct clk *clk =3D ERR_PTR(-EPROBE_DEFER);
-=20
- 	/* Check if we have such a provider in our array */
- 	mutex_lock(&of_clk_lock);
-diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-index 442a313..1f402b9 100644
---- a/drivers/clk/clkdev.c
-+++ b/drivers/clk/clkdev.c
-@@ -157,7 +157,12 @@ struct clk *clk_get(struct device *dev, const char=
- *con_id)
-=20
- 	if (dev) {
- 		clk =3D of_clk_get_by_name(dev->of_node, con_id);
--		if (!IS_ERR(clk) && __clk_get(clk))
-+		if (!IS_ERR(clk)) {
-+			if (!__clk_get(clk))
-+				clk =3D ERR_PTR(-ENOENT);
-+			return clk;
-+		}
-+		if (PTR_ERR(clk) =3D=3D -EPROBE_DEFER)
- 			return clk;
- 	}
-=20
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+Also, check if it is actually an S varient or not, they have the same
+phy-id.. ;)
+
+Jason
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
