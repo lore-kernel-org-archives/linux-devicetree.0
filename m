@@ -1,34 +1,56 @@
-From: Denis Carikli <denis@eukrea.com>
-Subject: Re: [PATCHv9][ 1/3] Input: tsc2007: Add device tree support.
-Date: Mon, 25 Nov 2013 09:39:05 +0100
-Message-ID: <52930CA9.4060606@eukrea.com>
-References: <1383916659-9988-1-git-send-email-denis@eukrea.com>
- <20131119211102.GA14888@core.coreip.homeip.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131119211102.GA14888@core.coreip.homeip.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, =?ISO-8859-1?Q?Eric_B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sascha Hauer <kernel@pengutronix.de>, linux-input@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, =?ISO-8859-1?Q?Lothar_Wa=DFmann?= <LW@KARO-electronics.de>
+From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/4] Add dt support for exynos hdmiphy settings
+Date: Mon, 25 Nov 2013 14:24:34 +0530
+Message-ID: <1385369679-4337-1-git-send-email-s.shirish@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2013 10:11 PM, Dmitry Torokhov wrote:
- > Input: tsc2007 misc fixes
- >
- > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
- >
- > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+For various revisions of a chipset if the signal pattern is changed for every
+revision, then the phy setting need to be updated correspondingly by measuring
+the signal.
+For getting correct signals the clock level and data de-emphasis
+levels needs to be adjusted.
+Since only these 2 values matter,we can move the same to dt,
+wherein we can have different dt files for every revision.
 
-Tested-by: Denis Carikli <denis@eukrea.com>
+This is an initial patchset towards achieving the same
+for exynos 5250 and can be later extended to future chipsets.
 
-Denis.
+V2: replaced moving of entire phy config structure with only
+required and justifiable conf registers.
+
+V3: Incorporated Mark Rutland's comments.
+
+V4: Rebased and included cros5250-common.dtsi.
+
+V5: removed nr-configs feild and also the constraint
+    of having the exact number of configs in the dt file
+    as in the driver, the programmer can add only the pixel
+    clock that needs to be updated.
+
+V6:
+V7: removed nr-configs form the dtsi files.
+
+Shirish S (4):
+  ARM: dts: smdk5250: Add hdmi phy settings
+  ARM: dts: arndale: Add hdmi phy settings
+  ARM: exynos: dts: cros5250: Add hdmi phy settings
+  drm: exynos: hdmi: Add dt support for hdmiphy settings
+
+ .../devicetree/bindings/video/exynos_hdmi.txt      |   31 ++++++++
+ arch/arm/boot/dts/cros5250-common.dtsi             |   74 +++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   74 +++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   74 +++++++++++++++++++
+ drivers/gpu/drm/exynos/exynos_hdmi.c               |   77 +++++++++++++++++++-
+ 5 files changed, 326 insertions(+), 4 deletions(-)
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
