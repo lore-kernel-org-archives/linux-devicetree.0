@@ -1,40 +1,89 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH 1/3] mtd: nand: davinci: reuse driver for Keystone arch
-Date: Mon, 25 Nov 2013 17:57:30 +0200
-Message-ID: <5293736A.2060108@ti.com>
-References: <1384964699-15134-1-git-send-email-ivan.khoronzhuk@ti.com> <1384964699-15134-2-git-send-email-ivan.khoronzhuk@ti.com> <201311231915.29643.arnd@arndb.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: add ARMv8 PMU binding
+Date: Mon, 25 Nov 2013 16:01:53 +0000
+Message-ID: <20131125160153.GI32081@e106331-lin.cambridge.arm.com>
+References: <1385155032-9032-1-git-send-email-robherring2@gmail.com>
+ <A8B9EAD7-0DBA-46D7-963F-30DEA0575EE2@codeaurora.org>
+ <528FD003.8090607@gmail.com>
+ <20131125091651.GA32081@e106331-lin.cambridge.arm.com>
+ <CAL_JsqKArowT_DE8-vCJvmOSxjp+X9bngCXXsgjBK7G3wPZ7wA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201311231915.29643.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKArowT_DE8-vCJvmOSxjp+X9bngCXXsgjBK7G3wPZ7wA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2013 08:15 PM, Arnd Bergmann wrote:
-> On Wednesday 20 November 2013, Ivan Khoronzhuk wrote:
->> --- a/drivers/mtd/nand/davinci_nand.c
->> +++ b/drivers/mtd/nand/davinci_nand.c
->> @@ -523,6 +523,7 @@ static struct nand_ecclayout hwecc4_2048 __initconst = {
->>   #if defined(CONFIG_OF)
->>   static const struct of_device_id davinci_nand_of_match[] = {
->>          {.compatible = "ti,davinci-nand", },
->> +       {.compatible = "ti,keystone-nand", },
->>          {},
->>   };
->>   MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
->
-> Same comment as for the watchdog driver: when the devices are actually compatible,
-> the driver does not need to know the new string, the preferred method is to
-> set both strings from the .dts file.
->
-> 	Arnd
->
+On Mon, Nov 25, 2013 at 03:24:46PM +0000, Rob Herring wrote:
+> On Mon, Nov 25, 2013 at 3:16 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> =
+wrote:
+> > On Fri, Nov 22, 2013 at 09:43:31PM +0000, Rob Herring wrote:
+> >> On 11/22/2013 03:38 PM, Kumar Gala wrote:
+> >> >
+> >> > On Nov 22, 2013, at 3:17 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
+ wrote:
+> >> >
+> >> >> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> >> >>
+> >> >> Add missing "arm,armv8-pmuv3" compatible property for ARMv8 PMU=
+=2E
+> >> >>
+> >> >> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> >> >> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> >> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> >> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> >> >> ---
+> >> >> Documentation/devicetree/bindings/arm/pmu.txt | 1 +
+> >> >> 1 file changed, 1 insertion(+)
+> >> >>
+> >> >> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Do=
+cumentation/devicetree/bindings/arm/pmu.txt
+> >> >> index 343781b..3e1e498 100644
+> >> >> --- a/Documentation/devicetree/bindings/arm/pmu.txt
+> >> >> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
+> >> >> @@ -7,6 +7,7 @@ representation in the device tree should be don=
+e as under:-
+> >> >> Required properties:
+> >> >>
+> >> >> - compatible : should be one of
+> >> >> +  "arm,armv8-pmuv3=E2=80=9D
+> >> >
+> >> > what about arm,armv8-pmu-v3?
+> >>
+> >> I'm just documenting what is already being used:
+> >>
+> >> arch/arm64/boot/dts/foundation-v8.dts:          compatible =3D
+> >> "arm,armv8-pmuv3";
+> >> arch/arm64/boot/dts/rtsm_ve-aemv8a.dts:         compatible =3D
+> >> "arm,armv8-pmuv3";
+> >>
+> >> Do we want to change those?
+> >
+> > It would probably have been nicer to have the '-' from the start, b=
+ut
+> > adding it now is only going to expand the set of compatible strings=
+ for
+> > no appreciable benefit.
+> >
+> > I don't see any value in adding a new form of the string, and we ca=
+n't
+> > change the existing one as it's already in use.
+>=20
+> Is that an ack then?
+>=20
 
-Thanks. I'll correct it.
+Sure:
 
--- 
-Regards,
-Ivan Khoronzhuk
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
