@@ -1,65 +1,55 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mfd: cros ec: spi: Add delay for raising CS
-Date: Mon, 25 Nov 2013 11:08:34 +0100
-Message-ID: <20131125100834.GH22043@ulmo.nvidia.com>
-References: <1385143550-31901-1-git-send-email-treding@nvidia.com>
- <20131125094503.GD17722@lee--X1>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 1/6] gpio: davinci: use readl/writel instead of __raw_*
+Date: Mon, 25 Nov 2013 16:04:16 +0530
+Message-ID: <529327A8.8080909@ti.com>
+References: <1385057731-4348-1-git-send-email-prabhakar.csengg@gmail.com>
+	<1385057731-4348-2-git-send-email-prabhakar.csengg@gmail.com>
+	<CAArO44vmfkroE9w4KviOhjkPvg9bTX9pAtr3oxYjD9u_wVZXeg@mail.gmail.com>
+	<CA+V-a8sjmo2K16m9_6Zf1qwcez+qKm-9JW1Cb=Aj4prtXd=-fA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Dx9iWuMxHO1cCoFc"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131125094503.GD17722@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Bernie Thompson <bhthompson-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <CA+V-a8sjmo2K16m9_6Zf1qwcez+qKm-9JW1Cb=Aj4prtXd=-fA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Taras Kondratiuk <taras.kondratiuk-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Prabhakar,
 
---Dx9iWuMxHO1cCoFc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Monday 25 November 2013 09:42 AM, Prabhakar Lad wrote:
+> Hi Taras,
+> 
+> On Fri, Nov 22, 2013 at 3:38 PM, Taras Kondratiuk
+> <taras.kondratiuk-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On 21 November 2013 20:15, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>
+>>> This patch replaces the __raw_readl/writel with
+>>> readl and writel, Altough the code runs on ARMv5
+>>> based SOCs, changing this will help copying the code
+>>> for other uses.
+>>
+>> This replacement has a functional impact: it adds memory barriers.
+>> Please note this in the description.
+>> Also please add a bit of explanation on why do you need to add barriers.
+>>
+> Agreed this adds memory barriers, I'll add a note about it.
 
-On Mon, Nov 25, 2013 at 09:45:03AM +0000, Lee Jones wrote:
-> On Fri, 22 Nov 2013, Thierry Reding wrote:
-[...]
-> >  static int cros_ec_probe_spi(struct spi_device *spi)
->=20
-> Can you send a pre-patch to fix this too please:
->   static int cros_ec_spi_probe(struct spi_device *spi)
+Well the barriers certainly make it easier to debug by having both
+device and memory accesses happen in program order. That said, if there
+is no pressing reason to add barriers, you can use
+{readl|writel}_relaxed() instead. That will make the code protable
+across endianess.
 
-I just noticed that we should probably do the same for .remove(), which
-uses the same convention.
-
-While at it, do you want me to make the same changes for cros_ec_i2c.c
-as well?
-
-Thierry
-
---Dx9iWuMxHO1cCoFc
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSkyGhAAoJEN0jrNd/PrOhHxgQAJ6WRO2EJBZ+j9e+P/fei+kq
-+KXy9hzlwzyvKA9hkF4Sr6pgULxTtpRwwNnDvxyzn6VVIrY232F0sguyCB0GZ1To
-9B7EwapYGUOdgm/wz0SlEJZzuWUqRtdal3rlQmvQRKO/VIpP+ksKdWtNdy9+CyQ9
-A1F7LJJktDSgo8qdRymEaafWNwE2n37B/Yq97z1vTVTRthU/2HEDzYs3KqiYHEQi
-ml4KgUhUhncj3Hh8EiDNKexW4JDDDDjHBrDArI8qUh6FflEPL2pliQqIsLknZfQi
-BuH0NCz9Y9+kHV6xw6zl1JSDKbiSZcxy+z2b2r/if2yRvObBTu9Op5tKs4ehzMj8
-qwSFAcsU9q1JHa7y+3tPGvhzp8+ICiF0ofgZYAfSAu7mqcOIVnVbFFjEU6EbjorG
-KViCWHXVlViqCYwIOrTMpMx9TONNpTW/h7VjKZql8unpzVh9sP+zWr1seI5aF+T0
-xrsjSTpG4GqcCqzwT687aCOQTE8dgYd8XjJT0VngSi9S6UIDm6pILYDZ6L6mwkfY
-+rrQzFHNGEHr9dEhgVv7KAcqBbZTiebJcePVx3N2lu5Aoe/k5d58mDghfT6qf8tw
-xiL+CwrWdvrXmWYeA8WrR8PXB/rquCn7F7npJaZVuuHOqaCE5nPDQGhNmlgpu5SW
-Sr2mJsxBOfogJz/s+89P
-=Y5BO
------END PGP SIGNATURE-----
-
---Dx9iWuMxHO1cCoFc--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
