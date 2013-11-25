@@ -1,209 +1,72 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] ARM: dts: Fix omap serial wake-up when booted with device
- tree
-Date: Mon, 25 Nov 2013 12:11:42 -0800
-Message-ID: <20131125201142.GT10023@atomide.com>
+From: Kevin Bracey <kevin@bracey.fi>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using
+ pinfunc.
+Date: Mon, 25 Nov 2013 22:01:42 +0200
+Message-ID: <5293ACA6.7060403@bracey.fi>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
+ <528BB1F2.4080107@wwwdotorg.org>
+ <CAD=FV=XS0dbE7zfgDGVdp84h4fHH6tfO8aN_HNh1LbOjYy51aQ@mail.gmail.com>
+ <528BB913.6080409@wwwdotorg.org>
+ <CAH9JG2UjnL5bZzNUuJhWY3GpwPD=rJvR2O4Hcpm33G+prSS=BA@mail.gmail.com>
+ <CACRpkdbyjm0X9RX+8WjqQxBPyRjBOAunkqVcO-0KUd1PTdGavA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdbyjm0X9RX+8WjqQxBPyRjBOAunkqVcO-0KUd1PTdGavA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kmpark@infradead.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-We've had deeper idle states working on omaps for few years now,
-but only in the legacy mode. When booted with device tree, the
-wake-up events did not have a chance to work until commit
-3e6cee1786a1 (pinctrl: single: Add support for wake-up interrupts)
-that recently got merged. In addition to that we also needed commit
-79d9701559a9 (of/irq: create interrupts-extended property) that's
-now also merged.
+On 25/11/2013 16:34, Linus Walleij wrote:
+> On Wed, Nov 20, 2013 at 1:02 AM, Kyungmin Park <kmpark@infradead.org> wrote:
+>> On Wed, Nov 20, 2013 at 4:16 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>> I think that last point should be addressed by having a driver that owns
+>>> the GPIO set it to the desired output level, and the implementation of
+>> Some pins are not connected (NC). At that cases, there's no drivers to
+>> handle it. To reduce power leakage, it sets proper configuration with
+>> values instead of reset values.
+> This is correspondant to the PIN_CONFIG_OUTPUT from
+> include/linux/pinctrl/pinconf-generic.h
 
-So let's fix the wake-up events for some selected omaps so devices
-booted in device tree mode won't just hang if deeper power states
-are enabled, and so systems can wake up from suspend to the serial
-port event.
+Indeed it is - I was waiting for someone to point that out. Now we've 
+got there...
 
-Note that there's no longer need to specify the wake-up bit in
-the pinctrl settings, the request_irq on the wake-up pin takes
-care of that.
+I've been working on extending the shmobile PFC driver to provide 
+"gpio-mode" and implement PIN_CONFIG_OUTPUT as described by 
+Documentation/pinctrl.txt, primarily to handle sleep states, but I have 
+begun to wonder about the initial state problem, as discussed here.
 
-Cc: devicetree@vger.kernel.org
-Cc: "Beno=C3=AEt Cousson" <bcousson@baylibre.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+As far as I can see, we can't currently specify "fallback" states for 
+pins, which is one of Tomasz' key requirements.
 
----
+We can specify "hog" states, and we can specify "default for a driver", 
+but not "default before/in absence of a driver" or "sleep in absence of 
+a driver". Having a hog precludes any finer driver control, AFAICT.
 
-=46YI, this depends on the device resource populating patch posted in
-thread "[PATCH] of/platform: Fix no irq domain found errors when
-populating interrupts" to avoid intoducing nasty warnings.
+Some of our existing pre-pinconf board files have a "unused pins" table 
+which is used to claim and pull GPIOs. I've converted that to "hog" 
+pinconf, but that only works because the table omits all pins used by 
+drivers. And, unsurprisingly, that's been error-prone; if those tables 
+originally covered all unused pins, they don't any more.
 
---- a/arch/arm/boot/dts/omap3-evm-37xx.dts
-+++ b/arch/arm/boot/dts/omap3-evm-37xx.dts
-@@ -89,7 +89,16 @@
- 	status =3D "disabled";
- };
-=20
-+&uart1 {
-+	interrupts-extended =3D <&intc 72 &omap3_pmx_core OMAP3_UART1_RX>;
-+};
-+
-+&uart2 {
-+	interrupts-extended =3D <&intc 73 &omap3_pmx_core OMAP3_UART2_RX>;
-+};
-+
- &uart3 {
-+	interrupts-extended =3D <&intc 74 &omap3_pmx_core OMAP3_UART3_RX>;
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart3_pins>;
- };
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -495,11 +495,13 @@
- };
-=20
- &uart2 {
-+	interrupts-extended =3D <&intc 73 &omap3_pmx_core OMAP3_UART2_RX>;
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart2_pins>;
- };
-=20
- &uart3 {
-+	interrupts-extended =3D <&intc 74 &omap3_pmx_core OMAP3_UART3_RX>;
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart3_pins>;
- };
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -207,7 +207,7 @@
- 		uart1: serial@4806a000 {
- 			compatible =3D "ti,omap3-uart";
- 			reg =3D <0x4806a000 0x2000>;
--			interrupts =3D <72>;
-+			interrupts-extended =3D <&intc 72>;
- 			dmas =3D <&sdma 49 &sdma 50>;
- 			dma-names =3D "tx", "rx";
- 			ti,hwmods =3D "uart1";
-@@ -217,7 +217,7 @@
- 		uart2: serial@4806c000 {
- 			compatible =3D "ti,omap3-uart";
- 			reg =3D <0x4806c000 0x400>;
--			interrupts =3D <73>;
-+			interrupts-extended =3D <&intc 73>;
- 			dmas =3D <&sdma 51 &sdma 52>;
- 			dma-names =3D "tx", "rx";
- 			ti,hwmods =3D "uart2";
-@@ -227,7 +227,7 @@
- 		uart3: serial@49020000 {
- 			compatible =3D "ti,omap3-uart";
- 			reg =3D <0x49020000 0x400>;
--			interrupts =3D <74>;
-+			interrupts-extended =3D <&intc 74>;
- 			dmas =3D <&sdma 53 &sdma 54>;
- 			dma-names =3D "tx", "rx";
- 			ti,hwmods =3D "uart3";
---- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-+++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-@@ -396,6 +396,21 @@
- 	usb-supply =3D <&vusb>;
- };
-=20
-+&uart2 {
-+	interrupts-extended =3D <&gic GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH
-+			       &omap4_pmx_core OMAP4_UART2_RX>;
-+};
-+
-+&uart3 {
-+	interrupts-extended =3D <&gic GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH
-+			       &omap4_pmx_core OMAP4_UART3_RX>;
-+};
-+
-+&uart4 {
-+	interrupts-extended =3D <&gic GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH
-+			       &omap4_pmx_core OMAP4_UART4_RX>;
-+};
-+
- &usb_otg_hs {
- 	interface-type =3D <1>;
- 	mode =3D <3>;
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -523,16 +523,22 @@
- };
-=20
- &uart2 {
-+	interrupts-extended =3D <&gic GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH
-+			       &omap4_pmx_core OMAP4_UART2_RX>;
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart2_pins>;
- };
-=20
- &uart3 {
-+	interrupts-extended =3D <&gic GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH
-+			       &omap4_pmx_core OMAP4_UART3_RX>;
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart3_pins>;
- };
-=20
- &uart4 {
-+	interrupts-extended =3D <&gic GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH
-+			       &omap4_pmx_core OMAP4_UART4_RX>;
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart4_pins>;
- };
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -236,7 +236,7 @@
- 		uart2: serial@4806c000 {
- 			compatible =3D "ti,omap4-uart";
- 			reg =3D <0x4806c000 0x100>;
--			interrupts =3D <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-extended =3D <&gic GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "uart2";
- 			clock-frequency =3D <48000000>;
- 		};
-@@ -244,7 +244,7 @@
- 		uart3: serial@48020000 {
- 			compatible =3D "ti,omap4-uart";
- 			reg =3D <0x48020000 0x100>;
--			interrupts =3D <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-extended =3D <&gic GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "uart3";
- 			clock-frequency =3D <48000000>;
- 		};
-@@ -252,7 +252,7 @@
- 		uart4: serial@4806e000 {
- 			compatible =3D "ti,omap4-uart";
- 			reg =3D <0x4806e000 0x100>;
--			interrupts =3D <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-extended =3D <&gic GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods =3D "uart4";
- 			clock-frequency =3D <48000000>;
- 		};
---- a/include/dt-bindings/pinctrl/omap.h
-+++ b/include/dt-bindings/pinctrl/omap.h
-@@ -49,5 +49,17 @@
- #define PIN_OFF_INPUT_PULLDOWN	(OFF_EN | OFF_PULL_EN)
- #define PIN_OFF_WAKEUPENABLE	WAKEUP_EN
-=20
-+/*
-+ * Define some commonly used pins configured by the boards.
-+ * Note that some boards use alternative pins, so check
-+ * the schematics before using these.
-+ */
-+#define OMAP3_UART1_RX		0x152
-+#define OMAP3_UART2_RX		0x14a
-+#define OMAP3_UART3_RX		0x16e
-+#define OMAP4_UART2_RX		0xdc
-+#define OMAP4_UART3_RX		0x104
-+#define OMAP4_UART4_RX		0x11c
-+
- #endif
-=20
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'd like confidence that we can get every pin into the correct state by 
+having a fully-populated table containing all pins, that can be used 
+regardless of which drivers start. I think what we're lacking is a "weak 
+hog". Whatever you call that. :)
+
+That would also specify the state to fallback to when a group is 
+released (where we currently do pinmux_disable_setting).
+
+Thoughts?
+
+Kevin
