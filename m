@@ -1,85 +1,60 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mfd: cros ec: spi: Add delay for raising CS
-Date: Mon, 25 Nov 2013 12:10:35 +0000
-Message-ID: <20131125121035.GG17722@lee--X1>
-References: <1385143550-31901-1-git-send-email-treding@nvidia.com>
- <20131125094503.GD17722@lee--X1>
- <20131125100428.GG22043@ulmo.nvidia.com>
- <20131125104532.GF17722@lee--X1>
- <20131125112852.GK22043@ulmo.nvidia.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: Fwd: [PATCH 7/8] watchdog: davinci: add "clocks" property
+Date: Mon, 25 Nov 2013 12:15:29 +0000
+Message-ID: <20131125121529.GE32081@e106331-lin.cambridge.arm.com>
+References: <1383680783-12114-8-git-send-email-ivan.khoronzhuk@ti.com>
+ <527A28E8.4010204@ti.com>
+ <201311231857.47104.arnd@arndb.de>
+ <52932DA1.8040204@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131125112852.GK22043-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+In-Reply-To: <52932DA1.8040204-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Bernie Thompson <bhthompson-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "nsekhar-l0cyMroinI0@public.gmane.org" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > > > +	/* Check for any DT properties */
-> > > > > +	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
-> > > >=20
-> > > > No need for the first check.
-> > >=20
-> > > Why not? While it is true that dev->of_node would be enough to de=
-termine
-> > > that the device was instantiated from a device tree, the IS_ENABL=
-ED()
-> > > will allow the compiler to throw away cros_ec_spi_dt_probe() if O=
-=46 isn't
-> > > enabled. At the same time it's nicer than #ifdeffery sprinkled ac=
-ross
-> > > the file and it actually compile-tests all the code. Win-win-win,=
- isn't
-> > > it?
-> >=20
-> > I agree that it's better than #ifdeffery, but I didn't know that if
-> > this check tested negative that the subordinate method would be
-> > optimised out by the compiler. Are you sure that happens?
->=20
-> I'm pretty sure that's what happens. If you have code like this (whic=
-h
-> is pretty much what the above evaluates to if !OF):
->=20
-> 	static void foo(void)
-> 	{
-> 		...
-> 	}
->=20
-> 	void bar(void)
-> 	{
-> 		if (0)
-> 			foo();
-> 	}
->=20
-> Then the compiler would be actively stupid if it kept foo around.
+On Mon, Nov 25, 2013 at 10:59:45AM +0000, ivan.khoronzhuk wrote:
+> On 11/23/2013 07:57 PM, Arnd Bergmann wrote:
+> > On Wednesday 06 November 2013, ivan.khoronzhuk wrote:
+> >> @@ -7,6 +7,10 @@ Required properties:
+> >>   
+> >>   - reg : Should contain WDT registers location and length
+> >>   
+> >> +- clocks: phandle reference to the controller clock.
+> >> +         Required only for Keystone arch.
+> >> +         See clock-bindings.txt
+> >> +
+> >>   Optional properties:
+> >>   
+> >>   - timeout-sec:         Contains the watchdog timeout in seconds
+> > 
+> > I think it should really be listed under "Optional properties" and the
+> > reference to Keystone removed. Note how the binding would need
+> > to change otherwise if another platform started to use the clock, which
+> > is a little silly.
+> > 
+> > 	Arnd
+> > 
+> 
+> Ok, I'll move clocks property under "Optional properties" and describe it
+> as following:
+> 
+> Optional properties:
+> - timeout-sec : Contains the watchdog timeout in seconds
+> - clocks: phandle reference to the controller clock.
+> 	  Needed if platform uses clocks.
+> 	  See clock-bindings.txt
 
-+1
+Nit: clocks aren't just phandles, they have a clock-specifier too (which
+might be 0 cells).
 
-> > Also, how often is this used without DT?
->=20
-> Well, it doesn't have a dependency on OF, so it can be used without i=
-t.
-> In-tree there seems to be no indication that it is used without DT, b=
-ut
-> given that there's no dependency it makes sense to keep it optional.
->=20
-> Of course we could also add the dependency if it really isn't used
-> outside of a DT context.
-=09
-This would obviously be my preference. I'd be surprised if anyone was
-using this with platform data, but as you say, you never know. Perhaps
-it would be worth obtaining for clarification from the Google guys?=20
+Otherwise this looks fine to me.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
