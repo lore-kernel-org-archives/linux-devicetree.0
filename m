@@ -1,47 +1,75 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] Update Davinci watchdog driver
-Date: Mon, 25 Nov 2013 18:44:02 +0200
-Message-ID: <52937E52.8070502@ti.com>
-References: <1384795139-19466-1-git-send-email-ivan.khoronzhuk@ti.com> <52934B6C.4060308@ti.com> <52934E7C.9040102@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RESEND] ASoC: clk: probe defer when clock
+	not yet ready
+Date: Mon, 25 Nov 2013 17:11:06 +0000
+Message-ID: <20131125171106.GJ14725@sirena.org.uk>
+References: <20131125093849.5fadc450@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52934E7C.9040102-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Strashko Grygorii <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============6717480875084952509=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131125093849.5fadc450@armhf>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mike Turquette <mturquette@linaro.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/25/2013 03:19 PM, ivan.khoronzhuk wrote:
-> On 11/25/2013 03:06 PM, Sekhar Nori wrote:
->> On Monday 18 November 2013 10:48 PM, Ivan Khoronzhuk wrote:
->>> These patches are intended to update Davinci watchdog to use WDT core
->>> and reuse driver for keystone arch, because Keystone uses the similar
->>> IP like Davinci.
->>
->> This series causes a regression on all DaVinci platforms because after
->> the series is applied the watchdog device does not get registered at
->> all. Since you changed the device name please include a patch to fix the
->> platform references too.
->>
->> Thanks,
->> Sekhar
->>
->
-> Ok, I will replace
->
 
-Sekhar I have replaced names in new patch seria
-https://lkml.org/lkml/2013/11/25/461
-at watchdog: davinci: change driver to use WDT core
+--===============6717480875084952509==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gVeFDRGtAQ0W7qcm"
+Content-Disposition: inline
 
-Is it OK for you?
 
--- 
-Regards,
-Ivan Khoronzhuk
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--gVeFDRGtAQ0W7qcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Nov 25, 2013 at 09:38:49AM +0100, Jean-Francois Moine wrote:
+> At probe time, a clock device may not be ready when some other device
+> wants to use it.=20
+
+The patch subject starts of "ASoC:" but this is a patch for the clock
+API only (it does then say clk:) - you probably want to fix that, it's
+not going to help get it noticed.
+
+--gVeFDRGtAQ0W7qcm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSk4SnAAoJELSic+t+oim90loP/iM0gN4L0B0pe/2wTKw6Xl5g
+RHuP07yc34pGhkTbmwoRV91wtUvebxDmVvQVezplUpafLKvg5x5D2iPX24HjJCc/
+XvRCKXVFXO0nCwGOhXMY0GScjNE4wDT7qihgPbsQ5XyFEZKJFhTsn9AhQlSdHPZA
+YaYBHB/nC67Z++0zbZnbgcqbDzU81/TfffftLgoA6gQ2ypgGsYk2YbYVa/YY+RQf
+nT6QiWb6reJ58oVmZlP9FsO1BofqhVNkYhgkJI/tnViaRqCyDFJIHPzna/ZrF6GY
+kqKmA7gL8c4Kxhw4FMGLX6IEk1QnbBzUmLgweYMTE4Yl0/beaSprUknrRhgjLlTe
+y6e708CoK6dibuQe6V0yrcgZnZv9QQQrVNNoFGJFxXsVLb1rYtsqxOnlw6WX2vs1
+P8zs0QtOUTeaQdtl+WH3siAOyEHBmNyw+4Xxa8WOOGvMOxzpnK3P67R7hOuQOykf
+t0U5fa0EEUGl/AZ1DuO0+dliIShG08egk4hgFYs78PnXqGKwBTjDQoY875Hw8/TQ
+e6bhFcjVxuZ5XFDewFYiJp7MlyGL7sgs20vOcZ8YFxfSFgIZWfHNFrs9E3pww8Gn
+on9BhQMWE7LAy00NdpU+A+xjx38hbFBgyuhT4e1UrtYX+4hPsTD0+4W8LQXjNZ7B
+Tmo3dnDyfIPKJ8v5mf47
+=2sED
+-----END PGP SIGNATURE-----
+
+--gVeFDRGtAQ0W7qcm--
+
+--===============6717480875084952509==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6717480875084952509==--
