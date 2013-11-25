@@ -1,100 +1,181 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v4 3/4] ata: Add APM X-Gene SoC SATA host controller driver
-Date: Sun, 24 Nov 2013 20:59:31 -0800
-Message-ID: <CAPw-ZTnxu1EFaQzSuq5XwC8m7SQUQz7SP8u0Zva2rvheFzTa-Q@mail.gmail.com>
-References: <1385014298-15700-1-git-send-email-lho@apm.com>
-	<201311211401.14836.arnd@arndb.de>
-	<CAPw-ZTnt0QnXxb_dkDpkXbz4xFOcMM2Z-oOVJdH9o9u3S+DuPg@mail.gmail.com>
-	<201311242035.11411.arnd@arndb.de>
-	<CAPw-ZTkBovLrQEk_CQzuw03t5P2N2ZecQhK8tkZQM0grGwPxSA@mail.gmail.com>
+From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv3] usb: chipidea: add support for USB OTG controller on
+ TI-NSPIRE
+Date: Mon, 25 Nov 2013 05:32:44 +0000
+Message-ID: <F281D0F91ED19E4D8E63A7504E8A64980411E460@039-SN2MPN1-021.039d.mgd.msft.net>
+References: <1385351617-94118-1-git-send-email-dt.tangr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <CAPw-ZTkBovLrQEk_CQzuw03t5P2N2ZecQhK8tkZQM0grGwPxSA@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jon Masters <jcm@redhat.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385351617-94118-1-git-send-email-dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
- Hi,
+ 
+> 
+> From: Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> The USB controller in TI-NSPIRE calculators are based off either
+> Freescale's
+> USB OTG controller or the USB controller found in the IMX233, both of
+> which
+> are Chipidea compatible.
+> 
+> This patch adds a device tree binding for the controller.
+> 
+> Signed-off-by: Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> 
+> Changelog v3:
+>  * Removed redundant module aliases
+> 
+> Changelog v2:
+>  * Rename ci13xxx to ci_hdrc
+>  * Fixed alignment issues
+> 
+> .../devicetree/bindings/usb/ci-hdrc-nspire.txt     | 17 +++++
+>  drivers/usb/chipidea/Makefile                      |  1 +
+>  drivers/usb/chipidea/ci_hdrc_nspire.c              | 72
+> ++++++++++++++++++++++
+>  3 files changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-
+> nspire.txt
+>  create mode 100644 drivers/usb/chipidea/ci_hdrc_nspire.c
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> new file mode 100644
+> index 0000000..5ba8e90
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> @@ -0,0 +1,17 @@
+> +* TI-Nspire USB OTG Controller
+> +
+> +Required properties:
+> +- compatible: Should be "zevio,nspire-usb"
+> +- reg: Should contain registers location and length
+> +- interrupts: Should contain controller interrupt
+> +
+> +Recommended properies:
+> +- vbus-supply: regulator for vbus
+> +
+> +Examples:
+> +		usb0: usb@B0000000 {
+> +			reg = <0xB0000000 0x1000>;
+> +			compatible = "zevio,nspire-usb";
+> +			interrupts = <8>;
+> +			vbus-supply = <&vbus_reg>;
+> +		};
+> diff --git a/drivers/usb/chipidea/Makefile
+> b/drivers/usb/chipidea/Makefile
+> index a99d980..245ea4d 100644
+> --- a/drivers/usb/chipidea/Makefile
+> +++ b/drivers/usb/chipidea/Makefile
+> @@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_CHIPIDEA_DEBUG)	+= debug.o
+>  # Glue/Bridge layers go here
+> 
+>  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
+> +obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_nspire.o
+> 
+>  # PCI doesn't provide stubs, need to check
+>  ifneq ($(CONFIG_PCI),)
+> diff --git a/drivers/usb/chipidea/ci_hdrc_nspire.c
+> b/drivers/usb/chipidea/ci_hdrc_nspire.c
+> new file mode 100644
+> index 0000000..517ce41
+> --- /dev/null
+> +++ b/drivers/usb/chipidea/ci_hdrc_nspire.c
+> @@ -0,0 +1,72 @@
+> +/*
+> + *	Copyright (C) 2013 Daniel Tang <tangrs-wZPxy8ob7RQXC2x5gXVKYQ@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2, as
+> + * published by the Free Software Foundation.
+> + *
+> + * Based off drivers/usb/chipidea/ci_hdrc_msm.c
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/usb/gadget.h>
+> +#include <linux/usb/chipidea.h>
+> +
+> +#include "ci.h"
+> +
+> +static struct ci_hdrc_platform_data ci_hdrc_nspire_platdata = {
+> +	.name			= "ci_hdrc_nspire",
+> +	.flags			= CI_HDRC_REGS_SHARED,
+> +	.capoffset		= DEF_CAPOFFSET,
+> +};
+> +
+> +static int ci_hdrc_nspire_probe(struct platform_device *pdev)
+> +{
+> +	struct platform_device *ci_pdev;
+> +
+> +	dev_dbg(&pdev->dev, "ci_hdrc_nspire_probe\n");
+> +
+> +	ci_pdev = ci_hdrc_add_device(&pdev->dev,
+> +				pdev->resource, pdev->num_resources,
+> +				&ci_hdrc_nspire_platdata);
+> +
+> +	if (IS_ERR(ci_pdev)) {
+> +		dev_err(&pdev->dev, "ci_hdrc_add_device failed!\n");
+> +		return PTR_ERR(ci_pdev);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, ci_pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ci_hdrc_nspire_remove(struct platform_device *pdev)
+> +{
+> +	struct platform_device *ci_pdev = platform_get_drvdata(pdev);
+> +
+> +	ci_hdrc_remove_device(ci_pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ci_hdrc_nspire_dt_ids[] = {
+> +	{ .compatible = "zevio,nspire-usb", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct platform_driver ci_hdrc_nspire_driver = {
+> +	.probe = ci_hdrc_nspire_probe,
+> +	.remove = ci_hdrc_nspire_remove,
+> +	.driver = {
+> +		.name = "nspire_usb",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = ci_hdrc_nspire_dt_ids,
+> +	},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, ci_hdrc_nspire_dt_ids);
+> +module_platform_driver(ci_hdrc_nspire_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> --
 
-Resend in plain text as mailing list reject HTML format.
+You can decide to add module alias or not.
 
-> > > > +static int xgene_ahci_init_memram(struct xgene_ahci_context *ctx)
-> > > > +{
-> > > > +     void *diagcsr = ctx->csr_base + SATA_DIAG_OFFSET;
-> > > > +     int timeout;
-> > > > +     u32 val;
-> > > > +
-> > > > +     xgene_rd(diagcsr + REGSPEC_CFG_MEM_RAM_SHUTDOWN_ADDR, &val);
-> > > > +     if (val == 0) {
-> > > > +             dev_dbg(ctx->dev, "memory already released from
-> > > shutdown\n");
-> > > > +             return 0;
-> > > > +     }
-> > > > +     dev_dbg(ctx->dev, "Release memory from shutdown\n");
-> > > > +     /* SATA controller memory in shutdown. Remove from shutdown. */
-> > > > +     xgene_wr_flush(diagcsr + REGSPEC_CFG_MEM_RAM_SHUTDOWN_ADDR, 0x00);
-> > > > +     timeout = SATA_RESET_MEM_RAM_TO;
-> > > > +     do {
-> > > > +             xgene_rd(diagcsr + REGSPEC_BLOCK_MEM_RDY_ADDR, &val);
-> > > > +             if (val != 0xFFFFFFFF)
-> > > > +                     udelay(1);
-> > > > +     } while (val != 0xFFFFFFFF && timeout-- > 0);
-> > >
-> > > With SATA_RESET_MEM_RAM_TO == 100000, this is an awfully long busy-loop.
-> > > Can you replace the udelay with usleep_range() providing a reasonable
-> > > wide range, and the replace the retry count with a time_before(jiffies(),
-> > > timeout) comparision?
-> > >
-> > [Loc Ho]
-> > I reduce to 1000. It only takes about one or two reads.
->
-> It's still over two miliseconds for the (unlikely) timeout in that case,
-> plus the time it takes to do the 1000 reads. The important part of my
-> comment was about using usleep_range(), which lets another process run
-> in the meantime rather than blocking the CPU.
->
-> If you want to keep using a retry count rather than a timeout, don't
-> call it "timeout".
->
-[Loc Ho]
-I will give usleep_range a try.
+Acked-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+for driver part.
 
->>
->> > > > +/* Flush the IOB to ensure all SATA controller writes completed before
->> > > > +   servicing the completed command. This is needed due to the
->> > > possibility
->> > > > +   that interrupt serviced before the data actually written to the
->> > > cache/DDR.
->> > > > +   Writes from the IP to the CPU domain is not synchronized with the IRQ
->> > > > +   line or the IP core toggled the CI bits before the data write
->> > > completed. */
->> > > > +static int xgene_ahci_iob_flush(struct xgene_ahci_context *ctx)
->> > > > +{
->> > > > +     if (ctx->ahbc_io_base)
->> > > > +             readl(ctx->ahbc_io_base);
->> > > > +     return 0;
->> > > > +}
->> > >
->> > > Normally the synchronization should be guaranteed by using MSI interrupts
->> > > rather than edge or level interrupt pins. Do you have MSI support in your
->> > > hardware? Using that would get rid of this ugly hack and likely improve
->> > > performance significantly.
->> > >
->> > [Loc Ho]
->> > The SATA IP is built into the chip and NOT on the PCIe bus. The need for
->> > this is already mentioned above.
->>
->> I don't understand the comment about PCIe. MSI should work regardless of
->> where the device resides in the system, unless you have the MSI controller
->> integrated into the PCIe host, which would be a bug because it causes the
->> same problem that you have on this device for any PCIe add-on device
->> (the MSI would no longer flush the a PCIe bus master DMA transfer
->> all the way to memory if the message is consumed by the PCIe host).
->
-[Loc Ho]
-The SATA IP does not support MSI as it is NOT an PCIe interface. The
-interrupt line is just a direct line into the GIC similar to the UART.
+I haven't seen your dts patch.
 
--Loc
+Peter
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
