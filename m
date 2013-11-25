@@ -1,56 +1,60 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] rtc: add hym8563 rtc-driver
-Date: Mon, 25 Nov 2013 12:01:25 +0000
-Message-ID: <20131125120125.GD32081@e106331-lin.cambridge.arm.com>
-References: <201311222254.07730.heiko@sntech.de>
- <201311222255.48943.heiko@sntech.de>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH 1/6] watchdog: davinci: change driver to use WDT core
+Date: Mon, 25 Nov 2013 14:06:30 +0200
+Message-ID: <52933D46.6090901@ti.com>
+References: <1384795139-19466-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1384795139-19466-2-git-send-email-ivan.khoronzhuk@ti.com>
+ <52933AE4.3070608@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201311222255.48943.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52933AE4.3070608@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Strashko Grygorii <grygorii.strashko@ti.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
+On 11/25/2013 01:56 PM, Sekhar Nori wrote:
+> On Monday 18 November 2013 10:48 PM, Ivan Khoronzhuk wrote:
+>> @@ -211,29 +129,34 @@ static int davinci_wdt_probe(struct platform_device *pdev)
+>>
+>>   	clk_prepare_enable(wdt_clk);
+>>
+>> -	if (heartbeat < 1 || heartbeat > MAX_HEARTBEAT)
+>> -		heartbeat = DEFAULT_HEARTBEAT;
+>> +	wdd			= &wdt_wdd;
+>> +	wdd->info		= &davinci_wdt_info;
+>> +	wdd->ops		= &davinci_wdt_ops;
+>> +	wdd->min_timeout 	= 1;
+>> +	wdd->max_timeout 	= MAX_HEARTBEAT;
+>
+> Some checkpatch warnings. Please fix.
+>
+> WARNING: please, no space before tabs
+> #273: FILE: drivers/watchdog/davinci_wdt.c:135:
+> +^Iwdd->min_timeout ^I= 1;$
+>
+> WARNING: please, no space before tabs
+> #274: FILE: drivers/watchdog/davinci_wdt.c:136:
+> +^Iwdd->max_timeout ^I= MAX_HEARTBEAT;$
+>
+> total: 0 errors, 2 warnings, 0 checks, 249 lines checked
+>
+> Thanks,
+> sekhar
+>
 
-> +static int hym8563_probe(struct i2c_client *client,
-> +                        const struct i2c_device_id *id)
-> +{
-> +       struct hym8563 *hym8563;
-> +       int ret, gpio_int;
-> +
-> +       hym8563 = devm_kzalloc(&client->dev, sizeof(hym8563), GFP_KERNEL);
-> +       if (!hym8563)
-> +               return -ENOMEM;
-> +
-> +       hym8563->client = client;
-> +       i2c_set_clientdata(client, hym8563);
-> +
-> +       device_set_wakeup_capable(&client->dev, true);
-> +
-> +       gpio_int = of_get_gpio(client->dev.of_node, 0);
-> +       if (!gpio_is_valid(gpio_int)) {
-> +               dev_err(&client->dev, "failed to get interrupt gpio\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       ret = devm_gpio_request_one(&client->dev, gpio_int,
-> +                                     GPIOF_DIR_IN, "hym8563_int");
-> +       if (ret) {
-> +               dev_err(&client->dev, "request of gpio %d failed, %d\n",
-> +                       gpio_int, ret);
-> +               return ret;
-> +       }
+Thanks, I will
 
->From here on the gpio is never used or even stashed away anywhere.
-What's the point in requesting it and then leaking it?
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Ivan Khoronzhuk
