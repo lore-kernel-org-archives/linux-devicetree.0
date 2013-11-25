@@ -1,8 +1,7 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH] ARM: dts: omap3-beagle: Fix USB host on beagle boards (for
- 3.13)
-Date: Mon, 25 Nov 2013 15:55:45 +0200
-Message-ID: <1385387745-7162-1-git-send-email-rogerq@ti.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH v3 0/6] Update Davinci watchdog driver
+Date: Mon, 25 Nov 2013 16:04:39 +0200
+Message-ID: <1385388285-10553-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,60 +15,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com, bcousson@baylibre.com
-Cc: nm@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel Moll <Pawel.Moll@arm.com>, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Beagle (rev. C4) and Beagle-XM (all revs) need VAUX2 1.8V supply
-for the USB PHY.
+These patches are intended to update Davinci watchdog to use WDT core
+and reuse driver for keystone arch, because Keystone uses the similar
+IP like Davinci.
 
-As the generic PHY driver can't handle more than one supply
-at the moment, we configure this supply to be always on.
-This will cause a very small power impact if the USB host subsystem
-is not in use, about 76.86 micro-W + LDO power.
+See Documentation:
+Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
+Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
 
-Older Beagle boards (prior to C4) don't have VAUX2 connected anywhere,
-so there won't be any functional impact on those boards other than
-some additional LDO power consumption.
+Also:
+ - improved to support GET_TIMELEFT option.
+ - added "clocks" and "timeout-sec" properties to DT.
 
-Reported-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/omap3-beagle-xm.dts | 8 ++++++++
- arch/arm/boot/dts/omap3-beagle.dts    | 8 ++++++++
- 2 files changed, 16 insertions(+)
+Based on
+git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+keystone/master
 
-diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-index 31a632f..b39918e 100644
---- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-+++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-@@ -215,3 +215,11 @@
- &usbhsehci {
- 	phys = <0 &hsusb2_phy>;
- };
-+
-+&vaux2 {
-+	regulator-name = "usb_1v8";
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-always-on;
-+};
-+
-diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-index fa532aa..9764556 100644
---- a/arch/arm/boot/dts/omap3-beagle.dts
-+++ b/arch/arm/boot/dts/omap3-beagle.dts
-@@ -178,3 +178,11 @@
- 	mode = <3>;
- 	power = <50>;
- };
-+
-+&vaux2 {
-+	regulator-name = "vdd_ehci";
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-always-on;
-+};
-+
+v2..v3:
+- watchdog: davinci: change driver to use WDT core
+	removed "ti,keystone-wdt" compatible from driver
+	renamed wdt device names for mach-davinci from
+		"watchdog" to "davinci-wdt"
+
+- watchdog: davinci: reuse driver for keystone arch
+	moved "clocks" property under "Optional properties"
+	improved decsription of "clocks" property
+
+- arm: dts: keystone: add watchdog entry
+	replaced "ti,keystone-wdt" compatible on
+		 "ti,keystone-wdt","ti,davinci-wdt"
+
+Ivan Khoronzhuk (6):
+  watchdog: davinci: change driver to use WDT core
+  watchdog: davinci: use davinci_wdt_device structure to hold device
+    data
+  watchdog: davinci: add GET_TIMELEFT option support
+  watchdog: davinci: add "timeout-sec" property
+  watchdog: davinci: reuse driver for keystone arch
+  arm: dts: keystone: add watchdog entry
+
+ .../devicetree/bindings/watchdog/davinci-wdt.txt   |   16 +-
+ arch/arm/boot/dts/keystone.dtsi                    |    6 +
+ arch/arm/mach-davinci/da8xx-dt.c                   |    2 +-
+ arch/arm/mach-davinci/devices-da8xx.c              |    4 +-
+ arch/arm/mach-davinci/devices.c                    |    2 +-
+ drivers/watchdog/Kconfig                           |    6 +-
+ drivers/watchdog/davinci_wdt.c                     |  225 +++++++++-----------
+ 7 files changed, 126 insertions(+), 135 deletions(-)
+
 -- 
-1.8.3.2
+1.7.9.5
