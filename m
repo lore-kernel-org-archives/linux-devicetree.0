@@ -1,89 +1,47 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: add ARMv8 PMU binding
-Date: Mon, 25 Nov 2013 16:01:53 +0000
-Message-ID: <20131125160153.GI32081@e106331-lin.cambridge.arm.com>
-References: <1385155032-9032-1-git-send-email-robherring2@gmail.com>
- <A8B9EAD7-0DBA-46D7-963F-30DEA0575EE2@codeaurora.org>
- <528FD003.8090607@gmail.com>
- <20131125091651.GA32081@e106331-lin.cambridge.arm.com>
- <CAL_JsqKArowT_DE8-vCJvmOSxjp+X9bngCXXsgjBK7G3wPZ7wA@mail.gmail.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] Update Davinci watchdog driver
+Date: Mon, 25 Nov 2013 18:44:02 +0200
+Message-ID: <52937E52.8070502@ti.com>
+References: <1384795139-19466-1-git-send-email-ivan.khoronzhuk@ti.com> <52934B6C.4060308@ti.com> <52934E7C.9040102@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKArowT_DE8-vCJvmOSxjp+X9bngCXXsgjBK7G3wPZ7wA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <52934E7C.9040102-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Strashko Grygorii <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 25, 2013 at 03:24:46PM +0000, Rob Herring wrote:
-> On Mon, Nov 25, 2013 at 3:16 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> =
-wrote:
-> > On Fri, Nov 22, 2013 at 09:43:31PM +0000, Rob Herring wrote:
-> >> On 11/22/2013 03:38 PM, Kumar Gala wrote:
-> >> >
-> >> > On Nov 22, 2013, at 3:17 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
- wrote:
-> >> >
-> >> >> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> >> >>
-> >> >> Add missing "arm,armv8-pmuv3" compatible property for ARMv8 PMU=
-=2E
-> >> >>
-> >> >> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> >> >> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> >> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> >> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> >> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> >> >> ---
-> >> >> Documentation/devicetree/bindings/arm/pmu.txt | 1 +
-> >> >> 1 file changed, 1 insertion(+)
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Do=
-cumentation/devicetree/bindings/arm/pmu.txt
-> >> >> index 343781b..3e1e498 100644
-> >> >> --- a/Documentation/devicetree/bindings/arm/pmu.txt
-> >> >> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
-> >> >> @@ -7,6 +7,7 @@ representation in the device tree should be don=
-e as under:-
-> >> >> Required properties:
-> >> >>
-> >> >> - compatible : should be one of
-> >> >> +  "arm,armv8-pmuv3=E2=80=9D
-> >> >
-> >> > what about arm,armv8-pmu-v3?
-> >>
-> >> I'm just documenting what is already being used:
-> >>
-> >> arch/arm64/boot/dts/foundation-v8.dts:          compatible =3D
-> >> "arm,armv8-pmuv3";
-> >> arch/arm64/boot/dts/rtsm_ve-aemv8a.dts:         compatible =3D
-> >> "arm,armv8-pmuv3";
-> >>
-> >> Do we want to change those?
-> >
-> > It would probably have been nicer to have the '-' from the start, b=
-ut
-> > adding it now is only going to expand the set of compatible strings=
- for
-> > no appreciable benefit.
-> >
-> > I don't see any value in adding a new form of the string, and we ca=
-n't
-> > change the existing one as it's already in use.
->=20
-> Is that an ack then?
->=20
+On 11/25/2013 03:19 PM, ivan.khoronzhuk wrote:
+> On 11/25/2013 03:06 PM, Sekhar Nori wrote:
+>> On Monday 18 November 2013 10:48 PM, Ivan Khoronzhuk wrote:
+>>> These patches are intended to update Davinci watchdog to use WDT core
+>>> and reuse driver for keystone arch, because Keystone uses the similar
+>>> IP like Davinci.
+>>
+>> This series causes a regression on all DaVinci platforms because after
+>> the series is applied the watchdog device does not get registered at
+>> all. Since you changed the device name please include a patch to fix the
+>> platform references too.
+>>
+>> Thanks,
+>> Sekhar
+>>
+>
+> Ok, I will replace
+>
 
-Sure:
+Sekhar I have replaced names in new patch seria
+https://lkml.org/lkml/2013/11/25/461
+at watchdog: davinci: change driver to use WDT core
 
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Is it OK for you?
 
-Mark.
+-- 
+Regards,
+Ivan Khoronzhuk
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
