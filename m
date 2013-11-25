@@ -1,50 +1,33 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 5/9] usb: gadget: s3c-hsotg: use generic phy_init()/phy_exit() support
-Date: Mon, 25 Nov 2013 13:16:03 -0500
-Message-ID: <1385403367-18144-6-git-send-email-matt.porter@linaro.org>
+From: Matt Porter <matt.porter@linaro.org>
+Subject: [PATCH v3 4/9] usb: gadget: s3c-hsotg: add snps,dwc2 compatible string
+Date: Mon, 25 Nov 2013 13:16:02 -0500
+Message-ID: <1385403367-18144-5-git-send-email-matt.porter@linaro.org>
 References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385403367-18144-1-git-send-email-matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1385403367-18144-1-git-send-email-matt.porter@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-If a generic phy is present, call phy_init()/phy_exit(). This supports
-generic phys that must be soft reset before power on.
+Enable support for the dwc2 binding.
 
-Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Matt Porter <matt.porter@linaro.org>
 ---
- drivers/usb/gadget/s3c-hsotg.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/gadget/s3c-hsotg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-index da3879b..8dfe33f 100644
+index a8e6c3d..da3879b 100644
 --- a/drivers/usb/gadget/s3c-hsotg.c
 +++ b/drivers/usb/gadget/s3c-hsotg.c
-@@ -3622,6 +3622,9 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
- 		goto err_supplies;
- 	}
- 
-+	if (hsotg->phy)
-+		phy_init(hsotg->phy);
-+
- 	/* usb phy enable */
- 	s3c_hsotg_phy_enable(hsotg);
- 
-@@ -3715,6 +3718,8 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
- 	}
- 
- 	s3c_hsotg_phy_disable(hsotg);
-+	if (hsotg->phy)
-+		phy_exit(hsotg->phy);
- 	clk_disable_unprepare(hsotg->clk);
- 
- 	return 0;
+@@ -3728,6 +3728,7 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
+ #ifdef CONFIG_OF
+ static const struct of_device_id s3c_hsotg_of_ids[] = {
+ 	{ .compatible = "samsung,s3c6400-hsotg", },
++	{ .compatible = "snps,dwc2", },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, s3c_hsotg_of_ids);
 -- 
 1.8.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
