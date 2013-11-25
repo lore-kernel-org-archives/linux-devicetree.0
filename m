@@ -1,134 +1,29 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when populating interrupts
-Date: Sun, 24 Nov 2013 21:36:51 +0000
-Message-ID: <20131124213651.59750C402C3@trevor.secretlab.ca>
-References: <20131123004334.GJ10023@atomide.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131123004334.GJ10023-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v7 0/4] Add dual-fifo mode support of i.MX ssi
+Date: Mon, 25 Nov 2013 10:11:03 +0800
+Message-ID: <20131125021101.GA11613@S2101-09.ap.freescale.net>
+References: <cover.1384352281.git.b42378@freescale.com>
+ <20131122163132.GB17344@MrMyself>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131122163132.GB17344@MrMyself>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolin Chen <b42378@freescale.com>
+Cc: vinod.koul@intel.com, dan.j.williams@intel.com, s.hauer@pengutronix.de, timur@tabi.org, broonie@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, swarren@wwwdotorg.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, dmaengine@vger.kernel.org, ijc+devicetree@hellion.org.uk, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Nov 2013 16:43:35 -0800, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> Currently we get the following kind of errors if we try to use
-> interrupt phandles to irqchips that have not yet initialized:
+On Sat, Nov 23, 2013 at 12:31:32AM +0800, Nicolin Chen wrote:
+> Hi all,
 > 
-> irq: no irq domain found for /ocp/pinmux@48002030 !
-> WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171 of_device_alloc+0x144/0x184()
-> Modules linked in:
-> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.12.0-00038-g42a9708 #1012
-> (show_stack+0x14/0x1c)
-> (dump_stack+0x6c/0xa0)
-> (warn_slowpath_common+0x64/0x84)
-> (warn_slowpath_null+0x1c/0x24)
-> (of_device_alloc+0x144/0x184)
-> (of_platform_device_create_pdata+0x44/0x9c)
-> (of_platform_bus_create+0xd0/0x170)
-> (of_platform_bus_create+0x12c/0x170)
-> (of_platform_populate+0x60/0x98)
-> ...
-> 
-> This is because we're wrongly trying to populate resources that are not
-> yet available. It's perfectly valid to create irqchips dynamically,
-> so let's fix up the issue by populating the interrupt resources based
-> on a notifier call instead.
-> 
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> 
-> ---
-> 
-> Rob & Grant, care to merge this for the -rc if this looks OK to you?
-> 
-> These happen for example when using interrupts-extended for omap
-> wake-up interrupts where the irq domain is created by pinctrl-single.c
-> at module_init time.
-> 
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -130,6 +130,56 @@ void of_device_make_bus_id(struct device *dev)
->  	dev_set_name(dev, "%s.%d", node->name, magic - 1);
->  }
->  
-> +/*
-> + * The device interrupts are not necessarily available for all
-> + * irqdomains initially so we need to populate them using a
-> + * notifier.
-> + */
-> +static int of_device_resource_notify(struct notifier_block *nb,
-> +				     unsigned long event, void *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct resource *res = pdev->resource;
-> +	struct resource *irqr = NULL;
-> +	int num_irq, i, found = 0;
-> +
-> +	if (event != BUS_NOTIFY_BIND_DRIVER)
-> +		return 0;
-> +
-> +	if (!np)
-> +		goto out;
-> +
-> +	num_irq = of_irq_count(np);
-> +	if (!num_irq)
-> +		goto out;
-> +
-> +	for (i = 0; i < pdev->num_resources; i++, res++) {
-> +		if (res->flags != IORESOURCE_IRQ ||
-> +		    res->start != -EPROBE_DEFER ||
-> +		    res->end != -EPROBE_DEFER)
-> +			continue;
-> +
-> +		if (!irqr)
-> +			irqr = res;
-> +		found++;
-> +	}
-> +
-> +	if (!found)
-> +		goto out;
-> +
-> +	if (found != num_irq) {
-> +		dev_WARN(dev, "error populating irq resources: %i != %i\n",
-> +			 found, num_irq);
-> +		goto out;
-> +	}
-> +
-> +	WARN_ON(of_irq_to_resource_table(np, irqr, num_irq) != num_irq);
-> +
-> +out:
-> +	return NOTIFY_DONE;
-> +}
-> +
->  /**
->   * of_device_alloc - Allocate and initialize an of_device
->   * @np: device node to assign to device
-> @@ -168,7 +218,13 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  			rc = of_address_to_resource(np, i, res);
->  			WARN_ON(rc);
->  		}
-> -		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
-> +
-> +		/* See of_device_resource_notify for populating interrupts */
-> +		for (i = 0; i < num_irq; i++, res++) {
-> +			res->flags = IORESOURCE_IRQ;
-> +			res->start = -EPROBE_DEFER;
-> +			res->end = -EPROBE_DEFER;
-> +		}
+>    I'm sorry to push this. But this series has been an orphan for a while.
+>    Could any one please receive and foster it?
 
-I actually like the idea of completely allocating the resource structure
-but leaving some entries empty. However, I agree with rmk that putting
-garbage into a resource structure is a bad idea. What about changing the
-value of flags to 0 or some other value to be obviously an empty
-property and give the follow up parsing some context about which ones it
-needs to attempt to recalculate?
+Vinod,
 
-However, I still don't like the notifier approach of actually triggering
-the fixup. We need something better.
+I expect you will pick up the series.  But otherwise, I can apply it via
+IMX tree with your ACKs on the first two patches.
 
-g.
+Shawn
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
