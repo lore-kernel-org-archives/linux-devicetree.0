@@ -1,155 +1,104 @@
-From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] drm: edid: enable probing and listing of non rb modes
-Date: Mon, 25 Nov 2013 14:24:36 +0530
-Message-ID: <1385369679-4337-3-git-send-email-s.shirish@samsung.com>
-References: <1385369679-4337-1-git-send-email-s.shirish@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1385369679-4337-1-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] clocksource: Do not drop unheld reference on device node
+Date: Mon, 25 Nov 2013 10:04:40 +0100
+Message-ID: <20131125090439.GC22043@ulmo.nvidia.com>
+References: <1382136588-15320-1-git-send-email-treding@nvidia.com>
+ <20131122161607.GA5088@ulmo.nvidia.com>
+ <528F86F2.40706@linaro.org>
+ <20131122192257.GX28642@pengutronix.de>
+ <52926F6F.3050104@linaro.org>
+ <20131125072923.GB28642@pengutronix.de>
+ <52931103.7030107@linaro.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vEao7xgI/oilGqZ+"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52931103.7030107@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <davidb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The current solution checks for the existing RB mode,
-if available in the edid block returns by adding it,
-but does not populate the connector with the modes
-of same resolution but which are non-rb modes.
 
-As a result the probing and listing of non-rb modes can't
-be made, in case the rb mode's pixel clock is not
-supported but non-rb mode is supported.
+--vEao7xgI/oilGqZ+
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patch changes the drm_mode_std mode selection to
-collect all the supported modes and not just one mode.
+On Mon, Nov 25, 2013 at 09:57:39AM +0100, Daniel Lezcano wrote:
+> On 11/25/2013 08:29 AM, Uwe Kleine-K=C3=B6nig wrote:
+> >Hello Daniel,
+> >
+> >On Sun, Nov 24, 2013 at 10:28:15PM +0100, Daniel Lezcano wrote:
+> >>On 11/22/2013 08:22 PM, Uwe Kleine-K=C3=B6nig wrote:
+> >>>On Fri, Nov 22, 2013 at 05:31:46PM +0100, Daniel Lezcano wrote:
+> >>>>On 11/22/2013 05:16 PM, Thierry Reding wrote:
+> >>>>>On Sat, Oct 19, 2013 at 12:49:48AM +0200, Thierry Reding wrote:
+> >>>>Yes. Sounds like I missed it.
+> >>>>
+> >>>>This regression has been introduced by:
+> >>>>
+> >>>>commit 326e31eebe61dc838e031ea16968b2cfb43443e3
+> >>>>Author: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> >>>>Date:   Tue Oct 1 11:00:53 2013 +0200
+> >>>>
+> >>>>     clocksource: Put nodes passed to CLOCKSOURCE_OF_DECLARE
+> >>>>callbacks centrally
+> >>>>
+> >>>>     Instead of letting each driver call of_node_put do it centrally =
+in the
+> >>>>     loop that also calls the CLOCKSOURCE_OF_DECLARE callbacks. This =
+is less
+> >>>>     prone to error and also moves getting and putting the references
+> >>>>into the
+> >>>>     same function.
+> >>>>
+> >>>>     Consequently all respective of_node_put calls in drivers are rem=
+oved.
+> >>>>
+> >>>>     Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutroni=
+x.de>
+> >>>>     Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >>>>     Acked-by: David Brown <davidb@codeaurora.org>
+> >>>Still all but the hook in clocksource_of_init of this commit was
+> >>>correct, right? (Well, but this buggy hunk makes the commit log wrong.)
+> >>
+> >>I don't understand your comment, can you elaborate ?
+> >My patch added an of_node_put in clocksource_of_init and dropped several
+> >of_node_puts in drivers. This thread is about the first being wrong. My
+> >question was if dropping the others was correct.
+>=20
+> Yes, Thierry's patch removes the of_node_puts but I am also wondering if =
+we
+> shouldn't just revert the patch 326e31eebe61dc838e instead.
 
-Signed-off-by: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/gpu/drm/drm_edid.c |   40 ++++++++++++++++++----------------------
- 1 file changed, 18 insertions(+), 22 deletions(-)
+I don't think that's necessary. Dropping the other of_node_put()s looks
+like the right thing to do. They drop a reference that they haven't
+taken themselves, which is usually not correct. I can't find anything
+wrong with the rest of that commit.
 
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index fb7cf0e..765aa96 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -1587,12 +1587,12 @@ bad_std_timing(u8 a, u8 b)
-  * Take the standard timing params (in this case width, aspect, and refresh)
-  * and convert them into a real mode using CVT/GTF/DMT.
-  */
--static struct drm_display_mode *
--drm_mode_std(struct drm_connector *connector, struct edid *edid,
-+unsigned int drm_mode_std(struct drm_connector *connector, struct edid *edid,
- 	     struct std_timing *t, int revision)
- {
- 	struct drm_device *dev = connector->dev;
- 	struct drm_display_mode *m, *mode = NULL;
-+	unsigned int modes = 0;
- 	int hsize, vsize;
- 	int vrefresh_rate;
- 	unsigned aspect_ratio = (t->vfreq_aspect & EDID_TIMING_ASPECT_MASK)
-@@ -1602,7 +1602,7 @@ drm_mode_std(struct drm_connector *connector, struct edid *edid,
- 	int timing_level = standard_timing_level(edid);
- 
- 	if (bad_std_timing(t->hsize, t->vfreq_aspect))
--		return NULL;
-+		return modes;
- 
- 	/* According to the EDID spec, the hdisplay = hsize * 8 + 248 */
- 	hsize = t->hsize * 8 + 248;
-@@ -1638,7 +1638,7 @@ drm_mode_std(struct drm_connector *connector, struct edid *edid,
- 	list_for_each_entry(m, &connector->probed_modes, head)
- 		if (m->hdisplay == hsize && m->vdisplay == vsize &&
- 		    drm_mode_vrefresh(m) == vrefresh_rate)
--			return NULL;
-+			return modes;
- 
- 	/* HDTV hack, part 2 */
- 	if (hsize == 1366 && vsize == 768 && vrefresh_rate == 60) {
-@@ -1647,19 +1647,21 @@ drm_mode_std(struct drm_connector *connector, struct edid *edid,
- 		mode->hdisplay = 1366;
- 		mode->hsync_start = mode->hsync_start - 1;
- 		mode->hsync_end = mode->hsync_end - 1;
--		return mode;
-+		goto done;
- 	}
- 
- 	/* check whether it can be found in default mode table */
- 	if (drm_monitor_supports_rb(edid)) {
- 		mode = drm_mode_find_dmt(dev, hsize, vsize, vrefresh_rate,
- 					 true);
--		if (mode)
--			return mode;
-+		if (mode) {
-+			drm_mode_probed_add(connector, mode);
-+			modes++;
-+		}
- 	}
- 	mode = drm_mode_find_dmt(dev, hsize, vsize, vrefresh_rate, false);
- 	if (mode)
--		return mode;
-+		goto done;
- 
- 	/* okay, generate it */
- 	switch (timing_level) {
-@@ -1676,7 +1678,7 @@ drm_mode_std(struct drm_connector *connector, struct edid *edid,
- 		 */
- 		mode = drm_gtf_mode(dev, hsize, vsize, vrefresh_rate, 0, 0);
- 		if (!mode)
--			return NULL;
-+			return modes;
- 		if (drm_mode_hsync(mode) > drm_gtf2_hbreak(edid)) {
- 			drm_mode_destroy(dev, mode);
- 			mode = drm_gtf_mode_complex(dev, hsize, vsize,
-@@ -1692,7 +1694,11 @@ drm_mode_std(struct drm_connector *connector, struct edid *edid,
- 				    false);
- 		break;
- 	}
--	return mode;
-+
-+done:
-+	drm_mode_probed_add(connector, mode);
-+	return modes++;
-+
- }
- 
- /*
-@@ -2174,15 +2180,10 @@ do_standard_modes(struct detailed_timing *timing, void *c)
- 		int i;
- 		for (i = 0; i < 6; i++) {
- 			struct std_timing *std;
--			struct drm_display_mode *newmode;
- 
- 			std = &data->data.timings[i];
--			newmode = drm_mode_std(connector, edid, std,
-+			closure->modes += drm_mode_std(connector, edid, std,
- 					       edid->revision);
--			if (newmode) {
--				drm_mode_probed_add(connector, newmode);
--				closure->modes++;
--			}
- 		}
- 	}
- }
-@@ -2203,15 +2204,10 @@ add_standard_modes(struct drm_connector *connector, struct edid *edid)
- 	};
- 
- 	for (i = 0; i < EDID_STD_TIMINGS; i++) {
--		struct drm_display_mode *newmode;
- 
--		newmode = drm_mode_std(connector, edid,
-+		modes += drm_mode_std(connector, edid,
- 				       &edid->standard_timings[i],
- 				       edid->revision);
--		if (newmode) {
--			drm_mode_probed_add(connector, newmode);
--			modes++;
--		}
- 	}
- 
- 	if (version_greater(edid, 1, 0))
--- 
-1.7.9.5
+Thierry
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--vEao7xgI/oilGqZ+
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSkxKnAAoJEN0jrNd/PrOhPxgQAJJnoCYDOsZFY4OB7+0Ha6nZ
+bFM01da6Ddrr93O4ZSqnPkstKAY2Egmwb8JrtBfaynMPbYrk1Ojau1hDOzAgo1ml
+/iI3mt3UFAdfZOah9eroucqC+iNGNg9yjzAMb7y+OeUe1+mgQbfPrR50ThY1Hy5l
+rqydqOhw1pjDi5yLYOpDT5gAXH7GED081PFL+54N/s8ytb2oDDt2Bbwksmt23Vzq
+Bx7lyDEMNboPUksvtos/70vgi9b7bx4olXIIjzocsL0BciTMmT2VpfYbnO1KKQVl
+pEpuWCvqP00T9cEfPtEhkc1d9t6ZEYMzSbk0vGi1MMA+MGlfs7CZ/xnYwgeu/SOz
+LDA756NOcv762N3RmvO2lfPKxiuh4tLS3m6br8rGa+bmQgogbMwvKAymzcbhxe+E
+DxsgThghnSAyA+gy+U3v+ArYJoI+quv01W+g9cKQk656C8gyX0myWYjCdfEl9YsF
+7EXNeMMVFjnGFvarBPX44C/AjtWaRmGexEzPWFxjS8+sGZZDxH0tcS8GzhXfxmIX
+UXz6V/KLq8Ff0RPUXjpmfgcKpo/B64L83h0PUehK5vbKTV/c5kEwFUIjdg2O1AkZ
+kAHIBbBr/OKneaN6NUF3sv91QCqxw7KGB0yiGXWl0M/n+nHTVWqARZgXfxz4hXz3
+skKkHW5wEZgXFYc6asvR
+=LVbx
+-----END PGP SIGNATURE-----
+
+--vEao7xgI/oilGqZ+--
