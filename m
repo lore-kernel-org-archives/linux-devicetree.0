@@ -1,19 +1,15 @@
-From: Kevin Bracey <kevin@bracey.fi>
-Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using
- pinfunc.
-Date: Mon, 25 Nov 2013 22:01:42 +0200
-Message-ID: <5293ACA6.7060403@bracey.fi>
-References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
- <528BB1F2.4080107@wwwdotorg.org>
- <CAD=FV=XS0dbE7zfgDGVdp84h4fHH6tfO8aN_HNh1LbOjYy51aQ@mail.gmail.com>
- <528BB913.6080409@wwwdotorg.org>
- <CAH9JG2UjnL5bZzNUuJhWY3GpwPD=rJvR2O4Hcpm33G+prSS=BA@mail.gmail.com>
- <CACRpkdbyjm0X9RX+8WjqQxBPyRjBOAunkqVcO-0KUd1PTdGavA@mail.gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3 04/10] usb: dwc3: use quirks to know if a particualr
+ platform doesn't have PHY
+Date: Mon, 25 Nov 2013 15:21:01 -0600
+Message-ID: <20131125212101.GR18046@saruman.home>
+References: <1385373690-12170-1-git-send-email-kishon@ti.com>
+ <1385373690-12170-5-git-send-email-kishon@ti.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============5799172451921987016=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdbyjm0X9RX+8WjqQxBPyRjBOAunkqVcO-0KUd1PTdGavA@mail.gmail.com>
+In-Reply-To: <1385373690-12170-5-git-send-email-kishon@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,50 +19,132 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kmpark@infradead.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, rob@landley.net, pawel.moll@arm.com, linux-doc@vger.kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, bcousson@baylibre.com, galak@codeaurora.org, swarren@wwwdotorg.org, s.nawrocki@samsung.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/11/2013 16:34, Linus Walleij wrote:
-> On Wed, Nov 20, 2013 at 1:02 AM, Kyungmin Park <kmpark@infradead.org> wrote:
->> On Wed, Nov 20, 2013 at 4:16 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>> I think that last point should be addressed by having a driver that owns
->>> the GPIO set it to the desired output level, and the implementation of
->> Some pins are not connected (NC). At that cases, there's no drivers to
->> handle it. To reduce power leakage, it sets proper configuration with
->> values instead of reset values.
-> This is correspondant to the PIN_CONFIG_OUTPUT from
-> include/linux/pinctrl/pinconf-generic.h
+--===============5799172451921987016==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hdoY8pikdvrkIRAT"
+Content-Disposition: inline
 
-Indeed it is - I was waiting for someone to point that out. Now we've 
-got there...
+--hdoY8pikdvrkIRAT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I've been working on extending the shmobile PFC driver to provide 
-"gpio-mode" and implement PIN_CONFIG_OUTPUT as described by 
-Documentation/pinctrl.txt, primarily to handle sleep states, but I have 
-begun to wonder about the initial state problem, as discussed here.
+On Mon, Nov 25, 2013 at 03:31:24PM +0530, Kishon Vijay Abraham I wrote:
+> There can be systems which does not have an external phy, so get
+> phy only if no quirks are added that indicates the PHY is not present.
+> Introduced two quirk flags to indicate the *absence* of usb2 phy and
+> usb3 phy. Also remove checking if return value is -ENXIO since it's now
+> changed to always enable usb_phy layer.
+>=20
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/usb/dwc3/Kconfig         |    1 +
+>  drivers/usb/dwc3/core.c          |   93 ++++++++++++++++++++------------=
+------
+>  drivers/usb/dwc3/core.h          |   15 ++++++
+>  drivers/usb/dwc3/platform_data.h |    5 ++
+>  4 files changed, 69 insertions(+), 45 deletions(-)
+>=20
+> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> index 70fc430..8e385b4 100644
+> --- a/drivers/usb/dwc3/Kconfig
+> +++ b/drivers/usb/dwc3/Kconfig
+> @@ -1,6 +1,7 @@
+>  config USB_DWC3
+>  	tristate "DesignWare USB3 DRD Core Support"
+>  	depends on (USB || USB_GADGET) && HAS_DMA
+> +	select USB_PHY
 
-As far as I can see, we can't currently specify "fallback" states for 
-pins, which is one of Tomasz' key requirements.
+no more selects, we've already had too many problems caused by bogus
+usage of select.
 
-We can specify "hog" states, and we can specify "default for a driver", 
-but not "default before/in absence of a driver" or "sleep in absence of 
-a driver". Having a hog precludes any finer driver control, AFAICT.
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 986674f..f20f4a1 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+> =20
+>  #include <linux/usb/ch9.h>
+>  #include <linux/usb/gadget.h>
+> @@ -351,13 +352,28 @@ static void dwc3_core_exit(struct dwc3 *dwc)
+> =20
+>  #define DWC3_ALIGN_MASK		(16 - 1)
+> =20
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id of_dwc3_match[] =3D {
+> +	{
+> +		.compatible =3D "snps,dwc3"
+> +	},
+> +	{
+> +		.compatible =3D "synopsys,dwc3"
+> +	},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, of_dwc3_match);
+> +#endif
+> +
 
-Some of our existing pre-pinconf board files have a "unused pins" table 
-which is used to claim and pull GPIOs. I've converted that to "hog" 
-pinconf, but that only works because the table omits all pins used by 
-drivers. And, unsurprisingly, that's been error-prone; if those tables 
-originally covered all unused pins, they don't any more.
+you can split this patch a little bit just to make it easier to review
+because there are a few changes which are really obvious:
 
-I'd like confidence that we can get every pin into the correct state by 
-having a fully-populated table containing all pins, that can be used 
-regardless of which drivers start. I think what we're lacking is a "weak 
-hog". Whatever you call that. :)
+a) move of_device_id higher in source code so you can use it from probe.
+	while at that, aso use of_match_device() and return early if it
+	doesn't match anything.
 
-That would also specify the state to fallback to when a group is 
-released (where we currently do pinmux_disable_setting).
+b) introduce struct dwc3_data.
 
-Thoughts?
+c) initialize of_id->data field.
 
-Kevin
+d) start using struct dwc3_data
+
+this will make to put all obvious changes (a-c) in separate patches so
+review can focus on (d).
+
+--=20
+balbi
+
+--hdoY8pikdvrkIRAT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSk789AAoJEIaOsuA1yqREUA4QAKJ5mdE8Hv9U3G/Uwaood3de
+RZRxtYtpd1hAJWNcRKRN8JhnZ4FsQnjsTOTT6AiWXlNuprgUtcText9xoK0YX9RD
+m/D7peeSwXWvC5OwEkXJfDgi6GhqFya2nyLAyx/WZAM7buHXiW3S1ffOr3RP5MkX
+loTIZzzjssHZN9/3lAdqAUKmwLpfu+b9P1sl6zF4i83cFWZWiin81dSryM9Eg2CP
+S30q5VsT8n6HCOEv8At5JV3SxgSOZgtc5pv7EE4loBzUhLgb/LdaXTHfzXBRPPux
+plJ+DVVzdKIrI4eO9StGfUytIQM/DDfGq76wIvwFSfnsopmJ5+ZFR50uxf4nS5Mn
++vpxkVC00uDgBzMLegGdahqOcYNyRA5fSYMClLi1VRe0bfDg7JipAll+VkzV/iZI
+WUcxta96WctOH0SbtwC8vqSDkHGiERt+E3OWLpkBZiUeCrLrooXqspJHyGt0Ws+J
+Nrzvy55Oc3/t/khbzJLrEeUJqVv3Dh8UcyEkPM9clRfrZtQJ2D01AgZAMC9ry07x
+RTs+Aelj2IzgZKtXINJXey4bCglk71h8okVCPK7vxdJNhEQlB/YOCRWwZuq9/84i
+G6Jk9PDDrqQ/KnVzalOoXOG/Es+vycXyd2A9DqB+IZRgocPBKR/cOkru6sQB7ogf
+h9/lh5qS/k/TZwcyohE2
+=X7UI
+-----END PGP SIGNATURE-----
+
+--hdoY8pikdvrkIRAT--
+
+
+--===============5799172451921987016==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5799172451921987016==--
