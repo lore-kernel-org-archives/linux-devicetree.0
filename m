@@ -1,73 +1,49 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv5] ASoC: Add support for BCM2835
-Date: Mon, 25 Nov 2013 17:17:48 +0000
-Message-ID: <20131125171748.GN14725@sirena.org.uk>
-References: <528F7718.5@koalo.de>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv5 2/9] driver/core: populate devices in order for IOMMUs
+Date: Mon, 25 Nov 2013 17:39:00 +0000
+Message-ID: <20131125173900.GB28201@mudshark.cambridge.arm.com>
+References: <1384853593-32202-1-git-send-email-hdoyu@nvidia.com>
+	<1384853593-32202-3-git-send-email-hdoyu@nvidia.com>
+	<20131121131558.E5B82C40A2C@trevor.secretlab.ca>
+	<528E5932.1070105@wwwdotorg.org>
+	<20131122074111.155E2C40753@trevor.secretlab.ca>
+	<528F95FE.7080406@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3062391100104055097=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <528F7718.5@koalo.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Florian Meier <florian.meier@koalo.de>
-Cc: devicetree <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Stephen Warren <swarren@wwwdotorg.org>, Liam Girdwood <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <528F95FE.7080406-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dave.martin-5wv7dgnIgG8@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 22, 2013 at 05:35:58PM +0000, Stephen Warren wrote:
+> On 11/22/2013 12:41 AM, Grant Likely wrote:
+> > It seems more that IOMMU attachment is closer to being a property of the
+> > bus rather than a property of the device itself. In that context it
+> > would make more sense for the bus device to hold off child device
+> > registration or probing until the IOMMU is available. That keeps the
+> > logic out of both the core code and the individual device drivers.
+> 
+> The bus structure that DT and Linux know about is the register bus.
+> There's no reason that devices have to emit their master transactions
+> onto that same bus, or onto only that same bus.
 
---===============3062391100104055097==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6AFz5yWxU/FsGPwt"
-Content-Disposition: inline
+Agreed. Dave (CC'd) and I actually had a lot of discussion around the DT bus
+abstractions last week and we ended up with a binding that looked sane enough
+to start a meaningful discussion in this area.
 
+Dave -- care to post what we came up with? It certainly has a bunch of
+overlap with the IOMMU problems being discussed here.
 
---6AFz5yWxU/FsGPwt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Nov 22, 2013 at 04:24:08PM +0100, Florian Meier wrote:
-> This driver adds support for digital audio (I2S)
-> for the BCM2835 SoC that is used by the
-> Raspberry Pi. External audio codecs can be
-> connected to the Raspberry Pi via P5 header.
-
-Applied, thanks.
-
---6AFz5yWxU/FsGPwt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSk4Y5AAoJELSic+t+oim9xTwP/2H4HxBqj2l3uI3ZECB/qS7X
-vA4P7R2Z78t8wol9zSl4RSxAOUT+qxgrVJmgTG2O1g9wA1MXrD+n2HU+VDzhXyAM
-gM/fKCCmfMX2/5X/QXyA9h7N561Gu8OK0z87Plu+V6sDPgN4UKYNrggR7m/rZjaN
-qVOPu8vQyNGyOwheh3uQRz2qcyFvubdPImhztpj5FYar6FQfCbnhXzBLSI7Eqh96
-14ZU4k3GD3N+8C6bWBTPr0zRr6RTiDcNXqgKzyJ7QCQTK4FIZ2DRihumGRs0GMCi
-ckAStfkEA7Axlrl87uP9U2K3Its0PKS7Ccrg/nHZpzymj54axTNCsJB7CJDcEyzV
-tnTH1WixGE/a6L3KafSbmOGPJC7B66Va5+BioKwbKTO9Df0ouxlH5L403ynlu9/A
-0u4OLlcVnpbyAiiu71jZCy1nzig66jr5twfOHG3C3rww5MJw+aF4UoIxdMA7R+ge
-ILggcMowf60h+apV966yXpeymqnFZ5G16QlPVYMdYQJMnkleeEXFn6Ufmjy0YhY+
-mAlFAjpoZydnHSpYAvgJU3VjIe6HpH9Mx/jhScn1c0Vlbnl+Pjr9Dn/pK046Xdit
-7BPhAxXCLQEa5K5MXPD5q30T6eND666pEJEUOc0uJqSODWHvjZMJ/ks63L4ZuhFI
-3U0BfyFugiwfg9pRgRsk
-=yKcQ
------END PGP SIGNATURE-----
-
---6AFz5yWxU/FsGPwt--
-
---===============3062391100104055097==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3062391100104055097==--
+Will
