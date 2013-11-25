@@ -1,63 +1,106 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: Fwd: [PATCH 6/8] watchdog: davinci: reuse driver for keystone
- arch
-Date: Mon, 25 Nov 2013 13:09:07 +0200
-Message-ID: <52932FD3.10508@ti.com>
-References: <1383680783-12114-7-git-send-email-ivan.khoronzhuk@ti.com> <527A28DE.4030906@ti.com> <201311231902.02807.arnd@arndb.de>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/5] Documentation: dt: Add kona-pwm binding
+Date: Mon, 25 Nov 2013 12:17:10 +0100
+Message-ID: <20131125111709.GJ22043@ulmo.nvidia.com>
+References: <1384800901-21711-1-git-send-email-tim.kryger@linaro.org>
+ <1384800901-21711-2-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201311231902.02807.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="I/5syFLg1Ed7r+1G"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1384800901-21711-2-git-send-email-tim.kryger@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tim Kryger <tim.kryger@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linaro Patches List <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2013 08:02 PM, Arnd Bergmann wrote:
-> On Wednesday 06 November 2013, ivan.khoronzhuk wrote:
-> 
->> @@ -1,13 +1,20 @@
->> -DaVinci Watchdog Timer (WDT) Controller
->> +Texas Instruments DaVinci/Keystone Watchdog Timer (WDT) Controller
->>   
->>   Required properties:
->> -- compatible : Should be "ti,davinci-wdt"
->> +
->> +- compatible:          "ti,davinci-wdt"
->> +                       "ti,keystone-wdt"
->> +
->>   - reg : Should contain WDT registers location and length
->>   
-> 
-> ...
-> 
->> @@ -229,6 +229,7 @@ static int davinci_wdt_remove(struct platform_device *pdev)
->>   
->>   static const struct of_device_id davinci_wdt_of_match[] = {
->>          { .compatible = "ti,davinci-wdt", },
->> +       { .compatible = "ti,keystone-wdt", },
->>          {},
->>   };
->>   MODULE_DEVICE_TABLE(of, davinci_wdt_of_match);
-> 
-> You should clarify the compatible list here: It seems that the devices are fully
-> compatible, so the driver should only need to check for "ti,davinci-wdt" as the
-> compatible string, while the dtb files should list both "ti,davinci-wdt" and
-> "ti,keystone-wdt" for keystone, but only the davinci string for davinci.
-> 
-> 	Arnd
-> 
 
-Ok, I will remove "ti,keystone-wdt" compatible from driver and for the keystone WDT node
-describe compatible as:
+--I/5syFLg1Ed7r+1G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-compatible = "ti,keystone-wdt", "ti,davinci-wdt";
+On Mon, Nov 18, 2013 at 10:54:57AM -0800, Tim Kryger wrote:
+> Add the binding description for the kona-pwm block found on Broadcom's
+> mobile SoCs.
+>=20
+> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Alex Elder <elder@linaro.org>
+> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> ---
+>  .../devicetree/bindings/pwm/bcm-kona-pwm.txt       | 24 ++++++++++++++++=
+++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt b/Doc=
+umentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+> new file mode 100644
+> index 0000000..5c3ea1b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+> @@ -0,0 +1,24 @@
+> +Broadcom's PWM Controller Device Tree bindings
 
--- 
-Regards,
-Ivan Khoronzhuk
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This sounds somewhat strange, like Broadcom owns the bindings... perhaps
+just:
+
+	Broadcom PWM controller device tree bindings
+
+Or for consistency:
+
+	Broadcom Kona PWM controller device tree bindings
+
+since apparently there exist other Broadcom PWM controllers.
+
+> +Broadcom's Kona PWM Controller has 6 channels
+
+"controller" and end the sentence with a full stop.
+
+> +
+> +Required Properties :
+> +- compatible: should be "brcm,kona-pwm"
+> +- reg: physical base address and length of the controller's registers
+> +- clocks: clock specifier for the kona pwm external clock
+
+Please use the correct spelling "PWM" in prose here and elsewhere. Also
+you should pick one of "kona", "Kona" or "KONA" and stick with it
+consistently. Might also be useful to mention what Kona is. Doesn't
+necessarily have to be in the document, but if for nothing else, then
+just for my curiosity.
+
+> +- #pwm-cells: should be 2.  The first cell specifies the per-chip index
+> +  of the PWM to use and the second cell is the period in nanoseconds.
+> +
+> +Refer to pwm/pwm.txt for generic pwm controller node properties.
+> +
+> +Refer to clocks/clock-bindings.txt for generic clock consumer
+> +properties
+
+This sentence should also end with a full stop.
+
+Thierry
+
+--I/5syFLg1Ed7r+1G
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSkzG1AAoJEN0jrNd/PrOhFwsP/iF+BvZaHOAS/+kK80G8wCQW
+tb0Wkdion8CN0ddWxB8kXvC0YFi5ihEDVRfTA9M/v6Grw631SRCP4RI+v87gENuq
+BHu+dhzzDqCVYUWg0bY6945MlMLXg/CuRt9uXNk09tny91kvwjzAd4BhhHgogPs7
+uDKMrFG5BbO/p8FFS9qe3qWjTcX1lYCloJzHI0QaJI9LnV8qmgYMIgmBigiz24Qx
+N4QWeLwVoUUiAGuyTunm96CLhWqkrXkJIfUMADTNozTDPWnV8NpPxpBlsKueSJSB
+Akij2Ta5DPEyXqAns8hGW94bmpFHDP86Ym0GxtbXBnW1xX2JcwXHJwIMWgNAc5wh
+qnkL7Kfx5j0uR7Zy0unjAB9ONmYRlKWkTs7E2R/dmVzo/UptOPKM/KsUyK4veJmX
+F1E9ktA3Q/Ywv88anjuYyIlnl3dvVipX4am0kbG8ma36ttmbdgPXIPbalweecuYI
+gx5koFcMfZi0oVFHSd8kzyJDUp7mGzq9Y1OYzjK8gMhnt9tJXiLeRptcmL7A/3qw
+IsNX9sPa0qBpNB/4T4rn1KtrdElbk1TnvS/et36vYst0gDSD5ydccFWSUU3veU53
+y1zF3mrLAGzjFHNjkzkOlqRoYwgeq7d9W0TJ7vRdBdikD/ym6fE6oDsPukGQrWIE
+yBpnC981/KEeKQTaL6/E
+=Vy4a
+-----END PGP SIGNATURE-----
+
+--I/5syFLg1Ed7r+1G--
