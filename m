@@ -1,32 +1,54 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 0/4] pinctrl: imx27: imx27 pincontrol driver
-Date: Mon, 25 Nov 2013 15:25:59 +0100
-Message-ID: <CACRpkdY9bh9gG2XO7vFJsL=E3VxnBHkf1qaQUKuCeYAinktkHQ@mail.gmail.com>
-References: <1384937151-11160-1-git-send-email-mpa@pengutronix.de>
-	<20131120124025.GB22308@S2101-09.ap.freescale.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using pinfunc.
+Date: Mon, 25 Nov 2013 15:34:19 +0100
+Message-ID: <CACRpkdbyjm0X9RX+8WjqQxBPyRjBOAunkqVcO-0KUd1PTdGavA@mail.gmail.com>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
+	<528BB1F2.4080107@wwwdotorg.org>
+	<CAD=FV=XS0dbE7zfgDGVdp84h4fHH6tfO8aN_HNh1LbOjYy51aQ@mail.gmail.com>
+	<528BB913.6080409@wwwdotorg.org>
+	<CAH9JG2UjnL5bZzNUuJhWY3GpwPD=rJvR2O4Hcpm33G+prSS=BA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131120124025.GB22308-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAH9JG2UjnL5bZzNUuJhWY3GpwPD=rJvR2O4Hcpm33G+prSS=BA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kyungmin Park <kmpark@infradead.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Tomasz Figa <t.figa@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2013 at 1:40 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On Wed, Nov 20, 2013 at 1:02 AM, Kyungmin Park <kmpark@infradead.org> wrote:
+> On Wed, Nov 20, 2013 at 4:16 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
 
-> I'm about to apply the series.  Is it okay for me to pull in your
-> 'devel' branch at commit 5fab718 (pinctrl: imx1-core populate
-> subdevices) now?  Or should I at least wait a few days for you to
-> rebase your branch on 3.13-rc1 after it becomes available?
+>> I think that last point should be addressed by having a driver that owns
+>> the GPIO set it to the desired output level, and the implementation of
 
-I have today rebased it on v3.13-rc1 so now it has a stable
-base and you can pull it in. I will not rebase it from this
-point.
+> Some pins are not connected (NC). At that cases, there's no drivers to
+> handle it. To reduce power leakage, it sets proper configuration with
+> values instead of reset values.
+
+This is correspondant to the PIN_CONFIG_OUTPUT from
+include/linux/pinctrl/pinconf-generic.h
+
+I.e. driving a pin - any pin, even one that cannot do GPIO - high
+or low as default.
+
+One could argue that if you can drive the pin high/low using
+software then by definition it *is* GPIO. Even if it cannot trigger
+IRQs or anything.
+
+The rationale for having it in pinconf-generic is basically for
+use cases such that one of the the pin config states the device
+pass through may relate to what the documentation calls
+the "GPIO mode fallacy" - a state on the pins that is definately
+related to the use case of a certain device, but puts the pin
+in something the manual calls "GPIO mode" in order to save
+power.
+
+But from a use case point of view that is not GPIO, it is the
+typically the sleep state of a certain pin when used with a
+certain device.
+
+I'll see if I can think of some doc patch to make this more clear...
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
