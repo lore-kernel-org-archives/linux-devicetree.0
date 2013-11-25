@@ -1,118 +1,75 @@
-From: Matt Porter <matt.porter@linaro.org>
-Subject: Re: [PATCH v3 3/3] usb: s3c-hsotg: Use the new Exynos USB phy driver
- with the generic phy framework
-Date: Mon, 25 Nov 2013 13:41:42 -0500
-Message-ID: <20131125184142.GU781@beef>
-References: <1383668001-19141-1-git-send-email-k.debski@samsung.com>
- <1383668001-19141-4-git-send-email-k.debski@samsung.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: [PATCH RESEND v2] clk: probe defer when clock not yet ready
+Date: Mon, 25 Nov 2013 19:47:04 +0100
+Message-ID: <20131125194704.5a5922b7@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1383668001-19141-4-git-send-email-k.debski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kamil Debski <k.debski@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm@vger.kernel.org, kyungmin.park@samsung.com, kishon@ti.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 05, 2013 at 05:13:21PM +0100, Kamil Debski wrote:
-> Change the used phy driver to the new Exynos USB phy driver that uses the
-> generic phy framework.
-> 
-> Signed-off-by: Kamil Debski <k.debski@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  drivers/usb/gadget/s3c-hsotg.c |   12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-> index bb31262..dc7f20c 100644
-> --- a/drivers/usb/gadget/s3c-hsotg.c
-> +++ b/drivers/usb/gadget/s3c-hsotg.c
-> @@ -31,6 +31,7 @@
->  #include <linux/regulator/consumer.h>
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
->  
->  #include <linux/usb/ch9.h>
->  #include <linux/usb/gadget.h>
-> @@ -162,7 +163,7 @@ struct s3c_hsotg_ep {
->  struct s3c_hsotg {
->  	struct device		 *dev;
->  	struct usb_gadget_driver *driver;
-> -	struct usb_phy		*phy;
-> +	struct phy		 *phy;
->  	struct s3c_hsotg_plat	 *plat;
->  
->  	spinlock_t              lock;
-> @@ -2905,9 +2906,10 @@ static void s3c_hsotg_phy_enable(struct s3c_hsotg *hsotg)
->  	dev_dbg(hsotg->dev, "pdev 0x%p\n", pdev);
->  
->  	if (hsotg->phy)
-> -		usb_phy_init(hsotg->phy);
-> +		phy_power_on(hsotg->phy);
->  	else if (hsotg->plat->phy_init)
->  		hsotg->plat->phy_init(pdev, hsotg->plat->phy_type);
-> +
+At probe time, a clock device may not be ready when some other device
+wants to use it.=20
 
-Stray whitespace
+This patch lets the functions clk_get/devm_clk_get return a probe defer
+when the clock is defined in the DT but not yet available.
 
->  }
->  
->  /**
-> @@ -2922,7 +2924,7 @@ static void s3c_hsotg_phy_disable(struct s3c_hsotg *hsotg)
->  	struct platform_device *pdev = to_platform_device(hsotg->dev);
->  
->  	if (hsotg->phy)
-> -		usb_phy_shutdown(hsotg->phy);
-> +		phy_power_off(hsotg->phy);
->  	else if (hsotg->plat->phy_exit)
->  		hsotg->plat->phy_exit(pdev, hsotg->plat->phy_type);
->  }
-> @@ -3529,7 +3531,7 @@ static void s3c_hsotg_delete_debug(struct s3c_hsotg *hsotg)
->  static int s3c_hsotg_probe(struct platform_device *pdev)
->  {
->  	struct s3c_hsotg_plat *plat = dev_get_platdata(&pdev->dev);
-> -	struct usb_phy *phy;
-> +	struct phy *phy;
->  	struct device *dev = &pdev->dev;
->  	struct s3c_hsotg_ep *eps;
->  	struct s3c_hsotg *hsotg;
-> @@ -3544,7 +3546,7 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  	}
->  
-> -	phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-> +	phy = devm_phy_get(&pdev->dev, "device");
+It also fixes an erroneous call to clk_get_sys() when __clk_get() fails=
+=2E
 
-A more descriptive string would be useful here IMHO. Since this is USB
-2.0 IP, perhaps "usb2-phy" like musb uses.
+Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+---
+resend v2: remove ASoc from subject (thank you, Mark)
+resend: - patch subject change from
+   [PATCH v3 1/2] ASoC: kirkwood: clk: probe defer when clock not yet r=
+eady
+	- base kernel 3.13.0-rc1
+v2: fix __clk_get() failure (from Russell King)
+---
+ drivers/clk/clk.c    | 2 +-
+ drivers/clk/clkdev.c | 7 ++++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-	phy-names = "usb2-phy";
-
-looks far more unique than
-
-	phy-names = "device";
-
-in the dts.
-
-Also, this has impact on the samsung-hsotg.txt binding. It should be
-updated to reflect the required generic phy properties that will be
-used when booting from DT:
-
-	- phys: phy provider specifier
-	- phy-names: shall be "device" 
-
-[or "usb2-phy" if the above suggestion is adopted]
-
-I've rebased my BCM281xx UDC series [1] against this s3c-hsotg generic
-phy support and it's working fine. I do add phy_init/phy_exit support
-which is probably better coming in with my series as my phy driver
-makes use of the init method.
-
-Tested-by: Matt Porter <matt.porter@linaro.org>
-
--Matt
-
-[1] http://www.kernelhub.org/?msg=367354&p=2
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 2cf2ea6..41361c6 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -2187,7 +2187,7 @@ EXPORT_SYMBOL_GPL(of_clk_del_provider);
+ struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec)
+ {
+ 	struct of_clk_provider *provider;
+-	struct clk *clk =3D ERR_PTR(-ENOENT);
++	struct clk *clk =3D ERR_PTR(-EPROBE_DEFER);
+=20
+ 	/* Check if we have such a provider in our array */
+ 	mutex_lock(&of_clk_lock);
+diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+index 442a313..1f402b9 100644
+--- a/drivers/clk/clkdev.c
++++ b/drivers/clk/clkdev.c
+@@ -157,7 +157,12 @@ struct clk *clk_get(struct device *dev, const char=
+ *con_id)
+=20
+ 	if (dev) {
+ 		clk =3D of_clk_get_by_name(dev->of_node, con_id);
+-		if (!IS_ERR(clk) && __clk_get(clk))
++		if (!IS_ERR(clk)) {
++			if (!__clk_get(clk))
++				clk =3D ERR_PTR(-ENOENT);
++			return clk;
++		}
++		if (PTR_ERR(clk) =3D=3D -EPROBE_DEFER)
+ 			return clk;
+ 	}
+=20
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
