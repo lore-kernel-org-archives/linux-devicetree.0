@@ -1,106 +1,137 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/5] Documentation: dt: Add kona-pwm binding
-Date: Mon, 25 Nov 2013 12:17:10 +0100
-Message-ID: <20131125111709.GJ22043@ulmo.nvidia.com>
-References: <1384800901-21711-1-git-send-email-tim.kryger@linaro.org>
- <1384800901-21711-2-git-send-email-tim.kryger@linaro.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mfd: cros ec: spi: Add delay for raising CS
+Date: Mon, 25 Nov 2013 12:28:53 +0100
+Message-ID: <20131125112852.GK22043@ulmo.nvidia.com>
+References: <1385143550-31901-1-git-send-email-treding@nvidia.com>
+ <20131125094503.GD17722@lee--X1>
+ <20131125100428.GG22043@ulmo.nvidia.com>
+ <20131125104532.GF17722@lee--X1>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="I/5syFLg1Ed7r+1G"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="45wMVEkw4XUbiYON"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1384800901-21711-2-git-send-email-tim.kryger@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Kryger <tim.kryger@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linaro Patches List <patches@linaro.org>
+In-Reply-To: <20131125104532.GF17722@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Bernie Thompson <bhthompson-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---I/5syFLg1Ed7r+1G
+--45wMVEkw4XUbiYON
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 18, 2013 at 10:54:57AM -0800, Tim Kryger wrote:
-> Add the binding description for the kona-pwm block found on Broadcom's
-> mobile SoCs.
+On Mon, Nov 25, 2013 at 10:45:32AM +0000, Lee Jones wrote:
+> > > > From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > >=20
+> > > > The EC has specific timing it requires. Add support for an optional=
+ delay
+> > > > after raising CS to fix timing issues. This is configurable based on
+> > > > a DT property "google,cros-ec-spi-msg-delay".
+> > > >=20
+> > > > If this property isn't set, then no delay will be added. However, i=
+f set
+> > > > it will cause a delay equal to the value passed to it to be inserte=
+d at
+> > > > the end of a transaction.
+> > > >=20
+> > > > Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > Reviewed-by: Bernie Thompson <bhthompson-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > > > Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > > > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > > > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> > > > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > > > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> > > > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > ---
+> > > > Changes in v2:
+> > > > - make property description more verbose
+> > > >=20
+> > > >  Documentation/devicetree/bindings/mfd/cros-ec.txt |  9 +++++++
+> > >=20
+> > > We need a DT dude to look over this.
+> >=20
+> > I think Mark Rutland looked at this last week and I think I've addressed
+> > all his comments. Hopefully he'll find the time to review this.
 >=20
-> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
-> Reviewed-by: Alex Elder <elder@linaro.org>
-> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-> ---
->  .../devicetree/bindings/pwm/bcm-kona-pwm.txt       | 24 ++++++++++++++++=
-++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+> Right, I just need his (or one of the other guy's) Ack(s) before I can
+> apply the patch.
+
+Sure, no problem.
+
+> > > > +	/* Check for any DT properties */
+> > > > +	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
+> > >=20
+> > > No need for the first check.
+> >=20
+> > Why not? While it is true that dev->of_node would be enough to determine
+> > that the device was instantiated from a device tree, the IS_ENABLED()
+> > will allow the compiler to throw away cros_ec_spi_dt_probe() if OF isn't
+> > enabled. At the same time it's nicer than #ifdeffery sprinkled across
+> > the file and it actually compile-tests all the code. Win-win-win, isn't
+> > it?
 >=20
-> diff --git a/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt b/Doc=
-umentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
-> new file mode 100644
-> index 0000000..5c3ea1b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
-> @@ -0,0 +1,24 @@
-> +Broadcom's PWM Controller Device Tree bindings
+> I agree that it's better than #ifdeffery, but I didn't know that if
+> this check tested negative that the subordinate method would be
+> optimised out by the compiler. Are you sure that happens?
 
-This sounds somewhat strange, like Broadcom owns the bindings... perhaps
-just:
+I'm pretty sure that's what happens. If you have code like this (which
+is pretty much what the above evaluates to if !OF):
 
-	Broadcom PWM controller device tree bindings
+	static void foo(void)
+	{
+		...
+	}
 
-Or for consistency:
+	void bar(void)
+	{
+		if (0)
+			foo();
+	}
 
-	Broadcom Kona PWM controller device tree bindings
+Then the compiler would be actively stupid if it kept foo around. Note
+that this is only thrown away because foo() is static and therefore it
+cannot be used by anything else except that dead branch. While I have
+never checked this personally, I remember it being highlighted as a
+feature of the IS_ENABLED() macro back when it was introduced. It is
+also quite commonly used throughout the kernel.
 
-since apparently there exist other Broadcom PWM controllers.
+> Also, how often is this used without DT?
 
-> +Broadcom's Kona PWM Controller has 6 channels
+Well, it doesn't have a dependency on OF, so it can be used without it.
+In-tree there seems to be no indication that it is used without DT, but
+given that there's no dependency it makes sense to keep it optional.
 
-"controller" and end the sentence with a full stop.
-
-> +
-> +Required Properties :
-> +- compatible: should be "brcm,kona-pwm"
-> +- reg: physical base address and length of the controller's registers
-> +- clocks: clock specifier for the kona pwm external clock
-
-Please use the correct spelling "PWM" in prose here and elsewhere. Also
-you should pick one of "kona", "Kona" or "KONA" and stick with it
-consistently. Might also be useful to mention what Kona is. Doesn't
-necessarily have to be in the document, but if for nothing else, then
-just for my curiosity.
-
-> +- #pwm-cells: should be 2.  The first cell specifies the per-chip index
-> +  of the PWM to use and the second cell is the period in nanoseconds.
-> +
-> +Refer to pwm/pwm.txt for generic pwm controller node properties.
-> +
-> +Refer to clocks/clock-bindings.txt for generic clock consumer
-> +properties
-
-This sentence should also end with a full stop.
+Of course we could also add the dependency if it really isn't used
+outside of a DT context.
 
 Thierry
 
---I/5syFLg1Ed7r+1G
+--45wMVEkw4XUbiYON
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSkzG1AAoJEN0jrNd/PrOhFwsP/iF+BvZaHOAS/+kK80G8wCQW
-tb0Wkdion8CN0ddWxB8kXvC0YFi5ihEDVRfTA9M/v6Grw631SRCP4RI+v87gENuq
-BHu+dhzzDqCVYUWg0bY6945MlMLXg/CuRt9uXNk09tny91kvwjzAd4BhhHgogPs7
-uDKMrFG5BbO/p8FFS9qe3qWjTcX1lYCloJzHI0QaJI9LnV8qmgYMIgmBigiz24Qx
-N4QWeLwVoUUiAGuyTunm96CLhWqkrXkJIfUMADTNozTDPWnV8NpPxpBlsKueSJSB
-Akij2Ta5DPEyXqAns8hGW94bmpFHDP86Ym0GxtbXBnW1xX2JcwXHJwIMWgNAc5wh
-qnkL7Kfx5j0uR7Zy0unjAB9ONmYRlKWkTs7E2R/dmVzo/UptOPKM/KsUyK4veJmX
-F1E9ktA3Q/Ywv88anjuYyIlnl3dvVipX4am0kbG8ma36ttmbdgPXIPbalweecuYI
-gx5koFcMfZi0oVFHSd8kzyJDUp7mGzq9Y1OYzjK8gMhnt9tJXiLeRptcmL7A/3qw
-IsNX9sPa0qBpNB/4T4rn1KtrdElbk1TnvS/et36vYst0gDSD5ydccFWSUU3veU53
-y1zF3mrLAGzjFHNjkzkOlqRoYwgeq7d9W0TJ7vRdBdikD/ym6fE6oDsPukGQrWIE
-yBpnC981/KEeKQTaL6/E
-=Vy4a
+iQIcBAEBAgAGBQJSkzR0AAoJEN0jrNd/PrOh+JQP/Ap2D0FIiIvbUfnQV2Df4YJx
+uCNv2VwYVZwhQ0do2v01zM+apuB3ZoNwdbAx6DUbBtjuao+goZNBPJDQaOPpfigB
+6uBD3Exwy4iiTcdCFMeAJMHIb/ObDEdd6JEY1VobdcJH2oxIUi2m0TNIfDdrJ+U5
+4YKUhAs0pDnREmz+PIZRsnJ3x3hwlkFjlrhy3ylImUJ0qdSmXG941YXXqlfgh0EB
+Krtiy/TYJwnF4jVFKMcBmS0z5fnDiDLRsMYL5SOt2JHCvDhpGbtwV7zthIpJez1D
+fsr/pjiu44tfKAh5hCEGVClSi0hc79kjpB18jfrhIzq5aDCt5E8VSTo4ss3b8Qyb
+v0EkLhkS8iwl2Q3CtpYQXfoWyGFYy/wDQ5KtpmsW8LINJcgxKtWhv/HCffzScC76
+R94KIBTspvzZXBVxpbHapWOoARC+q26njFfesCsxSTFFBZaaInsFUmbpeMufsFic
+sK3X4DskVmVF3pvfVKMSppIbtqKPlmXYeL7UXHx+nh38APHXHp8xE9f7Mg2rzVUE
+/CZN+wsscuMRBCaVTlimJUovRmJidITYM4bFWK1T5bxYPZ8dFCKj7pyfgQ9N5rbU
+ijxMENYG6d9b+kGMUYMvTwQdPXdEqRKvIj2R8f7OzK9OkrLeb0xYIGXPZVp34IjO
+CY+PdiCvYZM9TUeYlPL0
+=7oBn
 -----END PGP SIGNATURE-----
 
---I/5syFLg1Ed7r+1G--
+--45wMVEkw4XUbiYON--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
