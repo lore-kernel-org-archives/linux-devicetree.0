@@ -1,200 +1,78 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH V2 2/2] ARM: dts: Enable ahci sata and sata phy
-Date: Mon, 25 Nov 2013 12:01:48 +0530
-Message-ID: <5292EED4.2080708@ti.com>
-References: <1384158778-27555-1-git-send-email-yuvaraj.cd@samsung.com>
- <1384158778-27555-3-git-send-email-yuvaraj.cd@samsung.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] clocksource: Do not drop unheld reference on device node
+Date: Mon, 25 Nov 2013 08:29:23 +0100
+Message-ID: <20131125072923.GB28642@pengutronix.de>
+References: <1382136588-15320-1-git-send-email-treding@nvidia.com>
+ <20131122161607.GA5088@ulmo.nvidia.com>
+ <528F86F2.40706@linaro.org>
+ <20131122192257.GX28642@pengutronix.de>
+ <52926F6F.3050104@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1384158778-27555-3-git-send-email-yuvaraj.cd@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: mark.rutland@arm.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, jg1.han@samsung.com, b.zolnierkie@samsung.com, sachin.kamat@linaro.org, t.figa@samsung.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, aditya.ps@samsung.com, grant.likely@linaro.org, christoffer.dall@linaro.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52926F6F.3050104-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Daniel,
 
-On Monday 11 November 2013 02:02 PM, Yuvaraj Kumar C D wrote:
-> This patch adds dt entry for ahci sata controller and its
-> corresponding phy controller.phy node has been added w.r.t
-> new generic phy framework.
-> 
-> Changes since V1:
-> 	1.Minor changes to node name convention
-> 	2.Updated binding document.
-> 
-> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
-> ---
->  .../devicetree/bindings/ata/exynos-sata-phy.txt    |   19 +++++++++++++-----
->  .../devicetree/bindings/ata/exynos-sata.txt        |   17 +++++++++++-----
->  arch/arm/boot/dts/exynos5250-arndale.dts           |    9 ++++++++-
->  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    8 ++------
->  arch/arm/boot/dts/exynos5250.dtsi                  |   21 ++++++++++++++++----
->  5 files changed, 53 insertions(+), 21 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-> index 37824fa..a679e17 100644
-> --- a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-> +++ b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-> @@ -4,11 +4,20 @@ SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
->  Each SATA PHY controller should have its own node.
->  
->  Required properties:
-> -- compatible        : compatible list, contains "samsung,exynos5-sata-phy"
-> +- compatible        : compatible list, contains "samsung,exynos5250-sata-phy"
+On Sun, Nov 24, 2013 at 10:28:15PM +0100, Daniel Lezcano wrote:
+> On 11/22/2013 08:22 PM, Uwe Kleine-K=F6nig wrote:
+> >On Fri, Nov 22, 2013 at 05:31:46PM +0100, Daniel Lezcano wrote:
+> >>On 11/22/2013 05:16 PM, Thierry Reding wrote:
+> >>>On Sat, Oct 19, 2013 at 12:49:48AM +0200, Thierry Reding wrote:
+> >>Yes. Sounds like I missed it.
+> >>
+> >>This regression has been introduced by:
+> >>
+> >>commit 326e31eebe61dc838e031ea16968b2cfb43443e3
+> >>Author: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >>Date:   Tue Oct 1 11:00:53 2013 +0200
+> >>
+> >>     clocksource: Put nodes passed to CLOCKSOURCE_OF_DECLARE
+> >>callbacks centrally
+> >>
+> >>     Instead of letting each driver call of_node_put do it centrall=
+y in the
+> >>     loop that also calls the CLOCKSOURCE_OF_DECLARE callbacks. Thi=
+s is less
+> >>     prone to error and also moves getting and putting the referenc=
+es
+> >>into the
+> >>     same function.
+> >>
+> >>     Consequently all respective of_node_put calls in drivers are r=
+emoved.
+> >>
+> >>     Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix=
+=2Ede>
+> >>     Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>     Acked-by: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >Still all but the hook in clocksource_of_init of this commit was
+> >correct, right? (Well, but this buggy hunk makes the commit log wron=
+g.)
+>=20
+> I don't understand your comment, can you elaborate ?
+My patch added an of_node_put in clocksource_of_init and dropped severa=
+l
+of_node_puts in drivers. This thread is about the first being wrong. My
+question was if dropping the others was correct.
 
-What if someone is already using samsung,exynos5-sata-phy? You can mark the old
-one as deprecated and add the new compatible string.
->  - reg               : <registers mapping>
->  
->  Example:
-> -        sata@ffe07000 {
-> -                compatible = "samsung,exynos5-sata-phy";
-> -                reg = <0xffe07000 0x1000>;
-> -        };
-> +	sata_phy: sata-phy@12170000 {
-> +		compatible = "samsung,exynos5250-sata-phy";
-> +		reg = <0x12170000 0x1ff>;
-> +		clocks = <&clock 287>;
-> +		clock-names = "sata_phyctrl";
-> +		#phy-cells = <0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +		sataphy-pmu {
-> +			reg = <0x10040724 0x4>;
-> +			};
+Best regards
+Uwe
 
-alignment problem..
-> +	};
-> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> index 0849f10..8ec7327 100644
-> --- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> +++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> @@ -8,10 +8,17 @@ Required properties:
->  - interrupts        : <interrupt mapping for SATA IRQ>
->  - reg               : <registers mapping>
->  - samsung,sata-freq : <frequency in MHz>
-> +- phys              : as mentioned in phy-bindings.txt
-> +- phy-names         : as mentioned in phy-bindings.txt
->  
->  Example:
-> -        sata@ffe08000 {
-> -                compatible = "samsung,exynos5-sata";
-> -                reg = <0xffe08000 0x1000>;
-> -                interrupts = <115>;
-> -        };
-> +	sata@122F0000 {
-
-use lower case here..
-> +		compatible = "snps,dwc-ahci";
-> +		samsung,sata-freq = <66>;
-> +		reg = <0x122F0000 0x1ff>;
-here too..
-> +		interrupts = <0 115 0>;
-> +		clocks = <&clock 277>, <&clock 143>;
-> +		clock-names = "sata", "sclk_sata";
-> +		phys = <&sata_phy>;
-> +		phy-names = "sata-phy";
-> +	};
-> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-> index b77a37e..434e4f3 100644
-> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
-> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-> @@ -381,7 +381,14 @@
->  	};
->  
->  	i2c@121D0000 {
-> -		status = "disabled";
-> +		samsung,i2c-sda-delay = <100>;
-> +		samsung,i2c-max-bus-freq = <40000>;
-> +		samsung,i2c-slave-addr = <0x38>;
-> +
-> +		sata-phy {
-> +			compatible = "sata-phy-i2c";
-
-Do you have documentation for this compatible string?
-> +			reg = <0x38>;
-> +		};
->  	};
->  
->  	mmc_0: mmc@12200000 {
-> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> index 13746df..eeeeef9 100644
-> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> @@ -90,16 +90,12 @@
->  		samsung,i2c-max-bus-freq = <40000>;
->  		samsung,i2c-slave-addr = <0x38>;
->  
-> -		sata-phy {
-> -			compatible = "samsung,sata-phy";
-> +		sata-phy@38 {
-> +			compatible = "sata-phy-i2c";
->  			reg = <0x38>;
->  		};
->  	};
->  
-> -	sata@122F0000 {
-> -		samsung,sata-freq = <66>;
-> -	};
-> -
->  	i2c@12C80000 {
->  		samsung,i2c-sda-delay = <100>;
->  		samsung,i2c-max-bus-freq = <66000>;
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 80b5df5..d24db31 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -46,6 +46,7 @@
->  		i2c6 = &i2c_6;
->  		i2c7 = &i2c_7;
->  		i2c8 = &i2c_8;
-> +		i2c9 = &i2c_9;
->  		pinctrl0 = &pinctrl_0;
->  		pinctrl1 = &pinctrl_1;
->  		pinctrl2 = &pinctrl_2;
-> @@ -216,16 +217,28 @@
->  	};
->  
->  	sata@122F0000 {
-> -		compatible = "samsung,exynos5-sata-ahci";
-> +		compatible = "snps,dwc-ahci";
-> +		samsung,sata-freq = <66>;
->  		reg = <0x122F0000 0x1ff>;
->  		interrupts = <0 115 0>;
->  		clocks = <&clock 277>, <&clock 143>;
->  		clock-names = "sata", "sclk_sata";
-> +		phys = <&sata_phy>;
-> +		phy-names = "sata-phy";
->  	};
->  
-> -	sata-phy@12170000 {
-> -		compatible = "samsung,exynos5-sata-phy";
-> +	sata_phy: sata-phy@12170000 {
-> +		compatible = "samsung,exynos5250-sata-phy";
->  		reg = <0x12170000 0x1ff>;
-> +		clocks = <&clock 287>;
-> +		clock-names = "sata_phyctrl";
-> +		#phy-cells = <0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +		sataphy-pmu {
-> +			reg = <0x10040724 0x4>;
-> +			};
-
-alignment problem here..
-
-Thanks
-Kishon
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
