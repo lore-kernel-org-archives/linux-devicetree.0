@@ -1,74 +1,215 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: add ARMv8 PMU binding
-Date: Mon, 25 Nov 2013 09:16:52 +0000
-Message-ID: <20131125091651.GA32081@e106331-lin.cambridge.arm.com>
-References: <1385155032-9032-1-git-send-email-robherring2@gmail.com>
- <A8B9EAD7-0DBA-46D7-963F-30DEA0575EE2@codeaurora.org>
- <528FD003.8090607@gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when
+ populating interrupts
+Date: Mon, 25 Nov 2013 10:25:50 +0100
+Message-ID: <20131125092549.GD22043@ulmo.nvidia.com>
+References: <20131123004334.GJ10023@atomide.com>
+ <20131124213651.59750C402C3@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PHCdUe6m4AxPMzOu"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <528FD003.8090607-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20131124213651.59750C402C3-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2013 at 09:43:31PM +0000, Rob Herring wrote:
-> On 11/22/2013 03:38 PM, Kumar Gala wrote:
-> >=20
-> > On Nov 22, 2013, at 3:17 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
-ote:
-> >=20
-> >> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> >>
-> >> Add missing "arm,armv8-pmuv3" compatible property for ARMv8 PMU.
-> >>
-> >> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> >> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> >> ---
-> >> Documentation/devicetree/bindings/arm/pmu.txt | 1 +
-> >> 1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Docum=
-entation/devicetree/bindings/arm/pmu.txt
-> >> index 343781b..3e1e498 100644
-> >> --- a/Documentation/devicetree/bindings/arm/pmu.txt
-> >> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
-> >> @@ -7,6 +7,7 @@ representation in the device tree should be done a=
-s under:-
-> >> Required properties:
-> >>
-> >> - compatible : should be one of
-> >> +	"arm,armv8-pmuv3=E2=80=9D
-> >=20
-> > what about arm,armv8-pmu-v3?
->=20
-> I'm just documenting what is already being used:
->=20
-> arch/arm64/boot/dts/foundation-v8.dts:          compatible =3D
-> "arm,armv8-pmuv3";
-> arch/arm64/boot/dts/rtsm_ve-aemv8a.dts:         compatible =3D
-> "arm,armv8-pmuv3";
->=20
-> Do we want to change those?
 
-It would probably have been nicer to have the '-' from the start, but
-adding it now is only going to expand the set of compatible strings for
-no appreciable benefit.
+--PHCdUe6m4AxPMzOu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't see any value in adding a new form of the string, and we can't
-change the existing one as it's already in use.
+On Sun, Nov 24, 2013 at 09:36:51PM +0000, Grant Likely wrote:
+> On Fri, 22 Nov 2013 16:43:35 -0800, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrot=
+e:
+> > Currently we get the following kind of errors if we try to use
+> > interrupt phandles to irqchips that have not yet initialized:
+> >=20
+> > irq: no irq domain found for /ocp/pinmux@48002030 !
+> > WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171 of_device_alloc+0x1=
+44/0x184()
+> > Modules linked in:
+> > CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.12.0-00038-g42a9708 #1012
+> > (show_stack+0x14/0x1c)
+> > (dump_stack+0x6c/0xa0)
+> > (warn_slowpath_common+0x64/0x84)
+> > (warn_slowpath_null+0x1c/0x24)
+> > (of_device_alloc+0x144/0x184)
+> > (of_platform_device_create_pdata+0x44/0x9c)
+> > (of_platform_bus_create+0xd0/0x170)
+> > (of_platform_bus_create+0x12c/0x170)
+> > (of_platform_populate+0x60/0x98)
+> > ...
+> >=20
+> > This is because we're wrongly trying to populate resources that are not
+> > yet available. It's perfectly valid to create irqchips dynamically,
+> > so let's fix up the issue by populating the interrupt resources based
+> > on a notifier call instead.
+> >=20
+> > Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> >=20
+> > ---
+> >=20
+> > Rob & Grant, care to merge this for the -rc if this looks OK to you?
+> >=20
+> > These happen for example when using interrupts-extended for omap
+> > wake-up interrupts where the irq domain is created by pinctrl-single.c
+> > at module_init time.
+> >=20
+> > --- a/drivers/of/platform.c
+> > +++ b/drivers/of/platform.c
+> > @@ -130,6 +130,56 @@ void of_device_make_bus_id(struct device *dev)
+> >  	dev_set_name(dev, "%s.%d", node->name, magic - 1);
+> >  }
+> > =20
+> > +/*
+> > + * The device interrupts are not necessarily available for all
+> > + * irqdomains initially so we need to populate them using a
+> > + * notifier.
+> > + */
+> > +static int of_device_resource_notify(struct notifier_block *nb,
+> > +				     unsigned long event, void *dev)
+> > +{
+> > +	struct platform_device *pdev =3D to_platform_device(dev);
+> > +	struct device_node *np =3D pdev->dev.of_node;
+> > +	struct resource *res =3D pdev->resource;
+> > +	struct resource *irqr =3D NULL;
+> > +	int num_irq, i, found =3D 0;
+> > +
+> > +	if (event !=3D BUS_NOTIFY_BIND_DRIVER)
+> > +		return 0;
+> > +
+> > +	if (!np)
+> > +		goto out;
+> > +
+> > +	num_irq =3D of_irq_count(np);
+> > +	if (!num_irq)
+> > +		goto out;
+> > +
+> > +	for (i =3D 0; i < pdev->num_resources; i++, res++) {
+> > +		if (res->flags !=3D IORESOURCE_IRQ ||
+> > +		    res->start !=3D -EPROBE_DEFER ||
+> > +		    res->end !=3D -EPROBE_DEFER)
+> > +			continue;
+> > +
+> > +		if (!irqr)
+> > +			irqr =3D res;
+> > +		found++;
+> > +	}
+> > +
+> > +	if (!found)
+> > +		goto out;
+> > +
+> > +	if (found !=3D num_irq) {
+> > +		dev_WARN(dev, "error populating irq resources: %i !=3D %i\n",
+> > +			 found, num_irq);
+> > +		goto out;
+> > +	}
+> > +
+> > +	WARN_ON(of_irq_to_resource_table(np, irqr, num_irq) !=3D num_irq);
+> > +
+> > +out:
+> > +	return NOTIFY_DONE;
+> > +}
+> > +
+> >  /**
+> >   * of_device_alloc - Allocate and initialize an of_device
+> >   * @np: device node to assign to device
+> > @@ -168,7 +218,13 @@ struct platform_device *of_device_alloc(struct dev=
+ice_node *np,
+> >  			rc =3D of_address_to_resource(np, i, res);
+> >  			WARN_ON(rc);
+> >  		}
+> > -		WARN_ON(of_irq_to_resource_table(np, res, num_irq) !=3D num_irq);
+> > +
+> > +		/* See of_device_resource_notify for populating interrupts */
+> > +		for (i =3D 0; i < num_irq; i++, res++) {
+> > +			res->flags =3D IORESOURCE_IRQ;
+> > +			res->start =3D -EPROBE_DEFER;
+> > +			res->end =3D -EPROBE_DEFER;
+> > +		}
+>=20
+> I actually like the idea of completely allocating the resource structure
+> but leaving some entries empty. However, I agree with rmk that putting
+> garbage into a resource structure is a bad idea. What about changing the
+> value of flags to 0 or some other value to be obviously an empty
+> property and give the follow up parsing some context about which ones it
+> needs to attempt to recalculate?
 
-Thanks,
-Mark.
+When I worked on this a while back I came to the same conclusion. It's
+nice to allocate all the resources at once, because the number of them
+doesn't change, only their actually values.
+
+However it seems to me like there's no way with the way platform_device
+is currently defined to pass along enough context to allow it to obtain
+the correct set of resources that need to be populated.
+
+We can't really set flags to 0 because then we loose all information
+about the type of resource, which is the only thing that could remotely
+be used to track interrupt-type resources and recalculate only those. I
+was looking at perhaps modifying the platform_device struct to use a
+different means of storing the resources that would make this easier.
+One possibility would be to add per-type arrays or lists of resources.
+That way we could simply remove the complete list of interrupts and redo
+them each time probing is deferred.
+
+However it looks like a whole lot of code currently relies on knowing
+the internals of struct platform_device, so that will likely turn into a
+nightmare patchset. coccinelle could possibly be very helpful here,
+though.
+
+Perhaps a backwards-compatible way would be to add some fields that keep
+track of where in the single array of struct resource:s the interrupts
+start and then overwrite the values, while at the same time not having
+to reallocate memory all the time. It's slightly hackish and I fear if
+we don't clean up after that we'll run the risk of cluttering up the
+structure eventually.
+
+I'm wondering if long term (well, really long-term) it might be better
+to move away from platform_device completely, given how various people
+have said that they don't like them and rather have them not exist at
+all. I haven't quite seen anyone explicitly stating why or what an
+alternative would look like, but perhaps someone can educate me.
+
+> However, I still don't like the notifier approach of actually triggering
+> the fixup. We need something better.
+
+I don't either. Notifiers are really not suitable for this in my
+opinion. We've had this discussion before in the context of Hiroshi's
+IOMMU patches, and they don't allow errors to be propagated easily. They
+also are a very decentralized way to do things and therefore better
+suited to do things that are really driver-specific. For something that
+every device requires (such as interrupt reference resolution), a change
+to the core seems like a more desirable approach to me.
+
+Thierry
+
+--PHCdUe6m4AxPMzOu
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSkxedAAoJEN0jrNd/PrOh+a8P/2J3+MWOKAJC7lYjEgaM9ppI
+lodi8VwR7NRNeyeIpRhnG2UHkwJwhypwPg1l6ck8Q7qwAMjQ+QPWDvpEfKtPmDVG
+xhre7NA0tk8Fxq0lW4VxBrL/2XrcrrKk0xjoWHxGO9oHM7qa0W2iJQH1tMn8zbxU
+FM4P+c25SpuWjf6N85YwP4joQXlAG7joPUoWqNOJXV9xyuSWvGWi77Z+9tFCXHhX
+SVvEx7QRfawhfceMD0XHx2BmOv8pK+I9Dgm1AlEwOTCqRIXvMm97bAzRVfKpz1RA
+/4o2sltwlAq0MQLyRLAqmqmf3TpkIgWRVjEYtFLpRrtFKVrQ6ZyAPuZE90LPkLAc
+muA5Jj1bAR2WPZd2ThOVPZtTXKp9UP5bSt91jeWFt9N03g/UNl8O1LLZu8t7PLBE
+6ORDXvI2W25ME8LABWuHcJVPdmCWaIVnrDVEkPVsH+4mfgZNDlPPw/lr8OJAKsUW
+QcauOtaKZfBWk0t+KqmOFxYm8692qgRGgDYeiZpwCZMBqmcFrBr7LhkETDuvlITm
+LirDpZ4OBLSMhiGd4lw7ghPyy8WE9RjjB81T1Q3zLSZgq8I25ubOKAlQZjn6LWyr
+vYZD0Nqv7W3HurPj5yDa5+ZOevhI1SvPTaALalivDRVQmOpxSs2rDPU+R300Xx82
+h3o3Oy/fxHt9JbJV8VNP
+=9B6+
+-----END PGP SIGNATURE-----
+
+--PHCdUe6m4AxPMzOu--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
