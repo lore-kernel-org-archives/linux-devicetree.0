@@ -1,106 +1,49 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 5/6] watchdog: davinci: reuse driver for keystone arch
-Date: Mon, 25 Nov 2013 16:53:05 +0200
-Message-ID: <52936451.1020406@ti.com>
-References: <1385388498-12448-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH v3 6/6] arm: dts: keystone: add watchdog entry
+Date: Mon, 25 Nov 2013 16:54:59 +0200
+Message-ID: <1385391299-27326-1-git-send-email-ivan.khoronzhuk@ti.com>
+References: <1385388285-10553-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385388498-12448-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1385388285-10553-1-git-send-email-ivan.khoronzhuk@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/25/2013 04:08 PM, Ivan Khoronzhuk wrote:
-> The keystone arch uses the same IP watchdog, so add "ti,keystone-wdt"
-> compatible and correct identity.
->
-> The Keystone arch is using clocks in DT and source clock for watchdog
-> has to be specified, so add this to binding.
->
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-> Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> ---
->   .../devicetree/bindings/watchdog/davinci-wdt.txt   |   12 ++++++++++--
->   drivers/watchdog/Kconfig                           |    4 ++--
->   drivers/watchdog/davinci_wdt.c                     |    2 +-
->   3 files changed, 13 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
-> index e450134..4d89317 100644
-> --- a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
-> @@ -1,11 +1,18 @@
-> -DaVinci Watchdog Timer (WDT) Controller
-> +Texas Instruments DaVinci/Keystone Watchdog Timer (WDT) Controller
->
->   Required properties:
-> -- compatible : Should be "ti,davinci-wdt"
-> +- compatible : Should be "ti,davinci-wdt" or "ti,keystone-wdt"
->   - reg : Should contain WDT registers location and length
->
->   Optional properties:
->   - timeout-sec : Contains the watchdog timeout in seconds
-> +- clocks : the clock feeding the watchdog timer.
-> +	   Needed if platform uses clocks.
-> +	   See clock-bindings.txt
-> +
-> +Documentation:
-> +Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
-> +Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
->
->   Examples:
->
-> @@ -13,4 +20,5 @@ wdt: wdt@2320000 {
->   	compatible = "ti,davinci-wdt";
->   	reg = <0x02320000 0x80>;
->   	timeout-sec = <30>;
-> +	clocks = <&clkwdtimer0>;
->   };
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index eb8c89d..01f3f81 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -270,12 +270,12 @@ config IOP_WATCHDOG
->
->   config DAVINCI_WATCHDOG
->   	tristate "DaVinci watchdog"
-> -	depends on ARCH_DAVINCI
-> +	depends on ARCH_DAVINCI || ARCH_KEYSTONE
->   	select WATCHDOG_CORE
->   	select WATCHDOG_NOWAYOUT
->   	help
->   	  Say Y here if to include support for the watchdog timer
-> -	  in the DaVinci DM644x/DM646x processors.
-> +	  in the DaVinci DM644x/DM646x or Keystone processors.
->   	  To compile this driver as a module, choose M here: the
->   	  module will be called davinci_wdt.
->
-> diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
-> index d342fc2..9128c74 100644
-> --- a/drivers/watchdog/davinci_wdt.c
-> +++ b/drivers/watchdog/davinci_wdt.c
-> @@ -143,7 +143,7 @@ static unsigned int davinci_wdt_get_timeleft(struct watchdog_device *wdd)
->
->   static const struct watchdog_info davinci_wdt_info = {
->   	.options = WDIOF_KEEPALIVEPING,
-> -	.identity = "DaVinci Watchdog",
-> +	.identity = "DaVinci/Keystone Watchdog",
->   };
->
->   static const struct watchdog_ops davinci_wdt_ops = {
->
+Add watchdog entry to keystone device tree.
 
-Sorry for mess, ignore this patch.
-Now it is in reply to Update Davinci watchdog driver
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+---
+ arch/arm/boot/dts/keystone.dtsi |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index f6d6d9e..54a8ff7 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -181,5 +181,11 @@
+ 			interrupts = <GIC_SPI 300 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&clkspi>;
+ 		};
++
++		wdt: wdt@022f0080 {
++			compatible = "ti,keystone-wdt","ti,davinci-wdt";
++			reg = <0x022f0080 0x80>;
++			clocks = <&clkwdtimer0>;
++		};
+ 	};
+ };
 -- 
-Regards,
-Ivan Khoronzhuk
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
