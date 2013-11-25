@@ -1,113 +1,74 @@
-From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/4] ARM: exynos: dts: cros5250: Add hdmi phy settings
-Date: Mon, 25 Nov 2013 14:24:38 +0530
-Message-ID: <1385369679-4337-5-git-send-email-s.shirish@samsung.com>
-References: <1385369679-4337-1-git-send-email-s.shirish@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1385369679-4337-1-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] clocksource: Do not drop unheld reference on device node
+Date: Mon, 25 Nov 2013 09:57:39 +0100
+Message-ID: <52931103.7030107@linaro.org>
+References: <1382136588-15320-1-git-send-email-treding@nvidia.com> <20131122161607.GA5088@ulmo.nvidia.com> <528F86F2.40706@linaro.org> <20131122192257.GX28642@pengutronix.de> <52926F6F.3050104@linaro.org> <20131125072923.GB28642@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131125072923.GB28642@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <davidb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch moves the hdmi phy setting to arndale dts,
-as its more of a per board configuration and also
-shall be easier for supporting future chipsets.
+On 11/25/2013 08:29 AM, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Daniel,
+>
+> On Sun, Nov 24, 2013 at 10:28:15PM +0100, Daniel Lezcano wrote:
+>> On 11/22/2013 08:22 PM, Uwe Kleine-K=C3=B6nig wrote:
+>>> On Fri, Nov 22, 2013 at 05:31:46PM +0100, Daniel Lezcano wrote:
+>>>> On 11/22/2013 05:16 PM, Thierry Reding wrote:
+>>>>> On Sat, Oct 19, 2013 at 12:49:48AM +0200, Thierry Reding wrote:
+>>>> Yes. Sounds like I missed it.
+>>>>
+>>>> This regression has been introduced by:
+>>>>
+>>>> commit 326e31eebe61dc838e031ea16968b2cfb43443e3
+>>>> Author: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+>>>> Date:   Tue Oct 1 11:00:53 2013 +0200
+>>>>
+>>>>      clocksource: Put nodes passed to CLOCKSOURCE_OF_DECLARE
+>>>> callbacks centrally
+>>>>
+>>>>      Instead of letting each driver call of_node_put do it central=
+ly in the
+>>>>      loop that also calls the CLOCKSOURCE_OF_DECLARE callbacks. Th=
+is is less
+>>>>      prone to error and also moves getting and putting the referen=
+ces
+>>>> into the
+>>>>      same function.
+>>>>
+>>>>      Consequently all respective of_node_put calls in drivers are =
+removed.
+>>>>
+>>>>      Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutr=
+onix.de>
+>>>>      Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>>>      Acked-by: David Brown <davidb@codeaurora.org>
+>>> Still all but the hook in clocksource_of_init of this commit was
+>>> correct, right? (Well, but this buggy hunk makes the commit log wro=
+ng.)
+>>
+>> I don't understand your comment, can you elaborate ?
+> My patch added an of_node_put in clocksource_of_init and dropped seve=
+ral
+> of_node_puts in drivers. This thread is about the first being wrong. =
+My
+> question was if dropping the others was correct.
 
-Signed-off-by: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/cros5250-common.dtsi |   74 ++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+Yes, Thierry's patch removes the of_node_puts but I am also wondering i=
+f=20
+we shouldn't just revert the patch 326e31eebe61dc838e instead.
 
-diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
-index dc259e8b..77408c6 100644
---- a/arch/arm/boot/dts/cros5250-common.dtsi
-+++ b/arch/arm/boot/dts/cros5250-common.dtsi
-@@ -301,6 +301,80 @@
- 
- 	hdmi {
- 		hpd-gpio = <&gpx3 7 0>;
-+		hdmiphy-configs {
-+			/*
-+			* Eye diagram test passed for:
-+			* Data de-emphasis: -0.7dB & Data Level: 880mV
-+			* i.e., 0010 0110 = 0x26
-+			* and Clock level of 515mV and diff 1030mV
-+			* i.e., 0x66
-+			*/
-+			config0: config0 {
-+				pixel-clock = <25200000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config1: config1 {
-+				pixel-clock = <27000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config2: config2 {
-+				pixel-clock = <27027000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config3: config3 {
-+				pixel-clock = <36000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config4: config4 {
-+				pixel-clock = <40000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config5: config5 {
-+				pixel-clock = <65000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config6: config6 {
-+				pixel-clock = <74176000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config7: config7 {
-+				pixel-clock = <74250000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config8: config8 {
-+				pixel-clock = <83500000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config9: config9 {
-+				pixel-clock = <106500000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config10: config10 {
-+				pixel-clock = <108000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config11: config11 {
-+				pixel-clock = <146250000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config12: config12 {
-+				pixel-clock = <148500000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+		};
- 	};
- 
- 	gpio-keys {
--- 
-1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
