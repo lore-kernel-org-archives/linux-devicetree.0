@@ -1,92 +1,63 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH v3 5/6] watchdog: davinci: reuse driver for keystone arch
-Date: Mon, 25 Nov 2013 16:08:18 +0200
-Message-ID: <1385388498-12448-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v3 1/6] watchdog: davinci: change driver to use WDT core
+Date: Mon, 25 Nov 2013 09:16:13 -0500
+Message-ID: <52935BAD.9080908@ti.com>
+References: <1385388285-10553-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1385388285-10553-2-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, wim@iguana.be, nsekhar@ti.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <Pawel.Moll@arm.com>, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, grygorii.strashko@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1385388285-10553-2-git-send-email-ivan.khoronzhuk@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel Moll <Pawel.Moll@arm.com>, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The keystone arch uses the same IP watchdog, so add "ti,keystone-wdt"
-compatible and correct identity.
+Ivan,
 
-The Keystone arch is using clocks in DT and source clock for watchdog
-has to be specified, so add this to binding.
+On Monday 25 November 2013 09:04 AM, Ivan Khoronzhuk wrote:
+> To reduce code duplicate and increase code readability use WDT core
+> code to handle WDT interface.
+> 
+> Remove io_lock as the WDT core uses mutex to lock each wdt device.
+> Remove wdt_state as the WDT core tracks state with its own variable.
+> 
+> The watchdog_init_timeout() can read timeout value from timeout-sec
+> property if the passed value is out of bounds. The heartbeat is
+> initialized in next way. If heartbeat is not set thought module
+> parameter, try to read it's value from WDT node timeout-sec property.
+> If node has no one, use default value.
+> 
+> The heartbeat is hold in wdd->timeout by WDT core, so use it in
+> order to set timeout period.
+> 
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Minor suggestion regarding the SOB line which applies to
+rest of the series as well. Typically your SOB line
+should be the last one like below.
+
 Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
----
- .../devicetree/bindings/watchdog/davinci-wdt.txt   |   12 ++++++++++--
- drivers/watchdog/Kconfig                           |    4 ++--
- drivers/watchdog/davinci_wdt.c                     |    2 +-
- 3 files changed, 13 insertions(+), 5 deletions(-)
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 
-diff --git a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
-index e450134..4d89317 100644
---- a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
-@@ -1,11 +1,18 @@
--DaVinci Watchdog Timer (WDT) Controller
-+Texas Instruments DaVinci/Keystone Watchdog Timer (WDT) Controller
- 
- Required properties:
--- compatible : Should be "ti,davinci-wdt"
-+- compatible : Should be "ti,davinci-wdt" or "ti,keystone-wdt"
- - reg : Should contain WDT registers location and length
- 
- Optional properties:
- - timeout-sec : Contains the watchdog timeout in seconds
-+- clocks : the clock feeding the watchdog timer.
-+	   Needed if platform uses clocks.
-+	   See clock-bindings.txt
-+
-+Documentation:
-+Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
-+Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
- 
- Examples:
- 
-@@ -13,4 +20,5 @@ wdt: wdt@2320000 {
- 	compatible = "ti,davinci-wdt";
- 	reg = <0x02320000 0x80>;
- 	timeout-sec = <30>;
-+	clocks = <&clkwdtimer0>;
- };
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index eb8c89d..01f3f81 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -270,12 +270,12 @@ config IOP_WATCHDOG
- 
- config DAVINCI_WATCHDOG
- 	tristate "DaVinci watchdog"
--	depends on ARCH_DAVINCI
-+	depends on ARCH_DAVINCI || ARCH_KEYSTONE
- 	select WATCHDOG_CORE
- 	select WATCHDOG_NOWAYOUT
- 	help
- 	  Say Y here if to include support for the watchdog timer
--	  in the DaVinci DM644x/DM646x processors.
-+	  in the DaVinci DM644x/DM646x or Keystone processors.
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called davinci_wdt.
- 
-diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
-index d342fc2..9128c74 100644
---- a/drivers/watchdog/davinci_wdt.c
-+++ b/drivers/watchdog/davinci_wdt.c
-@@ -143,7 +143,7 @@ static unsigned int davinci_wdt_get_timeleft(struct watchdog_device *wdd)
- 
- static const struct watchdog_info davinci_wdt_info = {
- 	.options = WDIOF_KEEPALIVEPING,
--	.identity = "DaVinci Watchdog",
-+	.identity = "DaVinci/Keystone Watchdog",
- };
- 
- static const struct watchdog_ops davinci_wdt_ops = {
--- 
-1.7.9.5
+No need to repost the series just for that. The last
+patch as I commented earlier, needs to be separate
+patch which will go via linux-keystone tree.
+
+Once the watchdog maintainer is happy with rest of the
+series and applies it, I will pick last patch.
+
+Regards,
+Santosh
