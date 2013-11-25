@@ -1,29 +1,42 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v7 0/4] Add dual-fifo mode support of i.MX ssi
-Date: Mon, 25 Nov 2013 10:11:03 +0800
-Message-ID: <20131125021101.GA11613@S2101-09.ap.freescale.net>
-References: <cover.1384352281.git.b42378@freescale.com>
- <20131122163132.GB17344@MrMyself>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Daniel Tang <dt.tangr@gmail.com>
+Subject: Re: [PATCHv2] usb: chipidea: add support for USB OTG controller on TI-NSPIRE
+Date: Mon, 25 Nov 2013 14:52:51 +1100
+Message-ID: <B462ABF6-2CD1-423F-8841-4D3A5C555751@gmail.com>
+References: <1385278667-91856-1-git-send-email-dt.tangr@gmail.com> <20131124101205.GA30724@shlinux1.ap.freescale.net>
+Mime-Version: 1.0 (Mac OS X Mail 6.6 \(1510\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131122163132.GB17344@MrMyself>
+In-Reply-To: <20131124101205.GA30724@shlinux1.ap.freescale.net>
 Sender: linux-doc-owner@vger.kernel.org
-To: Nicolin Chen <b42378@freescale.com>
-Cc: vinod.koul@intel.com, dan.j.williams@intel.com, s.hauer@pengutronix.de, timur@tabi.org, broonie@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, swarren@wwwdotorg.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, dmaengine@vger.kernel.org, ijc+devicetree@hellion.org.uk, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Peter Chen <Peter.Chen@freescale.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 23, 2013 at 12:31:32AM +0800, Nicolin Chen wrote:
-> Hi all,
+Hi,
+
+On 24/11/2013, at 9:12 PM, Peter Chen <Peter.Chen@freescale.com> wrote:
+
+> On Sun, Nov 24, 2013 at 06:37:47PM +1100, dt.tangr@gmail.com wrote:
 > 
->    I'm sorry to push this. But this series has been an orphan for a while.
->    Could any one please receive and foster it?
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, ci_hdrc_nspire_dt_ids);
+>> +module_platform_driver(ci_hdrc_nspire_driver);
+>> +
+>> +MODULE_ALIAS("platform:nspire_usb");
+>> +MODULE_ALIAS("platform:ci_hdrc_nspire");
+> 
+> Just curious, why you need to two alias?
 
-Vinod,
+Oops, I must've forgotten to remove this. I'll remove it in the next patch.
 
-I expect you will pick up the series.  But otherwise, I can apply it via
-IMX tree with your ACKs on the first two patches.
+> 
+> -- 
+> 
+> Best Regards,
+> Peter Chen
+> 
 
-Shawn
-
+Cheers,
+Daniel Tang
