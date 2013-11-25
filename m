@@ -1,104 +1,74 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] clocksource: Do not drop unheld reference on device node
-Date: Mon, 25 Nov 2013 10:04:40 +0100
-Message-ID: <20131125090439.GC22043@ulmo.nvidia.com>
-References: <1382136588-15320-1-git-send-email-treding@nvidia.com>
- <20131122161607.GA5088@ulmo.nvidia.com>
- <528F86F2.40706@linaro.org>
- <20131122192257.GX28642@pengutronix.de>
- <52926F6F.3050104@linaro.org>
- <20131125072923.GB28642@pengutronix.de>
- <52931103.7030107@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: add ARMv8 PMU binding
+Date: Mon, 25 Nov 2013 09:16:52 +0000
+Message-ID: <20131125091651.GA32081@e106331-lin.cambridge.arm.com>
+References: <1385155032-9032-1-git-send-email-robherring2@gmail.com>
+ <A8B9EAD7-0DBA-46D7-963F-30DEA0575EE2@codeaurora.org>
+ <528FD003.8090607@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vEao7xgI/oilGqZ+"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52931103.7030107@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <davidb@codeaurora.org>
+In-Reply-To: <528FD003.8090607-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---vEao7xgI/oilGqZ+
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Nov 25, 2013 at 09:57:39AM +0100, Daniel Lezcano wrote:
-> On 11/25/2013 08:29 AM, Uwe Kleine-K=C3=B6nig wrote:
-> >Hello Daniel,
-> >
-> >On Sun, Nov 24, 2013 at 10:28:15PM +0100, Daniel Lezcano wrote:
-> >>On 11/22/2013 08:22 PM, Uwe Kleine-K=C3=B6nig wrote:
-> >>>On Fri, Nov 22, 2013 at 05:31:46PM +0100, Daniel Lezcano wrote:
-> >>>>On 11/22/2013 05:16 PM, Thierry Reding wrote:
-> >>>>>On Sat, Oct 19, 2013 at 12:49:48AM +0200, Thierry Reding wrote:
-> >>>>Yes. Sounds like I missed it.
-> >>>>
-> >>>>This regression has been introduced by:
-> >>>>
-> >>>>commit 326e31eebe61dc838e031ea16968b2cfb43443e3
-> >>>>Author: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> >>>>Date:   Tue Oct 1 11:00:53 2013 +0200
-> >>>>
-> >>>>     clocksource: Put nodes passed to CLOCKSOURCE_OF_DECLARE
-> >>>>callbacks centrally
-> >>>>
-> >>>>     Instead of letting each driver call of_node_put do it centrally =
-in the
-> >>>>     loop that also calls the CLOCKSOURCE_OF_DECLARE callbacks. This =
-is less
-> >>>>     prone to error and also moves getting and putting the references
-> >>>>into the
-> >>>>     same function.
-> >>>>
-> >>>>     Consequently all respective of_node_put calls in drivers are rem=
-oved.
-> >>>>
-> >>>>     Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutroni=
-x.de>
-> >>>>     Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> >>>>     Acked-by: David Brown <davidb@codeaurora.org>
-> >>>Still all but the hook in clocksource_of_init of this commit was
-> >>>correct, right? (Well, but this buggy hunk makes the commit log wrong.)
+On Fri, Nov 22, 2013 at 09:43:31PM +0000, Rob Herring wrote:
+> On 11/22/2013 03:38 PM, Kumar Gala wrote:
+> >=20
+> > On Nov 22, 2013, at 3:17 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
+ote:
+> >=20
+> >> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > >>
-> >>I don't understand your comment, can you elaborate ?
-> >My patch added an of_node_put in clocksource_of_init and dropped several
-> >of_node_puts in drivers. This thread is about the first being wrong. My
-> >question was if dropping the others was correct.
+> >> Add missing "arm,armv8-pmuv3" compatible property for ARMv8 PMU.
+> >>
+> >> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> >> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> >> ---
+> >> Documentation/devicetree/bindings/arm/pmu.txt | 1 +
+> >> 1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Docum=
+entation/devicetree/bindings/arm/pmu.txt
+> >> index 343781b..3e1e498 100644
+> >> --- a/Documentation/devicetree/bindings/arm/pmu.txt
+> >> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
+> >> @@ -7,6 +7,7 @@ representation in the device tree should be done a=
+s under:-
+> >> Required properties:
+> >>
+> >> - compatible : should be one of
+> >> +	"arm,armv8-pmuv3=E2=80=9D
+> >=20
+> > what about arm,armv8-pmu-v3?
 >=20
-> Yes, Thierry's patch removes the of_node_puts but I am also wondering if =
-we
-> shouldn't just revert the patch 326e31eebe61dc838e instead.
+> I'm just documenting what is already being used:
+>=20
+> arch/arm64/boot/dts/foundation-v8.dts:          compatible =3D
+> "arm,armv8-pmuv3";
+> arch/arm64/boot/dts/rtsm_ve-aemv8a.dts:         compatible =3D
+> "arm,armv8-pmuv3";
+>=20
+> Do we want to change those?
 
-I don't think that's necessary. Dropping the other of_node_put()s looks
-like the right thing to do. They drop a reference that they haven't
-taken themselves, which is usually not correct. I can't find anything
-wrong with the rest of that commit.
+It would probably have been nicer to have the '-' from the start, but
+adding it now is only going to expand the set of compatible strings for
+no appreciable benefit.
 
-Thierry
+I don't see any value in adding a new form of the string, and we can't
+change the existing one as it's already in use.
 
---vEao7xgI/oilGqZ+
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSkxKnAAoJEN0jrNd/PrOhPxgQAJJnoCYDOsZFY4OB7+0Ha6nZ
-bFM01da6Ddrr93O4ZSqnPkstKAY2Egmwb8JrtBfaynMPbYrk1Ojau1hDOzAgo1ml
-/iI3mt3UFAdfZOah9eroucqC+iNGNg9yjzAMb7y+OeUe1+mgQbfPrR50ThY1Hy5l
-rqydqOhw1pjDi5yLYOpDT5gAXH7GED081PFL+54N/s8ytb2oDDt2Bbwksmt23Vzq
-Bx7lyDEMNboPUksvtos/70vgi9b7bx4olXIIjzocsL0BciTMmT2VpfYbnO1KKQVl
-pEpuWCvqP00T9cEfPtEhkc1d9t6ZEYMzSbk0vGi1MMA+MGlfs7CZ/xnYwgeu/SOz
-LDA756NOcv762N3RmvO2lfPKxiuh4tLS3m6br8rGa+bmQgogbMwvKAymzcbhxe+E
-DxsgThghnSAyA+gy+U3v+ArYJoI+quv01W+g9cKQk656C8gyX0myWYjCdfEl9YsF
-7EXNeMMVFjnGFvarBPX44C/AjtWaRmGexEzPWFxjS8+sGZZDxH0tcS8GzhXfxmIX
-UXz6V/KLq8Ff0RPUXjpmfgcKpo/B64L83h0PUehK5vbKTV/c5kEwFUIjdg2O1AkZ
-kAHIBbBr/OKneaN6NUF3sv91QCqxw7KGB0yiGXWl0M/n+nHTVWqARZgXfxz4hXz3
-skKkHW5wEZgXFYc6asvR
-=LVbx
------END PGP SIGNATURE-----
-
---vEao7xgI/oilGqZ+--
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
