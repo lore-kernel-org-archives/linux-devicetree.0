@@ -1,59 +1,51 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: add hym8563 binding
-Date: Mon, 25 Nov 2013 11:50:52 +0000
-Message-ID: <20131125115052.GC32081@e106331-lin.cambridge.arm.com>
-References: <201311222254.07730.heiko@sntech.de>
- <201311222255.03642.heiko@sntech.de>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 1/6] watchdog: davinci: change driver to use WDT core
+Date: Mon, 25 Nov 2013 17:26:20 +0530
+Message-ID: <52933AE4.3070608@ti.com>
+References: <1384795139-19466-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1384795139-19466-2-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201311222255.03642.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1384795139-19466-2-git-send-email-ivan.khoronzhuk@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Strashko Grygorii <grygorii.strashko@ti.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 22, 2013 at 09:55:03PM +0000, Heiko St=C3=BCbner wrote:
-> Add binding documentation for the hym8563 rtc chip.
->=20
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/rtc/haoyu,hym8563.txt      |   29 ++++++++++=
-++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/haoyu,hym85=
-63.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt =
-b/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
-> new file mode 100644
-> index 0000000..2743416
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
-> @@ -0,0 +1,29 @@
-> +Haoyu Microelectronics HYM8563 Real Time Clock
-> +
-> +The HYM8563 provides basic rtc and alarm functionality
-> +as well as a clock output of up to 32kHz.
-> +
-> +Required properties:
-> +- compatible: should be: "haoyu,hym8563"
+On Monday 18 November 2013 10:48 PM, Ivan Khoronzhuk wrote:
+> @@ -211,29 +129,34 @@ static int davinci_wdt_probe(struct platform_device *pdev)
+>  
+>  	clk_prepare_enable(wdt_clk);
+>  
+> -	if (heartbeat < 1 || heartbeat > MAX_HEARTBEAT)
+> -		heartbeat = DEFAULT_HEARTBEAT;
+> +	wdd			= &wdt_wdd;
+> +	wdd->info		= &davinci_wdt_info;
+> +	wdd->ops		= &davinci_wdt_ops;
+> +	wdd->min_timeout 	= 1;
+> +	wdd->max_timeout 	= MAX_HEARTBEAT;
 
-The "haoyu" vendor prefix will need to be documented (I couldn't spot i=
-t
-in mainline's vendor-refixes.txt).
+Some checkpatch warnings. Please fix.
 
-> +- reg: i2c address
-> +- gpios: interrupt gpio
+WARNING: please, no space before tabs
+#273: FILE: drivers/watchdog/davinci_wdt.c:135:
++^Iwdd->min_timeout ^I= 1;$
 
-What's this used for exactly?
+WARNING: please, no space before tabs
+#274: FILE: drivers/watchdog/davinci_wdt.c:136:
++^Iwdd->max_timeout ^I= MAX_HEARTBEAT;$
+
+total: 0 errors, 2 warnings, 0 checks, 249 lines checked
 
 Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+sekhar
