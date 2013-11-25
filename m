@@ -1,310 +1,70 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
 Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when
  populating interrupts
-Date: Mon, 25 Nov 2013 11:46:57 -0800
-Message-ID: <20131125194657.GR10023@atomide.com>
+Date: Mon, 25 Nov 2013 11:50:05 -0800
+Message-ID: <20131125195004.GS10023@atomide.com>
 References: <20131123004334.GJ10023@atomide.com>
- <20131123005509.GJ16735@n2100.arm.linux.org.uk>
- <20131123010850.GN10023@atomide.com>
- <20131123011515.GO10023@atomide.com>
- <20131123015034.GP10023@atomide.com>
- <CAL_JsqKV7K+QdLHS+3LtfcVx5Dpc7n6A8UwwNWKBP33Gs19c8g@mail.gmail.com>
- <20131123163240.GW5928@atomide.com>
- <20131125093434.GE22043@ulmo.nvidia.com>
+ <20131124213651.59750C402C3@trevor.secretlab.ca>
+ <20131125092549.GD22043@ulmo.nvidia.com>
+ <20131125094954.GF22043@ulmo.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131125093434.GE22043-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20131125094954.GF22043@ulmo.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [131125 01:36]:
-> On Sat, Nov 23, 2013 at 08:32:40AM -0800, Tony Lindgren wrote:
-> > * Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [131123 07:43]:
-> > > On Fri, Nov 22, 2013 at 7:50 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > > * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [131122 17:16]:
-> > > >> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [131122 17:09]:
-> > > >> > * Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> [131122 16:56]:
-> > > >> > > On Fri, Nov 22, 2013 at 04:43:35PM -0800, Tony Lindgren wrote:
-> > > >> > > > +               /* See of_device_resource_notify for populating interrupts */
-> > > >> > > > +               for (i = 0; i < num_irq; i++, res++) {
-> > > >> > > > +                       res->flags = IORESOURCE_IRQ;
-> > > >> > > > +                       res->start = -EPROBE_DEFER;
-> > > >> > > > +                       res->end = -EPROBE_DEFER;
-> > > >> > >
-> > > >> > > NAK.  Definitely a bad idea to start introducing magic values other into
-> > > >> > > resources.  Please don't do this.
-> > > >> >
-> > > >> > Do you have any better ideas on how to sort out this issue then?
-> > > >>
-> > > >> I guess we could allocate all the resources lazily here, I'll take a look
-> > > >> at that.
-> > > >
-> > > > Here's a version that allocates the resources lazily with the notifier.
-> > > > Seems to boot, need to play with it a bit more though to make sure we're
-> > > > not overwriting resources for any legacy devices.
+* Thierry Reding <thierry.reding@gmail.com> [131125 01:51]:
+> On Mon, Nov 25, 2013 at 10:25:50AM +0100, Thierry Reding wrote:
+> > On Sun, Nov 24, 2013 at 09:36:51PM +0000, Grant Likely wrote:
 > > > 
-> > > Have you seen Thierry's series[1]? While your approach is certainly
-> > > more concise, it seems like a work-around for the problem. I don't
-> > > think a notifier is the right long term solution.
+> > > I actually like the idea of completely allocating the resource structure
+> > > but leaving some entries empty. However, I agree with rmk that putting
+> > > garbage into a resource structure is a bad idea. What about changing the
+> > > value of flags to 0 or some other value to be obviously an empty
+> > > property and give the follow up parsing some context about which ones it
+> > > needs to attempt to recalculate?
 > > 
-> > OK cool. I think we can fix the $Subject bug first without making all
-> > those changes, then do the rest of the reorg for v3.14.
-> > 
-> > The bug is that we try to populate IRQ resources at a wrong time
-> > when they may not exist.
-> > 
-> > Based on a quick look it seems we could combine Thierry's addition
-> > of the new function of_platform_probe(struct platform_device *pdev)
-> > and use that to allocate all resources at driver probe time like my
-> > patch is doing. And then there's no need for the notifier.
+> > When I worked on this a while back I came to the same conclusion. It's
+> > nice to allocate all the resources at once, because the number of them
+> > doesn't change, only their actually values.
 > 
-> My series already does the allocation at probe time as well. That was
-> the whole point. The reason why I added of_platform_probe() is because I
-> think we'll be needing this for other types of resources in the future
-> as well, so it could serve as a central place to do all of that.
+> I should maybe add: one issue that was raised during review of my
+> initial patch series was that we'll also need to cope with situations
+> like the following:
+> 
+> 	1) device's interrupt parent is probed (assigned IRQ base X)
+> 	2) device is probed (interrupt parent there, therefore gets
+> 	   assigned IRQ (X + z)
+> 	3) device in removed
+> 	4) device's interrupt parent is removed
+> 	5) device is probed (deferred because interrupt parent isn't
+> 	   there)
+> 	6) device's interrupt parent is probed (assigned IRQ base Y)
+> 	7) device is probed, gets assigned IRQ (Y + z)
+> 
+> So not only do we have to track which resources are interrupt resources,
+> but we also need to have them reassigned everytime the device is probed,
+> therefore interrupt mappings need to be properly disposed and the values
+> invalidated when probing is deferred or the device removed.
+> 
+> Having a dynamic list of properties all of a sudden doesn't sound like
+> such a bad idea after all. It makes handling this kind of situation
+> rather trivial, especially per-type lists. Those lists will be empty at
+> first and populated during the first probe. When probing fails or when a
+> device is unloaded, we dispose the mappings and empty the lists, so that
+> subsequent probes will start from scratch. It certainly sounds like a
+> bit of a waste of CPU cycles, but on the other hand it makes the code
+> much simpler.
 
-Yeah, that's the way to go in the long run. However, we currently do have
-some dependencies to that data being there and bus specific code may
-add legacy resources to it with platform_device_add_resources(). At least
-omap_device_alloc() depends on that until v3.14 when mach-omap2 is booting
-in DT only mode.
- 
-> There was also a proposal[0] by Arnd a few weeks ago that solved this in
-> a more generic way. I've said it before, and I'll say again that the
-> idea scares me somewhat, but it does solve some interesting aspects and
-> has the potential to get rid of a whole lot of boilerplate code. While
-> the original purpose was to handle all things devm_*(), I suspect that
-> same mechanism could be used to resolve DT references at probe time.
-
-Yes devm_alloc() should work once the legacy dependencies are out of the
-way. We would need to audit where pdev->num_resources or pdev->resource is
-being relied on, and where platform_device_add_resources() is being called
-before the device probe. So I doubt we can do that all as a fix for the
--rc cycle.
-
-Below is what I think might be limited enough to fix the $Subject bug for
-the -rc cycle. I took the of_platform_probe() from your patch 08/10 to
-avoid the notifier. Also added Greg to Cc as it's now touching
-drivers/base/platform.c too.
-
-Seems to work for my test cases, does this work for you guys?
+Looks like we cannot yet use devm_allocate, but that seems like a nice
+solution in the long run. I just posted an updated patch to fix the $Subject
+bug for the -rc cycle to this thread with more comments regarding dynamically
+allocating the resources.
 
 Regards,
 
 Tony
- 
-> [0]: http://www.spinics.net/lists/devicetree/msg10684.html
-
-8< ---------------------
-
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Date: Mon, 25 Nov 2013 11:12:52 -0800
-Subject: [PATCH] of/platform: Fix no irq domain found errors when populating interrupts
-
-Currently we get the following kind of errors if we try to use interrupt
-phandles to irqchips that have not yet initialized:
-
-irq: no irq domain found for /ocp/pinmux@48002030 !
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171 of_device_alloc+0x144/0x184()
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.12.0-00038-g42a9708 #1012
-(show_stack+0x14/0x1c)
-(dump_stack+0x6c/0xa0)
-(warn_slowpath_common+0x64/0x84)
-(warn_slowpath_null+0x1c/0x24)
-(of_device_alloc+0x144/0x184)
-(of_platform_device_create_pdata+0x44/0x9c)
-(of_platform_bus_create+0xd0/0x170)
-(of_platform_bus_create+0x12c/0x170)
-(of_platform_populate+0x60/0x98)
-
-This is because we're wrongly trying to populate resources that are not yet
-available. It's perfectly valid to create irqchips dynamically, so let's
-fix up the issue by populating the interrupt resources at the driver probe
-time instead.
-
-Note that at least currently we cannot dynamically allocate the resources as bus
-specific code may add legacy resources with platform_device_add_resources()
-before the driver probe. At least omap_device_alloc() currently relies on
-num_resources to determine if legacy resources should be added. This issue
-will get fixed automatically when mach-omap2 boots with DT only, but there
-are probably other places too where platform_device_add_resources() modifies
-things before driver probe.
-
-The addition of of_platform_probe() is based on patches posted earlier by
-Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>.
-
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -481,6 +481,10 @@ static int platform_drv_probe(struct device *_dev)
- 	struct platform_device *dev = to_platform_device(_dev);
- 	int ret;
- 
-+	ret = of_platform_probe(dev);
-+	if (ret)
-+		return ret;
-+
- 	if (ACPI_HANDLE(_dev))
- 		acpi_dev_pm_attach(_dev, true);
- 
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -141,7 +141,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 				  struct device *parent)
- {
- 	struct platform_device *dev;
--	int rc, i, num_reg = 0, num_irq;
-+	int num_reg = 0, num_irq;
- 	struct resource *res, temp_res;
- 
- 	dev = platform_device_alloc("", -1);
-@@ -154,7 +154,14 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 			num_reg++;
- 	num_irq = of_irq_count(np);
- 
--	/* Populate the resource table */
-+	/*
-+	 * Only allocate the resources for us to use later on. Note that bus
-+	 * specific code may also add in additional legacy resources using
-+	 * platform_device_add_resources(), and may even rely on us allocating
-+	 * the basic resources here to do so. So we cannot allocate the
-+	 * resources lazily until the legacy code has been fixed to not rely
-+	 * on allocating resources here.
-+	 */
- 	if (num_irq || num_reg) {
- 		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
- 		if (!res) {
-@@ -164,11 +171,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 
- 		dev->num_resources = num_reg + num_irq;
- 		dev->resource = res;
--		for (i = 0; i < num_reg; i++, res++) {
--			rc = of_address_to_resource(np, i, res);
--			WARN_ON(rc);
--		}
--		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
-+		/* See of_device_resource_populate for populating the data */
- 	}
- 
- 	dev->dev.of_node = of_node_get(np);
-@@ -187,6 +190,50 @@ struct platform_device *of_device_alloc(struct device_node *np,
- EXPORT_SYMBOL(of_device_alloc);
- 
- /**
-+ * of_device_resource_populate - Populate device resources from device tree
-+ * @dev: pointer to platform device
-+ *
-+ * The device interrupts are not necessarily available for all
-+ * irqdomains initially so we need to populate them lazily at
-+ * device probe time from of_platform_populate.
-+ */
-+static int of_device_resource_populate(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	int rc, i, num_reg = 0, num_irq;
-+	struct resource *res, temp_res;
-+
-+	res = pdev->resource;
-+
-+	/*
-+	 * Count the io and irq resources again. Currently we cannot rely on
-+	 * pdev->num_resources as bus specific code may have changed that
-+	 * with platform_device_add_resources(). But the resources we allocated
-+	 * earlier are still there and available for us to populate.
-+	 */
-+	if (of_can_translate_address(np))
-+		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
-+			num_reg++;
-+	num_irq = of_irq_count(np);
-+
-+	if (pdev->num_resources < num_reg + num_irq) {
-+		dev_WARN(&pdev->dev, "not enough resources %i < %i\n",
-+			 pdev->num_resources, num_reg + num_irq);
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < num_reg; i++, res++) {
-+		rc = of_address_to_resource(np, i, res);
-+		WARN_ON(rc);
-+	}
-+
-+	if (num_irq)
-+		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
-+
-+	return 0;
-+}
-+
-+/**
-  * of_platform_device_create_pdata - Alloc, initialize and register an of_device
-  * @np: pointer to node to create device for
-  * @bus_id: name to assign device
-@@ -488,4 +535,35 @@ int of_platform_populate(struct device_node *root,
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(of_platform_populate);
-+
-+/**
-+ * of_platform_probe() - OF specific initialization at probe time
-+ * @pdev: pointer to a platform device
-+ *
-+ * This function is called by the driver core to perform devicetree-specific
-+ * setup for a given platform device at probe time. If a device's resources
-+ * as specified in the device tree are not available yet, this function can
-+ * return -EPROBE_DEFER and cause the device to be probed again later, when
-+ * other drivers that potentially provide the missing resources have been
-+ * probed in turn.
-+ *
-+ * Note that because of the above, all code executed by this function must
-+ * be prepared to be run multiple times on the same device (i.e. it must be
-+ * idempotent).
-+ *
-+ * Returns 0 on success or a negative error code on failure.
-+ */
-+int of_platform_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	if (!pdev->dev.of_node)
-+		return 0;
-+
-+	ret = of_device_resource_populate(pdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
- #endif /* CONFIG_OF_ADDRESS */
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -72,6 +72,8 @@ extern int of_platform_populate(struct device_node *root,
- 				const struct of_device_id *matches,
- 				const struct of_dev_auxdata *lookup,
- 				struct device *parent);
-+
-+extern int of_platform_probe(struct platform_device *pdev);
- #else
- static inline int of_platform_populate(struct device_node *root,
- 					const struct of_device_id *matches,
-@@ -80,6 +82,11 @@ static inline int of_platform_populate(struct device_node *root,
- {
- 	return -ENODEV;
- }
-+
-+static inline int of_platform_probe(struct platform_device *pdev)
-+{
-+	return 0;
-+}
- #endif
- 
- #endif	/* _LINUX_OF_PLATFORM_H */
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
