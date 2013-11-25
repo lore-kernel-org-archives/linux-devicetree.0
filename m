@@ -1,39 +1,35 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 3/3] ARM: tegra: document use of standard DMA DT bindings
-Date: Mon, 25 Nov 2013 15:25:44 -0700
-Message-ID: <5293CE68.3000801@wwwdotorg.org>
-References: <1385417161-5542-1-git-send-email-swarren@wwwdotorg.org> <1385417161-5542-4-git-send-email-swarren@wwwdotorg.org> <11843948.6MmkNU7Gku@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] ARM: tegra: delete nvidia,tegra20-spi.txt binding
+Date: Mon, 25 Nov 2013 15:37:55 -0700
+Message-ID: <1385419075-11414-1-git-send-email-swarren@wwwdotorg.org>
 Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11843948.6MmkNU7Gku@wuerfel>
 Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/25/2013 03:07 PM, Arnd Bergmann wrote:
-> On Monday 25 November 2013 15:06:01 Stephen Warren wrote:
->>    See ../reset/reset.txt for details.
->>  - reset-names : Must include the following entries:
->>    - dma
->> +- #iommu-cells : Must be <1>. This dictates the length of DMA specifiers in
->> +  client nodes' dmas properties. The specifier represents the DMA request
->> +  select value for the peripheral. For more details, consult the Tegra TRM's
->> +  documentation of the APB DMA channel control register REQ_SEL field.
->>  
->>  Examples:
->>  
->> @@ -36,4 +40,5 @@ apbdma: dma@6000a000 {
->>         clocks = <&tegra_car 34>;
->>         resets = <&tegra_car 34>;
->>         reset-names = "dma";
->> +       #iommu-cells = <1>;
-> 
-> s/iommu-cells/dma-cells/
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Thanks.
+This binding shouldn't exist; Tegra20 has two forms of SPI controller
+that are documented separately in nvidia,tegra20-sflash.txt and
+nvidia,tegra20-slink.txt.
 
-Uggh. I know you pointed that out before, and I fixed it. I guess I
-screwed up a rebase somewhere:-(
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt | 5 -----
+ 1 file changed, 5 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt
+
+diff --git a/Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt b/Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt
+deleted file mode 100644
+index 6b9e51896693..000000000000
+--- a/Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt
++++ /dev/null
+@@ -1,5 +0,0 @@
+-NVIDIA Tegra 2 SPI device
+-
+-Required properties:
+-- compatible : should be "nvidia,tegra20-spi".
+-- gpios : should specify GPIOs used for chipselect.
+-- 
+1.8.1.5
