@@ -1,30 +1,55 @@
-From: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 04/17] spi/qspi: parse control module register.
-Date: Tue, 26 Nov 2013 16:48:58 +0530
-Message-ID: <529483A2.3080000@ti.com>
-References: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com> <1385451313-1875-5-git-send-email-sourav.poddar@ti.com> <20131126103104.GZ14725@sirena.org.uk>
+From: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v3 0/3] *** iio:adc:imx: Add Freescale vf610 ADC driver support ***
+Date: Tue, 26 Nov 2013 18:56:31 +0800
+Message-ID: <1385463394-11157-1-git-send-email-B38611@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131126103104.GZ14725-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 26 November 2013 04:01 PM, Mark Brown wrote:
-> On Tue, Nov 26, 2013 at 01:05:00PM +0530, Sourav Poddar wrote:
->> In qspi controller, we need to switch to memory mapped operations.
->> These switching depends on
-> This will need to be added to the DT binding.
+The patch set is to enable Vybrid VF610 ADC driver.
 
+Please see the Reference Manual of the ADC:
+http://cache.freescale.com/files/32bit/doc/ref_manual/VYBRIDRM.pdf?fpsp=1&WT_TYPE=
+Reference%20Manuals&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation
 
-I have added a "reg-name" property. Does we need to add individual 
-reg-names also?
+*** Change ***
+* V3: (review by Shawn Guo)
+- DTS properties: use prefix "fsl," instead of "vf610".
+- Drop DTS unnessary comments, and add "vref" optional propert comments.
+- Modify driver format.
+- Remove driver debug code.
+- Remove the of_device_id .data init.
+- Remove unnecessary device node check.
+- Add clk_prepare_enable() return check.
 
+* V2: (Simply review by Jonathan Cameron)
+- Rename the driver after "vf610_adc".
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+* V1:
+Feature:
+- Enable Vybrid vf610 board ADC0 in dts file.
+- ADC driver only support software trigger for the init version.
+- ADC configuration support dts set.
+Note: Since the ADC IP is used for Freescale Vybrid VF610, i.MX6SLX, i.MX7 serial sillicons.
+
+Fugang Duan (3):
+  ARM: dts: vf610-twr: Add ADC support
+  iio:adc:imx: add Freescale Vybrid vf610 adc driver
+  Documentation: add the binding file for Freescale vf610 ADC driver
+
+ .../devicetree/bindings/iio/adc/vf610-adc.txt      |   57 ++
+ arch/arm/boot/dts/vf610-twr.dts                    |   14 +
+ arch/arm/boot/dts/vf610.dtsi                       |   26 +
+ drivers/iio/adc/Kconfig                            |   11 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/vf610_adc.c                        |  744 ++++++++++++++++++++
+ 6 files changed, 853 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+ create mode 100644 drivers/iio/adc/vf610_adc.c
+
+-- 
+1.7.2.rc3
