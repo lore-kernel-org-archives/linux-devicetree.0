@@ -1,125 +1,67 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH v5 4/4] arm64: Add APM X-Gene SoC SATA host controller DTS entries
-Date: Tue, 26 Nov 2013 00:01:25 -0700
-Message-ID: <1385449285-30764-5-git-send-email-lho@apm.com>
-References: <1385449285-30764-1-git-send-email-lho@apm.com>
- <1385449285-30764-2-git-send-email-lho@apm.com>
- <1385449285-30764-3-git-send-email-lho@apm.com>
- <1385449285-30764-4-git-send-email-lho@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1385449285-30764-4-git-send-email-lho@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 06/12] mtd: nand: davinci: adjust DT properties to MTD
+ generic
+Date: Tue, 26 Nov 2013 12:33:03 +0530
+Message-ID: <529447A7.1050605@ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
+ <1384187188-5776-7-git-send-email-ivan.khoronzhuk@ti.com>
+ <4F5844B3A985794BA902E12C070812375F8D20@DNCE04.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <4F5844B3A985794BA902E12C070812375F8D20@DNCE04.ent.ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
+ Grygorii" <grygorii.strashko@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-arm64: Add APM X-Gene SoC SATA host controller and clock DTS entries
+On Monday 11 November 2013 10:31 PM, Khoronzhuk, Ivan wrote:
+> The properties davinci-ecc-mode, davinci-nand-use-bbt, davinci-nand-buswidth
+> are MTD generic. Correct names for them are: nand-ecc-mode, nand-on-flash-bbt,
+> nand-bus-width accordingly. So rename them in dts and documentation.
+> 
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> ---
+>  .../devicetree/bindings/mtd/davinci-nand.txt       |   25 ++++++++++++++++----
+>  drivers/mtd/nand/davinci_nand.c                    |   11 ++++++---
+>  2 files changed, 28 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+> index d2a3fc0..befaa5b 100644
+> --- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+> @@ -37,7 +37,7 @@ Recommended properties :
+>  - ti,davinci-mask-chipsel:     mask for chipselect address. Needed to mask
+>                                 addresses for given chipselect.
+> 
+> -- ti,davinci-ecc-mode:         operation mode of the NAND ecc mode. ECC mode
+> +- nand-ecc-mode:               operation mode of the NAND ecc mode. ECC mode
+>                                 valid values for davinci driver:
+>                                 - "none"
+>                                 - "soft"
+> @@ -45,10 +45,25 @@ Recommended properties :
+> 
+>  - ti,davinci-ecc-bits:         used ECC bits, currently supported 1 or 4.
+> 
+> -- ti,davinci-nand-buswidth:    buswidth 8 or 16.
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Tuan Phan <tphan@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   81 ++++++++++++++++++++++++++++++++++++
- 1 files changed, 81 insertions(+), 0 deletions(-)
+Shouldn't we keep the documentation for existing bindings while just
+marking them as deprecated?
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index f74c26a..fd8ff25 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -176,6 +176,51 @@
- 				reg-names = "csr-reg";
- 				clock-output-names = "eth8clk";
- 			};
-+
-+			sata01clk: sata01clk@1f21c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "sata01clk";
-+				reg = <0x0 0x1f21c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata01clk";
-+				status = "disabled";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x3f>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x3f>;
-+			};
-+
-+			sata23clk: sata23clk@1f22c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "sata23clk";
-+				reg = <0x0 0x1f22c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata23clk";
-+				status = "ok";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x3f>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x3f>;
-+			};
-+
-+			sata45clk: sata45clk@1f23c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "sata45clk";
-+				reg = <0x0 0x1f23c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata45clk";
-+				status = "ok";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x3f>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x3f>;
-+			};
- 		};
- 
- 		serial0: serial@1c020000 {
-@@ -224,5 +269,41 @@
- 			apm-tx-boost-gain = <0x3 0x3 0x3 0x3 0x3 0x3>;
- 			apm-tx-eye-tuning = <0xa 0xa 0xa 0xc 0xc 0xc>;
- 		};
-+
-+		sata1: sata@1a000000 {
-+			compatible = "apm,xgene-ahci-sgmii";
-+			reg = <0x0 0x1a000000 0x0 0x1000>,
-+			      <0x0 0x1f210000 0x0 0x10000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x86 0x4>;
-+			status = "disabled";
-+			clocks = <&sata01clk 0>;
-+			phys = <&phy1 0>;
-+			phy-names = "sata-6g";
-+		};
-+
-+		sata2: sata@1a400000 {
-+			compatible = "apm,xgene-ahci-sgmii";
-+			reg = <0x0 0x1a400000 0x0 0x1000>,
-+			      <0x0 0x1f220000 0x0 0x10000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x87 0x4>;
-+			status = "ok";
-+			clocks = <&sata23clk 0>;
-+			phys = <&phy2 0>;
-+			phy-names = "sata-6g";
-+		};
-+
-+		sata3: sata@1a800000 {
-+			compatible = "apm,xgene-ahci-pcie";
-+			reg = <0x0 0x1a800000 0x0 0x1000>,
-+			      <0x0 0x1f230000 0x0 0x10000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0x0 0x88 0x4>;
-+			status = "ok";
-+			clocks = <&sata45clk 0>;
-+			phys = <&phy3 0>;
-+			phy-names = "sata-6g";
-+		};
- 	};
- };
--- 
-1.5.5
+Thanks,
+Sekhar
 
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
