@@ -1,69 +1,26 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v3 1/6] watchdog: davinci: change driver to use WDT core
-Date: Tue, 26 Nov 2013 13:09:56 +0200
-Message-ID: <52948184.50604@ti.com>
-References: <1385388285-10553-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1385388285-10553-2-git-send-email-ivan.khoronzhuk@ti.com>
+From: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 03/17] spi/qspi: parse register by name.
+Date: Tue, 26 Nov 2013 16:47:49 +0530
+Message-ID: <5294835D.5090902@ti.com>
+References: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com> <1385451313-1875-4-git-send-email-sourav.poddar@ti.com> <20131126103029.GY14725@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1385388285-10553-2-git-send-email-ivan.khoronzhuk@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Pawel Moll <Pawel.Moll@arm.com>, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131126103029.GY14725-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/25/2013 04:04 PM, Ivan Khoronzhuk wrote:
-> To reduce code duplicate and increase code readability use WDT core
-> code to handle WDT interface.
->
-> Remove io_lock as the WDT core uses mutex to lock each wdt device.
-> Remove wdt_state as the WDT core tracks state with its own variable.
->
-> The watchdog_init_timeout() can read timeout value from timeout-sec
-> property if the passed value is out of bounds. The heartbeat is
-> initialized in next way. If heartbeat is not set thought module
-> parameter, try to read it's value from WDT node timeout-sec property.
-> If node has no one, use default value.
->
-> The heartbeat is hold in wdd->timeout by WDT core, so use it in
-> order to set timeout period.
->
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->   arch/arm/mach-davinci/da8xx-dt.c      |    2 +-
->   arch/arm/mach-davinci/devices-da8xx.c |    4 +-
->   arch/arm/mach-davinci/devices.c       |    2 +-
->   drivers/watchdog/Kconfig              |    2 +
->   drivers/watchdog/davinci_wdt.c        |  151 ++++++++-------------------------
->   5 files changed, 43 insertions(+), 118 deletions(-)
-
-Pls note, that this patch contains both changes in platform and driver 
-code to fix regression reported by Sekhar Nori on v2 of this series and 
-caused by driver name changing.
-
-Is it ok?
-
-It can be splitted, but then both patches will introduce regression by 
-itself and thing will work only if both of them will be applied together.
-
->
-> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-> index d2bc574..ed19287 100644
-[...]
-> -MODULE_ALIAS("platform:watchdog");
-> +MODULE_ALIAS("platform:davinci-wdt");
->
-Regards,
--Grygorii
+On Tuesday 26 November 2013 04:00 PM, Mark Brown wrote:
+> On Tue, Nov 26, 2013 at 01:04:59PM +0530, Sourav Poddar wrote:
+>> Modify the qspi driver to parse reg information by name.
+> This presumably needs an update to the device tree bindings so that
+> there's a name defined?
+I have added "reg-names" property in dt bindings. (17/17) patch of
+this series has that info.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
