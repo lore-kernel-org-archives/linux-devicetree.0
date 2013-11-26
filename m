@@ -1,73 +1,69 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 06/12] mtd: nand: davinci: adjust DT properties to MTD
- generic
-Date: Tue, 26 Nov 2013 12:49:46 +0200
-Message-ID: <52947CCA.2010400@ti.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>, <1384187188-5776-7-git-send-email-ivan.khoronzhuk@ti.com> <4F5844B3A985794BA902E12C070812375F8D20@DNCE04.ent.ti.com> <529447A7.1050605@ti.com> <52947832.3080309@ti.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v3 1/6] watchdog: davinci: change driver to use WDT core
+Date: Tue, 26 Nov 2013 13:09:56 +0200
+Message-ID: <52948184.50604@ti.com>
+References: <1385388285-10553-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1385388285-10553-2-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52947832.3080309-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "Shilimkar, Santosh" <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1385388285-10553-2-git-send-email-ivan.khoronzhuk@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Pawel Moll <Pawel.Moll@arm.com>, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/2013 12:30 PM, Grygorii Strashko wrote:
-> On 11/26/2013 09:03 AM, Sekhar Nori wrote:
->> On Monday 11 November 2013 10:31 PM, Khoronzhuk, Ivan wrote:
->>> The properties davinci-ecc-mode, davinci-nand-use-bbt, davinci-nand-buswidth
->>> are MTD generic. Correct names for them are: nand-ecc-mode, nand-on-flash-bbt,
->>> nand-bus-width accordingly. So rename them in dts and documentation.
->>>
->>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
->>> ---
->>>    .../devicetree/bindings/mtd/davinci-nand.txt       |   25 ++++++++++++++++----
->>>    drivers/mtd/nand/davinci_nand.c                    |   11 ++++++---
->>>    2 files changed, 28 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
->>> index d2a3fc0..befaa5b 100644
->>> --- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
->>> +++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
->>> @@ -37,7 +37,7 @@ Recommended properties :
->>>    - ti,davinci-mask-chipsel:     mask for chipselect address. Needed to mask
->>>                                   addresses for given chipselect.
->>>
->>> -- ti,davinci-ecc-mode:         operation mode of the NAND ecc mode. ECC mode
->>> +- nand-ecc-mode:               operation mode of the NAND ecc mode. ECC mode
->>>                                   valid values for davinci driver:
->>>                                   - "none"
->>>                                   - "soft"
->>> @@ -45,10 +45,25 @@ Recommended properties :
->>>
->>>    - ti,davinci-ecc-bits:         used ECC bits, currently supported 1 or 4.
->>>
->>> -- ti,davinci-nand-buswidth:    buswidth 8 or 16.
->>
->> Shouldn't we keep the documentation for existing bindings while just
->> marking them as deprecated?
+On 11/25/2013 04:04 PM, Ivan Khoronzhuk wrote:
+> To reduce code duplicate and increase code readability use WDT core
+> code to handle WDT interface.
 >
-> I haven't found any requirements about this in doc.
-> It's done in both way in other drivers - some keep properties in bindings
-> documentation and some are not.
+> Remove io_lock as the WDT core uses mutex to lock each wdt device.
+> Remove wdt_state as the WDT core tracks state with its own variable.
 >
-> Regards,
-> -grygorii
+> The watchdog_init_timeout() can read timeout value from timeout-sec
+> property if the passed value is out of bounds. The heartbeat is
+> initialized in next way. If heartbeat is not set thought module
+> parameter, try to read it's value from WDT node timeout-sec property.
+> If node has no one, use default value.
 >
+> The heartbeat is hold in wdd->timeout by WDT core, so use it in
+> order to set timeout period.
+>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>   arch/arm/mach-davinci/da8xx-dt.c      |    2 +-
+>   arch/arm/mach-davinci/devices-da8xx.c |    4 +-
+>   arch/arm/mach-davinci/devices.c       |    2 +-
+>   drivers/watchdog/Kconfig              |    2 +
+>   drivers/watchdog/davinci_wdt.c        |  151 ++++++++-------------------------
+>   5 files changed, 43 insertions(+), 118 deletions(-)
 
-For me this is not needed, but for example from mtd:
-Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-,it contains deprecated properties, like a lot of others.
+Pls note, that this patch contains both changes in platform and driver 
+code to fix regression reported by Sekhar Nori on v2 of this series and 
+caused by driver name changing.
 
-And this sad me I should remain deprecated properties.
-Anyway if we have these properties in driver we should describe them.
+Is it ok?
 
--- 
+It can be splitted, but then both patches will introduce regression by 
+itself and thing will work only if both of them will be applied together.
+
+>
+> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+> index d2bc574..ed19287 100644
+[...]
+> -MODULE_ALIAS("platform:watchdog");
+> +MODULE_ALIAS("platform:davinci-wdt");
+>
 Regards,
-Ivan Khoronzhuk
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Grygorii
