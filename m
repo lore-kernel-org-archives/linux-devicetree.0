@@ -1,161 +1,54 @@
-From: =?iso-8859-1?Q?=22Andersson=2C_Bj=F6rn=22?=
-	<Bjorn.Andersson@sonymobile.com>
-Subject: Re: [PATCH 3/3] pinctrl: Add documentation for pinctrl-msm8x74
-Date: Tue, 26 Nov 2013 01:52:59 +0100
-Message-ID: <CEB92A62.3A401%bjorn.andersson@sonymobile.com>
-References: <5293E7FB.6040300@wwwdotorg.org>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH 10/12] mtd: nand: davinci: don't set timings if AEMIF
+ is used
+Date: Mon, 25 Nov 2013 19:55:57 -0500
+Message-ID: <5293F19D.70901@ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>, <1384187188-5776-11-git-send-email-ivan.khoronzhuk@ti.com> <4F5844B3A985794BA902E12C070812375F8D53@DNCE04.ent.ti.com> <528307F0.6000805@ti.com> <52838941.4060207@ti.com> <5284ABB9.70608@ti.com> <5284DFE7.70308@ti.com> <528E3DD4.7030607@ti.com> <528F968F.40306@ti.com> <5291CB01.1010506@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5293E7FB.6040300@wwwdotorg.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5291CB01.1010506@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko, Grygorii" <grygorii.strashko@ti.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sunday 24 November 2013 04:46 AM, Sekhar Nori wrote:
+> On Friday 22 November 2013 11:08 PM, Santosh Shilimkar wrote:
+>> On Thursday 21 November 2013 12:07 PM, Nori, Sekhar wrote:
+>>> On 11/14/2013 8:06 PM, Santosh Shilimkar wrote:
 
+[..]
 
-On 11/25/13 4:14 PM, "Stephen Warren" <swarren@wwwdotorg.org> wrote:
-
->On 11/23/2013 04:38 PM, Bjorn Andersson wrote:
->> This adds initial documentation for the pinctrl-msm8x74 driver.
->
->> diff --git 
->>a/Documentation/devicetree/bindings/pinctrl/qcom,msm8x74-pinctrl.txt
->>b/Documentation/devicetree/bindings/pinctrl/qcom,msm8x74-pinctrl.txt
->
->> +Qualcomm MSM8x74 TLMM block
->> +
->> +Required properties:
->> +- compatible: "qcom,msm8x74-pinctrl"
->> +- reg: Should be the base address of the TLMM block.
->
->base address *and length*?
-
-Of course
-
->
->> +- interrupts: Should be the irq of the TLMM summary interrupt.
->
->s/irq/IRQ/
-
-OK
-
->
->> +- interrupt-controller: Marks the device node as an interrupt
->>controller.
->> +- #interrupt-cells: Should be two.
->> +- gpio-controller: Marks the device node as a GPIO controller.
->> +- #gpio-cells : Should be two.
->> +                The first cell is the gpio pin number and the
->> +                second cell is used for optional parameters.
->> +
->> +Please refer to ../gpio/gpio.txt for a general description of GPIO
->>bindings.
->
->It's probably worth linking to ../interrupt-controller/interrupts.txt too.
-
-Will do.
-
->
->> +Please refer to pinctrl-bindings.txt in this directory for details of
->>the
->> +common pinctrl bindings used by client devices, including the meaning
->>of the
->> +phrase "pin configuration node".
->> +
->> +Each subnode describes properties for the given pins.
->
->Which subnodes? It's probably worth describing what subnodes can exist.
->Perhaps try cribbing e.g. the 3 paragraphs in the Tegra binding that
->appear right after the "Please refer to pinctrl-bindings.txt..." that's
->there.
-
-I see that most other documents have a variation of those paragraphs, so
-I better follow that then.
-
->
->> +Required subnode-properties:
->> +- qcom,pins: An array of strings, each matching a pin or group to be
->> +             configured. Possible values are listed below.
->
->It isn't clear from this that these properties exist in a sub-sub-node,
->not just a sub-node, of the main pinctrl node.
->
->> +Optional subnode-properties:
->> +- qcom,function: A name of the function to be muxed to the specified
->> +                 pins. Possible values are listed below.
->
->Are "pins" and "functions" generic enough now that they don't need a
->vendor prefix? Both those property names are certainly mentioned in
->pinctrl-bindings.txt.
-
-I've missed that these where in pinconf-generic. I based
-msm_dt_subnode_to_map
-on the tegra implementation and made changes to support pinconf-generic,
-which
-now seems identical with pinconf_generic_dt_subnode_to_map.
-I'll use that directly instead.
-
->
->> +- drive-strength: Configure the drive strength of the specified pins.
->
->What units? I assume the definition matches that in
->pinctrl-bindings.txt? Perhaps it'd be simpler to say "The following
->generic properties as defined in pinctrl-bindings.txt: pins, function,
->bias-disable, ...".
-
-Sounds much better than duplicating that information here.
-
->
->> +Valid values for qcom,function are:
->> +  blsp_i2c2, blsp_i2c6, blsp_i2c11, blsp_spi1, blsp_uart2, blsp_uart8,
->>slimbus
->> +
->> +  (Note that this is not yet the complete list of functions)
->
->It'd be best if the complete list were defined from the start. That
->said, I suppose adding new values into the list would be
->backwards-compatible (if not forwards-compatible i.e. new DTs usable
->with old kernels).
-
-This list is enough for the currently supported (and published on
-linux-arm-msm)
-drivers for the 8x74 based DragonBoard. I wanted to get some feedback
-before adding
-more of the functions in the msm8x74 tables.
-
->
->> +Example:
->> +
->> +	msmgpio: pinctrl@fd510000 {
->...
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&uart2_default>;
->> +
->> +		uart2 {
->
->What does that node represent? Other pinctrl bindings  only have 1 or 2
->levels of subnodes, not 3.
-
-I liked the concept of grouping related states/muxes together and then I
-saw Linus'
-ux500 series that did the same thing. But as it's just a matter of taste I
-should
-probably remove it from the example and just make sure it's clear above
-that such
-structure is okay.
-
->
->> +			uart2_default: uart2_default {
->> +				mux {
->> +					qcom,pins = "gpio4", "gpio5";
->> +					qcom,function = "blsp_uart2";
->> +				};
-
-Thanks for your comments!
+>>> Yes, that would be the ideal way. But the reality is that there is close
+>>> to zero chance of all the DaVinci platforms using AEMIF ever getting
+>>> converted to DT. This means that we will never be able to get rid of
+>>> this piece of code.
+>>>
+>> Well that means some of those platforms support will get deprecated
+>> soon considering other basic frameworks like irq, timer wheel etc
+>> is assuming the DT direction. But its your call because if you
+>> want those platforms to live, you need to convert them to DT.
+>>  
+>>> I do agree platform data is not the direction you want to take on ARM
+>>> but at the same time its not really a deprecated mechanism as far as the
+>>> broader kernel is concerned.
+>>>
+>>> So, can we consider adding platform data mechanism to the AEMIF driver?
+>>>
+>> Sorry but answer is "NO". If the above hack is really bothering you,
+>> we can actually rip out the above code in question and move it
+>> to mach-davinci. Infact thats the best direction to make the
+>> mtd nandn driver independent of any platform quirks(dt, pdata etc)
+>>
+>> Ivan already has a patch to do that and he is going to post
+>> that patch. With that patch, we won't need $subject patch.
+>>
+> 
+> Okay I will wait for the patch.
+> 
+Ivan has posted a patch already and you are copied on it.
 
 Regards,
-Bjorn
-
+Santosh
