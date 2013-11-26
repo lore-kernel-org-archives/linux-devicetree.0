@@ -1,557 +1,402 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH 07/12] memory: davinci-aemif: introduce AEMIF driver
-Date: Tue, 26 Nov 2013 19:44:55 +0200
-Message-ID: <5294DE17.9080900@ti.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
- <1384187188-5776-8-git-send-email-ivan.khoronzhuk@ti.com>
- <4F5844B3A985794BA902E12C070812375F8D2E@DNCE04.ent.ti.com>
- <52944BD3.90105@ti.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2] watchdog: GPIO-controlled watchdog
+Date: Tue, 26 Nov 2013 09:54:34 -0800
+Message-ID: <5294E05A.3040104@roeck-us.net>
+References: <1385483188-12221-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52944BD3.90105@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
- Grygorii" <grygorii.strashko@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385483188-12221-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/2013 09:20 AM, Sekhar Nori wrote:
-> On Monday 11 November 2013 10:36 PM, Khoronzhuk, Ivan wrote:
->> Add new AEMIF driver for EMIF16 davinci controller. The EMIF16 module
->> is intended to provide a glue-less interface to a variety of
->> asynchronous memory devices like ASRA M, NOR and NAND memory. A total
->> of 256M bytes of any of these memories can be accessed at any given
->> time via four chip selects with 64M byte access per chip select.
->>
->> Synchronous memories such as DDR1 SD RAM, SDR SDRAM and Mobile SDR
->> are not supported.
->>
->> See http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->> ---
->>   drivers/memory/Kconfig         |   11 ++
->>   drivers/memory/Makefile        |    1 +
->>   drivers/memory/davinci-aemif.c |  415 ++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 427 insertions(+)
->>   create mode 100644 drivers/memory/davinci-aemif.c
->>
->> diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
->> index 29a11db..010e75e 100644
->> --- a/drivers/memory/Kconfig
->> +++ b/drivers/memory/Kconfig
->> @@ -7,6 +7,17 @@ menuconfig MEMORY
->>
->>   if MEMORY
->>
->> +config TI_DAVINCI_AEMIF
->> +       bool "Texas Instruments DaVinci AEMIF driver"
-> 
-> This driver cannot be a module? If not, why not?
-> 
+On 11/26/2013 08:26 AM, Alexander Shiyan wrote:
+> This patch adds a watchdog driver for devices controlled through GPIO,
+> (Analog Devices ADM706, IC 555 etc).
+>
+> Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+> ---
 
-Yes it can be a module, I will correct it.
+A list of changes since v1 would be helpful.
 
->> +       depends on (ARCH_DAVINCI || ARCH_KEYSTONE) && OF
->> +       help
->> +         This driver is for the AEMIF module available in Texas Instruments
->> +         SoCs. AEMIF stands for Asynchronous External Memory Interface and
->> +         is intended to provide a glue-less interface to a variety of
->> +         asynchronuous memory devices like ASRAM, NOR and NAND memory. A total
->> +         of 256M bytes of any of these memories can be accessed at a given
->> +         time via four chip selects with 64M byte access per chip select.
->> +
->>   config TI_EMIF
->>          tristate "Texas Instruments EMIF driver"
->>          depends on ARCH_OMAP2PLUS
->> diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
->> index 969d923..af14126 100644
->> --- a/drivers/memory/Makefile
->> +++ b/drivers/memory/Makefile
->> @@ -5,6 +5,7 @@
->>   ifeq ($(CONFIG_DDR),y)
->>   obj-$(CONFIG_OF)               += of_memory.o
->>   endif
->> +obj-$(CONFIG_TI_DAVINCI_AEMIF) += davinci-aemif.o
->>   obj-$(CONFIG_TI_EMIF)          += emif.o
->>   obj-$(CONFIG_MVEBU_DEVBUS)     += mvebu-devbus.o
->>   obj-$(CONFIG_TEGRA20_MC)       += tegra20-mc.o
->> diff --git a/drivers/memory/davinci-aemif.c b/drivers/memory/davinci-aemif.c
->> new file mode 100644
->> index 0000000..e36b74b
->> --- /dev/null
->> +++ b/drivers/memory/davinci-aemif.c
->> @@ -0,0 +1,415 @@
->> +/*
->> + * DaVinci/Keystone AEMIF driver
->> + *
->> + * Copyright (C) 2010 - 2013 Texas Instruments Incorporated. http://www.ti.com/
->> + * Copyright (C) Heiko Schocher <hs@denx.de>
->> + * Copyright (C) Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-> 
-> Just checking: You meant Author: ? Code is already copyrighted to TI by
-> line above.
-> 
+>   .../devicetree/bindings/watchdog/gpio-wdt.txt      |  23 ++
+>   drivers/watchdog/Kconfig                           |   8 +
+>   drivers/watchdog/Makefile                          |   1 +
+>   drivers/watchdog/gpio_wdt.c                        | 246 +++++++++++++++++++++
+>   4 files changed, 278 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
+>   create mode 100644 drivers/watchdog/gpio_wdt.c
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
+> new file mode 100644
+> index 0000000..08ba8e5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
+> @@ -0,0 +1,23 @@
+> +* GPIO-controlled Watchdog
+> +
+> +Required Properties:
+> +- compatible: Should contain "linux,wdt-gpio".
 
-It will be
+Should ?
 
-Author:
-Heiko Schocher <hs@denx.de>
-Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> +- gpios: From common gpio binding; gpio connection to WDT reset pin.
+> +- wdt-gpio,hw_algo: The algorithm used by the driver. Should be one
+> +  of the following values:
 
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/platform_device.h>
->> +
->> +#define TA_SHIFT       2
->> +#define RHOLD_SHIFT    4
->> +#define RSTROBE_SHIFT  7
->> +#define RSETUP_SHIFT   13
->> +#define WHOLD_SHIFT    17
->> +#define WSTROBE_SHIFT  20
->> +#define WSETUP_SHIFT   26
->> +#define EW_SHIFT       30
->> +#define SS_SHIFT       31
->> +
->> +#define TA(x)          ((x) << TA_SHIFT)
->> +#define RHOLD(x)       ((x) << RHOLD_SHIFT)
->> +#define RSTROBE(x)     ((x) << RSTROBE_SHIFT)
->> +#define RSETUP(x)      ((x) << RSETUP_SHIFT)
->> +#define WHOLD(x)       ((x) << WHOLD_SHIFT)
->> +#define WSTROBE(x)     ((x) << WSTROBE_SHIFT)
->> +#define WSETUP(x)      ((x) << WSETUP_SHIFT)
->> +#define EW(x)          ((x) << EW_SHIFT)
->> +#define SS(x)          ((x) << SS_SHIFT)
->> +
->> +#define ASIZE_MAX      0x1
->> +#define TA_MAX         0x3
->> +#define RHOLD_MAX      0x7
->> +#define RSTROBE_MAX    0x3f
->> +#define RSETUP_MAX     0xf
->> +#define WHOLD_MAX      0x7
->> +#define WSTROBE_MAX    0x3f
->> +#define WSETUP_MAX     0xf
->> +#define EW_MAX         0x1
->> +#define SS_MAX         0x1
->> +#define NUM_CS         4
->> +
->> +#define TA_VAL(x)      (((x) & TA(TA_MAX)) >> TA_SHIFT)
->> +#define RHOLD_VAL(x)   (((x) & RHOLD(RHOLD_MAX)) >> RHOLD_SHIFT)
->> +#define RSTROBE_VAL(x) (((x) & RSTROBE(RSTROBE_MAX)) >> RSTROBE_SHIFT)
->> +#define RSETUP_VAL(x)  (((x) & RSETUP(RSETUP_MAX)) >> RSETUP_SHIFT)
->> +#define WHOLD_VAL(x)   (((x) & WHOLD(WHOLD_MAX)) >> WHOLD_SHIFT)
->> +#define WSTROBE_VAL(x) (((x) & WSTROBE(WSTROBE_MAX)) >> WSTROBE_SHIFT)
->> +#define WSETUP_VAL(x)  (((x) & WSETUP(WSETUP_MAX)) >> WSETUP_SHIFT)
->> +#define EW_VAL(x)      (((x) & EW(EW_MAX)) >> EW_SHIFT)
->> +#define SS_VAL(x)      (((x) & SS(SS_MAX)) >> SS_SHIFT)
->> +
->> +#define NRCSR_OFFSET   0x00
->> +#define AWCCR_OFFSET   0x04
->> +#define A1CR_OFFSET    0x10
->> +
->> +#define ACR_ASIZE_MASK 0x3
->> +#define ACR_EW_MASK    BIT(30)
->> +#define ACR_SS_MASK    BIT(31)
->> +#define ASIZE_16BIT    1
->> +
->> +#define CONFIG_MASK    (TA(TA_MAX) | \
->> +                               RHOLD(RHOLD_MAX) | \
->> +                               RSTROBE(RSTROBE_MAX) |  \
->> +                               RSETUP(RSETUP_MAX) | \
->> +                               WHOLD(WHOLD_MAX) | \
->> +                               WSTROBE(WSTROBE_MAX) | \
->> +                               WSETUP(WSETUP_MAX) | \
->> +                               EW(EW_MAX) | SS(SS_MAX) | \
->> +                               ASIZE_MAX)
->> +
->> +#define DRV_NAME       "davinci-aemif"
->> +
->> +/**
->> + * structure to hold cs parameters
->> + * @cs: chip-select number
->> + * @wstrobe: write strobe width, ns
->> + * @rstrobe: read strobe width, ns
->> + * @wsetup: write setup width, ns
->> + * @whold: write hold width, ns
->> + * @rsetup: read setup width, ns
->> + * @rhold: read hold width, ns
->> + * @ta: minimum turn around time, ns
->> + * @enable_ss: enable/disable select strobe mode
->> + * @enable_ew: enable/disable extended wait mode
->> + * @asize: width of the asynchronous device's data bus
->> + */
->> +struct davinci_aemif_cs_data {
->> +       u8      cs;
->> +       u16     wstrobe;
->> +       u16     rstrobe;
->> +       u8      wsetup;
->> +       u8      whold;
->> +       u8      rsetup;
->> +       u8      rhold;
->> +       u8      ta;
->> +       u8      enable_ss;
->> +       u8      enable_ew;
->> +       u8      asize;
->> +};
->> +
->> +/**
->> + * structure to hold device data
->> + * @base: base address of AEMIF registers
->> + * @clk: source clock
->> + * @clk_rate: clock's rate in kHz
->> + * @num_cs: number of assigned chip-selects
->> + * @cs_data: array of chip-select settings
->> + */
->> +struct davinci_aemif_device {
->> +       struct device *dev;
->> +       void __iomem *base;
->> +       struct clk *clk;
->> +       unsigned long clk_rate;
->> +       u8 num_cs;
->> +       int cs_offset;
->> +       struct davinci_aemif_cs_data cs_data[NUM_CS];
->> +};
->> +
->> +static struct davinci_aemif_device *aemif;
->> +/**
->> + * davinci_aemif_calc_rate - calculate timing data.
->> + * @wanted: The cycle time needed in nanoseconds.
->> + * @clk: The input clock rate in kHz.
->> + * @max: The maximum divider value that can be programmed.
->> + *
->> + * On success, returns the calculated timing value minus 1 for easy
->> + * programming into AEMIF timing registers, else negative errno.
->> + */
->> +static int davinci_aemif_calc_rate(int wanted, unsigned long clk, int max)
->> +{
->> +       int result;
->> +
->> +       result = DIV_ROUND_UP((wanted * clk), NSEC_PER_MSEC) - 1;
->> +
->> +       dev_dbg(aemif->dev, "%s: result %d from %ld, %d\n", __func__, result,
->> +               clk, wanted);
->> +
->> +       /* It is generally OK to have a more relaxed timing than requested... */
->> +       if (result < 0)
->> +               result = 0;
->> +
->> +       /* ... But configuring tighter timings is not an option. */
->> +       else if (result > max)
->> +               result = -EINVAL;
->> +
->> +       return result;
->> +}
->> +
->> +/**
->> + * davinci_aemif_config_abus - configure async bus parameters
->> + * @data: aemif chip select configuration
->> + *
->> + * This function programs the given timing values (in real clock) into the
->> + * AEMIF registers taking the AEMIF clock into account.
->> + *
->> + * This function does not use any locking while programming the AEMIF
->> + * because it is expected that there is only one user of a given
->> + * chip-select.
->> + *
->> + * Returns 0 on success, else negative errno.
->> + */
->> +static int davinci_aemif_config_abus(struct davinci_aemif_cs_data *data)
->> +{
->> +       int ta, rhold, rstrobe, rsetup, whold, wstrobe, wsetup;
->> +       unsigned offset;
->> +       u32 set, val;
->> +
->> +       offset = A1CR_OFFSET + (data->cs - aemif->cs_offset) * 4;
->> +
->> +       ta      = davinci_aemif_calc_rate(data->ta, aemif->clk_rate, TA_MAX);
->> +       rhold   = davinci_aemif_calc_rate(data->rhold, aemif->clk_rate,
->> +                                         RHOLD_MAX);
->> +       rstrobe = davinci_aemif_calc_rate(data->rstrobe, aemif->clk_rate,
->> +                                         RSTROBE_MAX);
->> +       rsetup  = davinci_aemif_calc_rate(data->rsetup, aemif->clk_rate,
->> +                                         RSETUP_MAX);
->> +       whold   = davinci_aemif_calc_rate(data->whold, aemif->clk_rate,
->> +                                         WHOLD_MAX);
->> +       wstrobe = davinci_aemif_calc_rate(data->wstrobe, aemif->clk_rate,
->> +                                         WSTROBE_MAX);
->> +       wsetup  = davinci_aemif_calc_rate(data->wsetup, aemif->clk_rate,
->> +                                         WSETUP_MAX);
->> +
->> +       if (ta < 0 || rhold < 0 || rstrobe < 0 || rsetup < 0 ||
->> +                       whold < 0 || wstrobe < 0 || wsetup < 0) {
->> +               dev_err(aemif->dev, "%s: cannot get suitable timings\n",
->> +                       __func__);
->> +               return -EINVAL;
->> +       }
->> +
->> +       set = TA(ta) | RHOLD(rhold) | RSTROBE(rstrobe) | RSETUP(rsetup) |
->> +               WHOLD(whold) | WSTROBE(wstrobe) | WSETUP(wsetup);
->> +
->> +       set |= (data->asize & ACR_ASIZE_MASK);
->> +       if (data->enable_ew)
->> +               set |= ACR_EW_MASK;
->> +       if (data->enable_ss)
->> +               set |= ACR_SS_MASK;
->> +
->> +       val = readl(aemif->base + offset);
->> +       val &= ~CONFIG_MASK;
->> +       val |= set;
->> +       writel(val, aemif->base + offset);
->> +
->> +       return 0;
->> +}
->> +
->> +inline int davinci_aemif_cycles_to_nsec(int val)
->> +{
->> +       return ((val + 1) * NSEC_PER_MSEC) / aemif->clk_rate;
->> +}
->> +
->> +/**
->> + * davinci_aemif_get_hw_params - function to read hw register values
->> + * @data: ptr to cs data
->> + *
->> + * This function reads the defaults from the registers and update
->> + * the timing values. Required for get/set commands and also for
->> + * the case when driver needs to use defaults in hardware.
->> + */
->> +static void davinci_aemif_get_hw_params(struct davinci_aemif_cs_data *data)
->> +{
->> +       u32 val, offset;
->> +       offset = A1CR_OFFSET + (data->cs - aemif->cs_offset) * 4;
->> +
->> +       val = readl(aemif->base + offset);
->> +       data->ta = davinci_aemif_cycles_to_nsec(TA_VAL(val));
->> +       data->rhold = davinci_aemif_cycles_to_nsec(RHOLD_VAL(val));
->> +       data->rstrobe = davinci_aemif_cycles_to_nsec(RSTROBE_VAL(val));
->> +       data->rsetup = davinci_aemif_cycles_to_nsec(RSETUP_VAL(val));
->> +       data->whold = davinci_aemif_cycles_to_nsec(WHOLD_VAL(val));
->> +       data->wstrobe = davinci_aemif_cycles_to_nsec(WSTROBE_VAL(val));
->> +       data->wsetup = davinci_aemif_cycles_to_nsec(WSETUP_VAL(val));
->> +       data->enable_ew = EW_VAL(val);
->> +       data->enable_ss = SS_VAL(val);
->> +       data->asize = val & ASIZE_MAX;
->> +}
->> +
->> +/**
->> + * of_davinci_aemif_parse_abus_config - parse CS configuration from DT
->> + * @np: device node ptr
->> + *
->> + * This function update the emif async bus configuration based on the values
->> + * configured in a cs device binding node.
->> + */
->> +static int of_davinci_aemif_parse_abus_config(struct device_node *np)
->> +{
->> +       struct davinci_aemif_cs_data *data;
->> +       unsigned long cs;
->> +       u32 val;
->> +
->> +       if (kstrtoul(np->name + 2, 10, &cs) < 0) {
->> +               dev_dbg(aemif->dev, "cs name is incorrect");
->> +               return -EINVAL;
->> +       }
->> +
->> +       if (cs - aemif->cs_offset >= NUM_CS || cs < aemif->cs_offset) {
->> +               dev_dbg(aemif->dev, "cs number is incorrect %lu", cs);
->> +               return -EINVAL;
->> +       }
->> +
->> +       if (aemif->num_cs >= NUM_CS) {
->> +               dev_dbg(aemif->dev, "cs count is more than %d", NUM_CS);
->> +               return -EINVAL;
->> +       }
->> +
->> +       data = &aemif->cs_data[aemif->num_cs++];
->> +       data->cs = cs;
->> +
->> +       /* read the current value in the hw register */
->> +       davinci_aemif_get_hw_params(data);
->> +
->> +       /* override the values from device node */
->> +       of_property_read_u8(np, "ti,davinci-cs-ta", &data->ta);
->> +       of_property_read_u8(np, "ti,davinci-cs-rhold", &data->rhold);
->> +       of_property_read_u16(np, "ti,davinci-cs-rstrobe", &data->rstrobe);
->> +       of_property_read_u8(np, "ti,davinci-cs-rsetup", &data->rsetup);
->> +       of_property_read_u8(np, "ti,davinci-cs-whold", &data->whold);
->> +       of_property_read_u16(np, "ti,davinci-cs-wstrobe", &data->wstrobe);
->> +       of_property_read_u8(np, "ti,davinci-cs-wsetup", &data->wsetup);
->> +       if (!of_property_read_u32(np, "ti,bus-width", &val))
->> +               if (val == 16)
->> +                       data->asize = 1;
->> +       data->enable_ew = of_property_read_bool(np, "ti,davinci-cs-ew");
->> +       data->enable_ss = of_property_read_bool(np, "ti,davinci-cs-ss");
->> +       return 0;
->> +}
->> +
->> +static const struct of_device_id davinci_aemif_of_match[] = {
->> +       { .compatible = "ti,davinci-aemif", },
->> +       { .compatible = "ti,keystone-aemif", },
->> +       { .compatible = "ti,omap-L138-aemif", },
-> 
-> Please use ti,da850-aemif instead. We dont use the omap-like paper part
-> number for these devices in kernel to avoid confusion with real OMAP
-> devices.
-> 
+Should ?
 
+> +  - toggle: Either a high-to-low or a low-to-high transition clears
+> +    the WDT counter. The watchdog timer is disabled when GPIO is
+> +    left floating or connected to a three-state buffer.
+> +  - level: Low or high level starts counting WDT timeout,
+> +    the opposite level disables the WDT. Active level is determined
+> +    by the GPIO flags.
+> +- wdt-gpio,hw_margin_ms: Maximum time to reset watchdog circuit (milliseconds).
+> +
+> +Example:
+> +	watchdog: watchdog {
+> +		/* ADM706 */
+> +		compatible = "linux,wdt-gpio";
 
-Ok, I'll replace ti,omap-L138-aemif -> ti,da850-aemif
+Oddly enough, the bindings could be used by non-Linux operating systems,
+but who am I to argue. Fine if this is what the DT maintainers want to see.
 
->> +       {},
->> +};
->> +
->> +static const struct of_device_id davinci_cs_of_match[] = {
->> +       { .compatible = "ti,davinci-cs", },
->> +       {},
->> +};
->> +
->> +static int davinci_aemif_probe(struct platform_device *pdev)
->> +{
->> +       int ret  = -ENODEV, i;
->> +       struct resource *res;
->> +       struct device *dev = &pdev->dev;
->> +       struct device_node *np = dev->of_node;
->> +
->> +       if (np == NULL)
->> +               return 0;
->> +
->> +       if (aemif) {
->> +               dev_err(dev, "davinci_aemif driver is in use currently\n");
->> +               return -EBUSY;
->> +       }
-> 
-> Why expressly prevent multiple AEMIF devices? Its entirely conceivable
-> to have two memories like NAND and NOR flash connect to two different
-> AEMIF interfaces.
-> 
+> +		gpios = <&gpio3 9 GPIO_ACTIVE_LOW>;
+> +		wdt-gpio,hw_algo = "toggle";
+> +		wdt-gpio,hw_margin_ms = <1600>;
 
-It can be, but I'm not sure if it is needed. Currently I've not seen case where
-more than 2 cses were used, I mean we have 2 cs free, why do we need the second AEMIF
-controller?
+Is this a new means to name device specific properties ?
+"wdt-gpio" in those bindings is quite redundant with "wdt-gpio"
+in the compatible property. Again, though, who am I to argue.
 
->> +
->> +       aemif = devm_kzalloc(dev, sizeof(*aemif), GFP_KERNEL);
->> +
->> +       if (!aemif) {
->> +               dev_err(dev, "cannot allocate memory for aemif\n");
->> +               return -ENOMEM;
->> +       }
->> +
->> +       aemif->clk = devm_clk_get(dev, "aemif");
-> 
-> If this is the only clock you care about, you can use NULL for
-> connection id.
-> 
+> +	};
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 5be6e91..968a882 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -87,6 +87,14 @@ config DA9055_WATCHDOG
+>   	  This driver can also be built as a module.  If so, the module
+>   	  will be called da9055_wdt.
+>
+> +config GPIO_WATCHDOG
+> +	tristate "Watchdog device controlled through GPIO-line"
+> +	depends on OF_GPIO
+> +	select WATCHDOG_CORE
+> +	help
+> +	  If you say yes here you get support for watchdog device
+> +	  controlled through GPIO-line.
+> +
+>   config WM831X_WATCHDOG
+>   	tristate "WM831x watchdog"
+>   	depends on MFD_WM831X
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 91bd95a..dc17275 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -171,6 +171,7 @@ obj-$(CONFIG_XEN_WDT) += xen_wdt.o
+>   # Architecture Independent
+>   obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
+>   obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
+> +obj-$(CONFIG_GPIO_WATCHDOG)	+= gpio_wdt.o
+>   obj-$(CONFIG_WM831X_WATCHDOG) += wm831x_wdt.o
+>   obj-$(CONFIG_WM8350_WATCHDOG) += wm8350_wdt.o
+>   obj-$(CONFIG_MAX63XX_WATCHDOG) += max63xx_wdt.o
+> diff --git a/drivers/watchdog/gpio_wdt.c b/drivers/watchdog/gpio_wdt.c
+> new file mode 100644
+> index 0000000..c7166be
+> --- /dev/null
+> +++ b/drivers/watchdog/gpio_wdt.c
+> @@ -0,0 +1,246 @@
+> +/*
+> + * Driver for watchdog device controlled through GPIO-line
+> + *
+> + * Author: 2013, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/notifier.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reboot.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define SOFT_TIMEOUT_MIN	1
+> +#define SOFT_TIMEOUT_DEF	60
+> +#define SOFT_TIMEOUT_MAX	0xffff
+> +
+> +enum {
+> +	HW_ALGO_TOGGLE,
+> +	HW_ALGO_LEVEL,
+> +};
+> +
+> +struct gpio_wdt_priv {
+> +	int			gpio;
+> +	bool			active_low;
+> +	bool			state;
+> +	unsigned int		hw_algo;
+> +	unsigned int		hw_margin;
+> +	unsigned long		last_jiffies;
+> +	struct notifier_block	notifier;
+> +	struct timer_list	timer;
+> +	struct watchdog_device	wdd;
+> +};
+> +
+> +static int gpio_wdt_disable(struct gpio_wdt_priv *priv)
+> +{
+> +	gpio_set_value_cansleep(priv->gpio, !priv->active_low);
+> +
+> +	/* Put GPIO back to tristate */
+> +	if (priv->hw_algo == HW_ALGO_TOGGLE)
+> +		return gpio_direction_input(priv->gpio);
+> +
+No disable for 'level' watchdogs ? Shouldn't it be set to the opposite
+of priv->state ?
 
-Yes I can, I'll replace aemif name on NULL.
+> +	return 0;
 
->> +       if (IS_ERR(aemif->clk)) {
->> +               dev_err(dev, "cannot get clock 'aemif'\n");
->> +               return PTR_ERR(aemif->clk);
->> +       }
->> +
->> +       clk_prepare_enable(aemif->clk);
->> +       aemif->clk_rate = clk_get_rate(aemif->clk) / 1000;
->> +
->> +       aemif->dev = dev;
->> +
->> +       if (of_device_is_compatible(np, "ti,omap-L138-aemif"))
->> +               aemif->cs_offset = 2;
->> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       aemif->base = devm_ioremap_resource(dev, res);
->> +       if (IS_ERR(aemif->base)) {
->> +               ret = PTR_ERR(aemif->base);
->> +               goto error;
->> +       }
->> +
->> +       /*
->> +        * For every controller device node, there is a cs device node that
->> +        * describe the bus configuration parameters. This functions iterate
->> +        * over these nodes and update the cs data array.
->> +        */
->> +       for_each_matching_node(np, of_match_ptr(davinci_cs_of_match)) {
->> +               ret = of_davinci_aemif_parse_abus_config(np);
->> +               if (ret < 0)
->> +                       goto error;
->> +       }
->> +
->> +       for (i = 0; i < aemif->num_cs; i++) {
->> +               ret = davinci_aemif_config_abus(&aemif->cs_data[i]);
->> +               if (ret < 0) {
->> +                       dev_err(dev, "Error configuring chip select %d\n",
->> +                               aemif->cs_data[i].cs);
->> +                       goto error;
->> +               }
->> +       }
->> +
->> +       /*
->> +        * Create a child devices explicitly from here to
->> +        * guarantee that the child will be probed after the AEMIF timing
->> +        * parameters are set.
->> +        */
->> +       for_each_matching_node(np, of_match_ptr(davinci_cs_of_match)) {
->> +               ret = of_platform_populate(np, NULL, NULL, dev);
->> +               if (ret < 0)
->> +                       goto error;
->> +       }
->> +
->> +       return 0;
->> +error:
->> +       clk_disable_unprepare(aemif->clk);
->> +       return ret;
->> +}
->> +
->> +static int davinci_aemif_remove(struct platform_device *pdev)
->> +{
->> +       clk_disable_unprepare(aemif->clk);
->> +       return 0;
->> +}
->> +
->> +static struct platform_driver davinci_aemif_driver = {
->> +       .probe = davinci_aemif_probe,
->> +       .remove = davinci_aemif_remove,
->> +       .driver = {
->> +               .name = DRV_NAME,
->> +               .owner = THIS_MODULE,
->> +               .of_match_table = of_match_ptr(davinci_aemif_of_match),
->> +       },
->> +};
->> +
->> +module_platform_driver(davinci_aemif_driver);
->> +
->> +MODULE_AUTHOR("Murali Karicheri <m-karicheri2@ti.com>");
-> 
-> Is this correct? If yes, I would have expected him to sign-off on the
-> patch too. If not, please drop this.
+Since this is an internal function which never returns anything but 0,
+you might as well make it void.
 
-I will add sign-off
+> +}
+> +
+> +static int gpio_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
+> +
+> +	priv->state = priv->active_low;
+> +	gpio_direction_output(priv->gpio, priv->state);
+> +	priv->last_jiffies = jiffies;
+> +	mod_timer(&priv->timer, priv->last_jiffies + priv->hw_margin);
+> +
+> +	return 0;
+> +}
+> +
+> +static int gpio_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
+> +
+> +	mod_timer(&priv->timer, 0);
+> +
+> +	return gpio_wdt_disable(priv);
+> +}
+> +
+> +static int gpio_wdt_ping(struct watchdog_device *wdd)
+> +{
+> +	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
+> +
+> +	priv->last_jiffies = jiffies;
+> +
+> +	return 0;
+> +}
+> +
+> +static int gpio_wdt_set_timeout(struct watchdog_device *wdd, unsigned int t)
+> +{
+> +	wdd->timeout = t;
+> +
+> +	return 0;
+> +}
+> +
+> +static void gpio_wdt_hwping(unsigned long data)
+> +{
+> +	struct watchdog_device *wdd = (struct watchdog_device *)data;
+> +	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
+> +
+> +	if (time_before(jiffies, priv->last_jiffies +
+> +			msecs_to_jiffies(wdd->timeout * 1000))) {
+> +		/* Restart timer */
+> +		mod_timer(&priv->timer, jiffies + priv->hw_margin);
+> +
+> +		switch (priv->hw_algo) {
+> +		case HW_ALGO_TOGGLE:
+> +			/* Toggle output pin */
+> +			priv->state = !priv->state;
+> +			gpio_set_value_cansleep(priv->gpio, priv->state);
+> +			break;
+> +		case HW_ALGO_LEVEL:
+> +			/* Pulse */
+> +			gpio_set_value_cansleep(priv->gpio, !priv->active_low);
+> +			udelay(1);
 
-> 
-> Thanks,
-> Sekhar
-> 
+Pretty arbitrary toggle time. Should this be a property ?
 
+> +			gpio_set_value_cansleep(priv->gpio, priv->active_low);
+> +			break;
+> +		}
+> +	} else
+> +		dev_crit(wdd->dev, "Timer expired. System will reboot soon!\n");
 
--- 
-Regards,
-Ivan Khoronzhuk
+Coding style (chapter 3): else should be in { } too.
+
+> +}
+> +
+> +static int gpio_wdt_notify_sys(struct notifier_block *nb, unsigned long code,
+> +			       void *unused)
+> +{
+> +	struct gpio_wdt_priv *priv = container_of(nb, struct gpio_wdt_priv,
+> +						  notifier);
+> +
+> +	mod_timer(&priv->timer, 0);
+> +
+> +	switch (code) {
+> +	case SYS_HALT:
+> +	case SYS_POWER_OFF:
+> +		gpio_wdt_disable(priv);
+> +		break;
+> +	case SYS_DOWN:
+
+This case statement is unnecessary.
+
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static const struct watchdog_info gpio_wdt_ident = {
+> +	.options	= WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING |
+> +			  WDIOF_SETTIMEOUT,
+> +	.identity	= "GPIO Watchdog",
+> +};
+> +
+> +static const struct watchdog_ops gpio_wdt_ops = {
+> +	.owner		= THIS_MODULE,
+> +	.start		= gpio_wdt_start,
+> +	.stop		= gpio_wdt_stop,
+> +	.ping		= gpio_wdt_ping,
+> +	.set_timeout	= gpio_wdt_set_timeout,
+> +};
+> +
+> +static int gpio_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct gpio_wdt_priv *priv;
+> +	enum of_gpio_flags flags;
+> +	const __be32 *prp;
+> +	u32 hw_margin;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->gpio = of_get_gpio_flags(pdev->dev.of_node, 0, &flags);
+> +	if (!gpio_is_valid(priv->gpio))
+> +		return priv->gpio;
+> +
+> +	priv->active_low = !!(flags & OF_GPIO_ACTIVE_LOW);
+> +
+
+!! is unnecessary for assignments to booleans.
+
+> +	ret = devm_gpio_request_one(&pdev->dev, priv->gpio, GPIOF_IN,
+> +				    dev_name(&pdev->dev));
+> +	if (ret)
+> +		return ret;
+> +
+> +	prp = of_get_property(pdev->dev.of_node, "wdt-gpio,hw_algo", NULL);
+> +	if (!prp)
+> +		return -EINVAL;
+
+I am a bit concerned about using of_get_property() to read a string.
+If the provided property is an integer, one can only hope that nothing odd happens.
+How about using of_property_read_string() instead ? That would at least
+provide some protection.
+
+> +	if (!strncmp((const char *)prp, "toggle", 6))
+> +		priv->hw_algo = HW_ALGO_TOGGLE;
+> +	else if (!strncmp((const char *)prp, "level", 5))
+> +		priv->hw_algo = HW_ALGO_LEVEL;
+> +	else
+> +		return -ENOTSUPP;
+
+This suggests that the value is valid but not supported. -EINVAL may be better.
+
+> +
+> +	prp = of_get_property(pdev->dev.of_node, "wdt-gpio,hw_margin_ms", NULL);
+> +	if (!prp)
+> +		return -EINVAL;
+
+There is also of_property_read_u32().
+
+> +	hw_margin = be32_to_cpu(*prp);
+> +	/* Disallow values lower than 2 and higher than 65535 ms */
+> +	if ((hw_margin < 2) || (hw_margin > 65535))
+> +		return -EINVAL;
+> +
+> +	/* Use safe value (2/3 of real timeout) */
+> +	priv->hw_margin = msecs_to_jiffies(hw_margin * 2 / 3);
+> +
+Hope this is safe enough. I would have used 1/2, but that
+is really up to you to decide.
+
+> +	watchdog_set_drvdata(&priv->wdd, priv);
+> +
+> +	priv->wdd.info		= &gpio_wdt_ident;
+> +	priv->wdd.ops		= &gpio_wdt_ops;
+> +	priv->wdd.min_timeout	= SOFT_TIMEOUT_MIN;
+> +	priv->wdd.max_timeout	= SOFT_TIMEOUT_MAX;
+> +
+> +	if (watchdog_init_timeout(&priv->wdd, 0, &pdev->dev) < 0)
+> +		priv->wdd.timeout = SOFT_TIMEOUT_DEF;
+> +
+> +	setup_timer(&priv->timer, gpio_wdt_hwping, (unsigned long)&priv->wdd);
+> +
+> +	priv->notifier.notifier_call = gpio_wdt_notify_sys;
+> +	ret = register_reboot_notifier(&priv->notifier);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return watchdog_register_device(&priv->wdd);
+
+If this fails you don't call unregister_reboot_notifier.
+
+> +}
+> +
+> +static int gpio_wdt_remove(struct platform_device *pdev)
+> +{
+> +	struct gpio_wdt_priv *priv = platform_get_drvdata(pdev);
+> +
+> +	del_timer_sync(&priv->timer);
+> +	unregister_reboot_notifier(&priv->notifier);
+> +	watchdog_unregister_device(&priv->wdd);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id gpio_wdt_dt_ids[] = {
+> +	{ .compatible = "linux,wdt-gpio", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, gpio_wdt_dt_ids);
+> +
+> +static struct platform_driver gpio_wdt_driver = {
+> +	.driver	= {
+> +		.name		= "gpio-wdt",
+> +		.owner		= THIS_MODULE,
+> +		.of_match_table	= gpio_wdt_dt_ids,
+> +	},
+> +	.probe	= gpio_wdt_probe,
+> +	.remove	= gpio_wdt_remove,
+> +};
+> +module_platform_driver(gpio_wdt_driver);
+> +
+> +MODULE_AUTHOR("Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>");
+> +MODULE_DESCRIPTION("GPIO Watchdog");
+> +MODULE_LICENSE("GPL");
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
