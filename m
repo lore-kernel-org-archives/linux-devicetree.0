@@ -1,7 +1,7 @@
 From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/4] ARM: dts: smdk5250: Add hdmi phy settings
-Date: Tue, 26 Nov 2013 15:27:35 +0530
-Message-ID: <1385459858-3972-2-git-send-email-s.shirish@samsung.com>
+Subject: [PATCH 3/4] ARM: exynos: dts: cros5250: Add hdmi phy settings
+Date: Tue, 26 Nov 2013 15:27:37 +0530
+Message-ID: <1385459858-3972-4-git-send-email-s.shirish@samsung.com>
 References: <1385459858-3972-1-git-send-email-s.shirish@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-reply-to: <1385459858-3972-1-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
@@ -10,20 +10,20 @@ To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3
 Cc: airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch moves the hdmi phy setting to smdk5250
-dts,as its more of a per board configuration and
-also shall be easier for supporting future chipsets.
+This patch moves the hdmi phy setting to arndale dts,
+as its more of a per board configuration and also
+shall be easier for supporting future chipsets.
 
 Signed-off-by: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/exynos5250-smdk5250.dts |   74 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/cros5250-common.dtsi |   74 ++++++++++++++++++++++++++++++++
  1 file changed, 74 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 2538b32..96e2cad 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -220,6 +220,80 @@
+diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
+index dc259e8b..77408c6 100644
+--- a/arch/arm/boot/dts/cros5250-common.dtsi
++++ b/arch/arm/boot/dts/cros5250-common.dtsi
+@@ -301,6 +301,80 @@
  
  	hdmi {
  		hpd-gpio = <&gpx3 7 0>;
@@ -103,7 +103,7 @@ index 2538b32..96e2cad 100644
 +		};
  	};
  
- 	codec@11000000 {
+ 	gpio-keys {
 -- 
 1.7.9.5
 
