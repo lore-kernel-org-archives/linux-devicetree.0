@@ -1,109 +1,54 @@
 From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/4] ARM: dts: arndale: Add hdmi phy settings
-Date: Tue, 26 Nov 2013 15:27:36 +0530
-Message-ID: <1385459858-3972-3-git-send-email-s.shirish@samsung.com>
-References: <1385459858-3972-1-git-send-email-s.shirish@samsung.com>
+Subject: [PATCH 0/4] Add dt support for exynos hdmiphy settings
+Date: Tue, 26 Nov 2013 15:27:34 +0530
+Message-ID: <1385459858-3972-1-git-send-email-s.shirish@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1385459858-3972-1-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 Cc: airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch moves the hdmi phy setting to arndale dts,
-as its more of a per board configuration and also
-shall be easier for supporting future chipsets.
+For various revisions of a chipset if the signal pattern is changed for every
+revision, then the phy setting need to be updated correspondingly by measuring
+the signal.
+For getting correct signals the clock level and data de-emphasis
+levels needs to be adjusted.
+Since only these 2 values matter,we can move the same to dt,
+wherein we can have different dt files for every revision.
 
-Signed-off-by: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/exynos5250-arndale.dts |   74 ++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+This is an initial patchset towards achieving the same
+for exynos 5250 and can be later extended to future chipsets.
 
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index cee55fa..48b00f7 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -475,6 +475,80 @@
- 		vdd_osc-supply = <&ldo10_reg>;
- 		vdd_pll-supply = <&ldo8_reg>;
- 		vdd-supply = <&ldo8_reg>;
-+		hdmiphy-configs {
-+			/*
-+			* Eye diagram test passed for:
-+			* Data de-emphasis: -0.7dB & Data Level: 880mV
-+			* i.e., 0010 0110 = 0x26
-+			* and Clock level of 515mV and diff 1030mV
-+			* i.e., 0x66
-+			*/
-+			config0: config0 {
-+				pixel-clock = <25200000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config1: config1 {
-+				pixel-clock = <27000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config2: config2 {
-+				pixel-clock = <27027000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config3: config3 {
-+				pixel-clock = <36000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config4: config4 {
-+				pixel-clock = <40000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config5: config5 {
-+				pixel-clock = <65000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config6: config6 {
-+				pixel-clock = <74176000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config7: config7 {
-+				pixel-clock = <74250000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config8: config8 {
-+				pixel-clock = <83500000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config9: config9 {
-+				pixel-clock = <106500000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config10: config10 {
-+				pixel-clock = <108000000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config11: config11 {
-+				pixel-clock = <146250000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config12: config12 {
-+				pixel-clock = <148500000>;
-+				config-de-emphasis-level =  /bits/ 8 <0x26>;
-+				config-clock-level =  /bits/ 8 < 0x66>;
-+			};
-+		};
- 	};
- 
- 	regulators {
+V2: replaced moving of entire phy config structure with only
+required and justifiable conf registers.
+
+V3: Incorporated Mark Rutland's comments.
+
+V4: Rebased and included cros5250-common.dtsi.
+
+V5: removed nr-configs feild and also the constraint
+of having the exact number of configs in the dt file
+as in the driver, the programmer can add only the pixel
+clock that needs to be updated.
+
+V6:
+V7: removed nr-configs form the dtsi files.
+
+V8: Fixed build error
+
+Shirish S (4):
+  ARM: dts: smdk5250: Add hdmi phy settings
+  ARM: dts: arndale: Add hdmi phy settings
+  ARM: exynos: dts: cros5250: Add hdmi phy settings
+  drm: exynos: hdmi: Add dt support for hdmiphy settings
+
+ .../devicetree/bindings/video/exynos_hdmi.txt      |   31 ++++++++
+ arch/arm/boot/dts/cros5250-common.dtsi             |   74 +++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   74 +++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   74 +++++++++++++++++++
+ drivers/gpu/drm/exynos/exynos_hdmi.c               |   77 +++++++++++++++++++-
+ 5 files changed, 326 insertions(+), 4 deletions(-)
+
 -- 
 1.7.9.5
 
