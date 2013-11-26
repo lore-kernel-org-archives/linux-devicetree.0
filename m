@@ -1,7 +1,7 @@
 From: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/4] ARM: exynos: dts: cros5250: Add hdmi phy settings
-Date: Tue, 26 Nov 2013 15:27:37 +0530
-Message-ID: <1385459858-3972-4-git-send-email-s.shirish@samsung.com>
+Subject: [PATCH 2/4] ARM: dts: arndale: Add hdmi phy settings
+Date: Tue, 26 Nov 2013 15:27:36 +0530
+Message-ID: <1385459858-3972-3-git-send-email-s.shirish@samsung.com>
 References: <1385459858-3972-1-git-send-email-s.shirish@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-reply-to: <1385459858-3972-1-git-send-email-s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
@@ -16,17 +16,17 @@ shall be easier for supporting future chipsets.
 
 Signed-off-by: Shirish S <s.shirish-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/cros5250-common.dtsi |   74 ++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-arndale.dts |   74 ++++++++++++++++++++++++++++++
  1 file changed, 74 insertions(+)
 
-diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
-index dc259e8b..77408c6 100644
---- a/arch/arm/boot/dts/cros5250-common.dtsi
-+++ b/arch/arm/boot/dts/cros5250-common.dtsi
-@@ -301,6 +301,80 @@
- 
- 	hdmi {
- 		hpd-gpio = <&gpx3 7 0>;
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index cee55fa..48b00f7 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -475,6 +475,80 @@
+ 		vdd_osc-supply = <&ldo10_reg>;
+ 		vdd_pll-supply = <&ldo8_reg>;
+ 		vdd-supply = <&ldo8_reg>;
 +		hdmiphy-configs {
 +			/*
 +			* Eye diagram test passed for:
@@ -103,7 +103,7 @@ index dc259e8b..77408c6 100644
 +		};
  	};
  
- 	gpio-keys {
+ 	regulators {
 -- 
 1.7.9.5
 
