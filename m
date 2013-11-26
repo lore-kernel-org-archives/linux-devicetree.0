@@ -1,105 +1,80 @@
-From: Gwenhael Goavec-Merou <gwenhael.goavec-merou@armadeus.com>
-Subject: [PATCH 1/3] ARM: imx27: add pingroups for cspi, sdhc and framebuffer
-Date: Tue, 26 Nov 2013 16:40:42 +0100
-Message-ID: <1385480444-77808-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv10 31/41] ARM: OMAP2+: clock: add support for regmap
+Date: Tue, 26 Nov 2013 09:40:45 -0800
+Message-ID: <20131126174045.GE26766@atomide.com>
+References: <1385453182-24421-1-git-send-email-t-kristo@ti.com>
+ <1385453182-24421-32-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, shawn.guo@linaro.org, Linus Walleij <linus.walleij@linaro.org>, Gwenhael Goavec-Merou <gwenhael.goavec-merou@armadeus.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1385453182-24421-32-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou@armadeus.com>
----
- arch/arm/boot/dts/imx27-pingrp.h | 68 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+* Tero Kristo <t-kristo@ti.com> [131126 00:10]:
+> Using regmap is required for isolating the actual memory access from
+> the clock code. Now, the driver providing the support for the clock IP
+> block can provide a regmap for this purpose.
+> 
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  arch/arm/mach-omap2/clock.c |   27 ++++++++++++++++++++++++++-
+>  arch/arm/mach-omap2/clock.h |    3 +++
+>  2 files changed, 29 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-omap2/clock.c b/arch/arm/mach-omap2/clock.c
+> index 238be3f..1ef6df8 100644
+> --- a/arch/arm/mach-omap2/clock.c
+> +++ b/arch/arm/mach-omap2/clock.c
+> @@ -25,7 +25,7 @@
+>  #include <linux/bitops.h>
+>  #include <linux/clk-private.h>
+>  #include <asm/cpu.h>
+> -
+> +#include <linux/regmap.h>
+>  
+>  #include <trace/events/power.h>
+>  
+> @@ -56,6 +56,31 @@ u16 cpu_mask;
+>  static bool clkdm_control = true;
+>  
+>  static LIST_HEAD(clk_hw_omap_clocks);
+> +struct regmap *clk_regmaps[CLK_MAX_REGMAPS];
+> +
+> +void omap2_clk_writel(u32 val, struct clk_hw_omap *clk, void __iomem *reg)
+> +{
+> +	if (clk->flags & REGMAP_ADDRESSING) {
+> +		struct clk_omap_reg *r = (struct clk_omap_reg *)&reg;
+> +		regmap_write(clk_regmaps[r->index], r->offset, val);
+> +	} else {
+> +		__raw_writel(val, reg);
+> +	}
+> +}
+> +
+> +u32 omap2_clk_readl(struct clk_hw_omap *clk, void __iomem *reg)
+> +{
+> +	u32 val;
+> +
+> +	if (clk->flags & REGMAP_ADDRESSING) {
+> +		struct clk_omap_reg *r = (struct clk_omap_reg *)&reg;
+> +		regmap_read(clk_regmaps[r->index], r->offset, &val);
+> +	} else {
+> +		val = __raw_readl(reg);
+> +	}
+> +
+> +	return val;
+> +}
+>  
+>  /*
+>   * Used for clocks that have the same value as the parent clock,
 
-diff --git a/arch/arm/boot/dts/imx27-pingrp.h b/arch/arm/boot/dts/imx27-pingrp.h
-index 08d8d18..e61bec2 100644
---- a/arch/arm/boot/dts/imx27-pingrp.h
-+++ b/arch/arm/boot/dts/imx27-pingrp.h
-@@ -68,4 +68,72 @@
- 	MX27_PAD_UART3_CTS__UART3_CTS 0x0 \
- 	MX27_PAD_UART3_RTS__UART3_RTS 0x0
- 
-+#define MX27_CSPI1_PINGRP1 \
-+	MX27_PAD_CSPI1_SCLK__CSPI1_SCLK 0x0 \
-+	MX27_PAD_CSPI1_MISO__CSPI1_MISO 0x0 \
-+	MX27_PAD_CSPI1_MOSI__CSPI1_MOSI 0x0
-+
-+#define MX27_CSPI2_PINGRP1 \
-+	MX27_PAD_CSPI2_SCLK__CSPI2_SCLK 0x0 \
-+	MX27_PAD_CSPI2_MISO__CSPI2_MISO 0x0 \
-+	MX27_PAD_CSPI2_MOSI__CSPI2_MOSI 0x0
-+
-+#define MX27_CSPI3_PINGRP1 \
-+	MX27_PAD_SD1_CLK__CSPI3_SCLK 0x0 \
-+	MX27_PAD_SD1_D0__CSPI3_MISO 0x0 \
-+	MX27_PAD_SD1_CMD__CSPI3_MOSI 0x0
-+
-+#define MX27_SDHC1_PINGRP1 \
-+	MX27_PAD_SD1_D0__SD1_D0 \
-+	MX27_PAD_SD1_D1__SD1_D1 \
-+	MX27_PAD_SD1_D2__SD1_D2 \
-+	MX27_PAD_SD1_D3__SD1_D3 \
-+	MX27_PAD_SD1_CMD__SD1_CMD \
-+	MX27_PAD_SD1_CLK__SD1_CLK
-+
-+#define MX27_SDHC2_PINGRP1 \
-+	MX27_PAD_SD2_D0__SD2_D0 \
-+	MX27_PAD_SD2_D1__SD2_D1 \
-+	MX27_PAD_SD2_D2__SD2_D2 \
-+	MX27_PAD_SD2_D3__SD2_D3 \
-+	MX27_PAD_SD2_CMD__SD2_CMD \
-+	MX27_PAD_SD2_CLK__SD2_CLK
-+
-+#define MX27_SDHC3_PINGRP1 \
-+	MX27_PAD_SD3_D0__SD3_D0 \
-+	MX27_PAD_SD3_D1__SD3_D1 \
-+	MX27_PAD_SD3_D2__SD3_D2 \
-+	MX27_PAD_SD3_D3__SD3_D3 \
-+	MX27_PAD_SD3_CMD__SD3_CMD \
-+	MX27_PAD_SD3_CLK__SD3_CLK
-+
-+#define MX27_FB1_PINGRP1 \
-+	MX27_PAD_LSCLK__LSCLK 0x0 \
-+	MX27_PAD_LD0__LD0 0x0 \
-+	MX27_PAD_LD1__LD1 0x0 \
-+	MX27_PAD_LD2__LD2 0x0 \
-+	MX27_PAD_LD3__LD3 0x0 \
-+	MX27_PAD_LD4__LD4 0x0 \
-+	MX27_PAD_LD5__LD5 0x0 \
-+	MX27_PAD_LD6__LD6 0x0 \
-+	MX27_PAD_LD7__LD7 0x0 \
-+	MX27_PAD_LD8__LD8 0x0 \
-+	MX27_PAD_LD9__LD9 0x0 \
-+	MX27_PAD_LD10__LD10 0x0 \
-+	MX27_PAD_LD11__LD11 0x0 \
-+	MX27_PAD_LD12__LD12 0x0 \
-+	MX27_PAD_LD13__LD13 0x0 \
-+	MX27_PAD_LD14__LD14 0x0 \
-+	MX27_PAD_LD15__LD15 0x0 \
-+	MX27_PAD_LD16__LD16 0x0 \
-+	MX27_PAD_LD17__LD17 0x0 \
-+	MX27_PAD_REV__REV 0x0 \
-+	MX27_PAD_CLS__CLS 0x0 \
-+	MX27_PAD_PS__PS 0x0 \
-+	MX27_PAD_SPL_SPR__SPL_SPR 0x0 \
-+	MX27_PAD_HSYNC__HSYNC 0x0 \
-+	MX27_PAD_VSYNC__VSYNC 0x0 \
-+	MX27_PAD_CONTRAST__CONTRAST 0x0 \
-+	MX27_PAD_OE_ACD__OE_ACD 0x0
-+
- #endif /* __DTS_IMX27_PINGRP_H */
--- 
-1.8.3.2
+Maybe use read[lw]_relaxed and write[lw]_relaxed here and elsewhere
+instead of __raw_read/write to help cut down the changes needed for
+the big endian patch set?
+
+Regards,
+
+Tony
