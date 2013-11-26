@@ -1,70 +1,152 @@
-From: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] Documentation: dt: Add kona-pwm binding
-Date: Mon, 25 Nov 2013 17:50:38 -0800
-Message-ID: <CAAYSxho=vJ0svnsg4KkD7tU9JMekEwef3if2jJD=d5pwWwndMw@mail.gmail.com>
-References: <1384800901-21711-1-git-send-email-tim.kryger@linaro.org>
-	<1384800901-21711-2-git-send-email-tim.kryger@linaro.org>
-	<20131125111709.GJ22043@ulmo.nvidia.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] of: Add simple panel device tree binding
+Date: Tue, 26 Nov 2013 02:54:41 +0100
+Message-ID: <2120855.5UlavpPp2J@avalon>
+References: <1385145714-3022-1-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131125111709.GJ22043-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Doc List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linaro Patches List <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1385145714-3022-1-git-send-email-treding@nvidia.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Hans de Goede <hdegoede@redhat.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 25, 2013 at 3:17 AM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Nov 18, 2013 at 10:54:57AM -0800, Tim Kryger wrote:
+Hi Thierry,
 
->> +++ b/Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
->> @@ -0,0 +1,24 @@
->> +Broadcom's PWM Controller Device Tree bindings
->
-> This sounds somewhat strange, like Broadcom owns the bindings... perhaps
-> just:
->
->         Broadcom PWM controller device tree bindings
->
-> Or for consistency:
->
->         Broadcom Kona PWM controller device tree bindings
+Thank you for the patch.
 
-Yes that sounds better.
+On Friday 22 November 2013 19:41:54 Thierry Reding wrote:
+> This binding specifies a set of common properties for display panels. It
+> can be used as a basis by bindings for specific panels.
+> 
+> Bindings for three specific panels are provided to show how the simple
+> panel binding can be used.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> This binding has already been discussed earlier. Both Laurent and Tomi
+> seemed to be generally fine with this.
 
->> +Broadcom's Kona PWM Controller has 6 channels
->
-> "controller" and end the sentence with a full stop.
+That's correct, I'm generally fine with your approach, but there's still one 
+point I'd like to see addressed.
 
-Sure.
+As I mentioned previously, I would like to avoid adding zillions of compatible 
+properties to the driver, when we could use a single property in the DT 
+bindings that would specify the timings instead. This would lower the amount 
+of changes made to the simple panel driver, while keeping DT simple enough (at 
+least in my opinion).
 
->> +- clocks: clock specifier for the kona pwm external clock
->
-> Please use the correct spelling "PWM" in prose here and elsewhere. Also
-> you should pick one of "kona", "Kona" or "KONA" and stick with it
-> consistently. Might also be useful to mention what Kona is. Doesn't
-> necessarily have to be in the document, but if for nothing else, then
-> just for my curiosity.
+Specifying the full timings in every DT source file would be pretty verbose 
+and could be error-prone. However, using a single property to specify one of 
+the standard display timings, as orinally proposed by Hans de Goede (CC'ed) 
+during a chat at the kernel summit would in my opinion be a good middle-ground 
+solution.
 
-Agreed.  It should be "Kona" here.
+Would you consider adding such a property to the simple panel bindings, and 
+define a common compatible string ? Each panel should of course list its own 
+compatibility string in addition to the common compatible string in case the 
+need for extensions arises in the future.
 
-Kona roughly defines the set of common IP used on multiple mobile SoCs.
+> The fact that the binding targets simple (dumb) panels only and the reduced
+> set of properties make it easy to be extended in backwards-compatible ways
+> should the need arise, while at the same time allowing to support a wide
+> variety of panels out there.
+> 
+>  .../devicetree/bindings/panel/auo,b101aw03.txt      |  7 +++++++
+>  .../bindings/panel/chunghwa,claa101wb03.txt         |  7 +++++++
+>  .../bindings/panel/panasonic,vvx10f004b00.txt       |  7 +++++++
+>  .../devicetree/bindings/panel/simple-panel.txt      | 21 ++++++++++++++++++
+>  4 files changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/auo,b101aw03.txt
+> create mode 100644
+> Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt create
+> mode 100644
+> Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt create
+> mode 100644 Documentation/devicetree/bindings/panel/simple-panel.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/panel/auo,b101aw03.txt
+> b/Documentation/devicetree/bindings/panel/auo,b101aw03.txt new file mode
+> 100644
+> index 000000000000..72e088a4fb3a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/auo,b101aw03.txt
+> @@ -0,0 +1,7 @@
+> +AU Optronics Corporation 10.1" WSVGA TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "auo,b101aw03"
+> +
+> +This binding is compatible with the simple-panel binding, which is
+> specified +in simple-panel.txt in this directory.
+> diff --git
+> a/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
+> b/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt new file
+> mode 100644
+> index 000000000000..0ab2c05a4c22
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
+> @@ -0,0 +1,7 @@
+> +Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "chunghwa,claa101wb03"
+> +
+> +This binding is compatible with the simple-panel binding, which is
+> specified +in simple-panel.txt in this directory.
+> diff --git
+> a/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
+> b/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt new
+> file mode 100644
+> index 000000000000..d328b0341bf4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
+> @@ -0,0 +1,7 @@
+> +Panasonic Corporation 10.1" WUXGA TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "panasonic,vvx10f004b00"
+> +
+> +This binding is compatible with the simple-panel binding, which is
+> specified +in simple-panel.txt in this directory.
+> diff --git a/Documentation/devicetree/bindings/panel/simple-panel.txt
+> b/Documentation/devicetree/bindings/panel/simple-panel.txt new file mode
+> 100644
+> index 000000000000..1341bbf4aa3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/simple-panel.txt
+> @@ -0,0 +1,21 @@
+> +Simple display panel
+> +
+> +Required properties:
+> +- power-supply: regulator to provide the supply voltage
+> +
+> +Optional properties:
+> +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+> +- enable-gpios: GPIO pin to enable or disable the panel
+> +- backlight: phandle of the backlight device attached to the panel
+> +
+> +Example:
+> +
+> +	panel: panel {
+> +		compatible = "cptt,claa101wb01";
+> +		ddc-i2c-bus = <&panelddc>;
+> +
+> +		power-supply = <&vdd_pnl_reg>;
+> +		enable-gpios = <&gpio 90 0>;
+> +
+> +		backlight = <&backlight>;
+> +	};
+-- 
+Regards,
 
->> +- #pwm-cells: should be 2.  The first cell specifies the per-chip index
->> +  of the PWM to use and the second cell is the period in nanoseconds.
->> +
->> +Refer to pwm/pwm.txt for generic pwm controller node properties.
->> +
->> +Refer to clocks/clock-bindings.txt for generic clock consumer
->> +properties
->
-> This sentence should also end with a full stop.
-
-Sure thing.  Thanks again.
-
--Tim
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
