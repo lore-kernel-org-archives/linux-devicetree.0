@@ -1,342 +1,157 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH v2] watchdog: GPIO-controlled watchdog
-Date: Tue, 26 Nov 2013 20:26:28 +0400
-Message-ID: <1385483188-12221-1-git-send-email-shc_work@mail.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 2/2] memory: ti-aemif: add bindings for AEMIF driver
+Date: Tue, 26 Nov 2013 18:27:56 +0200
+Message-ID: <5294CC0C.9000203@ti.com>
+References: <1384962416-14862-1-git-send-email-ivan.khoronzhuk@ti.com> <1384962416-14862-3-git-send-email-ivan.khoronzhuk@ti.com> <817E4263-5E61-4471-AED0-5C97FD2B902F@kernel.crashing.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <817E4263-5E61-4471-AED0-5C97FD2B902F@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@kernel.crashing.org>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a watchdog driver for devices controlled through GPIO,
-(Analog Devices ADM706, IC 555 etc).
+On 11/22/2013 11:04 PM, Kumar Gala wrote:
+>=20
+> On Nov 20, 2013, at 9:46 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>=
+ wrote:
+>=20
+>> Add bindings for AEMIF controller drivers/memory/ti-aemif.c
+>>
+>=20
+> Binding shouldn=92t normally refer to code.
+>=20
+> Just saying something like:
+>=20
+> Adding binging for TI Async External Memory Interface (AEMIF) control=
+ler.
+>=20
+>=20
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>> ---
+>> .../bindings/memory-controllers/ti-aemif.txt       |  198 ++++++++++=
+++++++++++
+>> 1 file changed, 198 insertions(+)
+>> create mode 100644 Documentation/devicetree/bindings/memory-controll=
+ers/ti-aemif.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/memory-controllers/ti=
+-aemif.txt b/Documentation/devicetree/bindings/memory-controllers/ti-ae=
+mif.txt
+>> new file mode 100644
+>> index 0000000..be0c0cb
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.=
+txt
+>> @@ -0,0 +1,198 @@
+>> +* Device tree bindings for Texas instruments AEMIF controller
+>> +
+>> +Th Async External Memory Interface (EMIF16/AEMIF) controller is int=
+ended to
+>=20
+> The?
+>=20
+>> +provide a glue-less interface to a variety of asynchronous memory d=
+evices like
+>> +ASRA M, NOR and NAND memory. A total of 256M bytes of any of these =
+memories
+>> +can be accessed at any given time via four chip selects with 64M by=
+te access
+>> +per chip select. Synchronous memories such as DDR1 SD RAM, SDR SDRA=
+M
+>> +and Mobile SDR are not supported.
+>> +
+>> +Documentation:
+>> +Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
+>> +OMAP-L138 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
+>> +Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
+>> +
+>> +Required properties:
+>> +
+>> +- compatible:		"ti,davinci-aemif"
+>> +			"ti,keystone-aemif"
+>> +			"ti,omap-L138-aemif"
+>> +
+>> +- #address-cells:	Must be 2. The first cell is the memory partition
+>> +			number. The 0 partition is for chip selects. And the
+>> +			second cell is the offset into the partition, for the 0
+>> +			partition it corresponds to chip select offset.
+>> +
+>=20
+> Is the first cell just the chip select number?
 
-Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- .../devicetree/bindings/watchdog/gpio-wdt.txt      |  23 ++
- drivers/watchdog/Kconfig                           |   8 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/gpio_wdt.c                        | 246 +++++++++++++++++++++
- 4 files changed, 278 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
- create mode 100644 drivers/watchdog/gpio_wdt.c
+No. It's rather memory range/partition number. Now there are 2 partitio=
+ns:
+- control partition which is common for all CS interfaces
+- CS-specific partition/range
+(this one can be splitted according to specific SoC requirement)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-new file mode 100644
-index 0000000..08ba8e5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-@@ -0,0 +1,23 @@
-+* GPIO-controlled Watchdog
-+
-+Required Properties:
-+- compatible: Should contain "linux,wdt-gpio".
-+- gpios: From common gpio binding; gpio connection to WDT reset pin.
-+- wdt-gpio,hw_algo: The algorithm used by the driver. Should be one
-+  of the following values:
-+  - toggle: Either a high-to-low or a low-to-high transition clears
-+    the WDT counter. The watchdog timer is disabled when GPIO is
-+    left floating or connected to a three-state buffer.
-+  - level: Low or high level starts counting WDT timeout,
-+    the opposite level disables the WDT. Active level is determined
-+    by the GPIO flags.
-+- wdt-gpio,hw_margin_ms: Maximum time to reset watchdog circuit (milliseconds).
-+
-+Example:
-+	watchdog: watchdog {
-+		/* ADM706 */
-+		compatible = "linux,wdt-gpio";
-+		gpios = <&gpio3 9 GPIO_ACTIVE_LOW>;
-+		wdt-gpio,hw_algo = "toggle";
-+		wdt-gpio,hw_margin_ms = <1600>;
-+	};
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 5be6e91..968a882 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -87,6 +87,14 @@ config DA9055_WATCHDOG
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called da9055_wdt.
- 
-+config GPIO_WATCHDOG
-+	tristate "Watchdog device controlled through GPIO-line"
-+	depends on OF_GPIO
-+	select WATCHDOG_CORE
-+	help
-+	  If you say yes here you get support for watchdog device
-+	  controlled through GPIO-line.
-+
- config WM831X_WATCHDOG
- 	tristate "WM831x watchdog"
- 	depends on MFD_WM831X
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 91bd95a..dc17275 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -171,6 +171,7 @@ obj-$(CONFIG_XEN_WDT) += xen_wdt.o
- # Architecture Independent
- obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
- obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
-+obj-$(CONFIG_GPIO_WATCHDOG)	+= gpio_wdt.o
- obj-$(CONFIG_WM831X_WATCHDOG) += wm831x_wdt.o
- obj-$(CONFIG_WM8350_WATCHDOG) += wm8350_wdt.o
- obj-$(CONFIG_MAX63XX_WATCHDOG) += max63xx_wdt.o
-diff --git a/drivers/watchdog/gpio_wdt.c b/drivers/watchdog/gpio_wdt.c
-new file mode 100644
-index 0000000..c7166be
---- /dev/null
-+++ b/drivers/watchdog/gpio_wdt.c
-@@ -0,0 +1,246 @@
-+/*
-+ * Driver for watchdog device controlled through GPIO-line
-+ *
-+ * Author: 2013, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/watchdog.h>
-+
-+#define SOFT_TIMEOUT_MIN	1
-+#define SOFT_TIMEOUT_DEF	60
-+#define SOFT_TIMEOUT_MAX	0xffff
-+
-+enum {
-+	HW_ALGO_TOGGLE,
-+	HW_ALGO_LEVEL,
-+};
-+
-+struct gpio_wdt_priv {
-+	int			gpio;
-+	bool			active_low;
-+	bool			state;
-+	unsigned int		hw_algo;
-+	unsigned int		hw_margin;
-+	unsigned long		last_jiffies;
-+	struct notifier_block	notifier;
-+	struct timer_list	timer;
-+	struct watchdog_device	wdd;
-+};
-+
-+static int gpio_wdt_disable(struct gpio_wdt_priv *priv)
-+{
-+	gpio_set_value_cansleep(priv->gpio, !priv->active_low);
-+
-+	/* Put GPIO back to tristate */
-+	if (priv->hw_algo == HW_ALGO_TOGGLE)
-+		return gpio_direction_input(priv->gpio);
-+
-+	return 0;
-+}
-+
-+static int gpio_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-+
-+	priv->state = priv->active_low;
-+	gpio_direction_output(priv->gpio, priv->state);
-+	priv->last_jiffies = jiffies;
-+	mod_timer(&priv->timer, priv->last_jiffies + priv->hw_margin);
-+
-+	return 0;
-+}
-+
-+static int gpio_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-+
-+	mod_timer(&priv->timer, 0);
-+
-+	return gpio_wdt_disable(priv);
-+}
-+
-+static int gpio_wdt_ping(struct watchdog_device *wdd)
-+{
-+	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-+
-+	priv->last_jiffies = jiffies;
-+
-+	return 0;
-+}
-+
-+static int gpio_wdt_set_timeout(struct watchdog_device *wdd, unsigned int t)
-+{
-+	wdd->timeout = t;
-+
-+	return 0;
-+}
-+
-+static void gpio_wdt_hwping(unsigned long data)
-+{
-+	struct watchdog_device *wdd = (struct watchdog_device *)data;
-+	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-+
-+	if (time_before(jiffies, priv->last_jiffies +
-+			msecs_to_jiffies(wdd->timeout * 1000))) {
-+		/* Restart timer */
-+		mod_timer(&priv->timer, jiffies + priv->hw_margin);
-+
-+		switch (priv->hw_algo) {
-+		case HW_ALGO_TOGGLE:
-+			/* Toggle output pin */
-+			priv->state = !priv->state;
-+			gpio_set_value_cansleep(priv->gpio, priv->state);
-+			break;
-+		case HW_ALGO_LEVEL:
-+			/* Pulse */
-+			gpio_set_value_cansleep(priv->gpio, !priv->active_low);
-+			udelay(1);
-+			gpio_set_value_cansleep(priv->gpio, priv->active_low);
-+			break;
-+		}
-+	} else
-+		dev_crit(wdd->dev, "Timer expired. System will reboot soon!\n");
-+}
-+
-+static int gpio_wdt_notify_sys(struct notifier_block *nb, unsigned long code,
-+			       void *unused)
-+{
-+	struct gpio_wdt_priv *priv = container_of(nb, struct gpio_wdt_priv,
-+						  notifier);
-+
-+	mod_timer(&priv->timer, 0);
-+
-+	switch (code) {
-+	case SYS_HALT:
-+	case SYS_POWER_OFF:
-+		gpio_wdt_disable(priv);
-+		break;
-+	case SYS_DOWN:
-+	default:
-+		break;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static const struct watchdog_info gpio_wdt_ident = {
-+	.options	= WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING |
-+			  WDIOF_SETTIMEOUT,
-+	.identity	= "GPIO Watchdog",
-+};
-+
-+static const struct watchdog_ops gpio_wdt_ops = {
-+	.owner		= THIS_MODULE,
-+	.start		= gpio_wdt_start,
-+	.stop		= gpio_wdt_stop,
-+	.ping		= gpio_wdt_ping,
-+	.set_timeout	= gpio_wdt_set_timeout,
-+};
-+
-+static int gpio_wdt_probe(struct platform_device *pdev)
-+{
-+	struct gpio_wdt_priv *priv;
-+	enum of_gpio_flags flags;
-+	const __be32 *prp;
-+	u32 hw_margin;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->gpio = of_get_gpio_flags(pdev->dev.of_node, 0, &flags);
-+	if (!gpio_is_valid(priv->gpio))
-+		return priv->gpio;
-+
-+	priv->active_low = !!(flags & OF_GPIO_ACTIVE_LOW);
-+
-+	ret = devm_gpio_request_one(&pdev->dev, priv->gpio, GPIOF_IN,
-+				    dev_name(&pdev->dev));
-+	if (ret)
-+		return ret;
-+
-+	prp = of_get_property(pdev->dev.of_node, "wdt-gpio,hw_algo", NULL);
-+	if (!prp)
-+		return -EINVAL;
-+	if (!strncmp((const char *)prp, "toggle", 6))
-+		priv->hw_algo = HW_ALGO_TOGGLE;
-+	else if (!strncmp((const char *)prp, "level", 5))
-+		priv->hw_algo = HW_ALGO_LEVEL;
-+	else
-+		return -ENOTSUPP;
-+
-+	prp = of_get_property(pdev->dev.of_node, "wdt-gpio,hw_margin_ms", NULL);
-+	if (!prp)
-+		return -EINVAL;
-+	hw_margin = be32_to_cpu(*prp);
-+	/* Disallow values lower than 2 and higher than 65535 ms */
-+	if ((hw_margin < 2) || (hw_margin > 65535))
-+		return -EINVAL;
-+
-+	/* Use safe value (2/3 of real timeout) */
-+	priv->hw_margin = msecs_to_jiffies(hw_margin * 2 / 3);
-+
-+	watchdog_set_drvdata(&priv->wdd, priv);
-+
-+	priv->wdd.info		= &gpio_wdt_ident;
-+	priv->wdd.ops		= &gpio_wdt_ops;
-+	priv->wdd.min_timeout	= SOFT_TIMEOUT_MIN;
-+	priv->wdd.max_timeout	= SOFT_TIMEOUT_MAX;
-+
-+	if (watchdog_init_timeout(&priv->wdd, 0, &pdev->dev) < 0)
-+		priv->wdd.timeout = SOFT_TIMEOUT_DEF;
-+
-+	setup_timer(&priv->timer, gpio_wdt_hwping, (unsigned long)&priv->wdd);
-+
-+	priv->notifier.notifier_call = gpio_wdt_notify_sys;
-+	ret = register_reboot_notifier(&priv->notifier);
-+	if (ret)
-+		return ret;
-+
-+	return watchdog_register_device(&priv->wdd);
-+}
-+
-+static int gpio_wdt_remove(struct platform_device *pdev)
-+{
-+	struct gpio_wdt_priv *priv = platform_get_drvdata(pdev);
-+
-+	del_timer_sync(&priv->timer);
-+	unregister_reboot_notifier(&priv->notifier);
-+	watchdog_unregister_device(&priv->wdd);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id gpio_wdt_dt_ids[] = {
-+	{ .compatible = "linux,wdt-gpio", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, gpio_wdt_dt_ids);
-+
-+static struct platform_driver gpio_wdt_driver = {
-+	.driver	= {
-+		.name		= "gpio-wdt",
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= gpio_wdt_dt_ids,
-+	},
-+	.probe	= gpio_wdt_probe,
-+	.remove	= gpio_wdt_remove,
-+};
-+module_platform_driver(gpio_wdt_driver);
-+
-+MODULE_AUTHOR("Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>");
-+MODULE_DESCRIPTION("GPIO Watchdog");
-+MODULE_LICENSE("GPL");
--- 
-1.8.3.2
+As per Keystone TCI6638K2K
+ Datasheet http://www.ti.com/lit/ds/sprs836d/sprs836d.pdf:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1) the memory range 0 will be from 0x30000000 size 0x10000000:
+00 3000 0000 - 00 33FF FFFF 64M EMIF16 CE0
+00 3400 0000 - 00 37FF FFFF 64M EMIF16 CE1
+00 3800 0000 - 00 3BFF FFFF 64M EMIF16 CE2
+00 3C00 0000 - 00 3FFF FFFF 64M EMIF16 CE3
+
+2) the memory range 1:
+00 2100 0A00 - 00 2100 0AFF 256 AEMIF Config
+
+And AEMIF node contains definition:
+ranges =3D <0 0 0x30000000 0x10000000
+	  1 0 0x21000A00 0x0000100>;
+
+
+Child node has (nand):
+ reg =3D <0 0 0x4000000 (cs0)
+        - or - 0 0x4000000 0x4000000 (cs1)
+        - or - 0 0x8000000 0x4000000 (cs2)
+	- or - 0 0xC000000 0x4000000 (cs3)
+	- and -
+        1 0 0x0000100>; (for all cs)
+
+=46or example for cs2 child node the resulting mem range 0 will be calc=
+ulated as
+
+from: 0x30000000 + (0 0x8000000 - 0 0)
+size: 0x4000000
+
+We don't encode CS number in reg/ranges, because it will allow simply c=
+hange=20
+AEMIF DT definitions depending on each SoC
+(AEMIF CS memory range can be continuous as above or not, if not - addi=
+tional
+range/partition can be added and child device can select the proper one=
+).
+
+>=20
+> I=92m wondering if this is similar to FSL Localbus controller, see th=
+e binding:
+>=20
+> bindings/powerpc/fsl/lbc.txt
+
+Don't think so :) it looks similar just because of using standard bindi=
+ngs
+(gpmc-nand.c mvebu-devbus.txt ti-gpmc.txt and etc.)
+
+>=20
+>> +- #size-cells:		Must be set to 1.
+>> +
+>> +- reg:			contains offset/length value for AEMIF control registers
+>> +			space.
+>> +
+>> +- ranges:		Must be set up to reflect the memory layout for 4
+>> +			chipselects and for AEMIF control range.
+>> +
+>> +- clocks:		phandle reference to the controller clock. Required only
+>> +			if clock tree data present in device tree.
+>> +			See clock-bindings.txt
+[..]
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+
+Regards,
+-grygorii
