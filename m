@@ -1,28 +1,63 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] checkpatch: add DT compatible string documentation check
-Date: Tue, 26 Nov 2013 09:29:00 -0800
-Message-ID: <1385486940.20100.60.camel@joe-AO722>
-References: <1385481675-26675-1-git-send-email-robherring2@gmail.com>
-	 <1385484225.20100.58.camel@joe-AO722>
-	 <CAL_JsqKgUQZT4g3fgPe-h8G-zWb1gnfxgT20BDrL+zS5u4URzg@mail.gmail.com>
+From: Gwenhael Goavec-Merou <gwenhael.goavec-merou@armadeus.com>
+Subject: [PATCH 2/3] ARM: dts: imx27: imx27-apf27: add pinctrl for fec and
+ uart1
+Date: Tue, 26 Nov 2013 16:40:43 +0100
+Message-ID: <1385480444-77808-2-git-send-email-gwenhael.goavec-merou@armadeus.com>
+References: <1385480444-77808-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKgUQZT4g3fgPe-h8G-zWb1gnfxgT20BDrL+zS5u4URzg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1385480444-77808-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, shawn.guo@linaro.org, Linus Walleij <linus.walleij@linaro.org>, Gwenhael Goavec-Merou <gwenhael.goavec-merou@armadeus.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2013-11-26 at 11:11 -0600, Rob Herring wrote:
-> I think we don't really want '+' (or '_') in compatible strings.
+Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou@armadeus.com>
+---
+ arch/arm/boot/dts/imx27-apf27.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-What about lines like:
-arch/powerpc/boot/dts/kmeter1.dts:  compatible = "ucc_geth";
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/imx27-apf27.dts b/arch/arm/boot/dts/imx27-apf27.dts
+index ba4c6df..8bc75c7 100644
+--- a/arch/arm/boot/dts/imx27-apf27.dts
++++ b/arch/arm/boot/dts/imx27-apf27.dts
+@@ -34,11 +34,27 @@
+ 	};
+ };
+ 
++&iomuxc {
++	imx27-apf27 {
++		pinctrl_fec1: fec1grp {
++			fsl,pins = <MX27_FEC1_PINGRP1>;
++		};
++
++		pinctrl_uart1: uart1grp {
++			fsl,pins = <MX27_UART1_PINGRP1>;
++		};
++	};
++};
++
+ &uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
+ 	status = "okay";
+ };
+ 
+ &fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
+ 	status = "okay";
+ };
+ 
+-- 
+1.8.3.2
