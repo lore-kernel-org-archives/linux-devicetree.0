@@ -1,57 +1,55 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] clk: exynos: Fix typos in DT bindings documentation
-Date: Tue, 26 Nov 2013 16:59:10 +0100
-Message-ID: <1692060.iWGz8bERyb@avalon>
-References: <1384775172-3373-1-git-send-email-laurent.pinchart@ideasonboard.com> <CAK9yfHxL8DnN8BE94-L3_MK+dBO0exEq7YAamXRHQ7Abo3jYyQ@mail.gmail.com> <1538452.UuDUTCGYER@amdc1227>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] checkpatch: add DT compatible string documentation check
+Date: Tue, 26 Nov 2013 10:01:15 -0600
+Message-ID: <1385481675-26675-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1538452.UuDUTCGYER@amdc1227>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-On Tuesday 26 November 2013 13:13:15 Tomasz Figa wrote:
-> On Tuesday 26 of November 2013 11:23:49 Sachin Kamat wrote:
-> > +CC Mike and removed a few from the list.
-> > 
-> > Hi Laurent,
-> > 
-> > On 26 November 2013 05:52, Laurent Pinchart wrote:
-> > > On Monday 18 November 2013 17:17:39 Sachin Kamat wrote:
-> > >> On 18 November 2013 17:16, Laurent Pinchart wrote:
-> > >> > s/comptible/compatible/
-> > >> > 
-> > >> > Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > >> 
-> > >> Good catch.
-> > >> 
-> > >> Reviewed-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > 
-> > > Have you queued up the patch for v3.14 ?
-> > 
-> > No, I haven't. This should either go through DT tree or else Tomasz Figa
-> > can pick this up and send it to Mike as per the new workflow for 3.14.
-> Well, since this is purely a fix for the documentation, without any
-> dependencies on clk tree, I see no reason to send it in any other way than
-> through DT tree directly.
+This adds a simple check that any compatible strings in DeviceTree dts
+files are present in Documentation/devicetree/bindings. This should be a
+temporary check until we have more sophisticated binding schema checking.
 
-Fine with me, as long as someone picks it up :-)
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+---
+ scripts/checkpatch.pl | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-> As for clk-samsung tree, I'm currently in process of preparing a tree on
-> kernel.org so I should start picking up Samsung clock patches soon.
-> 
-> By the way, the patch adding me to MAINTAINERS file has not been merged
-> yet. Mike, are there any issues?
-
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 9c98100..3fc3517 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2034,6 +2034,21 @@ sub process {
+ 			     "Use of $flag is deprecated, please use \`$replacement->{$flag} instead.\n" . $herecurr) if ($replacement->{$flag});
+ 		}
+ 
++# check for compatible documentation
++		if ($realfile =~ /\.dts/ && $rawline =~ /\+\s*compatible\s*=/) {
++			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,]+)\"/g;
++
++			foreach my $compat (@compats) {
++				my $compat2 = $compat;
++				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
++				`egrep -rq "$compat|$compat2" "Documentation/devicetree/bindings/"`;
++				if ( $? >> 8 ) {
++					WARN("UNDOCUMENTED_DT_BINDING",
++					     "DT compatible string \"$compat\" appears un-documented -- check Documentation/devicetree/bindings/\n" . $herecurr);
++				}
++			}
++		}
++
+ # check we are in a valid source file if not then ignore this hunk
+ 		next if ($realfile !~ /\.(h|c|s|S|pl|sh)$/);
+ 
 -- 
-Regards,
-
-Laurent Pinchart
+1.8.3.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
