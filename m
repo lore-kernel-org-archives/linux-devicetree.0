@@ -1,135 +1,135 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] of: Add simple panel device tree binding
-Date: Tue, 26 Nov 2013 09:59:12 +0100
-Message-ID: <20131126085911.GA27752@ulmo.nvidia.com>
-References: <1385145714-3022-1-git-send-email-treding@nvidia.com>
-	<2120855.5UlavpPp2J@avalon>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1775981963=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2120855.5UlavpPp2J@avalon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Hans de Goede <hdegoede@redhat.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org
+From: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+Subject: [PATCH v4 0/4] Exynos 5410 Dual cluster support
+Date: Tue, 26 Nov 2013 12:58:04 +0400
+Message-ID: <1385456288-20398-1-git-send-email-v.tyrtov@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>, Tyrtov Vyacheslav <v.tyrtov@samsung.com>, Dave.Martin@arm.com, nicolas.pitre@linaro.org, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+The series of patches represent support of Exynos 5410 SoC
 
---===============1775981963==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
-Content-Disposition: inline
+The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture
+Patches allow all 8 CPU cores (4 x A7 and 4 x A15) to run at the same time
+
+Patches add new platform description, support of clock controller,
+dual cluster support and device tree for Exynos 5410
+
+Has been build on v3.13-rc1.
+Has been tested on Exynos 5410 reference board (exynos_defconfig).
+
+Thanks for all your comments to Tomasz Figa, Dave Martin and Nicolas Pitre.
+
+Vyacheslav.
 
 
---DocE+STaALJfprDB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changelog:
 
-On Tue, Nov 26, 2013 at 02:54:41AM +0100, Laurent Pinchart wrote:
-> Hi Thierry,
->=20
-> Thank you for the patch.
->=20
-> On Friday 22 November 2013 19:41:54 Thierry Reding wrote:
-> > This binding specifies a set of common properties for display panels. It
-> > can be used as a basis by bindings for specific panels.
-> >=20
-> > Bindings for three specific panels are provided to show how the simple
-> > panel binding can be used.
-> >=20
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > ---
-> > This binding has already been discussed earlier. Both Laurent and Tomi
-> > seemed to be generally fine with this.
->=20
-> That's correct, I'm generally fine with your approach, but there's still =
-one=20
-> point I'd like to see addressed.
->=20
-> As I mentioned previously, I would like to avoid adding zillions of compa=
-tible=20
-> properties to the driver, when we could use a single property in the DT=
-=20
-> bindings that would specify the timings instead. This would lower the amo=
-unt=20
-> of changes made to the simple panel driver, while keeping DT simple enoug=
-h (at=20
-> least in my opinion).
->=20
-> Specifying the full timings in every DT source file would be pretty verbo=
-se=20
-> and could be error-prone. However, using a single property to specify one=
- of=20
-> the standard display timings, as orinally proposed by Hans de Goede (CC'e=
-d)=20
-> during a chat at the kernel summit would in my opinion be a good middle-g=
-round=20
-> solution.
->=20
-> Would you consider adding such a property to the simple panel bindings, a=
-nd=20
-> define a common compatible string ? Each panel should of course list its =
-own=20
-> compatibility string in addition to the common compatible string in case =
-the=20
-> need for extensions arises in the future.
+v4:
+	In arch/arm/mach-exynos/edcs.c
+1. Renamed all exynos_ prefixes to edcs_.
+2. Reworked edcs_core_power_up/down functions.
+3. Removed exynos_core_power_control function.
+4. Added this_core_to_pcpu function.
+5. Added core_power_state function which detects if cpu is being reset.
+6. Replaced cache flush sequences with v7_exit_coherency_flush().
+7. exynos_core_power_down moved to lock protected area.
+8. edcs_power_down_finish implemented.
+	In Documentation/devicetree/bindings/clock/exynos5410-clock.txt
+1. External clocks documented.
+	In arch/arm/boot/dts/exynos5410-smdk5410.dts
+1. oscclk node corrected according to ePAPR recommendation.
+	In arch/arm/boot/dts/exynos5410.dtsi
+1. mct@101C0000 node renamed to timer@101C0000.
+2. "interrupt-controller" line removed from mct node.
+3. mct_map renamed to interrupt_map.
+	In arch/arm/mach-exynos/Kconfig
+1. some cosmetic corrections.
+	In include/dt-bindings/clock/exynos5410.h
+1. Unnecessary defines removed.
 
-My gripe with this is that it duplicates information. By definition a
-simple panel supports a limited number of display modes (typically only
-a single one), so once you know the compatible value (which needs to be
-there anyway) you can derive the mode from it. Adding a property that
-specifies the display mode is redundant.
+v3:
+	In drivers/clk/samsung/clk-exynos5410.c
+1. Fixed rate clock "samsung,clock-oscclk" removed.
+	In arch/arm/boot/dts/exynos5410.dtsi
+1. In mct node clock CLK_FIN_PLL replaced with generic fixed rate oscclk.
+	In arch/arm/boot/dts/exynos5410-smdk5410.dts
+1. Fixed rate oscclk clock added.
+	In arch/arm/mach-exynos/edcs.c
+1. Added write memory barrier in exynos_core_power_control function.
+2. __raw_readl/__raw_writel replaced with readl_relaxed/writel_relaxed.
+3. #define added for some magic constants.
+4. Disabled the GIC CPU interface in exynos_power_down function.
 
-Dave Airlie proposed something else, namely to keep a list of common
-modes within the driver and have each device reference that mode
-instead. I think that could work similarily well. It still requires the
-driver to be touched for each new panel, but the changes will be very
-small. They'll be more of the "add a new table entry" sort of change
-that we have in drivers like the 8250/16550-compatible serial. Most of
-that could probably be wrapped into a macro to make it concise.
+v2:
+	In drivers/clk/samsung/clk-exynos5410.c
+1. Clock driver converted to use preprocessor macros instead of enums.
+   Clock IDs now defined in include/dt-bindings/clock/exynos5410.h.
+2. Unused spinlock removed.
+3. Function exynos5410_clk_init defined as static.
+   Struct exynos5410_fixed_rate_ext_clks defined as static.
+   Struct exynos5410_mux_clks defined as static.
+   Struct exynos5410_div_clks defined as static.
+   Struct exynos5410_gate_clks defined as static.
+4. Removed aliases.
+5. Pll's magic register offsets defined as preprocessor macros.
+6. Redundant check of device_node pointer removed.
+	
+	In arch/arm/boot/dts/exynos5410.dtsi
+1. dwmmcX nodes renamed to mmc.
+   dwmmc_X renamed to mmc_X.
+   dwmmc status="disabled" field added.
+   fifo-depth field moved from arch/arm/boot/dts/exynos5410-smdk5410.dts
+2. Blank lines added where necessary.
+3. cpu@ suffixes corrected.
+4. edcs node removed.
+5. Hexadecimal characters case corrected.
+6. Clock IDs replaced with preprocessor macros.
+	
+	In arch/arm/boot/dts/exynos5410-smdk5410.dts
+1. status = "okay" field added to mmc nodes.
+	
+	In arch/arm/mach-exynos/edcs.c
+1. "kfs_" prefix replaced with "edcs_"
+2. EDCS_CPUS_PER_CLUSTER and EDCS_CLUSTERS defined instead of MCPM's values.
+3. Cache handling sequence borrowed from arch/arm/mach-vexpress/tc2_pm.c
+4. mcpm_sync_init() call added.
+5. power management functions reworked.
+	
+	Other
+1. Documentation/devicetree/bindings/clock/exynos5410-clock.txt corrected.
+2. Removed smdk5410_defconfig. Instead SOC_EXYNOS5410 now selects MCPM and
+   ARM_CCI in arch/arm/mach-exynos/Kconfig.
+3. edcs_status driver removed.
 
-Thierry
+Tarek Dakhran (4):
+  ARM: EXYNOS: Add support for EXYNOS5410 SoC
+  clk: exynos5410: register clocks using common clock framework
+  ARM: dts: Add initial device tree support for EXYNOS5410
+  ARM: EXYNOS: add Exynos Dual Cluster Support
 
---DocE+STaALJfprDB
-Content-Type: application/pgp-signature
+ .../devicetree/bindings/clock/exynos5410-clock.txt |  54 ++++
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/exynos5410-smdk5410.dts          |  72 +++++
+ arch/arm/boot/dts/exynos5410.dtsi                  | 207 ++++++++++++++
+ arch/arm/mach-exynos/Kconfig                       |  12 +
+ arch/arm/mach-exynos/Makefile                      |   2 +
+ arch/arm/mach-exynos/common.c                      |  18 ++
+ arch/arm/mach-exynos/edcs.c                        | 297 +++++++++++++++++++++
+ arch/arm/mach-exynos/include/mach/map.h            |   1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |   1 +
+ arch/arm/plat-samsung/include/plat/cpu.h           |   8 +
+ drivers/clk/samsung/Makefile                       |   1 +
+ drivers/clk/samsung/clk-exynos5410.c               | 239 +++++++++++++++++
+ include/dt-bindings/clock/exynos5410.h             |  32 +++
+ 14 files changed, 945 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/exynos5410-clock.txt
+ create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
+ create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
+ create mode 100644 arch/arm/mach-exynos/edcs.c
+ create mode 100644 drivers/clk/samsung/clk-exynos5410.c
+ create mode 100644 include/dt-bindings/clock/exynos5410.h
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSlGLfAAoJEN0jrNd/PrOh9vQP/jRQt2pQ4IYuAi/n3J4L5de+
-Pw+1yFHWNT8nsTLWyYb5vo9Lnk87pcj6L2YRCfKQQhrI8cjHsbWa+305piLbxRlz
-EgylymRZZDFD1tFJ3Q3mO/h9p0RsX4M8iPqIF4LS2c4QYDlQR0/d9He3xpdDlXw9
-nXH/TR6f3fjVM6NJ851v+gUJ6lHlnxD4FsmkMLIvzf2mAk2Sa26B5eubrFkshLZJ
-SDDSU0qdSBkLJ9Vy01iHbjlHLbN4XoXah4SN5GGOajDj9ciu+Pih58h4aQrFQ9zu
-aQFxXgRy9zJi9RtyHf//rHzMOJg4mDHktV3g5bLCD/G4iMOGh+dPk+RuSGcTqRBI
-NtQpG6c9B/U8W3hXCVujh3rzxFXVYu5KyE+Wy232o0seGeRMk4kPKzQPnNAmbL5Z
-LlpEjnC+VFn4vQLr7n/O8oajXy8WswRW9ytQk7Wvu18aN4/RNGijJ4QkC6Sxqqaz
-gVQjim1/RJ00N802EkpnMWvVRwXErvNceCHPUBWg0Ze0FiUFn/wVbFFQLmclBDZh
-26eK//l0F177vxv1xkUaO/cm6HGhuDBp4dfYVbHj5ZacNDGS0z6NTLCSx+gQG6zo
-WeRCeUbo+d+2Xq4Pjp9VfsH+b4eUklY/v1yy8T/vQIcWAQ7epiKLiA1CVOuAaRBQ
-maFISaLTn7CU/Vb6/iBe
-=fF1X
------END PGP SIGNATURE-----
-
---DocE+STaALJfprDB--
-
---===============1775981963==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1775981963==--
+-- 
+1.8.1.5
