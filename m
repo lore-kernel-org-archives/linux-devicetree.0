@@ -1,66 +1,124 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 4/4] arm64: Add APM X-Gene SoC 15Gbps Multi-purpose
- PHY DTS entries
-Date: Tue, 26 Nov 2013 12:40:33 +0400
-Message-ID: <52945E81.3010708@cogentembedded.com>
-References: <1385444818-29682-1-git-send-email-lho@apm.com> <1385444818-29682-2-git-send-email-lho@apm.com> <1385444818-29682-3-git-send-email-lho@apm.com> <1385444818-29682-4-git-send-email-lho@apm.com> <1385444818-29682-5-git-send-email-lho@apm.com>
+From: Alexander Aring <alex.aring@gmail.com>
+Subject: Re: [PATCHv10 15/41] CLK: TI: DRA7: Add APLL support
+Date: Tue, 26 Nov 2013 09:51:29 +0100
+Message-ID: <20131126085128.GA19357@omega>
+References: <1385453182-24421-1-git-send-email-t-kristo@ti.com>
+ <1385453182-24421-16-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1385444818-29682-5-git-send-email-lho@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>, olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1385453182-24421-16-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, J Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi,
 
-On 26-11-2013 9:46, Loc Ho wrote:
-
-> arm64: Add APM X-Gene SoC 15Gbps Multi-purpose PHY DTS entries
-
-    As I already said, there's no need to repeat the patch summary line (the 
-mail subject) in the changelog verbatim.
-
-> This patch adds the DTS entries for the APM X-Gene SoC 15Gbps Multi-purpose
-> PHY driver. The PHY for SATA controller 0 and 1 are enabled by default.
-
-> Signed-off-by: Loc Ho <lho@apm.com>
-> Signed-off-by: Tuan Phan <tphan@apm.com>
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+On Tue, Nov 26, 2013 at 10:05:56AM +0200, Tero Kristo wrote:
+> From: J Keerthy <j-keerthy@ti.com>
+> 
+> The patch adds support for DRA7 PCIe APLL. The APLL
+> sources the optional functional clocks for PCIe module.
+> 
+> APLL stands for Analog PLL. This is different when comapred
+> with DPLL meaning Digital PLL, the phase detection is done
+> using an analog circuit.
+> 
+> Signed-off-by: J Keerthy <j-keerthy@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 > ---
->   arch/arm64/boot/dts/apm-storm.dtsi |   31 +++++++++++++++++++++++++++++++
->   1 files changed, 31 insertions(+), 0 deletions(-)
-
-> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-> index 359d7b6..f74c26a 100644
-> --- a/arch/arm64/boot/dts/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
-> @@ -193,5 +193,36 @@
->   			reg = <0x0 0x17000014 0x0 0x100>;
->   			mask = <0x1>;
->   		};
+>  .../devicetree/bindings/clock/ti/apll.txt          |   31 +++
+>  drivers/clk/ti/Makefile                            |    2 +-
+>  drivers/clk/ti/apll.c                              |  239 ++++++++++++++++++++
+>  3 files changed, 271 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/ti/apll.txt
+>  create mode 100644 drivers/clk/ti/apll.c
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/ti/apll.txt b/Documentation/devicetree/bindings/clock/ti/apll.txt
+> new file mode 100644
+> index 0000000..7faf5a6
+...
 > +
-> +		phy1: phy@1f210000 {
+> +static int __init of_dra7_apll_setup(struct device_node *node)
+> +{
+> +	const struct clk_ops *ops;
+> +	struct clk *clk;
+> +	const char *clk_name = node->name;
+> +	int num_parents;
+> +	const char **parent_names = NULL;
+> +	u8 apll_flags = 0;
+> +	struct dpll_data *ad;
+> +	u32 idlest_mask = 0x1;
+> +	u32 autoidle_mask = 0x3;
+> +	int i;
+> +	int ret;
+> +
+> +	ops = &apll_ck_ops;
+> +	ad = kzalloc(sizeof(*ad), GFP_KERNEL);
+> +	if (!ad)
+> +		return -ENOMEM;
+> +
+> +	of_property_read_string(node, "clock-output-names", &clk_name);
+> +
+> +	num_parents = of_clk_get_parent_count(node);
+> +	if (num_parents < 1) {
+> +		pr_err("dra7 apll %s must have parent(s)\n", node->name);
+> +		ret = -EINVAL;
+> +		goto cleanup;
+> +	}
+> +
+> +	parent_names = kzalloc(sizeof(char *) * num_parents, GFP_KERNEL);
+> +
+> +	for (i = 0; i < num_parents; i++)
+> +		parent_names[i] = of_clk_get_parent_name(node, i);
+> +
+> +	ad->clk_ref = of_clk_get(node, 0);
+> +	ad->clk_bypass = of_clk_get(node, 1);
+> +
+> +	if (IS_ERR(ad->clk_ref)) {
+> +		pr_debug("ti,clk-ref for %s not found\n", clk_name);
+> +		ret = -EAGAIN;
+> +		goto cleanup;
+> +	}
+> +
+> +	if (IS_ERR(ad->clk_bypass)) {
+> +		pr_debug("ti,clk-bypass for %s not found\n", clk_name);
+> +		ret = -EAGAIN;
+> +		goto cleanup;
+> +	}
+> +
+> +	ad->control_reg = ti_clk_get_reg_addr(node, 0);
+> +	ad->idlest_reg = ti_clk_get_reg_addr(node, 1);
+> +
+> +	if (!ad->control_reg || !ad->idlest_reg) {
+> +		ret = -EINVAL;
+> +		goto cleanup;
+> +	}
+> +
+> +	ad->idlest_mask = idlest_mask;
+> +	ad->enable_mask = autoidle_mask;
+> +
+> +	clk = omap_clk_register_apll(NULL, clk_name, parent_names,
+> +				num_parents, apll_flags, ad,
+> +				NULL, ops);
+> +
+> +	if (!IS_ERR(clk)) {
+> +		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+> +		return 0;
+> +	}
+> +
 
-    Shouldn't the address part of the node name correspond to the first 
-address specifier in the "reg" prop?
+Should we not also here do a cleanup for allocated memory?
 
-> +			compatible = "apm,xgene-phy";
-> +			reg = <0x0 0x1f21a000 0x0 0x100>,
-> +			      <0x0 0x1f21c000 0x0 0x100>;
-> +			#phy-cells = <1>;
-> +			status = "disabled";
-> +			apm-tx-boost-gain = <0x2 0x2 0x2 0x2 0x2 0x2>;
-> +			apm-tx-eye-tuning = <0xa 0xa 0xa 0xa 0xa 0xa>;
+> +	return PTR_ERR(clk);
+> +
+> +cleanup:
+> +	kfree(parent_names);
+> +	kfree(ad);
+> +	return ret;
+> +}
+> +CLK_OF_DECLARE(dra7_apll_clock, "ti,dra7-apll-clock", of_dra7_apll_setup);
 
-    The vendor name should be separated by comma in the vendor specific prop 
-names.
-
-> +		};
-
-    Same comments about the other 2 PHY nodes.
-
-WBR, Sergei
-
+- Alex
