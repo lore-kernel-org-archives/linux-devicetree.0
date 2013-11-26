@@ -1,71 +1,46 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH v3 4/4] arm64: Add APM X-Gene SoC 15Gbps Multi-purpose PHY DTS entries
-Date: Mon, 25 Nov 2013 22:46:58 -0700
-Message-ID: <1385444818-29682-5-git-send-email-lho@apm.com>
-References: <1385444818-29682-1-git-send-email-lho@apm.com>
- <1385444818-29682-2-git-send-email-lho@apm.com>
- <1385444818-29682-3-git-send-email-lho@apm.com>
- <1385444818-29682-4-git-send-email-lho@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1385444818-29682-4-git-send-email-lho@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] clk: exynos: Fix typos in DT bindings documentation
+Date: Tue, 26 Nov 2013 11:23:49 +0530
+Message-ID: <CAK9yfHxL8DnN8BE94-L3_MK+dBO0exEq7YAamXRHQ7Abo3jYyQ@mail.gmail.com>
+References: <1384775172-3373-1-git-send-email-laurent.pinchart@ideasonboard.com>
+	<CAK9yfHzA_0AEK8DkBcWFmCNsZGiHUqThD4cyLPgEYPverOWkYA@mail.gmail.com>
+	<1566145.0GyXC9vG8j@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1566145.0GyXC9vG8j@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-arm64: Add APM X-Gene SoC 15Gbps Multi-purpose PHY DTS entries
++CC Mike and removed a few from the list.
 
-This patch adds the DTS entries for the APM X-Gene SoC 15Gbps Multi-purpose
-PHY driver. The PHY for SATA controller 0 and 1 are enabled by default.
+Hi Laurent,
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Tuan Phan <tphan@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   31 +++++++++++++++++++++++++++++++
- 1 files changed, 31 insertions(+), 0 deletions(-)
+On 26 November 2013 05:52, Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+> Hi Sachin,
+>
+> On Monday 18 November 2013 17:17:39 Sachin Kamat wrote:
+>> On 18 November 2013 17:16, Laurent Pinchart wrote:
+>> > s/comptible/compatible/
+>> >
+>> > Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>>
+>> Good catch.
+>>
+>> Reviewed-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Have you queued up the patch for v3.14 ?
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 359d7b6..f74c26a 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -193,5 +193,36 @@
- 			reg = <0x0 0x17000014 0x0 0x100>;
- 			mask = <0x1>;
- 		};
-+
-+		phy1: phy@1f210000 {
-+			compatible = "apm,xgene-phy";
-+			reg = <0x0 0x1f21a000 0x0 0x100>,
-+			      <0x0 0x1f21c000 0x0 0x100>;
-+			#phy-cells = <1>;
-+			status = "disabled";
-+			apm-tx-boost-gain = <0x2 0x2 0x2 0x2 0x2 0x2>;
-+			apm-tx-eye-tuning = <0xa 0xa 0xa 0xa 0xa 0xa>;
-+		};
-+
-+		phy2: phy@1f220000 {
-+			compatible = "apm,xgene-phy";
-+			reg = <0x0 0x1f22a000 0x0 0x100>,
-+			      <0x0 0x1f22c000 0x0 0x100>;
-+			#phy-cells = <1>;
-+			status = "ok";
-+			apm-tx-boost-gain = <0x2 0x2 0x2 0x2 0x2 0x2>;
-+			apm-tx-eye-tuning = <0xa 0xa 0xa 0x5 0x5 0x5>;
-+		};
-+
-+		phy3: phy@1f230000 {
-+			compatible = "apm,xgene-phy-ext";
-+			reg = <0x0 0x1f23a000 0x0 0x100>,
-+			      <0x0 0x1f23c000 0x0 0x100>,
-+			      <0x0 0x1f2d0000 0x0 0x100>;
-+			#phy-cells = <1>;
-+			status = "ok";
-+			apm-tx-boost-gain = <0x3 0x3 0x3 0x3 0x3 0x3>;
-+			apm-tx-eye-tuning = <0xa 0xa 0xa 0xc 0xc 0xc>;
-+		};
- 	};
- };
+No, I haven't. This should either go through DT tree or else Tomasz Figa can
+pick this up and send it to Mike as per the new workflow for 3.14.
+
 -- 
-1.5.5
-
+With warm regards,
+Sachin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
