@@ -1,76 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 04/17] spi/qspi: parse control module register.
-Date: Tue, 26 Nov 2013 10:31:04 +0000
-Message-ID: <20131126103104.GZ14725@sirena.org.uk>
-References: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com>
- <1385451313-1875-5-git-send-email-sourav.poddar@ti.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 7/9] phy: add Broadcom Kona USB2 PHY DT binding
+Date: Tue, 26 Nov 2013 16:01:05 +0530
+Message-ID: <52947869.4040101@ti.com>
+References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org> <1385403367-18144-8-git-send-email-matt.porter@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1020111012097443253=="
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1385451313-1875-5-git-send-email-sourav.poddar@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: devicetree@vger.kernel.org, computersforpeace@gmail.com, balbi@ti.com, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385403367-18144-8-git-send-email-matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============1020111012097443253==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="S/OOmhz5UkAXnkSU"
-Content-Disposition: inline
+On Monday 25 November 2013 11:46 PM, Matt Porter wrote:
+> Add a binding that describes the Broadcom Kona USB2 PHY found
+> on the BCM281xx family of SoCs.
+> 
+> Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/phy/bcm-kona-usb2-phy.txt         | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
+> new file mode 100644
+> index 0000000..3dc8b3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
 
+you should name this bcm-phy. Then you can add binding info of all (future) PHY
+IP from broadcom here.
 
---S/OOmhz5UkAXnkSU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+other than that this looks fine..
+Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 
-On Tue, Nov 26, 2013 at 01:05:00PM +0530, Sourav Poddar wrote:
-> In qspi controller, we need to switch to memory mapped operations.
-> These switching depends on
-
-This will need to be added to the DT binding.
-
---S/OOmhz5UkAXnkSU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSlHhlAAoJELSic+t+oim9VvQP/1z3ojMhLVfYarimp8Vsyd0Y
-+NJ3TH8gU5sCB5OlLfpbg4qnOlUO4N7PzZZNRfYK9WbbxMUg2Tr0IVcUKBvxyOlD
-Uz9fps08VTnvc7/dFjZczZEW+jGH/wkgn0rbH3SQu5lNo307JqcBopkf9VdwlbTA
-J0foTDDxGOICUuLBArjUyJJ9F+iPDm9u9mZkvbSpCSsmQlJCQz7wfDKf3CWu+CDJ
-TKaxyBd//4JT1D9q5Y4l6kTwCLiMJoQkWjoJyinWhhoELEoVAFldHhFfVQsOmkCU
-iCZINfkD5JY+aJysZpyPdAZcv2XVLsrzn6bh77QC/Gr5qydE40CM6Jwoo7Ghf8Uk
-1S20zjevyIBFwByHfUs7ULGmhZ8PYKaqcow7LrVeholoJBV4vVHNFILBks6GiwBD
-2FnBi45aIib1+rf5VQhSQ9S41UoW9QTbkHOUE4jEJ/uoMulW+wJscC2PqDiKQDNN
-SIpFRYL7gIbaHfZiUlHD9xtR99AyeTQSq2fIUCOm+hLX42Qh0wHIkkp9S94B3Mlu
-cbqPaZ5gyrXHYi8YahUMDG7N+oyWlwpjWO8E4sdtevxc0sCGXheYUz+itdOrdLG9
-n/eyNbhMEEPwhn4da36H3u8RkvYLmxxmyet0/H6O1Zjn4PvA/DsPz9oDJd4x1bca
-LzQoSd+LUqyE2/FvM+R/
-=j4PP
------END PGP SIGNATURE-----
-
---S/OOmhz5UkAXnkSU--
-
-
---===============1020111012097443253==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
---===============1020111012097443253==--
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
