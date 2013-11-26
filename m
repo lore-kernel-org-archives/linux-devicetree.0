@@ -1,122 +1,132 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] of: Add simple panel device tree binding
-Date: Tue, 26 Nov 2013 10:01:54 +0800
-Message-ID: <CAGS+omB5RKRUod_gDrDGRTi3B-BsX54dD1hHeT32gdPSjw9Bkg@mail.gmail.com>
-References: <1385145714-3022-1-git-send-email-treding@nvidia.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/5 v3] input: tc3589x-keypad: support probing from
+ device tree
+Date: Mon, 25 Nov 2013 18:34:34 -0800
+Message-ID: <20131126023431.GC31517@core.coreip.homeip.net>
+References: <1384270261-15889-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385145714-3022-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1384270261-15889-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 23, 2013 at 2:41 AM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This binding specifies a set of common properties for display panels. It
-> can be used as a basis by bindings for specific panels.
->
-> Bindings for three specific panels are provided to show how the simple
-> panel binding can be used.
->
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Tue, Nov 12, 2013 at 04:31:01PM +0100, Linus Walleij wrote:
+> Implement device tree probing for the tc3589x keypad driver.
+> This is modeled on the STMPE keypad driver and tested on the
+> Ux500 TVK1281618 UIB.
+> 
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
-> This binding has already been discussed earlier. Both Laurent and Tomi
-> seemed to be generally fine with this. The fact that the binding targets
-> simple (dumb) panels only and the reduced set of properties make it easy
-> to be extended in backwards-compatible ways should the need arise, while
-> at the same time allowing to support a wide variety of panels out there.
->
->  .../devicetree/bindings/panel/auo,b101aw03.txt      |  7 +++++++
->  .../bindings/panel/chunghwa,claa101wb03.txt         |  7 +++++++
->  .../bindings/panel/panasonic,vvx10f004b00.txt       |  7 +++++++
->  .../devicetree/bindings/panel/simple-panel.txt      | 21 +++++++++++++++++++++
->  4 files changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/auo,b101aw03.txt
->  create mode 100644 Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
->  create mode 100644 Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
->  create mode 100644 Documentation/devicetree/bindings/panel/simple-panel.txt
->
-> diff --git a/Documentation/devicetree/bindings/panel/auo,b101aw03.txt b/Documentation/devicetree/bindings/panel/auo,b101aw03.txt
-> new file mode 100644
-> index 000000000000..72e088a4fb3a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/auo,b101aw03.txt
-> @@ -0,0 +1,7 @@
-> +AU Optronics Corporation 10.1" WSVGA TFT LCD panel
+> ChangeLog v2->v3:
+> - Use two local u32 variables to avoid weirdness in u8 casting
+>   of the resulting values to the pointers.
+> ChangeLog v1->v2:
+> - Fix rows/columns binding to read two u32's insead of two
+>   u8 /bits/ as noted by Mark Rutland.
+> ---
+>  drivers/input/keyboard/tc3589x-keypad.c | 66 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 64 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/tc3589x-keypad.c b/drivers/input/keyboard/tc3589x-keypad.c
+> index 208de7cbb7fa..7f36e7addb86 100644
+> --- a/drivers/input/keyboard/tc3589x-keypad.c
+> +++ b/drivers/input/keyboard/tc3589x-keypad.c
+> @@ -297,6 +297,65 @@ static void tc3589x_keypad_close(struct input_dev *input)
+>  	tc3589x_keypad_disable(keypad);
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static const struct tc3589x_keypad_platform_data *
+> +tc3589x_keypad_of_probe(struct device *dev)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct tc3589x_keypad_platform_data *plat;
+> +	u32 cols, rows;
+> +	u32 debounce_ms;
+> +	int proplen;
 > +
-> +Required properties:
-> +- compatible: should be "auo,b101aw03"
+> +	if (!np)
+> +		return ERR_PTR(-ENODEV);
 > +
-> +This binding is compatible with the simple-panel binding, which is specified
-> +in simple-panel.txt in this directory.
-> diff --git a/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt b/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
-> new file mode 100644
-> index 000000000000..0ab2c05a4c22
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
-> @@ -0,0 +1,7 @@
-> +Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
+> +	plat = devm_kzalloc(dev, sizeof(*plat), GFP_KERNEL);
+> +	if (!plat)
+> +		return ERR_PTR(-ENOMEM);
 > +
-> +Required properties:
-> +- compatible: should be "chunghwa,claa101wb03"
+> +	of_property_read_u32(np, "keypad,num-columns", &cols);
+> +	of_property_read_u32(np, "keypad,num-rows", &rows);
+> +	plat->kcol = (u8) cols;
+> +	plat->krow = (u8) rows;
+> +	if (!plat->krow || !plat->kcol ||
+> +	     plat->krow > TC_KPD_ROWS || plat->kcol > TC_KPD_COLUMNS) {
+> +		dev_err(dev,
+> +			"keypad columns/rows not properly specified (%ux%u)\n",
+> +			plat->kcol, plat->krow);
+> +		return ERR_PTR(-EINVAL);
+> +	}
 > +
-> +This binding is compatible with the simple-panel binding, which is specified
-> +in simple-panel.txt in this directory.
-> diff --git a/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt b/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
-> new file mode 100644
-> index 000000000000..d328b0341bf4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
-> @@ -0,0 +1,7 @@
-> +Panasonic Corporation 10.1" WUXGA TFT LCD panel
+> +	if (!of_get_property(np, "linux,keymap", &proplen)) {
+> +		dev_err(dev, "property linux,keymap not found\n");
+> +		return ERR_PTR(-ENOENT);
+> +	}
 > +
-> +Required properties:
-> +- compatible: should be "panasonic,vvx10f004b00"
-> +
-> +This binding is compatible with the simple-panel binding, which is specified
-> +in simple-panel.txt in this directory.
-> diff --git a/Documentation/devicetree/bindings/panel/simple-panel.txt b/Documentation/devicetree/bindings/panel/simple-panel.txt
-> new file mode 100644
-> index 000000000000..1341bbf4aa3d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/simple-panel.txt
-> @@ -0,0 +1,21 @@
-> +Simple display panel
-> +
-> +Required properties:
-> +- power-supply: regulator to provide the supply voltage
-> +
-> +Optional properties:
-> +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-> +- enable-gpios: GPIO pin to enable or disable the panel
-> +- backlight: phandle of the backlight device attached to the panel
-> +
-> +Example:
-> +
-> +       panel: panel {
-> +               compatible = "cptt,claa101wb01";
-> +               ddc-i2c-bus = <&panelddc>;
-> +
-> +               power-supply = <&vdd_pnl_reg>;
-> +               enable-gpios = <&gpio 90 0>;
-> +
-> +               backlight = <&backlight>;
-> +       };
+> +	plat->no_autorepeat = of_property_read_bool(np, "linux,no-autorepeat");
 
+So, have DT overlords settled on the autorepeat property?
 
-Pardon the question if this has been discussed before, but, would this
-also be a good binding in which to store a panel's physical dimensions
-(mmWidth, mmHeight)?  Or is there another binding more appropriate?
+> +	plat->enable_wakeup = of_property_read_bool(np, "linux,wakeup");
 
-> --
-> 1.8.4.2
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+> +
+> +	/* The custom delay format is ms/16 */
+> +	of_property_read_u32(np, "debounce-delay-ms", &debounce_ms);
+> +	if (debounce_ms)
+> +		plat->debounce_period = debounce_ms * 16;
+> +	else
+> +		plat->debounce_period = TC_KPD_DEBOUNCE_PERIOD;
+> +
+> +	plat->settle_time = TC_KPD_SETTLE_TIME;
+> +	/* FIXME: should be property of the IRQ resource? */
+> +	plat->irqtype = IRQF_TRIGGER_FALLING;
+> +
+> +	return plat;
+> +}
+> +#else
+> +static inline const struct tc3589x_keypad_platform_data *
+> +tc3589x_keypad_of_probe(struct device *dev)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +#endif
+> +
+> +
+>  static int tc3589x_keypad_probe(struct platform_device *pdev)
+>  {
+>  	struct tc3589x *tc3589x = dev_get_drvdata(pdev->dev.parent);
+> @@ -307,8 +366,11 @@ static int tc3589x_keypad_probe(struct platform_device *pdev)
+>  
+>  	plat = tc3589x->pdata->keypad;
+>  	if (!plat) {
+> -		dev_err(&pdev->dev, "invalid keypad platform data\n");
+> -		return -EINVAL;
+> +		plat = tc3589x_keypad_of_probe(&pdev->dev);
+> +		if (IS_ERR(plat)) {
+> +			dev_err(&pdev->dev, "invalid keypad platform data\n");
+> +			return PTR_ERR(plat);
+> +		}
+>  	}
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -- 
+
+Don't you also want to add MODULE_DEVICE_TABLE entry?
+
+Thanks.
+
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
