@@ -1,161 +1,128 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH] staging: dwc2: set up all module params
-Date: Mon, 25 Nov 2013 22:02:30 -0700
-Message-ID: <1385442150-23561-1-git-send-email-swarren@wwwdotorg.org>
+From: Fugang Duan <fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v2 3/3] Documentation: add the binding file for
+ Freescale vf610 ADC driver
+Date: Tue, 26 Nov 2013 05:46:32 +0000
+Message-ID: <9848F2DB572E5649BA045B288BE08FBE01895845@039-SN2MPN1-023.039d.mgd.msft.net>
+References: <1385430172-16642-1-git-send-email-B38611@freescale.com>
+ <1385430172-16642-4-git-send-email-B38611@freescale.com>
+ <20131126050805.GL30476@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Paul Zimmerman <paulz@synopsys.com>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131126050805.GL30476-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Content-Language: en-US
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The DWC2 USB controller in the BCM2835 (Raspberry Pi) needs some non-
-default parameters. Select these based on the compatible value from the
-DT node. For all other HW, fall back to the default parameters currently
-in use.
+From: Shawn Guo [mailto:shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
+Sent: Tuesday, November 26, 2013 1:08 PM
 
-The values in params_bcm2835[] were posted to the mailing list by Paul
-quite some time ago. I made a couple of minor modifications since then;
-to set ahbcfg instead of ahb_single, and to set uframe_sched.
+>To: Duan Fugang-B38611
+>Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Li Frank-B20596; linux-
+>iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>Subject: Re: [PATCH v2 3/3] Documentation: add the binding file for Freescale
+>vf610 ADC driver
+>
+>On Tue, Nov 26, 2013 at 09:42:52AM +0800, Fugang Duan wrote:
+>> The patch adds the binding file for Freescale vf610 ADC driver.
+>>
+>> Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iio/adc/vf610-adc.txt      |   57
+>++++++++++++++++++++
+>>  1 files changed, 57 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+>> b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+>> new file mode 100644
+>> index 0000000..df370c5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+>> @@ -0,0 +1,57 @@
+>> +Freescale vf610 Analog to Digital Converter bindings
+>> +
+>> +The devicetree bindings are for the new ADC driver written for
+>> +vf610/i.MX6slx and upward SoCs from Freescale.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "fsl,vf610-adc"
+>> +  (* the future compatible expander for i.MX6slx, i.MX7 will be
+>> +"fsl,imx-adc")
+>
+>Drop this line.  You can extend the bindings when new compatible is needed.
 
-Signed-off-by: Stephen Warren <swarren@wwwdotorg.org>
----
- Documentation/devicetree/bindings/staging/dwc2.txt |    4 +-
- drivers/staging/dwc2/platform.c                    |   56 ++++++++++++++++----
- 2 files changed, 50 insertions(+), 10 deletions(-)
+I will drop it in next version of the patch set.
+Thanks.
 
-diff --git a/Documentation/devicetree/bindings/staging/dwc2.txt b/Documentation/devicetree/bindings/staging/dwc2.txt
-index 1a1b7cf..8b60e90 100644
---- a/Documentation/devicetree/bindings/staging/dwc2.txt
-+++ b/Documentation/devicetree/bindings/staging/dwc2.txt
-@@ -2,7 +2,9 @@ Platform DesignWare HS OTG USB 2.0 controller
- -----------------------------------------------------
- 
- Required properties:
--- compatible : "snps,dwc2"
-+- compatible : One of:
-+  - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
-+  - snps,dwc2: A generic DWC2 USB controller with default parameters.
- - reg : Should contain 1 register range (address and length)
- - interrupts : Should contain 1 interrupt
- 
-diff --git a/drivers/staging/dwc2/platform.c b/drivers/staging/dwc2/platform.c
-index 4d9fac0..20586dc 100644
---- a/drivers/staging/dwc2/platform.c
-+++ b/drivers/staging/dwc2/platform.c
-@@ -39,6 +39,7 @@
- #include <linux/slab.h>
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- 
- #include "core.h"
-@@ -46,6 +47,33 @@
- 
- static const char dwc2_driver_name[] = "dwc2";
- 
-+static const struct dwc2_core_params params_bcm2835 = {
-+	.otg_cap			= 0,	/* HNP/SRP capable */
-+	.otg_ver			= 0,	/* 1.3 */
-+	.dma_enable			= 1,
-+	.dma_desc_enable		= 0,
-+	.speed				= 0,	/* High Speed */
-+	.enable_dynamic_fifo		= 1,
-+	.en_multiple_tx_fifo		= 1,
-+	.host_rx_fifo_size		= 774,	/* 774 DWORDs */
-+	.host_nperio_tx_fifo_size	= 256,	/* 256 DWORDs */
-+	.host_perio_tx_fifo_size	= 512,	/* 512 DWORDs */
-+	.max_transfer_size		= 65535,
-+	.max_packet_count		= 511,
-+	.host_channels			= 8,
-+	.phy_type			= 1,	/* UTMI */
-+	.phy_utmi_width			= 8,	/* 8 bits */
-+	.phy_ulpi_ddr			= 0,	/* Single */
-+	.phy_ulpi_ext_vbus		= 0,
-+	.i2c_enable			= 0,
-+	.ulpi_fs_ls			= 0,
-+	.host_support_fs_ls_low_power	= 0,
-+	.host_ls_low_power_phy_clk	= 0,	/* 48 MHz */
-+	.ts_dline			= 0,
-+	.reload_ctl			= 0,
-+	.ahbcfg				= 0x10,
-+};
-+
- /**
-  * dwc2_driver_remove() - Called when the DWC_otg core is unregistered with the
-  * DWC_otg driver
-@@ -66,6 +94,13 @@ static int dwc2_driver_remove(struct platform_device *dev)
- 	return 0;
- }
- 
-+static const struct of_device_id dwc2_of_match_table[] = {
-+	{ .compatible = "brcm,bcm2835-usb", .data = &params_bcm2835 },
-+	{ .compatible = "snps,dwc2", .data = NULL },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
-+
- /**
-  * dwc2_driver_probe() - Called when the DWC_otg core is bound to the DWC_otg
-  * driver
-@@ -80,14 +115,23 @@ static int dwc2_driver_remove(struct platform_device *dev)
-  */
- static int dwc2_driver_probe(struct platform_device *dev)
- {
-+	const struct of_device_id *match;
-+	const struct dwc2_core_params *params;
-+	struct dwc2_core_params defparams;
- 	struct dwc2_hsotg *hsotg;
- 	struct resource *res;
- 	int retval;
- 	int irq;
--	struct dwc2_core_params params;
-+
-+	match = of_match_device(dwc2_of_match_table, &dev->dev);
-+	if (match)
-+		params = match->data;
-+	else {
-+		dwc2_set_all_params(&defparams, -1);
-+		params = &defparams;
-+	}
- 
- 	/* Default all params to autodetect */
--	dwc2_set_all_params(&params, -1);
- 
- 	hsotg = devm_kzalloc(&dev->dev, sizeof(*hsotg), GFP_KERNEL);
- 	if (!hsotg)
-@@ -118,7 +162,7 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 	dev_dbg(&dev->dev, "mapped PA %08lx to VA %p\n",
- 		(unsigned long)res->start, hsotg->regs);
- 
--	retval = dwc2_hcd_init(hsotg, irq, &params);
-+	retval = dwc2_hcd_init(hsotg, irq, params);
- 	if (retval)
- 		return retval;
- 
-@@ -127,12 +171,6 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 	return retval;
- }
- 
--static const struct of_device_id dwc2_of_match_table[] = {
--	{ .compatible = "snps,dwc2" },
--	{},
--};
--MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
--
- static struct platform_driver dwc2_platform_driver = {
- 	.driver = {
- 		.name = dwc2_driver_name,
--- 
-1.7.10.4
+>
+>> +- reg: Offset and length of the register set for the device
+>> +- interrupts: Should contain the interrupt for the device
+>> +- clocks: The clocks needed by the ADC controller
+>> +- clock-names: the name of the clocks
+>> +
+>> +Optional properties:
+>> +- vf610,adc-io-pinctl: Enable field for the I/O port control of MCU pins
+>used as analog inputs.
+>
+>Use prefix "fsl," instead of "vf610,".
+>
+>Shawn
+>
+
+Agree. I will replace all the prefix "vf610," with "fsl," in next version of this patch set.
+
+Thanks.
+
+>> +- vf610,adc-vref: ADC refrence voltage value, unit is uV.
+>> +- vf610,adc-clk-div: Current clock divider value, such as 1,2,4,8,16 and so
+>on.
+>> +- vf610,adc-res: ADC conversion mode selection, such as 8 for 8-bit, 10 for
+>10-bit, 12 for 12-bit mode.
+>> +- vf610,adc-sam-time: ADC sample time duration, number of ADC clocks,
+>> +such as 2, 4, 6, 8, 12, 16, 20, 24
+>> +- vf610,adc-aver-sam-sel: Determines how many ADC conversions will be
+>averaged to create the ADC average result.
+>> +			The Optional value is 4, 8, 16, 32.
+>> +- vf610,adc-hw-aver-en: Bool type to decide enable hardware average function.
+>> +- vf610,adc-low-power-mode: Bool type to decide enable ADC low power mode.
+>> +- vf610,adc-high-speed-conv: Bool type to decide enable ADC high speed mode.
+>> +
+>> +Example:
+>> +adc0: adc@4003b000 {
+>> +	compatible = "fsl,vf610-adc";
+>> +	reg = <0x4003b000 0x1000>;
+>> +	interrupts = <0 53 0x04>;
+>> +	clocks = <&clks VF610_CLK_ADC0>;
+>> +	clock-names = "adc";
+>> +	status = "disabled";
+>> +};
+>> +
+>> +adc1: adc@400bb000 {
+>> +	compatible = "fsl,vf610-adc";
+>> +	reg = <0x400bb000 0x1000>;
+>> +	interrupts = <0 54 0x04>;
+>> +	clocks = <&clks VF610_CLK_ADC1>;
+>> +	clock-names = "adc";
+>> +	status = "disabled";
+>> +};
+>> +
+>> +&adc0 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_adc0_ad5>;
+>> +	vf610,adc-io-pinctl = <0x20>;
+>> +	vf610,adc-vref = <3300000>;
+>> +	vf610,adc-clk-div = <2>;
+>> +	vf610,adc-res = <12>;
+>> +	vf610,adc-sam-time = <4>;
+>> +	vf610,adc-aver-sam-sel = <4>;
+>> +	vf610,adc-hw-aver-en;
+>> +	vf610,adc-low-power-mode;
+>> +	status = "okay";
+>> +};
+>> --
+>> 1.7.2.rc3
+>>
+>>
