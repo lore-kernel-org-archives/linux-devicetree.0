@@ -1,101 +1,129 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] Documentation: add the binding file for
- Freescale vf610 ADC driver
-Date: Tue, 26 Nov 2013 14:09:26 +0000
-Message-ID: <20131126140926.GA5402@e106331-lin.cambridge.arm.com>
+Subject: Re: [PATCH v3 2/3] iio:adc:imx: add Freescale Vybrid vf610 adc
+ driver
+Date: Tue, 26 Nov 2013 14:25:34 +0000
+Message-ID: <20131126142534.GB5402@e106331-lin.cambridge.arm.com>
 References: <1385463394-11157-1-git-send-email-B38611@freescale.com>
- <1385463394-11157-4-git-send-email-B38611@freescale.com>
+ <1385463394-11157-3-git-send-email-B38611@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1385463394-11157-4-git-send-email-B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1385463394-11157-3-git-send-email-B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Content-Language: en-US
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "b20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 26, 2013 at 10:56:34AM +0000, Fugang Duan wrote:
-> The patch adds the binding file for Freescale vf610 ADC driver.
-> 
+On Tue, Nov 26, 2013 at 10:56:33AM +0000, Fugang Duan wrote:
+> Add Freescale Vybrid vf610 adc driver. The driver only support
+> ADC software trigger.
+>
 > Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
->  .../devicetree/bindings/iio/adc/vf610-adc.txt      |   57 ++++++++++++++++++++
->  1 files changed, 57 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> new file mode 100644
-> index 0000000..4101516
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> @@ -0,0 +1,57 @@
-> +Freescale vf610 Analog to Digital Converter bindings
+>  drivers/iio/adc/Kconfig     |   11 +
+>  drivers/iio/adc/Makefile    |    1 +
+>  drivers/iio/adc/vf610_adc.c |  744 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 756 insertions(+), 0 deletions(-)
+
+[...]
+
+> +static void vf610_adc_cfg_of_init(struct vf610_adc *info)
+> +{
+> +       struct device_node *np = info->dev->of_node;
 > +
-> +The devicetree bindings are for the new ADC driver written for
-> +vf610/i.MX6slx and upward SoCs from Freescale.
+> +       /*
+> +        * set default Configuration for ADC controller
+> +        * This config may upgrade to require from DT
+> +        */
+> +       info->adc_feature.clk_sel = ADCIOC_BUSCLK_SET;
+> +       info->adc_feature.vol_ref = VF610_ADCIOC_VR_VREF_SET;
+> +       info->adc_feature.calibration = true;
+> +       info->adc_feature.tri_hw = false;
+> +       info->adc_feature.dataov_en = true;
+> +       info->adc_feature.ac_clk_en = false;
+> +       info->adc_feature.dma_en = false;
+> +       info->adc_feature.cc_en = false;
+> +       info->adc_feature.cmp_func_en = false;
+> +       info->adc_feature.cmp_range_en = false;
+> +       info->adc_feature.cmp_greater_en = false;
 > +
-> +Required properties:
-> +- compatible: Should be "fsl,vf610-adc"
+> +       if (of_property_read_u32(np, "fsl,adc-io-pinctl",
+> +                       &info->adc_feature.pctl)) {
+> +               info->adc_feature.pctl = VF610_ADC_IOPCTL5;
+> +               dev_info(info->dev,
+> +                       "Miss adc-io-pinctl in dt, enable pin SE5.\n");
+> +       }
 
-s/be/contain/
-
-> +- reg: Offset and length of the register set for the device
-> +- interrupts: Should contain the interrupt for the device
-> +- clocks: The clocks needed by the ADC controller
-
-How many? Which ones?
-
-> +- clock-names: the name of the clocks
-
-Either define the set of names, or don't use clock-names. It's useless
-if it doesn't tell you anything.
+Could you elaborate on what this means? What is this doing when pinctrl
+is not specified in the DT?
 
 > +
-> +Optional properties:
-> +- fsl,adc-io-pinctl: Enable field for the I/O port control of MCU pins used as analog inputs.
-> +- fsl,adc-vref: ADC refrence voltage value, unit is uV.
+> +       if (info->vref)
+> +               info->vref_uv = regulator_get_voltage(info->vref);
+> +       else if (of_property_read_u32(np, "fsl,adc-vref", &info->vref_uv))
+> +               dev_err(info->dev,
+> +                       "Miss adc-vref property or vref regulator in the DT.\n");
 
-Can you not query the regulator to figure this out?
+Query the regulator instead.
 
-> +- fsl,adc-clk-div: Current clock divider value, such as 1,2,4,8,16 and so on.
+> +
+> +       if (of_property_read_u32(np, "fsl,adc-clk-div",
+> +                       &info->adc_feature.clk_div_num)) {
+> +               info->adc_feature.clk_div_num = 2;
+> +               dev_info(info->dev,
+> +                       "Miss adc-clk-div in dt, set divider to 2.\n");
+> +       }
 
-Could you elaborate on this? What's it used for and why is it needed?
+Why do you need this?
 
-> +- fsl,adc-res: ADC conversion mode selection, such as 8 for 8-bit, 10 for 10-bit, 12 for 12-bit mode.
+I'd expect the use to request a frequency they wanted to sample at, and
+the driver would try its best by fiddling with this and the clock input.
 
-This sounds like something that could be changed at runtime. Why does
-this need to be configured in the DT?
+> +
+> +       if (of_property_read_u32(np, "fsl,adc-res",
+> +                       &info->adc_feature.res_mode)) {
+> +               info->adc_feature.res_mode = 12;
+> +               dev_info(info->dev,
+> +                       "Miss adc-res property in dt, use 8bit mode.\n");
 
-> +- fsl,adc-sam-time: ADC sample time duration, number of ADC clocks, such as 2, 4, 6, 8, 12, 16, 20, 24
+This message does not seem to match the code above it.
 
-Likewise.
+Is this a hardware limitation in some instances? Or is it always
+possible to select any of the resolutions?
 
-Please don't poinltessly abbreviate, "sample" is much better than "sam"
-here...
+> +
+> +       if (of_property_read_u32(np, "fsl,adc-sam-time",
+> +                       &info->adc_feature.sam_time)) {
+> +               info->adc_feature.sam_time = 4;
+> +               dev_info(info->dev,
+> +                       "Miss adc-sam-time property in dt, set to 4.\n");
+> +       }
 
-> +- fsl,adc-aver-sam-sel: Determines how many ADC conversions will be averaged to create the ADC average result.
-> +			The Optional value is 4, 8, 16, 32.
+This looks like it should be handled at runtime.
 
-Likewise.
+> +
+> +       info->adc_feature.hw_average = of_property_read_bool(np,
+> +                                       "fsl,adc-hw-aver-en");
 
-> +- fsl,adc-hw-aver-en: Bool type to decide enable hardware average function.
+Is hw average support not always present?
 
-When would you wnat this and when wouldn't you?
+> +       if (info->adc_feature.hw_average &&
+> +                of_property_read_u32(np, "fsl,adc-aver-sam-sel",
+> +                               &info->adc_feature.hw_sam)) {
+> +               info->adc_feature.hw_sam = 4;
+> +               dev_info(info->dev,
+> +                       "Miss adc-aver-sam-sel property in dt, set to 4.\n");
+> +       }
 
-Similarly, "averages" is far clearer than "aver".
+Why not configure this at runtime instead?
 
-> +- fsl,adc-low-power-mode: Bool type to decide enable ADC low power mode.
+> +
+> +       info->adc_feature.lpm = of_property_read_bool(np, "fsl,adc-low-power-mode");
+> +       info->adc_feature.hs_oper = of_property_read_bool(np, "fsl,adc-high-speed-conv");
 
-Similarly?
-
-> +- fsl,adc-high-speed-conv: Bool type to decide enable ADC high speed mode.
-
-Similarly?
-
-> +- vref: The regulator to support ADC refrence voltage.
-
-s/vref/vref-supply/
+Please elaborate on what these mean, and why they need to be in the DT.
 
 Thanks,
 Mark.
