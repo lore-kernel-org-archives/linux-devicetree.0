@@ -1,82 +1,45 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Subject: Re: [PATCH] of: Add simple panel device tree binding
-Date: Tue, 26 Nov 2013 02:54:41 +0100
-Message-ID: <2120855.5UlavpPp2J@avalon>
+Date: Tue, 26 Nov 2013 10:01:54 +0800
+Message-ID: <CAGS+omB5RKRUod_gDrDGRTi3B-BsX54dD1hHeT32gdPSjw9Bkg@mail.gmail.com>
 References: <1385145714-3022-1-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1385145714-3022-1-git-send-email-treding@nvidia.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Hans de Goede <hdegoede@redhat.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385145714-3022-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
-
-Thank you for the patch.
-
-On Friday 22 November 2013 19:41:54 Thierry Reding wrote:
+On Sat, Nov 23, 2013 at 2:41 AM, Thierry Reding
+<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > This binding specifies a set of common properties for display panels. It
 > can be used as a basis by bindings for specific panels.
-> 
+>
 > Bindings for three specific panels are provided to show how the simple
 > panel binding can be used.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+>
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
 > This binding has already been discussed earlier. Both Laurent and Tomi
-> seemed to be generally fine with this.
-
-That's correct, I'm generally fine with your approach, but there's still one 
-point I'd like to see addressed.
-
-As I mentioned previously, I would like to avoid adding zillions of compatible 
-properties to the driver, when we could use a single property in the DT 
-bindings that would specify the timings instead. This would lower the amount 
-of changes made to the simple panel driver, while keeping DT simple enough (at 
-least in my opinion).
-
-Specifying the full timings in every DT source file would be pretty verbose 
-and could be error-prone. However, using a single property to specify one of 
-the standard display timings, as orinally proposed by Hans de Goede (CC'ed) 
-during a chat at the kernel summit would in my opinion be a good middle-ground 
-solution.
-
-Would you consider adding such a property to the simple panel bindings, and 
-define a common compatible string ? Each panel should of course list its own 
-compatibility string in addition to the common compatible string in case the 
-need for extensions arises in the future.
-
-> The fact that the binding targets simple (dumb) panels only and the reduced
-> set of properties make it easy to be extended in backwards-compatible ways
-> should the need arise, while at the same time allowing to support a wide
-> variety of panels out there.
-> 
+> seemed to be generally fine with this. The fact that the binding targets
+> simple (dumb) panels only and the reduced set of properties make it easy
+> to be extended in backwards-compatible ways should the need arise, while
+> at the same time allowing to support a wide variety of panels out there.
+>
 >  .../devicetree/bindings/panel/auo,b101aw03.txt      |  7 +++++++
 >  .../bindings/panel/chunghwa,claa101wb03.txt         |  7 +++++++
 >  .../bindings/panel/panasonic,vvx10f004b00.txt       |  7 +++++++
->  .../devicetree/bindings/panel/simple-panel.txt      | 21 ++++++++++++++++++
+>  .../devicetree/bindings/panel/simple-panel.txt      | 21 +++++++++++++++++++++
 >  4 files changed, 42 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/panel/auo,b101aw03.txt
-> create mode 100644
-> Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt create
-> mode 100644
-> Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt create
-> mode 100644 Documentation/devicetree/bindings/panel/simple-panel.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/panel/auo,b101aw03.txt
-> b/Documentation/devicetree/bindings/panel/auo,b101aw03.txt new file mode
-> 100644
+>  create mode 100644 Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
+>  create mode 100644 Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
+>  create mode 100644 Documentation/devicetree/bindings/panel/simple-panel.txt
+>
+> diff --git a/Documentation/devicetree/bindings/panel/auo,b101aw03.txt b/Documentation/devicetree/bindings/panel/auo,b101aw03.txt
+> new file mode 100644
 > index 000000000000..72e088a4fb3a
 > --- /dev/null
 > +++ b/Documentation/devicetree/bindings/panel/auo,b101aw03.txt
@@ -86,12 +49,10 @@ need for extensions arises in the future.
 > +Required properties:
 > +- compatible: should be "auo,b101aw03"
 > +
-> +This binding is compatible with the simple-panel binding, which is
-> specified +in simple-panel.txt in this directory.
-> diff --git
-> a/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
-> b/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt new file
-> mode 100644
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
+> diff --git a/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt b/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
+> new file mode 100644
 > index 000000000000..0ab2c05a4c22
 > --- /dev/null
 > +++ b/Documentation/devicetree/bindings/panel/chunghwa,claa101wb03.txt
@@ -101,12 +62,10 @@ need for extensions arises in the future.
 > +Required properties:
 > +- compatible: should be "chunghwa,claa101wb03"
 > +
-> +This binding is compatible with the simple-panel binding, which is
-> specified +in simple-panel.txt in this directory.
-> diff --git
-> a/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
-> b/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt new
-> file mode 100644
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
+> diff --git a/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt b/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
+> new file mode 100644
 > index 000000000000..d328b0341bf4
 > --- /dev/null
 > +++ b/Documentation/devicetree/bindings/panel/panasonic,vvx10f004b00.txt
@@ -116,11 +75,10 @@ need for extensions arises in the future.
 > +Required properties:
 > +- compatible: should be "panasonic,vvx10f004b00"
 > +
-> +This binding is compatible with the simple-panel binding, which is
-> specified +in simple-panel.txt in this directory.
-> diff --git a/Documentation/devicetree/bindings/panel/simple-panel.txt
-> b/Documentation/devicetree/bindings/panel/simple-panel.txt new file mode
-> 100644
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
+> diff --git a/Documentation/devicetree/bindings/panel/simple-panel.txt b/Documentation/devicetree/bindings/panel/simple-panel.txt
+> new file mode 100644
 > index 000000000000..1341bbf4aa3d
 > --- /dev/null
 > +++ b/Documentation/devicetree/bindings/panel/simple-panel.txt
@@ -137,16 +95,29 @@ need for extensions arises in the future.
 > +
 > +Example:
 > +
-> +	panel: panel {
-> +		compatible = "cptt,claa101wb01";
-> +		ddc-i2c-bus = <&panelddc>;
+> +       panel: panel {
+> +               compatible = "cptt,claa101wb01";
+> +               ddc-i2c-bus = <&panelddc>;
 > +
-> +		power-supply = <&vdd_pnl_reg>;
-> +		enable-gpios = <&gpio 90 0>;
+> +               power-supply = <&vdd_pnl_reg>;
+> +               enable-gpios = <&gpio 90 0>;
 > +
-> +		backlight = <&backlight>;
-> +	};
--- 
-Regards,
+> +               backlight = <&backlight>;
+> +       };
 
-Laurent Pinchart
+
+Pardon the question if this has been discussed before, but, would this
+also be a good binding in which to store a panel's physical dimensions
+(mmWidth, mmHeight)?  Or is there another binding more appropriate?
+
+> --
+> 1.8.4.2
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
