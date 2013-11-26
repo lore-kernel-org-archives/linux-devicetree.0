@@ -1,53 +1,59 @@
-From: Paul Zimmerman <Paul.Zimmerman@synopsys.com>
-Subject: RE: [PATCH] staging: dwc2: set up all module params
-Date: Tue, 26 Nov 2013 19:52:12 +0000
-Message-ID: <A2CA0424C0A6F04399FB9E1CD98E030458E2AD85@US01WEMBX2.internal.synopsys.com>
-References: <1385442150-23561-1-git-send-email-swarren@wwwdotorg.org>
- <A2CA0424C0A6F04399FB9E1CD98E030458E2AD11@US01WEMBX2.internal.synopsys.com>
- <5294F9BC.4000502@wwwdotorg.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 09/10] ARM: dts: omap3-beagle-xm: Add USB Host
+ support
+Date: Tue, 26 Nov 2013 13:04:56 -0800
+Message-ID: <20131126210456.GN26766@atomide.com>
+References: <1380012836-29900-1-git-send-email-rogerq@ti.com>
+ <1380012836-29900-10-git-send-email-rogerq@ti.com>
+ <528BD2AF.2030607@ti.com>
+ <528C8FBC.7020407@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <5294F9BC.4000502@wwwdotorg.org>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <528C8FBC.7020407@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, balbi@ti.com, bcousson@baylibre.com, p.zabel@pengutronix.de, broonie@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
-> Sent: Tuesday, November 26, 2013 11:43 AM
+* Roger Quadros <rogerq@ti.com> [131120 02:33]:
+> Nishant,
 > 
-> On 11/26/2013 12:27 PM, Paul Zimmerman wrote:
-> >> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
-> >> Sent: Monday, November 25, 2013 9:03 PM
+> On 11/19/2013 11:05 PM, Nishanth Menon wrote:
+> > 
+> > 
+> > On 09/24/2013 03:53 AM, Roger Quadros wrote:
+> >> Provide RESET GPIO and Power regulator for the USB PHY,
+> >> the USB Host port mode and the PHY device for the controller.
+> >> Also provide pin multiplexer information for USB host pins.
 > >>
-> >> The DWC2 USB controller in the BCM2835 (Raspberry Pi) needs some non-
-> >> default parameters. Select these based on the compatible value from the
-> >> DT node. For all other HW, fall back to the default parameters currently
-> >> in use.
+> >> We also relocate omap3_pmx_core pin definations so that they
+> >> are close to omap3_pmx_wkup pin definations.
 > >>
-> >> The values in params_bcm2835[] were posted to the mailing list by Paul
-> >> quite some time ago. I made a couple of minor modifications since then;
-> >> to set ahbcfg instead of ahb_single, and to set uframe_sched.
-> >
-> > Hi Stephen,
-> >
-> > I don't see any code in this patch that is setting uframe_sched?
+> >> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> >> ---
+> > 
+> > just using this thread, but a question ->
+> > 
+> > I am kernel * master                                   dec8e46 Merge
+> > tag 'arc-v3.13-rc1-part2' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc
+> > 
+> > and I see that VAUX2 which supplies USB_1V8[1] is not enabled -> I did
+> > a quick patch and it did seem to work (Usb keyboard, networking, mouse
+> > etc on my ehci ports seems to come up good) - any suggestions how we'd
+> > like to handle this?
 > 
-> Hmm, that's true. What value should it be set to for the BCM2835, do you
-> know? I obviously have it set to 0, which seems to work out OK...
+> It worked for me without your patch. It could be that u-boot is enabling
+> that regulator for me. I'm on u-boot-v2013.10.
+> 
+> In any case, your patch seems the right thing to do. We should take it in
+> the rc cycle.
 
-It definitely should be enabled for the Pi, so set it to 1.
+Can you guys post a proper fix for this? Meanwhile, I'll mark this
+thread as read to shrink my inbox a bit.
 
--- 
-Paul
+Regards,
+
+Tony
