@@ -1,54 +1,57 @@
-From: Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v11 7/7] ARM: tegra: support Trusted Foundations by default
-Date: Tue, 26 Nov 2013 16:47:30 +0000
-Message-ID: <20131126164730.GE2355@e103592.cambridge.arm.com>
-References: <1385274652-16415-1-git-send-email-acourbot@nvidia.com>
- <1385274652-16415-8-git-send-email-acourbot@nvidia.com>
- <20131126000608.GA21634@quad.lixom.net>
- <CAAVeFu+mMyPhFtVZ09vgYWWCYkPpF3X547ffRAfXXKOOWUUkqg@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] checkpatch: add DT compatible string documentation check
+Date: Tue, 26 Nov 2013 11:11:26 -0600
+Message-ID: <CAL_JsqKgUQZT4g3fgPe-h8G-zWb1gnfxgT20BDrL+zS5u4URzg@mail.gmail.com>
+References: <1385481675-26675-1-git-send-email-robherring2@gmail.com>
+	<1385484225.20100.58.camel@joe-AO722>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAAVeFu+mMyPhFtVZ09vgYWWCYkPpF3X547ffRAfXXKOOWUUkqg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <acourbot@nvidia.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385484225.20100.58.camel@joe-AO722>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 26, 2013 at 10:35:58AM +0900, Alexandre Courbot wrote:
-> On Tue, Nov 26, 2013 at 9:06 AM, Olof Johansson <olof@lixom.net> wrote:
-> > On Sun, Nov 24, 2013 at 03:30:52PM +0900, Alexandre Courbot wrote:
-> >> Support for Trusted Foundations is light and allows the kernel to run on
-> >> a wider range of devices, so enable it by default.
-> >>
-> >> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> >> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> >> Reviewed-by: Stephen Warren <swarren@nvidia.com>
-> >> ---
-> >>  arch/arm/configs/tegra_defconfig | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >
-> > I think we want this enabled on multi_v7_defconfig too? Send a separate
-> > patch for that once this is merged though.
-> 
-> Will do.
+On Tue, Nov 26, 2013 at 10:43 AM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Tue, 2013-11-26 at 10:01 -0600, Rob Herring wrote:
+>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>
+> Hi Rob.
+>
+>> This adds a simple check that any compatible strings in DeviceTree dts
+>> files are present in Documentation/devicetree/bindings. This should be a
+>> temporary check until we have more sophisticated binding schema checking.
+> []
+>> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> []
+>> @@ -2034,6 +2034,21 @@ sub process {
+>>                            "Use of $flag is deprecated, please use \`$replacement->{$flag} instead.\n" . $herecurr) if ($replacement->{$flag});
+>>               }
+>>
+>> +# check for compatible documentation
+>> +             if ($realfile =~ /\.dts/ && $rawline =~ /\+\s*compatible\s*=/) {
+>> +                     my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,]+)\"/g;
+>
+> I believe there needs to be a \+\. in the brackets
+> for lines like:
+>
+> arch/c6x/boot/dts/tms320c6678.dtsi: compatible = "ti,c64x+timer64";
 
-Should it just be default y if one of the relevant
-CONFIG_ARCH_TEGRA_*_SOC is selected?
+I think we don't really want '+' (or '_') in compatible strings. That
+would really a check against the documentation versus whether the dts
+matches the documentation. So I probably should add a separate check
+on use of documented, but deprecated compatible strings. Ideally, that
+check would be on the binding doc, but since they are unstructured
+currently, we'd have to do it on dts files.
 
-That way, it's automatically included if relevant, and automatically
-excluded if not -- regardless of whether the kernel is multiplatform
-or not.
+> and
+> arch/powerpc/boot/dts/mpc8313erdb.dts: compatible = "fsl,sec2.2", "fsl,sec2.1",
 
-Cheers
----Dave
+Yes, indeed.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
