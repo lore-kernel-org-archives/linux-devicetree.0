@@ -1,45 +1,67 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 7/9] phy: add Broadcom Kona USB2 PHY DT binding
-Date: Tue, 26 Nov 2013 16:01:05 +0530
-Message-ID: <52947869.4040101@ti.com>
-References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org> <1385403367-18144-8-git-send-email-matt.porter@linaro.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 06/12] mtd: nand: davinci: adjust DT properties to MTD
+ generic
+Date: Tue, 26 Nov 2013 12:30:10 +0200
+Message-ID: <52947832.3080309@ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
+ <1384187188-5776-7-git-send-email-ivan.khoronzhuk@ti.com>
+ <4F5844B3A985794BA902E12C070812375F8D20@DNCE04.ent.ti.com>
+ <529447A7.1050605@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385403367-18144-8-git-send-email-matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <529447A7.1050605@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>, "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Monday 25 November 2013 11:46 PM, Matt Porter wrote:
-> Add a binding that describes the Broadcom Kona USB2 PHY found
-> on the BCM281xx family of SoCs.
+On 11/26/2013 09:03 AM, Sekhar Nori wrote:
+> On Monday 11 November 2013 10:31 PM, Khoronzhuk, Ivan wrote:
+>> The properties davinci-ecc-mode, davinci-nand-use-bbt, davinci-nand-buswidth
+>> are MTD generic. Correct names for them are: nand-ecc-mode, nand-on-flash-bbt,
+>> nand-bus-width accordingly. So rename them in dts and documentation.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>> ---
+>>   .../devicetree/bindings/mtd/davinci-nand.txt       |   25 ++++++++++++++++----
+>>   drivers/mtd/nand/davinci_nand.c                    |   11 ++++++---
+>>   2 files changed, 28 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+>> index d2a3fc0..befaa5b 100644
+>> --- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+>> @@ -37,7 +37,7 @@ Recommended properties :
+>>   - ti,davinci-mask-chipsel:     mask for chipselect address. Needed to mask
+>>                                  addresses for given chipselect.
+>>
+>> -- ti,davinci-ecc-mode:         operation mode of the NAND ecc mode. ECC mode
+>> +- nand-ecc-mode:               operation mode of the NAND ecc mode. ECC mode
+>>                                  valid values for davinci driver:
+>>                                  - "none"
+>>                                  - "soft"
+>> @@ -45,10 +45,25 @@ Recommended properties :
+>>
+>>   - ti,davinci-ecc-bits:         used ECC bits, currently supported 1 or 4.
+>>
+>> -- ti,davinci-nand-buswidth:    buswidth 8 or 16.
 > 
-> Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/phy/bcm-kona-usb2-phy.txt         | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
-> new file mode 100644
-> index 0000000..3dc8b3d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/bcm-kona-usb2-phy.txt
+> Shouldn't we keep the documentation for existing bindings while just
+> marking them as deprecated?
 
-you should name this bcm-phy. Then you can add binding info of all (future) PHY
-IP from broadcom here.
+I haven't found any requirements about this in doc. 
+It's done in both way in other drivers - some keep properties in bindings
+documentation and some are not.
 
-other than that this looks fine..
-Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+-grygorii
