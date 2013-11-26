@@ -1,81 +1,46 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 07/12] memory: davinci-aemif: introduce AEMIF driver
-Date: Tue, 26 Nov 2013 10:05:40 -0500
-Message-ID: <5294B8C4.6040803@ti.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>,
- <1384187188-5776-8-git-send-email-ivan.khoronzhuk@ti.com>
- <4F5844B3A985794BA902E12C070812375F8D2E@DNCE04.ent.ti.com>
- <52944BD3.90105@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 1/3] irqchip: irq-dove: Add PMU interrupt
+ controller.
+Date: Tue, 26 Nov 2013 10:14:06 -0500
+Message-ID: <20131126151406.GK2879@titan.lakedaemon.net>
+References: <1383820531-4387-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <52944BD3.90105@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
- Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Landley <rob@landley.net>, "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1383820531-4387-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 26 November 2013 02:20 AM, Sekhar Nori wrote:
-> On Monday 11 November 2013 10:36 PM, Khoronzhuk, Ivan wrote:
->> Add new AEMIF driver for EMIF16 davinci controller. The EMIF16 module
->> is intended to provide a glue-less interface to a variety of
->> asynchronous memory devices like ASRA M, NOR and NAND memory. A total
->> of 256M bytes of any of these memories can be accessed at any given
->> time via four chip selects with 64M byte access per chip select.
->>
->> Synchronous memories such as DDR1 SD RAM, SDR SDRAM and Mobile SDR
->> are not supported.
->>
->> See http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->> ---
-
-[...]
-
->> +static int davinci_aemif_probe(struct platform_device *pdev)
->> +{
->> +       int ret  = -ENODEV, i;
->> +       struct resource *res;
->> +       struct device *dev = &pdev->dev;
->> +       struct device_node *np = dev->of_node;
->> +
->> +       if (np == NULL)
->> +               return 0;
->> +
->> +       if (aemif) {
->> +               dev_err(dev, "davinci_aemif driver is in use currently\n");
->> +               return -EBUSY;
->> +       }
+On Thu, Nov 07, 2013 at 11:35:29AM +0100, Andrew Lunn wrote:
+> Dove has a Power Management Unit with its own interrupt
+> controller. This is chained on the main interrupt controller.  Add a
+> driver, making use of generic chip where possible.
 > 
-> Why expressly prevent multiple AEMIF devices? Its entirely conceivable
-> to have two memories like NAND and NOR flash connect to two different
-> AEMIF interfaces.
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-Ivan wanted me to clarify the Keystone hardware which supports
-1 instance of controller with 4 CS. That allows already four
-devices to be connected. Currently NAND and NOR are connected on it
-and two more slots are free.
+> cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> cc: pawel.moll-5wv7dgnIgG8@public.gmane.org
+> cc: mark.rutland-5wv7dgnIgG8@public.gmane.org
+> cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+> cc: ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
+> ---
+>  .../interrupt-controller/marvell,dove-pmu-intc.txt |  17 +++
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-dove.c                         | 126 +++++++++++++++++++++
+>  3 files changed, 144 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,dove-pmu-intc.txt
+>  create mode 100644 drivers/irqchip/irq-dove.c
 
-Since driver support what hardware is, lets not build a driver for
-hardware which don't exist. And if at all such a support would be
-needed in future, we can always add it.
+Applied to mvebu/irqchip for tglx once it's stewed in -next for a bit.
 
-Regards,
-Santosh
+thx,
 
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
