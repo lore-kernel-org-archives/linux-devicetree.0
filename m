@@ -1,64 +1,202 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 04/17] spi/qspi: parse control module register.
-Date: Tue, 26 Nov 2013 12:25:12 +0000
-Message-ID: <20131126122512.GD14725@sirena.org.uk>
-References: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com>
- <1385451313-1875-5-git-send-email-sourav.poddar@ti.com>
- <20131126103104.GZ14725@sirena.org.uk>
- <529483A2.3080000@ti.com>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: Re: [PATCH V9 2/3] watchdog: s3c2410_wdt: use syscon regmap interface
+ to configure pmu register
+Date: Tue, 26 Nov 2013 18:01:02 +0530
+Message-ID: <CAL1wa8eAUKkDA41A-9HTc+=iPbGFrkQUXPMtkNFbH4Y9y-b0tA@mail.gmail.com>
+References: <1384768189-2839-1-git-send-email-l.krishna@samsung.com>
+ <1384768189-2839-3-git-send-email-l.krishna@samsung.com> <CAD=FV=W+PNhUY+KC6DoMqRuEQFsgdffP466x=VTdGR-3L8ibFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dqsx3Lh6rjXyciUn"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <529483A2.3080000-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=W+PNhUY+KC6DoMqRuEQFsgdffP466x=VTdGR-3L8ibFQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Wim Van Sebroeck <wim@iguana.be>
+Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, "cpgs ." <cpgs@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
+Hi Doug,
 
---dqsx3Lh6rjXyciUn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks for reviewing the patch series.
 
-On Tue, Nov 26, 2013 at 04:48:58PM +0530, Sourav Poddar wrote:
-> On Tuesday 26 November 2013 04:01 PM, Mark Brown wrote:
-> >On Tue, Nov 26, 2013 at 01:05:00PM +0530, Sourav Poddar wrote:
-> >>In qspi controller, we need to switch to memory mapped operations.
-> >>These switching depends on
+On Tue, Nov 26, 2013 at 4:14 AM, Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi Leela Krishna,
+>
+> On Mon, Nov 18, 2013 at 1:49 AM, Leela Krishna Amudala
+> <l.krishna@samsung.com> wrote:
+> > Add device tree support for exynos5250 and 5420 SoCs and use syscon regmap interface
+> > to configure AUTOMATIC_WDT_RESET_DISABLE and MASK_WDT_RESET_REQUEST registers of PMU
+> > to mask/unmask enable/disable of watchdog in probe and s2r scenarios.
+> >
+> > Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> > ---
+> >  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   21 ++-
+> >  drivers/watchdog/Kconfig                           |    1 +
+> >  drivers/watchdog/s3c2410_wdt.c                     |  145 ++++++++++++++++++--
+> >  3 files changed, 157 insertions(+), 10 deletions(-)
+>
+> ...
+>
+> > +struct s3c2410_wdt_variant {
+> > +       int disable_reg;
+> > +       int mask_reset_reg;
+> > +       int mask_bit;
+> > +       u32 quirks;
+> > +};
+>
+> Ideally you could add descriptions.  I added them in a patch based on
+> yours <https://chromium-review.googlesource.com/#/c/177935/1/drivers/watchdog/s3c2410_wdt.c>,
+> but since yours hasn't landed perhaps you can do it directly?
+>
+> /**
+>  * struct s3c2410_wdt_variant - Per-variant config data
+>  *
+>  * @disable_reg: Offset in pmureg for the register that disables the watchdog
+>  * timer reset functionality.
+>  * @mask_reset_reg: Offset in pmureg for the register that masks the watchdog
+>  * timer reset functionality.
+>  * @mask_bit: Bit number for the watchdog timer in the disable register and the
+>  * mask reset register.
+>  * @quirks: A bitfield of quirks.
+>  */
+>
 
-> >This will need to be added to the DT binding.
+Okay, Added the above descriptions
 
-> I have added a "reg-name" property. Does we need to add individual
-> reg-names also?
+> > +
+> >  struct s3c2410_wdt {
+> >         struct device           *dev;
+> >         struct clk              *clock;
+> > @@ -94,7 +107,49 @@ struct s3c2410_wdt {
+> >         unsigned long           wtdat_save;
+> >         struct watchdog_device  wdt_device;
+> >         struct notifier_block   freq_transition;
+> > +       struct s3c2410_wdt_variant *drv_data;
+> > +       struct regmap *pmureg;
+>
+> Total nit, but everything else in this structure is tab aligned and
+> your new elements are not.
+>
 
-I don't understand what you mean by "individual reg-names"?
+Me and Tomasz had a discussion about it and he replied for this comment
 
---dqsx3Lh6rjXyciUn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> >  static int s3c2410wdt_probe(struct platform_device *pdev)
+> >  {
+> >         struct device *dev;
+> > @@ -354,6 +443,16 @@ static int s3c2410wdt_probe(struct platform_device *pdev)
+> >         spin_lock_init(&wdt->lock);
+> >         wdt->wdt_device = s3c2410_wdd;
+> >
+> > +       wdt->drv_data = get_wdt_drv_data(pdev);
+> > +       if (wdt->drv_data->quirks & QUIRK_NEEDS_PMU_CONFIG) {
+> > +               wdt->pmureg = syscon_regmap_lookup_by_phandle(dev->of_node,
+> > +                                                       "samsung,syscon-phandle");
+> > +               if (IS_ERR(wdt->pmureg)) {
+> > +                       dev_err(dev, "syscon regmap lookup failed.\n");
+> > +                       return PTR_ERR(wdt->pmureg);
+>
+> nit: this function appears to never call "return" directly.  You'll
+> match other error handling better if you do:
+>
+> ret = PTR_ERR(wdt->pmureg);
+> goto err;
+>
+> (if someone else has already said they don't like that, just ignore me).
+>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Will consider Tomasz suggestion for this
 
-iQIcBAEBAgAGBQJSlJMkAAoJELSic+t+oim98dsP/jybFymsOcncl7ILBDsnyNQy
-ypT3KH4sGYxMtRuVlPYra97PRDz0ZaB1RQBFSXmi8N/ZfdXZUZR/0qaRJ00zW+8K
-yU/5Rc1Yp/DBAJ6mVjiOd4+qVpUrT8MV5REoKG9HhZVcTPdsMa6EK8EdZpzid1/H
-MljrH+iocuaAEtFxgrntPDCi/E05IUXPdMH0jsyl7fyrKmcGd442jcRn9ytxR/Hm
-4HWhwWXUUBYjMJcWLyPvW/fxQNKJELtB1upe4BpRGNCe5Hh8GaIk5DnD6HuWiJEk
-7enUkFPq7Ay7qGjv33llq1xRmgOzZbScHdjR5Q1xCMprDaM5bbluAQyZpCGUnbVl
-z6DKfeMheeICEvXzZch8B1f+mvlnCcy8+GL3MqLjlTitr+gf0UGUrnyiBjaNkC+K
-wQGdcV6yCJRpvwbc6CQaBZsXxymhWcIgkCa8YMjH1N3V+GuY4G1rpis/cVxnQpBq
-xFLX9+PNIRSIIZxeOZIR2Qt7+POUnutrynvlQ9mTeQnleQ/8nr2+UIYQYNewR0I0
-oU/Yp7295fumkDNzvzVDLEcYw/9hCoeaqx460yGDN3L8ZZSGI4r3kmIjQ8hlpdEO
-4AflqcgJq+yl103EqHT97jOweXmDVYlHNbDm8LAcmNQ0prl9NUn4vXO4oVemnXUS
-g+ZT6KauH1LhvTZDVCeW
-=xqrf
------END PGP SIGNATURE-----
+> > +               }
+> > +       }
+> > +
+> >         wdt_irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> >         if (wdt_irq == NULL) {
+> >                 dev_err(dev, "no irq resource specified\n");
+> > @@ -444,6 +543,14 @@ static int s3c2410wdt_probe(struct platform_device *pdev)
+> >                  (wtcon & S3C2410_WTCON_RSTEN) ? "en" : "dis",
+> >                  (wtcon & S3C2410_WTCON_INTEN) ? "en" : "dis");
+> >
+> > +       if (wdt->drv_data->quirks & QUIRK_NEEDS_PMU_CONFIG) {
+> > +               ret = s3c2410wdt_mask_and_disable_reset(wdt, false);
+> > +               if (ret < 0) {
+> > +                       dev_err(wdt->dev, "failed to update pmu register");
+> > +                       goto err_cpufreq;
+> > +               }
+> > +       }
+>
+> There are a few minor problems here:
+>
+> 1. You're putting a potential failure condition _after_ printing that
+> the watchdog is enabled.  You should put your code above the
+> "dev_info".
+>
 
---dqsx3Lh6rjXyciUn--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes moved it like below
+
+static int s3c2410wdt_probe(struct platform_device *pdev)
+{
+
+[snip]
+
+if (tmr_atboot && started == 0) {
+                dev_info(dev, "starting watchdog timer\n");
+                s3c2410wdt_start(&wdt->wdt_device);
+}
+[snip]
+
+
+> 2. Error handling doesn't seem quite right.  If you fail here you'll
+> be returning an error but you might have started the watchdog already.
+>  Perhaps you should be moving the "mask_and_disable" up a little and
+> then you an undo it if needed?
+>
+
+Above mentioned comment will take care of this
+
+> 3. I think it would be fine to put the "dev_err" directly in the
+> s3c2410wdt_mask_and_disable_reset() as per Guenter, but still return
+> the error code.  You'll still use the error code here, right?
+>
+
+Yes, used dev_err and moved it into s3c2410wdt_mask_and_disable_reset()
+and removed the dev_err message in the if (ret < 0) check
+
+> > +
+> >         return 0;
+> >
+> >   err_cpufreq:
+> > @@ -459,8 +566,15 @@ static int s3c2410wdt_probe(struct platform_device *pdev)
+> >
+> >  static int s3c2410wdt_remove(struct platform_device *dev)
+> >  {
+> > +       int ret;
+> >         struct s3c2410_wdt *wdt = platform_get_drvdata(dev);
+> >
+> > +       if (wdt->drv_data->quirks & QUIRK_NEEDS_PMU_CONFIG) {
+> > +               ret = s3c2410wdt_mask_and_disable_reset(wdt, true);
+>
+> This function does return an error.  Why not pass the error on
+> through?  The system wouldn't be in such a stellar state, but if
+> regmap is failing it's probably pretty bad anyway...
+>
+>
+
+Yes, returning the error here and doing the same in other functions also
+like suspend and resume
+
+Will post the next version tomorrow
+
+Best Wishes,
+Leela Krishna.
+
+>
+> Nothing here is terrible and I wouldn't be upset if you landed these
+> as-is, but since it seems that Guenter is requesting a spin.  Perhaps
+> you could address my comments, too?
+>
+>
+> -Doug
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
