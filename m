@@ -1,57 +1,47 @@
-From: Tim Kryger <tim.kryger@linaro.org>
-Subject: Re: [PATCH 2/5] pwm: kona: Introduce Kona PWM controller support
-Date: Tue, 26 Nov 2013 13:32:13 -0800
-Message-ID: <CAAYSxhqquF87NEJj8n3M7E8LWNgQGQdTqQmHPX9sdmvtBiSBTA@mail.gmail.com>
-References: <1384800901-21711-1-git-send-email-tim.kryger@linaro.org>
-	<1384800901-21711-3-git-send-email-tim.kryger@linaro.org>
-	<20131125110854.GI22043@ulmo.nvidia.com>
-	<CAAYSxhr7=Pa8RdnEsD2MGTR4hvfHCcHQCP77GRjx1Fqb-=kRrA@mail.gmail.com>
-	<20131126094505.GC27752@ulmo.nvidia.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/2] ARM: dts: omap4-panda-common: Fix pin muxing for
+ wl12xx
+Date: Tue, 26 Nov 2013 13:55:37 -0800
+Message-ID: <20131126215537.GO26766@atomide.com>
+References: <1385041804-19115-1-git-send-email-balajitk@ti.com>
+ <1385041804-19115-2-git-send-email-balajitk@ti.com>
+ <20131121165823.GM10317@atomide.com>
+ <528E4295.2040109@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131126094505.GC27752@ulmo.nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linaro Patches List <patches@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <528E4295.2040109@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Balaji T K <balajitk@ti.com>, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 26, 2013 at 1:45 AM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Mon, Nov 25, 2013 at 05:38:44PM -0800, Tim Kryger wrote:
+* Dan Murphy <dmurphy@ti.com> [131121 09:28]:
+> On 11/21/2013 10:58 AM, Tony Lindgren wrote:
+> > * Balaji T K <balajitk@ti.com> [131121 05:51]:
+> >> pin mux wl12xx_gpio and wl12xx_pins should be part of omap4_pmx_core
+> >> and not omap4_pmx_wkup. So, move wl12xx_* to omap4_pmx_core.
+> >>
+> >> Fix the following error message:
+> >> pinctrl-single 4a31e040.pinmux: mux offset out of range: 0x38 (0x38)
+> >> pinctrl-single 4a31e040.pinmux: could not add functions for pinmux_wl12xx_pins 56x
+> 
+> Why is the led pins moved then?
 
-> Okay, that's fine then. Do you have a pointer to that documentation?
+Heh the patch just looks that way, looking at the curly brackets
+thing do get moved properly.
+ 
+> >> SDIO card is not detected after moving pin mux to omap4_pmx_core since
+> >> sdmmc5_clk pull is disabled. Enable Pull up on sdmmc5_clk to detect SDIO card.
+> > Cool, does this fix the issue with the WLAN not coming up after a warm reset
+> > on panda?
 
-Unfortunately the documentation is not publicly available at the moment.
+Also commit f446043f1aa7 (regulator: fixed: fix regulator_list_voltage() for
+regression) is needed that recently got merged. But with v3.13-rc1 +
+f446043f1aa7 + this patch no luck whatsoever bringing up the wl12xx so there
+must be also some regression somewhere from v3.12 on that?
 
->> The hardware is always enabled and at best can be be configured to
->> operate at zero duty.
->
-> What good are the PWMOUT_ENABLE bits then? Is that really only used for
-> triggering updates? That's what another comment suggests, but if so, can
-> the comment in kona_pwmc_apply_settings() be extended to mention that?
+Regards,
 
-The guidance from the documentation is to treat the enable bits as a trigger.
-
-Sure I can expand the comment to try and make this more clear.
-
->> The settings in HW may have already been triggered and might not be
->> what you want.
->>
->> For example:
->>
->> /sys/class/pwm/pwmchip0/pwm1# echo 1 > enable
->> /sys/class/pwm/pwmchip0/pwm1# echo 5000 > period
->> /sys/class/pwm/pwmchip0/pwm1# echo 2000 > duty_cycle
->> /sys/class/pwm/pwmchip0/pwm1# echo 0 > enable
->> /sys/class/pwm/pwmchip0/pwm1# echo 1 > enable
->
-> I'm not exactly sure what this is supposed to demonstrate.
-
-The computation has to be performed for every operation except the disable.
-
-> All of that said, I wasn't able to dig up a normative policy and either
-> of your proposed alternatives do exist in the kernel, so I withdraw any
-> objections regarding MODULE_AUTHOR. Take your pick.
-
-Thanks
+Tony
