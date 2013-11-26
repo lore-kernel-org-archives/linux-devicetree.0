@@ -1,402 +1,144 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2] watchdog: GPIO-controlled watchdog
-Date: Tue, 26 Nov 2013 09:54:34 -0800
-Message-ID: <5294E05A.3040104@roeck-us.net>
-References: <1385483188-12221-1-git-send-email-shc_work@mail.ru>
+From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 5/9] ARM: at91/dt: add mmc0 slot0 support to at91rm9200ek
+ board
+Date: Tue, 26 Nov 2013 18:55:52 +0100
+Message-ID: <5294E0A8.20303@overkiz.com>
+References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>	<1377687995-10758-1-git-send-email-b.brezillon@overkiz.com>	<20131120145926.GE14627@ns203013.ovh.net>	<528CDFFB.1020601@overkiz.com>	<CACRpkdboBg4YOnMNiar0DDBVnoky=zNky+Pzyp1=P_POtH15qQ@mail.gmail.com>	<528DE1C4.6060900@overkiz.com> <CACRpkdZdweyWJefttiuiYAJ9qhahLbnj7eHUiLV_83UA41X_uQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385483188-12221-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
+In-Reply-To: <CACRpkdZdweyWJefttiuiYAJ9qhahLbnj7eHUiLV_83UA41X_uQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/2013 08:26 AM, Alexander Shiyan wrote:
-> This patch adds a watchdog driver for devices controlled through GPIO,
-> (Analog Devices ADM706, IC 555 etc).
+Hello Linus,
+
+Sorry for the noise, my mail was filtered by several ML because of some=
+=20
+HTML contents.
+
+Le 26/11/2013 14:46, Linus Walleij a =E9crit :
+> On Thu, Nov 21, 2013 at 11:34 AM, boris brezillon
+> <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>  wrote:
+>> On 21/11/2013 10:48, Linus Walleij wrote:
+>>> No matter whether it's a switch or a GPIO regulator it seems we
+>>> are in violent agreement that it should not be controlled by the
+>>> pin control states at least.
+>>>
+>>> Start with making it a GPIO then you can figure out whether
+>>> a GPIO regulator or drivers/extcon/extcon-gpio.c should be
+>>> used.
+>> Thanks for pointing this out. I wasn't aware of the extcon subsystem=
+=2E
+>>
+>> Actually, I think it's a little bit more tricky.
+> Hm, yeah extcon is for things like audio jacks on phones that
+> userspace need to detect.
 >
-> Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-> ---
-
-A list of changes since v1 would be helpful.
-
->   .../devicetree/bindings/watchdog/gpio-wdt.txt      |  23 ++
->   drivers/watchdog/Kconfig                           |   8 +
->   drivers/watchdog/Makefile                          |   1 +
->   drivers/watchdog/gpio_wdt.c                        | 246 +++++++++++++++++++++
->   4 files changed, 278 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
->   create mode 100644 drivers/watchdog/gpio_wdt.c
+> drivers/input/keyboard/gpio_keys* is for things that actually
+> input characters to userspace stuff.
 >
-> diff --git a/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-> new file mode 100644
-> index 0000000..08ba8e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-> @@ -0,0 +1,23 @@
-> +* GPIO-controlled Watchdog
-> +
-> +Required Properties:
-> +- compatible: Should contain "linux,wdt-gpio".
-
-Should ?
-
-> +- gpios: From common gpio binding; gpio connection to WDT reset pin.
-> +- wdt-gpio,hw_algo: The algorithm used by the driver. Should be one
-> +  of the following values:
-
-Should ?
-
-> +  - toggle: Either a high-to-low or a low-to-high transition clears
-> +    the WDT counter. The watchdog timer is disabled when GPIO is
-> +    left floating or connected to a three-state buffer.
-> +  - level: Low or high level starts counting WDT timeout,
-> +    the opposite level disables the WDT. Active level is determined
-> +    by the GPIO flags.
-> +- wdt-gpio,hw_margin_ms: Maximum time to reset watchdog circuit (milliseconds).
-> +
-> +Example:
-> +	watchdog: watchdog {
-> +		/* ADM706 */
-> +		compatible = "linux,wdt-gpio";
-
-Oddly enough, the bindings could be used by non-Linux operating systems,
-but who am I to argue. Fine if this is what the DT maintainers want to see.
-
-> +		gpios = <&gpio3 9 GPIO_ACTIVE_LOW>;
-> +		wdt-gpio,hw_algo = "toggle";
-> +		wdt-gpio,hw_margin_ms = <1600>;
-
-Is this a new means to name device specific properties ?
-"wdt-gpio" in those bindings is quite redundant with "wdt-gpio"
-in the compatible property. Again, though, who am I to argue.
-
-> +	};
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 5be6e91..968a882 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -87,6 +87,14 @@ config DA9055_WATCHDOG
->   	  This driver can also be built as a module.  If so, the module
->   	  will be called da9055_wdt.
+> None of it is applicable here it seems ...
 >
-> +config GPIO_WATCHDOG
-> +	tristate "Watchdog device controlled through GPIO-line"
-> +	depends on OF_GPIO
-> +	select WATCHDOG_CORE
-> +	help
-> +	  If you say yes here you get support for watchdog device
-> +	  controlled through GPIO-line.
-> +
->   config WM831X_WATCHDOG
->   	tristate "WM831x watchdog"
->   	depends on MFD_WM831X
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 91bd95a..dc17275 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -171,6 +171,7 @@ obj-$(CONFIG_XEN_WDT) += xen_wdt.o
->   # Architecture Independent
->   obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
->   obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
-> +obj-$(CONFIG_GPIO_WATCHDOG)	+= gpio_wdt.o
->   obj-$(CONFIG_WM831X_WATCHDOG) += wm831x_wdt.o
->   obj-$(CONFIG_WM8350_WATCHDOG) += wm8350_wdt.o
->   obj-$(CONFIG_MAX63XX_WATCHDOG) += max63xx_wdt.o
-> diff --git a/drivers/watchdog/gpio_wdt.c b/drivers/watchdog/gpio_wdt.c
-> new file mode 100644
-> index 0000000..c7166be
-> --- /dev/null
-> +++ b/drivers/watchdog/gpio_wdt.c
-> @@ -0,0 +1,246 @@
-> +/*
-> + * Driver for watchdog device controlled through GPIO-line
-> + *
-> + * Author: 2013, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/delay.h>
-> +#include <linux/module.h>
-> +#include <linux/notifier.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/watchdog.h>
-> +
-> +#define SOFT_TIMEOUT_MIN	1
-> +#define SOFT_TIMEOUT_DEF	60
-> +#define SOFT_TIMEOUT_MAX	0xffff
-> +
-> +enum {
-> +	HW_ALGO_TOGGLE,
-> +	HW_ALGO_LEVEL,
-> +};
-> +
-> +struct gpio_wdt_priv {
-> +	int			gpio;
-> +	bool			active_low;
-> +	bool			state;
-> +	unsigned int		hw_algo;
-> +	unsigned int		hw_margin;
-> +	unsigned long		last_jiffies;
-> +	struct notifier_block	notifier;
-> +	struct timer_list	timer;
-> +	struct watchdog_device	wdd;
-> +};
-> +
-> +static int gpio_wdt_disable(struct gpio_wdt_priv *priv)
-> +{
-> +	gpio_set_value_cansleep(priv->gpio, !priv->active_low);
-> +
-> +	/* Put GPIO back to tristate */
-> +	if (priv->hw_algo == HW_ALGO_TOGGLE)
-> +		return gpio_direction_input(priv->gpio);
-> +
-No disable for 'level' watchdogs ? Shouldn't it be set to the opposite
-of priv->state ?
-
-> +	return 0;
-
-Since this is an internal function which never returns anything but 0,
-you might as well make it void.
-
-> +}
-> +
-> +static int gpio_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-> +
-> +	priv->state = priv->active_low;
-> +	gpio_direction_output(priv->gpio, priv->state);
-> +	priv->last_jiffies = jiffies;
-> +	mod_timer(&priv->timer, priv->last_jiffies + priv->hw_margin);
-> +
-> +	return 0;
-> +}
-> +
-> +static int gpio_wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-> +
-> +	mod_timer(&priv->timer, 0);
-> +
-> +	return gpio_wdt_disable(priv);
-> +}
-> +
-> +static int gpio_wdt_ping(struct watchdog_device *wdd)
-> +{
-> +	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-> +
-> +	priv->last_jiffies = jiffies;
-> +
-> +	return 0;
-> +}
-> +
-> +static int gpio_wdt_set_timeout(struct watchdog_device *wdd, unsigned int t)
-> +{
-> +	wdd->timeout = t;
-> +
-> +	return 0;
-> +}
-> +
-> +static void gpio_wdt_hwping(unsigned long data)
-> +{
-> +	struct watchdog_device *wdd = (struct watchdog_device *)data;
-> +	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-> +
-> +	if (time_before(jiffies, priv->last_jiffies +
-> +			msecs_to_jiffies(wdd->timeout * 1000))) {
-> +		/* Restart timer */
-> +		mod_timer(&priv->timer, jiffies + priv->hw_margin);
-> +
-> +		switch (priv->hw_algo) {
-> +		case HW_ALGO_TOGGLE:
-> +			/* Toggle output pin */
-> +			priv->state = !priv->state;
-> +			gpio_set_value_cansleep(priv->gpio, priv->state);
-> +			break;
-> +		case HW_ALGO_LEVEL:
-> +			/* Pulse */
-> +			gpio_set_value_cansleep(priv->gpio, !priv->active_low);
-> +			udelay(1);
-
-Pretty arbitrary toggle time. Should this be a property ?
-
-> +			gpio_set_value_cansleep(priv->gpio, priv->active_low);
-> +			break;
-> +		}
-> +	} else
-> +		dev_crit(wdd->dev, "Timer expired. System will reboot soon!\n");
-
-Coding style (chapter 3): else should be in { } too.
-
-> +}
-> +
-> +static int gpio_wdt_notify_sys(struct notifier_block *nb, unsigned long code,
-> +			       void *unused)
-> +{
-> +	struct gpio_wdt_priv *priv = container_of(nb, struct gpio_wdt_priv,
-> +						  notifier);
-> +
-> +	mod_timer(&priv->timer, 0);
-> +
-> +	switch (code) {
-> +	case SYS_HALT:
-> +	case SYS_POWER_OFF:
-> +		gpio_wdt_disable(priv);
-> +		break;
-> +	case SYS_DOWN:
-
-This case statement is unnecessary.
-
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static const struct watchdog_info gpio_wdt_ident = {
-> +	.options	= WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING |
-> +			  WDIOF_SETTIMEOUT,
-> +	.identity	= "GPIO Watchdog",
-> +};
-> +
-> +static const struct watchdog_ops gpio_wdt_ops = {
-> +	.owner		= THIS_MODULE,
-> +	.start		= gpio_wdt_start,
-> +	.stop		= gpio_wdt_stop,
-> +	.ping		= gpio_wdt_ping,
-> +	.set_timeout	= gpio_wdt_set_timeout,
-> +};
-> +
-> +static int gpio_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct gpio_wdt_priv *priv;
-> +	enum of_gpio_flags flags;
-> +	const __be32 *prp;
-> +	u32 hw_margin;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->gpio = of_get_gpio_flags(pdev->dev.of_node, 0, &flags);
-> +	if (!gpio_is_valid(priv->gpio))
-> +		return priv->gpio;
-> +
-> +	priv->active_low = !!(flags & OF_GPIO_ACTIVE_LOW);
-> +
-
-!! is unnecessary for assignments to booleans.
-
-> +	ret = devm_gpio_request_one(&pdev->dev, priv->gpio, GPIOF_IN,
-> +				    dev_name(&pdev->dev));
-> +	if (ret)
-> +		return ret;
-> +
-> +	prp = of_get_property(pdev->dev.of_node, "wdt-gpio,hw_algo", NULL);
-> +	if (!prp)
-> +		return -EINVAL;
-
-I am a bit concerned about using of_get_property() to read a string.
-If the provided property is an integer, one can only hope that nothing odd happens.
-How about using of_property_read_string() instead ? That would at least
-provide some protection.
-
-> +	if (!strncmp((const char *)prp, "toggle", 6))
-> +		priv->hw_algo = HW_ALGO_TOGGLE;
-> +	else if (!strncmp((const char *)prp, "level", 5))
-> +		priv->hw_algo = HW_ALGO_LEVEL;
-> +	else
-> +		return -ENOTSUPP;
-
-This suggests that the value is valid but not supported. -EINVAL may be better.
-
-> +
-> +	prp = of_get_property(pdev->dev.of_node, "wdt-gpio,hw_margin_ms", NULL);
-> +	if (!prp)
-> +		return -EINVAL;
-
-There is also of_property_read_u32().
-
-> +	hw_margin = be32_to_cpu(*prp);
-> +	/* Disallow values lower than 2 and higher than 65535 ms */
-> +	if ((hw_margin < 2) || (hw_margin > 65535))
-> +		return -EINVAL;
-> +
-> +	/* Use safe value (2/3 of real timeout) */
-> +	priv->hw_margin = msecs_to_jiffies(hw_margin * 2 / 3);
-> +
-Hope this is safe enough. I would have used 1/2, but that
-is really up to you to decide.
-
-> +	watchdog_set_drvdata(&priv->wdd, priv);
-> +
-> +	priv->wdd.info		= &gpio_wdt_ident;
-> +	priv->wdd.ops		= &gpio_wdt_ops;
-> +	priv->wdd.min_timeout	= SOFT_TIMEOUT_MIN;
-> +	priv->wdd.max_timeout	= SOFT_TIMEOUT_MAX;
-> +
-> +	if (watchdog_init_timeout(&priv->wdd, 0, &pdev->dev) < 0)
-> +		priv->wdd.timeout = SOFT_TIMEOUT_DEF;
-> +
-> +	setup_timer(&priv->timer, gpio_wdt_hwping, (unsigned long)&priv->wdd);
-> +
-> +	priv->notifier.notifier_call = gpio_wdt_notify_sys;
-> +	ret = register_reboot_notifier(&priv->notifier);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return watchdog_register_device(&priv->wdd);
-
-If this fails you don't call unregister_reboot_notifier.
-
-> +}
-> +
-> +static int gpio_wdt_remove(struct platform_device *pdev)
-> +{
-> +	struct gpio_wdt_priv *priv = platform_get_drvdata(pdev);
-> +
-> +	del_timer_sync(&priv->timer);
-> +	unregister_reboot_notifier(&priv->notifier);
-> +	watchdog_unregister_device(&priv->wdd);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id gpio_wdt_dt_ids[] = {
-> +	{ .compatible = "linux,wdt-gpio", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, gpio_wdt_dt_ids);
-> +
-> +static struct platform_driver gpio_wdt_driver = {
-> +	.driver	= {
-> +		.name		= "gpio-wdt",
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table	= gpio_wdt_dt_ids,
-> +	},
-> +	.probe	= gpio_wdt_probe,
-> +	.remove	= gpio_wdt_remove,
-> +};
-> +module_platform_driver(gpio_wdt_driver);
-> +
-> +MODULE_AUTHOR("Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>");
-> +MODULE_DESCRIPTION("GPIO Watchdog");
-> +MODULE_LICENSE("GPL");
+>> The switch connected to gpio PB22 is used to enable one device or th=
+e other:
+>>   - PB22 set to high level enables slot0 of mmc0 (connect mmc signal=
+s to the
+>> mmc
+>>     connector)
+>>   - PB22 set to low level enables the dataflash (connect to the SPI0=
+ signals
+>> to the
+>>     dataflash device)
+> So this is something like a "jumper" of the old type, configuring
+> the entire system?
 >
+> Something like that:
+> http://www.mignonette-game.com/images/v2/21-arduino-com-jumper.jpg
+>
+> But in this case it is a mechanical switch rather than a jumper?
+Not exactly.
+The functionnaly selection (spi device or mmc slot) is done by the=20
+software using to the
+PB22 pin:
+  - set PB22 pin to 1 if you want to enable the mmc slot
+  - set PB22 pin to 0 if you want to enable the spi device
+
+This is the rm9200ek board datasheet=20
+http://www.alliedelec.com/images/products/datasheets/bm/ATMEL/70123901.=
+pdf,=20
+and you'll find the switch schematic at page 26.
+Here is the switch datasheet :=20
+http://pdf1.alldatasheet.fr/datasheet-pdf/view/90971/PERICOM/PI5A100Q.h=
+tml
+
+If I understand correctly, you're suggesting to retrieve the PB22 pin=20
+value to decide
+wether the mmc slot or the spi device is enabled. Is that right ?
+
+In this case the bootstrap and/or bootloader would have to properly=20
+configure the P22 pin
+before executing the linux kernel, and I'm pretty sure this is not the =
+case.
+
+> This is not much different from the GPIOs people use to e.g. encode
+> the board type, just that it can change.
+>
+> Do people switch this thing at runtime?
+
+In the board version this was configured in the init_machine function=20
+(or board init
+function) depending on the MTD_AT91_DATAFLASH_CARD
+(=20
+http://lxr.free-electrons.com/source/arch/arm/mach-at91/board-rm9200ek.=
+c#L173).
+As a result it was not reconfigurable at runtime.
+
+But Jean-Christophe suggested to make it configurable at runtime (using=
+=20
+dt fragments).
+
+>> The pinctrl approach has the benefit of providing a transparent way =
+(no
+>> existing
+>> drivers modifications) to enable one device or the other.
+>>
+>> But if you think this is better done (or cleaner) with an extcon or =
+a
+>> regulator device,
+>> I'll try to find a way to do it this way.
+> I'm uncertain. If this is something that changes at runtime, the
+> input from the switch should be read through GPIO and used
+> to select the "default" state of one device and something like
+> "sleep" on the other (I suspect more things than pin control
+> may be affected by that!)
+>
+> If this is a switch that you want to take the simple shortcut
+> of just reading at boot, the approach would still be similar, just
+> less code.
+>
+> So use gpio_get() to read the value, and then select which
+> *entire device* goes active depending on the setting would
+> be the right approach I guess?
+
+I'm not sure these suggestions apply according to my previous answers,
+but tell me if I'm wrong.
+
+Thanks for your time and suggestions.
+
+Best Regards,
+
+Boris
+
+> Yours,
+> Linus Walleij
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
