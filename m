@@ -1,59 +1,57 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 09/10] ARM: dts: omap3-beagle-xm: Add USB Host
- support
-Date: Tue, 26 Nov 2013 13:04:56 -0800
-Message-ID: <20131126210456.GN26766@atomide.com>
-References: <1380012836-29900-1-git-send-email-rogerq@ti.com>
- <1380012836-29900-10-git-send-email-rogerq@ti.com>
- <528BD2AF.2030607@ti.com>
- <528C8FBC.7020407@ti.com>
+From: Tim Kryger <tim.kryger@linaro.org>
+Subject: Re: [PATCH 2/5] pwm: kona: Introduce Kona PWM controller support
+Date: Tue, 26 Nov 2013 13:32:13 -0800
+Message-ID: <CAAYSxhqquF87NEJj8n3M7E8LWNgQGQdTqQmHPX9sdmvtBiSBTA@mail.gmail.com>
+References: <1384800901-21711-1-git-send-email-tim.kryger@linaro.org>
+	<1384800901-21711-3-git-send-email-tim.kryger@linaro.org>
+	<20131125110854.GI22043@ulmo.nvidia.com>
+	<CAAYSxhr7=Pa8RdnEsD2MGTR4hvfHCcHQCP77GRjx1Fqb-=kRrA@mail.gmail.com>
+	<20131126094505.GC27752@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <528C8FBC.7020407@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, balbi@ti.com, bcousson@baylibre.com, p.zabel@pengutronix.de, broonie@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131126094505.GC27752@ulmo.nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linaro Patches List <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [131120 02:33]:
-> Nishant,
-> 
-> On 11/19/2013 11:05 PM, Nishanth Menon wrote:
-> > 
-> > 
-> > On 09/24/2013 03:53 AM, Roger Quadros wrote:
-> >> Provide RESET GPIO and Power regulator for the USB PHY,
-> >> the USB Host port mode and the PHY device for the controller.
-> >> Also provide pin multiplexer information for USB host pins.
-> >>
-> >> We also relocate omap3_pmx_core pin definations so that they
-> >> are close to omap3_pmx_wkup pin definations.
-> >>
-> >> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> >> ---
-> > 
-> > just using this thread, but a question ->
-> > 
-> > I am kernel * master                                   dec8e46 Merge
-> > tag 'arc-v3.13-rc1-part2' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc
-> > 
-> > and I see that VAUX2 which supplies USB_1V8[1] is not enabled -> I did
-> > a quick patch and it did seem to work (Usb keyboard, networking, mouse
-> > etc on my ehci ports seems to come up good) - any suggestions how we'd
-> > like to handle this?
-> 
-> It worked for me without your patch. It could be that u-boot is enabling
-> that regulator for me. I'm on u-boot-v2013.10.
-> 
-> In any case, your patch seems the right thing to do. We should take it in
-> the rc cycle.
+On Tue, Nov 26, 2013 at 1:45 AM, Thierry Reding
+<thierry.reding@gmail.com> wrote:
+> On Mon, Nov 25, 2013 at 05:38:44PM -0800, Tim Kryger wrote:
 
-Can you guys post a proper fix for this? Meanwhile, I'll mark this
-thread as read to shrink my inbox a bit.
+> Okay, that's fine then. Do you have a pointer to that documentation?
 
-Regards,
+Unfortunately the documentation is not publicly available at the moment.
 
-Tony
+>> The hardware is always enabled and at best can be be configured to
+>> operate at zero duty.
+>
+> What good are the PWMOUT_ENABLE bits then? Is that really only used for
+> triggering updates? That's what another comment suggests, but if so, can
+> the comment in kona_pwmc_apply_settings() be extended to mention that?
+
+The guidance from the documentation is to treat the enable bits as a trigger.
+
+Sure I can expand the comment to try and make this more clear.
+
+>> The settings in HW may have already been triggered and might not be
+>> what you want.
+>>
+>> For example:
+>>
+>> /sys/class/pwm/pwmchip0/pwm1# echo 1 > enable
+>> /sys/class/pwm/pwmchip0/pwm1# echo 5000 > period
+>> /sys/class/pwm/pwmchip0/pwm1# echo 2000 > duty_cycle
+>> /sys/class/pwm/pwmchip0/pwm1# echo 0 > enable
+>> /sys/class/pwm/pwmchip0/pwm1# echo 1 > enable
+>
+> I'm not exactly sure what this is supposed to demonstrate.
+
+The computation has to be performed for every operation except the disable.
+
+> All of that said, I wasn't able to dig up a normative policy and either
+> of your proposed alternatives do exist in the kernel, so I withdraw any
+> objections regarding MODULE_AUTHOR. Take your pick.
+
+Thanks
