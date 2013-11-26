@@ -1,108 +1,60 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 4/6] gpio: davinci: add OF support
-Date: Tue, 26 Nov 2013 14:33:14 +0200
-Message-ID: <5294950A.9070007@ti.com>
-References: <1385057731-4348-1-git-send-email-prabhakar.csengg@gmail.com>
-	<1385057731-4348-5-git-send-email-prabhakar.csengg@gmail.com>
-	<52932DB9.4090805@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/17] spi/spi.h: Add get_buf/put_buf support in spi
+ master..
+Date: Tue, 26 Nov 2013 12:38:14 +0000
+Message-ID: <20131126123814.GE14725@sirena.org.uk>
+References: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com>
+ <1385451313-1875-2-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <52932DB9.4090805-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qvqe4mReYAfpWQmG"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1385451313-1875-2-git-send-email-sourav.poddar-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/25/2013 01:00 PM, Sekhar Nori wrote:
-> On Thursday 21 November 2013 11:45 PM, Prabhakar Lad wrote:
->> From: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
->>
->> This patch adds OF parser support for davinci gpio
->> driver and also appropriate documentation in gpio-davinci.txt
->> located at Documentation/devicetree/bindings/gpio/.
->>
->> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
->> [prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: simplified the OF code, removed
->> 		unnecessary DT property and also simplified
->> 		the commit message]
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   .../devicetree/bindings/gpio/gpio-davinci.txt      |   41 ++++++++++++++
->>   drivers/gpio/gpio-davinci.c                        |   57 ++++++++++++++++++--
->>   2 files changed, 95 insertions(+), 3 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> new file mode 100644
->> index 0000000..a2e839d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> @@ -0,0 +1,41 @@
->> +Davinci GPIO controller bindings
->> +
->> +Required Properties:
->> +- compatible: should be "ti,dm6441-gpio"
->> +
->> +- reg: Physical base address of the controller and the size of memory mapped
->> +       registers.
->> +
->> +- gpio-controller : Marks the device node as a gpio controller.
->> +
->> +- interrupt-parent: phandle of the parent interrupt controller.
->> +
->> +- interrupts: Array of GPIO interrupt number. Only banked or unbanked IRQs are
->> +	      supported at a time.
-> 
-> If this is true..
-> 
->> +
->> +- ti,ngpio: The number of GPIO pins supported.
->> +
->> +- ti,davinci-gpio-unbanked: The number of GPIOs that have an individual interrupt
->> +		             line to processor.
-> 
-> .. then why do you need to maintain this separately? Number of elements
-> in interrupts property should give you this answer, no?
-> 
-> There can certainly be devices (past and future) which use a mixture of
-> banked and unbanked IRQs. So a binding which does not take care of this
-> is likely to change in future and that is a problem since it brings in
-> backward compatibility of the binding into picture.
-> 
-> The right thing would be to define the DT node per-bank similar to what
-> is done on OMAP rather than for all banks together. That way there can
-> be a separate property which determines whether that bank supports
-> direct-mapped or banked IRQs (or that could be inferred if the number of
-> tuples in the interrupts property is more than one).
 
-Number of IRQ can't be simply used to determine type of IRQ - need to handle IRQ names,
-because each bank(32 gpios) may have up to 2 banked IRQs (one per 16 GPIO).
+--qvqe4mReYAfpWQmG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Few things here:
-- The mixed banked/unbanked functionality has never been supported before. 
-- The Davinci GPIO IP is different from OMAP and has common
-  control registers for all banks.
-- The proposed approach is more less easy to implement for DT case, but for not-DT
-  case - the platform data will need to be changed significantly (.
-  So, from this point of view, that would be a big change (actually the total driver rewriting).
+On Tue, Nov 26, 2013 at 01:04:57PM +0530, Sourav Poddar wrote:
 
-Do you have any thoughts about how it can be done in a simpler way?
+> Add get_buf, put_buf api support in spi master.
+> This can be used in a scenario where spi controller
 
-Actually, the same was proposed by Linus, but we've tried avoid such huge rework -
-by switching to one irq_domain per all banks for example.
+I would expect that while the buffer is mapped the controller would be
+unavailable for normal SPI API use so I'd expect some code that checks a
+flag while a mapping is in place and errors out on normal SPI operations
+during that time as well as the operations themselves.
 
-Regards,
-- grygorii
+--qvqe4mReYAfpWQmG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSlJYzAAoJELSic+t+oim9BzYP/1ga7pIG7+8CG5+n2KG0w0S6
+7YN4dRfqF8RKGISWaAQpjEvVKdZbHez6s1OXhnCzUv2duORyrZZIpFJRGM049P8M
+xszuw5Go10phl+IaWlIYRQl5CMZe1ObUsKJNCBlkCL3ZMmvvEaiSK+T28e5MXEan
+82ZlgW1j+ZX+rBPNOGmeEzyaa1AKmYVj9/9fUrUVzl+dEQjeHC2CfrOd8UJuv7JX
+79wgV9zrm8IkttkylDTrt+mM4qoxvBiAmIu+EM6A8HDlYUiKEVLN8iGDn4Cshrnb
+zfuKGxntuDDDVvyK4yMaQMfbeLs6Ku2YCeZ5WyO34M0a/7gskC/lfAM+Ppb7rn47
+LszJw1mFVwGn+JOJOVpHb0J1md79K7WQvYF05fFv5Kw+xaEcPMD2g7flwhMTnmlj
+MBKlkQmAuZAkHFFLBTb/yNAc7v8eDmpDFV1meHfLF2N1eTc3lIP50rtY71gk1vKp
+eKwGjCX1GxHpV4QvHm1nQ18JjJB1IQelAQGY7DVPLPU3ljSoCE7ToX0W6/CjmAJT
+z71X4J+/qwz6Qpg5nBkbZVBvLsYX+33pJ4WRppDjFK54TLGM8SZiZ4oubTDRAuv6
+0NwdAIieorOF767T0QCPJL+um9timylrnEkSeyqLVkDIAX26OtHJChUHXcmLsr6S
+CBmp1M0ObDFltQ6XNVrU
+=peMD
+-----END PGP SIGNATURE-----
+
+--qvqe4mReYAfpWQmG--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
