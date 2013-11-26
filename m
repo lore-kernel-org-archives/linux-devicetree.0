@@ -1,47 +1,65 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/2] ARM: dts: omap4-panda-common: Fix pin muxing for
- wl12xx
-Date: Tue, 26 Nov 2013 13:55:37 -0800
-Message-ID: <20131126215537.GO26766@atomide.com>
-References: <1385041804-19115-1-git-send-email-balajitk@ti.com>
- <1385041804-19115-2-git-send-email-balajitk@ti.com>
- <20131121165823.GM10317@atomide.com>
- <528E4295.2040109@ti.com>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v5 2/4] Documentation: Add documentation for APM X-Gene
+ SoC SATA host controller DTS binding
+Date: Tue, 26 Nov 2013 14:04:18 -0800
+Message-ID: <CAPw-ZTm1wS0j2DphK9+Rmmu2UPJniobMUv6MTfMCG5wwKNvJCg@mail.gmail.com>
+References: <1385449285-30764-1-git-send-email-lho@apm.com>
+	<1385449285-30764-2-git-send-email-lho@apm.com>
+	<1385449285-30764-3-git-send-email-lho@apm.com>
+	<20131126145515.GD5402@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <528E4295.2040109@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Balaji T K <balajitk@ti.com>, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <20131126145515.GD5402@e106331-lin.cambridge.arm.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "olof@lixom.net" <olof@lixom.net>, "tj@kernel.org" <tj@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-* Dan Murphy <dmurphy@ti.com> [131121 09:28]:
-> On 11/21/2013 10:58 AM, Tony Lindgren wrote:
-> > * Balaji T K <balajitk@ti.com> [131121 05:51]:
-> >> pin mux wl12xx_gpio and wl12xx_pins should be part of omap4_pmx_core
-> >> and not omap4_pmx_wkup. So, move wl12xx_* to omap4_pmx_core.
-> >>
-> >> Fix the following error message:
-> >> pinctrl-single 4a31e040.pinmux: mux offset out of range: 0x38 (0x38)
-> >> pinctrl-single 4a31e040.pinmux: could not add functions for pinmux_wl12xx_pins 56x
-> 
-> Why is the led pins moved then?
+Hi,
 
-Heh the patch just looks that way, looking at the curly brackets
-thing do get moved properly.
- 
-> >> SDIO card is not detected after moving pin mux to omap4_pmx_core since
-> >> sdmmc5_clk pull is disabled. Enable Pull up on sdmmc5_clk to detect SDIO card.
-> > Cool, does this fix the issue with the WLAN not coming up after a warm reset
-> > on panda?
+>> +- interrupt-parent   : Interrupt controller.
+>
+> I don't think that's strictly required.
 
-Also commit f446043f1aa7 (regulator: fixed: fix regulator_list_voltage() for
-regression) is needed that recently got merged. But with v3.13-rc1 +
-f446043f1aa7 + this patch no luck whatsoever bringing up the wl12xx so there
-must be also some regression somewhere from v3.12 on that?
+Okay, got rip of it.
 
-Regards,
+>> +Optional properties:
+>> +- status             : Shall be "ok" if enabled or "na" if disabled.
+>> +                       Default is "ok".
+>
+> Why not use the more standard "disabled" string, as I asked you to
+> previously?
 
-Tony
+Missed this one. Fixed.
+
+>> +             sata2: sata@1a400000 {
+>> +                     compatible = "apm,xgene-ahci-sgmii";
+>> +                     reg = <0x0 0x1a400000 0x0 0x1000>,
+>> +                           <0x0 0x1f220000 0x0 0x10000>;
+>> +                     interrupt-parent = <&gic>;
+>> +                     interrupts = <0x0 0x87 0x4>;
+>> +                     status = "ok";
+>> +                     clocks = <&sata23clk 0>;
+>> +                     phys = <&phy2 0>;
+>> +                     phy-names = "sata-6g";
+>> +             };
+>> +
+>> +             sata3: sata@1a800000 {
+>> +                     compatible = "apm,xgene-ahci-pcie";
+>> +                     reg = <0x0 0x1a800000 0x0 0x1000>,
+>> +                           <0x0 0x1f230000 0x0 0x10000>;
+>> +                     interrupt-parent = <&gic>;
+>> +                     interrupts = <0x0 0x88 0x4>;
+>> +                     status = "ok";
+>> +                     clocks = <&sata45clk 0>;
+>> +                     phys = <&phy3 0>;
+>> +                     phy-names = "sata-6g";
+>> +             };
+>
+> The example is pointlessly huge. You could trim it down two these last
+> two nodes (with a phy node and some fixed clocks).
+
+I will use dummy fixed clock and added two PHY nodes.
+
+-Loc
