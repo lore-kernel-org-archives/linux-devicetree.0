@@ -1,43 +1,80 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] staging: dwc2: set up all module params
-Date: Tue, 26 Nov 2013 12:42:52 -0700
-Message-ID: <5294F9BC.4000502@wwwdotorg.org>
-References: <1385442150-23561-1-git-send-email-swarren@wwwdotorg.org>
- <A2CA0424C0A6F04399FB9E1CD98E030458E2AD11@US01WEMBX2.internal.synopsys.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 0/6] Update Davinci watchdog driver
+Date: Tue, 26 Nov 2013 21:40:50 +0200
+Message-ID: <5294F942.8070401@ti.com>
+References: <1385388285-10553-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <A2CA0424C0A6F04399FB9E1CD98E030458E2AD11@US01WEMBX2.internal.synopsys.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385388285-10553-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/2013 12:27 PM, Paul Zimmerman wrote:
->> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
->> Sent: Monday, November 25, 2013 9:03 PM
->>
->> The DWC2 USB controller in the BCM2835 (Raspberry Pi) needs some non-
->> default parameters. Select these based on the compatible value from the
->> DT node. For all other HW, fall back to the default parameters currently
->> in use.
->>
->> The values in params_bcm2835[] were posted to the mailing list by Paul
->> quite some time ago. I made a couple of minor modifications since then;
->> to set ahbcfg instead of ahb_single, and to set uframe_sched.
-> 
-> Hi Stephen,
-> 
-> I don't see any code in this patch that is setting uframe_sched?
+Hi Sekhar,
 
-Hmm, that's true. What value should it be set to for the BCM2835, do you
-know? I obviously have it set to 0, which seems to work out OK...
+On 11/25/2013 04:04 PM, Ivan Khoronzhuk wrote:
+> These patches are intended to update Davinci watchdog to use WDT core
+> and reuse driver for keystone arch, because Keystone uses the similar
+> IP like Davinci.
+> 
+> See Documentation:
+> Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
+> Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
+> 
+> Also:
+>   - improved to support GET_TIMELEFT option.
+>   - added "clocks" and "timeout-sec" properties to DT.
+> 
+> Based on
+> git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+> keystone/master
+> 
+
+Could you confirm that regression detected in v2 of series is gone?
+
+Also would it be acceptable if this series will go via WDT tree?
+- The first patch patch in series contains changes in both
+ Davinci platform & wdt driver.
+
+> v2..v3:
+> - watchdog: davinci: change driver to use WDT core
+> 	removed "ti,keystone-wdt" compatible from driver
+> 	renamed wdt device names for mach-davinci from
+> 		"watchdog" to "davinci-wdt"
+> 
+> - watchdog: davinci: reuse driver for keystone arch
+> 	moved "clocks" property under "Optional properties"
+> 	improved decsription of "clocks" property
+> 
+> - arm: dts: keystone: add watchdog entry
+> 	replaced "ti,keystone-wdt" compatible on
+> 		 "ti,keystone-wdt","ti,davinci-wdt"
+> 
+> Ivan Khoronzhuk (6):
+>    watchdog: davinci: change driver to use WDT core
+>    watchdog: davinci: use davinci_wdt_device structure to hold device
+>      data
+>    watchdog: davinci: add GET_TIMELEFT option support
+>    watchdog: davinci: add "timeout-sec" property
+>    watchdog: davinci: reuse driver for keystone arch
+>    arm: dts: keystone: add watchdog entry
+> 
+>   .../devicetree/bindings/watchdog/davinci-wdt.txt   |   16 +-
+>   arch/arm/boot/dts/keystone.dtsi                    |    6 +
+>   arch/arm/mach-davinci/da8xx-dt.c                   |    2 +-
+>   arch/arm/mach-davinci/devices-da8xx.c              |    4 +-
+>   arch/arm/mach-davinci/devices.c                    |    2 +-
+>   drivers/watchdog/Kconfig                           |    6 +-
+>   drivers/watchdog/davinci_wdt.c                     |  225 +++++++++-----------
+>   7 files changed, 126 insertions(+), 135 deletions(-)
+> 
+
+Thanks,
+- grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
