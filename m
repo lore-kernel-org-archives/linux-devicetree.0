@@ -1,129 +1,95 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] iio:adc:imx: add Freescale Vybrid vf610 adc
- driver
-Date: Tue, 26 Nov 2013 14:25:34 +0000
-Message-ID: <20131126142534.GB5402@e106331-lin.cambridge.arm.com>
-References: <1385463394-11157-1-git-send-email-B38611@freescale.com>
- <1385463394-11157-3-git-send-email-B38611@freescale.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 2/4] Documentation: Add documentation for APM X-Gene
+ SoC SATA host controller DTS binding
+Date: Tue, 26 Nov 2013 14:55:16 +0000
+Message-ID: <20131126145515.GD5402@e106331-lin.cambridge.arm.com>
+References: <1385449285-30764-1-git-send-email-lho@apm.com>
+ <1385449285-30764-2-git-send-email-lho@apm.com>
+ <1385449285-30764-3-git-send-email-lho@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-scsi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1385463394-11157-3-git-send-email-B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "b20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385449285-30764-3-git-send-email-lho@apm.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: "olof@lixom.net" <olof@lixom.net>, "tj@kernel.org" <tj@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 26, 2013 at 10:56:33AM +0000, Fugang Duan wrote:
-> Add Freescale Vybrid vf610 adc driver. The driver only support
-> ADC software trigger.
->
-> Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Tue, Nov 26, 2013 at 07:01:23AM +0000, Loc Ho wrote:
+> Documentation: Add documentation for APM X-Gene SoC SATA host controller DTS binding
+> 
+> Signed-off-by: Loc Ho <lho@apm.com>
+> Signed-off-by: Tuan Phan <tphan@apm.com>
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
 > ---
->  drivers/iio/adc/Kconfig     |   11 +
->  drivers/iio/adc/Makefile    |    1 +
->  drivers/iio/adc/vf610_adc.c |  744 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 756 insertions(+), 0 deletions(-)
+>  .../devicetree/bindings/ata/apm-xgene.txt          |  102 ++++++++++++++++++++
+>  1 files changed, 102 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ata/apm-xgene.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/apm-xgene.txt b/Documentation/devicetree/bindings/ata/apm-xgene.txt
+> new file mode 100644
+> index 0000000..879eee7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/apm-xgene.txt
+> @@ -0,0 +1,102 @@
+> +* APM X-Gene 6.0 Gb/s SATA host controller and clock nodes
+> +
+> +SATA host controller nodes are defined to describe on-chip Serial ATA
+> +controllers. Each SATA controller (pair of ports) have its own node. Its
+> +corresponding clock nodes are shown below.
+> +
+> +Required properties:
+> +- compatible		: Shall be "apm,xgene-ahci-sgmii" if mux'ed with SGMII
+> +			  or "apm,xgene-ahci-pcie" if mux'ed with PCIe.
+> +- reg			: First memory resource shall be the AHCI memory
+> +			  resource.
+> +			  Second memory resource shall be the host controller
+> +			  memory resource.
+> +- interrupt-parent	: Interrupt controller.
+
+I don't think that's strictly required.
+
+> +- interrupts		: Interrupt mapping for SATA host controller IRQ.
+> +- clocks		: Reference to the clock entry.
+> +- phys			: PHY reference with parameter 0.
+> +- phy-names		: Name of the PHY. Shall be "sata-6g".
+> +
+> +Optional properties:
+> +- status		: Shall be "ok" if enabled or "na" if disabled.
+> +			  Default is "ok".
+
+Why not use the more standard "disabled" string, as I asked you to
+previously?
 
 [...]
 
-> +static void vf610_adc_cfg_of_init(struct vf610_adc *info)
-> +{
-> +       struct device_node *np = info->dev->of_node;
+> +		sata2: sata@1a400000 {
+> +			compatible = "apm,xgene-ahci-sgmii";
+> +			reg = <0x0 0x1a400000 0x0 0x1000>,
+> +			      <0x0 0x1f220000 0x0 0x10000>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <0x0 0x87 0x4>;
+> +			status = "ok";
+> +			clocks = <&sata23clk 0>;
+> +			phys = <&phy2 0>;
+> +			phy-names = "sata-6g";
+> +		};
 > +
-> +       /*
-> +        * set default Configuration for ADC controller
-> +        * This config may upgrade to require from DT
-> +        */
-> +       info->adc_feature.clk_sel = ADCIOC_BUSCLK_SET;
-> +       info->adc_feature.vol_ref = VF610_ADCIOC_VR_VREF_SET;
-> +       info->adc_feature.calibration = true;
-> +       info->adc_feature.tri_hw = false;
-> +       info->adc_feature.dataov_en = true;
-> +       info->adc_feature.ac_clk_en = false;
-> +       info->adc_feature.dma_en = false;
-> +       info->adc_feature.cc_en = false;
-> +       info->adc_feature.cmp_func_en = false;
-> +       info->adc_feature.cmp_range_en = false;
-> +       info->adc_feature.cmp_greater_en = false;
-> +
-> +       if (of_property_read_u32(np, "fsl,adc-io-pinctl",
-> +                       &info->adc_feature.pctl)) {
-> +               info->adc_feature.pctl = VF610_ADC_IOPCTL5;
-> +               dev_info(info->dev,
-> +                       "Miss adc-io-pinctl in dt, enable pin SE5.\n");
-> +       }
+> +		sata3: sata@1a800000 {
+> +			compatible = "apm,xgene-ahci-pcie";
+> +			reg = <0x0 0x1a800000 0x0 0x1000>,
+> +			      <0x0 0x1f230000 0x0 0x10000>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <0x0 0x88 0x4>;
+> +			status = "ok";
+> +			clocks = <&sata45clk 0>;
+> +			phys = <&phy3 0>;
+> +			phy-names = "sata-6g";
+> +		};
 
-Could you elaborate on what this means? What is this doing when pinctrl
-is not specified in the DT?
-
-> +
-> +       if (info->vref)
-> +               info->vref_uv = regulator_get_voltage(info->vref);
-> +       else if (of_property_read_u32(np, "fsl,adc-vref", &info->vref_uv))
-> +               dev_err(info->dev,
-> +                       "Miss adc-vref property or vref regulator in the DT.\n");
-
-Query the regulator instead.
-
-> +
-> +       if (of_property_read_u32(np, "fsl,adc-clk-div",
-> +                       &info->adc_feature.clk_div_num)) {
-> +               info->adc_feature.clk_div_num = 2;
-> +               dev_info(info->dev,
-> +                       "Miss adc-clk-div in dt, set divider to 2.\n");
-> +       }
-
-Why do you need this?
-
-I'd expect the use to request a frequency they wanted to sample at, and
-the driver would try its best by fiddling with this and the clock input.
-
-> +
-> +       if (of_property_read_u32(np, "fsl,adc-res",
-> +                       &info->adc_feature.res_mode)) {
-> +               info->adc_feature.res_mode = 12;
-> +               dev_info(info->dev,
-> +                       "Miss adc-res property in dt, use 8bit mode.\n");
-
-This message does not seem to match the code above it.
-
-Is this a hardware limitation in some instances? Or is it always
-possible to select any of the resolutions?
-
-> +
-> +       if (of_property_read_u32(np, "fsl,adc-sam-time",
-> +                       &info->adc_feature.sam_time)) {
-> +               info->adc_feature.sam_time = 4;
-> +               dev_info(info->dev,
-> +                       "Miss adc-sam-time property in dt, set to 4.\n");
-> +       }
-
-This looks like it should be handled at runtime.
-
-> +
-> +       info->adc_feature.hw_average = of_property_read_bool(np,
-> +                                       "fsl,adc-hw-aver-en");
-
-Is hw average support not always present?
-
-> +       if (info->adc_feature.hw_average &&
-> +                of_property_read_u32(np, "fsl,adc-aver-sam-sel",
-> +                               &info->adc_feature.hw_sam)) {
-> +               info->adc_feature.hw_sam = 4;
-> +               dev_info(info->dev,
-> +                       "Miss adc-aver-sam-sel property in dt, set to 4.\n");
-> +       }
-
-Why not configure this at runtime instead?
-
-> +
-> +       info->adc_feature.lpm = of_property_read_bool(np, "fsl,adc-low-power-mode");
-> +       info->adc_feature.hs_oper = of_property_read_bool(np, "fsl,adc-high-speed-conv");
-
-Please elaborate on what these mean, and why they need to be in the DT.
+The example is pointlessly huge. You could trim it down two these last
+two nodes (with a phy node and some fixed clocks). 
 
 Thanks,
 Mark.
