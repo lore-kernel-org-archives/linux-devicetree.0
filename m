@@ -1,15 +1,15 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 2/9] staging: dwc2: update DT binding to add generic
- clock/phy properties
-Date: Tue, 26 Nov 2013 15:49:30 +0530
-Message-ID: <529475B2.9070202@ti.com>
+Subject: Re: [PATCH v3 5/9] usb: gadget: s3c-hsotg: use generic
+ phy_init()/phy_exit() support
+Date: Tue, 26 Nov 2013 15:53:32 +0530
+Message-ID: <529476A4.8080600@ti.com>
 References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org>
- <1385403367-18144-3-git-send-email-matt.porter@linaro.org>
+ <1385403367-18144-6-git-send-email-matt.porter@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1385403367-18144-3-git-send-email-matt.porter@linaro.org>
+In-Reply-To: <1385403367-18144-6-git-send-email-matt.porter@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,44 +23,41 @@ To: Matt Porter <matt.porter@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroa
 Cc: Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Linaro Patches <patches@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+
 On Monday 25 November 2013 11:46 PM, Matt Porter wrote:
-> dwc2/s3c-hsotg require a single clock to be specified and optionally
-> a generic phy. On the s3c-hsotg driver old style USB phy support is
-> present as a fallback so the generic phy properties are optional.
+> If a generic phy is present, call phy_init()/phy_exit(). This supports
+> generic phys that must be soft reset before power on.
 > 
 > Signed-off-by: Matt Porter <matt.porter@linaro.org>
 > ---
->  Documentation/devicetree/bindings/staging/dwc2.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/usb/gadget/s3c-hsotg.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/staging/dwc2.txt b/Documentation/devicetree/bindings/staging/dwc2.txt
-> index 1a1b7cf..b8b42b6 100644
-> --- a/Documentation/devicetree/bindings/staging/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/staging/dwc2.txt
-> @@ -5,6 +5,12 @@ Required properties:
->  - compatible : "snps,dwc2"
->  - reg : Should contain 1 register range (address and length)
->  - interrupts : Should contain 1 interrupt
-> +- clocks: clock provider specifier
-> +- clock-names: shall be "otg"
-> +- phys: phy provider specifier
-> +- phy-names: shall be "device"
+> diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
+> index da3879b..8dfe33f 100644
+> --- a/drivers/usb/gadget/s3c-hsotg.c
+> +++ b/drivers/usb/gadget/s3c-hsotg.c
+> @@ -3622,6 +3622,9 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
+>  		goto err_supplies;
+>  	}
+>  
+> +	if (hsotg->phy)
 
-lets mention in the Documentation too that the phy properties are optional.
-apart from that..
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> +Refer to clk/clock-bindings.txt for generic clock consumer properties
-> +Refer to phy/phy-bindings.txt for generic phy consumer properties
+IS_ERR? If your phy_get fails *phy* will have a error value..
+
+> +		phy_init(hsotg->phy);
+> +
+>  	/* usb phy enable */
+>  	s3c_hsotg_phy_enable(hsotg);
 >  
->  Example:
+> @@ -3715,6 +3718,8 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
+>  	}
 >  
-> @@ -12,4 +18,8 @@ Example:
->                  compatible = "ralink,rt3050-usb, snps,dwc2";
->                  reg = <0x101c0000 40000>;
->                  interrupts = <18>;
-> +		clocks = <&usb_otg_ahb_clk>;
-> +		clock-names = "otg";
-> +		phys = <&usbphy>;
-> +		phy-names = "device";
->          };
-> 
+>  	s3c_hsotg_phy_disable(hsotg);
+> +	if (hsotg->phy)
+
+same here.
+
+Thanks
+Kishon
