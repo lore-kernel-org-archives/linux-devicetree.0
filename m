@@ -1,38 +1,69 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] clk: exynos: Fix typos in DT bindings documentation
-Date: Tue, 26 Nov 2013 01:22:02 +0100
-Message-ID: <1566145.0GyXC9vG8j@avalon>
-References: <1384775172-3373-1-git-send-email-laurent.pinchart@ideasonboard.com> <CAK9yfHzA_0AEK8DkBcWFmCNsZGiHUqThD4cyLPgEYPverOWkYA@mail.gmail.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using pinfunc.
+Date: Tue, 26 Nov 2013 01:30:37 +0100
+Message-ID: <2715269.S45Tc0DQGQ@flatron>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com> <CACRpkdbyjm0X9RX+8WjqQxBPyRjBOAunkqVcO-0KUd1PTdGavA@mail.gmail.com> <5293ACA6.7060403@bracey.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK9yfHzA_0AEK8DkBcWFmCNsZGiHUqThD4cyLPgEYPverOWkYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5293ACA6.7060403@bracey.fi>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Kevin Bracey <kevin@bracey.fi>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kmpark@infradead.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sachin,
-
-On Monday 18 November 2013 17:17:39 Sachin Kamat wrote:
-> On 18 November 2013 17:16, Laurent Pinchart wrote:
-> > s/comptible/compatible/
-> > 
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+On Monday 25 of November 2013 22:01:42 Kevin Bracey wrote:
+> On 25/11/2013 16:34, Linus Walleij wrote:
+> > On Wed, Nov 20, 2013 at 1:02 AM, Kyungmin Park <kmpark@infradead.org> wrote:
+> >> On Wed, Nov 20, 2013 at 4:16 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> >>> I think that last point should be addressed by having a driver that owns
+> >>> the GPIO set it to the desired output level, and the implementation of
+> >> Some pins are not connected (NC). At that cases, there's no drivers to
+> >> handle it. To reduce power leakage, it sets proper configuration with
+> >> values instead of reset values.
+> > This is correspondant to the PIN_CONFIG_OUTPUT from
+> > include/linux/pinctrl/pinconf-generic.h
 > 
-> Good catch.
+> Indeed it is - I was waiting for someone to point that out. Now we've 
+> got there...
 > 
-> Reviewed-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> I've been working on extending the shmobile PFC driver to provide 
+> "gpio-mode" and implement PIN_CONFIG_OUTPUT as described by 
+> Documentation/pinctrl.txt, primarily to handle sleep states, but I have 
+> begun to wonder about the initial state problem, as discussed here.
+> 
+> As far as I can see, we can't currently specify "fallback" states for 
+> pins, which is one of Tomasz' key requirements.
+> 
+> We can specify "hog" states, and we can specify "default for a driver", 
+> but not "default before/in absence of a driver" or "sleep in absence of 
+> a driver". Having a hog precludes any finer driver control, AFAICT.
+> 
+> Some of our existing pre-pinconf board files have a "unused pins" table 
+> which is used to claim and pull GPIOs. I've converted that to "hog" 
+> pinconf, but that only works because the table omits all pins used by 
+> drivers. And, unsurprisingly, that's been error-prone; if those tables 
+> originally covered all unused pins, they don't any more.
+> 
+> I'd like confidence that we can get every pin into the correct state by 
+> having a fully-populated table containing all pins, that can be used 
+> regardless of which drivers start. I think what we're lacking is a "weak 
+> hog". Whatever you call that. :)
+> 
+> That would also specify the state to fallback to when a group is 
+> released (where we currently do pinmux_disable_setting).
+> 
+> Thoughts?
 
-Have you queued up the patch for v3.14 ?
+I fully agree with Kevin. We're currently also using "hogs" for this, but
+as Kevin mentioned, this is error prone, as it can be used for pins that
+are not touched by any drivers.
 
--- 
-Regards,
+IMHO a way to specify a default safe state of all pins (with lowest power
+consumption, without possibility of glitching external devices, etc.)
+would be really useful for Samsung platforms (and probably Renesas ones
+as Kevin wrote).
 
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
