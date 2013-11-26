@@ -1,83 +1,59 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 6/9] usb: gadget: s3c-hsotg: get phy bus width from
- phy subsystem
-Date: Tue, 26 Nov 2013 15:58:45 +0530
-Message-ID: <529477DD.8000906@ti.com>
-References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org>
- <1385403367-18144-7-git-send-email-matt.porter@linaro.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 02/17] spi/spi.h: Add configure from slave support.
+Date: Tue, 26 Nov 2013 10:29:51 +0000
+Message-ID: <20131126102951.GX14725@sirena.org.uk>
+References: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com>
+ <1385451313-1875-3-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1385403367-18144-7-git-send-email-matt.porter@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Porter <matt.porter@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Linaro Patches <patches@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eMGrAD5L3cjpiKtl"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1385451313-1875-3-git-send-email-sourav.poddar-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Monday 25 November 2013 11:46 PM, Matt Porter wrote:
-> Adds support for querying the phy bus width from the generic phy
-> subsystem. Configure UTMI bus width in GUSBCFG based on this value.
-> 
-> Signed-off-by: Matt Porter <matt.porter@linaro.org>
-> ---
->  drivers/usb/gadget/s3c-hsotg.c | 14 +++++++++++++-
->  drivers/usb/gadget/s3c-hsotg.h |  1 +
->  2 files changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-> index 8dfe33f..be41585 100644
-> --- a/drivers/usb/gadget/s3c-hsotg.c
-> +++ b/drivers/usb/gadget/s3c-hsotg.c
-> @@ -144,6 +144,7 @@ struct s3c_hsotg_ep {
->   * @regs: The memory area mapped for accessing registers.
->   * @irq: The IRQ number we are using
->   * @supplies: Definition of USB power supplies
-> + * @phyif: PHY interface width
->   * @dedicated_fifos: Set if the hardware has dedicated IN-EP fifos.
->   * @num_of_eps: Number of available EPs (excluding EP0)
->   * @debug_root: root directrory for debugfs.
-> @@ -171,6 +172,7 @@ struct s3c_hsotg {
->  
->  	struct regulator_bulk_data supplies[ARRAY_SIZE(s3c_hsotg_supply_names)];
->  
-> +	u32			phyif;
->  	unsigned int		dedicated_fifos:1;
->  	unsigned char           num_of_eps;
->  
-> @@ -2276,7 +2278,7 @@ static void s3c_hsotg_core_init(struct s3c_hsotg *hsotg)
->  	 */
->  
->  	/* set the PLL on, remove the HNP/SRP and set the PHY */
-> -	writel(GUSBCFG_PHYIf16 | GUSBCFG_TOutCal(7) |
-> +	writel(hsotg->phyif | GUSBCFG_TOutCal(7) |
->  	       (0x5 << 10), hsotg->regs + GUSBCFG);
->  
->  	s3c_hsotg_init_fifo(hsotg);
-> @@ -3622,6 +3624,16 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
->  		goto err_supplies;
->  	}
->  
-> +	/* Set default UTMI width */
-> +	hsotg->phyif = GUSBCFG_PHYIf16;
-> +
-> +	/*
-> +	 * If using the generic PHY framework, check if the PHY bus
-> +	 * width is 8-bit and set the phyif appropriately.
-> +	 */
-> +	if (hsotg->phy && (phy_get_bus_width(phy) == 8))
+--eMGrAD5L3cjpiKtl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-what if the phy has error value here?
+On Tue, Nov 26, 2013 at 01:04:58PM +0530, Sourav Poddar wrote:
 
-Thanks
-Kishon
+>  	void	(*get_buf)(struct spi_master *master);
+>  	void	(*put_buf)(struct spi_master *master);
+> +	void	(*configure_from_slave)(struct spi_device *spi, u8 *val);
+
+Clearly this is far too unstructured to be useful, this is only ever
+going to work with one specific combination of slave and master since
+there's absolutely no semantics defined.
+
+--eMGrAD5L3cjpiKtl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSlHgcAAoJELSic+t+oim9MAEP/jksyOHV60pekSBgUvF0lDQa
+/20gnPmbYp9Z4uCZEiiWXOP7HUhfvngAgVS2d6RuFLf1Km0FJ2Z9d0rs0gAZsvSo
+LnzVuSdAMtDgKjjuKqJmpL2DiOtRk9veL8w+D30e5uqjY4R4PWlbnWRAZ2RNwvpn
+9pVJHfHdAvKvkgpjCZ7FMIGJbW2hHmgieNP5m5B8TvRS0nycQuoBXwRYsbpLDIKf
+Munb9Rg0nibRXUU1EDvx7nBGRETX961nP3Ix9aDvlBkvAihZ4L7+B76VdY0t9Ya6
+du92IbzDnDexkkxEgMcVZQmgBJOEz3xwBgv3qsPFzB2spPDzqcR8F9rnsegWUvlM
+E+znd+fCesDyE2s3jC2tk7C4vrX5amcZ910hHvvYYRT/Oir3ET37NKugAZ+Y8EHK
+RHyjH1BEzdm774fAz8TDena31kzGyMBBZoYDCIqEPeMPkC6PUiOVD9nqMLue/iQF
++pvYTqFKiVz9Q/4KDRhyl2ChCqCPL6wlIXKzVne//1oWWjIT/Sy7PUvbNvQhn8Ga
+40joh9duOjS7ND2gA2FLV07OdchctHiKnbcQGfXegWGagWLTx0X/IdX7RE/Jof0g
+hG9+NInn+XNMXNfbq+xw5PPEOqMI4BxLE/HcIh4WFNBYKtNFlPjvTKMlsdwYvt3N
+u1uSdPIIXWsXMN1DkJIa
+=gnfI
+-----END PGP SIGNATURE-----
+
+--eMGrAD5L3cjpiKtl--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
