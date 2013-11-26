@@ -1,34 +1,92 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] Documentation: add the binding file for Freescale
- vf610 ADC driver
-Date: Tue, 26 Nov 2013 21:37:39 +0800
-Message-ID: <20131126133737.GA5402@S2101-09.ap.freescale.net>
-References: <1385463394-11157-1-git-send-email-B38611@freescale.com>
- <1385463394-11157-4-git-send-email-B38611@freescale.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/9] ARM: at91/dt: add mmc0 slot0 support to at91rm9200ek board
+Date: Tue, 26 Nov 2013 14:46:05 +0100
+Message-ID: <CACRpkdZdweyWJefttiuiYAJ9qhahLbnj7eHUiLV_83UA41X_uQ@mail.gmail.com>
+References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
+	<1377687995-10758-1-git-send-email-b.brezillon@overkiz.com>
+	<20131120145926.GE14627@ns203013.ovh.net>
+	<528CDFFB.1020601@overkiz.com>
+	<CACRpkdboBg4YOnMNiar0DDBVnoky=zNky+Pzyp1=P_POtH15qQ@mail.gmail.com>
+	<528DE1C4.6060900@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1385463394-11157-4-git-send-email-B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <528DE1C4.6060900-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 26, 2013 at 06:56:34PM +0800, Fugang Duan wrote:
-> +Optional properties:
-> +- fsl,adc-io-pinctl: Enable field for the I/O port control of MCU pins used as analog inputs.
-> +- fsl,adc-vref: ADC refrence voltage value, unit is uV.
-> +- fsl,adc-clk-div: Current clock divider value, such as 1,2,4,8,16 and so on.
-> +- fsl,adc-res: ADC conversion mode selection, such as 8 for 8-bit, 10 for 10-bit, 12 for 12-bit mode.
-> +- fsl,adc-sam-time: ADC sample time duration, number of ADC clocks, such as 2, 4, 6, 8, 12, 16, 20, 24
-> +- fsl,adc-aver-sam-sel: Determines how many ADC conversions will be averaged to create the ADC average result.
-> +			The Optional value is 4, 8, 16, 32.
-> +- fsl,adc-hw-aver-en: Bool type to decide enable hardware average function.
-> +- fsl,adc-low-power-mode: Bool type to decide enable ADC low power mode.
-> +- fsl,adc-high-speed-conv: Bool type to decide enable ADC high speed mode.
-> +- vref: The regulator to support ADC refrence voltage.
+On Thu, Nov 21, 2013 at 11:34 AM, boris brezillon
+<b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org> wrote:
+> On 21/11/2013 10:48, Linus Walleij wrote:
 
-Shouldn't it be vref-supply?
+>> No matter whether it's a switch or a GPIO regulator it seems we
+>> are in violent agreement that it should not be controlled by the
+>> pin control states at least.
+>>
+>> Start with making it a GPIO then you can figure out whether
+>> a GPIO regulator or drivers/extcon/extcon-gpio.c should be
+>> used.
+>
+> Thanks for pointing this out. I wasn't aware of the extcon subsystem.
+>
+> Actually, I think it's a little bit more tricky.
 
-Shawn
+Hm, yeah extcon is for things like audio jacks on phones that
+userspace need to detect.
+
+drivers/input/keyboard/gpio_keys* is for things that actually
+input characters to userspace stuff.
+
+None of it is applicable here it seems ...
+
+> The switch connected to gpio PB22 is used to enable one device or the other:
+>  - PB22 set to high level enables slot0 of mmc0 (connect mmc signals to the
+> mmc
+>    connector)
+>  - PB22 set to low level enables the dataflash (connect to the SPI0 signals
+> to the
+>    dataflash device)
+
+So this is something like a "jumper" of the old type, configuring
+the entire system?
+
+Something like that:
+http://www.mignonette-game.com/images/v2/21-arduino-com-jumper.jpg
+
+But in this case it is a mechanical switch rather than a jumper?
+
+This is not much different from the GPIOs people use to e.g. encode
+the board type, just that it can change.
+
+Do people switch this thing at runtime?
+
+> The pinctrl approach has the benefit of providing a transparent way (no
+> existing
+> drivers modifications) to enable one device or the other.
+>
+> But if you think this is better done (or cleaner) with an extcon or a
+> regulator device,
+> I'll try to find a way to do it this way.
+
+I'm uncertain. If this is something that changes at runtime, the
+input from the switch should be read through GPIO and used
+to select the "default" state of one device and something like
+"sleep" on the other (I suspect more things than pin control
+may be affected by that!)
+
+If this is a switch that you want to take the simple shortcut
+of just reading at boot, the approach would still be similar, just
+less code.
+
+So use gpio_get() to read the value, and then select which
+*entire device* goes active depending on the setting would
+be the right approach I guess?
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
