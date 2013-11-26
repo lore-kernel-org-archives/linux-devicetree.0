@@ -1,80 +1,36 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv10 31/41] ARM: OMAP2+: clock: add support for regmap
-Date: Tue, 26 Nov 2013 09:40:45 -0800
-Message-ID: <20131126174045.GE26766@atomide.com>
-References: <1385453182-24421-1-git-send-email-t-kristo@ti.com>
- <1385453182-24421-32-git-send-email-t-kristo@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] checkpatch: add DT compatible string documentation check
+Date: Tue, 26 Nov 2013 11:43:20 -0600
+Message-ID: <5294DDB8.8050207@gmail.com>
+References: <1385481675-26675-1-git-send-email-robherring2@gmail.com>	 <1385484225.20100.58.camel@joe-AO722>	 <CAL_JsqKgUQZT4g3fgPe-h8G-zWb1gnfxgT20BDrL+zS5u4URzg@mail.gmail.com> <1385486940.20100.60.camel@joe-AO722>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385453182-24421-32-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385486940.20100.60.camel@joe-AO722>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [131126 00:10]:
-> Using regmap is required for isolating the actual memory access from
-> the clock code. Now, the driver providing the support for the clock IP
-> block can provide a regmap for this purpose.
+On 11/26/2013 11:29 AM, Joe Perches wrote:
+> On Tue, 2013-11-26 at 11:11 -0600, Rob Herring wrote:
+>> I think we don't really want '+' (or '_') in compatible strings.
 > 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  arch/arm/mach-omap2/clock.c |   27 ++++++++++++++++++++++++++-
->  arch/arm/mach-omap2/clock.h |    3 +++
->  2 files changed, 29 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-omap2/clock.c b/arch/arm/mach-omap2/clock.c
-> index 238be3f..1ef6df8 100644
-> --- a/arch/arm/mach-omap2/clock.c
-> +++ b/arch/arm/mach-omap2/clock.c
-> @@ -25,7 +25,7 @@
->  #include <linux/bitops.h>
->  #include <linux/clk-private.h>
->  #include <asm/cpu.h>
-> -
-> +#include <linux/regmap.h>
->  
->  #include <trace/events/power.h>
->  
-> @@ -56,6 +56,31 @@ u16 cpu_mask;
->  static bool clkdm_control = true;
->  
->  static LIST_HEAD(clk_hw_omap_clocks);
-> +struct regmap *clk_regmaps[CLK_MAX_REGMAPS];
-> +
-> +void omap2_clk_writel(u32 val, struct clk_hw_omap *clk, void __iomem *reg)
-> +{
-> +	if (clk->flags & REGMAP_ADDRESSING) {
-> +		struct clk_omap_reg *r = (struct clk_omap_reg *)&reg;
-> +		regmap_write(clk_regmaps[r->index], r->offset, val);
-> +	} else {
-> +		__raw_writel(val, reg);
-> +	}
-> +}
-> +
-> +u32 omap2_clk_readl(struct clk_hw_omap *clk, void __iomem *reg)
-> +{
-> +	u32 val;
-> +
-> +	if (clk->flags & REGMAP_ADDRESSING) {
-> +		struct clk_omap_reg *r = (struct clk_omap_reg *)&reg;
-> +		regmap_read(clk_regmaps[r->index], r->offset, &val);
-> +	} else {
-> +		val = __raw_readl(reg);
-> +	}
-> +
-> +	return val;
-> +}
->  
->  /*
->   * Used for clocks that have the same value as the parent clock,
+> What about lines like:
+> arch/powerpc/boot/dts/kmeter1.dts:  compatible = "ucc_geth";
 
-Maybe use read[lw]_relaxed and write[lw]_relaxed here and elsewhere
-instead of __raw_read/write to help cut down the changes needed for
-the big endian patch set?
+I didn't say we don't have them, but for new bindings we want to flag
+things like this. It is fine if new dts files use those existing
+bindings, but no one should be creating new bindings with the deprecated
+style. The problem is that I can't really automate this check on the
+binding documentation until we move to schema based bindings (which
+won't be soon). So I would like to warn if dts files use deprecated
+styles. I don't expect this to be a frequent occurrence.
 
-Regards,
+Rob
 
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
