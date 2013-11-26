@@ -1,125 +1,189 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Add simple panel device tree binding
-Date: Tue, 26 Nov 2013 10:11:43 +0100
-Message-ID: <20131126091142.GB27752@ulmo.nvidia.com>
-References: <1385145714-3022-1-git-send-email-treding@nvidia.com>
- <CAGS+omB5RKRUod_gDrDGRTi3B-BsX54dD1hHeT32gdPSjw9Bkg@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 2/5] pwm: kona: Introduce Kona PWM controller support
+Date: Tue, 26 Nov 2013 10:45:06 +0100
+Message-ID: <20131126094505.GC27752@ulmo.nvidia.com>
+References: <1384800901-21711-1-git-send-email-tim.kryger@linaro.org>
+ <1384800901-21711-3-git-send-email-tim.kryger@linaro.org>
+ <20131125110854.GI22043@ulmo.nvidia.com>
+ <CAAYSxhr7=Pa8RdnEsD2MGTR4hvfHCcHQCP77GRjx1Fqb-=kRrA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5I6of5zJg18YgZEa"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="RIYY1s2vRbPFwWeW"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGS+omB5RKRUod_gDrDGRTi3B-BsX54dD1hHeT32gdPSjw9Bkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+In-Reply-To: <CAAYSxhr7=Pa8RdnEsD2MGTR4hvfHCcHQCP77GRjx1Fqb-=kRrA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tim Kryger <tim.kryger@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linaro Patches List <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
---5I6of5zJg18YgZEa
+--RIYY1s2vRbPFwWeW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 26, 2013 at 10:01:54AM +0800, Daniel Kurtz wrote:
-> On Sat, Nov 23, 2013 at 2:41 AM, Thierry Reding
-> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > This binding specifies a set of common properties for display panels. It
-> > can be used as a basis by bindings for specific panels.
-> >
-> > Bindings for three specific panels are provided to show how the simple
-> > panel binding can be used.
+On Mon, Nov 25, 2013 at 05:38:44PM -0800, Tim Kryger wrote:
+> On Mon, Nov 25, 2013 at 3:08 AM, Thierry Reding
+> <thierry.reding@gmail.com> wrote:
+> > On Mon, Nov 18, 2013 at 10:54:58AM -0800, Tim Kryger wrote:
+> > [...]
+> >> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
 [...]
-> > +Example:
-> > +
-> > +       panel: panel {
-> > +               compatible =3D "cptt,claa101wb01";
-> > +               ddc-i2c-bus =3D <&panelddc>;
-> > +
-> > +               power-supply =3D <&vdd_pnl_reg>;
-> > +               enable-gpios =3D <&gpio 90 0>;
-> > +
-> > +               backlight =3D <&backlight>;
-> > +       };
+> >> +#define PWM_CONTROL_INITIAL          (0x3f3f3f00)
+> >
+> > Can this not be expressed as a bitmask of values for the individual
+> > fields.
+> >
+> >> +#define PWMOUT_POLARITY(chan)                (0x1 << (8 + chan))
+> >
+> > This seems to only account for bits 8-13, what about the others?
+> >
+> >> +#define PWMOUT_ENABLE(chan)          (0x1 << chan)
+> >
+> > Well, this accounts for bits 0-5, that still leaves 16-21 and 24-29.
 >=20
+> 29:24 - Configures each PWM channel for smooth transitions or glitches
+> 21:16 - Configures each PWM channel for push/pull or open drain output
+
+Excellent, now if you can turn that into bit definitions and define
+PWM_CONTROL_INITIAL in terms of those, then I'll be very happy.
+
+One other thing I didn't pay attention to before: while it's quite
+unlikely ever to happen, you might want to spend an extra pair of
+parentheses around "chan", just in case.
+
+> >> +#define PRESCALE_OFFSET                      (0x00000004)
+> >> +#define PRESCALE_SHIFT(chan)         (chan << 2)
+> >
+> > I'm confused. This allocates 2 bits for each channel...
+> >
+> >> +#define PRESCALE_MASK(chan)          (~(0x7 << (chan << 2)))
+> >> +#define PRESCALE_MIN                 (0x00000000)
+> >> +#define PRESCALE_MAX                 (0x00000007)
+> >
+> > ... but 0x7 requires at least 3 bits.
 >=20
-> Pardon the question if this has been discussed before, but, would this
-> also be a good binding in which to store a panel's physical dimensions
-> (mmWidth, mmHeight)?  Or is there another binding more appropriate?
+> Actually this is allocating 2^2 bits for each channel.
 
-This binding doesn't define those properties because they are implied by
-the compatible string. The corresponding driver defines a structure like
-this:
+Doh! Indeed. Perhaps writing it as (~(0x7 << (chan * 4))) would make it
+easier to digest for slow-witted people like myself.
 
-	struct panel_desc {
-		const struct drm_display_mode *modes;
-		unsigned int num_modes;
+> >> +#define PERIOD_COUNT_OFFSET(chan)    (0x00000008 + (chan << 3))
+> >> +#define PERIOD_COUNT_MIN             (0x00000002)
+> >> +#define PERIOD_COUNT_MAX             (0x00ffffff)
+> >
+> > Why PERIOD_COUNT? PERIOD is descriptive enough. Or is this the name as
+> > found in the manual?
+>=20
+> I agree but as you suspected this name comes from the hardware docs.
 
-		struct {
-			unsigned int width;
-			unsigned int height;
-		} size;
-	};
+Okay, that's fine then. Do you have a pointer to that documentation?
 
-The panel_desc.size structure contains the physical panel dimensions,
-specified in mm. With that, a panel will be supported by defining
-something like this:
+> >> +static int kona_pwmc_enable(struct pwm_chip *chip, struct pwm_device =
+*pwm)
+> >> +{
+> >> +     return kona_pwmc_config(chip, pwm, pwm->duty_cycle, pwm->period);
+> >> +}
+> >
+> > Why can't this just enable the channel? Why go through all the trouble
+> > of running the whole computations again?
+>=20
+> The hardware is always enabled and at best can be be configured to
+> operate at zero duty.
 
-	static const struct drm_display_mode foo_mode =3D {
-		...
-	};
+What good are the PWMOUT_ENABLE bits then? Is that really only used for
+triggering updates? That's what another comment suggests, but if so, can
+the comment in kona_pwmc_apply_settings() be extended to mention that?
 
-	static const struct panel_desc foo =3D {
-		.modes =3D &foo_mode,
-		.num_modes =3D 1,
-		.size {
-			.width =3D 223,
-			.height =3D 125,
-		},
-	};
+> The settings in HW may have already been triggered and might not be
+> what you want.
+>=20
+> For example:
+>=20
+> /sys/class/pwm/pwmchip0/pwm1# echo 1 > enable
+> /sys/class/pwm/pwmchip0/pwm1# echo 5000 > period
+> /sys/class/pwm/pwmchip0/pwm1# echo 2000 > duty_cycle
+> /sys/class/pwm/pwmchip0/pwm1# echo 0 > enable
+> /sys/class/pwm/pwmchip0/pwm1# echo 1 > enable
 
-	static const struct of_device_id platform_of_match[] =3D {
-		...
-		{
-			.compatible =3D "vendor,foo",
-			.data =3D &foo,
-		},
-		...
-	};
+I'm not exactly sure what this is supposed to demonstrate.
 
-I assume you have a specific use-case in mind. Does this provide what
-you need? The driver patches were posted earlier[0][1]. They have
-changed slightly since then to address review comments, but nothing
-significant.
+> >> +
+> >> +     writel(0, kp->base + DUTY_CYCLE_HIGH_OFFSET(chan));
+> >> +     kona_pwmc_apply_settings(kp, chan);
+> >> +}
+> >> +
+> >> +static const struct pwm_ops kona_pwm_ops =3D {
+> >> +     .config =3D kona_pwmc_config,
+> >> +     .owner =3D THIS_MODULE,
+> >> +     .enable =3D kona_pwmc_enable,
+> >> +     .disable =3D kona_pwmc_disable,
+> >> +};
+> >
+> > Please move the .owner field to be the last field. Also you did define
+> > the PWMOUT_POLARITY field, which indicates that the hardware supports
+> > changing the signal's polarity, yet you don't implement the polarity
+> > feature. Why not?
+>=20
+> I wanted to keep this driver simple for now.
+
+Fair enough.
+
+> > Do you really want the clock enabled all the time? Why not just
+> > clk_enable() whenever a PWM is enabled? If you need the clock for
+> > register access, you can also bracket register accesses with
+> > clk_enable() and clk_disable(). Perhaps the power savings aren't worth
+> > the added effort, so if you'd rather not do that, I'm fine with it, too.
+>=20
+> I intend to follow up with a patch to do exactly that but I want to
+> establish the baseline functionality first.
+
+Okay, that's fine.
+
+> >> +MODULE_AUTHOR("Broadcom");
+> >
+> > I don't think Broadcom qualifies as author. This should be the name of
+> > whoever wrote the code. There are a few drivers that contain the company
+> > name in the MODULE_AUTHOR, but I don't think those are correct either.
+>=20
+> Would you be fine with two lines here?  Something like:
+>=20
+> MODULE_AUTHOR("Broadcom Corporation <bcm-kernel-feedback-list@broadcom.co=
+m>");
+> MODULE_AUTHOR("Tim Kryger <tkryger@broadcom.com>");
+
+Not sure. That email address certainly doesn't look like it belongs to
+the driver author. Neither did Broadcom actually write the driver, you
+did, right? If you're concerned about your employer not being credited
+you're listed with an @broadcom.com email address and there's the
+copyright statement.
+
+All of that said, I wasn't able to dig up a normative policy and either
+of your proposed alternatives do exist in the kernel, so I withdraw any
+objections regarding MODULE_AUTHOR. Take your pick.
 
 Thierry
 
-[0]: http://www.spinics.net/lists/devicetree/msg08498.html
-[1]: http://www.spinics.net/lists/devicetree/msg08499.html
-
---5I6of5zJg18YgZEa
+--RIYY1s2vRbPFwWeW
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSlGXOAAoJEN0jrNd/PrOhcvoQALk6OyUkBDUZoYclozecjMjS
-YASKg0C3QyhZubxuKmbJJ8zUbMrehL/i8xB4d6P4wk3JzgI9u4rjhSjyNtJtocyo
-+sKDctDnHZAmd7a7xE3DP/B2YxVaC+15Swbr0hyRwIoLh3mJk93KykXkabaJNRoV
-UypZ/bqKNpTVY3SWQGWb/nbeVP3sH+ubEVz0vksZNBedHhXKIwYizka8+L3HfGNd
-giZK7ztjsyINvU4jXu5160pgg1UWaK+XFRJI2xF5vCzrgH0ty9q7OyEdtul7ibAz
-xr28WEnSWcs5zAtZdCmJGyLo8J+uDMDMN8Y1paEb1AnjrflPdWkuZRuEotoOFs05
-CfNJxYZEL8x6khWzmknczIOCMWKZdudeIFqNxCtH+jm4X+3qOO2ItCbo/eIHWDY/
-9LCqMTrpb0pK27T/qvjNJxLo71qV5GuGnRVSTL6zC75CWBVODyQXtfV9N4gTUKgE
-9mab2L97SPDlb2TE5AWzJ1VF8Bqg/WSI0nzIsCbgJB40cRdi4w0FYWMHSa2u03nF
-8E1m+qC/59m4BlUbAW6zwkyjcrhSJmcW1XvcUZydrFHOLwFE5dg7a20/C0JpYpkw
-PN6zkXlbPlz4q+XSMlcwL0CBDVpiJJjpV1a+FLHbjaKFkihRhiveafNfnocgfGer
-94URaF3J97AszIaNRqCi
-=0Xkk
+iQIcBAEBAgAGBQJSlG2hAAoJEN0jrNd/PrOh6ogP/jjxSKLBGXycQEuVd8QRh6B6
+tit2cjmsOvYjOkTFgfAXbQNaeH6XfUEYmbQ/wKcZ+Yo9hiMpEdYm7JGVdywG7k4F
+ND1DxJ8uzYeBI3wRyKz+0Qpc8RujJdRBHR0/ft3m2aWfZBqFsTdhhiP7F54PVsZz
+uDQT6tnNB1kvCzVEYWq15JriE+dehncnWaTzB41jDdQFoNpTfHlL2mxdP4LeUVLJ
+H/tN1HI1T7UIKkGxcv3H4HXwX2PjvLRpp/W4e39/WAtOy4cvdRni62MJZFZXc5Af
+7/4+4qF7Qh81JMF+vxCEbZWmup6icmIPo9xewK5ZwyWGIqH0JJVxeD6IWhZ6I+S6
+INLhGURCd+omuXGuG8kDpsX4gn+rLcP6HhnN54ItPntiOhP+c+zKuDxuPGv8hpnU
+NnIQGBYlyZlcgJTUcJ1817i2zl6hO6xb/E6hiY7ADszbsjNWZXSzx0/MPs0lIsrG
+1BJ5K2yXPbKwlv50xSYTUO4RnRYWuQQDNfhmrnAMQENUKR8P8q1lwTC5TBFhnyG8
+uQyVbntGmUIBJrpWvyijxk+0n0rq3G5q2sdqpgRWsxjcuhXOk0clFeBkZsYGOUJN
+W397HbusUy+K553ZVZDREpAx4bfWBZVc6IbkIwyguBQIQlMRBSjI19eD3DWZe/Lv
+enZv/zDz4k3F+9M/hnlh
+=cDGi
 -----END PGP SIGNATURE-----
 
---5I6of5zJg18YgZEa--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--RIYY1s2vRbPFwWeW--
