@@ -1,15 +1,17 @@
 From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH v3 1/6] watchdog: davinci: change driver to use WDT core
-Date: Wed, 27 Nov 2013 12:03:01 +0200
-Message-ID: <5295C355.6000604@ti.com>
-References: <1385388285-10553-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1385388285-10553-2-git-send-email-ivan.khoronzhuk@ti.com>
- <5295758C.2030907@ti.com> <52959966.7000509@roeck-us.net>
+Subject: Re: [PATCH 07/12] memory: davinci-aemif: introduce AEMIF driver
+Date: Wed, 27 Nov 2013 12:22:11 +0200
+Message-ID: <5295C7D3.8010803@ti.com>
+References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1384187188-5776-8-git-send-email-ivan.khoronzhuk@ti.com>
+ <4F5844B3A985794BA902E12C070812375F8D2E@DNCE04.ent.ti.com>
+ <52944BD3.90105@ti.com> <5294B8C4.6040803@ti.com> <5294D8AD.5030106@ti.com>
+ <5294E7E4.3060600@ti.com> <20131127003707.GQ9468@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52959966.7000509@roeck-us.net>
+In-Reply-To: <20131127003707.GQ9468@ld-irv-0074.broadcom.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,47 +21,65 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>, Sekhar Nori <nsekhar@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel Moll <Pawel.Moll@arm.com>, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
+ Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sekhar Nori <nsekhar@ti.com>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/27/2013 09:04 AM, Guenter Roeck wrote:
-> On 11/26/2013 08:31 PM, Sekhar Nori wrote:
->> On Monday 25 November 2013 07:34 PM, Ivan Khoronzhuk wrote:
->>> To reduce code duplicate and increase code readability use WDT core
->>> code to handle WDT interface.
+On 11/27/2013 02:37 AM, Brian Norris wrote:
+> On Tue, Nov 26, 2013 at 01:26:44PM -0500, Santosh Shilimkar wrote:
+>> On Tuesday 26 November 2013 12:21 PM, Sekhar Nori wrote:
+>>> On 11/26/2013 8:35 PM, Santosh Shilimkar wrote:
+>>>> On Tuesday 26 November 2013 02:20 AM, Sekhar Nori wrote:
+>>>>> On Monday 11 November 2013 10:36 PM, Khoronzhuk, Ivan wrote:
+>>>>>> +static int davinci_aemif_probe(struct platform_device *pdev)
+>>>>>> +{
+>>>>>> +       int ret  = -ENODEV, i;
+>>>>>> +       struct resource *res;
+>>>>>> +       struct device *dev = &pdev->dev;
+>>>>>> +       struct device_node *np = dev->of_node;
+>>>>>> +
+>>>>>> +       if (np == NULL)
+>>>>>> +               return 0;
+>>>>>> +
+>>>>>> +       if (aemif) {
+>>>>>> +               dev_err(dev, "davinci_aemif driver is in use currently\n");
+>>>>>> +               return -EBUSY;
+>>>>>> +       }
+>>>>>
+>>>>> Why expressly prevent multiple AEMIF devices? Its entirely conceivable
+>>>>> to have two memories like NAND and NOR flash connect to two different
+>>>>> AEMIF interfaces.
+>>>>>
+>>>> Ivan wanted me to clarify the Keystone hardware which supports
+>>>> 1 instance of controller with 4 CS. That allows already four
+>>>> devices to be connected. Currently NAND and NOR are connected on it
+>>>> and two more slots are free.
+>>>>
+>>>> Since driver support what hardware is, lets not build a driver for
+>>>> hardware which don't exist. And if at all such a support would be
+>>>> needed in future, we can always add it.
 >>>
->>> Remove io_lock as the WDT core uses mutex to lock each wdt device.
->>> Remove wdt_state as the WDT core tracks state with its own variable.
+>>> I understand the lack of hardware part, but its common to write the
+>>> driver such that it can handle multiple instances. Is there any gain on
+>>> current hardware because of this check? From what I am hearing, the code
+>>> in question wont be exercised at all. So why go all the way and add it
+>>> in first place?
 >>>
->>> The watchdog_init_timeout() can read timeout value from timeout-sec
->>> property if the passed value is out of bounds. The heartbeat is
->>> initialized in next way. If heartbeat is not set thought module
->>> parameter, try to read it's value from WDT node timeout-sec property.
->>> If node has no one, use default value.
->>>
->>> The heartbeat is hold in wdd->timeout by WDT core, so use it in
->>> order to set timeout period.
->>>
->>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>
->> So this still causes a regression because the clk_get()
->> fails due to the changed device name. Please fold this
->> patch in (tested on DM365, compiled on rest).
->>
->> Also, the change in device name (while needed) does not seem
->> to be related to usage of wdt core. Can you may be split
->> that change into a separate patch?
->>
+>> Fair enough. The check can be dropped.
 >
-> Given all the trouble with it, I think that would be a good idea.
+> Hmm, while the sentiment expressed by Sekhar is noble (to avoid
+> unnecessarily constraining the driver), removing the check is not
+> enough. You're still using a global static variable 'aemif', and it is
+> important not to accidentally re-use this struct if a second device ever
+> becomes available. So for the current implementation, the check is
+> necessary IMO. If instead, you were to make 'aemif' a per-device struct
+> (like with platform_set_drvdata()), then you would not have this issue.
 >
-> Guenter
+> Brian
 >
 
-Ok, I'll split it for convenience.
+Yes, that is the plan to make it a per-device.
 
 -- 
 Regards,
