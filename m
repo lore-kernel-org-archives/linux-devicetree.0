@@ -1,117 +1,96 @@
-From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: imx1-core populate subdevices
-Date: Wed, 27 Nov 2013 13:19:19 +0800
-Message-ID: <529580D7.1030505@gtsys.com.hk>
-References: <CACRpkda2dO6DvurEhaTVGJv8nDyEGOEeLCap-_+1e1mHtD0XyQ@mail.gmail.com>	<1384193987-20740-1-git-send-email-mpa@pengutronix.de> <CACRpkdaQcY43wnfD_phsi6rCo3oUmOUcei+gb9phyGT7F1iZyA@mail.gmail.com> <529567FB.5090501@gtsys.com.hk>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2 1/2] mmc: arasan: Add driver for Arasan SDHCI
+Date: Wed, 27 Nov 2013 06:28:05 +0100
+Message-ID: <529582E5.4010809@monstr.eu>
+References: <1383151090-13885-1-git-send-email-soren.brinkmann@xilinx.com> <87mwkqeojd.fsf@octavius.laptop.org> <9e92f3b2-5434-4fcf-b7f5-3f634175193c@CO1EHSMHS024.ehs.local>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <529567FB.5090501-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="3tpKEjUrp25SrafhhopaWuCU0Crd3sVDs"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <9e92f3b2-5434-4fcf-b7f5-3f634175193c@CO1EHSMHS024.ehs.local>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
+Cc: Chris Ball <cjb@laptop.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--3tpKEjUrp25SrafhhopaWuCU0Crd3sVDs
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+Hi Chris,
 
-On Wednesday, November 27, 2013 11:33 AM, Chris Ruehl wrote:
-> On Wednesday, November 20, 2013 04:01 AM, Linus Walleij wrote:
->> On Mon, Nov 11, 2013 at 7:19 PM, Markus Pargmann<mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> wrote:
+On 11/27/2013 12:39 AM, S=C3=B6ren Brinkmann wrote:
+> Hi Chris,
+>=20
+> On Tue, Nov 26, 2013 at 06:22:46PM -0500, Chris Ball wrote:
+>> Hi Soren, sorry for the late review, just trivial changes:
+> No problem. Thanks for looking at it.
+>=20
 >>
->>> Support gpio devicetree subnodes to allow a more detailed DT hardware
->>> description.
->>>
->>> Signed-off-by: Markus Pargmann<mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> On Wed, Oct 30 2013, Soren Brinkmann wrote:
+>>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b=
+/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>> new file mode 100644
+>>> index 000000000000..ef4c5ac753e8
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>> @@ -0,0 +1,27 @@
+>>> +Device Tree Bindings for the Arasan SDCHI Controller
 >>
->> Looks good to me.
+>> SDHCI
+> Oops. Will be fixed.
+>=20
 >>
->> Tentatively applied this, the DT people may want to say something
->> about this.
+>>> +
+>>> +  The bindings follow the mmc[1], clock[2] and interrupt[3] bindings=
+=2E Only
+>>> +  deviations are documented here.
+>>> +
+>>> +  [1] Documentation/devicetree/bindings/mmc/mmc.txt
+>>> +  [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>>> +  [3] Documentation/devicetree/bindings/interrupt-controller/interru=
+pts.txt
+>>> +
+>>> +Required Properties:
+>>> +  - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a'
+>>> +  - reg: From mmc bindings: Register location and length.
 >>
->> Yours,
->> Linus Walleij
->> --
->
-> Hi,
->
-> I tried the new configuration but the kernel oops when probing the
-> dm9000 caused by insufficient resources more likely the real reason
-> that somehow the gpio6: triggers a problem
->
->
-> [ 0.115718] irq: no irq domain found for
-> /soc/aipi@10000000/iomuxc@10015000/gpio@10015500 !
-> [ 0.115768] ------------[ cut here ]------------
-> [ 0.115853] WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171
-> of_device_alloc+0x110/0x15c()
-> [ 0.117824] ---[ end trace 0e10ae727e6e0ab1 ]---
-> [ 0.121236] Failed to request board ext/int gpios
-> [ 0.152712] imx27-pinctrl 10015000.iomuxc: initialized IMX pinctrl driver
->
->
-> iomuxc: iomuxc@10015000 {
-> compatible = "fsl,imx27-iomuxc";
-> reg = <0x10015000 0x600>;
-> #address-cells = <1>;
-> #size-cells = <1>;
-> ranges;
->
-> gpio1: gpio@10015000 {
-> compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
-> reg = <0x10015000 0x100>;
-> interrupts = <8>;
-> gpio-controller;
-> #gpio-cells = <2>;
-> interrupt-controller;
-> #interrupt-cells = <2>;
-> };
-> ...
-> gpio6: gpio@10015500 {
-> compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
-> reg = <0x10015500 0x100>;
-> interrupts = <8>;
-> gpio-controller;
-> #gpio-cells = <2>;
-> interrupt-controller;
-> #interrupt-cells = <2>;
-> };
-> };
->
+>> Actually, reg/interrupts are from the OF core.  There's no need to
+>> mention them here.
+> Tomasz complained when I left those parts out so I added them in v2.
+> Since it's there now, I don't mind either way. Let's just agree on one
+> way or the other.
+>=20
 
-More info
-board-dts-definition for the dm9000 which trigger the oops
+Binding was Acked-by Rob and that's why I believe this should be fine.
 
-/ {
-         model = "GTSYS IR module";
-         compatible = "gtsys,mx27gtsir","fsl,imx27";
+Thanks,
+Michal
 
-         memory {
-                 reg = <0xa0000000 0x10000000>;
-         };
-
-         enet1: ethernet@d4000000 {
-                         compatible = "davicom,dm9000";
-                         #address-cells = <1>;
-                         #size-cells = <1>;
-                         reg = <0xd4000000 0x2
-                                0xd4000004 0x2>;
-                         interrupt-parent = <&gpio6>;
-                         interrupts = <18 2>;   /* DM9000IRQ IMX_GPIO_NR(6,18) 2 
-= high edge trigger */
-                         local-mac-address = [00 00 00 00 00 00];
-                         davicom,no-eeprom;
-                         status = "okay";
-         };
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
-> Kernel Linux version 3.13.0-rc1-next-20131125-dirty
->
-> With kind regards
-> Chris
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--3tpKEjUrp25SrafhhopaWuCU0Crd3sVDs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlKVguUACgkQykllyylKDCGRCgCgjYNKIqoiaIvRGPuX91ipVBXZ
+edAAn0FmUq6S2dwEyOoxj28thwTjjRAT
+=phuA
+-----END PGP SIGNATURE-----
+
+--3tpKEjUrp25SrafhhopaWuCU0Crd3sVDs--
