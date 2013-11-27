@@ -1,67 +1,61 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] mfd: max14577: Add max14577 MFD driver core
-Date: Wed, 27 Nov 2013 13:18:15 +0000
-Message-ID: <20131127131815.GI3296@lee--X1>
-References: <1385135469-27044-1-git-send-email-k.kozlowski@samsung.com>
- <1385135469-27044-2-git-send-email-k.kozlowski@samsung.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH] ARM: davinci: aemif: get rid of davinci-nand driver
+ dependency on aemif
+Date: Wed, 27 Nov 2013 15:21:47 +0200
+Message-ID: <5295F1EB.7030804@ti.com>
+References: <5291CB01.1010506@ti.com>
+ <1385409654-19006-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <5295AECB.7040503@ti.com> <5295D102.2010101@ti.com> <5295EE7B.6030504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1385135469-27044-2-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5295EE7B.6030504@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, rob@landley.net, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Nov 2013, Krzysztof Kozlowski wrote:
+On 11/27/2013 03:07 PM, Sekhar Nori wrote:
+> On Wednesday 27 November 2013 04:31 PM, ivan.khoronzhuk wrote:
+>>>> @@ -192,9 +193,15 @@ static __init void davinci_ntosd2_init(void)
+>>>>            davinci_cfg_reg(DM644X_ATAEN_DISABLE);
+>>>>
+>>>>            /* only one device will be jumpered and detected */
+>>>> -        if (HAS_NAND)
+>>>> +        if (HAS_NAND) {
+>>>>                platform_device_register(
+>>>>                        &davinci_ntosd2_nandflash_device);
+>>>> +
+>>>> +            if (davinci_aemif_setup(
+>>>> +                &davinci_ntosd2_nandflash_device))
+>>>> +                pr_warn("%s: Cannot configure AEMIF.\n",
+>>>> +                    __func__);
+>>>
+>>> This is looking really ugly. Can you shorten
+>>> davinci_ntosd2_nandflash_device to just "ntosd2_nandflash" or similar?
+>>
+>> The rename is not related to the patch, so I won't do this.
+>
+> The reason I asked you to rename is not because I want to push some
+> random clean-up into this patch. You had to introduce a line so broken
+> that its almost unreadable. I offered the suggestion as a way to improve
+> the readability of the code you are introducing in *this* patch.
+>
+> Thanks,
+> Sekhar
+>
 
-> From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->=20
-> This patch adds max14577 core/irq driver to support MUIC(Micro USB IC=
-)
-> device and charger device and support irq domain method to control
-> internal interrupt of max14577 device. Also, this patch supports DT
-> binding with max14577_i2c_parse_dt().
->=20
-> The MAXIM 14577 chip contains Micro-USB Interface Circuit and Li+ Bat=
-tery
-> Charger. It contains accessory and USB charger detection logic. It su=
-pports
-> USB 2.0 Hi-Speed, UART and stereo audio signals over Micro-USB connec=
-tor.
->=20
-> The battery charger is compliant with the USB Battery Charging Specif=
-ication
-> Revision 1.1. It has also SFOUT LDO output for powering USB devices.
->=20
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/mfd/Kconfig                  |   13 ++
->  drivers/mfd/Makefile                 |    1 +
->  drivers/mfd/max14577.c               |  243 ++++++++++++++++++++++++=
-+
->  include/linux/mfd/max14577-private.h |  330 ++++++++++++++++++++++++=
-++++++++++
->  include/linux/mfd/max14577.h         |   69 +++++++
->  5 files changed, 656 insertions(+)
->  create mode 100644 drivers/mfd/max14577.c
->  create mode 100644 include/linux/mfd/max14577-private.h
->  create mode 100644 include/linux/mfd/max14577.h
+Ok, I will rename
 
-Applied, thanks.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Ivan Khoronzhuk
