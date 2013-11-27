@@ -1,62 +1,95 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/2] ARM: dts: omap4-panda-common: Fix pin muxing for
- wl12xx
-Date: Wed, 27 Nov 2013 08:48:24 -0800
-Message-ID: <20131127164823.GX26766@atomide.com>
-References: <1385041804-19115-1-git-send-email-balajitk@ti.com>
- <1385041804-19115-2-git-send-email-balajitk@ti.com>
- <20131121165823.GM10317@atomide.com>
- <528E4295.2040109@ti.com>
- <20131126215537.GO26766@atomide.com>
- <52961DF2.8080507@ti.com>
+From: Matt Porter <matt.porter@linaro.org>
+Subject: Re: [PATCH v3 1/9] phy: add phy_get_bus_width()/phy_set_bus_width()
+ calls
+Date: Wed, 27 Nov 2013 11:55:37 -0500
+Message-ID: <20131127165537.GB31091@beef>
+References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org>
+ <1385403367-18144-2-git-send-email-matt.porter@linaro.org>
+ <529474FA.9080103@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52961DF2.8080507@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: Dan Murphy <dmurphy@ti.com>, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <529474FA.9080103@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>, Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-* Balaji T K <balajitk@ti.com> [131127 08:30]:
-> On Wednesday 27 November 2013 03:25 AM, Tony Lindgren wrote:
-> >* Dan Murphy <dmurphy@ti.com> [131121 09:28]:
-> >>On 11/21/2013 10:58 AM, Tony Lindgren wrote:
-> >>>* Balaji T K <balajitk@ti.com> [131121 05:51]:
-> >>>>pin mux wl12xx_gpio and wl12xx_pins should be part of omap4_pmx_core
-> >>>>and not omap4_pmx_wkup. So, move wl12xx_* to omap4_pmx_core.
-> >>>>
-> >>>>Fix the following error message:
-> >>>>pinctrl-single 4a31e040.pinmux: mux offset out of range: 0x38 (0x38)
-> >>>>pinctrl-single 4a31e040.pinmux: could not add functions for pinmux_wl12xx_pins 56x
-> >>
-> >>Why is the led pins moved then?
-> >
-> >Heh the patch just looks that way, looking at the curly brackets
-> >thing do get moved properly.
-> >
-> >>>>SDIO card is not detected after moving pin mux to omap4_pmx_core since
-> >>>>sdmmc5_clk pull is disabled. Enable Pull up on sdmmc5_clk to detect SDIO card.
-> >>>Cool, does this fix the issue with the WLAN not coming up after a warm reset
-> >>>on panda?
-> >
-> >Also commit f446043f1aa7 (regulator: fixed: fix regulator_list_voltage() for
-> >regression) is needed that recently got merged. But with v3.13-rc1 +
-> >f446043f1aa7 + this patch no luck whatsoever bringing up the wl12xx so there
-> >must be also some regression somewhere from v3.12 on that?
-> >
-> Hi Tony,
+On Tue, Nov 26, 2013 at 03:46:26PM +0530, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
-> I tried loading wl12xx as modules on latest base as yours with
-> ti-connectivity/wl127x-fw-5-sr.bin firmware in place and I could connect
-> and run iperf.
+> On Monday 25 November 2013 11:45 PM, Matt Porter wrote:
+> > This adds a pair of APIs that allows the generic PHY subsystem to
+> > provide information on the PHY bus width. The PHY provider driver may
+> > use phy_set_bus_width() to set the bus width that the PHY supports.
+> > The controller driver may then use phy_get_bus_width() to fetch the
+> > PHY bus width in order to properly configure the controller.
+> > 
+> > Signed-off-by: Matt Porter <matt.porter@linaro.org>
+> > ---
+> >  include/linux/phy/phy.h | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+> > index 6d72269..6ca6c61 100644
+> > --- a/include/linux/phy/phy.h
+> > +++ b/include/linux/phy/phy.h
+> > @@ -46,6 +46,7 @@ struct phy_ops {
+> >   * @mutex: mutex to protect phy_ops
+> >   * @init_count: used to protect when the PHY is used by multiple consumers
+> >   * @power_count: used to protect when the PHY is used by multiple consumers
+> > + * @bus_width: used to specify data width of the PHY bus
+> >   */
+> >  struct phy {
+> >  	struct device		dev;
+> > @@ -55,6 +56,7 @@ struct phy {
+> >  	struct mutex		mutex;
+> >  	int			init_count;
+> >  	int			power_count;
+> > +	int			bus_width;
+> 
+> the bus_width can be part of the attrs struct which you initially proposed.
+> Soon there will be requests for other attributes being added (e.g., speed).
 
-Oh OK I must have missed something then.
+Agreed, I'll merge the accessors with the original attrs struct.
 
-Does it now work after a warm reboot too? And after bringing the interface
-down with "ifconfig wlan0 down" followed by "ifconfig wlan0 up"?
+> >  };
+> >  
+> >  /**
+> > @@ -127,6 +129,14 @@ int phy_init(struct phy *phy);
+> >  int phy_exit(struct phy *phy);
+> >  int phy_power_on(struct phy *phy);
+> >  int phy_power_off(struct phy *phy);
+> > +static inline int phy_get_bus_width(struct phy *phy)
+> > +{
+> > +	return phy->bus_width;
+> > +}
+> > +static inline void phy_set_bus_width(struct phy *phy, int bus_width)
+> 
+> u32 bus_width?
 
-Regards,
+will update
 
-Tony
+> > +{
+> > +	phy->bus_width = bus_width;
+> > +}
+> >  struct phy *phy_get(struct device *dev, const char *string);
+> >  struct phy *devm_phy_get(struct device *dev, const char *string);
+> >  void phy_put(struct phy *phy);
+> > @@ -199,6 +209,16 @@ static inline int phy_power_off(struct phy *phy)
+> >  	return -ENOSYS;
+> >  }
+> >  
+> > +static inline int phy_get_bus_width(struct phy *phy)
+> > +{
+> > +	return -ENOSYS;
+> > +}
+> > +
+> > +static inline void phy_set_bus_width(struct phy *phy, bus_width)
+> 
+> er.. has this been compile tested?
+
+*sigh* obviously not, will address this.
+
+-Matt
