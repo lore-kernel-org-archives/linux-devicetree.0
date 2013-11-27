@@ -1,75 +1,102 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 5/9] usb: gadget: s3c-hsotg: use generic
- phy_init()/phy_exit() support
-Date: Wed, 27 Nov 2013 17:36:50 -0500
-Message-ID: <20131127223650.GP31091@beef>
-References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org>
- <1385403367-18144-6-git-send-email-matt.porter@linaro.org>
- <529476A4.8080600@ti.com>
- <20131127171325.GD31091@beef>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
+ generic bus properties
+Date: Wed, 27 Nov 2013 15:06:50 -0800
+Message-ID: <20131127230650.GA6162@kroah.com>
+References: <20131127172806.GC2291@e103592.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131127171325.GD31091@beef>
+In-Reply-To: <20131127172806.GC2291-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2013 at 12:13:25PM -0500, Matt Porter wrote:
-> On Tue, Nov 26, 2013 at 03:53:32PM +0530, Kishon Vijay Abraham I wrote:
-> > Hi,
-> > 
-> > On Monday 25 November 2013 11:46 PM, Matt Porter wrote:
-> > > If a generic phy is present, call phy_init()/phy_exit(). This supports
-> > > generic phys that must be soft reset before power on.
-> > > 
-> > > Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > ---
-> > >  drivers/usb/gadget/s3c-hsotg.c | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > > 
-> > > diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-> > > index da3879b..8dfe33f 100644
-> > > --- a/drivers/usb/gadget/s3c-hsotg.c
-> > > +++ b/drivers/usb/gadget/s3c-hsotg.c
-> > > @@ -3622,6 +3622,9 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
-> > >  		goto err_supplies;
-> > >  	}
-> > >  
-> > > +	if (hsotg->phy)
-> > 
-> > IS_ERR? If your phy_get fails *phy* will have a error value..
+On Wed, Nov 27, 2013 at 05:28:06PM +0000, Dave Martin wrote:
+> Hi all,
 > 
-> Yes, thanks. I'll fix these and also note that the same issue exists in
-> Kamil's patch for these same hsotg->phy conditional uses. I'll work with
-> Kamil to either get those addressed there or in a follow on fix.
-
-I spoke too soon. If devm_phy_get fails, we don't set hsotg->phy and probe
-defer thus not reaching this point. Since hsotg->phy is either NULL or a
-valid struct phy *, this is correct as is throughout the driver.
-
-> > 
-> > > +		phy_init(hsotg->phy);
-> > > +
-> > >  	/* usb phy enable */
-> > >  	s3c_hsotg_phy_enable(hsotg);
-> > >  
-> > > @@ -3715,6 +3718,8 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
-> > >  	}
-> > >  
-> > >  	s3c_hsotg_phy_disable(hsotg);
-> > > +	if (hsotg->phy)
-> > 
-> > same here.
+> SoC architectures are getting increasingly complex in ways that are not
+> transparent to software.
 > 
-> Ok.
+> A particular emerging issue is that of multi-master SoCs, which may have
+> different address views, IOMMUs, and coherency behaviour from one master
+> to the next.
+> 
+> DT can't describe multi-master systems today except for PCI DMA and
+> similar.  This comes with constraints and assumptions that won't work
+> for emerging SoC bus architectures.  On-SoC, a device's interface to the
+> system can't be described in terms of a single interface to a single
+> "bus".
+> 
+> Different masters may have different views of the system too.  Software
+> needs to understand the true topology in order to do address mapping,
+> coherency management etc., in any generic way.
+> 
+> One piece of the puzzle is to define how to describe these topologies in
+> DT.
+> 
+> The other is how to get the right abstractions in the kernel to drive
+> these systems in a generic way.
+> 
+> The following proposal (originally from Will) begins to address the DT
+> part.
+> 
+> Comments encouraged -- I anticipate it may take some discussion to
+> reach a consensus here.
+> 
+> Cheers
+> ---Dave
+> 
+> 
+> >From will.deacon-5wv7dgnIgG8@public.gmane.org Wed Nov 20 12:06:22 2013
+> Date: Wed, 20 Nov 2013 12:06:13 +0000
+> Subject: [PATCH RFC v2] Documentation: devicetree: add description for generic bus properties
+> 
+> This patch documents properties that can be used as part of bus and
+> device bindings in order to describe their linkages within the system
+> topology.
+> 
+> Use of these properties allows topological parsing to occur in generic
+> library code, making it easier for bus drivers to parse information
+> regarding their upstream masters and potentially allows us to treat
+> the slave and master interfaces separately for a given device.
+> 
+> Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> ---
+> 
+> A number of discussion points remain to be resolved:
+> 
+>   - Use of the ranges property and describing slave vs master bus
+>     address ranges. In the latter case, we actually want to describe our
+>     address space with respect to the bus on which the bus masters,
+>     rather than the parent. This could potentially be achieved by adding
+>     properties such as dma-parent and dma-ranges (already used by PPC?)
+> 
+>   - Describing masters that master through multiple different buses
+> 
+>   - How on Earth this fits in with the Linux device model (it doesn't)
 
-Same above, this will be NULL on failure (but is only applicable at this
-point on the platform data path.
+How does this _not_ fit into the Linux device model?  What am I missing
+here that precludes the use of the "driver/device/bus" model we have
+today?
 
--Matt
+>   - Interaction with IOMMU bindings (currently under discussion)
+> 
+> Cheers,
+> 
+> Will
+> 
+>  .../devicetree/bindings/arm/coherent-bus.txt       | 110 +++++++++++++++++++++
+
+Why "arm"?
+
+What makes it ARM specific?
+
+thanks,
+
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
