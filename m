@@ -1,138 +1,98 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH v2] net: smc91x: Fix device tree based configuration so
- it's usable
-Date: Wed, 27 Nov 2013 10:56:57 -0800
-Message-ID: <20131127185657.GA26766@atomide.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH] Documentation: devicetree: arm: add lpae property to
+ cpus/cpu bindings
+Date: Wed, 27 Nov 2013 11:27:34 -0800
+Message-ID: <CAOesGMh9aQEtqha3gt80q4RmLjXtFTc+Xt39M0m+geTk_betzQ@mail.gmail.com>
+References: <1385517172-803-1-git-send-email-olof@lixom.net>
+	<20131127094911.GE5402@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: netdev-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131127094911.GE5402-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 89ce376c6bdc (drivers/net: Use of_match_ptr() macro in smc91x.c)
-added minimal device tree support to smc91x, but it's not working on
-many platforms because of the lack of some key configuration bits.
+On Wed, Nov 27, 2013 at 1:49 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi Olof,
+>
+> On Wed, Nov 27, 2013 at 01:52:52AM +0000, Olof Johansson wrote:
+>> While the LPAE capability is determined by the kernel today, it is still
+>> useful to be able to specify the feature in the device tree. There is
+>> precedence from other architectures for this.
+>>
+>> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+>> ---
+>>
+>> My personal motive for this is to be able to tell which boards are
+>> work even trying to boot an LPAE kernel on, since we don't disable the
+>> platforms that are based on A8/A9 when LPAE is turned on. I'll add dtsi
+>> patches for A7/A15-based platforms once the binding is settled.
+>
+> It would be nice to have this description of why you want to add this in
+> the commit message proper.
 
-Fix the issue by parsing the necessary configuration like the
-smc911x driver is doing. As most smc91x users seem to use 16-bit
-access, let's default to that if no reg-io-width is specified.
+Sure.
 
-Cc: Nicolas Pitre <nico@fluxnic.net>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+> I don't see much point in this. If we're going to add this to the DTSIs
+> for all platforms that have CPUs with LPAE support, why not just check
+> if a given DT contains one of those CPUs to find out if it has LPAE
+> support?
 
----
+Because it's awkward to have to do a table with each cpu compatible
+value that is known to support LPAE everywhere it's needed.
 
-Device tree folks, any objection to using the reg-io-width property
-as a mask here?
+Alternatively we could have a common compatible field for shared
+features, but that also won't scale (we don't have a compatible field
+today to indicate architecture version, and this would be an
+incremental part on top of that).
 
-Looks like we can use reg-io-width as a mask too if needed, it seems
-to play fine with combinations of 1 = 8-bit, 2 = 16-bit, 4 = 32-bit
-and so on.
+> The information this flag describes is at best redundant, but could also
+> be missing or present erroneously.
 
-I would like to see this merged during the -rc cycle as this makes
-my test devices behave the same way when booted in legacy platform
-data mode compared to when booted with device tree.
+That is true for many other device tree properties too.
+
+> It's also of no use to any OS actually running on the hardware, as it's
+> easier for an OS to check ID_MMFR0[3:0] than to parse a DTB. Likewise
+> for bootloaders.
+
+Compare this to the PowerPC processor binding from IEEE1275, and
+you'll see that there are some similarities, for example when it comes
+to properties describing support of certain instructions (which could
+be probed by inserting illegal instruction handlers and attempting to
+execute them). They also have properties for cpu-version and a few
+other similar things that can be read from registers.
+
+>> I don't think it's worth trying to add those dependencies in Kconfig,
+>> by the way -- it'd be pretty verbose and churny.
+>
+> I think if we want an early warning that a particular platform is not
+> going to support LPAE, this would be a better place to put it.
+
+It's problematic because you really need to annotate every platform
+that _doesn't_ support LPAE to get something that works. Otherwise, if
+you have one platform that selects something like CONFIG_HAVE_LPAE,
+then just enabling that platform together with the rest of them means
+you can turn it on, even if the older platforms can't boot any more.
+
+So, you'd need every non-A15/A7 platform select a CONFIG_NO_LPAE of
+whatnot, which doesn't scale.
+
+Alternatively we'll need to add a config option per cpu, and have
+CONFIG_ARM_LPAE depend on !CORTEX_A8 && !CORTEX_A9 && !<qualcomm v7
+cpus> && !<marvell v7 cpus>. That's also ugly.
+
+> It's a shame we don't have a standard header in the Linux Image. If we
+> did, we could add a "uses LPAE" flag to the Linux Image that bootloaders
+> could check and refuse to run the Image or print a warning if the HW had
+> no LPAE support.
+
+Yep, unfortunate.
 
 
---- a/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-+++ b/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-@@ -8,3 +8,7 @@ Required properties:
- Optional properties:
- - phy-device : phandle to Ethernet phy
- - local-mac-address : Ethernet mac address to use
-+- reg-io-width : Mask of sizes (in bytes) of the IO accesses that
-+  are supported on the device.  Valid value for SMSC LAN91c111 are
-+  1, 2 or 4.  If it's omitted or invalid, the size would be 2 meaning
-+  16-bit access only.
---- a/drivers/net/ethernet/smsc/smc91x.c
-+++ b/drivers/net/ethernet/smsc/smc91x.c
-@@ -82,6 +82,7 @@ static const char version[] =
- #include <linux/mii.h>
- #include <linux/workqueue.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
-@@ -2184,6 +2185,15 @@ static void smc_release_datacs(struct platform_device *pdev, struct net_device *
- 	}
- }
- 
-+#if IS_BUILTIN(CONFIG_OF)
-+static const struct of_device_id smc91x_match[] = {
-+	{ .compatible = "smsc,lan91c94", },
-+	{ .compatible = "smsc,lan91c111", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, smc91x_match);
-+#endif
-+
- /*
-  * smc_init(void)
-  *   Input parameters:
-@@ -2198,6 +2208,8 @@ static void smc_release_datacs(struct platform_device *pdev, struct net_device *
- static int smc_drv_probe(struct platform_device *pdev)
- {
- 	struct smc91x_platdata *pd = dev_get_platdata(&pdev->dev);
-+	struct device_node *np = pdev->dev.of_node;
-+	const struct of_device_id *match = NULL;
- 	struct smc_local *lp;
- 	struct net_device *ndev;
- 	struct resource *res, *ires;
-@@ -2217,11 +2229,33 @@ static int smc_drv_probe(struct platform_device *pdev)
- 	 */
- 
- 	lp = netdev_priv(ndev);
-+	lp->cfg.flags = 0;
- 
- 	if (pd) {
- 		memcpy(&lp->cfg, pd, sizeof(lp->cfg));
- 		lp->io_shift = SMC91X_IO_SHIFT(lp->cfg.flags);
--	} else {
-+	}
-+
-+#if IS_BUILTIN(CONFIG_OF)
-+	match = of_match_device(of_match_ptr(smc91x_match), &pdev->dev);
-+	if (match) {
-+		u32 val;
-+
-+		/* Combination of IO widths supported, default to 16-bit */
-+		if (!of_property_read_u32(np, "reg-io-width", &val)) {
-+			if (val & 1)
-+				lp->cfg.flags |= SMC91X_USE_8BIT;
-+			if ((val == 0) || (val & 2))
-+				lp->cfg.flags |= SMC91X_USE_16BIT;
-+			if (val & 4)
-+				lp->cfg.flags |= SMC91X_USE_32BIT;
-+		} else {
-+			lp->cfg.flags |= SMC91X_USE_16BIT;
-+		}
-+	}
-+#endif
-+
-+	if (!pd && !match) {
- 		lp->cfg.flags |= (SMC_CAN_USE_8BIT)  ? SMC91X_USE_8BIT  : 0;
- 		lp->cfg.flags |= (SMC_CAN_USE_16BIT) ? SMC91X_USE_16BIT : 0;
- 		lp->cfg.flags |= (SMC_CAN_USE_32BIT) ? SMC91X_USE_32BIT : 0;
-@@ -2370,15 +2404,6 @@ static int smc_drv_resume(struct device *dev)
- 	return 0;
- }
- 
--#ifdef CONFIG_OF
--static const struct of_device_id smc91x_match[] = {
--	{ .compatible = "smsc,lan91c94", },
--	{ .compatible = "smsc,lan91c111", },
--	{},
--};
--MODULE_DEVICE_TABLE(of, smc91x_match);
--#endif
--
- static struct dev_pm_ops smc_drv_pm_ops = {
- 	.suspend	= smc_drv_suspend,
- 	.resume		= smc_drv_resume,
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
