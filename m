@@ -1,42 +1,48 @@
-From: =?UTF-8?B?UGhpbGlwcGUgUsOpdG9ybmF6?= <philippe.retornaz@gmail.com>
-Subject: Re: [PATCH 1/3] pwm: Add mc13xxx pwm driver.
-Date: Wed, 27 Nov 2013 16:58:33 +0100
-Message-ID: <529616A9.2090909@gmail.com>
-References: <1385566771-366-1-git-send-email-denis@eukrea.com>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH 1/2] ARM: dts: omap4-panda-common: Fix pin muxing for
+ wl12xx
+Date: Wed, 27 Nov 2013 21:34:31 +0530
+Message-ID: <5296180F.7040104@ti.com>
+References: <1385041804-19115-1-git-send-email-balajitk@ti.com> <1385041804-19115-2-git-send-email-balajitk@ti.com> <20131121165823.GM10317@atomide.com> <528E4295.2040109@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1385566771-366-1-git-send-email-denis@eukrea.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Denis Carikli <denis@eukrea.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <528E4295.2040109@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-> +struct mc13xxx *get_mc13xxx(void)
-> +{
-> +	return mc13xxx_data;
-> +}
-> +EXPORT_SYMBOL_GPL(get_mc13xxx);
-> +
->   int mc13xxx_common_init(struct mc13xxx *mc13xxx,
->   		struct mc13xxx_platform_data *pdata, int irq)
->   {
-> @@ -706,6 +714,9 @@ err_revision:
->   		mc13xxx_add_subdevice(mc13xxx, "%s-pwrbutton");
->   	}
+On Thursday 21 November 2013 10:57 PM, Dan Murphy wrote:
+> On 11/21/2013 10:58 AM, Tony Lindgren wrote:
+>> * Balaji T K <balajitk@ti.com> [131121 05:51]:
+>>> pin mux wl12xx_gpio and wl12xx_pins should be part of omap4_pmx_core
+>>> and not omap4_pmx_wkup. So, move wl12xx_* to omap4_pmx_core.
+>>>
+>>> Fix the following error message:
+>>> pinctrl-single 4a31e040.pinmux: mux offset out of range: 0x38 (0x38)
+>>> pinctrl-single 4a31e040.pinmux: could not add functions for pinmux_wl12xx_pins 56x
 >
-> +	/* Linux will not have to handle more than one mc13xxx pmic. */
-> +	mc13xxx_data = mc13xxx;
-> +
+> Why is the led pins moved then?
+Hi Dan,
 
-Why using a such hack instead of an MFD subdevice ?
+I just moved 27 lines (wl12xx_pins, wl12xx_gpio) up, git diff generated smaller
+diff stat by moving 10 line of code (led_wkgpio_pins) further down :-)
 
-Regards,
-
-Philippe
-
-
+>
+>>> SDIO card is not detected after moving pin mux to omap4_pmx_core since
+>>> sdmmc5_clk pull is disabled. Enable Pull up on sdmmc5_clk to detect SDIO card.
+>> Cool, does this fix the issue with the WLAN not coming up after a warm reset
+>> on panda?
+>>
+>> Regards,
+>>
+>> Tony
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
 
