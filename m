@@ -1,7 +1,7 @@
 From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v2 5/9] clocksource/cadence_ttc: Adjust interval in clock notifier
-Date: Tue, 26 Nov 2013 17:04:52 -0800
-Message-ID: <1385514296-26702-6-git-send-email-soren.brinkmann@xilinx.com>
+Subject: [PATCH v2 9/9] arm: zynq: Add support for cpufreq
+Date: Tue, 26 Nov 2013 17:04:56 -0800
+Message-ID: <1385514296-26702-10-git-send-email-soren.brinkmann@xilinx.com>
 References: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com>
@@ -10,50 +10,67 @@ To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-The clockevent has to be reprogrammed if the timer's input
-clock frequency changes and the timer is in periodic mode, in order to
-maintain the correct timer interval.
+The generic cpufreq-cpu0 driver can scale the CPU frequency on Zynq
+SOCs. Add the required platform device to the BSP and appropriate
+OPPs to the dts.
 
 Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
 ---
-v2:
- - adjust the timer interval while the timer interrupt is disabled
----
- drivers/clocksource/cadence_ttc_timer.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/zynq-7000.dtsi | 6 ++++++
+ arch/arm/mach-zynq/Kconfig       | 2 ++
+ arch/arm/mach-zynq/common.c      | 3 +++
+ 3 files changed, 11 insertions(+)
 
-diff --git a/drivers/clocksource/cadence_ttc_timer.c b/drivers/clocksource/cadence_ttc_timer.c
-index 246d018d1e63..77517675653e 100644
---- a/drivers/clocksource/cadence_ttc_timer.c
-+++ b/drivers/clocksource/cadence_ttc_timer.c
-@@ -322,6 +322,9 @@ static int ttc_rate_change_clockevent_cb(struct notifier_block *nb,
- 	switch (event) {
- 	case POST_RATE_CHANGE:
- 	{
-+		/* update cached frequency */
-+		ttc->freq = ndata->new_rate;
-+
- 		/*
- 		 * clockevents_update_freq should be called with IRQ disabled on
- 		 * the CPU the timer provides events for. The timer we use is
-@@ -329,12 +332,15 @@ static int ttc_rate_change_clockevent_cb(struct notifier_block *nb,
- 		 * cores.
- 		 */
- 		disable_irq(ttcce->ce.irq);
-+
- 		clockevents_update_freq(&ttcce->ce,
- 				ndata->new_rate / PRESCALE);
--		enable_irq(ttcce->ce.irq);
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 23ba82c205a2..dc030481ee64 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -24,6 +24,12 @@
+ 			device_type = "cpu";
+ 			reg = <0>;
+ 			clocks = <&clkc 3>;
++			operating-points = <
++				/* kHz    uV */
++				666667  1000000
++				333334  1000000
++				111112  1000000
++			>;
+ 		};
  
--		/* update cached frequency */
--		ttc->freq = ndata->new_rate;
-+		if (ttcce->ce.mode == CLOCK_EVT_MODE_PERIODIC)
-+			ttc_set_interval(ttc, DIV_ROUND_CLOSEST(ttc->freq,
-+						PRESCALE * HZ));
+ 		cpu@1 {
+diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig
+index f84fab14f0b7..f03e75bd0b2b 100644
+--- a/arch/arm/mach-zynq/Kconfig
++++ b/arch/arm/mach-zynq/Kconfig
+@@ -2,6 +2,8 @@ config ARCH_ZYNQ
+ 	bool "Xilinx Zynq ARM Cortex A9 Platform" if ARCH_MULTI_V7
+ 	select ARM_AMBA
+ 	select ARM_GIC
++	select ARCH_HAS_CPUFREQ
++	select ARCH_HAS_OPP
+ 	select COMMON_CLK
+ 	select CPU_V7
+ 	select GENERIC_CLOCKEVENTS
+diff --git a/arch/arm/mach-zynq/common.c b/arch/arm/mach-zynq/common.c
+index 9a7bd137c8fd..eeff33a1d14a 100644
+--- a/arch/arm/mach-zynq/common.c
++++ b/arch/arm/mach-zynq/common.c
+@@ -54,6 +54,8 @@ static struct platform_device zynq_cpuidle_device = {
+  */
+ static void __init zynq_init_machine(void)
+ {
++	struct platform_device_info devinfo = { .name = "cpufreq-cpu0", };
 +
-+		enable_irq(ttcce->ce.irq);
+ 	/*
+ 	 * 64KB way size, 8-way associativity, parity disabled
+ 	 */
+@@ -62,6 +64,7 @@ static void __init zynq_init_machine(void)
+ 	of_platform_bus_probe(NULL, zynq_of_bus_ids, NULL);
  
- 		/* fall through */
- 	}
+ 	platform_device_register(&zynq_cpuidle_device);
++	platform_device_register_full(&devinfo);
+ }
+ 
+ static void __init zynq_timer_init(void)
 -- 
 1.8.4.4
