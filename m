@@ -1,45 +1,64 @@
-From: Denis Carikli <denis@eukrea.com>
-Subject: [PATCH 3/3] ARM: imx_v6_v7_defconfig: Enable mc13xxx-pwm support.
-Date: Wed, 27 Nov 2013 16:39:31 +0100
-Message-ID: <1385566771-366-3-git-send-email-denis@eukrea.com>
-References: <1385566771-366-1-git-send-email-denis@eukrea.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1385566771-366-1-git-send-email-denis@eukrea.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org, Denis Carikli <denis@eukrea.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 1/2] regulator: max14577: Add regulator driver for
+ Maxim 14577
+Date: Wed, 27 Nov 2013 15:42:21 +0000
+Message-ID: <20131127154221.GZ14725@sirena.org.uk>
+References: <1385559982-32039-1-git-send-email-k.kozlowski@samsung.com>
+ <20131127152042.GY14725@sirena.org.uk>
+ <20131127152358.GP3296@lee--X1>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="iuL7KOmW1iVG2alW"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131127152358.GP3296@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The eukrea mbimx53sd has its display backlighgt
-  connected to the pwm of its mc13xxx, so we turn
-  it on.
 
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-pwm@vger.kernel.org
-Cc: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Denis Carikli <denis@eukrea.com>
----
- arch/arm/configs/imx_v6_v7_defconfig |    1 +
- 1 file changed, 1 insertion(+)
+--iuL7KOmW1iVG2alW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index d479049..4bd1b13 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -241,6 +241,7 @@ CONFIG_COMMON_CLK_DEBUG=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_PWM=y
- CONFIG_PWM_IMX=y
-+CONFIG_PWM_MC13XXX=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT2_FS_XATTR=y
- CONFIG_EXT2_FS_POSIX_ACL=y
--- 
-1.7.9.5
+On Wed, Nov 27, 2013 at 03:23:58PM +0000, Lee Jones wrote:
+> On Wed, 27 Nov 2013, Mark Brown wrote:
+> > > +	{
+> > > +		.name = "max14577-regulator",
+> > > +		.of_compatible = "maxim,max14577-regulator",
+> > > +	},
 
+> > Why is there a compatible for this at all, would this ever appear as
+> > part of a different device?
+
+> For automatic assigning of it's of_node.
+
+> In previous incarnations of this set it was done manually for some reason.
+
+The usual thing to do is of_get_child_by_name() on the parent to get the
+container to search in.
+
+--iuL7KOmW1iVG2alW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSlhLaAAoJELSic+t+oim9dQQP/1f8iBNIrClTGQwT63yC+YKx
+OzoPXr8gj3AAhtyjhoQRTtXFrMUBlnChrk5rTs7v9wSjrtsTwpUz/Qmt+UPYl6fh
+WuCbu7fTSlFrqFp4pQrF4IHFvTXTDuRcw8sbh7XShbtrb+74Vn51Gv990IrBvwo5
+p00HpinqORL7h37hddJjubFYbbxiNGVLs2K2u5Q7eidghpcYmehWHnUeiV9qoWWE
+5UG6qOEiO7YmEXmmZWZoF/0U6lAKnVx6kk4KxLsueK+RhOkbjS8xzx3tWdjWqN6t
+iSSUW0dLPQOeF/ulPiOnMXSA4BvcQHffF94TDCKuiKa12rH/K60U2O5Pq9cxjl/B
+SYs8lrUjeHQlR5NMQ8bF+xTGoUBJHsgGjkVciLnx/zUmSqViqv8q+L3aqsT4jMPw
+p/01CZAGXFvKudrI8tPNkxzUXN+NNGzZnoUAG8H0yYTgkfQIPuMVO/b2OzNgupsq
+dvCn1/bIZzkAJ+SrwbncR6T6fm86g74td98YsIy6ozD3/4yayULJVWTvd4c0KUbv
+qxUiRLGzqie/CML/pw06fryysc9DaBnVRMfinC73+sbDgcRouB4OjplmGkSUlmnV
+liR1GFGNEE067efEvKJFXV5bzlEOiyJ783vkaEaVGxRYCQ/VHHK89h1Vuh3Ozuif
+RhMdiBzUxmuYREOTxi9L
+=ZDZm
+-----END PGP SIGNATURE-----
+
+--iuL7KOmW1iVG2alW--
