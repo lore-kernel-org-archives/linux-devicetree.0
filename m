@@ -1,49 +1,132 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] clk: fixed-factor: Fix device-tree binding typo
-Date: Wed, 27 Nov 2013 11:53:10 -0800
-Message-ID: <20131127195310.16819.83218@quantum>
-References: <1380136218-15578-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH v4 1/2] clk/zynq/clkc: Add 'fclk-enable' feature
+Date: Wed, 27 Nov 2013 12:16:23 -0800
+Message-ID: <1385583384-28870-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380136218-15578-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Emilio Lopez <elopez93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Ezequiel Garcia (2013-09-25 12:10:18)
-> The required properties are not named "div" and "mult",
-> but rather "clock-div" and "clock-mult".
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In some use cases Zynq's FPGA clocks are used as static clock
+generators for IP in the FPGA part of the SOC for which no Linux driver
+exists and would control those clocks. To avoid automatic
+gating of these clocks in such cases a new property - fclk-enable - is
+added to the clock controller's DT description to accomodate such use
+cases. It's value is a bitmask, where a set bit results in enabling
+the corresponding FCLK through the clkc.
 
-Taken into clk-next.
+FPGA clocks are handled following the rules below:
 
-Thanks,
-Mike
+If an FCLK is not enabled by bootloaders, that FCLK will be disabled in
+Linux. Drivers can enable and control it through the CCF as usual.
 
-> ---
->  Documentation/devicetree/bindings/clock/fixed-factor-clock.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt b/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
-> index 5757f9a..1bae8527 100644
-> --- a/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
-> @@ -19,6 +19,6 @@ Example:
->                 compatible = "fixed-factor-clock";
->                 clocks = <&parentclk>;
->                 #clock-cells = <0>;
-> -               div = <2>;
-> -               mult = <1>;
-> +               clock-div = <2>;
-> +               clock-mult = <1>;
->         };
-> -- 
-> 1.8.1.5
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If an FCLK is enabled by bootloaders AND the corresponding bit in the
+'fclk-enable' DT property is set, that FCLK will be enabled by the clkc,
+resulting in an off by one reference count for that clock. Ensuring it
+will always be running.
+
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+---
+v4:
+ - replace bitwise with logical AND
+v3:
+ - documentation stated the default for fclk-enable is 0xf. This changed
+   in v2 => remove that note
+v2:
+ - change default value for fclk-enable to '0'
+---
+ Documentation/devicetree/bindings/clock/zynq-7000.txt |  4 ++++
+ drivers/clk/zynq/clkc.c                               | 18 +++++++++++++++---
+ 2 files changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/zynq-7000.txt b/Documentation/devicetree/bindings/clock/zynq-7000.txt
+index d99af878f5d7..17b4a94916d6 100644
+--- a/Documentation/devicetree/bindings/clock/zynq-7000.txt
++++ b/Documentation/devicetree/bindings/clock/zynq-7000.txt
+@@ -22,6 +22,10 @@ Required properties:
+ Optional properties:
+  - clocks : as described in the clock bindings
+  - clock-names : as described in the clock bindings
++ - fclk-enable : Bit mask to enable FCLKs statically at boot time.
++		 Bit [0..3] correspond to FCLK0..FCLK3. The corresponding
++		 FCLK will only be enabled if it is actually running at
++		 boot time.
+ 
+ Clock inputs:
+ The following strings are optional parameters to the 'clock-names' property in
+diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
+index 10772aa72e4e..09dd0173ea0a 100644
+--- a/drivers/clk/zynq/clkc.c
++++ b/drivers/clk/zynq/clkc.c
+@@ -102,9 +102,10 @@ static const char *swdt_ext_clk_input_names[] __initdata = {"swdt_ext_clk"};
+ 
+ static void __init zynq_clk_register_fclk(enum zynq_clk fclk,
+ 		const char *clk_name, void __iomem *fclk_ctrl_reg,
+-		const char **parents)
++		const char **parents, int enable)
+ {
+ 	struct clk *clk;
++	u32 enable_reg;
+ 	char *mux_name;
+ 	char *div0_name;
+ 	char *div1_name;
+@@ -147,6 +148,12 @@ static void __init zynq_clk_register_fclk(enum zynq_clk fclk,
+ 	clks[fclk] = clk_register_gate(NULL, clk_name,
+ 			div1_name, CLK_SET_RATE_PARENT, fclk_gate_reg,
+ 			0, CLK_GATE_SET_TO_DISABLE, fclk_gate_lock);
++	enable_reg = readl(fclk_gate_reg) & 1;
++	if (enable && !enable_reg) {
++		if (clk_prepare_enable(clks[fclk]))
++			pr_warn("%s: FCLK%u enable failed\n", __func__,
++					fclk - fclk0);
++	}
+ 	kfree(mux_name);
+ 	kfree(div0_name);
+ 	kfree(div1_name);
+@@ -213,6 +220,7 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 	int ret;
+ 	struct clk *clk;
+ 	char *clk_name;
++	unsigned int fclk_enable = 0;
+ 	const char *clk_output_name[clk_max];
+ 	const char *cpu_parents[4];
+ 	const char *periph_parents[4];
+@@ -238,6 +246,8 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 	periph_parents[2] = clk_output_name[armpll];
+ 	periph_parents[3] = clk_output_name[ddrpll];
+ 
++	of_property_read_u32(np, "fclk-enable", &fclk_enable);
++
+ 	/* ps_clk */
+ 	ret = of_property_read_u32(np, "ps-clk-frequency", &tmp);
+ 	if (ret) {
+@@ -340,10 +350,12 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 	clk_prepare_enable(clks[dci]);
+ 
+ 	/* Peripheral clocks */
+-	for (i = fclk0; i <= fclk3; i++)
++	for (i = fclk0; i <= fclk3; i++) {
++		int enable = !!(fclk_enable & BIT(i - fclk0));
+ 		zynq_clk_register_fclk(i, clk_output_name[i],
+ 				SLCR_FPGA0_CLK_CTRL + 0x10 * (i - fclk0),
+-				periph_parents);
++				periph_parents, enable);
++	}
+ 
+ 	zynq_clk_register_periph_clk(lqspi, 0, clk_output_name[lqspi], NULL,
+ 			SLCR_LQSPI_CLK_CTRL, periph_parents, 0);
+-- 
+1.8.4.4
