@@ -1,77 +1,68 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v4 28/29] serial: sh-sci: Add device tree bindings documentation
-Date: Thu, 28 Nov 2013 00:18:38 +0100
-Message-ID: <1385594319-5758-29-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1385594319-5758-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1385594319-5758-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: linux-serial@vger.kernel.org, Bastian Hecht <hechtb+renesas@gmail.com>, Paul Mundt <lethal@linux-sh.org>, devicetree@vger.kernel.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/2] ARM: dts: omap4-panda-common: Fix pin muxing for
+ wl12xx
+Date: Wed, 27 Nov 2013 15:47:59 -0800
+Message-ID: <20131127234759.GF26766@atomide.com>
+References: <1385041804-19115-1-git-send-email-balajitk@ti.com>
+ <1385041804-19115-2-git-send-email-balajitk@ti.com>
+ <20131121165823.GM10317@atomide.com>
+ <528E4295.2040109@ti.com>
+ <20131126215537.GO26766@atomide.com>
+ <52961DF2.8080507@ti.com>
+ <20131127164823.GX26766@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131127164823.GX26766@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>
+Cc: Dan Murphy <dmurphy@ti.com>, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree bindings for the sci serial port devices.
+* Tony Lindgren <tony@atomide.com> [131127 08:49]:
+> * Balaji T K <balajitk@ti.com> [131127 08:30]:
+> > On Wednesday 27 November 2013 03:25 AM, Tony Lindgren wrote:
+> > >* Dan Murphy <dmurphy@ti.com> [131121 09:28]:
+> > >>On 11/21/2013 10:58 AM, Tony Lindgren wrote:
+> > >>>* Balaji T K <balajitk@ti.com> [131121 05:51]:
+> > >>>>pin mux wl12xx_gpio and wl12xx_pins should be part of omap4_pmx_core
+> > >>>>and not omap4_pmx_wkup. So, move wl12xx_* to omap4_pmx_core.
+> > >>>>
+> > >>>>Fix the following error message:
+> > >>>>pinctrl-single 4a31e040.pinmux: mux offset out of range: 0x38 (0x38)
+> > >>>>pinctrl-single 4a31e040.pinmux: could not add functions for pinmux_wl12xx_pins 56x
+> > >>
+> > >>Why is the led pins moved then?
+> > >
+> > >Heh the patch just looks that way, looking at the curly brackets
+> > >thing do get moved properly.
+> > >
+> > >>>>SDIO card is not detected after moving pin mux to omap4_pmx_core since
+> > >>>>sdmmc5_clk pull is disabled. Enable Pull up on sdmmc5_clk to detect SDIO card.
+> > >>>Cool, does this fix the issue with the WLAN not coming up after a warm reset
+> > >>>on panda?
+> > >
+> > >Also commit f446043f1aa7 (regulator: fixed: fix regulator_list_voltage() for
+> > >regression) is needed that recently got merged. But with v3.13-rc1 +
+> > >f446043f1aa7 + this patch no luck whatsoever bringing up the wl12xx so there
+> > >must be also some regression somewhere from v3.12 on that?
+> > >
+> > Hi Tony,
+> > 
+> > I tried loading wl12xx as modules on latest base as yours with
+> > ti-connectivity/wl127x-fw-5-sr.bin firmware in place and I could connect
+> > and run iperf.
+> 
+> Oh OK I must have missed something then.
+> 
+> Does it now work after a warm reboot too? And after bringing the interface
+> down with "ifconfig wlan0 down" followed by "ifconfig wlan0 up"?
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
----
- .../bindings/serial/renesas,sci-serial.txt         | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+Yes great, I can confirm that v3.13-rc1 + f446043f1aa7 (regulator: fixed: fix
+regulator_list_voltage() for regression) + this patch works even after a
+warm reset :) Will apply both to omap-for-v3.13/fixes-take4 with Cc stable.
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-new file mode 100644
-index 0000000..f372cf2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-@@ -0,0 +1,46 @@
-+* Renesas SH-Mobile Serial Communication Interface
-+
-+Required properties:
-+
-+  - compatible: Must contain one of the following:
-+
-+    - "renesas,scif-r8a7790" for R8A7790 (R-Car H2) SCIF compatible UART.
-+    - "renesas,scifa-r8a7790" for R8A7790 (R-Car H2) SCIFA compatible UART.
-+    - "renesas,scifb-r8a7790" for R8A7790 (R-Car H2) SCIFB compatible UART.
-+    - "renesas,hscif-r8a7790" for R8A7790 (R-Car H2) HSCIF compatible UART.
-+    - "renesas,scif-r8a7791" for R8A7791 (R-Car M2) SCIF compatible UART.
-+    - "renesas,scifa-r8a7791" for R8A7791 (R-Car M2) SCIFA compatible UART.
-+    - "renesas,scifb-r8a7791" for R8A7791 (R-Car M2) SCIFB compatible UART.
-+    - "renesas,hscif-r8a7791" for R8A7791 (R-Car M2) HSCIF compatible UART.
-+    - "renesas,scif" for generic SCIF compatible UART.
-+    - "renesas,scifa" for generic SCIFA compatible UART.
-+    - "renesas,scifb" for generic SCIFB compatible UART.
-+    - "renesas,hscif" for generic HSCIF compatible UART.
-+
-+    When compatible with the generic version, nodes must list the
-+    SoC-specific version corresponding to the platform first followed by the
-+    generic version.
-+
-+  - reg: Base address and length of the I/O registers used by the UART.
-+  - interrupts: Must contain an interrupt-specifier for the SCIx interrupt.
-+
-+  - clocks: Must contain a phandle and clock-specifier pair for each entry
-+    in clock-names.
-+  - clock-names: Must contain "sci_ick" for the SCIx UART interface clock.
-+
-+Note: Each enabled SCIx UART should have an alias correctly numbered in the
-+"aliases" node.
-+
-+Example:
-+	aliases {
-+		serial0 = &scifa0;
-+	};
-+
-+	scifa0: serial@e6c40000 {
-+		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
-+		reg = <0 0xe6c40000 0 64>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 144 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7790_CLK_SCIFA0>;
-+		clock-names = "sci_ick";
-+	};
--- 
-1.8.3.2
+Regards,
 
+Tony
