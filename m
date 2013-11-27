@@ -1,166 +1,86 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V2] staging: dwc2: set up all module params
-Date: Tue, 26 Nov 2013 18:58:01 -0700
-Message-ID: <1385517481-8252-1-git-send-email-swarren@wwwdotorg.org>
+From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: imx1-core populate subdevices
+Date: Wed, 27 Nov 2013 11:33:15 +0800
+Message-ID: <529567FB.5090501@gtsys.com.hk>
+References: <CACRpkda2dO6DvurEhaTVGJv8nDyEGOEeLCap-_+1e1mHtD0XyQ@mail.gmail.com>	<1384193987-20740-1-git-send-email-mpa@pengutronix.de> <CACRpkdaQcY43wnfD_phsi6rCo3oUmOUcei+gb9phyGT7F1iZyA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Stephen Warren <swarren@wwwdotorg.org>, Paul Zimmerman <paulz@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdaQcY43wnfD_phsi6rCo3oUmOUcei+gb9phyGT7F1iZyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The DWC2 USB controller in the BCM2835 (Raspberry Pi) needs some non-
-default parameters. Select these based on the compatible value from the
-DT node. For all other HW, fall back to the default parameters currently
-in use.
+On Wednesday, November 20, 2013 04:01 AM, Linus Walleij wrote:
+> On Mon, Nov 11, 2013 at 7:19 PM, Markus Pargmann<mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>  wrote:
+>
+>> Support gpio devicetree subnodes to allow a more detailed DT hardware
+>> description.
+>>
+>> Signed-off-by: Markus Pargmann<mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>
+> Looks good to me.
+>
+> Tentatively applied this, the DT people may want to say something
+> about this.
+>
+> Yours,
+> Linus Walleij
+> --
 
-The values in params_bcm2835[] were posted to the mailing list by Paul
-quite some time ago. I made a couple of minor modifications since then;
-to set ahbcfg instead of ahb_single, and to set uframe_sched.
+Hi,
 
-Signed-off-by: Stephen Warren <swarren@wwwdotorg.org>
----
-v2:
-* Handle !match->data correctly.
-* Set uframe_sched core parameter.
----
- Documentation/devicetree/bindings/staging/dwc2.txt |    4 +-
- drivers/staging/dwc2/platform.c                    |   58 ++++++++++++++++----
- 2 files changed, 51 insertions(+), 11 deletions(-)
+I tried the new configuration but the kernel oops when probing the
+dm9000 caused by insufficient resources more likely the real reason
+that somehow the gpio6: triggers a problem
 
-diff --git a/Documentation/devicetree/bindings/staging/dwc2.txt b/Documentation/devicetree/bindings/staging/dwc2.txt
-index 1a1b7cf..8b60e90 100644
---- a/Documentation/devicetree/bindings/staging/dwc2.txt
-+++ b/Documentation/devicetree/bindings/staging/dwc2.txt
-@@ -2,7 +2,9 @@ Platform DesignWare HS OTG USB 2.0 controller
- -----------------------------------------------------
- 
- Required properties:
--- compatible : "snps,dwc2"
-+- compatible : One of:
-+  - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
-+  - snps,dwc2: A generic DWC2 USB controller with default parameters.
- - reg : Should contain 1 register range (address and length)
- - interrupts : Should contain 1 interrupt
- 
-diff --git a/drivers/staging/dwc2/platform.c b/drivers/staging/dwc2/platform.c
-index 4d9fac0..28a78fe 100644
---- a/drivers/staging/dwc2/platform.c
-+++ b/drivers/staging/dwc2/platform.c
-@@ -39,6 +39,7 @@
- #include <linux/slab.h>
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- 
- #include "core.h"
-@@ -46,6 +47,34 @@
- 
- static const char dwc2_driver_name[] = "dwc2";
- 
-+static const struct dwc2_core_params params_bcm2835 = {
-+	.otg_cap			= 0,	/* HNP/SRP capable */
-+	.otg_ver			= 0,	/* 1.3 */
-+	.dma_enable			= 1,
-+	.dma_desc_enable		= 0,
-+	.speed				= 0,	/* High Speed */
-+	.enable_dynamic_fifo		= 1,
-+	.en_multiple_tx_fifo		= 1,
-+	.host_rx_fifo_size		= 774,	/* 774 DWORDs */
-+	.host_nperio_tx_fifo_size	= 256,	/* 256 DWORDs */
-+	.host_perio_tx_fifo_size	= 512,	/* 512 DWORDs */
-+	.max_transfer_size		= 65535,
-+	.max_packet_count		= 511,
-+	.host_channels			= 8,
-+	.phy_type			= 1,	/* UTMI */
-+	.phy_utmi_width			= 8,	/* 8 bits */
-+	.phy_ulpi_ddr			= 0,	/* Single */
-+	.phy_ulpi_ext_vbus		= 0,
-+	.i2c_enable			= 0,
-+	.ulpi_fs_ls			= 0,
-+	.host_support_fs_ls_low_power	= 0,
-+	.host_ls_low_power_phy_clk	= 0,	/* 48 MHz */
-+	.ts_dline			= 0,
-+	.reload_ctl			= 0,
-+	.ahbcfg				= 0x10,
-+	.uframe_sched			= 1,
-+};
-+
- /**
-  * dwc2_driver_remove() - Called when the DWC_otg core is unregistered with the
-  * DWC_otg driver
-@@ -66,6 +95,13 @@ static int dwc2_driver_remove(struct platform_device *dev)
- 	return 0;
- }
- 
-+static const struct of_device_id dwc2_of_match_table[] = {
-+	{ .compatible = "brcm,bcm2835-usb", .data = &params_bcm2835 },
-+	{ .compatible = "snps,dwc2", .data = NULL },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
-+
- /**
-  * dwc2_driver_probe() - Called when the DWC_otg core is bound to the DWC_otg
-  * driver
-@@ -80,14 +116,22 @@ static int dwc2_driver_remove(struct platform_device *dev)
-  */
- static int dwc2_driver_probe(struct platform_device *dev)
- {
-+	const struct of_device_id *match;
-+	const struct dwc2_core_params *params;
-+	struct dwc2_core_params defparams;
- 	struct dwc2_hsotg *hsotg;
- 	struct resource *res;
- 	int retval;
- 	int irq;
--	struct dwc2_core_params params;
- 
--	/* Default all params to autodetect */
--	dwc2_set_all_params(&params, -1);
-+	match = of_match_device(dwc2_of_match_table, &dev->dev);
-+	if (match && match->data) {
-+		params = match->data;
-+	} else {
-+		/* Default all params to autodetect */
-+		dwc2_set_all_params(&defparams, -1);
-+		params = &defparams;
-+	}
- 
- 	hsotg = devm_kzalloc(&dev->dev, sizeof(*hsotg), GFP_KERNEL);
- 	if (!hsotg)
-@@ -118,7 +162,7 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 	dev_dbg(&dev->dev, "mapped PA %08lx to VA %p\n",
- 		(unsigned long)res->start, hsotg->regs);
- 
--	retval = dwc2_hcd_init(hsotg, irq, &params);
-+	retval = dwc2_hcd_init(hsotg, irq, params);
- 	if (retval)
- 		return retval;
- 
-@@ -127,12 +171,6 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 	return retval;
- }
- 
--static const struct of_device_id dwc2_of_match_table[] = {
--	{ .compatible = "snps,dwc2" },
--	{},
--};
--MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
--
- static struct platform_driver dwc2_platform_driver = {
- 	.driver = {
- 		.name = dwc2_driver_name,
--- 
-1.7.10.4
+
+[    0.115718] irq: no irq domain found for 
+/soc/aipi@10000000/iomuxc@10015000/gpio@10015500 !
+[    0.115768] ------------[ cut here ]------------
+[    0.115853] WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171 
+of_device_alloc+0x110/0x15c()
+[    0.117824] ---[ end trace 0e10ae727e6e0ab1 ]---
+[    0.121236] Failed to request board ext/int gpios
+[    0.152712] imx27-pinctrl 10015000.iomuxc: initialized IMX pinctrl driver
+
+
+iomuxc: iomuxc@10015000 {
+         compatible = "fsl,imx27-iomuxc";
+         reg = <0x10015000 0x600>;
+         #address-cells = <1>;
+         #size-cells = <1>;
+         ranges;
+
+         gpio1: gpio@10015000 {
+              compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+              reg = <0x10015000 0x100>;
+              interrupts = <8>;
+              gpio-controller;
+              #gpio-cells = <2>;
+              interrupt-controller;
+              #interrupt-cells = <2>;
+         };
+...
+         gpio6: gpio@10015500 {
+              compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+              reg = <0x10015500 0x100>;
+              interrupts = <8>;
+              gpio-controller;
+              #gpio-cells = <2>;
+              interrupt-controller;
+              #interrupt-cells = <2>;
+         };
+};
+
+Kernel Linux version 3.13.0-rc1-next-20131125-dirty
+
+With kind regards
+Chris
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
