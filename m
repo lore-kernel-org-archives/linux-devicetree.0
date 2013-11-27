@@ -1,45 +1,30 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when
- populating interrupts
-Date: Wed, 27 Nov 2013 13:53:10 -0800
-Message-ID: <20131127215310.GC26766@atomide.com>
-References: <20131123004334.GJ10023@atomide.com>
- <20131124213651.59750C402C3@trevor.secretlab.ca>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: omap3-beagle: Add omap-twl4030 audio support
+Date: Wed, 27 Nov 2013 14:02:59 -0800
+Message-ID: <20131127220258.GE26766@atomide.com>
+References: <1385578008-6623-1-git-send-email-jarkko.nikula@bitmer.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131124213651.59750C402C3-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1385578008-6623-1-git-send-email-jarkko.nikula@bitmer.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jarkko Nikula <jarkko.nikula@bitmer.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-* Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [131124 13:37]:
-> 
-> I actually like the idea of completely allocating the resource structure
-> but leaving some entries empty. However, I agree with rmk that putting
-> garbage into a resource structure is a bad idea. What about changing the
-> value of flags to 0 or some other value to be obviously an empty
-> property and give the follow up parsing some context about which ones it
-> needs to attempt to recalculate?
+* Jarkko Nikula <jarkko.nikula@bitmer.com> [131127 10:48]:
+> This adds typical McBSP2-TWL4030 audio description to the legacy
+> Beagle Board.
 
-If we want to play it safe, we should probably introduce something like
-this to ioport.h:
+Nice to see that work almost out of the box :)
 
-+#define IORESOURCE_IRQ_DEFERRED	(1<<6)
-
-Then we can populate IRQ resources initially with that. And later on
-during the driver probe, we know it's safe to populate the resource
-if res->flags & IORESOURCE_IRQ_DEFERRED.
-
-That fixes the $Subject bug, and gets us a little bit further for
-making more changes later on.
+BTW, I just noticed that sound/soc/omap/Kconfig has depends on
+OMAP_MUX. The OMAP_MUX option will be dropped for mach-omap2
+for v3.14, so you may want to take a look at that too. If there
+really is a dependency, that should be handled using
+pinctrl-single for the .dts entries.
 
 Regards,
 
 Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
