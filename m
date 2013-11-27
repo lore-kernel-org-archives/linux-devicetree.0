@@ -1,53 +1,70 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] ARM: davinci: aemif: get rid of davinci-nand driver
- dependency on aemif
-Date: Wed, 27 Nov 2013 18:37:07 +0530
-Message-ID: <5295EE7B.6030504@ti.com>
-References: <5291CB01.1010506@ti.com>
- <1385409654-19006-1-git-send-email-ivan.khoronzhuk@ti.com>
- <5295AECB.7040503@ti.com> <5295D102.2010101@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 4/5] regulator: max14577: Add regulator driver for
+ Maxim 14577
+Date: Wed, 27 Nov 2013 13:16:26 +0000
+Message-ID: <20131127131626.GH3296@lee--X1>
+References: <1385135469-27044-1-git-send-email-k.kozlowski@samsung.com>
+ <1385135469-27044-5-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5295D102.2010101@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, rob@landley.net, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1385135469-27044-5-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 27 November 2013 04:31 PM, ivan.khoronzhuk wrote:
->>> @@ -192,9 +193,15 @@ static __init void davinci_ntosd2_init(void)
->>>           davinci_cfg_reg(DM644X_ATAEN_DISABLE);
->>>
->>>           /* only one device will be jumpered and detected */
->>> -        if (HAS_NAND)
->>> +        if (HAS_NAND) {
->>>               platform_device_register(
->>>                       &davinci_ntosd2_nandflash_device);
->>> +
->>> +            if (davinci_aemif_setup(
->>> +                &davinci_ntosd2_nandflash_device))
->>> +                pr_warn("%s: Cannot configure AEMIF.\n",
->>> +                    __func__);
->>
->> This is looking really ugly. Can you shorten
->> davinci_ntosd2_nandflash_device to just "ntosd2_nandflash" or similar?
-> 
-> The rename is not related to the patch, so I won't do this.
+> MAX14577 chip is a multi-function device which includes MUIC,
+> charger and voltage regulator. The driver is located in drivers/mfd.
+>=20
+> This patch adds regulator driver for MAX14577 chip. There are two
+> regulators in this chip:
+> 1. Safeout LDO with constant voltage output of 4.9V. It can be only
+>    enabled or disabled.
+> 2. Current regulator for the charger. It provides current from 90mA u=
+p
+>    to 950mA.
+> Driver supports Device Tree.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  drivers/mfd/max14577.c       |    3 +-
+>  drivers/regulator/Kconfig    |    7 ++
+>  drivers/regulator/Makefile   |    1 +
+>  drivers/regulator/max14577.c |  268 ++++++++++++++++++++++++++++++++=
+++++++++++
+>  4 files changed, 278 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/regulator/max14577.c
+>=20
+> diff --git a/drivers/mfd/max14577.c b/drivers/mfd/max14577.c
+> index 94b766d..d841f2a 100644
+> --- a/drivers/mfd/max14577.c
+> +++ b/drivers/mfd/max14577.c
+> @@ -26,7 +26,8 @@
+> =20
+>  static struct mfd_cell max14577_devs[] =3D {
+>  	{ .name =3D "max14577-muic", },
+> -	{ .name =3D "max14577-regulator", },
+> +	{ .name =3D "max14577-regulator",
+> +		.of_compatible =3D "maxim,max14577-regulator", },
+>  	{ .name =3D "max14577-charger", },
+>  };
 
-The reason I asked you to rename is not because I want to push some
-random clean-up into this patch. You had to introduce a line so broken
-that its almost unreadable. I offered the suggestion as a way to improve
-the readability of the code you are introducing in *this* patch.
+If you separate this patch out and make it look 'normal' i.e. sort out
+the indenting, I'll apply it. Instead of this randomness, I expect to
+see something like:=20
 
-Thanks,
-Sekhar
+> +	 {
+> +	        .name =3D "max14577-regulator",
+> +	        .of_compatible =3D "maxim,max14577-regulator",=20
+> +	 },
+
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
