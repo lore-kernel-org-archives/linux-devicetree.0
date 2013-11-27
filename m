@@ -1,28 +1,40 @@
-From: Sekhar Nori <nsekhar@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
 Subject: Re: [PATCH] watchdog: davinci: rename platform driver to davinci-wdt
-Date: Wed, 27 Nov 2013 19:30:46 +0530
-Message-ID: <5295FB0E.4070406@ti.com>
+Date: Wed, 27 Nov 2013 09:17:08 -0500
+Message-ID: <5295FEE4.8090108@ti.com>
 References: <1385559113-4354-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <5295FB0E.4070406@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1385559113-4354-1-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, grygorii.strashko@ti.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5295FB0E.4070406@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 27 November 2013 07:01 PM, Ivan Khoronzhuk wrote:
-> As we switch to use the watchdog core which permits more than one
-> active watchdog in the system, rename platform driver to
-> "davinci-wdt" to be identifiable.
+On Wednesday 27 November 2013 09:00 AM, Sekhar Nori wrote:
+> On Wednesday 27 November 2013 07:01 PM, Ivan Khoronzhuk wrote:
+>> As we switch to use the watchdog core which permits more than one
+>> active watchdog in the system, rename platform driver to
+>> "davinci-wdt" to be identifiable.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 > 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> Looks good to me. Since bulk of this patch touches mach-davinci, I would
+> like to take this through my tree to avoid conflicts with other
+> mach-davinci patches I accept.
+> 
+Sounds good. Thanks Sekhar !!
 
-Looks good to me. Since bulk of this patch touches mach-davinci, I would
-like to take this through my tree to avoid conflicts with other
-mach-davinci patches I accept.
-
-Thanks,
-Sekhar
+Regards,
+Santosh
