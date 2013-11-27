@@ -1,188 +1,69 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] clk: add accuracy support for fixed clock
-Date: Wed, 27 Nov 2013 10:10:42 -0800
-Message-ID: <20131127181042.16819.36364@quantum>
-References: <1385556285-19180-1-git-send-email-b.brezillon@overkiz.com>
- <1385556285-19180-3-git-send-email-b.brezillon@overkiz.com>
- <20131127145620.GR2879@titan.lakedaemon.net> <5296298C.9040300@overkiz.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/8] net: smc91x: Fix device tree based configuration
+ so it's usable
+Date: Wed, 27 Nov 2013 10:36:30 -0800
+Message-ID: <20131127183629.GZ26766@atomide.com>
+References: <1384396537-3486-1-git-send-email-tony@atomide.com>
+ <1384396537-3486-2-git-send-email-tony@atomide.com>
+ <20131114110324.GC16396@e106331-lin.cambridge.arm.com>
+ <20131114160813.GC10317@atomide.com>
+ <20131116151640.GJ10317@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5296298C.9040300-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131116151640.GJ10317@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Nicolas Pitre <nico@fluxnic.net>, "David S. Miller" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting boris brezillon (2013-11-27 09:19:08)
-> Hi Jason,
-> 
-> On 27/11/2013 15:56, Jason Cooper wrote:
-> > Boris,
-> >
-> > Thanks for posting this series.  Bear with me as I'm attempting to give
-> > MikeT a hand.
-> Nice to hear.
-> Mike already took a look at this series, but I'm happy to get more 
-> feedbacks.
-> 
-> > Don't be afraid to tell me a question is stupid :-)
-> Your questions are far from stupid ;-).
-> 
-> >
-> > On Wed, Nov 27, 2013 at 01:44:45PM +0100, Boris BREZILLON wrote:
-> >> This patch adds support for accuracy retrieval on fixed clocks.
-> >> It also adds a new dt property called 'clock-accuracy' to define the clock
-> >> accuracy.
-> >>
-> >> This can be usefull for oscillator (RC, crystal, ...) definitions which are
-> >> always given an accuracy characteristic.
-> > I think we need to be more explicit in the binding and the API,
-> > especially when providing a method to recalculate the accuracy.  I
-> > presume this recalculated value would be relative against the root
-> > clock?
-> 
-> Yes, indirectly.
-> Actually the clk accuracy depends on the whole clock chain, and is 
-> calculated
-> either by comparing the real clk rate to the theorical clk rate
-> (accuracy = absolute_value((theorical_clk_rate - real_clk_rate)) / 
-> theorical_clk_rate),
-> or by adding all the accuracies (expressed in ppm, ppb or ppt) of the 
-> clk chain
-> (accuracy = current_clk_accuracy + parent_clk_accuracy).
-> 
-> Say you have a root clk with a +-10000 ppb accuracy, then a pll multiplying
-> this root clk by 40 and introducing a possible drift of +- 1000 ppb and
-> eventually a system clk based on this pll with a perfect div by 2 prescaler
-> (accuracy = 0 ppb).
-> 
-> If I understand correctly how accuracy propagates accross the clk tree,
-> you'll end up with a system clk with a +- 11000 ppb accuracy.
-> 
-> e.g.:
->   root clk = 12MHz +- 10000 ppb => 12 MHz * (1 - (10000 / 10^9)) < root 
-> clk < 12 MHz * (1 + (10000 / 10^9))
->                                                      => 11,99988 MHz < 
-> root clk < 12,00012 MHz
->   pll clk = ((root clk) * 40) +- 1000 ppb =>  (11,99988 MHz * 40) * (1 - 
-> (1000 / 10^9)) < pll clk < (12,00012 MHz * 40) * (1 + (1000 / 10^9))
->                                                             => 
-> 479,994720005 MHz < pll clk < 480,005280005 MHz
-> 
->   system clk = ((pll clk) / 2) +- XXX ppb => 479,994720005 MHz / 2 < 
-> system clk < 480,005280005 MHz / 2
->                                                                => 
-> 239,997360002 MHz < system clk < 240,002640002 MHz
->                                                                => system 
-> clk accuracy = 0,002640002 / 240 = 11000 ppb
-> 
-> Please tell me if my assumptions are false.
-> >
-> > There really needs to be two attributes here:  the rated accuracy from
-> > the manufacturer, and the calculated accuracy wrt another clock in the
-> > system.  We only need a binding for the manufacturer rating since the
-> > calculated accuracy is determined at runtime.
-> 
-> Actually when I proposed this new functionnality I only had the theorical
-> (or manufacturer rated) accuracy in mind.
-> But providing an estimated accuracy (based on another clk) sounds
-> interresting if your reference clk is an extremly accurate one.
+* Tony Lindgren <tony@atomide.com> [131116 07:17]:
+>
+> Here's what I was thinking with the reg-io-width-mask. Anybody
+> have comments on using reg-io-width vs reg-io-width-mask?
+...
 
-Is there a need to model clock accuracy across the clock chain? I'm OK
-modeling it in DT, and the code to do it in the clk framework isn't very
-much ... but I also wonder if we're just adding complexity for no
-reason.
+> --- a/drivers/net/ethernet/smsc/smc91x.c
+> +++ b/drivers/net/ethernet/smsc/smc91x.c
+> @@ -2222,11 +2234,31 @@ static int smc_drv_probe(struct platform_device *pdev)
+>  	 */
+>  
+>  	lp = netdev_priv(ndev);
+> +	lp->cfg.flags = 0;
+>  
+>  	if (pd) {
+>  		memcpy(&lp->cfg, pd, sizeof(lp->cfg));
+>  		lp->io_shift = SMC91X_IO_SHIFT(lp->cfg.flags);
+> -	} else {
+> +	}
+> +
+> +#if IS_BUILTIN(CONFIG_OF)
+> +	match = of_match_device(of_match_ptr(smc91x_match), &pdev->dev);
+> +	if (match) {
+> +		u32 val;
+> +
+> +		of_property_read_u32(np, "reg-io-width", &val);
+> +		if (val == 0)
+> +			lp->cfg.flags |= SMC91X_USE_16BIT;
+> +		if (val & 1)
+> +			lp->cfg.flags |= SMC91X_USE_8BIT;
+> +		if (val & 2)
+> +			lp->cfg.flags |= SMC91X_USE_16BIT;
+> +		if (val & 4)
+> +			lp->cfg.flags |= SMC91X_USE_32BIT;
+> +	}
+> +#endif
+> +
+> +	if (!pd && !match) {
+>  		lp->cfg.flags |= (SMC_CAN_USE_8BIT)  ? SMC91X_USE_8BIT  : 0;
+>  		lp->cfg.flags |= (SMC_CAN_USE_16BIT) ? SMC91X_USE_16BIT : 0;
+>  		lp->cfg.flags |= (SMC_CAN_USE_32BIT) ? SMC91X_USE_32BIT : 0;
 
-> 
-> >
-> > I would also prefer to see an unknown accuracy be -1.
-> I decided to keep 0 as a default value for unimplemented recalc_accuracy
-> (or unspecified fixed accuracy) to keep existing implementation coherent.
-> 
-> 0 means the clk is perfect, and I thought it would be easier to handle a
-> perfect clk (even if this is not really the case) than handling an error 
-> case.
-> 
-> Another aspect is the propagation of the clk accuracy accross the clk tree.
-> Returning -1 in the middle of the clk chain will drop the previous clk 
-> accuracy
-> calculation.
-> 
-> Anyway, I can change this if you think this is more appropriate.
-
-What about the absence of the property? Instead of requiring a -1 value
-can we simply detect that the property does not exist? This is nicer for
-backwards compatibility with existing DTS.
+Looks this patch is missing the check for the return value for
+of_property_read_u32(), will repost this patch separately as the
+others in this series are out of the way now.
 
 Regards,
-Mike
 
-> 
-> > There are already
-> > clocks on the market (PPS reference clocks) with accuracies of
-> > 0.1ppb/day [1].  Obviously, these aren't system clocks.  So the limit on
-> > accuracy may be a non-issue.  However, it may be worth changing the
-> > binding property to express the units.
-> Wow, 0.1 ppb, this is impressive :-).
-> 
-> 
-> This needs more than changing the dt bindings: I currently store the
-> accuracy value in an unsigned long field, and expressing this in ppt
-> (parts per trillion) may implies storing this in an u64 field (or store a
-> unit field).
-> 
-> 
-> >
-> >> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-> >> ---
-> >>   .../devicetree/bindings/clock/fixed-clock.txt      |    3 ++
-> >>   drivers/clk/clk-fixed-rate.c                       |   43 +++++++++++++++++---
-> >>   include/linux/clk-provider.h                       |    4 ++
-> >>   3 files changed, 44 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.txt b/Documentation/devicetree/bindings/clock/fixed-clock.txt
-> >> index 0b1fe78..48ea0ad 100644
-> >> --- a/Documentation/devicetree/bindings/clock/fixed-clock.txt
-> >> +++ b/Documentation/devicetree/bindings/clock/fixed-clock.txt
-> >> @@ -10,6 +10,8 @@ Required properties:
-> >>   - clock-frequency : frequency of clock in Hz. Should be a single cell.
-> >>   
-> >>   Optional properties:
-> >> +- clock-accuracy : accuracy of clock in ppb (parts per billion).
-> >> +               Should be a single cell.
-> > I would prefer to call this property 'clock-rated-ppb'.
-> 
-> Depending on what we choose to do with the accuracy field, this might be 
-> an option.
-> 
-> >
-> >>   - gpios : From common gpio binding; gpio connection to clock enable pin.
-> >>   - clock-output-names : From common clock binding.
-> >>   
-> >> @@ -18,4 +20,5 @@ Example:
-> >>              compatible = "fixed-clock";
-> >>              #clock-cells = <0>;
-> >>              clock-frequency = <1000000000>;
-> >> +            clock-accuracy = <100>;
-> >>      };
-> > thx,
-> >
-> > Jason.
-> >
-> > [1] http://www.vectron.com/products/modules/md-010.htm
-> 
-> Thanks for your review, and don't hesitate to ask more questions, or to 
-> point out
-> incoherencies in my approach (I'm not an expert in clk and clk accuracy 
-> calculation,
-> and I might be wrong ;-)).
-> 
-> Best Regards,
-> 
-> Boris
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
