@@ -1,16 +1,15 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] Documentation: devicetree: arm: add lpae property to
- cpus/cpu bindings
-Date: Wed, 27 Nov 2013 09:49:11 +0000
-Message-ID: <20131127094911.GE5402@e106331-lin.cambridge.arm.com>
-References: <1385517172-803-1-git-send-email-olof@lixom.net>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH v3 1/6] watchdog: davinci: change driver to use WDT core
+Date: Wed, 27 Nov 2013 12:03:01 +0200
+Message-ID: <5295C355.6000604@ti.com>
+References: <1385388285-10553-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1385388285-10553-2-git-send-email-ivan.khoronzhuk@ti.com>
+ <5295758C.2030907@ti.com> <52959966.7000509@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1385517172-803-1-git-send-email-olof@lixom.net>
-Content-Language: en-US
+In-Reply-To: <52959966.7000509@roeck-us.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,79 +19,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Guenter Roeck <linux@roeck-us.net>, Sekhar Nori <nsekhar@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel Moll <Pawel.Moll@arm.com>, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+On 11/27/2013 09:04 AM, Guenter Roeck wrote:
+> On 11/26/2013 08:31 PM, Sekhar Nori wrote:
+>> On Monday 25 November 2013 07:34 PM, Ivan Khoronzhuk wrote:
+>>> To reduce code duplicate and increase code readability use WDT core
+>>> code to handle WDT interface.
+>>>
+>>> Remove io_lock as the WDT core uses mutex to lock each wdt device.
+>>> Remove wdt_state as the WDT core tracks state with its own variable.
+>>>
+>>> The watchdog_init_timeout() can read timeout value from timeout-sec
+>>> property if the passed value is out of bounds. The heartbeat is
+>>> initialized in next way. If heartbeat is not set thought module
+>>> parameter, try to read it's value from WDT node timeout-sec property.
+>>> If node has no one, use default value.
+>>>
+>>> The heartbeat is hold in wdd->timeout by WDT core, so use it in
+>>> order to set timeout period.
+>>>
+>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>>
+>> So this still causes a regression because the clk_get()
+>> fails due to the changed device name. Please fold this
+>> patch in (tested on DM365, compiled on rest).
+>>
+>> Also, the change in device name (while needed) does not seem
+>> to be related to usage of wdt core. Can you may be split
+>> that change into a separate patch?
+>>
+>
+> Given all the trouble with it, I think that would be a good idea.
+>
+> Guenter
+>
 
-On Wed, Nov 27, 2013 at 01:52:52AM +0000, Olof Johansson wrote:
-> While the LPAE capability is determined by the kernel today, it is still
-> useful to be able to specify the feature in the device tree. There is
-> precedence from other architectures for this.
-> 
-> Signed-off-by: Olof Johansson <olof@lixom.net>
-> ---
-> 
-> My personal motive for this is to be able to tell which boards are
-> work even trying to boot an LPAE kernel on, since we don't disable the
-> platforms that are based on A8/A9 when LPAE is turned on. I'll add dtsi
-> patches for A7/A15-based platforms once the binding is settled.
+Ok, I'll split it for convenience.
 
-It would be nice to have this description of why you want to add this in
-the commit message proper.
-
-I don't see much point in this. If we're going to add this to the DTSIs
-for all platforms that have CPUs with LPAE support, why not just check
-if a given DT contains one of those CPUs to find out if it has LPAE
-support?
-
-The information this flag describes is at best redundant, but could also
-be missing or present erroneously. 
-
-It's also of no use to any OS actually running on the hardware, as it's
-easier for an OS to check ID_MMFR0[3:0] than to parse a DTB. Likewise
-for bootloaders.
-
-> 
-> I don't think it's worth trying to add those dependencies in Kconfig,
-> by the way -- it'd be pretty verbose and churny.
-
-I think if we want an early warning that a particular platform is not
-going to support LPAE, this would be a better place to put it.
-
-It's a shame we don't have a standard header in the Linux Image. If we
-did, we could add a "uses LPAE" flag to the Linux Image that bootloaders
-could check and refuse to run the Image or print a warning if the HW had
-no LPAE support.
-
-Thanks,
-Mark.
-
-> 
->  Documentation/devicetree/bindings/arm/cpus.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 91304353eea4..632015f8314f 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -191,6 +191,14 @@ nodes to be present and contain the properties described below.
->  			  property identifying a 64-bit zero-initialised
->  			  memory location.
->  
-> +	- lpae
-> +		Usage: Indicates that the CPU can use the LPAE extensions to
-> +		       address more than 32 bit physical memory.
-> +		Value type: <empty>
-> +		Definition:
-> +			# On ARMv7 systems this boolean property is used
-> +			  to indicate LPAE feature capability.
-> +
->  Example 1 (dual-cluster big.LITTLE system 32-bit):
->  
->  	cpus {
-> -- 
-> 1.8.4.1.601.g02b3b1d
-> 
-> 
+-- 
+Regards,
+Ivan Khoronzhuk
