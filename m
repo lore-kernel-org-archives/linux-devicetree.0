@@ -1,52 +1,260 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
-Date: Wed, 27 Nov 2013 14:17:50 +0000
-Message-ID: <20131127141750.B666EC404EC@trevor.secretlab.ca>
-References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> < CAEgOgz5BWzo-LGddjG6ZUtKt6GHxLmDUEndFOdVrn+1HTPvpGQ@mail.gmail.com> < 20131124213212.226B8C402C3@trevor.secretlab.ca> < CAEgOgz4yhDzy_BFiotK5Qi48sczR3PL1oPjPhNYC9O94P6AnzQ@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEgOgz4yhDzy_BFiotK5Qi48sczR3PL1oPjPhNYC9O94P6AnzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] iio:adc:imx: add Freescale Vybrid vf610 adc
+ driver
+Date: Wed, 27 Nov 2013 14:18:04 +0000
+Message-ID: <20131127141803.GA27879@e106331-lin.cambridge.arm.com>
+References: <1385463394-11157-1-git-send-email-B38611@freescale.com>
+ <1385463394-11157-3-git-send-email-B38611@freescale.com>
+ <20131126142534.GB5402@e106331-lin.cambridge.arm.com>
+ <9848F2DB572E5649BA045B288BE08FBE01898D02@039-SN2MPN1-023.039d.mgd.msft.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <9848F2DB572E5649BA045B288BE08FBE01898D02-RL0Hj/+nBVDtkydW1Tv2Dq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fugang Duan <fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Nov 2013 19:06:35 +1000, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> On Mon, Nov 25, 2013 at 7:32 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Sun, 24 Nov 2013 17:04:52 +1000, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> >> On Wed, Nov 13, 2013 at 4:14 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >> > On Wed, 13 Nov 2013 09:17:01 +1000, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> >> >> It's going to get a little verbose once you start making multiple
-> >> >> connections as you need one mux per wire. Perhaps it could be cleaned
-> >> >> up by making the foo_irq_mux node(s) a child of foo?
-> >> >
-> >> > It could, but then you need some way of attaching a driver to that node,
-> >> > and that would require building knowledge into the driver again.
-> >> >
-> >> > Can you boil it down to a couple of concrete examples? What is a
-> >> > specific example of how the platform should decide which interrupt line
-> >> > to use?
-> >> >
-> >>
-> >> So i've spent some time playing with this. I now have a booting kernel
-> >> with multiple root interrupt controllers and peripheral devices
-> >> multiply-connected to both root controllers. But only one on of the
-> >> controllers is used by Linux (as linux being able to use multiple
-> >> intcs is a non-trivial problem). So the scheme I am using is to have
-> >> one of these root intc's marked as disabled via
+On Wed, Nov 27, 2013 at 05:37:24AM +0000, Fugang Duan wrote:
+> From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Data: Tuesday, November 26, 2013 10:26 PM
+> 
+> >To: Duan Fugang-B38611
+> >Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> >shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Li Frank-B20596; linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >Subject: Re: [PATCH v3 2/3] iio:adc:imx: add Freescale Vybrid vf610 adc driver
 > >
-> > Multiple intc's should be a solved problem. What issue are you seeing?
-> > Or is this a microblaze specific problem?
+> >On Tue, Nov 26, 2013 at 10:56:33AM +0000, Fugang Duan wrote:
+> >> Add Freescale Vybrid vf610 adc driver. The driver only support ADC
+> >> software trigger.
+> >>
+> >> Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >> ---
+> >>  drivers/iio/adc/Kconfig     |   11 +
+> >>  drivers/iio/adc/Makefile    |    1 +
+> >>  drivers/iio/adc/vf610_adc.c |  744
+> >> +++++++++++++++++++++++++++++++++++++++++++
+> >>  3 files changed, 756 insertions(+), 0 deletions(-)
+> >
+> >[...]
+> >
+> >> +static void vf610_adc_cfg_of_init(struct vf610_adc *info) {
+> >> +       struct device_node *np = info->dev->of_node;
+> >> +
+> >> +       /*
+> >> +        * set default Configuration for ADC controller
+> >> +        * This config may upgrade to require from DT
+> >> +        */
+> >> +       info->adc_feature.clk_sel = ADCIOC_BUSCLK_SET;
+> >> +       info->adc_feature.vol_ref = VF610_ADCIOC_VR_VREF_SET;
+> >> +       info->adc_feature.calibration = true;
+> >> +       info->adc_feature.tri_hw = false;
+> >> +       info->adc_feature.dataov_en = true;
+> >> +       info->adc_feature.ac_clk_en = false;
+> >> +       info->adc_feature.dma_en = false;
+> >> +       info->adc_feature.cc_en = false;
+> >> +       info->adc_feature.cmp_func_en = false;
+> >> +       info->adc_feature.cmp_range_en = false;
+> >> +       info->adc_feature.cmp_greater_en = false;
+> >> +
+> >> +       if (of_property_read_u32(np, "fsl,adc-io-pinctl",
+> >> +                       &info->adc_feature.pctl)) {
+> >> +               info->adc_feature.pctl = VF610_ADC_IOPCTL5;
+> >> +               dev_info(info->dev,
+> >> +                       "Miss adc-io-pinctl in dt, enable pin SE5.\n");
+> >> +       }
+> >
+> >Could you elaborate on what this means? What is this doing when pinctrl is not
+> >specified in the DT?
 > >
 > 
-> It's multiple root (i.e. have no explicit parent) interrupt
-> controllers. And linux
-> doesnt respect status = "disabled" for interrupt controllers at all it seems.
+> As vf610 reference manually describe ADC pin control:
+> 
+> 37.8.2 Input Select and Pin Control
+> The pin control registers (ADC_PC) disable the I/O port control of the pins used as
+> analog inputs. When a pin control register bit is set, the following conditions are forced
+> for the associated MCU pin:
+> * The output buffer is forced to its high impedance state.
+> * The input buffer is disabled. A read of the I/O port returns a zero for any pin with its
+> input buffer disabled.
+> * The pullup is disabled. 
+> 
+> So, when the relative ADC pin is used as Sliding rheostat test, disable the pin control.
+> 
+> 
+> >> +
+> >> +       if (info->vref)
+> >> +               info->vref_uv = regulator_get_voltage(info->vref);
+> >> +       else if (of_property_read_u32(np, "fsl,adc-vref", &info->vref_uv))
+> >> +               dev_err(info->dev,
+> >> +                       "Miss adc-vref property or vref regulator in
+> >> + the DT.\n");
+> >
+> >Query the regulator instead.
+> 
+> When the ADC reference voltage is not controlled by regulator, just by
+> fixed voltage from MCU digital power, We get the reference voltage
+> from DT.
 
-That can be fixed.  :-)
+You could use a fixed-regulator in that case in the DT, and query the
+voltage through the regulator framework. There is no need for this
+property.
 
-g.
+>   
+> >
+> >> +
+> >> +       if (of_property_read_u32(np, "fsl,adc-clk-div",
+> >> +                       &info->adc_feature.clk_div_num)) {
+> >> +               info->adc_feature.clk_div_num = 2;
+> >> +               dev_info(info->dev,
+> >> +                       "Miss adc-clk-div in dt, set divider to 2.\n");
+> >> +       }
+> >
+> >Why do you need this?
+> >
+> >I'd expect the use to request a frequency they wanted to sample at, and the
+> >driver would try its best by fiddling with this and the clock input.
+> >
+> >> +
+> >> +       if (of_property_read_u32(np, "fsl,adc-res",
+> >> +                       &info->adc_feature.res_mode)) {
+> >> +               info->adc_feature.res_mode = 12;
+> >> +               dev_info(info->dev,
+> >> +                       "Miss adc-res property in dt, use 8bit
+> >> + mode.\n");
+> >
+> >This message does not seem to match the code above it.
+> >
+> >Is this a hardware limitation in some instances? Or is it always possible to
+> >select any of the resolutions?
+> 
+> No limitation, just mistake for it. I have tested 8-bit, 10-bit, 12-bit mode, all pass.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok. So this is not necessary?
+
+> >
+> >> +
+> >> +       if (of_property_read_u32(np, "fsl,adc-sam-time",
+> >> +                       &info->adc_feature.sam_time)) {
+> >> +               info->adc_feature.sam_time = 4;
+> >> +               dev_info(info->dev,
+> >> +                       "Miss adc-sam-time property in dt, set to 4.\n");
+> >> +       }
+> >
+> >This looks like it should be handled at runtime.
+> 
+> Driver can get the ADC sample time duration fro DT.
+> fsl,adc-sam-time: ADC sample time duration, number of ADC clocks, such
+> as 2, 4, 6, 8, 12, 16, 20, 24
+
+If this is not a fixed property of the hardware, and there isn't some
+limitation such that one of these values _must_ be used, I do not
+believe it should be in the device tree.
+
+Just because it is easier to put it there doesn't make putting it there
+correct.
+
+> 
+> How to handled at runtime ? 
+> Use ioctl ?
+
+Something of that sort. Hopefully someone more familiar with the
+subsystem can describe what's preferred.
+
+> For the ADC, there have many setting, some of setting are defined
+> statically,  some of them get from DT.  If let the setting handled at
+> runtime, it need to introduce ioctl interface for the driver.
+
+If it's a static property of the HW that cannot be probed, it should be
+in the DT. If it's a limitation of the HW, that should be in the DT.
+
+If it's an arbitrary value that does not have a significant effect on
+performance or correctness, I do not see why it should be in the DT.
+
+As far as I can see, this does not belong in the DT. The fact that you'd
+need an ioctl to configure it dynamically is an orthogonal issue.
+
+> 
+> >
+> >> +
+> >> +       info->adc_feature.hw_average = of_property_read_bool(np,
+> >> +                                       "fsl,adc-hw-aver-en");
+> >
+> >Is hw average support not always present?
+> 
+> Vf610 RM describe:
+> 37.8.5.7 Hardware Average Function
+> After the selected input is sampled and converted, the result is placed in an accumulator
+> from which an average is calculated once the selected number of conversions has been
+> completed. When hardware averaging is selected the completion of a single conversion
+> will not set the COCOn bit.
+> 
+> In general, hw average function is useful to reduce cpu loading.
+> The function is optional for user.
+
+Ok. If this is always possible to use, as your description implies, then
+I do not see why this needs to be in the DT. Whether you choose to
+enable or disable it in the driver by default, or whether you expose an
+interface to userspace to configure this is an orthogonal issue.
+
+> 
+> >
+> >> +       if (info->adc_feature.hw_average &&
+> >> +                of_property_read_u32(np, "fsl,adc-aver-sam-sel",
+> >> +                               &info->adc_feature.hw_sam)) {
+> >> +               info->adc_feature.hw_sam = 4;
+> >> +               dev_info(info->dev,
+> >> +                       "Miss adc-aver-sam-sel property in dt, set to 4.\n");
+> >> +       }
+> >
+> >Why not configure this at runtime instead?
+> >
+> As above said, if let the configuration set at runtime, we need to
+> introduce ioctl interface for user.
+> How do you think ?
+
+An ioctl or sysfs interface sounds like the correct solution. I don't
+have any strong opinion on the particular interface used, but DT is not
+the right place to expose this configuration option.
+
+> 
+> 
+> >> +
+> >> +       info->adc_feature.lpm = of_property_read_bool(np, "fsl,adc-low-power-
+> >mode");
+> >> +       info->adc_feature.hs_oper = of_property_read_bool(np,
+> >> + "fsl,adc-high-speed-conv");
+> >
+> >Please elaborate on what these mean, and why they need to be in the DT.
+> >
+> Yes, there have some configuration have been set in default,  some of them from DT.
+> I think the hw function/feature enable/disable are judged from DT.
+> Some general configurations are set in default.
+
+Sorry, but that does not answer my questions:
+
+* What do these two properties mean?
+* Why must they be in the DT?
+
+As far as I can tell, they do not need to be in the DT.
+
+> 
+> Of course, let all of them are set at runtime is better. But need to
+> introduce ioctl interface for user. 
+
+I don't see this as an argument for placing these in the DT. Describe
+the hardware in the DT. Anything that is expected to be changed by the
+user is clearly not a property of the hardware and should not be in the
+DT.
+
+There are grey areas with some devices where a specific configuration is
+far more optimal for a given platform (e.g. reserving specific portions
+of memory for frame buffers). As far as I can see, none of the
+properties proposed in this patch fall into that area, and sane defaults
+can be selected for all of them which could later be overridden with a
+userspace interface of some sort.
+
+Thanks,
+Mark.
