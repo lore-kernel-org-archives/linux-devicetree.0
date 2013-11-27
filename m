@@ -1,111 +1,165 @@
-From: Fugang Duan <fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v3 2/3] iio:adc:imx: add Freescale Vybrid vf610 adc
- driver
-Date: Wed, 27 Nov 2013 08:31:15 +0000
-Message-ID: <9848F2DB572E5649BA045B288BE08FBE018990B8@039-SN2MPN1-023.039d.mgd.msft.net>
-References: <1385463394-11157-1-git-send-email-B38611@freescale.com>
- <1385463394-11157-3-git-send-email-B38611@freescale.com>
- <52948B45.7030505@metafoo.de>
- <9848F2DB572E5649BA045B288BE08FBE01898C41@039-SN2MPN1-023.039d.mgd.msft.net>
- <5295AB51.4050804@metafoo.de>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH] ARM: davinci: aemif: get rid of davinci-nand driver
+ dependency on aemif
+Date: Wed, 27 Nov 2013 14:05:23 +0530
+Message-ID: <5295AECB.7040503@ti.com>
+References: <5291CB01.1010506@ti.com>
+ <1385409654-19006-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5295AB51.4050804-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1385409654-19006-1-git-send-email-ivan.khoronzhuk@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, rob@landley.net, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lars-Peter Clausen [mailto:lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org]
-Data: Wednesday, November 27, 2013 4:21 PM
++ MTD maintainers
 
->To: Duan Fugang-B38611
->Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Li Frank-B20596; linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->Subject: Re: [PATCH v3 2/3] iio:adc:imx: add Freescale Vybrid vf610 adc driver
->
->On 11/27/2013 05:44 AM, Fugang Duan wrote:
->[...]
->>>> +	if (info->vref)
->>>> +		info->vref_uv = regulator_get_voltage(info->vref);
->>>> +	else if (of_property_read_u32(np, "fsl,adc-vref", &info->vref_uv))
->>>> +		dev_err(info->dev,
->>>> +			"Miss adc-vref property or vref regulator in the DT.\n");
->>>
->>> If you have a fixed reference voltage use the fixed voltage
->>> regulator. Don't invent custom ways of specifying this.
->>>
->> Different boards design may use different method to supply the reference
->voltage.
->> There maybe fixed voltage regulator, maybe no regulator just use fixed
->voltage.
->
->Well the voltage has to come from somewhere and that source should be described
->in the DT with a fixed regulator.
->
+On Tuesday 26 November 2013 01:30 AM, Ivan Khoronzhuk wrote:
+> The problem that the set timings code contains the call of Davinci
+> platform function davinci_aemif_setup_timing() which is not
+> accessible if kernel is built for another platform like Keystone.
+> 
+> The Keysone platform is going to use TI AEMIF driver.
+> If TI AEMIF is used we don't need to set timings and bus width.
+> It is done by AEMIF driver.
+> 
+> To get rid of davinci-nand driver dependency on aemif platform code
+> we moved aemif code to davinci platform.
+> 
+> The platform AEMIF code (aemif.c) has to be removed once Davinci
+> will be converted to DT and use ti-aemif.c driver.
+> 
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> ---
+>  arch/arm/mach-davinci/aemif.c                   |   73 ++++++++++++++++++++++-
+>  arch/arm/mach-davinci/board-da830-evm.c         |    3 +
+>  arch/arm/mach-davinci/board-da850-evm.c         |    3 +
+>  arch/arm/mach-davinci/board-dm355-evm.c         |    5 ++
+>  arch/arm/mach-davinci/board-dm355-leopard.c     |    5 ++
+>  arch/arm/mach-davinci/board-dm365-evm.c         |    4 ++
+>  arch/arm/mach-davinci/board-dm644x-evm.c        |    5 ++
+>  arch/arm/mach-davinci/board-dm646x-evm.c        |    3 +
+>  arch/arm/mach-davinci/board-mityomapl138.c      |    3 +
+>  arch/arm/mach-davinci/board-neuros-osd2.c       |    9 ++-
+>  arch/arm/mach-davinci/devices-tnetv107x.c       |    3 +
+>  drivers/mtd/nand/davinci_nand.c                 |   23 -------
+>  include/linux/platform_data/mtd-davinci-aemif.h |    5 +-
+>  13 files changed, 116 insertions(+), 28 deletions(-)
 
-Good suggestion. Thanks.
+[...]
 
->>
->>>> +
->>>> +	if (of_property_read_u32(np, "fsl,adc-clk-div",
->>>> +			&info->adc_feature.clk_div_num)) {
->>>> +		info->adc_feature.clk_div_num = 2;
->>>> +		dev_info(info->dev,
->>>> +			"Miss adc-clk-div in dt, set divider to 2.\n");
->>>> +	}
->>>> +
->>>> +	if (of_property_read_u32(np, "fsl,adc-res",
->>>> +			&info->adc_feature.res_mode)) {
->>>> +		info->adc_feature.res_mode = 12;
->>>> +		dev_info(info->dev,
->>>> +			"Miss adc-res property in dt, use 8bit mode.\n");
->>>> +	}
->>>> +
->>>> +	if (of_property_read_u32(np, "fsl,adc-sam-time",
->>>> +			&info->adc_feature.sam_time)) {
->>>> +		info->adc_feature.sam_time = 4;
->>>> +		dev_info(info->dev,
->>>> +			"Miss adc-sam-time property in dt, set to 4.\n");
->>>> +	}
->>>> +
->>>> +	info->adc_feature.hw_average = of_property_read_bool(np,
->>>> +					"fsl,adc-hw-aver-en");
->>>> +	if (info->adc_feature.hw_average &&
->>>> +		 of_property_read_u32(np, "fsl,adc-aver-sam-sel",
->>>> +				&info->adc_feature.hw_sam)) {
->>>> +		info->adc_feature.hw_sam = 4;
->>>> +		dev_info(info->dev,
->>>> +			"Miss adc-aver-sam-sel property in dt, set to 4.\n");
->>>> +	}
->>>> +
->>>> +	info->adc_feature.lpm = of_property_read_bool(np,
->>>> +"fsl,adc-low-power-
->>> mode");
->>>> +	info->adc_feature.hs_oper = of_property_read_bool(np,
->>>> +"fsl,adc-high-speed-conv");
->>>
->>> Some of the properties look like they should be runtime configurable
->>> rather then board specific settings. E.g. the resolution or the
->>> sampling frequency, or whether averaging is enabled.
->>>
->>>
->> So, I have question:
->> Since the ADC have many user configurable setting, I have import some of them
->from DT, and some of them use static define.
->> How to set/change them in runtime for user configuration ?
->> Introduce ioctl ?
->
->I think a lot of them already map to standard iio properties. E.g. the
->samplerate. So you'd expose them as sysfs attributes. But please use standard
->attributes here instead of inventing your own with cryptic names.
->
->- Lars
+> +
+> +/**
+> + * davinci_aemif_setup - setup AEMIF interface by davinci_nand_pdata
+> + * @pdev - link to platform device to setup settings for
+> + *
+> + * This function does not use any locking while programming the AEMIF
+> + * because it is expected that there is only one user of a given
+> + * chip-select.
+> + *
+> + * Returns 0 on success, else negative errno.
+> + */
+> +int davinci_aemif_setup(struct platform_device *pdev)
+> +{
+> +	struct davinci_nand_pdata *pdata = dev_get_platdata(&pdev->dev);
+> +	uint32_t val;
+> +	struct resource	*res;
+> +	void __iomem *base;
+> +	int ret = 0;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "cannot get IORESOURCE_MEM\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	base = ioremap(res->start, resource_size(res));
+> +	if (!base) {
+> +		dev_err(&pdev->dev, "ioremap failed for resource %pR\n", res);
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	/*
+> +	 * Setup Async configuration register in case we did not boot
+> +	 * from NAND and so bootloader did not bother to set it up.
+> +	 */
+> +	val = davinci_aemif_readl(base, A1CR_OFFSET + pdev->id * 4);
 
-Good suggestion, I will use the standard IIO interface for the ADC configuration.
+The AEMIF clock has to be enabled before this. The NAND driver might
+load much later.
+
+> +	/*
+> +	 * Extended Wait is not valid and Select Strobe mode is not
+> +	 * used
+> +	 */
+> +	val &= ~(ACR_ASIZE_MASK | ACR_EW_MASK | ACR_SS_MASK);
+> +	if (pdata->options & NAND_BUSWIDTH_16)
+> +		val |= 0x1;
+> +
+> +	davinci_aemif_writel(base, A1CR_OFFSET + pdev->id * 4, val);
+> +
+> +	if (pdata->timing)
+> +		ret = davinci_aemif_setup_timing(pdata->timing, base, pdev->id);
+> +
+> +	if (ret < 0)
+> +		dev_dbg(&pdev->dev, "NAND timing values setup fail\n");
+> +
+> +err:
+> +	iounmap(base);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(davinci_aemif_setup);
+
+No need to export this symbol as nothing apart from platform code uses it.
+
+>  static const short mityomap_mii_pins[] = {
+> diff --git a/arch/arm/mach-davinci/board-neuros-osd2.c b/arch/arm/mach-davinci/board-neuros-osd2.c
+> index bb680af..a7d6668 100644
+> --- a/arch/arm/mach-davinci/board-neuros-osd2.c
+> +++ b/arch/arm/mach-davinci/board-neuros-osd2.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/platform_data/mmc-davinci.h>
+>  #include <linux/platform_data/mtd-davinci.h>
+>  #include <linux/platform_data/usb-davinci.h>
+> +#include <linux/platform_data/mtd-davinci-aemif.h>
+>  
+>  #include <asm/mach-types.h>
+>  #include <asm/mach/arch.h>
+> @@ -192,9 +193,15 @@ static __init void davinci_ntosd2_init(void)
+>  		davinci_cfg_reg(DM644X_ATAEN_DISABLE);
+>  
+>  		/* only one device will be jumpered and detected */
+> -		if (HAS_NAND)
+> +		if (HAS_NAND) {
+>  			platform_device_register(
+>  					&davinci_ntosd2_nandflash_device);
+> +
+> +			if (davinci_aemif_setup(
+> +				&davinci_ntosd2_nandflash_device))
+> +				pr_warn("%s: Cannot configure AEMIF.\n",
+> +					__func__);
+
+This is looking really ugly. Can you shorten
+davinci_ntosd2_nandflash_device to just "ntosd2_nandflash" or similar?
+
+I am yet to test this. Will test once the next version is posted.
+
+Overall, I cannot say I am fan of this approach (mostly because we are
+ending up having two drivers for the same hardware in kernel). But given
+that the other option of adding platform device support to AEMIF driver
+is not acceptable to you, I guess I will live with this.
 
 Thanks,
-Andy
+Sekhar
