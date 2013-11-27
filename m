@@ -1,17 +1,16 @@
 From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH 07/12] memory: davinci-aemif: introduce AEMIF driver
-Date: Wed, 27 Nov 2013 12:22:11 +0200
-Message-ID: <5295C7D3.8010803@ti.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1384187188-5776-8-git-send-email-ivan.khoronzhuk@ti.com>
- <4F5844B3A985794BA902E12C070812375F8D2E@DNCE04.ent.ti.com>
- <52944BD3.90105@ti.com> <5294B8C4.6040803@ti.com> <5294D8AD.5030106@ti.com>
- <5294E7E4.3060600@ti.com> <20131127003707.GQ9468@ld-irv-0074.broadcom.com>
+Subject: Re: [PATCH] ARM: davinci: aemif: get rid of davinci-nand driver
+ dependency on aemif
+Date: Wed, 27 Nov 2013 13:01:22 +0200
+Message-ID: <5295D102.2010101@ti.com>
+References: <5291CB01.1010506@ti.com>
+ <1385409654-19006-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <5295AECB.7040503@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131127003707.GQ9468@ld-irv-0074.broadcom.com>
+In-Reply-To: <5295AECB.7040503@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,65 +20,161 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko,
- Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sekhar Nori <nsekhar@ti.com>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, rob@landley.net, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/27/2013 02:37 AM, Brian Norris wrote:
-> On Tue, Nov 26, 2013 at 01:26:44PM -0500, Santosh Shilimkar wrote:
->> On Tuesday 26 November 2013 12:21 PM, Sekhar Nori wrote:
->>> On 11/26/2013 8:35 PM, Santosh Shilimkar wrote:
->>>> On Tuesday 26 November 2013 02:20 AM, Sekhar Nori wrote:
->>>>> On Monday 11 November 2013 10:36 PM, Khoronzhuk, Ivan wrote:
->>>>>> +static int davinci_aemif_probe(struct platform_device *pdev)
->>>>>> +{
->>>>>> +       int ret  = -ENODEV, i;
->>>>>> +       struct resource *res;
->>>>>> +       struct device *dev = &pdev->dev;
->>>>>> +       struct device_node *np = dev->of_node;
->>>>>> +
->>>>>> +       if (np == NULL)
->>>>>> +               return 0;
->>>>>> +
->>>>>> +       if (aemif) {
->>>>>> +               dev_err(dev, "davinci_aemif driver is in use currently\n");
->>>>>> +               return -EBUSY;
->>>>>> +       }
->>>>>
->>>>> Why expressly prevent multiple AEMIF devices? Its entirely conceivable
->>>>> to have two memories like NAND and NOR flash connect to two different
->>>>> AEMIF interfaces.
->>>>>
->>>> Ivan wanted me to clarify the Keystone hardware which supports
->>>> 1 instance of controller with 4 CS. That allows already four
->>>> devices to be connected. Currently NAND and NOR are connected on it
->>>> and two more slots are free.
->>>>
->>>> Since driver support what hardware is, lets not build a driver for
->>>> hardware which don't exist. And if at all such a support would be
->>>> needed in future, we can always add it.
->>>
->>> I understand the lack of hardware part, but its common to write the
->>> driver such that it can handle multiple instances. Is there any gain on
->>> current hardware because of this check? From what I am hearing, the code
->>> in question wont be exercised at all. So why go all the way and add it
->>> in first place?
->>>
->> Fair enough. The check can be dropped.
+On 11/27/2013 10:35 AM, Sekhar Nori wrote:
+> + MTD maintainers
 >
-> Hmm, while the sentiment expressed by Sekhar is noble (to avoid
-> unnecessarily constraining the driver), removing the check is not
-> enough. You're still using a global static variable 'aemif', and it is
-> important not to accidentally re-use this struct if a second device ever
-> becomes available. So for the current implementation, the check is
-> necessary IMO. If instead, you were to make 'aemif' a per-device struct
-> (like with platform_set_drvdata()), then you would not have this issue.
+> On Tuesday 26 November 2013 01:30 AM, Ivan Khoronzhuk wrote:
+>> The problem that the set timings code contains the call of Davinci
+>> platform function davinci_aemif_setup_timing() which is not
+>> accessible if kernel is built for another platform like Keystone.
+>>
+>> The Keysone platform is going to use TI AEMIF driver.
+>> If TI AEMIF is used we don't need to set timings and bus width.
+>> It is done by AEMIF driver.
+>>
+>> To get rid of davinci-nand driver dependency on aemif platform code
+>> we moved aemif code to davinci platform.
+>>
+>> The platform AEMIF code (aemif.c) has to be removed once Davinci
+>> will be converted to DT and use ti-aemif.c driver.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>> ---
+>>   arch/arm/mach-davinci/aemif.c                   |   73 ++++++++++++++++++++++-
+>>   arch/arm/mach-davinci/board-da830-evm.c         |    3 +
+>>   arch/arm/mach-davinci/board-da850-evm.c         |    3 +
+>>   arch/arm/mach-davinci/board-dm355-evm.c         |    5 ++
+>>   arch/arm/mach-davinci/board-dm355-leopard.c     |    5 ++
+>>   arch/arm/mach-davinci/board-dm365-evm.c         |    4 ++
+>>   arch/arm/mach-davinci/board-dm644x-evm.c        |    5 ++
+>>   arch/arm/mach-davinci/board-dm646x-evm.c        |    3 +
+>>   arch/arm/mach-davinci/board-mityomapl138.c      |    3 +
+>>   arch/arm/mach-davinci/board-neuros-osd2.c       |    9 ++-
+>>   arch/arm/mach-davinci/devices-tnetv107x.c       |    3 +
+>>   drivers/mtd/nand/davinci_nand.c                 |   23 -------
+>>   include/linux/platform_data/mtd-davinci-aemif.h |    5 +-
+>>   13 files changed, 116 insertions(+), 28 deletions(-)
 >
-> Brian
+> [...]
+>
+>> +
+>> +/**
+>> + * davinci_aemif_setup - setup AEMIF interface by davinci_nand_pdata
+>> + * @pdev - link to platform device to setup settings for
+>> + *
+>> + * This function does not use any locking while programming the AEMIF
+>> + * because it is expected that there is only one user of a given
+>> + * chip-select.
+>> + *
+>> + * Returns 0 on success, else negative errno.
+>> + */
+>> +int davinci_aemif_setup(struct platform_device *pdev)
+>> +{
+>> +	struct davinci_nand_pdata *pdata = dev_get_platdata(&pdev->dev);
+>> +	uint32_t val;
+>> +	struct resource	*res;
+>> +	void __iomem *base;
+>> +	int ret = 0;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>> +	if (!res) {
+>> +		dev_err(&pdev->dev, "cannot get IORESOURCE_MEM\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	base = ioremap(res->start, resource_size(res));
+>> +	if (!base) {
+>> +		dev_err(&pdev->dev, "ioremap failed for resource %pR\n", res);
+>> +		ret = -ENOMEM;
+>> +		goto err;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Setup Async configuration register in case we did not boot
+>> +	 * from NAND and so bootloader did not bother to set it up.
+>> +	 */
+>> +	val = davinci_aemif_readl(base, A1CR_OFFSET + pdev->id * 4);
+>
+> The AEMIF clock has to be enabled before this. The NAND driver might
+> load much later.
 >
 
-Yes, that is the plan to make it a per-device.
+Ok
+
+>> +	/*
+>> +	 * Extended Wait is not valid and Select Strobe mode is not
+>> +	 * used
+>> +	 */
+>> +	val &= ~(ACR_ASIZE_MASK | ACR_EW_MASK | ACR_SS_MASK);
+>> +	if (pdata->options & NAND_BUSWIDTH_16)
+>> +		val |= 0x1;
+>> +
+>> +	davinci_aemif_writel(base, A1CR_OFFSET + pdev->id * 4, val);
+>> +
+>> +	if (pdata->timing)
+>> +		ret = davinci_aemif_setup_timing(pdata->timing, base, pdev->id);
+>> +
+>> +	if (ret < 0)
+>> +		dev_dbg(&pdev->dev, "NAND timing values setup fail\n");
+>> +
+>> +err:
+>> +	iounmap(base);
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL(davinci_aemif_setup);
+>
+> No need to export this symbol as nothing apart from platform code uses it.
+>
+
+Ok
+
+>>   static const short mityomap_mii_pins[] = {
+>> diff --git a/arch/arm/mach-davinci/board-neuros-osd2.c b/arch/arm/mach-davinci/board-neuros-osd2.c
+>> index bb680af..a7d6668 100644
+>> --- a/arch/arm/mach-davinci/board-neuros-osd2.c
+>> +++ b/arch/arm/mach-davinci/board-neuros-osd2.c
+>> @@ -31,6 +31,7 @@
+>>   #include <linux/platform_data/mmc-davinci.h>
+>>   #include <linux/platform_data/mtd-davinci.h>
+>>   #include <linux/platform_data/usb-davinci.h>
+>> +#include <linux/platform_data/mtd-davinci-aemif.h>
+>>
+>>   #include <asm/mach-types.h>
+>>   #include <asm/mach/arch.h>
+>> @@ -192,9 +193,15 @@ static __init void davinci_ntosd2_init(void)
+>>   		davinci_cfg_reg(DM644X_ATAEN_DISABLE);
+>>
+>>   		/* only one device will be jumpered and detected */
+>> -		if (HAS_NAND)
+>> +		if (HAS_NAND) {
+>>   			platform_device_register(
+>>   					&davinci_ntosd2_nandflash_device);
+>> +
+>> +			if (davinci_aemif_setup(
+>> +				&davinci_ntosd2_nandflash_device))
+>> +				pr_warn("%s: Cannot configure AEMIF.\n",
+>> +					__func__);
+>
+> This is looking really ugly. Can you shorten
+> davinci_ntosd2_nandflash_device to just "ntosd2_nandflash" or similar?
+
+The rename is not related to the patch, so I won't do this.
+
+>
+> I am yet to test this. Will test once the next version is posted.
+>
+> Overall, I cannot say I am fan of this approach (mostly because we are
+> ending up having two drivers for the same hardware in kernel). But given
+> that the other option of adding platform device support to AEMIF driver
+> is not acceptable to you, I guess I will live with this.
+>
+> Thanks,
+> Sekhar
+>
 
 -- 
 Regards,
