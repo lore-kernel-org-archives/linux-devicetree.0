@@ -1,99 +1,355 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] mtd: nand: gpio: Add DT property to automatically
- determine bus width
-Date: Tue, 26 Nov 2013 20:34:22 -0800
-Message-ID: <CAN8TOE-PccHVcsdy8QrbLKuOpz1ysKNAbhxv3JuXMmWfU1GWpA@mail.gmail.com>
-References: <1384343884-29622-1-git-send-email-shc_work@mail.ru>
-	<20131127012158.GR9468@ld-irv-0074.broadcom.com>
-	<1385526078.44550720@f276.i.mail.ru>
+From: Fugang Duan <fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v3 2/3] iio:adc:imx: add Freescale Vybrid vf610 adc
+ driver
+Date: Wed, 27 Nov 2013 04:44:19 +0000
+Message-ID: <9848F2DB572E5649BA045B288BE08FBE01898C41@039-SN2MPN1-023.039d.mgd.msft.net>
+References: <1385463394-11157-1-git-send-email-B38611@freescale.com>
+ <1385463394-11157-3-git-send-email-B38611@freescale.com>
+ <52948B45.7030505@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385526078.44550720-3vKlxj6uJRtsdVUOrk1QfQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52948B45.7030505-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Content-Language: en-US
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Data: Tuesday, November 26, 2013 7:52 PM
 
-On Tue, Nov 26, 2013 at 8:21 PM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
-> ...
->> We're dealing with a similar issue in other drivers currently, and I
->> think it's worth straightening out the issue for all systems.
->>
->> On Wed, Nov 13, 2013 at 03:58:02PM +0400, Alexander Shiyan wrote:
->> > This patch adds a property to automatically determine the NAND
->> > bus width by CFI/ONFI information from chip. This property works
->> > if the bus width is not specified explicitly.
->>
->> This issue brings up a few questions in my mind, which are relevant to
->> device tree in general.
->>
->> First of all, do we need a device tree property at all, for something
->> that is auto-detectable?
->>
->> Related: is a device tree consumer (like Linux) supposed to be a
->> validator, or simply a best-effort? I'm considering the following case:
->> if Linux is allowed to auto-detect some property which also has a device
->> tree binding (e.g., "nand-bus-width", in
->> Documentation/devicetree/bindings/mtd/nand.txt), what should happen if
->> the binding happens to be incorrect? IOW, what if the device tree
->> specifies buswidth is x16, but Linux correctly detects it as x8?
->> Shouldn't we make the best effort to bring the hardware up, regardless
->> of what the device tree says?
->>
->> So for something like this GPIO driver, I'm thinking that Linux should
->> just use NAND_BUSWIDTH_AUTO all the time [*]. But (as I'm hinting above)
->> that would allow DTB firmware implementors to be lazier and have a
->> technically-incorrect "nand-bus-width" or "bank-width" binding, since
->> they know it can reliably be detected and overridden by Linux.
->>
->> [*] Except where resource_size(res) < 2, as Alexander already has in
->> this patch.
->>
->> > Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
->> > ---
->> >  .../devicetree/bindings/mtd/gpio-control-nand.txt        |  3 +++
->> >  drivers/mtd/nand/gpio.c                                  | 16 ++++++++++++----
->> >  2 files changed, 15 insertions(+), 4 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
->> > index 36ef07d..fe4e960 100644
->> > --- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
->> > +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
->> > @@ -19,6 +19,9 @@ Optional properties:
->> >    defaults to 1 byte.
->> >  - chip-delay : chip dependent delay for transferring data from array to
->> >    read registers (tR).  If not present then a default of 20us is used.
->> > +- gpio-control-nand,bank-width-auto : Device bus width is determined
->> > +  automatically by CFI/ONFI information from chip if "bank-width"
->> > +  parameter is omitted (Boolean).
->>
->> If we do resort to a new binding for auto-buswidth, it should be a
->> generic one that all NAND drivers can use. Maybe a separate boolean
->> "nand-bus-width-auto" and if it is present, then it overrules the
->> presence (or lack) of the "nand-bus-width" boolean property?
->> Or is it possible to extend "nand-bus-width" to allow the value of 0 to
->> mean automatic?
+>To: Duan Fugang-B38611
+>Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+>shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Li Frank-B20596; linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>Subject: Re: [PATCH v3 2/3] iio:adc:imx: add Freescale Vybrid vf610 adc driver
 >
-> This was be my first implementation of this feature, but rejected...
-> http://permalink.gmane.org/gmane.linux.drivers.mtd/47302
+>On 11/26/2013 11:56 AM, Fugang Duan wrote:
+>> Add Freescale Vybrid vf610 adc driver. The driver only support ADC
+>> software trigger.
+>>
+>> Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>
+>The driver itself looks mostly fine. I'm not so sure about the dt bindings
+>though.
+>
+>> ---
+>>  drivers/iio/adc/Kconfig     |   11 +
+>>  drivers/iio/adc/Makefile    |    1 +
+>>  drivers/iio/adc/vf610_adc.c |  744
+>> +++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 756 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig index
+>> 2209f28..d0476ec 100644
+>> --- a/drivers/iio/adc/Kconfig
+>> +++ b/drivers/iio/adc/Kconfig
+>> @@ -204,4 +204,15 @@ config VIPERBOARD_ADC
+>>  	  Say yes here to access the ADC part of the Nano River
+>>  	  Technologies Viperboard.
+>>
+>> +config VF610_ADC
+>
+>Keep things in alphabetical order...
+>
+>> +	tristate "Freescale vf610 ADC driver"
+>> +	help
+>> +	  Say yes here if you want support for the Vybrid board
+>> +	  analog-to-digital converter.
+>> +	  Since the IP is used for i.MX6SLX and i.MX7 serial sillicons, the
+>driver
+>> +	  also support the subsequent chips.
+>> +
+>> +	  This driver can also be built as a module. If so, the module will be
+>> +	  called vf610_adc.
+>> +
+>>  endmenu
+>> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile index
+>> ba9a10a..c39ae38 100644
+>> --- a/drivers/iio/adc/Makefile
+>> +++ b/drivers/iio/adc/Makefile
+>> @@ -22,3 +22,4 @@ obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
+>>  obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
+>>  obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
+>>  obj-$(CONFIG_VIPERBOARD_ADC) += viperboard_adc.o
+>> +obj-$(CONFIG_VF610_ADC) += vf610_adc.o
+>
+>Same here
+>
+>> diff --git a/drivers/iio/adc/vf610_adc.c b/drivers/iio/adc/vf610_adc.c
+>> new file mode 100644 index 0000000..0c200d91
+>> --- /dev/null
+>> +++ b/drivers/iio/adc/vf610_adc.c
+>> @@ -0,0 +1,744 @@
+>[...]
+>> +struct vf610_adc {
+>> +	struct device           *dev;
+>> +	void __iomem            *regs;
+>> +	struct clk              *clk;
+>> +	unsigned int            irq;
+>
+>irq doesn't seem to be used outside of the probe function.
 
-Huh? Your original patch was not correct (it removed properties) and
-it was not comprehensive in its description -- it didn't cover any of
-the topics in my questions above. It wasn't rejected for any reason
-related to my questions here.
+Yes, I will remove the private variable.
+>
+>> +
+>> +	u32			vref_uv;
+>> +	u32			value;
+>> +	struct regulator        *vref;
+>> +	struct vf610_adc_feature	adc_feature;
+>> +
+>> +	struct completion       completion;
+>> +};
+>[...]
+>> +static void vf610_adc_cfg_of_init(struct vf610_adc *info) {
+>> +	struct device_node *np = info->dev->of_node;
+>> +
+>> +	/*
+>> +	 * set default Configuration for ADC controller
+>> +	 * This config may upgrade to require from DT
+>> +	 */
+>> +	info->adc_feature.clk_sel = ADCIOC_BUSCLK_SET;
+>> +	info->adc_feature.vol_ref = VF610_ADCIOC_VR_VREF_SET;
+>> +	info->adc_feature.calibration = true;
+>> +	info->adc_feature.tri_hw = false;
+>> +	info->adc_feature.dataov_en = true;
+>> +	info->adc_feature.ac_clk_en = false;
+>> +	info->adc_feature.dma_en = false;
+>> +	info->adc_feature.cc_en = false;
+>> +	info->adc_feature.cmp_func_en = false;
+>> +	info->adc_feature.cmp_range_en = false;
+>> +	info->adc_feature.cmp_greater_en = false;
+>> +
+>> +	if (of_property_read_u32(np, "fsl,adc-io-pinctl",
+>> +			&info->adc_feature.pctl)) {
+>> +		info->adc_feature.pctl = VF610_ADC_IOPCTL5;
+>> +		dev_info(info->dev,
+>> +			"Miss adc-io-pinctl in dt, enable pin SE5.\n");
+>> +	}
+>> +
+>> +	if (info->vref)
+>> +		info->vref_uv = regulator_get_voltage(info->vref);
+>> +	else if (of_property_read_u32(np, "fsl,adc-vref", &info->vref_uv))
+>> +		dev_err(info->dev,
+>> +			"Miss adc-vref property or vref regulator in the DT.\n");
+>
+>If you have a fixed reference voltage use the fixed voltage regulator. Don't
+>invent custom ways of specifying this.
+>
+Different boards design may use different method to supply the reference voltage.
+There maybe fixed voltage regulator, maybe no regulator just use fixed voltage.
 
-My question is whether we can leave the documented
-bus-width/bank-width binding in place, but just change the Linux
-implementation to perform auto-detection instead of just using the
-binding directly. And if the answer is "no", then we need a new
-binding like your current patch, except that it should be usable for
-all NAND.
+>> +
+>> +	if (of_property_read_u32(np, "fsl,adc-clk-div",
+>> +			&info->adc_feature.clk_div_num)) {
+>> +		info->adc_feature.clk_div_num = 2;
+>> +		dev_info(info->dev,
+>> +			"Miss adc-clk-div in dt, set divider to 2.\n");
+>> +	}
+>> +
+>> +	if (of_property_read_u32(np, "fsl,adc-res",
+>> +			&info->adc_feature.res_mode)) {
+>> +		info->adc_feature.res_mode = 12;
+>> +		dev_info(info->dev,
+>> +			"Miss adc-res property in dt, use 8bit mode.\n");
+>> +	}
+>> +
+>> +	if (of_property_read_u32(np, "fsl,adc-sam-time",
+>> +			&info->adc_feature.sam_time)) {
+>> +		info->adc_feature.sam_time = 4;
+>> +		dev_info(info->dev,
+>> +			"Miss adc-sam-time property in dt, set to 4.\n");
+>> +	}
+>> +
+>> +	info->adc_feature.hw_average = of_property_read_bool(np,
+>> +					"fsl,adc-hw-aver-en");
+>> +	if (info->adc_feature.hw_average &&
+>> +		 of_property_read_u32(np, "fsl,adc-aver-sam-sel",
+>> +				&info->adc_feature.hw_sam)) {
+>> +		info->adc_feature.hw_sam = 4;
+>> +		dev_info(info->dev,
+>> +			"Miss adc-aver-sam-sel property in dt, set to 4.\n");
+>> +	}
+>> +
+>> +	info->adc_feature.lpm = of_property_read_bool(np, "fsl,adc-low-power-
+>mode");
+>> +	info->adc_feature.hs_oper = of_property_read_bool(np,
+>> +"fsl,adc-high-speed-conv");
+>
+>Some of the properties look like they should be runtime configurable rather
+>then board specific settings. E.g. the resolution or the sampling frequency, or
+>whether averaging is enabled.
+>
+>
+So, I have question:
+Since the ADC have many user configurable setting, I have import some of them from DT, and some of them use static define.
+How to set/change them in runtime for user configuration ? 
+Introduce ioctl ?
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +}
+>[...]
+
+The format is caused by outlook.
+
+>> +static void vf610_adc_calibration(struct vf610_adc *info) {
+>> +	int adc_gc, hc_cfg;
+>> +	int timeout;
+>> +
+>> +	if (!info->adc_feature.calibration)
+>> +		return;
+>> +
+>> +	/* enable calibration interrupt */
+>> +	hc_cfg = VF610_ADC_AIEN | VF610_ADC_CONV_DISABLE;
+>> +	writel(hc_cfg, info->regs + ADC_HC0);
+>> +
+>> +	adc_gc = readl(info->regs + ADC_GC);
+>> +	writel(adc_gc | VF610_ADC_CAL, info->regs + ADC_GC);
+>> +
+>> +	timeout = wait_for_completion_interruptible_timeout
+>> +			(&info->completion, VF610_ADC_TIMEOUT);
+>
+>This should probably not be interruptible.
+>
+Agree.
+
+>> +	if (timeout == 0)
+>> +		dev_err(info->dev, "Timeout for adc calibration\n");
+>> +
+>> +	adc_gc = readl(info->regs + ADC_GS);
+>> +	if (adc_gc & VF610_ADC_CALF)
+>> +		dev_err(info->dev, "ADC calibration failed\n");
+>> +
+>> +	info->adc_feature.calibration = false; }
+>> +
+>> +static inline void vf610_adc_cfg_set(struct vf610_adc *info)
+>
+>I'd drop the inline
+
+Agree, thanks!
+>
+>> +{
+>[...]
+>> +}
+>
+>> +static inline int vf610_adc_read_data(struct vf610_adc *info)
+>same here
+
+Ok, thanks.
+
+>> +{
+>[...]
+>> +}
+>> +
+>[...]
+>> +static int vf610_read_raw(struct iio_dev *indio_dev,
+>> +			struct iio_chan_spec const *chan,
+>> +			int *val,
+>> +			int *val2,
+>> +			long mask)
+>> +{
+>> +	struct vf610_adc *info = iio_priv(indio_dev);
+>> +	unsigned int hc_cfg;
+>> +	unsigned long timeout;
+>> +
+>> +	/* Check for invalid channel */
+>> +	if (chan->channel > VF610_ADC_MAX_CHANS_NUM)
+>> +		return -EINVAL;
+>> +
+>> +	switch (mask) {
+>> +	case IIO_CHAN_INFO_RAW:
+>> +		mutex_lock(&indio_dev->mlock);
+>> +
+>
+>putting a reinit_completion() here would make sense
+
+Agree it , thanks!
+>
+>> +		hc_cfg = VF610_ADC_ADCHC(chan->channel);
+>> +		hc_cfg |= VF610_ADC_AIEN;
+>> +		writel(hc_cfg, info->regs + ADC_HC0);
+>> +		timeout = wait_for_completion_interruptible_timeout
+>> +				(&info->completion, VF610_ADC_TIMEOUT);
+>> +		*val = info->value;
+>> +
+>> +		mutex_unlock(&indio_dev->mlock);
+>> +
+>> +		if (timeout == 0)
+>> +			return -ETIMEDOUT;
+>
+>timeout can be negative if the thread was interrupted. In that case return the
+>error code in timeout.
+
+Agree, thanks!
+
+>
+>> +
+>> +		return IIO_VAL_INT;
+>> +
+>> +	case IIO_CHAN_INFO_SCALE:
+>> +		*val = info->vref_uv >> info->adc_feature.res_mode;
+>> +		*val2 = 0;
+>> +		return IIO_VAL_INT_PLUS_MICRO;
+>
+>It's better to use:
+>		*val = info->vref_uv / 1000;
+>		*val2 = info->adc_feature.res_mode;
+>		return IIO_VAL_FACTIONAL_LOG2;
+>
+Thanks for your suggestion.
+
+
+>> +	default:
+>> +		break;
+>> +	}
+>> +
+>> +	return -EINVAL;
+>> +}
+>[...]
+>> +static int vf610_adc_probe(struct platform_device *pdev) {
+>> +	struct vf610_adc *info = NULL;
+>> +	struct iio_dev *indio_dev;
+>> +	struct resource *mem;
+>> +	int ret = -ENODEV;
+>> +
+>> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(struct vf610_adc));
+>> +	if (!indio_dev) {
+>> +		dev_err(&pdev->dev, "Failed allocating iio device\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	info = iio_priv(indio_dev);
+>> +	info->dev = &pdev->dev;
+>> +
+>> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	info->regs = devm_ioremap_resource(&pdev->dev, mem);
+>> +	if (IS_ERR(info->regs))
+>> +		return PTR_ERR(info->regs);
+>> +
+>> +	info->irq = platform_get_irq(pdev, 0);
+>> +	if (info->irq < 0) {
+>
+>0 isn't a valid irq number so this should be "irq <= 0"
+
+Greet. Thanks.
+>
+>> +		dev_err(&pdev->dev, "no irq resource?\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>[...]
+>> +	vf610_adc_cfg_of_init(info);
+>> +	vf610_adc_hw_init(info);
+>
+>This should probably be done before registering the device. Same goes for the
+>clk_enable() call.
+>
+Got it, thanks!
+
+>> +
+>> +	return 0;
+>> +}
+
+Lars-Peter,  thanks for your review.
+
+Andy
