@@ -1,144 +1,53 @@
-From: Fugang Duan <fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v3 3/3] Documentation: add the binding file for
- Freescale vf610 ADC driver
-Date: Wed, 27 Nov 2013 06:05:42 +0000
-Message-ID: <9848F2DB572E5649BA045B288BE08FBE01898D6F@039-SN2MPN1-023.039d.mgd.msft.net>
-References: <1385463394-11157-1-git-send-email-B38611@freescale.com>
- <1385463394-11157-4-git-send-email-B38611@freescale.com>
- <20131126140926.GA5402@e106331-lin.cambridge.arm.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] watchdog: davinci: change driver to use WDT core
+Date: Tue, 26 Nov 2013 23:04:06 -0800
+Message-ID: <52959966.7000509@roeck-us.net>
+References: <1385388285-10553-1-git-send-email-ivan.khoronzhuk@ti.com> <1385388285-10553-2-git-send-email-ivan.khoronzhuk@ti.com> <5295758C.2030907@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131126140926.GA5402-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5295758C.2030907-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-Data: Tuesday, November 26, 2013 10:09 PM
-
->To: Duan Fugang-B38611
->Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Li Frank-B20596; linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->Subject: Re: [PATCH v3 3/3] Documentation: add the binding file for Freescale
->vf610 ADC driver
->
->On Tue, Nov 26, 2013 at 10:56:34AM +0000, Fugang Duan wrote:
->> The patch adds the binding file for Freescale vf610 ADC driver.
+On 11/26/2013 08:31 PM, Sekhar Nori wrote:
+> On Monday 25 November 2013 07:34 PM, Ivan Khoronzhuk wrote:
+>> To reduce code duplicate and increase code readability use WDT core
+>> code to handle WDT interface.
 >>
->> Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iio/adc/vf610-adc.txt      |   57
->++++++++++++++++++++
->>  1 files changed, 57 insertions(+), 0 deletions(-)
+>> Remove io_lock as the WDT core uses mutex to lock each wdt device.
+>> Remove wdt_state as the WDT core tracks state with its own variable.
 >>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
->> b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
->> new file mode 100644
->> index 0000000..4101516
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
->> @@ -0,0 +1,57 @@
->> +Freescale vf610 Analog to Digital Converter bindings
->> +
->> +The devicetree bindings are for the new ADC driver written for
->> +vf610/i.MX6slx and upward SoCs from Freescale.
->> +
->> +Required properties:
->> +- compatible: Should be "fsl,vf610-adc"
+>> The watchdog_init_timeout() can read timeout value from timeout-sec
+>> property if the passed value is out of bounds. The heartbeat is
+>> initialized in next way. If heartbeat is not set thought module
+>> parameter, try to read it's value from WDT node timeout-sec property.
+>> If node has no one, use default value.
+>>
+>> The heartbeat is hold in wdd->timeout by WDT core, so use it in
+>> order to set timeout period.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+>> Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+>> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 >
->s/be/contain/
+> So this still causes a regression because the clk_get()
+> fails due to the changed device name. Please fold this
+> patch in (tested on DM365, compiled on rest).
 >
->> +- reg: Offset and length of the register set for the device
->> +- interrupts: Should contain the interrupt for the device
->> +- clocks: The clocks needed by the ADC controller
+> Also, the change in device name (while needed) does not seem
+> to be related to usage of wdt core. Can you may be split
+> that change into a separate patch?
 >
->How many? Which ones?
->
->> +- clock-names: the name of the clocks
->
->Either define the set of names, or don't use clock-names. It's useless if it
->doesn't tell you anything.
->
->> +
->> +Optional properties:
->> +- fsl,adc-io-pinctl: Enable field for the I/O port control of MCU pins used
->as analog inputs.
->> +- fsl,adc-vref: ADC refrence voltage value, unit is uV.
->
->Can you not query the regulator to figure this out?
 
-This is optional, some board design have no fixed regulator, just supply fixed voltage from MCU digital power which
-Cannot handled by the module.
+Given all the trouble with it, I think that would be a good idea.
 
->
->> +- fsl,adc-clk-div: Current clock divider value, such as 1,2,4,8,16 and so on.
->
->Could you elaborate on this? What's it used for and why is it needed?
+Guenter
 
-Exp: ADC clock source is ipg bus clock, the clk divider can control the ADC sample speed while other setting don't change:
-	The sample speed that clock divider is equal to 1 is twice  than the divider is equal to 2.
-
-Anyway, it can control sample speed by user. 
-
->
->> +- fsl,adc-res: ADC conversion mode selection, such as 8 for 8-bit, 10 for
->10-bit, 12 for 12-bit mode.
->
->This sounds like something that could be changed at runtime. Why does this need
->to be configured in the DT?
->
->> +- fsl,adc-sam-time: ADC sample time duration, number of ADC clocks,
->> +such as 2, 4, 6, 8, 12, 16, 20, 24
->
->Likewise.
->
->Please don't poinltessly abbreviate, "sample" is much better than "sam"
->here...
->
->> +- fsl,adc-aver-sam-sel: Determines how many ADC conversions will be averaged
->to create the ADC average result.
->> +			The Optional value is 4, 8, 16, 32.
->
->Likewise.
-
-
-For above ADC configuration, ADC conversion mode, sample time duration, hardware average sample selection, and so on.
-All of them can changed at runtime. The only method is to introduce the ioctl interface for user to change them at runtime.
-How about you think ?  
-
->
->> +- fsl,adc-hw-aver-en: Bool type to decide enable hardware average function.
->
->When would you wnat this and when wouldn't you?
->
->Similarly, "averages" is far clearer than "aver".
-
-Ok, I see. Thanks.
->
->> +- fsl,adc-low-power-mode: Bool type to decide enable ADC low power mode.
->
->Similarly?
->
->> +- fsl,adc-high-speed-conv: Bool type to decide enable ADC high speed mode.
->
->Similarly?
->
->> +- vref: The regulator to support ADC refrence voltage.
->
->s/vref/vref-supply/
->
->Thanks,
->Mark.
-
-Thanks for your review.
-Summary, there have many comments why don't let some ADC configuration change at runtime.
-The driver still don't add ioctl interface for user to configurate the ADC setting. So the setting are got from DT.
-
-Do you have one good method to change the configuration at runtime ?
-
-Thanks,
-Andy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
