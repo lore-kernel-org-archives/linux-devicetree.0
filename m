@@ -1,55 +1,70 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAxLzNdIHB3bTogQWRkIG1jMTN4eHggcHdtIGRyaXZlci4=?=
-Date: Wed, 27 Nov 2013 19:54:24 +0400
-Message-ID: <1385567664.228570055@f131.i.mail.ru>
-References: <1385566771-366-1-git-send-email-denis@eukrea.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv8][ 3/5] ARM: dts: mbimxsd35: Add sound support.
+Date: Wed, 27 Nov 2013 16:54:22 +0100
+Message-ID: <1385567664-758-3-git-send-email-denis@eukrea.com>
+References: <1385567664-758-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1385566771-366-1-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?RGVuaXMgQ2FyaWtsaQ==?= <denis@eukrea.com>
-Cc: linux-pwm@vger.kernel.org, =?UTF-8?B?U2FtdWVsIE9ydGl6?= <sameo@linux.intel.com>, devicetree@vger.kernel.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring@calxeda.com>, =?UTF-8?B?VGhpZXJyeSBSZWRpbmc=?= <thierry.reding@gmail.com>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@linaro.org>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo@linaro.org>, =?UTF-8?B?TGVlIEpvbmVz?= <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385567664-758-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-...
-> Signed-off-by: Denis Carikli <denis@eukrea.com>
-> ---
->  .../devicetree/bindings/pwm/fsl,mc13xxx-pwm.txt    |   19 ++
->  drivers/mfd/mc13xxx-core.c                         |   11 ++
->  drivers/pwm/Kconfig                                |    6 +
->  drivers/pwm/Makefile                               |    1 +
->  drivers/pwm/pwm-mc13xxx.c                          |  205 ++++++++++++++++++++
->  include/linux/mfd/mc13783.h                        |    2 +
->  6 files changed, 244 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/fsl,mc13xxx-pwm.txt
->  create mode 100644 drivers/pwm/pwm-mc13xxx.c
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/fsl,mc13xxx-pwm.txt b/Documentation/devicetree/bindings/pwm/fsl,mc13xxx-pwm.txt
-> new file mode 100644
-> index 0000000..a1394d0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/fsl,mc13xxx-pwm.txt
-> @@ -0,0 +1,19 @@
-> +Freescale mc13xxx series PWM drivers.
-> +
-> +Supported PWMs:
-> +mc13892 series
-> +mc34708 series
-
-MC13892 does not have a dedicated PWM.
-You can probably use the existing driver mc13xxx-led driver.
-
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 ---
+ChangeLog v7->v8:
+- Ajusted to match the driver changes.
+---
+ .../boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts  |    9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b/a=
+rch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
+index fe0f3fa..71a80d3 100644
+--- a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
++++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
+@@ -39,6 +39,14 @@
+ 			linux,default-trigger =3D "heartbeat";
+ 		};
+ 	};
++
++	sound {
++		compatible =3D "eukrea,asoc-tlv320";
++		eukrea,model =3D "imx35-eukrea-tlv320aic23";
++		ssi-controller =3D <&ssi1>;
++		fsl,mux-int-port =3D <1>;
++		fsl,mux-ext-port =3D <4>;
++	};
+ };
+=20
+ &audmux {
+@@ -105,6 +113,7 @@
+ };
+=20
+ &ssi1 {
++	codec-handle =3D <&tlv320aic23>;
+ 	fsl,mode =3D "i2s-slave";
+ 	status =3D "okay";
+ };
+--=20
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
