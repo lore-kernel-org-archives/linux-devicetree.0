@@ -1,7 +1,7 @@
 From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v2 3/9] clocksource/cadence_ttc: Store timer frequency in driver data
-Date: Tue, 26 Nov 2013 17:04:50 -0800
-Message-ID: <1385514296-26702-4-git-send-email-soren.brinkmann@xilinx.com>
+Subject: [PATCH v2 6/9] clocksource/cadence_ttc: Overhaul clocksource frequency adjustment
+Date: Tue, 26 Nov 2013 17:04:53 -0800
+Message-ID: <1385514296-26702-7-git-send-email-soren.brinkmann@xilinx.com>
 References: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com>
@@ -10,100 +10,183 @@ To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-It is not allowed to call clk_get_rate() from interrupt context. To
-avoid such calls the timer input frequency is stored in the driver's
-data struct which makes it accessible to the driver in any context.
+The currently used method adjusting the clocksource to a changing input
+frequency does not work on kernels from 3.11 on.
+The new approach is to keep the timer frequency as constant as possible.
+I.e.
+ - due to the TTC's prescaler limitations, allow frequency changes
+   only if the frequency scales by a power of 2
+ - adjust the counter's divider on the fly when a frequency change
+   occurs
+
+This limits cpufreq to scale by certain factors only.
+But we may keep the time base somewhat constant, so that sleep() & co
+keep working as expected, while supporting cpufreq.
 
 Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/clocksource/cadence_ttc_timer.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+v2:
+ - remove PM notifier and associated code
+---
+ drivers/clocksource/cadence_ttc_timer.c | 112 ++++++++++++++++++++++++++------
+ 1 file changed, 92 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/clocksource/cadence_ttc_timer.c b/drivers/clocksource/cadence_ttc_timer.c
-index b2bb3a4bc205..a92350b55d32 100644
+index 77517675653e..b0cd7368b466 100644
 --- a/drivers/clocksource/cadence_ttc_timer.c
 +++ b/drivers/clocksource/cadence_ttc_timer.c
-@@ -67,11 +67,13 @@
+@@ -16,6 +16,7 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/clk-provider.h>
+ #include <linux/interrupt.h>
+ #include <linux/clockchips.h>
+ #include <linux/of_address.h>
+@@ -52,6 +53,8 @@
+ #define TTC_CNT_CNTRL_DISABLE_MASK	0x1
+ 
+ #define TTC_CLK_CNTRL_CSRC_MASK		(1 << 5)	/* clock source */
++#define TTC_CLK_CNTRL_PSV_MASK		0x1e
++#define TTC_CLK_CNTRL_PSV_SHIFT		1
+ 
+ /*
+  * Setup the timers to use pre-scaling, using a fixed value for now that will
+@@ -63,6 +66,8 @@
+ #define CLK_CNTRL_PRESCALE_EN	1
+ #define CNT_CNTRL_RESET		(1 << 4)
+ 
++#define MAX_F_ERR 50
++
+ /**
   * struct ttc_timer - This definition defines local timer structure
   *
-  * @base_addr:	Base address of timer
-+ * @freq:	Timer input clock frequency
-  * @clk:	Associated clock source
-  * @clk_rate_change_nb	Notifier block for clock rate changes
-  */
- struct ttc_timer {
- 	void __iomem *base_addr;
-+	unsigned long freq;
- 	struct clk *clk;
- 	struct notifier_block clk_rate_change_nb;
+@@ -82,6 +87,9 @@ struct ttc_timer {
+ 		container_of(x, struct ttc_timer, clk_rate_change_nb)
+ 
+ struct ttc_timer_clocksource {
++	int			scale_dir;
++	u32			scale_clk_ctrl_reg_old;
++	u32			scale_clk_ctrl_reg_new;
+ 	struct ttc_timer	ttc;
+ 	struct clocksource	cs;
  };
-@@ -196,9 +198,8 @@ static void ttc_set_mode(enum clock_event_mode mode,
+@@ -229,32 +237,96 @@ static int ttc_rate_change_clocksource_cb(struct notifier_block *nb,
+ 			struct ttc_timer_clocksource, ttc);
  
- 	switch (mode) {
- 	case CLOCK_EVT_MODE_PERIODIC:
--		ttc_set_interval(timer,
--				DIV_ROUND_CLOSEST(clk_get_rate(ttce->ttc.clk),
--					PRESCALE * HZ));
-+		ttc_set_interval(timer, DIV_ROUND_CLOSEST(ttce->ttc.freq,
-+						PRESCALE * HZ));
- 		break;
- 	case CLOCK_EVT_MODE_ONESHOT:
- 	case CLOCK_EVT_MODE_UNUSED:
-@@ -273,6 +274,8 @@ static void __init ttc_setup_clocksource(struct clk *clk, void __iomem *base)
- 		return;
- 	}
- 
-+	ttccs->ttc.freq = clk_get_rate(ttccs->ttc.clk);
+ 	switch (event) {
+-	case POST_RATE_CHANGE:
++	case PRE_RATE_CHANGE:
++	{
++		u32 psv;
++		unsigned long factor, rate_low, rate_high;
 +
- 	ttccs->ttc.clk_rate_change_nb.notifier_call =
- 		ttc_rate_change_clocksource_cb;
- 	ttccs->ttc.clk_rate_change_nb.next = NULL;
-@@ -298,16 +301,14 @@ static void __init ttc_setup_clocksource(struct clk *clk, void __iomem *base)
- 	__raw_writel(CNT_CNTRL_RESET,
- 		     ttccs->ttc.base_addr + TTC_CNT_CNTRL_OFFSET);
- 
--	err = clocksource_register_hz(&ttccs->cs,
--			clk_get_rate(ttccs->ttc.clk) / PRESCALE);
-+	err = clocksource_register_hz(&ttccs->cs, ttccs->ttc.freq / PRESCALE);
- 	if (WARN_ON(err)) {
- 		kfree(ttccs);
- 		return;
++		if (ndata->new_rate == ndata->old_rate) {
++			ttccs->scale_dir = 0;
++			return NOTIFY_OK;
++		}
++
++		if (ndata->new_rate > ndata->old_rate) {
++			factor = DIV_ROUND_CLOSEST(ndata->new_rate,
++					ndata->old_rate);
++			ttccs->scale_dir = 1;
++			rate_low = ndata->old_rate;
++			rate_high = ndata->new_rate;
++		} else {
++			factor = DIV_ROUND_CLOSEST(ndata->old_rate,
++					ndata->new_rate);
++			ttccs->scale_dir = -1;
++			rate_low = ndata->new_rate;
++			rate_high = ndata->old_rate;
++		}
++
++		if (!is_power_of_2(factor))
++				return NOTIFY_BAD;
++
++		if (abs(rate_high - (factor * rate_low)) > MAX_F_ERR)
++			return NOTIFY_BAD;
++
++		factor = __ilog2_u32(factor);
++
+ 		/*
+-		 * Do whatever is necessary to maintain a proper time base
+-		 *
+-		 * I cannot find a way to adjust the currently used clocksource
+-		 * to the new frequency. __clocksource_updatefreq_hz() sounds
+-		 * good, but does not work. Not sure what's that missing.
+-		 *
+-		 * This approach works, but triggers two clocksource switches.
+-		 * The first after unregister to clocksource jiffies. And
+-		 * another one after the register to the newly registered timer.
+-		 *
+-		 * Alternatively we could 'waste' another HW timer to ping pong
+-		 * between clock sources. That would also use one register and
+-		 * one unregister call, but only trigger one clocksource switch
+-		 * for the cost of another HW timer used by the OS.
++		 * store timer clock ctrl register so we can restore it in case
++		 * of an abort.
+ 		 */
+-		clocksource_unregister(&ttccs->cs);
+-		clocksource_register_hz(&ttccs->cs,
+-				ndata->new_rate / PRESCALE);
+-		/* fall through */
+-	case PRE_RATE_CHANGE:
++		ttccs->scale_clk_ctrl_reg_old =
++			__raw_readl(ttccs->ttc.base_addr +
++					TTC_CLK_CNTRL_OFFSET);
++
++		psv = (ttccs->scale_clk_ctrl_reg_old &
++				TTC_CLK_CNTRL_PSV_MASK) >>
++				TTC_CLK_CNTRL_PSV_SHIFT;
++		if (ttccs->scale_dir < 0)
++			psv -= factor;
++		else
++			psv += factor;
++
++		/* prescaler within legal range? */
++		if (psv & ~(TTC_CLK_CNTRL_PSV_MASK >> TTC_CLK_CNTRL_PSV_SHIFT))
++			return NOTIFY_BAD;
++
++		ttccs->scale_clk_ctrl_reg_new = ttccs->scale_clk_ctrl_reg_old &
++			~TTC_CLK_CNTRL_PSV_MASK;
++		ttccs->scale_clk_ctrl_reg_new |= psv << TTC_CLK_CNTRL_PSV_SHIFT;
++
++
++		/* scale down: adjust divider in post-change notification */
++		if (ttccs->scale_dir < 0)
++			return NOTIFY_DONE;
++
++		/* scale up: adjust divider now - before frequency change */
++		__raw_writel(ttccs->scale_clk_ctrl_reg_new,
++				ttccs->ttc.base_addr + TTC_CLK_CNTRL_OFFSET);
++		break;
++	}
++	case POST_RATE_CHANGE:
++		/* scale up: pre-change notification did the adjustment */
++		if (ttccs->scale_dir >= 0)
++			return NOTIFY_OK;
++
++		/* scale down: adjust divider now - after frequency change */
++		__raw_writel(ttccs->scale_clk_ctrl_reg_new,
++				ttccs->ttc.base_addr + TTC_CLK_CNTRL_OFFSET);
++		break;
++
+ 	case ABORT_RATE_CHANGE:
++		/* we have to undo the adjustment in case we scale up */
++		if (ttccs->scale_dir <= 0)
++			return NOTIFY_OK;
++
++		/* restore original register value */
++		__raw_writel(ttccs->scale_clk_ctrl_reg_old,
++				ttccs->ttc.base_addr + TTC_CLK_CNTRL_OFFSET);
++		/* fall through */
+ 	default:
+ 		return NOTIFY_DONE;
  	}
- 
- 	ttc_sched_clock_val_reg = base + TTC_COUNT_VAL_OFFSET;
--	setup_sched_clock(ttc_sched_clock_read, 16,
--			clk_get_rate(ttccs->ttc.clk) / PRESCALE);
-+	setup_sched_clock(ttc_sched_clock_read, 16, ttccs->ttc.freq / PRESCALE);
++
++	return NOTIFY_DONE;
  }
  
- static int ttc_rate_change_clockevent_cb(struct notifier_block *nb,
-@@ -334,6 +335,9 @@ static int ttc_rate_change_clockevent_cb(struct notifier_block *nb,
- 				ndata->new_rate / PRESCALE);
- 		local_irq_restore(flags);
- 
-+		/* update cached frequency */
-+		ttc->freq = ndata->new_rate;
-+
- 		/* fall through */
- 	}
- 	case PRE_RATE_CHANGE:
-@@ -367,6 +371,7 @@ static void __init ttc_setup_clockevent(struct clk *clk,
- 	if (clk_notifier_register(ttcce->ttc.clk,
- 				&ttcce->ttc.clk_rate_change_nb))
- 		pr_warn("Unable to register clock notifier.\n");
-+	ttcce->ttc.freq = clk_get_rate(ttcce->ttc.clk);
- 
- 	ttcce->ttc.base_addr = base;
- 	ttcce->ce.name = "ttc_clockevent";
-@@ -396,7 +401,7 @@ static void __init ttc_setup_clockevent(struct clk *clk,
- 	}
- 
- 	clockevents_config_and_register(&ttcce->ce,
--			clk_get_rate(ttcce->ttc.clk) / PRESCALE, 1, 0xfffe);
-+			ttcce->ttc.freq / PRESCALE, 1, 0xfffe);
- }
- 
- /**
+ static void __init ttc_setup_clocksource(struct clk *clk, void __iomem *base)
 -- 
 1.8.4.4
