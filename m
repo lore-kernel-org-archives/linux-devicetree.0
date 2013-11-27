@@ -1,104 +1,263 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] mtd: nand: gpio: Add DT property to
- automatically determine bus width
-Date: Tue, 26 Nov 2013 17:23:38 -0800
-Message-ID: <20131127012338.GS9468@ld-irv-0074.broadcom.com>
-References: <1384343884-29622-1-git-send-email-shc_work@mail.ru>
- <20131127012158.GR9468@ld-irv-0074.broadcom.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 3/8] clk: shmobile: Add MSTP clock support
+Date: Wed, 27 Nov 2013 02:30:03 +0100
+Message-ID: <1446370.Z0Dk5p9vtm@avalon>
+References: <1384872347-11724-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20131119181936.GR5914@e106331-lin.cambridge.arm.com>
+ <2936776.W2YYB2sEWe@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131127012158.GR9468-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2936776.W2YYB2sEWe@avalon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mike Turquette <mturquette@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 26, 2013 at 05:21:58PM -0800, Brian Norris wrote:
-> + Pekon, Ezequiel
+Hi Mark,
 
-+ Pekon, Ezequiel for real this time! Sorry... Everything else intact
-/Brian
+I'd like to send v4 of this series soon, hopefully for the last time. Would 
+you be able to reply to the two issues that are still left and discussed below 
+? That would be really appreciated.
 
-> 
-> Hi Alexander,
-> 
-> We're dealing with a similar issue in other drivers currently, and I
-> think it's worth straightening out the issue for all systems.
-> 
-> On Wed, Nov 13, 2013 at 03:58:02PM +0400, Alexander Shiyan wrote:
-> > This patch adds a property to automatically determine the NAND
-> > bus width by CFI/ONFI information from chip. This property works
-> > if the bus width is not specified explicitly.
-> 
-> This issue brings up a few questions in my mind, which are relevant to
-> device tree in general.
-> 
-> First of all, do we need a device tree property at all, for something
-> that is auto-detectable?
-> 
-> Related: is a device tree consumer (like Linux) supposed to be a
-> validator, or simply a best-effort? I'm considering the following case:
-> if Linux is allowed to auto-detect some property which also has a device
-> tree binding (e.g., "nand-bus-width", in
-> Documentation/devicetree/bindings/mtd/nand.txt), what should happen if
-> the binding happens to be incorrect? IOW, what if the device tree
-> specifies buswidth is x16, but Linux correctly detects it as x8?
-> Shouldn't we make the best effort to bring the hardware up, regardless
-> of what the device tree says?
-> 
-> So for something like this GPIO driver, I'm thinking that Linux should
-> just use NAND_BUSWIDTH_AUTO all the time [*]. But (as I'm hinting above)
-> that would allow DTB firmware implementors to be lazier and have a
-> technically-incorrect "nand-bus-width" or "bank-width" binding, since
-> they know it can reliably be detected and overridden by Linux.
-> 
-> [*] Except where resource_size(res) < 2, as Alexander already has in
-> this patch.
-> 
-> > Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/mtd/gpio-control-nand.txt        |  3 +++
-> >  drivers/mtd/nand/gpio.c                                  | 16 ++++++++++++----
-> >  2 files changed, 15 insertions(+), 4 deletions(-)
+On Wednesday 20 November 2013 22:54:58 Laurent Pinchart wrote:
+> On Tuesday 19 November 2013 18:19:36 Mark Rutland wrote:
+> > On Tue, Nov 19, 2013 at 05:00:40PM +0000, Laurent Pinchart wrote:
+> > > On Tuesday 19 November 2013 16:28:21 Mark Rutland wrote:
+> > > > On Tue, Nov 19, 2013 at 02:45:42PM +0000, Laurent Pinchart wrote:
+> > > > > MSTP clocks are gate clocks controlled through a register that
+> > > > > handles up to 32 clocks. The register is often sparsely populated.
+> > > > 
+> > > > Does that mean some clocks aren't wired up, or that some clocks don't
+> > > > exist at all?
+> > > 
+> > > It means that some of the bits don't control anything.
+> > > 
+> > > > What is the behaviour of the unpopulated bits?
+> > > 
+> > > According to the datasheet they're reserved, read-only, and read an
+> > > unspecified value that is to be written back without modification when
+> > > writing the register.
 > > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-> > index 36ef07d..fe4e960 100644
-> > --- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-> > @@ -19,6 +19,9 @@ Optional properties:
-> >    defaults to 1 byte.
-> >  - chip-delay : chip dependent delay for transferring data from array to
-> >    read registers (tR).  If not present then a default of 20us is used.
-> > +- gpio-control-nand,bank-width-auto : Device bus width is determined
-> > +  automatically by CFI/ONFI information from chip if "bank-width"
-> > +  parameter is omitted (Boolean).
+> > Ok.
+> > 
+> > > > > Those clocks are found on Renesas ARM SoCs.
+> > > > > 
+> > > > > Cc: devicetree@vger.kernel.org
+> > > > > Signed-off-by: Laurent Pinchart
+> > > > > <laurent.pinchart+renesas@ideasonboard.com>
+> > > > > ---
+> > > > > 
+> > > > >  .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  48 +++++
+> > > > >  drivers/clk/shmobile/Makefile                      |   1 +
+> > > > >  drivers/clk/shmobile/clk-mstp.c                    | 229 ++++++++++
+> > > > >  3 files changed, 278 insertions(+)
+> > > > >  create mode 100644
+> > > > >  Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> > > > >  create mode 100644 drivers/clk/shmobile/clk-mstp.c
+> > > > > 
+> > > > > diff --git
+> > > > > a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-
+> > > > > clocks.txt
+> > > > > b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-
+> > > > > clocks.txt
+> > > > > new file mode 100644
+> > > > > index 0000000..126b17e
+> > > > > --- /dev/null
+> > > > > +++
+> > > > > b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-
+> > > > > clocks.txt
+> > > > > @@ -0,0 +1,48 @@
+> > > > > +* Renesas CPG Module Stop (MSTP) Clocks
+> > > > > +
+> > > > > +The CPG can gate SoC device clocks. The gates are organized in
+> > > > > groups of up to
+> > > > > +32 gates.
+> > > > > +
+> > > > > +This device tree binding describes a single 32 gate clocks group
+> > > > > per node.
+> > > > > +Clocks are referenced by user nodes by the MSTP node phandle and
+> > > > > the clock
+> > > > > +index in the group, from 0 to 31.
+> > > > > +
+> > > > > +Required Properties:
+> > > > > +
+> > > > > +  - compatible: Must be one of the following
+> > > > > +    - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP
+> > > > > gate clocks
+> > > > > +    - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP
+> > > > > gate clocks
+> > > > > +    - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
+> > > > > +  - reg: Base address and length of the memory resource used by the
+> > > > > MSTP
+> > > > > +    clocks
+> > > > 
+> > > > There are two entries in the example, the code seems to assume they
+> > > > are particular registers, but this implies one.
+> > > 
+> > > There can be one or two registers, depending on the hardware. The first
+> > > register is always required and controls the clocks, the second register
+> > > is optional (in the sense that it's not implemented for some of the MSTP
+> > > instances) and reports the clock status.
+> > 
+> > Ok. The documentation should note this.
 > 
-> If we do resort to a new binding for auto-buswidth, it should be a
-> generic one that all NAND drivers can use. Maybe a separate boolean
-> "nand-bus-width-auto" and if it is present, then it overrules the
-> presence (or lack) of the "nand-bus-width" boolean property?
-> Or is it possible to extend "nand-bus-width" to allow the value of 0 to
-> mean automatic?
+> What about
 > 
-> You may want to modify the of_get_nand_bus_width() helper (or add a new
-> one, of_nand_bus_width_auto()?) to drivers/of/of_mtd.c to assist with
-> this.
+>   - reg: Base address and length of the I/O mapped registers used by the
+> MSTP clocks. The first register is the clock control register and is
+> mandatory. The second register is the clock status register and is optional
+> when not implemented in hardware.
 > 
-> ...BTW, it looks like we have a duplicate binding here: GPIO NAND
-> defines "bank-width" where generic NAND defines "nand-bus-width". Aren't
-> these essentially duplications? Can we support the generic binding in
-> gpio.c and discourage "bank-width"? Or is that just unnecessary effort?
+> > > > Are these not part of a larger bank of registers?
+> > > 
+> > > They are. Here's the memory map for the r8a7791 for instance.
+> > > 
+> > > MSTPSR0		H'E615 0030
+> > > MSTPSR1		H'E615 0038
+> > > MSTPSR2		H'E615 0040
+> > > MSTPSR3		H'E615 0048
+> > > MSTPSR4		H'E615 004C
+> > > MSTPSR5		H'E615 003C
+> > > MSTPSR6		H'E615 01C0
+> > > MSTPSR7		H'E615 01C4
+> > > MSTPSR8		H'E615 09A0
+> > > MSTPSR9		H'E615 09A4
+> > > MSTPSR10		H'E615 09A8
+> > > MSTPSR11		H'E615 09AC
+> > > 
+> > > SMSTPCR0		H'E615 0130
+> > > SMSTPCR1		H'E615 0134
+> > > SMSTPCR2		H'E615 0138
+> > > SMSTPCR3		H'E615 013C
+> > > SMSTPCR4		H'E615 0140
+> > > SMSTPCR5		H'E615 0144
+> > > SMSTPCR6		H'E615 0148
+> > > SMSTPCR7		H'E615 014C
+> > > SMSTPCR8		H'E615 0990
+> > > SMSTPCR9		H'E615 0994
+> > > SMSTPCR10		H'E615 0998
+> > > SMSTPCR11		H'E615 099C
+> > > 
+> > > I've pondered whether we should use a single device node for all the
+> > > MSTP clocks, but I don't think it would be very practical. Not only
+> > > would we need to encode all bit positions, we also would have to encode
+> > > register offsets in DT. This would become pretty messy in a single node.
+> > > 
+> > > > > +  - clocks: Reference to the parent clocks
+> > > > 
+> > > > How many, and what do they correspond to?
+> > > 
+> > > What about
+> > > 
+> > > - clocks: Reference to the parent clocks, one per output clock. The
+> > > parents must appear in the same order as the output clocks.
+> > 
+> > That sounds reasonable.
+> > 
+> > > > > +  - #clock-cells: Must be 1
+> > > > > +  - clock-output-names: The name of the clocks as free-form strings
+> > > > > +  - renesas,indices: Indices of the gate clocks into the group (0
+> > > > > to 31)
+> > > > 
+> > > > The description of this property doesn't describe half of what it
+> > > > means. I believe something like the below does:
+> > > > 
+> > > > - renesas,indices: A list of clock IDs (single cells), one for each
+> > > >   clock present. Each entry may correspond to a clock-output-names
+> > > >   entry at the same index, and its location in the list defines the
+> > > >   corresponding clock-specifier for the entry.
+> > > 
+> > > I might be mistaken, but doesn't "its location in the list defines the
+> > > corresponding clock-specifier for the entry" imply that clock specifiers
+> > > use the location in the list as the clock ID instead of the numerical
+> > > value of the indices entry ? Each entry in the renesas,indices list
+> > > corresponds to one clocks entry and one clock-output-names entry, and
+> > > clock users reference an MSTP clock using the value of its indices
+> > > entry, not the position of the entry.
+> > 
+> > Sorry, the code confused me. Having read over it again, I'm even more
+> > confused.
+> > 
+> > You said the registers were sparesly populated, but the code assumes
+> > that the bits start at 0 and the set of populated bits are contiguous,
+> > which is not what I would describe that as sparse. Are the bits always
+> > contiguous?
 > 
-> >  - gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
-> >    location used to guard against bus reordering with regards to accesses to
-> >    the GPIO's and the NAND flash data bus.  If present, then after changing
+> They're not, and the code doesn't assume so. The driver loops over all the
+> clocks using the position in the renesas,indices array as the loop counter
+> i. It then retrieves the output name, the parent and the index and
+> registers the clock. When registration succeeds, the clock is stored in the
+> clks array at the index corresponding to the renesas,indices value. The
+> clks array is thus sparsely populated, exactly as the MSTP register.
 > 
-> [...]
+> > I thought the bits in the register were truly sparse (i.e. you could
+> > have two bits which were at either end of the register), and the indices
+> > property allowed you to define the set of bits which were valid.
+> > 
+> > As far as I can see from cpg_mstp_clocks_init and
+> > cpg_mstp_clock_register, the indices property assings the set of IDs for
+> > consumers to use, and I don't see what the point of that is if we
+> > already have a well-defined linear index (the bit position in the
+> > register) which we could use instead, which also makes the binding and
+> > code simpler.
+> > 
+> > > > I'd imagine we have a few sparse clocks by now, and we might be able
+> > > > to make this more uniform. But I may be mistaken.
+> > > > 
+> > > > [...]
+> > > > 
+> > > > > +static int cpg_mstp_clock_endisable(struct clk_hw *hw, bool enable)
+> > > > > +{
+> > > > > +	struct mstp_clock *clock = to_mstp_clock(hw);
+> > > > > +	struct mstp_clock_group *group = clock->group;
+> > > > > +	u32 bitmask = BIT(clock->bit_index);
+> > > > > +	unsigned long flags;
+> > > > > +	unsigned int i;
+> > > > > +	u32 value;
+> > > > > +
+> > > > > +	spin_lock_irqsave(&group->lock, flags);
+> > > > > +
+> > > > > +	value = clk_readl(group->smstpcr);
+> > > > > +	if (enable)
+> > > > > +		value &= ~bitmask;
+> > > > > +	else
+> > > > > +		value |= bitmask;
+> > > > > +	clk_writel(value, group->smstpcr);
+> > > > > +
+> > > > > +	spin_unlock_irqrestore(&group->lock, flags);
+> > > > > +
+> > > > > +	if (!enable || !group->mstpsr)
+> > > > > +		return 0;
+> > > > > +
+> > > > > +	for (i = 1000; i > 0; --i) {
+> > > > > +		if (!(clk_readl(group->mstpsr) & bitmask))
+> > > > > +			break;
+> > > > > +		cpu_relax();
+> > > > > +	}
+> > > > 
+> > > > Any particular reason for 1000 times? Is there a known minimum time to
+> > > > switch a clock between disabled and enabled? A comment would be nice.
+> > > 
+> > > There's no particular reason, the datasheet doesn't provide any useful
+> > > information. I've just copied that value from existing C code.
+> > 
+> > Any chance it might work without?
 > 
-> Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Yes, with roughly a 75% chance :-) Without this look I get a crash around
+> once every four times with the video processing devices. Other devices are
+> affected as well, but delays in their respective drivers hide the problem.
+
+-- 
+Regards,
+
+Laurent Pinchart
