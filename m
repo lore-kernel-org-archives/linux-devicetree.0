@@ -1,61 +1,58 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH] ARM: davinci: aemif: get rid of davinci-nand driver
- dependency on aemif
-Date: Wed, 27 Nov 2013 15:21:47 +0200
-Message-ID: <5295F1EB.7030804@ti.com>
-References: <5291CB01.1010506@ti.com>
- <1385409654-19006-1-git-send-email-ivan.khoronzhuk@ti.com>
- <5295AECB.7040503@ti.com> <5295D102.2010101@ti.com> <5295EE7B.6030504@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5295EE7B.6030504@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, rob@landley.net, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+From: Tomasz Stanislawski <t.stanislaws@samsung.com>
+Subject: [PATCH] phy: Add exynos-phy driver
+Date: Wed, 27 Nov 2013 14:26:27 +0100
+Message-ID: <1385558788-10880-1-git-send-email-t.stanislaws@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: t.figa@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, rob.herring@calxeda.com, sylvester.nawrocki@gmail.com, kishon@ti.com, kyungmin.park@samsung.com, Tomasz Stanislawski <t.stanislaws@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/27/2013 03:07 PM, Sekhar Nori wrote:
-> On Wednesday 27 November 2013 04:31 PM, ivan.khoronzhuk wrote:
->>>> @@ -192,9 +193,15 @@ static __init void davinci_ntosd2_init(void)
->>>>            davinci_cfg_reg(DM644X_ATAEN_DISABLE);
->>>>
->>>>            /* only one device will be jumpered and detected */
->>>> -        if (HAS_NAND)
->>>> +        if (HAS_NAND) {
->>>>                platform_device_register(
->>>>                        &davinci_ntosd2_nandflash_device);
->>>> +
->>>> +            if (davinci_aemif_setup(
->>>> +                &davinci_ntosd2_nandflash_device))
->>>> +                pr_warn("%s: Cannot configure AEMIF.\n",
->>>> +                    __func__);
->>>
->>> This is looking really ugly. Can you shorten
->>> davinci_ntosd2_nandflash_device to just "ntosd2_nandflash" or similar?
->>
->> The rename is not related to the patch, so I won't do this.
->
-> The reason I asked you to rename is not because I want to push some
-> random clean-up into this patch. You had to introduce a line so broken
-> that its almost unreadable. I offered the suggestion as a way to improve
-> the readability of the code you are introducing in *this* patch.
->
-> Thanks,
-> Sekhar
->
+Hello everyone,
+The Samsung SoCs from Exynos family are enhanced with a bunch of switches
+dedicated for IP blocks. Those switches are called PHYs in Exynos
+specification. They are usually controlled by a single bit in a single
+one-word-long register.
 
-Ok, I will rename
+A IP driver has to control such a switch in an abstract manner.  Therefore,
+such 'enablers' were implemented as clocks in older versions of Linux kernel.
+With the dawn of PHY subsystems, PHYs become a natural way of exporting the
+'enabler' functionality to drivers.  However, there is an unexpected
+consequence. Some of those 1-bit PHYs were implemented as separate drivers.
+This means that one has to create a struct device, struct phy, its phy provider
+and 100-150 lines of driver code to basically set one bit.
+
+The DP phy driver is a good example:
+https://lkml.org/lkml/2013/7/18/53
+
+And simple-phy RFC (shares only driver code but not other resources):
+https://lkml.org/lkml/2013/10/21/313
+
+To avoid waste of resources I propose to create all such 1-bit phys from Exynos
+SoC using a single device, driver and phy provider.
+
+This patchset contains a proposed solution.
+
+All comment are welcome.
+
+Hopefully in future the functionality introduced by this patch may be merged
+into a larger Power Management Unit (PMU) gluer driver.  On Samsusng SoC , the
+PMU part contains a number of register barely linked to power management (like
+clock gating, clock dividers, CPU resetting, etc.).  It may be tempting to
+create a hybrid driver that export clocks/phys/etc that are controlled by PMU
+unit.
+
+Regards,
+Tomasz Stanislawski
+
+Tomasz Stanislawski (1):
+  phy: Add exynos-phy driver
+
+ drivers/phy/Kconfig      |    5 ++
+ drivers/phy/Makefile     |    1 +
+ drivers/phy/exynos-phy.c |  152 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 158 insertions(+)
+ create mode 100644 drivers/phy/exynos-phy.c
 
 -- 
-Regards,
-Ivan Khoronzhuk
+1.7.9.5
