@@ -1,80 +1,55 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v2 2/2] clk: add accuracy support for fixed clock
-Date: Wed, 27 Nov 2013 09:56:20 -0500
-Message-ID: <20131127145620.GR2879@titan.lakedaemon.net>
-References: <1385556285-19180-1-git-send-email-b.brezillon@overkiz.com>
- <1385556285-19180-3-git-send-email-b.brezillon@overkiz.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 1/2] regulator: max14577: Add regulator driver for
+ Maxim 14577
+Date: Wed, 27 Nov 2013 15:20:42 +0000
+Message-ID: <20131127152042.GY14725@sirena.org.uk>
+References: <1385559982-32039-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HATTsZJGJQJ3rT4Z"
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1385556285-19180-3-git-send-email-b.brezillon@overkiz.com>
+In-Reply-To: <1385559982-32039-1-git-send-email-k.kozlowski@samsung.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Boris,
 
-Thanks for posting this series.  Bear with me as I'm attempting to give
-MikeT a hand.  Don't be afraid to tell me a question is stupid :-)
+--HATTsZJGJQJ3rT4Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Nov 27, 2013 at 01:44:45PM +0100, Boris BREZILLON wrote:
-> This patch adds support for accuracy retrieval on fixed clocks.
-> It also adds a new dt property called 'clock-accuracy' to define the clock
-> accuracy.
-> 
-> This can be usefull for oscillator (RC, crystal, ...) definitions which are
-> always given an accuracy characteristic.
+On Wed, Nov 27, 2013 at 02:46:21PM +0100, Krzysztof Kozlowski wrote:
 
-I think we need to be more explicit in the binding and the API,
-especially when providing a method to recalculate the accuracy.  I
-presume this recalculated value would be relative against the root
-clock?
+> +	{
+> +		.name = "max14577-regulator",
+> +		.of_compatible = "maxim,max14577-regulator",
+> +	},
 
-There really needs to be two attributes here:  the rated accuracy from
-the manufacturer, and the calculated accuracy wrt another clock in the
-system.  We only need a binding for the manufacturer rating since the
-calculated accuracy is determined at runtime.
+Why is there a compatible for this at all, would this ever appear as
+part of a different device?
 
-I would also prefer to see an unknown accuracy be -1.  There are already
-clocks on the market (PPS reference clocks) with accuracies of
-0.1ppb/day [1].  Obviously, these aren't system clocks.  So the limit on
-accuracy may be a non-issue.  However, it may be worth changing the
-binding property to express the units.
+--HATTsZJGJQJ3rT4Z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
-> ---
->  .../devicetree/bindings/clock/fixed-clock.txt      |    3 ++
->  drivers/clk/clk-fixed-rate.c                       |   43 +++++++++++++++++---
->  include/linux/clk-provider.h                       |    4 ++
->  3 files changed, 44 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.txt b/Documentation/devicetree/bindings/clock/fixed-clock.txt
-> index 0b1fe78..48ea0ad 100644
-> --- a/Documentation/devicetree/bindings/clock/fixed-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/fixed-clock.txt
-> @@ -10,6 +10,8 @@ Required properties:
->  - clock-frequency : frequency of clock in Hz. Should be a single cell.
->  
->  Optional properties:
-> +- clock-accuracy : accuracy of clock in ppb (parts per billion).
-> +		   Should be a single cell.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-I would prefer to call this property 'clock-rated-ppb'.
+iQIcBAEBAgAGBQJSlg3GAAoJELSic+t+oim9x10P/1UvkkH8dhLKekFcQiyhJZVP
++4h3P2QScY6K/edHcb+0zhvFcBqRdo/0gX6Yp4BW9wr0yc+xg5SMSt66QWlw8OHF
+TqWHmamCPS06bp47HU1wXw55bo9eOUFjRDPfTyPIaF2tnGkP+Q2zBIZmKcVCD87M
+yyb/ka5acmmOiBH+eOtoE3cr5IiVt90MC9zFqE2B44o93cTsxHY1elHHleAEgux4
+sAH09Cwp/klwIUkbWD+CmQ5cQCGRd2mn0grVm75RWvl2ZSlnScyty9d+d9qqaMlk
+XarryjfpA7Qe0t+aEBf+WRAhfMvQishROl0ATtwh6gliOgv6xKv2Y+DJxxqGwZEM
+qjBU88pu5AFZUB8UwTEWgOdlkMndetpHoXmflzezC5suPaCs/I+ihR95uKVl/47L
+OCfPBtOZkYl0hds5L+OBIreT8ZB+BZe/e8DWb39UYdbayPE4S6XOX3jPbupq0eNG
+7UYJiL2dbLdkevlfRPNfClAqWhq10SJyXOMgpHfze9gN+ntRWYZjogSi50dlCBNC
+EdKsosxRnkFfrpnOu0PAVIBSY07/KOF3vqlCRmkutOzSqbDGDv1n2WQ/a4uWCbuk
+QDfprJzC6VfvG3g1RIEdWuJa/6AEWtFmZmiJmbjsk83AE5xlInXhehgdrTQ0XoP8
+jTjSvP7QREcRSglu8p2K
+=iTcc
+-----END PGP SIGNATURE-----
 
->  - gpios : From common gpio binding; gpio connection to clock enable pin.
->  - clock-output-names : From common clock binding.
->  
-> @@ -18,4 +20,5 @@ Example:
->  		compatible = "fixed-clock";
->  		#clock-cells = <0>;
->  		clock-frequency = <1000000000>;
-> +		clock-accuracy = <100>;
->  	};
-
-thx,
-
-Jason.
-
-[1] http://www.vectron.com/products/modules/md-010.htm
+--HATTsZJGJQJ3rT4Z--
