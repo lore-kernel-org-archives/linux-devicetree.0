@@ -1,86 +1,56 @@
-From: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH V10 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
- exynos5420 dtsi files
-Date: Wed, 27 Nov 2013 17:20:08 +0530
-Message-ID: <1385553010-30183-2-git-send-email-l.krishna@samsung.com>
-References: <1385553010-30183-1-git-send-email-l.krishna@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1385553010-30183-1-git-send-email-l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH v2 00/10] Reuse davinci-nand driver for Keystone arch
+Date: Wed, 27 Nov 2013 13:51:21 +0200
+Message-ID: <5295DCB9.7030708@ti.com>
+References: <1385033305-13179-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <20131127013309.GT9468@ld-irv-0074.broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131127013309.GT9468@ld-irv-0074.broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pmusysreg node to exynos5250 and exynos5420 dtsi files to
-handle PMU register accesses in a centralized way using syscon driver
+On 11/27/2013 03:33 AM, Brian Norris wrote:
+> Hi Ivan,
+>
+> On Thu, Nov 21, 2013 at 01:28:15PM +0200, Ivan Khoronzhuk wrote:
+>> This series contains fixes and updates of Davinci nand driver in
+>> order to reuse it for Keystone platform.
+>>
+>> The series is combination of two following series:
+>> - Davinci nand driver fixes and updates:
+>>    https://lkml.org/lkml/2013/11/20/271
+>> - Reuse davinci-nand driver for Keystone arch
+>>    https://lkml.org/lkml/2013/11/20/315
+>
+> Can you make sure to consistently change the email $subject for your
+> patch series? For each of the above, it looks like they are actually
+> version 2, yet they still just say "[PATCH X/Y]" (not "[PATCH v2 X/Y]").
+> This makes it harder to parse the history of each series. (And the
+> combining of two un-versioned patch series adds to the confusion.)
+>
+> Now, this combined series has a good v2 marking (although at this point,
+> is it really v3? ...whatever, it doesn't matter). Please continue to
+> write appropriate $subjects for this and future patch series.
+>
+> Thanks,
+> Brian
+>
 
-Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/samsung/pmu.txt |   16 ++++++++++++++++
- arch/arm/boot/dts/exynos5250.dtsi                     |    5 +++++
- arch/arm/boot/dts/exynos5420.dtsi                     |    5 +++++
- 3 files changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
+Sorry for the mess, I will
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-new file mode 100644
-index 0000000..307e727
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-@@ -0,0 +1,16 @@
-+SAMSUNG Exynos SoC series PMU Registers
-+
-+Properties:
-+ - name : should be 'syscon';
-+ - compatible : should contain two values. First value must be one from following list:
-+		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
-+		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
-+		second value must be always "syscon".
-+
-+ - reg : offset and length of the register set.
-+
-+Example :
-+pmu_syscon: syscon@10040000 {
-+	compatible = "samsung,exynos5250-pmu", "syscon";
-+	reg = <0x10040000 0x5000>;
-+};
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 9db5047..2f264ad 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -163,6 +163,11 @@
- 		interrupts = <0 47 0>;
- 	};
- 
-+	pmu_syscon: syscon@10040000 {
-+		compatible = "samsung,exynos5250-pmu", "syscon";
-+		reg = <0x10040000 0x5000>;
-+	};
-+
- 	watchdog {
- 		clocks = <&clock 336>;
- 		clock-names = "watchdog";
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 09aa06c..06e97a7 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -310,4 +310,9 @@
- 		clocks = <&clock 431>, <&clock 143>;
- 		clock-names = "mixer", "sclk_hdmi";
- 	};
-+
-+	pmu_syscon: syscon@10040000 {
-+		compatible = "samsung,exynos5420-pmu", "syscon";
-+		reg = <0x10040000 0x5000>;
-+	};
- };
 -- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Ivan Khoronzhuk
