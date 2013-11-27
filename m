@@ -1,63 +1,110 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [PATCH 3/3] arm: dts: am43x-gp-evm: Add matrix gpio keys.
-Date: Wed, 27 Nov 2013 13:01:19 +0530
-Message-ID: <1385537479-6959-4-git-send-email-sourav.poddar@ti.com>
-References: <1385537479-6959-1-git-send-email-sourav.poddar@ti.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: imx1-core populate subdevices
+Date: Wed, 27 Nov 2013 08:31:52 +0100
+Message-ID: <20131127073152.GA28465@pengutronix.de>
+References: <CACRpkda2dO6DvurEhaTVGJv8nDyEGOEeLCap-_+1e1mHtD0XyQ@mail.gmail.com>
+ <1384193987-20740-1-git-send-email-mpa@pengutronix.de>
+ <CACRpkdaQcY43wnfD_phsi6rCo3oUmOUcei+gb9phyGT7F1iZyA@mail.gmail.com>
+ <529567FB.5090501@gtsys.com.hk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1385537479-6959-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, tony@atomide.com, bcousson@baylibre.com
-Cc: balbi@ti.com, linux-omap@vger.kernel.org, nsekhar@ti.com, Sourav Poddar <sourav.poddar@ti.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <529567FB.5090501-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add gpio keys node for am43x gp evm.
+Hi,
 
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
----
- arch/arm/boot/dts/am437x-gp-evm.dts |   21 +++++++++++++++++++++
- 1 files changed, 21 insertions(+), 0 deletions(-)
+On Wed, Nov 27, 2013 at 11:33:15AM +0800, Chris Ruehl wrote:
+> On Wednesday, November 20, 2013 04:01 AM, Linus Walleij wrote:
+> >On Mon, Nov 11, 2013 at 7:19 PM, Markus Pargmann<mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>  wrote:
+> >
+> >>Support gpio devicetree subnodes to allow a more detailed DT hardware
+> >>description.
+> >>
+> >>Signed-off-by: Markus Pargmann<mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >
+> >Looks good to me.
+> >
+> >Tentatively applied this, the DT people may want to say something
+> >about this.
+> >
+> >Yours,
+> >Linus Walleij
+> >--
+> 
+> Hi,
+> 
+> I tried the new configuration but the kernel oops when probing the
+> dm9000 caused by insufficient resources more likely the real reason
+> that somehow the gpio6: triggers a problem
+> 
+> 
+> [    0.115718] irq: no irq domain found for
+> /soc/aipi@10000000/iomuxc@10015000/gpio@10015500 !
+> [    0.115768] ------------[ cut here ]------------
+> [    0.115853] WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171
+> of_device_alloc+0x110/0x15c()
+> [    0.117824] ---[ end trace 0e10ae727e6e0ab1 ]---
+> [    0.121236] Failed to request board ext/int gpios
+> [    0.152712] imx27-pinctrl 10015000.iomuxc: initialized IMX pinctrl driver
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 312a51c..9ef6b5a 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -13,6 +13,7 @@
- #include "am4372.dtsi"
- #include <dt-bindings/pinctrl/am43xx.h>
- #include <dt-bindings/pwm/pwm.h>
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "TI AM437x GP EVM";
-@@ -24,6 +25,26 @@
- 		brightness-levels = <0 51 53 56 62 75 101 152 255>;
- 		default-brightness-level = <8>;
- 	};
-+
-+	matrix_keypad: matrix_keypad@0 {
-+		compatible = "gpio-matrix-keypad";
-+		debounce-delay-ms = <5>;
-+		col-scan-delay-us = <2>;
-+
-+		row-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH /* Bank3, pin21 */
-+				&gpio4 3 GPIO_ACTIVE_HIGH /* Bank4, pin3 */
-+				&gpio4 2 GPIO_ACTIVE_HIGH>; /* Bank4, pin2 */
-+
-+		col-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH /* Bank3, pin19 */
-+				&gpio3 20 GPIO_ACTIVE_HIGH>; /* Bank3, pin20 */
-+
-+		linux,keymap = <0x00000201      /* P1 */
-+				0x00010202      /* P2 */
-+				0x01000067      /* UP */
-+				0x0101006a      /* RIGHT */
-+				0x02000069      /* LEFT */
-+				0x0201006c>;      /* DOWN */
-+		};
- };
- 
- &am43xx_pinmux {
+The imx27-pinctrl driver seems to be initialized after the irq is
+requested. So this issue should be the same as in [1].
+
+Regards,
+
+Markus
+
+[1] [PATCH] of/platform: Fix no irq domain found errors when populating interrupts
+http://archive.arm.linux.org.uk/lurker/message/20131123.004335.61d5c21b.en.html
+
+> 
+> 
+> iomuxc: iomuxc@10015000 {
+>         compatible = "fsl,imx27-iomuxc";
+>         reg = <0x10015000 0x600>;
+>         #address-cells = <1>;
+>         #size-cells = <1>;
+>         ranges;
+> 
+>         gpio1: gpio@10015000 {
+>              compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+>              reg = <0x10015000 0x100>;
+>              interrupts = <8>;
+>              gpio-controller;
+>              #gpio-cells = <2>;
+>              interrupt-controller;
+>              #interrupt-cells = <2>;
+>         };
+> ...
+>         gpio6: gpio@10015500 {
+>              compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
+>              reg = <0x10015500 0x100>;
+>              interrupts = <8>;
+>              gpio-controller;
+>              #gpio-cells = <2>;
+>              interrupt-controller;
+>              #interrupt-cells = <2>;
+>         };
+> };
+> 
+> Kernel Linux version 3.13.0-rc1-next-20131125-dirty
+> 
+> With kind regards
+> Chris
+> 
+> 
+
 -- 
-1.7.1
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
