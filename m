@@ -1,241 +1,165 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 8/9] phy: add Broadcom Kona USB2 PHY driver
-Date: Wed, 27 Nov 2013 14:21:52 +0530
-Message-ID: <5295B2A8.80705@ti.com>
-References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org>
- <1385403367-18144-9-git-send-email-matt.porter@linaro.org>
+From: Fugang Duan <fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v3 3/3] Documentation: add the binding file for
+ Freescale vf610 ADC driver
+Date: Wed, 27 Nov 2013 08:55:05 +0000
+Message-ID: <9848F2DB572E5649BA045B288BE08FBE018991DC@039-SN2MPN1-023.039d.mgd.msft.net>
+References: <1385463394-11157-1-git-send-email-B38611@freescale.com>
+ <1385463394-11157-4-git-send-email-B38611@freescale.com>
+ <20131126140926.GA5402@e106331-lin.cambridge.arm.com>
+ <9848F2DB572E5649BA045B288BE08FBE01898D6F@039-SN2MPN1-023.039d.mgd.msft.net>
+ <56212a87-d3e7-4ef7-8198-0cb059b98979@email.android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1385403367-18144-9-git-send-email-matt.porter@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Porter <matt.porter@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Linaro Patches <patches@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56212a87-d3e7-4ef7-8198-0cb059b98979-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Monday 25 November 2013 11:46 PM, Matt Porter wrote:
-> Add a driver for the internal Broadcom Kona USB 2.0 PHY found
-> on the BCM281xx family of SoCs.
-> 
-> Signed-off-by: Matt Porter <matt.porter@linaro.org>
-> ---
->  drivers/phy/Kconfig             |   6 ++
->  drivers/phy/Makefile            |   1 +
->  drivers/phy/phy-bcm-kona-usb2.c | 158 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 165 insertions(+)
->  create mode 100644 drivers/phy/phy-bcm-kona-usb2.c
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index a344f3d..2e87fa8 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -51,4 +51,10 @@ config PHY_EXYNOS_DP_VIDEO
->  	help
->  	  Support for Display Port PHY found on Samsung EXYNOS SoCs.
->  
-> +config BCM_KONA_USB2_PHY
-> +	tristate "Broadcom Kona USB2 PHY Driver"
-> +	depends on GENERIC_PHY
-> +	help
-> +	  Enable this to support the Broadcom Kona USB 2.0 PHY.
-> +
->  endmenu
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index d0caae9..c447f1a 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -3,6 +3,7 @@
->  #
->  
->  obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
-> +obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
->  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
->  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
->  obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
-> diff --git a/drivers/phy/phy-bcm-kona-usb2.c b/drivers/phy/phy-bcm-kona-usb2.c
-> new file mode 100644
-> index 0000000..2c54fb8
-> --- /dev/null
-> +++ b/drivers/phy/phy-bcm-kona-usb2.c
-> @@ -0,0 +1,158 @@
-> +/*
-> + * phy-bcm-kona-usb2.c - Broadcom Kona USB2 Phy Driver
-> + *
-> + * Copyright (C) 2013 Linaro Limited
-> + * Matt Porter <matt.porter@linaro.org>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/delay.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/clk.h>
-> +#include <linux/phy/phy.h>
-
-arrange the headers in alphabetical order so that it's easy while adding new
-headers. Just my preference.
-> +
-> +#define OTGCTL			(0)
-> +#define OTGCTL_OTGSTAT2		(1 << 31)
-> +#define OTGCTL_OTGSTAT1		(1 << 30)
-> +#define OTGCTL_PRST_N_SW	(1 << 11)
-> +#define OTGCTL_HRESET_N		(1 << 10)
-> +#define OTGCTL_UTMI_LINE_STATE1	(1 << 9)
-> +#define OTGCTL_UTMI_LINE_STATE0	(1 << 8)
-> +
-> +#define P1CTL			(8)
-> +#define P1CTL_SOFT_RESET	(1 << 1)
-> +#define P1CTL_NON_DRIVING	(1 << 0)
-
-you can use BIT() instead.
-> +
-> +struct bcm_kona_usb {
-> +	void __iomem *regs;
-> +};
-> +
-> +static void bcm_kona_usb_phy_power(struct bcm_kona_usb *phy, int on)
-> +{
-> +	u32 val;
-> +
-> +	val = readl(phy->regs + OTGCTL);
-> +	if (on) {
-> +		/* Configure and power PHY */
-> +		val &= ~(OTGCTL_OTGSTAT2 | OTGCTL_OTGSTAT1 |
-> +			 OTGCTL_UTMI_LINE_STATE1 | OTGCTL_UTMI_LINE_STATE0);
-> +		val |= OTGCTL_PRST_N_SW | OTGCTL_HRESET_N;
-> +	} else {
-> +		val &= ~(OTGCTL_PRST_N_SW | OTGCTL_HRESET_N);
-> +	}
-> +	writel(val, phy->regs + OTGCTL);
-> +}
-> +
-> +static int bcm_kona_usb_phy_init(struct phy *gphy)
-> +{
-> +	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
-> +	u32 val;
-> +
-> +	/* Soft reset PHY */
-> +	val = readl(phy->regs + P1CTL);
-> +	val &= ~P1CTL_NON_DRIVING;
-> +	val |= P1CTL_SOFT_RESET;
-> +	writel(val, phy->regs + P1CTL);
-> +	writel(val & ~P1CTL_SOFT_RESET, phy->regs + P1CTL);
-> +	/* Reset needs to be asserted for 2ms */
-> +	mdelay(2);
-> +	writel(val | P1CTL_SOFT_RESET, phy->regs + P1CTL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int bcm_kona_usb_phy_power_on(struct phy *gphy)
-> +{
-> +	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
-> +
-> +	bcm_kona_usb_phy_power(phy, 1);
-> +
-> +	return 0;
-> +}
-> +
-> +static int bcm_kona_usb_phy_power_off(struct phy *gphy)
-> +{
-> +	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
-> +
-> +	bcm_kona_usb_phy_power(phy, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct phy_ops ops = {
-> +	.init		= bcm_kona_usb_phy_init,
-> +	.power_on	= bcm_kona_usb_phy_power_on,
-> +	.power_off	= bcm_kona_usb_phy_power_off,
-> +	.owner = THIS_MODULE,
-
-owner is aligned differently..
-> +};
-> +
-> +static int bcm_kona_usb2_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct bcm_kona_usb *phy;
-> +	struct resource *res;
-> +	struct phy *gphy;
-> +	struct phy_provider *phy_provider;
-> +
-> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-> +	if (!phy)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	phy->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(phy->regs))
-> +		return PTR_ERR(phy->regs);
-> +
-> +	platform_set_drvdata(pdev, phy);
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev,
-> +			of_phy_simple_xlate);
-> +	if (IS_ERR(phy_provider))
-> +		return PTR_ERR(phy_provider);
-> +
-> +	gphy = devm_phy_create(dev, &ops, NULL);
-> +	if (IS_ERR(gphy))
-> +		return PTR_ERR(gphy);
-> +
-> +	/* The Kona PHY supports an 8-bit wide UTMI interface */
-> +	phy_set_bus_width(gphy, 8);
-> +
-> +	phy_set_drvdata(gphy, phy);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id bcm_kona_usb2_dt_ids[] = {
-> +	{ .compatible = "brcm,kona-usb2-phy" },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, bcm_kona_usb2_dt_ids);
-> +
-> +static struct platform_driver bcm_kona_usb2_driver = {
-> +	.probe		= bcm_kona_usb2_probe,
-> +	.driver		= {
-> +		.name	= "bcm-kona-usb2",
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table = bcm_kona_usb2_dt_ids,
-> +	},
-> +};
-> +
-> +module_platform_driver(bcm_kona_usb2_driver);
-> +
-> +MODULE_ALIAS("platform:bcm-kona-usb2");
-> +MODULE_AUTHOR("Matt Porter <matt.porter@linaro.org>");
-> +MODULE_DESCRIPTION("BCM Kona USB 2.0 PHY driver");
-> +MODULE_LICENSE("GPL v2");
-> 
-Apart from those comments, this patch looks good.
-
-Thanks
-Kishon
+RnJvbTogSm9uYXRoYW4gQ2FtZXJvbiA8amljMjNAa2VybmVsLm9yZz4NCkRhdGE6IFdlZG5lc2Rh
+eSwgTm92ZW1iZXIgMjcsIDIwMTMgNDoxMCBQTQ0KDQo+VG86IER1YW4gRnVnYW5nLUIzODYxMTsg
+TWFyayBSdXRsYW5kDQo+Q2M6IHNhY2hpbi5rYW1hdEBsaW5hcm8ub3JnOyBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsgc2hhd24uZ3VvQGxpbmFyby5vcmc7DQo+TGkgRnJhbmstQjIwNTk2OyBs
+aW51eC1paW9Admdlci5rZXJuZWwub3JnDQo+U3ViamVjdDogUkU6IFtQQVRDSCB2MyAzLzNdIERv
+Y3VtZW50YXRpb246IGFkZCB0aGUgYmluZGluZyBmaWxlIGZvciBGcmVlc2NhbGUNCj52ZjYxMCBB
+REMgZHJpdmVyDQo+DQo+DQo+DQo+RnVnYW5nIER1YW4gPGZ1Z2FuZy5kdWFuQGZyZWVzY2FsZS5j
+b20+IHdyb3RlOg0KPj5Gcm9tOiBNYXJrIFJ1dGxhbmQgW21haWx0bzptYXJrLnJ1dGxhbmRAYXJt
+LmNvbV0NCj4+RGF0YTogVHVlc2RheSwgTm92ZW1iZXIgMjYsIDIwMTMgMTA6MDkgUE0NCj4+DQo+
+Pj5UbzogRHVhbiBGdWdhbmctQjM4NjExDQo+Pj5DYzogamljMjNAa2VybmVsLm9yZzsgc2FjaGlu
+LmthbWF0QGxpbmFyby5vcmc7DQo+PmRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPj4+c2hh
+d24uZ3VvQGxpbmFyby5vcmc7IExpIEZyYW5rLUIyMDU5NjsgbGludXgtaWlvQHZnZXIua2VybmVs
+Lm9yZw0KPj4+U3ViamVjdDogUmU6IFtQQVRDSCB2MyAzLzNdIERvY3VtZW50YXRpb246IGFkZCB0
+aGUgYmluZGluZyBmaWxlIGZvcg0KPj5GcmVlc2NhbGUNCj4+PnZmNjEwIEFEQyBkcml2ZXINCj4+
+Pg0KPj4+T24gVHVlLCBOb3YgMjYsIDIwMTMgYXQgMTA6NTY6MzRBTSArMDAwMCwgRnVnYW5nIER1
+YW4gd3JvdGU6DQo+Pj4+IFRoZSBwYXRjaCBhZGRzIHRoZSBiaW5kaW5nIGZpbGUgZm9yIEZyZWVz
+Y2FsZSB2ZjYxMCBBREMgZHJpdmVyLg0KPj4+Pg0KPj4+PiBTaWduZWQtb2ZmLWJ5OiBGdWdhbmcg
+RHVhbiA8QjM4NjExQGZyZWVzY2FsZS5jb20+DQo+Pj4+IC0tLQ0KPj4+PiAgLi4uL2RldmljZXRy
+ZWUvYmluZGluZ3MvaWlvL2FkYy92ZjYxMC1hZGMudHh0ICAgICAgfCAgIDU3DQo+Pj4rKysrKysr
+KysrKysrKysrKysrKw0KPj4+PiAgMSBmaWxlcyBjaGFuZ2VkLCA1NyBpbnNlcnRpb25zKCspLCAw
+IGRlbGV0aW9ucygtKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvdmY2MTAtYWRjLnR4dA0KPj4+PiBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL3ZmNjEwLWFkYy50eHQNCj4+Pj4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4+Pj4gaW5kZXggMDAwMDAwMC4uNDEwMTUxNg0KPj4+PiAtLS0gL2Rl
+di9udWxsDQo+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8v
+YWRjL3ZmNjEwLWFkYy50eHQNCj4+Pj4gQEAgLTAsMCArMSw1NyBAQA0KPj4+PiArRnJlZXNjYWxl
+IHZmNjEwIEFuYWxvZyB0byBEaWdpdGFsIENvbnZlcnRlciBiaW5kaW5ncw0KPj4+PiArDQo+Pj4+
+ICtUaGUgZGV2aWNldHJlZSBiaW5kaW5ncyBhcmUgZm9yIHRoZSBuZXcgQURDIGRyaXZlciB3cml0
+dGVuIGZvcg0KPj4+PiArdmY2MTAvaS5NWDZzbHggYW5kIHVwd2FyZCBTb0NzIGZyb20gRnJlZXNj
+YWxlLg0KPj4+PiArDQo+Pj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPj4+PiArLSBjb21wYXRp
+YmxlOiBTaG91bGQgYmUgImZzbCx2ZjYxMC1hZGMiDQo+Pj4NCj4+PnMvYmUvY29udGFpbi8NCj4+
+Pg0KPj4+PiArLSByZWc6IE9mZnNldCBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgZm9y
+IHRoZSBkZXZpY2UNCj4+Pj4gKy0gaW50ZXJydXB0czogU2hvdWxkIGNvbnRhaW4gdGhlIGludGVy
+cnVwdCBmb3IgdGhlIGRldmljZQ0KPj4+PiArLSBjbG9ja3M6IFRoZSBjbG9ja3MgbmVlZGVkIGJ5
+IHRoZSBBREMgY29udHJvbGxlcg0KPj4+DQo+Pj5Ib3cgbWFueT8gV2hpY2ggb25lcz8NCj4+Pg0K
+Pj4+PiArLSBjbG9jay1uYW1lczogdGhlIG5hbWUgb2YgdGhlIGNsb2Nrcw0KPj4+DQo+Pj5FaXRo
+ZXIgZGVmaW5lIHRoZSBzZXQgb2YgbmFtZXMsIG9yIGRvbid0IHVzZSBjbG9jay1uYW1lcy4gSXQn
+cyB1c2VsZXNzDQo+PmlmIGl0DQo+Pj5kb2Vzbid0IHRlbGwgeW91IGFueXRoaW5nLg0KPj4+DQo+
+Pj4+ICsNCj4+Pj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+Pj4+ICstIGZzbCxhZGMtaW8tcGlu
+Y3RsOiBFbmFibGUgZmllbGQgZm9yIHRoZSBJL08gcG9ydCBjb250cm9sIG9mIE1DVQ0KPj5waW5z
+IHVzZWQNCj4+PmFzIGFuYWxvZyBpbnB1dHMuDQo+Pj4+ICstIGZzbCxhZGMtdnJlZjogQURDIHJl
+ZnJlbmNlIHZvbHRhZ2UgdmFsdWUsIHVuaXQgaXMgdVYuDQo+Pj4NCj4+PkNhbiB5b3Ugbm90IHF1
+ZXJ5IHRoZSByZWd1bGF0b3IgdG8gZmlndXJlIHRoaXMgb3V0Pw0KPj4NCj4+VGhpcyBpcyBvcHRp
+b25hbCwgc29tZSBib2FyZCBkZXNpZ24gaGF2ZSBubyBmaXhlZCByZWd1bGF0b3IsIGp1c3QNCj4+
+c3VwcGx5IGZpeGVkIHZvbHRhZ2UgZnJvbSBNQ1UgZGlnaXRhbCBwb3dlciB3aGljaCBDYW5ub3Qg
+aGFuZGxlZCBieSB0aGUNCj4+bW9kdWxlLg0KPkZpeGVkIHJlZ3VsYXRvcnMgYXJlIHVzZWQgd2hl
+biB0aGluZ3MgZWl0aGVyIHN1cHBsaWVkIGJ5IGFuIGFjdHVhbCBmaXhlZCByZWcgb3INCj53aGVu
+ICBkaXJlY3RseSBjb25uZWN0ZWQgdG8gYW5vdGhlciBzdXBwbHkuIEl0IGRvZXMgbm90IGhhdmUg
+dG8gY29ycmVzcG9uZCB0byBhDQo+Yml0IG9mIHJlYWwgIGhhcmR3YXJlIHRob3VnaCB0aGF0IE1D
+VSBkaWdpdGFsIHBvd2VyIGlzIGNvbWluZyBmcm9tIHNvbWV3aGVyZSENCj4NCj5IZW5jZSB0aGlz
+IGRlZmluaXRlbHkgd2FudHMgdG8gYmUgYSByZWd1bGF0b3INCg0KR29vZCBzdWdnZXN0aW9uLCB0
+aGFua3MgIQ0KDQo+Pg0KPj4+DQo+Pj4+ICstIGZzbCxhZGMtY2xrLWRpdjogQ3VycmVudCBjbG9j
+ayBkaXZpZGVyIHZhbHVlLCBzdWNoIGFzIDEsMiw0LDgsMTYNCj4+YW5kIHNvIG9uLg0KPj4+DQo+
+Pj5Db3VsZCB5b3UgZWxhYm9yYXRlIG9uIHRoaXM/IFdoYXQncyBpdCB1c2VkIGZvciBhbmQgd2h5
+IGlzIGl0IG5lZWRlZD8NCj4+DQo+PkV4cDogQURDIGNsb2NrIHNvdXJjZSBpcyBpcGcgYnVzIGNs
+b2NrLCB0aGUgY2xrIGRpdmlkZXIgY2FuIGNvbnRyb2wgdGhlDQo+PkFEQyBzYW1wbGUgc3BlZWQg
+d2hpbGUgb3RoZXIgc2V0dGluZyBkb24ndCBjaGFuZ2U6DQo+PglUaGUgc2FtcGxlIHNwZWVkIHRo
+YXQgY2xvY2sgZGl2aWRlciBpcyBlcXVhbCB0byAxIGlzIHR3aWNlICB0aGFuIHRoZQ0KPj5kaXZp
+ZGVyIGlzIGVxdWFsIHRvIDIuDQo+Pg0KPj5Bbnl3YXksIGl0IGNhbiBjb250cm9sIHNhbXBsZSBz
+cGVlZCBieSB1c2VyLg0KPklmIGxlZnQgaW4gZGV2aWNlIHRyZWUgdGhlbiB0aGlzIG1pZ2h0IGJl
+IGJlc3QgaW1wbGVtZW50ZWQgYXMgYSB2ZXJ5IHNpbXBsZQ0KPmNsb2NrLg0KPkkgd291bGQgcHJl
+ZmVyIGl0IHRvIGJlIGNvbnRyb2xsZWQgZnJvbSB1c2VyIHNwYWNlIGFzIHNhbXBsaW5nX2ZyZXF1
+ZW5jeS4NCj4+DQo+Pj4NCj4+Pj4gKy0gZnNsLGFkYy1yZXM6IEFEQyBjb252ZXJzaW9uIG1vZGUg
+c2VsZWN0aW9uLCBzdWNoIGFzIDggZm9yIDgtYml0LA0KPj4xMCBmb3INCj4+PjEwLWJpdCwgMTIg
+Zm9yIDEyLWJpdCBtb2RlLg0KPj4+DQo+Pj5UaGlzIHNvdW5kcyBsaWtlIHNvbWV0aGluZyB0aGF0
+IGNvdWxkIGJlIGNoYW5nZWQgYXQgcnVudGltZS4gV2h5IGRvZXMNCj4+dGhpcyBuZWVkDQo+Pj50
+byBiZSBjb25maWd1cmVkIGluIHRoZSBEVD8NCj4+Pg0KPj4+PiArLSBmc2wsYWRjLXNhbS10aW1l
+OiBBREMgc2FtcGxlIHRpbWUgZHVyYXRpb24sIG51bWJlciBvZiBBREMgY2xvY2tzLA0KPj4+PiAr
+c3VjaCBhcyAyLCA0LCA2LCA4LCAxMiwgMTYsIDIwLCAyNA0KPj4+DQo+Pj5MaWtld2lzZS4NCj4+
+Pg0KPj4+UGxlYXNlIGRvbid0IHBvaW5sdGVzc2x5IGFiYnJldmlhdGUsICJzYW1wbGUiIGlzIG11
+Y2ggYmV0dGVyIHRoYW4NCj4+InNhbSINCj4+PmhlcmUuLi4NCj4+Pg0KPj4+PiArLSBmc2wsYWRj
+LWF2ZXItc2FtLXNlbDogRGV0ZXJtaW5lcyBob3cgbWFueSBBREMgY29udmVyc2lvbnMgd2lsbCBi
+ZQ0KPj5hdmVyYWdlZA0KPj4+dG8gY3JlYXRlIHRoZSBBREMgYXZlcmFnZSByZXN1bHQuDQo+Pj4+
+ICsJCQlUaGUgT3B0aW9uYWwgdmFsdWUgaXMgNCwgOCwgMTYsIDMyLg0KPj4+DQo+Pj5MaWtld2lz
+ZS4NCj4+DQo+Pg0KPj5Gb3IgYWJvdmUgQURDIGNvbmZpZ3VyYXRpb24sIEFEQyBjb252ZXJzaW9u
+IG1vZGUsIHNhbXBsZSB0aW1lIGR1cmF0aW9uLA0KPj5oYXJkd2FyZSBhdmVyYWdlIHNhbXBsZSBz
+ZWxlY3Rpb24sIGFuZCBzbyBvbi4NCj4+QWxsIG9mIHRoZW0gY2FuIGNoYW5nZWQgYXQgcnVudGlt
+ZS4gVGhlIG9ubHkgbWV0aG9kIGlzIHRvIGludHJvZHVjZSB0aGUNCj4+aW9jdGwgaW50ZXJmYWNl
+IGZvciB1c2VyIHRvIGNoYW5nZSB0aGVtIGF0IHJ1bnRpbWUuDQo+PkhvdyBhYm91dCB5b3UgdGhp
+bmsgPw0KPk5vIGl0IGlzIG5vdC4gTGlrZSBhbGwgc2ltaWxhciBjb250cm9scyB0aGVzZSBTaG91
+bGQgYmUgdmlhIHN5c2ZzIGF0dHJpYnV0ZXMNCj5jcmVhdGVkIHZpYSBUaGUgc3RhbmRhcmQgY2hh
+bm5lbCBzdHJ1Y3R1cmVzIGluIElJTy4NCj5TYW1wbGUgZHVyYXRpb24gbWlnaHQgYmUgaW50ZWdy
+YXRpb25fdGltZSAgb3Igc2FtcGxpbmdfZnJlcXVlbmN5IGRlcGVuZGluZyBvbg0KPml0cyBleGFj
+dCBzZW1hbnRpY3MuIEF2ZXJhZ2luZyBpcyBhIGZvcm0gb2YgbG93IHBhc3MgZmlsdGVyIGFuZCBz
+aG91bGQgYmUNCj5zcGVjaWZpZWQgYXMgc3VjaC4NCj4NCj5JZiBpdCBpcyBub3QgYWxyZWFkeSBp
+biB0aGUgYWJpIHRoZW4gcHJvcG9zZSBzb21ldGhpbmcgbmV3Lg0KPg0KPlRoZSBvbmx5IG9uZSBo
+ZXJlIHRoYXQgSSBjYW4gc2VlIGFuIGlzc3VlIHdpdGggZG9pbmcgdGhhdCB3YXkgaXMgdGhlIHJl
+c29sdXRpb24uDQo+U28gZmFyIGl0IGhhc24ndCBhY3R1YWxseSBtYWRlIHNlbnNlIHRvIG1ha2Ug
+dGhpcyBjb250cm9sbGFibGUuLg0KPkNvdXBsZSBvZiBxdWVzdGlvbnMgb24gdGhhdC4NCj4xLiBX
+aGF0IGVmZmVjdCBvbiBzcGVlZCBvZiBzYW1wbGluZyBkb2VzIGNoYW5naW5nIHRoaXMgaGF2ZT8g
+Tm90ZSB0aGF0IHdlDQo+cHJvYmFibHkgZG8gbm90IGNhcmUgYWJvdXQgdGhpcyBpZiB1c2luZyBz
+eXNmcyByZWFkaW5nLg0KPjIuIFdoYXQgb3RoZXIgZGlzYWR2YW50YWdlcyBhcmUgdGhlcmUgdG8g
+YWx3YXlzIHJ1bm5pbmcgaW4gMTIgYml0IG1vZGU/DQo+DQo+SSBoYXZlIG5vIHByb2JsZW0gd2l0
+aCBhZGRpbmcgd3JpdGUgc3VwcG9ydCBmb3IgdGhlIHR5cGUgb2YgYnVmZmVyIGVsZW1lbnRzDQo+
+dGhvdWdoIGl0IHdvdWxkIHJlcXVpcmUgc29tZSBJSU8gY29yZSBpbmZyYXN0cnVjdHVyZS4NCj5I
+b3dldmVyIEkgZG8gd2FudCBhIHdlbGwgZGVzY3JpYmVkIHJlYXNvbiB0byBib3RoZXIgd2l0aCB0
+aGUgYWRkZWQgY29tcGxleGl0eS4NCj4NClRoYW5rcyB2ZXJ5IG11Y2ghIFlvdXIgc3VnZ2VzdGlv
+biBpcyB2ZXJ5IHVzZWZ1bCBmb3IgbWUuIEkgd2lsbCB1c2UgdGhlIHN0YW5kYXJkIHN5cyBpbnRl
+cmZhY2UgZm9yIEFEQyBjb25maWd1cmF0aW9uLg0KDQpBbmQgZm9yIHlvdXIgcXVlc3Rpb246DQox
+LiBlZmZlY3Qgb24gc3BlZWQgb2Ygc2FtcGxpbmc6IA0KCS0gQURDIHNhbXBsZSB0aW1lIGR1cmF0
+aW9uLCBudW1iZXIgb2YgQURDIGNsb2Nrcywgc3VjaCBhcyAyLCA0LCA2LCA4LCAxMiwgMTYsIDIw
+LCAyNA0KCS0gY2xvY2ssIHRoZSBjbG9jayBzb3VyY2UgaXMgaXBnIGJ1cyBjbG9jaywgY3VycmVu
+dCBjbG9jayBkaXZpZGVyIHZhbHVlIGZvciBBREMsIHN1Y2ggYXMgMSwyLDQsOCwxNiBhbmQgc28g
+b24NCgktIGlmIGhhcmR3YXJlIGF2ZXJhZ2UgZnVuY3Rpb24gZW5hYmxlLA0KCQlUaGUgQURDIGF2
+ZXJhZ2Ugc2FtcGxlIG51bWJlciBhbHNvIGFmZmVjdCBzcGVlZCwgZGV0ZXJtaW5lcyBob3cgbWFu
+eSBBREMgY29udmVyc2lvbnMgd2lsbCBiZSBhdmVyYWdlZCB0byBjcmVhdGUgdGhlIEFEQyBhdmVy
+YWdlIHJlc3VsdC4NCglBbGwgb2YgYWJvdmUgc2V0dGluZyBhZmZlY3QgdGhlIHNwZWVkIG9mIHNh
+bXBsaW5nLg0KDQoJSWYgdXNlIHRoZSBzeXNmcyByZWFkaW5nLCB0aGUgc3BlZWQgZG9uJ3QgbmVl
+ZCBjYXJlLiANCglTbyBJIGhhdmUgc29tZSBxdWVzdGlvbnM6DQoJYS4gRm9yIGhpZ2ggc3BlZWQg
+c2FtcGxpbmcsIElJTyBzdWJzeXN0ZW0gaG93IHRvIGhhbmRsZSBpdCBpZiB0aGVyZSBubyBpb2N0
+bCBpbnRlcmZhY2UgZm9yIHVzZXIgPyANCgkgICBpdCBpcyBpaW8gYnVmZmVyL2ZpZm8gPw0KCWIu
+IEZvciBzb2Z0d2FyZSB0cmlnZ2VyLCB0aGUgc3BlZWQgb2Ygc2FtcGxpbmcgYWxzbyBkb24ndCBu
+ZWVkIHRvIGNhcmUsIGlzIGl0IHJpZ2h0ID8gDQoJYy4gSWYgdXNlIGNhc2UgbmVlZCBoaWdoIHNw
+ZWVkIHNhbXBsaW5nLCB0aGVyZSBtdXN0IGhhdmUgaGFyZXdhcmUgdHJpZ2dlciBhbmQgaWlvIGJ1
+ZmZlciBmb3IgaXQsIHJpZ2h0ID8gDQogDQoyLiBubyBkaXNhZHZhbnRhZ2UsIEkgaGF2ZSB2YWxp
+ZGF0ZWQgQURDIGNhbiB3b3JrIGZpbmUgYXQgOC1iaXQsIDEwLWJpdCwgMTItYml0IG1vZGUuDQoN
+Cj4+DQo+Pj4NCj4+Pj4gKy0gZnNsLGFkYy1ody1hdmVyLWVuOiBCb29sIHR5cGUgdG8gZGVjaWRl
+IGVuYWJsZSBoYXJkd2FyZSBhdmVyYWdlDQo+PmZ1bmN0aW9uLg0KPj4+DQo+Pj5XaGVuIHdvdWxk
+IHlvdSB3bmF0IHRoaXMgYW5kIHdoZW4gd291bGRuJ3QgeW91Pw0KPj4+DQo+Pj5TaW1pbGFybHks
+ICJhdmVyYWdlcyIgaXMgZmFyIGNsZWFyZXIgdGhhbiAiYXZlciIuDQo+Pg0KPj5PaywgSSBzZWUu
+IFRoYW5rcy4NCj4+Pg0KPj4+PiArLSBmc2wsYWRjLWxvdy1wb3dlci1tb2RlOiBCb29sIHR5cGUg
+dG8gZGVjaWRlIGVuYWJsZSBBREMgbG93IHBvd2VyDQo+Pm1vZGUuDQo+Pj4NCj4+PlNpbWlsYXJs
+eT8NCj5UaGlzIG9uZSBpcyBpbnRlcmVzdGluZy4gV2hhdCBlZmZlY3RzIGRvZXMgaXQgaGF2ZSBp
+biB0aGlzIGRldmljZT8gU29tZXRpbWVzIGl0DQo+aXMgYSAgc2FtcGxpbmcgZnJlcXVlbmN5IHJl
+c3RyaWN0aW9uLi4uDQo+Pj4NCj4+Pj4gKy0gZnNsLGFkYy1oaWdoLXNwZWVkLWNvbnY6IEJvb2wg
+dHlwZSB0byBkZWNpZGUgZW5hYmxlIEFEQyBoaWdoDQo+PnNwZWVkIG1vZGUuDQo+Pj4NCj4+PlNp
+bWlsYXJseT8NCj4+Pg0KPj4+PiArLSB2cmVmOiBUaGUgcmVndWxhdG9yIHRvIHN1cHBvcnQgQURD
+IHJlZnJlbmNlIHZvbHRhZ2UuDQo+Pj4NCj4+PnMvdnJlZi92cmVmLXN1cHBseS8NCj4+Pg0KPj4+
+VGhhbmtzLA0KPj4+TWFyay4NCj4+DQo+PlRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQo+PlN1bW1h
+cnksIHRoZXJlIGhhdmUgbWFueSBjb21tZW50cyB3aHkgZG9uJ3QgbGV0IHNvbWUgQURDIGNvbmZp
+Z3VyYXRpb24NCj4+Y2hhbmdlIGF0IHJ1bnRpbWUuDQo+PlRoZSBkcml2ZXIgc3RpbGwgZG9uJ3Qg
+YWRkIGlvY3RsIGludGVyZmFjZSBmb3IgdXNlciB0byBjb25maWd1cmF0ZSB0aGUNCj4+QURDIHNl
+dHRpbmcuIFNvIHRoZSBzZXR0aW5nIGFyZSBnb3QgZnJvbSBEVC4NCj4+DQo+PkRvIHlvdSBoYXZl
+IG9uZSBnb29kIG1ldGhvZCB0byBjaGFuZ2UgdGhlIGNvbmZpZ3VyYXRpb24gYXQgcnVudGltZSA/
+DQo+U2VlIGFib3ZlIDopDQo+DQo+SW4gc2hvcnQuLi5BZGQgcmVsZXZhbnQgYml0cyB0byBpbmZv
+X21hc2tfKiBpbiBhbGwgdGhlIGlpb19DaGFuX3NwZWMgc3RydWN0dXJlcw0KPnRoZW4gcHV0IHRo
+ZSAgcmVsZXZhbnQgaGFuZGxpbmcgaW4gdGhlIHJlYWRfcmF3IGFuZCB3cml0ZV9yYXcgaWlvX2lu
+Zm8NCj5jYWxsYmFja3MuDQo+Pg0KPj5UaGFua3MsDQo+PkFuZHkNCj4+DQo+Pi0tDQo+PlRvIHVu
+c3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51
+eC1paW8iIGluDQo+PnRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJu
+ZWwub3JnIE1vcmUgbWFqb3Jkb21vIGluZm8NCj4+YXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcv
+bWFqb3Jkb21vLWluZm8uaHRtbA0KPg0KPi0tDQo+U2VudCBmcm9tIG15IEFuZHJvaWQgcGhvbmUg
+d2l0aCBLLTkgTWFpbC4gUGxlYXNlIGV4Y3VzZSBteSBicmV2aXR5Lg0KDQpUaGFua3MgZm9yIHlv
+dXIgcmV2aWV3IGFuZCBhbnN3ZXJzLg0KDQpBbmR5DQo=
