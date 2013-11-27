@@ -1,120 +1,241 @@
-From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: imx1-core populate subdevices
-Date: Wed, 27 Nov 2013 16:45:42 +0800
-Message-ID: <5295B136.8040607@gtsys.com.hk>
-References: <CACRpkda2dO6DvurEhaTVGJv8nDyEGOEeLCap-_+1e1mHtD0XyQ@mail.gmail.com> <1384193987-20740-1-git-send-email-mpa@pengutronix.de> <CACRpkdaQcY43wnfD_phsi6rCo3oUmOUcei+gb9phyGT7F1iZyA@mail.gmail.com> <529567FB.5090501@gtsys.com.hk> <20131127073152.GA28465@pengutronix.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 8/9] phy: add Broadcom Kona USB2 PHY driver
+Date: Wed, 27 Nov 2013 14:21:52 +0530
+Message-ID: <5295B2A8.80705@ti.com>
+References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org>
+ <1385403367-18144-9-git-send-email-matt.porter@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131127073152.GA28465-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1385403367-18144-9-git-send-email-matt.porter@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matt Porter <matt.porter@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Linaro Patches <patches@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, November 27, 2013 03:31 PM, Markus Pargmann wrote:
-> Hi,
->
-> On Wed, Nov 27, 2013 at 11:33:15AM +0800, Chris Ruehl wrote:
->> On Wednesday, November 20, 2013 04:01 AM, Linus Walleij wrote:
->>> On Mon, Nov 11, 2013 at 7:19 PM, Markus Pargmann<mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>   wrote:
->>>
->>>> Support gpio devicetree subnodes to allow a more detailed DT hardware
->>>> description.
->>>>
->>>> Signed-off-by: Markus Pargmann<mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>
->>> Looks good to me.
->>>
->>> Tentatively applied this, the DT people may want to say something
->>> about this.
->>>
->>> Yours,
->>> Linus Walleij
->>> --
->>
->> Hi,
->>
->> I tried the new configuration but the kernel oops when probing the
->> dm9000 caused by insufficient resources more likely the real reason
->> that somehow the gpio6: triggers a problem
->>
->>
->> [    0.115718] irq: no irq domain found for
->> /soc/aipi@10000000/iomuxc@10015000/gpio@10015500 !
->> [    0.115768] ------------[ cut here ]------------
->> [    0.115853] WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171
->> of_device_alloc+0x110/0x15c()
->> [    0.117824] ---[ end trace 0e10ae727e6e0ab1 ]---
->> [    0.121236] Failed to request board ext/int gpios
->> [    0.152712] imx27-pinctrl 10015000.iomuxc: initialized IMX pinctrl driver
->
-> The imx27-pinctrl driver seems to be initialized after the irq is
-> requested. So this issue should be the same as in [1].
->
-> Regards,
->
-> Markus
+Hi,
 
-Markus,
+On Monday 25 November 2013 11:46 PM, Matt Porter wrote:
+> Add a driver for the internal Broadcom Kona USB 2.0 PHY found
+> on the BCM281xx family of SoCs.
+> 
+> Signed-off-by: Matt Porter <matt.porter@linaro.org>
+> ---
+>  drivers/phy/Kconfig             |   6 ++
+>  drivers/phy/Makefile            |   1 +
+>  drivers/phy/phy-bcm-kona-usb2.c | 158 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 165 insertions(+)
+>  create mode 100644 drivers/phy/phy-bcm-kona-usb2.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index a344f3d..2e87fa8 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -51,4 +51,10 @@ config PHY_EXYNOS_DP_VIDEO
+>  	help
+>  	  Support for Display Port PHY found on Samsung EXYNOS SoCs.
+>  
+> +config BCM_KONA_USB2_PHY
+> +	tristate "Broadcom Kona USB2 PHY Driver"
+> +	depends on GENERIC_PHY
+> +	help
+> +	  Enable this to support the Broadcom Kona USB 2.0 PHY.
+> +
+>  endmenu
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index d0caae9..c447f1a 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -3,6 +3,7 @@
+>  #
+>  
+>  obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+> +obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+>  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+>  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+>  obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+> diff --git a/drivers/phy/phy-bcm-kona-usb2.c b/drivers/phy/phy-bcm-kona-usb2.c
+> new file mode 100644
+> index 0000000..2c54fb8
+> --- /dev/null
+> +++ b/drivers/phy/phy-bcm-kona-usb2.c
+> @@ -0,0 +1,158 @@
+> +/*
+> + * phy-bcm-kona-usb2.c - Broadcom Kona USB2 Phy Driver
+> + *
+> + * Copyright (C) 2013 Linaro Limited
+> + * Matt Porter <matt.porter@linaro.org>
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/delay.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/clk.h>
+> +#include <linux/phy/phy.h>
 
-Thank you for point this out!  I patched the Linux-next and
-my problems went away. I will test now a bit more..
+arrange the headers in alphabetical order so that it's easy while adding new
+headers. Just my preference.
+> +
+> +#define OTGCTL			(0)
+> +#define OTGCTL_OTGSTAT2		(1 << 31)
+> +#define OTGCTL_OTGSTAT1		(1 << 30)
+> +#define OTGCTL_PRST_N_SW	(1 << 11)
+> +#define OTGCTL_HRESET_N		(1 << 10)
+> +#define OTGCTL_UTMI_LINE_STATE1	(1 << 9)
+> +#define OTGCTL_UTMI_LINE_STATE0	(1 << 8)
+> +
+> +#define P1CTL			(8)
+> +#define P1CTL_SOFT_RESET	(1 << 1)
+> +#define P1CTL_NON_DRIVING	(1 << 0)
 
-Cheers
-Chris
+you can use BIT() instead.
+> +
+> +struct bcm_kona_usb {
+> +	void __iomem *regs;
+> +};
+> +
+> +static void bcm_kona_usb_phy_power(struct bcm_kona_usb *phy, int on)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(phy->regs + OTGCTL);
+> +	if (on) {
+> +		/* Configure and power PHY */
+> +		val &= ~(OTGCTL_OTGSTAT2 | OTGCTL_OTGSTAT1 |
+> +			 OTGCTL_UTMI_LINE_STATE1 | OTGCTL_UTMI_LINE_STATE0);
+> +		val |= OTGCTL_PRST_N_SW | OTGCTL_HRESET_N;
+> +	} else {
+> +		val &= ~(OTGCTL_PRST_N_SW | OTGCTL_HRESET_N);
+> +	}
+> +	writel(val, phy->regs + OTGCTL);
+> +}
+> +
+> +static int bcm_kona_usb_phy_init(struct phy *gphy)
+> +{
+> +	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
+> +	u32 val;
+> +
+> +	/* Soft reset PHY */
+> +	val = readl(phy->regs + P1CTL);
+> +	val &= ~P1CTL_NON_DRIVING;
+> +	val |= P1CTL_SOFT_RESET;
+> +	writel(val, phy->regs + P1CTL);
+> +	writel(val & ~P1CTL_SOFT_RESET, phy->regs + P1CTL);
+> +	/* Reset needs to be asserted for 2ms */
+> +	mdelay(2);
+> +	writel(val | P1CTL_SOFT_RESET, phy->regs + P1CTL);
+> +
+> +	return 0;
+> +}
+> +
+> +static int bcm_kona_usb_phy_power_on(struct phy *gphy)
+> +{
+> +	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
+> +
+> +	bcm_kona_usb_phy_power(phy, 1);
+> +
+> +	return 0;
+> +}
+> +
+> +static int bcm_kona_usb_phy_power_off(struct phy *gphy)
+> +{
+> +	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
+> +
+> +	bcm_kona_usb_phy_power(phy, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct phy_ops ops = {
+> +	.init		= bcm_kona_usb_phy_init,
+> +	.power_on	= bcm_kona_usb_phy_power_on,
+> +	.power_off	= bcm_kona_usb_phy_power_off,
+> +	.owner = THIS_MODULE,
 
->
-> [1] [PATCH] of/platform: Fix no irq domain found errors when populating interrupts
-> http://archive.arm.linux.org.uk/lurker/message/20131123.004335.61d5c21b.en.html
->
->>
->>
->> iomuxc: iomuxc@10015000 {
->>          compatible = "fsl,imx27-iomuxc";
->>          reg =<0x10015000 0x600>;
->>          #address-cells =<1>;
->>          #size-cells =<1>;
->>          ranges;
->>
->>          gpio1: gpio@10015000 {
->>               compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
->>               reg =<0x10015000 0x100>;
->>               interrupts =<8>;
->>               gpio-controller;
->>               #gpio-cells =<2>;
->>               interrupt-controller;
->>               #interrupt-cells =<2>;
->>          };
->> ...
->>          gpio6: gpio@10015500 {
->>               compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
->>               reg =<0x10015500 0x100>;
->>               interrupts =<8>;
->>               gpio-controller;
->>               #gpio-cells =<2>;
->>               interrupt-controller;
->>               #interrupt-cells =<2>;
->>          };
->> };
->>
->> Kernel Linux version 3.13.0-rc1-next-20131125-dirty
->>
->> With kind regards
->> Chris
->>
->>
->
+owner is aligned differently..
+> +};
+> +
+> +static int bcm_kona_usb2_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct bcm_kona_usb *phy;
+> +	struct resource *res;
+> +	struct phy *gphy;
+> +	struct phy_provider *phy_provider;
+> +
+> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> +	if (!phy)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	phy->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(phy->regs))
+> +		return PTR_ERR(phy->regs);
+> +
+> +	platform_set_drvdata(pdev, phy);
+> +
+> +	phy_provider = devm_of_phy_provider_register(dev,
+> +			of_phy_simple_xlate);
+> +	if (IS_ERR(phy_provider))
+> +		return PTR_ERR(phy_provider);
+> +
+> +	gphy = devm_phy_create(dev, &ops, NULL);
+> +	if (IS_ERR(gphy))
+> +		return PTR_ERR(gphy);
+> +
+> +	/* The Kona PHY supports an 8-bit wide UTMI interface */
+> +	phy_set_bus_width(gphy, 8);
+> +
+> +	phy_set_drvdata(gphy, phy);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id bcm_kona_usb2_dt_ids[] = {
+> +	{ .compatible = "brcm,kona-usb2-phy" },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, bcm_kona_usb2_dt_ids);
+> +
+> +static struct platform_driver bcm_kona_usb2_driver = {
+> +	.probe		= bcm_kona_usb2_probe,
+> +	.driver		= {
+> +		.name	= "bcm-kona-usb2",
+> +		.owner	= THIS_MODULE,
+> +		.of_match_table = bcm_kona_usb2_dt_ids,
+> +	},
+> +};
+> +
+> +module_platform_driver(bcm_kona_usb2_driver);
+> +
+> +MODULE_ALIAS("platform:bcm-kona-usb2");
+> +MODULE_AUTHOR("Matt Porter <matt.porter@linaro.org>");
+> +MODULE_DESCRIPTION("BCM Kona USB 2.0 PHY driver");
+> +MODULE_LICENSE("GPL v2");
+> 
+Apart from those comments, this patch looks good.
 
--- 
-GTSYS Limited RFID Technology
-A01 24/F Gold King Industrial Bld
-35-41 Tai Lin Pai Road, Kwai Chung, Hong Kong
-Fax (852) 8167 4060 - Tel (852) 3598 9488
-
-Disclaimer: http://www.gtsys.com.hk/email/classified.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
