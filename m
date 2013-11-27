@@ -1,167 +1,249 @@
-From: boris brezillon <b.brezillon@overkiz.com>
-Subject: Re: [PATCH v2 2/2] clk: add accuracy support for fixed clock
-Date: Wed, 27 Nov 2013 18:19:08 +0100
-Message-ID: <5296298C.9040300@overkiz.com>
-References: <1385556285-19180-1-git-send-email-b.brezillon@overkiz.com> <1385556285-19180-3-git-send-email-b.brezillon@overkiz.com> <20131127145620.GR2879@titan.lakedaemon.net>
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 8/9] phy: add Broadcom Kona USB2 PHY driver
+Date: Wed, 27 Nov 2013 12:21:37 -0500
+Message-ID: <20131127172137.GG31091@beef>
+References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org>
+ <1385403367-18144-9-git-send-email-matt.porter@linaro.org>
+ <5295B2A8.80705@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131127145620.GR2879@titan.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5295B2A8.80705-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+On Wed, Nov 27, 2013 at 02:21:52PM +0530, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Monday 25 November 2013 11:46 PM, Matt Porter wrote:
+> > Add a driver for the internal Broadcom Kona USB 2.0 PHY found
+> > on the BCM281xx family of SoCs.
+> > 
+> > Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/phy/Kconfig             |   6 ++
+> >  drivers/phy/Makefile            |   1 +
+> >  drivers/phy/phy-bcm-kona-usb2.c | 158 ++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 165 insertions(+)
+> >  create mode 100644 drivers/phy/phy-bcm-kona-usb2.c
+> > 
+> > diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> > index a344f3d..2e87fa8 100644
+> > --- a/drivers/phy/Kconfig
+> > +++ b/drivers/phy/Kconfig
+> > @@ -51,4 +51,10 @@ config PHY_EXYNOS_DP_VIDEO
+> >  	help
+> >  	  Support for Display Port PHY found on Samsung EXYNOS SoCs.
+> >  
+> > +config BCM_KONA_USB2_PHY
+> > +	tristate "Broadcom Kona USB2 PHY Driver"
+> > +	depends on GENERIC_PHY
+> > +	help
+> > +	  Enable this to support the Broadcom Kona USB 2.0 PHY.
+> > +
+> >  endmenu
+> > diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> > index d0caae9..c447f1a 100644
+> > --- a/drivers/phy/Makefile
+> > +++ b/drivers/phy/Makefile
+> > @@ -3,6 +3,7 @@
+> >  #
+> >  
+> >  obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+> > +obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+> >  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+> >  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+> >  obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+> > diff --git a/drivers/phy/phy-bcm-kona-usb2.c b/drivers/phy/phy-bcm-kona-usb2.c
+> > new file mode 100644
+> > index 0000000..2c54fb8
+> > --- /dev/null
+> > +++ b/drivers/phy/phy-bcm-kona-usb2.c
+> > @@ -0,0 +1,158 @@
+> > +/*
+> > + * phy-bcm-kona-usb2.c - Broadcom Kona USB2 Phy Driver
+> > + *
+> > + * Copyright (C) 2013 Linaro Limited
+> > + * Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > + *
+> > + * This software is licensed under the terms of the GNU General Public
+> > + * License version 2, as published by the Free Software Foundation, and
+> > + * may be copied, distributed, and modified under those terms.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/io.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/phy/phy.h>
+> 
+> arrange the headers in alphabetical order so that it's easy while adding new
+> headers. Just my preference.
 
-On 27/11/2013 15:56, Jason Cooper wrote:
-> Boris,
->
-> Thanks for posting this series.  Bear with me as I'm attempting to give
-> MikeT a hand.
-Nice to hear.
-Mike already took a look at this series, but I'm happy to get more 
-feedbacks.
+yeah, same here. just development creep that I will address.
 
-> Don't be afraid to tell me a question is stupid :-)
-Your questions are far from stupid ;-).
+> > +
+> > +#define OTGCTL			(0)
+> > +#define OTGCTL_OTGSTAT2		(1 << 31)
+> > +#define OTGCTL_OTGSTAT1		(1 << 30)
+> > +#define OTGCTL_PRST_N_SW	(1 << 11)
+> > +#define OTGCTL_HRESET_N		(1 << 10)
+> > +#define OTGCTL_UTMI_LINE_STATE1	(1 << 9)
+> > +#define OTGCTL_UTMI_LINE_STATE0	(1 << 8)
+> > +
+> > +#define P1CTL			(8)
+> > +#define P1CTL_SOFT_RESET	(1 << 1)
+> > +#define P1CTL_NON_DRIVING	(1 << 0)
+> 
+> you can use BIT() instead.
 
->
-> On Wed, Nov 27, 2013 at 01:44:45PM +0100, Boris BREZILLON wrote:
->> This patch adds support for accuracy retrieval on fixed clocks.
->> It also adds a new dt property called 'clock-accuracy' to define the clock
->> accuracy.
->>
->> This can be usefull for oscillator (RC, crystal, ...) definitions which are
->> always given an accuracy characteristic.
-> I think we need to be more explicit in the binding and the API,
-> especially when providing a method to recalculate the accuracy.  I
-> presume this recalculated value would be relative against the root
-> clock?
+will do
 
-Yes, indirectly.
-Actually the clk accuracy depends on the whole clock chain, and is 
-calculated
-either by comparing the real clk rate to the theorical clk rate
-(accuracy = absolute_value((theorical_clk_rate - real_clk_rate)) / 
-theorical_clk_rate),
-or by adding all the accuracies (expressed in ppm, ppb or ppt) of the 
-clk chain
-(accuracy = current_clk_accuracy + parent_clk_accuracy).
+> > +
+> > +struct bcm_kona_usb {
+> > +	void __iomem *regs;
+> > +};
+> > +
+> > +static void bcm_kona_usb_phy_power(struct bcm_kona_usb *phy, int on)
+> > +{
+> > +	u32 val;
+> > +
+> > +	val = readl(phy->regs + OTGCTL);
+> > +	if (on) {
+> > +		/* Configure and power PHY */
+> > +		val &= ~(OTGCTL_OTGSTAT2 | OTGCTL_OTGSTAT1 |
+> > +			 OTGCTL_UTMI_LINE_STATE1 | OTGCTL_UTMI_LINE_STATE0);
+> > +		val |= OTGCTL_PRST_N_SW | OTGCTL_HRESET_N;
+> > +	} else {
+> > +		val &= ~(OTGCTL_PRST_N_SW | OTGCTL_HRESET_N);
+> > +	}
+> > +	writel(val, phy->regs + OTGCTL);
+> > +}
+> > +
+> > +static int bcm_kona_usb_phy_init(struct phy *gphy)
+> > +{
+> > +	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
+> > +	u32 val;
+> > +
+> > +	/* Soft reset PHY */
+> > +	val = readl(phy->regs + P1CTL);
+> > +	val &= ~P1CTL_NON_DRIVING;
+> > +	val |= P1CTL_SOFT_RESET;
+> > +	writel(val, phy->regs + P1CTL);
+> > +	writel(val & ~P1CTL_SOFT_RESET, phy->regs + P1CTL);
+> > +	/* Reset needs to be asserted for 2ms */
+> > +	mdelay(2);
+> > +	writel(val | P1CTL_SOFT_RESET, phy->regs + P1CTL);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int bcm_kona_usb_phy_power_on(struct phy *gphy)
+> > +{
+> > +	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
+> > +
+> > +	bcm_kona_usb_phy_power(phy, 1);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int bcm_kona_usb_phy_power_off(struct phy *gphy)
+> > +{
+> > +	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
+> > +
+> > +	bcm_kona_usb_phy_power(phy, 0);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct phy_ops ops = {
+> > +	.init		= bcm_kona_usb_phy_init,
+> > +	.power_on	= bcm_kona_usb_phy_power_on,
+> > +	.power_off	= bcm_kona_usb_phy_power_off,
+> > +	.owner = THIS_MODULE,
+> 
+> owner is aligned differently..
 
-Say you have a root clk with a +-10000 ppb accuracy, then a pll multiplying
-this root clk by 40 and introducing a possible drift of +- 1000 ppb and
-eventually a system clk based on this pll with a perfect div by 2 prescaler
-(accuracy = 0 ppb).
+ok
 
-If I understand correctly how accuracy propagates accross the clk tree,
-you'll end up with a system clk with a +- 11000 ppb accuracy.
+> > +};
+> > +
+> > +static int bcm_kona_usb2_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct bcm_kona_usb *phy;
+> > +	struct resource *res;
+> > +	struct phy *gphy;
+> > +	struct phy_provider *phy_provider;
+> > +
+> > +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> > +	if (!phy)
+> > +		return -ENOMEM;
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	phy->regs = devm_ioremap_resource(&pdev->dev, res);
+> > +	if (IS_ERR(phy->regs))
+> > +		return PTR_ERR(phy->regs);
+> > +
+> > +	platform_set_drvdata(pdev, phy);
+> > +
+> > +	phy_provider = devm_of_phy_provider_register(dev,
+> > +			of_phy_simple_xlate);
+> > +	if (IS_ERR(phy_provider))
+> > +		return PTR_ERR(phy_provider);
+> > +
+> > +	gphy = devm_phy_create(dev, &ops, NULL);
+> > +	if (IS_ERR(gphy))
+> > +		return PTR_ERR(gphy);
+> > +
+> > +	/* The Kona PHY supports an 8-bit wide UTMI interface */
+> > +	phy_set_bus_width(gphy, 8);
+> > +
+> > +	phy_set_drvdata(gphy, phy);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id bcm_kona_usb2_dt_ids[] = {
+> > +	{ .compatible = "brcm,kona-usb2-phy" },
+> > +	{ /* sentinel */ }
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(of, bcm_kona_usb2_dt_ids);
+> > +
+> > +static struct platform_driver bcm_kona_usb2_driver = {
+> > +	.probe		= bcm_kona_usb2_probe,
+> > +	.driver		= {
+> > +		.name	= "bcm-kona-usb2",
+> > +		.owner	= THIS_MODULE,
+> > +		.of_match_table = bcm_kona_usb2_dt_ids,
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(bcm_kona_usb2_driver);
+> > +
+> > +MODULE_ALIAS("platform:bcm-kona-usb2");
+> > +MODULE_AUTHOR("Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> > +MODULE_DESCRIPTION("BCM Kona USB 2.0 PHY driver");
+> > +MODULE_LICENSE("GPL v2");
+> > 
+> Apart from those comments, this patch looks good.
 
-e.g.:
-  root clk = 12MHz +- 10000 ppb => 12 MHz * (1 - (10000 / 10^9)) < root 
-clk < 12 MHz * (1 + (10000 / 10^9))
-                                                     => 11,99988 MHz < 
-root clk < 12,00012 MHz
-  pll clk = ((root clk) * 40) +- 1000 ppb =>  (11,99988 MHz * 40) * (1 - 
-(1000 / 10^9)) < pll clk < (12,00012 MHz * 40) * (1 + (1000 / 10^9))
-                                                            => 
-479,994720005 MHz < pll clk < 480,005280005 MHz
+Ok, thanks much for all the reviews.
 
-  system clk = ((pll clk) / 2) +- XXX ppb => 479,994720005 MHz / 2 < 
-system clk < 480,005280005 MHz / 2
-                                                               => 
-239,997360002 MHz < system clk < 240,002640002 MHz
-                                                               => system 
-clk accuracy = 0,002640002 / 240 = 11000 ppb
-
-Please tell me if my assumptions are false.
->
-> There really needs to be two attributes here:  the rated accuracy from
-> the manufacturer, and the calculated accuracy wrt another clock in the
-> system.  We only need a binding for the manufacturer rating since the
-> calculated accuracy is determined at runtime.
-
-Actually when I proposed this new functionnality I only had the theorical
-(or manufacturer rated) accuracy in mind.
-But providing an estimated accuracy (based on another clk) sounds
-interresting if your reference clk is an extremly accurate one.
-
->
-> I would also prefer to see an unknown accuracy be -1.
-I decided to keep 0 as a default value for unimplemented recalc_accuracy
-(or unspecified fixed accuracy) to keep existing implementation coherent.
-
-0 means the clk is perfect, and I thought it would be easier to handle a
-perfect clk (even if this is not really the case) than handling an error 
-case.
-
-Another aspect is the propagation of the clk accuracy accross the clk tree.
-Returning -1 in the middle of the clk chain will drop the previous clk 
-accuracy
-calculation.
-
-Anyway, I can change this if you think this is more appropriate.
-
-> There are already
-> clocks on the market (PPS reference clocks) with accuracies of
-> 0.1ppb/day [1].  Obviously, these aren't system clocks.  So the limit on
-> accuracy may be a non-issue.  However, it may be worth changing the
-> binding property to express the units.
-Wow, 0.1 ppb, this is impressive :-).
-
-
-This needs more than changing the dt bindings: I currently store the
-accuracy value in an unsigned long field, and expressing this in ppt
-(parts per trillion) may implies storing this in an u64 field (or store a
-unit field).
-
-
->
->> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
->> ---
->>   .../devicetree/bindings/clock/fixed-clock.txt      |    3 ++
->>   drivers/clk/clk-fixed-rate.c                       |   43 +++++++++++++++++---
->>   include/linux/clk-provider.h                       |    4 ++
->>   3 files changed, 44 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.txt b/Documentation/devicetree/bindings/clock/fixed-clock.txt
->> index 0b1fe78..48ea0ad 100644
->> --- a/Documentation/devicetree/bindings/clock/fixed-clock.txt
->> +++ b/Documentation/devicetree/bindings/clock/fixed-clock.txt
->> @@ -10,6 +10,8 @@ Required properties:
->>   - clock-frequency : frequency of clock in Hz. Should be a single cell.
->>   
->>   Optional properties:
->> +- clock-accuracy : accuracy of clock in ppb (parts per billion).
->> +		   Should be a single cell.
-> I would prefer to call this property 'clock-rated-ppb'.
-
-Depending on what we choose to do with the accuracy field, this might be 
-an option.
-
->
->>   - gpios : From common gpio binding; gpio connection to clock enable pin.
->>   - clock-output-names : From common clock binding.
->>   
->> @@ -18,4 +20,5 @@ Example:
->>   		compatible = "fixed-clock";
->>   		#clock-cells = <0>;
->>   		clock-frequency = <1000000000>;
->> +		clock-accuracy = <100>;
->>   	};
-> thx,
->
-> Jason.
->
-> [1] http://www.vectron.com/products/modules/md-010.htm
-
-Thanks for your review, and don't hesitate to ask more questions, or to 
-point out
-incoherencies in my approach (I'm not an expert in clk and clk accuracy 
-calculation,
-and I might be wrong ;-)).
-
-Best Regards,
-
-Boris
+-Matt
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
