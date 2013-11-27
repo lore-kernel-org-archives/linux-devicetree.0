@@ -1,109 +1,90 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: imx1-core populate subdevices
-Date: Wed, 27 Nov 2013 08:31:52 +0100
-Message-ID: <20131127073152.GA28465@pengutronix.de>
-References: <CACRpkda2dO6DvurEhaTVGJv8nDyEGOEeLCap-_+1e1mHtD0XyQ@mail.gmail.com>
- <1384193987-20740-1-git-send-email-mpa@pengutronix.de>
- <CACRpkdaQcY43wnfD_phsi6rCo3oUmOUcei+gb9phyGT7F1iZyA@mail.gmail.com>
- <529567FB.5090501@gtsys.com.hk>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2Ml0gd2F0Y2hkb2c6IEdQSU8tY29udHJvbGxlZCB3YXRj?=
+ =?UTF-8?B?aGRvZw==?=
+Date: Wed, 27 Nov 2013 11:34:54 +0400
+Message-ID: <1385537694.255779958@f424.i.mail.ru>
+References: <1385483188-12221-1-git-send-email-shc_work@mail.ru>
+ <5294E05A.3040104@roeck-us.net>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <529567FB.5090501-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+In-Reply-To: <5294E05A.3040104-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: =?UTF-8?B?R3VlbnRlciBSb2Vjaw==?= <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?V2ltIFZhbiBTZWJyb2Vjaw==?= <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Nov 27, 2013 at 11:33:15AM +0800, Chris Ruehl wrote:
-> On Wednesday, November 20, 2013 04:01 AM, Linus Walleij wrote:
-> >On Mon, Nov 11, 2013 at 7:19 PM, Markus Pargmann<mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>  wrote:
-> >
-> >>Support gpio devicetree subnodes to allow a more detailed DT hardware
-> >>description.
-> >>
-> >>Signed-off-by: Markus Pargmann<mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >
-> >Looks good to me.
-> >
-> >Tentatively applied this, the DT people may want to say something
-> >about this.
-> >
-> >Yours,
-> >Linus Walleij
-> >--
-> 
-> Hi,
-> 
-> I tried the new configuration but the kernel oops when probing the
-> dm9000 caused by insufficient resources more likely the real reason
-> that somehow the gpio6: triggers a problem
-> 
-> 
-> [    0.115718] irq: no irq domain found for
-> /soc/aipi@10000000/iomuxc@10015000/gpio@10015500 !
-> [    0.115768] ------------[ cut here ]------------
-> [    0.115853] WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171
-> of_device_alloc+0x110/0x15c()
-> [    0.117824] ---[ end trace 0e10ae727e6e0ab1 ]---
-> [    0.121236] Failed to request board ext/int gpios
-> [    0.152712] imx27-pinctrl 10015000.iomuxc: initialized IMX pinctrl driver
-
-The imx27-pinctrl driver seems to be initialized after the irq is
-requested. So this issue should be the same as in [1].
-
-Regards,
-
-Markus
-
-[1] [PATCH] of/platform: Fix no irq domain found errors when populating interrupts
-http://archive.arm.linux.org.uk/lurker/message/20131123.004335.61d5c21b.en.html
-
-> 
-> 
-> iomuxc: iomuxc@10015000 {
->         compatible = "fsl,imx27-iomuxc";
->         reg = <0x10015000 0x600>;
->         #address-cells = <1>;
->         #size-cells = <1>;
->         ranges;
-> 
->         gpio1: gpio@10015000 {
->              compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
->              reg = <0x10015000 0x100>;
->              interrupts = <8>;
->              gpio-controller;
->              #gpio-cells = <2>;
->              interrupt-controller;
->              #interrupt-cells = <2>;
->         };
-> ...
->         gpio6: gpio@10015500 {
->              compatible = "fsl,imx27-gpio", "fsl,imx21-gpio";
->              reg = <0x10015500 0x100>;
->              interrupts = <8>;
->              gpio-controller;
->              #gpio-cells = <2>;
->              interrupt-controller;
->              #interrupt-cells = <2>;
->         };
-> };
-> 
-> Kernel Linux version 3.13.0-rc1-next-20131125-dirty
-> 
-> With kind regards
-> Chris
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+SGVsbG8uCgo+IE9uIDExLzI2LzIwMTMgMDg6MjYgQU0sIEFsZXhhbmRlciBTaGl5YW4gd3JvdGU6
+Cj4gPiBUaGlzIHBhdGNoIGFkZHMgYSB3YXRjaGRvZyBkcml2ZXIgZm9yIGRldmljZXMgY29udHJv
+bGxlZCB0aHJvdWdoIEdQSU8sCj4gPiAoQW5hbG9nIERldmljZXMgQURNNzA2LCBJQyA1NTUgZXRj
+KS4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kZXIgU2hpeWFuIDxzaGNfd29ya0BtYWls
+LnJ1PgouLi4KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRj
+aGRvZy9ncGlvLXdkdC50eHQKPiA+IEBAIC0wLDAgKzEsMjMgQEAKPiA+ICsqIEdQSU8tY29udHJv
+bGxlZCBXYXRjaGRvZwo+ID4gKwo+ID4gK1JlcXVpcmVkIFByb3BlcnRpZXM6Cj4gPiArLSBjb21w
+YXRpYmxlOiBTaG91bGQgY29udGFpbiAibGludXgsd2R0LWdwaW8iLgo+IAo+IFNob3VsZCA/Cj4g
+Cj4gPiArLSBncGlvczogRnJvbSBjb21tb24gZ3BpbyBiaW5kaW5nOyBncGlvIGNvbm5lY3Rpb24g
+dG8gV0RUIHJlc2V0IHBpbi4KPiA+ICstIHdkdC1ncGlvLGh3X2FsZ286IFRoZSBhbGdvcml0aG0g
+dXNlZCBieSB0aGUgZHJpdmVyLiBTaG91bGQgYmUgb25lCj4gPiArICBvZiB0aGUgZm9sbG93aW5n
+IHZhbHVlczoKPiAKPiBTaG91bGQgPwoKV2hhdCB3cm9uZyBoZXJlPwoKLi4uCj4gPiArRXhhbXBs
+ZToKPiA+ICsJd2F0Y2hkb2c6IHdhdGNoZG9nIHsKPiA+ICsJCS8qIEFETTcwNiAqLwo+ID4gKwkJ
+Y29tcGF0aWJsZSA9ICJsaW51eCx3ZHQtZ3BpbyI7Cj4gCj4gT2RkbHkgZW5vdWdoLCB0aGUgYmlu
+ZGluZ3MgY291bGQgYmUgdXNlZCBieSBub24tTGludXggb3BlcmF0aW5nIHN5c3RlbXMsCj4gYnV0
+IHdobyBhbSBJIHRvIGFyZ3VlLiBGaW5lIGlmIHRoaXMgaXMgd2hhdCB0aGUgRFQgbWFpbnRhaW5l
+cnMgd2FudCB0byBzZWUuCgpPbiBteSBvcGluaW9uIHRoaXMgbWVhbiB0aGF0IHRoaXMgaXMgbm90
+IGEgcmVhbCBoYXJkd2FyZSwgYnV0IGhhcmR3YXJlIGVtdWxhdGlvbiwKbGlrZSBzb21lIG90aGVy
+IGRyaXZlciBkb2VzLgoKLi4uCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy93YXRjaGRvZy9ncGlv
+X3dkdC5jIGIvZHJpdmVycy93YXRjaGRvZy9ncGlvX3dkdC5jCj4gPiBuZXcgZmlsZSBtb2RlIDEw
+MDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uYzcxNjZiZQo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysr
+IGIvZHJpdmVycy93YXRjaGRvZy9ncGlvX3dkdC5jCj4gPiBAQCAtMCwwICsxLDI0NiBAQAo+ID4g
+Ky8qCj4gPiArICogRHJpdmVyIGZvciB3YXRjaGRvZyBkZXZpY2UgY29udHJvbGxlZCB0aHJvdWdo
+IEdQSU8tbGluZQo+ID4gKyAqCj4gPiArICogQXV0aG9yOiAyMDEzLCBBbGV4YW5kZXIgU2hpeWFu
+IDxzaGNfd29ya0BtYWlsLnJ1Pgo+ID4gKyAqCj4gPiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUg
+c29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkKPiA+ICsgKiBp
+dCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzIHB1
+Ymxpc2hlZCBieQo+ID4gKyAqIHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247IGVpdGhlciB2
+ZXJzaW9uIDIgb2YgdGhlIExpY2Vuc2UsIG9yCj4gPiArICogKGF0IHlvdXIgb3B0aW9uKSBhbnkg
+bGF0ZXIgdmVyc2lvbi4KPiA+ICsgKi8KPiA+ICsKPiA+ICsjaW5jbHVkZSA8bGludXgvZXJyLmg+
+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L21vZHVs
+ZS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9ub3RpZmllci5oPgo+ID4gKyNpbmNsdWRlIDxsaW51
+eC9vZl9ncGlvLmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ID4g
+KyNpbmNsdWRlIDxsaW51eC9yZWJvb3QuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvd2F0Y2hkb2cu
+aD4KPiA+ICsKPiA+ICsjZGVmaW5lIFNPRlRfVElNRU9VVF9NSU4JMQo+ID4gKyNkZWZpbmUgU09G
+VF9USU1FT1VUX0RFRgk2MAo+ID4gKyNkZWZpbmUgU09GVF9USU1FT1VUX01BWAkweGZmZmYKPiA+
+ICsKPiA+ICtlbnVtIHsKPiA+ICsJSFdfQUxHT19UT0dHTEUsCj4gPiArCUhXX0FMR09fTEVWRUws
+Cj4gPiArfTsKPiA+ICsKPiA+ICtzdHJ1Y3QgZ3Bpb193ZHRfcHJpdiB7Cj4gPiArCWludAkJCWdw
+aW87Cj4gPiArCWJvb2wJCQlhY3RpdmVfbG93Owo+ID4gKwlib29sCQkJc3RhdGU7Cj4gPiArCXVu
+c2lnbmVkIGludAkJaHdfYWxnbzsKPiA+ICsJdW5zaWduZWQgaW50CQlod19tYXJnaW47Cj4gPiAr
+CXVuc2lnbmVkIGxvbmcJCWxhc3RfamlmZmllczsKPiA+ICsJc3RydWN0IG5vdGlmaWVyX2Jsb2Nr
+CW5vdGlmaWVyOwo+ID4gKwlzdHJ1Y3QgdGltZXJfbGlzdAl0aW1lcjsKPiA+ICsJc3RydWN0IHdh
+dGNoZG9nX2RldmljZQl3ZGQ7Cj4gPiArfTsKPiA+ICsKPiA+ICtzdGF0aWMgaW50IGdwaW9fd2R0
+X2Rpc2FibGUoc3RydWN0IGdwaW9fd2R0X3ByaXYgKnByaXYpCj4gPiArewo+ID4gKwlncGlvX3Nl
+dF92YWx1ZV9jYW5zbGVlcChwcml2LT5ncGlvLCAhcHJpdi0+YWN0aXZlX2xvdyk7Cj4gPiArCj4g
+PiArCS8qIFB1dCBHUElPIGJhY2sgdG8gdHJpc3RhdGUgKi8KPiA+ICsJaWYgKHByaXYtPmh3X2Fs
+Z28gPT0gSFdfQUxHT19UT0dHTEUpCj4gPiArCQlyZXR1cm4gZ3Bpb19kaXJlY3Rpb25faW5wdXQo
+cHJpdi0+Z3Bpbyk7Cj4gPiArCj4gTm8gZGlzYWJsZSBmb3IgJ2xldmVsJyB3YXRjaGRvZ3MgPyBT
+aG91bGRuJ3QgaXQgYmUgc2V0IHRvIHRoZSBvcHBvc2l0ZQo+IG9mIHByaXYtPnN0YXRlID8KPiAK
+PiA+ICsJcmV0dXJuIDA7Cj4gCj4gU2luY2UgdGhpcyBpcyBhbiBpbnRlcm5hbCBmdW5jdGlvbiB3
+aGljaCBuZXZlciByZXR1cm5zIGFueXRoaW5nIGJ1dCAwLAo+IHlvdSBtaWdodCBhcyB3ZWxsIG1h
+a2UgaXQgdm9pZC4KCiJsZXZlbCIgdmVyc2lvbiB3aWxsIGJlIGRpc2FibGVkIGJ5CiJncGlvX3Nl
+dF92YWx1ZV9jYW5zbGVlcChwcml2LT5ncGlvLCAhcHJpdi0+YWN0aXZlX2xvdyk7IiBsaW5lIGFi
+b3ZlLgoicmV0dXJuIiBpcyB1c2VkIGJ5ICJ0cmlzdGF0ZSIgc3dpdGNoLgoKLi4uCj4gPiArc3Rh
+dGljIHZvaWQgZ3Bpb193ZHRfaHdwaW5nKHVuc2lnbmVkIGxvbmcgZGF0YSkKPiA+ICt7Cj4gPiAr
+CXN0cnVjdCB3YXRjaGRvZ19kZXZpY2UgKndkZCA9IChzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlICop
+ZGF0YTsKPiA+ICsJc3RydWN0IGdwaW9fd2R0X3ByaXYgKnByaXYgPSB3YXRjaGRvZ19nZXRfZHJ2
+ZGF0YSh3ZGQpOwo+ID4gKwo+ID4gKwlpZiAodGltZV9iZWZvcmUoamlmZmllcywgcHJpdi0+bGFz
+dF9qaWZmaWVzICsKPiA+ICsJCQltc2Vjc190b19qaWZmaWVzKHdkZC0+dGltZW91dCAqIDEwMDAp
+KSkgewo+ID4gKwkJLyogUmVzdGFydCB0aW1lciAqLwo+ID4gKwkJbW9kX3RpbWVyKCZwcml2LT50
+aW1lciwgamlmZmllcyArIHByaXYtPmh3X21hcmdpbik7Cj4gPiArCj4gPiArCQlzd2l0Y2ggKHBy
+aXYtPmh3X2FsZ28pIHsKPiA+ICsJCWNhc2UgSFdfQUxHT19UT0dHTEU6Cj4gPiArCQkJLyogVG9n
+Z2xlIG91dHB1dCBwaW4gKi8KPiA+ICsJCQlwcml2LT5zdGF0ZSA9ICFwcml2LT5zdGF0ZTsKPiA+
+ICsJCQlncGlvX3NldF92YWx1ZV9jYW5zbGVlcChwcml2LT5ncGlvLCBwcml2LT5zdGF0ZSk7Cj4g
+PiArCQkJYnJlYWs7Cj4gPiArCQljYXNlIEhXX0FMR09fTEVWRUw6Cj4gPiArCQkJLyogUHVsc2Ug
+Ki8KPiA+ICsJCQlncGlvX3NldF92YWx1ZV9jYW5zbGVlcChwcml2LT5ncGlvLCAhcHJpdi0+YWN0
+aXZlX2xvdyk7Cj4gPiArCQkJdWRlbGF5KDEpOwo+IAo+IFByZXR0eSBhcmJpdHJhcnkgdG9nZ2xl
+IHRpbWUuIFNob3VsZCB0aGlzIGJlIGEgcHJvcGVydHkgPwoKV2hhdCBhYm91dCAxLzEwIG9mIGhh
+cmR3YXJlIHRpbWVvdXQ/CgouLi4KVGhhbmtzLgoKLS0tCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
