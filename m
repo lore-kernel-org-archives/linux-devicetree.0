@@ -1,57 +1,109 @@
-From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 0/9] arm: zynq: Add support for cpufreq
-Date: Tue, 26 Nov 2013 17:04:47 -0800
-Message-ID: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH v2 3/9] clocksource/cadence_ttc: Store timer frequency in driver data
+Date: Tue, 26 Nov 2013 17:04:50 -0800
+Message-ID: <1385514296-26702-4-git-send-email-soren.brinkmann@xilinx.com>
+References: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-I revised this series and rebased on top of Linus' tree. Patch specific
-changes are tracked in the respective email with their patch. On the
-level of the whole series, this changed:
+It is not allowed to call clk_get_rate() from interrupt context. To
+avoid such calls the timer input frequency is stored in the driver's
+data struct which makes it accessible to the driver in any context.
 
-v2:
- - added 'clocksource/cadence_ttc: Use enable/disable_irq'. I hope that
-   is more appropriate to avoid races of the timer with its interrupt
-   handler.
- - added 'arm: zynq: Don't use arm_global_timer with cpufreq'. In the
-   3.13 merge window we enabled the arm_global_timer for Zynq. That
-   timer is clocked by the CPU clock and hence does not provide a stabl=
-e
-   clocksource when cpufreq is enabled. That patch makes the selection =
-of
-   the GT driver depend on !CPU_FREQ for Zynq.
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/clocksource/cadence_ttc_timer.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-	S=C3=B6ren
-
-Soren Brinkmann (9):
-  arm: dt: zynq: Remove 'clock-ranges' from TTC nodes
-  arm: dt: zynq: Add 'cpus' node
-  clocksource/cadence_ttc: Store timer frequency in driver data
-  clocksource/cadence_ttc: Use enable/disable_irq
-  clocksource/cadence_ttc: Adjust interval in clock notifier
-  clocksource/cadence_ttc: Overhaul clocksource frequency adjustment
-  clocksource/cadence_ttc: Use only one counter
-  arm: zynq: Don't use arm_global_timer with cpufreq
-  arm: zynq: Add support for cpufreq
-
- arch/arm/boot/dts/zynq-7000.dtsi        |  27 +++-
- arch/arm/mach-zynq/Kconfig              |   4 +-
- arch/arm/mach-zynq/common.c             |   3 +
- drivers/clocksource/cadence_ttc_timer.c | 235 +++++++++++++++++++-----=
---------
- 4 files changed, 174 insertions(+), 95 deletions(-)
-
---=20
+diff --git a/drivers/clocksource/cadence_ttc_timer.c b/drivers/clocksource/cadence_ttc_timer.c
+index b2bb3a4bc205..a92350b55d32 100644
+--- a/drivers/clocksource/cadence_ttc_timer.c
++++ b/drivers/clocksource/cadence_ttc_timer.c
+@@ -67,11 +67,13 @@
+  * struct ttc_timer - This definition defines local timer structure
+  *
+  * @base_addr:	Base address of timer
++ * @freq:	Timer input clock frequency
+  * @clk:	Associated clock source
+  * @clk_rate_change_nb	Notifier block for clock rate changes
+  */
+ struct ttc_timer {
+ 	void __iomem *base_addr;
++	unsigned long freq;
+ 	struct clk *clk;
+ 	struct notifier_block clk_rate_change_nb;
+ };
+@@ -196,9 +198,8 @@ static void ttc_set_mode(enum clock_event_mode mode,
+ 
+ 	switch (mode) {
+ 	case CLOCK_EVT_MODE_PERIODIC:
+-		ttc_set_interval(timer,
+-				DIV_ROUND_CLOSEST(clk_get_rate(ttce->ttc.clk),
+-					PRESCALE * HZ));
++		ttc_set_interval(timer, DIV_ROUND_CLOSEST(ttce->ttc.freq,
++						PRESCALE * HZ));
+ 		break;
+ 	case CLOCK_EVT_MODE_ONESHOT:
+ 	case CLOCK_EVT_MODE_UNUSED:
+@@ -273,6 +274,8 @@ static void __init ttc_setup_clocksource(struct clk *clk, void __iomem *base)
+ 		return;
+ 	}
+ 
++	ttccs->ttc.freq = clk_get_rate(ttccs->ttc.clk);
++
+ 	ttccs->ttc.clk_rate_change_nb.notifier_call =
+ 		ttc_rate_change_clocksource_cb;
+ 	ttccs->ttc.clk_rate_change_nb.next = NULL;
+@@ -298,16 +301,14 @@ static void __init ttc_setup_clocksource(struct clk *clk, void __iomem *base)
+ 	__raw_writel(CNT_CNTRL_RESET,
+ 		     ttccs->ttc.base_addr + TTC_CNT_CNTRL_OFFSET);
+ 
+-	err = clocksource_register_hz(&ttccs->cs,
+-			clk_get_rate(ttccs->ttc.clk) / PRESCALE);
++	err = clocksource_register_hz(&ttccs->cs, ttccs->ttc.freq / PRESCALE);
+ 	if (WARN_ON(err)) {
+ 		kfree(ttccs);
+ 		return;
+ 	}
+ 
+ 	ttc_sched_clock_val_reg = base + TTC_COUNT_VAL_OFFSET;
+-	setup_sched_clock(ttc_sched_clock_read, 16,
+-			clk_get_rate(ttccs->ttc.clk) / PRESCALE);
++	setup_sched_clock(ttc_sched_clock_read, 16, ttccs->ttc.freq / PRESCALE);
+ }
+ 
+ static int ttc_rate_change_clockevent_cb(struct notifier_block *nb,
+@@ -334,6 +335,9 @@ static int ttc_rate_change_clockevent_cb(struct notifier_block *nb,
+ 				ndata->new_rate / PRESCALE);
+ 		local_irq_restore(flags);
+ 
++		/* update cached frequency */
++		ttc->freq = ndata->new_rate;
++
+ 		/* fall through */
+ 	}
+ 	case PRE_RATE_CHANGE:
+@@ -367,6 +371,7 @@ static void __init ttc_setup_clockevent(struct clk *clk,
+ 	if (clk_notifier_register(ttcce->ttc.clk,
+ 				&ttcce->ttc.clk_rate_change_nb))
+ 		pr_warn("Unable to register clock notifier.\n");
++	ttcce->ttc.freq = clk_get_rate(ttcce->ttc.clk);
+ 
+ 	ttcce->ttc.base_addr = base;
+ 	ttcce->ce.name = "ttc_clockevent";
+@@ -396,7 +401,7 @@ static void __init ttc_setup_clockevent(struct clk *clk,
+ 	}
+ 
+ 	clockevents_config_and_register(&ttcce->ce,
+-			clk_get_rate(ttcce->ttc.clk) / PRESCALE, 1, 0xfffe);
++			ttcce->ttc.freq / PRESCALE, 1, 0xfffe);
+ }
+ 
+ /**
+-- 
 1.8.4.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
