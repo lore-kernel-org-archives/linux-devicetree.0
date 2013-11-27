@@ -1,70 +1,67 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 4/5] regulator: max14577: Add regulator driver for
- Maxim 14577
-Date: Wed, 27 Nov 2013 13:16:26 +0000
-Message-ID: <20131127131626.GH3296@lee--X1>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] mfd: max14577: Add max14577 MFD driver core
+Date: Wed, 27 Nov 2013 13:18:15 +0000
+Message-ID: <20131127131815.GI3296@lee--X1>
 References: <1385135469-27044-1-git-send-email-k.kozlowski@samsung.com>
- <1385135469-27044-5-git-send-email-k.kozlowski@samsung.com>
+ <1385135469-27044-2-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1385135469-27044-5-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+In-Reply-To: <1385135469-27044-2-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> MAX14577 chip is a multi-function device which includes MUIC,
-> charger and voltage regulator. The driver is located in drivers/mfd.
+On Fri, 22 Nov 2013, Krzysztof Kozlowski wrote:
+
+> From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 >=20
-> This patch adds regulator driver for MAX14577 chip. There are two
-> regulators in this chip:
-> 1. Safeout LDO with constant voltage output of 4.9V. It can be only
->    enabled or disabled.
-> 2. Current regulator for the charger. It provides current from 90mA u=
-p
->    to 950mA.
-> Driver supports Device Tree.
+> This patch adds max14577 core/irq driver to support MUIC(Micro USB IC=
+)
+> device and charger device and support irq domain method to control
+> internal interrupt of max14577 device. Also, this patch supports DT
+> binding with max14577_i2c_parse_dt().
 >=20
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> The MAXIM 14577 chip contains Micro-USB Interface Circuit and Li+ Bat=
+tery
+> Charger. It contains accessory and USB charger detection logic. It su=
+pports
+> USB 2.0 Hi-Speed, UART and stereo audio signals over Micro-USB connec=
+tor.
+>=20
+> The battery charger is compliant with the USB Battery Charging Specif=
+ication
+> Revision 1.1. It has also SFOUT LDO output for powering USB devices.
+>=20
+> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/mfd/max14577.c       |    3 +-
->  drivers/regulator/Kconfig    |    7 ++
->  drivers/regulator/Makefile   |    1 +
->  drivers/regulator/max14577.c |  268 ++++++++++++++++++++++++++++++++=
+>  drivers/mfd/Kconfig                  |   13 ++
+>  drivers/mfd/Makefile                 |    1 +
+>  drivers/mfd/max14577.c               |  243 ++++++++++++++++++++++++=
++
+>  include/linux/mfd/max14577-private.h |  330 ++++++++++++++++++++++++=
 ++++++++++
->  4 files changed, 278 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/regulator/max14577.c
->=20
-> diff --git a/drivers/mfd/max14577.c b/drivers/mfd/max14577.c
-> index 94b766d..d841f2a 100644
-> --- a/drivers/mfd/max14577.c
-> +++ b/drivers/mfd/max14577.c
-> @@ -26,7 +26,8 @@
-> =20
->  static struct mfd_cell max14577_devs[] =3D {
->  	{ .name =3D "max14577-muic", },
-> -	{ .name =3D "max14577-regulator", },
-> +	{ .name =3D "max14577-regulator",
-> +		.of_compatible =3D "maxim,max14577-regulator", },
->  	{ .name =3D "max14577-charger", },
->  };
+>  include/linux/mfd/max14577.h         |   69 +++++++
+>  5 files changed, 656 insertions(+)
+>  create mode 100644 drivers/mfd/max14577.c
+>  create mode 100644 include/linux/mfd/max14577-private.h
+>  create mode 100644 include/linux/mfd/max14577.h
 
-If you separate this patch out and make it look 'normal' i.e. sort out
-the indenting, I'll apply it. Instead of this randomness, I expect to
-see something like:=20
-
-> +	 {
-> +	        .name =3D "max14577-regulator",
-> +	        .of_compatible =3D "maxim,max14577-regulator",=20
-> +	 },
-
+Applied, thanks.
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
