@@ -1,49 +1,158 @@
-From: Denis Carikli <denis@eukrea.com>
-Subject: [PATCHv8][ 2/5] ARM: dts: mbimxsd25: Add sound support.
-Date: Wed, 27 Nov 2013 16:54:21 +0100
-Message-ID: <1385567664-758-2-git-send-email-denis@eukrea.com>
-References: <1385567664-758-1-git-send-email-denis@eukrea.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1385567664-758-1-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Timur Tabi <timur@tabi.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when populating interrupts
+Date: Wed, 27 Nov 2013 15:56:29 +0000
+Message-ID: <20131127155629.DB612C404EC@trevor.secretlab.ca>
+References: <20131123004334.GJ10023@atomide.com> <20131124213651.59750C402C3 @trevor.secretlab.ca> <20131125092549.GD22043@ulmo.nvidia.com> < 20131125094954.GF22043@ulmo.nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131125094954.GF22043@ulmo.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Q2M6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4KQ2M6IFBhd2VsIE1vbGwg
-PHBhd2VsLm1vbGxAYXJtLmNvbT4KQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5j
-b20+CkNjOiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPgpDYzogSWFuIENh
-bXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4KQ2M6IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnCkNjOiBMaWFtIEdpcmR3b29kIDxsZ2lyZHdvb2RAZ21haWwuY29tPgpDYzog
-TWFyayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPgpDYzogYWxzYS1kZXZlbEBhbHNhLXByb2pl
-Y3Qub3JnCkNjOiBTYXNjaGEgSGF1ZXIgPGtlcm5lbEBwZW5ndXRyb25peC5kZT4KQ2M6IEVyaWMg
-QsOpbmFyZCA8ZXJpY0BldWtyZWEuY29tPgpTaWduZWQtb2ZmLWJ5OiBEZW5pcyBDYXJpa2xpIDxk
-ZW5pc0BldWtyZWEuY29tPgotLS0KQ2hhbmdlTG9nIHY3LT52ODoKLSBBanVzdGVkIHRvIG1hdGNo
-IHRoZSBkcml2ZXIgY2hhbmdlcy4KLS0tCiAuLi4vYm9vdC9kdHMvaW14MjUtZXVrcmVhLW1iaW14
-c2QyNS1iYXNlYm9hcmQuZHRzICB8ICAgIDkgKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgOSBp
-bnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjUtZXVrcmVh
-LW1iaW14c2QyNS1iYXNlYm9hcmQuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjUtZXVrcmVh
-LW1iaW14c2QyNS1iYXNlYm9hcmQuZHRzCmluZGV4IGZhZDY4NDcuLjgxM2ExMTQgMTAwNjQ0Ci0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI1LWV1a3JlYS1tYmlteHNkMjUtYmFzZWJvYXJkLmR0
-cworKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXgyNS1ldWtyZWEtbWJpbXhzZDI1LWJhc2Vib2Fy
-ZC5kdHMKQEAgLTQzLDYgKzQzLDE0IEBACiAJCQlsaW51eCxkZWZhdWx0LXRyaWdnZXIgPSAiaGVh
-cnRiZWF0IjsKIAkJfTsKIAl9OworCisJc291bmQgeworCQljb21wYXRpYmxlID0gImV1a3JlYSxh
-c29jLXRsdjMyMCI7CisJCWV1a3JlYSxtb2RlbCA9ICJpbXgyNS1ldWtyZWEtdGx2MzIwYWljMjMi
-OworCQlzc2ktY29udHJvbGxlciA9IDwmc3NpMT47CisJCWZzbCxtdXgtaW50LXBvcnQgPSA8MT47
-CisJCWZzbCxtdXgtZXh0LXBvcnQgPSA8NT47CisJfTsKIH07CiAKICZhdWRtdXggewpAQCAtOTgs
-NiArMTA2LDcgQEAKIH07CiAKICZzc2kxIHsKKwljb2RlYy1oYW5kbGUgPSA8JnRsdjMyMGFpYzIz
-PjsKIAlmc2wsbW9kZSA9ICJpMnMtc2xhdmUiOwogCXN0YXR1cyA9ICJva2F5IjsKIH07Ci0tIAox
-LjcuOS41CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpB
-bHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDov
-L21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
+On Mon, 25 Nov 2013 10:49:55 +0100, Thierry Reding <thierry.reding@gmail.com> wrote:
+> On Mon, Nov 25, 2013 at 10:25:50AM +0100, Thierry Reding wrote:
+> > On Sun, Nov 24, 2013 at 09:36:51PM +0000, Grant Likely wrote:
+> > > On Fri, 22 Nov 2013 16:43:35 -0800, Tony Lindgren <tony@atomide.com> wrote:
+> > > > Currently we get the following kind of errors if we try to use
+> > > > interrupt phandles to irqchips that have not yet initialized:
+> > > > 
+> > > > irq: no irq domain found for /ocp/pinmux@48002030 !
+> > > > WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171 of_device_alloc+0x144/0x184()
+> > > > Modules linked in:
+> > > > CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.12.0-00038-g42a9708 #1012
+> > > > (show_stack+0x14/0x1c)
+> > > > (dump_stack+0x6c/0xa0)
+> > > > (warn_slowpath_common+0x64/0x84)
+> > > > (warn_slowpath_null+0x1c/0x24)
+> > > > (of_device_alloc+0x144/0x184)
+> > > > (of_platform_device_create_pdata+0x44/0x9c)
+> > > > (of_platform_bus_create+0xd0/0x170)
+> > > > (of_platform_bus_create+0x12c/0x170)
+> > > > (of_platform_populate+0x60/0x98)
+> > > > ...
+> > > > 
+> > > > This is because we're wrongly trying to populate resources that are not
+> > > > yet available. It's perfectly valid to create irqchips dynamically,
+> > > > so let's fix up the issue by populating the interrupt resources based
+> > > > on a notifier call instead.
+> > > > 
+> > > > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > > > 
+> > > > ---
+> > > > 
+> > > > Rob & Grant, care to merge this for the -rc if this looks OK to you?
+> > > > 
+> > > > These happen for example when using interrupts-extended for omap
+> > > > wake-up interrupts where the irq domain is created by pinctrl-single.c
+> > > > at module_init time.
+> > > > 
+> > > > --- a/drivers/of/platform.c
+> > > > +++ b/drivers/of/platform.c
+> > > > @@ -130,6 +130,56 @@ void of_device_make_bus_id(struct device *dev)
+> > > >  	dev_set_name(dev, "%s.%d", node->name, magic - 1);
+> > > >  }
+> > > >  
+> > > > +/*
+> > > > + * The device interrupts are not necessarily available for all
+> > > > + * irqdomains initially so we need to populate them using a
+> > > > + * notifier.
+> > > > + */
+> > > > +static int of_device_resource_notify(struct notifier_block *nb,
+> > > > +				     unsigned long event, void *dev)
+> > > > +{
+> > > > +	struct platform_device *pdev = to_platform_device(dev);
+> > > > +	struct device_node *np = pdev->dev.of_node;
+> > > > +	struct resource *res = pdev->resource;
+> > > > +	struct resource *irqr = NULL;
+> > > > +	int num_irq, i, found = 0;
+> > > > +
+> > > > +	if (event != BUS_NOTIFY_BIND_DRIVER)
+> > > > +		return 0;
+> > > > +
+> > > > +	if (!np)
+> > > > +		goto out;
+> > > > +
+> > > > +	num_irq = of_irq_count(np);
+> > > > +	if (!num_irq)
+> > > > +		goto out;
+> > > > +
+> > > > +	for (i = 0; i < pdev->num_resources; i++, res++) {
+> > > > +		if (res->flags != IORESOURCE_IRQ ||
+> > > > +		    res->start != -EPROBE_DEFER ||
+> > > > +		    res->end != -EPROBE_DEFER)
+> > > > +			continue;
+> > > > +
+> > > > +		if (!irqr)
+> > > > +			irqr = res;
+> > > > +		found++;
+> > > > +	}
+> > > > +
+> > > > +	if (!found)
+> > > > +		goto out;
+> > > > +
+> > > > +	if (found != num_irq) {
+> > > > +		dev_WARN(dev, "error populating irq resources: %i != %i\n",
+> > > > +			 found, num_irq);
+> > > > +		goto out;
+> > > > +	}
+> > > > +
+> > > > +	WARN_ON(of_irq_to_resource_table(np, irqr, num_irq) != num_irq);
+> > > > +
+> > > > +out:
+> > > > +	return NOTIFY_DONE;
+> > > > +}
+> > > > +
+> > > >  /**
+> > > >   * of_device_alloc - Allocate and initialize an of_device
+> > > >   * @np: device node to assign to device
+> > > > @@ -168,7 +218,13 @@ struct platform_device *of_device_alloc(struct device_node *np,
+> > > >  			rc = of_address_to_resource(np, i, res);
+> > > >  			WARN_ON(rc);
+> > > >  		}
+> > > > -		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+> > > > +
+> > > > +		/* See of_device_resource_notify for populating interrupts */
+> > > > +		for (i = 0; i < num_irq; i++, res++) {
+> > > > +			res->flags = IORESOURCE_IRQ;
+> > > > +			res->start = -EPROBE_DEFER;
+> > > > +			res->end = -EPROBE_DEFER;
+> > > > +		}
+> > > 
+> > > I actually like the idea of completely allocating the resource structure
+> > > but leaving some entries empty. However, I agree with rmk that putting
+> > > garbage into a resource structure is a bad idea. What about changing the
+> > > value of flags to 0 or some other value to be obviously an empty
+> > > property and give the follow up parsing some context about which ones it
+> > > needs to attempt to recalculate?
+> > 
+> > When I worked on this a while back I came to the same conclusion. It's
+> > nice to allocate all the resources at once, because the number of them
+> > doesn't change, only their actually values.
+> 
+> I should maybe add: one issue that was raised during review of my
+> initial patch series was that we'll also need to cope with situations
+> like the following:
+> 
+> 	1) device's interrupt parent is probed (assigned IRQ base X)
+> 	2) device is probed (interrupt parent there, therefore gets
+> 	   assigned IRQ (X + z)
+> 	3) device in removed
+> 	4) device's interrupt parent is removed
+> 	5) device is probed (deferred because interrupt parent isn't
+> 	   there)
+> 	6) device's interrupt parent is probed (assigned IRQ base Y)
+> 	7) device is probed, gets assigned IRQ (Y + z)
+> 
+> So not only do we have to track which resources are interrupt resources,
+> but we also need to have them reassigned everytime the device is probed,
+> therefore interrupt mappings need to be properly disposed and the values
+> invalidated when probing is deferred or the device removed.
+
+Yes, that is a problem, but the only way to handle that is to always
+recalcuate all resource references at probe time. I don't feel good
+about handling that in the core. I'd rather move drivers away from
+referencing the resources table directly and instead use an API. Then
+the resources table could be missing entirely.
+
+g.
