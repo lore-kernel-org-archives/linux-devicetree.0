@@ -1,75 +1,57 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 07/12] memory: davinci-aemif: introduce AEMIF driver
-Date: Tue, 26 Nov 2013 16:37:07 -0800
-Message-ID: <20131127003707.GQ9468@ld-irv-0074.broadcom.com>
-References: <1384187188-5776-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1384187188-5776-8-git-send-email-ivan.khoronzhuk@ti.com>
- <4F5844B3A985794BA902E12C070812375F8D2E@DNCE04.ent.ti.com>
- <52944BD3.90105@ti.com>
- <5294B8C4.6040803@ti.com>
- <5294D8AD.5030106@ti.com>
- <5294E7E4.3060600@ti.com>
+From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/9] arm: zynq: Add support for cpufreq
+Date: Tue, 26 Nov 2013 17:04:47 -0800
+Message-ID: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5294E7E4.3060600-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "Khoronzhuk, Ivan" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 26, 2013 at 01:26:44PM -0500, Santosh Shilimkar wrote:
-> On Tuesday 26 November 2013 12:21 PM, Sekhar Nori wrote:
-> > On 11/26/2013 8:35 PM, Santosh Shilimkar wrote:
-> >> On Tuesday 26 November 2013 02:20 AM, Sekhar Nori wrote:
-> >>> On Monday 11 November 2013 10:36 PM, Khoronzhuk, Ivan wrote:
-> >>>> +static int davinci_aemif_probe(struct platform_device *pdev)
-> >>>> +{
-> >>>> +       int ret  = -ENODEV, i;
-> >>>> +       struct resource *res;
-> >>>> +       struct device *dev = &pdev->dev;
-> >>>> +       struct device_node *np = dev->of_node;
-> >>>> +
-> >>>> +       if (np == NULL)
-> >>>> +               return 0;
-> >>>> +
-> >>>> +       if (aemif) {
-> >>>> +               dev_err(dev, "davinci_aemif driver is in use currently\n");
-> >>>> +               return -EBUSY;
-> >>>> +       }
-> >>>
-> >>> Why expressly prevent multiple AEMIF devices? Its entirely conceivable
-> >>> to have two memories like NAND and NOR flash connect to two different
-> >>> AEMIF interfaces.
-> >>>
-> >> Ivan wanted me to clarify the Keystone hardware which supports
-> >> 1 instance of controller with 4 CS. That allows already four
-> >> devices to be connected. Currently NAND and NOR are connected on it
-> >> and two more slots are free.
-> >>
-> >> Since driver support what hardware is, lets not build a driver for
-> >> hardware which don't exist. And if at all such a support would be
-> >> needed in future, we can always add it.
-> > 
-> > I understand the lack of hardware part, but its common to write the
-> > driver such that it can handle multiple instances. Is there any gain on
-> > current hardware because of this check? From what I am hearing, the code
-> > in question wont be exercised at all. So why go all the way and add it
-> > in first place?
-> > 
-> Fair enough. The check can be dropped.
+I revised this series and rebased on top of Linus' tree. Patch specific
+changes are tracked in the respective email with their patch. On the
+level of the whole series, this changed:
 
-Hmm, while the sentiment expressed by Sekhar is noble (to avoid
-unnecessarily constraining the driver), removing the check is not
-enough. You're still using a global static variable 'aemif', and it is
-important not to accidentally re-use this struct if a second device ever
-becomes available. So for the current implementation, the check is
-necessary IMO. If instead, you were to make 'aemif' a per-device struct
-(like with platform_set_drvdata()), then you would not have this issue.
+v2:
+ - added 'clocksource/cadence_ttc: Use enable/disable_irq'. I hope that
+   is more appropriate to avoid races of the timer with its interrupt
+   handler.
+ - added 'arm: zynq: Don't use arm_global_timer with cpufreq'. In the
+   3.13 merge window we enabled the arm_global_timer for Zynq. That
+   timer is clocked by the CPU clock and hence does not provide a stabl=
+e
+   clocksource when cpufreq is enabled. That patch makes the selection =
+of
+   the GT driver depend on !CPU_FREQ for Zynq.
 
-Brian
+	S=C3=B6ren
+
+Soren Brinkmann (9):
+  arm: dt: zynq: Remove 'clock-ranges' from TTC nodes
+  arm: dt: zynq: Add 'cpus' node
+  clocksource/cadence_ttc: Store timer frequency in driver data
+  clocksource/cadence_ttc: Use enable/disable_irq
+  clocksource/cadence_ttc: Adjust interval in clock notifier
+  clocksource/cadence_ttc: Overhaul clocksource frequency adjustment
+  clocksource/cadence_ttc: Use only one counter
+  arm: zynq: Don't use arm_global_timer with cpufreq
+  arm: zynq: Add support for cpufreq
+
+ arch/arm/boot/dts/zynq-7000.dtsi        |  27 +++-
+ arch/arm/mach-zynq/Kconfig              |   4 +-
+ arch/arm/mach-zynq/common.c             |   3 +
+ drivers/clocksource/cadence_ttc_timer.c | 235 +++++++++++++++++++-----=
+--------
+ 4 files changed, 174 insertions(+), 95 deletions(-)
+
+--=20
+1.8.4.4
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
