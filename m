@@ -1,52 +1,65 @@
-From: Lee Jones <lee.jones@linaro.org>
+From: Mark Brown <broonie@kernel.org>
 Subject: Re: [PATCH v5 1/2] regulator: max14577: Add regulator driver for
  Maxim 14577
-Date: Wed, 27 Nov 2013 16:13:23 +0000
-Message-ID: <20131127161323.GS3296@lee--X1>
+Date: Wed, 27 Nov 2013 16:28:59 +0000
+Message-ID: <20131127162859.GD14725@sirena.org.uk>
 References: <1385559982-32039-1-git-send-email-k.kozlowski@samsung.com>
  <20131127152042.GY14725@sirena.org.uk>
  <20131127152358.GP3296@lee--X1>
  <20131127154221.GZ14725@sirena.org.uk>
+ <20131127161323.GS3296@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MGdfKiBebYi9ts3p"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131127154221.GZ14725@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
+In-Reply-To: <20131127161323.GS3296@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
 Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Nov 2013, Mark Brown wrote:
 
-> On Wed, Nov 27, 2013 at 03:23:58PM +0000, Lee Jones wrote:
-> > On Wed, 27 Nov 2013, Mark Brown wrote:
-> > > > +	{
-> > > > +		.name =3D "max14577-regulator",
-> > > > +		.of_compatible =3D "maxim,max14577-regulator",
-> > > > +	},
->=20
-> > > Why is there a compatible for this at all, would this ever appear=
- as
-> > > part of a different device?
->=20
-> > For automatic assigning of it's of_node.
->=20
-> > In previous incarnations of this set it was done manually for some =
-reason.
->=20
-> The usual thing to do is of_get_child_by_name() on the parent to get =
-the
-> container to search in.
+--MGdfKiBebYi9ts3p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-What do you mean when you say 'usual thing'? Only the max8998 does
-this currently. IMHO the better way to do it for MFD devices is
-provide a compatible string and let the framework does the rest for
-you.
+On Wed, Nov 27, 2013 at 04:13:23PM +0000, Lee Jones wrote:
+> On Wed, 27 Nov 2013, Mark Brown wrote:
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> > The usual thing to do is of_get_child_by_name() on the parent to get the
+> > container to search in.
+
+> What do you mean when you say 'usual thing'? Only the max8998 does
+> this currently. IMHO the better way to do it for MFD devices is
+> provide a compatible string and let the framework does the rest for
+> you.
+
+No, as3722, Palmas and three of the TPS chips do the same thing.  If it
+were a purely Linux-internal thing I'd probably agree with you but as it
+is we'd just be adding compatible strings in everyone's DTs to save one
+line of code in the kernel.
+
+--MGdfKiBebYi9ts3p
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSlh3IAAoJELSic+t+oim9jCgP/Rbo7ANSJJWvI2oXkvZ1vibK
+t+WmTuBchJFKeRWCfQOQEUesSCAffhBNaqEAutiY2ibrK6Zbht5J3R7JpEMTi1jP
+l+F5a/brULQ/LLRZm8CVCVixujRbYqpG/7VvjXR4M16sdc+XiVEYdzvAU8fU3tmU
+gYv8qL0Ke1PCSLVYZf6GM7G+tSJTkhbRi96jQ0i6u+YBw3rTimlzWMkgOCZdtUQd
+DrI/I0lpIx2Hn0KcDp0n5A0jy9f2jJpsg9cQJi+mNlOtoWJE7oDFp57EtN5k5pJp
+QD0mQbnR9cTzYzraCoFm4hIb1dSDaQa2pUfuIhGKyopqMOz5eWmeHci1NsBMKJBe
+gp0yBse9tZH5LmYXCHAkFy9TNKL5rwcdArHosQ6VvUaUCa0WLNH82LQDD6c0cKtz
+bFO3Sv6Oe/cyD4FbsJz/qS7adVMZb/YqW5TRZ8JNKL+YKLgF6yQw7bMQ4/uup1k8
+YDhhKTvxGCojLL9ooe9e+LZrsuSdC6OXVREFqvI+FY8HHj4ZlD6oULicrLXgqeN5
+mq3x07cPjn63miZyo/GmpORofZ3T4zbgxhwOA6ZK77SQZyBrVACwUWJjtmlag9s7
+4bi59yTWMm+sUpGQdL/6XT3uwHQB3/DyF74Yu3GFqfkhwOY/7+tOCmxeJv5nafQz
+Qx/bcnL3Q9zU9k9pbunp
+=EIXQ
+-----END PGP SIGNATURE-----
+
+--MGdfKiBebYi9ts3p--
