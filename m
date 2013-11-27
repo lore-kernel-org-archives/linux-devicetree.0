@@ -1,193 +1,364 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH] watchdog: davinci: rename platform driver to davinci-wdt
-Date: Wed, 27 Nov 2013 15:31:53 +0200
-Message-ID: <1385559113-4354-1-git-send-email-ivan.khoronzhuk@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v5 1/2] regulator: max14577: Add regulator driver for Maxim
+ 14577
+Date: Wed, 27 Nov 2013 14:46:21 +0100
+Message-ID: <1385559982-32039-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-As we switch to use the watchdog core which permits more than one
-active watchdog in the system, rename platform driver to
-"davinci-wdt" to be identifiable.
+MAX14577 chip is a multi-function device which includes MUIC,
+charger and voltage regulator. The driver is located in drivers/mfd.
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+This patch adds regulator driver for MAX14577 chip. There are two
+regulators in this chip:
+1. Safeout LDO with constant voltage output of 4.9V. It can be only
+   enabled or disabled.
+2. Current regulator for the charger. It provides current from 90mA up
+   to 950mA.
+Driver supports Device Tree.
+
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 ---
-based on:
-https://lkml.org/lkml/2013/11/27/164
+ drivers/mfd/max14577.c       |   13 +-
+ drivers/regulator/Kconfig    |    7 ++
+ drivers/regulator/Makefile   |    1 +
+ drivers/regulator/max14577.c |  269 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 287 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/regulator/max14577.c
 
-CC:
-Sekhar Nori <nsekhar@ti.com>
-Guenter Roeck <linux@roeck-us.net>
-
- arch/arm/mach-davinci/da830.c         |    2 +-
- arch/arm/mach-davinci/da850.c         |    2 +-
- arch/arm/mach-davinci/da8xx-dt.c      |    2 +-
- arch/arm/mach-davinci/devices-da8xx.c |    4 ++--
- arch/arm/mach-davinci/devices.c       |    2 +-
- arch/arm/mach-davinci/dm355.c         |    2 +-
- arch/arm/mach-davinci/dm365.c         |    2 +-
- arch/arm/mach-davinci/dm644x.c        |    2 +-
- arch/arm/mach-davinci/dm646x.c        |    2 +-
- drivers/watchdog/davinci_wdt.c        |    4 ++--
- 10 files changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
-index 0813b51..82c6013 100644
---- a/arch/arm/mach-davinci/da830.c
-+++ b/arch/arm/mach-davinci/da830.c
-@@ -385,7 +385,7 @@ static struct clk_lookup da830_clks[] = {
- 	CLK(NULL,		"pll0_sysclk7",	&pll0_sysclk7),
- 	CLK("i2c_davinci.1",	NULL,		&i2c0_clk),
- 	CLK(NULL,		"timer0",	&timerp64_0_clk),
--	CLK("watchdog",		NULL,		&timerp64_1_clk),
-+	CLK("davinci-wdt",	NULL,		&timerp64_1_clk),
- 	CLK(NULL,		"arm_rom",	&arm_rom_clk),
- 	CLK(NULL,		"scr0_ss",	&scr0_ss_clk),
- 	CLK(NULL,		"scr1_ss",	&scr1_ss_clk),
-diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-index 352984e..ccb2f58 100644
---- a/arch/arm/mach-davinci/da850.c
-+++ b/arch/arm/mach-davinci/da850.c
-@@ -443,7 +443,7 @@ static struct clk_lookup da850_clks[] = {
- 	CLK(NULL,		"pll1_sysclk3",	&pll1_sysclk3),
- 	CLK("i2c_davinci.1",	NULL,		&i2c0_clk),
- 	CLK(NULL,		"timer0",	&timerp64_0_clk),
--	CLK("watchdog",		NULL,		&timerp64_1_clk),
-+	CLK("davinci-wdt",	NULL,		&timerp64_1_clk),
- 	CLK(NULL,		"arm_rom",	&arm_rom_clk),
- 	CLK(NULL,		"tpcc0",	&tpcc0_clk),
- 	CLK(NULL,		"tptc0",	&tptc0_clk),
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-index d2bc574..ed19287 100644
---- a/arch/arm/mach-davinci/da8xx-dt.c
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -32,7 +32,7 @@ static void __init da8xx_init_irq(void)
+diff --git a/drivers/mfd/max14577.c b/drivers/mfd/max14577.c
+index 94b766d..9af46c2 100644
+--- a/drivers/mfd/max14577.c
++++ b/drivers/mfd/max14577.c
+@@ -25,9 +25,16 @@
+ #include <linux/mfd/max14577-private.h>
  
- static struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
- 	OF_DEV_AUXDATA("ti,davinci-i2c", 0x01c22000, "i2c_davinci.1", NULL),
--	OF_DEV_AUXDATA("ti,davinci-wdt", 0x01c21000, "watchdog", NULL),
-+	OF_DEV_AUXDATA("ti,davinci-wdt", 0x01c21000, "davinci-wdt", NULL),
- 	OF_DEV_AUXDATA("ti,da830-mmc", 0x01c40000, "da830-mmc.0", NULL),
- 	OF_DEV_AUXDATA("ti,da850-ehrpwm", 0x01f00000, "ehrpwm", NULL),
- 	OF_DEV_AUXDATA("ti,da850-ehrpwm", 0x01f02000, "ehrpwm", NULL),
-diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-index c46eccb..f9ba74b 100644
---- a/arch/arm/mach-davinci/devices-da8xx.c
-+++ b/arch/arm/mach-davinci/devices-da8xx.c
-@@ -389,7 +389,7 @@ static struct resource da8xx_watchdog_resources[] = {
+ static struct mfd_cell max14577_devs[] = {
+-	{ .name = "max14577-muic", },
+-	{ .name = "max14577-regulator", },
+-	{ .name = "max14577-charger", },
++	{
++		.name = "max14577-muic",
++	},
++	{
++		.name = "max14577-regulator",
++		.of_compatible = "maxim,max14577-regulator",
++	},
++	{
++		.name = "max14577-charger",
++	},
  };
  
- static struct platform_device da8xx_wdt_device = {
--	.name		= "watchdog",
-+	.name		= "davinci-wdt",
- 	.id		= -1,
- 	.num_resources	= ARRAY_SIZE(da8xx_watchdog_resources),
- 	.resource	= da8xx_watchdog_resources,
-@@ -399,7 +399,7 @@ void da8xx_restart(enum reboot_mode mode, const char *cmd)
- {
- 	struct device *dev;
+ static bool max14577_volatile_reg(struct device *dev, unsigned int reg)
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index ce785f4..11ee053 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -249,6 +249,13 @@ config REGULATOR_LP8788
+ 	help
+ 	  This driver supports LP8788 voltage regulator chip.
  
--	dev = bus_find_device_by_name(&platform_bus_type, NULL, "watchdog");
-+	dev = bus_find_device_by_name(&platform_bus_type, NULL, "davinci-wdt");
- 	if (!dev) {
- 		pr_err("%s: failed to find watchdog device\n", __func__);
- 		return;
-diff --git a/arch/arm/mach-davinci/devices.c b/arch/arm/mach-davinci/devices.c
-index 3996e98..5cf9a02 100644
---- a/arch/arm/mach-davinci/devices.c
-+++ b/arch/arm/mach-davinci/devices.c
-@@ -302,7 +302,7 @@ static struct resource wdt_resources[] = {
- };
- 
- struct platform_device davinci_wdt_device = {
--	.name		= "watchdog",
-+	.name		= "davinci-wdt",
- 	.id		= -1,
- 	.num_resources	= ARRAY_SIZE(wdt_resources),
- 	.resource	= wdt_resources,
-diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
-index ef9ff1f..4bb8132 100644
---- a/arch/arm/mach-davinci/dm355.c
-+++ b/arch/arm/mach-davinci/dm355.c
-@@ -375,7 +375,7 @@ static struct clk_lookup dm355_clks[] = {
- 	CLK(NULL, "pwm3", &pwm3_clk),
- 	CLK(NULL, "timer0", &timer0_clk),
- 	CLK(NULL, "timer1", &timer1_clk),
--	CLK("watchdog", NULL, &timer2_clk),
-+	CLK("davinci-wdt", NULL, &timer2_clk),
- 	CLK(NULL, "timer3", &timer3_clk),
- 	CLK(NULL, "rto", &rto_clk),
- 	CLK(NULL, "usb", &usb_clk),
-diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
-index 1511a06..b0e8df3 100644
---- a/arch/arm/mach-davinci/dm365.c
-+++ b/arch/arm/mach-davinci/dm365.c
-@@ -473,7 +473,7 @@ static struct clk_lookup dm365_clks[] = {
- 	CLK(NULL, "pwm3", &pwm3_clk),
- 	CLK(NULL, "timer0", &timer0_clk),
- 	CLK(NULL, "timer1", &timer1_clk),
--	CLK("watchdog", NULL, &timer2_clk),
-+	CLK("davinci-wdt", NULL, &timer2_clk),
- 	CLK(NULL, "timer3", &timer3_clk),
- 	CLK(NULL, "usb", &usb_clk),
- 	CLK("davinci_emac.1", NULL, &emac_clk),
-diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
-index 143a321..aeaad95 100644
---- a/arch/arm/mach-davinci/dm644x.c
-+++ b/arch/arm/mach-davinci/dm644x.c
-@@ -322,7 +322,7 @@ static struct clk_lookup dm644x_clks[] = {
- 	CLK(NULL, "pwm2", &pwm2_clk),
- 	CLK(NULL, "timer0", &timer0_clk),
- 	CLK(NULL, "timer1", &timer1_clk),
--	CLK("watchdog", NULL, &timer2_clk),
-+	CLK("davinci-wdt", NULL, &timer2_clk),
- 	CLK(NULL, NULL, NULL),
- };
- 
-diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
-index 2a73f29..a56779b 100644
---- a/arch/arm/mach-davinci/dm646x.c
-+++ b/arch/arm/mach-davinci/dm646x.c
-@@ -356,7 +356,7 @@ static struct clk_lookup dm646x_clks[] = {
- 	CLK(NULL, "pwm1", &pwm1_clk),
- 	CLK(NULL, "timer0", &timer0_clk),
- 	CLK(NULL, "timer1", &timer1_clk),
--	CLK("watchdog", NULL, &timer2_clk),
-+	CLK("davinci-wdt", NULL, &timer2_clk),
- 	CLK("palm_bk3710", NULL, &ide_clk),
- 	CLK(NULL, "vpif0", &vpif0_clk),
- 	CLK(NULL, "vpif1", &vpif1_clk),
-diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
-index 884f696..9128c74 100644
---- a/drivers/watchdog/davinci_wdt.c
-+++ b/drivers/watchdog/davinci_wdt.c
-@@ -218,7 +218,7 @@ MODULE_DEVICE_TABLE(of, davinci_wdt_of_match);
- 
- static struct platform_driver platform_wdt_driver = {
- 	.driver = {
--		.name = "watchdog",
-+		.name = "davinci-wdt",
- 		.owner	= THIS_MODULE,
- 		.of_match_table = davinci_wdt_of_match,
- 	},
-@@ -238,4 +238,4 @@ MODULE_PARM_DESC(heartbeat,
- 		 __MODULE_STRING(DEFAULT_HEARTBEAT));
- 
- MODULE_LICENSE("GPL");
--MODULE_ALIAS("platform:watchdog");
-+MODULE_ALIAS("platform:davinci-wdt");
++config REGULATOR_MAX14577
++	tristate "Maxim 14577 regulator"
++	depends on MFD_MAX14577
++	help
++	  This driver controls a Maxim 14577 regulator via I2C bus.
++	  The regulators include safeout LDO and current regulator 'CHARGER'.
++
+ config REGULATOR_MAX1586
+ 	tristate "Maxim 1586/1587 voltage regulator"
+ 	depends on I2C
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 01c597e..654bd43 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -35,6 +35,7 @@ obj-$(CONFIG_REGULATOR_LP872X) += lp872x.o
+ obj-$(CONFIG_REGULATOR_LP8788) += lp8788-buck.o
+ obj-$(CONFIG_REGULATOR_LP8788) += lp8788-ldo.o
+ obj-$(CONFIG_REGULATOR_LP8755) += lp8755.o
++obj-$(CONFIG_REGULATOR_MAX14577) += max14577.o
+ obj-$(CONFIG_REGULATOR_MAX1586) += max1586.o
+ obj-$(CONFIG_REGULATOR_MAX8649)	+= max8649.o
+ obj-$(CONFIG_REGULATOR_MAX8660) += max8660.o
+diff --git a/drivers/regulator/max14577.c b/drivers/regulator/max14577.c
+new file mode 100644
+index 0000000..400bdfc
+--- /dev/null
++++ b/drivers/regulator/max14577.c
+@@ -0,0 +1,269 @@
++/*
++ * max14577.c - Regulator driver for the Maxim 14577
++ *
++ * Copyright (C) 2013 Samsung Electronics
++ * Krzysztof Kozlowski <k.kozlowski@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/mfd/max14577.h>
++#include <linux/mfd/max14577-private.h>
++#include <linux/regulator/of_regulator.h>
++
++struct max14577_regulator {
++	struct device *dev;
++	struct max14577 *max14577;
++	struct regulator_dev **regulators;
++};
++
++static int max14577_reg_is_enabled(struct regulator_dev *rdev)
++{
++	int rid = rdev_get_id(rdev);
++	struct regmap *rmap = rdev->regmap;
++	u8 reg_data;
++
++	switch (rid) {
++	case MAX14577_CHARGER:
++		max14577_read_reg(rmap, MAX14577_CHG_REG_CHG_CTRL2, &reg_data);
++		if ((reg_data & CHGCTRL2_MBCHOSTEN_MASK) == 0)
++			return 0;
++		max14577_read_reg(rmap, MAX14577_CHG_REG_STATUS3, &reg_data);
++		if ((reg_data & STATUS3_CGMBC_MASK) == 0)
++			return 0;
++		/* MBCHOSTEN and CGMBC are on */
++		return 1;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int max14577_reg_get_current_limit(struct regulator_dev *rdev)
++{
++	u8 reg_data;
++	struct regmap *rmap = rdev->regmap;
++
++	if (rdev_get_id(rdev) != MAX14577_CHARGER)
++		return -EINVAL;
++
++	max14577_read_reg(rmap, MAX14577_CHG_REG_CHG_CTRL4, &reg_data);
++
++	if ((reg_data & CHGCTRL4_MBCICHWRCL_MASK) == 0)
++		return MAX14577_REGULATOR_CURRENT_LIMIT_MIN;
++
++	reg_data = ((reg_data & CHGCTRL4_MBCICHWRCH_MASK) >>
++			CHGCTRL4_MBCICHWRCH_SHIFT);
++	return MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_START +
++		reg_data * MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_STEP;
++}
++
++static int max14577_reg_set_current_limit(struct regulator_dev *rdev,
++		int min_uA, int max_uA)
++{
++	int i, current_bits = 0xf;
++	u8 reg_data;
++
++	if (rdev_get_id(rdev) != MAX14577_CHARGER)
++		return -EINVAL;
++
++	if (min_uA > MAX14577_REGULATOR_CURRENT_LIMIT_MAX ||
++			max_uA < MAX14577_REGULATOR_CURRENT_LIMIT_MIN)
++		return -EINVAL;
++
++	if (max_uA < MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_START) {
++		/* Less than 200 mA, so set 90mA (turn only Low Bit off) */
++		u8 reg_data = 0x0 << CHGCTRL4_MBCICHWRCL_SHIFT;
++		return max14577_update_reg(rdev->regmap,
++				MAX14577_CHG_REG_CHG_CTRL4,
++				CHGCTRL4_MBCICHWRCL_MASK, reg_data);
++	}
++
++	/* max_uA is in range: <LIMIT_HIGH_START, inifinite>, so search for
++	 * valid current starting from LIMIT_MAX. */
++	for (i = MAX14577_REGULATOR_CURRENT_LIMIT_MAX;
++			i >= MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_START;
++			i -= MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_STEP) {
++		if (i <= max_uA)
++			break;
++		current_bits--;
++	}
++	BUG_ON(current_bits < 0); /* Cannot happen */
++	/* Turn Low Bit on (use range 200mA-950 mA) */
++	reg_data = 0x1 << CHGCTRL4_MBCICHWRCL_SHIFT;
++	/* and set proper High Bits */
++	reg_data |= current_bits << CHGCTRL4_MBCICHWRCH_SHIFT;
++
++	return max14577_update_reg(rdev->regmap, MAX14577_CHG_REG_CHG_CTRL4,
++			CHGCTRL4_MBCICHWRCL_MASK | CHGCTRL4_MBCICHWRCH_MASK,
++			reg_data);
++}
++
++static struct regulator_ops max14577_safeout_ops = {
++	.is_enabled		= regulator_is_enabled_regmap,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.list_voltage		= regulator_list_voltage_linear,
++};
++
++static struct regulator_ops max14577_charger_ops = {
++	.is_enabled		= max14577_reg_is_enabled,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.get_current_limit	= max14577_reg_get_current_limit,
++	.set_current_limit	= max14577_reg_set_current_limit,
++};
++
++static const struct regulator_desc supported_regulators[] = {
++	[MAX14577_SAFEOUT] = {
++		.name		= "SAFEOUT",
++		.id		= MAX14577_SAFEOUT,
++		.ops		= &max14577_safeout_ops,
++		.type		= REGULATOR_VOLTAGE,
++		.owner		= THIS_MODULE,
++		.n_voltages	= 1,
++		.min_uV		= MAX14577_REGULATOR_SAFEOUT_VOLTAGE,
++		.enable_reg	= MAX14577_REG_CONTROL2,
++		.enable_mask	= CTRL2_SFOUTORD_MASK,
++	},
++	[MAX14577_CHARGER] = {
++		.name		= "CHARGER",
++		.id		= MAX14577_CHARGER,
++		.ops		= &max14577_charger_ops,
++		.type		= REGULATOR_CURRENT,
++		.owner		= THIS_MODULE,
++		.enable_reg	= MAX14577_CHG_REG_CHG_CTRL2,
++		.enable_mask	= CHGCTRL2_MBCHOSTEN_MASK,
++	},
++};
++
++#ifdef CONFIG_OF
++static struct of_regulator_match max14577_regulator_matches[] = {
++	{ .name	= "SAFEOUT", },
++	{ .name = "CHARGER", },
++};
++
++static int max14577_regulator_dt_parse_pdata(struct platform_device *pdev)
++{
++	int ret;
++	struct device_node *np = pdev->dev.of_node;
++
++	ret = of_regulator_match(&pdev->dev, np, max14577_regulator_matches,
++			MAX14577_REG_MAX);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Error parsing regulator init data: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static inline struct regulator_init_data *match_init_data(int index)
++{
++	return max14577_regulator_matches[index].init_data;
++}
++
++static inline struct device_node *match_of_node(int index)
++{
++	return max14577_regulator_matches[index].of_node;
++}
++#else /* CONFIG_OF */
++static int max14577_regulator_dt_parse_pdata(struct platform_device *pdev)
++{
++	return 0;
++}
++static inline struct regulator_init_data *match_init_data(int index)
++{
++	return NULL;
++}
++
++static inline struct device_node *match_of_node(int index)
++{
++	return NULL;
++}
++#endif /* CONFIG_OF */
++
++
++static int max14577_regulator_probe(struct platform_device *pdev)
++{
++	struct max14577 *max14577 = dev_get_drvdata(pdev->dev.parent);
++	struct device_node *np = pdev->dev.of_node;
++	struct max14577_platform_data *pdata = dev_get_platdata(max14577->dev);
++	int i;
++	struct regulator_config config = {};
++
++	if (np) {
++		int ret = max14577_regulator_dt_parse_pdata(pdev);
++		if (ret)
++			return ret;
++	}
++
++	config.dev = &pdev->dev;
++	config.regmap = max14577->regmap;
++
++	for (i = 0; i < ARRAY_SIZE(supported_regulators); i++) {
++		struct regulator_dev *regulator;
++		/*
++		 * Index of supported_regulators[] is also the id and must
++		 * match index of pdata->regulators[].
++		 */
++		if (pdata && pdata->regulators) {
++			config.init_data = pdata->regulators[i].initdata;
++			config.of_node = pdata->regulators[i].of_node;
++		} else {
++			config.init_data = match_init_data(i);
++			config.of_node = match_of_node(i);
++		}
++
++		regulator = devm_regulator_register(&pdev->dev,
++				&supported_regulators[i], &config);
++		if (IS_ERR(regulator)) {
++			int ret = PTR_ERR(regulator);
++			dev_err(&pdev->dev,
++					"Regulator init failed for ID %d with error: %d\n",
++					i, ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static struct platform_driver max14577_regulator_driver = {
++	.driver = {
++		   .owner = THIS_MODULE,
++		   .name = "max14577-regulator",
++		   },
++	.probe	= max14577_regulator_probe,
++};
++
++static int __init max14577_regulator_init(void)
++{
++	BUILD_BUG_ON(MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_START +
++			MAX14577_REGULATOR_CURRENT_LIMIT_HIGH_STEP * 0xf !=
++			MAX14577_REGULATOR_CURRENT_LIMIT_MAX);
++	BUILD_BUG_ON(ARRAY_SIZE(supported_regulators) != MAX14577_REG_MAX);
++
++	return platform_driver_register(&max14577_regulator_driver);
++}
++subsys_initcall(max14577_regulator_init);
++
++static void __exit max14577_regulator_exit(void)
++{
++	platform_driver_unregister(&max14577_regulator_driver);
++}
++module_exit(max14577_regulator_exit);
++
++MODULE_AUTHOR("Krzysztof Kozlowski <k.kozlowski@samsung.com>");
++MODULE_DESCRIPTION("MAXIM 14577 regulator driver");
++MODULE_LICENSE("GPL");
 -- 
 1.7.9.5
+
