@@ -1,181 +1,76 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH] ARM: davinci: aemif: get rid of davinci-nand driver
- dependency on aemif
-Date: Wed, 27 Nov 2013 13:01:22 +0200
-Message-ID: <5295D102.2010101@ti.com>
-References: <5291CB01.1010506@ti.com>
- <1385409654-19006-1-git-send-email-ivan.khoronzhuk@ti.com>
- <5295AECB.7040503@ti.com>
+From: kgene@kernel.org
+Subject: RE: [PATCH v2 4/5] ARM: dts: exynos4x12: Device tree node definition
+ for TMU on Exynos4x12
+Date: Wed, 27 Nov 2013 20:34:59 +0900
+Message-ID: <004c01ceeb64$b5c708a0$215519e0$@kernel.org>
+References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
+ <1381300194-13134-1-git-send-email-l.majewski@samsung.com>
+ <1381300194-13134-5-git-send-email-l.majewski@samsung.com>
+ <20131015082750.4b2f3325@amdc308.digital.local>
+ <20131127081144.5402a81e@amdc308.digital.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5295AECB.7040503@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, rob@landley.net, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20131127081144.5402a81e@amdc308.digital.local>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Lukasz Majewski' <l.majewski@samsung.com>
+Cc: 'Lukasz Majewski' <l.majewski@majess.pl>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/27/2013 10:35 AM, Sekhar Nori wrote:
-> + MTD maintainers
->
-> On Tuesday 26 November 2013 01:30 AM, Ivan Khoronzhuk wrote:
->> The problem that the set timings code contains the call of Davinci
->> platform function davinci_aemif_setup_timing() which is not
->> accessible if kernel is built for another platform like Keystone.
->>
->> The Keysone platform is going to use TI AEMIF driver.
->> If TI AEMIF is used we don't need to set timings and bus width.
->> It is done by AEMIF driver.
->>
->> To get rid of davinci-nand driver dependency on aemif platform code
->> we moved aemif code to davinci platform.
->>
->> The platform AEMIF code (aemif.c) has to be removed once Davinci
->> will be converted to DT and use ti-aemif.c driver.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->> ---
->>   arch/arm/mach-davinci/aemif.c                   |   73 ++++++++++++++++++++++-
->>   arch/arm/mach-davinci/board-da830-evm.c         |    3 +
->>   arch/arm/mach-davinci/board-da850-evm.c         |    3 +
->>   arch/arm/mach-davinci/board-dm355-evm.c         |    5 ++
->>   arch/arm/mach-davinci/board-dm355-leopard.c     |    5 ++
->>   arch/arm/mach-davinci/board-dm365-evm.c         |    4 ++
->>   arch/arm/mach-davinci/board-dm644x-evm.c        |    5 ++
->>   arch/arm/mach-davinci/board-dm646x-evm.c        |    3 +
->>   arch/arm/mach-davinci/board-mityomapl138.c      |    3 +
->>   arch/arm/mach-davinci/board-neuros-osd2.c       |    9 ++-
->>   arch/arm/mach-davinci/devices-tnetv107x.c       |    3 +
->>   drivers/mtd/nand/davinci_nand.c                 |   23 -------
->>   include/linux/platform_data/mtd-davinci-aemif.h |    5 +-
->>   13 files changed, 116 insertions(+), 28 deletions(-)
->
-> [...]
->
->> +
->> +/**
->> + * davinci_aemif_setup - setup AEMIF interface by davinci_nand_pdata
->> + * @pdev - link to platform device to setup settings for
->> + *
->> + * This function does not use any locking while programming the AEMIF
->> + * because it is expected that there is only one user of a given
->> + * chip-select.
->> + *
->> + * Returns 0 on success, else negative errno.
->> + */
->> +int davinci_aemif_setup(struct platform_device *pdev)
->> +{
->> +	struct davinci_nand_pdata *pdata = dev_get_platdata(&pdev->dev);
->> +	uint32_t val;
->> +	struct resource	*res;
->> +	void __iomem *base;
->> +	int ret = 0;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->> +	if (!res) {
->> +		dev_err(&pdev->dev, "cannot get IORESOURCE_MEM\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	base = ioremap(res->start, resource_size(res));
->> +	if (!base) {
->> +		dev_err(&pdev->dev, "ioremap failed for resource %pR\n", res);
->> +		ret = -ENOMEM;
->> +		goto err;
->> +	}
->> +
->> +	/*
->> +	 * Setup Async configuration register in case we did not boot
->> +	 * from NAND and so bootloader did not bother to set it up.
->> +	 */
->> +	val = davinci_aemif_readl(base, A1CR_OFFSET + pdev->id * 4);
->
-> The AEMIF clock has to be enabled before this. The NAND driver might
-> load much later.
->
+Lukasz Majewski wrote:
+> 
+> Hi Kukjin,
+> 
+Hi,
 
-Ok
+> > Hi Kukjin,
+> >
+> > > The TMU device tree node definition for Exynos4x12 family of SoCs.
+> > >
+> > > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> > > Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > > Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> > >
+> > > ---
+> > > Changes for v2:
+> > > - None
+> > >
+> > >  arch/arm/boot/dts/exynos4x12.dtsi |   10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/exynos4x12.dtsi
+> > > b/arch/arm/boot/dts/exynos4x12.dtsi index ad531fe..64c0ece 100644
+> > > --- a/arch/arm/boot/dts/exynos4x12.dtsi
+> > > +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+> > > @@ -176,4 +176,14 @@
+> > >  			};
+> > >  		};
+> > >  	};
+> > > +
+> > > +	tmu@100C0000 {
+> > > +		compatible = "samsung,exynos4412-tmu";
+> > > +		interrupt-parent = <&combiner>;
+> > > +		interrupts = <2 4>;
+> > > +		reg = <0x100C0000 0x100>;
+> > > +		clocks = <&clock 383>;
+> > > +		clock-names = "tmu_apbif";
+> > > +		status = "disabled";
+> > > +	};
+> > >  };
+> >
+> > Can you pull this DT node definition for TMU (as a fix to v3.12)?
+> >
+> > It is crucial for Exynos4412.
+> >
+> 
+> Kukjin, could you pull this patch?
+> 
+Yes, but I'm not sure this is _really_ critical bug fix so maybe this will
+be queued for 3.14.
 
->> +	/*
->> +	 * Extended Wait is not valid and Select Strobe mode is not
->> +	 * used
->> +	 */
->> +	val &= ~(ACR_ASIZE_MASK | ACR_EW_MASK | ACR_SS_MASK);
->> +	if (pdata->options & NAND_BUSWIDTH_16)
->> +		val |= 0x1;
->> +
->> +	davinci_aemif_writel(base, A1CR_OFFSET + pdev->id * 4, val);
->> +
->> +	if (pdata->timing)
->> +		ret = davinci_aemif_setup_timing(pdata->timing, base, pdev->id);
->> +
->> +	if (ret < 0)
->> +		dev_dbg(&pdev->dev, "NAND timing values setup fail\n");
->> +
->> +err:
->> +	iounmap(base);
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL(davinci_aemif_setup);
->
-> No need to export this symbol as nothing apart from platform code uses it.
->
+If any problem, please kindly let me know.
 
-Ok
-
->>   static const short mityomap_mii_pins[] = {
->> diff --git a/arch/arm/mach-davinci/board-neuros-osd2.c b/arch/arm/mach-davinci/board-neuros-osd2.c
->> index bb680af..a7d6668 100644
->> --- a/arch/arm/mach-davinci/board-neuros-osd2.c
->> +++ b/arch/arm/mach-davinci/board-neuros-osd2.c
->> @@ -31,6 +31,7 @@
->>   #include <linux/platform_data/mmc-davinci.h>
->>   #include <linux/platform_data/mtd-davinci.h>
->>   #include <linux/platform_data/usb-davinci.h>
->> +#include <linux/platform_data/mtd-davinci-aemif.h>
->>
->>   #include <asm/mach-types.h>
->>   #include <asm/mach/arch.h>
->> @@ -192,9 +193,15 @@ static __init void davinci_ntosd2_init(void)
->>   		davinci_cfg_reg(DM644X_ATAEN_DISABLE);
->>
->>   		/* only one device will be jumpered and detected */
->> -		if (HAS_NAND)
->> +		if (HAS_NAND) {
->>   			platform_device_register(
->>   					&davinci_ntosd2_nandflash_device);
->> +
->> +			if (davinci_aemif_setup(
->> +				&davinci_ntosd2_nandflash_device))
->> +				pr_warn("%s: Cannot configure AEMIF.\n",
->> +					__func__);
->
-> This is looking really ugly. Can you shorten
-> davinci_ntosd2_nandflash_device to just "ntosd2_nandflash" or similar?
-
-The rename is not related to the patch, so I won't do this.
-
->
-> I am yet to test this. Will test once the next version is posted.
->
-> Overall, I cannot say I am fan of this approach (mostly because we are
-> ending up having two drivers for the same hardware in kernel). But given
-> that the other option of adding platform device support to AEMIF driver
-> is not acceptable to you, I guess I will live with this.
->
-> Thanks,
-> Sekhar
->
-
--- 
-Regards,
-Ivan Khoronzhuk
+Thanks,
+Kukjin
