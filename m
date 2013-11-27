@@ -1,39 +1,53 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v2 00/10] Reuse davinci-nand driver for Keystone arch
-Date: Tue, 26 Nov 2013 17:33:09 -0800
-Message-ID: <20131127013309.GT9468@ld-irv-0074.broadcom.com>
-References: <1385033305-13179-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Fugang Duan <fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v3 3/3] Documentation: add the binding file for
+ Freescale vf610 ADC driver
+Date: Wed, 27 Nov 2013 01:38:12 +0000
+Message-ID: <9848F2DB572E5649BA045B288BE08FBE018988D9@039-SN2MPN1-023.039d.mgd.msft.net>
+References: <1385463394-11157-1-git-send-email-B38611@freescale.com>
+ <1385463394-11157-4-git-send-email-B38611@freescale.com>
+ <20131126133737.GA5402@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385033305-13179-1-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131126133737.GA5402-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Content-Language: en-US
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ivan,
+From: Shawn Guo [mailto:shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
+Data: Tuesday, November 26, 2013 9:38 PM
 
-On Thu, Nov 21, 2013 at 01:28:15PM +0200, Ivan Khoronzhuk wrote:
-> This series contains fixes and updates of Davinci nand driver in
-> order to reuse it for Keystone platform.
-> 
-> The series is combination of two following series:
-> - Davinci nand driver fixes and updates:
->   https://lkml.org/lkml/2013/11/20/271
-> - Reuse davinci-nand driver for Keystone arch
->   https://lkml.org/lkml/2013/11/20/315
+>To: Duan Fugang-B38611
+>Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Li
+>Frank-B20596; linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>Subject: Re: [PATCH v3 3/3] Documentation: add the binding file for Freescale
+>vf610 ADC driver
+>
+>On Tue, Nov 26, 2013 at 06:56:34PM +0800, Fugang Duan wrote:
+>> +Optional properties:
+>> +- fsl,adc-io-pinctl: Enable field for the I/O port control of MCU pins used
+>as analog inputs.
+>> +- fsl,adc-vref: ADC refrence voltage value, unit is uV.
+>> +- fsl,adc-clk-div: Current clock divider value, such as 1,2,4,8,16 and so on.
+>> +- fsl,adc-res: ADC conversion mode selection, such as 8 for 8-bit, 10 for
+>10-bit, 12 for 12-bit mode.
+>> +- fsl,adc-sam-time: ADC sample time duration, number of ADC clocks, such as
+>2, 4, 6, 8, 12, 16, 20, 24
+>> +- fsl,adc-aver-sam-sel: Determines how many ADC conversions will be averaged
+>to create the ADC average result.
+>> +			The Optional value is 4, 8, 16, 32.
+>> +- fsl,adc-hw-aver-en: Bool type to decide enable hardware average function.
+>> +- fsl,adc-low-power-mode: Bool type to decide enable ADC low power mode.
+>> +- fsl,adc-high-speed-conv: Bool type to decide enable ADC high speed mode.
+>> +- vref: The regulator to support ADC refrence voltage.
+>
+>Shouldn't it be vref-supply?
+>
+>Shawn
 
-Can you make sure to consistently change the email $subject for your
-patch series? For each of the above, it looks like they are actually
-version 2, yet they still just say "[PATCH X/Y]" (not "[PATCH v2 X/Y]").
-This makes it harder to parse the history of each series. (And the
-combining of two un-versioned patch series adds to the confusion.)
+It is vref-supply.
 
-Now, this combined series has a good v2 marking (although at this point,
-is it really v3? ...whatever, it doesn't matter). Please continue to
-write appropriate $subjects for this and future patch series.
-
-Thanks,
-Brian
+Thanks.
