@@ -1,48 +1,52 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: Re: [PATCH 1/2] ARM: dts: omap4-panda-common: Fix pin muxing for
- wl12xx
-Date: Wed, 27 Nov 2013 21:34:31 +0530
-Message-ID: <5296180F.7040104@ti.com>
-References: <1385041804-19115-1-git-send-email-balajitk@ti.com> <1385041804-19115-2-git-send-email-balajitk@ti.com> <20131121165823.GM10317@atomide.com> <528E4295.2040109@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/2] regulator: max14577: Add regulator driver for
+ Maxim 14577
+Date: Wed, 27 Nov 2013 16:13:23 +0000
+Message-ID: <20131127161323.GS3296@lee--X1>
+References: <1385559982-32039-1-git-send-email-k.kozlowski@samsung.com>
+ <20131127152042.GY14725@sirena.org.uk>
+ <20131127152358.GP3296@lee--X1>
+ <20131127154221.GZ14725@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <528E4295.2040109@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131127154221.GZ14725@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 21 November 2013 10:57 PM, Dan Murphy wrote:
-> On 11/21/2013 10:58 AM, Tony Lindgren wrote:
->> * Balaji T K <balajitk@ti.com> [131121 05:51]:
->>> pin mux wl12xx_gpio and wl12xx_pins should be part of omap4_pmx_core
->>> and not omap4_pmx_wkup. So, move wl12xx_* to omap4_pmx_core.
->>>
->>> Fix the following error message:
->>> pinctrl-single 4a31e040.pinmux: mux offset out of range: 0x38 (0x38)
->>> pinctrl-single 4a31e040.pinmux: could not add functions for pinmux_wl12xx_pins 56x
->
-> Why is the led pins moved then?
-Hi Dan,
+On Wed, 27 Nov 2013, Mark Brown wrote:
 
-I just moved 27 lines (wl12xx_pins, wl12xx_gpio) up, git diff generated smaller
-diff stat by moving 10 line of code (led_wkgpio_pins) further down :-)
+> On Wed, Nov 27, 2013 at 03:23:58PM +0000, Lee Jones wrote:
+> > On Wed, 27 Nov 2013, Mark Brown wrote:
+> > > > +	{
+> > > > +		.name =3D "max14577-regulator",
+> > > > +		.of_compatible =3D "maxim,max14577-regulator",
+> > > > +	},
+>=20
+> > > Why is there a compatible for this at all, would this ever appear=
+ as
+> > > part of a different device?
+>=20
+> > For automatic assigning of it's of_node.
+>=20
+> > In previous incarnations of this set it was done manually for some =
+reason.
+>=20
+> The usual thing to do is of_get_child_by_name() on the parent to get =
+the
+> container to search in.
 
->
->>> SDIO card is not detected after moving pin mux to omap4_pmx_core since
->>> sdmmc5_clk pull is disabled. Enable Pull up on sdmmc5_clk to detect SDIO card.
->> Cool, does this fix the issue with the WLAN not coming up after a warm reset
->> on panda?
->>
->> Regards,
->>
->> Tony
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
+What do you mean when you say 'usual thing'? Only the max8998 does
+this currently. IMHO the better way to do it for MFD devices is
+provide a compatible string and let the framework does the rest for
+you.
 
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
