@@ -1,40 +1,52 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH] watchdog: davinci: rename platform driver to davinci-wdt
-Date: Wed, 27 Nov 2013 09:17:08 -0500
-Message-ID: <5295FEE4.8090108@ti.com>
-References: <1385559113-4354-1-git-send-email-ivan.khoronzhuk@ti.com>
- <5295FB0E.4070406@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5295FB0E.4070406@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
+Date: Wed, 27 Nov 2013 14:17:50 +0000
+Message-ID: <20131127141750.B666EC404EC@trevor.secretlab.ca>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org> < CAEgOgz5BWzo-LGddjG6ZUtKt6GHxLmDUEndFOdVrn+1HTPvpGQ@mail.gmail.com> < 20131124213212.226B8C402C3@trevor.secretlab.ca> < CAEgOgz4yhDzy_BFiotK5Qi48sczR3PL1oPjPhNYC9O94P6AnzQ@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEgOgz4yhDzy_BFiotK5Qi48sczR3PL1oPjPhNYC9O94P6AnzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 27 November 2013 09:00 AM, Sekhar Nori wrote:
-> On Wednesday 27 November 2013 07:01 PM, Ivan Khoronzhuk wrote:
->> As we switch to use the watchdog core which permits more than one
->> active watchdog in the system, rename platform driver to
->> "davinci-wdt" to be identifiable.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+On Wed, 27 Nov 2013 19:06:35 +1000, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> On Mon, Nov 25, 2013 at 7:32 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Sun, 24 Nov 2013 17:04:52 +1000, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> >> On Wed, Nov 13, 2013 at 4:14 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> >> > On Wed, 13 Nov 2013 09:17:01 +1000, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> >> >> It's going to get a little verbose once you start making multiple
+> >> >> connections as you need one mux per wire. Perhaps it could be cleaned
+> >> >> up by making the foo_irq_mux node(s) a child of foo?
+> >> >
+> >> > It could, but then you need some way of attaching a driver to that node,
+> >> > and that would require building knowledge into the driver again.
+> >> >
+> >> > Can you boil it down to a couple of concrete examples? What is a
+> >> > specific example of how the platform should decide which interrupt line
+> >> > to use?
+> >> >
+> >>
+> >> So i've spent some time playing with this. I now have a booting kernel
+> >> with multiple root interrupt controllers and peripheral devices
+> >> multiply-connected to both root controllers. But only one on of the
+> >> controllers is used by Linux (as linux being able to use multiple
+> >> intcs is a non-trivial problem). So the scheme I am using is to have
+> >> one of these root intc's marked as disabled via
+> >
+> > Multiple intc's should be a solved problem. What issue are you seeing?
+> > Or is this a microblaze specific problem?
+> >
 > 
-> Looks good to me. Since bulk of this patch touches mach-davinci, I would
-> like to take this through my tree to avoid conflicts with other
-> mach-davinci patches I accept.
-> 
-Sounds good. Thanks Sekhar !!
+> It's multiple root (i.e. have no explicit parent) interrupt
+> controllers. And linux
+> doesnt respect status = "disabled" for interrupt controllers at all it seems.
 
-Regards,
-Santosh
+That can be fixed.  :-)
+
+g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
