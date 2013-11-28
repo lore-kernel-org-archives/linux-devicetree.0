@@ -1,110 +1,52 @@
-From: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-Subject: [PATCHv2 3/3] ARM: dts: imx27: imx27-apf27dev: add pinctrl for cspi, i2c, sdhc and framebuffer
-Date: Thu, 28 Nov 2013 08:19:32 +0100
-Message-ID: <1385623172-87429-3-git-send-email-gwenhael.goavec-merou@armadeus.com>
-References: <1385623172-87429-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
- <1385623172-87429-2-git-send-email-gwenhael.goavec-merou@armadeus.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385623172-87429-2-git-send-email-gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] ARM: DTS: omap4-sdp: Add regulator for LCD backlight
+ (pwm-backlight)
+Date: Thu, 28 Nov 2013 11:28:44 +0200
+Message-ID: <1385630924-16392-1-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, tomi.valkeinen@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Since in DT booted kernel dummy regulators are no longer supported we need
+to provide valid phandle for the regulator needed by the backlight.
+On the board VBAT is used to power the LCD backlight(s).
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Changelog:
-v2:
- * Fix framebuffer pingroup name: MX27_FB1_PINGRP1 -> MX27_FB_PINGRP1
+Hi,
 
- arch/arm/boot/dts/imx27-apf27dev.dts | 40 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+This patch is needed for 3.13 to get the LCD backlight to work again.
 
-diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
-index 9197329..0010b3e 100644
---- a/arch/arm/boot/dts/imx27-apf27dev.dts
-+++ b/arch/arm/boot/dts/imx27-apf27dev.dts
-@@ -60,6 +60,8 @@
- &cspi1 {
- 	fsl,spi-num-chipselects = <1>;
- 	cs-gpios = <&gpio4 28 1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_cspi1>;
- 	status = "okay";
- };
+Regards,
+Peter
+
+ arch/arm/boot/dts/omap4-sdp.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+index 5fc3f43..6f86db2 100644
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -104,6 +104,7 @@
+ 				100 110 120 127
+ 				>;
+ 		default-brightness-level = <13>;
++		power-supply = <&vbat>;
+ 	};
  
-@@ -67,17 +69,23 @@
- 	fsl,spi-num-chipselects = <3>;
- 	cs-gpios = <&gpio4 21 1>, <&gpio4 27 1>,
- 			<&gpio2 17 1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_cspi2>;
- 	status = "okay";
- };
- 
- &fb {
- 	display = <&display>;
- 	fsl,dmacr = <0x00020010>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_imxfb1>;
- 	status = "okay";
- };
- 
- &i2c1 {
- 	clock-frequency = <400000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
- 	status = "okay";
- 
- 	rtc@68 {
-@@ -87,11 +95,43 @@
- };
- 
- &i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
- };
- 
-+&iomuxc {
-+	imx27-apf27dev {
-+		pinctrl_cspi1: cspi1grp {
-+			fsl,pins = <MX27_CSPI1_PINGRP1>;
-+		};
-+
-+		pinctrl_cspi2: cspi2grp {
-+			fsl,pins = <MX27_CSPI2_PINGRP1>;
-+		};
-+
-+		pinctrl_imxfb1: imxfbgrp {
-+			fsl,pins = <MX27_FB_PINGRP1>;
-+		};
-+
-+		pinctrl_i2c1: i2c1grp {
-+			fsl,pins = <MX27_I2C1_PINGRP1>;
-+		};
-+
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <MX27_I2C2_PINGRP1>;
-+		};
-+
-+		pinctrl_sdhc2: sdhc2grp {
-+			fsl,pins = <MX27_SDHC2_PINGRP1>;
-+		};
-+	};
-+};
-+
- &sdhci2 {
- 	bus-width = <4>;
- 	cd-gpios = <&gpio3 14 0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sdhc2>;
- 	status = "okay";
- };
+ 	sound {
 -- 
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.4.2
