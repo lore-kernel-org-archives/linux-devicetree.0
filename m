@@ -1,93 +1,108 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 5/9] usb: gadget: s3c-hsotg: use generic
- phy_init()/phy_exit() support
-Date: Thu, 28 Nov 2013 11:41:38 -0500
-Message-ID: <20131128164138.GS31091@beef>
-References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org>
- <1385403367-18144-6-git-send-email-matt.porter@linaro.org>
- <529476A4.8080600@ti.com>
- <20131127171325.GD31091@beef>
- <20131127223650.GP31091@beef>
- <5296DA70.8010409@ti.com>
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
+ generic bus properties
+Date: Thu, 28 Nov 2013 16:50:30 +0000
+Message-ID: <20131128165025.GA4634@e103592.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5296DA70.8010409-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 28, 2013 at 11:23:52AM +0530, Kishon Vijay Abraham I wrote:
-> On Thursday 28 November 2013 04:06 AM, Matt Porter wrote:
-> > On Wed, Nov 27, 2013 at 12:13:25PM -0500, Matt Porter wrote:
-> >> On Tue, Nov 26, 2013 at 03:53:32PM +0530, Kishon Vijay Abraham I wrote:
-> >>> Hi,
-> >>>
-> >>> On Monday 25 November 2013 11:46 PM, Matt Porter wrote:
-> >>>> If a generic phy is present, call phy_init()/phy_exit(). This supports
-> >>>> generic phys that must be soft reset before power on.
-> >>>>
-> >>>> Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>>> ---
-> >>>>  drivers/usb/gadget/s3c-hsotg.c | 5 +++++
-> >>>>  1 file changed, 5 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-> >>>> index da3879b..8dfe33f 100644
-> >>>> --- a/drivers/usb/gadget/s3c-hsotg.c
-> >>>> +++ b/drivers/usb/gadget/s3c-hsotg.c
-> >>>> @@ -3622,6 +3622,9 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
-> >>>>  		goto err_supplies;
-> >>>>  	}
-> >>>>  
-> >>>> +	if (hsotg->phy)
-> >>>
-> >>> IS_ERR? If your phy_get fails *phy* will have a error value..
-> >>
-> >> Yes, thanks. I'll fix these and also note that the same issue exists in
-> >> Kamil's patch for these same hsotg->phy conditional uses. I'll work with
-> >> Kamil to either get those addressed there or in a follow on fix.
-> > 
-> > I spoke too soon. If devm_phy_get fails, we don't set hsotg->phy and probe
-> > defer thus not reaching this point. Since hsotg->phy is either NULL or a
-> > valid struct phy *, this is correct as is throughout the driver.
-> > 
-> >>>
-> >>>> +		phy_init(hsotg->phy);
-> >>>> +
-> >>>>  	/* usb phy enable */
-> >>>>  	s3c_hsotg_phy_enable(hsotg);
-> >>>>  
-> >>>> @@ -3715,6 +3718,8 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
-> >>>>  	}
-> >>>>  
-> >>>>  	s3c_hsotg_phy_disable(hsotg);
-> >>>> +	if (hsotg->phy)
-> >>>
-> >>> same here.
-> >>
-> >> Ok.
-> > 
-> > Same above, this will be NULL on failure (but is only applicable at this
-> > point on the platform data path.
+On Thu, Nov 28, 2013 at 10:28:45AM +0000, Will Deacon wrote:
+> Hi Greg,
 > 
-> Ah ok.. Btw where is phy_get being called? Is it not part of this series?
+> On Wed, Nov 27, 2013 at 11:06:50PM +0000, Greg KH wrote:
+> > On Wed, Nov 27, 2013 at 05:28:06PM +0000, Dave Martin wrote:
+> > > >From will.deacon-5wv7dgnIgG8@public.gmane.org Wed Nov 20 12:06:22 2013
+> > > A number of discussion points remain to be resolved:
+> > > 
+> > >   - Use of the ranges property and describing slave vs master bus
+> > >     address ranges. In the latter case, we actually want to describe our
+> > >     address space with respect to the bus on which the bus masters,
+> > >     rather than the parent. This could potentially be achieved by adding
+> > >     properties such as dma-parent and dma-ranges (already used by PPC?)
+> > > 
+> > >   - Describing masters that master through multiple different buses
+> > > 
+> > >   - How on Earth this fits in with the Linux device model (it doesn't)
+> > 
+> > How does this _not_ fit into the Linux device model?  What am I missing
+> > here that precludes the use of the "driver/device/bus" model we have
+> > today?
 
-It's in the Kamil's Exynos USB Phy -> generic phy series [1] which I depend
-on here. I mentioned it in the cover letter toward the end so it's a bit
-buried.
+The physical-sockets history of buses like PCI tends to force a simple
+tree-like topology as a natural consequence.  You also end up with
+closely linked topologies for power, clocks, interrupts etc., because
+those all pass through the same sockets, so it's difficult to have a
+different structure.
 
-I have some outstanding, but trivial, comments on that series but I hear
-Kamil will be posting an update in the coming days. I'll wait a few days
-to post v4 addressing your comments so I can hopefully rebase against
-his updated s3c-hsotg patch.
+On SoC, those constraints have never existed and are not followed.  A
+device's interface to the system is almost always split into multiple
+connections, not covered by a single design or standard.  The problem
+now is that increasing complexity means that the sometimes bizarre
+topology features of SoCs are becoming less and less transparent for
+software.
 
--Matt
+The device model currently seems to assume that certain things (power,
+DMA and MMIO accessibility) follow the tree (which may not work for many
+SoCs), and some other things (clocks, regulators, interrupts etc.) are
+not incorporated at all -- making them independent, but it may make some
+abstractions impossible today.
 
-[1] https://lkml.org/lkml/2013/11/5/275
+How much this matters for actual systems is hard to foresee yet.  Since
+not _all_ possible insanities find their way into silicon.  The
+onus should certainly be on us (i.e., the ARM/SoC community) to
+demonstrate if the device model needs to change, and to find practical
+ways to change it that minimise the resulting churn.
+
+> The main problem is that we have devices which slave on one bus and master
+> on another. That then complicates probing, power-management, IOMMU
+> configuration, address mapping (e.g. I walk the slave buses to figure out
+> where the slave registers live, but then I need a way to work out where
+> exactly I master on a different bus) and dynamic coherency, amongst other
+> things.
+> 
+> If we try to use the current infrastructure then we end up with one bus per
+> device, which usually ends up being a fake bus representing both the slave
+> and master buses (which is how the platform bus gets abused) and then device
+> drivers having their own idea of the system topology where it's required.
+> 
+> This is fairly horrible and doesn't work for anything other than the trivial
+> case, where one or both of the buses are `dumb' and don't require any work
+> from Linux.
+
+If we can come up with some generic bus type that is just a container for
+a load of hooks that know how to deal with various aspects of each device's
+interface to the system, on a per-device basis, than may be a start.
+
+The platform bus kinda serves that role, but the trouble with that is that
+it doesn't encourage any abstraction at all.  In the face of increasing
+complexity, abstraction is desperately needed.
+
+> > >  .../devicetree/bindings/arm/coherent-bus.txt       | 110 +++++++++++++++++++++
+> > 
+> > Why "arm"?
+> > 
+> > What makes it ARM specific?
+> 
+> This is just an RFC, so I'd be happy to put the binding somewhere more
+> broad. I'm not sure how much of an issue this is outside of the SoC space,
+> though.
+
+I think that the ARM community are the ones who care the most today,
+so are likely to make the most noise about it.
+
+The binding is entirely generic in concept, so we should certainly
+push for it to be non-ARM-specific.  Non-ARM SoCs will likely need
+to solve this problem too at some point.
+
+Cheers
+---Dave
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
