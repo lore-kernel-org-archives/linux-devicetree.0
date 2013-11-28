@@ -1,282 +1,115 @@
-From: Fugang Duan <fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v3 2/3] iio:adc:imx: add Freescale Vybrid vf610 adc
- driver
-Date: Thu, 28 Nov 2013 01:25:55 +0000
-Message-ID: <9848F2DB572E5649BA045B288BE08FBE0189C154@039-SN2MPN1-023.039d.mgd.msft.net>
-References: <1385463394-11157-1-git-send-email-B38611@freescale.com>
- <1385463394-11157-3-git-send-email-B38611@freescale.com>
- <20131126142534.GB5402@e106331-lin.cambridge.arm.com>
- <9848F2DB572E5649BA045B288BE08FBE01898D02@039-SN2MPN1-023.039d.mgd.msft.net>
- <20131127141803.GA27879@e106331-lin.cambridge.arm.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: imx27: add pingroups for cspi, sdhc and
+ framebuffer
+Date: Thu, 28 Nov 2013 10:41:56 +0800
+Message-ID: <20131128024155.GD5850@S2101-09.ap.freescale.net>
+References: <1385480444-77808-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131127141803.GA27879-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1385480444-77808-1-git-send-email-gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-Data: Wednesday, November 27, 2013 10:18 PM
+On Tue, Nov 26, 2013 at 04:40:42PM +0100, Gwenhael Goavec-Merou wrote:
+> Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx27-pingrp.h | 68 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx27-pingrp.h b/arch/arm/boot/dts/imx27-pingrp.h
+> index 08d8d18..e61bec2 100644
+> --- a/arch/arm/boot/dts/imx27-pingrp.h
+> +++ b/arch/arm/boot/dts/imx27-pingrp.h
+> @@ -68,4 +68,72 @@
+>  	MX27_PAD_UART3_CTS__UART3_CTS 0x0 \
+>  	MX27_PAD_UART3_RTS__UART3_RTS 0x0
+>  
+> +#define MX27_CSPI1_PINGRP1 \
+> +	MX27_PAD_CSPI1_SCLK__CSPI1_SCLK 0x0 \
+> +	MX27_PAD_CSPI1_MISO__CSPI1_MISO 0x0 \
+> +	MX27_PAD_CSPI1_MOSI__CSPI1_MOSI 0x0
 
->To: Duan Fugang-B38611
->Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Li Frank-B20596; linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->Subject: Re: [PATCH v3 2/3] iio:adc:imx: add Freescale Vybrid vf610 adc driver
->
->On Wed, Nov 27, 2013 at 05:37:24AM +0000, Fugang Duan wrote:
->> From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Data: Tuesday, November 26, 2013 10:26 PM
->>
->> >To: Duan Fugang-B38611
->> >Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org;
->> >devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Li Frank-B20596;
->> >linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> >Subject: Re: [PATCH v3 2/3] iio:adc:imx: add Freescale Vybrid vf610
->> >adc driver
->> >
->> >On Tue, Nov 26, 2013 at 10:56:33AM +0000, Fugang Duan wrote:
->> >> Add Freescale Vybrid vf610 adc driver. The driver only support ADC
->> >> software trigger.
->> >>
->> >> Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> >> ---
->> >>  drivers/iio/adc/Kconfig     |   11 +
->> >>  drivers/iio/adc/Makefile    |    1 +
->> >>  drivers/iio/adc/vf610_adc.c |  744
->> >> +++++++++++++++++++++++++++++++++++++++++++
->> >>  3 files changed, 756 insertions(+), 0 deletions(-)
->> >
->> >[...]
->> >
->> >> +static void vf610_adc_cfg_of_init(struct vf610_adc *info) {
->> >> +       struct device_node *np = info->dev->of_node;
->> >> +
->> >> +       /*
->> >> +        * set default Configuration for ADC controller
->> >> +        * This config may upgrade to require from DT
->> >> +        */
->> >> +       info->adc_feature.clk_sel = ADCIOC_BUSCLK_SET;
->> >> +       info->adc_feature.vol_ref = VF610_ADCIOC_VR_VREF_SET;
->> >> +       info->adc_feature.calibration = true;
->> >> +       info->adc_feature.tri_hw = false;
->> >> +       info->adc_feature.dataov_en = true;
->> >> +       info->adc_feature.ac_clk_en = false;
->> >> +       info->adc_feature.dma_en = false;
->> >> +       info->adc_feature.cc_en = false;
->> >> +       info->adc_feature.cmp_func_en = false;
->> >> +       info->adc_feature.cmp_range_en = false;
->> >> +       info->adc_feature.cmp_greater_en = false;
->> >> +
->> >> +       if (of_property_read_u32(np, "fsl,adc-io-pinctl",
->> >> +                       &info->adc_feature.pctl)) {
->> >> +               info->adc_feature.pctl = VF610_ADC_IOPCTL5;
->> >> +               dev_info(info->dev,
->> >> +                       "Miss adc-io-pinctl in dt, enable pin SE5.\n");
->> >> +       }
->> >
->> >Could you elaborate on what this means? What is this doing when
->> >pinctrl is not specified in the DT?
->> >
->>
->> As vf610 reference manually describe ADC pin control:
->>
->> 37.8.2 Input Select and Pin Control
->> The pin control registers (ADC_PC) disable the I/O port control of the
->> pins used as analog inputs. When a pin control register bit is set,
->> the following conditions are forced for the associated MCU pin:
->> * The output buffer is forced to its high impedance state.
->> * The input buffer is disabled. A read of the I/O port returns a zero
->> for any pin with its input buffer disabled.
->> * The pullup is disabled.
->>
->> So, when the relative ADC pin is used as Sliding rheostat test, disable the
->pin control.
->>
->>
->> >> +
->> >> +       if (info->vref)
->> >> +               info->vref_uv = regulator_get_voltage(info->vref);
->> >> +       else if (of_property_read_u32(np, "fsl,adc-vref", &info->vref_uv))
->> >> +               dev_err(info->dev,
->> >> +                       "Miss adc-vref property or vref regulator
->> >> + in the DT.\n");
->> >
->> >Query the regulator instead.
->>
->> When the ADC reference voltage is not controlled by regulator, just by
->> fixed voltage from MCU digital power, We get the reference voltage
->> from DT.
->
->You could use a fixed-regulator in that case in the DT, and query the voltage
->through the regulator framework. There is no need for this property.
->
->>
->> >
->> >> +
->> >> +       if (of_property_read_u32(np, "fsl,adc-clk-div",
->> >> +                       &info->adc_feature.clk_div_num)) {
->> >> +               info->adc_feature.clk_div_num = 2;
->> >> +               dev_info(info->dev,
->> >> +                       "Miss adc-clk-div in dt, set divider to 2.\n");
->> >> +       }
->> >
->> >Why do you need this?
->> >
->> >I'd expect the use to request a frequency they wanted to sample at,
->> >and the driver would try its best by fiddling with this and the clock input.
->> >
->> >> +
->> >> +       if (of_property_read_u32(np, "fsl,adc-res",
->> >> +                       &info->adc_feature.res_mode)) {
->> >> +               info->adc_feature.res_mode = 12;
->> >> +               dev_info(info->dev,
->> >> +                       "Miss adc-res property in dt, use 8bit
->> >> + mode.\n");
->> >
->> >This message does not seem to match the code above it.
->> >
->> >Is this a hardware limitation in some instances? Or is it always
->> >possible to select any of the resolutions?
->>
->> No limitation, just mistake for it. I have tested 8-bit, 10-bit, 12-bit mode,
->all pass.
->
->Ok. So this is not necessary?
->
->> >
->> >> +
->> >> +       if (of_property_read_u32(np, "fsl,adc-sam-time",
->> >> +                       &info->adc_feature.sam_time)) {
->> >> +               info->adc_feature.sam_time = 4;
->> >> +               dev_info(info->dev,
->> >> +                       "Miss adc-sam-time property in dt, set to 4.\n");
->> >> +       }
->> >
->> >This looks like it should be handled at runtime.
->>
->> Driver can get the ADC sample time duration fro DT.
->> fsl,adc-sam-time: ADC sample time duration, number of ADC clocks, such
->> as 2, 4, 6, 8, 12, 16, 20, 24
->
->If this is not a fixed property of the hardware, and there isn't some
->limitation such that one of these values _must_ be used, I do not believe it
->should be in the device tree.
->
->Just because it is easier to put it there doesn't make putting it there correct.
->
->>
->> How to handled at runtime ?
->> Use ioctl ?
->
->Something of that sort. Hopefully someone more familiar with the subsystem can
->describe what's preferred.
->
->> For the ADC, there have many setting, some of setting are defined
->> statically,  some of them get from DT.  If let the setting handled at
->> runtime, it need to introduce ioctl interface for the driver.
->
->If it's a static property of the HW that cannot be probed, it should be in the
->DT. If it's a limitation of the HW, that should be in the DT.
->
->If it's an arbitrary value that does not have a significant effect on
->performance or correctness, I do not see why it should be in the DT.
->
->As far as I can see, this does not belong in the DT. The fact that you'd need
->an ioctl to configure it dynamically is an orthogonal issue.
->
->>
->> >
->> >> +
->> >> +       info->adc_feature.hw_average = of_property_read_bool(np,
->> >> +                                       "fsl,adc-hw-aver-en");
->> >
->> >Is hw average support not always present?
->>
->> Vf610 RM describe:
->> 37.8.5.7 Hardware Average Function
->> After the selected input is sampled and converted, the result is
->> placed in an accumulator from which an average is calculated once the
->> selected number of conversions has been completed. When hardware
->> averaging is selected the completion of a single conversion will not set the
->COCOn bit.
->>
->> In general, hw average function is useful to reduce cpu loading.
->> The function is optional for user.
->
->Ok. If this is always possible to use, as your description implies, then I do
->not see why this needs to be in the DT. Whether you choose to enable or disable
->it in the driver by default, or whether you expose an interface to userspace to
->configure this is an orthogonal issue.
->
->>
->> >
->> >> +       if (info->adc_feature.hw_average &&
->> >> +                of_property_read_u32(np, "fsl,adc-aver-sam-sel",
->> >> +                               &info->adc_feature.hw_sam)) {
->> >> +               info->adc_feature.hw_sam = 4;
->> >> +               dev_info(info->dev,
->> >> +                       "Miss adc-aver-sam-sel property in dt, set to
->4.\n");
->> >> +       }
->> >
->> >Why not configure this at runtime instead?
->> >
->> As above said, if let the configuration set at runtime, we need to
->> introduce ioctl interface for user.
->> How do you think ?
->
->An ioctl or sysfs interface sounds like the correct solution. I don't have any
->strong opinion on the particular interface used, but DT is not the right place
->to expose this configuration option.
->
->>
->>
->> >> +
->> >> +       info->adc_feature.lpm = of_property_read_bool(np,
->> >> + "fsl,adc-low-power-
->> >mode");
->> >> +       info->adc_feature.hs_oper = of_property_read_bool(np,
->> >> + "fsl,adc-high-speed-conv");
->> >
->> >Please elaborate on what these mean, and why they need to be in the DT.
->> >
->> Yes, there have some configuration have been set in default,  some of them
->from DT.
->> I think the hw function/feature enable/disable are judged from DT.
->> Some general configurations are set in default.
->
->Sorry, but that does not answer my questions:
->
->* What do these two properties mean?
->* Why must they be in the DT?
->
->As far as I can tell, they do not need to be in the DT.
->
->>
->> Of course, let all of them are set at runtime is better. But need to
->> introduce ioctl interface for user.
->
->I don't see this as an argument for placing these in the DT. Describe the
->hardware in the DT. Anything that is expected to be changed by the user is
->clearly not a property of the hardware and should not be in the DT.
->
->There are grey areas with some devices where a specific configuration is far
->more optimal for a given platform (e.g. reserving specific portions of memory
->for frame buffers). As far as I can see, none of the properties proposed in
->this patch fall into that area, and sane defaults can be selected for all of
->them which could later be overridden with a userspace interface of some sort.
->
->Thanks,
->Mark.
+Please sort the PINGRP entries alphabetically.
 
-Thanks, Mark.
+> +
+> +#define MX27_CSPI2_PINGRP1 \
+> +	MX27_PAD_CSPI2_SCLK__CSPI2_SCLK 0x0 \
+> +	MX27_PAD_CSPI2_MISO__CSPI2_MISO 0x0 \
+> +	MX27_PAD_CSPI2_MOSI__CSPI2_MOSI 0x0
+> +
+> +#define MX27_CSPI3_PINGRP1 \
+> +	MX27_PAD_SD1_CLK__CSPI3_SCLK 0x0 \
+> +	MX27_PAD_SD1_D0__CSPI3_MISO 0x0 \
+> +	MX27_PAD_SD1_CMD__CSPI3_MOSI 0x0
+> +
+> +#define MX27_SDHC1_PINGRP1 \
+> +	MX27_PAD_SD1_D0__SD1_D0 \
+> +	MX27_PAD_SD1_D1__SD1_D1 \
+> +	MX27_PAD_SD1_D2__SD1_D2 \
+> +	MX27_PAD_SD1_D3__SD1_D3 \
+> +	MX27_PAD_SD1_CMD__SD1_CMD \
+> +	MX27_PAD_SD1_CLK__SD1_CLK
+> +
+> +#define MX27_SDHC2_PINGRP1 \
+> +	MX27_PAD_SD2_D0__SD2_D0 \
+> +	MX27_PAD_SD2_D1__SD2_D1 \
+> +	MX27_PAD_SD2_D2__SD2_D2 \
+> +	MX27_PAD_SD2_D3__SD2_D3 \
+> +	MX27_PAD_SD2_CMD__SD2_CMD \
+> +	MX27_PAD_SD2_CLK__SD2_CLK
+> +
+> +#define MX27_SDHC3_PINGRP1 \
+> +	MX27_PAD_SD3_D0__SD3_D0 \
+> +	MX27_PAD_SD3_D1__SD3_D1 \
+> +	MX27_PAD_SD3_D2__SD3_D2 \
+> +	MX27_PAD_SD3_D3__SD3_D3 \
+> +	MX27_PAD_SD3_CMD__SD3_CMD \
+> +	MX27_PAD_SD3_CLK__SD3_CLK
+> +
+> +#define MX27_FB1_PINGRP1 \
 
-Anyway, I need to re-architect the ADC configuration, as you suggestion, move some setting from DT, add it for runtime.
-For iio subsystem, there have some sysfs interface for related ADC setting, but other runtime setting need ioctl interface.
+Please name the PINGRP entry after IP block.  FB1 is not a good one.
 
-Thanks very much!
-Andy
+Shawn
+
+> +	MX27_PAD_LSCLK__LSCLK 0x0 \
+> +	MX27_PAD_LD0__LD0 0x0 \
+> +	MX27_PAD_LD1__LD1 0x0 \
+> +	MX27_PAD_LD2__LD2 0x0 \
+> +	MX27_PAD_LD3__LD3 0x0 \
+> +	MX27_PAD_LD4__LD4 0x0 \
+> +	MX27_PAD_LD5__LD5 0x0 \
+> +	MX27_PAD_LD6__LD6 0x0 \
+> +	MX27_PAD_LD7__LD7 0x0 \
+> +	MX27_PAD_LD8__LD8 0x0 \
+> +	MX27_PAD_LD9__LD9 0x0 \
+> +	MX27_PAD_LD10__LD10 0x0 \
+> +	MX27_PAD_LD11__LD11 0x0 \
+> +	MX27_PAD_LD12__LD12 0x0 \
+> +	MX27_PAD_LD13__LD13 0x0 \
+> +	MX27_PAD_LD14__LD14 0x0 \
+> +	MX27_PAD_LD15__LD15 0x0 \
+> +	MX27_PAD_LD16__LD16 0x0 \
+> +	MX27_PAD_LD17__LD17 0x0 \
+> +	MX27_PAD_REV__REV 0x0 \
+> +	MX27_PAD_CLS__CLS 0x0 \
+> +	MX27_PAD_PS__PS 0x0 \
+> +	MX27_PAD_SPL_SPR__SPL_SPR 0x0 \
+> +	MX27_PAD_HSYNC__HSYNC 0x0 \
+> +	MX27_PAD_VSYNC__VSYNC 0x0 \
+> +	MX27_PAD_CONTRAST__CONTRAST 0x0 \
+> +	MX27_PAD_OE_ACD__OE_ACD 0x0
+> +
+>  #endif /* __DTS_IMX27_PINGRP_H */
+> -- 
+> 1.8.3.2
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
