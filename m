@@ -1,199 +1,80 @@
-From: boris brezillon <b.brezillon@overkiz.com>
-Subject: Re: [PATCH v2 2/2] clk: add accuracy support for fixed clock
-Date: Thu, 28 Nov 2013 09:02:58 +0100
-Message-ID: <5296F8B2.9080807@overkiz.com>
-References: <1385556285-19180-1-git-send-email-b.brezillon@overkiz.com> <1385556285-19180-3-git-send-email-b.brezillon@overkiz.com> <20131127145620.GR2879@titan.lakedaemon.net> <5296298C.9040300@overkiz.com> <20131127181042.16819.36364@quantum>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] clocksource: Do not drop unheld reference on device node
+Date: Thu, 28 Nov 2013 09:23:49 +0100
+Message-ID: <5296FD95.1010000@linaro.org>
+References: <1382136588-15320-1-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131127181042.16819.36364@quantum>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Jason Cooper <jason@lakedaemon.net>
-Cc: Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1382136588-15320-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/11/2013 19:10, Mike Turquette wrote:
-> Quoting boris brezillon (2013-11-27 09:19:08)
->> Hi Jason,
->>
->> On 27/11/2013 15:56, Jason Cooper wrote:
->>> Boris,
->>>
->>> Thanks for posting this series.  Bear with me as I'm attempting to give
->>> MikeT a hand.
->> Nice to hear.
->> Mike already took a look at this series, but I'm happy to get more
->> feedbacks.
->>
->>> Don't be afraid to tell me a question is stupid :-)
->> Your questions are far from stupid ;-).
->>
->>> On Wed, Nov 27, 2013 at 01:44:45PM +0100, Boris BREZILLON wrote:
->>>> This patch adds support for accuracy retrieval on fixed clocks.
->>>> It also adds a new dt property called 'clock-accuracy' to define the clock
->>>> accuracy.
->>>>
->>>> This can be usefull for oscillator (RC, crystal, ...) definitions which are
->>>> always given an accuracy characteristic.
->>> I think we need to be more explicit in the binding and the API,
->>> especially when providing a method to recalculate the accuracy.  I
->>> presume this recalculated value would be relative against the root
->>> clock?
->> Yes, indirectly.
->> Actually the clk accuracy depends on the whole clock chain, and is
->> calculated
->> either by comparing the real clk rate to the theorical clk rate
->> (accuracy = absolute_value((theorical_clk_rate - real_clk_rate)) /
->> theorical_clk_rate),
->> or by adding all the accuracies (expressed in ppm, ppb or ppt) of the
->> clk chain
->> (accuracy = current_clk_accuracy + parent_clk_accuracy).
->>
->> Say you have a root clk with a +-10000 ppb accuracy, then a pll multiplying
->> this root clk by 40 and introducing a possible drift of +- 1000 ppb and
->> eventually a system clk based on this pll with a perfect div by 2 prescaler
->> (accuracy = 0 ppb).
->>
->> If I understand correctly how accuracy propagates accross the clk tree,
->> you'll end up with a system clk with a +- 11000 ppb accuracy.
->>
->> e.g.:
->>    root clk = 12MHz +- 10000 ppb => 12 MHz * (1 - (10000 / 10^9)) < root
->> clk < 12 MHz * (1 + (10000 / 10^9))
->>                                                       => 11,99988 MHz <
->> root clk < 12,00012 MHz
->>    pll clk = ((root clk) * 40) +- 1000 ppb =>  (11,99988 MHz * 40) * (1 -
->> (1000 / 10^9)) < pll clk < (12,00012 MHz * 40) * (1 + (1000 / 10^9))
->>                                                              =>
->> 479,994720005 MHz < pll clk < 480,005280005 MHz
->>
->>    system clk = ((pll clk) / 2) +- XXX ppb => 479,994720005 MHz / 2 <
->> system clk < 480,005280005 MHz / 2
->>                                                                 =>
->> 239,997360002 MHz < system clk < 240,002640002 MHz
->>                                                                 => system
->> clk accuracy = 0,002640002 / 240 = 11000 ppb
->>
->> Please tell me if my assumptions are false.
->>> There really needs to be two attributes here:  the rated accuracy from
->>> the manufacturer, and the calculated accuracy wrt another clock in the
->>> system.  We only need a binding for the manufacturer rating since the
->>> calculated accuracy is determined at runtime.
->> Actually when I proposed this new functionnality I only had the theorical
->> (or manufacturer rated) accuracy in mind.
->> But providing an estimated accuracy (based on another clk) sounds
->> interresting if your reference clk is an extremly accurate one.
-> Is there a need to model clock accuracy across the clock chain?
-> I'm OK
-> modeling it in DT, and the code to do it in the clk framework isn't very
-> much ... but I also wonder if we're just adding complexity for no
-> reason.
-
-AFAIK the most important node in the clock chain (regarding accuracy)
-is the root node.
-But some nodes (like PLLs) might introduce more innacuracy.
-This series propose a simple way (or at least tries to keep it simple 
-:-)) to
-express accuracy over the whole clk chain by means of the recalc_accuracy.
-
-I'm not sure keeping the accuracy calculation (or retrieval) in the root 
-clk node
-only will simplify the calculation (or retrieval) of a leaf clk node 
-accuracy (you'd
-still have to walk over the clock chain to get the root clk accuracy).
-
-My primary goal with this series is to provide a simple way (for a clock 
-user) to
-choose the most accurate clock among several available clocks.
-This is a real need on AT91 platforms which provides internal RC oscillators
-with a really poor accuracy (+- 5% <=> +- 50000 ppm).
-
+On 10/19/2013 12:49 AM, Thierry Reding wrote:
+> When booting a recent kernel on ARM with OF_DYNAMIC enabled, the kern=
+el
+> warns about the following:
 >
->>> I would also prefer to see an unknown accuracy be -1.
->> I decided to keep 0 as a default value for unimplemented recalc_accuracy
->> (or unspecified fixed accuracy) to keep existing implementation coherent.
->>
->> 0 means the clk is perfect, and I thought it would be easier to handle a
->> perfect clk (even if this is not really the case) than handling an error
->> case.
->>
->> Another aspect is the propagation of the clk accuracy accross the clk tree.
->> Returning -1 in the middle of the clk chain will drop the previous clk
->> accuracy
->> calculation.
->>
->> Anyway, I can change this if you think this is more appropriate.
-> What about the absence of the property?
-> Instead of requiring a -1 value
-> can we simply detect that the property does not exist? This is nicer for
-> backwards compatibility with existing DTS.
-
-I already handle the absence of the clock-accuracy property.
-In this case the clock is considered perfect (accuracy = 0 ppb).
-
-Mike, do you want me to return an error in the recalc_accuracy callback
-to notifiy the absence of the clock-accuracy property ?
-
+> 	[    0.000000] ERROR: Bad of_node_put() on /timer@50004600
+> 	[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.12.0-rc5-=
+next-20131017-00077-gedfd827-dirty #406
+> 	[    0.000000] [<c0015b68>] (unwind_backtrace+0x0/0xf4) from [<c0011=
+7e4>] (show_stack+0x10/0x14)
+> 	[    0.000000] [<c00117e4>] (show_stack+0x10/0x14) from [<c055f734>]=
+ (dump_stack+0x9c/0xc8)
+> 	[    0.000000] [<c055f734>] (dump_stack+0x9c/0xc8) from [<c03b47d4>]=
+ (of_node_release+0x90/0x9c)
+> 	[    0.000000] [<c03b47d4>] (of_node_release+0x90/0x9c) from [<c03b5=
+084>] (of_find_matching_node_and_match+0x78/0xb4)
+> 	[    0.000000] [<c03b5084>] (of_find_matching_node_and_match+0x78/0x=
+b4) from [<c07887c8>] (clocksource_of_init+0x60/0x70)
+> 	[    0.000000] [<c07887c8>] (clocksource_of_init+0x60/0x70) from [<c=
+076e99c>] (start_kernel+0x1f4/0x33c)
+> 	[    0.000000] [<c076e99c>] (start_kernel+0x1f4/0x33c) from [<800080=
+74>] (0x80008074)
 >
-> Regards,
-> Mike
+> This is caused by clocksource_of_init() dropping a reference on the
+> device node that it never took. The reference taken by the loop is
+> implicitly dropped on subsequent iterations. See the implementation o=
+f
+> and the comment on top of the of_find_matching_node_and_match()
+> function for reference (no pun intended).
 >
->>> There are already
->>> clocks on the market (PPS reference clocks) with accuracies of
->>> 0.1ppb/day [1].  Obviously, these aren't system clocks.  So the limit on
->>> accuracy may be a non-issue.  However, it may be worth changing the
->>> binding property to express the units.
->> Wow, 0.1 ppb, this is impressive :-).
->>
->>
->> This needs more than changing the dt bindings: I currently store the
->> accuracy value in an unsigned long field, and expressing this in ppt
->> (parts per trillion) may implies storing this in an u64 field (or store a
->> unit field).
->>
->>
->>>> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
->>>> ---
->>>>    .../devicetree/bindings/clock/fixed-clock.txt      |    3 ++
->>>>    drivers/clk/clk-fixed-rate.c                       |   43 +++++++++++++++++---
->>>>    include/linux/clk-provider.h                       |    4 ++
->>>>    3 files changed, 44 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.txt b/Documentation/devicetree/bindings/clock/fixed-clock.txt
->>>> index 0b1fe78..48ea0ad 100644
->>>> --- a/Documentation/devicetree/bindings/clock/fixed-clock.txt
->>>> +++ b/Documentation/devicetree/bindings/clock/fixed-clock.txt
->>>> @@ -10,6 +10,8 @@ Required properties:
->>>>    - clock-frequency : frequency of clock in Hz. Should be a single cell.
->>>>    
->>>>    Optional properties:
->>>> +- clock-accuracy : accuracy of clock in ppb (parts per billion).
->>>> +               Should be a single cell.
->>> I would prefer to call this property 'clock-rated-ppb'.
->> Depending on what we choose to do with the accuracy field, this might be
->> an option.
->>
->>>>    - gpios : From common gpio binding; gpio connection to clock enable pin.
->>>>    - clock-output-names : From common clock binding.
->>>>    
->>>> @@ -18,4 +20,5 @@ Example:
->>>>               compatible = "fixed-clock";
->>>>               #clock-cells = <0>;
->>>>               clock-frequency = <1000000000>;
->>>> +            clock-accuracy = <100>;
->>>>       };
->>> thx,
->>>
->>> Jason.
->>>
->>> [1] http://www.vectron.com/products/modules/md-010.htm
->> Thanks for your review, and don't hesitate to ask more questions, or to
->> point out
->> incoherencies in my approach (I'm not an expert in clk and clk accuracy
->> calculation,
->> and I might be wrong ;-)).
->>
->> Best Regards,
->>
->> Boris
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>   drivers/clocksource/clksrc-of.c | 1 -
+>   1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/clocksource/clksrc-of.c b/drivers/clocksource/cl=
+ksrc-of.c
+> index 35639cf4..b9ddd9e 100644
+> --- a/drivers/clocksource/clksrc-of.c
+> +++ b/drivers/clocksource/clksrc-of.c
+> @@ -35,6 +35,5 @@ void __init clocksource_of_init(void)
+>
+>   		init_func =3D match->data;
+>   		init_func(np);
+> -		of_node_put(np);
+>   	}
+>   }
+
+Applied to my tree for 3.13 fixes.
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
