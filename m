@@ -1,93 +1,57 @@
-From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] clk: add clk accuracy support
-Date: Thu, 28 Nov 2013 09:29:31 +0100
-Message-ID: <5296FEEB.7070205@overkiz.com>
-References: <20131127231125.7995.qmail@science.horizon.com>
+From: boris brezillon <b.brezillon@overkiz.com>
+Subject: Re: [PATCH v5 06/17] clk: at91: add PMC pll clocks
+Date: Thu, 28 Nov 2013 09:34:10 +0100
+Message-ID: <52970002.3020405@overkiz.com>
+References: <1384289513-3068-1-git-send-email-b.brezillon@overkiz.com>
+ <1384293439-4525-1-git-send-email-b.brezillon@overkiz.com>
+ <20131127214843.16819.59481@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131127231125.7995.qmail-FT9nftu9LUyCkawlElnc8EEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: colin-gpGsJRJZ3PBBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpGsJRJZ3PBBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131127214843.16819.59481@quantum>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Mike,
 
-On 28/11/2013 00:11, colin-gpGsJRJZ3PBBDgjK7y7TUQ@public.gmane.org wrote:
-> Um, do you have a definition somewhere (like in comments) of the definition
-> of the accuracy you're using?  So multiple people can add consistent values?
+On 27/11/2013 22:48, Mike Turquette wrote:
+> Quoting Boris BREZILLON (2013-11-12 13:57:19)
+>> +static const struct clk_ops pll_ops = {
+>> +       .prepare = clk_pll_prepare,
+>> +       .is_prepared = clk_pll_is_ready,
+>> +       .disable = clk_pll_disable,
+>> +       .is_enabled = clk_pll_is_ready,
+>> +       .recalc_rate = clk_pll_recalc_rate,
+>> +       .round_rate = clk_pll_round_rate,
+>> +       .set_rate = clk_pll_set_rate,
+>> +};
+> Hi Boris,
 >
-> Is this the standard deviation (67% confidence), 2 standard deviations
-> (95%), 3 (99%), or something else?
->
-> What averaging time is this computed over?  Usually clock stability (which
-> I recognize is not accuracy) is expressed using the Allan deviation,
->
-> http://tf.nist.gov/general/glossary.htm#allandeviation
->
-> This is because real clocks have unbounded asymptotic error.  Over long
-> time intervals, have a random frequency walk characteristic, where the
-> frequency error after time T is proportional to sqrt(T).
->
-> So an oscillator which is stable to 1ppb over a T second interval will be
-> stable to 2ppb over a 4T second interval, 3ppb over a 9T second interval,
-> and so on.
->
-> Since accuracy is limited by stability, and there's no upper bound on
-> instability, there's actually no upper bound on inaccuracy, either.
->
-> (Admittedly, your typical crystal oscillators have their stability
-> limited by environmental instability, particularly temperature, which
-> dwarfs the frequency flicker noise limit.)
->
->
-> On the flip side, some systems are synchronized to UTC by various means.
-> This means (if we either neglect UTC's far sub-ppb instability, or just
-> define it as "perfect") that the inaccuracy over a long enough averaging
-> interval is zero.
->
-> But if it only synchronizes once a day, there can be significant
-> inaccuracy between synchronization.  Should the accuracy specification
-> reflect that shorter-term instability?
->
->
-> Finally, you can't specify *too* short an interval, because clocks also
-> have increasing error over small time intervals.  Below 10 seconds or
-> so, white noise cycle-to-cycle jitter dominates, and the fewer cycles
-> you average over, the larger it appears to be.
->
->
-> A clear definition would help people understand what numbers to put in.
+> It is a bit strange to see only a .prepare and .disable callback
+> populated. What happens if a driver calls clk_disable and then
+> clk_enable? You clock will still be disabled in hardware.
 
-Thanks for these informations, it helped me understand the different sources
-of inaccuracies of a crystal.
-As I said earlier, I'm not an expert in this area, and all your comments and
-feedbacks are welcome.
-BTW does this apply to other clk generators (RC oscillators, PLLs, ...), 
-or is this only
-applicable to crystal oscillators ?
+Oops, I haven't thought about that.
+I did this because the clk_pll_disable does not sleep, but this is a big 
+mistake :-(.
 
-Regarding the exact definition of accuracy, I guess in case of crystals 
-this has more
-to do with stability.
+I'll fix this.
 
-I found something called "Total stability" in several datasheet
-(e.g. http://www.silabs.com/Support%20Documents/TechnicalDocs/si510-11.pdf).
-Is this something applicable to our case ?
-
-Keep in mind that the primary goal of the clk accuracy retrieval is to 
-give a clock
-user a way to choose the most accurate clock among several available clocks.
-This means we don't need the value to be extremely precise, but at least 
-(as you
-stated) these values should represent the same things.
+Thanks.
 
 Best Regards,
 
 Boris
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Regards,
+> Mike
