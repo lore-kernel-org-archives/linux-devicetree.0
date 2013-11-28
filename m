@@ -1,28 +1,70 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv10 00/41] ARM: TI SoC clock DT conversion
-Date: Thu, 28 Nov 2013 18:58:04 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1311281857100.23429@utopia.booyaka.com>
-References: <1385453182-24421-1-git-send-email-t-kristo@ti.com> <52969313.6090207@ti.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: [PATCH 1/4] dt: Add bindings documentation for the ADI AXI-I2S controller
+Date: Thu, 28 Nov 2013 20:02:49 +0100
+Message-ID: <1385665372-29477-1-git-send-email-lars@metafoo.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52969313.6090207-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Nov 2013, Nishanth Menon wrote:
+This patch adds the devicetree documentation for the ADI AXI-SPDIF audio
+controller. The controller has:
+ * One set of memory mapped register
+ * Two clocks, one for the memory mapped register interface, one used as the
+   audio reference clock
+ * One DMA interface each for the transmit and receive data
 
-> http://pastebin.mozilla.org/3681900 -> AM3517-evm (not sure yet how
-> long this has been broken).
+Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../devicetree/bindings/sound/adi,axi-i2s.txt      | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
 
-Seems to work in v3.13-rc1:
+diff --git a/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
+new file mode 100644
+index 0000000..d9c0e53
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
+@@ -0,0 +1,29 @@
++ADI AXI-I2S controller
++
++Required properties:
++ - compatible : Must be "adi,axi-i2s-1.00.a"
++ - reg : Must contain I2S registers location and length
++ - clocks : Clock specifier providing a handle to the controller's clocks. The
++   controller expects two clocks, the clock used for the AXI interface and the
++   clock used as thei sampling rate reference clock sample.
++ - clock-names : "axi" for the clock to the AXI interface, "ref" for the sample
++   rate reference clock.
++ - dma : Specifiers for the DMA channels that are used by the core.
++ - dma-names : "tx" for the transmit channel, "rx" for the receive channel.
++
++For more details on the 'dma', 'dma-names', 'clock' and 'clock-names' properties
++please check:
++	* resource-names.txt
++	* clock/clock-bindings.txt
++	* dma/dma.txt
++
++Example:
++
++	i2s: i2s@0x77600000 {
++		compatible = "adi,axi-i2s-1.00.a";
++		reg = <0x77600000 0x1000>;
++		clocks = <&clk 15 &audio_clock>;
++		clock-names = "axi", "ref";
++		dmas = <&ps7_dma 0 &ps7_dma 1>;
++		dma-names = "tx", "rx";
++	};
+-- 
+1.8.0
 
-http://www.pwsan.com/omap/testlogs/test_v3.13-rc1/20131124230250/boot/3517evm/3517evm_log.txt
-
-
-- Paul
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
