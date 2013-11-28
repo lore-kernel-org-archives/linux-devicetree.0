@@ -1,57 +1,113 @@
-From: boris brezillon <b.brezillon@overkiz.com>
-Subject: Re: [PATCH v5 06/17] clk: at91: add PMC pll clocks
-Date: Thu, 28 Nov 2013 09:34:10 +0100
-Message-ID: <52970002.3020405@overkiz.com>
-References: <1384289513-3068-1-git-send-email-b.brezillon@overkiz.com>
- <1384293439-4525-1-git-send-email-b.brezillon@overkiz.com>
- <20131127214843.16819.59481@quantum>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131127214843.16819.59481@quantum>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+From: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Subject: [PATCHv2 1/3] ARM: imx27: add pingroups for cspi, sdhc and framebuffer
+Date: Thu, 28 Nov 2013 08:19:30 +0100
+Message-ID: <1385623172-87429-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+---
+Changelog:
+v2:
+ * pingroups entries are now sorted alphabetically;
+ * framebuffer pingroup is renamed: MX27_FB1_PINGRP1 -> MX27_FB_PINGRP1
 
-On 27/11/2013 22:48, Mike Turquette wrote:
-> Quoting Boris BREZILLON (2013-11-12 13:57:19)
->> +static const struct clk_ops pll_ops = {
->> +       .prepare = clk_pll_prepare,
->> +       .is_prepared = clk_pll_is_ready,
->> +       .disable = clk_pll_disable,
->> +       .is_enabled = clk_pll_is_ready,
->> +       .recalc_rate = clk_pll_recalc_rate,
->> +       .round_rate = clk_pll_round_rate,
->> +       .set_rate = clk_pll_set_rate,
->> +};
-> Hi Boris,
->
-> It is a bit strange to see only a .prepare and .disable callback
-> populated. What happens if a driver calls clk_disable and then
-> clk_enable? You clock will still be disabled in hardware.
+ arch/arm/boot/dts/imx27-pingrp.h | 68 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
-Oops, I haven't thought about that.
-I did this because the clk_pll_disable does not sleep, but this is a big 
-mistake :-(.
+diff --git a/arch/arm/boot/dts/imx27-pingrp.h b/arch/arm/boot/dts/imx27-pingrp.h
+index 08d8d18..f3fbf5a 100644
+--- a/arch/arm/boot/dts/imx27-pingrp.h
++++ b/arch/arm/boot/dts/imx27-pingrp.h
+@@ -13,6 +13,50 @@
+ 
+ #include "imx27-pinfunc.h"
+ 
++#define MX27_CSPI1_PINGRP1 \
++	MX27_PAD_CSPI1_MISO__CSPI1_MISO 0x0 \
++	MX27_PAD_CSPI1_MOSI__CSPI1_MOSI 0x0 \
++	MX27_PAD_CSPI1_SCLK__CSPI1_SCLK 0x0
++
++#define MX27_CSPI2_PINGRP1 \
++	MX27_PAD_CSPI2_MISO__CSPI2_MISO 0x0 \
++	MX27_PAD_CSPI2_MOSI__CSPI2_MOSI 0x0 \
++	MX27_PAD_CSPI2_SCLK__CSPI2_SCLK 0x0
++
++#define MX27_CSPI3_PINGRP1 \
++	MX27_PAD_SD1_CLK__CSPI3_SCLK 0x0 \
++	MX27_PAD_SD1_D0__CSPI3_MISO 0x0 \
++	MX27_PAD_SD1_CMD__CSPI3_MOSI 0x0
++
++#define MX27_FB_PINGRP1 \
++	MX27_PAD_CLS__CLS 0x0 \
++	MX27_PAD_CONTRAST__CONTRAST 0x0 \
++	MX27_PAD_LD0__LD0 0x0 \
++	MX27_PAD_LD1__LD1 0x0 \
++	MX27_PAD_LD2__LD2 0x0 \
++	MX27_PAD_LD3__LD3 0x0 \
++	MX27_PAD_LD4__LD4 0x0 \
++	MX27_PAD_LD5__LD5 0x0 \
++	MX27_PAD_LD6__LD6 0x0 \
++	MX27_PAD_LD7__LD7 0x0 \
++	MX27_PAD_LD8__LD8 0x0 \
++	MX27_PAD_LD9__LD9 0x0 \
++	MX27_PAD_LD10__LD10 0x0 \
++	MX27_PAD_LD11__LD11 0x0 \
++	MX27_PAD_LD12__LD12 0x0 \
++	MX27_PAD_LD13__LD13 0x0 \
++	MX27_PAD_LD14__LD14 0x0 \
++	MX27_PAD_LD15__LD15 0x0 \
++	MX27_PAD_LD16__LD16 0x0 \
++	MX27_PAD_LD17__LD17 0x0 \
++	MX27_PAD_LSCLK__LSCLK 0x0 \
++	MX27_PAD_OE_ACD__OE_ACD 0x0 \
++	MX27_PAD_PS__PS 0x0 \
++	MX27_PAD_REV__REV 0x0 \
++	MX27_PAD_SPL_SPR__SPL_SPR 0x0 \
++	MX27_PAD_HSYNC__HSYNC 0x0 \
++	MX27_PAD_VSYNC__VSYNC 0x0
++
+ #define MX27_FEC1_PINGRP1 \
+ 	MX27_PAD_SD3_CMD__FEC_TXD0 0x0 \
+ 	MX27_PAD_SD3_CLK__FEC_TXD1 0x0 \
+@@ -44,6 +88,30 @@
+ #define MX27_OWIRE1_PINGRP1 \
+ 	MX27_PAD_RTCK__OWIRE 0x0
+ 
++#define MX27_SDHC1_PINGRP1 \
++	MX27_PAD_SD1_CLK__SD1_CLK \
++	MX27_PAD_SD1_CMD__SD1_CMD \
++	MX27_PAD_SD1_D0__SD1_D0 \
++	MX27_PAD_SD1_D1__SD1_D1 \
++	MX27_PAD_SD1_D2__SD1_D2 \
++	MX27_PAD_SD1_D3__SD1_D3
++
++#define MX27_SDHC2_PINGRP1 \
++	MX27_PAD_SD2_CLK__SD2_CLK \
++	MX27_PAD_SD2_CMD__SD2_CMD \
++	MX27_PAD_SD2_D0__SD2_D0 \
++	MX27_PAD_SD2_D1__SD2_D1 \
++	MX27_PAD_SD2_D2__SD2_D2 \
++	MX27_PAD_SD2_D3__SD2_D3
++
++#define MX27_SDHC3_PINGRP1 \
++	MX27_PAD_SD3_CLK__SD3_CLK \
++	MX27_PAD_SD3_CMD__SD3_CMD \
++	MX27_PAD_SD3_D0__SD3_D0 \
++	MX27_PAD_SD3_D1__SD3_D1 \
++	MX27_PAD_SD3_D2__SD3_D2 \
++	MX27_PAD_SD3_D3__SD3_D3
++
+ #define MX27_UART1_PINGRP1 \
+ 	MX27_PAD_UART1_TXD__UART1_TXD 0x0 \
+ 	MX27_PAD_UART1_RXD__UART1_RXD 0x0
+-- 
+1.8.3.2
 
-I'll fix this.
-
-Thanks.
-
-Best Regards,
-
-Boris
-> Regards,
-> Mike
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
