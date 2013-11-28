@@ -1,67 +1,58 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 12/17] spi/qspi: convert driver to enable/disable memory
- mapped.
-Date: Thu, 28 Nov 2013 10:49:22 +0000
-Message-ID: <20131128104922.GK14725@sirena.org.uk>
-References: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com>
- <1385451313-1875-13-git-send-email-sourav.poddar@ti.com>
- <20131126131138.GJ14725@sirena.org.uk>
- <5296D37C.2020003@ti.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH] watchdog: davinci: rename platform driver to davinci-wdt
+Date: Thu, 28 Nov 2013 12:52:40 +0200
+Message-ID: <52972078.3090408@ti.com>
+References: <1385559113-4354-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <5295FB0E.4070406@ti.com> <52961665.3060309@roeck-us.net>
+ <5296DCD6.3030002@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uU2Tt3HF5Lkp2Lhz"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5296D37C.2020003@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: computersforpeace@gmail.com, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5296DCD6.3030002@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>, Guenter Roeck <linux@roeck-us.net>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/28/2013 08:04 AM, Sekhar Nori wrote:
+> On Wednesday 27 November 2013 09:27 PM, Guenter Roeck wrote:
+>> On 11/27/2013 06:00 AM, Sekhar Nori wrote:
+>>> On Wednesday 27 November 2013 07:01 PM, Ivan Khoronzhuk wrote:
+>>>> As we switch to use the watchdog core which permits more than one
+>>>> active watchdog in the system, rename platform driver to
+>>>> "davinci-wdt" to be identifiable.
+>>>>
+>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>>
+>>> Looks good to me. Since bulk of this patch touches mach-davinci, I would
+>>> like to take this through my tree to avoid conflicts with other
+>>> mach-davinci patches I accept.
+>>>
+>>
+>> Good idea, and makes sense.
+>
+> Added to v3.14/soc with your Reviewed-by
+>
+> Thanks,
+> Sekhar
+>
+> [1]
+> https://git.kernel.org/cgit/linux/kernel/git/nsekhar/linux-davinci.git/log/?h=v3.14/soc
+>
 
---uU2Tt3HF5Lkp2Lhz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks, Sekhar.
+What about other WDT patches, are you OK with them?
+https://lkml.org/lkml/2013/11/27/164
 
-On Thu, Nov 28, 2013 at 10:54:12AM +0530, Sourav Poddar wrote:
-
-> At the beginning of this api, I am doing a "disable memory mapped",
-> as becuase of
-> the code implemntation, if the control has reaches this api, memory
-> mapped is not
-> the desired operation. Then, at the end of this api after
-> "spi_finalize_current_message(master)", which indicated the current
-> transfer complete, I
-> issue a end of transfer command. Only after which, I enable memory
-> mapped mode again.
-
-> So, will the condition you mention above will hit.? Please help me
-> understand if i am
-> missing something?
-
-Removing the mapping isn't going to stop another context which has
-obtained a handle on the map trying to look at the mapping.
-
---uU2Tt3HF5Lkp2Lhz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSlx+uAAoJELSic+t+oim9zZYP/jH2FbRLSu51xDnNht2012dr
-QDRaGRX/N1ggDa6zkHxfaW2uwc5599/pxICsZillw5pZH9bSFh0f0bFvhPLXAkYx
-MUhw8SvSthOA5ScMZ08/BuvuXSL/0KyGDVFf8d4uztMbJraRxIoWszn8xjhs70n0
-fSnGykY9pKNm27EbWnuSXQgjBXBvLk3xUJcGD0H9ezA0OCORdt6eufZ2MvEAyLxx
-YoEmm5HWxpNhvOYG6opDq+/uuBWbC/k5jQLVsvvAEJ4vvQfbVU+JXWON4/qi9EKx
-7OeH4f8EoR8unE2ZxBIorMWNRZ5C3NzcWmmexBJkEjyAqin6JhyOzCddZ6L9KXBy
-89wFq3/grXkB3RwH32G9Oa4QzLGEhnF+SVYf2P2cPQ+qRZx3rGQCm/mU9igRDoBU
-SCN5ptehThp5nkRU79Ef+2O1h3uB5+iU5aGmTaciDeOd8J6OAG+ss/LMDLYoqaEl
-L3MxeQX/WRTEEgHg9RTHtwHKjHFq58MmRrvMZuOHbXsfim9AKt//j8VaRA/qVhpg
-S6VVbQUjf9miKXyR3mpQgdTAF3vi7mE1S7OukmXk8GPmAA/Z+YYyBlbPpVXq+Bgq
-LQCWlNfn3Vbu3HWNQ5P3W/HXxBSqaqzBcveDEvYtbgJNQUmOOd37MXx8Q0DaE5Bc
-WtwtMa2wqOPmZ8t2DZ51
-=T6bf
------END PGP SIGNATURE-----
-
---uU2Tt3HF5Lkp2Lhz--
+-- 
+Regards,
+Ivan Khoronzhuk
