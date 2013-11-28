@@ -1,81 +1,117 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v7 0/4] Add dual-fifo mode support of i.MX ssi
-Date: Thu, 28 Nov 2013 14:11:09 +0530
-Message-ID: <20131128084108.GZ8834@intel.com>
-References: <cover.1384352281.git.b42378@freescale.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] irqchip: renesas-intc-irqpin: Update Documentation of
+ DT bindings compat string and example
+Date: Thu, 28 Nov 2013 09:46:17 +0000
+Message-ID: <20131128094617.GB5929@e106331-lin.cambridge.arm.com>
+References: <1385620857-18994-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1384352281.git.b42378@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nicolin Chen <b42378@freescale.com>
-Cc: dan.j.williams@intel.com, s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
+In-Reply-To: <1385620857-18994-1-git-send-email-horms+renesas@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2013 at 10:55:23PM +0800, Nicolin Chen wrote:
->  * ! This series of patches has a direct dependency between them. When
->  * ! applying them, we need to apply to one single branch. Otherwise,
->  * ! it would break currect branches.
-Applied, thanks
+On Thu, Nov 28, 2013 at 06:40:57AM +0000, Simon Horman wrote:
+> Update the compat strings to provide hardware-specific compat strings
+> for each variant of the hardware that is supported.
+> 
+> Also provide an example which was previously missing from
+> the bindings documentation
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+>  .../interrupt-controller/renesas,intc-irqpin.txt   | 29 +++++++++++++++++++++-
+>  1 file changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+> index 1f8b0c5..240ab2a 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+> @@ -2,7 +2,12 @@ DT bindings for the R-/SH-Mobile irqpin controller
+>  
+>  Required properties:
+>  
+> -- compatible: has to be "renesas,intc-irqpin"
+> +- compatible: Must be one of the following:
 
---
-~Vinod
-> 
-> Changelog
-> v7:
->  * Appended missing Acked-by to all four patches.
->  * Sorry that I didn't add them at the first place.
-> v6:
->  * PATCH-1: Use goto err_firmware instead of return directly.
->  *
->  * Nothing changes for the other three ack-ed patches
-> v5:
->  * PATCH-3: Add period size constraint when using dual fifo mode
->  *
->  * Nothing changes for the other three patches
-> v4:
->  * PATCH-3: Drop useless register configuration.
->  *
->  * Nothing changes for the other three patches
-> v3:
->  * PATCH-1: Add comments to indicate the end of v1 and v2 array.
->  * PATCH-3: Use better way to keep watermark as even number.
->  *
->  * Nothing changes for PATCH-2 and PATCH-4
-> v2:
->  * Instead of adding rogue scripts to current SDMA driver based on firmware
->  * V1, we define the new SDMA firmware as version 2 and bisect the PATCH-1
->  * to two patches: The first is to add version check code to the SDMA driver;
->  * And the second is to add SSI dual FIFO DMATYPE.
->  *
->  * Nothing changes for the last two patches.
-> v1:
->  * SSI can reduce hardware overrun/underrun possibility when using dual
->  * fifo mode. To support this mode, we need to first update sdma sciprt
->  * list, and then enable dual fifo BIT in SSI driver, and last update DT
->  * bindings of i.MX series.
-> 
-> Nicolin Chen (4):
->   dma: imx-sdma: Add sdma firmware version 2 support
->   dma: imx-sdma: Add new dma type for ssi dual fifo script
->   ASoC: fsl_ssi: Add dual fifo mode support
->   ARM: dts: imx: use dual-fifo sdma script for ssi
-> 
->  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
->  arch/arm/boot/dts/imx51.dtsi                       |  4 ++--
->  arch/arm/boot/dts/imx53.dtsi                       |  4 ++--
->  arch/arm/boot/dts/imx6qdl.dtsi                     | 12 +++++-----
->  arch/arm/boot/dts/imx6sl.dtsi                      | 12 +++++-----
->  drivers/dma/imx-sdma.c                             | 19 ++++++++++++++-
->  include/linux/platform_data/dma-imx-sdma.h         |  5 ++++
->  include/linux/platform_data/dma-imx.h              |  1 +
->  sound/soc/fsl/fsl_ssi.c                            | 27 +++++++++++++++++++++-
->  9 files changed, 67 insertions(+), 18 deletions(-)
-> 
-> -- 
-> 1.8.4
-> 
-> 
+s/be/contain/
 
--- 
+> +    "renesas,intc-irqpin"
+> +    "renesas,intc-irqpin-r8a7740"
+> +    "renesas,intc-irqpin-r8a7778"
+> +    "renesas,intc-irqpin-r8a7779"
+> +    "renesas,intc-irqpin-sh73a0"
+>  - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
+>    interrupts.txt in this directory
+
+I looked in this file in mainline, and the binding does not describe
+that the reg entries are _required_ as the driver implies:
+
+---->8----
+	/* get hold of manadatory IOMEM */
+	for (k = 0; k < INTC_IRQPIN_REG_NR; k++) {
+		io[k] = platform_get_resource(pdev, IORESOURCE_MEM, k);
+		if (!io[k]) {
+			dev_err(&pdev->dev, "not enough IOMEM resources\n");
+			ret = -EINVAL;
+			goto err0;
+		}
+	}
+---->8----
+
+Please add a description of the reg entries to the required properties
+section of the binding, along with a description of what they correspond
+to.
+
+>  
+> @@ -14,3 +19,25 @@ Optional properties:
+>    if different from the default 4 bits
+>  - control-parent: disable and enable interrupts on the parent interrupt
+>    controller, needed for some broken implementations
+
+Similarly, please describe the interrupts, and what they are logically.
+
+> +
+> +Example:
+> +
+> +        irqpin0: irqpin@e6900000 {
+> +                compatible = "renesas,intc-irqpin";
+> +                #interrupt-cells = <2>;
+> +                interrupt-controller;
+
+Please mention this as required too.
+
+> +                reg = <0xe6900000 4>,
+> +                        <0xe6900010 4>,
+> +                        <0xe6900020 1>,
+> +                        <0xe6900040 1>,
+> +                        <0xe6900060 1>;
+> +                interrupt-parent = <&gic>;
+> +                interrupts = <0 149 IRQ_TYPE_LEVEL_HIGH
+> +                              0 149 IRQ_TYPE_LEVEL_HIGH
+> +                              0 149 IRQ_TYPE_LEVEL_HIGH
+> +                              0 149 IRQ_TYPE_LEVEL_HIGH
+> +                              0 149 IRQ_TYPE_LEVEL_HIGH
+> +                              0 149 IRQ_TYPE_LEVEL_HIGH
+> +                              0 149 IRQ_TYPE_LEVEL_HIGH
+> +                              0 149 IRQ_TYPE_LEVEL_HIGH>;
+
+Please bracket these individually.
+
+Otherwise, this looks fine to me.
+
+Thanks,
+Mark.
