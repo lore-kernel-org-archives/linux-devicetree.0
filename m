@@ -1,309 +1,151 @@
-From: Jonas Jensen <jonas.jensen@gmail.com>
-Subject: [PATCH v6] gpio: Add MOXA ART GPIO driver
-Date: Thu, 28 Nov 2013 16:19:05 +0100
-Message-ID: <1385651945-22355-1-git-send-email-jonas.jensen@gmail.com>
-References: <1381503190-5733-1-git-send-email-jonas.jensen@gmail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1381503190-5733-1-git-send-email-jonas.jensen@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: grant.likely@linaro.org, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, arnd@arndb.de, mark.rutland@arm.com, devicetree@vger.kernel.org, Jonas Jensen <jonas.jensen@gmail.com>
+From: randy <lxr1234@hotmail.com>
+Subject: Re: How to enable usb in exynos4412
+Date: Thu, 28 Nov 2013 23:29:26 +0800
+Message-ID: <BLU0-SMTP92C7727197877F7B4E95D9ADEE0@phx.gbl>
+References: <BLU0-SMTP72A83BF7783889A9C59A03ADEE0@phx.gbl> <2200229.bjG2XWDipV@amdc1227>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2200229.bjG2XWDipV@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, stern@rowland.harvard.edu, devicetree@vger.kernel.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add GPIO driver for MOXA ART SoCs.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
----
+Hello Tomasz Figa
+=E4=BA=8E 2013=E5=B9=B411=E6=9C=8828=E6=97=A5 22:37, Tomasz Figa =E5=86=
+=99=E9=81=93:
+> Hi Randy,
+>=20
+> On Thursday 28 of November 2013 22:00:41 randy wrote:
+>> I have development board whose SoC is exynos4412, I try to enable
+>> the usb in it but I failed. I saw the document=20
+>> Documentation/devicetree/bindings/usb/samsung-usbphy.txt, does it
+>> mean that the usb driver is not done? And about that document, in
+>> samsung datasheet(32.8.2), the address reg 0x125B_0000 + 32bits
+>> contains hsic1, hsic0, phy1 and phy0's power control. And in
+>> 0x1002_0704 + 3 * 32 bits, it contains usb_phy, hsic1_phy and
+>> hsic2_phy control(8.8.1.27). So I doubt the documents.
+>>=20
+>> Here is the log and dts=20
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3Dlog=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [
+>> 1.000000] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI)
+>> Driver [    1.010000] ehci-exynos: EHCI EXYNOS driver [
+>> 1.015000] unable to find transceiver of type USB2 PHY [
+>> 1.020000] exynos-ehci 12580000.ehci: no platform data or=20
+>> transceiver defined [    1.025000] platform 12580000.ehci: Driver
+>> exynos-ehci requests probe deferral
+>=20
+> First of all, do you have CONFIG_SAMSUNG_USB2PHY enabled in your
+> kernel config? Also, see below.
+>=20
+>>=20
+Yes, I have
 
-Notes:
-    Thanks for reviewing!
-    
-    v5 writes to "pincontrol" are not needed, the pins work regardless.
-    
-    I took notes probing the pins with a multimeter, and I don't know the proper
-    place for it, so I'm attaching the text here:
-    
-    GPIOs on the UC-7112-LX base board can be found at "JP2", this is a 2x10 hole through
-    area that comes without header pins. The holes can be used to measure and test GPIOs.
-    A header could theoretically be soldered in.
-    
-    "JP2" is described with the following PCB print:
-    
-    |PIO1|PIO3|PIO5|PIO7|PIO9|NC|NC|NC|GND|+5V|
-    |PIO0|    |PIO4|PIO6|PIO8|NC|NC|NC|GND|+5V|
-    
-    PIO2 (no text / PIO2) to PIO9 were verified working.
-    PIO0, PIO1 could not be verified.
-    
-    The driver adds support for 32 pins via the register at 0x98700000, the following
-    GPIO numbers (corresponding pins on the right) were tested and verified:
-    
-    05: RTC SCLK
-    06: RTC DATA
-    07: RTC RESET
-    12: (no text / PIO2)
-    13: PIO3
-    14: PIO4
-    15: PIO5
-    16: PIO6
-    17: PIO7
-    18: PIO8
-    19: PIO9
-    24: HCM1206EN buzzer
-    25: reset button
-    27: ready LED
-    
-    GPIOs that can be set from sysfs are:
-    1. GPIO 12-19 (measures 0V / 3.3V respectively)
-    2. GPIO 24, 27
-    
-    GPIOs that can be "seen":
-    1. GPIO 25
-    
-    Thanks for telling me about drivers/input/keyboard/gpio_keys_polled.c,
-    it works, events are triggered on reset "key" and print to console,
-    the relevant DT parts are:
-    
-    leds {
-            compatible = "gpio-leds";
-            user-led {
-                    label = "ready-led";
-                    gpios = <&gpio 27 0x1>;
-                    default-state = "on";
-                    linux,default-trigger = "default-on";
-            };
-    };
-    
-    gpio_keys_polled {
-            compatible = "gpio-keys-polled";
-            #address-cells = <1>;
-            #size-cells = <0>;
-            poll-interval = <500>;
-            button@25 {
-                    label = "GPIO Reset";
-                    linux,code = <116>;
-                    gpios = <&gpio 25 1>;
-            };
-    };
-    
-    Changes since v5:
-    
-    1. remove pincontrol register
-    2. update DT binding and example
-    
-    Applies to next-20131128
+ayaka@kotomi:~/workplace/exynos4412/kernel/linux-mainline$ cat
+=2E./build-linux-mainline/.config|grep CONFIG_SAMSUNG_USB2PHY
+CONFIG_SAMSUNG_USB2PHY=3Dy
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3Ddts=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>
+>>=20
+diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts
+>> b/arch/arm/boot/dts/exynos4412-tiny4412.dts new file mode 100644=20
+>> index 0000000..c8d4cfa --- /dev/null +++
+>> b/arch/arm/boot/dts/exynos4412-tiny4412.dts @@ -0,0 +1,176 @@=20
+>> +/* + * Hardkernel's Exynos4412 based tiny4412 1306 board device
+>> tree source + * + * Copyright (c) 2013 Tomoya Gitsufuki
+>> <ayaka@mail.soulik.info> + * + * Device tree source file for
+>> Friendyarm tiny4412 1306 board which is based on + * Samsung's
+>> Exynos4412 SoC. + * + * This program is free software; you can
+>> redistribute it and/or modify + * it under the terms of the GNU
+>> General Public License version 2 as + * published by the Free
+>> Software Foundation. +*/ + +/dts-v1/; +#include
+>> "exynos4412.dtsi" + +/ { +	model =3D "Friendly Arm Tiny4412 1306
+>> board based on Exynos4412"; +	compatible =3D
+>> "friendlyarm,tiny4412-1306", "samsung,exynos4412"; + +	memory { +
+>> reg =3D <0x40000000 0x40000000>; +	}; + +	chosen { +		bootargs
+>> =3D"root=3D/dev/mmcblk0p1 rootfstype=3Dext4 rw console=3DttySAC0,115=
+200
+>> init=3D/sbin/init"; +	}; + +	leds { +		compatible =3D "gpio-leds"; +
+>> led1 { +			label =3D "led1:heart"; +			gpios =3D <&gpm4 0 1>; +
+>> default-state =3D "on"; +			linux,default-trigger =3D "heartbeat"; +
+>> }; +		led2 { +			label =3D "led2:mmc0"; +			gpios =3D <&gpm4 1 1>; +
+>> default-state =3D "on"; +			linux,default-trigger =3D "mmc0"; +		};=20
+>> + +	}; + +	regulators { +		compatible =3D "simple-bus"; +
+>> #address-cells =3D <1>; + +		vemmc_reg: regulator-0 { +
+>> compatible =3D "regulator-fixed"; +			regulator-name =3D
+>> "VMEM_VDD_2.8V"; +			regulator-min-microvolt =3D <2800000>; +
+>> regulator-max-microvolt =3D <2800000>; +			gpio =3D <&gpk0 2 0>; +
+>> enable-active-high; +		}; + +	}; + +	/* +	mshc@12550000 { +
+>> #address-cells =3D <1>; +		#size-cells =3D <0>; +		pinctrl-0 =3D
+>> <&sd4_clk &sd4_cmd &sd4_bus4 &sd4_bus8>; +		pinctrl-names =3D
+>> "default"; +		status =3D "okay"; + +		vmmc-supply =3D <&vemmc_reg>; =
++
+>> clocks =3D <&clock 301>, <&clock 149>; +		clocks-name =3D "dwmci",
+>> "sclk_dwmci"; +		clock-frequency =3D <400000000>; + +		num-slots =3D
+>> <1>; +		supports-highspeed; +		broken-cd; +		fifo-depth =3D
+>> <0x80>; +		card-detect-delay =3D <200>; +
+>> samsung,dw-mshc-sdr-timing =3D <2 3>; +		samsung,dw-mshc-ddr-timing
+>> =3D <1 2>; + +		slot@0 { +			reg =3D <0>; +			bus-width =3D <8>; + +
+>> }; +	}; +	*/ + +	rtc@10070000 { +		status =3D "okay"; +	}; + +
+>> sdhci@12530000 { +		bus-width =3D <4>; +		pinctrl-0 =3D <&sd2_clk
+>> &sd2_cmd &sd2_bus4 &sd2_cd>; +		pinctrl-names =3D "default"; +
+>> status =3D "okay"; +	}; +	sdhci@1254000 { +		bus-width =3D <4>; +
+>> pinctrl-0 =3D <&sd3_clk &sd3_cmd &sd3_bus4 &sd3_cd>; +
+>> pinctrl-names =3D "default"; +		status =3D "okay"; +	}; + +	usb_phy:
+>> usbphy@125B0000 { +		#address-cells =3D <1>; +		#size-cells =3D <1>;=
+=20
+>> +		compatible =3D "samsung,exynos4210-usbphy";
+>=20
+> This is not the compatible listed in [1]. Moreover, it looks like
+> the compatible string for Exynos4x12 is not documented. According
+> to driver code, it should be "samsung,exynos4x12-usb2phy".
+>=20
+> [1] Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+>=20
+>> +		reg =3D <0x12B0000 0x100>;
+>=20
+> The address should be 0x125B0000.
+>=20
+>> +		ranges; + +		clocks =3D <&clock 2>, <&clock 305>; +		clock-names
+>> =3D "xusbxti", "otg"; +		usbphy-sys { +			/* USB device and host
+>> PHY_CONTROL registers */ +			reg =3D <0x10020704 0x8>;
+>=20
+> reg should be <0x10020704 0xc 0x1001021c 0x4> on Exynos4x12.
+>=20
+> In general, this PHY driver is only preliminary and there is
+> already work going on a completely new PHY driver that will cover
+> full USB functionality present on Exynos 4 and should be much more
+> reliable.
+>=20
+> The currently available one might or might not work for you, even
+> after correcting the things I pointed above.
+>=20
+> Best regards, Tomasz
+>=20
+>=20
+>=20
+I have follow you, yes it doesn't work. I have tested it many times
+before, the first address problem may is modified in one test.
+So I shall wait the driver to be ready?
+Thank you.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
 
- .../devicetree/bindings/gpio/moxa,moxart-gpio.txt  |  19 +++
- drivers/gpio/Kconfig                               |   7 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-moxart.c                         | 142 +++++++++++++++++++++
- 4 files changed, 169 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/moxa,moxart-gpio.txt
- create mode 100644 drivers/gpio/gpio-moxart.c
-
-diff --git a/Documentation/devicetree/bindings/gpio/moxa,moxart-gpio.txt b/Documentation/devicetree/bindings/gpio/moxa,moxart-gpio.txt
-new file mode 100644
-index 0000000..f8e8f18
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/moxa,moxart-gpio.txt
-@@ -0,0 +1,19 @@
-+MOXA ART GPIO Controller
-+
-+Required properties:
-+
-+- #gpio-cells : Should be 2, The first cell is the pin number,
-+		the second cell is used to specify polarity:
-+			0 = active high
-+			1 = active low
-+- compatible : Must be "moxa,moxart-gpio"
-+- reg : Should contain registers location and length
-+
-+Example:
-+
-+	gpio: gpio@98700000 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		compatible = "moxa,moxart-gpio";
-+		reg =	<0x98700000 0xC>;
-+	};
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 0f04444..e48c523 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -156,6 +156,13 @@ config GPIO_F7188X
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called f7188x-gpio.
- 
-+config GPIO_MOXART
-+	bool "MOXART GPIO support"
-+	depends on ARCH_MOXART
-+	help
-+	  Select this option to enable GPIO driver for
-+	  MOXA ART SoC devices.
-+
- config GPIO_MPC5200
- 	def_bool y
- 	depends on PPC_MPC52xx
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 7971e36..ee95154 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_GPIO_MC9S08DZ60)	+= gpio-mc9s08dz60.o
- obj-$(CONFIG_GPIO_MCP23S08)	+= gpio-mcp23s08.o
- obj-$(CONFIG_GPIO_ML_IOH)	+= gpio-ml-ioh.o
- obj-$(CONFIG_GPIO_MM_LANTIQ)	+= gpio-mm-lantiq.o
-+obj-$(CONFIG_GPIO_MOXART)	+= gpio-moxart.o
- obj-$(CONFIG_GPIO_MPC5200)	+= gpio-mpc5200.o
- obj-$(CONFIG_GPIO_MPC8XXX)	+= gpio-mpc8xxx.o
- obj-$(CONFIG_GPIO_MSIC)		+= gpio-msic.o
-diff --git a/drivers/gpio/gpio-moxart.c b/drivers/gpio/gpio-moxart.c
-new file mode 100644
-index 0000000..96ec03c
---- /dev/null
-+++ b/drivers/gpio/gpio-moxart.c
-@@ -0,0 +1,142 @@
-+/*
-+ * MOXA ART SoCs GPIO driver.
-+ *
-+ * Copyright (C) 2013 Jonas Jensen
-+ *
-+ * Jonas Jensen <jonas.jensen@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/io.h>
-+#include <linux/gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_gpio.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/delay.h>
-+#include <linux/timer.h>
-+#include <linux/bitops.h>
-+
-+#define GPIO_DATA_OUT		0x00
-+#define GPIO_DATA_IN		0x04
-+#define GPIO_PIN_DIRECTION	0x08
-+
-+static void __iomem *moxart_gpio_base;
-+
-+static int moxart_gpio_request(struct gpio_chip *chip, unsigned offset)
-+{
-+	return pinctrl_request_gpio(offset);
-+}
-+
-+static void moxart_gpio_free(struct gpio_chip *chip, unsigned offset)
-+{
-+	pinctrl_free_gpio(offset);
-+}
-+
-+static int moxart_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-+{
-+	void __iomem *ioaddr = moxart_gpio_base + GPIO_PIN_DIRECTION;
-+
-+	writel(readl(ioaddr) & ~BIT(offset), ioaddr);
-+	return 0;
-+}
-+
-+static int moxart_gpio_direction_output(struct gpio_chip *chip,
-+					unsigned offset, int value)
-+{
-+	void __iomem *ioaddr = moxart_gpio_base + GPIO_PIN_DIRECTION;
-+
-+	writel(readl(ioaddr) | BIT(offset), ioaddr);
-+	return 0;
-+}
-+
-+static void moxart_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-+{
-+	void __iomem *ioaddr = moxart_gpio_base + GPIO_DATA_OUT;
-+	u32 reg = readl(ioaddr);
-+
-+	if (value)
-+		reg = reg | BIT(offset);
-+	else
-+		reg = reg & ~BIT(offset);
-+
-+
-+	writel(reg, ioaddr);
-+}
-+
-+static int moxart_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	u32 ret = readl(moxart_gpio_base + GPIO_PIN_DIRECTION);
-+
-+	if (ret & BIT(offset))
-+		return !!(readl(moxart_gpio_base + GPIO_DATA_OUT) &
-+			  BIT(offset));
-+	else
-+		return !!(readl(moxart_gpio_base + GPIO_DATA_IN) &
-+			  BIT(offset));
-+}
-+
-+static struct gpio_chip moxart_gpio_chip = {
-+	.label			= "moxart-gpio",
-+	.request		= moxart_gpio_request,
-+	.free			= moxart_gpio_free,
-+	.direction_input	= moxart_gpio_direction_input,
-+	.direction_output	= moxart_gpio_direction_output,
-+	.set			= moxart_gpio_set,
-+	.get			= moxart_gpio_get,
-+	.base			= 0,
-+	.ngpio			= 32,
-+	.can_sleep		= 0,
-+};
-+
-+static int moxart_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	int ret;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	moxart_gpio_base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(moxart_gpio_base)) {
-+		dev_err(dev, "%s: devm_ioremap_resource res_gpio failed\n",
-+			dev->of_node->full_name);
-+		return PTR_ERR(moxart_gpio_base);
-+	}
-+
-+	moxart_gpio_chip.dev = dev;
-+
-+	ret = gpiochip_add(&moxart_gpio_chip);
-+	if (ret) {
-+		dev_err(dev, "%s: gpiochip_add failed\n",
-+			dev->of_node->full_name);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id moxart_gpio_match[] = {
-+	{ .compatible = "moxa,moxart-gpio" },
-+	{ }
-+};
-+
-+static struct platform_driver moxart_gpio_driver = {
-+	.driver	= {
-+		.name		= "moxart-gpio",
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= moxart_gpio_match,
-+	},
-+	.probe	= moxart_gpio_probe,
-+};
-+module_platform_driver(moxart_gpio_driver);
-+
-+MODULE_DESCRIPTION("MOXART GPIO chip driver");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Jonas Jensen <jonas.jensen@gmail.com>");
--- 
-1.8.2.1
-
+iQEcBAEBAgAGBQJSl2FPAAoJEPb4VsMIzTzi4fEH/1oSAOP3Ei3lNC8aIQM5Kzl0
+TY19PlixKp33sJiSY9ojRxObilMX3MI2elNxNpKl8X+HbqJhlWlrifa+u202A4UW
+Cen0RJcFfYBKSQvY2rf/aeJxTbcBFrrHc5p6P/fQh3hJn4SgfS4qYeQKyYUv494p
+yhqJvHOGNDP3h2SR6DTwb/2sTiLFCvuM5Ea8IkjfLv+dsYOlaXl1/b6az0g0IHXc
+wiGChsm9lQlHc5RCYpoJYFnUueRWjBoJcBPNJH54gJ3HQx48D7g5TGOAwubTPYQt
+7BGuFYPqPwbEMon81bv72k/XJ6BoTH1NfWP8scMxNHrSJNLc9QUL3qlIMmA2b7c=3D
+=3DLK75
+-----END PGP SIGNATURE-----
