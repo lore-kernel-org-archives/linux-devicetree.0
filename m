@@ -1,44 +1,49 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: Re: [PATCH] ARM: DTS: omap4-sdp: Add regulator for LCD backlight
- (pwm-backlight)
-Date: Thu, 28 Nov 2013 15:39:17 +0530
-Message-ID: <5297164D.9060400@ti.com>
-References: <1385630924-16392-1-git-send-email-peter.ujfalusi@ti.com>
+From: Marc Dietrich <marvin24@gmx.de>
+Subject: Re: [PATCH v3 1/6] ARM: tegra: add gpiod_lookup table for paz00
+Date: Thu, 28 Nov 2013 11:20:19 +0100
+Message-ID: <1752117.77jQLaML2y@fb07-iapwap2>
+References: <1385460350-17543-1-git-send-email-mika.westerberg@linux.intel.com> <4501377.Eymj5teNBr@fb07-iapwap2> <20131128093224.GA26634@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1385630924-16392-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Benoit Cousson <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tomi.valkeinen@ti.com
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20131128093224.GA26634@ulmo.nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rhyland Klein <rklein@nvidia.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, Chris Ball <cjb@laptop.org>, Johannes Berg <johannes@sipsolutions.net>, Adrian Hunter <adrian.hunter@intel.com>, Alex Courbot <acourbot@nvidia.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, Rob Landley <rob@landley.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Stephen Warren <swarren@wwwdotorg.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 28 November 2013 02:58 PM, Peter Ujfalusi wrote:
-> Since in DT booted kernel dummy regulators are no longer supported we need
-> to provide valid phandle for the regulator needed by the backlight.
-> On the board VBAT is used to power the LCD backlight(s).
->
-> Signed-off-by: Peter Ujfalusi<peter.ujfalusi@ti.com>
-> ---
-> Hi,
->
-> This patch is needed for 3.13 to get the LCD backlight to work again.
-Is this usage of power supply a mandatory requirement?
+Am Donnerstag, 28. November 2013, 10:32:41 schrieb Thierry Reding:
+> On Thu, Nov 28, 2013 at 10:09:14AM +0100, Marc Dietrich wrote:
+> > The real problem with the rfkill driver is that it does not support DT. A
+> > naive attempt to convert it was made some year ago, but got rejected
+> > because rfkill wasn't seen as isolated device which can be represented in
+> > the device- tree. Also it can not be added under some existing device
+> > node (e.g. the wifi driver) because those devices sit normally on an
+> > "enumeratable" bus (e.g. usb, pci), which is not listed in the device
+> > tree at all. This is why it still requires a board file and
+> > platform_data. I wish we could find a solution for this.
+> 
+> There is a solution at least for PCI. You can list PCI devices within
+> the device tree, which is really handy (required even) if for instance
+> one of the PCI devices is an SPI or I2C controller, each providing a bus
+> that cannot be probed. What you usually do is describe the PCI hierarchy
+> at least up to the controller and then list slaves as child nodes.
+> 
+> I'm not aware of anything similar for USB, but it should certainly be
+> possible to come up with a standard binding for the USB bus. It has a
+> topology that's similar enough to that of PCI so that the same general
+> rules could be applied.
+> 
+> If that's really the only thing that keeps rfkill from gaining DT
+> support then it's something worth tackling in my opinion.
 
-There is a thread which discusses this issue[1]:
-http://www.spinics.net/lists/arm-kernel/msg288215.html
+it's not so simple I fear. The wifi driver needs to learn about the rfkill 
+"device". As mentioned above, it's not really a device so the question is what 
+needs to be added and where? The wifi driver just polls his own gpio lines to 
+check the status of rfkill. Be we want to modify the "other side", so maybe 
+this isn't related to the wifi driver at all. It's more a "virtual rfkill 
+device". No idea if something like this exists already in device tree.
 
-According to the above, regulator framework have support in 3.13-rc1 to 
-returns
-a dummy  regulator if there is none specified in the dts data.
-Thierry told that there seems to be a bug in regulator in handling these 
-case.
-
-Though, I also posted a patch on pwm a couple of days ago[2]
-[2]: https://patchwork.kernel.org/patch/3246711/
-
-I posted it without "power-supply" by testing it with the
-solution proposed in [1].
-If I dont use the solution[1], it fails for me also.
+Marc
 
