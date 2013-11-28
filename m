@@ -1,191 +1,62 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: How to enable usb in exynos4412
-Date: Thu, 28 Nov 2013 15:37:07 +0100
-Message-ID: <2200229.bjG2XWDipV@amdc1227>
-References: <BLU0-SMTP72A83BF7783889A9C59A03ADEE0@phx.gbl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <BLU0-SMTP72A83BF7783889A9C59A03ADEE0@phx.gbl>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: randy <lxr1234@hotmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, stern@rowland.harvard.edu, devicetree@vger.kernel.org, balbi@ti.com
+From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 0/6] ARM: at91: use new at91 clks for samad3 SoCs
+Date: Thu, 28 Nov 2013 15:49:31 +0100
+Message-ID: <1385650171-8756-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Randy,
+Hello,
 
-On Thursday 28 of November 2013 22:00:41 randy wrote:
-> I have development board whose SoC is exynos4412, I try to enable the
-> usb in it but I failed. I saw the document
-> Documentation/devicetree/bindings/usb/samsung-usbphy.txt, does it mean
-> that the usb driver is not done?
-> And about that document, in samsung datasheet(32.8.2), the address reg
-> 0x125B_0000 + 32bits contains hsic1, hsic0, phy1 and phy0's power
-> control. And in 0x1002_0704 + 3 * 32 bits, it contains usb_phy,
-> hsic1_phy and hsic2_phy control(8.8.1.27). So I doubt the documents.
-> 
-> Here is the log and dts
-> ===========================log================================
-> [    1.000000] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
-> [    1.010000] ehci-exynos: EHCI EXYNOS driver
-> [    1.015000] unable to find transceiver of type USB2 PHY
-> [    1.020000] exynos-ehci 12580000.ehci: no platform data or
-> transceiver defined
-> [    1.025000] platform 12580000.ehci: Driver exynos-ehci requests probe
-> deferral
+This patch series moves sama5d3 SoCs and boards to the new at91 clk framework
+(based on common clk framework).
 
-First of all, do you have CONFIG_SAMSUNG_USB2PHY enabled in your kernel
-config? Also, see below.
+Best Regards,
 
-> 
-> ================================dts==================================
-> diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts
-> b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-> new file mode 100644
-> index 0000000..c8d4cfa
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-> @@ -0,0 +1,176 @@
-> +/*
-> + * Hardkernel's Exynos4412 based tiny4412 1306 board device tree source
-> + *
-> + * Copyright (c) 2013 Tomoya Gitsufuki <ayaka@mail.soulik.info>
-> + *
-> + * Device tree source file for Friendyarm tiny4412 1306 board which is
-> based on
-> + * Samsung's Exynos4412 SoC.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
-> +
-> +/dts-v1/;
-> +#include "exynos4412.dtsi"
-> +
-> +/ {
-> +	model = "Friendly Arm Tiny4412 1306 board based on Exynos4412";
-> +	compatible = "friendlyarm,tiny4412-1306", "samsung,exynos4412";
-> +
-> +	memory {
-> +		reg = <0x40000000 0x40000000>;
-> +	};
-> +
-> +	chosen {
-> +		bootargs ="root=/dev/mmcblk0p1 rootfstype=ext4 rw
-> console=ttySAC0,115200 init=/sbin/init";
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		led1 {
-> +			label = "led1:heart";
-> +			gpios = <&gpm4 0 1>;
-> +			default-state = "on";
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +		led2 {
-> +			label = "led2:mmc0";
-> +			gpios = <&gpm4 1 1>;
-> +			default-state = "on";
-> +			linux,default-trigger = "mmc0";
-> +		};
-> +
-> +	};
-> +
-> +	regulators {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +
-> +		vemmc_reg: regulator-0 {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "VMEM_VDD_2.8V";
-> +			regulator-min-microvolt = <2800000>;
-> +			regulator-max-microvolt = <2800000>;
-> +			gpio = <&gpk0 2 0>;
-> +			enable-active-high;
-> +		};
-> +
-> +	};
-> +
-> +	/*
-> +	mshc@12550000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-0 = <&sd4_clk &sd4_cmd &sd4_bus4 &sd4_bus8>;
-> +		pinctrl-names = "default";
-> +		status = "okay";
-> +
-> +		vmmc-supply = <&vemmc_reg>;
-> +		clocks = <&clock 301>, <&clock 149>;
-> +		clocks-name = "dwmci", "sclk_dwmci";
-> +		clock-frequency = <400000000>;
-> +
-> +		num-slots = <1>;
-> +		supports-highspeed;
-> +		broken-cd;
-> +		fifo-depth = <0x80>;
-> +		card-detect-delay = <200>;
-> +		samsung,dw-mshc-sdr-timing = <2 3>;
-> +		samsung,dw-mshc-ddr-timing = <1 2>;
-> +
-> +		slot@0 {
-> +			reg = <0>;
-> +			bus-width = <8>;
-> +				
-> +		};
-> +	};
-> +	*/
-> +
-> +	rtc@10070000 {
-> +		status = "okay";
-> +	};
-> +
-> +	sdhci@12530000 {
-> +		bus-width = <4>;
-> +		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4 &sd2_cd>;
-> +		pinctrl-names = "default";
-> +		status = "okay";
-> +	};
-> +	sdhci@1254000 {
-> +		bus-width = <4>;
-> +		pinctrl-0 = <&sd3_clk &sd3_cmd &sd3_bus4 &sd3_cd>;
-> +		pinctrl-names = "default";
-> +		status = "okay";
-> +	};
-> +
-> +	usb_phy: usbphy@125B0000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "samsung,exynos4210-usbphy";
+Boris
 
-This is not the compatible listed in [1]. Moreover, it looks like the
-compatible string for Exynos4x12 is not documented. According to driver
-code, it should be "samsung,exynos4x12-usb2phy".
+Changes since v3:
+ - fix prog clks declaration
 
-[1] Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+Changes since v2:
+ - rework dt bindings:
+   * replace "atmel,clk-id" property by the standard "reg" property
+   * reference system, peripheral and programmable clks using the direct
+     clk node instead of the parent node plus a clk id
+ - add usb_clk to usb ehci controller node
 
-> +		reg = <0x12B0000 0x100>;
+Changes since v1:
+ - remove references to peripheral id macros
+ - remove old clk definitions after moving to new clk framework
 
-The address should be 0x125B0000.
+Boris BREZILLON (6):
+  ARM: at91: prepare sama5 dt boards transition to common clk
+  ARM: at91: prepare common clk transition for sama5d3 SoC
+  ARM: at91/dt: define sama5d3 clocks
+  ARM: at91/dt: define sama5d3xek's main clk frequency
+  ARM: at91: move sama5d3 SoC to common clk
+  ARM: at91/dt: remove old clk material
 
-> +		ranges;
-> +
-> +		clocks = <&clock 2>, <&clock 305>;
-> +		clock-names = "xusbxti", "otg";
-> +		usbphy-sys {
-> +			/* USB device and host PHY_CONTROL registers */
-> +			reg = <0x10020704 0x8>;
+ arch/arm/boot/dts/sama5d3.dtsi      |  379 ++++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/sama5d3_can.dtsi  |   20 ++
+ arch/arm/boot/dts/sama5d3_emac.dtsi |   11 +
+ arch/arm/boot/dts/sama5d3_gmac.dtsi |   11 +
+ arch/arm/boot/dts/sama5d3_lcd.dtsi  |   17 ++
+ arch/arm/boot/dts/sama5d3_mci2.dtsi |   12 ++
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi |   12 ++
+ arch/arm/boot/dts/sama5d3_uart.dtsi |   21 ++
+ arch/arm/boot/dts/sama5d3xcm.dtsi   |   17 +-
+ arch/arm/mach-at91/Kconfig          |    1 -
+ arch/arm/mach-at91/board-dt-sama5.c |   10 +-
+ arch/arm/mach-at91/sama5d3.c        |  342 -------------------------------
+ 12 files changed, 497 insertions(+), 356 deletions(-)
 
-reg should be <0x10020704 0xc 0x1001021c 0x4> on Exynos4x12.
+-- 
+1.7.9.5
 
-In general, this PHY driver is only preliminary and there is already
-work going on a completely new PHY driver that will cover full USB
-functionality present on Exynos 4 and should be much more reliable.
-
-The currently available one might or might not work for you, even after
-correcting the things I pointed above.
-
-Best regards,
-Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
