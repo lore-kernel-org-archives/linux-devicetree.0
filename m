@@ -1,41 +1,98 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v4 2/5] extcon: max14577: Add extcon-max14577 driver to
- support MUIC device
-Date: Thu, 28 Nov 2013 12:53:11 +0900
-Message-ID: <5296BE27.1040904@samsung.com>
-References: <1385135469-27044-1-git-send-email-k.kozlowski@samsung.com>
- <1385135469-27044-3-git-send-email-k.kozlowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1385135469-27044-3-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: [PATCH V11 0/3] Add watchdog DT nodes and use syscon regmap interface
+ to configure pmu registers
+Date: Thu, 28 Nov 2013 10:04:00 +0530
+Message-ID: <1385613243-3559-1-git-send-email-l.krishna@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, wim@iguana.be
+Cc: dianders@chromium.org, kgene.kim@samsung.com, t.figa@samsung.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2013 12:51 AM, Krzysztof Kozlowski wrote:
-> From: Chanwoo Choi <cw00.choi@samsung.com>
-> 
-> This patch supports Maxim MAX14577 MUIC(Micro USB Interface Controller)
-> device by using EXTCON subsystem to handle various external connectors.
-> The max14577 device uses regmap method for i2c communication and
-> supports irq domain.
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  drivers/extcon/Kconfig           |   10 +
->  drivers/extcon/Makefile          |    1 +
->  drivers/extcon/extcon-max14577.c |  752 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 763 insertions(+)
->  create mode 100644 drivers/extcon/extcon-max14577.c
-> 
+This patchset does the following things
+	- Adds pmusysreg device node to exynos5.dtsi file
+	- Adds watchdog DT nodes to Exynos5250 and 5420
+	- Uses syscon regmap interface to configure pmu registers
+	  to mask/unmask enable/disable of watchdog.
+	
+This patch set is rebased on Kgene's for-next branch and tested on SMDK5420
 
-Applied it.
+changes since V10:
+	- followed coding style rules
+	- removed duplicate error message suggested by Guenter Roeck <linux@roeck-us.net>
 
-Thanks,
-Chanwoo Choi
+changes since V9:
+	- added descriptions to s3c2410_wdt_variant structure fields
+	- moved calling s3c2410wdt_mask_and_disable_reset() function above s3c2410wdt_start() call in probe
+	- put dev_err message back to s3c2410wdt_mask_and_disable_reset() function
+	  (suggested by Doug Anderson <dianders@chromium.org>)
 
+changes since V8:
+	- modified the patch description for the below patch
+	  "watchdog: s3c2410_wdt: use syscon regmap interface to configure pmu register"
+	- removed MODULE_ALIAS in watchdog driver
+	- changed dev_warn to dev_err in one failure case handling (suggested by Guenter Roeck <linux@roeck-us.net>)
+	- renamed variable name from pmu_config to drv_data
+	- changed the compatible field description in documentation file
+	  (suggested by Tomasz Figa <t.figa@samsung.com>)
+
+changes since V7:
+	- re-ordered the patches in the series
+	- moved pmu_config_s3c2410 structure out of ifdef CONFIG_OF
+	  and limited only this structure to platform match table
+	- renamed structure name from s3c_wdt_driver_ids to s3c2410_wdt_ids
+	- removed exynos variants from platform match table
+	  (suggested by Tomasz Figa <t.figa@samsung.com>)
+
+changes since V6:
+	- added SoC-specific compatible value to syscon node and documented it
+	- given more patch description for below patch
+	  ARM: dts: update watchdog device nodes for Exynos5250 and Exynos5420
+	- added platform_device_id array for watchdog devices
+	- selected MFD_SYSCON in Kconfig entry for watchdog
+
+Changes since V5:
+	- removed status property in DT nodes
+	- changed the return type for the function s3c2410wdt_mask_and_disable_reset()
+	  and handled error cases
+	- Handled to get driver data in non-DT cases
+	- Addressed comments given by Tomasz Figa <t.figa@samsung.com>
+
+Changes since V4:
+	- changed the node name from pmusysreg to syscon and node label from pmu_sys_reg to pmu_syscon
+	- changed the property name from samsung,pmusysreg to samsung,syscon-phandle
+	- used regmap_update_bits instead of remap_read/regmap_write
+	- Addressed other comments given by Tomasz Figa <t.figa@samsung.com>
+
+Changes since V3:
+	- changed the compatible strings for watchdog node
+	- splitted up adding pmusysreg node and made it separate patch
+	- Addressed comments given by Sachin Kamat <sachin.kamat@linaro.org>
+
+Changes since V2:
+	- used syscon regmap interface to configure pmu registers in WDT driver
+	  (suggested by Tomasz Figa <t.figa@samsung.com>)
+
+Changes since V1:
+        - Added new compatible string for Exynos5 SoCs
+        - Introduced quirk mechanism to program PMU registers
+        - Addressed comments given by Tomasz Figa <t.figa@samsung.com>
+
+Leela Krishna Amudala (3):
+  ARM: dts: Add pmu sysreg node to exynos5250 and exynos5420 dtsi files
+  watchdog: s3c2410_wdt: use syscon regmap interface to configure pmu
+    register
+  ARM: dts: update watchdog device nodes for Exynos5250 and Exynos5420
+
+ .../devicetree/bindings/arm/samsung/pmu.txt        |   16 ++
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |   21 ++-
+ arch/arm/boot/dts/exynos5.dtsi                     |    7 -
+ arch/arm/boot/dts/exynos5250.dtsi                  |   11 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |   14 ++
+ drivers/watchdog/Kconfig                           |    1 +
+ drivers/watchdog/s3c2410_wdt.c                     |  159 ++++++++++++++++++--
+ 7 files changed, 211 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
+
+-- 
+1.7.10.4
