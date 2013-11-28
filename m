@@ -1,34 +1,75 @@
-From: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 03/17] spi/qspi: parse register by name.
-Date: Thu, 28 Nov 2013 16:49:35 +0530
-Message-ID: <529726C7.8060005@ti.com>
-References: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com> <1385451313-1875-4-git-send-email-sourav.poddar@ti.com> <20131126103029.GY14725@sirena.org.uk> <5294835D.5090902@ti.com> <20131126122442.GC14725@sirena.org.uk> <5296CA5A.90304@ti.com> <20131128105423.GL14725@sirena.org.uk> <529721BF.4010902@ti.com> <20131128111152.GN14725@sirena.org.uk>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/9] clocksource/cadence_ttc: Use enable/disable_irq
+Date: Thu, 28 Nov 2013 12:55:38 +0100
+Message-ID: <52972F3A.9090103@linaro.org>
+References: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com> <1385514296-26702-5-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131128111152.GN14725-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385514296-26702-5-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 28 November 2013 04:41 PM, Mark Brown wrote:
-> On Thu, Nov 28, 2013 at 04:28:07PM +0530, Sourav Poddar wrote:
->> On Thursday 28 November 2013 04:24 PM, Mark Brown wrote:
->>> That means that if you switch all resources to _byname then the driver
->>> won't find any resources at all and will fail.  This will in turn mean
->>> that any device trees that work with the current code wil start failing,
->>> breaking compatibility.
->> I am changing my code to use *byname for all resources. There is no
->> dts available now in mainline using this code. I have added the dts file
->> as patch 15, 16 of this series to take care of this.
-> We're now aiming for DT to be a stable interface and the existing
-> binding has been included in a release so you really ought to be keeping
-> compatiblity.
-Ok. So I will check for *byname, if not found I will switch to 
-"platform_get_resource".
+On 11/27/2013 02:04 AM, Soren Brinkmann wrote:
+> To ensure that the timer interrupt is properly enabled/disabled acros=
+s
+> the whole CPU cluster use enable/disable_irq() instead of
+> local_irq_disable().
+>
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>   drivers/clocksource/cadence_ttc_timer.c | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/clocksource/cadence_ttc_timer.c b/drivers/clocks=
+ource/cadence_ttc_timer.c
+> index a92350b55d32..246d018d1e63 100644
+> --- a/drivers/clocksource/cadence_ttc_timer.c
+> +++ b/drivers/clocksource/cadence_ttc_timer.c
+> @@ -322,18 +322,16 @@ static int ttc_rate_change_clockevent_cb(struct=
+ notifier_block *nb,
+>   	switch (event) {
+>   	case POST_RATE_CHANGE:
+>   	{
+> -		unsigned long flags;
+> -
+>   		/*
+>   		 * clockevents_update_freq should be called with IRQ disabled on
+>   		 * the CPU the timer provides events for. The timer we use is
+>   		 * common to both CPUs, not sure if we need to run on both
+>   		 * cores.
+>   		 */
+> -		local_irq_save(flags);
+> +		disable_irq(ttcce->ce.irq);
+>   		clockevents_update_freq(&ttcce->ce,
+>   				ndata->new_rate / PRESCALE);
+> -		local_irq_restore(flags);
+> +		enable_irq(ttcce->ce.irq);
+>
+>   		/* update cached frequency */
+>   		ttc->freq =3D ndata->new_rate;
+>
+
+I am worried about the 'disable_irq' function calling 'synchronize_irq'=
+=2E=20
+Isn't possible to deadlock with the ondemand cpufreq governor ? I added=
+=20
+Viresh in Cc, he knows better than me the code path.
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
