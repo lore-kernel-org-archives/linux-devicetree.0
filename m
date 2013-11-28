@@ -1,17 +1,14 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH v11 7/7] ARM: tegra: support Trusted Foundations by default
-Date: Thu, 28 Nov 2013 15:02:44 +0900
-Message-ID: <CAAVeFuJgqgRnWLD+dyvb7+2fLanHmdDT0YV5r8ETsoqqjW8p7A@mail.gmail.com>
-References: <1385274652-16415-1-git-send-email-acourbot@nvidia.com>
- <1385274652-16415-8-git-send-email-acourbot@nvidia.com>
- <20131126000608.GA21634@quad.lixom.net>
- <CAAVeFu+mMyPhFtVZ09vgYWWCYkPpF3X547ffRAfXXKOOWUUkqg@mail.gmail.com>
- <20131126164730.GE2355@e103592.cambridge.arm.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH] watchdog: davinci: rename platform driver to davinci-wdt
+Date: Thu, 28 Nov 2013 11:34:06 +0530
+Message-ID: <5296DCD6.3030002@ti.com>
+References: <1385559113-4354-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <5295FB0E.4070406@ti.com> <52961665.3060309@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131126164730.GE2355@e103592.cambridge.arm.com>
+In-Reply-To: <52961665.3060309@roeck-us.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,37 +18,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <Dave.Martin@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <acourbot@nvidia.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Guenter Roeck <linux@roeck-us.net>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2013 at 1:47 AM, Dave Martin <Dave.Martin@arm.com> wrote:
-> On Tue, Nov 26, 2013 at 10:35:58AM +0900, Alexandre Courbot wrote:
->> On Tue, Nov 26, 2013 at 9:06 AM, Olof Johansson <olof@lixom.net> wrote:
->> > On Sun, Nov 24, 2013 at 03:30:52PM +0900, Alexandre Courbot wrote:
->> >> Support for Trusted Foundations is light and allows the kernel to run on
->> >> a wider range of devices, so enable it by default.
->> >>
->> >> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
->> >> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
->> >> Reviewed-by: Stephen Warren <swarren@nvidia.com>
->> >> ---
->> >>  arch/arm/configs/tegra_defconfig | 1 +
->> >>  1 file changed, 1 insertion(+)
->> >
->> > I think we want this enabled on multi_v7_defconfig too? Send a separate
->> > patch for that once this is merged though.
+On Wednesday 27 November 2013 09:27 PM, Guenter Roeck wrote:
+> On 11/27/2013 06:00 AM, Sekhar Nori wrote:
+>> On Wednesday 27 November 2013 07:01 PM, Ivan Khoronzhuk wrote:
+>>> As we switch to use the watchdog core which permits more than one
+>>> active watchdog in the system, rename platform driver to
+>>> "davinci-wdt" to be identifiable.
+>>>
+>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 >>
->> Will do.
->
-> Should it just be default y if one of the relevant
-> CONFIG_ARCH_TEGRA_*_SOC is selected?
->
-> That way, it's automatically included if relevant, and automatically
-> excluded if not -- regardless of whether the kernel is multiplatform
-> or not.
+>> Looks good to me. Since bulk of this patch touches mach-davinci, I would
+>> like to take this through my tree to avoid conflicts with other
+>> mach-davinci patches I accept.
+>>
+> 
+> Good idea, and makes sense.
 
-So basically, that would mean setting the default to 'y' since the
-option is not available unless a supported platform is included?
+Added to v3.14/soc with your Reviewed-by
 
-I'm fine this way too, if Stephen also agrees.
+Thanks,
+Sekhar
+
+[1]
+https://git.kernel.org/cgit/linux/kernel/git/nsekhar/linux-davinci.git/log/?h=v3.14/soc
