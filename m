@@ -1,69 +1,81 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH] ARM: DTS: omap4-sdp: Add regulator for LCD backlight
- (pwm-backlight)
-Date: Thu, 28 Nov 2013 10:35:08 +0100
-Message-ID: <52970E4C.8070502@baylibre.com>
-References: <1385630924-16392-1-git-send-email-peter.ujfalusi@ti.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v7 0/4] Add dual-fifo mode support of i.MX ssi
+Date: Thu, 28 Nov 2013 14:11:09 +0530
+Message-ID: <20131128084108.GZ8834@intel.com>
+References: <cover.1384352281.git.b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1385630924-16392-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tomi.valkeinen@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1384352281.git.b42378@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolin Chen <b42378@freescale.com>
+Cc: dan.j.williams@intel.com, s.hauer@pengutronix.de, timur@tabi.org, shawn.guo@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On Wed, Nov 13, 2013 at 10:55:23PM +0800, Nicolin Chen wrote:
+>  * ! This series of patches has a direct dependency between them. When
+>  * ! applying them, we need to apply to one single branch. Otherwise,
+>  * ! it would break currect branches.
+Applied, thanks
 
-On 28/11/2013 10:28, Peter Ujfalusi wrote:
-> Since in DT booted kernel dummy regulators are no longer supported we=
- need
-> to provide valid phandle for the regulator needed by the backlight.
-> On the board VBAT is used to power the LCD backlight(s).
->
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
-> Hi,
->
-> This patch is needed for 3.13 to get the LCD backlight to work again.
-
-OK, so this is a fix for the next -rc?
-
-Regards,
-Benoit
-
->
-> Regards,
-> Peter
->
->   arch/arm/boot/dts/omap4-sdp.dts | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap=
-4-sdp.dts
-> index 5fc3f43..6f86db2 100644
-> --- a/arch/arm/boot/dts/omap4-sdp.dts
-> +++ b/arch/arm/boot/dts/omap4-sdp.dts
-> @@ -104,6 +104,7 @@
->   				100 110 120 127
->   				>;
->   		default-brightness-level =3D <13>;
-> +		power-supply =3D <&vbat>;
->   	};
->
->   	sound {
->
-
-
---=20
-Beno=EEt Cousson
-BayLibre
-Embedded Linux Technology Lab
-www.baylibre.com
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+~Vinod
+> 
+> Changelog
+> v7:
+>  * Appended missing Acked-by to all four patches.
+>  * Sorry that I didn't add them at the first place.
+> v6:
+>  * PATCH-1: Use goto err_firmware instead of return directly.
+>  *
+>  * Nothing changes for the other three ack-ed patches
+> v5:
+>  * PATCH-3: Add period size constraint when using dual fifo mode
+>  *
+>  * Nothing changes for the other three patches
+> v4:
+>  * PATCH-3: Drop useless register configuration.
+>  *
+>  * Nothing changes for the other three patches
+> v3:
+>  * PATCH-1: Add comments to indicate the end of v1 and v2 array.
+>  * PATCH-3: Use better way to keep watermark as even number.
+>  *
+>  * Nothing changes for PATCH-2 and PATCH-4
+> v2:
+>  * Instead of adding rogue scripts to current SDMA driver based on firmware
+>  * V1, we define the new SDMA firmware as version 2 and bisect the PATCH-1
+>  * to two patches: The first is to add version check code to the SDMA driver;
+>  * And the second is to add SSI dual FIFO DMATYPE.
+>  *
+>  * Nothing changes for the last two patches.
+> v1:
+>  * SSI can reduce hardware overrun/underrun possibility when using dual
+>  * fifo mode. To support this mode, we need to first update sdma sciprt
+>  * list, and then enable dual fifo BIT in SSI driver, and last update DT
+>  * bindings of i.MX series.
+> 
+> Nicolin Chen (4):
+>   dma: imx-sdma: Add sdma firmware version 2 support
+>   dma: imx-sdma: Add new dma type for ssi dual fifo script
+>   ASoC: fsl_ssi: Add dual fifo mode support
+>   ARM: dts: imx: use dual-fifo sdma script for ssi
+> 
+>  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
+>  arch/arm/boot/dts/imx51.dtsi                       |  4 ++--
+>  arch/arm/boot/dts/imx53.dtsi                       |  4 ++--
+>  arch/arm/boot/dts/imx6qdl.dtsi                     | 12 +++++-----
+>  arch/arm/boot/dts/imx6sl.dtsi                      | 12 +++++-----
+>  drivers/dma/imx-sdma.c                             | 19 ++++++++++++++-
+>  include/linux/platform_data/dma-imx-sdma.h         |  5 ++++
+>  include/linux/platform_data/dma-imx.h              |  1 +
+>  sound/soc/fsl/fsl_ssi.c                            | 27 +++++++++++++++++++++-
+>  9 files changed, 67 insertions(+), 18 deletions(-)
+> 
+> -- 
+> 1.8.4
+> 
+> 
+
+-- 
