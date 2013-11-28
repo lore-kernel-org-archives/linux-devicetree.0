@@ -1,52 +1,88 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH] Documentation: devicetree: arm: add lpae property to
- cpus/cpu bindings
-Date: Wed, 27 Nov 2013 21:28:01 -0800
-Message-ID: <CAOesGMh45EyTm5ZEAXphiD5L=cyLQ=732qZfW1jtQDo8Rd9rpg@mail.gmail.com>
-References: <1385517172-803-1-git-send-email-olof@lixom.net>
-	<20131127094911.GE5402@e106331-lin.cambridge.arm.com>
-	<CAOesGMh9aQEtqha3gt80q4RmLjXtFTc+Xt39M0m+geTk_betzQ@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 5/9] usb: gadget: s3c-hsotg: use generic
+ phy_init()/phy_exit() support
+Date: Thu, 28 Nov 2013 11:23:52 +0530
+Message-ID: <5296DA70.8010409@ti.com>
+References: <1385403367-18144-1-git-send-email-matt.porter@linaro.org>
+ <1385403367-18144-6-git-send-email-matt.porter@linaro.org>
+ <529476A4.8080600@ti.com> <20131127171325.GD31091@beef>
+ <20131127223650.GP31091@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMh9aQEtqha3gt80q4RmLjXtFTc+Xt39M0m+geTk_betzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131127223650.GP31091@beef>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matt Porter <matt.porter@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomasz Figa <t.figa@samsung.com>, Christian Daudt <bcm@fixthebug.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Kyungmin Park <kyungmin.park@samsung.com>, Felipe Balbi <balbi@ti.com>, Linaro Patches <patches@linaro.org>, Kumar Gala <galak@codeaurora.org>, Paul Zimmerman <paulz@synopsys.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2013 at 11:27 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Wed, Nov 27, 2013 at 1:49 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> Hi Olof,
->>
->> On Wed, Nov 27, 2013 at 01:52:52AM +0000, Olof Johansson wrote:
->>> While the LPAE capability is determined by the kernel today, it is still
->>> useful to be able to specify the feature in the device tree. There is
->>> precedence from other architectures for this.
+On Thursday 28 November 2013 04:06 AM, Matt Porter wrote:
+> On Wed, Nov 27, 2013 at 12:13:25PM -0500, Matt Porter wrote:
+>> On Tue, Nov 26, 2013 at 03:53:32PM +0530, Kishon Vijay Abraham I wrote:
+>>> Hi,
 >>>
->>> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
->>> ---
+>>> On Monday 25 November 2013 11:46 PM, Matt Porter wrote:
+>>>> If a generic phy is present, call phy_init()/phy_exit(). This supports
+>>>> generic phys that must be soft reset before power on.
+>>>>
+>>>> Signed-off-by: Matt Porter <matt.porter@linaro.org>
+>>>> ---
+>>>>  drivers/usb/gadget/s3c-hsotg.c | 5 +++++
+>>>>  1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
+>>>> index da3879b..8dfe33f 100644
+>>>> --- a/drivers/usb/gadget/s3c-hsotg.c
+>>>> +++ b/drivers/usb/gadget/s3c-hsotg.c
+>>>> @@ -3622,6 +3622,9 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
+>>>>  		goto err_supplies;
+>>>>  	}
+>>>>  
+>>>> +	if (hsotg->phy)
 >>>
->>> My personal motive for this is to be able to tell which boards are
->>> work even trying to boot an LPAE kernel on, since we don't disable the
->>> platforms that are based on A8/A9 when LPAE is turned on. I'll add dtsi
->>> patches for A7/A15-based platforms once the binding is settled.
+>>> IS_ERR? If your phy_get fails *phy* will have a error value..
 >>
->> It would be nice to have this description of why you want to add this in
->> the commit message proper.
->
-> Sure.
+>> Yes, thanks. I'll fix these and also note that the same issue exists in
+>> Kamil's patch for these same hsotg->phy conditional uses. I'll work with
+>> Kamil to either get those addressed there or in a follow on fix.
+> 
+> I spoke too soon. If devm_phy_get fails, we don't set hsotg->phy and probe
+> defer thus not reaching this point. Since hsotg->phy is either NULL or a
+> valid struct phy *, this is correct as is throughout the driver.
+> 
+>>>
+>>>> +		phy_init(hsotg->phy);
+>>>> +
+>>>>  	/* usb phy enable */
+>>>>  	s3c_hsotg_phy_enable(hsotg);
+>>>>  
+>>>> @@ -3715,6 +3718,8 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
+>>>>  	}
+>>>>  
+>>>>  	s3c_hsotg_phy_disable(hsotg);
+>>>> +	if (hsotg->phy)
+>>>
+>>> same here.
+>>
+>> Ok.
+> 
+> Same above, this will be NULL on failure (but is only applicable at this
+> point on the platform data path.
 
+Ah ok.. Btw where is phy_get being called? Is it not part of this series?
 
-By the way, I ended up doing it a different way than depending on DT
-contents, so I don't have a need to push for this now.
+Thanks
+Kishon
 
-Still, I think it's worth resolving long-term (how to encode CPU
-features on ARM as properties), but lower priority.
-
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> -Matt
+> 
