@@ -1,83 +1,69 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] irqchip: renesas-intc: Document DT bindings
-Date: Thu, 28 Nov 2013 09:31:40 +0000
-Message-ID: <20131128093140.GA5929@e106331-lin.cambridge.arm.com>
-References: <1385620847-18919-1-git-send-email-horms+renesas@verge.net.au>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [PATCH] ARM: DTS: omap4-sdp: Add regulator for LCD backlight
+ (pwm-backlight)
+Date: Thu, 28 Nov 2013 10:35:08 +0100
+Message-ID: <52970E4C.8070502@baylibre.com>
+References: <1385630924-16392-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385620847-18919-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1385630924-16392-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tomi.valkeinen@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 28, 2013 at 06:40:47AM +0000, Simon Horman wrote:
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Hi Peter,
+
+On 28/11/2013 10:28, Peter Ujfalusi wrote:
+> Since in DT booted kernel dummy regulators are no longer supported we=
+ need
+> to provide valid phandle for the regulator needed by the backlight.
+> On the board VBAT is used to power the LCD backlight(s).
+>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > ---
->  .../interrupt-controller/renesas,intc-irqc.txt     | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqc.txt
-> new file mode 100644
-> index 0000000..305d4e7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqc.txt
-> @@ -0,0 +1,30 @@
-> +DT bindings for the R-/SH-Mobile INTC controller
-> +
-> +Required properties:
-> +
-> +- compatible: Must be one of the following:
+> Hi,
+>
+> This patch is needed for 3.13 to get the LCD backlight to work again.
 
-s/be/contain/
+OK, so this is a fix for the next -rc?
 
-> +    "renesas,intc"
-> +    "renesas,intc-r8a73a4"
-> +    "renesas,intc-r8a7790"
-> +    "renesas,intc-r8a7791"
-> +- #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
-> +  interrupts.txt in this directory
+Regards,
+Benoit
 
-I assume you also require a reg to be able to poke the MMIO registers.
+>
+> Regards,
+> Peter
+>
+>   arch/arm/boot/dts/omap4-sdp.dts | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap=
+4-sdp.dts
+> index 5fc3f43..6f86db2 100644
+> --- a/arch/arm/boot/dts/omap4-sdp.dts
+> +++ b/arch/arm/boot/dts/omap4-sdp.dts
+> @@ -104,6 +104,7 @@
+>   				100 110 120 127
+>   				>;
+>   		default-brightness-level =3D <13>;
+> +		power-supply =3D <&vbat>;
+>   	};
+>
+>   	sound {
+>
 
-And an interrupt-controller annotation.
 
-The example has a series of interrupts. How many do you expect, and what
-do they logically correspond to (are they all equivalent, does one
-signal errrors, etc)? Are they required or optional?
-
-> +
-> +Optional properties:
-> +
-> +- any properties, listed in interrupts.txt, and any standard resource allocation
-> +  properties
-
-This is a useless description.
-
-What are "resource allocation properties"?
-
-> +
-> +Example:
-> +
-> +        irqc0: interrupt-controller@e61c0000 {
-> +                compatible = "renesas,irqc-r8a7790", "renesas,irqc";
-
-Do you always expect "renesas,irqc" to be in the list?
-
-> +                #interrupt-cells = <2>;
-> +                interrupt-controller;
-> +                reg = <0 0xe61c0000 0 0x200>;
-> +                interrupt-parent = <&gic>;
-> +                interrupts = <0 0 IRQ_TYPE_LEVEL_HIGH>,
-> +                             <0 1 IRQ_TYPE_LEVEL_HIGH>,
-> +                             <0 2 IRQ_TYPE_LEVEL_HIGH>,
-> +                             <0 3 IRQ_TYPE_LEVEL_HIGH>;
-
-As mentioned above, these were not described at all.
-
-Thanks,
-Mark.
+--=20
+Beno=EEt Cousson
+BayLibre
+Embedded Linux Technology Lab
+www.baylibre.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
