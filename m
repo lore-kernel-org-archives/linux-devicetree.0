@@ -1,43 +1,64 @@
 From: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
-Subject: [PATCH v1 2/2] of: irq: Ignore disabled interrupt controllers
-Date: Wed, 27 Nov 2013 23:26:13 -0800
-Message-ID: <e395866d7910723ed8cf82ba9475ef51ac6443f2.1385623064.git.peter.crosthwaite@xilinx.com>
-References: <cover.1385623064.git.peter.crosthwaite@xilinx.com>
+Subject: Re: [RFC 9/9] of/irq: create interrupts-extended property
+Date: Thu, 28 Nov 2013 17:28:47 +1000
+Message-ID: <CAEgOgz4rMj2wg6xiwjo3vuQSCXYurPF3-sKifUbCUXk8amMO4A@mail.gmail.com>
+References: <1381869563-16083-1-git-send-email-grant.likely@linaro.org>
+	<CAEgOgz4yhDzy_BFiotK5Qi48sczR3PL1oPjPhNYC9O94P6AnzQ@mail.gmail.com>
+	<20131127141750.B666EC404EC@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1385623064.git.peter.crosthwaite@xilinx.com>
-In-Reply-To: <cover.1385623064.git.peter.crosthwaite@xilinx.com>
-References: <cover.1385623064.git.peter.crosthwaite@xilinx.com>
+In-Reply-To: <20131127141750.B666EC404EC@trevor.secretlab.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: grant-likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: rob.herring@calxeda.com
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Michal Simek <monstr@monstr.eu>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-When searching the system for interrupt controllers, skip over any
-that are explicitly disabled.
+On Thu, Nov 28, 2013 at 12:17 AM, Grant Likely <grant.likely@linaro.org> wrote:
+> On Wed, 27 Nov 2013 19:06:35 +1000, Peter Crosthwaite <peter.crosthwaite@xilinx.com> wrote:
+>> On Mon, Nov 25, 2013 at 7:32 AM, Grant Likely <grant.likely@linaro.org> wrote:
+>> > On Sun, 24 Nov 2013 17:04:52 +1000, Peter Crosthwaite <peter.crosthwaite@xilinx.com> wrote:
+>> >> On Wed, Nov 13, 2013 at 4:14 PM, Grant Likely <grant.likely@linaro.org> wrote:
+>> >> > On Wed, 13 Nov 2013 09:17:01 +1000, Peter Crosthwaite <peter.crosthwaite@xilinx.com> wrote:
+>> >> >> It's going to get a little verbose once you start making multiple
+>> >> >> connections as you need one mux per wire. Perhaps it could be cleaned
+>> >> >> up by making the foo_irq_mux node(s) a child of foo?
+>> >> >
+>> >> > It could, but then you need some way of attaching a driver to that node,
+>> >> > and that would require building knowledge into the driver again.
+>> >> >
+>> >> > Can you boil it down to a couple of concrete examples? What is a
+>> >> > specific example of how the platform should decide which interrupt line
+>> >> > to use?
+>> >> >
+>> >>
+>> >> So i've spent some time playing with this. I now have a booting kernel
+>> >> with multiple root interrupt controllers and peripheral devices
+>> >> multiply-connected to both root controllers. But only one on of the
+>> >> controllers is used by Linux (as linux being able to use multiple
+>> >> intcs is a non-trivial problem). So the scheme I am using is to have
+>> >> one of these root intc's marked as disabled via
+>> >
+>> > Multiple intc's should be a solved problem. What issue are you seeing?
+>> > Or is this a microblaze specific problem?
+>> >
+>>
+>> It's multiple root (i.e. have no explicit parent) interrupt
+>> controllers. And linux
+>> doesnt respect status = "disabled" for interrupt controllers at all it seems.
+>
+> That can be fixed.  :-)
+>
 
-This makes interrupt controllers consistent with regular devices,
-which can be marked as do-not-probe via the status = "disabled" dts
-property.
+Patches on list.
 
-Signed-off-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
----
- drivers/of/irq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Regards,
+Peter
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 22e414b..bf80268 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -441,7 +441,8 @@ void __init of_irq_init(const struct of_device_id *matches)
- 	INIT_LIST_HEAD(&intc_parent_list);
- 
- 	for_each_matching_node(np, matches) {
--		if (!of_find_property(np, "interrupt-controller", NULL))
-+		if (!of_find_property(np, "interrupt-controller", NULL) ||
-+				!of_device_is_available(np))
- 			continue;
- 		/*
- 		 * Here, we allocate and populate an intc_desc with the node
--- 
-1.8.4.4
+> g.
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
