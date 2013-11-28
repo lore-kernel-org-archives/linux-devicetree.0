@@ -1,80 +1,93 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] clocksource: Do not drop unheld reference on device node
-Date: Thu, 28 Nov 2013 09:23:49 +0100
-Message-ID: <5296FD95.1010000@linaro.org>
-References: <1382136588-15320-1-git-send-email-treding@nvidia.com>
+From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] clk: add clk accuracy support
+Date: Thu, 28 Nov 2013 09:29:31 +0100
+Message-ID: <5296FEEB.7070205@overkiz.com>
+References: <20131127231125.7995.qmail@science.horizon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1382136588-15320-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20131127231125.7995.qmail-FT9nftu9LUyCkawlElnc8EEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: colin-gpGsJRJZ3PBBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpGsJRJZ3PBBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/2013 12:49 AM, Thierry Reding wrote:
-> When booting a recent kernel on ARM with OF_DYNAMIC enabled, the kern=
-el
-> warns about the following:
->
-> 	[    0.000000] ERROR: Bad of_node_put() on /timer@50004600
-> 	[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.12.0-rc5-=
-next-20131017-00077-gedfd827-dirty #406
-> 	[    0.000000] [<c0015b68>] (unwind_backtrace+0x0/0xf4) from [<c0011=
-7e4>] (show_stack+0x10/0x14)
-> 	[    0.000000] [<c00117e4>] (show_stack+0x10/0x14) from [<c055f734>]=
- (dump_stack+0x9c/0xc8)
-> 	[    0.000000] [<c055f734>] (dump_stack+0x9c/0xc8) from [<c03b47d4>]=
- (of_node_release+0x90/0x9c)
-> 	[    0.000000] [<c03b47d4>] (of_node_release+0x90/0x9c) from [<c03b5=
-084>] (of_find_matching_node_and_match+0x78/0xb4)
-> 	[    0.000000] [<c03b5084>] (of_find_matching_node_and_match+0x78/0x=
-b4) from [<c07887c8>] (clocksource_of_init+0x60/0x70)
-> 	[    0.000000] [<c07887c8>] (clocksource_of_init+0x60/0x70) from [<c=
-076e99c>] (start_kernel+0x1f4/0x33c)
-> 	[    0.000000] [<c076e99c>] (start_kernel+0x1f4/0x33c) from [<800080=
-74>] (0x80008074)
->
-> This is caused by clocksource_of_init() dropping a reference on the
-> device node that it never took. The reference taken by the loop is
-> implicitly dropped on subsequent iterations. See the implementation o=
-f
-> and the comment on top of the of_find_matching_node_and_match()
-> function for reference (no pun intended).
->
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->   drivers/clocksource/clksrc-of.c | 1 -
->   1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/clocksource/clksrc-of.c b/drivers/clocksource/cl=
-ksrc-of.c
-> index 35639cf4..b9ddd9e 100644
-> --- a/drivers/clocksource/clksrc-of.c
-> +++ b/drivers/clocksource/clksrc-of.c
-> @@ -35,6 +35,5 @@ void __init clocksource_of_init(void)
->
->   		init_func =3D match->data;
->   		init_func(np);
-> -		of_node_put(np);
->   	}
->   }
+Hello,
 
-Applied to my tree for 3.13 fixes.
+On 28/11/2013 00:11, colin-gpGsJRJZ3PBBDgjK7y7TUQ@public.gmane.org wrote:
+> Um, do you have a definition somewhere (like in comments) of the definition
+> of the accuracy you're using?  So multiple people can add consistent values?
+>
+> Is this the standard deviation (67% confidence), 2 standard deviations
+> (95%), 3 (99%), or something else?
+>
+> What averaging time is this computed over?  Usually clock stability (which
+> I recognize is not accuracy) is expressed using the Allan deviation,
+>
+> http://tf.nist.gov/general/glossary.htm#allandeviation
+>
+> This is because real clocks have unbounded asymptotic error.  Over long
+> time intervals, have a random frequency walk characteristic, where the
+> frequency error after time T is proportional to sqrt(T).
+>
+> So an oscillator which is stable to 1ppb over a T second interval will be
+> stable to 2ppb over a 4T second interval, 3ppb over a 9T second interval,
+> and so on.
+>
+> Since accuracy is limited by stability, and there's no upper bound on
+> instability, there's actually no upper bound on inaccuracy, either.
+>
+> (Admittedly, your typical crystal oscillators have their stability
+> limited by environmental instability, particularly temperature, which
+> dwarfs the frequency flicker noise limit.)
+>
+>
+> On the flip side, some systems are synchronized to UTC by various means.
+> This means (if we either neglect UTC's far sub-ppb instability, or just
+> define it as "perfect") that the inaccuracy over a long enough averaging
+> interval is zero.
+>
+> But if it only synchronizes once a day, there can be significant
+> inaccuracy between synchronization.  Should the accuracy specification
+> reflect that shorter-term instability?
+>
+>
+> Finally, you can't specify *too* short an interval, because clocks also
+> have increasing error over small time intervals.  Below 10 seconds or
+> so, white noise cycle-to-cycle jitter dominates, and the fewer cycles
+> you average over, the larger it appears to be.
+>
+>
+> A clear definition would help people understand what numbers to put in.
 
+Thanks for these informations, it helped me understand the different sources
+of inaccuracies of a crystal.
+As I said earlier, I'm not an expert in this area, and all your comments and
+feedbacks are welcome.
+BTW does this apply to other clk generators (RC oscillators, PLLs, ...), 
+or is this only
+applicable to crystal oscillators ?
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+Regarding the exact definition of accuracy, I guess in case of crystals 
+this has more
+to do with stability.
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+I found something called "Total stability" in several datasheet
+(e.g. http://www.silabs.com/Support%20Documents/TechnicalDocs/si510-11.pdf).
+Is this something applicable to our case ?
 
+Keep in mind that the primary goal of the clk accuracy retrieval is to 
+give a clock
+user a way to choose the most accurate clock among several available clocks.
+This means we don't need the value to be extremely precise, but at least 
+(as you
+stated) these values should represent the same things.
+
+Best Regards,
+
+Boris
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
