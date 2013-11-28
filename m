@@ -1,115 +1,187 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: imx27: add pingroups for cspi, sdhc and
- framebuffer
-Date: Thu, 28 Nov 2013 10:41:56 +0800
-Message-ID: <20131128024155.GD5850@S2101-09.ap.freescale.net>
-References: <1385480444-77808-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
+From: Tien Hock Loh <thloh.linux@gmail.com>
+Subject: Re: [PATCH V4 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Thu, 28 Nov 2013 10:51:14 +0800
+Message-ID: <CAOLUe6Zzp4UHOS7oAVFTN5zZR=8rXjiU8ew9J5x3FXNZ6qxmaA@mail.gmail.com>
+References: <1385524192-21501-1-git-send-email-thloh@altera.com>
+	<20131127144055.GB27879@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1385480444-77808-1-git-send-email-gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131127144055.GB27879@e106331-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "thloh@altera.com" <thloh@altera.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lftan@altera.com" <lftan@altera.com>, dinguyen@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 26, 2013 at 04:40:42PM +0100, Gwenhael Goavec-Merou wrote:
-> Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx27-pingrp.h | 68 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx27-pingrp.h b/arch/arm/boot/dts/imx27-pingrp.h
-> index 08d8d18..e61bec2 100644
-> --- a/arch/arm/boot/dts/imx27-pingrp.h
-> +++ b/arch/arm/boot/dts/imx27-pingrp.h
-> @@ -68,4 +68,72 @@
->  	MX27_PAD_UART3_CTS__UART3_CTS 0x0 \
->  	MX27_PAD_UART3_RTS__UART3_RTS 0x0
->  
-> +#define MX27_CSPI1_PINGRP1 \
-> +	MX27_PAD_CSPI1_SCLK__CSPI1_SCLK 0x0 \
-> +	MX27_PAD_CSPI1_MISO__CSPI1_MISO 0x0 \
-> +	MX27_PAD_CSPI1_MOSI__CSPI1_MOSI 0x0
+Hi Mark
 
-Please sort the PINGRP entries alphabetically.
+On Wed, Nov 27, 2013 at 10:40 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> Hi,
+>
+> On Wed, Nov 27, 2013 at 03:49:52AM +0000, thloh@altera.com wrote:
+>> From: Tien Hock Loh <thloh@altera.com>
+>>
+>> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
+>> Tested on Altera CV SoC board using dipsw and LED using LED framework.
+>>
+>> Signed-off-by: Tien Hock Loh <thloh@altera.com>
+>> ---
+>>  .../devicetree/bindings/gpio/gpio-altera.txt       |  35 ++
+>>  drivers/gpio/Kconfig                               |   7 +
+>>  drivers/gpio/Makefile                              |   1 +
+>>  drivers/gpio/gpio-altera.c                         | 395 +++++++++++++++++++++
+>>  4 files changed, 438 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
+>>  create mode 100644 drivers/gpio/gpio-altera.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera.txt b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+>> new file mode 100644
+>> index 0000000..6c57d84
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+>> @@ -0,0 +1,35 @@
+>> +Altera GPIO controller bindings
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +  - "altr,pio-1.0"
+>> +- reg: Physical base address and length of the controller's registers.
+>> +- #gpio-cells : Should be 1
+>> +  - first cell is the gpio offset number
+>> +- gpio-controller : Marks the device node as a GPIO controller.
+>> +- #interrupt-cells : Should be 1.
+>> +- interrupts: Specify the interrupt.
+>> +- interrupt-controller: Mark the device node as an interrupt controller
+>> +  The first cell is the local interrupt offset number to the GPIO controller.
+>
+> Huh? This line doesn't make much sense immediately after the description
+> of interrupt-controller. Presumably this is associated iwth
+> #interrupt-cells?
 
-> +
-> +#define MX27_CSPI2_PINGRP1 \
-> +	MX27_PAD_CSPI2_SCLK__CSPI2_SCLK 0x0 \
-> +	MX27_PAD_CSPI2_MISO__CSPI2_MISO 0x0 \
-> +	MX27_PAD_CSPI2_MOSI__CSPI2_MOSI 0x0
-> +
-> +#define MX27_CSPI3_PINGRP1 \
-> +	MX27_PAD_SD1_CLK__CSPI3_SCLK 0x0 \
-> +	MX27_PAD_SD1_D0__CSPI3_MISO 0x0 \
-> +	MX27_PAD_SD1_CMD__CSPI3_MOSI 0x0
-> +
-> +#define MX27_SDHC1_PINGRP1 \
-> +	MX27_PAD_SD1_D0__SD1_D0 \
-> +	MX27_PAD_SD1_D1__SD1_D1 \
-> +	MX27_PAD_SD1_D2__SD1_D2 \
-> +	MX27_PAD_SD1_D3__SD1_D3 \
-> +	MX27_PAD_SD1_CMD__SD1_CMD \
-> +	MX27_PAD_SD1_CLK__SD1_CLK
-> +
-> +#define MX27_SDHC2_PINGRP1 \
-> +	MX27_PAD_SD2_D0__SD2_D0 \
-> +	MX27_PAD_SD2_D1__SD2_D1 \
-> +	MX27_PAD_SD2_D2__SD2_D2 \
-> +	MX27_PAD_SD2_D3__SD2_D3 \
-> +	MX27_PAD_SD2_CMD__SD2_CMD \
-> +	MX27_PAD_SD2_CLK__SD2_CLK
-> +
-> +#define MX27_SDHC3_PINGRP1 \
-> +	MX27_PAD_SD3_D0__SD3_D0 \
-> +	MX27_PAD_SD3_D1__SD3_D1 \
-> +	MX27_PAD_SD3_D2__SD3_D2 \
-> +	MX27_PAD_SD3_D3__SD3_D3 \
-> +	MX27_PAD_SD3_CMD__SD3_CMD \
-> +	MX27_PAD_SD3_CLK__SD3_CLK
-> +
-> +#define MX27_FB1_PINGRP1 \
+Yes, it must have got displaced when I was editing the text. I'll get
+this fixed.
 
-Please name the PINGRP entry after IP block.  FB1 is not a good one.
+>
+>> +
+>> +Altera GPIO specific properties:
+>> +- altr,gpio-bank-width: Width of the GPIO bank. This defines how many pins the
+>> +  GPIO device has. Ranges between 1-32.
+>
+> The code appears to handle this as an optional property, such that this
+> proeprty is only required if the GPIO controller does not have 32 GPIOs.
+> It would be worth notign that this is optional, and describing when this
+> is expected in the binding.
+>
 
-Shawn
+Noted. Will add a note on required and optional parameters.
 
-> +	MX27_PAD_LSCLK__LSCLK 0x0 \
-> +	MX27_PAD_LD0__LD0 0x0 \
-> +	MX27_PAD_LD1__LD1 0x0 \
-> +	MX27_PAD_LD2__LD2 0x0 \
-> +	MX27_PAD_LD3__LD3 0x0 \
-> +	MX27_PAD_LD4__LD4 0x0 \
-> +	MX27_PAD_LD5__LD5 0x0 \
-> +	MX27_PAD_LD6__LD6 0x0 \
-> +	MX27_PAD_LD7__LD7 0x0 \
-> +	MX27_PAD_LD8__LD8 0x0 \
-> +	MX27_PAD_LD9__LD9 0x0 \
-> +	MX27_PAD_LD10__LD10 0x0 \
-> +	MX27_PAD_LD11__LD11 0x0 \
-> +	MX27_PAD_LD12__LD12 0x0 \
-> +	MX27_PAD_LD13__LD13 0x0 \
-> +	MX27_PAD_LD14__LD14 0x0 \
-> +	MX27_PAD_LD15__LD15 0x0 \
-> +	MX27_PAD_LD16__LD16 0x0 \
-> +	MX27_PAD_LD17__LD17 0x0 \
-> +	MX27_PAD_REV__REV 0x0 \
-> +	MX27_PAD_CLS__CLS 0x0 \
-> +	MX27_PAD_PS__PS 0x0 \
-> +	MX27_PAD_SPL_SPR__SPL_SPR 0x0 \
-> +	MX27_PAD_HSYNC__HSYNC 0x0 \
-> +	MX27_PAD_VSYNC__VSYNC 0x0 \
-> +	MX27_PAD_CONTRAST__CONTRAST 0x0 \
-> +	MX27_PAD_OE_ACD__OE_ACD 0x0
-> +
->  #endif /* __DTS_IMX27_PINGRP_H */
-> -- 
-> 1.8.3.2
-> 
+>> +- altr,interrupt_trigger: Specifies the interrupt trigger type the GPIO
+>> +  hardware is synthesized. This field is required if the Altera GPIO controller
+>> +  used has IRQ enabled as the interrupt type is not software controlled,
+>> +  but hardware synthesized.
+>
+> s/_/-/
+>
+> What type is this, and what values are expected?
+>
+> The description implies that this is an optional property, but the code
+> seems to require it.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This isn't always required, but only required when the controller is
+used as an interrupt controller. I'll specify that this is a required
+field if GPIO is used as an interrupt controller. I'll add in the
+expected values as well.
+
+>
+>> +
+>> +Example:
+>> +
+>> +gpio_altr: gpio_altr {
+>> +    compatible = "altr,pio-1.0";
+>> +    reg = <0xff200000 0x10>;
+>> +    interrupts = <0 45 4>;
+>> +    altr,gpio-bank-width = <32>;
+>> +    altr,interrupt_trigger = <0>;
+>
+> The description doesn't tell me what this porperty in the example
+> means...
+
+Noted, I'll put the supported interrupt trigger to the description
+above. This is the value of interrupt trigger as defined in
+<dt-bindings/interrupt-controller/irq.h>.
+
+>
+>> +    #gpio-cells = <1>;
+>> +    gpio-controller;
+>> +    #interrupt-cells = <1>;
+>> +    interrupt-controller;
+>> +};
+>
+> [...]
+>
+>> +int altera_gpio_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device_node *node = pdev->dev.of_node;
+>> +       int id, reg, ret;
+>> +       struct altera_gpio_chip *altera_gc = devm_kzalloc(&pdev->dev,
+>> +                               sizeof(*altera_gc), GFP_KERNEL);
+>> +       if (altera_gc == NULL) {
+>> +               pr_err("%s: out of memory\n", node->full_name);
+>> +               return -ENOMEM;
+>> +       }
+>> +       altera_gc->irq = 0;
+>> +
+>> +       spin_lock_init(&altera_gc->gpio_lock);
+>> +
+>> +       id = pdev->id;
+>> +
+>> +       if (of_property_read_u32(node, "altr,gpio-bank-width", &reg))
+>> +               /*By default assume full GPIO controller*/
+>> +               altera_gc->mmchip.gc.ngpio = 32;
+>> +       else
+>> +               altera_gc->mmchip.gc.ngpio = reg;
+>
+> As mentioned above, the binding doesn't describe this as optional, yet
+> it's treated as such.
+
+I'll get this fixed in the documentation.
+
+>
+>> +
+>> +       if (altera_gc->mmchip.gc.ngpio > 32) {
+>> +               pr_warn("%s: ngpio is greater than 32, defaulting to 32\n",
+>> +                       node->full_name);
+>> +               altera_gc->mmchip.gc.ngpio = 32;
+>> +       }
+>> +
+>> +       altera_gc->mmchip.gc.direction_input    = altera_gpio_direction_input;
+>> +       altera_gc->mmchip.gc.direction_output   = altera_gpio_direction_output;
+>> +       altera_gc->mmchip.gc.get                = altera_gpio_get;
+>> +       altera_gc->mmchip.gc.set                = altera_gpio_set;
+>> +       altera_gc->mmchip.gc.to_irq             = altera_gpio_to_irq;
+>> +       altera_gc->mmchip.gc.owner              = THIS_MODULE;
+>> +
+>> +       ret = of_mm_gpiochip_add(node, &altera_gc->mmchip);
+>> +       if (ret) {
+>> +               pr_err("%s: Failed adding memory mapped gpiochip\n",
+>> +                       node->full_name);
+>> +               return ret;
+>> +       }
+>> +
+>> +       platform_set_drvdata(pdev, altera_gc);
+>> +
+>> +       altera_gc->mapped_irq = irq_of_parse_and_map(node, 0);
+>> +
+>> +       if (!altera_gc->mapped_irq)
+>> +               goto skip_irq;
+>
+> It seems odd to jump directly to a return 0. Why not just return 0 here
+> (or initialise ret to 0 and combine the two return cases)?
+
+Noted. I'll return 0 here.
+
+>
+> Thanks,
+> Mark.
+
+Thanks for the comments. I'll post a patch v5.
