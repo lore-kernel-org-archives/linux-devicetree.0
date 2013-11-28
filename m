@@ -1,279 +1,373 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH v6 13/16] clk: at91: add PMC smd clock
-Date: Thu, 28 Nov 2013 14:46:21 +0100
-Message-ID: <1385646381-8243-1-git-send-email-b.brezillon@overkiz.com>
+From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 14/16] dt: binding: add at91 clks dt bindings documentation
+Date: Thu, 28 Nov 2013 14:53:24 +0100
+Message-ID: <1385646804-8420-1-git-send-email-b.brezillon@overkiz.com>
 References: <1385642184-6467-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1385642184-6467-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Jason Cooper <jason@lakedaemon.net>
-Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385642184-6467-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds at91 smd (Soft Modem) clock implementation using common clk
-framework.
+This patch adds new at91 clks dt bindings documentation.
 
-Not used by any driver right now.
-
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/mach-at91/Kconfig |    5 ++
- drivers/clk/at91/Makefile  |    1 +
- drivers/clk/at91/clk-smd.c |  171 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/at91/pmc.c     |    7 ++
- drivers/clk/at91/pmc.h     |    5 ++
- 5 files changed, 189 insertions(+)
- create mode 100644 drivers/clk/at91/clk-smd.c
+ .../devicetree/bindings/clock/at91-clock.txt       |  339 ++++++++++++++++++++
+ 1 file changed, 339 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/at91-clock.txt
 
-diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-index b76dc4c..97033f7 100644
---- a/arch/arm/mach-at91/Kconfig
-+++ b/arch/arm/mach-at91/Kconfig
-@@ -39,6 +39,9 @@ config AT91_SAM9G45_RESET
- config AT91_SAM9_TIME
- 	bool
- 
-+config HAVE_AT91_SMD
-+	bool
-+
- config SOC_AT91SAM9
- 	bool
- 	select AT91_SAM9_TIME
-@@ -85,6 +88,7 @@ config SOC_SAMA5D3
- 	select HAVE_AT91_DBGU1
- 	select AT91_USE_OLD_CLK
- 	select HAVE_AT91_UTMI
-+	select HAVE_AT91_SMD
- 	select HAVE_AT91_USB_CLK
- 	help
- 	  Select this if you are using one of Atmel's SAMA5D3 family SoC.
-@@ -157,6 +161,7 @@ config SOC_AT91SAM9X5
- 	select SOC_AT91SAM9
- 	select AT91_USE_OLD_CLK
- 	select HAVE_AT91_UTMI
-+	select HAVE_AT91_SMD
- 	select HAVE_AT91_USB_CLK
- 	help
- 	  Select this if you are using one of Atmel's AT91SAM9x5 family SoC.
-diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-index 61db058..0e92b71 100644
---- a/drivers/clk/at91/Makefile
-+++ b/drivers/clk/at91/Makefile
-@@ -9,3 +9,4 @@ obj-y += clk-system.o clk-peripheral.o
- obj-$(CONFIG_AT91_PROGRAMMABLE_CLOCKS)	+= clk-programmable.o
- obj-$(CONFIG_HAVE_AT91_UTMI)		+= clk-utmi.o
- obj-$(CONFIG_HAVE_AT91_USB_CLK)		+= clk-usb.o
-+obj-$(CONFIG_HAVE_AT91_SMD)		+= clk-smd.o
-diff --git a/drivers/clk/at91/clk-smd.c b/drivers/clk/at91/clk-smd.c
+diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
 new file mode 100644
-index 0000000..144d47e
+index 0000000..cd5e239
 --- /dev/null
-+++ b/drivers/clk/at91/clk-smd.c
-@@ -0,0 +1,171 @@
-+/*
-+ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ */
++++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+@@ -0,0 +1,339 @@
++Device Tree Clock bindings for arch-at91
 +
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk/at91_pmc.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/io.h>
++This binding uses the common clock binding[1].
 +
-+#include "pmc.h"
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
 +
-+#define SMD_SOURCE_MAX		2
++Required properties:
++- compatible : shall be one of the following:
++	"atmel,at91rm9200-pmc" or
++	"atmel,at91sam9g45-pmc" or
++	"atmel,at91sam9n12-pmc" or
++	"atmel,at91sam9x5-pmc" or
++	"atmel,sama5d3-pmc":
++		at91 PMC (Power Management Controller)
++		All at91 specific clocks (clocks defined below) must be child
++		node of the PMC node.
 +
-+#define SMD_DIV_SHIFT		8
-+#define SMD_MAX_DIV		0xf
++	"atmel,at91rm9200-clk-main":
++		at91 main oscillator
 +
-+struct at91sam9x5_clk_smd {
-+	struct clk_hw hw;
-+	struct at91_pmc *pmc;
-+};
++	"atmel,at91rm9200-clk-master" or
++	"atmel,at91sam9x5-clk-master":
++		at91 master clock
 +
-+#define to_at91sam9x5_clk_smd(hw) \
-+	container_of(hw, struct at91sam9x5_clk_smd, hw)
++	"atmel,at91sam9x5-clk-peripheral" or
++	"atmel,at91rm9200-clk-peripheral":
++		at91 peripheral clocks
 +
-+static unsigned long at91sam9x5_clk_smd_recalc_rate(struct clk_hw *hw,
-+						    unsigned long parent_rate)
-+{
-+	u32 tmp;
-+	u8 smddiv;
-+	struct at91sam9x5_clk_smd *smd = to_at91sam9x5_clk_smd(hw);
-+	struct at91_pmc *pmc = smd->pmc;
++	"atmel,at91rm9200-clk-pll" or
++	"atmel,at91sam9g45-clk-pll" or
++	"atmel,at91sam9g20-clk-pllb" or
++	"atmel,sama5d3-clk-pll":
++		at91 pll clocks
 +
-+	tmp = pmc_read(pmc, AT91_PMC_SMD);
-+	smddiv = (tmp & AT91_PMC_SMD_DIV) >> SMD_DIV_SHIFT;
-+	return parent_rate / (smddiv + 1);
-+}
++	"atmel,at91sam9x5-clk-plldiv":
++		at91 plla divisor
 +
-+static long at91sam9x5_clk_smd_round_rate(struct clk_hw *hw, unsigned long rate,
-+					  unsigned long *parent_rate)
-+{
-+	unsigned long div;
-+	unsigned long bestrate;
-+	unsigned long tmp;
++	"atmel,at91rm9200-clk-programmable" or
++	"atmel,at91sam9g45-clk-programmable" or
++	"atmel,at91sam9x5-clk-programmable":
++		at91 programmable clocks
 +
-+	if (rate >= *parent_rate)
-+		return *parent_rate;
++	"atmel,at91sam9x5-clk-smd":
++		at91 SMD (Soft Modem) clock
 +
-+	div = *parent_rate / rate;
-+	if (div > SMD_MAX_DIV)
-+		return *parent_rate / (SMD_MAX_DIV + 1);
++	"atmel,at91rm9200-clk-system":
++		at91 system clocks
 +
-+	bestrate = *parent_rate / div;
-+	tmp = *parent_rate / (div + 1);
-+	if (bestrate - rate > rate - tmp)
-+		bestrate = tmp;
++	"atmel,at91rm9200-clk-usb" or
++	"atmel,at91sam9x5-clk-usb" or
++	"atmel,at91sam9n12-clk-usb":
++		at91 usb clock
 +
-+	return bestrate;
-+}
++	"atmel,at91sam9x5-clk-utmi":
++		at91 utmi clock
 +
-+static int at91sam9x5_clk_smd_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	u32 tmp;
-+	struct at91sam9x5_clk_smd *smd = to_at91sam9x5_clk_smd(hw);
-+	struct at91_pmc *pmc = smd->pmc;
++Required properties for PMC node:
++- reg : defines the IO memory reserved for the PMC.
++- #size-cells : shall be 0 (reg is used to encode clk id).
++- #address-cells : shall be 1 (reg is used to encode clk id).
++- interrupts : shall be set to PMC interrupt line.
++- interrupt-controller : tell that the PMC is an interrupt controller.
++- #interrupt-cells : must be set to 1. The first cell encodes the interrupt id,
++	and reflect the bit position in the PMC_ER/DR/SR registers.
++	You can use the dt macros defined in dt-bindings/clk/at91.h.
++	0 (AT91_PMC_MOSCS) -> main oscillator ready
++	1 (AT91_PMC_LOCKA) -> PLL A ready
++	2 (AT91_PMC_LOCKB) -> PLL B ready
++	3 (AT91_PMC_MCKRDY) -> master clock ready
++	6 (AT91_PMC_LOCKU) -> UTMI PLL clock ready
++	8 .. 15 (AT91_PMC_PCKRDY(id)) -> programmable clock ready
++	16 (AT91_PMC_MOSCSELS) -> main oscillator selected
++	17 (AT91_PMC_MOSCRCS) -> RC main oscillator stabilized
++	18 (AT91_PMC_CFDEV) -> clock failure detected
 +
-+	if (index > 1)
-+		return -EINVAL;
-+	tmp = pmc_read(pmc, AT91_PMC_SMD) & ~AT91_PMC_SMDS;
-+	if (index)
-+		tmp |= AT91_PMC_SMDS;
-+	pmc_write(pmc, AT91_PMC_SMD, tmp);
-+	return 0;
-+}
++For example:
++	pmc: pmc@fffffc00 {
++		compatible = "atmel,sama5d3-pmc";
++		interrupts = <1 4 7>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		#size-cells = <0>;
++		#address-cells = <1>;
 +
-+static u8 at91sam9x5_clk_smd_get_parent(struct clk_hw *hw)
-+{
-+	struct at91sam9x5_clk_smd *smd = to_at91sam9x5_clk_smd(hw);
-+	struct at91_pmc *pmc = smd->pmc;
++		/* put at91 clocks here */
++	};
 +
-+	return pmc_read(pmc, AT91_PMC_SMD) & AT91_PMC_SMDS;
-+}
++Required properties for main clock:
++- interrupt-parent : must reference the PMC node.
++- interrupts : shall be set to "<0>".
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks (optional if clock-frequency is provided) : shall be the slow clock
++	phandle. This clock is used to calculate the main clock rate if
++	"clock-frequency" is not provided.
++- clock-frequency : the main oscillator frequency.Prefer the use of
++	"clock-frequency" over automatic clock rate calculation.
 +
-+static int at91sam9x5_clk_smd_set_rate(struct clk_hw *hw, unsigned long rate,
-+				       unsigned long parent_rate)
-+{
-+	u32 tmp;
-+	struct at91sam9x5_clk_smd *smd = to_at91sam9x5_clk_smd(hw);
-+	struct at91_pmc *pmc = smd->pmc;
-+	unsigned long div = parent_rate / rate;
++For example:
++	main: mainck {
++		compatible = "atmel,at91rm9200-clk-main";
++		interrupt-parent = <&pmc>;
++		interrupts = <0>;
++		#clock-cells = <0>;
++		clocks = <&ck32k>;
++		clock-frequency = <18432000>;
++	};
 +
-+	if (parent_rate % rate || div < 1 || div > (SMD_MAX_DIV + 1))
-+		return -EINVAL;
-+	tmp = pmc_read(pmc, AT91_PMC_SMD) & ~AT91_PMC_SMD_DIV;
-+	tmp |= (div - 1) << SMD_DIV_SHIFT;
-+	pmc_write(pmc, AT91_PMC_SMD, tmp);
++Required properties for master clock:
++- interrupt-parent : must reference the PMC node.
++- interrupts : shall be set to "<3>".
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the master clock sources (see atmel datasheet) phandles.
++	e.g. "<&ck32k>, <&main>, <&plla>, <&pllb>".
++- atmel,clk-output-range : minimum and maximum clock frequency (two u32
++			   fields).
++	   e.g. output = <0 133000000>; <=> 0 to 133MHz.
++- atmel,clk-divisors : master clock divisors table (four u32 fields).
++		0 <=> reserved value.
++		e.g. divisors = <1 2 4 6>;
++- atmel,master-clk-have-div3-pres : some SoC use the reserved value 7 in the
++				    PRES field as CLOCK_DIV3 (e.g sam9x5).
 +
-+	return 0;
-+}
++For example:
++	mck: mck {
++		compatible = "atmel,at91rm9200-clk-master";
++		interrupt-parent = <&pmc>;
++		interrupts = <3>;
++		#clock-cells = <0>;
++		atmel,clk-output-range = <0 133000000>;
++		atmel,clk-divisors = <1 2 4 0>;
++	};
 +
-+static const struct clk_ops at91sam9x5_smd_ops = {
-+	.recalc_rate = at91sam9x5_clk_smd_recalc_rate,
-+	.round_rate = at91sam9x5_clk_smd_round_rate,
-+	.get_parent = at91sam9x5_clk_smd_get_parent,
-+	.set_parent = at91sam9x5_clk_smd_set_parent,
-+	.set_rate = at91sam9x5_clk_smd_set_rate,
-+};
++Required properties for peripheral clocks:
++- #size-cells : shall be 0 (reg is used to encode clk id).
++- #address-cells : shall be 1 (reg is used to encode clk id).
++- clocks : shall be the master clock phandle.
++	e.g. clocks = <&mck>;
++- name: device tree node describing a specific system clock.
++	* #clock-cells : from common clock binding; shall be set to 0.
++	* reg: peripheral id. See Atmel's datasheets to get a full
++	  list of peripheral ids.
++	* atmel,clk-output-range : minimum and maximum clock frequency
++	  (two u32 fields). Only valid on at91sam9x5-clk-peripheral
++	  compatible IPs.
 +
-+static struct clk * __init
-+at91sam9x5_clk_register_smd(struct at91_pmc *pmc, const char *name,
-+			    const char **parent_names, u8 num_parents)
-+{
-+	struct at91sam9x5_clk_smd *smd;
-+	struct clk *clk = NULL;
-+	struct clk_init_data init;
++For example:
++	periph: periphck {
++		compatible = "atmel,at91sam9x5-clk-peripheral";
++		#size-cells = <0>;
++		#address-cells = <1>;
++		clocks = <&mck>;
 +
-+	smd = kzalloc(sizeof(*smd), GFP_KERNEL);
-+	if (!smd)
-+		return ERR_PTR(-ENOMEM);
++		ssc0_clk {
++			#clock-cells = <0>;
++			reg = <2>;
++			atmel,clk-output-range = <0 133000000>;
++		};
 +
-+	init.name = name;
-+	init.ops = &at91sam9x5_smd_ops;
-+	init.parent_names = parent_names;
-+	init.num_parents = num_parents;
-+	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE;
++		usart0_clk {
++			#clock-cells = <0>;
++			reg = <3>;
++			atmel,clk-output-range = <0 66000000>;
++		};
++	};
 +
-+	smd->hw.init = &init;
-+	smd->pmc = pmc;
 +
-+	clk = clk_register(NULL, &smd->hw);
-+	if (IS_ERR(clk))
-+		kfree(smd);
++Required properties for pll clocks:
++- interrupt-parent : must reference the PMC node.
++- interrupts : shall be set to "<1>".
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the main clock phandle.
++- reg : pll id.
++	0 -> PLL A
++	1 -> PLL B
++- atmel,clk-input-range : minimum and maximum source clock frequency (two u32
++			  fields).
++	  e.g. input = <1 32000000>; <=> 1 to 32MHz.
++- #atmel,pll-clk-output-range-cells : number of cells reserved for pll output
++				      range description. Sould be set to 2, 3
++				      or 4.
++	* 1st and 2nd cells represent the frequency range (min-max).
++	* 3rd cell is optional and represents the OUT field value for the given
++	  range.
++	* 4th cell is optional and represents the ICPLL field (PLLICPR
++	  register)
++- atmel,pll-clk-output-ranges : pll output frequency ranges + optional parameter
++				depending on #atmel,pll-output-range-cells
++				property value.
 +
-+	return clk;
-+}
++For example:
++	plla: pllack {
++		compatible = "atmel,at91sam9g45-clk-pll";
++		interrupt-parent = <&pmc>;
++		interrupts = <1>;
++		#clock-cells = <0>;
++		clocks = <&main>;
++		reg = <0>;
++		atmel,clk-input-range = <2000000 32000000>;
++		#atmel,pll-clk-output-range-cells = <4>;
++		atmel,pll-clk-output-ranges = <74500000 800000000 0 0
++					       69500000 750000000 1 0
++					       64500000 700000000 2 0
++					       59500000 650000000 3 0
++					       54500000 600000000 0 1
++					       49500000 550000000 1 1
++					       44500000 500000000 2 1
++					       40000000 450000000 3 1>;
++	};
 +
-+void __init of_at91sam9x5_clk_smd_setup(struct device_node *np,
-+					struct at91_pmc *pmc)
-+{
-+	struct clk *clk;
-+	int i;
-+	int num_parents;
-+	const char *parent_names[SMD_SOURCE_MAX];
-+	const char *name = np->name;
++Required properties for plldiv clocks (plldiv = pll / 2):
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the plla clock phandle.
 +
-+	num_parents = of_count_phandle_with_args(np, "clocks", "#clock-cells");
-+	if (num_parents <= 0 || num_parents > SMD_SOURCE_MAX)
-+		return;
++The pll divisor is equal to 2 and cannot be changed.
 +
-+	for (i = 0; i < num_parents; i++) {
-+		parent_names[i] = of_clk_get_parent_name(np, i);
-+		if (!parent_names[i])
-+			return;
-+	}
++For example:
++	plladiv: plladivck {
++		compatible = "atmel,at91sam9x5-clk-plldiv";
++		#clock-cells = <0>;
++		clocks = <&plla>;
++	};
 +
-+	of_property_read_string(np, "clock-output-names", &name);
++Required properties for programmable clocks:
++- interrupt-parent : must reference the PMC node.
++- #size-cells : shall be 0 (reg is used to encode clk id).
++- #address-cells : shall be 1 (reg is used to encode clk id).
++- clocks : shall be the programmable clock source phandles.
++	e.g. clocks = <&clk32k>, <&main>, <&plla>, <&pllb>;
++- name: device tree node describing a specific prog clock.
++	* #clock-cells : from common clock binding; shall be set to 0.
++	* reg : programmable clock id (register offset from  PCKx
++			 register).
++	* interrupts : shall be set to "<(8 + id)>".
 +
-+	clk = at91sam9x5_clk_register_smd(pmc, name, parent_names,
-+					  num_parents);
-+	if (IS_ERR(clk))
-+		return;
++For example:
++	prog: progck {
++		compatible = "atmel,at91sam9g45-clk-programmable";
++		#size-cells = <0>;
++		#address-cells = <1>;
++		interrupt-parent = <&pmc>;
++		clocks = <&clk32k>, <&main>, <&plladiv>, <&utmi>, <&mck>;
 +
-+	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+}
-diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-index 4fba500..7b9db60 100644
---- a/drivers/clk/at91/pmc.c
-+++ b/drivers/clk/at91/pmc.c
-@@ -315,6 +315,13 @@ static const struct of_device_id pmc_clk_ids[] __initdata = {
- 		.data = of_at91sam9n12_clk_usb_setup,
- 	},
- #endif
-+	/* SMD clock */
-+#if defined(CONFIG_HAVE_AT91_SMD)
-+	{
-+		.compatible = "atmel,at91sam9x5-clk-smd",
-+		.data = of_at91sam9x5_clk_smd_setup,
-+	},
-+#endif
- 	{ /*sentinel*/ }
- };
- 
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 2483ddc..ba8d142 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -108,4 +108,9 @@ extern void __init of_at91sam9n12_clk_usb_setup(struct device_node *np,
- 						struct at91_pmc *pmc);
- #endif
- 
-+#if defined(CONFIG_HAVE_AT91_SMD)
-+extern void __init of_at91sam9x5_clk_smd_setup(struct device_node *np,
-+					       struct at91_pmc *pmc);
-+#endif
++		prog0 {
++			#clock-cells = <0>;
++			reg = <0>;
++			interrupts = <8>;
++		};
 +
- #endif /* __PMC_H_ */
++		prog1 {
++			#clock-cells = <0>;
++			reg = <1>;
++			interrupts = <9>;
++		};
++	};
++
++
++Required properties for smd clock:
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the smd clock source phandles.
++	e.g. clocks = <&plladiv>, <&utmi>;
++
++For example:
++	smd: smdck {
++		compatible = "atmel,at91sam9x5-clk-smd";
++		#clock-cells = <0>;
++		clocks = <&plladiv>, <&utmi>;
++	};
++
++Required properties for system clocks:
++- #size-cells : shall be 0 (reg is used to encode clk id).
++- #address-cells : shall be 1 (reg is used to encode clk id).
++- name: device tree node describing a specific system clock.
++	* #clock-cells : from common clock binding; shall be set to 0.
++	* reg: system clock id (bit position in SCER/SCDR/SCSR registers).
++	      See Atmel's datasheet to get a full list of system clock ids.
++
++For example:
++	system: systemck {
++		compatible = "atmel,at91rm9200-clk-system";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ddrck {
++			#clock-cells = <0>;
++			reg = <2>;
++			clocks = <&mck>;
++		};
++
++		uhpck {
++			#clock-cells = <0>;
++			reg = <6>;
++			clocks = <&usb>;
++		};
++
++		udpck {
++			#clock-cells = <0>;
++			reg = <7>;
++			clocks = <&usb>;
++		};
++	};
++
++
++Required properties for usb clock:
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the smd clock source phandles.
++	e.g. clocks = <&pllb>;
++- atmel,clk-divisors (only available for "atmel,at91rm9200-clk-usb"):
++	usb clock divisor table.
++	e.g. divisors = <1 2 4 0>;
++
++For example:
++	usb: usbck {
++		compatible = "atmel,at91sam9x5-clk-usb";
++		#clock-cells = <0>;
++		clocks = <&plladiv>, <&utmi>;
++	};
++
++	usb: usbck {
++		compatible = "atmel,at91rm9200-clk-usb";
++		#clock-cells = <0>;
++		clocks = <&pllb>;
++		atmel,clk-divisors = <1 2 4 0>;
++	};
++
++
++Required properties for utmi clock:
++- interrupt-parent : must reference the PMC node.
++- interrupts : shall be set to "<AT91_PMC_LOCKU IRQ_TYPE_LEVEL_HIGH>".
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the main clock source phandle.
++
++For example:
++	utmi: utmick {
++		compatible = "atmel,at91sam9x5-clk-utmi";
++		interrupt-parent = <&pmc>;
++		interrupts = <AT91_PMC_LOCKU IRQ_TYPE_LEVEL_HIGH>;
++		#clock-cells = <0>;
++		clocks = <&main>;
++	};
 -- 
 1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
