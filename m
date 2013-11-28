@@ -1,108 +1,48 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
- generic bus properties
-Date: Thu, 28 Nov 2013 16:50:30 +0000
-Message-ID: <20131128165025.GA4634@e103592.cambridge.arm.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v11 7/7] ARM: tegra: support Trusted Foundations by default
+Date: Thu, 28 Nov 2013 09:58:33 -0700
+Message-ID: <52977639.4000308@wwwdotorg.org>
+References: <1385274652-16415-1-git-send-email-acourbot@nvidia.com> <1385274652-16415-8-git-send-email-acourbot@nvidia.com> <20131126000608.GA21634@quad.lixom.net> <CAAVeFu+mMyPhFtVZ09vgYWWCYkPpF3X547ffRAfXXKOOWUUkqg@mail.gmail.com> <20131126164730.GE2355@e103592.cambridge.arm.com> <CAAVeFuJgqgRnWLD+dyvb7+2fLanHmdDT0YV5r8ETsoqqjW8p7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAVeFuJgqgRnWLD+dyvb7+2fLanHmdDT0YV5r8ETsoqqjW8p7A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 28, 2013 at 10:28:45AM +0000, Will Deacon wrote:
-> Hi Greg,
+On 11/27/2013 11:02 PM, Alexandre Courbot wrote:
+> On Wed, Nov 27, 2013 at 1:47 AM, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On Tue, Nov 26, 2013 at 10:35:58AM +0900, Alexandre Courbot wrote:
+>>> On Tue, Nov 26, 2013 at 9:06 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>>> On Sun, Nov 24, 2013 at 03:30:52PM +0900, Alexandre Courbot wrote:
+>>>>> Support for Trusted Foundations is light and allows the kernel to run on
+>>>>> a wider range of devices, so enable it by default.
+>>>>>
+>>>>> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>> Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>>> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>> ---
+>>>>>  arch/arm/configs/tegra_defconfig | 1 +
+>>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> I think we want this enabled on multi_v7_defconfig too? Send a separate
+>>>> patch for that once this is merged though.
+>>>
+>>> Will do.
+>>
+>> Should it just be default y if one of the relevant
+>> CONFIG_ARCH_TEGRA_*_SOC is selected?
+>>
+>> That way, it's automatically included if relevant, and automatically
+>> excluded if not -- regardless of whether the kernel is multiplatform
+>> or not.
 > 
-> On Wed, Nov 27, 2013 at 11:06:50PM +0000, Greg KH wrote:
-> > On Wed, Nov 27, 2013 at 05:28:06PM +0000, Dave Martin wrote:
-> > > >From will.deacon-5wv7dgnIgG8@public.gmane.org Wed Nov 20 12:06:22 2013
-> > > A number of discussion points remain to be resolved:
-> > > 
-> > >   - Use of the ranges property and describing slave vs master bus
-> > >     address ranges. In the latter case, we actually want to describe our
-> > >     address space with respect to the bus on which the bus masters,
-> > >     rather than the parent. This could potentially be achieved by adding
-> > >     properties such as dma-parent and dma-ranges (already used by PPC?)
-> > > 
-> > >   - Describing masters that master through multiple different buses
-> > > 
-> > >   - How on Earth this fits in with the Linux device model (it doesn't)
-> > 
-> > How does this _not_ fit into the Linux device model?  What am I missing
-> > here that precludes the use of the "driver/device/bus" model we have
-> > today?
-
-The physical-sockets history of buses like PCI tends to force a simple
-tree-like topology as a natural consequence.  You also end up with
-closely linked topologies for power, clocks, interrupts etc., because
-those all pass through the same sockets, so it's difficult to have a
-different structure.
-
-On SoC, those constraints have never existed and are not followed.  A
-device's interface to the system is almost always split into multiple
-connections, not covered by a single design or standard.  The problem
-now is that increasing complexity means that the sometimes bizarre
-topology features of SoCs are becoming less and less transparent for
-software.
-
-The device model currently seems to assume that certain things (power,
-DMA and MMIO accessibility) follow the tree (which may not work for many
-SoCs), and some other things (clocks, regulators, interrupts etc.) are
-not incorporated at all -- making them independent, but it may make some
-abstractions impossible today.
-
-How much this matters for actual systems is hard to foresee yet.  Since
-not _all_ possible insanities find their way into silicon.  The
-onus should certainly be on us (i.e., the ARM/SoC community) to
-demonstrate if the device model needs to change, and to find practical
-ways to change it that minimise the resulting churn.
-
-> The main problem is that we have devices which slave on one bus and master
-> on another. That then complicates probing, power-management, IOMMU
-> configuration, address mapping (e.g. I walk the slave buses to figure out
-> where the slave registers live, but then I need a way to work out where
-> exactly I master on a different bus) and dynamic coherency, amongst other
-> things.
+> So basically, that would mean setting the default to 'y' since the
+> option is not available unless a supported platform is included?
 > 
-> If we try to use the current infrastructure then we end up with one bus per
-> device, which usually ends up being a fake bus representing both the slave
-> and master buses (which is how the platform bus gets abused) and then device
-> drivers having their own idea of the system topology where it's required.
-> 
-> This is fairly horrible and doesn't work for anything other than the trivial
-> case, where one or both of the buses are `dumb' and don't require any work
-> from Linux.
+> I'm fine this way too, if Stephen also agrees.
 
-If we can come up with some generic bus type that is just a container for
-a load of hooks that know how to deal with various aspects of each device's
-interface to the system, on a per-device basis, than may be a start.
-
-The platform bus kinda serves that role, but the trouble with that is that
-it doesn't encourage any abstraction at all.  In the face of increasing
-complexity, abstraction is desperately needed.
-
-> > >  .../devicetree/bindings/arm/coherent-bus.txt       | 110 +++++++++++++++++++++
-> > 
-> > Why "arm"?
-> > 
-> > What makes it ARM specific?
-> 
-> This is just an RFC, so I'd be happy to put the binding somewhere more
-> broad. I'm not sure how much of an issue this is outside of the SoC space,
-> though.
-
-I think that the ARM community are the ones who care the most today,
-so are likely to make the most noise about it.
-
-The binding is entirely generic in concept, so we should certainly
-push for it to be non-ARM-specific.  Non-ARM SoCs will likely need
-to solve this problem too at some point.
-
-Cheers
----Dave
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Fine by me.
