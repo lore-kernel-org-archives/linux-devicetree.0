@@ -1,55 +1,52 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: Re: [PATCH 12/17] spi/qspi: convert driver to enable/disable memory
- mapped.
-Date: Thu, 28 Nov 2013 10:54:12 +0530
-Message-ID: <5296D37C.2020003@ti.com>
-References: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com>
- <1385451313-1875-13-git-send-email-sourav.poddar@ti.com>
- <20131126131138.GJ14725@sirena.org.uk>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH] Documentation: devicetree: arm: add lpae property to
+ cpus/cpu bindings
+Date: Wed, 27 Nov 2013 21:28:01 -0800
+Message-ID: <CAOesGMh45EyTm5ZEAXphiD5L=cyLQ=732qZfW1jtQDo8Rd9rpg@mail.gmail.com>
+References: <1385517172-803-1-git-send-email-olof@lixom.net>
+	<20131127094911.GE5402@e106331-lin.cambridge.arm.com>
+	<CAOesGMh9aQEtqha3gt80q4RmLjXtFTc+Xt39M0m+geTk_betzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20131126131138.GJ14725@sirena.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, computersforpeace@gmail.com, balbi@ti.com, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMh9aQEtqha3gt80q4RmLjXtFTc+Xt39M0m+geTk_betzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-On Tuesday 26 November 2013 06:41 PM, Mark Brown wrote:
-> On Tue, Nov 26, 2013 at 01:05:08PM +0530, Sourav Poddar wrote:
->> Idea is to enable memory mapped by default at the end of the probe,
->> if the control reaches the "transfer" api, then the operation is
->> not a memory mapped one. Hence, we switch to Normal mode and at the
->> end of the "transfer" function. switch back to memory mapped mode.
-> This doesn't see safe, what happens if something tries to use the map
-> while a transfer is in progress?
-Transfer gets initiated with the following api "ti_qspi_start_transfer_one".
-
-At the beginning of this api, I am doing a "disable memory mapped", as 
-becuase of
-the code implemntation, if the control has reaches this api, memory 
-mapped is not
-the desired operation. Then, at the end of this api after
-"spi_finalize_current_message(master)", which indicated the current 
-transfer complete, I
-issue a end of transfer command. Only after which, I enable memory 
-mapped mode again.
-
-So, will the condition you mention above will hit.? Please help me 
-understand if i am
-missing something?
+On Wed, Nov 27, 2013 at 11:27 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Wed, Nov 27, 2013 at 1:49 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> Hi Olof,
+>>
+>> On Wed, Nov 27, 2013 at 01:52:52AM +0000, Olof Johansson wrote:
+>>> While the LPAE capability is determined by the kernel today, it is still
+>>> useful to be able to specify the feature in the device tree. There is
+>>> precedence from other architectures for this.
+>>>
+>>> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+>>> ---
+>>>
+>>> My personal motive for this is to be able to tell which boards are
+>>> work even trying to boot an LPAE kernel on, since we don't disable the
+>>> platforms that are based on A8/A9 when LPAE is turned on. I'll add dtsi
+>>> patches for A7/A15-based platforms once the binding is settled.
+>>
+>> It would be nice to have this description of why you want to add this in
+>> the commit message proper.
+>
+> Sure.
 
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+By the way, I ended up doing it a different way than depending on DT
+contents, so I don't have a need to push for this now.
+
+Still, I think it's worth resolving long-term (how to encode CPU
+features on ARM as properties), but lower priority.
+
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
