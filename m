@@ -1,103 +1,141 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCHv6 1/4] pwm: Add Freescale FTM PWM driver support
-Date: Thu, 28 Nov 2013 23:37:19 +0100
-Message-ID: <20131128223719.GG14689@mithrandir>
-References: <1384220218-12716-1-git-send-email-Li.Xiubo@freescale.com>
- <1384220218-12716-2-git-send-email-Li.Xiubo@freescale.com>
- <20131128212510.GC14689@mithrandir>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
+ generic bus properties
+Date: Thu, 28 Nov 2013 16:31:47 -0700
+Message-ID: <20131128233147.GA19387@obsidianresearch.com>
+References: <20131127172806.GC2291@e103592.cambridge.arm.com>
+ <20131128203322.GB14689@mithrandir>
+ <20131128211009.GA26447@obsidianresearch.com>
+ <20131128222232.GF14689@mithrandir>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Wtrm9ATX0sn6fFKv"
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131128212510.GC14689@mithrandir>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: r65073@freescale.com, s.hauer@pengutronix.de, swarren@wwwdotorg.org, t.figa@samsung.com, grant.likely@linaro.org, linux@arm.linux.org.uk, rob@landley.net, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Alison Wang <b18965@freescale.com>, Jingchang Lu <b35083@freescale.com>, Xiubo Li <Li.Xiubo@freescale.com>
+In-Reply-To: <20131128222232.GF14689@mithrandir>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 28, 2013 at 11:22:33PM +0100, Thierry Reding wrote:
+> On Thu, Nov 28, 2013 at 02:10:09PM -0700, Jason Gunthorpe wrote:
+> > On Thu, Nov 28, 2013 at 09:33:23PM +0100, Thierry Reding wrote:
+> > 
+> > > >   - Describing masters that master through multiple different buses
+> > > > 
+> > > >   - How on Earth this fits in with the Linux device model (it doesn't)
+> > > > 
+> > > >   - Interaction with IOMMU bindings (currently under discussion)
+> > > 
+> > > This is all very vague. Perhaps everyone else knows what this is all
+> > > about, in which case it'd be great if somebody could clue me in.
+> > 
+> > It looks like an approach to describe an AXI physical bus topology in
+> > DT..
+> 
+> Thanks for explaining this. It makes a whole lot more sense now.
 
---Wtrm9ATX0sn6fFKv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hopefully the ARM guys concur, this was just my impression from
+reviewing their patches and having recently done some design work with
+AXI..
 
-On Thu, Nov 28, 2013 at 10:25:11PM +0100, Thierry Reding wrote:
-> On Tue, Nov 12, 2013 at 09:36:55AM +0800, Xiubo Li wrote:
-[...]
-> > +static int fsl_pwm_parse_clk_ps(struct fsl_pwm_chip *fpc)
-> > +{
-> > +	int ret;
-> > +	struct of_phandle_args clkspec;
-> > +	struct device_node *np =3D fpc->chip.dev->of_node;
-> > +
-> > +	fpc->sys_clk =3D devm_clk_get(fpc->chip.dev, "ftm0");
-> > +	if (IS_ERR(fpc->sys_clk)) {
-> > +		ret =3D PTR_ERR(fpc->sys_clk);
-> > +		dev_err(fpc->chip.dev,
-> > +				"failed to get \"ftm0\" clock %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	fpc->counter_clk =3D devm_clk_get(fpc->chip.dev, "ftm0_counter");
-> > +	if (IS_ERR(fpc->counter_clk)) {
-> > +		ret =3D PTR_ERR(fpc->counter_clk);
-> > +		dev_err(fpc->chip.dev,
-> > +				"failed to get \"ftm0_counter\" clock %d\n",
-> > +				ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret =3D of_parse_phandle_with_args(np, "clocks", "#clock-cells", 1,
-> > +					&clkspec);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	fpc->counter_clk_select =3D clkspec.args[0];
->=20
-> This isn't at all pretty. But given that once you have access to a
-> struct clk there's no way to identify it, I don't know of a better
-> alternative.
+> > axi
+> > {
+> >    /* Describe a DAG of AXI connections here. */
+> >    cpu { downstream = &ax_switch,}
+> >    axi_switch {downstream = &memory,&low_speed}
+> >    memory {}
+> >    dma {downstream = &memory}
+> >    low_speed {}
+> > }
+> 
+> Correct me if I'm wrong, but the switch would be what the specification
+> refers to as "interconnect", while a port would correspond to what is
+> called an "interface" in the specification?
 
-Hi Mike,
+That seems correct, but for this purpose we are not interested in
+boring dumb interconnect but fancy interconnect with address remapping
+capabilities, or cache coherency (eg the SCU/L2 cache is modeled as
+switch/interconnect in a AXI DAG).
 
-I've seen this crop up a number of times now, to varying degrees of
-gravity. In this particular case, the driver needs to know the type of a
-clock because it needs to program this hardware differently depending on
-which clock feeds the counter. Since there is no way to obtain any kind
-of identifying information from a struct clk, drivers need to rely on
-hacks like this and manually reach into the device tree to obtain that
-information.
+I called it a switch because the job of the interconnect block is to
+take an AXI input packet on a slave interface and route it to the
+proper master interface with internal arbitration between slave
+interfaces. In my world that is a called a switch ;)
 
-I'm aware of similar cases which have been solved by using a mux clock
-that takes a set of parents and the .set_parent() operation is then used
-to program registers appropriately. However in all those cases, the mux
-clock (and the parents) have all been part of a single driver, so I am
-not sure if the same would be applicable here.
+AXI is basically an on-chip point-to-point switched fabric like PCI-E,
+and the stuff that travels on AXI looks fairly similar to PCI-E TLPs..
 
-Do you have any other suggestions on how this could possibly be solved?
+If you refer to the PDF I linked I broadly modeled the above DT
+fragment on that diagram, each axi sub node (vertex) represents an
+'interconnect' and 'downstream' is a master->slave interface pair (edge).
 
-Thierry
+Fundamentally AXI is inherently a DAG, but unlike what we are used to
+in other platforms you don't have to go through a fused
+CPU/cache/memory controller unit to access memory, so there are
+software visible asymmetries depending on how the DMA flows through
+the AXI DAG.
 
---Wtrm9ATX0sn6fFKv
-Content-Type: application/pgp-signature
+> > Which is why I think encoding the AXI DAG directly in DT is probably
+> > the most future proof way to model this stuff - it sticks close to the
+> > tools ARM provides to the SOC designers, so it is very likely to be
+> > able to model arbitary SOC designs.
+> 
+> I'm not sure I agree with you fully here. At least I think that if what
+> we want to describe is an AXI bus topology, then we should be describing
+> it in terms of the AXI specification.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Right, that was what I was trying to describe :) 
 
-iQIcBAEBAgAGBQJSl8WeAAoJEN0jrNd/PrOhHccP/1zloUswCIV3ruMzP1o0ZSak
-9ZYULNc3caVlbDGFahaJXBIyorqYBP7Ls980pcuLUaf0aPdqV70PyBcv2CtVt6n5
-XV8JW9WZ1vHpLqHOU3cVBC72tkIEdIzQBfNNoC36mX6y8yYWjzvEjAmKfmM2eXph
-/0aAoeFg6RTfsqxPpgsDKP9woCLog5V189rVWDW9/ZFt+egoKPk7gTGza9KAkNyg
-2ThQ1Dh8M2DCcgJ9iWWEz+Yyo0IA3siIbMwiEA7Y6Y0W92qf7LoaAVZ4sz/2z+ce
-ZekWeHDV/+KrwHFSTW1r91/rmO210l7dnUGle2Vu7mDB68SzLtyOEmTkS9BdI2hN
-QnvPCiqgGxYjdXwVfh/Rppa/RDDSbaITP99XftMCBPJsrutay4dh21X9Q83BYSnF
-4S640xNVy2TVo0MgzixJc3uVw07DQRX7QSIL27m67vrrE4hWGknKcsmEt3uX4qD8
-E2ksoIgHg3zwSFelyEfZ2Y6w/7KoZ9i6+kb5y7wLQ/d0VV/6gqc68ed8OT6gm/dU
-+1gSpE23GTZNNaKsOaxcvc436SnuGRmPN6pcxdhRacS740pbjEM0juvKjioyMScE
-Sna51Tr9YHfk/4otjIFiNP/HAOskWsepUrqBPBQNf7CNgvaHMrZ4Yd1w6NRLQxc2
-PlztS056LdO2/WeUtAGO
-=Xjht
------END PGP SIGNATURE-----
+The DAG would be vertexes that are 'interconnect' and directed edges
+that are 'master -> slave interface' pairs.
 
---Wtrm9ATX0sn6fFKv--
+This would be an addendum/side-table dataset to the standard 'soc' CPU
+address map tree, that would only be needed to program address
+mapping/iommu hardware.
+
+And it isn't really AXI specific, x86 style platforms can have a DAG
+too, it is just much simpler, as there is only 1 vertex - the IOMMU.
+
+> I mean, even though device tree is supposed to describe hardware, there
+> needs to be a limit to the amount of detail we put into it. After all it
+> isn't a hardware description language, but rather a language to describe
+> the hardware in a way that makes sense for operating system software to
+> use it.
+
+Right - which is why I said the usual 'soc' node should remain as-is
+typical today - a tree formed by viewing the AXI DAG from the CPU
+vertex. That 100% matches the OS perspective of the system for CPU
+originated MMIO.
+
+The AXI DAG side-table would be used to resolve weirdness with 'bus
+master' DMA programming. The OS can detect all the required
+configuration and properties by tracing a path through the DAG from
+the source of the DMA to the target - that tells you what IOMMUs are
+involved, if the path is cache coherent, etc.
+
+> Perhaps this is just another way of saying what Greg has already said.
+> If we continue down this road, we'll eventually end up having to
+> describe all sorts of nitty gritty details. And we'll need even more
+
+Greg's point makes sense, but the HW guys are not designing things
+this way for kicks - there are real physics based reasons for some of
+these choices...
+
+eg An all-to-all bus cross bar (eg like Intel's ring bus) is engery
+expensive compared to a purpose built muxed bus tree. Doing coherency
+look ups on DMA traffic costs energy, etc.
+
+> code to deal with those descriptions and the hardware they represent. At
+> some point we need to start pushing some of the complexity back into
+> hardware so that we can keep a sane code-base.
+
+Some of this is a consequence of the push to have the firmware
+minimal. As soon as you say the kernel has to configure the address
+map you've created a big complexity for it..
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
