@@ -1,89 +1,34 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: [PATCH V11 3/3] ARM: dts: update watchdog device nodes for Exynos5250
- and Exynos5420
-Date: Thu, 28 Nov 2013 10:04:03 +0530
-Message-ID: <1385613243-3559-4-git-send-email-l.krishna@samsung.com>
-References: <1385613243-3559-1-git-send-email-l.krishna@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1385613243-3559-1-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, wim@iguana.be
-Cc: dianders@chromium.org, kgene.kim@samsung.com, t.figa@samsung.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com, linux@roeck-us.net
+From: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 09/17] spi/spi.h: Add "mem" variable in spi master.
+Date: Thu, 28 Nov 2013 10:08:44 +0530
+Message-ID: <5296C8D4.80004@ti.com>
+References: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com> <1385451313-1875-10-git-send-email-sourav.poddar@ti.com> <20131126130119.GH14725@sirena.org.uk> <52949C9F.10008@ti.com> <20131126132051.GO14725@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131126132051.GO14725-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In Exynos5 series SoCs, PMU has registers to enable/disable mask/unmask
-watchdog timer which is not the case with s3c series SoCs so, there is a
-need to have different compatible names for watchdog to handle these pmu
-registers access.
-
-Hence this patch removes watchdog node from Exynos5.dtsi common file and
-make it separate by updating existing node in Exynos5250 and adding new node
-to Exynos5420. This patch also makes the watchdog node enabled by default
-
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
-Tested-by: Doug Anderson <dianders@chromium.org>
----
- arch/arm/boot/dts/exynos5.dtsi    |    7 -------
- arch/arm/boot/dts/exynos5250.dtsi |    6 +++++-
- arch/arm/boot/dts/exynos5420.dtsi |    9 +++++++++
- 3 files changed, 14 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-index 074739d..de6a606 100644
---- a/arch/arm/boot/dts/exynos5.dtsi
-+++ b/arch/arm/boot/dts/exynos5.dtsi
-@@ -102,13 +102,6 @@
- 		status = "disabled";
- 	};
- 
--	watchdog {
--		compatible = "samsung,s3c2410-wdt";
--		reg = <0x101D0000 0x100>;
--		interrupts = <0 42 0>;
--		status = "disabled";
--	};
--
- 	fimd@14400000 {
- 		compatible = "samsung,exynos5250-fimd";
- 		interrupt-parent = <&combiner>;
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 2f264ad..54df046 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -168,9 +168,13 @@
- 		reg = <0x10040000 0x5000>;
- 	};
- 
--	watchdog {
-+	watchdog@101D0000 {
-+		compatible = "samsung,exynos5250-wdt";
-+		reg = <0x101D0000 0x100>;
-+		interrupts = <0 42 0>;
- 		clocks = <&clock 336>;
- 		clock-names = "watchdog";
-+		samsung,syscon-phandle = <&pmu_syscon>;
- 	};
- 
- 	g2d@10850000 {
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 06e97a7..f5a0076 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -315,4 +315,13 @@
- 		compatible = "samsung,exynos5420-pmu", "syscon";
- 		reg = <0x10040000 0x5000>;
- 	};
-+
-+        watchdog@101D0000 {
-+		compatible = "samsung,exynos5420-wdt";
-+		reg = <0x101D0000 0x100>;
-+		interrupts = <0 42 0>;
-+		clocks = <&clock 316>;
-+		clock-names = "watchdog";
-+		samsung,syscon-phandle = <&pmu_syscon>;
-+        };
- };
--- 
-1.7.10.4
+On Tuesday 26 November 2013 06:50 PM, Mark Brown wrote:
+> On Tue, Nov 26, 2013 at 06:35:35PM +0530, Sourav Poddar wrote:
+>> On Tuesday 26 November 2013 06:31 PM, Mark Brown wrote:
+>>> Is this really generic enough to put here rather than in the driver
+>>> data?
+>> The thought behind this was that if a master controller supports
+>> memory mapped operation and slave wants to use memcpy in his
+>> driver(bypassing spi ), then we should have a mean to communicate
+>> between the
+>> master and the slave. So, 'spi_master' seems to be the place for me
+>> for this data,
+>> which could be parsed in the slave side also.
+> I would have expected that the address would be returned by the function
+> that maps the buffer in rather than stored permanently in the master.
+Yes, it could be be done the above way. I will change.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
