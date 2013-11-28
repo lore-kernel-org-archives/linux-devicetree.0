@@ -1,117 +1,74 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] irqchip: renesas-intc-irqpin: Update Documentation of
- DT bindings compat string and example
-Date: Thu, 28 Nov 2013 09:46:17 +0000
-Message-ID: <20131128094617.GB5929@e106331-lin.cambridge.arm.com>
-References: <1385620857-18994-1-git-send-email-horms+renesas@verge.net.au>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] ARM: DTS: omap4-sdp: Add regulator for LCD backlight
+ (pwm-backlight)
+Date: Thu, 28 Nov 2013 11:52:18 +0200
+Message-ID: <52971252.40909@ti.com>
+References: <1385630924-16392-1-git-send-email-peter.ujfalusi@ti.com> <52970E4C.8070502@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1385620857-18994-1-git-send-email-horms+renesas@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52970E4C.8070502@baylibre.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tomi.valkeinen@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 28, 2013 at 06:40:57AM +0000, Simon Horman wrote:
-> Update the compat strings to provide hardware-specific compat strings
-> for each variant of the hardware that is supported.
-> 
-> Also provide an example which was previously missing from
-> the bindings documentation
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  .../interrupt-controller/renesas,intc-irqpin.txt   | 29 +++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> index 1f8b0c5..240ab2a 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> @@ -2,7 +2,12 @@ DT bindings for the R-/SH-Mobile irqpin controller
->  
->  Required properties:
->  
-> -- compatible: has to be "renesas,intc-irqpin"
-> +- compatible: Must be one of the following:
+Hi Benoit,
 
-s/be/contain/
+On 11/28/2013 11:35 AM, Benoit Cousson wrote:
+> Hi Peter,
+>=20
+> On 28/11/2013 10:28, Peter Ujfalusi wrote:
+>> Since in DT booted kernel dummy regulators are no longer supported w=
+e need
+>> to provide valid phandle for the regulator needed by the backlight.
+>> On the board VBAT is used to power the LCD backlight(s).
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>> Hi,
+>>
+>> This patch is needed for 3.13 to get the LCD backlight to work again=
+=2E
+>=20
+> OK, so this is a fix for the next -rc?
 
-> +    "renesas,intc-irqpin"
-> +    "renesas,intc-irqpin-r8a7740"
-> +    "renesas,intc-irqpin-r8a7778"
-> +    "renesas,intc-irqpin-r8a7779"
-> +    "renesas,intc-irqpin-sh73a0"
->  - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
->    interrupts.txt in this directory
+Yes, it would be really great if this can make it to the next -rc.
 
-I looked in this file in mainline, and the binding does not describe
-that the reg entries are _required_ as the driver implies:
+>=20
+> Regards,
+> Benoit
+>=20
+>>
+>> Regards,
+>> Peter
+>>
+>>   arch/arm/boot/dts/omap4-sdp.dts | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/oma=
+p4-sdp.dts
+>> index 5fc3f43..6f86db2 100644
+>> --- a/arch/arm/boot/dts/omap4-sdp.dts
+>> +++ b/arch/arm/boot/dts/omap4-sdp.dts
+>> @@ -104,6 +104,7 @@
+>>                   100 110 120 127
+>>                   >;
+>>           default-brightness-level =3D <13>;
+>> +        power-supply =3D <&vbat>;
+>>       };
+>>
+>>       sound {
+>>
+>=20
+>=20
 
----->8----
-	/* get hold of manadatory IOMEM */
-	for (k = 0; k < INTC_IRQPIN_REG_NR; k++) {
-		io[k] = platform_get_resource(pdev, IORESOURCE_MEM, k);
-		if (!io[k]) {
-			dev_err(&pdev->dev, "not enough IOMEM resources\n");
-			ret = -EINVAL;
-			goto err0;
-		}
-	}
----->8----
 
-Please add a description of the reg entries to the required properties
-section of the binding, along with a description of what they correspond
-to.
-
->  
-> @@ -14,3 +19,25 @@ Optional properties:
->    if different from the default 4 bits
->  - control-parent: disable and enable interrupts on the parent interrupt
->    controller, needed for some broken implementations
-
-Similarly, please describe the interrupts, and what they are logically.
-
-> +
-> +Example:
-> +
-> +        irqpin0: irqpin@e6900000 {
-> +                compatible = "renesas,intc-irqpin";
-> +                #interrupt-cells = <2>;
-> +                interrupt-controller;
-
-Please mention this as required too.
-
-> +                reg = <0xe6900000 4>,
-> +                        <0xe6900010 4>,
-> +                        <0xe6900020 1>,
-> +                        <0xe6900040 1>,
-> +                        <0xe6900060 1>;
-> +                interrupt-parent = <&gic>;
-> +                interrupts = <0 149 IRQ_TYPE_LEVEL_HIGH
-> +                              0 149 IRQ_TYPE_LEVEL_HIGH
-> +                              0 149 IRQ_TYPE_LEVEL_HIGH
-> +                              0 149 IRQ_TYPE_LEVEL_HIGH
-> +                              0 149 IRQ_TYPE_LEVEL_HIGH
-> +                              0 149 IRQ_TYPE_LEVEL_HIGH
-> +                              0 149 IRQ_TYPE_LEVEL_HIGH
-> +                              0 149 IRQ_TYPE_LEVEL_HIGH>;
-
-Please bracket these individually.
-
-Otherwise, this looks fine to me.
-
-Thanks,
-Mark.
+--=20
+P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
