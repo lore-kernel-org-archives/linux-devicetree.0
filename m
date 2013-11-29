@@ -1,78 +1,195 @@
-From: Will Deacon <will.deacon@arm.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
  generic bus properties
-Date: Fri, 29 Nov 2013 18:15:17 +0000
-Message-ID: <20131129181517.GK31000@mudshark.cambridge.arm.com>
-References: <20131127230650.GA6162@kroah.com>
- <20131128102845.GB21354@mudshark.cambridge.arm.com>
- <20131128173339.GB4634@e103592.cambridge.arm.com>
- <20131128191331.GB2385@kroah.com>
- <20131128193917.GC4634@e103592.cambridge.arm.com>
- <20131128212528.GA6144@kroah.com>
- <20131129114453.GC21336@mudshark.cambridge.arm.com>
- <20131129173701.GA5635@kroah.com>
- <20131129180110.GJ31000@mudshark.cambridge.arm.com>
- <20131129181123.GA7113@kroah.com>
+Date: Fri, 29 Nov 2013 11:43:41 -0700
+Message-ID: <20131129184341.GA25451@obsidianresearch.com>
+References: <20131127172806.GC2291@e103592.cambridge.arm.com>
+ <20131128203322.GB14689@mithrandir>
+ <20131128211009.GA26447@obsidianresearch.com>
+ <20131128222232.GF14689@mithrandir>
+ <20131128233147.GA19387@obsidianresearch.com>
+ <20131129115815.GC3136@e103592.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131129181123.GA7113@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hiroshi Doyu <hdoyu@nvidia.com>
+In-Reply-To: <20131129115815.GC3136-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2013 at 06:11:23PM +0000, Greg KH wrote:
-> On Fri, Nov 29, 2013 at 06:01:10PM +0000, Will Deacon wrote:
-> > On Fri, Nov 29, 2013 at 05:37:01PM +0000, Greg KH wrote:
-> > > On Fri, Nov 29, 2013 at 11:44:53AM +0000, Will Deacon wrote:
-> > > > On Thu, Nov 28, 2013 at 09:25:28PM +0000, Greg KH wrote:
-> > > > > On Thu, Nov 28, 2013 at 07:39:17PM +0000, Dave Martin wrote:
-> > > > > > On Thu, Nov 28, 2013 at 11:13:31AM -0800, Greg KH wrote:
-> > > > > > > Yes it is, you all are the ones tasked with implementing the crazy crap
-> > > > > > > the hardware people have created, best of luck with that :)
-> > > > > > 
-> > > > > > Agreed.  The first assumption should be that we can fit in with the
-> > > > > > existing device model -- we should only reconsider if we find that
-> > > > > > to be impossible.
-> > > > > 
-> > > > > Let me know if you think it is somehow impossible, but you all should
-> > > > > really push back on the insane hardware designers that are forcing you
-> > > > > all to do this work.  I find it "interesting" how this all becomes your
-> > > > > workload for their crazy ideas.
-> > > > 
-> > > > Oh, I don't think we're claiming anything is impossible here :) It's more
-> > > > that we will probably want to make some changes to the device model to allow,
-> > > > for example, a device to be associated with multiple buses of potentially
-> > > > different types.
-> > > 
-> > > Why would you want that?  What good would that help with?
-> > 
-> > It would help with devices which have their slave interface on one bus, but
-> > master to another.
-> > 
-> > We need a way to configure the master side of things (IOMMU, coherency, MSI
-> > routing, etc) on one bus and configure the slave side (device probing, power
-> > management, clocks, etc) on another.
+On Fri, Nov 29, 2013 at 11:58:15AM +0000, Dave Martin wrote:
+> > Hopefully the ARM guys concur, this was just my impression from
+> > reviewing their patches and having recently done some design work with
+> > AXI..
 > 
-> Make this two "devices" and have each "device" have a pointer or a way
-> to "find" the other one.
+> Yes and no.  We are trying to describe a real topology here, but only
+> because there are salient features that the kernel genuinely does
+> need to know about if we want to be able to abstract this kind of thing.
+> 
+> It's not just about AXI.
 
-That's certainly one possibility, and one that I'd also toyed around with.
-The risk is that we're just spreading the problem around (e.g. into the
-dmaengine API), but it's definitely a starting point.
+Right, I brought up AXI because it is public, well documented and easy
+to talk about - every bus/interconnect (PCI, PCI-E, RapidIO,
+HyperTransport, etc) I've ever seen works in essentially the same way
+- links and 'switches'.
 
-As I said, we need to sort out the DT bindings first then we can see exactly
-what we need to fit into Linux.
+> The master-slave link concept is not supposed to be a new concept at
+> all: DT already has this concept.  All we are aiming to add here is
+> the ability to describe cross-links that ePAPR cannot describe
+> directly.
 
-Will
+The main issue seems to be how to do merge the DT standard CPU-centric
+tree with a bus graph that isn't CPU-centric - eg like in that Zynq
+diagram I mentioned.
+
+All the existing DT cases I'm aware of are able to capture the DMA bus
+topology within the CPU tree - because they are the same :)
+
+> In axi { axi_switch {} }, are you describing two levels of bus, or
+> one?  I'm guessing one, but then the nested node looks a bit weird.
+
+So, my attempt was to sketch a vertex list and adjacency matrix in DT.
+
+'axi' is the container for the graph, 'axi_switch' is a vertex and
+then 'downstream' encodes the adjacency list.
+
+We can't use the natural DT tree hierarchy here because there is no
+natural graph root - referring to the Zynq diagram there is no vertex
+you can start at and then reach every other vertex - so a tree can't
+work, and there is no such thing as a 'bus level'
+
+> However, there's nothing to stop a DMA controller's master side being
+> looped back so that it can access its own slave interface.  This is the
+> normal situation for coherent DMA, since the whole point there is
+> that the DMA controller should shares its system view closely with
+> the CPUs, including some levels of cache.
+
+The DAG would only have vertexes for switches and distinct vertexes
+for 'end-ports'. So if an IP block has a master interface and a slave
+interface then it would have two DAG end-port vertexes and the DAG can
+remain acyclic.
+
+The only way to create cycles is to connect switches in loops, and you
+can always model a group of looped switches as a single switch vertex
+to remove cycles.
+
+If cycles really are required then it just makes the kernel's job
+harder, it doesn't break the DT representation ..
+
+> > Right - which is why I said the usual 'soc' node should remain as-is
+> > typical today - a tree formed by viewing the AXI DAG from the CPU
+> > vertex. That 100% matches the OS perspective of the system for CPU
+> > originated MMIO.
+> 
+> Do you mean the top-level bus node in the DT and its contents, or
+> something else?
+> 
+> If so, agreed ...
+
+Right, the DT, and the 'reg' properties should present a tree that is
+the MMIO path for the CPU. That tree should be a subset of the full
+bus graph.
+
+If the bus is 'sane' then that tree matches the DMA graph as well,
+which is where most implementations are today.
+
+> ... that could work, although putting the links in the natural places
+> in the DT directly feels cleaner that stashing a crib table elsewhere
+> in the DT.  That's partly cosmetic, I think both could work?
+
+I choose to talk about this as a side table for a few reasons (touched
+on above) but perhaps the most important is where do you put switches
+that the CPU's MMIO path doesn't flow through? What is the natural
+place in the DT tree?
+
+Again refering to the Zynq diagram, you could have a SOC node like
+this:
+
+soc
+{
+  // Start at Cortex A9
+  scu {
+     OCM {}
+     l2cache {
+             memory {}
+	     slave {
+	     	   on_chip0 {reg = {}}
+	     	   on_chip1 {reg = {}}
+	     	   on_chip2 {reg = {}}
+		   ...
+	     }
+     }
+  }
+}
+
+Where do I put a node for the 'memory interconnect' switch? How do I
+model DMA connected to the 'Cache Coherent AXI port'?
+
+MMIO config registers for these blocks are going to fit into the MMIO
+tree someplace, but that doesn't really tell you anything about how
+they fit into the dma graph.
+
+Easy to do with a side table:
+axi {
+    cpu {downstream = scu}
+    scu {downstream = OCM,l2cache}
+    l2cache {downstream = memory,slave interconnect}
+    slave interconnect {} // No more switches
+
+    hp axi {downstream = memory interconnect}
+    memory interconnect {downstream = memory,OCM}
+    
+    coherent acp {downstream = scu}
+
+    gp axi  {downstream = master interconnect}
+    master interconnect  {downstream = central interconnect}
+    central interconnect  {downstream = ocm,slave interconnect,memory}
+
+    dma engine  {downstream = central interconnect}
+}
+
+Which captures the switch vertex list and adjacency list.
+
+Then you have to connect the device nodes into the AXI graph:
+
+Perhaps:
+
+on_chip0
+{ 
+   reg = {}
+   axi_mmio_slave_port = <&slave interconnect, M0> // Vertex and edge
+   axi_bus_master_port = <&hp axi, S1>
+}
+
+Or maybe back reference from the graph table is better:
+
+axi {
+   hp axi {
+       downstream = memory interconnect
+       controller = &...;
+       S1 {
+          bus_master = &on_chip0;   // Vertex and edge
+       	  axi,arbitration-priority = 10;
+       }
+   }
+   slave interconnect {
+       M0 {
+          mmio_slave = &on_chip0;
+       }
+   }
+}
+
+It sort of feels natural that you could describe the interconnect in
+under its own tidy node and the main tree remains left alone...
+
+This might be easier to parse as well, since you know everything under
+'axi' is related to interconnect and not jumbled with other stuff.
+
+Cheers,
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
