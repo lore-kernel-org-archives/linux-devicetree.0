@@ -1,169 +1,75 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 2/2] memory: ti-aemif: add bindings for AEMIF driver
-Date: Fri, 29 Nov 2013 10:10:44 -0500
-Message-ID: <5298AE74.7020804@ti.com>
-References: <1384962416-14862-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1384962416-14862-3-git-send-email-ivan.khoronzhuk@ti.com>
- <20131120182102.GK14627@ns203013.ovh.net> <528D076A.8070806@ti.com>
- <C0B815B0-E394-494C-88A2-78A0DBFA23DA@kernel.crashing.org>
- <5298ABFA.8070804@ti.com>
+From: boris brezillon <b.brezillon@overkiz.com>
+Subject: Re: [PATCH 5/9] ARM: at91/dt: add mmc0 slot0 support to at91rm9200ek
+ board
+Date: Fri, 29 Nov 2013 16:30:23 +0100
+Message-ID: <5298B30F.3060905@overkiz.com>
+References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>	<1377687995-10758-1-git-send-email-b.brezillon@overkiz.com>	<20131120145926.GE14627@ns203013.ovh.net>	<528CDFFB.1020601@overkiz.com>	<CACRpkdboBg4YOnMNiar0DDBVnoky=zNky+Pzyp1=P_POtH15qQ@mail.gmail.com>	<528DE1C4.6060900@overkiz.com>	<CACRpkdZdweyWJefttiuiYAJ9qhahLbnj7eHUiLV_83UA41X_uQ@mail.gmail.com>	<5294D64D.7000100@overkiz.com>	<CACRpkdZoAjuWVpWZfvPgOAd7qB1ZBtC+45nD3SYay3SrMhqwVA@mail.gmail.com>	<52986CA8.3010601@overkiz.com> <CACRpkdag5=QYsWe81ocpkMp2APaoBAOOn2r0iAVdf9DHTKrSXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <5298ABFA.8070804@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Rob Landley <rob@landley.net>, "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdag5=QYsWe81ocpkMp2APaoBAOOn2r0iAVdf9DHTKrSXA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Joachim Eastwood <manabian@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 29 November 2013 10:00 AM, Grygorii Strashko wrote:
-> Hi Kumar Gala,
-> =
-
-> On 11/22/2013 11:06 PM, Kumar Gala wrote:
+On 29/11/2013 14:31, Linus Walleij wrote:
+> On Fri, Nov 29, 2013 at 11:30 AM, boris brezillon
+> <b.brezillon@overkiz.com> wrote:
+>> On 29/11/2013 11:03, Linus Walleij wrote:
+>>> I guess one way is to obtain this GPIO in board code and just
+>>> flick it depending on which device you register.
+> (...)
+>> The whole goal of moving from board files to dt is to drop all board
+>> specific processing or initialization and only keep a common description
+>> with generic drivers capable of handling common use cases.
 >>
->> On Nov 20, 2013, at 1:03 PM, ivan.khoronzhuk <ivan.khoronzhuk@ti.com> wr=
-ote:
+>> I'm not sure providing new board specific drivers is a good solution
+>> (even if it is the simplest way to achieve our goal).
 >>
->>> On 11/20/2013 08:21 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>>>> +				the chip select signal.
->>>>> +				Minimum value is 1 (0 treated as 1).
->>>>> +
->>>>> +- ti,cs-wsetup:		write setup width, ns
->>>>> +				Time between the beginning of a memory cycle
->>>>> +				and the activation of write strobe.
->>>>> +				Minimum value is 1 (0 treated as 1).
->>>>> +
->>>>> +- ti,cs-wstrobe:	write strobe width, ns
->>>>> +				Time between the activation and deactivation of
->>>>> +				the write strobe.
->>>>> +				Minimum value is 1 (0 treated as 1).
->>>>> +
->>>>> +- ti,cs-whold:		write hold width, ns
->>>>> +				Time between the deactivation of the write
->>>>> +				strobe and the end of the cycle (which may be
->>>>> +				either an address change or the deactivation of
->>>>> +				the chip select signal.
->>>>> +				Minimum value is 1 (0 treated as 1).
->>>>> +
->>>>> +If any of the above parameters are absent, current parameter value w=
-ill be taken
->>>>> +from the corresponding HW reg.
->>>>> +
->>>>> +The name for cs node must be in format csN, where N is the cs number.
->>>>
->>>> this is wired we should use reg instead to represent the cs as done fo=
-r SPI
->>>> or a an other property
->>>>
->>>> Best Regards,
->>>> J.
->>>>
->>>
->>> Ok, I will add new property cs-chipselect like following :
->>>
->>> ti,cs-chipselect:	number of chipselect. Indicates on the
->>> 			aemif driver which chipselect is used
->>> 			for accessing the memory.
->>> 			For compatibles "ti,davinci-aemif" and
->>> 			"ti,keystone-aemif" it can be in range [0-3].
->>> 			For compatible "ti,omap-L138-aemif" range is [2-5].
->>>
->>> Is it OK?
->>
->> Why do you need this? As it was mentioned just use reg:
->>
->> So you=92d have something like:
->>
->> memory-controller@21000A00 {
->> 	=85
->> 	nand:cs2@2 {
->> 		reg =3D <2 0 0>;
->> 		ranges;
->> 		...
->>
->> 	}:
->> };
-> =
+>> Could we have something similar to pinctrl but with gpios :
+>> when the device is probed the device/driver core code request the gpio
+>> configure it appropriately and set it to the requested value (if configured
+>> as output).
+> This has been suggested under the name "GPIO hogs" in the past.
+>
+> It would work similar to how pinctrl hogs work by associating the
+> GPIO line the controller itself, using some specific string
+> like gpio-input-hogs = <...> / gpio-output-hogs = <...>;
+>
+> The gpiolib core will then grab and set up these before
+> returning from the registration call so noone ever gets a chance
+> to use them.
 
-> I'd prefer to continue with "ti,cs-chipselect" (this is more human friend=
-ly definition, as for me),
-> but if you insist - it can be changed as:
-> memory-controller@21000A00 {
-> 	compatible =3D "ti,keystone-aemif";
-> ...
-> =
+Ok, I'll take a look.
 
-> 	cs2 {
-> 		compatible =3D "ti,aemif-cs";
-> 		reg =3D <2>;
-> ...
-> 	}
-> =
+Could you point me out a thread (or other documents) talking about gpio 
+hogs.
+I found this one 
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/162254.html.
 
-> 	cs0 {
-> 		compatible =3D "ti,aemif-cs";
-> 		reg =3D <0>;
-> ...
-> 	}
-> =
+>> These are just thoughts, and I guess introducing new code in the
+>> device/driver core
+>> code is not that easy, especially when this code is here to handle specific
+>> case
+>> like ours.
+> It is very easy, just write the patch, iterate it (these patches get
+> a lot of scrutiny as it is core code, so expect some work and time
+> to get it done), and then unless there is a blocker, I would merge it.
+> The concept is entirely sound, just that someone needs to step
+> up and do the work...
 
->>
->> However, I=92m confused by the example in which you have:
->>
->> +		nand@0,0x8000000 {
->> +			compatible =3D "ti,davinci-nand";
->> +			reg =3D <0 0x8000000 0x4000000
->> +			       1 0x0000000 0x0000100>;
->> +
->> +			.. see davinci-nand.txt
->> +		};
->>
->> What chipselects is this on 0 & 1?
-> =
+Sure, I'll propose something (I guess your talking about GPIO hogs 
+concept not gpio-switch driver).
+If you already thought a bit about GPIO hogs, I'd be interested to get 
+some inputs (suggestions, ideas, code, ...).
 
-> As I described in https://lkml.org/lkml/2013/11/26/282 we are not encodin=
-g CS number in reg
->  - it's memory partition number.
-> =
+Anyway, thanks for taking time to answer my questions.
 
-> Also, I'd like to note that we *DO NOT introduce* NAND device bindings he=
-re.
-> The Davinci NAND bindings was introduced and accepted more then one year =
-ago, and
-> we've just updated its a bit (keeping full compatibility) and reused
-> (see https://lkml.org/lkml/2013/11/21/182). =
+Best Reagrds,
 
-> And the CS number is encoded for Davinci NAND node using standalone prope=
-rty
-> "ti,davinci-chipselect" and we need to provide (2) two memory ranges to i=
-t,
-> as result we can't encode CS number in "reg" for AEMIF child devices (NAN=
-D/NOR/etc),
-> as it will break bindings compatibility.
-> =
+Boris
 
-> In this document, NAND node is used just as an example of child node.
-> =
-
-The above should have been really captured in the commit log to get a better
-picture. No way on earth, a reviewer can figure out whether this is new bin=
-dings
-or copy of bindings already used.
-
-Regards,
-Santosh
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> Yours,
+> Linus Walleij
