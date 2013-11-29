@@ -1,42 +1,83 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v4 0/5] Update Davinci watchdog driver
-Date: Fri, 29 Nov 2013 09:57:29 -0500
-Message-ID: <5298AB59.7020506@ti.com>
-References: <1385556508-3935-1-git-send-email-ivan.khoronzhuk@ti.com> <5298943D.8010608@ti.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] memory: ti-aemif: add bindings for AEMIF driver
+Date: Fri, 29 Nov 2013 16:56:08 +0200
+Message-ID: <5298AB08.3090108@ti.com>
+References: <1384962416-14862-1-git-send-email-ivan.khoronzhuk@ti.com> <1384962416-14862-3-git-send-email-ivan.khoronzhuk@ti.com> <20131120182102.GK14627@ns203013.ovh.net> <528D076A.8070806@ti.com> <20131122184247.GO14627@ns203013.ovh.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5298943D.8010608@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, wim@iguana.be, nsekhar@ti.com
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131122184247.GO14627-HVbc7XotTAhnXn40ka+A6Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 29 November 2013 08:18 AM, Grygorii Strashko wrote:
-> Hi Sekhar,
-> 
-> On 11/27/2013 02:48 PM, Ivan Khoronzhuk wrote:
->> These patches are intended to update Davinci watchdog to use WDT core
->> and reuse driver for keystone arch, because Keystone uses the similar
->> IP like Davinci.
+Hi Jean-Christophe,
+
+On 11/22/2013 08:42 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 21:03 Wed 20 Nov     , ivan.khoronzhuk wrote:
+>> On 11/20/2013 08:21 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>>> +				the chip select signal.
+>>>> +				Minimum value is 1 (0 treated as 1).
+>>>> +
+>>>> +- ti,cs-wsetup:		write setup width, ns
+>>>> +				Time between the beginning of a memory cycle
+>>>> +				and the activation of write strobe.
+>>>> +				Minimum value is 1 (0 treated as 1).
+>>>> +
+>>>> +- ti,cs-wstrobe:	write strobe width, ns
+>>>> +				Time between the activation and deactivation of
+>>>> +				the write strobe.
+>>>> +				Minimum value is 1 (0 treated as 1).
+>>>> +
+>>>> +- ti,cs-whold:		write hold width, ns
+>>>> +				Time between the deactivation of the write
+>>>> +				strobe and the end of the cycle (which may be
+>>>> +				either an address change or the deactivation of
+>>>> +				the chip select signal.
+>>>> +				Minimum value is 1 (0 treated as 1).
+>>>> +
+>>>> +If any of the above parameters are absent, current parameter value will be taken
+>>>> +from the corresponding HW reg.
+>>>> +
+>>>> +The name for cs node must be in format csN, where N is the cs number.
+>>>
+>>> this is wired we should use reg instead to represent the cs as done for SPI
+>>> or a an other property
+>>>
+>>> Best Regards,
+>>> J.
+>>>
 >>
->> See Documentation:
->> Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
->> Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
+>> Ok, I will add new property cs-chipselect like following :
 >>
->> Also:
->>   - improved to support GET_TIMELEFT option.
->>   - added "clocks" and "timeout-sec" properties to DT.
+>> ti,cs-chipselect:	number of chipselect. Indicates on the
+>> 			aemif driver which chipselect is used
+>> 			for accessing the memory.
+>> 			For compatibles "ti,davinci-aemif" and
+>> 			"ti,keystone-aemif" it can be in range [0-3].
+>> 			For compatible "ti,omap-L138-aemif" range is [2-5].
+>>
+>> Is it OK?
 > 
-> Do you have any additional comments to this series?
+> yes
 > 
-> By the way patch "[PATCH] watchdog: davinci: rename platform driver to davinci-wdt"
-> https://lkml.org/lkml/2013/11/27/201 can be applied as before as after this series
-> without conflicts.
+> I just have one issue the whole memory concept
 > 
-Thats good then and probably the series can go via watchdog tree.
-In either way, it will be good to know who is queuing up the series for 3.14
+> for me we should do as done on pinctrl have a phandle on the device that
+> require it and handle it at device core level
+> 
+> as the memory controller is not necessarely on the same bus as the memory
+> device them selves
+
+Could you clarify your point a bit, pls?
+Are you talking about external ASRAM, NOR and NAND chips wired to CS interface?
 
 Regards,
-Santosh
+- grygorii
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
