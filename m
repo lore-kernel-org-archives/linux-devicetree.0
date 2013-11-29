@@ -1,52 +1,58 @@
-From: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Device Tree Maturity Project
-Date: Fri, 29 Nov 2013 15:57:33 +0000
-Message-ID: <1385740653.25763.53.camel@kazak.uk.xensource.com>
-References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail. com>
-	 <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com>
-	 < 20131122112223.GB8406@e106331-lin.cambridge.arm.com>
-	 <20131127143655.F25E4C404EC@trevor.secretlab.ca>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: tegra: add reset properties to Tegra124 DTs
+Date: Fri, 29 Nov 2013 16:58:07 +0100
+Message-ID: <20131129155806.GQ9712@ulmo.nvidia.com>
+References: <1385419160-11511-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131127143655.F25E4C404EC-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qd/SZIFVu+MYwfCR"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1385419160-11511-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-11-27 at 14:36 +0000, Grant Likely wrote:
-> On Fri, 22 Nov 2013 11:22:23 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Wed, Nov 20, 2013 at 11:56:39AM +0000, Grant Likely wrote:
-> > > On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
-> > > <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > > > To help keep track of what is going on, I would like to have a short
-> > > > stand up meeting once a week. Looking at my calendar, I can make
-> > > > 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
-> > > 
-> > > Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
-> > 
-> > Apologies for begin a little late to the party...
-> > 
-> > I have a regular fortnightly meeting on Thursdays, and for the next few
-> > weeks (until the new year) I'm otherwise engaged on Fridays, so Tuesdays
-> > would be preferable for me.
-> 
-> I started with Fridays, but it sounds like Tuesday works for everyone.
-> I've moved the meeting to next Tuesday.
 
-Should I have gotten an update meeting request?
+--qd/SZIFVu+MYwfCR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  This Friday would have been off
-> anyway because of some minor holiday in the US.
+On Mon, Nov 25, 2013 at 03:39:17PM -0700, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/tegra124.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 
-:-)
+A proper commit message would be nice, but it probably wouldn't be much
+more than a repetition of the subject, so perhaps it's not worth it.
+Either way:
 
-Ian.
+Reviewed-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
+--qd/SZIFVu+MYwfCR
+Content-Type: application/pgp-signature
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSmLmOAAoJEN0jrNd/PrOhKtQP/iPSI4/M97l2Jh7uvpUP9rZ4
+ekOCuoa0QYj27KYnEVq9nKO8m0zOYp2WKQqZkJHcobCr06u8BElB61D/E/fZ54fL
+cSkvecTb663wjhLp8HRYRVn009G6Jb/pKbNAjpXsWRHcZoYyq5UD9eQj8hH+qCwg
+00lgVKFSFbQMbdPiYBn8Naz72ldtEsw8jygOYo7AZmZxlKnxWynPtesYVGhrp5OH
+bEK4DQhZe7EsXbkj+JcTyyzap3pr5L6TTTtpc4b9Ao3VeO9KnX+6OS5N0NMJBDn1
+V88LollrdGxi1n/UNcQVAXaA5F5YmfzQpKm7saSf9vimxIUGB33SobKzhPYAvrDI
+HzitOqi6RTCk+HLJZnrzX6KOu8i3huVxDG0Dtcdgn0jsLi6Pu7OL3Pk/QhzwVuOg
+kkgtm6HlhgHKEzH7TwwJTuds41BFvlJb/JLEPTgddIc4MA3yxTaY0v5cxW0bH2gd
+Lf8aylNKrt2btXM5GwHN7D54rn70AhPawjWn3SqEMpYSayY4YgzkT0JQvcVm6qGQ
+IjyOTVa3DV9mQCif31E0Perlw6VNg9pq+1pHjxPYECyQg8/RyLxxIDdz1XkOq2J4
+MGLVc75z8wx1khohCEaevqmXHWfKg3gpl31cMBfBij87CIXMKpwcOxCq07LiZxQT
+W9kIhDIVEvncUF1o155a
+=Gmrg
+-----END PGP SIGNATURE-----
+
+--qd/SZIFVu+MYwfCR--
