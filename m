@@ -1,60 +1,62 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: delete nvidia,tegra20-spi.txt binding
-Date: Fri, 29 Nov 2013 12:16:36 +0100
-Message-ID: <20131129111635.GM22771@ulmo.nvidia.com>
-References: <1385419075-11414-1-git-send-email-swarren@wwwdotorg.org>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
+ generic bus properties
+Date: Fri, 29 Nov 2013 11:44:53 +0000
+Message-ID: <20131129114453.GC21336@mudshark.cambridge.arm.com>
+References: <20131127172806.GC2291@e103592.cambridge.arm.com>
+ <20131127230650.GA6162@kroah.com>
+ <20131128102845.GB21354@mudshark.cambridge.arm.com>
+ <20131128173339.GB4634@e103592.cambridge.arm.com>
+ <20131128191331.GB2385@kroah.com>
+ <20131128193917.GC4634@e103592.cambridge.arm.com>
+ <20131128212528.GA6144@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sWvRP97dwRHm9fX+"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1385419075-11414-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20131128212528.GA6144@kroah.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hiroshi Doyu <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 28, 2013 at 09:25:28PM +0000, Greg KH wrote:
+> On Thu, Nov 28, 2013 at 07:39:17PM +0000, Dave Martin wrote:
+> > On Thu, Nov 28, 2013 at 11:13:31AM -0800, Greg KH wrote:
+> > > Yes it is, you all are the ones tasked with implementing the crazy crap
+> > > the hardware people have created, best of luck with that :)
+> > 
+> > Agreed.  The first assumption should be that we can fit in with the
+> > existing device model -- we should only reconsider if we find that
+> > to be impossible.
+> 
+> Let me know if you think it is somehow impossible, but you all should
+> really push back on the insane hardware designers that are forcing you
+> all to do this work.  I find it "interesting" how this all becomes your
+> workload for their crazy ideas.
 
---sWvRP97dwRHm9fX+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oh, I don't think we're claiming anything is impossible here :) It's more
+that we will probably want to make some changes to the device model to allow,
+for example, a device to be associated with multiple buses of potentially
+different types.
 
-On Mon, Nov 25, 2013 at 03:37:55PM -0700, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> This binding shouldn't exist; Tegra20 has two forms of SPI controller
-> that are documented separately in nvidia,tegra20-sflash.txt and
-> nvidia,tegra20-slink.txt.
->=20
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt | 5 -----
->  1 file changed, 5 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/spi/nvidia,tegra20-=
-spi.txt
+Step one is to get the DT binding sorted, then we can try and get Linux to
+make use of it. This goes hand-in-hand with the IOMMU discussion going on
+here:
 
-Reviewed-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+  http://lists.infradead.org/pipermail/linux-arm-kernel/2013-November/210401.html
 
---sWvRP97dwRHm9fX+
-Content-Type: application/pgp-signature
+which is one of the issues that is hitting us right now.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Cheers,
 
-iQIcBAEBAgAGBQJSmHeTAAoJEN0jrNd/PrOhCecQALVj+e8ruk+OdRAGj0iFf1qg
-ahAMUJDm4JhfVCJGxo0hl/p618X5HOcrd5zrIQi+zpbp84OnumyqjhM6INdW9tj7
-2G7CC8y3YgZhwZlgscnVJ2cEkzM3Twm4wLHRntwdPe6OTk6v1Jqpu3Y5hQlRo/wV
-RnMDp2FmWYUW2AnmYOv21wJbBJkrAjxX4WETKCCTzCrqMvs6XrBvCNSzyrc4Vm1N
-s46UL23eYzaP3450tHnaLEHzEEM6F6YI11dTGlY+jcRDVWfo/OOgFHGodSiSaG0w
-3dXzqfgfBrJcC8zDsAfFheXnLui6TBHitcAfC906SW8Xqg94dj0PDA30/8HOp48Y
-dbgyhSecgtHKwLNY+ska4byflcaScDTm+EJerZFsrg0/BnnCNpRDw9uVSqfK2h1g
-f1A/xsDkzT7CseBAkwz7sIsGaUoonGpKjBjQ60cUfuX7vSRplWXrTWKP42gUg4vV
-eGkKwhUmmdYW5+TmAjhIRkdz8OxJUMi/MjEiZ6zI0HwnXTfJKzaQS3UYNFAzONWv
-z40E40BfsFOASJWxGZCHT2x+ReqhgMRoPWVm0qhLybSzjHwvyWcWfIeB0jq2VLM8
-pJvq8WuxWDVWk9gX5NgjfVDJeEnTeUYgrsCYApQQghbEM4oUSz5i7SCVKA35bEtb
-ouEZuJjY0BwMZw+72Mti
-=91OZ
------END PGP SIGNATURE-----
-
---sWvRP97dwRHm9fX+--
+Will
