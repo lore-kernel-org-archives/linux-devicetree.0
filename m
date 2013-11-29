@@ -1,65 +1,69 @@
-From: Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
- generic bus properties
-Date: Fri, 29 Nov 2013 13:13:59 +0000
-Message-ID: <20131129131359.GH4634@e103592.cambridge.arm.com>
-References: <20131127172806.GC2291@e103592.cambridge.arm.com>
- <20131128203322.GB14689@mithrandir>
- <20131128211009.GA26447@obsidianresearch.com>
- <20131128222232.GF14689@mithrandir>
- <20131128233147.GA19387@obsidianresearch.com>
- <20131129023554.GA14239@kroah.com>
- <20131129093713.GC22771@ulmo.nvidia.com>
- <20131129095703.GV16735@n2100.arm.linux.org.uk>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 0/5] Update Davinci watchdog driver
+Date: Fri, 29 Nov 2013 15:18:53 +0200
+Message-ID: <5298943D.8010608@ti.com>
+References: <1385556508-3935-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20131129095703.GV16735@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Greg KH <gregkh@linuxfoundation.org>, Will Deacon <Will.Deacon@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Hiroshi Doyu <hdoyu@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385556508-3935-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2013 at 09:57:03AM +0000, Russell King - ARM Linux wrote:
-> On Fri, Nov 29, 2013 at 10:37:14AM +0100, Thierry Reding wrote:
-> > There's a large gap between how fast new SoCs are supposed to tape out
-> > and the rate at which new code can be merged upstream. Perhaps some of
-> > that could be mitigated by putting more of the complexity into firmware
-> > and that's already happening to some degree for ARMv8. But I suspect
-> > there's a limit to what you can hide away in firmware while at the same
-> > time giving the kernel enough information to do the right thing.
-> 
-> One of the bigger issues which stands in the way of companies caring
-> about mainstream support is closed source IPs like VPUs and GPUs.
-> 
-> If you have one of those on your chip, even if the kernel side code
-> is already under the GPL, normally that code is not "mainline worthy".
-> Also, as the userspace code may not be open source, some people object
-> to having the open source part in the kernel.
-> 
-> So for customers to be able to get the performance out of the chip,
-> they have to stick with having non-mainline kernel.
-> 
-> At that point, why bother spending too much time getting mainline
-> support for the device.  It's never going to be fully functional in
-> mainline.  It doesn't make sense for these SoC companies.
+Hi Sekhar,
 
-Putting effort into upstream support for something that is only relevant
-to GPUs (or VPUs) does look less valuable for us right now, unless it
-encourages people to start posting more GPU/VPU code upstream, and we
-know there are other blockers there.
+On 11/27/2013 02:48 PM, Ivan Khoronzhuk wrote:
+> These patches are intended to update Davinci watchdog to use WDT core
+> and reuse driver for keystone arch, because Keystone uses the similar
+> IP like Davinci.
+> 
+> See Documentation:
+> Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
+> Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
+> 
+> Also:
+>   - improved to support GET_TIMELEFT option.
+>   - added "clocks" and "timeout-sec" properties to DT.
 
-DMA and IOMMU we definitely care about, though.
+Do you have any additional comments to this series?
 
-Cheers
----Dave
+By the way patch "[PATCH] watchdog: davinci: rename platform driver to davinci-wdt"
+https://lkml.org/lkml/2013/11/27/201 can be applied as before as after this series
+without conflicts.
+
+> 
+> Based on
+> git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+> keystone/master
+> 
+> v3..v4:
+> - watchdog: davinci: change driver to use WDT core
+> 	reverted rename of platform driver to "davinci-wdt"
+> 	as it causes a regression on Davinci platforms.
+> 
+[...]
+> 
+> Ivan Khoronzhuk (5):
+>    watchdog: davinci: change driver to use WDT core
+>    watchdog: davinci: use davinci_wdt_device structure to hold device
+>      data
+>    watchdog: davinci: add GET_TIMELEFT option support
+>    watchdog: davinci: add "timeout-sec" property
+>    watchdog: davinci: reuse driver for keystone arch
+> 
+>   .../devicetree/bindings/watchdog/davinci-wdt.txt   |   16 +-
+>   drivers/watchdog/Kconfig                           |    6 +-
+>   drivers/watchdog/davinci_wdt.c                     |  221 +++++++++-----------
+>   3 files changed, 114 insertions(+), 129 deletions(-)
+> 
+
+
+Regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
