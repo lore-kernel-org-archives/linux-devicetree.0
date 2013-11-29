@@ -1,75 +1,56 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: tegra: add MMC controllers to Tegra124 DT
-Date: Fri, 29 Nov 2013 17:04:27 +0100
-Message-ID: <20131129160426.GT9712@ulmo.nvidia.com>
-References: <1385419160-11511-1-git-send-email-swarren@wwwdotorg.org>
- <1385419160-11511-4-git-send-email-swarren@wwwdotorg.org>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 00/10] Reuse davinci-nand driver for Keystone arch
+Date: Fri, 29 Nov 2013 11:28:32 -0500
+Message-ID: <5298C0B0.4030404@ti.com>
+References: <1385033305-13179-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pd495SECmvzXpBRb"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1385419160-11511-4-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385033305-13179-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Ivan,
+On Thursday 21 November 2013 06:28 AM, Ivan Khoronzhuk wrote:
+> This series contains fixes and updates of Davinci nand driver in
+> order to reuse it for Keystone platform.
+> 
+> The series is combination of two following series:
+> - Davinci nand driver fixes and updates:
+>   https://lkml.org/lkml/2013/11/20/271
+> - Reuse davinci-nand driver for Keystone arch
+>   https://lkml.org/lkml/2013/11/20/315
+> 
+> Ivan Khoronzhuk (10):
+>   mtd: nand: davinci: fix driver registration
+>   mtd: nand: davinci: return ENOMEM if memory allocation is failed
+>   mtd: nand: davinci: check required ti,davinci-chipselect property
+>   mtd: nand: davinci: simplify error handling
+>   mtd: nand: davinci: move bindings under mtd
+>   mtd: nand: davinci: extend description of bindings
+>   mtd: nand: davinci: adjust DT properties to MTD generic
+>   mtd: nand: davinci: reuse driver for Keystone arch
+>   mtd: nand: davinci: don't set timings if AEMIF is used
+>   mtd: nand: davinci: don't request AEMIF address range
+> 
+>  .../devicetree/bindings/arm/davinci/nand.txt       |   46 --------
+>  .../devicetree/bindings/mtd/davinci-nand.txt       |   94 ++++++++++++++++
+>  drivers/mtd/nand/Kconfig                           |    6 +-
+>  drivers/mtd/nand/davinci_nand.c                    |  117 +++++++++++---------
+>  4 files changed, 164 insertions(+), 99 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
+>  create mode 100644 Documentation/devicetree/bindings/mtd/davinci-nand.txt
+> 
+Please drop patch 9 from the series considering we are handling it
+differently and repost the entire series with David in cc. David
+has been lining up the patches.
 
---pd495SECmvzXpBRb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Nov 25, 2013 at 03:39:20PM -0700, Stephen Warren wrote:
-[...]
-> diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/t=
-egra124-venice2.dts
-> index a0b028384658..bc502112eb04 100644
-> --- a/arch/arm/boot/dts/tegra124-venice2.dts
-> +++ b/arch/arm/boot/dts/tegra124-venice2.dts
-> @@ -25,6 +25,17 @@
->  		nvidia,sys-clock-req-active-high;
->  	};
-> =20
-> +	sdhci@700b0400 {
-> +		cd-gpios =3D <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
-
-I have a local patch which adds this here:
-
-		power-gpios =3D <&gpio TEGRA_GPIO(R, 0) GPIO_ACTIVE_HIGH>;
-
-> +		status =3D "okay";
-> +		bus-width =3D <4>;
-
-And:
-
-		vmmc-supply =3D <&vddio_sdmmc3>;
-
-here. The latter doesn't probably matter because we don't have the PMIC
-node yet and the regulator seems to be on by default.
-
-Thierry
-
---pd495SECmvzXpBRb
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSmLsKAAoJEN0jrNd/PrOhOIoP/i0Qg7onmbKd+qDxz4bQ/k5f
-Y0EsQGLm17hOFdcMrsXZ2wLwq5T6EIxXuNlWdW3PZ85JmR56DY/F1Ny/30dql1vp
-XX8+UJCNgPc+JfISSpdI8c9+57CxpaYEuuG1siFXiyi1xFU0vSdrSGqWT52iEzon
-XhX08uPxSHX6rAn4P0U0v/XGLU2nuFmP7ekPB/YQ18SiTbZWgJ7IloIPFW6wl8lA
-+M4vNRsAdljMnA7IoEnKRajPg81+ihgzShuEmFZAZy7FAMJyCap/5eGe9I4DvjS7
-/0ejfATN7XDulA47IV0gHgh1EKbHhALxuQh9oKW+vmi3Vwa7o9AmRDlaBB5Pff7p
-ucNS2CWX9Q/hHYtk5EPyKzgugP5U7GurYEUVBE6U0IovPIOMjGsk7qF4+obz9qFv
-tU4IilWv01gPEljutAhJaZuQDxTpR5MnQRYLAuir4olEh+2rptaYkEmhN9YBATSV
-UExIttr7c2soVLwqN6vwA3zs2L66mPZJh8FyYzHGEDkEI0cf04s+dsTlT2h+dVFm
-jSuacyElF59LbDjoMQoHjcoxiIi9FfHAL41e4oG3rSQlW4djpRqcr828k2ULBbM+
-ov4l+2O2FJ7CaMDr1zoDiOdCB2XzFbizz4kRAkDPpnhjwh8fK+ivuiI9ZYnvvxzt
-Nf8eeP2S2col6Q5hSrNZ
-=O+Y4
------END PGP SIGNATURE-----
-
---pd495SECmvzXpBRb--
+Regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
