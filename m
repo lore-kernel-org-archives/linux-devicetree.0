@@ -1,125 +1,55 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/3] ARM: imx27: add pingroups for cspi, sdhc and
- framebuffer
-Date: Fri, 29 Nov 2013 10:28:55 +0800
-Message-ID: <20131129022853.GE5914@S2101-09.ap.freescale.net>
-References: <1385623172-87429-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
+ generic bus properties
+Date: Thu, 28 Nov 2013 18:35:54 -0800
+Message-ID: <20131129023554.GA14239@kroah.com>
+References: <20131127172806.GC2291@e103592.cambridge.arm.com>
+ <20131128203322.GB14689@mithrandir>
+ <20131128211009.GA26447@obsidianresearch.com>
+ <20131128222232.GF14689@mithrandir>
+ <20131128233147.GA19387@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1385623172-87429-1-git-send-email-gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20131128233147.GA19387-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 28, 2013 at 08:19:30AM +0100, Gwenhael Goavec-Merou wrote:
-> Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-
-Applied all 3, thanks.
-
-Shawn
-
-> ---
-> Changelog:
-> v2:
->  * pingroups entries are now sorted alphabetically;
->  * framebuffer pingroup is renamed: MX27_FB1_PINGRP1 -> MX27_FB_PINGRP1
+On Thu, Nov 28, 2013 at 04:31:47PM -0700, Jason Gunthorpe wrote:
+> > Perhaps this is just another way of saying what Greg has already said.
+> > If we continue down this road, we'll eventually end up having to
+> > describe all sorts of nitty gritty details. And we'll need even more
 > 
->  arch/arm/boot/dts/imx27-pingrp.h | 68 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
+> Greg's point makes sense, but the HW guys are not designing things
+> this way for kicks - there are real physics based reasons for some of
+> these choices...
 > 
-> diff --git a/arch/arm/boot/dts/imx27-pingrp.h b/arch/arm/boot/dts/imx27-pingrp.h
-> index 08d8d18..f3fbf5a 100644
-> --- a/arch/arm/boot/dts/imx27-pingrp.h
-> +++ b/arch/arm/boot/dts/imx27-pingrp.h
-> @@ -13,6 +13,50 @@
->  
->  #include "imx27-pinfunc.h"
->  
-> +#define MX27_CSPI1_PINGRP1 \
-> +	MX27_PAD_CSPI1_MISO__CSPI1_MISO 0x0 \
-> +	MX27_PAD_CSPI1_MOSI__CSPI1_MOSI 0x0 \
-> +	MX27_PAD_CSPI1_SCLK__CSPI1_SCLK 0x0
-> +
-> +#define MX27_CSPI2_PINGRP1 \
-> +	MX27_PAD_CSPI2_MISO__CSPI2_MISO 0x0 \
-> +	MX27_PAD_CSPI2_MOSI__CSPI2_MOSI 0x0 \
-> +	MX27_PAD_CSPI2_SCLK__CSPI2_SCLK 0x0
-> +
-> +#define MX27_CSPI3_PINGRP1 \
-> +	MX27_PAD_SD1_CLK__CSPI3_SCLK 0x0 \
-> +	MX27_PAD_SD1_D0__CSPI3_MISO 0x0 \
-> +	MX27_PAD_SD1_CMD__CSPI3_MOSI 0x0
-> +
-> +#define MX27_FB_PINGRP1 \
-> +	MX27_PAD_CLS__CLS 0x0 \
-> +	MX27_PAD_CONTRAST__CONTRAST 0x0 \
-> +	MX27_PAD_LD0__LD0 0x0 \
-> +	MX27_PAD_LD1__LD1 0x0 \
-> +	MX27_PAD_LD2__LD2 0x0 \
-> +	MX27_PAD_LD3__LD3 0x0 \
-> +	MX27_PAD_LD4__LD4 0x0 \
-> +	MX27_PAD_LD5__LD5 0x0 \
-> +	MX27_PAD_LD6__LD6 0x0 \
-> +	MX27_PAD_LD7__LD7 0x0 \
-> +	MX27_PAD_LD8__LD8 0x0 \
-> +	MX27_PAD_LD9__LD9 0x0 \
-> +	MX27_PAD_LD10__LD10 0x0 \
-> +	MX27_PAD_LD11__LD11 0x0 \
-> +	MX27_PAD_LD12__LD12 0x0 \
-> +	MX27_PAD_LD13__LD13 0x0 \
-> +	MX27_PAD_LD14__LD14 0x0 \
-> +	MX27_PAD_LD15__LD15 0x0 \
-> +	MX27_PAD_LD16__LD16 0x0 \
-> +	MX27_PAD_LD17__LD17 0x0 \
-> +	MX27_PAD_LSCLK__LSCLK 0x0 \
-> +	MX27_PAD_OE_ACD__OE_ACD 0x0 \
-> +	MX27_PAD_PS__PS 0x0 \
-> +	MX27_PAD_REV__REV 0x0 \
-> +	MX27_PAD_SPL_SPR__SPL_SPR 0x0 \
-> +	MX27_PAD_HSYNC__HSYNC 0x0 \
-> +	MX27_PAD_VSYNC__VSYNC 0x0
-> +
->  #define MX27_FEC1_PINGRP1 \
->  	MX27_PAD_SD3_CMD__FEC_TXD0 0x0 \
->  	MX27_PAD_SD3_CLK__FEC_TXD1 0x0 \
-> @@ -44,6 +88,30 @@
->  #define MX27_OWIRE1_PINGRP1 \
->  	MX27_PAD_RTCK__OWIRE 0x0
->  
-> +#define MX27_SDHC1_PINGRP1 \
-> +	MX27_PAD_SD1_CLK__SD1_CLK \
-> +	MX27_PAD_SD1_CMD__SD1_CMD \
-> +	MX27_PAD_SD1_D0__SD1_D0 \
-> +	MX27_PAD_SD1_D1__SD1_D1 \
-> +	MX27_PAD_SD1_D2__SD1_D2 \
-> +	MX27_PAD_SD1_D3__SD1_D3
-> +
-> +#define MX27_SDHC2_PINGRP1 \
-> +	MX27_PAD_SD2_CLK__SD2_CLK \
-> +	MX27_PAD_SD2_CMD__SD2_CMD \
-> +	MX27_PAD_SD2_D0__SD2_D0 \
-> +	MX27_PAD_SD2_D1__SD2_D1 \
-> +	MX27_PAD_SD2_D2__SD2_D2 \
-> +	MX27_PAD_SD2_D3__SD2_D3
-> +
-> +#define MX27_SDHC3_PINGRP1 \
-> +	MX27_PAD_SD3_CLK__SD3_CLK \
-> +	MX27_PAD_SD3_CMD__SD3_CMD \
-> +	MX27_PAD_SD3_D0__SD3_D0 \
-> +	MX27_PAD_SD3_D1__SD3_D1 \
-> +	MX27_PAD_SD3_D2__SD3_D2 \
-> +	MX27_PAD_SD3_D3__SD3_D3
-> +
->  #define MX27_UART1_PINGRP1 \
->  	MX27_PAD_UART1_TXD__UART1_TXD 0x0 \
->  	MX27_PAD_UART1_RXD__UART1_RXD 0x0
-> -- 
-> 1.8.3.2
-> 
+> eg An all-to-all bus cross bar (eg like Intel's ring bus) is engery
+> expensive compared to a purpose built muxed bus tree. Doing coherency
+> look ups on DMA traffic costs energy, etc.
 
+Really?  How much power exactly does it take / save?  Yes, hardware
+people think "software is free", but when you can't actually control the
+hardware in the software properly, well, you end up with something like
+itanium...
+
+> > code to deal with those descriptions and the hardware they represent. At
+> > some point we need to start pushing some of the complexity back into
+> > hardware so that we can keep a sane code-base.
+> 
+> Some of this is a consequence of the push to have the firmware
+> minimal. As soon as you say the kernel has to configure the address
+> map you've created a big complexity for it..
+
+Why the push to make firmware "minimal"?  What is that "saving"?  You
+just push the complexity from one place to the other, just because ARM
+doesn't seem to have good firmware engineers, doesn't mean they should
+punish their kernel developers :)
+
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
