@@ -1,155 +1,97 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [RFC/PATCH] mtd: nand: auto-detection of NAND bus-width from ONFI param or nand_id[]
-Date: Fri, 29 Nov 2013 10:40:56 -0300
-Message-ID: <1385732456-32696-2-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1385732456-32696-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1385732456-32696-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: Brian Norris <computersforpeace@gmail.com>, Pekon Gupta <pekon@ti.com>, shc_work@mail.ru, Artem Bityutskiy <dedekind1@gmail.com>, David Woodhouse <dwmw2@infradead.org>, swarren@wwwdotorg.org, rob.herring@calxeda.com, mark.rutland@arm.com, Tony Lindgren <tony@atomide.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+From: Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
+ generic bus properties
+Date: Fri, 29 Nov 2013 14:13:25 +0000
+Message-ID: <20131129141325.GE3136@e103592.cambridge.arm.com>
+References: <20131127172806.GC2291@e103592.cambridge.arm.com>
+ <20131128203322.GB14689@mithrandir>
+ <20131128211009.GA26447@obsidianresearch.com>
+ <20131128222232.GF14689@mithrandir>
+ <20131128233147.GA19387@obsidianresearch.com>
+ <20131129095711.GD22771@ulmo.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20131129095711.GD22771@ulmo.nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Greg KH <gregkh@linuxfoundation.org>, Will Deacon <Will.Deacon@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hiroshi Doyu <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Pekon Gupta <pekon@ti.com>
+On Fri, Nov 29, 2013 at 09:57:12AM +0000, Thierry Reding wrote:
+> On Thu, Nov 28, 2013 at 04:31:47PM -0700, Jason Gunthorpe wrote:
 
-This patch is alternative implementation for following commit which introduced
-NAND_BUSWIDTH_AUTO for detection of bus-width during device probe
-   commit 64b37b2a63eb2f80b65c7185f0013f8ffc637ae3
-   Author:     Matthieu CASTET <matthieu.castet@parrot.com>
-   AuthorDate: 2012-11-06
+[...]
 
-As NAND device is identified only during nand_scan_ident(), so this patch
-assumes that NAND driver may un-initialized or partially congigured while
-calling nand_scan_ident(). Hence, this patch does following:
+> > The AXI DAG side-table would be used to resolve weirdness with 'bus
+> > master' DMA programming. The OS can detect all the required
+> > configuration and properties by tracing a path through the DAG from
+> > the source of the DMA to the target - that tells you what IOMMUs are
+> > involved, if the path is cache coherent, etc.
+> 
+> That all sounds like an awful amount of data to wade through. Do we
+> really need all of it to do what we want? Perhaps it can be simplified
+> a bit. For instance it seems like the majority of hardware where this is
+> actually required will have to go through one IOMMU (or a cascade of
+> IOMMUs) and the path isn't cache coherent.
 
- 1. Temporarily configures 'bus-width=x8' mode before reading ONFI parameters,
-    as required by ONFI specification [1].
+The DT should describe the hardware, but only those aspects that a sane
+OS should need to care about.  Some judgment is needed.
 
- 2. Reconfigures the driver with correct bus-width determined by either reading
-    ONFI param, or the nand_flash_id[] table.
+Figuring out exactly which info we ought to care about is part of the
+purpose of this discussion.  There are certainly lots of hardware
+integration and configuration parameters that we don't need to know.
 
-This patch removes any dependency on either 'DT binding' or 'platform data' to
-specify the NAND device bus-width.
+I think that figuring out the path capabilities ought to be a one-off
+step, done when the DMA client device is probed.  We need to retain
+enough information to do the mapping each time a buffer needs to be
+set up, but we shouldn't have to re-scan the DT each time.
 
-[*] Reference: ONFI spec version 3.1 (section 3.5.3. Target Initialization)
-    "The Read ID and Read Parameter Page commands only use the lower 8-bits
-     of the data bus. The host shall not issue commands that use a word
-     data width on x16 devices until the host determines the device supports
-     a 16-bit data bus width in the parameter page."
 
-Signed-off-by: Pekon Gupta <pekon@ti.com>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
----
- drivers/mtd/nand/nand_base.c | 43 +++++++++++++------------------------------
- include/linux/mtd/nand.h     |  7 -------
- 2 files changed, 13 insertions(+), 37 deletions(-)
+In more general cases, there are still some things that really can't
+be pushed into firmware for which Linux needs a fair amount of
+topology information.
 
-diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
-index bd39f7b..2fff3d0 100644
---- a/drivers/mtd/nand/nand_base.c
-+++ b/drivers/mtd/nand/nand_base.c
-@@ -2942,15 +2942,6 @@ static int nand_flash_detect_onfi(struct mtd_info *mtd, struct nand_chip *chip,
- 		chip->read_byte(mtd) != 'F' || chip->read_byte(mtd) != 'I')
- 		return 0;
- 
--	/*
--	 * ONFI must be probed in 8-bit mode or with NAND_BUSWIDTH_AUTO, not
--	 * with NAND_BUSWIDTH_16
--	 */
--	if (chip->options & NAND_BUSWIDTH_16) {
--		pr_err("ONFI cannot be probed in 16-bit mode; aborting\n");
--		return 0;
--	}
--
- 	chip->cmdfunc(mtd, NAND_CMD_PARAM, 0, -1);
- 	for (i = 0; i < 3; i++) {
- 		chip->read_buf(mtd, (uint8_t *)p, sizeof(*p));
-@@ -3335,13 +3326,20 @@ static bool find_full_id_nand(struct mtd_info *mtd, struct nand_chip *chip,
-  */
- static struct nand_flash_dev *nand_get_flash_type(struct mtd_info *mtd,
- 						  struct nand_chip *chip,
--						  int busw,
- 						  int *maf_id, int *dev_id,
- 						  struct nand_flash_dev *type)
- {
- 	int i, maf_idx;
-+	int busw = 0;
- 	u8 id_data[8];
- 
-+	/*
-+	 * The device detection is done in 8-bit mode. The real bus width
-+	 * will be autodetected (either ONFI or flash-based), the
-+	 * defaults re-configured and the chip->options updated.
-+	 */
-+	nand_set_defaults(chip, 0);
-+
- 	/* Select the device */
- 	chip->select_chip(mtd, 0);
- 
-@@ -3431,22 +3429,11 @@ ident_done:
- 			break;
- 	}
- 
--	if (chip->options & NAND_BUSWIDTH_AUTO) {
--		WARN_ON(chip->options & NAND_BUSWIDTH_16);
-+	/* re-configure driver using detected bus-width */
-+	if (busw) {
-+		pr_debug("reconfiguring bus width to %d bit\n", busw ? 16 : 8);
- 		chip->options |= busw;
- 		nand_set_defaults(chip, busw);
--	} else if (busw != (chip->options & NAND_BUSWIDTH_16)) {
--		/*
--		 * Check, if buswidth is correct. Hardware drivers should set
--		 * chip correct!
--		 */
--		pr_info("NAND device: Manufacturer ID:"
--			" 0x%02x, Chip ID: 0x%02x (%s %s)\n", *maf_id,
--			*dev_id, nand_manuf_ids[maf_idx].name, mtd->name);
--		pr_warn("NAND bus width %d instead %d bit\n",
--			   (chip->options & NAND_BUSWIDTH_16) ? 16 : 8,
--			   busw ? 16 : 8);
--		return ERR_PTR(-EINVAL);
- 	}
- 
- 	nand_decode_bbm_options(mtd, chip, id_data);
-@@ -3497,17 +3484,13 @@ ident_done:
- int nand_scan_ident(struct mtd_info *mtd, int maxchips,
- 		    struct nand_flash_dev *table)
- {
--	int i, busw, nand_maf_id, nand_dev_id;
-+	int i, nand_maf_id, nand_dev_id;
- 	struct nand_chip *chip = mtd->priv;
- 	struct nand_flash_dev *type;
- 
--	/* Get buswidth to select the correct functions */
--	busw = chip->options & NAND_BUSWIDTH_16;
--	/* Set the default functions */
--	nand_set_defaults(chip, busw);
- 
- 	/* Read the flash type */
--	type = nand_get_flash_type(mtd, chip, busw,
-+	type = nand_get_flash_type(mtd, chip,
- 				&nand_maf_id, &nand_dev_id, table);
- 
- 	if (IS_ERR(type)) {
-diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-index 9e6c8f9..d5cc642 100644
---- a/include/linux/mtd/nand.h
-+++ b/include/linux/mtd/nand.h
-@@ -183,13 +183,6 @@ typedef enum {
- #define NAND_OWN_BUFFERS	0x00020000
- /* Chip may not exist, so silence any errors in scan */
- #define NAND_SCAN_SILENT_NODEV	0x00040000
--/*
-- * Autodetect nand buswidth with readid/onfi.
-- * This suppose the driver will configure the hardware in 8 bits mode
-- * when calling nand_scan_ident, and update its configuration
-- * before calling nand_scan_tail.
-- */
--#define NAND_BUSWIDTH_AUTO      0x00080000
- 
- /* Options set by nand scan */
- /* Nand scan has allocated controller struct */
--- 
-1.8.1.5
+Our current example is things like MSIs from PCIe devices in systems
+with newer GICs and SMMU.  Particularly for guests under KVM, the ways
+all these link together is needed for configuring and routing MSIs to
+guest CPUs.
 
+
+[...]
+
+> > eg An all-to-all bus cross bar (eg like Intel's ring bus) is engery
+> > expensive compared to a purpose built muxed bus tree. Doing coherency
+> > look ups on DMA traffic costs energy, etc.
+> 
+> I understand that these may all contribute to saving power. However what
+> good is a system that's very power-efficient if it's so complex that the
+> software can no longer control it?
+
+Not a lot of good.  However, that's the extreme case.  We have to deal
+with some pain for sure -- and some parts of that pain may turn out to be
+too ridiculous (either too useless, or too unworkable) for it to be worth
+supporting them in Linux.
+
+This thread focuses on one of the less ridculous things: the aim is not
+to describe the hardware bus architecture in full detail, just the
+aspects the OS needs to know about for important, abstractable things
+like DMA and IOMMU topology.
+
+If we model the description around the actual topology, there seems
+less chance of needing to bodge the bindings in the future when some
+previously non-relevant aspect of the topology becomes important.
+
+Cheers
+---Dave
