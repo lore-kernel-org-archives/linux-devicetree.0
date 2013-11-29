@@ -1,131 +1,53 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv10 15/41] CLK: TI: DRA7: Add APLL support
-Date: Fri, 29 Nov 2013 21:00:29 +0200
-Message-ID: <5298E44D.4010308@ti.com>
-References: <1385453182-24421-1-git-send-email-t-kristo@ti.com> <1385453182-24421-16-git-send-email-t-kristo@ti.com> <20131126085128.GA19357@omega>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v7] gpio: Add MOXA ART GPIO driver
+Date: Fri, 29 Nov 2013 20:06:31 +0100
+Message-ID: <201311292006.31661.arnd@arndb.de>
+References: <1385651945-22355-1-git-send-email-jonas.jensen@gmail.com> <1385723494-8033-1-git-send-email-jonas.jensen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131126085128.GA19357@omega>
-Sender: linux-omap-owner@vger.kernel.org
-To: Alexander Aring <alex.aring@gmail.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, J Keerthy <j-keerthy@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385723494-8033-1-git-send-email-jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/2013 10:51 AM, Alexander Aring wrote:
-> Hi,
->
-> On Tue, Nov 26, 2013 at 10:05:56AM +0200, Tero Kristo wrote:
->> From: J Keerthy <j-keerthy@ti.com>
->>
->> The patch adds support for DRA7 PCIe APLL. The APLL
->> sources the optional functional clocks for PCIe module.
->>
->> APLL stands for Analog PLL. This is different when comapred
->> with DPLL meaning Digital PLL, the phase detection is done
->> using an analog circuit.
->>
->> Signed-off-by: J Keerthy <j-keerthy@ti.com>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   .../devicetree/bindings/clock/ti/apll.txt          |   31 +++
->>   drivers/clk/ti/Makefile                            |    2 +-
->>   drivers/clk/ti/apll.c                              |  239 ++++++++++++++++++++
->>   3 files changed, 271 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/clock/ti/apll.txt
->>   create mode 100644 drivers/clk/ti/apll.c
->>
->> diff --git a/Documentation/devicetree/bindings/clock/ti/apll.txt b/Documentation/devicetree/bindings/clock/ti/apll.txt
->> new file mode 100644
->> index 0000000..7faf5a6
-> ...
->> +
->> +static int __init of_dra7_apll_setup(struct device_node *node)
->> +{
->> +	const struct clk_ops *ops;
->> +	struct clk *clk;
->> +	const char *clk_name = node->name;
->> +	int num_parents;
->> +	const char **parent_names = NULL;
->> +	u8 apll_flags = 0;
->> +	struct dpll_data *ad;
->> +	u32 idlest_mask = 0x1;
->> +	u32 autoidle_mask = 0x3;
->> +	int i;
->> +	int ret;
->> +
->> +	ops = &apll_ck_ops;
->> +	ad = kzalloc(sizeof(*ad), GFP_KERNEL);
->> +	if (!ad)
->> +		return -ENOMEM;
->> +
->> +	of_property_read_string(node, "clock-output-names", &clk_name);
->> +
->> +	num_parents = of_clk_get_parent_count(node);
->> +	if (num_parents < 1) {
->> +		pr_err("dra7 apll %s must have parent(s)\n", node->name);
->> +		ret = -EINVAL;
->> +		goto cleanup;
->> +	}
->> +
->> +	parent_names = kzalloc(sizeof(char *) * num_parents, GFP_KERNEL);
->> +
->> +	for (i = 0; i < num_parents; i++)
->> +		parent_names[i] = of_clk_get_parent_name(node, i);
->> +
->> +	ad->clk_ref = of_clk_get(node, 0);
->> +	ad->clk_bypass = of_clk_get(node, 1);
->> +
->> +	if (IS_ERR(ad->clk_ref)) {
->> +		pr_debug("ti,clk-ref for %s not found\n", clk_name);
->> +		ret = -EAGAIN;
->> +		goto cleanup;
->> +	}
->> +
->> +	if (IS_ERR(ad->clk_bypass)) {
->> +		pr_debug("ti,clk-bypass for %s not found\n", clk_name);
->> +		ret = -EAGAIN;
->> +		goto cleanup;
->> +	}
->> +
->> +	ad->control_reg = ti_clk_get_reg_addr(node, 0);
->> +	ad->idlest_reg = ti_clk_get_reg_addr(node, 1);
->> +
->> +	if (!ad->control_reg || !ad->idlest_reg) {
->> +		ret = -EINVAL;
->> +		goto cleanup;
->> +	}
->> +
->> +	ad->idlest_mask = idlest_mask;
->> +	ad->enable_mask = autoidle_mask;
->> +
->> +	clk = omap_clk_register_apll(NULL, clk_name, parent_names,
->> +				num_parents, apll_flags, ad,
->> +				NULL, ops);
->> +
->> +	if (!IS_ERR(clk)) {
->> +		of_clk_add_provider(node, of_clk_src_simple_get, clk);
->> +		return 0;
->> +	}
->> +
->
-> Should we not also here do a cleanup for allocated memory?
->
->> +	return PTR_ERR(clk);
+On Friday 29 November 2013, Jonas Jensen wrote:
+> Add GPIO driver for MOXA ART SoCs.
+> 
+> Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Yes, this should be changed to be ret = PTR_ERR(clk);
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
--Tero
+One more comment, no need to resend for another review if this is the only
+thing you want to change:
 
->> +
->> +cleanup:
->> +	kfree(parent_names);
->> +	kfree(ad);
->> +	return ret;
->> +}
->> +CLK_OF_DECLARE(dra7_apll_clock, "ti,dra7-apll-clock", of_dra7_apll_setup);
->
-> - Alex
->
+> +struct moxart_gpio_chip {
+> +	struct gpio_chip gpio;
+> +	void __iomem *moxart_gpio_base;
+> +};
 
+If you rename 'moxart_gpio_base' to 'base'
+
+> +static int moxart_gpio_get(struct gpio_chip *chip, unsigned offset)
+> +{
+> +	struct moxart_gpio_chip *gc = to_moxart_gpio(chip);
+> +	u32 ret = readl(gc->moxart_gpio_base + GPIO_PIN_DIRECTION);
+> +
+> +	if (ret & BIT(offset))
+> +		return !!(readl(gc->moxart_gpio_base + GPIO_DATA_OUT) &
+> +			  BIT(offset));
+> +	else
+> +		return !!(readl(gc->moxart_gpio_base + GPIO_DATA_IN) &
+> +			  BIT(offset));
+> +}
+
+These will fit in one line with no loss of readability.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
