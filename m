@@ -1,56 +1,61 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 00/10] Reuse davinci-nand driver for Keystone arch
-Date: Fri, 29 Nov 2013 11:28:32 -0500
-Message-ID: <5298C0B0.4030404@ti.com>
-References: <1385033305-13179-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: Re: [PATCH V4 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Fri, 29 Nov 2013 17:41:17 +0100
+Message-ID: <20131129164117.GL2982@book.gsilab.sittig.org>
+References: <1385524192-21501-1-git-send-email-thloh@altera.com>
+ <20131128202424.GC2982@book.gsilab.sittig.org>
+ <CAOLUe6aWObs1FsZUmw0ptPfwFK6gAiCMjRweMJM5qC8TbnFRBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385033305-13179-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOLUe6aWObs1FsZUmw0ptPfwFK6gAiCMjRweMJM5qC8TbnFRBQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tien Hock Loh <thloh@altera.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tien Hock Loh <thloh.linux@gmail.com>, "lftan@altera.com" <lftan@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Ivan,
-On Thursday 21 November 2013 06:28 AM, Ivan Khoronzhuk wrote:
-> This series contains fixes and updates of Davinci nand driver in
-> order to reuse it for Keystone platform.
+On Fri, Nov 29, 2013 at 09:59 +0800, Tien Hock Loh wrote:
 > 
-> The series is combination of two following series:
-> - Davinci nand driver fixes and updates:
->   https://lkml.org/lkml/2013/11/20/271
-> - Reuse davinci-nand driver for Keystone arch
->   https://lkml.org/lkml/2013/11/20/315
+> On Fri, Nov 29, 2013 at 4:24 AM, Gerhard Sittig <gsi@denx.de> wrote:
+> > On Wed, Nov 27, 2013 at 11:49 +0800, thloh@altera.com wrote:
+> >>
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+> >> @@ -0,0 +1,35 @@
+> >> +[ ... ]
+> >> +
+> >> +Example:
+> >> +
+> >> +gpio_altr: gpio_altr {
+> >> +    compatible = "altr,pio-1.0";
+> >> +    reg = <0xff200000 0x10>;
+> >
+> > This length appears to be less than what the code defines (the
+> > latter has offsets beyond 0x10).
 > 
-> Ivan Khoronzhuk (10):
->   mtd: nand: davinci: fix driver registration
->   mtd: nand: davinci: return ENOMEM if memory allocation is failed
->   mtd: nand: davinci: check required ti,davinci-chipselect property
->   mtd: nand: davinci: simplify error handling
->   mtd: nand: davinci: move bindings under mtd
->   mtd: nand: davinci: extend description of bindings
->   mtd: nand: davinci: adjust DT properties to MTD generic
->   mtd: nand: davinci: reuse driver for Keystone arch
->   mtd: nand: davinci: don't set timings if AEMIF is used
->   mtd: nand: davinci: don't request AEMIF address range
-> 
->  .../devicetree/bindings/arm/davinci/nand.txt       |   46 --------
->  .../devicetree/bindings/mtd/davinci-nand.txt       |   94 ++++++++++++++++
->  drivers/mtd/nand/Kconfig                           |    6 +-
->  drivers/mtd/nand/davinci_nand.c                    |  117 +++++++++++---------
->  4 files changed, 164 insertions(+), 99 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
->  create mode 100644 Documentation/devicetree/bindings/mtd/davinci-nand.txt
-> 
-Please drop patch 9 from the series considering we are handling it
-differently and repost the entire series with David in cc. David
-has been lining up the patches.
+> The higher registers (0x10 and 0x14) are only available if the
+> controller is configured as GPIO output. Thus, there are two
+> configuration - one that has the length 0x10 (GPIO without output
+> ports), and one with the length 0x20 (GPIO with output ports). Is
+> there anything I need to handle for cases like this?
 
-Regards,
-Santosh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hmm.  I cannot tell whether there is a preference in mainline or
+whether there is prior art of IP blocks having different sizes
+depending on their "being compatible" to something or their
+configuration and feature set.  Others may know more.
+
+With your explanation in mind, writing "specify an address and
+size that fits your component" may be considered "stating the
+obvious".
+
+So I don't have strong feelings about it, I was just wondering.
+This need not mean that something was wrong. :)
+
+
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
