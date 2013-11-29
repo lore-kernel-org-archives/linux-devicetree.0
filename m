@@ -1,207 +1,126 @@
-From: Tien Hock Loh <thloh@altera.com>
-Subject: Re: [PATCH V4 1/1] drivers/gpio: Altera soft IP GPIO driver
-Date: Fri, 29 Nov 2013 09:59:05 +0800
-Message-ID: <CAOLUe6aWObs1FsZUmw0ptPfwFK6gAiCMjRweMJM5qC8TbnFRBQ@mail.gmail.com>
-References: <1385524192-21501-1-git-send-email-thloh@altera.com>
-	<20131128202424.GC2982@book.gsilab.sittig.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 1/3] ARM: imx27: add pingroups for cspi, sdhc and
+ framebuffer
+Date: Fri, 29 Nov 2013 10:28:55 +0800
+Message-ID: <20131129022853.GE5914@S2101-09.ap.freescale.net>
+References: <1385623172-87429-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131128202424.GC2982@book.gsilab.sittig.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tien Hock Loh <thloh@altera.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tien Hock Loh <thloh.linux@gmail.com>, "lftan@altera.com" <lftan@altera.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1385623172-87429-1-git-send-email-gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2013 at 4:24 AM, Gerhard Sittig <gsi@denx.de> wrote:
-> On Wed, Nov 27, 2013 at 11:49 +0800, thloh@altera.com wrote:
->>
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
->> @@ -0,0 +1,35 @@
->> +[ ... ]
->> +
->> +Example:
->> +
->> +gpio_altr: gpio_altr {
->> +    compatible = "altr,pio-1.0";
->> +    reg = <0xff200000 0x10>;
->
-> This length appears to be less than what the code defines (the
-> latter has offsets beyond 0x10).
+On Thu, Nov 28, 2013 at 08:19:30AM +0100, Gwenhael Goavec-Merou wrote:
+> Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
 
-The higher registers (0x10 and 0x14) are only available if the
-controller is configured as GPIO output. Thus, there are two
-configuration - one that has the length 0x10 (GPIO without output
-ports), and one with the length 0x20 (GPIO with output ports). Is
-there anything I need to handle for cases like this?
+Applied all 3, thanks.
 
->
->> +    interrupts = <0 45 4>;
->> +    altr,gpio-bank-width = <32>;
->> +    altr,interrupt_trigger = <0>;
->
-> The numerical value of zero is not one of the valid options.
-> Strictly speaking, "none" is zero -- but if the GPIO chip is an
-> IRQ controller, the value should be _some_ trigger type, I guess.
->
+Shawn
 
-Yes, you're right, I'll get it fixed.
+> ---
+> Changelog:
+> v2:
+>  * pingroups entries are now sorted alphabetically;
+>  * framebuffer pingroup is renamed: MX27_FB1_PINGRP1 -> MX27_FB_PINGRP1
+> 
+>  arch/arm/boot/dts/imx27-pingrp.h | 68 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx27-pingrp.h b/arch/arm/boot/dts/imx27-pingrp.h
+> index 08d8d18..f3fbf5a 100644
+> --- a/arch/arm/boot/dts/imx27-pingrp.h
+> +++ b/arch/arm/boot/dts/imx27-pingrp.h
+> @@ -13,6 +13,50 @@
+>  
+>  #include "imx27-pinfunc.h"
+>  
+> +#define MX27_CSPI1_PINGRP1 \
+> +	MX27_PAD_CSPI1_MISO__CSPI1_MISO 0x0 \
+> +	MX27_PAD_CSPI1_MOSI__CSPI1_MOSI 0x0 \
+> +	MX27_PAD_CSPI1_SCLK__CSPI1_SCLK 0x0
+> +
+> +#define MX27_CSPI2_PINGRP1 \
+> +	MX27_PAD_CSPI2_MISO__CSPI2_MISO 0x0 \
+> +	MX27_PAD_CSPI2_MOSI__CSPI2_MOSI 0x0 \
+> +	MX27_PAD_CSPI2_SCLK__CSPI2_SCLK 0x0
+> +
+> +#define MX27_CSPI3_PINGRP1 \
+> +	MX27_PAD_SD1_CLK__CSPI3_SCLK 0x0 \
+> +	MX27_PAD_SD1_D0__CSPI3_MISO 0x0 \
+> +	MX27_PAD_SD1_CMD__CSPI3_MOSI 0x0
+> +
+> +#define MX27_FB_PINGRP1 \
+> +	MX27_PAD_CLS__CLS 0x0 \
+> +	MX27_PAD_CONTRAST__CONTRAST 0x0 \
+> +	MX27_PAD_LD0__LD0 0x0 \
+> +	MX27_PAD_LD1__LD1 0x0 \
+> +	MX27_PAD_LD2__LD2 0x0 \
+> +	MX27_PAD_LD3__LD3 0x0 \
+> +	MX27_PAD_LD4__LD4 0x0 \
+> +	MX27_PAD_LD5__LD5 0x0 \
+> +	MX27_PAD_LD6__LD6 0x0 \
+> +	MX27_PAD_LD7__LD7 0x0 \
+> +	MX27_PAD_LD8__LD8 0x0 \
+> +	MX27_PAD_LD9__LD9 0x0 \
+> +	MX27_PAD_LD10__LD10 0x0 \
+> +	MX27_PAD_LD11__LD11 0x0 \
+> +	MX27_PAD_LD12__LD12 0x0 \
+> +	MX27_PAD_LD13__LD13 0x0 \
+> +	MX27_PAD_LD14__LD14 0x0 \
+> +	MX27_PAD_LD15__LD15 0x0 \
+> +	MX27_PAD_LD16__LD16 0x0 \
+> +	MX27_PAD_LD17__LD17 0x0 \
+> +	MX27_PAD_LSCLK__LSCLK 0x0 \
+> +	MX27_PAD_OE_ACD__OE_ACD 0x0 \
+> +	MX27_PAD_PS__PS 0x0 \
+> +	MX27_PAD_REV__REV 0x0 \
+> +	MX27_PAD_SPL_SPR__SPL_SPR 0x0 \
+> +	MX27_PAD_HSYNC__HSYNC 0x0 \
+> +	MX27_PAD_VSYNC__VSYNC 0x0
+> +
+>  #define MX27_FEC1_PINGRP1 \
+>  	MX27_PAD_SD3_CMD__FEC_TXD0 0x0 \
+>  	MX27_PAD_SD3_CLK__FEC_TXD1 0x0 \
+> @@ -44,6 +88,30 @@
+>  #define MX27_OWIRE1_PINGRP1 \
+>  	MX27_PAD_RTCK__OWIRE 0x0
+>  
+> +#define MX27_SDHC1_PINGRP1 \
+> +	MX27_PAD_SD1_CLK__SD1_CLK \
+> +	MX27_PAD_SD1_CMD__SD1_CMD \
+> +	MX27_PAD_SD1_D0__SD1_D0 \
+> +	MX27_PAD_SD1_D1__SD1_D1 \
+> +	MX27_PAD_SD1_D2__SD1_D2 \
+> +	MX27_PAD_SD1_D3__SD1_D3
+> +
+> +#define MX27_SDHC2_PINGRP1 \
+> +	MX27_PAD_SD2_CLK__SD2_CLK \
+> +	MX27_PAD_SD2_CMD__SD2_CMD \
+> +	MX27_PAD_SD2_D0__SD2_D0 \
+> +	MX27_PAD_SD2_D1__SD2_D1 \
+> +	MX27_PAD_SD2_D2__SD2_D2 \
+> +	MX27_PAD_SD2_D3__SD2_D3
+> +
+> +#define MX27_SDHC3_PINGRP1 \
+> +	MX27_PAD_SD3_CLK__SD3_CLK \
+> +	MX27_PAD_SD3_CMD__SD3_CMD \
+> +	MX27_PAD_SD3_D0__SD3_D0 \
+> +	MX27_PAD_SD3_D1__SD3_D1 \
+> +	MX27_PAD_SD3_D2__SD3_D2 \
+> +	MX27_PAD_SD3_D3__SD3_D3
+> +
+>  #define MX27_UART1_PINGRP1 \
+>  	MX27_PAD_UART1_TXD__UART1_TXD 0x0 \
+>  	MX27_PAD_UART1_RXD__UART1_RXD 0x0
+> -- 
+> 1.8.3.2
+> 
 
-> Is it useful to drop numerical specs and use symbolic names, when
-> you already refer to dt-bindings header files in your reply?
-> And/or reference common GPIO and IRQ related documentation.
->
-
-Noted. I'll update the documentation on using dt-binding macros
-instead of values.
-
->> +    #gpio-cells = <1>;
->> +    gpio-controller;
->> +    #interrupt-cells = <1>;
->> +    interrupt-controller;
->> +};
->
->
->> --- /dev/null
->> +++ b/drivers/gpio/gpio-altera.c
->> @@ -0,0 +1,395 @@
->> +[ ... ]
->> +
->> +#define ALTERA_GPIO_DATA             0x0
->> +#define ALTERA_GPIO_DIR                      0x4
->> +#define ALTERA_GPIO_IRQ_MASK         0x8
->> +#define ALTERA_GPIO_EDGE_CAP         0xc
->> +#define ALTERA_GPIO_OUTSET           0x10
->> +#define ALTERA_GPIO_OUTCLEAR         0x14
->
-> See above.  These aren't used in the code, but they suggest that
-> the register window is larger than 0x10.
-
-See my explanation above.
-
->
->> +static void altera_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
->> +{
->> +     struct altera_gpio_chip *altera_gc = irq_desc_get_handler_data(desc);
->> +     struct irq_chip *chip = irq_desc_get_chip(desc);
->> +     struct of_mm_gpio_chip *mm_gc = &altera_gc->mmchip;
->> +     unsigned long status;
->> +
->> +     int i;
->> +     chip->irq_mask(&desc->irq_data);
->> +
->> +     /* Handling for level trigger and edge trigger is different */
->> +     if (altera_gc->interrupt_trigger == IRQ_TYPE_LEVEL_HIGH) {
->> +             status = readl_relaxed(mm_gc->regs + ALTERA_GPIO_DATA);
->> +             status &= readl_relaxed(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
->> +
->> +             for (i = 0; i < mm_gc->gc.ngpio; i++) {
->> +                     if (BIT(i) & status) {
->> +                             generic_handle_irq(irq_linear_revmap(
->> +                                     altera_gc->irq, i));
->> +                     }
->> +             }
->
-> for_each_set_bit()
->
->> +     } else {
->> +             while ((status =
->> +                     (readl_relaxed(mm_gc->regs + ALTERA_GPIO_EDGE_CAP) &
->> +                     readl_relaxed(mm_gc->regs + ALTERA_GPIO_IRQ_MASK)))) {
->> +                     writel_relaxed(status,
->> +                             mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
->> +                     for (i = 0; i < mm_gc->gc.ngpio; i++) {
->> +                             if (BIT(i) & status) {
->> +                                     generic_handle_irq(irq_linear_revmap(
->> +                                             altera_gc->irq, i));
->> +                             }
->> +                     }
->> +             }
->> +     }
->
-> Is the "level low" trigger missing?  Or is it not supported (in
-> the hardware) and is this worth documenting?  OTOH later versions
-> of the IP block may support all types of triggers, so the main
-> concern is that the driver's setup and handling are consistent,
-> which they are from a quick glance.
-
-Yes, the Altera GPIO IP doesn't support level low trigger. Patch V5
-has the supported interrupt triggers in the documentation.
-
->
->> +
->> +     chip->irq_eoi(irq_desc_get_irq_data(desc));
->> +     chip->irq_unmask(&desc->irq_data);
->> +}
->
->
->> +int altera_gpio_probe(struct platform_device *pdev)
->> +{
->> +[ ... ]
->> +
->> +     altera_gc->mapped_irq = irq_of_parse_and_map(node, 0);
->> +
->> +     if (!altera_gc->mapped_irq)
->> +             goto skip_irq;
->
-> Personally I would not eliminate this goto instruction, but would
-> put the skip_irq label into the regular probe() path.  After all
-> it's a shortcut when an option does not apply, it's not an error
-> path.
-
-Right. I'll get this fixed.
-
->
->> +
->> +     altera_gc->irq = irq_domain_add_linear(node, altera_gc->mmchip.gc.ngpio,
->> +                             &altera_gpio_irq_ops, altera_gc);
->> +
->> +     if (!altera_gc->irq) {
->> +             ret = -ENODEV;
->> +             goto dispose_irq;
->> +     }
->> +
->> +     if (of_property_read_u32(node, "altr,interrupt_trigger", &reg)) {
->> +             ret = -EINVAL;
->> +             pr_err("%s: interrupt_trigger value not set in device tree\n",
->> +                     node->full_name);
->> +             goto teardown;
->> +     }
->> +     altera_gc->interrupt_trigger = reg;
->> +
->> +     irq_set_handler_data(altera_gc->mapped_irq, altera_gc);
->> +     irq_set_chained_handler(altera_gc->mapped_irq, altera_gpio_irq_handler);
->> +
->> +     return 0;
->
-> I'd put skip_irq here, right before the return (as other GPIO
-> drivers do).  The remaining lines of this routine all can be
-> considered "exceptions" and "bail out" paths.
-
-Noted. Thanks.
-
->
->> +
->> +teardown:
->> +     irq_domain_remove(altera_gc->irq);
->> +dispose_irq:
->> +     irq_dispose_mapping(altera_gc->mapped_irq);
->> +     WARN_ON(gpiochip_remove(&altera_gc->mmchip.gc) < 0);
->> +
->> +     pr_err("%s: registration failed with status %d\n",
->> +             node->full_name, ret);
->> +
->> +     return ret;
->> +skip_irq:
->> +     return 0;
->> +}
->
->
-> virtually yours
-> Gerhard Sittig
-> --
-> DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-> HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-> Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
-
- Thanks for the comments. I'll get these fixed.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
