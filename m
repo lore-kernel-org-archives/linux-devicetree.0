@@ -1,163 +1,117 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH RFC 08/10] net: stmmac:sti: Add STi SOC glue driver.
-Date: Fri, 29 Nov 2013 20:37:15 +0100
-Message-ID: <20131129193715.GA3441@lukather>
-References: <1384264311-7308-1-git-send-email-srinivas.kandagatla@st.com>
- <1384264383-7653-1-git-send-email-srinivas.kandagatla@st.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
+ generic bus properties
+Date: Fri, 29 Nov 2013 20:45:58 +0100
+Message-ID: <20131129194557.GA16826@mithrandir>
+References: <20131127172806.GC2291@e103592.cambridge.arm.com>
+ <20131128203322.GB14689@mithrandir>
+ <20131128211009.GA26447@obsidianresearch.com>
+ <20131128222232.GF14689@mithrandir>
+ <20131128233147.GA19387@obsidianresearch.com>
+ <20131129023554.GA14239@kroah.com>
+ <20131129093713.GC22771@ulmo.nvidia.com>
+ <20131129174223.GB5635@kroah.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
-Return-path: <linux-pm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1384264383-7653-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: srinivas.kandagatla@st.com
-Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, stephen.gallimore@st.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-pm@vger.kernel.org
+In-Reply-To: <20131129174223.GB5635-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---n8g4imXOkfNTN/H1
+--vkogqOf2sHV7VnPd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Srinivas,
-
-On Tue, Nov 12, 2013 at 01:53:03PM +0000, srinivas.kandagatla@st.com wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+On Fri, Nov 29, 2013 at 09:42:23AM -0800, Greg KH wrote:
+> On Fri, Nov 29, 2013 at 10:37:14AM +0100, Thierry Reding wrote:
+> > > > Some of this is a consequence of the push to have the firmware
+> > > > minimal. As soon as you say the kernel has to configure the address
+> > > > map you've created a big complexity for it..
+> > >=20
+> > > Why the push to make firmware "minimal"?  What is that "saving"?  You
+> > > just push the complexity from one place to the other, just because ARM
+> > > doesn't seem to have good firmware engineers, doesn't mean they should
+> > > punish their kernel developers :)
+> >=20
+> > In my experience the biggest problem here is that people working on
+> > upstream kernels and therefore confronted with these issues are seldom
+> > able to track the latest developments of new chips.
+> >=20
+> > When the time comes to upstream support, most of the functionality has
+> > been implemented downstream already, so it actually works and there's no
+> > apparent reason why things should change.
 >=20
-> STi series SOCs have a glue layer on top of the synopsis gmac IP, this
-> glue layer needs to be configured before the gmac driver starts using
-> the IP.
+> That's a failure of the companies involved.
+
+Yes, I know.
+
+> > Now I know that that's not an ideal situation and upstreaming should
+> > start a whole lot earlier, but even if that were the case, once the
+> > silicon tapes out there's not a whole lot you can do about it anymore.
+> > Starting with upstreaming even before that would have to be a solution,
+> > but I don't think that's realistic at the current pace of development.
 >=20
-> This patch adds a platform driver for the glue layer which configures
-> the IP before stmmac driver takes over.
+> For other companies it is realistic.  I have a whole presentation on
+> this, and why it even makes good business sense to do it properly (hint,
+> saves you time and money, who doesn't like that?)
+
+I've seen a recording of that presentation. Twice. =3D)
+
+> > There's a large gap between how fast new SoCs are supposed to tape out
+> > and the rate at which new code can be merged upstream. Perhaps some of
+> > that could be mitigated by putting more of the complexity into firmware
+> > and that's already happening to some degree for ARMv8. But I suspect
+> > there's a limit to what you can hide away in firmware while at the same
+> > time giving the kernel enough information to do the right thing.
+> >=20
+> > I am completely convinced that our goal should be to do upstreaming
+> > early and ideally there shouldn't be any downstream development in the
+> > first place. The reason why we're not there yet is because it isn't
+> > practical to do so currently, so I'm very interested in suggestions or
+> > finding ways to improve the situation.
 >=20
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> ---
->  .../devicetree/bindings/net/sti-dwmac.txt          |   45 +++
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |    1 +
->  drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c    |  294 ++++++++++++++=
-++++++
->  3 files changed, 340 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/sti-dwmac.txt
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c
+> "Practical"?  Heh, other companies know how to do this properly, and
+> because of that, they will succeed, sorry.
 >=20
-> diff --git a/Documentation/devicetree/bindings/net/sti-dwmac.txt b/Docume=
-ntation/devicetree/bindings/net/sti-dwmac.txt
-> new file mode 100644
-> index 0000000..5431d9d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/sti-dwmac.txt
-> @@ -0,0 +1,45 @@
-> +STMicroelectronics SoC DWMAC controller
-> +
-> +The device node has following properties.
-> +
-> +Required properties:
-> + - compatible	: Can be "st,stih415-dwmac", "st,stih416-dwmac" or
-> +   "st,stid127-dwmac".
-> + - reg		: Offset of the glue configuration register map in system
-> +   configuration regmap pointed by st,syscon property and size.
-> + - st,syscon	: Should be phandle to system configuration node which
-> +   encompases this glue registers.
-> + - st,tx-retime-src: This specifies which clk is wired up to the mac for
-> +   retimeing tx lines. This is totally board dependent and can take one =
-of the
-> +   posssible values from "txclk", "clk_125", "phyclk" or "clkgen".
-> +
-> +Optional properties:
-> + - resets	: phandle pointing to the system reset controller with correct
-> +   reset line index for ethernet reset.
-> +
-> +Sub-nodes:
-> +The dwmac core should be added as subnode to STMicroelectronics dwmac gl=
-ue.
-> +- dwmac :	The binding details of dwmac can be found in
-> +  Documentation/devicetree/bindings/net/stmmac.txt
-> +
-> +Example:
-> +
-> +ethernet0: ethernet0{
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <1>;
-> +	compatible		=3D "st,stih415-dwmac";
-> +	reg			=3D <0x148 0x4>;
-> +	resets			=3D <&softreset STIH415_ETH0_SOFTRESET>;
-> +	st,syscon		=3D <&syscfg_rear>;
-> +	st,tx-retime-src	=3D "clk_125";
-> +	ranges;
-> +
-> +	dwmac0:dwmac@fe810000 {
-> +		device_type 	=3D "network";
-> +		compatible	=3D "snps,dwmac", "snps,dwmac-3.610";
-> +		reg 		=3D <0xfe810000 0x8000>;
-> +		interrupts 	=3D <0 147 0>;
-> +		interrupt-names =3D "macirq";
-> +		...
-> +	};
-> +};
+> It can be done, the fact that ARM and it's licensees don't want to do
+> it, doesn't mean it isn't "practical" at all, it's just a failure on
+> their part to do things in the "correct" way, wasting time and money in
+> the process.
 
-Sorry for stepping up so late, but I dont' think this is the right way
-to do it.
+Well, I can't really argue with that, so I'll stop with the whining and
+go back to work.
 
-DT is to describe how the hardware is laid out in a system agnostic
-way, hence, it should not be impacted by the implementation details.
+Thierry
 
-The fact that you use a glue to the dwmac driver *is* an
-implementation detail.
-
-I think you'd rather have something like:
-
-dwmac0: ethernet@fe810000 {
-	compatible		=3D "st,stih415-dwmac";
-	reg 			=3D <0xfe810000 0x8000 0x148 0x4>;
-	resets			=3D <&softreset STIH415_ETH0_SOFTRESET>;
-	st,syscon		=3D <&syscfg_rear>;
-	st,tx-retime-src	=3D "clk_125";
-	interrupts 		=3D <0 147 0>;
-	interrupt-names 	=3D "macirq";
-	...
-};
-
-Then, the driver can have its init functions associated to the
-compatible you're using, through the .data field of the of_device_id
-structure, and you just call it in the generic driver at probe's time.
-
-
-I don't really know what this syscon thing is either, but I think the
-reg <0x148 0x4> is related to that.
-
-Why don't you pass it directly in the st,syscon property, to have
-something like <&syscfg_rear 0x148>?
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---n8g4imXOkfNTN/H1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSmOzrAAoJEBx+YmzsjxAgrw0QAI9JhZLvGUDKp70jGHcp/xtZ
-20OVTR2WYS1DA6M/qTZQOc2NDWzvq3MFE6NIz3e+P9GaoRjiQGYLIbHEXtTWXdR8
-RVrYKJDmsMYVTbt7Ir3s+olWCv2dmQJqkbvnhMaVoAoTO6+B1QMTMmzT+FbhLCBV
-CBQxJLjuYVT1erqtSv1daMqzsw40iAObi9IG4MJyXo7ZQ92F5BOSohCCQ5JN+4wN
-WCk2uzhTjDClbY4ReuMXy9QSdcIWBvkH9g+pGZr5WXvtfdtL7abwG19xQesxQrk9
-SUVJyVfoE8zwnQWesWJ/LlvgkfMvuKXn3aNWM2py57Wfkh1F5jTQ/aqLUKHI734S
-zwJvn0SjNv5P9T3REJtK1BnxaNhc/bBrIuwj1xnGok5XdXZr8jwIPzT1QV1PBcdk
-TrvABsopxySnskguYEyOgYF5g5SE/0fWoGxjsbcihFGq8HfoV/BPpTW45NMun/jy
-Z20l4QsV7Ymk+7DxDtHYZ8FP1Y3/Y0MG2jseJHD8pbRBclIKFe34Lh07OYci3xsE
-85W0lvLfIV9MPNKyeQEW7ZGc8hEG3QM8a7tNugyjSvFcVwB863nnjR7VKYqrJlSF
-HiEvh2Qf5z+jj4HCO0Vwgel4RrzGos07QqRKiZdshZU1UaV5Q978U+oJJCQyP6zz
-+PzArETdO7W+CDdm4Rs+
-=9Opn
+iQIcBAEBAgAGBQJSmO71AAoJEN0jrNd/PrOh8GcQAK+T2fz5kNYJHD4nJnEE/UTB
+q+T4nv/w7r3OOH0RIG3FAiwheGIGHh5OhWhq2QqKXLU6DXtJB8L9GfU4TEgzDPQY
+A7GzqUfixIVqy2YJir30VvYUkcE0Jx0QgwVIOUxwxeHIB4eH8vHq7qpPAqMG8Luu
+HHVxd3RJE1caK3FzjNeWYO5Rx+b2y7kIsl59sR0kmSRXynIz/9VeaYHecegzMG7I
+TuMwc1FKzHRIg6K0vckE5r4tn+AGPc5rVVlfbTYsx2uUzdtlRCZ2qEBkkRvw2tSF
+1jxdfEJEsxe3QHwFQH7n0FTzVxftnO+LWSSTjcMFNty5iGEESdcJfGuT746NhZHy
+M6bNoLVGeWpHwFxuugSRVcazVJXhkInnyEF2VUm5mwiWnzw3Oymk2m3fpZ/eTMYz
+ZZFANGuDVNxTaE+Xo034xWe1FcW6/8CAyxcXpLADoMNBUTgl2RhODEXDhY+jgA6m
+IUYudLJX5uWwR9Yt4Tot9Ss/js6c6+VTrGkD5h3bazNj6SiTYmxQiMx1OREJq7Xx
+67YL5AtRTtzG9yBImetvRtIfZezxSf1VVbSf81sMbQopn4p4nDOSMLeOujiyBIMV
+lwa4A7FRfNfXHs3owDTlGhfYdKr4Mb0xgZg/of+Gb8waPaXnLPQUWVOlPOT0Cwp9
+vUCOOwvSRh8NiGMYw5aq
+=ZMs2
 -----END PGP SIGNATURE-----
 
---n8g4imXOkfNTN/H1--
+--vkogqOf2sHV7VnPd--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
