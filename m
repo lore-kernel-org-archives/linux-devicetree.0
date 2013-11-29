@@ -1,46 +1,58 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] mtd: nand: gpio: Add DT property to automatically
- determine bus width
-Date: Fri, 29 Nov 2013 09:25:52 -0300
-Message-ID: <20131129122551.GC2815@localhost>
-References: <1384343884-29622-1-git-send-email-shc_work@mail.ru>
- <20131127012158.GR9468@ld-irv-0074.broadcom.com>
- <20131127012338.GS9468@ld-irv-0074.broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 14/36] mtd: st_spi_fsm: Add device-tree binding documentation
+Date: Fri, 29 Nov 2013 12:19:03 +0000
+Message-ID: <1385727565-25794-15-git-send-email-lee.jones@linaro.org>
+References: <1385727565-25794-1-git-send-email-lee.jones@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131127012338.GS9468-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
+In-Reply-To: <1385727565-25794-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, angus.clark-qxv4g6HH51o@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mtd/st-fsm.txt | 26 ++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/st-fsm.txt
 
-On Tue, Nov 26, 2013 at 05:23:38PM -0800, Brian Norris wrote:
-[..]
-> >=20
-> > If we do resort to a new binding for auto-buswidth, it should be a
-> > generic one that all NAND drivers can use.
+diff --git a/Documentation/devicetree/bindings/mtd/st-fsm.txt b/Documentation/devicetree/bindings/mtd/st-fsm.txt
+new file mode 100644
+index 0000000..c248939
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/st-fsm.txt
+@@ -0,0 +1,26 @@
++* ST-Microelectronics SPI FSM Serial (NOR) Flash Controller
++
++Required properties:
++  - compatible : Should be "st,spi-fsm"
++  - reg        : Contains register's location and length.
++  - reg-names  : Should contain the reg names "spi-fsm"
++  - interrupts : The interrupt number
++  - pinctrl-0  : Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
++
++Optional properties:
++  - st,syscfg          : Phandle to boot-device system configuration registers
++  - st,boot-device-reg : Address of the aforementioned boot-device register(s)
++  - st,boot-device-spi : Expected boot-device value if booted via this device
++
++Example:
++	spifsm: spifsm@fe902000{
++	        compatible         = "st,spi-fsm";
++	        reg                =  <0xfe902000 0x1000>;
++	        reg-names          = "spi-fsm";
++	        pinctrl-0          = <&pinctrl_fsm>;
++		st,syscfg	   = <&syscfg_rear>;
++	        st,boot-device-reg = <0x958>;
++	        st,boot-device-spi = <0x1a>;
++		status = "okay";
++	};
++
+-- 
+1.8.3.2
 
-Why do we need yet another binding to describe something that's
-completely discoverable?
-
-I'm working on *removing* any need to set the bus width, either from th=
-e
-driver or from the DT, so I see this patch as step backwards.
-
-Can anyone help me understand if there's *any* valid use case where we
-want to specify a-priori the bus width, considering it's completely
-discoverable at run-time?
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
