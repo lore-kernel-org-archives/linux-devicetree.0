@@ -1,69 +1,137 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 29/31] ARM: tegra: remove legacy DMA entries from DT
-Date: Fri, 29 Nov 2013 15:53:50 +0100
-Message-ID: <20131129145349.GI9712@ulmo.nvidia.com>
-References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org>
- <1384548866-13141-30-git-send-email-swarren@wwwdotorg.org>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: davinci: aemif: get rid of davinci-nand driver
+ dependency on aemif
+Date: Fri, 29 Nov 2013 09:53:54 -0500
+Message-ID: <5298AA82.1090309@ti.com>
+References: <1385562694-24618-1-git-send-email-ivan.khoronzhuk@ti.com> <52981A4B.70703@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LYw3s/afESlflPpp"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1384548866-13141-30-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52981A4B.70703-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thursday 28 November 2013 11:38 PM, Sekhar Nori wrote:
+> On Wednesday 27 November 2013 08:01 PM, Ivan Khoronzhuk wrote:
+>> The problem that the set timings code contains the call of Davinci
+>> platform function davinci_aemif_setup_timing() which is not
+>> accessible if kernel is built for another platform like Keystone.
+>>
+>> The Keysone platform is going to use TI AEMIF driver.
+>> If TI AEMIF is used we don't need to set timings and bus width.
+>> It is done by AEMIF driver.
+>>
+>> To get rid of davinci-nand driver dependency on aemif platform code
+>> we moved aemif code to davinci platform.
+>>
+>> The platform AEMIF code (aemif.c) has to be removed once Davinci
+>> will be converted to DT and use ti-aemif.c driver.
+>>
+>> The long device name "davinci_ntosd2_nandflash_device" was renamed
+>> to "ntosd2_nandflash" as requested by Sekhar Nori, because after
+>> adding changes the line is so broken that its almost unreadable.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+> 
+> This patch can be simplified in some places.
+> 
+>> ---
+>> v2..v1:
+>> - enabled AEMIF clock
+>> - removed EXPORT_SYMBOL(davinci_aemif_setup)
+>> - renamed ugly name davinci_ntosd2_nandflash_device
+>>
+>> CC:
+>> Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>>
+>>  arch/arm/mach-davinci/aemif.c                   |   89 ++++++++++++++++++++++-
+>>  arch/arm/mach-davinci/board-da830-evm.c         |    3 +
+>>  arch/arm/mach-davinci/board-da850-evm.c         |    3 +
+>>  arch/arm/mach-davinci/board-dm355-evm.c         |    5 ++
+>>  arch/arm/mach-davinci/board-dm355-leopard.c     |    5 ++
+>>  arch/arm/mach-davinci/board-dm365-evm.c         |    4 +
+>>  arch/arm/mach-davinci/board-dm644x-evm.c        |    5 ++
+>>  arch/arm/mach-davinci/board-dm646x-evm.c        |    3 +
+>>  arch/arm/mach-davinci/board-mityomapl138.c      |    3 +
+>>  arch/arm/mach-davinci/board-neuros-osd2.c       |   13 +++-
+>>  arch/arm/mach-davinci/devices-tnetv107x.c       |    3 +
+>>  drivers/mtd/nand/davinci_nand.c                 |   23 ------
+>>  include/linux/platform_data/mtd-davinci-aemif.h |    5 +-
+> 
+> Most of these boards dont really have a timing structure defined.
+> Instead of blindly calling AEMIF setup on all boards, it can be
+> done only on boards that actually need it.
+>
+Make sense to me.
 
---LYw3s/afESlflPpp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Nov 15, 2013 at 01:54:24PM -0700, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> Now that all Tegra drivers have been converted to use DMA APIs which
-> retrieve DMA channel information from standard DMA DT properties, we can
-> remove all the legacy DT DMA-related properties.
->=20
-> Cc: treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-> Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+ 
+>>  /*
+>>   * aemif_calc_rate - calculate timing data.
+>>   * @wanted: The cycle time needed in nanoseconds.
+>> @@ -86,7 +98,7 @@ static int aemif_calc_rate(int wanted, unsigned long clk, int max)
+>>   *
+>>   * Returns 0 on success, else negative errno.
+>>   */
+>> -int davinci_aemif_setup_timing(struct davinci_aemif_timing *t,
+>> +static int davinci_aemif_setup_timing(struct davinci_aemif_timing *t,
+> 
+> passing the clkrate to this function helps avoid a repeated clk_get().
+> I made these changes locally and here is the updated patch:
+>
+probably a good idea.
+ 
+> ---8<---
+> From cdea7d6f753db09447fe2232959864ab999fe565 Mon Sep 17 00:00:00 2001
+> From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+> Date: Wed, 27 Nov 2013 16:31:34 +0200
+> Subject: [PATCH 1/1] ARM: davinci: aemif: get rid of davinci-nand driver
+>  dependency on aemif
+> 
+> The problem that the set timings code contains the call of Davinci
+> platform function davinci_aemif_setup_timing() which is not
+> accessible if kernel is built for another platform like Keystone.
+> 
+> The Keysone platform is going to use TI AEMIF driver.
+> If TI AEMIF is used we don't need to set timings and bus width.
+> It is done by AEMIF driver. The TI AEMIF driver cannot
+> be used on all current DaVinci platforms since it is DT-only.
+> 
+> To get rid of davinci-nand driver dependency on aemif platform code
+> we moved aemif code to davinci platform.
+> 
+> The platform AEMIF code (aemif.c) has to be removed once Davinci
+> will be converted to DT and use ti-aemif.c driver.
+> 
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 > ---
->  arch/arm/boot/dts/tegra114.dtsi | 14 --------------
->  arch/arm/boot/dts/tegra20.dtsi  | 13 -------------
->  arch/arm/boot/dts/tegra30.dtsi  | 12 ------------
->  3 files changed, 39 deletions(-)
+>  arch/arm/mach-davinci/aemif.c                   |  106 ++++++++++++++++++++---
+>  arch/arm/mach-davinci/board-da830-evm.c         |    3 +
+>  arch/arm/mach-davinci/board-da850-evm.c         |    3 +
+>  arch/arm/mach-davinci/board-dm644x-evm.c        |    5 ++
+>  arch/arm/mach-davinci/board-dm646x-evm.c        |    3 +
+Ivan commented same need for board-mityomapl138.c as well.
 
-Reviewed-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
---LYw3s/afESlflPpp
-Content-Type: application/pgp-signature
+>  drivers/mtd/nand/davinci_nand.c                 |   23 -----
+>  include/linux/platform_data/mtd-davinci-aemif.h |    5 +-
+>  7 files changed, 112 insertions(+), 36 deletions(-)
+> 
+Apart from that one board question, I think the patch is nicely
+breaking the hard dependency with nand driver and machine code
+making easier for re-use.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+FWIW,
+Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 
-iQIcBAEBAgAGBQJSmKp9AAoJEN0jrNd/PrOh7xkP/Rwh1Kl6uQmLybJte51eF1R/
-vSHLDuIuuOrle6xBWc3WHcrB8i1DA3Zvc/3iF6IMJyO2DERAPSwE+P66px6PwKwp
-Q7+QTYOOsJOvI2LHmr9ccJ4Nhx87ZP9Z2pAJFG5Whs5M/l1BkKNG0FJW9hMMxHPM
-Chw9FyVLveNQfxcNDGDvox4mgnUkqlaot0GHJrdl4Ie83TtGnz9JixI5yYkprhcp
-2LWkUmnjs1t7Dnc8u0LSdhGoibRPEyp/da8TyYMnSJ/X8xKTgqZM5+sOwe92wjtW
-m7AzXJVpmVaRiiKgpBuI4f+Jthk4tK1kHVQp1+0i/FqErxnHgarcDkhljvK89D+U
-AHy8VX5KKnQHk3SKuYdvarLiVQN4Fj8jtusftWBEHtW/08I9QY/pb7ITkgATQSpK
-1bFMlA+bJ9A14fZRlboxdKxGaGOmYpnddl6Q21KHL6ALjgOmhrn+uJ6C0eDnwOFU
-erFm0Vn2kAlRl9puAc33+4j+ynh9rVHE0aqP8eNVJpuIMVgTzTg29smImyrzXBvP
-nqadPde4cjbb13O74laNQVlpHG87xchY18stK5Hpu30neKbbOJwkurx9i6fwUoUg
-Xtsm4OnY5h4JheKWiH67bO9RXd+ptKsCnu2iN59vQTKH52WJdEtgCm9RImXyERJv
-xDanwFUV8Xo4V6EYiijt
-=riBz
------END PGP SIGNATURE-----
+Regards,
+Santosh
 
---LYw3s/afESlflPpp--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
