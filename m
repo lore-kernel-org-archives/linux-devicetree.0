@@ -1,32 +1,39 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH V3 1/2] sata_rcar: Add R-Car Gen2 SATA PHY support
-Date: Fri, 29 Nov 2013 15:14:06 -0500
-Message-ID: <20131129201406.GD21755@mtj.dyndns.org>
-References: <1383912570-8393-1-git-send-email-valentine.barshak@cogentembedded.com>
- <1383912570-8393-2-git-send-email-valentine.barshak@cogentembedded.com>
- <52951B4D.3030205@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52951B4D.3030205@cogentembedded.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Valentine <valentine.barshak@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH] gpio: rcar: Add r8a7791 support to the DT bindings
+Date: Fri, 29 Nov 2013 21:14:57 +0100
+Message-ID: <1385756097-6627-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+The r8a7791 (R-Car M2) has a GPIO controller with additional features
+compared to the generic renesas,gpio-rcar compatible devices. Add a
+model-specific string to let the driver enable these features.
 
-On Wed, Nov 27, 2013 at 02:06:05AM +0400, Valentine wrote:
-> On 11/08/2013 04:09 PM, Valentine Barshak wrote:
-> 
-> Tejun,
-> are you OK with taking this?
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Yeah, the stat part looks okay to me.  How the two should be routed?
-Both through libata or should I just take the first one?
-
-Thanks.
-
+diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+index 8655df9..f61cef7 100644
+--- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
++++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+@@ -2,10 +2,11 @@
+ 
+ Required Properties:
+ 
+-  - compatible: should be one of the following.
++  - compatible: should contain one of the following.
+     - "renesas,gpio-r8a7778": for R8A7778 (R-Mobile M1) compatible GPIO controller.
+     - "renesas,gpio-r8a7779": for R8A7779 (R-Car H1) compatible GPIO controller.
+     - "renesas,gpio-r8a7790": for R8A7790 (R-Car H2) compatible GPIO controller.
++    - "renesas,gpio-r8a7791": for R8A7791 (R-Car M2) compatible GPIO controller.
+     - "renesas,gpio-rcar": for generic R-Car GPIO controller.
+ 
+   - reg: Base address and length of each memory resource used by the GPIO
 -- 
-tejun
+1.8.3.2
+
