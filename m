@@ -1,66 +1,46 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 02/31] ARM: tegra: document reset properties in DT
- bindings
-Date: Fri, 29 Nov 2013 13:23:48 +0100
-Message-ID: <20131129122348.GO22771@ulmo.nvidia.com>
-References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org>
- <1384548866-13141-3-git-send-email-swarren@wwwdotorg.org>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] mtd: nand: gpio: Add DT property to automatically
+ determine bus width
+Date: Fri, 29 Nov 2013 09:25:52 -0300
+Message-ID: <20131129122551.GC2815@localhost>
+References: <1384343884-29622-1-git-send-email-shc_work@mail.ru>
+ <20131127012158.GR9468@ld-irv-0074.broadcom.com>
+ <20131127012338.GS9468@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MmQIYbZiCoQ2kDro"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1384548866-13141-3-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20131127012338.GS9468-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Brian,
 
---MmQIYbZiCoQ2kDro
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Nov 26, 2013 at 05:23:38PM -0800, Brian Norris wrote:
+[..]
+> >=20
+> > If we do resort to a new binding for auto-buswidth, it should be a
+> > generic one that all NAND drivers can use.
 
-On Fri, Nov 15, 2013 at 01:53:57PM -0700, Stephen Warren wrote:
-[...]
-> diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-[...]
-> +  - resets : Must contain an entry for each entry in reset-names.
-> +    See ../reset/reset.txt for details.
-> +  - reset-names : Must include the following entries:
-> +    - dc
+Why do we need yet another binding to describe something that's
+completely discoverable?
 
-For consistency with this, the clock-names entry for the first clock in
-this node should then be "dc" as well.
+I'm working on *removing* any need to set the bus width, either from th=
+e
+driver or from the DT, so I see this patch as step backwards.
 
-> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra30-ahub.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra30-ahub.txt
-[...]
-> -  - spdif_in
-> +  - spdif
-
-Why is this renamed?
-
-Thierry
-
---MmQIYbZiCoQ2kDro
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSmIdUAAoJEN0jrNd/PrOhpnoP/iThUePfKuly0/gkMi471eiz
-YjlyddEukDvxxo9bQ1zKeDh8EdUnKXmMDVj2CfypWLAFhJ2gM+8GEwdDSkrdha3g
-cP0Nmks2AKEODX8KCrZplPI87RB99EYVhZOuEaEu02ww4+MrrCUVbCohhD0XtC9L
-JQPoJg1UEMXv/SsW0jGVvlzd0aVL/vgMOeEzpGZxI+dK1e/Kk/K3toIYkqAEQdnq
-37RPS4QSav/xGNBc0+z9Oy/Ix8LKuSDYOjvurALxQ8MnI6PRdbdEnzJFrow4g9Ft
-EiFGObtaGwvcR2sinHAnlIgl4HsHRTUMYSF48UVcvll+uaNSSrJKiboZu+KPKOFq
-O7lpwRAsZPgrLOQUa+51iTwcqkAouK7Dalpo7Qrq/uUPX2P072J7NLA+/f11rtQO
-Gq/gKXJUFab2cz9eLr90wNN18iD4ewnnVNU9BQrBen5Rejql+oa4mmCa0Et7znR/
-oGr1Ze8IrHEPn4AWi/umZ05CKfJz12qAZHMxVViXjLzSBtYElVx8a260DUN4BA2S
-MrB+nYc33koFFTgWjFtzewmcp8Cpk1lXbxyoJd/uABvXfqqGkqFc/x0GoDnW432b
-8khnVlwMVCYBF6EW/aLAfeue+dvA3+Dvc4CndS/8IGDLafcXVThaY/CMWcBq+vHC
-3KB7GPovs4PAha+pArg0
-=X8UQ
------END PGP SIGNATURE-----
-
---MmQIYbZiCoQ2kDro--
+Can anyone help me understand if there's *any* valid use case where we
+want to specify a-priori the bus width, considering it's completely
+discoverable at run-time?
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
