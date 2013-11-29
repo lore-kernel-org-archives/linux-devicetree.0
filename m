@@ -1,52 +1,36 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7] gpio: Add MOXA ART GPIO driver
-Date: Fri, 29 Nov 2013 21:29:37 +0100
-Message-ID: <CACRpkdZbLJh-qDtEhA1Q4X9ABDtv5XTtd9-CkF2LTwzKnDbguA@mail.gmail.com>
-References: <1385651945-22355-1-git-send-email-jonas.jensen@gmail.com>
-	<1385723494-8033-1-git-send-email-jonas.jensen@gmail.com>
+From: Valentine <valentine.barshak@cogentembedded.com>
+Subject: Re: [PATCH V3 1/2] sata_rcar: Add R-Car Gen2 SATA PHY support
+Date: Sat, 30 Nov 2013 00:35:52 +0400
+Message-ID: <5298FAA8.2050300@cogentembedded.com>
+References: <1383912570-8393-1-git-send-email-valentine.barshak@cogentembedded.com> <1383912570-8393-2-git-send-email-valentine.barshak@cogentembedded.com> <52951B4D.3030205@cogentembedded.com> <20131129201406.GD21755@mtj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1385723494-8033-1-git-send-email-jonas.jensen@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jonas Jensen <jonas.jensen@gmail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20131129201406.GD21755@mtj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2013 at 12:11 PM, Jonas Jensen <jonas.jensen@gmail.com> wrote:
-
-> Add GPIO driver for MOXA ART SoCs.
+On 11/30/2013 12:14 AM, Tejun Heo wrote:
+> Hello,
 >
-> Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
+> On Wed, Nov 27, 2013 at 02:06:05AM +0400, Valentine wrote:
+>> On 11/08/2013 04:09 PM, Valentine Barshak wrote:
+>>
+>> Tejun,
+>> are you OK with taking this?
+>
+> Yeah, the stat part looks okay to me.  How the two should be routed?
+> Both through libata or should I just take the first one?
 
-OK this v6 version is looking *really good* so I have
-applied it, couldn't hesitate.
+I'm not sure about that. I'm more concerned about the first one.
+But I wouldn't mind if you take both.
 
-> +static struct gpio_chip moxart_template_chip = {
-> +       .label                  = "moxart-gpio",
-> +       .request                = moxart_gpio_request,
-> +       .free                   = moxart_gpio_free,
-> +       .direction_input        = moxart_gpio_direction_input,
-> +       .direction_output       = moxart_gpio_direction_output,
-> +       .set                    = moxart_gpio_set,
-> +       .get                    = moxart_gpio_get,
-> +       .base                   = 0,
-> +       .ngpio                  = 32,
-> +       .can_sleep              = 0,
-> +};
+>
+> Thanks.
+>
 
-No need to initialized unused fields to zero, that is by
-default. But no big deal.
-
-> +static const struct of_device_id moxart_gpio_match[] = {
-> +       { .compatible = "moxa,moxart-gpio" },
-> +       { }
-> +};
-
-This vendor prefix does not exist in
-Documentation/devicetree/bindings/vendor-prefixes.txt
-Please send a follow-up patch adding it and I can merge
-that through the GPIO tree as well.
-
-Yours,
-Linus Walleij
+Thanks,
+Val.
