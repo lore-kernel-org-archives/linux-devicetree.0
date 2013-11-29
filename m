@@ -1,55 +1,42 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] watchdog: davinci: rename platform driver to davinci-wdt
-Date: Fri, 29 Nov 2013 13:44:32 +0530
-Message-ID: <52984CE8.50803@ti.com>
-References: <1385559113-4354-1-git-send-email-ivan.khoronzhuk@ti.com>
- <5295FB0E.4070406@ti.com> <52961665.3060309@roeck-us.net>
- <5296DCD6.3030002@ti.com> <52973E40.4060400@roeck-us.net>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v6 0/6] gpio: daVinci: cleanup and feature enhancement
+Date: Fri, 29 Nov 2013 14:00:27 +0530
+Message-ID: <CA+V-a8vZ22_OpfyEDcQoMWZJbUm3utBSJSrOZUw3ux2whZYXiQ@mail.gmail.com>
+References: <1385057731-4348-1-git-send-email-prabhakar.csengg@gmail.com> <CACRpkdYvNwF+dxfiLCHpCL+Ze17PMAMkJo4s-4T4ku1KxDPXxw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52973E40.4060400@roeck-us.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: wim@iguana.be
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Guenter Roeck <linux@roeck-us.net>, grant.likely@linaro.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYvNwF+dxfiLCHpCL+Ze17PMAMkJo4s-4T4ku1KxDPXxw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sekhar Nori <nsekhar@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Wim,
+Hi Linus,
 
-On Thursday 28 November 2013 06:29 PM, Guenter Roeck wrote:
-> On 11/27/2013 10:04 PM, Sekhar Nori wrote:
->> On Wednesday 27 November 2013 09:27 PM, Guenter Roeck wrote:
->>> On 11/27/2013 06:00 AM, Sekhar Nori wrote:
->>>> On Wednesday 27 November 2013 07:01 PM, Ivan Khoronzhuk wrote:
->>>>> As we switch to use the watchdog core which permits more than one
->>>>> active watchdog in the system, rename platform driver to
->>>>> "davinci-wdt" to be identifiable.
->>>>>
->>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>>>
->>>> Looks good to me. Since bulk of this patch touches mach-davinci, I
->>>> would
->>>> like to take this through my tree to avoid conflicts with other
->>>> mach-davinci patches I accept.
->>>>
->>>
->>> Good idea, and makes sense.
+On Fri, Nov 29, 2013 at 1:17 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Thu, Nov 21, 2013 at 7:15 PM, Prabhakar Lad
+> <prabhakar.csengg@gmail.com> wrote:
+>
+>> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 >>
->> Added to v3.14/soc with your Reviewed-by
+>> This patch series does the following
+>> 1> Ports the driver to use irqdomain.
+>> 2> Adds dt binding support for gpio-davinci.
+>> 3> Adds DA850 dt support goio.
 >>
-> 
-> You should get an Ack from Wim.
+>> Changes for v6:
+>> 1: GPIO driver now migrated to irq domain legacy.
+>> 2: Fixed review comments pointed by Grygorii.
+>> 3: Included Ack's.
+>
+> This series is looking nice, I assume that Sekhar will take this through
+> the DaVinci tree once he's happy with it. I think I've ACKed all relevant
+> patches, else tell me.
+>
+While you are at it, you missed to ACK v6 2/6 patch [1]
 
-Can you please provide your ack? I will add it to the existing commit.
+[1] https://lkml.org/lkml/2013/11/21/425
 
-Thanks,
-Sekhar
+Regards,
+--Prabhakar
