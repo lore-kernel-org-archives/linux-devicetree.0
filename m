@@ -1,49 +1,63 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/7] Davinci nand driver fixes and updates
-Date: Fri, 29 Nov 2013 10:37:00 -0500
-Message-ID: <5298B49C.1050104@ti.com>
-References: <1384960945-14528-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 1/2] memory: ti-aemif: introduce AEMIF driver
+Date: Fri, 29 Nov 2013 17:35:28 +0200
+Message-ID: <5298B440.1020905@ti.com>
+References: <1384962416-14862-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1384962416-14862-2-git-send-email-ivan.khoronzhuk@ti.com>
+ <5298B370.3090405@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384960945-14528-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <5298B370.3090405@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, gregkh@linuxfoundation.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Rob Landley <rob@landley.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Ivan,
+On 11/29/2013 05:32 PM, Santosh Shilimkar wrote:
+> On Wednesday 20 November 2013 10:46 AM, Ivan Khoronzhuk wrote:
+>> Add new AEMIF driver for EMIF16 Texas Instruments controller.
+>> The EMIF16 module is intended to provide a glue-less interface to
+>> a variety of asynchronous memory devices like ASRA M, NOR and NAND
+>> memory. A total of 256M bytes of any of these memories can be
+>> accessed at any given time via four chip selects with 64M byte access
 
-On Wednesday 20 November 2013 10:22 AM, Ivan Khoronzhuk wrote:
-> This series contains fixes and updates of Davinci nand driver, in
-> order to prepare it to be reused for Keystone platform.
-> 
-> V1:
-> https://lkml.org/lkml/2013/11/11/352
-> 
-> Ivan Khoronzhuk (7):
->   mtd: nand: davinci: fix driver registration
->   mtd: nand: davinci: return ENOMEM if memory allocation is failed
->   mtd: nand: davinci: check required ti,davinci-chipselect property
->   mtd: nand: davinci: simplify error handling
->   mtd: nand: davinci: move bindings under mtd
->   mtd: nand: davinci: extend description of bindings
->   mtd: nand: davinci: adjust DT properties to MTD generic
-> 
->  .../devicetree/bindings/arm/davinci/nand.txt       |   46 ----------
->  .../devicetree/bindings/mtd/davinci-nand.txt       |   92 ++++++++++++++++++++
->  drivers/mtd/nand/davinci_nand.c                    |   68 +++++++--------
->  3 files changed, 126 insertions(+), 80 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
->  create mode 100644 Documentation/devicetree/bindings/mtd/davinci-nand.txt
-> 
-Can you please update the series with pending comments and
-send a refreshed version. 
+[...]
+
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id aemif_of_match[] = {
+>> +	{ .compatible = "ti,davinci-aemif", },
+>> +	{ .compatible = "ti,keystone-aemif", },
+>> +	{ .compatible = "ti,omap-L138-aemif", },
+>> +	{},
+>> +};
+>> +
+> Looks like you are yet to update the patches from
+> previous comments. Did I miss v2 or you haven't posted
+> that yet ?
+
+No. This is v2, actually :( (the mess was already noticed) it was posted 
+after v1 (https://lkml.org/lkml/2013/11/11/352), but people continue 
+commenting v1, for some reasons.
+
+Next version will be posted when bindings will be clarified finally.
 
 Regards,
-Santosh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-grygorii
+
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
