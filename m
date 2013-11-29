@@ -1,66 +1,81 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 5/9] ARM: at91/dt: add mmc0 slot0 support to at91rm9200ek board
-Date: Fri, 29 Nov 2013 14:31:21 +0100
-Message-ID: <CACRpkdag5=QYsWe81ocpkMp2APaoBAOOn2r0iAVdf9DHTKrSXA@mail.gmail.com>
-References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
-	<1377687995-10758-1-git-send-email-b.brezillon@overkiz.com>
-	<20131120145926.GE14627@ns203013.ovh.net>
-	<528CDFFB.1020601@overkiz.com>
-	<CACRpkdboBg4YOnMNiar0DDBVnoky=zNky+Pzyp1=P_POtH15qQ@mail.gmail.com>
-	<528DE1C4.6060900@overkiz.com>
-	<CACRpkdZdweyWJefttiuiYAJ9qhahLbnj7eHUiLV_83UA41X_uQ@mail.gmail.com>
-	<5294D64D.7000100@overkiz.com>
-	<CACRpkdZoAjuWVpWZfvPgOAd7qB1ZBtC+45nD3SYay3SrMhqwVA@mail.gmail.com>
-	<52986CA8.3010601@overkiz.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52986CA8.3010601@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: boris brezillon <b.brezillon@overkiz.com>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Joachim Eastwood <manabian@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: [RFC/PATCH] NAND bus-width detection extreme makeover
+Date: Fri, 29 Nov 2013 10:40:55 -0300
+Message-ID: <1385732456-32696-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: Brian Norris <computersforpeace@gmail.com>, Pekon Gupta <pekon@ti.com>, shc_work@mail.ru, Artem Bityutskiy <dedekind1@gmail.com>, David Woodhouse <dwmw2@infradead.org>, swarren@wwwdotorg.org, rob.herring@calxeda.com, mark.rutland@arm.com, Tony Lindgren <tony@atomide.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2013 at 11:30 AM, boris brezillon
-<b.brezillon@overkiz.com> wrote:
-> On 29/11/2013 11:03, Linus Walleij wrote:
+Here's my proposal, based in Pekon's latest work.
 
->> I guess one way is to obtain this GPIO in board code and just
->> flick it depending on which device you register.
-(...)
-> The whole goal of moving from board files to dt is to drop all board
-> specific processing or initialization and only keep a common description
-> with generic drivers capable of handling common use cases.
->
-> I'm not sure providing new board specific drivers is a good solution
-> (even if it is the simplest way to achieve our goal).
->
-> Could we have something similar to pinctrl but with gpios :
-> when the device is probed the device/driver core code request the gpio
-> configure it appropriately and set it to the requested value (if configured
-> as output).
+This patch removes the flash device bus-width configuration, prior to
+the device detection. With this modification, a NAND driver is no longer
+able to "force" the device width, and instead can only obtain the detected
+bus-width after the call to nand_scan_ident().
 
-This has been suggested under the name "GPIO hogs" in the past.
+Flash devices bus-width are specified either by reading an ONFI feature,
+or through a flag in the in-kernel flash devices table. Therefore, it doesn't
+make any sense to somehow "advise" the NAND core about this parameter.
 
-It would work similar to how pinctrl hogs work by associating the
-GPIO line the controller itself, using some specific string
-like gpio-input-hogs = <...> / gpio-output-hogs = <...>;
+In addition, the ONFI specification requires to issue the detection commands
+using only the lower 8-bits of the data bus. The ONFI specification says:
 
-The gpiolib core will then grab and set up these before
-returning from the registration call so noone ever gets a chance
-to use them.
+  "" The Read ID and Read Parameter Page commands only use the lower 8-bits
+     of the data bus. The host shall not issue commands that use a word
+     data width on x16 devices until the host determines the device supports
+     a 16-bit data bus width in the parameter page. ""
 
-> These are just thoughts, and I guess introducing new code in the
-> device/driver core
-> code is not that easy, especially when this code is here to handle specific
-> case
-> like ours.
+IIRC, the current way of setting the device width is to set NAND_BUSWIDTH_AUTO
+in chip->options and then let the driver set some width-specific callbacks after
+the NAND core has detected the width.
 
-It is very easy, just write the patch, iterate it (these patches get
-a lot of scrutiny as it is core code, so expect some work and time
-to get it done), and then unless there is a blocker, I would merge it.
-The concept is entirely sound, just that someone needs to step
-up and do the work...
+However, as noticed by Pekon Gupta, this means NAND_BUSWIDTH_AUTO should be
+always turned on (and hence the option be removed).
 
-Yours,
-Linus Walleij
+That's exactly what this patch is doing.
+
+This patch has been tested on a AM335x board with 8-bit and 16-bit devices,
+which were successfully detected and nandtest'ed, using ONFI and flash-based
+detection.
+
+Note that some driver's might need fixes to work in both 8-bit and 16-bit
+modes, and such work should be done by respective maintainers.
+
+Of course, the memory controller (such as GPMC in the OMAP case) still needs
+proper width a-prior configuration, but that's completely unrelated to the
+flash device bus width. If some driver wants (and is able to) re-configure
+its memory controller after the device has been properly detected, it's free
+to do so.
+
+Needless to say, if this work is acceptable we'll be able to finally remove/deprecate
+any traces of the NAND bus width setting, include the devicetree nand-bus-width parameter.
+
+Alexander: Could you try this patch and see if it's suitable for your needs?
+I think you should be able to use it to set the bus-width, without any need for
+a new DT property. You will have to split your nand_scan() call in an initial
+call to nand_scan_ident() and a final call to nand_scan_tail().
+
+Typically, a driver would work like this:
+
+	/* scan NAND device connected to chip controller */
+	if (nand_scan_ident(mtd, 1, NULL))
+		return -ENODEV;
+
+	if (nand_chip->options & NAND_BUSWIDTH_16) {
+		nand_chip->read_buf   = xxx_read_buf16;
+		nand_chip->write_buf  = xxx_write_buf16;
+	}
+
+Pekon Gupta (1):
+  mtd: nand: auto-detection of NAND bus-width from ONFI param or
+    nand_id[]
+
+ drivers/mtd/nand/nand_base.c | 43 +++++++++++++------------------------------
+ include/linux/mtd/nand.h     |  7 -------
+ 2 files changed, 13 insertions(+), 37 deletions(-)
+
+-- 
+1.8.1.5
+
