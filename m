@@ -1,107 +1,223 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 01/31] ARM: tegra: add missing clock documentation to DT
- bindings
-Date: Fri, 29 Nov 2013 12:49:01 +0100
-Message-ID: <20131129114900.GN22771@ulmo.nvidia.com>
-References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org>
- <1384548866-13141-2-git-send-email-swarren@wwwdotorg.org>
+From: Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
+ generic bus properties
+Date: Fri, 29 Nov 2013 11:58:15 +0000
+Message-ID: <20131129115815.GC3136@e103592.cambridge.arm.com>
+References: <20131127172806.GC2291@e103592.cambridge.arm.com>
+ <20131128203322.GB14689@mithrandir>
+ <20131128211009.GA26447@obsidianresearch.com>
+ <20131128222232.GF14689@mithrandir>
+ <20131128233147.GA19387@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kUBUi7JBpjcBtem/"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1384548866-13141-2-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20131128233147.GA19387@obsidianresearch.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Greg KH <gregkh@linuxfoundation.org>, Will Deacon <Will.Deacon@arm.com>, Thierry Reding <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hiroshi Doyu <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 28, 2013 at 04:31:47PM -0700, Jason Gunthorpe wrote:
+> On Thu, Nov 28, 2013 at 11:22:33PM +0100, Thierry Reding wrote:
+> > On Thu, Nov 28, 2013 at 02:10:09PM -0700, Jason Gunthorpe wrote:
+> > > On Thu, Nov 28, 2013 at 09:33:23PM +0100, Thierry Reding wrote:
+> > > 
+> > > > >   - Describing masters that master through multiple different buses
+> > > > > 
+> > > > >   - How on Earth this fits in with the Linux device model (it doesn't)
+> > > > > 
+> > > > >   - Interaction with IOMMU bindings (currently under discussion)
+> > > > 
+> > > > This is all very vague. Perhaps everyone else knows what this is all
+> > > > about, in which case it'd be great if somebody could clue me in.
+> > > 
+> > > It looks like an approach to describe an AXI physical bus topology in
+> > > DT..
+> > 
+> > Thanks for explaining this. It makes a whole lot more sense now.
+> 
+> Hopefully the ARM guys concur, this was just my impression from
+> reviewing their patches and having recently done some design work with
+> AXI..
 
---kUBUi7JBpjcBtem/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes and no.  We are trying to describe a real topology here, but only
+because there are salient features that the kernel genuinely does
+need to know about if we want to be able to abstract this kind of thing.
 
-On Fri, Nov 15, 2013 at 01:53:56PM -0700, Stephen Warren wrote:
-[...]
-> @@ -60,6 +81,12 @@ of the following host1x client modules:
->    - compatible: "nvidia,tegra<chip>-dc"
->    - reg: Physical base address and length of the controller's registers.
->    - interrupts: The interrupt outputs from the controller.
-> +  - clocks : Must contain an entry for each entry in clock-names.
-> +    See ../clocks/clock-bindings.txt for details.
-> +  - clock-names : Must include the following entries:
-> +    - disp1 or disp2 (depending on the controller instance)
+It's not just about AXI.
 
-I'm not sure if this makes sense. The name could be the same independent
-of which controller uses it. If it isn't then the driver would need
-additional code to find out which instance it is and construct a dynamic
-string.
+Things like CCI-400 ("cache coherent interconnect") and its successors 
+have real run-time control requirements on each connection to the bus.
+(The "port" terminology is used in the CCI documentation, but in any
+case the concept of a link between a device and a bus should be a pretty
+generic concept, not tied to a specific name or a specific interconnect.)
 
-Any objection to just make this entry "disp", or "dc"?
+If I need to turn on the bus interface for device X, in need to know
+how to tell the bus which interface to poke -- hence the need for
+a "port ID".  Of course, we're free to choose other names.
 
->  - dsi: display serial interface
-> =20
->    Required properties:
->    - compatible: "nvidia,tegra<chip>-dsi"
->    - reg: Physical base address and length of the controller's registers.
-> +  - clocks : Must contain one entry, for the module clock.
-> +    See ../clocks/clock-bindings.txt for details.
-> +  - clocks : Must contain an entry for each entry in clock-names.
-> +    See ../clocks/clock-bindings.txt for details.
+The master-slave link concept is not supposed to be a new concept at
+all: DT already has this concept.  All we are aiming to add here is the
+ability to describe cross-links that ePAPR cannot describe directly.
 
-There's another duplicate clocks entry here, although perhaps Marc
-already caught that.
+> 
+> > > axi
+> > > {
+> > >    /* Describe a DAG of AXI connections here. */
+> > >    cpu { downstream = &ax_switch,}
+> > >    axi_switch {downstream = &memory,&low_speed}
+> > >    memory {}
+> > >    dma {downstream = &memory}
+> > >    low_speed {}
+> > > }
+> > 
+> > Correct me if I'm wrong, but the switch would be what the specification
+> > refers to as "interconnect", while a port would correspond to what is
+> > called an "interface" in the specification?
+> 
+> That seems correct, but for this purpose we are not interested in
+> boring dumb interconnect but fancy interconnect with address remapping
+> capabilities, or cache coherency (eg the SCU/L2 cache is modeled as
+> switch/interconnect in a AXI DAG).
 
-> +  - clock-names : Must include the following entries:
+Bear in mind that "fancy interconnect with address remapping
+capabilities" probably means at least two independent components on an
+ARM SoC.
 
-One other thing I noticed here is that you use a space between the
-property name and the :. None of the other properties have that, so it
-looks somewhat out of place. The same is true for other bindings, but
-there seem to be inconsistencies in some places anyway, so perhaps we
-don't care? Well, I do care, don't know about you. =3D)
+To avoid excessive code fragmentation we'd want a driver for each, not a
+driver per every possible pairing.  The pairing could be different on
+every port even in a single SoC, though I hope we will never see that.
 
-> diff --git a/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.tx=
-t b/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.txt
-> index 91ff771c7e77..d4f2d534934b 100644
-> --- a/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.txt
-> +++ b/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.txt
-> @@ -6,8 +6,10 @@ Required properties:
->  - interrupts: Should contain SPI interrupts.
->  - nvidia,dma-request-selector : The Tegra DMA controller's phandle and
->    request selector for this SPI controller.
-> -- This is also require clock named "spi" as per binding document
-> -  Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +- clocks : Must contain an entry for each entry in clock-names.
-> +  See ../clocks/clock-bindings.txt for details.
-> +- clock-names : Must include the following entries:
-> +  - spi
+> I called it a switch because the job of the interconnect block is to
+> take an AXI input packet on a slave interface and route it to the
+> proper master interface with internal arbitration between slave
+> interfaces. In my world that is a called a switch ;)
 
-This is inconsistent with other bindings that require only a single
-clock entry. I suppose that this is required because of the driver
-requesting a specifically named clock, in which case that's fine.
+In axi { axi_switch {} }, are you describing two levels of bus, or
+one?  I'm guessing one, but then the nested node looks a bit weird.
 
-Thierry
+> AXI is basically an on-chip point-to-point switched fabric like PCI-E,
+> and the stuff that travels on AXI looks fairly similar to PCI-E TLPs..
+> 
+> If you refer to the PDF I linked I broadly modeled the above DT
+> fragment on that diagram, each axi sub node (vertex) represents an
+> 'interconnect' and 'downstream' is a master->slave interface pair (edge).
+> 
+> Fundamentally AXI is inherently a DAG, but unlike what we are used to
+> in other platforms you don't have to go through a fused
+> CPU/cache/memory controller unit to access memory, so there are
+> software visible asymmetries depending on how the DMA flows through
+> the AXI DAG.
 
---kUBUi7JBpjcBtem/
-Content-Type: application/pgp-signature
+Just to call this out, the linkage is *not* guaranteed to be acyclic.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+If you connect pass-through devices (i.e., buses) round in a cycle,
+you may get transactions going round and round forever, so we should
+never see that in a system.
 
-iQIcBAEBAgAGBQJSmH8sAAoJEN0jrNd/PrOhrcsP+QF4Kaeqj8sbZ8Aerc9ncK/K
-/+a7qjBUvmKnpjaPKo8ZL1Xw38g4jv5qZ0QCOPnfDz5hN/Zv03BaR51+YyKgMCNh
-AeVRdA68IrQ7t286V4WyPWrzXK3vReWu+QeFxAVB/l7Ir/C8BexhZWqSqmFX+IJy
-jtlKIBe7+HOT+ZZFm8Gqd6rGkjjUEHU1Y/5Xi7MNZTT15snZeqQo4XfK9p7F73GQ
-X5oXDUWUvG37UOxkiVN2/6o6StN5412FiYWTUaS1VqBL+Kd9E4jc6vkqCHmGZB5X
-b3xxfoytkOlRL6fpQ90B0nGvOI/yjaKAzdsBVlr+jqEdbuSOHn9b+ZD3eqvmMQoz
-EzbQlJEUWanBreWGYBCpfQAeXHkPY9GVmYYav+PkUMk6yDHHKXwzHyiBHLCjYuQw
-HvJbxGhIjcaS6FhkDnj9nTP2BruIfaZWOSmOqBH3a9EYquUX13JzZMRlcAM6rBAW
-6ygP7VLt7BgInFFUhZnvlzhAfMj38d8OHj41jZzvmd72JQXtE+3HbRhXaUUykihE
-KhLyMT0ZZRtgvYJuGOQNtSxTNrin+7wMkhj5Qg36pdBB/OQ6YdT5O/yPaBVEJrnF
-elRmGDA7I5YxtDK41Bi4IGSYDJjNqW81LKVYmE04+L3MDJJI/7LEZIBTojiCjuZh
-z5hg0Bs7oXit1+ZThpXU
-=3Caa
------END PGP SIGNATURE-----
+However, there's nothing to stop a DMA controller's master side being
+looped back so that it can access its own slave interface.  This is the
+normal situation for coherent DMA, since the whole point there is
+that the DMA controller should shares its system view closely with
+the CPUs, including some levels of cache.
 
---kUBUi7JBpjcBtem/--
+(This does mean that the DMA may be able to program itself -- but I don't
+claim that this is useful.  Rather, it's a side-effect of providing a
+coherent system view.)
+
+> > > Which is why I think encoding the AXI DAG directly in DT is probably
+> > > the most future proof way to model this stuff - it sticks close to the
+> > > tools ARM provides to the SOC designers, so it is very likely to be
+> > > able to model arbitary SOC designs.
+> > 
+> > I'm not sure I agree with you fully here. At least I think that if what
+> > we want to describe is an AXI bus topology, then we should be describing
+> > it in terms of the AXI specification.
+> 
+> Right, that was what I was trying to describe :) 
+> 
+> The DAG would be vertexes that are 'interconnect' and directed edges
+> that are 'master -> slave interface' pairs.
+> 
+> This would be an addendum/side-table dataset to the standard 'soc' CPU
+> address map tree, that would only be needed to program address
+> mapping/iommu hardware.
+> 
+> And it isn't really AXI specific, x86 style platforms can have a DAG
+> too, it is just much simpler, as there is only 1 vertex - the IOMMU.
+
+Agree -- this concept of a master/slave link is a really generic concept,
+
+The complete set of properties associated with each link will be
+specific to each different interconnect, and possibly from port to port:
+_that_ stuff would be described by separate, non-generic properties
+defined per interconnect type.
+
+But to do DMA mapping, you should only need to know what master/slave
+links exist, and any associated mappings.
+
+> 
+> > I mean, even though device tree is supposed to describe hardware, there
+> > needs to be a limit to the amount of detail we put into it. After all it
+> > isn't a hardware description language, but rather a language to describe
+> > the hardware in a way that makes sense for operating system software to
+> > use it.
+> 
+> Right - which is why I said the usual 'soc' node should remain as-is
+> typical today - a tree formed by viewing the AXI DAG from the CPU
+> vertex. That 100% matches the OS perspective of the system for CPU
+> originated MMIO.
+
+Do you mean the top-level bus node in the DT and its contents, or
+something else?
+
+If so, agreed ...
+
+> The AXI DAG side-table would be used to resolve weirdness with 'bus
+> master' DMA programming. The OS can detect all the required
+> configuration and properties by tracing a path through the DAG from
+> the source of the DMA to the target - that tells you what IOMMUs are
+> involved, if the path is cache coherent, etc.
+
+... that could work, although putting the links in the natural places
+in the DT directly feels cleaner that stashing a crib table elsewhere
+in the DT.  That's partly cosmetic, I think both could work?
+
+> 
+> > Perhaps this is just another way of saying what Greg has already said.
+> > If we continue down this road, we'll eventually end up having to
+> > describe all sorts of nitty gritty details. And we'll need even more
+> 
+> Greg's point makes sense, but the HW guys are not designing things
+> this way for kicks - there are real physics based reasons for some of
+> these choices...
+> 
+> eg An all-to-all bus cross bar (eg like Intel's ring bus) is engery
+> expensive compared to a purpose built muxed bus tree. Doing coherency
+> look ups on DMA traffic costs energy, etc.
+> 
+> > code to deal with those descriptions and the hardware they represent. At
+> > some point we need to start pushing some of the complexity back into
+> > hardware so that we can keep a sane code-base.
+> 
+> Some of this is a consequence of the push to have the firmware
+> minimal. As soon as you say the kernel has to configure the address
+> map you've created a big complexity for it..
+> 
+> Jason
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
