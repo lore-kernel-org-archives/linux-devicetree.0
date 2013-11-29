@@ -1,128 +1,384 @@
-From: Alexander Aring <alex.aring@gmail.com>
-Subject: Re: [PATCHv10 15/41] CLK: TI: DRA7: Add APLL support
-Date: Fri, 29 Nov 2013 21:52:01 +0100
-Message-ID: <20131129205200.GA11310@omega>
-References: <1385453182-24421-1-git-send-email-t-kristo@ti.com>
- <1385453182-24421-16-git-send-email-t-kristo@ti.com>
- <20131126085128.GA19357@omega>
- <5298E44D.4010308@ti.com>
+From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Subject: [PATCHv3] ARM: mvebu: Add Netgear ReadyNAS 2120 board
+Date: Fri, 29 Nov 2013 22:29:03 +0100
+Message-ID: <557eae062dc044b41088d494f4e6be565699aacd.1385760357.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5298E44D.4010308@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, J Keerthy <j-keerthy@ti.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+
+All hardware parts of the (mv78230 Armada XP based) NETGEAR ReadyNAS
+2120 are supported by mainline kernel (USB 3.0 and eSATA rear ports,
+USB 2.0 front port, Gigabit controller and PHYs for the two rear ports,
+serial port, LEDs, Buttons, 88SE9170 SATA controllers, three G762 fan
+controllers, G751 temperature sensor) except for:
+
+ - the Intersil ISL12057 I2C RTC Chip,
+ - the Armada NAND controller.
+
+Support for both of those is currently work in progress and does not
+prevent boot.
+
+Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+---
 Hi,
 
-On Fri, Nov 29, 2013 at 09:00:29PM +0200, Tero Kristo wrote:
-> On 11/26/2013 10:51 AM, Alexander Aring wrote:
-> >Hi,
-> >
-> >On Tue, Nov 26, 2013 at 10:05:56AM +0200, Tero Kristo wrote:
-> >>From: J Keerthy <j-keerthy@ti.com>
-> >>
-> >>The patch adds support for DRA7 PCIe APLL. The APLL
-> >>sources the optional functional clocks for PCIe module.
-> >>
-> >>APLL stands for Analog PLL. This is different when comapred
-> >>with DPLL meaning Digital PLL, the phase detection is done
-> >>using an analog circuit.
-> >>
-> >>Signed-off-by: J Keerthy <j-keerthy@ti.com>
-> >>Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> >>---
-> >>  .../devicetree/bindings/clock/ti/apll.txt          |   31 +++
-> >>  drivers/clk/ti/Makefile                            |    2 +-
-> >>  drivers/clk/ti/apll.c                              |  239 ++++++++++++++++++++
-> >>  3 files changed, 271 insertions(+), 1 deletion(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/clock/ti/apll.txt
-> >>  create mode 100644 drivers/clk/ti/apll.c
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/clock/ti/apll.txt b/Documentation/devicetree/bindings/clock/ti/apll.txt
-> >>new file mode 100644
-> >>index 0000000..7faf5a6
-> >...
-> >>+
-> >>+static int __init of_dra7_apll_setup(struct device_node *node)
-> >>+{
-> >>+	const struct clk_ops *ops;
-> >>+	struct clk *clk;
-> >>+	const char *clk_name = node->name;
-> >>+	int num_parents;
-> >>+	const char **parent_names = NULL;
-> >>+	u8 apll_flags = 0;
-> >>+	struct dpll_data *ad;
-> >>+	u32 idlest_mask = 0x1;
-> >>+	u32 autoidle_mask = 0x3;
-> >>+	int i;
-> >>+	int ret;
-> >>+
-> >>+	ops = &apll_ck_ops;
-> >>+	ad = kzalloc(sizeof(*ad), GFP_KERNEL);
-> >>+	if (!ad)
-> >>+		return -ENOMEM;
-> >>+
-> >>+	of_property_read_string(node, "clock-output-names", &clk_name);
-> >>+
-> >>+	num_parents = of_clk_get_parent_count(node);
-> >>+	if (num_parents < 1) {
-> >>+		pr_err("dra7 apll %s must have parent(s)\n", node->name);
-> >>+		ret = -EINVAL;
-> >>+		goto cleanup;
-> >>+	}
-> >>+
-> >>+	parent_names = kzalloc(sizeof(char *) * num_parents, GFP_KERNEL);
-> >>+
-> >>+	for (i = 0; i < num_parents; i++)
-> >>+		parent_names[i] = of_clk_get_parent_name(node, i);
-> >>+
-> >>+	ad->clk_ref = of_clk_get(node, 0);
-> >>+	ad->clk_bypass = of_clk_get(node, 1);
-> >>+
-> >>+	if (IS_ERR(ad->clk_ref)) {
-> >>+		pr_debug("ti,clk-ref for %s not found\n", clk_name);
-> >>+		ret = -EAGAIN;
-> >>+		goto cleanup;
-> >>+	}
-> >>+
-> >>+	if (IS_ERR(ad->clk_bypass)) {
-> >>+		pr_debug("ti,clk-bypass for %s not found\n", clk_name);
-> >>+		ret = -EAGAIN;
-> >>+		goto cleanup;
-> >>+	}
-> >>+
-> >>+	ad->control_reg = ti_clk_get_reg_addr(node, 0);
-> >>+	ad->idlest_reg = ti_clk_get_reg_addr(node, 1);
-> >>+
-> >>+	if (!ad->control_reg || !ad->idlest_reg) {
-> >>+		ret = -EINVAL;
-> >>+		goto cleanup;
-> >>+	}
-> >>+
-> >>+	ad->idlest_mask = idlest_mask;
-> >>+	ad->enable_mask = autoidle_mask;
-> >>+
-> >>+	clk = omap_clk_register_apll(NULL, clk_name, parent_names,
-> >>+				num_parents, apll_flags, ad,
-> >>+				NULL, ops);
-> >>+
-> >>+	if (!IS_ERR(clk)) {
-> >>+		of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> >>+		return 0;
-> >>+	}
-> >>+
-> >
-> >Should we not also here do a cleanup for allocated memory?
-> >
-> >>+	return PTR_ERR(clk);
-> 
-> Yes, this should be changed to be ret = PTR_ERR(clk);
-> 
-ahh, ok. Just figure this out... I saw this on other patches in your
-patchstack too sometimes. Please check this. :-)
+This is v3.14 material. This depends on the fix I pushed for mv78230 PCIe
+DT definitions which should hit Linus tree long before next merge window.
 
-- Alex
+If you wonder about the SATA presence and power pin definitions under
+pinctrl, I thought it would not harm to have them for reference even
+though they are currently not used. FWIW, I am currently looking if a
+GPIO regulator can make any use of those.
+
+Changes since v2:
+
+ - Switched back to marvell,mv64xxx-i2c compatible strings for i2c node
+ - Replaced wrong PHY compatible string by a simple comment
+
+Changes since v1:
+
+ After Andrew's comment:
+  - Added comment about G751 function
+
+ After Sebastian's comments:
+  - Changed clock frequency for a clock provider for serial line
+  - Added compatible string for PHY (marvell,mv88e1318s)
+  - Removed useless properties in clocks and gpio_keys nodes
+  - Made G762 clock node name unique by including g762 in it
+  - Changed values for macros for GPIO voltage level
+  - Removed comments after GPIOs
+  - Changed buttons and button pins names
+
+ After Jason's comment:
+  - Changed values for macros for input keys, removed comments
+
+ After more documenation reading:
+  - changed i2c compatible string to marvell,mv78230-i2c
+
+Comments welcome,
+
+Cheers,
+
+a+
+
+ arch/arm/boot/dts/Makefile                     |   1 +
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 286 +++++++++++++++++++++++++
+ 2 files changed, 287 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d57c1a6..6881b6c 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -114,6 +114,7 @@ dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
+ 	armada-xp-axpwifiap.dtb \
+ 	armada-xp-db.dtb \
+ 	armada-xp-gp.dtb \
++	armada-xp-netgear-rn2120.dtb \
+ 	armada-xp-matrix.dtb \
+ 	armada-xp-openblocks-ax3-4.dtb
+ dtb-$(CONFIG_ARCH_MXC) += \
+diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+new file mode 100644
+index 0000000..8b2a787
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+@@ -0,0 +1,286 @@
++/*
++ * Device Tree file for NETGEAR ReadyNAS 2120
++ *
++ * Copyright (C) 2013, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
++#include "armada-xp-mv78230.dtsi"
++
++/ {
++	model = "NETGEAR ReadyNAS 2120";
++	compatible = "netgear,readynas-2120", "marvell,armadaxp-mv78230", "marvell,armadaxp", "marvell,armada-370-xp";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 earlyprintk";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0 0x00000000 0 0x80000000>; /* 2GB */
++	};
++
++	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
++			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
++
++		pcie-controller {
++			status = "okay";
++
++			/* Connected to first Marvell 88SE9170 SATA controller */
++			pcie@1,0 {
++				/* Port 0, Lane 0 */
++				status = "okay";
++			};
++
++			/* Connected to second Marvell 88SE9170 SATA controller */
++			pcie@2,0 {
++				/* Port 0, Lane 1 */
++				status = "okay";
++			};
++
++			/* Connected to Fresco Logic FL1009 USB 3.0 controller */
++			pcie@5,0 {
++				/* Port 1, Lane 0 */
++				status = "okay";
++			};
++		};
++
++		internal-regs {
++			pinctrl {
++				poweroff: poweroff {
++					marvell,pins = "mpp42";
++					marvell,function = "gpio";
++				};
++
++				power_button_pin: power-button-pin {
++					marvell,pins = "mpp27";
++					marvell,function = "gpio";
++				};
++
++				reset_button_pin: reset-button-pin {
++					marvell,pins = "mpp41";
++					marvell,function = "gpio";
++				};
++
++				sata1_led_pin: sata1-led-pin {
++					marvell,pins = "mpp31";
++					marvell,function = "gpio";
++				};
++
++				sata2_led_pin: sata2-led-pin {
++					marvell,pins = "mpp40";
++					marvell,function = "gpio";
++				};
++
++				sata3_led_pin: sata3-led-pin {
++					marvell,pins = "mpp44";
++					marvell,function = "gpio";
++				};
++
++				sata4_led_pin: sata4-led-pin {
++					marvell,pins = "mpp47";
++					marvell,function = "gpio";
++				};
++
++				sata1_power_pin: sata1-power-pin {
++					marvell,pins = "mpp24";
++					marvell,function = "gpio";
++				};
++
++				sata2_power_pin: sata2-power-pin {
++					marvell,pins = "mpp25";
++					marvell,function = "gpio";
++				};
++
++				sata3_power_pin: sata3-power-pin {
++					marvell,pins = "mpp26";
++					marvell,function = "gpio";
++				};
++
++				sata4_power_pin: sata4-power-pin {
++					marvell,pins = "mpp28";
++					marvell,function = "gpio";
++				};
++
++				sata1_pres_pin: sata1-pres-pin {
++					marvell,pins = "mpp32";
++					marvell,function = "gpio";
++				};
++
++				sata2_pres_pin: sata2-pres-pin {
++					marvell,pins = "mpp33";
++					marvell,function = "gpio";
++				};
++
++				sata3_pres_pin: sata3-pres-pin {
++					marvell,pins = "mpp34";
++					marvell,function = "gpio";
++				};
++
++				sata4_pres_pin: sata4-pres-pin {
++					marvell,pins = "mpp35";
++					marvell,function = "gpio";
++				};
++
++				err_led_pin: err-led-pin {
++					marvell,pins = "mpp45";
++					marvell,function = "gpio";
++				};
++			};
++
++			serial@12000 {
++				clocks = <&coreclk 0>;
++				status = "okay";
++			};
++
++			mdio {
++				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
++					reg = <0>;
++				};
++
++				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
++					reg = <1>;
++				};
++			};
++
++			ethernet@70000 {
++				status = "okay";
++				phy = <&phy0>;
++				phy-mode = "rgmii-id";
++			};
++
++			ethernet@74000 {
++				status = "okay";
++				phy = <&phy1>;
++				phy-mode = "rgmii-id";
++			};
++
++			/* Front USB 2.0 port */
++			usb@50000 {
++				status = "okay";
++			};
++
++			i2c@11000 {
++				compatible = "marvell,mv64xxx-i2c";
++				clock-frequency = <400000>;
++				status = "okay";
++
++				/* Controller for rear fan #1 of 3 (Protechnic
++				 * MGT4012XB-O20, 8000RPM) near eSATA port */
++				g762_fan1: g762@3e {
++					compatible = "gmt,g762";
++					reg = <0x3e>;
++					clocks = <&g762_clk>; /* input clock */
++					fan_gear_mode = <0>;
++					fan_startv = <1>;
++					pwm_polarity = <0>;
++				};
++
++				/*  Controller for rear (center) fan #2 of 3 */
++				g762_fan2: g762@48 {
++					compatible = "gmt,g762";
++					reg = <0x48>;
++					clocks = <&g762_clk>; /* input clock */
++					fan_gear_mode = <0>;
++					fan_startv = <1>;
++					pwm_polarity = <0>;
++				};
++
++				/*  Controller for rear fan #3 of 3 */
++				g762_fan3: g762@49 {
++					compatible = "gmt,g762";
++					reg = <0x49>;
++					clocks = <&g762_clk>; /* input clock */
++					fan_gear_mode = <0>;
++					fan_startv = <1>;
++					pwm_polarity = <0>;
++				};
++
++				/* Temperature sensor */
++				g751: g751@4c {
++					compatible = "gmt,g751";
++					reg = <0x4c>;
++				};
++			};
++		};
++	};
++
++	clocks {
++	       g762_clk: g762-oscillator {
++			 compatible = "fixed-clock";
++			 #clock-cells = <0>;
++			 clock-frequency = <32768>;
++	       };
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = <&sata1_led_pin &sata2_led_pin &err_led_pin
++			     &sata3_led_pin &sata4_led_pin>;
++		pinctrl-names = "default";
++
++		red-sata1-led {
++			label = "rn2120:red:sata1";
++			gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		red-sata2-led {
++			label = "rn2120:red:sata2";
++			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		red-sata3-led {
++			label = "rn2120:red:sata3";
++			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		red-sata4-led {
++			label = "rn2120:red:sata4";
++			gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		red-err-led {
++			label = "rn2120:red:err";
++			gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-0 = <&power_button_pin &reset_button_pin>;
++		pinctrl-names = "default";
++
++		power-button {
++			label = "Power Button";
++			linux,code = <KEY_POWER>;
++			gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>;
++		};
++
++		reset-button {
++			label = "Reset Button";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	gpio-poweroff {
++		compatible = "gpio-poweroff";
++		pinctrl-0 = <&poweroff>;
++		pinctrl-names = "default";
++		gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
++	};
++};
+-- 
+1.8.4.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
