@@ -1,169 +1,169 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH v2 1/2] misc: bmp085: Clean up and enable use of interrupt for completion.
-Date: Sat, 30 Nov 2013 16:26:00 +0100
-Message-ID: <1385825161-5194-2-git-send-email-marek@goldelico.com>
-References: <1385825161-5194-1-git-send-email-marek@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1385825161-5194-1-git-send-email-marek@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, neilb@suse.de, hns@goldelico.com, Marek Belisko <marek@goldelico.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [RFC/PATCH] NAND bus-width detection extreme makeover
+Date: Sat, 30 Nov 2013 13:28:25 -0300
+Message-ID: <20131130162824.GA2402@localhost>
+References: <1385732456-32696-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20131130083537.GB29397@norris.computersforpeace.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131130083537.GB29397@norris.computersforpeace.net>
+Sender: linux-omap-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Pekon Gupta <pekon@ti.com>, shc_work@mail.ru, Artem Bityutskiy <dedekind1@gmail.com>, David Woodhouse <dwmw2@infradead.org>, swarren@wwwdotorg.org, rob.herring@calxeda.com, mark.rutland@arm.com, Tony Lindgren <tony@atomide.com>, u.kleine-koenig@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-- pass IRQ to driver and have it initialize
-- finish waiting early if interrupt fires
+Hi Brian,
 
-Signed-off-by: NeilBrown <neilb@suse.de>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Marek Belisko <marek@goldelico.com>
----
- drivers/misc/bmp085-i2c.c |  2 +-
- drivers/misc/bmp085-spi.c |  2 +-
- drivers/misc/bmp085.c     | 39 ++++++++++++++++++++++++++++++++++-----
- drivers/misc/bmp085.h     |  2 +-
- 4 files changed, 37 insertions(+), 8 deletions(-)
+On Sat, Nov 30, 2013 at 12:35:37AM -0800, Brian Norris wrote:
+> Hi Ezequiel,
+>=20
+> On Fri, Nov 29, 2013 at 10:40:55AM -0300, Ezequiel Garcia wrote:
+> > Here's my proposal, based in Pekon's latest work.
+> >=20
+> > This patch removes the flash device bus-width configuration, prior =
+to
+> > the device detection. With this modification, a NAND driver is no l=
+onger
+> > able to "force" the device width, and instead can only obtain the d=
+etected
+> > bus-width after the call to nand_scan_ident().
+> >=20
+> > Flash devices bus-width are specified either by reading an ONFI fea=
+ture,
+> > or through a flag in the in-kernel flash devices table. Therefore, =
+it doesn't
+> > make any sense to somehow "advise" the NAND core about this paramet=
+er.
+>=20
+> Hmm, I think there are a few factors at play here. First of all, the
+> hardware driver knows the best about the physical buswidth. It should
+> know if there are 8 or 16 data lines connected to the device, so it
+> could, for instance, know that it does not have enough data lines to
+> support x16 buswidth. (You could possibly devise hardware that can
+> support x16 but not x8, I suppose.) So this is one way in which the
+> driver must "advise" the NAND core about the buswidth.
+>=20
+> On the other hand, the hardware/driver doesn't know what buswidth the
+> flash chip is. That's nand_base's job. So in that sense, we don't nee=
+d
+> to "advise" the NAND core.
+>=20
+> But there are certainly cases where the driver should advise, and if
+> there is a mismatch, bail.
+>=20
 
-diff --git a/drivers/misc/bmp085-i2c.c b/drivers/misc/bmp085-i2c.c
-index 3abfcec..a7c1629 100644
---- a/drivers/misc/bmp085-i2c.c
-+++ b/drivers/misc/bmp085-i2c.c
-@@ -49,7 +49,7 @@ static int bmp085_i2c_probe(struct i2c_client *client,
- 		return err;
- 	}
- 
--	return bmp085_probe(&client->dev, regmap);
-+	return bmp085_probe(&client->dev, regmap, client->irq);
- }
- 
- static int bmp085_i2c_remove(struct i2c_client *client)
-diff --git a/drivers/misc/bmp085-spi.c b/drivers/misc/bmp085-spi.c
-index d6a5265..864ecac 100644
---- a/drivers/misc/bmp085-spi.c
-+++ b/drivers/misc/bmp085-spi.c
-@@ -41,7 +41,7 @@ static int bmp085_spi_probe(struct spi_device *client)
- 		return err;
- 	}
- 
--	return bmp085_probe(&client->dev, regmap);
-+	return bmp085_probe(&client->dev, regmap, client->irq);
- }
- 
- static int bmp085_spi_remove(struct spi_device *client)
-diff --git a/drivers/misc/bmp085.c b/drivers/misc/bmp085.c
-index 2704d88..820e53d 100644
---- a/drivers/misc/bmp085.c
-+++ b/drivers/misc/bmp085.c
-@@ -49,9 +49,11 @@
- #include <linux/device.h>
- #include <linux/init.h>
- #include <linux/slab.h>
--#include <linux/delay.h>
- #include <linux/of.h>
- #include "bmp085.h"
-+#include <linux/interrupt.h>
-+#include <linux/completion.h>
-+#include <linux/gpio.h>
- 
- #define BMP085_CHIP_ID			0x55
- #define BMP085_CALIBRATION_DATA_START	0xAA
-@@ -84,8 +86,19 @@ struct bmp085_data {
- 	unsigned long last_temp_measurement;
- 	u8	chip_id;
- 	s32	b6; /* calculated temperature correction coefficient */
-+	int	irq;
-+	struct	completion done;
- };
- 
-+static irqreturn_t bmp085_eoc_isr(int irq, void *devid)
-+{
-+	struct bmp085_data *data = devid;
-+
-+	complete(&data->done);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static s32 bmp085_read_calibration_data(struct bmp085_data *data)
- {
- 	u16 tmp[BMP085_CALIBRATION_DATA_LENGTH];
-@@ -116,6 +129,9 @@ static s32 bmp085_update_raw_temperature(struct bmp085_data *data)
- 	s32 status;
- 
- 	mutex_lock(&data->lock);
-+
-+	init_completion(&data->done);
-+
- 	status = regmap_write(data->regmap, BMP085_CTRL_REG,
- 			      BMP085_TEMP_MEASUREMENT);
- 	if (status < 0) {
-@@ -123,7 +139,8 @@ static s32 bmp085_update_raw_temperature(struct bmp085_data *data)
- 			"Error while requesting temperature measurement.\n");
- 		goto exit;
- 	}
--	msleep(BMP085_TEMP_CONVERSION_TIME);
-+	wait_for_completion_timeout(&data->done, 1 + msecs_to_jiffies(
-+					    BMP085_TEMP_CONVERSION_TIME));
- 
- 	status = regmap_bulk_read(data->regmap, BMP085_CONVERSION_REGISTER_MSB,
- 				 &tmp, sizeof(tmp));
-@@ -147,6 +164,9 @@ static s32 bmp085_update_raw_pressure(struct bmp085_data *data)
- 	s32 status;
- 
- 	mutex_lock(&data->lock);
-+
-+	init_completion(&data->done);
-+
- 	status = regmap_write(data->regmap, BMP085_CTRL_REG,
- 			BMP085_PRESSURE_MEASUREMENT +
- 			(data->oversampling_setting << 6));
-@@ -157,8 +177,8 @@ static s32 bmp085_update_raw_pressure(struct bmp085_data *data)
- 	}
- 
- 	/* wait for the end of conversion */
--	msleep(2+(3 << data->oversampling_setting));
--
-+	wait_for_completion_timeout(&data->done, 1 + msecs_to_jiffies(
-+					2+(3 << data->oversampling_setting)));
- 	/* copy data into a u32 (4 bytes), but skip the first byte. */
- 	status = regmap_bulk_read(data->regmap, BMP085_CONVERSION_REGISTER_MSB,
- 				 ((u8 *)&tmp)+1, 3);
-@@ -420,7 +440,7 @@ struct regmap_config bmp085_regmap_config = {
- };
- EXPORT_SYMBOL_GPL(bmp085_regmap_config);
- 
--int bmp085_probe(struct device *dev, struct regmap *regmap)
-+int bmp085_probe(struct device *dev, struct regmap *regmap, int irq)
- {
- 	struct bmp085_data *data;
- 	int err = 0;
-@@ -434,6 +454,15 @@ int bmp085_probe(struct device *dev, struct regmap *regmap)
- 	dev_set_drvdata(dev, data);
- 	data->dev = dev;
- 	data->regmap = regmap;
-+	data->irq = irq;
-+
-+	if (data->irq > 0) {
-+		err = devm_request_irq(dev, data->irq, bmp085_eoc_isr,
-+					      IRQF_TRIGGER_RISING, "bmp085",
-+					      data);
-+		if (err < 0)
-+			goto exit_free;
-+	}
- 
- 	/* Initialize the BMP085 chip */
- 	err = bmp085_init_client(data);
-diff --git a/drivers/misc/bmp085.h b/drivers/misc/bmp085.h
-index 2b8f615..8b8e3b1 100644
---- a/drivers/misc/bmp085.h
-+++ b/drivers/misc/bmp085.h
-@@ -26,7 +26,7 @@
- 
- extern struct regmap_config bmp085_regmap_config;
- 
--int bmp085_probe(struct device *dev, struct regmap *regmap);
-+int bmp085_probe(struct device *dev, struct regmap *regmap, int irq);
- int bmp085_remove(struct device *dev);
- int bmp085_detect(struct device *dev);
- 
--- 
-1.8.3.2
+As Pekon just said, the driver can take this action, once the NAND core
+has detected the NAND device width and bail out.
+
+I really don't see why we need to *enforce* that in the NAND core.
+
+> > In addition, the ONFI specification requires to issue the detection=
+ commands
+> > using only the lower 8-bits of the data bus. The ONFI specification=
+ says:
+> >=20
+> >   "" The Read ID and Read Parameter Page commands only use the lowe=
+r 8-bits
+> >      of the data bus. The host shall not issue commands that use a =
+word
+> >      data width on x16 devices until the host determines the device=
+ supports
+> >      a 16-bit data bus width in the parameter page. ""
+>=20
+> This does not really say that *all* NAND transactions must be perform=
+ed
+> on the lower 8 bits (a true x8 buswidth), but only that all ONFI
+> transactions must be.
+>=20
+
+Well, I *think* I never said that, and this patch doesn't imply that
+either. All the patch is doing is using x8 buswidth until the width is
+detected. Then it switches to whatever the width was detected to.
+
+> > IIRC, the current way of setting the device width is to set NAND_BU=
+SWIDTH_AUTO
+> > in chip->options and then let the driver set some width-specific ca=
+llbacks after
+> > the NAND core has detected the width.
+> >=20
+> > However, as noticed by Pekon Gupta, this means NAND_BUSWIDTH_AUTO s=
+hould be
+> > always turned on (and hence the option be removed).
+>=20
+> No, I think you can solve the x16 ONFI detection problem without
+> requiring NAND_BUSWIDTH_AUTO.
+
+Uh? I'm not requiring NAND_BUSWIDTH_AUTO at all.
+
+> And in fact, NAND_BUSWIDTH_AUTO only helps
+> you wil part of the problem: performing ONFI transactions during the
+> initial detection, where you pretend like you're an x8 device.
+>=20
+> But what happens if a driver needs to use ONFI SET_FEATURES or
+> GET_FEATURES after initial probe?
+>=20
+> So I think the problem may need to be divided into 2 parts:
+>=20
+>  1) How do we best handle ONFI transactions, so that they are always
+>     performed on the lower 8 bits of the bus **regardless of actual
+>     buswidth**? (I think Uwe's patch + my response in [1] might solve
+>     this.)
+>=20
+>  2) Can/should we relax the old restrictions where drivers have to
+>     configure the buswidth correctly before running nand_scan_ident()=
+,
+>     in the spirit of NAND_BUSWIDTH_AUTO? And why do we need this
+>     flexibility?
+>=20
+
+Uh? Both (1) and (2) are already handled by this patch, regarding the
+initial device detection.
+
+[..]
+> > Of course, the memory controller (such as GPMC in the OMAP case) st=
+ill needs
+> > proper width a-prior configuration, but that's completely unrelated=
+ to the
+> > flash device bus width.
+>=20
+> I would disagree.
+>=20
+
+On which arguments?
+
+To be honest with you, I'm a bit lost about your feedback :-)
+
+I guess you *did* read the patch, right? It's pretty straight-forward
+and it fixes a *current* bug: 16-bit devices *cannot* be ONFI
+detected.
+
+All the patch does is:
+
+1. Set defaults to x8
+
+2. Detect device. Either method works.
+
+3. Set defaults to detected width, x8 or x16.
+
+The NAND driver is free, after the detection, to error-out, print a
+message, or re-arrange the callbacks.
+
+Which part exactly of the above do you disagree with?
+
+Now, maybe I went to far talking about removing this or that, but as fa=
+r
+as the ONFI detection, I think the change is pretty-straightforward.
+
+(I'll reply to your suggestion in the proper mail)
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
