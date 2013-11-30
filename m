@@ -1,42 +1,61 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] mtd: nand: gpio: Add DT property to automatically
- determine bus width
-Date: Sat, 30 Nov 2013 01:17:38 -0800
-Message-ID: <20131130091738.GE29397@norris.computersforpeace.net>
-References: <1384343884-29622-1-git-send-email-shc_work@mail.ru>
- <20131127012158.GR9468@ld-irv-0074.broadcom.com>
- <1385715364.73252787@f82.i.mail.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/2] ARM: apf28dev: dts: set gpio polarity for usb regulator and pinctrl for regulator gpio
+Date: Sat, 30 Nov 2013 09:51:13 +0100
+Message-ID: <1385801473-97460-2-git-send-email-gwenhael.goavec-merou@armadeus.com>
+References: <1385801473-97460-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1385715364.73252787-rvgK6QqyBjrWO3iv0lnsqw@public.gmane.org>
+In-Reply-To: <1385801473-97460-1-git-send-email-gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2013 at 12:56:04PM +0400, Alexander Shiyan wrote:
-> > Hi Alexander,
-> > 
-> > We're dealing with a similar issue in other drivers currently, and I
-> > think it's worth straightening out the issue for all systems.
-> > 
-> > On Wed, Nov 13, 2013 at 03:58:02PM +0400, Alexander Shiyan wrote:
-> > > This patch adds a property to automatically determine the NAND
-> > > bus width by CFI/ONFI information from chip. This property works
-> > > if the bus width is not specified explicitly.
-> ...
-> 
-> Hello Brian.
-> Can at least part [2/3] "mtd: nand: gpio: Use devm_gpio_request_one() where possible"
-> be applied at this time?
+Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/imx28-apf28dev.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Probably. I was avoiding taking things out of order in the series for
-now, but I'll take another look. If it looks good and applies
-independently, then I'll take it.
+diff --git a/arch/arm/boot/dts/imx28-apf28dev.dts b/arch/arm/boot/dts/imx28-apf28dev.dts
+index 741aecb..334dea5 100644
+--- a/arch/arm/boot/dts/imx28-apf28dev.dts
++++ b/arch/arm/boot/dts/imx28-apf28dev.dts
+@@ -66,6 +66,16 @@
+ 					fsl,voltage = <MXS_VOLTAGE_HIGH>;
+ 					fsl,pull-up = <MXS_PULL_DISABLE>;
+ 				};
++
++				usb0_otg_apf28dev: otg-apf28dev@0 {
++					reg = <0>;
++					fsl,pinmux-ids = <
++						MX28_PAD_LCD_D23__GPIO_1_23
++					>;
++					fsl,drive-strength = <MXS_DRIVE_4mA>;
++					fsl,voltage = <MXS_VOLTAGE_HIGH>;
++					fsl,pull-up = <MXS_PULL_DISABLE>;
++				};
+ 			};
+ 
+ 			lcdif@80030000 {
+@@ -131,6 +141,8 @@
+ 
+ 	ahb@80080000 {
+ 		usb0: usb@80080000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&usb0_otg_apf28dev>;
+ 			vbus-supply = <&reg_usb0_vbus>;
+ 			status = "okay";
+ 		};
+@@ -160,6 +172,7 @@
+ 			regulator-min-microvolt = <5000000>;
+ 			regulator-max-microvolt = <5000000>;
+ 			gpio = <&gpio1 23 1>;
++			enable-active-high;
+ 		};
+ 	};
+ 
+-- 
+1.8.3.2
 
-Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
