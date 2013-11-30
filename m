@@ -1,39 +1,62 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtSRkMvUEFUQ0hdIE5BTkQgYnVzLXdpZHRoIGRldGVjdGlvbiBleHRy?=
- =?UTF-8?B?ZW1lIG1ha2VvdmVy?=
-Date: Sat, 30 Nov 2013 12:52:38 +0400
-Message-ID: <1385801558.849805040@f409.i.mail.ru>
-References: <1385732456-32696-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20131130083537.GB29397@norris.computersforpeace.net>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v5 1/3] mtd: nand: gpio: Add DT property to automatically
+ determine bus width
+Date: Sat, 30 Nov 2013 01:15:56 -0800
+Message-ID: <20131130091556.GD29397@norris.computersforpeace.net>
+References: <1384343884-29622-1-git-send-email-shc_work@mail.ru>
+ <20131127012158.GR9468@ld-irv-0074.broadcom.com>
+ <20131127012338.GS9468@ld-irv-0074.broadcom.com>
+ <20131129122551.GC2815@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131130083537.GB29397-7ciq9WCbhwJWVhifINYOO1poFGfAdsVx5NbjCUgZEJk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?QnJpYW4gTm9ycmlz?= <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?B?RXplcXVpZWwgR2FyY2lh?= <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UGVrb24gR3VwdGE=?= <pekon-l0cyMroinI0@public.gmane.org>, =?UTF-8?B?QXJ0ZW0gQml0eXV0c2tpeQ==?= <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?RGF2aWQgV29vZGhvdXNl?= <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, =?UTF-8?B?VG9ueSBMaW5kZ3Jlbg==?= <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20131129122551.GC2815@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Artem Bityutskiy <dedekind1@gmail.com>, Rob Herring <rob.herring@calxeda.com>, linux-mtd@lists.infradead.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Eric Miao <eric.y.miao@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Pekon Gupta <pekon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8uCgo+IE9uIEZyaSwgTm92IDI5LCAyMDEzIGF0IDEwOjQwOjU1QU0gLTAzMDAsIEV6ZXF1
-aWVsIEdhcmNpYSB3cm90ZToKPiA+IEhlcmUncyBteSBwcm9wb3NhbCwgYmFzZWQgaW4gUGVrb24n
-cyBsYXRlc3Qgd29yay4KPiA+IAo+ID4gVGhpcyBwYXRjaCByZW1vdmVzIHRoZSBmbGFzaCBkZXZp
-Y2UgYnVzLXdpZHRoIGNvbmZpZ3VyYXRpb24sIHByaW9yIHRvCj4gPiB0aGUgZGV2aWNlIGRldGVj
-dGlvbi4gV2l0aCB0aGlzIG1vZGlmaWNhdGlvbiwgYSBOQU5EIGRyaXZlciBpcyBubyBsb25nZXIK
-PiA+IGFibGUgdG8gImZvcmNlIiB0aGUgZGV2aWNlIHdpZHRoLCBhbmQgaW5zdGVhZCBjYW4gb25s
-eSBvYnRhaW4gdGhlIGRldGVjdGVkCj4gPiBidXMtd2lkdGggYWZ0ZXIgdGhlIGNhbGwgdG8gbmFu
-ZF9zY2FuX2lkZW50KCkuCi4uLgo+ID4gQWxleGFuZGVyOiBDb3VsZCB5b3UgdHJ5IHRoaXMgcGF0
-Y2ggYW5kIHNlZSBpZiBpdCdzIHN1aXRhYmxlIGZvciB5b3VyIG5lZWRzPwo+ID4gSSB0aGluayB5
-b3Ugc2hvdWxkIGJlIGFibGUgdG8gdXNlIGl0IHRvIHNldCB0aGUgYnVzLXdpZHRoLCB3aXRob3V0
-IGFueSBuZWVkIGZvcgo+ID4gYSBuZXcgRFQgcHJvcGVydHkuIFlvdSB3aWxsIGhhdmUgdG8gc3Bs
-aXQgeW91ciBuYW5kX3NjYW4oKSBjYWxsIGluIGFuIGluaXRpYWwKPiA+IGNhbGwgdG8gbmFuZF9z
-Y2FuX2lkZW50KCkgYW5kIGEgZmluYWwgY2FsbCB0byBuYW5kX3NjYW5fdGFpbCgpLgo+IAo+IEZX
-SVcsIGdwaW8uYyBkb2VzIG5vdCBuZWVkIHRvIHNwbGl0IG5hbmRfc2NhbigpLCBhcyBpdCBkb2Vz
-bid0IG5lZWQgYW55Cj4gY3VzdG9tIGNhbGwtYmFja3MuIG5hbmRfYmFzZSBzaG91bGQgZG8gYWxs
-IHRoZSB3b3JrLgoKSSBhZ3JlZSwgdGhlcmUgYXJlIG5vIG5lZWQgdG8gc3BsaXQuCkknbGwgdGVz
-dCB0aGlzIG9uIE1vbmRheS4KCi0tLQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Nov 29, 2013 at 09:25:52AM -0300, Ezequiel Garcia wrote:
+> On Tue, Nov 26, 2013 at 05:23:38PM -0800, Brian Norris wrote:
+> [..]
+> > > 
+> > > If we do resort to a new binding for auto-buswidth, it should be a
+> > > generic one that all NAND drivers can use.
+> 
+> Why do we need yet another binding to describe something that's
+> completely discoverable?
+
+The DT property is not specified only for the sake of the flash chip
+itself, but for the sake of the controller which supports it. I suppose
+we've kind of overloaded its usage, but it is not entirely
+auto-detectable.
+
+> I'm working on *removing* any need to set the bus width, either from the
+> driver or from the DT, so I see this patch as step backwards.
+
+Well, I disagree with the removal ;)
+
+> Can anyone help me understand if there's *any* valid use case where we
+> want to specify a-priori the bus width, considering it's completely
+> discoverable at run-time?
+
+I think the primary use case should be to reflect a limitation in the
+hardware (besides just the flash chip). It can mean that the controller
+itself only supports one bus width, or that the board is only wired up
+for x8, for instance.
+
+Brian
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
