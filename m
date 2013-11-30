@@ -1,62 +1,43 @@
-From: Brian Norris <computersforpeace@gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v5 1/3] mtd: nand: gpio: Add DT property to automatically
  determine bus width
-Date: Sat, 30 Nov 2013 01:15:56 -0800
-Message-ID: <20131130091556.GD29397@norris.computersforpeace.net>
+Date: Sat, 30 Nov 2013 01:17:38 -0800
+Message-ID: <20131130091738.GE29397@norris.computersforpeace.net>
 References: <1384343884-29622-1-git-send-email-shc_work@mail.ru>
  <20131127012158.GR9468@ld-irv-0074.broadcom.com>
- <20131127012338.GS9468@ld-irv-0074.broadcom.com>
- <20131129122551.GC2815@localhost>
+ <1385715364.73252787@f82.i.mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131129122551.GC2815@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Artem Bityutskiy <dedekind1@gmail.com>, Rob Herring <rob.herring@calxeda.com>, linux-mtd@lists.infradead.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Eric Miao <eric.y.miao@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Pekon Gupta <pekon@ti.com>
+In-Reply-To: <1385715364.73252787-rvgK6QqyBjrWO3iv0lnsqw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2013 at 09:25:52AM -0300, Ezequiel Garcia wrote:
-> On Tue, Nov 26, 2013 at 05:23:38PM -0800, Brian Norris wrote:
-> [..]
-> > > 
-> > > If we do resort to a new binding for auto-buswidth, it should be a
-> > > generic one that all NAND drivers can use.
+On Fri, Nov 29, 2013 at 12:56:04PM +0400, Alexander Shiyan wrote:
+> > Hi Alexander,
+> > 
+> > We're dealing with a similar issue in other drivers currently, and I
+> > think it's worth straightening out the issue for all systems.
+> > 
+> > On Wed, Nov 13, 2013 at 03:58:02PM +0400, Alexander Shiyan wrote:
+> > > This patch adds a property to automatically determine the NAND
+> > > bus width by CFI/ONFI information from chip. This property works
+> > > if the bus width is not specified explicitly.
+> ...
 > 
-> Why do we need yet another binding to describe something that's
-> completely discoverable?
+> Hello Brian.
+> Can at least part [2/3] "mtd: nand: gpio: Use devm_gpio_request_one() where possible"
+> be applied at this time?
 
-The DT property is not specified only for the sake of the flash chip
-itself, but for the sake of the controller which supports it. I suppose
-we've kind of overloaded its usage, but it is not entirely
-auto-detectable.
-
-> I'm working on *removing* any need to set the bus width, either from the
-> driver or from the DT, so I see this patch as step backwards.
-
-Well, I disagree with the removal ;)
-
-> Can anyone help me understand if there's *any* valid use case where we
-> want to specify a-priori the bus width, considering it's completely
-> discoverable at run-time?
-
-I think the primary use case should be to reflect a limitation in the
-hardware (besides just the flash chip). It can mean that the controller
-itself only supports one bus width, or that the board is only wired up
-for x8, for instance.
+Probably. I was avoiding taking things out of order in the series for
+now, but I'll take another look. If it looks good and applies
+independently, then I'll take it.
 
 Brian
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
