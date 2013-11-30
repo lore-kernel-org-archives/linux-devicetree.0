@@ -1,125 +1,362 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [RFC/PATCH] NAND bus-width detection extreme makeover
-Date: Sat, 30 Nov 2013 14:19:40 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA50432@DBDE04.ent.ti.com>
-References: <1385732456-32696-1-git-send-email-ezequiel.garcia@free-electrons.com>,
- <20131130083537.GB29397@norris.computersforpeace.net>
+From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Subject: [PATCHv0] ARM: kirkwood: Add support for NETGEAR ReadyNAS NV+ v2
+Date: Sat, 30 Nov 2013 16:13:44 +0100
+Message-ID: <58e99356aad0daf90d28162eac6a4ecec70470f8.1385822676.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20131130083537.GB29397@norris.computersforpeace.net>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shc_work@mail.ru" <shc_work@mail.ru>, Artem Bityutskiy <dedekind1@gmail.com>, Tony Lindgren <tony@atomide.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian, Ezequiel,
 
-Sorry Im bit confused on below, so few queries ..
+Almost all hardware parts of the NETGEAR ReadyNAS NV+ v2 ([1] for more
+details) are supported by mainline kernel. The only missing elements in
+provided .dts file are:
 
->From: Brian Norris [computersforpeace@gmail.com]
->So I think the problem may need to be divided into 2 parts:
->
->1) How do we best handle ONFI transactions, so that they are always
->  performed on the lower 8 bits of the bus **regardless of actual
->   buswidth**? (I think Uwe's patch + my response in [1] might solve
->   this.)
->
-> 2) Can/should we relax the old restrictions where drivers have to
->    configure the buswidth correctly before running nand_scan_ident(),
->    in the spirit of NAND_BUSWIDTH_AUTO? And why do we need this
->    flexibility?
->
->I think problem (1) is solvable independently of (2). So we don't
->inherently *need* BUSWIDTH_AUTO just to support ONFI correctly; we can
->just enforce that we ignore the upper 8 bits.
->
->Now, what do we have NAND_BUSWIDTH_AUTO for, anyway? It seems like its
->best use case is for a driver that (a) knows it might encounter either
->x8 or x16 flash chips and (b) is equipped to handle this change at
->runtime (e.g., it only needs to re-assign some call-backs after
->nand_scan_ident()). This means, for one, that it should have at least
->all 16 data lines connected.
->
->However, not all hardware/drivers fit (a) and (b). For such systems, we
->probably want to just indicate the expected buswidth and error out
->automatically if we detect this is incorrect.
->
-Sorry I'm bit confused here.. Where do you want to error out ?
-(a) In nand_base.c (generic driver) OR
-(b) you want the controller driver (callee of nand_scan_ident) to handle
-the bus-width mismatch on its own.
+ - the front LCD module (Winstar WINSTAR WH1602): driver development is
+   ongoing. This is the same LCD module as on ReadyNAS 104.
+ - the Macronix MX25L512 512Kbit SPI flash: no time to play with it yet=
+=2E
 
-I prefer (b), which is the basis of my first proposal patch.
-In my opinion following sequence should be followed by each controller driver
-during probe.
-Step-1: assign basic callbacks and parameters which are required for
-     basic NAND device I/O (like chip->ctrl, chip->delay, etc)
-Step-2: call nand_scan_ident()
-      nand_scan_ident() would populate detect NAND device parameter by
-     - reading ONFI parameters in x8 bit mode (ignoring pre-configurations)
-     - look-up from nand_flash_id[]
-      And populate chip->options, mtd->writesize, etc...
-Step-3: On return from nand_scan_ident, each controller driver should
-     check whether (chip_options & NAND_BUSWIDTH_16) as set by 
-     nand_scan_ident() matches its controller & board configurations or
-     not. Based on which it can take corrective action or error out.
+The device is the big brother (4 vs 2 bay) of the ReadyNAS Duo v2. The
+main differences are some additional LEDs for the disks, a Marvell
+88SM4140 SATA Port multiplier (no driver required to access the disk)
+and previously described LCD module. Otherwise, it shares the same SoC
+(kirkwood 88F6282), RAM (256MB), NAND (128MB), RTC chip (Ricoh rs5c372a=
+),
+fan controller (GMT G762), XHCI controller (NEC/Renesas =C2=B5PD720200)=
+=2E
 
-If we follow above sequence then 
-(1) NAND_BUSWIDTH_AUTO becomes implicit. And controller driver
-   does not need to set any such flags before calling nand_scan_ident().
-(2) Currently, we are error-out inside nand_base.c when 
-   (busw != chip->options & BUS_WIDTH_16).
-   Now this would be handled by individual controller drivers, as they
-   know their hardware best.
-  (If you remember, this was the reason of omap2,c calling
-   nand_scan_ident() twice. If instead of failing the first call to 
-   nand_scan_ident  would have just returned with *corrected* bus-width,
-   then omap2,c could have handled that situation by re-configuring
-   its controller).
+[1]: http://natisbad.org/NAS5/
 
+Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+---
+Hi,
 
+This is v3.14 material. As most of the .dts file content can be shared
+w/ Duo v2 one, I intend to work on that aspect for next round (it was
+easier for me to develop and test on a flat .dts).
 
->So I think we still want to support the following three configurations:
->
->  !NAND_BUSWIDTH_16 && !NAND_BUSWIDTH_AUTO: device must use 8-bit
->  buswidth
->
->  NAND_BUSWIDTH_16 && !NAND_BUSWIDTH_AUTO: device must use 16-bit
->  buswidth
->
->  NAND_BUSWIDTH_AUTO: can support either buswidth (auto-detectable)
->
->But I think these selections should only be restricted by hardware
->limitations (lack of I/O pin connections, inflexible controller) and not
->enforced because of software limitations in handling ONFI. This brings
->be back to problem (1), where I think we need resolve it along the lines
->of Uwe's + my patch (see [1]), not by forcing NAND_BUSWIDTH_AUTO on all
->drivers.
->
-> That's exactly what this patch is doing.
+To be more specific, the main differences between the two files are
+different GPIO values for gpio-leds nodes and pinctrl, and 2 additional
+LEDs.
 
-Sorry, I'll re-review Uwe's + ur patch.
-But do you agree on following:
-(1) somehow we need to do away with NAND_BUSWIDTH_AUTO *macro*.
-And instead make its functionality, built-in the nand_base.c driver ?
+If you have comments or directions to avoid common mistakes while doing
+that work, I'll take them into account. Meanwhile, I will start and tak=
+e
+a look at existing .dtsi files.
 
-(2) And nand-bus-width DT binding will still be required for defining controller
-and board level description ... 
-Is my understanding correct ?
+Cheers,
 
+a+
 
-with regards, pekon
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+ arch/arm/boot/dts/Makefile                         |   1 +
+ .../boot/dts/kirkwood-netgear_readynas_nv+_v2.dts  | 270 +++++++++++++=
+++++++++
+ 2 files changed, 271 insertions(+)
+ create mode 100644 arch/arm/boot/dts/kirkwood-netgear_readynas_nv+_v2.=
+dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d57c1a6..c9cd0e9 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -90,6 +90,7 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) +=3D kirkwood-cloudbox.dt=
+b \
+ 	kirkwood-mplcec4.dtb \
+ 	kirkwood-mv88f6281gtw-ge.dtb \
+ 	kirkwood-netgear_readynas_duo_v2.dtb \
++	kirkwood-netgear_readynas_nv+_v2.dtb \
+ 	kirkwood-ns2.dtb \
+ 	kirkwood-ns2lite.dtb \
+ 	kirkwood-ns2max.dtb \
+diff --git a/arch/arm/boot/dts/kirkwood-netgear_readynas_nv+_v2.dts b/a=
+rch/arm/boot/dts/kirkwood-netgear_readynas_nv+_v2.dts
+new file mode 100644
+index 0000000..9cb5d26
+--- /dev/null
++++ b/arch/arm/boot/dts/kirkwood-netgear_readynas_nv+_v2.dts
+@@ -0,0 +1,270 @@
++/*
++ * Device Tree file for NETGEAR ReadyNAS NV+ v2
++ *
++ * Copyright (C) 2013, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
++#include "kirkwood.dtsi"
++#include "kirkwood-6282.dtsi"
++
++/ {
++	model =3D "NETGEAR ReadyNAS NV+ v2";
++	compatible =3D "netgear,readynas-nv+-v2", "netgear,readynas", "marvel=
+l,kirkwood-88f6282", "marvell,kirkwood";
++
++	memory { /* 256 MB */
++		device_type =3D "memory";
++		reg =3D <0x00000000 0x10000000>;
++	};
++
++	chosen {
++		bootargs =3D "console=3DttyS0,115200n8 earlyprintk";
++	};
++
++	mbus {
++		pcie-controller {
++			status =3D "okay";
++
++			/* Connected to NEC uPD720200 USB 3.0 controller */
++			pcie@1,0 {
++				/* Port 0, Lane 0 */
++				status =3D "okay";
++			};
++		};
++	};
++
++	ocp@f1000000 {
++		pinctrl: pinctrl@10000 {
++			pmx_button_power: pmx-button-power {
++				marvell,pins =3D "mpp47";
++				marvell,function =3D "gpio";
++			};
++
++			pmx_button_backup: pmx-button-backup {
++				marvell,pins =3D "mpp45";
++				marvell,function =3D "gpio";
++			};
++
++			pmx_button_reset: pmx-button-reset {
++				marvell,pins =3D "mpp13";
++				marvell,function =3D "gpio";
++			};
++
++			pmx_led_blue_power: pmx-led-blue-power {
++				marvell,pins =3D "mpp31";
++				marvell,function =3D "gpio";
++			};
++
++			pmx_led_blue_backup: pmx-led-blue-backup {
++				marvell,pins =3D "mpp22";
++				marvell,function =3D "gpio";
++			};
++
++			pmx_led_blue_disk1: pmx-led-blue-disk1 {
++				marvell,pins =3D "mpp20";
++				marvell,function =3D "gpio";
++			};
++
++			pmx_led_blue_disk2: pmx-led-blue-disk2 {
++				marvell,pins =3D "mpp23";
++				marvell,function =3D "gpio";
++			};
++
++			pmx_led_blue_disk3: pmx-led-blue-disk3 {
++				marvell,pins =3D "mpp24";
++				marvell,function =3D "gpio";
++			};
++
++			pmx_led_blue_disk4: pmx-led-blue-disk4 {
++				marvell,pins =3D "mpp29";
++				marvell,function =3D "gpio";
++			};
++
++			pmx_poweroff: pmx-poweroff {
++				marvell,pins =3D "mpp30";
++				marvell,function =3D "gpio";
++			};
++		};
++
++		clocks {
++		       g762_clk: g762-oscillator {
++				 compatible =3D "fixed-clock";
++				 #clock-cells =3D <0>;
++				 clock-frequency =3D <8192>;
++		       };
++		};
++
++		i2c@11000 {
++			status =3D "okay";
++
++			rs5c372a: rs5c372a@32 {
++				compatible =3D "ricoh,rs5c372a";
++				reg =3D <0x32>;
++			};
++
++			g762: g762@3e {
++				compatible =3D "gmt,g762";
++				reg =3D <0x3e>;
++				clocks =3D <&g762_clk>; /* input clock */
++				fan_gear_mode =3D <0>;
++				fan_startv =3D <1>;
++				pwm_polarity =3D <0>;
++			};
++		};
++
++		serial@12000 {
++			pinctrl-0 =3D <&pmx_uart0>;
++			pinctrl-names =3D "default";
++			status =3D "okay";
++		};
++
++		sata@80000 { /* Connected to Marvell 88SM4140 SATA port multiplier *=
+/
++			status =3D "okay";
++			nr-ports =3D <1>;
++		};
++	};
++
++	gpio-leds {
++		compatible =3D "gpio-leds";
++		pinctrl-0 =3D < &pmx_led_blue_power &pmx_led_blue_backup
++			      &pmx_led_blue_disk1 &pmx_led_blue_disk2
++			      &pmx_led_blue_disk3 &pmx_led_blue_disk3 >;
++		pinctrl-names =3D "default";
++
++		power_led {
++			label =3D "status:blue:power_led";
++			gpios =3D <&gpio0 31 GPIO_ACTIVE_LOW>;
++			linux,default-trigger =3D "default-on";
++		};
++
++		backup_led {
++			label =3D "status:blue:backup_led";
++			gpios =3D <&gpio0 22 GPIO_ACTIVE_LOW>;
++		};
++
++		disk1_led {
++			label =3D "status:blue:disk1_led";
++			gpios =3D <&gpio0 20 GPIO_ACTIVE_LOW>;
++		};
++
++		disk2_led {
++			label =3D "status:blue:disk2_led";
++			gpios =3D <&gpio0 23 GPIO_ACTIVE_LOW>;
++		};
++
++		disk3_led {
++			label =3D "status:blue:disk3_led";
++			gpios =3D <&gpio0 24 GPIO_ACTIVE_LOW>;
++		};
++
++		disk4_led {
++			label =3D "status:blue:disk4_led";
++			gpios =3D <&gpio0 29 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	gpio-keys {
++		compatible =3D "gpio-keys";
++		pinctrl-0 =3D <&pmx_button_power &pmx_button_backup
++			     &pmx_button_reset>;
++		pinctrl-names =3D "default";
++
++		power-button {
++			label =3D "Power Button";
++			linux,code =3D <KEY_POWER>;
++			gpios =3D <&gpio1 15 GPIO_ACTIVE_LOW>;
++		};
++
++		reset-button {
++			label =3D "Reset Button";
++			linux,code =3D <KEY_RESTART>;
++			gpios =3D <&gpio0 13 GPIO_ACTIVE_LOW>;
++		};
++
++		backup-button {
++			label =3D "Backup Button";
++			linux,code =3D <KEY_COPY>;
++			gpios =3D <&gpio1 13 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	gpio-poweroff {
++		compatible =3D "gpio-poweroff";
++		pinctrl-0 =3D <&pmx_poweroff>;
++		pinctrl-names =3D "default";
++		gpios =3D <&gpio0 30 GPIO_ACTIVE_LOW>;
++	};
++
++	regulators {
++		compatible =3D "simple-bus";
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++
++		usb3_regulator: usb3-regulator {
++			compatible =3D "regulator-fixed";
++			reg =3D <1>;
++			regulator-name =3D "USB 3.0 Power";
++			regulator-min-microvolt =3D <5000000>;
++			regulator-max-microvolt =3D <5000000>;
++			enable-active-high;
++			regulator-always-on;
++			regulator-boot-on;
++			gpio =3D <&gpio1 14 GPIO_ACTIVE_HIGH>;
++		};
++	};
++};
++
++&nand {
++	status =3D "okay";
++
++	partition@0 {
++		label =3D "u-boot";
++		reg =3D <0x0000000 0x180000>;
++		read-only;
++	};
++
++	partition@180000 {
++		label =3D "u-boot-env";
++		reg =3D <0x180000 0x20000>;
++	};
++
++	partition@200000 {
++		label =3D "uImage";
++		reg =3D <0x0200000 0x600000>;
++	};
++
++	partition@800000 {
++		label =3D "minirootfs";
++		reg =3D <0x0800000 0x1000000>;
++	};
++
++	partition@1800000 {
++		label =3D "jffs2";
++		reg =3D <0x1800000 0x6800000>;
++	};
++};
++
++&mdio {
++	status =3D "okay";
++
++	ethphy0: ethernet-phy@0 { /* Marvell 88E1318 */
++		device_type =3D "ethernet-phy";
++		reg =3D <0>;
++	};
++};
++
++&eth0 {
++	status =3D "okay";
++
++	ethernet0-port@0 {
++		phy-handle =3D <&ethphy0>;
++	};
++};
+--=20
+1.8.4.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
