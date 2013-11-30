@@ -1,350 +1,175 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH v3] watchdog: GPIO-controlled watchdog
-Date: Sat, 30 Nov 2013 11:54:32 +0400
-Message-ID: <1385798072-3886-1-git-send-email-shc_work@mail.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [RFC/PATCH] NAND bus-width detection extreme makeover
+Date: Sat, 30 Nov 2013 00:35:37 -0800
+Message-ID: <20131130083537.GB29397@norris.computersforpeace.net>
+References: <1385732456-32696-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1385732456-32696-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Pekon Gupta <pekon@ti.com>, shc_work@mail.ru, Artem Bityutskiy <dedekind1@gmail.com>, David Woodhouse <dwmw2@infradead.org>, swarren@wwwdotorg.org, rob.herring@calxeda.com, mark.rutland@arm.com, Tony Lindgren <tony@atomide.com>, u.kleine-koenig@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a watchdog driver for devices controlled through GPIO,
-(Analog Devices ADM706, Maxim MAX823, National NE555 etc).
+Hi Ezequiel,
 
-Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- .../devicetree/bindings/watchdog/gpio-wdt.txt      |  23 ++
- drivers/watchdog/Kconfig                           |   8 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/gpio_wdt.c                        | 254 +++++++++++++++++++++
- 4 files changed, 286 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
- create mode 100644 drivers/watchdog/gpio_wdt.c
+On Fri, Nov 29, 2013 at 10:40:55AM -0300, Ezequiel Garcia wrote:
+> Here's my proposal, based in Pekon's latest work.
+> 
+> This patch removes the flash device bus-width configuration, prior to
+> the device detection. With this modification, a NAND driver is no longer
+> able to "force" the device width, and instead can only obtain the detected
+> bus-width after the call to nand_scan_ident().
+> 
+> Flash devices bus-width are specified either by reading an ONFI feature,
+> or through a flag in the in-kernel flash devices table. Therefore, it doesn't
+> make any sense to somehow "advise" the NAND core about this parameter.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-new file mode 100644
-index 0000000..37afec1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-@@ -0,0 +1,23 @@
-+* GPIO-controlled Watchdog
-+
-+Required Properties:
-+- compatible: Should contain "linux,wdt-gpio".
-+- gpios: From common gpio binding; gpio connection to WDT reset pin.
-+- hw_algo: The algorithm used by the driver. Should be one of the
-+  following values:
-+  - toggle: Either a high-to-low or a low-to-high transition clears
-+    the WDT counter. The watchdog timer is disabled when GPIO is
-+    left floating or connected to a three-state buffer.
-+  - level: Low or high level starts counting WDT timeout,
-+    the opposite level disables the WDT. Active level is determined
-+    by the GPIO flags.
-+- hw_margin_ms: Maximum time to reset watchdog circuit (milliseconds).
-+
-+Example:
-+	watchdog: watchdog {
-+		/* ADM706 */
-+		compatible = "linux,wdt-gpio";
-+		gpios = <&gpio3 9 GPIO_ACTIVE_LOW>;
-+		hw_algo = "toggle";
-+		hw_margin_ms = <1600>;
-+	};
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 5be6e91..968a882 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -87,6 +87,14 @@ config DA9055_WATCHDOG
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called da9055_wdt.
- 
-+config GPIO_WATCHDOG
-+	tristate "Watchdog device controlled through GPIO-line"
-+	depends on OF_GPIO
-+	select WATCHDOG_CORE
-+	help
-+	  If you say yes here you get support for watchdog device
-+	  controlled through GPIO-line.
-+
- config WM831X_WATCHDOG
- 	tristate "WM831x watchdog"
- 	depends on MFD_WM831X
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 91bd95a..dc17275 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -171,6 +171,7 @@ obj-$(CONFIG_XEN_WDT) += xen_wdt.o
- # Architecture Independent
- obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
- obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
-+obj-$(CONFIG_GPIO_WATCHDOG)	+= gpio_wdt.o
- obj-$(CONFIG_WM831X_WATCHDOG) += wm831x_wdt.o
- obj-$(CONFIG_WM8350_WATCHDOG) += wm8350_wdt.o
- obj-$(CONFIG_MAX63XX_WATCHDOG) += max63xx_wdt.o
-diff --git a/drivers/watchdog/gpio_wdt.c b/drivers/watchdog/gpio_wdt.c
-new file mode 100644
-index 0000000..1e02dd6
---- /dev/null
-+++ b/drivers/watchdog/gpio_wdt.c
-@@ -0,0 +1,254 @@
-+/*
-+ * Driver for watchdog device controlled through GPIO-line
-+ *
-+ * Author: 2013, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/watchdog.h>
-+
-+#define SOFT_TIMEOUT_MIN	1
-+#define SOFT_TIMEOUT_DEF	60
-+#define SOFT_TIMEOUT_MAX	0xffff
-+
-+enum {
-+	HW_ALGO_TOGGLE,
-+	HW_ALGO_LEVEL,
-+};
-+
-+struct gpio_wdt_priv {
-+	int			gpio;
-+	bool			active_low;
-+	bool			state;
-+	unsigned int		hw_algo;
-+	unsigned int		hw_margin;
-+	unsigned long		last_jiffies;
-+	struct notifier_block	notifier;
-+	struct timer_list	timer;
-+	struct watchdog_device	wdd;
-+};
-+
-+static void gpio_wdt_disable(struct gpio_wdt_priv *priv)
-+{
-+	gpio_set_value_cansleep(priv->gpio, !priv->active_low);
-+
-+	/* Put GPIO back to tristate */
-+	if (priv->hw_algo == HW_ALGO_TOGGLE)
-+		gpio_direction_input(priv->gpio);
-+}
-+
-+static int gpio_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-+
-+	priv->state = priv->active_low;
-+	gpio_direction_output(priv->gpio, priv->state);
-+	priv->last_jiffies = jiffies;
-+	mod_timer(&priv->timer, priv->last_jiffies + priv->hw_margin);
-+
-+	return 0;
-+}
-+
-+static int gpio_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-+
-+	mod_timer(&priv->timer, 0);
-+	gpio_wdt_disable(priv);
-+
-+	return 0;
-+}
-+
-+static int gpio_wdt_ping(struct watchdog_device *wdd)
-+{
-+	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-+
-+	priv->last_jiffies = jiffies;
-+
-+	return 0;
-+}
-+
-+static int gpio_wdt_set_timeout(struct watchdog_device *wdd, unsigned int t)
-+{
-+	wdd->timeout = t;
-+
-+	return gpio_wdt_ping(wdd);
-+}
-+
-+static void gpio_wdt_hwping(unsigned long data)
-+{
-+	struct watchdog_device *wdd = (struct watchdog_device *)data;
-+	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-+
-+	if (time_after(jiffies, priv->last_jiffies +
-+		       msecs_to_jiffies(wdd->timeout * 1000))) {
-+		dev_crit(wdd->dev, "Timer expired. System will reboot soon!\n");
-+		return;
-+	}
-+
-+	/* Restart timer */
-+	mod_timer(&priv->timer, jiffies + priv->hw_margin);
-+
-+	switch (priv->hw_algo) {
-+	case HW_ALGO_TOGGLE:
-+		/* Toggle output pin */
-+		priv->state = !priv->state;
-+		gpio_set_value_cansleep(priv->gpio, priv->state);
-+		break;
-+	case HW_ALGO_LEVEL:
-+		/* Pulse */
-+		gpio_set_value_cansleep(priv->gpio, !priv->active_low);
-+		udelay(1);
-+		gpio_set_value_cansleep(priv->gpio, priv->active_low);
-+		break;
-+	}
-+}
-+
-+static int gpio_wdt_notify_sys(struct notifier_block *nb, unsigned long code,
-+			       void *unused)
-+{
-+	struct gpio_wdt_priv *priv = container_of(nb, struct gpio_wdt_priv,
-+						  notifier);
-+
-+	mod_timer(&priv->timer, 0);
-+
-+	switch (code) {
-+	case SYS_HALT:
-+	case SYS_POWER_OFF:
-+		gpio_wdt_disable(priv);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static const struct watchdog_info gpio_wdt_ident = {
-+	.options	= WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING |
-+			  WDIOF_SETTIMEOUT,
-+	.identity	= "GPIO Watchdog",
-+};
-+
-+static const struct watchdog_ops gpio_wdt_ops = {
-+	.owner		= THIS_MODULE,
-+	.start		= gpio_wdt_start,
-+	.stop		= gpio_wdt_stop,
-+	.ping		= gpio_wdt_ping,
-+	.set_timeout	= gpio_wdt_set_timeout,
-+};
-+
-+static int gpio_wdt_probe(struct platform_device *pdev)
-+{
-+	struct gpio_wdt_priv *priv;
-+	enum of_gpio_flags flags;
-+	unsigned int hw_margin;
-+	unsigned long f = 0;
-+	const char *algo;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->gpio = of_get_gpio_flags(pdev->dev.of_node, 0, &flags);
-+	if (!gpio_is_valid(priv->gpio))
-+		return priv->gpio;
-+
-+	priv->active_low = flags & OF_GPIO_ACTIVE_LOW;
-+
-+	ret = of_property_read_string(pdev->dev.of_node, "hw_algo", &algo);
-+	if (ret)
-+		return ret;
-+	if (!strncmp(algo, "toggle", 6)) {
-+		priv->hw_algo = HW_ALGO_TOGGLE;
-+		f = GPIOF_IN;
-+	} else if (!strncmp(algo, "level", 5)) {
-+		priv->hw_algo = HW_ALGO_LEVEL;
-+		f = priv->active_low ? GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW;
-+	} else {
-+		return -EINVAL;
-+	}
-+
-+	ret = devm_gpio_request_one(&pdev->dev, priv->gpio, f,
-+				    dev_name(&pdev->dev));
-+	if (ret)
-+		return ret;
-+
-+	ret = of_property_read_u32(pdev->dev.of_node,
-+				   "hw_margin_ms", &hw_margin);
-+	if (ret)
-+		return ret;
-+	/* Disallow values lower than 2 and higher than 65535 ms */
-+	if ((hw_margin < 2) || (hw_margin > 65535))
-+		return -EINVAL;
-+
-+	/* Use safe value (1/2 of real timeout) */
-+	priv->hw_margin = msecs_to_jiffies(hw_margin / 2);
-+
-+	watchdog_set_drvdata(&priv->wdd, priv);
-+
-+	priv->wdd.info		= &gpio_wdt_ident;
-+	priv->wdd.ops		= &gpio_wdt_ops;
-+	priv->wdd.min_timeout	= SOFT_TIMEOUT_MIN;
-+	priv->wdd.max_timeout	= SOFT_TIMEOUT_MAX;
-+
-+	if (watchdog_init_timeout(&priv->wdd, 0, &pdev->dev) < 0)
-+		priv->wdd.timeout = SOFT_TIMEOUT_DEF;
-+
-+	setup_timer(&priv->timer, gpio_wdt_hwping, (unsigned long)&priv->wdd);
-+
-+	ret = watchdog_register_device(&priv->wdd);
-+	if (ret)
-+		return ret;
-+
-+	priv->notifier.notifier_call = gpio_wdt_notify_sys;
-+	ret = register_reboot_notifier(&priv->notifier);
-+	if (ret)
-+		watchdog_unregister_device(&priv->wdd);
-+
-+	return ret;
-+}
-+
-+static int gpio_wdt_remove(struct platform_device *pdev)
-+{
-+	struct gpio_wdt_priv *priv = platform_get_drvdata(pdev);
-+
-+	del_timer_sync(&priv->timer);
-+	unregister_reboot_notifier(&priv->notifier);
-+	watchdog_unregister_device(&priv->wdd);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id gpio_wdt_dt_ids[] = {
-+	{ .compatible = "linux,wdt-gpio", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, gpio_wdt_dt_ids);
-+
-+static struct platform_driver gpio_wdt_driver = {
-+	.driver	= {
-+		.name		= "gpio-wdt",
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= gpio_wdt_dt_ids,
-+	},
-+	.probe	= gpio_wdt_probe,
-+	.remove	= gpio_wdt_remove,
-+};
-+module_platform_driver(gpio_wdt_driver);
-+
-+MODULE_AUTHOR("Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>");
-+MODULE_DESCRIPTION("GPIO Watchdog");
-+MODULE_LICENSE("GPL");
--- 
-1.8.3.2
+Hmm, I think there are a few factors at play here. First of all, the
+hardware driver knows the best about the physical buswidth. It should
+know if there are 8 or 16 data lines connected to the device, so it
+could, for instance, know that it does not have enough data lines to
+support x16 buswidth. (You could possibly devise hardware that can
+support x16 but not x8, I suppose.) So this is one way in which the
+driver must "advise" the NAND core about the buswidth.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On the other hand, the hardware/driver doesn't know what buswidth the
+flash chip is. That's nand_base's job. So in that sense, we don't need
+to "advise" the NAND core.
+
+But there are certainly cases where the driver should advise, and if
+there is a mismatch, bail.
+
+> In addition, the ONFI specification requires to issue the detection commands
+> using only the lower 8-bits of the data bus. The ONFI specification says:
+> 
+>   "" The Read ID and Read Parameter Page commands only use the lower 8-bits
+>      of the data bus. The host shall not issue commands that use a word
+>      data width on x16 devices until the host determines the device supports
+>      a 16-bit data bus width in the parameter page. ""
+
+This does not really say that *all* NAND transactions must be performed
+on the lower 8 bits (a true x8 buswidth), but only that all ONFI
+transactions must be.
+
+> IIRC, the current way of setting the device width is to set NAND_BUSWIDTH_AUTO
+> in chip->options and then let the driver set some width-specific callbacks after
+> the NAND core has detected the width.
+> 
+> However, as noticed by Pekon Gupta, this means NAND_BUSWIDTH_AUTO should be
+> always turned on (and hence the option be removed).
+
+No, I think you can solve the x16 ONFI detection problem without
+requiring NAND_BUSWIDTH_AUTO. And in fact, NAND_BUSWIDTH_AUTO only helps
+you wil part of the problem: performing ONFI transactions during the
+initial detection, where you pretend like you're an x8 device.
+
+But what happens if a driver needs to use ONFI SET_FEATURES or
+GET_FEATURES after initial probe?
+
+So I think the problem may need to be divided into 2 parts:
+
+ 1) How do we best handle ONFI transactions, so that they are always
+    performed on the lower 8 bits of the bus **regardless of actual
+    buswidth**? (I think Uwe's patch + my response in [1] might solve
+    this.)
+
+ 2) Can/should we relax the old restrictions where drivers have to
+    configure the buswidth correctly before running nand_scan_ident(),
+    in the spirit of NAND_BUSWIDTH_AUTO? And why do we need this
+    flexibility?
+
+I think problem (1) is solvable independently of (2). So we don't
+inherently *need* BUSWIDTH_AUTO just to support ONFI correctly; we can
+just enforce that we ignore the upper 8 bits.
+
+Now, what do we have NAND_BUSWIDTH_AUTO for, anyway? It seems like its
+best use case is for a driver that (a) knows it might encounter either
+x8 or x16 flash chips and (b) is equipped to handle this change at
+runtime (e.g., it only needs to re-assign some call-backs after
+nand_scan_ident()). This means, for one, that it should have at least
+all 16 data lines connected.
+
+However, not all hardware/drivers fit (a) and (b). For such systems, we
+probably want to just indicate the expected buswidth and error out
+automatically if we detect this is incorrect.
+
+So I think we still want to support the following three configurations:
+
+  !NAND_BUSWIDTH_16 && !NAND_BUSWIDTH_AUTO: device must use 8-bit
+  buswidth
+
+  NAND_BUSWIDTH_16 && !NAND_BUSWIDTH_AUTO: device must use 16-bit
+  buswidth
+
+  NAND_BUSWIDTH_AUTO: can support either buswidth (auto-detectable)
+
+But I think these selections should only be restricted by hardware
+limitations (lack of I/O pin connections, inflexible controller) and not
+enforced because of software limitations in handling ONFI. This brings
+be back to problem (1), where I think we need resolve it along the lines
+of Uwe's + my patch (see [1]), not by forcing NAND_BUSWIDTH_AUTO on all
+drivers.
+
+> That's exactly what this patch is doing.
+
+...
+
+> Note that some driver's might need fixes to work in both 8-bit and 16-bit
+> modes, and such work should be done by respective maintainers.
+
+I think this is one problem of the NAND_BUSWIDTH_AUTO-by-default
+approach; it is better to avoid unnecessary work on old drivers. Many
+of these drivers don't re-configure their x8 vs. x16 callback methods
+automatically. So I think NAND_BUSWIDTH_AUTO should still be opt-in.
+
+> Of course, the memory controller (such as GPMC in the OMAP case) still needs
+> proper width a-prior configuration, but that's completely unrelated to the
+> flash device bus width.
+
+I would disagree.
+
+> If some driver wants (and is able to) re-configure
+> its memory controller after the device has been properly detected, it's free
+> to do so.
+
+The key point here is "if it is able to". Some hardware is unable to be
+reconfigured, and so nand_base should take that into account. Such
+inflexible systems are not good candidates for NAND_BUSWIDTH_AUTO.
+
+> Needless to say, if this work is acceptable we'll be able to finally remove/deprecate
+> any traces of the NAND bus width setting, include the devicetree nand-bus-width parameter.
+
+I think we need to leave the infrastructure in place to enforce a
+particular buswidth, since some systems may need it. How would a driver
+ever signify that it is only wired for x8 buswidth? We would have to
+wait until its BBT scan fails on an x16 device.
+
+So I think individual drivers should still opt in to using
+NAND_BUSWIDTH_AUTO.
+
+> Alexander: Could you try this patch and see if it's suitable for your needs?
+> I think you should be able to use it to set the bus-width, without any need for
+> a new DT property. You will have to split your nand_scan() call in an initial
+> call to nand_scan_ident() and a final call to nand_scan_tail().
+
+FWIW, gpio.c does not need to split nand_scan(), as it doesn't need any
+custom call-backs. nand_base should do all the work.
+
+> Typically, a driver would work like this:
+> 
+> 	/* scan NAND device connected to chip controller */
+> 	if (nand_scan_ident(mtd, 1, NULL))
+> 		return -ENODEV;
+> 
+> 	if (nand_chip->options & NAND_BUSWIDTH_16) {
+> 		nand_chip->read_buf   = xxx_read_buf16;
+> 		nand_chip->write_buf  = xxx_write_buf16;
+> 	}
+...
+
+Brian
+
+[1] http://lists.infradead.org/pipermail/linux-mtd/2013-November/050507.html
