@@ -1,40 +1,118 @@
-From: Jarkko Nikula <jarkko.nikula@bitmer.com>
-Subject: Re: [RFC 4/4] ASoC: RX-51: Add DT support to sound driver
-Date: Sat, 30 Nov 2013 15:28:02 +0200
-Message-ID: <5299E7E2.8040206@bitmer.com>
-References: <1382909086-10493-1-git-send-email-sre@debian.org> <1382909086-10493-5-git-send-email-sre@debian.org> <20131106143248.GD15551@amd.pavel.ucw.cz>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH 0/3] DT support for ST micro accelerometers and
+ gyroscopes
+Date: Sat, 30 Nov 2013 15:13:15 +0100
+Message-ID: <20131130141315.GC3002@lukather>
+References: <1384876234-1211-1-git-send-email-maxime.ripard@free-electrons.com>
+ <528DF164.8060009@st.com>
+ <20131121131402.GF1029@lukather>
+ <52926901.9080004@kernel.org>
+ <20131125094044.GE3176@lukather>
+ <5299D3BA.8080700@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131106143248.GD15551@amd.pavel.ucw.cz>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@debian.org>, Sebastian Reichel <sre@ring0.de>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5G06lTa6Jq83wMTw"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5299D3BA.8080700-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Lilly <brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org>, Brent-Crosby <brent-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org>, Jim Wall <jimwall@q.com>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
-On 11/06/2013 04:32 PM, Pavel Machek wrote:
-> Hi!
-> 
->> This patch adds device tree support to the Nokia N900 audio driver.
-> 
-> Note, N900 audio driver.
-> 
->> +- compatible: "nokia,rx51-audio"
-> 
-> Still, it is rx51-audio. If it is feasible, could we move away from
-> rx51 naming and into n900 naming that is familiar to mere humans?
-> 
-> We can rename the sources later, but I guess we should get dts binding
-> right first time...
+--5G06lTa6Jq83wMTw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry the long response. I definitely would like n900 naming more in dts.
+On Sat, Nov 30, 2013 at 12:02:02PM +0000, Jonathan Cameron wrote:
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA1
+>=20
+> On 11/25/13 09:40, Maxime Ripard wrote:
+> > Hi Jonathan,
+> >=20
+> > On Sun, Nov 24, 2013 at 09:00:49PM +0000, Jonathan Cameron wrote:
+> >> -----BEGIN PGP SIGNED MESSAGE----- Hash: SHA1
+> >>=20
+> >> On 11/21/13 13:14, Maxime Ripard wrote:
+> >>> Hi Denis,
+> >>>=20
+> >>> On Thu, Nov 21, 2013 at 12:41:24PM +0100, Denis CIOCCA wrote:
+> >>>> only one point: it's possible to use the same names with DT? (using =
+_ instead of -)
+> >>>=20
+> >>> Yes, it is, but only for i2c as far as I'm aware, and usually the DT =
+compatibles are with - as a separator (I
+> >>> looked into the ePAPR, but couldn't get any explanations or requireme=
+nts on this, even though it's used in all
+> >>> of their examples)
+> >>=20
+> >> In other discussions, where the defacto i2c device tree bindings have =
+been followed, the conclusion has been that
+> >> to change to a - from _ would result in userspace ABI changes, so whil=
+st no one wants _ the discussion has
+> >> concluded we can't really avoid it.
+> >=20
+> > What kind of userspace ABI changes are we talking about?
+> IIRC:
+>=20
+> i2c has a generic binding that matches to the name bit of the i2c_device_=
+id
+> array.  That is then exported in sysfs.  There are quite a lot of instanc=
+es
+> of underscores out there in these names.  Thus unforutnately they can't
+> be changed without possibly breaking userspace.  Typically those same nam=
+es
+> are also output by IIO though obviously we could keep that the same whilst
+> changing the dt binding.
+>=20
+> Also the i2c binding allows binding after dropping the vendor prefix which
+> is even more 'interesting'. See of_modialias_node in drivers/of/base.c
+>=20
+> I'd therefore argue in favour of just leaving the underscores in existing
+> drivers as a nasty bit of legacy and doing our best to not introduce any
+> new ones!
 
-History is that the basic board file for N900 went to mainline before
-sales started and used the hw name in sources and Kconfig. Audio machine
-driver then followed the same rx51 hw naming scheme with rest of sources.
+Except I'm not removing anything, just adding new stuff. Therefore,
+I'm not breaking anything. The existing users of the underscore stuff
+in DT will still work, (if some ever exist, last time I checked, it
+wasn't the case) just like they used to.
 
--- 
-Jarkko
+If we have the occasion of having the thing done like it's done
+anywhere else, at no cost, I don't get what the issue is.
+
+Especially since these devices are also usable on other buses than
+i2c, which make it quite inconsistent from one bus to another.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--5G06lTa6Jq83wMTw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSmfJ7AAoJEBx+YmzsjxAgEdsQAJkMVSCa61l0LlxW8llYA/g/
+Moog9lBzwT1UmNDcau8H8+fzRkisXR2rRindwZ1d3qKjQViDm4NhIriz1rgzVTNF
+VC9JioXZNOkGnhnL1r4TWFYTHXDY6TblBiw1yGnUWoPn60eeZV/0WjQ5/V+67q4a
+ptSlM2LZfbBKdJkzsQS8cmux/wW3QcajYoqMRNQCDeK1T9qUYxmsA7JNNM2uJae7
+YTYfg6sjdLjwbLJfSgPyQUjieeAOydtGV8boa+SBFExRMP2bYd2/7WpOr6N2QXZC
+n7eRfgYTcf8IbMbVdlJT6SFRFEolJ6VRip7l4Cg4xEljCIMs/iHOk9lyDVT5HuSj
+XkC+Ls0Dt86U+SnXmEQEMHsuagTtYt185O3FHWX6Fjm2a1pDCVJukZeXv3laUUv7
+DwVuYOoQcKIgRMVJyH1n+38pGHjD/9BoeqJAPW3vcnKGLs/ETZU6rqJoiQ1hzaXF
+1jj0WfdJYBVvXFhrgrzsWQm2p7il9wkUxr9vmUtSLrtQ7xuOmqGtxxJH/ybq0mXo
+l8C515AhSUO2U5n+piSvqRKyAs/oZ7lp5zIlbYh4AtifzOojjXEvT/TmLrJ6LF8H
+Y6hIO1cLafmliWKe2vrCw0s7IvI+sWuZHmzYFtYjyEgt37qZptrom+GDfrqG7Yk4
+qXTf2A7IMd6Eoeg8cCvk
+=85aa
+-----END PGP SIGNATURE-----
+
+--5G06lTa6Jq83wMTw--
