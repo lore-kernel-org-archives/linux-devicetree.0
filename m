@@ -1,118 +1,125 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] DT support for ST micro accelerometers and
- gyroscopes
-Date: Sat, 30 Nov 2013 15:13:15 +0100
-Message-ID: <20131130141315.GC3002@lukather>
-References: <1384876234-1211-1-git-send-email-maxime.ripard@free-electrons.com>
- <528DF164.8060009@st.com>
- <20131121131402.GF1029@lukather>
- <52926901.9080004@kernel.org>
- <20131125094044.GE3176@lukather>
- <5299D3BA.8080700@kernel.org>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [RFC/PATCH] NAND bus-width detection extreme makeover
+Date: Sat, 30 Nov 2013 14:19:40 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA50432@DBDE04.ent.ti.com>
+References: <1385732456-32696-1-git-send-email-ezequiel.garcia@free-electrons.com>,
+ <20131130083537.GB29397@norris.computersforpeace.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5G06lTa6Jq83wMTw"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5299D3BA.8080700-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Lilly <brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org>, Brent-Crosby <brent-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org>, Jim Wall <jimwall@q.com>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20131130083537.GB29397@norris.computersforpeace.net>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shc_work@mail.ru" <shc_work@mail.ru>, Artem Bityutskiy <dedekind1@gmail.com>, Tony Lindgren <tony@atomide.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Brian, Ezequiel,
 
---5G06lTa6Jq83wMTw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry Im bit confused on below, so few queries ..
 
-On Sat, Nov 30, 2013 at 12:02:02PM +0000, Jonathan Cameron wrote:
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA1
->=20
-> On 11/25/13 09:40, Maxime Ripard wrote:
-> > Hi Jonathan,
-> >=20
-> > On Sun, Nov 24, 2013 at 09:00:49PM +0000, Jonathan Cameron wrote:
-> >> -----BEGIN PGP SIGNED MESSAGE----- Hash: SHA1
-> >>=20
-> >> On 11/21/13 13:14, Maxime Ripard wrote:
-> >>> Hi Denis,
-> >>>=20
-> >>> On Thu, Nov 21, 2013 at 12:41:24PM +0100, Denis CIOCCA wrote:
-> >>>> only one point: it's possible to use the same names with DT? (using =
-_ instead of -)
-> >>>=20
-> >>> Yes, it is, but only for i2c as far as I'm aware, and usually the DT =
-compatibles are with - as a separator (I
-> >>> looked into the ePAPR, but couldn't get any explanations or requireme=
-nts on this, even though it's used in all
-> >>> of their examples)
-> >>=20
-> >> In other discussions, where the defacto i2c device tree bindings have =
-been followed, the conclusion has been that
-> >> to change to a - from _ would result in userspace ABI changes, so whil=
-st no one wants _ the discussion has
-> >> concluded we can't really avoid it.
-> >=20
-> > What kind of userspace ABI changes are we talking about?
-> IIRC:
->=20
-> i2c has a generic binding that matches to the name bit of the i2c_device_=
-id
-> array.  That is then exported in sysfs.  There are quite a lot of instanc=
-es
-> of underscores out there in these names.  Thus unforutnately they can't
-> be changed without possibly breaking userspace.  Typically those same nam=
-es
-> are also output by IIO though obviously we could keep that the same whilst
-> changing the dt binding.
->=20
-> Also the i2c binding allows binding after dropping the vendor prefix which
-> is even more 'interesting'. See of_modialias_node in drivers/of/base.c
->=20
-> I'd therefore argue in favour of just leaving the underscores in existing
-> drivers as a nasty bit of legacy and doing our best to not introduce any
-> new ones!
+>From: Brian Norris [computersforpeace@gmail.com]
+>So I think the problem may need to be divided into 2 parts:
+>
+>1) How do we best handle ONFI transactions, so that they are always
+>  performed on the lower 8 bits of the bus **regardless of actual
+>   buswidth**? (I think Uwe's patch + my response in [1] might solve
+>   this.)
+>
+> 2) Can/should we relax the old restrictions where drivers have to
+>    configure the buswidth correctly before running nand_scan_ident(),
+>    in the spirit of NAND_BUSWIDTH_AUTO? And why do we need this
+>    flexibility?
+>
+>I think problem (1) is solvable independently of (2). So we don't
+>inherently *need* BUSWIDTH_AUTO just to support ONFI correctly; we can
+>just enforce that we ignore the upper 8 bits.
+>
+>Now, what do we have NAND_BUSWIDTH_AUTO for, anyway? It seems like its
+>best use case is for a driver that (a) knows it might encounter either
+>x8 or x16 flash chips and (b) is equipped to handle this change at
+>runtime (e.g., it only needs to re-assign some call-backs after
+>nand_scan_ident()). This means, for one, that it should have at least
+>all 16 data lines connected.
+>
+>However, not all hardware/drivers fit (a) and (b). For such systems, we
+>probably want to just indicate the expected buswidth and error out
+>automatically if we detect this is incorrect.
+>
+Sorry I'm bit confused here.. Where do you want to error out ?
+(a) In nand_base.c (generic driver) OR
+(b) you want the controller driver (callee of nand_scan_ident) to handle
+the bus-width mismatch on its own.
 
-Except I'm not removing anything, just adding new stuff. Therefore,
-I'm not breaking anything. The existing users of the underscore stuff
-in DT will still work, (if some ever exist, last time I checked, it
-wasn't the case) just like they used to.
+I prefer (b), which is the basis of my first proposal patch.
+In my opinion following sequence should be followed by each controller driver
+during probe.
+Step-1: assign basic callbacks and parameters which are required for
+     basic NAND device I/O (like chip->ctrl, chip->delay, etc)
+Step-2: call nand_scan_ident()
+      nand_scan_ident() would populate detect NAND device parameter by
+     - reading ONFI parameters in x8 bit mode (ignoring pre-configurations)
+     - look-up from nand_flash_id[]
+      And populate chip->options, mtd->writesize, etc...
+Step-3: On return from nand_scan_ident, each controller driver should
+     check whether (chip_options & NAND_BUSWIDTH_16) as set by 
+     nand_scan_ident() matches its controller & board configurations or
+     not. Based on which it can take corrective action or error out.
 
-If we have the occasion of having the thing done like it's done
-anywhere else, at no cost, I don't get what the issue is.
+If we follow above sequence then 
+(1) NAND_BUSWIDTH_AUTO becomes implicit. And controller driver
+   does not need to set any such flags before calling nand_scan_ident().
+(2) Currently, we are error-out inside nand_base.c when 
+   (busw != chip->options & BUS_WIDTH_16).
+   Now this would be handled by individual controller drivers, as they
+   know their hardware best.
+  (If you remember, this was the reason of omap2,c calling
+   nand_scan_ident() twice. If instead of failing the first call to 
+   nand_scan_ident  would have just returned with *corrected* bus-width,
+   then omap2,c could have handled that situation by re-configuring
+   its controller).
 
-Especially since these devices are also usable on other buses than
-i2c, which make it quite inconsistent from one bus to another.
 
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+>So I think we still want to support the following three configurations:
+>
+>  !NAND_BUSWIDTH_16 && !NAND_BUSWIDTH_AUTO: device must use 8-bit
+>  buswidth
+>
+>  NAND_BUSWIDTH_16 && !NAND_BUSWIDTH_AUTO: device must use 16-bit
+>  buswidth
+>
+>  NAND_BUSWIDTH_AUTO: can support either buswidth (auto-detectable)
+>
+>But I think these selections should only be restricted by hardware
+>limitations (lack of I/O pin connections, inflexible controller) and not
+>enforced because of software limitations in handling ONFI. This brings
+>be back to problem (1), where I think we need resolve it along the lines
+>of Uwe's + my patch (see [1]), not by forcing NAND_BUSWIDTH_AUTO on all
+>drivers.
+>
+> That's exactly what this patch is doing.
 
---5G06lTa6Jq83wMTw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Sorry, I'll re-review Uwe's + ur patch.
+But do you agree on following:
+(1) somehow we need to do away with NAND_BUSWIDTH_AUTO *macro*.
+And instead make its functionality, built-in the nand_base.c driver ?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+(2) And nand-bus-width DT binding will still be required for defining controller
+and board level description ... 
+Is my understanding correct ?
 
-iQIcBAEBAgAGBQJSmfJ7AAoJEBx+YmzsjxAgEdsQAJkMVSCa61l0LlxW8llYA/g/
-Moog9lBzwT1UmNDcau8H8+fzRkisXR2rRindwZ1d3qKjQViDm4NhIriz1rgzVTNF
-VC9JioXZNOkGnhnL1r4TWFYTHXDY6TblBiw1yGnUWoPn60eeZV/0WjQ5/V+67q4a
-ptSlM2LZfbBKdJkzsQS8cmux/wW3QcajYoqMRNQCDeK1T9qUYxmsA7JNNM2uJae7
-YTYfg6sjdLjwbLJfSgPyQUjieeAOydtGV8boa+SBFExRMP2bYd2/7WpOr6N2QXZC
-n7eRfgYTcf8IbMbVdlJT6SFRFEolJ6VRip7l4Cg4xEljCIMs/iHOk9lyDVT5HuSj
-XkC+Ls0Dt86U+SnXmEQEMHsuagTtYt185O3FHWX6Fjm2a1pDCVJukZeXv3laUUv7
-DwVuYOoQcKIgRMVJyH1n+38pGHjD/9BoeqJAPW3vcnKGLs/ETZU6rqJoiQ1hzaXF
-1jj0WfdJYBVvXFhrgrzsWQm2p7il9wkUxr9vmUtSLrtQ7xuOmqGtxxJH/ybq0mXo
-l8C515AhSUO2U5n+piSvqRKyAs/oZ7lp5zIlbYh4AtifzOojjXEvT/TmLrJ6LF8H
-Y6hIO1cLafmliWKe2vrCw0s7IvI+sWuZHmzYFtYjyEgt37qZptrom+GDfrqG7Yk4
-qXTf2A7IMd6Eoeg8cCvk
-=85aa
------END PGP SIGNATURE-----
 
---5G06lTa6Jq83wMTw--
+with regards, pekon
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
