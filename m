@@ -1,134 +1,154 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [RFC/PATCH v2] mtd: nand: Fix ONFI detection of 16-bit width NAND devices
-Date: Sat, 30 Nov 2013 14:17:39 -0300
-Message-ID: <1385831859-19170-2-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1385831859-19170-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1385831859-19170-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Brian Norris <computersforpeace@gmail.com>, Pekon Gupta <pekon@ti.com>, shc_work@mail.ru, u.kleine-koenig@pengutronix.de, Artem Bityutskiy <dedekind1@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] mtd: nand: gpio: Add DT property to automatically
+ determine bus width
+Date: Sat, 30 Nov 2013 10:35:37 -0800
+Message-ID: <20131130183537.GF29397@norris.computersforpeace.net>
+References: <1384343884-29622-1-git-send-email-shc_work@mail.ru>
+ <20131127012158.GR9468@ld-irv-0074.broadcom.com>
+ <20131127012338.GS9468@ld-irv-0074.broadcom.com>
+ <20131129122551.GC2815@localhost>
+ <20131130091556.GD29397@norris.computersforpeace.net>
+ <20131130111721.GA2330@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131130111721.GA2330@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch is alternative implementation for following commit which introduced
-NAND_BUSWIDTH_AUTO for detection of bus-width during device probe
-   commit 64b37b2a63eb2f80b65c7185f0013f8ffc637ae3
-   Author:     Matthieu CASTET <matthieu.castet@parrot.com>
-   AuthorDate: 2012-11-06
+On Sat, Nov 30, 2013 at 08:17:22AM -0300, Ezequiel Garcia wrote:
+> Brian,
+> 
+> On Sat, Nov 30, 2013 at 01:15:56AM -0800, Brian Norris wrote:
+> > 
+> > > Can anyone help me understand if there's *any* valid use case where we
+> > > want to specify a-priori the bus width, considering it's completely
+> > > discoverable at run-time?
+> > 
+> > I think the primary use case should be to reflect a limitation in the
+> > hardware (besides just the flash chip). It can mean that the controller
+> > itself only supports one bus width, or that the board is only wired up
+> > for x8, for instance.
+> > 
+> 
+> What do you mean by "reflect a limitation" of the hardware?
 
-As NAND device is identified only during nand_scan_ident(), so this patch
-assumes that NAND driver may un-initialized or partially congigured while
-calling nand_scan_ident(). Hence, this patch does following:
+Read the following sentence.
 
- 1. Temporarily configures 'bus-width=x8' mode before reading ONFI parameters,
-    as required by ONFI specification [1].
+Limitations: the hardware could be hooked up only for 8 data lines; or
+the controller could support only one particular bus width. Either of
+these can only be reflected in device tree.
 
- 2. Reconfigures the driver with correct bus-width determined by either reading
-    ONFI param, or the nand_flash_id[] table.
+> Maybe I'm not really following you, but it sounds as you're mixing up
+> the NAND device buswidth and the memory controller buswidth. At least
+> I consider them as two different parameters for two different pieces
+> of hardware.
 
-This patch removes any dependency on either 'DT binding' or 'platform data' to
-specify the NAND device bus-width.
+Yes, maybe I'm combining two properties, but we only have one way to
+express this for now. This should be resolved.
 
-[*] Reference: ONFI spec version 3.1 (section 3.5.3. Target Initialization)
-    "The Read ID and Read Parameter Page commands only use the lower 8-bits
-     of the data bus. The host shall not issue commands that use a word
-     data width on x16 devices until the host determines the device supports
-     a 16-bit data bus width in the parameter page."
+> Consider OMAP, just as an example. We currently have two DT properties:
+> 
+> 1. nand-bus-width: not related to OMAP but kernel wide. It's supposed
+>    to specify the devices buswidth.
+> 
+> 2. gpmc,device-width: It specifies how the controller should be
+>    configured (it doesn't really specify hardware, but configuration,
+>    sadly).
+> 
+> I now realise maybe this piece of DT binding is not a good example of DT.
+> 
+> Anyway, once again: Why would we need to set "nand-bus-width" to specify
+> the flash device width given we can discover that as soon as the NAND
+> is detected?
 
-Signed-off-by: Pekon Gupta <pekon@ti.com>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
----
- drivers/mtd/nand/nand_base.c | 43 +++++++++++++------------------------------
- 1 file changed, 13 insertions(+), 30 deletions(-)
+You've asked two different questions.
 
-diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
-index bd39f7b..3ff9944 100644
---- a/drivers/mtd/nand/nand_base.c
-+++ b/drivers/mtd/nand/nand_base.c
-@@ -2942,15 +2942,6 @@ static int nand_flash_detect_onfi(struct mtd_info *mtd, struct nand_chip *chip,
- 		chip->read_byte(mtd) != 'F' || chip->read_byte(mtd) != 'I')
- 		return 0;
- 
--	/*
--	 * ONFI must be probed in 8-bit mode or with NAND_BUSWIDTH_AUTO, not
--	 * with NAND_BUSWIDTH_16
--	 */
--	if (chip->options & NAND_BUSWIDTH_16) {
--		pr_err("ONFI cannot be probed in 16-bit mode; aborting\n");
--		return 0;
--	}
--
- 	chip->cmdfunc(mtd, NAND_CMD_PARAM, 0, -1);
- 	for (i = 0; i < 3; i++) {
- 		chip->read_buf(mtd, (uint8_t *)p, sizeof(*p));
-@@ -3335,13 +3326,21 @@ static bool find_full_id_nand(struct mtd_info *mtd, struct nand_chip *chip,
-  */
- static struct nand_flash_dev *nand_get_flash_type(struct mtd_info *mtd,
- 						  struct nand_chip *chip,
--						  int busw,
- 						  int *maf_id, int *dev_id,
- 						  struct nand_flash_dev *type)
- {
- 	int i, maf_idx;
-+	int busw = 0;
- 	u8 id_data[8];
- 
-+	/*
-+	 * The device detection is done in 8-bit mode. The real bus width
-+	 * will be autodetected (either ONFI or flash-based), the
-+	 * defaults re-configured and the chip->options updated.
-+	 */
-+	nand_set_defaults(chip, 0);
-+	chip->options &= ~NAND_BUSWIDTH_16;
-+
- 	/* Select the device */
- 	chip->select_chip(mtd, 0);
- 
-@@ -3431,22 +3430,10 @@ ident_done:
- 			break;
- 	}
- 
--	if (chip->options & NAND_BUSWIDTH_AUTO) {
--		WARN_ON(chip->options & NAND_BUSWIDTH_16);
-+	/* Configure driver using detected bus-width */
-+	if (busw) {
- 		chip->options |= busw;
- 		nand_set_defaults(chip, busw);
--	} else if (busw != (chip->options & NAND_BUSWIDTH_16)) {
--		/*
--		 * Check, if buswidth is correct. Hardware drivers should set
--		 * chip correct!
--		 */
--		pr_info("NAND device: Manufacturer ID:"
--			" 0x%02x, Chip ID: 0x%02x (%s %s)\n", *maf_id,
--			*dev_id, nand_manuf_ids[maf_idx].name, mtd->name);
--		pr_warn("NAND bus width %d instead %d bit\n",
--			   (chip->options & NAND_BUSWIDTH_16) ? 16 : 8,
--			   busw ? 16 : 8);
--		return ERR_PTR(-EINVAL);
- 	}
- 
- 	nand_decode_bbm_options(mtd, chip, id_data);
-@@ -3497,17 +3484,13 @@ ident_done:
- int nand_scan_ident(struct mtd_info *mtd, int maxchips,
- 		    struct nand_flash_dev *table)
- {
--	int i, busw, nand_maf_id, nand_dev_id;
-+	int i, nand_maf_id, nand_dev_id;
- 	struct nand_chip *chip = mtd->priv;
- 	struct nand_flash_dev *type;
- 
--	/* Get buswidth to select the correct functions */
--	busw = chip->options & NAND_BUSWIDTH_16;
--	/* Set the default functions */
--	nand_set_defaults(chip, busw);
- 
- 	/* Read the flash type */
--	type = nand_get_flash_type(mtd, chip, busw,
-+	type = nand_get_flash_type(mtd, chip,
- 				&nand_maf_id, &nand_dev_id, table);
- 
- 	if (IS_ERR(type)) {
--- 
-1.8.1.5
+Question 1:
+  Can anyone help me understand if there's *any* valid use case where we
+  want to specify a-priori the bus width, considering it's completely
+  discoverable at run-time?
 
+Question 2:
+  Why would we need to set "nand-bus-width" to specify the flash device
+  width given we can discover that as soon as the NAND is detected?
+
+The first question is about the NAND core in general, where I strongly
+believe that a NAND driver has the right to specify "a-priori" what its
+supported bus width(s) is/are.
+
+The second question is specifically about the nand-bus-width DT
+property. I think the property is somewhat broken, since it describes
+the flash chip and not exactly the board wiring or controller
+capabilities.
+
+So to keep this thread focused on Alexander's patch:
+
++- gpio-control-nand,bank-width-auto : Device bus width is determined
++  automatically by CFI/ONFI information from chip if "bank-width"
++  parameter is omitted (Boolean).
+
+This description fits squarely into describing the flash chip (not the
+board wiring or controller limitations), and so it seems superfluous (in
+agreement with Ezequiel here, right?). But we have this property already
+for GPIO:
+
+- bank-width : Width (in bytes) of the device.  If not present, the width
+  defaults to 1 byte.
+
+This seems to describe the flash chip as well, and paints us into a
+corner where we can't determine if it was used because of
+board/controller limitations or because of the flash chip. We can get
+out of this through the use of an additional property of some kind.
+
+I think to describe the controller/board properly, we probably need
+something like this for some drivers:
+
+  <manufacturer>,supported-bus-widths = <LIST>;
+
+Where <LIST> can be one or more of 8 or 16, and it reflects any hardware
+limitations outside of the flash chip (e.g., # of data lines; controller
+limitations). And if <manufacturer>,supported-bus-widths is missing,
+then we default to say that the hardware *only* supports the bus width
+found in "nand-bus-width"/"bank-width"/similar. So we have this:
+
+[I]
+  <manufacturer>,supported-bus-widths = <8>, <16>;
+  nand-bus-width = <don't care>;
+
+  ===> This means the NAND driver could allow auto-detect of the flash
+       buswidth. The "nand-bus-width" (or "bank-width") can actually be
+       "deprecated" here.
+
+[II]
+  <manufacturer>,supported-bus-widths = <X>; // X = 8 or 16
+  nand-bus-width = <Y>; // Y = 8 or 16 or missing
+
+  ===> This means the NAND driver should only configure bus width to X.
+       If Y is missing, we're OK. If X != Y, then the device tree is
+       malformed.
+
+[III]
+  <manufacturer>,supported-bus-widths is missing;
+  nand-bus-width = <Y>; // Y = 8 or 16 or missing
+
+  ===> This means the NAND driver should only configure bus width to Y.
+
+This covers the most general DT description, I think. But in the GPIO
+case, the "controller" is so dead simple that we can probably represent
+the "supported-bus-widths" simply through the # of connected data lines:
+
+  gpio,data-lines = <X>;
+
+where X = 8 or 16. If X=16, that means it can support either x8 or x16
+(and hence, auto-detection in the NAND core), but if X=8, we only
+support x8 and no autodetection.
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
