@@ -1,119 +1,40 @@
-From: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: imx27-apf27dev: Add pinctrl for cspi chip-select, sdhci2 card-detect, gpio-leds and gpio-keys
-Date: Sat, 30 Nov 2013 15:36:10 +0100
-Message-ID: <1385822170-98486-3-git-send-email-gwenhael.goavec-merou@armadeus.com>
-References: <1385822170-98486-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
- <1385822170-98486-2-git-send-email-gwenhael.goavec-merou@armadeus.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385822170-98486-2-git-send-email-gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCHv4 0/2] twl4030-keypad DT binding
+Date: Sat, 30 Nov 2013 17:53:34 +0100
+Message-ID: <1385830416-12900-1-git-send-email-sre@debian.org>
+References: <1383948866-32672-1-git-send-email-sre@debian.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1383948866-32672-1-git-send-email-sre@debian.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/imx27-apf27dev.dts | 34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+Hi,
 
-diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
-index 6069331..c8d3cb4 100644
---- a/arch/arm/boot/dts/imx27-apf27dev.dts
-+++ b/arch/arm/boot/dts/imx27-apf27dev.dts
-@@ -38,6 +38,8 @@
- 
- 	gpio-keys {
- 		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_keys>;
- 
- 		user-key {
- 			label = "user";
-@@ -48,6 +50,8 @@
- 
- 	leds {
- 		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
- 
- 		user {
- 			label = "Heartbeat";
-@@ -61,7 +65,7 @@
- 	fsl,spi-num-chipselects = <1>;
- 	cs-gpios = <&gpio4 28 1>;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_cspi1>;
-+	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
- 	status = "okay";
- };
- 
-@@ -70,7 +74,7 @@
- 	cs-gpios = <&gpio4 21 1>, <&gpio4 27 1>,
- 			<&gpio2 17 1>;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_cspi2>;
-+	pinctrl-0 = <&pinctrl_cspi2 &pinctrl_cspi2_cs>;
- 	status = "okay";
- };
- 
-@@ -106,10 +110,22 @@
- 			fsl,pins = <MX27_CSPI1_PINGRP1>;
- 		};
- 
-+		pinctrl_cspi1_cs: cspi1csgrp {
-+			fsl,pins = <MX27_PAD_CSPI1_SS0__GPIO4_28 0x0>;
-+		};
-+
- 		pinctrl_cspi2: cspi2grp {
- 			fsl,pins = <MX27_CSPI2_PINGRP1>;
- 		};
- 
-+		pinctrl_cspi2_cs: cspi2csgrp {
-+			fsl,pins = <
-+				MX27_PAD_CSI_D5__GPIO2_17 0x0
-+				MX27_PAD_CSPI2_SS0__GPIO4_21 0x0
-+				MX27_PAD_CSPI1_SS1__GPIO4_27 0x0
-+			>;
-+		};
-+
- 		pinctrl_imxfb1: imxfbgrp {
- 			fsl,pins = <MX27_FB_PINGRP1>;
- 		};
-@@ -126,9 +142,21 @@
- 			fsl,pins = <MX27_SDHC2_PINGRP1>;
- 		};
- 
-+		pinctrl_sdhc2_cd: sdhc2cdgrp {
-+			fsl,pins = <MX27_PAD_TOUT__GPIO3_14 0x0>;
-+		};
-+
- 		pinctrl_pwm0: pwm0grp {
- 			fsl,pins = <MX27_PWM0_PINGRP1>;
- 		};
-+
-+		pinctrl_gpio_leds: gpioledsgrp {
-+			fsl,pins = <MX27_PAD_PC_VS1__GPIO6_14 0x0>;
-+		};
-+
-+		pinctrl_gpio_keys: gpiokeysgrp {
-+			fsl,pins = <MX27_PAD_PC_VS2__GPIO6_13 0x0>;
-+		};
- 	};
- };
- 
-@@ -136,7 +164,7 @@
- 	bus-width = <4>;
- 	cd-gpios = <&gpio3 14 0>;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_sdhc2>;
-+	pinctrl-0 = <&pinctrl_sdhc2 &pinctrl_sdhc2_cd>;
- 	status = "okay";
- };
- 
+Add device tree support for the twl4030 keypad, which is
+for example used in the Nokia N900.
+
+Changes since v3 [0]:
+ * Removed support for disabling autorepeat via DT. There
+   is still discussion going on, how the standard binding
+   should look like. On the other hand everyone agrees,
+   that autorepeat should be default for keypads.
+ * Remove useless twl4030_keypad_dt_match
+
+[0] https://lkml.org/lkml/2013/11/8/463
+
+-- Sebastian
+
+Sebastian Reichel (2):
+  Input: twl4030-keypad - add device tree support
+  dt: binding documentation for twl4030-keypad
+
+ .../devicetree/bindings/input/twl4030-keypad.txt   | 27 +++++++++
+ drivers/input/keyboard/twl4030_keypad.c            | 65 ++++++++++++++++------
+ 2 files changed, 75 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/twl4030-keypad.txt
+
 -- 
-1.8.3.2
+1.8.4.3
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
