@@ -1,72 +1,58 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 03/31] ARM: tegra: document use of standard DMA DT bindings
-Date: Sun, 01 Dec 2013 12:09:51 -0700
-Message-ID: <529B897F.1010101@wwwdotorg.org>
-References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org> <1384548866-13141-4-git-send-email-swarren@wwwdotorg.org> <20131129122907.GP22771@ulmo.nvidia.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3] watchdog: GPIO-controlled watchdog
+Date: Sun, 1 Dec 2013 11:14:57 -0800
+Message-ID: <20131201191457.GB19549@roeck-us.net>
+References: <1385798072-3886-1-git-send-email-shc_work@mail.ru>
+ <529B78DC.7070200@roeck-us.net>
+ <1385924607.556195103@f310.i.mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131129122907.GP22771-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1385924607.556195103-ufcwd1q191BsdVUOrk1QfQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2013 05:29 AM, Thierry Reding wrote:
-> On Fri, Nov 15, 2013 at 01:53:58PM -0700, Stephen Warren wrote: 
-> [...]
->> diff --git
->> a/Documentation/devicetree/bindings/sound/nvidia,tegra20-ac97.txt
->> b/Documentation/devicetree/bindings/sound/nvidia,tegra20-ac97.txt
->>
->> 
-index 2b6817f6e40e..eaf00102d92c 100644
->> ---
->> a/Documentation/devicetree/bindings/sound/nvidia,tegra20-ac97.txt
->>
->> 
-+++ b/Documentation/devicetree/bindings/sound/nvidia,tegra20-ac97.txt
->> @@ -4,14 +4,17 @@ Required properties: - compatible :
->> "nvidia,tegra20-ac97" - reg : Should contain AC97 controller
->> registers location and length - interrupts : Should contain AC97
->> interrupt -- clocks : Must contain one entry, for the module
->> clock. -  See ../clocks/clock-bindings.txt for details. - resets
->> : Must contain an entry for each entry in reset-names. See
->> ../reset/reset.txt for details. - reset-names : Must include the
->> following entries: - ac97 -- nvidia,dma-request-selector : The
->> Tegra DMA controller's phandle and -  request selector for the
->> AC97 controller +- dmas : Must contain an entry for each entry in
->> clock-names. +  See ../dma/dma.txt for details. +- dma-names :
->> Must include the following entries: +  - rx +  - tx +- clocks :
->> Must contain one entry, for the module clock. +  See
->> ../clocks/clock-bindings.txt for details.
+On Sun, Dec 01, 2013 at 11:03:27PM +0400, Alexander Shiyan wrote:
+> Hello.
 > 
-> Was this unintentionally moved?
-
-IIRC, at the end of the series, each binding describes reg,
-interrupts, clocks, reset, dmas in that order, for consistency.
-
->> diff --git
->> a/Documentation/devicetree/bindings/spi/nvidia,tegra20-sflash.txt
->> b/Documentation/devicetree/bindings/spi/nvidia,tegra20-sflash.txt
->>
->> 
-index e144f144717f..bdf08e6dec9b 100644
->> ---
->> a/Documentation/devicetree/bindings/spi/nvidia,tegra20-sflash.txt
->>
->> 
-+++ b/Documentation/devicetree/bindings/spi/nvidia,tegra20-sflash.txt
->> @@ -4,14 +4,17 @@ Required properties: - compatible : should be
->> "nvidia,tegra20-sflash". - reg: Should contain SFLASH registers
->> location and length. - interrupts: Should contain SFLASH
->> interrupts. -- nvidia,dma-request-selector : The Tegra DMA
->> controller's phandle and -  request selector for this SFLASH
->> controller. - clocks : Must contain one entry, for the module
->> clock.
+> > On 11/29/2013 11:54 PM, Alexander Shiyan wrote:
+> > > This patch adds a watchdog driver for devices controlled through GPIO,
+> > > (Analog Devices ADM706, Maxim MAX823, National NE555 etc).
+> > >
+> > > Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+> > > ---
+> > 
+> > Looks pretty good, except for a single nitpick below (sorry I didn't notice that one earlier).
+> > 
+> > Also, as mentioned before, a changelog describing what changed and what didn't
+> > would be really helpful.
 > 
-> But then this doesn't move it... perhaps it really is accidental
-> in other places. =)
+> Just fixed all observations made by you earlier.
+> 
+Yes, but since you did not say that, I had to look up my earlier comments
+and check against this version. This takes time, and time is one thing
+which reviewers or subsystem maintainers don't always have readily
+available.
 
-The patch to that file does move the docs for the dmas property...
+> ...
+> > > +	/* Disallow values lower than 2 and higher than 65535 ms */
+> > > +	if ((hw_margin < 2) || (hw_margin > 65535))
+> > 
+> > Unnecessary ( ).
+> 
+> This can be corrected during merge. Isn't it? Or you expect v4?
+> 
+If I were the watchdog maintainer, yes. Since I am not, it really
+depends on Wim. He might accept your patch as-is, make the change
+himself, expect you to submit another version, or request additional
+changes. You'll see.
+
+Thanks,
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
