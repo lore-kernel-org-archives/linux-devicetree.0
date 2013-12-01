@@ -1,58 +1,72 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3] watchdog: GPIO-controlled watchdog
-Date: Sun, 1 Dec 2013 11:14:57 -0800
-Message-ID: <20131201191457.GB19549@roeck-us.net>
-References: <1385798072-3886-1-git-send-email-shc_work@mail.ru>
- <529B78DC.7070200@roeck-us.net>
- <1385924607.556195103@f310.i.mail.ru>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 04/31] ARM: tegra: update DT files to add reset properties
+Date: Sun, 01 Dec 2013 12:15:07 -0700
+Message-ID: <529B8ABB.5040109@wwwdotorg.org>
+References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org> <1384548866-13141-5-git-send-email-swarren@wwwdotorg.org> <20131129130031.GQ22771@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1385924607.556195103-ufcwd1q191BsdVUOrk1QfQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131129130031.GQ22771-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 01, 2013 at 11:03:27PM +0400, Alexander Shiyan wrote:
-> Hello.
+On 11/29/2013 06:00 AM, Thierry Reding wrote:
+> On Fri, Nov 15, 2013 at 01:53:59PM -0700, Stephen Warren wrote: 
+> [...]
+>> @@ -135,8 +140,10 @@ reg-shift = <2>; interrupts = <GIC_SPI 37
+>> IRQ_TYPE_LEVEL_HIGH>; nvidia,dma-request-selector = <&apbdma 9>; 
+>> -		status = "disabled"; clocks = <&tegra_car
+>> TEGRA114_CLK_UARTB>; +		resets = <&tegra_car 7>;
 > 
-> > On 11/29/2013 11:54 PM, Alexander Shiyan wrote:
-> > > This patch adds a watchdog driver for devices controlled through GPIO,
-> > > (Analog Devices ADM706, Maxim MAX823, National NE555 etc).
-> > >
-> > > Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-> > > ---
-> > 
-> > Looks pretty good, except for a single nitpick below (sorry I didn't notice that one earlier).
-> > 
-> > Also, as mentioned before, a changelog describing what changed and what didn't
-> > would be really helpful.
+> This is confusing. For some reason that escapes me the
+> tegra114-car.h file defines TEGRA114_CLK_UARTB as 192. Other reset
+> entries match the numerical value of the TEGRA114_CLK_* define,
+> which makes it easy to double-check this.
 > 
-> Just fixed all observations made by you earlier.
+> But UARTB is indeed at bit 7, so this looks good.
 > 
-Yes, but since you did not say that, I had to look up my earlier comments
-and check against this version. This takes time, and time is one thing
-which reviewers or subsystem maintainers don't always have readily
-available.
+> Oh, I think perhaps it's caused by bit 7 being shared by both the
+> UARTB and the VFIR controllers for reset, but not for the clocks.
 
-> ...
-> > > +	/* Disallow values lower than 2 and higher than 65535 ms */
-> > > +	if ((hw_margin < 2) || (hw_margin > 65535))
-> > 
-> > Unnecessary ( ).
-> 
-> This can be corrected during merge. Isn't it? Or you expect v4?
-> 
-If I were the watchdog maintainer, yes. Since I am not, it really
-depends on Wim. He might accept your patch as-is, make the change
-himself, expect you to submit another version, or request additional
-changes. You'll see.
+Yes, there's a single reset bit that affects 2 HW modules, yet each HW
+module has its own clock. So the reset and clock IDs don't exactly
+align. That's the main reason I wanted to switch the drivers to the
+reset framework rather than piggy-backing on the clock framework to do
+resets, so the difference in name-spaces is explicit.
 
-Thanks,
-Guenter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> reg = <0x70080300 0x100>; nvidia,ahub-cif-ids = <4 4>; clocks =
+>> <&tegra_car TEGRA114_CLK_I2S0>;
+> 
+> The clocks for these i2s devices are already listed in the ahub
+> node. Is that on purpose?
+
+Yes.
+
+The AHUB driver needs to remove reset from the HW modules, so that the
+configlink bus works. Reset removal used to require a custom Tegra API
+that took a clock as a parameter. Hence, the AHUB node needed the
+clock reference. After this series, the AHUB only needs a reset handle
+to use the standard reset API. However, the clock references are left
+in the AHUB node until after the AHUB driver is converted, so the
+series is bisectable. After the series, only the I2S driver needs to
+clock references.
+
+>> @@ -110,6 +118,8 @@ reg = <0x54080000 0x00040000>; interrupts =
+>> <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>; clocks = <&tegra_car
+>> TEGRA30_CLK_VI>; +			resets = <&tegra_car 164>;
+> 
+> I think this needs to be 20.
+
+OK, I'll check that when I get back...
+
+>> +			 <&tegra_car 30>,  /* i2s0 */ +			 <&tegra_car 11>,  /* i2s1
+>> */ +			 <&tegra_car 18>,  /* i2s2 */ +			 <&tegra_car 101>, /*
+>> i2s3 */ +			 <&tegra_car 102>, /* i2s4 */
+> 
+> Some comment for these as for Tegra20.
+
+I'm not sure which other comment was "for Tegra20", since none of the
+filenames were quoted, but I'll try to check when I get back.
