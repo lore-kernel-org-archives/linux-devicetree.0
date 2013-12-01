@@ -1,387 +1,695 @@
-From: randy <lxr1234@hotmail.com>
-Subject: Re: [PATCH 1/1] ARM: dts: Add missing clock names for exynos4412
- dwmmc node
-Date: Sun, 1 Dec 2013 20:30:27 +0800
-Message-ID: <BLU0-SMTP201633399C78BEA7F22839AADEB0@phx.gbl>
-References: <BLU0-SMTP572E6FBC0A6572AEB71304ADEC0@phx.gbl>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: [PATCH v2 2/2] rtc: add hym8563 rtc-driver
+Date: Sun, 1 Dec 2013 14:39:45 +0100
+Message-ID: <201312011439.45417.heiko@sntech.de>
+References: <201312011437.47432.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <BLU0-SMTP572E6FBC0A6572AEB71304ADEC0@phx.gbl>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, kasimling@gmail.com
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201312011437.47432.heiko@sntech.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+The Haoyu Microelectronics HYM8563 provides rtc- and alarm functions
+as well as a clock output of up to 32kHz.
 
-I don't know whether it will works. Actually I don't what the name
-used for. So I just referencing my mail before.
-Thank you
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ drivers/rtc/Kconfig       |   11 +
+ drivers/rtc/Makefile      |    1 +
+ drivers/rtc/rtc-hym8563.c |  626 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 638 insertions(+)
+ create mode 100644 drivers/rtc/rtc-hym8563.c
 
-- -------- origin mail --------
-=E4=B8=BB=E9=A2=98: Re: linux 3.13-rc1 make dw_mmc-exynos more worse
-=E6=97=A5=E6=9C=9F: Tue, 26 Nov 2013 14:00:20 +0800
-=E5=8F=91=E4=BB=B6=E4=BA=BA: randy <lxr1234@hotmail.com>
-=E6=94=B6=E4=BB=B6=E4=BA=BA: Jaehoon Chung <jh80.chung@samsung.com>
-=E6=8A=84=E9=80=81: Tomasz Figa <tomasz.figa@gmail.com>,
-linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Seungwon
-Jeon <tgih.jun@samsung.com>, t.figa@samsung.com, olof@lixom.net,
-kgene.kim@samsung.com
-
-Thanks Jaehoon,
-I have noticed that before it, but in dw_mmc driver, I won't meet this
-problem.
-As you can seen in dts, I have defined a clock source.
-Or the clock source what I choose is not correct?
-I don't know how to debug this, I don't know much about it.
-Actually, I don't really understand the contain in chapter 7 of datashe=
-et.
-I am sorry for that.
-Would you like to tell me some more about it?
-
-=E4=BA=8E 2013=E5=B9=B411=E6=9C=8826=E6=97=A5 12:32, Jaehoon Chung =E5=86=
-=99=E9=81=93:
-> Hi, Randy,
->=20
-> It seems a problem that controller didn't find the clock source.=20
-> Also you can see the below message. Did you check the clock=20
-> source?
->=20
->> [    1.125000] s3c-sdhci 12550000.sdhci: failed to get io clock
->=20
-> Actually, need to prevent the "null pointer dereference" for clock=20
-> in dw-mmc.c
->=20
-> And If dw-mmc controller can be used, recommend to use it. dw-mmc=20
-> can use DDR mode, but sdhci can't.
->=20
-> Best Regards, Jaehoon Chung
->=20
-> On 11/26/2013 10:47 AM, randy wrote: =E4=BA=8E 2013=E5=B9=B411=E6=9C=88=
-26=E6=97=A5 08:41, Tomasz=20
-> Figa =E5=86=99=E9=81=93:
->>>> On Sunday 24 of November 2013 22:18:46 Olof Johansson wrote:
->>>>> Hi,
->>>>>=20
->>>>> On Sun, Nov 24, 2013 at 4:07 AM, randy=20
->>>>> <lxr1234@hotmail.com> wrote:
->>>>>> -----BEGIN PGP SIGNED MESSAGE----- Hash: SHA1
->>>>>>=20
->>>>>> After pull the merge of 3.13-rc1, the dw_mmc-exynos will=20
->>>>>> make the boot stock.In 3.13, it is just stocked udev in=20
->>>>>> 3.13 and makse udev timeout but kernel report the emmc=20
->>>>>> device is found.
->>>>>>=20
->>>>>> And in the=20
->>>>>> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt=20
->>>>>> I saw that it is need to define which gpio ports that a=20
->>>>>> emmc slot use, but when I watched others dts, they use=20
->>>>>> pinctrl, which is correct? Here is the log and dts
->>>>>=20
->>>>> [..]
->>>>>=20
->>>>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3Dlog begin=20
->>>>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
->>>>> [..]
->>>>>> [    0.000000] CPU EXYNOS4412 (id 0xe4412011)
->>>>>=20
->>>>> [..]
->>>>>=20
->>>>>> [    1.095000] mmc0: no vmmc regulator found [ 1.130000]=20
->>>>>> mmc0: SDHCI controller on samsung-hsmmc [12530000.sdhci]=20
->>>>>> using ADMA [    1.130000] Synopsys Designware Multimedia=20
->>>>>> Card Interface Driver [ 1.130000] Unable to handle
->>>>>> kernel NULL pointer dereference at virtual address
->>>>>> 0000002a [ 1.130000] pgd =3D c0004000 [    1.130000]
->>>>>> [0000002a] *pgd=3D00000000 [ 1.135000] Internal error:
->>>>>> Oops: 5 [#1] PREEMPT SMP ARM [ 1.140000] Modules linked
->>>>>> in: [ 1.140000] CPU: 0 PID: 1 Comm: swapper/0 Not
->>>>>> tainted 3.13.0-rc1-00008-g584fa45-dirty #3 [ 1.150000]
->>>>>> task: ef0a4000 ti: ef0a8000 task.ti: ef0a8000 [ 1.155000]
->>>>>> PC is at clk_get_rate+0x18/0x5c [    1.160000] LR is at=20
->>>>>> clk_prepare_lock+0xc/0xd8 [    1.165000] pc :=20
->>>>>> [<c0319400>] lr : [<c0318864>]    psr: a0000113 [=20
->>>>>> 1.165000] sp : ef0a9e20 ip : ee94eb40  fp : 00000000 [=20
->>>>>> 1.175000] r10: c0571510  r9 : ef0a8000  r8 : ef227a10 [=20
->>>>>> 1.180000] r7 : c043544c  r6 : fffffffe  r5 : ee94ead0 r4
->>>>>> : fffffffe [    1.185000] r3 : ef0a4000  r2 : 00000001 r1
->>>>>> : 000002b9  r0 : 00000001 [ 1.195000] Flags: NzCv IRQs on
->>>>>> FIQs on  Mode SVC_32  ISA ARM Segment kernel [ 1.200000]
->>>>>> Control: 10c5387d  Table: 4000404a DAC: 00000015 [
->>>>>> 1.205000] Process swapper/0 (pid: 1, stack limit =3D
->>>>>> 0xef0a8240) [    1.210000] Stack: (0xef0a9e20 to
->>>>>> 0xef0aa000) [    1.215000] 9e20: c0308474 ee9ea610
->>>>>> ee94ead0 c0308488 c0308474 ee9ea610 00000000 c030592c [
->>>>>> 1.225000] 9e40: ef227a10 00001000 c043544c c020a920
->>>>>> c0838b04 17d78400 ee9ea610 ef227a00 [ 1.235000] 9e60:
->>>>>> ef227a10 c05d6b1c 00000000 c05d6b1c c05890b0 ef0a8000
->>>>>> c0571510 c0269448 [ 1.240000] 9e80: c0269430 ef227a10
->>>>>> c061291c c0268088 00000000 ef227a10 c05d6b1c ef227a44 [
->>>>>> 1.250000] 9ea0: 00000000 c026822c 00000000 c05d6b1c
->>>>>> c02681a0 c02668a8 ef005478 ef212740 [ 1.255000] 9ec0:
->>>>>> c05d6b1c ef2c7900 c05cf438 c0267864 c0511e38 c05d6b1c
->>>>>> 00000006 c05d6b1c [    1.265000] 9ee0: 00000006 c059575c
->>>>>> c05df580 c026884c 00000000 c05a2e14 00000006 c00088dc [
->>>>>> 1.275000] 9f00: c0603f70 ef163e00 c040e334 60000113
->>>>>> c05b5000 a0000113 c05b5054 c05b5050 [ 1.280000] 9f20:
->>>>>> c05df580 c054ad68 c0839c96 c04247b4 00000093 c0035158
->>>>>> c05b5054 c05a2a20 [    1.290000] 9f40: c050ae2c c054a438
->>>>>> 00000006 00000006 00000000 c05a2e14 00000006 c059575c [
->>>>>> 1.300000] 9f60: c05df580 00000093 c0595768 c0571510
->>>>>> 00000000 c0571c48 00000006 00000006 [ 1.305000] 9f80:
->>>>>> c0571510 c003df68 00000000 c0403544 00000000 00000000
->>>>>> 00000000 00000000 [    1.315000] 9fa0: 00000000 c040354c
->>>>>> 00000000 c000e738 00000000 00000000 00000000 00000000 [
->>>>>> 1.320000] 9fc0: 00000000 00000000 00000000 00000000
->>>>>> 00000000 00000000 00000000 00000000 [ 1.330000] 9fe0:
->>>>>> 00000000 00000000 00000000 00000000 00000013 00000000
->>>>>> be73efa4 ffffbffd [    1.340000] [<c0319400>]
->>>>>> (clk_get_rate+0x18/0x5c) from [<c0308488>]=20
->>>>>> (dw_mci_exynos_setup_clock+0x14/0x2c) [    1.350000]=20
->>>>>> [<c0308488>] (dw_mci_exynos_setup_clock+0x14/0x2c) from=20
->>>>>> [<c030592c>] (dw_mci_probe+0x15c/0xca4) [    1.360000]=20
->>>>>> [<c030592c>] (dw_mci_probe+0x15c/0xca4) from
->>>>>> [<c0269448>] (platform_drv_probe+0x18/0x48) [ 1.365000]
->>>>>> [<c0269448>] (platform_drv_probe+0x18/0x48) from
->>>>>> [<c0268088>] (driver_probe_device+0x100/0x218) [
->>>>>> 1.375000] [<c0268088>] (driver_probe_device+0x100/0x218)
->>>>>> from [<c026822c>] (__driver_attach+0x8c/0x90) [
->>>>>> 1.385000] [<c026822c>] (__driver_attach+0x8c/0x90) from=20
->>>>>> [<c02668a8>] (bus_for_each_dev+0x54/0x88) [    1.395000]=20
->>>>>> [<c02668a8>] (bus_for_each_dev+0x54/0x88) from=20
->>>>>> [<c0267864>] (bus_add_driver+0xd4/0x1d0) [    1.405000]=20
->>>>>> [<c0267864>] (bus_add_driver+0xd4/0x1d0) from=20
->>>>>> [<c026884c>] (driver_register+0x78/0xf4) [    1.415000]=20
->>>>>> [<c026884c>] (driver_register+0x78/0xf4) from=20
->>>>>> [<c00088dc>] (do_one_initcall+0xec/0x148) [    1.420000]=20
->>>>>> [<c00088dc>] (do_one_initcall+0xec/0x148) from=20
->>>>>> [<c0571c48>] (kernel_init_freeable+0xfc/0x1c8) [=20
->>>>>> 1.430000] [<c0571c48>] (kernel_init_freeable+0xfc/0x1c8)=20
->>>>>> from [<c040354c>] (kernel_init+0x8/0x110) [    1.440000]=20
->>>>>> [<c040354c>] (kernel_init+0x8/0x110) from [<c000e738>]=20
->>>>>> (ret_from_fork+0x14/0x3c) [    1.450000] Code: ebfffd18=20
->>>>>> e3540000 01a05004 0a000008 (e594302c)
->>>>>=20
->>>>>=20
->>>>> Looks like a clock issue on 4412? I only have 5250 that I=20
->>>>> boot test on, no EXYNOS4 coverage at all (I had an Odroid-X
->>>>> but it wasn't useful due to the very old u-boot it came
->>>>> with so I gave it away).
->>>>>=20
->>>>> Tomasz, is this something you can reproduce on 4210/4412?
->>>>=20
->>>> Nope. All of our boards (exynos4210-trats, exynos4412-trats2)
->>>> are configured to use sdhci-s3c for all MMC slots[1], as at
->>>> the time they got submitted to mainline, this driver was
->>>> considered more reliable than dw-mmc. Not sure about today,
->>>> though.
->>>>=20
->>>> [1] On Exynos4 there is one dw-mmc block and four sdhci-s3c=20
->>>> blocks, while there are just four physical busses. Using pin=20
->>>> control you can configure any of the four sets of pins to=20
->>>> work either using its dedicated sdhci-s3c or the only one=20
->>>> dw-mmc.
->>>>=20
->>>> Best regards, Tomasz
->>>>=20
->>>> -- To unsubscribe from this list: send the line "unsubscribe=20
->>>> linux-samsung-soc" in the body of a message to=20
->>>> majordomo@vger.kernel.org More majordomo info at=20
->>>> http://vger.kernel.org/majordomo-info.html
->>>>=20
->>>>=20
-> Well I don't think it can work this time, maybe my dts is wrong. At
-> this time neither emmc nor usb can work.=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3Dlog begin=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=20
-> [    1.035000] s3c-rtc 10070000.rtc: rtc disabled, re-enabling [=20
-> 1.040000] s3c-rtc 10070000.rtc: rtc core: registered s3c as rtc0 [=20
-> 1.050000] device-mapper: ioctl: 4.27.0-ioctl (2013-10-30)=20
-> initialised: dm-devel@redhat.com [    1.055000] sdhci: Secure=20
-> Digital Host Controller Interface driver [    1.060000] sdhci:=20
-> Copyright(c) Pierre Ossman [    1.065000] s3c-sdhci 12530000.sdhci:
-> clock source 2: mmc_busclk.2 (100000000 Hz) [ 1.075000] s3c-sdhci
-> 12530000.sdhci: dummy supplies not allowed [ 1.080000] mmc0: no
-> vqmmc regulator found [    1.085000] s3c-sdhci 12530000.sdhci:
-> dummy supplies not allowed [    1.090000] mmc0: no vmmc regulator
-> found [    1.125000] mmc0: SDHCI controller on samsung-hsmmc
-> [12530000.sdhci] using ADMA [    1.125000] s3c-sdhci=20
-> 12550000.sdhci: failed to get io clock [    1.125000] s3c-sdhci:=20
-> probe of 12550000.sdhci failed with error -2 [    1.125000]=20
-> Synopsys Designware Multimedia Card Interface Driver [ 1.130000]
-> usbcore: registered new interface driver usbhid [ 1.130000] usbhid:
-> USB HID core driver [    1.135000] TCP: cubic registered [
-> 1.145000] NET: Registered protocol family 10 [ 1.145000] NET:
-> Registered protocol family 17 [    1.145000] NET: Registered
-> protocol family 15 [    1.150000] Key type dns_resolver registered
-> [    1.155000] Registering SWP/SWPB emulation handler [ 1.160000]
-> unable to find transceiver of type USB2 PHY [ 1.165000] exynos-ehci
-> 12580000.ehci: no platform data or transceiver defined [
-> 1.175000] platform 12580000.ehci: Driver exynos-ehci requests probe
-> deferral [    1.175000] mmc0: new high speed SDHC card at address
-> aaaa [    1.185000] isa bounce pool size: 16 pages [ 1.190000]
-> mmcblk0: mmc0:aaaa SU08G 7.40 GiB [ 1.195000] s3c-rtc 10070000.rtc:
-> setting system clock to 2013-01-01 12:06:09 UTC (1357041969) [
-> 1.205000] exynos_cpufreq_init: failed to get resource vdd_arm [
-> 1.205000]  mmcblk0: p1 p2 p3 p4 [ 1.215000] unable to find
-> transceiver of type USB2 PHY [ 1.215000] exynos-ehci 12580000.ehci:
-> no platform data or transceiver defined [    1.225000] platform
-> 12580000.ehci: Driver exynos-ehci requests probe deferral
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3Dlog end=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-dts=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->
->
-/*
->
->=20
-* Hardkernel's Exynos4412 based tiny4412 1306 board device tree
-> source * * Copyright (c) 2013 Tomoya Gitsufuki=20
-> <ayaka@mail.soulik.info> * * Device tree source file for Friendyarm
-> tiny4412 1306 board which is based on * Samsung's Exynos4412 SoC. *
-> * This program is free software; you can redistribute it and/or
-> modify * it under the terms of the GNU General Public License
-> version 2 as * published by the Free Software Foundation. */
->=20
-> /dts-v1/; #include "exynos4412.dtsi"
->=20
-> / { model =3D "Friendly Arm Tiny4412 1306 board based on
-> Exynos4412"; compatible =3D "friendlyarm,tiny4412-1306",
-> "samsung,exynos4412";
->=20
-> memory { reg =3D <0x40000000 0x40000000>; };
->=20
-> chosen { bootargs =3D"root=3D/dev/mmcblk0p1 rootfstype=3Dext4 rw=20
-> console=3DttySAC0,115200 init=3D/sbin/init"; };
->=20
-> leds { compatible =3D "gpio-leds"; led1 { label =3D "led1:heart"; gpi=
-os
-> =3D <&gpm4 0 1>; default-state =3D "on"; linux,default-trigger =3D=20
-> "heartbeat"; }; led2 { label =3D "led2:mmc0"; gpios =3D <&gpm4 1 1>;=20
-> default-state =3D "on"; linux,default-trigger =3D "mmc0"; };
->=20
-> };
->=20
-> regulators { compatible =3D "simple-bus"; #address-cells =3D <1>;
->=20
-> vemmc_reg: regulator-0 { compatible =3D "regulator-fixed";=20
-> regulator-name =3D "VMEM_VDD_2.8V"; regulator-min-microvolt =3D=20
-> <2800000>; regulator-max-microvolt =3D <2800000>; gpio =3D <&gpk0 2
-> 0>; enable-active-high; };
->=20
-> };
->=20
-> /* mshc@12550000 { #address-cells =3D <1>; #size-cells =3D <0>;=20
-> pinctrl-0 =3D <&sd4_clk &sd4_cmd &sd4_bus4 &sd4_bus8>; pinctrl-names=20
-> =3D "default"; status =3D "okay";
->=20
-> vmmc-supply =3D <&vemmc_reg>; clocks =3D <&clock 301>, <&clock 149>;=20
-> clocks-name =3D "dwmci", "sclk_dwmci"; clock-frequency =3D=20
-> <400000000>;
->=20
-> num-slots =3D <1>; supports-highspeed; broken-cd; fifo-depth =3D=20
-> <0x80>; card-detect-delay =3D <200>; samsung,dw-mshc-sdr-timing =3D <=
-2=20
-> 3>; samsung,dw-mshc-ddr-timing =3D <1 2>;
->=20
-> slot@0 { reg =3D <0>; bus-width =3D <8>;  }; }; */
->=20
-> rtc@10070000 { status =3D "okay"; };
->=20
-> sdhci@12530000 { bus-width =3D <4>; pinctrl-0 =3D <&sd2_clk &sd2_cmd=20
-> &sd2_bus4 &sd2_cd>; pinctrl-names =3D "default"; status =3D "okay"; }=
-;
->=20
-> sdhci@1254000 { bus-width =3D <4>; pinctrl-0 =3D <&sd3_clk &sd3_cmd=20
-> &sd3_bus4 &sd3_cd>; pinctrl-names =3D "default"; status =3D "okay"; }=
-;
->=20
-> sdhci@12550000 { compatible =3D "samsung,exynos4210-sdhci";=20
-> #address-cells =3D <1>; #size-cells =3D <0>; reg =3D <0x12550000
-> 0x1000>; interrupts =3D <0 77 0>; non-removable; pinctrl-0 =3D
-> <&sd4_clk &sd4_cmd &sd4_bus4 &sd4_bus8>; pinctrl-names =3D "default";
-> status =3D "okay";
->=20
-> bus-width =3D <8>; vmmc-supply =3D <&vemmc_reg>; clocks =3D <&clock 3=
-01>,
-> <&clock 149>; clocks-name =3D "dwmci", "sclk_dwmci"; clock-frequency
-> =3D <400000000>;
->=20
-> };
->=20
-> /* the usb phy of hsic0, hsic1 and otg are in the same place */=20
-> usb_phy: otg@125B0000 { #address-cells =3D <1>; #size-cells =3D <1>;=20
-> compatible =3D "samsung,exynos4210-usbphy"; reg =3D <0x125B0000
-> 0x100>; ranges;
->=20
-> clocks =3D <&clock 2>, <&clock 305>; clock-names =3D "xusbxti", "otg"=
-;=20
-> usbphy-sys { /* USB device and host PHY_CONTROL registers */ reg =3D
-> <0x10020704 0x8>; }; };
->=20
-> ehci@12580000 { usb-phy =3D <&usb_phy>; status =3D "okay"; };=20
-> ohci@12590000 { status =3D "okay"; };
->=20
->=20
-> codec@13400000 { samsung,mfc-r =3D <0x43000000 0x800000>;=20
-> samsung,mfc-l =3D <0x51000000 0x800000>; status =3D "okay"; };
->=20
-> serial@13800000 { status =3D "okay"; };
->=20
-> serial@13810000 { status =3D "okay"; };
->=20
-> serial@13820000 { status =3D "okay"; };
->=20
-> serial@13830000 { status =3D "okay"; };
->=20
-> fixed-rate-clocks { xxti { compatible =3D "samsung,clock-xxti";=20
-> clock-frequency =3D <0>; };
->=20
-> xusbxti { compatible =3D "samsung,clock-xusbxti"; clock-frequency =3D=
-=20
-> <24000000>; }; };
->=20
-> i2c@13860000 { status =3D "okay"; samsung,i2c-sda-delay =3D <100>;=20
-> samsung,i2c-max-bus-freq =3D <200000>;
->=20
-> wm8960@10 { compatible =3D "wlf,wm8960"; reg =3D <0x10>; }; }; };
->>=20
->=20
-> -- To unsubscribe from this list: send the line "unsubscribe=20
-> linux-samsung-soc" in the body of a message to=20
-> majordomo@vger.kernel.org More majordomo info at=20
-> http://vger.kernel.org/majordomo-info.html
->=20
->=20
-
-- --
-To unsubscribe from this list: send the line "unsubscribe
-linux-samsung-soc" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
-
-iQEcBAEBAgAGBQJSmyvdAAoJEPb4VsMIzTziIhMH/1IgGhwGdq7rX287MbuWGEbk
-s+btcAJ3P/g5pg5mP+1LQ5lHXF+xQmFK3l3lYuqs8aDZcQXqQKOaRRLfq9Et6rUo
-28FuJyIJOmA3PTSy1JIbW86R3NxrP9XgmBOs4AUMX6P276fC6GzzeJcdscoGa/Cl
-r4eciyc8FKCuVWzOUSfXgqxwlhkk9zoawANoz8zGB0wUdX3NZcg6TibXFMeMBXbP
-cohO4juDL9UGObxMYirwboa3OYUUBjYYtJl88V4swQld8/fuk3fjkrwLH8FIZULg
-fBxT+IxcKjySIfDJ84/aYbIPbzkEZPrqNV3Fh9cS/BcyAeSZgpJHlHuw0xYajLc=3D
-=3DoNvB
------END PGP SIGNATURE-----
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 9654aa3..bf2c572 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -202,6 +202,17 @@ config RTC_DRV_DS3232
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called rtc-ds3232.
+ 
++config RTC_DRV_HYM8563
++	tristate "Haoyu Microelectronics HYM8563"
++	depends on I2C && OF && GPIOLIB
++	help
++	  Say Y to enable support for the HYM8563 I2C RTC chip. Apart
++	  from the usual rtc functions it provides a clock output of
++	  up to 32kHz.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called rtc-hym8563.
++
+ config RTC_DRV_LP8788
+ 	tristate "TI LP8788 RTC driver"
+ 	depends on MFD_LP8788
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 2dff3d2..92f9d2c 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -54,6 +54,7 @@ obj-$(CONFIG_RTC_DRV_EP93XX)	+= rtc-ep93xx.o
+ obj-$(CONFIG_RTC_DRV_FM3130)	+= rtc-fm3130.o
+ obj-$(CONFIG_RTC_DRV_GENERIC)	+= rtc-generic.o
+ obj-$(CONFIG_RTC_DRV_HID_SENSOR_TIME) += rtc-hid-sensor-time.o
++obj-$(CONFIG_RTC_DRV_HYM8563)	+= rtc-hym8563.o
+ obj-$(CONFIG_RTC_DRV_IMXDI)	+= rtc-imxdi.o
+ obj-$(CONFIG_RTC_DRV_ISL1208)	+= rtc-isl1208.o
+ obj-$(CONFIG_RTC_DRV_ISL12022)	+= rtc-isl12022.o
+diff --git a/drivers/rtc/rtc-hym8563.c b/drivers/rtc/rtc-hym8563.c
+new file mode 100644
+index 0000000..2dc4154
+--- /dev/null
++++ b/drivers/rtc/rtc-hym8563.c
+@@ -0,0 +1,626 @@
++/*
++ * Haoyu HYM8563 RTC driver
++ *
++ * Copyright (C) 2013 MundoReader S.L.
++ * Author: Heiko Stuebner <heiko@sntech.de>
++ *
++ * based on rtc-HYM8563
++ * Copyright (C) 2010 ROCKCHIP, Inc.
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/module.h>
++#include <linux/clk-provider.h>
++#include <linux/i2c.h>
++#include <linux/bcd.h>
++#include <linux/rtc.h>
++#include <linux/delay.h>
++#include <linux/slab.h>
++#include <linux/gpio.h>
++#include <linux/of_gpio.h>
++
++#define HYM8563_CTL1		0x00
++#define HYM8563_CTL1_TEST	BIT(7)
++#define HYM8563_CTL1_STOP	BIT(5)
++#define HYM8563_CTL1_TESTC	BIT(3)
++
++#define HYM8563_CTL2		0x01
++#define HYM8563_CTL2_TI_TP	BIT(4)
++#define HYM8563_CTL2_AF		BIT(3)
++#define HYM8563_CTL2_TF		BIT(2)
++#define HYM8563_CTL2_AIE	BIT(1)
++#define HYM8563_CTL2_TIE	BIT(0)
++
++#define HYM8563_SEC		0x02
++#define HYM8563_SEC_VL		BIT(7)
++#define HYM8563_SEC_MASK	0x7f
++
++#define HYM8563_MIN		0x03
++#define HYM8563_MIN_MASK	0x7f
++
++#define HYM8563_HOUR		0x04
++#define HYM8563_HOUR_MASK	0x3f
++
++#define HYM8563_DAY		0x05
++#define HYM8563_DAY_MASK	0x3f
++
++#define HYM8563_WEEKDAY		0x06
++#define HYM8563_WEEKDAY_MASK	0x07
++
++#define HYM8563_MONTH		0x07
++#define HYM8563_MONTH_CENTURY	BIT(7)
++#define HYM8563_MONTH_MASK	0x1f
++
++#define HYM8563_YEAR		0x08
++
++#define HYM8563_ALM_MIN		0x09
++#define HYM8563_ALM_HOUR	0x0a
++#define HYM8563_ALM_DAY		0x0b
++#define HYM8563_ALM_WEEK	0x0c
++
++/* Each alarm check can be disabled by setting this bit in the register */
++#define HYM8563_ALM_BIT_DISABLE	BIT(7)
++
++#define HYM8563_CLKOUT		0x0d
++#define HYM8563_CLKOUT_DISABLE	BIT(7)
++#define HYM8563_CLKOUT_32768	0
++#define HYM8563_CLKOUT_1024	1
++#define HYM8563_CLKOUT_32	2
++#define HYM8563_CLKOUT_1	3
++#define HYM8563_CLKOUT_MASK	3
++
++#define HYM8563_TMR_CTL		0x0e
++#define HYM8563_TMR_CTL_ENABLE	BIT(7)
++#define HYM8563_TMR_CTL_4096	0
++#define HYM8563_TMR_CTL_64	1
++#define HYM8563_TMR_CTL_1	2
++#define HYM8563_TMR_CTL_1_60	3
++#define HYM8563_TMR_CTL_MASK	3
++
++#define HYM8563_TMR_CNT		0x0f
++
++struct hym8563 {
++	struct i2c_client	*client;
++	struct rtc_device	*rtc;
++	bool			valid;
++	struct clk_hw		clkout_hw;
++};
++
++/*
++ * RTC handling
++ */
++
++static int hym8563_rtc_read_time(struct device *dev, struct rtc_time *tm)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct hym8563 *hym8563 = i2c_get_clientdata(client);
++	u8 buf[7];
++	int ret;
++
++	if (!hym8563->valid) {
++		dev_warn(&client->dev, "no valid clock/calendar values available\n");
++		return -EPERM;
++	}
++
++	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
++
++	tm->tm_sec = bcd2bin(buf[0] & HYM8563_SEC_MASK);
++	tm->tm_min = bcd2bin(buf[1] & HYM8563_MIN_MASK);
++	tm->tm_hour = bcd2bin(buf[2] & HYM8563_HOUR_MASK);
++	tm->tm_mday = bcd2bin(buf[3] & HYM8563_DAY_MASK);
++	tm->tm_wday = bcd2bin(buf[4] & HYM8563_WEEKDAY_MASK); /* 0 = Sun */
++	tm->tm_mon = bcd2bin(buf[5] & HYM8563_MONTH_MASK) - 1; /* 0 = Jan */
++	tm->tm_year = bcd2bin(buf[6]) + 100;
++
++	return 0;
++}
++
++static int hym8563_rtc_set_time(struct device *dev, struct rtc_time *tm)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct hym8563 *hym8563 = i2c_get_clientdata(client);
++	u8 buf[7];
++	int ret;
++
++	/* Years >= 2100 are to far in the future, 19XX is to early */
++	if (tm->tm_year < 100 || tm->tm_year >= 200)
++		return -EINVAL;
++
++	buf[0] = bin2bcd(tm->tm_sec);
++	buf[1] = bin2bcd(tm->tm_min);
++	buf[2] = bin2bcd(tm->tm_hour);
++	buf[3] = bin2bcd(tm->tm_mday);
++	buf[4] = bin2bcd(tm->tm_wday);
++	buf[5] = bin2bcd(tm->tm_mon + 1);
++
++	/*
++	 * While the HYM8563 has a century flag in the month register,
++	 * it does not seem to carry it over a subsequent write/read.
++	 * So we'll limit ourself to 100 years, starting at 2000 for now.
++	 */
++	buf[6] = tm->tm_year - 100;
++
++	/*
++	 * CTL1 only contains TEST-mode bits apart from stop,
++	 * so no need to read the value first
++	 */
++	ret = i2c_smbus_write_byte_data(client, HYM8563_CTL1,
++						HYM8563_CTL1_STOP);
++	if (ret < 0)
++		return ret;
++
++	ret = i2c_smbus_write_i2c_block_data(client, HYM8563_SEC, 7, buf);
++	if (ret < 0)
++		return ret;
++
++	ret = i2c_smbus_write_byte_data(client, HYM8563_CTL1, 0);
++	if (ret < 0)
++		return ret;
++
++	hym8563->valid = true;
++
++	return 0;
++}
++
++static int hym8563_rtc_alarm_irq_enable(struct device *dev,
++					unsigned int enabled)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	int data;
++
++	data = i2c_smbus_read_byte_data(client, HYM8563_CTL2);
++	if (data < 0)
++		return data;
++
++	if (enabled)
++		data |= HYM8563_CTL2_AIE;
++	else
++		data &= ~HYM8563_CTL2_AIE;
++
++	return i2c_smbus_write_byte_data(client, HYM8563_CTL2, data);
++};
++
++static int hym8563_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct rtc_time *alm_tm = &alm->time;
++	u8 buf[4];
++	int ret;
++
++	ret = i2c_smbus_read_i2c_block_data(client, HYM8563_ALM_MIN, 4, buf);
++	if (ret < 0)
++		return ret;
++
++	/* The alarm only has a minute accuracy */
++	alm_tm->tm_sec = -1;
++
++	alm_tm->tm_min = (buf[0] & HYM8563_ALM_BIT_DISABLE) ?
++					-1 :
++					bcd2bin(buf[0] & HYM8563_MIN_MASK);
++	alm_tm->tm_hour = (buf[1] & HYM8563_ALM_BIT_DISABLE) ?
++					-1 :
++					bcd2bin(buf[1] & HYM8563_HOUR_MASK);
++	alm_tm->tm_mday = (buf[2] & HYM8563_ALM_BIT_DISABLE) ?
++					-1 :
++					bcd2bin(buf[2] & HYM8563_DAY_MASK);
++	alm_tm->tm_wday = (buf[3] & HYM8563_ALM_BIT_DISABLE) ?
++					-1 :
++					bcd2bin(buf[3] & HYM8563_WEEKDAY_MASK);
++
++	alm_tm->tm_mon = -1;
++	alm_tm->tm_year = -1;
++
++	ret = i2c_smbus_read_byte_data(client, HYM8563_CTL2);
++	if (ret < 0)
++		return ret;
++
++	if (ret & HYM8563_CTL2_AIE)
++		alm->enabled = 1;
++
++	return 0;
++}
++
++static int hym8563_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct rtc_time *alm_tm = &alm->time;
++	u8 buf[4];
++	int ret;
++
++	/*
++	 * The alarm has no seconds so deal with it
++	 */
++	if (alm_tm->tm_sec) {
++		alm_tm->tm_sec = 0;
++		alm_tm->tm_min++;
++		if (alm_tm->tm_min >= 60) {
++			alm_tm->tm_min = 0;
++			alm_tm->tm_hour++;
++			if (alm_tm->tm_hour >= 24) {
++				alm_tm->tm_hour = 0;
++				alm_tm->tm_mday++;
++				if (alm_tm->tm_mday > 31)
++					alm_tm->tm_mday = 0;
++			}
++		}
++	}
++
++	ret = i2c_smbus_read_byte_data(client, HYM8563_CTL2);
++	if (ret < 0)
++		return ret;
++
++	ret &= ~HYM8563_CTL2_AIE;
++
++	ret = i2c_smbus_write_byte_data(client, HYM8563_CTL2, ret);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = (alm_tm->tm_min < 60 && alm_tm->tm_min >= 0) ?
++			bin2bcd(alm_tm->tm_min) : HYM8563_ALM_BIT_DISABLE;
++
++	buf[1] = (alm_tm->tm_hour < 24 && alm_tm->tm_hour >= 0) ?
++			bin2bcd(alm_tm->tm_hour) : HYM8563_ALM_BIT_DISABLE;
++
++	buf[2] = (alm_tm->tm_mday <= 31 && alm_tm->tm_mday >= 1) ?
++			bin2bcd(alm_tm->tm_mday) : HYM8563_ALM_BIT_DISABLE;
++
++	buf[3] = (alm_tm->tm_wday < 7 && alm_tm->tm_wday >= 0) ?
++			bin2bcd(alm_tm->tm_wday) : HYM8563_ALM_BIT_DISABLE;
++
++	ret = i2c_smbus_write_i2c_block_data(client, HYM8563_ALM_MIN, 4, buf);
++	if (ret < 0)
++		return ret;
++
++	return hym8563_rtc_alarm_irq_enable(dev, alm->enabled);
++}
++
++static const struct rtc_class_ops hym8563_rtc_ops = {
++	.read_time		= hym8563_rtc_read_time,
++	.set_time		= hym8563_rtc_set_time,
++	.alarm_irq_enable	= hym8563_rtc_alarm_irq_enable,
++	.read_alarm		= hym8563_rtc_read_alarm,
++	.set_alarm		= hym8563_rtc_set_alarm,
++};
++
++/*
++ * Handling of the clkout
++ */
++
++#define clkout_hw_to_hym8563(_hw) container_of(_hw, struct hym8563, clkout_hw)
++
++static int clkout_rates[] = {
++	32768,
++	1024,
++	32,
++	1,
++};
++
++static unsigned long hym8563_clkout_recalc_rate(struct clk_hw *hw,
++						unsigned long parent_rate)
++{
++	struct hym8563 *hym8563 = clkout_hw_to_hym8563(hw);
++	struct i2c_client *client = hym8563->client;
++	int ret = i2c_smbus_read_byte_data(client, HYM8563_CLKOUT);
++
++	if (ret < 0 || ret & HYM8563_CLKOUT_DISABLE)
++		return 0;
++
++	ret &= HYM8563_CLKOUT_MASK;
++	return clkout_rates[ret];
++}
++
++static long hym8563_clkout_round_rate(struct clk_hw *hw, unsigned long rate,
++				      unsigned long *prate)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(clkout_rates); i++)
++		if (clkout_rates[i] <= rate)
++			return clkout_rates[i];
++
++	return 0;
++}
++
++static int hym8563_clkout_set_rate(struct clk_hw *hw, unsigned long rate,
++				   unsigned long parent_rate)
++{
++	struct hym8563 *hym8563 = clkout_hw_to_hym8563(hw);
++	struct i2c_client *client = hym8563->client;
++	int ret = i2c_smbus_read_byte_data(client, HYM8563_CLKOUT);
++	int i;
++
++	if (ret < 0)
++		return ret;
++
++	for (i = 0; i < ARRAY_SIZE(clkout_rates); i++)
++		if (clkout_rates[i] == rate) {
++			ret &= ~HYM8563_CLKOUT_MASK;
++			ret |= i;
++			return i2c_smbus_write_byte_data(client,
++							 HYM8563_CLKOUT, ret);
++		}
++
++	return -EINVAL;
++}
++
++static int hym8563_clkout_control(struct clk_hw *hw, bool enable)
++{
++	struct hym8563 *hym8563 = clkout_hw_to_hym8563(hw);
++	struct i2c_client *client = hym8563->client;
++	int ret = i2c_smbus_read_byte_data(client, HYM8563_CLKOUT);
++
++	if (ret < 0)
++		return ret;
++
++	if (enable)
++		ret &= ~HYM8563_CLKOUT_DISABLE;
++	else
++		ret |= HYM8563_CLKOUT_DISABLE;
++
++	return i2c_smbus_write_byte_data(client, HYM8563_CLKOUT, ret);
++}
++
++static int hym8563_clkout_prepare(struct clk_hw *hw)
++{
++	return hym8563_clkout_control(hw, 1);
++}
++
++static void hym8563_clkout_unprepare(struct clk_hw *hw)
++{
++	hym8563_clkout_control(hw, 0);
++}
++
++static int hym8563_clkout_is_prepared(struct clk_hw *hw)
++{
++	struct hym8563 *hym8563 = clkout_hw_to_hym8563(hw);
++	struct i2c_client *client = hym8563->client;
++	int ret = i2c_smbus_read_byte_data(client, HYM8563_CLKOUT);
++
++	if (ret < 0)
++		return ret;
++
++	return !(ret & HYM8563_CLKOUT_DISABLE);
++}
++
++const struct clk_ops hym8563_clkout_ops = {
++	.prepare = hym8563_clkout_prepare,
++	.unprepare = hym8563_clkout_unprepare,
++	.is_prepared = hym8563_clkout_is_prepared,
++	.recalc_rate = hym8563_clkout_recalc_rate,
++	.round_rate = hym8563_clkout_round_rate,
++	.set_rate = hym8563_clkout_set_rate,
++};
++
++static struct clk *hym8563_clkout_register_clk(struct hym8563 *hym8563)
++{
++	struct i2c_client *client = hym8563->client;
++	struct device_node *node = client->dev.of_node;
++	struct clk *clk;
++	struct clk_init_data init;
++	int ret;
++
++	ret = i2c_smbus_write_byte_data(client, HYM8563_CLKOUT,
++						HYM8563_CLKOUT_DISABLE);
++	if (ret < 0)
++		return ERR_PTR(ret);
++
++	init.name = "hym8563-clkout";
++	init.ops = &hym8563_clkout_ops;
++	init.flags = CLK_IS_ROOT;
++	init.parent_names = NULL;
++	init.num_parents = 0;
++	hym8563->clkout_hw.init = &init;
++
++	/* register the clock */
++	clk = clk_register(&client->dev, &hym8563->clkout_hw);
++
++	if (!IS_ERR(clk))
++		of_clk_add_provider(node, of_clk_src_simple_get, clk);
++
++	return clk;
++}
++
++/*
++ * The alarm interrupt is implemented as a level-low interrupt in the
++ * hym8563, while the timer interrupt uses a falling edge.
++ * We don't use the timer at all, so the interrupt is requested to
++ * use the level-low trigger.
++ */
++static irqreturn_t hym8563_irq(int irq, void *dev_id)
++{
++	struct hym8563 *hym8563 = (struct hym8563 *)dev_id;
++	struct i2c_client *client = hym8563->client;
++	struct mutex *lock = &hym8563->rtc->ops_lock;
++	int data, ret;
++
++	mutex_lock(lock);
++
++	/* Clear the alarm flag */
++
++	data = i2c_smbus_read_byte_data(client, HYM8563_CTL2);
++	if (data < 0) {
++		dev_err(&client->dev, "%s: error reading i2c data %d\n",
++			__func__, data);
++		goto out;
++	}
++
++	data &= ~HYM8563_CTL2_AF;
++
++	ret = i2c_smbus_write_byte_data(client, HYM8563_CTL2, data);
++	if (ret < 0) {
++		dev_err(&client->dev, "%s: error writing i2c data %d\n",
++			__func__, ret);
++	}
++
++out:
++	mutex_unlock(lock);
++	return IRQ_HANDLED;
++}
++
++static int hym8563_init_device(struct i2c_client *client)
++{
++	int ret;
++
++	/* Clear stop flag if present */
++	ret = i2c_smbus_write_byte_data(client, HYM8563_CTL1, 0);
++	if (ret < 0)
++		return ret;
++
++	ret = i2c_smbus_read_byte_data(client, HYM8563_CTL2);
++	if (ret < 0)
++		return ret;
++
++	/* Disable alarm and timer interrupts */
++	ret &= ~HYM8563_CTL2_AIE;
++	ret &= ~HYM8563_CTL2_TIE;
++
++	/* Clear any pending alarm and timer flags */
++	if (ret & HYM8563_CTL2_AF)
++		ret &= ~HYM8563_CTL2_AF;
++
++	if (ret & HYM8563_CTL2_TF)
++		ret &= ~HYM8563_CTL2_TF;
++
++	ret &= ~HYM8563_CTL2_TI_TP;
++
++	return i2c_smbus_write_byte_data(client, HYM8563_CTL2, ret);
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int hym8563_suspend(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	int ret;
++
++	if (device_may_wakeup(dev)) {
++		ret = enable_irq_wake(client->irq);
++		if (ret) {
++			dev_err(dev, "enable_irq_wake failed, %d\n", ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static int hym8563_resume(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++
++	if (device_may_wakeup(dev))
++		disable_irq_wake(client->irq);
++
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(hym8563_pm_ops, hym8563_suspend, hym8563_resume);
++
++static int hym8563_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	struct hym8563 *hym8563;
++	int ret, gpio_int;
++
++	hym8563 = devm_kzalloc(&client->dev, sizeof(hym8563), GFP_KERNEL);
++	if (!hym8563)
++		return -ENOMEM;
++
++	hym8563->client = client;
++	i2c_set_clientdata(client, hym8563);
++
++	device_set_wakeup_capable(&client->dev, true);
++
++	gpio_int = of_get_gpio(client->dev.of_node, 0);
++	if (!gpio_is_valid(gpio_int)) {
++		dev_err(&client->dev, "failed to get interrupt gpio\n");
++		return -EINVAL;
++	}
++
++	ret = devm_gpio_request_one(&client->dev, gpio_int,
++				      GPIOF_DIR_IN, "hym8563_int");
++	if (ret) {
++		dev_err(&client->dev, "request of gpio %d failed, %d\n",
++			gpio_int, ret);
++		return ret;
++	}
++
++	client->irq = gpio_to_irq(gpio_int);
++	if (client->irq < 0) {
++		dev_err(&client->dev, "could not get irq of gpio %d, %d\n",
++			gpio_int, client->irq);
++		return client->irq;
++	}
++
++	ret = hym8563_init_device(client);
++	if (ret) {
++		dev_err(&client->dev, "could not init device, %d\n", ret);
++		return ret;
++	}
++
++	ret = devm_request_threaded_irq(&client->dev, client->irq,
++					NULL, hym8563_irq,
++					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++					client->name, hym8563);
++	if (ret < 0) {
++		dev_err(&client->dev, "irq %d request failed, %d\n",
++			client->irq, ret);
++		return ret;
++	}
++
++	/* check state of calendar information */
++	ret = i2c_smbus_read_byte_data(client, HYM8563_SEC);
++	if (ret < 0)
++		return ret;
++
++	hym8563->valid = !(ret & HYM8563_SEC_VL);
++	dev_dbg(&client->dev, "rtc information is %s\n",
++		hym8563->valid ? "valid" : "invalid");
++
++	hym8563->rtc = devm_rtc_device_register(&client->dev, client->name,
++						&hym8563_rtc_ops, THIS_MODULE);
++	if (IS_ERR(hym8563->rtc))
++		return PTR_ERR(hym8563->rtc);
++
++	if (IS_ENABLED(CONFIG_COMMON_CLK))
++		hym8563_clkout_register_clk(hym8563);
++
++	return 0;
++}
++
++static const struct i2c_device_id hym8563_id[] = {
++	{ "hym8563", 0 },
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, hym8563_id);
++
++static struct of_device_id hym8563_dt_idtable[] = {
++	{ .compatible = "haoyu,hym8563" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, hym8563_dt_idtable);
++
++static struct i2c_driver hym8563_driver = {
++	.driver		= {
++		.name	= "rtc-hym8563",
++		.owner	= THIS_MODULE,
++		.pm	= &hym8563_pm_ops,
++		.of_match_table	= of_match_ptr(hym8563_dt_idtable),
++	},
++	.probe		= hym8563_probe,
++	.id_table	= hym8563_id,
++};
++
++module_i2c_driver(hym8563_driver);
++
++MODULE_AUTHOR("Heiko Stuebner <heiko@sntech.de>");
++MODULE_DESCRIPTION("HYM8563 RTC driver");
++MODULE_LICENSE("GPL");
+-- 
+1.7.10.4
