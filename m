@@ -1,36 +1,82 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2M10gd2F0Y2hkb2c6IEdQSU8tY29udHJvbGxlZCB3YXRj?=
- =?UTF-8?B?aGRvZw==?=
-Date: Sun, 01 Dec 2013 23:03:27 +0400
-Message-ID: <1385924607.556195103@f310.i.mail.ru>
-References: <1385798072-3886-1-git-send-email-shc_work@mail.ru>
- <529B78DC.7070200@roeck-us.net>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 01/31] ARM: tegra: add missing clock documentation to
+ DT bindings
+Date: Sun, 01 Dec 2013 12:05:44 -0700
+Message-ID: <529B8888.3010801@wwwdotorg.org>
+References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org> <1384548866-13141-2-git-send-email-swarren@wwwdotorg.org> <20131129114900.GN22771@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <529B78DC.7070200-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?R3VlbnRlciBSb2Vjaw==?= <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?V2ltIFZhbiBTZWJyb2Vjaw==?= <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131129114900.GN22771-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8uCgo+IE9uIDExLzI5LzIwMTMgMTE6NTQgUE0sIEFsZXhhbmRlciBTaGl5YW4gd3JvdGU6
-Cj4gPiBUaGlzIHBhdGNoIGFkZHMgYSB3YXRjaGRvZyBkcml2ZXIgZm9yIGRldmljZXMgY29udHJv
-bGxlZCB0aHJvdWdoIEdQSU8sCj4gPiAoQW5hbG9nIERldmljZXMgQURNNzA2LCBNYXhpbSBNQVg4
-MjMsIE5hdGlvbmFsIE5FNTU1IGV0YykuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogQWxleGFuZGVy
-IFNoaXlhbiA8c2hjX3dvcmtAbWFpbC5ydT4KPiA+IC0tLQo+IAo+IExvb2tzIHByZXR0eSBnb29k
-LCBleGNlcHQgZm9yIGEgc2luZ2xlIG5pdHBpY2sgYmVsb3cgKHNvcnJ5IEkgZGlkbid0IG5vdGlj
-ZSB0aGF0IG9uZSBlYXJsaWVyKS4KPiAKPiBBbHNvLCBhcyBtZW50aW9uZWQgYmVmb3JlLCBhIGNo
-YW5nZWxvZyBkZXNjcmliaW5nIHdoYXQgY2hhbmdlZCBhbmQgd2hhdCBkaWRuJ3QKPiB3b3VsZCBi
-ZSByZWFsbHkgaGVscGZ1bC4KCkp1c3QgZml4ZWQgYWxsIG9ic2VydmF0aW9ucyBtYWRlIGJ5IHlv
-dSBlYXJsaWVyLgoKLi4uCj4gPiArCS8qIERpc2FsbG93IHZhbHVlcyBsb3dlciB0aGFuIDIgYW5k
-IGhpZ2hlciB0aGFuIDY1NTM1IG1zICovCj4gPiArCWlmICgoaHdfbWFyZ2luIDwgMikgfHwgKGh3
-X21hcmdpbiA+IDY1NTM1KSkKPiAKPiBVbm5lY2Vzc2FyeSAoICkuCgpUaGlzIGNhbiBiZSBjb3Jy
-ZWN0ZWQgZHVyaW5nIG1lcmdlLiBJc24ndCBpdD8gT3IgeW91IGV4cGVjdCB2ND8KClRoYW5rcy4K
-LS0tCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 11/29/2013 04:49 AM, Thierry Reding wrote:
+> On Fri, Nov 15, 2013 at 01:53:56PM -0700, Stephen Warren wrote: 
+> [...]
+>> @@ -60,6 +81,12 @@ of the following host1x client modules: -
+>> compatible: "nvidia,tegra<chip>-dc" - reg: Physical base address
+>> and length of the controller's registers. - interrupts: The
+>> interrupt outputs from the controller. +  - clocks : Must contain
+>> an entry for each entry in clock-names. +    See
+>> ../clocks/clock-bindings.txt for details. +  - clock-names : Must
+>> include the following entries: +    - disp1 or disp2 (depending
+>> on the controller instance)
+> 
+> I'm not sure if this makes sense. The name could be the same
+> independent of which controller uses it. If it isn't then the
+> driver would need additional code to find out which instance it is
+> and construct a dynamic string.
+> 
+> Any objection to just make this entry "disp", or "dc"?
+
+This patch simply documents the binding that the various drivers
+already require and/or whatever is already in the DT files if there
+are any clocks the drivers don't currently use. I did consider fixing
+up all the current usage to actually be sane, but that would require
+even more driver changes (in addition to those required for the reset
+framework patches).
+
+>> +  - clock-names : Must include the following entries:
+> 
+> One other thing I noticed here is that you use a space between the 
+> property name and the :. None of the other properties have that, so
+> it looks somewhat out of place. The same is true for other
+> bindings, but there seem to be inconsistencies in some places
+> anyway, so perhaps we don't care? Well, I do care, don't know about
+> you. =)
+
+Yes, I simply cut/paste the clock docs from one binding into the other
+to make sure the wording was consistent. I guess I need to go through
+and adjust the pasted format to match the various bindings. It's a
+pity they're plain-text not a schema, so there is no consistency here:-(
+
+>> diff --git
+>> a/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.txt
+>> b/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.txt 
+>> index 91ff771c7e77..d4f2d534934b 100644 ---
+>> a/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.txt 
+>> +++
+>> b/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.txt 
+>> @@ -6,8 +6,10 @@ Required properties: - interrupts: Should
+>> contain SPI interrupts. - nvidia,dma-request-selector : The Tegra
+>> DMA controller's phandle and request selector for this SPI
+>> controller. -- This is also require clock named "spi" as per
+>> binding document -
+>> Documentation/devicetree/bindings/clock/clock-bindings.txt +-
+>> clocks : Must contain an entry for each entry in clock-names. +
+>> See ../clocks/clock-bindings.txt for details. +- clock-names :
+>> Must include the following entries: +  - spi
+> 
+> This is inconsistent with other bindings that require only a
+> single clock entry. I suppose that this is required because of the
+> driver requesting a specifically named clock, in which case that's
+> fine.
+
+This driver does clk_get(dev, "spi") rather than clk_get(dev, NULL),
+so this requires a specific name. Again, I did consider updating all
+drivers to use names, but decided I didn't want to do even more driver
+changes, but instead just document what was currently required.
