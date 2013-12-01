@@ -1,45 +1,40 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 02/31] ARM: tegra: document reset properties in DT bindings
-Date: Sun, 01 Dec 2013 12:06:49 -0700
-Message-ID: <529B88C9.60804@wwwdotorg.org>
-References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org> <1384548866-13141-3-git-send-email-swarren@wwwdotorg.org> <20131129122348.GO22771@ulmo.nvidia.com>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: [PATCH v3 0/2] Add support for hym8563 rtcs
+Date: Sun, 1 Dec 2013 20:47:02 +0100
+Message-ID: <201312012047.02299.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131129122348.GO22771-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, Mike Turquette <mturquette@linaro.org>, Richard Weinberger <richard.weinberger@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2013 05:23 AM, Thierry Reding wrote:
-> On Fri, Nov 15, 2013 at 01:53:57PM -0700, Stephen Warren wrote: 
-> [...]
->> diff --git
->> a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
->> b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
->
->> 
-[...]
->> +  - resets : Must contain an entry for each entry in
->> reset-names. +    See ../reset/reset.txt for details. +  -
->> reset-names : Must include the following entries: +    - dc
-> 
-> For consistency with this, the clock-names entry for the first
-> clock in this node should then be "dc" as well.
+This series adds support for the Haoyu Microelectronics HYM8563 rtc. This
+chip is often used in designs around the Cortex-A9 SoCs from Rockchip to
+provide rtc functionality and the 32kHz suspend clock the SoC needs.
 
-The dc driver gets the clock by name, so this isn't a requirement.
+changes since v2:
+- get size for devm_kzalloc from struct not from pointer
+changes since v1:
+- add haoyu prefix to vendor-prefixes.txt
+- use gpio_to_irq to get the alarm interrupt instead of specifying it
+  separately to the gpio itself
 
->> diff --git
->> a/Documentation/devicetree/bindings/sound/nvidia,tegra30-ahub.txt
->> b/Documentation/devicetree/bindings/sound/nvidia,tegra30-ahub.txt
->
->> 
-[...]
->> -  - spdif_in +  - spdif
-> 
-> Why is this renamed?
+Heiko Stuebner (2):
+  dt-bindings: add hym8563 binding
+  rtc: add hym8563 rtc-driver
 
-There are two separate clocks for the SPDIF input and output modules,
-but just a single reset.
+ .../devicetree/bindings/rtc/haoyu,hym8563.txt      |   27 +
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ drivers/rtc/Kconfig                                |   11 +
+ drivers/rtc/Makefile                               |    1 +
+ drivers/rtc/rtc-hym8563.c                          |  626 ++++++++++++++++++++
+ 5 files changed, 666 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
+ create mode 100644 drivers/rtc/rtc-hym8563.c
+
+-- 
+1.7.10.4
