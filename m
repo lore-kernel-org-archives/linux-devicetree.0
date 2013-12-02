@@ -1,60 +1,52 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/1] ARM: dts: Add missing clock names for exynos4412
- dwmmc node
-Date: Mon, 2 Dec 2013 09:52:53 +0000
-Message-ID: <20131202095253.GC12952@e106331-lin.cambridge.arm.com>
-References: <1385892707-25063-1-git-send-email-kasimling@gmail.com>
+From: Valentine <valentine.barshak@cogentembedded.com>
+Subject: Re: [PATCH V3 1/2] sata_rcar: Add R-Car Gen2 SATA PHY support
+Date: Mon, 02 Dec 2013 14:07:24 +0400
+Message-ID: <529C5BDC.7080006@cogentembedded.com>
+References: <1383912570-8393-1-git-send-email-valentine.barshak@cogentembedded.com> <1383912570-8393-2-git-send-email-valentine.barshak@cogentembedded.com> <52951B4D.3030205@cogentembedded.com> <20131129201406.GD21755@mtj.dyndns.org> <5298FAA8.2050300@cogentembedded.com> <20131129204231.GE21755@mtj.dyndns.org> <20131202000201.GA14523@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1385892707-25063-1-git-send-email-kasimling@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alex Ling <kasimling@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20131202000201.GA14523@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Tejun Heo <tj@kernel.org>
+Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 01, 2013 at 10:11:47AM +0000, Alex Ling wrote:
-> This patch adds "biu" and "ciu" clock names for exynos4412 dwmmc
-> node. Without this patch, dwmmc host driver will skip enabling the
-> two clocks and it will break dwmmc host function on exynos4412.
-> Tested on FriendlyARM TINY4412 board.
+On 12/02/2013 04:02 AM, Simon Horman wrote:
+> On Fri, Nov 29, 2013 at 03:42:31PM -0500, Tejun Heo wrote:
+>> On Sat, Nov 30, 2013 at 12:35:52AM +0400, Valentine wrote:
+>>> On 11/30/2013 12:14 AM, Tejun Heo wrote:
+>>>> Hello,
+>>>>
+>>>> On Wed, Nov 27, 2013 at 02:06:05AM +0400, Valentine wrote:
+>>>>> On 11/08/2013 04:09 PM, Valentine Barshak wrote:
+>>>>>
+>>>>> Tejun,
+>>>>> are you OK with taking this?
+>>>>
+>>>> Yeah, the stat part looks okay to me.  How the two should be routed?
+>>>> Both through libata or should I just take the first one?
+>>>
+>>> I'm not sure about that. I'm more concerned about the first one.
+>>> But I wouldn't mind if you take both.
+>>
+>> Applied the first one to libata/for-3.14.  Are people happy with the
+>> second one?  If so, I'll put route that through libata/for-3.14 too.
+>
+> Hi,
+>
+> Assuming that the second one is " [PATCH V3 2/2] dt: Document sata_rcar
+> bindings" then from my point of view it would be ideal if you took it.
+> However, it seems that there is still some discussion on the contents
+> between Valentine and Kumar Gala.
+>
 
-The patch description is a little off; this patch adds the clocks as
-well as the clock-names.
+Thanks, Simon.
+Actually between Laurent and Kumar.
+Since the R-Car Gen2 DTS file have been updated to include the IRQ macros,
+I don't see any issues with applying the binding documentation from this
+series.
 
-The patch itself looks fine to me.
-
-Mark.
-
-> 
-> Signed-off-by: Alex Ling <kasimling@gmail.com>
-> ---
->  arch/arm/boot/dts/exynos4412.dtsi |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-> index e743e67..67bef99 100644
-> --- a/arch/arm/boot/dts/exynos4412.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412.dtsi
-> @@ -67,5 +67,7 @@
->  		interrupts = <0 77 0>;
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		clocks = <&clock 301>, <&clock 149>;
-> +		clock-names = "biu", "ciu";
->  	};
->  };
-> -- 
-> 1.7.9.5
-> 
-> 
+Thanks,
+Val.
