@@ -1,55 +1,106 @@
-From: Alex Ling <kasimling@gmail.com>
-Subject: Re: [PATCH 1/1] ARM: dts: Add missing clock names for exynos4412
- dwmmc node
-Date: Mon, 2 Dec 2013 22:01:20 +0800
-Message-ID: <CAHaF_kjuXZOkUXiK-E8mk1BmMvBPf-dUkha+nRnM3XhKOoSOJA@mail.gmail.com>
-References: <1385892707-25063-1-git-send-email-kasimling@gmail.com> <20131202095253.GC12952@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20131202095253.GC12952@e106331-lin.cambridge.arm.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "ben-linux@fluff.org" <ben-linux@fluff.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] OF: base: match each node compatible against all given
+ matches first
+Date: Mon, 02 Dec 2013 15:09:54 +0100
+Message-ID: <529C94B2.3040408@gmail.com>
+References: <1385663785-8643-1-git-send-email-sebastian.hesselbarth@gmail.com> <20131202120300.GA12793@ulmo.nvidia.com> <529C927A.9000303@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <529C927A.9000303-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Meelis Roos <mroos-Y27EyoLml9s@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 2, 2013 at 5:52 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Sun, Dec 01, 2013 at 10:11:47AM +0000, Alex Ling wrote:
->> This patch adds "biu" and "ciu" clock names for exynos4412 dwmmc
->> node. Without this patch, dwmmc host driver will skip enabling the
->> two clocks and it will break dwmmc host function on exynos4412.
->> Tested on FriendlyARM TINY4412 board.
+On 12/02/13 15:00, Rob Herring wrote:
+> On 12/02/2013 06:03 AM, Thierry Reding wrote:
+>> On Thu, Nov 28, 2013 at 07:36:25PM +0100, Sebastian Hesselbarth
+>> wrote:
+>>> Currently, of_match_node compares each given match against all
+>>> node's compatible strings with of_device_is_compatible.
+>>>
+>>> To achieve multiple compatible strings per node with ordering
+>>> from specific to generic, this requires given matches to be
+>>> ordered from specific to generic. For most of the drivers this
+>>> is not true and also an alphabetical ordering is more sane
+>>> there.
+>>>
+>>> Therefore, this patch modifies of_match_node to match each of
+>>> the node's compatible strings against all given matches first,
+>>> before checking the next compatible string. This implies that
+>>> node's compatibles are ordered from specific to generic while
+>>> given matches can be in any order.
+>>>
+>>> Signed-off-by: Sebastian Hesselbarth
+[...]
+>> That said, I think you might actually have nailed it with this
+>> patch. From what I remember all earlier attempt failed because
+>> they didn't match all compatible/name/type combinations properly.
+>> I'm adding a few people on Cc who were involved with the other
+>> patches, perhaps they can give your patch a spin and see if it
+>> fixes things for them.
 >
-> The patch description is a little off; this patch adds the clocks as
-> well as the clock-names.
-Well noted. I'll update the description later. Thanks!
->
-> The patch itself looks fine to me.
->
-> Mark.
+> I agree and the change here is simple enough I think the chances of a
+> regression are low. But there is one issue...
 >
 >>
->> Signed-off-by: Alex Ling <kasimling@gmail.com>
->> ---
->>  arch/arm/boot/dts/exynos4412.dtsi |    2 ++
->>  1 file changed, 2 insertions(+)
+>> Thierry
 >>
->> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
->> index e743e67..67bef99 100644
->> --- a/arch/arm/boot/dts/exynos4412.dtsi
->> +++ b/arch/arm/boot/dts/exynos4412.dtsi
->> @@ -67,5 +67,7 @@
->>               interrupts = <0 77 0>;
->>               #address-cells = <1>;
->>               #size-cells = <0>;
->> +             clocks = <&clock 301>, <&clock 149>;
->> +             clock-names = "biu", "ciu";
->>       };
->>  };
->> --
->> 1.7.9.5
+>> [0]: https://lkml.org/lkml/2013/10/3/585
 >>
->>
+>>> diff --git a/drivers/of/base.c b/drivers/of/base.c index
+>>> 7d4c70f..183a9c7 100644 --- a/drivers/of/base.c +++
+>>> b/drivers/of/base.c @@ -713,23 +713,37 @@ static const struct
+>>> of_device_id *__of_match_node(const struct of_device_id *matches,
+>>> const struct device_node *node) { +	const char *cp; + int cplen,
+>>> l; + if (!matches) return NULL;
+>>>
+>>> -	while (matches->name[0] || matches->type[0] ||
+>>> matches->compatible[0]) { -		int match = 1; -		if
+>>> (matches->name[0]) -			match &= node->name -				&&
+>>> !strcmp(matches->name, node->name); -		if (matches->type[0]) -
+>>> match &= node->type -				&& !strcmp(matches->type, node->type);
+>>> - if (matches->compatible[0]) -			match &=
+>>> __of_device_is_compatible(node, -							   matches->compatible);
+>>>   -		if (match) -			return matches; -		matches++; +	cp =
+>>> __of_get_property(node, "compatible", &cplen); +	if (!cp) +
+>>> return NULL;
+>
+> No compatible property and matching on name and/or type only is valid.
+> Remove the if here and changing the following should work:
+>
+>>> + +	while (cplen > 0) {
+>
+> do {
+>
+>>> +		const struct of_device_id *m = matches; + +		while
+>>> (m->name[0] || m->type[0] || m->compatible[0]) { +			int match =
+>>> 1; +			if (m->name[0]) +				match &= node->name +					&&
+>>> !strcmp(m->name, node->name); +			if (m->type[0]) +				match &=
+>>> node->type + && !strcmp(m->type, node->type); +			if
+>>> (m->compatible[0])
+>
+> if (cp && m->compatible[0])
+>
+>>> +				match &= !of_compat_cmp(cp, m->compatible, +
+>>> strlen(m->compatible)); +			if (match) +				return m; +			m++; +
+>>> } +		l = strlen(cp) + 1; +		cp += l; +		cplen -= l; }
+>
+>
+> } while (cp && (cplen > 0));
 
-BR,
-Alex
+Rob,
+
+although quoting somehow got messed up, I see the point. The pointer
+arith right above loop end condition needs to be skipped too if !cp.
+
+I will rework the loop to allow name/type matching with cp == NULL
+and resend in a day or two.
+
+Sebastian
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
