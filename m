@@ -1,72 +1,157 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH 2/3] ARM: dts: clps711x: Add bindings documentation for CLPS711X irqchip driver
-Date: Mon,  2 Dec 2013 22:12:59 +0400
-Message-ID: <1386007979-6785-1-git-send-email-shc_work@mail.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/3] usb: phy-generic: Add ULPI VBUS support
+Date: Mon, 2 Dec 2013 18:22:04 +0000
+Message-ID: <20131202182204.GQ12952@e106331-lin.cambridge.arm.com>
+References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk>
+ <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1385967919-13258-4-git-send-email-chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add OF document for Cirrus Logic CLPS711X irqchip driver.
+On Mon, Dec 02, 2013 at 07:05:19AM +0000, Chris Ruehl wrote:
+> usb: phy-generic: Add ULPI VBUS support
+> 
+> Some platforms need to set the VBUS parameters of the ULPI
+> like ISP1504 which interact with overcurrent protection and
+> power switch MIC2575. Therefore it requires to set
+> * DRVVBUS
+> * DRVVBUS_EXT
+> * EXTVBUSIND
+> * CHRGVBUS
+> of the ULPI.
+> This patch add support for it.
 
-Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- .../interrupt-controller/cirrus,clps711x-intc.txt  | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
+Could you elaborate on when we need to do this and why?
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
-new file mode 100644
-index 0000000..12f47cb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
-@@ -0,0 +1,41 @@
-+Cirrus Logic CLPS711X Interrupt Controller
-+
-+Required properties:
-+
-+- compatible: Should be "cirrus,clps711x-intc"
-+- reg: Specifies base physical address of the registers set
-+- interrupt-controller: Identifies the node as an interrupt controller
-+- #interrupt-cells: Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 1.
-+
-+The interrupt sources are as follows:
-+ID	Name	Description
-+---------------------------
-+1:	BLINT	Battery low (FIQ)
-+3:	MCINT	Media changed (FIQ)
-+4:	CSINT	CODEC sound
-+5:	EINT1	External 1
-+6:	EINT2	External 2
-+7:	EINT3	External 3
-+8:	TC1OI	TC1 under flow
-+9:	TC2OI	TC2 under flow
-+10:	RTCMI	RTC compare match
-+11:	TINT	64Hz tick
-+12:	UTXINT1	UART1 transmit FIFO half empty
-+13:	URXINT1	UART1 receive FIFO half full
-+14:	UMSINT	UART1 modem status changed
-+15:	SSEOTI	SSI1 end of transfer
-+16:	KBDINT	Keyboard
-+17:	SS2RX	SSI2 receive FIFO half or greater full
-+18:	SS2TX	SSI2 transmit FIFO less than half empty
-+28:	UTXINT2	UART2 transmit FIFO half empty
-+29:	URXINT2	UART2 receive FIFO half full
-+32:	DAIINT	DAI interface (FIQ)
-+
-+Example:
-+	intc: interrupt-controller {
-+		compatible = "cirrus,clps711x-intc";
-+		reg = <0x80000000 0x4000>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
--- 
-1.8.3.2
+> 
+> Devicetree configuration example:
+> 
+> usbphy0: usbphy@0x10024170 {
+>  compatible = "usb-nop-xceiv";
+>  reg = <0x10024170 0x4>; /* ULPI Viewport OTG */
+>  clocks = <&clks 75>;
+>  clock-names = "main_clk";
+> };
+> 
+> &usbphy0 {
+>         reset-gpios = <&gpio1 31 1>;
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_usbphy0 &pinctrl_usbotg1>;
+>         ulpi_set_vbus = <0x0f>;
+> };
+> 
+> Please refer to the phy-bindings.txt for the value of ulpi_set_vbus commit
+> with this patch.
+> 
+> Signed-off-by: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+> ---
+>  .../devicetree/bindings/phy/phy-bindings.txt       |   15 ++++++
+>  drivers/usb/phy/phy-generic.c                      |   50 +++++++++++++++++++-
+>  drivers/usb/phy/phy-generic.h                      |    3 ++
+>  3 files changed, 67 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-bindings.txt b/Documentation/devicetree/bindings/phy/phy-bindings.txt
+> index 8ae844f..b109b2f 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-bindings.txt
+> +++ b/Documentation/devicetree/bindings/phy/phy-bindings.txt
+> @@ -34,6 +34,18 @@ phys : the phandle for the PHY device (used by the PHY subsystem)
+>  phy-names : the names of the PHY corresponding to the PHYs present in the
+>  	    *phys* phandle
+>  
+> +Optional Properties:
+> +reset-gpios :	GPIO used to reset ULPI like ISP1504 with
+> +		0 = reset active high ; 1 = reset active low.
 
+The format of the gpio-specifier doesn't matter here.
+
+Why do you need to mention the ISP1504? Either this is generic, or it
+doesn't belong here.
+
+Perhaps we need a ulpi-phy binding document. This and the rest of the
+patch is strongly tied to ULPI.
+
+> +cs-gpios :	GPIO used to activate a ULPI like ISP1504 with
+> +		0 = reset acitive high; 1 = reset active low.
+
+Again, the format of the gpio-specifier is not a concern here. I'm also
+a little confused as to the name "cs-gpios" for something that activates
+the ULPI.
+
+> +ulpi_set_vbus :	ULPI configuation parameter to program the VBUS signaling of 
+> +		ISP1504 or similar chipsets.
+
+Could you elaborate on this? Is this applicable to any ULPI PHY? The
+description implies that it's somewhat tied to ISP1504 (if it's not,
+drop the mention of ISP1504).
+
+Why exactly do we need this, and why should it live in the DT?
+
+Why can se not figure this out automatically, or have defaults that work
+in more places?
+
+Also, s/_/-/ on property names please.
+
+> +		Set the parameter:
+> +		DRVVBUS = (1) DRVVBUS_EXT = (1<<1) EXTVBUSIND = (1<<2) CHRGVBUS = (1<<3)
+> +		eg: DRVVBUS | DRVVBUS_EXT = 0x03
+> +		    ulpi_set_vbus = <0x03>
+
+I don't like putting arbitrary bitfields like this in DT. They're
+illegible and easy to abuse.
+
+Boolean properties are nicer for flags.
+
+What exactly do these flags mean?
+
+[...]
+
+> @@ -253,14 +284,15 @@ static int usb_phy_gen_xceiv_probe(struct platform_device *pdev)
+>  
+>  	if (dev->of_node) {
+>  		struct device_node *node = dev->of_node;
+> +		struct resource	*res;
+>  		enum of_gpio_flags flags;
+>  		enum of_gpio_flags csflags;
+> +		u32 ulpi_vbus;
+>  
+>  		if (of_property_read_u32(node, "clock-frequency", &clk_rate))
+>  			clk_rate = 0;
+>  
+>  		needs_vcc = of_property_read_bool(node, "vcc-supply");
+> -
+>  		nop->gpio_reset = of_get_named_gpio_flags(node, "reset-gpios",
+>  								0, &flags);
+
+Why the random line deletion?
+
+>  
+> @@ -274,6 +306,22 @@ static int usb_phy_gen_xceiv_probe(struct platform_device *pdev)
+>  		if (gpio_is_valid(nop->gpio_chipselect))
+>  			nop->cs_active_low = csflags & OF_GPIO_ACTIVE_LOW;
+>  
+> +		err = of_property_read_u32(node, "ulpi_set_vbus",&ulpi_vbus);
+> +		if (err) {
+> +			nop->ulpi_vbus = -1;
+> +			nop->viewport = NULL;
+> +			ulpi_vbus = 0;
+> +		} else {
+> +			dev_dbg(dev,"ULPI ulpi_set_vbus 0x%02x",ulpi_vbus);
+> +			nop->ulpi_vbus = ulpi_vbus;
+> +			res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+
+This wasn't described in the binding document, and it's ULPI specific. I
+think we need a separate ulpi-phy binding that builds upon the generic
+one.
+
+Thanks,
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
