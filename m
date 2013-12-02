@@ -1,173 +1,46 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH V6] kbuild: dtbs_install: new make target
-Date: Sun,  1 Dec 2013 23:56:28 +0000
-Message-ID: <1385942188-21831-1-git-send-email-jason@lakedaemon.net>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384201760-16785-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH V3 1/2] sata_rcar: Add R-Car Gen2 SATA PHY support
+Date: Mon, 2 Dec 2013 09:02:01 +0900
+Message-ID: <20131202000201.GA14523@verge.net.au>
+References: <1383912570-8393-1-git-send-email-valentine.barshak@cogentembedded.com>
+ <1383912570-8393-2-git-send-email-valentine.barshak@cogentembedded.com>
+ <52951B4D.3030205@cogentembedded.com>
+ <20131129201406.GD21755@mtj.dyndns.org>
+ <5298FAA8.2050300@cogentembedded.com>
+ <20131129204231.GE21755@mtj.dyndns.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131129204231.GE21755@mtj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Valentine <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Unlike other build products in the Linux kernel, there is no 'make
-*install' mechanism to put devicetree blobs in a standard place.
+On Fri, Nov 29, 2013 at 03:42:31PM -0500, Tejun Heo wrote:
+> On Sat, Nov 30, 2013 at 12:35:52AM +0400, Valentine wrote:
+> > On 11/30/2013 12:14 AM, Tejun Heo wrote:
+> > >Hello,
+> > >
+> > >On Wed, Nov 27, 2013 at 02:06:05AM +0400, Valentine wrote:
+> > >>On 11/08/2013 04:09 PM, Valentine Barshak wrote:
+> > >>
+> > >>Tejun,
+> > >>are you OK with taking this?
+> > >
+> > >Yeah, the stat part looks okay to me.  How the two should be routed?
+> > >Both through libata or should I just take the first one?
+> > 
+> > I'm not sure about that. I'm more concerned about the first one.
+> > But I wouldn't mind if you take both.
+> 
+> Applied the first one to libata/for-3.14.  Are people happy with the
+> second one?  If so, I'll put route that through libata/for-3.14 too.
 
-This patch is an attempt to fix this problem.  Akin to 'make install',
-this creates a new make target, dtbs_install.  The script that gets
-called defers to a distribution or user supplied installdtbs binary,
-if found in the system.  Otherwise, the default action is to install the
-built dtbs into
+Hi,
 
-  /lib/devicetrees/${kernel_version}/${dts_filename}.dtb
-
-This is done to keep dtbs from different kernel versions separate until
-things have settled down.  Once the dtbs are stable, and not so strongly
-linked to the kernel version, the devicetree files will most likely move
-to their own repo.  Users will need to upgrade install scripts at that
-time.
-
-/lib has been selected over /boot since /boot is often a FAT filesystem
-and a majority of the dts filenames are longer than 8+3.
-
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
-Note: Stephen, I haven't added your Ack because I wanted to make sure you were
-Ok with the change to /lib in light of /boot partitions formatted to FAT
-
-changes since v5:
- - move make target back to arch/arm/Makefile (gcl)
- - change default install location to /lib from /boot (FAT) (ojn,jac)
-
-changes since v4:
- - move make target from arch/arm/Makefile to Makefile (swarren)
- - change default install location to /boot/devicetrees/$KERNVER (swarren/gcl)
- - add INSTALL_DTBS_PATH for changing build root (jac)
-
-changes since v3:
- - drop renaming files to ${compat}.dtb (rmk/swarren)
- - move installdtbs.sh to ./scripts/ (gcl)
-
-changes since v2:
- - use fdtget instead of a modified dtc to get the board compat string
-
-changes since v1:
- - added this patch
-
- Makefile               | 12 +++++++++++-
- arch/arm/Makefile      | 10 ++++++++++
- scripts/installdtbs.sh | 33 +++++++++++++++++++++++++++++++++
- 3 files changed, 54 insertions(+), 1 deletion(-)
- create mode 100644 scripts/installdtbs.sh
-
-diff --git a/Makefile b/Makefile
-index c0c2d58e3998..240e0d52b126 100644
---- a/Makefile
-+++ b/Makefile
-@@ -339,6 +339,7 @@ OBJDUMP		= $(CROSS_COMPILE)objdump
- AWK		= awk
- GENKSYMS	= scripts/genksyms/genksyms
- INSTALLKERNEL  := installkernel
-+INSTALLDTBS    := installdtbs
- DEPMOD		= /sbin/depmod
- PERL		= perl
- CHECK		= sparse
-@@ -391,7 +392,7 @@ KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(S
- export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
- export ARCH SRCARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC
- export CPP AR NM STRIP OBJCOPY OBJDUMP
--export MAKE AWK GENKSYMS INSTALLKERNEL PERL UTS_MACHINE
-+export MAKE AWK GENKSYMS INSTALLKERNEL INSTALLDTBS PERL UTS_MACHINE
- export HOSTCXX HOSTCXXFLAGS LDFLAGS_MODULE CHECK CHECKFLAGS
- 
- export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS LDFLAGS
-@@ -704,6 +705,15 @@ export KBUILD_IMAGE ?= vmlinux
- export	INSTALL_PATH ?= /boot
- 
- #
-+# INSTALL_DTBS_PATH specifies a prefix for relocations required by build roots.
-+# Like INSTALL_MOD_PATH, it isn't defined in the Makefile, but can be passed as
-+# an argument if needed.
-+#
-+
-+DTBBOOT = $(INSTALL_DTBS_PATH)/lib/devicetrees/$(KERNELRELEASE)
-+export DTBBOOT
-+
-+#
- # INSTALL_MOD_PATH specifies a prefix to MODLIB for module directory
- # relocations required by build roots.  This is not defined in the
- # makefile but the argument can be passed to make if needed.
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index c99b1086d83d..400a3a7ee899 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -314,6 +314,12 @@ PHONY += dtbs
- dtbs: scripts
- 	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) dtbs
- 
-+PHONY += dtbs_install
-+
-+dtbs_install: dtbs
-+	$(CONFIG_SHELL) $(srctree)/scripts/installdtbs.sh $(KERNELRELEASE) \
-+	"$(DTBBOOT)" "$(srctree)"
-+
- # We use MRPROPER_FILES and CLEAN_FILES now
- archclean:
- 	$(Q)$(MAKE) $(clean)=$(boot)
-@@ -331,6 +337,10 @@ define archhelp
-   echo  '  bootpImage    - Combined zImage and initial RAM disk'
-   echo  '                  (supply initrd image via make variable INITRD=<path>)'
-   echo  '* dtbs          - Build device tree blobs for enabled boards'
-+  echo  '  dtbs_install  - Install dtbs'
-+  echo  '                  Install using (your) ~/bin/$(INSTALLDTBS) or'
-+  echo  '                  (distribution) /sbin/$(INSTALLDTBS) or'
-+  echo  '                  install to $(DTBBOOT)'
-   echo  '  install       - Install uncompressed kernel'
-   echo  '  zinstall      - Install compressed kernel'
-   echo  '  uinstall      - Install U-Boot wrapped compressed kernel'
-diff --git a/scripts/installdtbs.sh b/scripts/installdtbs.sh
-new file mode 100644
-index 000000000000..11027f00c3a4
---- /dev/null
-+++ b/scripts/installdtbs.sh
-@@ -0,0 +1,33 @@
-+#!/bin/sh
-+#
-+# This file is subject to the terms and conditions of the GNU General Public
-+# License.  See the file "COPYING" in the main directory of this archive
-+# for more details.
-+#
-+# Copyright (C) 1995 by Linus Torvalds
-+#
-+# Adapted from code in arch/i386/boot/Makefile by H. Peter Anvin
-+#
-+# Further adapted from arch/x86/boot/install.sh by Jason Cooper
-+#
-+# "make dtbs_install" script
-+#
-+# Arguments:
-+#   $1 - kernel version
-+#   $2 - default install path (blank if root directory)
-+#   $3 - directory containing dtbs
-+#
-+
-+# User may have a custom install script
-+
-+if [ -x ~/bin/${INSTALLDTBS} ]; then exec ~/bin/${INSTALLDTBS} "$@"; fi
-+if [ -x /sbin/${INSTALLDTBS} ]; then exec /sbin/${INSTALLDTBS} "$@"; fi
-+
-+# Default install
-+[ -d "$2" ] && rm -rf "$2"
-+
-+mkdir -p "$2"
-+
-+for dtb in `find "$3" -name "*.dtb"`; do
-+	cp "$dtb" "$2/${dtb##*/}"
-+done
--- 
-1.8.4.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Assuming that the second one is " [PATCH V3 2/2] dt: Document sata_rcar
+bindings" then from my point of view it would be ideal if you took it.
+However, it seems that there is still some discussion on the contents
+between Valentine and Kumar Gala.
