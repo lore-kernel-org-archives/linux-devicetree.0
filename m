@@ -1,72 +1,77 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4] ASoC: simple-card: add Device Tree
- support
-Date: Mon, 2 Dec 2013 16:24:38 +0000
-Message-ID: <20131202162438.GN12952@e106331-lin.cambridge.arm.com>
-References: <20131003104248.GI27287@sirena.org.uk>
- <87fvsh2966.wl%kuninori.morimoto.gx@renesas.com>
- <20131024171758.GA2461@kartoffel>
- <87iowm9jwv.wl%kuninori.morimoto.gx@renesas.com>
- <20131115155028.GE24831@e106331-lin.cambridge.arm.com>
- <87li0m7d7c.wl%kuninori.morimoto.gx@renesas.com>
- <20131118113617.GC30853@e106331-lin.cambridge.arm.com>
- <87mwl1du71.wl%kuninori.morimoto.gx@renesas.com>
- <20131120162403.GA22479@e106331-lin.cambridge.arm.com>
- <8738mqzk8z.wl%kuninori.morimoto.gx@renesas.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v1 1/1] dts: bindings: add mpc5121 clocks binding document
+Date: Mon, 2 Dec 2013 17:55:20 +0100
+Message-ID: <20131202165520.GX2982@book.gsilab.sittig.org>
+References: <20131202094656.GA12952@e106331-lin.cambridge.arm.com>
+ <1385994034-2513-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8738mqzk8z.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>
+In-Reply-To: <1385994034-2513-1-git-send-email-gsi-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 21, 2013 at 12:12:13AM +0000, Kuninori Morimoto wrote:
+On Mon, Dec 02, 2013 at 15:20 +0100, Gerhard Sittig wrote:
 > 
-> Hi Mark Rutland
+> add a clock bindings documentation file for Freescale MPC5121
 > 
-> > > --------------------
-> > > So, ideally.  However we have to consider the fact that the clock API
-> > > isn't reliably available makes this harder than it should be.  Even
-> > > among the DT using platforms at least PowerPC still uses a custom clock
-> > > API.  We could just use this as a carrot to push people to convert
-> > > though.
-> > > ---------------------
-> > 
-> > I would be happier if we could unify the common clock infrastructure, it
-> > would make this kind of thing a lot lessy messy. However, I'm not
-> > against the system-clock-frequency property for now.
+> this binding implements and uses existing common clock bindings,
+> it does not introduce a new binding semantics but discusses the
+> specific use on Freescale MPC5121 and provides examples
 > 
-> Thank you
+> [ ... ]
 > 
-> > > OK, sorry for my English
-> > 
-> > Sorry for the confusion, I'll try to be less ambiguous in future :)
-> > 
-> > What I was trying to get at here is that if there is neither a clock or
-> > a system-clock-frequency property in the device tree, dai->sysclk will
-> > not have been initialised in this path. Is this a valid case, and will
-> > dai->sysclk have a well-defined, sane value?
-> 
-> My understanding, this "dai" itself is created by devm_kzalloc()
-> So, default dai->sysclk is 0.
-> And, if there is no clocks, no system-clock-frequency property,
-> it try of_property_read_u32() side. but it will do nothing to dai->sysclk
-> in such case. so dai->sysclk is still 0, and it is very sane on this driver.
-> Is this good answer ?
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/mpc5121-clock.txt
+> @@ -0,0 +1,95 @@
+> +Device Tree Clock bindings for Freescale MPC5121
+> +
+> [ ... ]
+> +
+> +Required properties:
+> +- compatible:	shall contain "fsl,mpc5121-clock"
+> +- reg:		shall specify the start address and length of the
+> +		clock module's set of control registers
+> +- #clock-cells:	shall be 1; defines the number of integer cells
+> +		required for a clock specifier which references
+> +		this clock provider
 
-That sounds fine to me. Just wanted to make sure. :)
+In hindsight the wording is not good (especially 'reg'), will see
+how I can improve this.  And the layout may improve some more.
 
-Thanks,
-Mark.
+> +
+> +Optional properties:
+> +- clocks:	list of phandle and clock specifier pairs for the
+> +		node's input clocks, following the common clock
+> +		consumers binding; should be empty, or one XTAL/OSC
+> +		clock reference
+> +- clock-names:	list of clock input name strings sorted in the same
+> +		order as the 'clocks' property
+
+Mark, I very much like your suggestion to state that 'clocks'
+should match 'clock-names' (and not vice versa, found in another
+thread, after having sent this patch).
+
+And noticed that 'clock-names' still does not say that the
+XTAL/OSC should go by the name "osc".  And should not say that at
+most one clock is accepted or how their order is.
+
+
+So I will wait for more feedback, but can tell already that v1
+needs an update before becoming acceptable.  Thank you for your
+patience. :)
+
+
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
