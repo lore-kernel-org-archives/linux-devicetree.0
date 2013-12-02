@@ -1,90 +1,132 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 02/31] ARM: tegra: document reset properties in DT
- bindings
-Date: Mon, 2 Dec 2013 10:08:53 +0100
-Message-ID: <20131202090852.GD17834@ulmo.nvidia.com>
-References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org>
- <1384548866-13141-3-git-send-email-swarren@wwwdotorg.org>
- <20131129122348.GO22771@ulmo.nvidia.com>
- <529B88C9.60804@wwwdotorg.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v6 02/17] dts: mpc512x: introduce dt-bindings/clock/ header
+Date: Mon, 2 Dec 2013 09:46:56 +0000
+Message-ID: <20131202094656.GA12952@e106331-lin.cambridge.arm.com>
+References: <1385851897-23475-1-git-send-email-gsi@denx.de>
+ <1385851897-23475-3-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EY/WZ/HvNxOox07X"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <529B88C9.60804-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1385851897-23475-3-git-send-email-gsi@denx.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gerhard Sittig <gsi@denx.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, Detlev Zundel <dzu@denx.de>, Stephen Warren <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Anatolij Gustschin <agust@denx.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Nov 30, 2013 at 10:51:22PM +0000, Gerhard Sittig wrote:
+> introduce a dt-bindings/ header file for MPC512x clocks,
+> providing symbolic identifiers for those SoC clocks which
+> clients will reference from their device tree nodes
 
---EY/WZ/HvNxOox07X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There should be a binding document update to go with this, pointing out
+that this include file defines the set of clock IDs for the MPC512x
+clocks.
 
-On Sun, Dec 01, 2013 at 12:06:49PM -0700, Stephen Warren wrote:
-> On 11/29/2013 05:23 AM, Thierry Reding wrote:
-> > On Fri, Nov 15, 2013 at 01:53:57PM -0700, Stephen Warren wrote:=20
-> > [...]
-> >> diff --git
-> >> a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-> >> b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-> >
-> >>=20
-> [...]
-> >> +  - resets : Must contain an entry for each entry in
-> >> reset-names. +    See ../reset/reset.txt for details. +  -
-> >> reset-names : Must include the following entries: +    - dc
-> >=20
-> > For consistency with this, the clock-names entry for the first
-> > clock in this node should then be "dc" as well.
->=20
-> The dc driver gets the clock by name, so this isn't a requirement.
+Otherwise, this looks fine to me.
 
-Right, but like I've said in another reply, I'd very much like for this
-to be fixed up so we don't have to mess around with per-instance names
-for clocks. So instead of naming the first clock in the display
-controller node "disp", we could rename it to "dc" for consistency with
-the reset bindings.
+Mark.
 
-> >> diff --git
-> >> a/Documentation/devicetree/bindings/sound/nvidia,tegra30-ahub.txt
-> >> b/Documentation/devicetree/bindings/sound/nvidia,tegra30-ahub.txt
-> >
-> >>=20
-> [...]
-> >> -  - spdif_in +  - spdif
-> >=20
-> > Why is this renamed?
->=20
-> There are two separate clocks for the SPDIF input and output modules,
-> but just a single reset.
-
-I also realized that when reviewing one of the subsequent patches.
-
-Thierry
-
---EY/WZ/HvNxOox07X
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSnE4kAAoJEN0jrNd/PrOhiXkQAL5iRdTR7uO03WpWT+eTIuMm
-rpJLisgAW8wtlJHbCK/ddIaJ6iGgdWWVJhTZsNy+QaMF2Ufo8OHCSvPRxRMBOuOB
-iAdrcwQrktf52Z7nxdMPjrwi/tsjMa6CCclRsVu5yAPXiqQcELLaBUvoYQZlBAGH
-I5jtWZbF+i1pDsrVN4eykeUBZVzAr19hC0Si3k4fOPF0jGTK6Z72M9qynsT2nGEm
-mKpj/YVTgS4/S4U6d1WGa8q7EqaJ0AWwDJAwnuNFKpzyudJqawfsHx3662uOCfZ9
-xzXm4VhAV8vl2sA4KNGztu7GYpPJ/5gDTPhdH16hnOFcoKUbA55Ek4sPUlGTun64
-IREwEdymoYMsp7xb/xCMVQK3EwF2xa17j4IvkJaniJKB2PrZIm7tEv3nD9ee5p2K
-mEqt9xBSSXwcS8CpdDrmno6fk4YA13owxWrfZEieKVDaPAYmCQ3Z/eEwMkotPlfZ
-3S3CE/zcZ8DlXOoufQvei2IHNYRCIwjyvbqSy4PRQqVpnl/b8/iEoEcRbioCrqFU
-VBohzZJmhSROb83AW7FLbOhnGU/3uRXhtya1CTkbrXle9m76/GgOBJ+4Bf4fFkuF
-5XcPIMzY2EBszt2Jd64rL96zBf5D1IJhOZe3cKyjOaeuZIqOtxbwiwr902m5Ka94
-D4YCxG79obWHh0EPBzDT
-=oC7e
------END PGP SIGNATURE-----
-
---EY/WZ/HvNxOox07X--
+> 
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ian.campbell@citrix.com>
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Mike Turquette <mturquette@linaro.org>	# for v3: w/o bdlc, PSC ipg
+> Signed-off-by: Gerhard Sittig <gsi@denx.de>
+> ---
+>  include/dt-bindings/clock/mpc512x-clock.h |   69 +++++++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/mpc512x-clock.h
+> 
+> diff --git a/include/dt-bindings/clock/mpc512x-clock.h b/include/dt-bindings/clock/mpc512x-clock.h
+> new file mode 100644
+> index 000000000000..9e81b3b99a32
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/mpc512x-clock.h
+> @@ -0,0 +1,69 @@
+> +/*
+> + * This header provides constants for MPC512x clock specs in DT bindings.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLOCK_MPC512x_CLOCK_H
+> +#define _DT_BINDINGS_CLOCK_MPC512x_CLOCK_H
+> +
+> +#define MPC512x_CLK_DUMMY		0
+> +#define MPC512x_CLK_REF			1
+> +#define MPC512x_CLK_SYS			2
+> +#define MPC512x_CLK_DIU			3
+> +#define MPC512x_CLK_VIU			4
+> +#define MPC512x_CLK_CSB			5
+> +#define MPC512x_CLK_E300		6
+> +#define MPC512x_CLK_IPS			7
+> +#define MPC512x_CLK_FEC			8
+> +#define MPC512x_CLK_SATA		9
+> +#define MPC512x_CLK_PATA		10
+> +#define MPC512x_CLK_NFC			11
+> +#define MPC512x_CLK_LPC			12
+> +#define MPC512x_CLK_MBX_BUS		13
+> +#define MPC512x_CLK_MBX			14
+> +#define MPC512x_CLK_MBX_3D		15
+> +#define MPC512x_CLK_AXE			16
+> +#define MPC512x_CLK_USB1		17
+> +#define MPC512x_CLK_USB2		18
+> +#define MPC512x_CLK_I2C			19
+> +#define MPC512x_CLK_MSCAN0_MCLK		20
+> +#define MPC512x_CLK_MSCAN1_MCLK		21
+> +#define MPC512x_CLK_MSCAN2_MCLK		22
+> +#define MPC512x_CLK_MSCAN3_MCLK		23
+> +#define MPC512x_CLK_BDLC		24
+> +#define MPC512x_CLK_SDHC		25
+> +#define MPC512x_CLK_PCI			26
+> +#define MPC512x_CLK_PSC_MCLK_IN		27
+> +#define MPC512x_CLK_SPDIF_TX		28
+> +#define MPC512x_CLK_SPDIF_RX		29
+> +#define MPC512x_CLK_SPDIF_MCLK		30
+> +#define MPC512x_CLK_SPDIF		31
+> +#define MPC512x_CLK_AC97		32
+> +#define MPC512x_CLK_PSC0_MCLK		33
+> +#define MPC512x_CLK_PSC1_MCLK		34
+> +#define MPC512x_CLK_PSC2_MCLK		35
+> +#define MPC512x_CLK_PSC3_MCLK		36
+> +#define MPC512x_CLK_PSC4_MCLK		37
+> +#define MPC512x_CLK_PSC5_MCLK		38
+> +#define MPC512x_CLK_PSC6_MCLK		39
+> +#define MPC512x_CLK_PSC7_MCLK		40
+> +#define MPC512x_CLK_PSC8_MCLK		41
+> +#define MPC512x_CLK_PSC9_MCLK		42
+> +#define MPC512x_CLK_PSC10_MCLK		43
+> +#define MPC512x_CLK_PSC11_MCLK		44
+> +#define MPC512x_CLK_PSC_FIFO		45
+> +#define MPC512x_CLK_PSC0		46
+> +#define MPC512x_CLK_PSC1		47
+> +#define MPC512x_CLK_PSC2		48
+> +#define MPC512x_CLK_PSC3		49
+> +#define MPC512x_CLK_PSC4		50
+> +#define MPC512x_CLK_PSC5		51
+> +#define MPC512x_CLK_PSC6		52
+> +#define MPC512x_CLK_PSC7		53
+> +#define MPC512x_CLK_PSC8		54
+> +#define MPC512x_CLK_PSC9		55
+> +#define MPC512x_CLK_PSC10		56
+> +#define MPC512x_CLK_PSC11		57
+> +
+> +#define MPC512x_CLK_LAST_PUBLIC		57
+> +
+> +#endif
+> -- 
+> 1.7.10.4
+> 
+> 
