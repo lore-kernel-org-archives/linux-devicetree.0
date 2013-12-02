@@ -1,110 +1,94 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] ARM: shmobile: kzm9d: Use common clock framework
-Date: Mon, 2 Dec 2013 11:25:51 +0900
-Message-ID: <20131202022549.GA12357@verge.net.au>
-References: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
- <20131008143403.c11f294c8a1701a2ab3bc5fd@ops.dti.ne.jp>
- <20131009034057.GO15065@verge.net.au>
- <CANqRtoQs+31mv0ZULOd3SGshkBkvp-kGoaVOSb10+Ncdp+WNXw@mail.gmail.com>
- <20131009065438.GA7220@verge.net.au>
- <CANqRtoSGFEjcBPDAtq3YCDbkiFCftyr8b=qniYqyMafng=zurw@mail.gmail.com>
- <20131009103915.GB17869@verge.net.au>
- <20131029044239.GC20432@verge.net.au>
+From: Li Xiubo <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv6 1/4] pwm: Add Freescale FTM PWM driver support
+Date: Mon, 2 Dec 2013 02:45:07 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F828E17D3@039-SN2MPN1-011.039d.mgd.msft.net>
+References: <1384220218-12716-1-git-send-email-Li.Xiubo@freescale.com>
+ <1384220218-12716-2-git-send-email-Li.Xiubo@freescale.com>
+ <20131128212510.GC14689@mithrandir>
+ <1DD289F6464F0949A2FCA5AA6DC23F828DD76C@039-SN2MPN1-011.039d.mgd.msft.net>
+ <20131129092224.GB22771@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131029044239.GC20432-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Shinya Kuribayashi <shinya.kuribayashi.px-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20131129092224.GB22771@ulmo.nvidia.com>
+Content-Language: en-US
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Shawn Guo <Shawn.Guo@freescale.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Huan Wang <Huan.Wang@freescale.com>, Jingchan
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 29, 2013 at 01:42:41PM +0900, Simon Horman wrote:
-> On Wed, Oct 09, 2013 at 07:39:18PM +0900, Simon Horman wrote:
-> > On Wed, Oct 09, 2013 at 04:29:56PM +0900, Magnus Damm wrote:
-> > > Hi Simon,
-> > > 
-> > > On Wed, Oct 9, 2013 at 3:54 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> > > > On Wed, Oct 09, 2013 at 01:59:46PM +0900, Magnus Damm wrote:
-> > > >> Hi Simon,
-> > > >>
-> > > >> On Wed, Oct 9, 2013 at 12:40 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> > > >> > On Tue, Oct 08, 2013 at 02:34:03PM +0900, takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org wrote:
-> > > >> >> Use common clock framework version of clock
-> > > >> >>  drivers/clk/shmobile/clk-emev2.c
-> > > >> >> instead of sh-clkfwk version
-> > > >> >>  arch/arm/mach-shmobile/clock-emev2.c
-> > > >> >> when it is configured as a part of multi-platform.
-> > > >> >>
-> > > >> >> Signed-off-by: Takashi Yoshii <takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org>
-> > > >> >
-> > > >> > Thanks.
-> > > >> >
-> > > >> > I plan to add this patch to a new topic branch,
-> > > >> > topic/emev2-common-clock, in the renesas tree and
-> > > >> > queue it up from there for inclusion in mainline
-> > > >> > if/when the first patch of this series is accepted
-> > > >> > by Mike Turquette.
-> > > >>
-> > > >> Thanks for picking up patches, Simon.
-> > > >>
-> > > >> I think you can simply merge this patch after the following series:
-> > > >>
-> > > >> [PATCH 00/05] ARM: shmobile: KZM9D Multiplatform update
-> > > >
-> > > > This is already queued up.
-> > > 
-> > > Yes, I know, thanks for that. I tried to explain the dependency in the
-> > > 00/00 cover letter but I will try to be more clear next time!
-> > > 
-> > > >> There are no build time dependencies on patch 1 and 2 so this patch
-> > > >> can be merged independently. Regarding run-time operation, the
-> > > >> multiplatform series above makes KZM9D DT reference only build for
-> > > >> multiplatform, and in such case CCF is required.
-> > > >>
-> > > >> So if you want to keep KZM9D DT reference working until Mike Turquette
-> > > >> accepts the CCF bits, then I recommend you to wait with "[PATCH 00/05]
-> > > >> ARM: shmobile: KZM9D Multiplatform update" until all EMEV2 CCF bits
-> > > >> have been merged.
-> > > >>
-> > > >> Another way is to merge "[PATCH 00/05] ARM: shmobile: KZM9D
-> > > >> Multiplatform update" before the EMEV2 CCF bits, but if so you may as
-> > > >> well merge this patch as well IMO. This
-> > > >> multiplatform-update-series-merge-before-CCF plan will result in
-> > > >> untestable KZM9D DT reference until EMEV2 CCF is merged. Either way is
-> > > >> fine with me.
-> > > >
-> > > > I am mainly concerned that the bindings may change before
-> > > > they are finally merged. And I thought it would be nice to avoid
-> > > > having to fix up the usage of the bindings if they change.
-> > > 
-> > > Sure, but the code in this patch looks like it simply starts DT CCF
-> > > probing regardless of what the bindings look like. So I don't think
-> > > you will have to worry about actual bindings detail.
-> > > 
-> > > > But I'm happy to just queue-up patches 2 and 3 of this series
-> > > > now if you prefer.
-> > > 
-> > > Well, I meant patch 3 only. Patch 1 and 2 are tied together by dependencies. =)
-> > 
-> > Thanks, I understand now.
-> > 
-> > I'll queue-up 3/3.
+> > > > +#define FTM_CNTIN_VAL       0x00
+> > >
+> > > Do we really need this?
+> > >
+> >
+> > Maybe not, I think that the initial value maybe modified in the future.
+> > And this can be more easy to ajust it.
 > 
-> Which I did.
+> Why would it need to be modified?
 > 
-> Then some time passed...
-> 
-> Mike has accepted my pull-request for patch 1 of this series
-> and accordingly I have queued-up this patch for v3.14.
-> It should appear in the devel branch the next time that I push it.
 
-I was mistaken. It was not queued up  for v3.14.
-And still has not been queued up.
+Well, for the PWM function modifying it make no sense, so I'll remove this. 
 
-I have un-queued this patch accordingly.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> > > > +	writel(period_cycles + cntin - 1, fpc->base + FTM_MOD);
+> > > > +	writel(duty_cycles + cntin, fpc->base + FTM_CV(pwm->hwpwm));
+> > >
+> > > And these:
+> > >
+> > > 	writel(period - 1, fpc->base + FTM_MOD);
+> > > 	writel(duty, fpc->base + FTM_CV(pwm->hwpwm));
+> > >
+> > > Although now that I think about it, this seems broken. The period is
+> > > set in a global register, so I assume it is valid for all channels.
+> > > What if you want to use different periods for individual channels?
+> > > The way I read this the last one to be configured will win and
+> > > change the period to whatever it wants. Other channels won't even
+> notice.
+> > >
+> >
+> > That's right. And all the 8 channels share the same period settings.
+> >
+> > > Is there a way to set the period per channel?
+> > >
+> >
+> > Not yet. Only could we do is to set the duty value individually for
+> > each channel. So here is a limitation for the cusumers that all the 8
+> channels'
+> > period values should be the same.
+> 
+> That will need to be handled some way. Perhaps the easiest would be to
+> check whether or not another channel is already running and check that
+> indeed the period as requested by the new channel matches that of any
+> running channels. If it doesn't match, then pwm_config() should fail.
+> 
+> When you do that you can also optimize this a bit by only setting the
+> frequency once. Whenever a new channel is configured it will have the same
+> period and therefore the register doesn't need to be reprogrammed.
+> 
+
+Yes, if it dosen't match it should fail, or nothing to do with the period
+register if it's not the first channel to be configured.
+
+
+> > > > +static void fsl_pwm_disable(struct pwm_chip *chip, struct
+> > > > +pwm_device
+> > > *pwm)
+> > > > +{
+> > > > +	struct fsl_pwm_chip *fpc;
+> > > > +
+> > > > +	fpc = to_fsl_chip(chip);
+> > > > +
+> > > > +	fsl_counter_clock_disable(fpc);
+> > > > +}
+> > >
+> > > Same here. Since you can't propagate the error, perhaps an error
+> > > message would be appropriate here?
+> > >
+> >
+> > Well, in fsl_counter_clock_disable(fpc); only '0' could be returned,
+> > maybe let it a void type value to return is better.
+> > Just like:
+> > static void fsl_counter_clock_disable(struct fsl_pwm_chip *fpc) 
+
