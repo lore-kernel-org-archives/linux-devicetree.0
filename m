@@ -1,106 +1,49 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] OF: base: match each node compatible against all given
- matches first
-Date: Mon, 02 Dec 2013 15:09:54 +0100
-Message-ID: <529C94B2.3040408@gmail.com>
-References: <1385663785-8643-1-git-send-email-sebastian.hesselbarth@gmail.com> <20131202120300.GA12793@ulmo.nvidia.com> <529C927A.9000303@gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v5 1/2] regulator: max14577: Add regulator driver for Maxim
+ 14577
+Date: Mon, 02 Dec 2013 15:12:35 +0100
+Message-ID: <1385993555.5573.3.camel@AMDC1943>
+References: <1385559982-32039-1-git-send-email-k.kozlowski@samsung.com>
+ <20131127152042.GY14725@sirena.org.uk> <20131127152358.GP3296@lee--X1>
+ <20131127154221.GZ14725@sirena.org.uk> <20131127161323.GS3296@lee--X1>
+ <20131127162859.GD14725@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <529C927A.9000303-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Meelis Roos <mroos-Y27EyoLml9s@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <20131127162859.GD14725@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/13 15:00, Rob Herring wrote:
-> On 12/02/2013 06:03 AM, Thierry Reding wrote:
->> On Thu, Nov 28, 2013 at 07:36:25PM +0100, Sebastian Hesselbarth
->> wrote:
->>> Currently, of_match_node compares each given match against all
->>> node's compatible strings with of_device_is_compatible.
->>>
->>> To achieve multiple compatible strings per node with ordering
->>> from specific to generic, this requires given matches to be
->>> ordered from specific to generic. For most of the drivers this
->>> is not true and also an alphabetical ordering is more sane
->>> there.
->>>
->>> Therefore, this patch modifies of_match_node to match each of
->>> the node's compatible strings against all given matches first,
->>> before checking the next compatible string. This implies that
->>> node's compatibles are ordered from specific to generic while
->>> given matches can be in any order.
->>>
->>> Signed-off-by: Sebastian Hesselbarth
-[...]
->> That said, I think you might actually have nailed it with this
->> patch. From what I remember all earlier attempt failed because
->> they didn't match all compatible/name/type combinations properly.
->> I'm adding a few people on Cc who were involved with the other
->> patches, perhaps they can give your patch a spin and see if it
->> fixes things for them.
->
-> I agree and the change here is simple enough I think the chances of a
-> regression are low. But there is one issue...
->
->>
->> Thierry
->>
->> [0]: https://lkml.org/lkml/2013/10/3/585
->>
->>> diff --git a/drivers/of/base.c b/drivers/of/base.c index
->>> 7d4c70f..183a9c7 100644 --- a/drivers/of/base.c +++
->>> b/drivers/of/base.c @@ -713,23 +713,37 @@ static const struct
->>> of_device_id *__of_match_node(const struct of_device_id *matches,
->>> const struct device_node *node) { +	const char *cp; + int cplen,
->>> l; + if (!matches) return NULL;
->>>
->>> -	while (matches->name[0] || matches->type[0] ||
->>> matches->compatible[0]) { -		int match = 1; -		if
->>> (matches->name[0]) -			match &= node->name -				&&
->>> !strcmp(matches->name, node->name); -		if (matches->type[0]) -
->>> match &= node->type -				&& !strcmp(matches->type, node->type);
->>> - if (matches->compatible[0]) -			match &=
->>> __of_device_is_compatible(node, -							   matches->compatible);
->>>   -		if (match) -			return matches; -		matches++; +	cp =
->>> __of_get_property(node, "compatible", &cplen); +	if (!cp) +
->>> return NULL;
->
-> No compatible property and matching on name and/or type only is valid.
-> Remove the if here and changing the following should work:
->
->>> + +	while (cplen > 0) {
->
-> do {
->
->>> +		const struct of_device_id *m = matches; + +		while
->>> (m->name[0] || m->type[0] || m->compatible[0]) { +			int match =
->>> 1; +			if (m->name[0]) +				match &= node->name +					&&
->>> !strcmp(m->name, node->name); +			if (m->type[0]) +				match &=
->>> node->type + && !strcmp(m->type, node->type); +			if
->>> (m->compatible[0])
->
-> if (cp && m->compatible[0])
->
->>> +				match &= !of_compat_cmp(cp, m->compatible, +
->>> strlen(m->compatible)); +			if (match) +				return m; +			m++; +
->>> } +		l = strlen(cp) + 1; +		cp += l; +		cplen -= l; }
->
->
-> } while (cp && (cplen > 0));
+Hi Mark,
 
-Rob,
+On Wed, 2013-11-27 at 16:28 +0000, Mark Brown wrote:
+> On Wed, Nov 27, 2013 at 04:13:23PM +0000, Lee Jones wrote:
+> > On Wed, 27 Nov 2013, Mark Brown wrote:
+> 
+> > > The usual thing to do is of_get_child_by_name() on the parent to get the
+> > > container to search in.
+> 
+> > What do you mean when you say 'usual thing'? Only the max8998 does
+> > this currently. IMHO the better way to do it for MFD devices is
+> > provide a compatible string and let the framework does the rest for
+> > you.
+> 
+> No, as3722, Palmas and three of the TPS chips do the same thing.  If it
+> were a purely Linux-internal thing I'd probably agree with you but as it
+> is we'd just be adding compatible strings in everyone's DTs to save one
+> line of code in the kernel.
 
-although quoting somehow got messed up, I see the point. The pointer
-arith right above loop end condition needs to be skipped too if !cp.
+Lee applied the MFD part of max14577, including the "of_compatible" of
+max14577-regulator.
 
-I will rework the loop to allow name/type matching with cp == NULL
-and resend in a day or two.
+Do you wish me to change the patch to previous version using
+of_get_child_by_name()?
 
-Sebastian
+Best regards,
+Krzysztof
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
