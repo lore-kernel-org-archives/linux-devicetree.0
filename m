@@ -1,49 +1,147 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v5 1/2] regulator: max14577: Add regulator driver for Maxim
- 14577
-Date: Mon, 02 Dec 2013 15:12:35 +0100
-Message-ID: <1385993555.5573.3.camel@AMDC1943>
-References: <1385559982-32039-1-git-send-email-k.kozlowski@samsung.com>
- <20131127152042.GY14725@sirena.org.uk> <20131127152358.GP3296@lee--X1>
- <20131127154221.GZ14725@sirena.org.uk> <20131127161323.GS3296@lee--X1>
- <20131127162859.GD14725@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <20131127162859.GD14725@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v1 1/1] dts: bindings: add mpc5121 clocks binding document
+Date: Mon,  2 Dec 2013 15:20:34 +0100
+Message-ID: <1385994034-2513-1-git-send-email-gsi@denx.de>
+References: <20131202094656.GA12952@e106331-lin.cambridge.arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131202094656.GA12952-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+add a clock bindings documentation file for Freescale MPC5121
 
-On Wed, 2013-11-27 at 16:28 +0000, Mark Brown wrote:
-> On Wed, Nov 27, 2013 at 04:13:23PM +0000, Lee Jones wrote:
-> > On Wed, 27 Nov 2013, Mark Brown wrote:
-> 
-> > > The usual thing to do is of_get_child_by_name() on the parent to get the
-> > > container to search in.
-> 
-> > What do you mean when you say 'usual thing'? Only the max8998 does
-> > this currently. IMHO the better way to do it for MFD devices is
-> > provide a compatible string and let the framework does the rest for
-> > you.
-> 
-> No, as3722, Palmas and three of the TPS chips do the same thing.  If it
-> were a purely Linux-internal thing I'd probably agree with you but as it
-> is we'd just be adding compatible strings in everyone's DTs to save one
-> line of code in the kernel.
+this binding implements and uses existing common clock bindings,
+it does not introduce a new binding semantics but discusses the
+specific use on Freescale MPC5121 and provides examples
 
-Lee applied the MFD part of max14577, including the "of_compatible" of
-max14577-regulator.
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+---
 
-Do you wish me to change the patch to previous version using
-of_get_child_by_name()?
+an accompanying doc update was suggested while the feature's
+implementation currently is under review, i.e. this document does not
+apply to the current status but "describes the future"
 
-Best regards,
-Krzysztof
+sending out this doc patch now is meant to neither have to re-spin the
+whole series nor to further delay the doc update submission, but to
+allow for immediate review of the doc update
 
+ .../devicetree/bindings/clock/mpc5121-clock.txt    |   95 ++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/mpc5121-clock.txt
 
+diff --git a/Documentation/devicetree/bindings/clock/mpc5121-clock.txt b/Documentation/devicetree/bindings/clock/mpc5121-clock.txt
+new file mode 100644
+index 000000000000..8fbb489f6581
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/mpc5121-clock.txt
+@@ -0,0 +1,95 @@
++Device Tree Clock bindings for Freescale MPC5121
++
++This binding uses the common clock binding[1] as well as the
++fixed-clock binding[2].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Documentation/devicetree/bindings/clock/fixed-clock.txt
++
++== Clock provider ==
++
++The MPC5121 clock control module (CCM) implements a clock provider
++with several output clocks, which in turn are input clocks to
++peripherals.
++
++The MPC5121 CCM is another clock consumer with respect to the SoC's
++crystal or oscillator input (referred to both as XTAL or OSC in the
++chip's documentation).
++
++Required properties:
++- compatible:	shall contain "fsl,mpc5121-clock"
++- reg:		shall specify the start address and length of the
++		clock module's set of control registers
++- #clock-cells:	shall be 1; defines the number of integer cells
++		required for a clock specifier which references
++		this clock provider
++
++Optional properties:
++- clocks:	list of phandle and clock specifier pairs for the
++		node's input clocks, following the common clock
++		consumers binding; should be empty, or one XTAL/OSC
++		clock reference
++- clock-names:	list of clock input name strings sorted in the same
++		order as the 'clocks' property
++
++== Clock consumers ==
++
++Peripherals specify their input clocks by referencing clock providers
++according to the common clock consumer binding.  A clock gets identified
++by a phandle and clock specifiers pair.  The number of integer cells in
++the clock specifier is a property of the clock provider.
++
++The <dt-bindings/clock/mpc512x-clock.h> file provides symbolic names
++such that consumers need not encode magic numbers into their specs.
++
++== Examples ==
++
++The following example describes a fixed rate XTAL clock.
++
++osc: osc {
++	compatible = "fixed-clock";
++	#clock-cells = <0>;
++	clock-frequency = <33000000>;
++};
++
++The following example describes the clock control module (CCM),
++referencing the above XTAL as an input, providing output clocks.
++
++clks: clock@f00 {
++	compatible = "fsl,mpc5121-clock";
++	reg = <0xf00 0x100>;
++	#clock-cells = <1>;
++	clocks = <&osc>;
++	clock-names = "osc";
++};
++
++The following examples describe peripheral nodes which reference
++CCM output clocks as their input clocks.
++
++#include <dt-bindings/clock/mpc512x-clock.h>
++
++can@1300 {
++	compatible = "fsl,mpc5121-mscan";
++	...
++	clocks = <&clks MPC512x_CLK_BDLC>,
++		 <&clks MPC512x_CLK_IPS>,
++		 <&clks MPC512x_CLK_SYS>,
++		 <&clks MPC512x_CLK_REF>,
++		 <&clks MPC512x_CLK_MSCAN0_MCLK>;
++	clock-names = "ipg", "ips", "sys", "ref", "mclk";
++};
++
++i2c@1700 {
++	compatible = "fsl,mpc5121-i2c", "fsl-i2c";
++	...
++	clocks = <&clks MPC512x_CLK_I2C>;
++	clock-names = "ipg";
++};
++
++psc@11000 {
++	compatible = "fsl,mpc5121-psc";
++	...
++	clocks = <&clks MPC512x_CLK_PSC0>,
++		 <&clks MPC512x_CLK_PSC0_MCLK>;
++	clock-names = "ipg", "mclk";
++};
+-- 
+1.7.10.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
