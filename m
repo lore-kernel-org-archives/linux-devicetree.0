@@ -1,157 +1,65 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/3] usb: phy-generic: Add ULPI VBUS support
-Date: Mon, 2 Dec 2013 18:22:04 +0000
-Message-ID: <20131202182204.GQ12952@e106331-lin.cambridge.arm.com>
-References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk>
- <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk>
+Subject: Re: Device Tree Maturity Project
+Date: Mon, 2 Dec 2013 18:24:58 +0000
+Message-ID: <20131202182458.GR12952@e106331-lin.cambridge.arm.com>
+References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail.com>
+ <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com>
+ <20131122112223.GB8406@e106331-lin.cambridge.arm.com>
+ <20131127143655.F25E4C404EC@trevor.secretlab.ca>
+ <1385740653.25763.53.camel@kazak.uk.xensource.com>
+ <E3A7FE14-3D7E-4949-8B16-D11E2E6E54ED@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1385967919-13258-4-git-send-email-chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E3A7FE14-3D7E-4949-8B16-D11E2E6E54ED-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2013 at 07:05:19AM +0000, Chris Ruehl wrote:
-> usb: phy-generic: Add ULPI VBUS support
+On Mon, Dec 02, 2013 at 06:09:22PM +0000, Kumar Gala wrote:
 > 
-> Some platforms need to set the VBUS parameters of the ULPI
-> like ISP1504 which interact with overcurrent protection and
-> power switch MIC2575. Therefore it requires to set
-> * DRVVBUS
-> * DRVVBUS_EXT
-> * EXTVBUSIND
-> * CHRGVBUS
-> of the ULPI.
-> This patch add support for it.
-
-Could you elaborate on when we need to do this and why?
-
+> On Nov 29, 2013, at 9:57 AM, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
 > 
-> Devicetree configuration example:
+> > On Wed, 2013-11-27 at 14:36 +0000, Grant Likely wrote:
+> >> On Fri, 22 Nov 2013 11:22:23 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> >>> On Wed, Nov 20, 2013 at 11:56:39AM +0000, Grant Likely wrote:
+> >>>> On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
+> >>>> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> >>>>> To help keep track of what is going on, I would like to have a short
+> >>>>> stand up meeting once a week. Looking at my calendar, I can make
+> >>>>> 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
+> >>>> 
+> >>>> Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
+> >>> 
+> >>> Apologies for begin a little late to the party...
+> >>> 
+> >>> I have a regular fortnightly meeting on Thursdays, and for the next few
+> >>> weeks (until the new year) I'm otherwise engaged on Fridays, so Tuesdays
+> >>> would be preferable for me.
+> >> 
+> >> I started with Fridays, but it sounds like Tuesday works for everyone.
+> >> I've moved the meeting to next Tuesday.
+> > 
+> > Should I have gotten an update meeting request?
+> > 
+> >> This Friday would have been off
+> >> anyway because of some minor holiday in the US.
+> > 
+> > :-)
+> > 
+> > Ian.
 > 
-> usbphy0: usbphy@0x10024170 {
->  compatible = "usb-nop-xceiv";
->  reg = <0x10024170 0x4>; /* ULPI Viewport OTG */
->  clocks = <&clks 75>;
->  clock-names = "main_clk";
-> };
-> 
-> &usbphy0 {
->         reset-gpios = <&gpio1 31 1>;
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_usbphy0 &pinctrl_usbotg1>;
->         ulpi_set_vbus = <0x0f>;
-> };
-> 
-> Please refer to the phy-bindings.txt for the value of ulpi_set_vbus commit
-> with this patch.
-> 
-> Signed-off-by: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-> ---
->  .../devicetree/bindings/phy/phy-bindings.txt       |   15 ++++++
->  drivers/usb/phy/phy-generic.c                      |   50 +++++++++++++++++++-
->  drivers/usb/phy/phy-generic.h                      |    3 ++
->  3 files changed, 67 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-bindings.txt b/Documentation/devicetree/bindings/phy/phy-bindings.txt
-> index 8ae844f..b109b2f 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-bindings.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-bindings.txt
-> @@ -34,6 +34,18 @@ phys : the phandle for the PHY device (used by the PHY subsystem)
->  phy-names : the names of the PHY corresponding to the PHYs present in the
->  	    *phys* phandle
->  
-> +Optional Properties:
-> +reset-gpios :	GPIO used to reset ULPI like ISP1504 with
-> +		0 = reset active high ; 1 = reset active low.
+> So are we meeting tomorrow (Tue Dec 3rd)?
 
-The format of the gpio-specifier doesn't matter here.
+I hope so.
 
-Why do you need to mention the ISP1504? Either this is generic, or it
-doesn't belong here.
+Grant?
 
-Perhaps we need a ulpi-phy binding document. This and the rest of the
-patch is strongly tied to ULPI.
-
-> +cs-gpios :	GPIO used to activate a ULPI like ISP1504 with
-> +		0 = reset acitive high; 1 = reset active low.
-
-Again, the format of the gpio-specifier is not a concern here. I'm also
-a little confused as to the name "cs-gpios" for something that activates
-the ULPI.
-
-> +ulpi_set_vbus :	ULPI configuation parameter to program the VBUS signaling of 
-> +		ISP1504 or similar chipsets.
-
-Could you elaborate on this? Is this applicable to any ULPI PHY? The
-description implies that it's somewhat tied to ISP1504 (if it's not,
-drop the mention of ISP1504).
-
-Why exactly do we need this, and why should it live in the DT?
-
-Why can se not figure this out automatically, or have defaults that work
-in more places?
-
-Also, s/_/-/ on property names please.
-
-> +		Set the parameter:
-> +		DRVVBUS = (1) DRVVBUS_EXT = (1<<1) EXTVBUSIND = (1<<2) CHRGVBUS = (1<<3)
-> +		eg: DRVVBUS | DRVVBUS_EXT = 0x03
-> +		    ulpi_set_vbus = <0x03>
-
-I don't like putting arbitrary bitfields like this in DT. They're
-illegible and easy to abuse.
-
-Boolean properties are nicer for flags.
-
-What exactly do these flags mean?
-
-[...]
-
-> @@ -253,14 +284,15 @@ static int usb_phy_gen_xceiv_probe(struct platform_device *pdev)
->  
->  	if (dev->of_node) {
->  		struct device_node *node = dev->of_node;
-> +		struct resource	*res;
->  		enum of_gpio_flags flags;
->  		enum of_gpio_flags csflags;
-> +		u32 ulpi_vbus;
->  
->  		if (of_property_read_u32(node, "clock-frequency", &clk_rate))
->  			clk_rate = 0;
->  
->  		needs_vcc = of_property_read_bool(node, "vcc-supply");
-> -
->  		nop->gpio_reset = of_get_named_gpio_flags(node, "reset-gpios",
->  								0, &flags);
-
-Why the random line deletion?
-
->  
-> @@ -274,6 +306,22 @@ static int usb_phy_gen_xceiv_probe(struct platform_device *pdev)
->  		if (gpio_is_valid(nop->gpio_chipselect))
->  			nop->cs_active_low = csflags & OF_GPIO_ACTIVE_LOW;
->  
-> +		err = of_property_read_u32(node, "ulpi_set_vbus",&ulpi_vbus);
-> +		if (err) {
-> +			nop->ulpi_vbus = -1;
-> +			nop->viewport = NULL;
-> +			ulpi_vbus = 0;
-> +		} else {
-> +			dev_dbg(dev,"ULPI ulpi_set_vbus 0x%02x",ulpi_vbus);
-> +			nop->ulpi_vbus = ulpi_vbus;
-> +			res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-
-This wasn't described in the binding document, and it's ULPI specific. I
-think we need a separate ulpi-phy binding that builds upon the generic
-one.
-
-Thanks,
 Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
