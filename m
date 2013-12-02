@@ -1,95 +1,108 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of_mtd: Fix header file include guard
-Date: Mon, 2 Dec 2013 11:55:38 -0800
-Message-ID: <20131202195538.GC9468@ld-irv-0074.broadcom.com>
-References: <52972EEE.8070704@xse.de>
- <20131129081113.GA20013@norris.computersforpeace.net>
- <52985D12.6060901@xse.de>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH] of: Add MIPI DSI bus device tree bindings
+Date: Mon, 02 Dec 2013 20:57:20 +0100
+Message-ID: <1564239.XE5EGzcucS@flatron>
+References: <1385998631-18515-1-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52985D12.6060901-wIELUdCntIg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rosenberger, Philipp" <Philipp.Rosenberger-wIELUdCntIg@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1385998631-18515-1-git-send-email-treding@nvidia.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+Hi Thierry,
 
-On Fri, Nov 29, 2013 at 09:22:44AM +0000, Rosenberger, Philipp wrote:
-> Thanks for your replay and all the hints about submitting the correct
-> way. Is it ok to paste the full git format-patch output like this?
+On Monday 02 of December 2013 16:37:11 Thierry Reding wrote:
+> Document the device tree bindings for the MIPI DSI bus. The MIPI Display
+> Serial Interface specifies a serial bus and a protocol for communication
+> between a host and up to four peripherals.
 > 
-> From a2e84efe0d5335547ca3e6c0a8bf8a026b0f2353 Mon Sep 17 00:00:00 2001
-> From: Philipp Rosenberger <philipp.rosenberger-wIELUdCntIg@public.gmane.org>
-> Date: Thu, 28 Nov 2013 12:36:52 +0100
-> Subject: [PATCH] of_mtd: Fix header file include guard
-> 
-> It seems the include guard was copied from of_net.h.
-> 
-> Signed-off-by: Philipp Rosenberger <philipp.rosenberger-wIELUdCntIg@public.gmane.org>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
->  include/linux/of_mtd.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/mipi/dsi/mipi-dsi-bus.txt  | 54 ++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mipi/dsi/mipi-dsi-bus.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mipi/dsi/mipi-dsi-bus.txt b/Documentation/devicetree/bindings/mipi/dsi/mipi-dsi-bus.txt
+> new file mode 100644
+> index 000000000000..f58ca4485a2f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mipi/dsi/mipi-dsi-bus.txt
+> @@ -0,0 +1,54 @@
+> +MIPI DSI (Display Serial Interface) busses
+> +==========================================
+> +
+> +The MIPI Display Serial Interface specifies a serial bus and a protocol for
+> +communication between a host and up to four peripherals. This document will
+> +define the syntax used to represent a DSI bus in a device tree.
+> +
+> +This document describes DSI bus-specific properties only or defines existing
+> +standard properties in the context of the DSI bus.
+> +
+> +Each DSI host provides a DSI bus. The DSI host controller's node contains a
+> +set of properties that characterize the bus. Child nodes describe individual
+> +peripherals on that bus.
+> +
+> +DSI host
+> +--------
+> +
+> +In addition to the standard properties and those defined by the parent bus of
+> +a DSI host, the following properties apply to a node representing a DSI host.
+> +
+> +Required properties:
+> +- #address-cells: The number of cells required to represent an address on the
+> +  bus. DSI peripherals are addressed using a 2-bit virtual channel number, so
+> +  a maximum of 4 devices can be addressed on a single bus. Hence the value of
+> +  this property should be 1.
+> +- #size-cells: Should be 0.
+> +
+> +DSI peripheral
+> +--------------
+> +
+> +Peripherals are represented as child nodes of the DSI host's node. Properties
+> +described here apply to all DSI peripherals, but individual bindings may want
+> +to define additional, device-specific properties.
+> +
+> +Required properties:
+> +- reg: The virtual channel number of a DSI peripheral. Must be in the range
+> +  from 0 to 3.
+> +
+> +Example
+> +-------
+> +
+> +	dsi-host {
+> +		...
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		peripheral@0 {
+> +			compatible = "...";
+> +			reg = <0>;
+> +		};
+> +
+> +		...
+> +	};
 > 
-> diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
-> index 6f10e93..cb32d9c 100644
-> --- a/include/linux/of_mtd.h
-> +++ b/include/linux/of_mtd.h
-> @@ -7,7 +7,7 @@
->   */
-> 
->  #ifndef __LINUX_OF_MTD_H
-> -#define __LINUX_OF_NET_H
-> +#define __LINUX_OF_MTD_H
-> 
->  #ifdef CONFIG_OF_MTD
-> 
-> --
-> 1.7.9.5
 
-That's workable for me, but that's not quite the standard way. The
-git-format-patch output is meant to be mailed directly (via
-git-send-email, for instance), not pasted into another email. If you
-paste it, then git-am will see two sets of email headers and may not
-understand it.
+In general, this looks good to me as a starter, so we could have support
+for DSI bus merged. IMHO we should consider adding some generic bus
+properties in future, though.
 
-> On 29.11.2013 09:11, Brian Norris wrote:
-> > + device tree guys
-> >
-> > Hi Grant/Rob,
-> >
-> > It looks like this header is technically owned by you guys. Once we have
-> > a proper submission, should I merge this sort of change through MTD, or
-> > do one of you want to take care of it?
+Anyway, have my
 
-Unless someone complains soon, I'll take this via MTD. No one else
-should be creating conflicts on this file anyway.
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 
-...
-> >> Confidentiality Notice: This e-mail message, including any attachments, is for the sole use of the intended recipient(s) and may contain confidential and privileged information. Any unauthorized review, use, disclosure or distribution is prohibited. If you are not the intended recipient, please contact the sender by return e-mail and destroy all copies of the original message.
-> >
-> > This confidentiality notice is incongruous with sending patches to a
-> > public mailing list, for inclusion in an open source project. This
-> > message (combined with a lack of a Signed-off-by) means we cannot take
-> > your patch. Please remove this footer and resubmit, with a CC to
-> > linux-mtd-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org and devicetree-u79uwXL29TaiAVqoAR/hOA@public.gmane.org
-> >
-> > Thanks,
-> > Brian
-> >
-> >
-> 
-> Thank you for this hint. I forgot that the mailserver append this
-> footer. I hope now there is no company footer anymore.
-
-Looks good now. Thanks.
-
-Pushed to l2-mtd.git.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
