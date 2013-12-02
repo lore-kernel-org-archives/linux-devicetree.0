@@ -1,59 +1,94 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH v3 1/2] dt-bindings: add hym8563 binding
-Date: Mon, 2 Dec 2013 13:41:10 +0000
-Message-ID: <20131202134110.GH27568@sirena.org.uk>
-References: <201312012047.02299.heiko@sntech.de>
- <201312012047.42669.heiko@sntech.de>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH 1/2] ARM: dts: tegra: Header file for pinctrl constants
+Date: Mon, 2 Dec 2013 19:25:01 +0530
+Message-ID: <1385992502-12771-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cjNfFEtZoUGcCUIb"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201312012047.42669.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Richard Weinberger <richard.weinberger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rob.herring@calxeda.com, swarren@wwwdotorg.org
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+Defines pincontrol constants to use from Tegra's DTS file
+for tegra pincontrol properties option.
 
---cjNfFEtZoUGcCUIb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+ include/dt-bindings/pinctrl/pinctrl-tegra.h |   65 +++++++++++++++++++++++++++
+ 1 files changed, 65 insertions(+), 0 deletions(-)
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra.h
 
-On Sun, Dec 01, 2013 at 08:47:42PM +0100, Heiko St=FCbner wrote:
-
-> +Required properties:
-> +- compatible: should be: "haoyu,hym8563"
-> +- reg: i2c address
-> +- gpios: alarm interrupt gpio
-
-Why is this specified as a GPIO and not as an interrupt?
-
---cjNfFEtZoUGcCUIb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSnI3zAAoJELSic+t+oim9mJMP/jV7/3NN0h1XZsWJouY0MDpn
-yR0rv4J1AirhVArU4fDUJiDHVBIRyTIQCB5kWYq/0ztjrIFFj3IaCLXI52v8EYv1
-BVuW+YPvmjFD+HRRslOkT4YfiBEFEd8qi6VFzjSKgNNHCXzzaaZTapx0YWXmNcBc
-RN4kBWbBKo5/GHjH25YxnhphF38k6k0fPIFhnUGthpywgFCPPbjpBE7SVcxDlzqD
-2buqRrSkh0q8jr1FrAGRda7MEpTn4rL5tAxQANP1GyCUpXOIyAVR5w+ExWNjK1/Q
-wsasWShU3QfVp2w+FDw4ETO/6KPaM2qtknStvH4wTkH7zQHIyHzhc3+i2gqWKk6M
-pcFyFIroLB6ZLy0yBK33B4F9Df7r20Aj0P6LEHYQn01RJ7BcgEAR3CEusezXwWL5
-CpDT0KbSgfzuesYqfVKyEr7wABKWXR4ijc0fuvXC9VLEhpCEN9YcgMpxCrRq90yn
-+RjIIwAdagmFwi3X3EVFIdZTD729l9dnFpo7epjyE4fuBnEFmeBGey3VVhDEmn6d
-LzuzfRMq1jNJQBnJ8jVjSiseONgcBYNMX3tT6qi1Z5vmiawtoUu10UIru87Qtx0d
-VBtb/u9+YVblsnCdbIB/oEGSE5snTHbgW5b6yNDOJljil9InetBov8XQ1LawwlqY
-j7b3RCD9HTjFC4utsPW3
-=6n80
------END PGP SIGNATURE-----
-
---cjNfFEtZoUGcCUIb--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/include/dt-bindings/pinctrl/pinctrl-tegra.h b/include/dt-bindings/pinctrl/pinctrl-tegra.h
+new file mode 100644
+index 0000000..c2bfa3f
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/pinctrl-tegra.h
+@@ -0,0 +1,65 @@
++/*
++ * This header provides constants for TEGRA pinctrl bindings.
++ *
++ * Copyright (c) 2013, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * Author: Laxman Dewangan <ldewangan@nvidia.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#ifndef _DT_BINDINGS_PINCTRL_TEGRA_H
++#define _DT_BINDINGS_PINCTRL_TEGRA_H
++
++/* Input/output */
++#define TEGRA_PIN_OUTPUT				0
++#define TEGRA_PIN_INPUT					1
++
++/* Pull up/down/normal */
++#define TEGRA_PIN_PUPD_NORMAL				0
++#define TEGRA_PIN_PUPD_PULL_DOWN			1
++#define TEGRA_PIN_PUPD_PULL_UP				2
++
++/* Tristate/normal */
++#define TEGRA_PIN_NORMAL				0
++#define TEGRA_PIN_TRISTATE				1
++
++/* Rcv Sel enable/disable */
++#define TEGRA_PIN_RCV_SEL_DISABLE			0
++#define TEGRA_PIN_RCV_SEL_ENABLE			1
++
++/* Lock enable/disable */
++#define TEGRA_PIN_LOCK_DISABLE				0
++#define TEGRA_PIN_LOCK_ENABLE				1
++
++/* Open drain enable/disable */
++#define TEGRA_PIN_OPEN_DRAIN_DISABLE			0
++#define TEGRA_PIN_OPEN_DRAIN_ENABLE			1
++
++/* High speed mode */
++#define TEGRA_PIN_DRIVE_HIGH_SPEED_MODE_DISABLE		0
++#define TEGRA_PIN_DRIVE_HIGH_SPEED_MODE_ENABLE		1
++
++/* Schmitt enable/disable */
++#define TEGRA_PIN_DRIVE_SCHMITT_DISABLE			0
++#define TEGRA_PIN_DRIVE_SCHMITT_ENABLE			1
++
++/* Low power mode */
++#define TEGRA_PIN_LP_DRIVE_DIV_8			0
++#define TEGRA_PIN_LP_DRIVE_DIV_4			1
++#define TEGRA_PIN_LP_DRIVE_DIV_2			2
++#define TEGRA_PIN_LP_DRIVE_DIV_1			3
++
++#define TEGRA_PIN_SLEW_RATE_FASTEST			0
++#define TEGRA_PIN_SLEW_RATE_FAST			1
++#define TEGRA_PIN_SLEW_RATE_SLOW			2
++#define TEGRA_PIN_SLEW_RATE_SLOWEST			3
++
++#endif
+-- 
+1.7.1.1
