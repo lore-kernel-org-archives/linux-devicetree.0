@@ -1,327 +1,218 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v8 1/2] PWM: atmel-pwm: add PWM controller driver
-Date: Mon, 2 Dec 2013 11:59:58 +0100
-Message-ID: <20131202105957.GD18060@ulmo.nvidia.com>
-References: <1384766002-2852-1-git-send-email-voice.shen@atmel.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC][PATCHv6+++ 01/13] of: introduce
+ of_property_for_earch_phandle_with_args()
+Date: Mon, 2 Dec 2013 12:02:20 +0100
+Message-ID: <20131202.130220.1404999403649937134.hdoyu@nvidia.com>
+References: <20131128.145818.1345100874304396564.hdoyu@nvidia.com><20131129.134625.431945240074254704.hdoyu@nvidia.com><529B8739.60701@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2iBwrppp/7QCDedR"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384766002-2852-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, galak@codeaurora.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <529B8739.60701-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Sun, 1 Dec 2013 20:00:09 +0100:
 
---2iBwrppp/7QCDedR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On 11/29/2013 04:46 AM, Hiroshi Doyu wrote:
+> ...
+> > Iterating over a property containing a list of phandles with arguments
+> > is a common operation for device drivers. This patch adds a new
+> > of_property_for_each_phandle_with_args() macro to make the iteration
+> > simpler.
+> > 
+> > Introduced a new struct "of_phandle_iter" to keep the state when
+> > iterating over the list.
+> > 
+> > Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > v6+++:
+> 
+> Surely that's v9; "+++" is rather unusual.
 
-On Mon, Nov 18, 2013 at 05:13:21PM +0800, Bo Shen wrote:
-[...]
-> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-[...]
-> +/* Max value for duty and period
+My intention was to put this into the next v7 series after I get this
+reviewed as RFC.
+...
+> Together with removing:
+> 
+> > +	const char	*cells_name;
+> > +	int		cell_count;
+> 
+> ... then you'd only be left with cur/end, so I think you could get away
+> without a struct at all, but simply "cur" as the iterator variable, plus
+> "end" as the one temp variable.
 
-Block comments should be of this form:
+Although the above proposal would be alsmot same as "[RFC][PATCHv6++
+01/13]"(*1) where I use *list(cur) and rem as remaining count, here's
+the update. I'll put this into v7 series.
 
-	/*
-	 * Max value ...
-	 * ...
-	 */
+---8<------8<------8<------8<------8<------8<------8<------8<------8<---
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-> +static int atmel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> +		int duty_ns, int period_ns)
-> +{
-> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> +	unsigned long clk_rate, prd, dty;
-> +	unsigned long long div;
-> +	int ret, pres = 0;
-> +
-> +	clk_rate = clk_get_rate(atmel_pwm->clk);
-> +	div = clk_rate;
-> +
-> +	/* Calculate the period cycles */
-> +	while (div > PWM_MAX_PRD) {
-> +		div = clk_rate / (1 << pres);
-> +		div = div * period_ns;
-> +		/* 1/Hz = 100000000 ns */
+Iterating over a property containing a list of phandles with arguments
+is a common operation for device drivers. This patch adds a new
+of_property_for_each_phandle_with_args() macro to make the iteration
+simpler.
 
-I don't think that comment is needed.
+Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+v6++++:
+Iterate without intrducing a new struct.
 
-> +		do_div(div, 1000000000);
-> +
-> +		if (pres++ > PRD_MAX_PRES) {
-> +			dev_err(chip->dev, "pres exceed the maximum value\n");
+v6+++:
+Introduced a new struct "of_phandle_iter" to keep the state when
+iterating over the list.
 
-"exceeds"
+v6++:
+Optimized to avoid O(n^2), suggested by Stephen Warren.
+http://lists.linuxfoundation.org/pipermail/iommu/2013-November/007066.html
 
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	/* Calculate the duty cycles */
-> +	prd = div;
-> +	div *= duty_ns;
-> +	do_div(div, period_ns);
-> +	dty = div;
-> +
-> +	ret = clk_enable(atmel_pwm->clk);
-> +	if (ret) {
-> +		dev_err(chip->dev, "failed to enable pwm clock\n");
+I didn't introduce any struct to hold params and state here.
 
-"PWM clock"
+v6+:
+Use the description, which Grant Likely proposed, to be full enough
+that a future reader can figure out why a patch was written.
 
-> +static void atmel_pwm_config_v1(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				int dty, int prd)
-> +{
-> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> +	unsigned int val;
-> +
-> +	/*
-> +	 * If the PWM channel is disabled, write value to duty and period
-> +	 * registers directly.
-> +	 * If the PWM channel is enabled, using the update register, it needs
-> +	 * to set bit 10 of CMR to 0
-> +	 */
+v5:
+New patch for v5.
 
-I think it would make sense to split this comment and move each part
-into the respective conditional branch.
+Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/of/base.c  | 53 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 87 insertions(+)
 
-> +	if (test_bit(PWMF_ENABLED, &pwm->flags)) {
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CUPD, dty);
-> +
-> +		val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
-> +		val &= ~PWM_CMR_UPD_CDTY;
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
-> +	} else {
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CDTY, dty);
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CPRD, prd);
-> +	}
-> +}
-> +
-> +static void atmel_pwm_config_v2(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				int dty, int prd)
-> +{
-> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> +
-> +	/*
-> +	 * If the PWM channel is disabled, write value to duty and period
-> +	 * registers directly.
-> +	 * If the PWM channel is enabled, using the duty update register to
-> +	 * update the value.
-> +	 */
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index f807d0e..7501f24 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1201,6 +1201,59 @@ void of_print_phandle_args(const char *msg, const struct of_phandle_args *args)
+ 	printk("\n");
+ }
+ 
++const __be32 *of_phandle_iter_next(const char *cells_name, int cell_count,
++				   const __be32 *cur, const __be32 *end,
++				   struct of_phandle_args *out_args)
++{
++	phandle phandle;
++	struct device_node *dn;
++	int i;
++
++	if (!cells_name && !cell_count)
++		return NULL;
++
++	if (!cur)
++		return NULL;
++
++	if (end - cur <= 0)
++		return NULL;
++
++	phandle = be32_to_cpup(cur++);
++	if (!phandle)
++		return NULL;
++
++	dn = of_find_node_by_phandle(phandle);
++	if (!dn)
++		return NULL;
++
++	if (cells_name)
++		if (of_property_read_u32(dn, cells_name, &cell_count))
++			return NULL;
++
++	out_args->np = dn;
++	out_args->args_count = cell_count;
++	for (i = 0; i < cell_count; i++)
++		out_args->args[i] = be32_to_cpup(cur++);
++
++	return cur;
++}
++EXPORT_SYMBOL_GPL(of_phandle_iter_next);
++
++const __be32 *of_phandle_iter_init(const struct device_node *np,
++				   const char *list_name,
++				   const __be32 **end)
++{
++	size_t bytes;
++	const __be32 *cur;
++
++	cur = of_get_property(np, list_name, &bytes);
++	if (bytes)
++		*end = cur + bytes / sizeof(*cur);
++
++	return cur;
++}
++EXPORT_SYMBOL_GPL(of_phandle_iter_init);
++
+ static int __of_parse_phandle_with_args(const struct device_node *np,
+ 					const char *list_name,
+ 					const char *cells_name,
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 276c546..c23710b 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -303,6 +303,14 @@ extern int of_parse_phandle_with_fixed_args(const struct device_node *np,
+ extern int of_count_phandle_with_args(const struct device_node *np,
+ 	const char *list_name, const char *cells_name);
+ 
++extern const __be32 *of_phandle_iter_init(const struct device_node *np,
++					  const char *list_name,
++					  const __be32 **end);
++extern const __be32 *of_phandle_iter_next(const char *cells_name,
++					  int cell_count,
++					  const __be32 *cur, const __be32 *end,
++					  struct of_phandle_args *out_args);
++
+ extern void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align));
+ extern int of_alias_get_id(struct device_node *np, const char *stem);
+ 
+@@ -527,6 +535,24 @@ static inline int of_count_phandle_with_args(struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
++static inline const __be32 *of_phandle_iter_init(const struct device_node *np,
++						 const char *list_name,
++						 const char *cells_name,
++						 const int cell_count,
++						 struct of_phandle_args *out_args)
++{
++	return NULL;
++}
++
++static inline const __be32 *of_phandle_iter_next(const char *cells_name,
++						 int cell_count,
++						 const __be32 *cur,
++						 const __be32 *end,
++						 struct of_phandle_args *out_args);
++{
++	return NULL;
++}
++
+ static inline int of_alias_get_id(struct device_node *np, const char *stem)
+ {
+ 	return -ENOSYS;
+@@ -613,6 +639,14 @@ static inline int of_property_read_u32(const struct device_node *np,
+ 		s;						\
+ 		s = of_prop_next_string(prop, s))
+ 
++#define of_property_for_each_phandle_with_args(node, list_name,	cells_name, \
++					       cell_count, out_args, cur, end) \
++	for (cur = of_phandle_iter_init(node, list_name, &end),		\
++		     cur = of_phandle_iter_next(cells_name, cell_count, \
++						cur, end, &out_args);	\
++	     cur;							\
++	     cur = of_phandle_iter_next(cells_name, cell_count, cur, end, &out_args))
++
+ #if defined(CONFIG_PROC_FS) && defined(CONFIG_PROC_DEVICETREE)
+ extern void proc_device_tree_add_node(struct device_node *, struct proc_dir_entry *);
+ extern void proc_device_tree_add_prop(struct proc_dir_entry *pde, struct property *prop);
+-- 
+1.8.1.5
 
-Same here.
 
-> +	if (test_bit(PWMF_ENABLED, &pwm->flags)) {
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CDTYUPD, dty);
-> +	} else {
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CDTY, dty);
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CPRD, prd);
-> +	}
-> +}
 
-Neither version 1 nor version 2 seem to be able to change the period
-while the channel is enabled. Perhaps that should be checked for in
-atmel_pwm_config() and an error (-EBUSY) returned?
 
-> +
-> +static int atmel_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
-> +		enum pwm_polarity polarity)
-> +{
-> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> +	u32 val = 0;
-> +	int ret;
-> +
-> +	if (polarity == PWM_POLARITY_NORMAL)
-> +		val &= ~PWM_CMR_CPOL;
-> +	else
-> +		val |= PWM_CMR_CPOL;
 
-I think I've mentioned this before, but val is always assigned to 0, so
-clearing a bit is a superfluous. Perhaps you need to readl the CMR
-register first before toggling the bit here?
-
-> +
-> +	ret = clk_enable(atmel_pwm->clk);
-> +	if (ret) {
-> +		dev_err(chip->dev, "failed to enable pwm clock\n");
-
-"PWM clock"
-
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id atmel_pwm_dt_ids[] = {
-> +	{
-> +		.compatible = "atmel,at91sam9rl-pwm",
-> +		.data = &atmel_pwm_data_v1,
-> +	}, {
-> +		.compatible = "atmel,sama5d3-pwm",
-> +		.data = &atmel_pwm_data_v2,
-> +	}, {
-> +		/* sentinel */
-> +	},
-> +};
-> +MODULE_DEVICE_TABLE(of, atmel_pwm_dt_ids);
-> +#endif
-
-I don't think you can do this. You use this table in a call to
-of_match_device() later on, in code which isn't protected by a
-corresponding #ifdef.
-
-> +static inline const struct atmel_pwm_data * __init
-> +	atmel_pwm_get_driver_data(struct platform_device *pdev)
-
-I don't think __init is warranted here. In fact I think this will give
-you a build warning, because this code is called from atmel_pwm_probe(),
-which in turn isn't marked __init.
-
-Also it's probably not worth marking this inline explicitly. It isn't
-all that short, and the compiler will likely inline it anyway since it's
-only called once.
-
-> +{
-> +	if (pdev->dev.of_node) {
-> +		const struct of_device_id *match;
-> +		match = of_match_device(atmel_pwm_dt_ids, &pdev->dev);
-
-Blank line between the above two for readability.
-
-> +		if (match == NULL)
-> +			return NULL;
-> +		return match->data;
-
-Same here. And "if (!match)" rather than "if (match == NULL)".
-
-> +	}
-> +
-> +	return (struct atmel_pwm_data *)
-> +		platform_get_device_id(pdev)->driver_data;
-
-Please use a temporary variable here to make this more readable, like
-so:
-
-	struct platform_device_id *id = platform_get_device_id(pdev);
-
-	...
-
-	return (struct atmel_pwm_data *)id->driver;
-
-> +}
-> +
-> +static int atmel_pwm_probe(struct platform_device *pdev)
-> +{
-> +	const struct atmel_pwm_data *data;
-> +	struct atmel_pwm_chip *atmel_pwm;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	atmel_pwm = devm_kzalloc(&pdev->dev, sizeof(*atmel_pwm), GFP_KERNEL);
-> +	if (!atmel_pwm)
-> +		return -ENOMEM;
-
-You could move this further down, so that memory doesn't get allocated
-if atmel_pwm_get_driver_data() or platform_get_resource() fails.
-
-> +
-> +	data = atmel_pwm_get_driver_data(pdev);
-> +	if (!data)
-> +		return -ENODEV;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -ENODEV;
-
-No need to check the return value here. devm_ioremap_resource() checks
-it for you.
-
-> +
-> +	atmel_pwm->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(atmel_pwm->base))
-> +		return PTR_ERR(atmel_pwm->base);
-> +
-> +	atmel_pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(atmel_pwm->clk))
-> +		return PTR_ERR(atmel_pwm->clk);
-> +
-> +	ret = clk_prepare(atmel_pwm->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to prepare pwm clock\n");
-
-"PWM clock"
-
-> +		return ret;
-> +	}
-> +
-> +	atmel_pwm->chip.dev = &pdev->dev;
-> +	atmel_pwm->chip.ops = &atmel_pwm_ops;
-> +	if (pdev->dev.of_node) {
-
-Blank line between the above two for readability.
-
-> +		atmel_pwm->chip.of_xlate = of_pwm_xlate_with_flags;
-> +		atmel_pwm->chip.of_pwm_n_cells = 3;
-> +		atmel_pwm->chip.base = -1;
-> +	} else {
-> +		atmel_pwm->chip.base = pdev->id;
-
-That's not correct. The chip cannot be tied to pdev->id, because that ID
-is the instance number of the device. So typically you would have
-devices name like this:
-
-	atmel-pwm.0
-	atmel-pwm.1
-	...
-
-Now, if you have that, then you won't be able to register the second
-instance because the first instance will already have requested PWMs
-0-3, and setting .base to 1 will cause PWMs 1-4 to be requested, which
-intersects with the range of the first instance.
-
-The same applies of course if you have other PWM controllers in the
-system which have similar instance names.
-
-So the right thing to do here is to provide that number via platform
-data so that platform code can define it, knowing in advance all ranges
-for all other PWM controllers and thereby make sure there's no
-intersection.
-
-> +	}
-> +	atmel_pwm->chip.npwm = 4;
-
-Blank line between the above two for readability.
-
-> +	atmel_pwm->config = data->config;
-> +
-> +	ret = pwmchip_add(&atmel_pwm->chip);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to add pwm chip %d\n", ret);
-
-"PWM chip"
-
-Thierry
-
---2iBwrppp/7QCDedR
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSnGgtAAoJEN0jrNd/PrOhukcP/jwkukzJyg8XrMeUCDgl1msT
-E78Ac3DrrRu8GV3rBdszHAIXydmMl5wo/sadHn9EqhOx5L9xXaAQfMtmgc4Q1VDa
-pwvDvwPGRtKtzhbSflEk5Hsy3f37hXgMQ+/HuCM56Sz3qiSc4Mc4Lh4zEXI1eWNg
-n4v4qYEfwm2qdPZSrT5jw40TvNwcLuPXRS0Ej6kjQCLlNwWSk+fDOVNqKBOnXVBS
-/1oTf4zq6lxM4mZXjswwO/zXpiEzCiJ8dmDNaUbARK0GBkBddxq02AaA5i5cAN+0
-tywympd3tZom1p/SHINg14foEMvp3MOUF5wXRW0b4wXmTwFnG6ZmpnEFmoxifiM5
-DZok9f1qkuXf3eqTFZEHOs4aZrrEtIcpCFtbpxKMJJBoM68wlUZUXs320uEeFh/q
-a4sahRTp7o15NHLnhDvhGF7rYiAaPv+henqnl2NSWgkipfOkuKlm96q37OfCkyE+
-xRivNfNmWzZxSStzYpmCZXk0cnK2i8ci3zHyvwENPd5VuP3KMJUUzDoEtm4uW+Fa
-wJ7P1mJiYQFIhvA7xyh+mlE2YsgVE0OfGvBaONQxcgXI12KZ6Aocf427EQGL1R8e
-gbMuYpnoT/DOV8zKD83OyvcCoWELRRUaNdULDjWDQY6Fw45iMaz7fI/U19m+bwXQ
-kJJhOfH12LuUnVbeTqCV
-=4B2F
------END PGP SIGNATURE-----
-
---2iBwrppp/7QCDedR--
+*1:
+ http://lists.linuxfoundation.org/pipermail/iommu/2013-November/007086.html
