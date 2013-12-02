@@ -1,39 +1,58 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: Device Tree Maturity Project
-Date: Mon, 02 Dec 2013 23:12:11 +0000
-Message-ID: <20131202231211.457DAC40800@trevor.secretlab.ca>
-References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail. com> <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com> < 20131122112223.GB8406@e106331-lin.cambridge.arm.com> <20131127143655. F25E4C404EC@trevor.secretlab.ca> <1385740653.25763.53.camel@kazak.uk. xensource.com>
+Date: Mon, 02 Dec 2013 23:19:43 +0000
+Message-ID: <20131202231943.19718C40800@trevor.secretlab.ca>
+References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail. com> <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com> < 20131122112223.GB8406@e106331-lin.cambridge.arm.com> <20131127143655. F25E4C404EC@trevor.secretlab.ca> <1385740653.25763.53.camel@kazak.uk. xensource.com> <E3A7FE14-3D7E-4949-8B16-D11E2E6E54ED@codeaurora.org> < 20131202182458.GR12952@e106331-lin.cambridge.arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385740653.25763.53.camel-ommiHX4a84BXesXXhkcM7miJhflN2719@public.gmane.org>
+In-Reply-To: <20131202182458.GR12952-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 29 Nov 2013 15:57:33 +0000, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
-> On Wed, 2013-11-27 at 14:36 +0000, Grant Likely wrote:
-> > On Fri, 22 Nov 2013 11:22:23 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > On Wed, Nov 20, 2013 at 11:56:39AM +0000, Grant Likely wrote:
-> > > > On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
-> > > > <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > > > > To help keep track of what is going on, I would like to have a short
-> > > > > stand up meeting once a week. Looking at my calendar, I can make
-> > > > > 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
-> > > > 
-> > > > Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
-> > > 
-> > > Apologies for begin a little late to the party...
-> > > 
-> > > I have a regular fortnightly meeting on Thursdays, and for the next few
-> > > weeks (until the new year) I'm otherwise engaged on Fridays, so Tuesdays
-> > > would be preferable for me.
+On Mon, 2 Dec 2013 18:24:58 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Mon, Dec 02, 2013 at 06:09:22PM +0000, Kumar Gala wrote:
 > > 
-> > I started with Fridays, but it sounds like Tuesday works for everyone.
-> > I've moved the meeting to next Tuesday.
+> > On Nov 29, 2013, at 9:57 AM, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
+> > 
+> > > On Wed, 2013-11-27 at 14:36 +0000, Grant Likely wrote:
+> > >> On Fri, 22 Nov 2013 11:22:23 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > >>> On Wed, Nov 20, 2013 at 11:56:39AM +0000, Grant Likely wrote:
+> > >>>> On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
+> > >>>> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > >>>>> To help keep track of what is going on, I would like to have a short
+> > >>>>> stand up meeting once a week. Looking at my calendar, I can make
+> > >>>>> 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
+> > >>>> 
+> > >>>> Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
+> > >>> 
+> > >>> Apologies for begin a little late to the party...
+> > >>> 
+> > >>> I have a regular fortnightly meeting on Thursdays, and for the next few
+> > >>> weeks (until the new year) I'm otherwise engaged on Fridays, so Tuesdays
+> > >>> would be preferable for me.
+> > >> 
+> > >> I started with Fridays, but it sounds like Tuesday works for everyone.
+> > >> I've moved the meeting to next Tuesday.
+> > > 
+> > > Should I have gotten an update meeting request?
+> > > 
+> > >> This Friday would have been off
+> > >> anyway because of some minor holiday in the US.
+> > > 
+> > > :-)
+> > > 
+> > > Ian.
+> > 
+> > So are we meeting tomorrow (Tue Dec 3rd)?
 > 
-> Should I have gotten an update meeting request?
+> I hope so.
+> 
+> Grant?
 
-Yes. I don't know why it didn't get out to you. I've tried to send it again.
+yes. I've tried to resend the invite. Let me know if you don't see it.
+
+Regardless, it will be the same Hangout link and it will be at 2:00 GMT.
 
 g.
 
