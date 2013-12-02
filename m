@@ -1,57 +1,70 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: Device Tree Maturity Project
-Date: Mon, 2 Dec 2013 12:09:22 -0600
-Message-ID: <E3A7FE14-3D7E-4949-8B16-D11E2E6E54ED@codeaurora.org>
-References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail. com> <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com> < 20131122112223.GB8406@e106331-lin.cambridge.arm.com> <20131127143655.F25E4C404EC@trevor.secretlab.ca> <1385740653.25763.53.camel@kazak.uk.xensource.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH 2/3] ARM: dts: clps711x: Add bindings documentation for CLPS711X irqchip driver
+Date: Mon,  2 Dec 2013 22:12:59 +0400
+Message-ID: <1386007979-6785-1-git-send-email-shc_work@mail.ru>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385740653.25763.53.camel-ommiHX4a84BXesXXhkcM7miJhflN2719@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add OF document for Cirrus Logic CLPS711X irqchip driver.
 
-On Nov 29, 2013, at 9:57 AM, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+---
+ .../interrupt-controller/cirrus,clps711x-intc.txt  | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
 
-> On Wed, 2013-11-27 at 14:36 +0000, Grant Likely wrote:
->> On Fri, 22 Nov 2013 11:22:23 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->>> On Wed, Nov 20, 2013 at 11:56:39AM +0000, Grant Likely wrote:
->>>> On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
->>>> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->>>>> To help keep track of what is going on, I would like to have a short
->>>>> stand up meeting once a week. Looking at my calendar, I can make
->>>>> 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
->>>> 
->>>> Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
->>> 
->>> Apologies for begin a little late to the party...
->>> 
->>> I have a regular fortnightly meeting on Thursdays, and for the next few
->>> weeks (until the new year) I'm otherwise engaged on Fridays, so Tuesdays
->>> would be preferable for me.
->> 
->> I started with Fridays, but it sounds like Tuesday works for everyone.
->> I've moved the meeting to next Tuesday.
-> 
-> Should I have gotten an update meeting request?
-> 
->> This Friday would have been off
->> anyway because of some minor holiday in the US.
-> 
-> :-)
-> 
-> Ian.
-
-So are we meeting tomorrow (Tue Dec 3rd)?
-
-- k
-
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
+new file mode 100644
+index 0000000..12f47cb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
+@@ -0,0 +1,41 @@
++Cirrus Logic CLPS711X Interrupt Controller
++
++Required properties:
++
++- compatible: Should be "cirrus,clps711x-intc"
++- reg: Specifies base physical address of the registers set
++- interrupt-controller: Identifies the node as an interrupt controller
++- #interrupt-cells: Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
++
++The interrupt sources are as follows:
++ID	Name	Description
++---------------------------
++1:	BLINT	Battery low (FIQ)
++3:	MCINT	Media changed (FIQ)
++4:	CSINT	CODEC sound
++5:	EINT1	External 1
++6:	EINT2	External 2
++7:	EINT3	External 3
++8:	TC1OI	TC1 under flow
++9:	TC2OI	TC2 under flow
++10:	RTCMI	RTC compare match
++11:	TINT	64Hz tick
++12:	UTXINT1	UART1 transmit FIFO half empty
++13:	URXINT1	UART1 receive FIFO half full
++14:	UMSINT	UART1 modem status changed
++15:	SSEOTI	SSI1 end of transfer
++16:	KBDINT	Keyboard
++17:	SS2RX	SSI2 receive FIFO half or greater full
++18:	SS2TX	SSI2 transmit FIFO less than half empty
++28:	UTXINT2	UART2 transmit FIFO half empty
++29:	URXINT2	UART2 receive FIFO half full
++32:	DAIINT	DAI interface (FIQ)
++
++Example:
++	intc: interrupt-controller {
++		compatible = "cirrus,clps711x-intc";
++		reg = <0x80000000 0x4000>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+1.8.3.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
