@@ -1,46 +1,110 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH V3 1/2] sata_rcar: Add R-Car Gen2 SATA PHY support
-Date: Mon, 2 Dec 2013 09:02:01 +0900
-Message-ID: <20131202000201.GA14523@verge.net.au>
-References: <1383912570-8393-1-git-send-email-valentine.barshak@cogentembedded.com>
- <1383912570-8393-2-git-send-email-valentine.barshak@cogentembedded.com>
- <52951B4D.3030205@cogentembedded.com>
- <20131129201406.GD21755@mtj.dyndns.org>
- <5298FAA8.2050300@cogentembedded.com>
- <20131129204231.GE21755@mtj.dyndns.org>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] ARM: shmobile: kzm9d: Use common clock framework
+Date: Mon, 2 Dec 2013 11:25:51 +0900
+Message-ID: <20131202022549.GA12357@verge.net.au>
+References: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
+ <20131008143403.c11f294c8a1701a2ab3bc5fd@ops.dti.ne.jp>
+ <20131009034057.GO15065@verge.net.au>
+ <CANqRtoQs+31mv0ZULOd3SGshkBkvp-kGoaVOSb10+Ncdp+WNXw@mail.gmail.com>
+ <20131009065438.GA7220@verge.net.au>
+ <CANqRtoSGFEjcBPDAtq3YCDbkiFCftyr8b=qniYqyMafng=zurw@mail.gmail.com>
+ <20131009103915.GB17869@verge.net.au>
+ <20131029044239.GC20432@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131129204231.GE21755@mtj.dyndns.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Valentine <valentine.barshak@cogentembedded.com>, linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kumar Gala <galak@codeaurora.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <20131029044239.GC20432-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Shinya Kuribayashi <shinya.kuribayashi.px-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 29, 2013 at 03:42:31PM -0500, Tejun Heo wrote:
-> On Sat, Nov 30, 2013 at 12:35:52AM +0400, Valentine wrote:
-> > On 11/30/2013 12:14 AM, Tejun Heo wrote:
-> > >Hello,
-> > >
-> > >On Wed, Nov 27, 2013 at 02:06:05AM +0400, Valentine wrote:
-> > >>On 11/08/2013 04:09 PM, Valentine Barshak wrote:
-> > >>
-> > >>Tejun,
-> > >>are you OK with taking this?
-> > >
-> > >Yeah, the stat part looks okay to me.  How the two should be routed?
-> > >Both through libata or should I just take the first one?
+On Tue, Oct 29, 2013 at 01:42:41PM +0900, Simon Horman wrote:
+> On Wed, Oct 09, 2013 at 07:39:18PM +0900, Simon Horman wrote:
+> > On Wed, Oct 09, 2013 at 04:29:56PM +0900, Magnus Damm wrote:
+> > > Hi Simon,
+> > > 
+> > > On Wed, Oct 9, 2013 at 3:54 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> > > > On Wed, Oct 09, 2013 at 01:59:46PM +0900, Magnus Damm wrote:
+> > > >> Hi Simon,
+> > > >>
+> > > >> On Wed, Oct 9, 2013 at 12:40 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> > > >> > On Tue, Oct 08, 2013 at 02:34:03PM +0900, takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org wrote:
+> > > >> >> Use common clock framework version of clock
+> > > >> >>  drivers/clk/shmobile/clk-emev2.c
+> > > >> >> instead of sh-clkfwk version
+> > > >> >>  arch/arm/mach-shmobile/clock-emev2.c
+> > > >> >> when it is configured as a part of multi-platform.
+> > > >> >>
+> > > >> >> Signed-off-by: Takashi Yoshii <takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org>
+> > > >> >
+> > > >> > Thanks.
+> > > >> >
+> > > >> > I plan to add this patch to a new topic branch,
+> > > >> > topic/emev2-common-clock, in the renesas tree and
+> > > >> > queue it up from there for inclusion in mainline
+> > > >> > if/when the first patch of this series is accepted
+> > > >> > by Mike Turquette.
+> > > >>
+> > > >> Thanks for picking up patches, Simon.
+> > > >>
+> > > >> I think you can simply merge this patch after the following series:
+> > > >>
+> > > >> [PATCH 00/05] ARM: shmobile: KZM9D Multiplatform update
+> > > >
+> > > > This is already queued up.
+> > > 
+> > > Yes, I know, thanks for that. I tried to explain the dependency in the
+> > > 00/00 cover letter but I will try to be more clear next time!
+> > > 
+> > > >> There are no build time dependencies on patch 1 and 2 so this patch
+> > > >> can be merged independently. Regarding run-time operation, the
+> > > >> multiplatform series above makes KZM9D DT reference only build for
+> > > >> multiplatform, and in such case CCF is required.
+> > > >>
+> > > >> So if you want to keep KZM9D DT reference working until Mike Turquette
+> > > >> accepts the CCF bits, then I recommend you to wait with "[PATCH 00/05]
+> > > >> ARM: shmobile: KZM9D Multiplatform update" until all EMEV2 CCF bits
+> > > >> have been merged.
+> > > >>
+> > > >> Another way is to merge "[PATCH 00/05] ARM: shmobile: KZM9D
+> > > >> Multiplatform update" before the EMEV2 CCF bits, but if so you may as
+> > > >> well merge this patch as well IMO. This
+> > > >> multiplatform-update-series-merge-before-CCF plan will result in
+> > > >> untestable KZM9D DT reference until EMEV2 CCF is merged. Either way is
+> > > >> fine with me.
+> > > >
+> > > > I am mainly concerned that the bindings may change before
+> > > > they are finally merged. And I thought it would be nice to avoid
+> > > > having to fix up the usage of the bindings if they change.
+> > > 
+> > > Sure, but the code in this patch looks like it simply starts DT CCF
+> > > probing regardless of what the bindings look like. So I don't think
+> > > you will have to worry about actual bindings detail.
+> > > 
+> > > > But I'm happy to just queue-up patches 2 and 3 of this series
+> > > > now if you prefer.
+> > > 
+> > > Well, I meant patch 3 only. Patch 1 and 2 are tied together by dependencies. =)
 > > 
-> > I'm not sure about that. I'm more concerned about the first one.
-> > But I wouldn't mind if you take both.
+> > Thanks, I understand now.
+> > 
+> > I'll queue-up 3/3.
 > 
-> Applied the first one to libata/for-3.14.  Are people happy with the
-> second one?  If so, I'll put route that through libata/for-3.14 too.
+> Which I did.
+> 
+> Then some time passed...
+> 
+> Mike has accepted my pull-request for patch 1 of this series
+> and accordingly I have queued-up this patch for v3.14.
+> It should appear in the devel branch the next time that I push it.
 
-Hi,
+I was mistaken. It was not queued up  for v3.14.
+And still has not been queued up.
 
-Assuming that the second one is " [PATCH V3 2/2] dt: Document sata_rcar
-bindings" then from my point of view it would be ideal if you took it.
-However, it seems that there is still some discussion on the contents
-between Valentine and Kumar Gala.
+I have un-queued this patch accordingly.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
