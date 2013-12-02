@@ -1,61 +1,72 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH RFC 0/2] ARM: defining power states DT bindings
-Date: Mon,  2 Dec 2013 16:20:03 +0000
-Message-ID: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Dave Martin <dave.martin@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4] ASoC: simple-card: add Device Tree
+ support
+Date: Mon, 2 Dec 2013 16:24:38 +0000
+Message-ID: <20131202162438.GN12952@e106331-lin.cambridge.arm.com>
+References: <20131003104248.GI27287@sirena.org.uk>
+ <87fvsh2966.wl%kuninori.morimoto.gx@renesas.com>
+ <20131024171758.GA2461@kartoffel>
+ <87iowm9jwv.wl%kuninori.morimoto.gx@renesas.com>
+ <20131115155028.GE24831@e106331-lin.cambridge.arm.com>
+ <87li0m7d7c.wl%kuninori.morimoto.gx@renesas.com>
+ <20131118113617.GC30853@e106331-lin.cambridge.arm.com>
+ <87mwl1du71.wl%kuninori.morimoto.gx@renesas.com>
+ <20131120162403.GA22479@e106331-lin.cambridge.arm.com>
+ <8738mqzk8z.wl%kuninori.morimoto.gx@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <8738mqzk8z.wl%kuninori.morimoto.gx@renesas.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-ARM based systems embed power management HW that allows SW to enter
-low-power states according to run-time criteria based on parameters (eg
-power state entry/exit latency) that define how a power state has to be
-managed and its respective properties. ARM partners implement HW power
-management schemes through custom HW, with power controllers and relative
-control mechanisms differing on both HW implementations and the way SW can
-control them. This differentiation forces PM software in the kernel to cope
-with states differences in power management drivers, which cause code
-fragmentation and duplication of functionality.
+On Thu, Nov 21, 2013 at 12:12:13AM +0000, Kuninori Morimoto wrote:
+> 
+> Hi Mark Rutland
+> 
+> > > --------------------
+> > > So, ideally.  However we have to consider the fact that the clock API
+> > > isn't reliably available makes this harder than it should be.  Even
+> > > among the DT using platforms at least PowerPC still uses a custom clock
+> > > API.  We could just use this as a carrot to push people to convert
+> > > though.
+> > > ---------------------
+> > 
+> > I would be happier if we could unify the common clock infrastructure, it
+> > would make this kind of thing a lot lessy messy. However, I'm not
+> > against the system-clock-frequency property for now.
+> 
+> Thank you
+> 
+> > > OK, sorry for my English
+> > 
+> > Sorry for the confusion, I'll try to be less ambiguous in future :)
+> > 
+> > What I was trying to get at here is that if there is neither a clock or
+> > a system-clock-frequency property in the device tree, dai->sysclk will
+> > not have been initialised in this path. Is this a valid case, and will
+> > dai->sysclk have a well-defined, sane value?
+> 
+> My understanding, this "dai" itself is created by devm_kzalloc()
+> So, default dai->sysclk is 0.
+> And, if there is no clocks, no system-clock-frequency property,
+> it try of_property_read_u32() side. but it will do nothing to dai->sysclk
+> in such case. so dai->sysclk is still 0, and it is very sane on this driver.
+> Is this good answer ?
 
-Most of the power control scheme HW parameters are not probeable on ARM
-platforms from a SW point of view, hence, in order to tackle the drivers
-fragmentation problem, this patch series defines device tree bindings to
-describe power states parameters on ARM platforms.
+That sounds fine to me. Just wanted to make sure. :)
 
-Device tree bindings for power states also require the introduction of devi=
-ce
-tree bindings for processor caches, since power states entry/exit require
-SW cache maintainance; in some ARM systems, where firmware does not
-support power down interfaces, cache maintainance must be carried out in th=
-e
-OS power management layer, which then requires a description of the cache
-topology through device tree nodes.
-
-The power states on ARM are described as "C-states" in this patchset,
-borrowing the nomenclature from ACPI power states bindings which have by no=
-w
-been widely adopted on both x86 and ARM world as power states names.
-
-C-states device tree standardization shares most of the concepts and
-definitions with the ongoing ACPI ARM C-state bindings proposal so that
-both standards can contain a coherent set of parameters, simplifying the
-way SW will have to handle the respective device drivers.
-
-Lorenzo Pieralisi (2):
-  Documentation: arm: add cache DT bindings
-  Documentation: arm: define DT C-states bindings
-
- Documentation/devicetree/bindings/arm/c-states.txt | 830 +++++++++++++++++=
-++++
- Documentation/devicetree/bindings/arm/cache.txt    |  25 +
- 2 files changed, 855 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/c-states.txt
- create mode 100644 Documentation/devicetree/bindings/arm/cache.txt
-
---=20
-1.8.4
-
-
+Thanks,
+Mark.
