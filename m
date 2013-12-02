@@ -1,80 +1,41 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH RFC 1/2] Documentation: arm: add cache DT bindings
-Date: Mon, 2 Dec 2013 11:28:41 -0600
-Message-ID: <D010BD06-683A-4500-AF13-64699ECEF808@codeaurora.org>
-References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com> <1386001205-11978-2-git-send-email-lorenzo.pieralisi@arm.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1386001205-11978-2-git-send-email-lorenzo.pieralisi@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Dave Martin <dave.martin@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH V11 2/3] watchdog: s3c2410_wdt: use syscon regmap
+ interface to configure pmu register
+Date: Mon, 2 Dec 2013 09:32:45 -0800
+Message-ID: <CAD=FV=XvTPbkdopAQVQt-ga2HrwwZ1MSWytMTeDAz=M91icy3g@mail.gmail.com>
+References: <1385613243-3559-1-git-send-email-l.krishna@samsung.com>
+	<1385613243-3559-3-git-send-email-l.krishna@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385613243-3559-3-git-send-email-l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "cpgs ." <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Leela Krishna,
 
-On Dec 2, 2013, at 10:20 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
-
-> On ARM systems the cache topology cannot be probed at runtime, in
-> particular, it is impossible to probe which CPUs share a given cache
-> level. Power management software requires this knowledge to implement
-> optimized power down sequences, hence this patch adds a document that
-> defines the DT cache bindings for ARM systems. The bindings are compliant
-> with ePAPR (PowerPC bindings), and rely on the cache bindings already
-> standardized in the ePAPR v1.1 document; ARM required updates are underlined
-> in the binding document.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+On Wed, Nov 27, 2013 at 8:34 PM, Leela Krishna Amudala
+<l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Add device tree support for exynos5250 and 5420 SoCs and use syscon regmap interface
+> to configure AUTOMATIC_WDT_RESET_DISABLE and MASK_WDT_RESET_REQUEST registers of PMU
+> to mask/unmask enable/disable of watchdog in probe and s2r scenarios.
+>
+> Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
-> Documentation/devicetree/bindings/arm/cache.txt | 25 +++++++++++++++++++++++++
-> 1 file changed, 25 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/arm/cache.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cache.txt b/Documentation/devicetree/bindings/arm/cache.txt
-> new file mode 100644
-> index 0000000..009cddb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/cache.txt
-> @@ -0,0 +1,25 @@
-> +==========================================
-> +ARM processors cache binding description
-> +==========================================
-> +
-> +Device tree bindings for ARM processor caches adhere to the cache bindings
-> +described in [3], in section 3.8 for multi-level and shared caches.
-> +
-> +On ARM, internal caches cannot be described in the cpu node but require
-> +specific nodes marked with compatible string set to "cache" (see [3],
-> +section 3.8).
+>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   21 ++-
+>  drivers/watchdog/Kconfig                           |    1 +
+>  drivers/watchdog/s3c2410_wdt.c                     |  159 ++++++++++++++++++--
+>  3 files changed, 171 insertions(+), 10 deletions(-)
 
-can you explain why
+Tested on ARM Chromebook in a backport to 3.8.  See
+<https://chromium-review.googlesource.com/#/c/177932/3> for this
+patch.
 
-> +
-> +Furthermore the cache bindings in [3] require the following property update:
-> +
-> +- [Table 3.9] cache-level: This property of cache nodes must match the cache
-> +			   level encoded in the processors CLIDR (v7) and
-> +			   CLIDR_EL1 (v8) registers, as described in [1][2].
-> +
-> +All other properties and rules apply.
-> +
-> +[1] ARMv7-AR Reference Manual
-> +    http://infocenter.arm.com/help/index.jsp
-> +[2] ARMv8-A Reference Manual
-> +    http://infocenter.arm.com/help/index.jsp
-> +[3] ePAPR standard
-> +    https://www.power.org/documentation/epapr-version-1-1/
-> -- 
-> 1.8.4
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
