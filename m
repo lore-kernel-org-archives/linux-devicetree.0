@@ -1,267 +1,59 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v4 2/3] clk: shmobile: Add DIV6 clock support
-Date: Mon,  2 Dec 2013 14:34:16 +0100
-Message-ID: <1385991257-28042-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1385991214-28003-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1385991257-28042-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1385991257-28042-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH v3 1/2] dt-bindings: add hym8563 binding
+Date: Mon, 2 Dec 2013 13:41:10 +0000
+Message-ID: <20131202134110.GH27568@sirena.org.uk>
+References: <201312012047.02299.heiko@sntech.de>
+ <201312012047.42669.heiko@sntech.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cjNfFEtZoUGcCUIb"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201312012047.42669.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Richard Weinberger <richard.weinberger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DIV6 clocks are divider gate clocks controlled through a single
-register. The divider is expressed on 6 bits, hence the name, and can
-take values from 1/1 to 1/64.
 
-Those clocks are found on Renesas ARM SoCs.
+--cjNfFEtZoUGcCUIb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- .../bindings/clock/renesas,cpg-div6-clocks.txt     |  28 ++++
- drivers/clk/shmobile/Makefile                      |   1 +
- drivers/clk/shmobile/clk-div6.c                    | 185 +++++++++++++++++++++
- 3 files changed, 214 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
- create mode 100644 drivers/clk/shmobile/clk-div6.c
+On Sun, Dec 01, 2013 at 08:47:42PM +0100, Heiko St=FCbner wrote:
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-new file mode 100644
-index 0000000..952e373
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-@@ -0,0 +1,28 @@
-+* Renesas CPG DIV6 Clock
-+
-+The CPG DIV6 clocks are variable factor clocks provided by the Clock Pulse
-+Generator (CPG). They clock input is divided by a configurable factor from 1
-+to 64.
-+
-+Required Properties:
-+
-+  - compatible: Must be one of the following
-+    - "renesas,r8a7790-div6-clock" for R8A7790 (R-Car H2) DIV6 clocks
-+    - "renesas,r8a7791-div6-clock" for R8A7791 (R-Car M2) DIV6 clocks
-+    - "renesas,cpg-div6-clock" for generic DIV6 clocks
-+  - reg: Base address and length of the memory resource used by the DIV6 clock
-+  - clocks: Reference to the parent clock
-+  - #clock-cells: Must be 0
-+  - clock-output-names: The name of the clock as a free-form string
-+
-+
-+Example
-+-------
-+
-+	sd2_clk: sd2_clk@e6150078 {
-+		compatible = "renesas,r8a7790-div6-clock", "renesas,cpg-div6-clock";
-+		reg = <0 0xe6150078 0 4>;
-+		clocks = <&pll1_div2_clk>;
-+		#clock-cells = <0>;
-+		clock-output-names = "sd2";
-+	};
-diff --git a/drivers/clk/shmobile/Makefile b/drivers/clk/shmobile/Makefile
-index d0a9034..2e4a119 100644
---- a/drivers/clk/shmobile/Makefile
-+++ b/drivers/clk/shmobile/Makefile
-@@ -1,5 +1,6 @@
- obj-$(CONFIG_ARCH_R8A7790)		+= clk-rcar-gen2.o
- obj-$(CONFIG_ARCH_R8A7791)		+= clk-rcar-gen2.o
-+obj-$(CONFIG_ARCH_SHMOBILE_MULTI)	+= clk-div6.o
- 
- # for emply built-in.o
- obj-n	:= dummy
-diff --git a/drivers/clk/shmobile/clk-div6.c b/drivers/clk/shmobile/clk-div6.c
-new file mode 100644
-index 0000000..aac4756
---- /dev/null
-+++ b/drivers/clk/shmobile/clk-div6.c
-@@ -0,0 +1,185 @@
-+/*
-+ * r8a7790 Common Clock Framework support
-+ *
-+ * Copyright (C) 2013  Renesas Solutions Corp.
-+ *
-+ * Contact: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#define CPG_DIV6_CKSTP		BIT(8)
-+#define CPG_DIV6_DIV(d)		((d) & 0x3f)
-+#define CPG_DIV6_DIV_MASK	0x3f
-+
-+/**
-+ * struct div6_clock - MSTP gating clock
-+ * @hw: handle between common and hardware-specific interfaces
-+ * @reg: IO-remapped register
-+ * @div: divisor value (1-64)
-+ */
-+struct div6_clock {
-+	struct clk_hw hw;
-+	void __iomem *reg;
-+	unsigned int div;
-+};
-+
-+#define to_div6_clock(_hw) container_of(_hw, struct div6_clock, hw)
-+
-+static int cpg_div6_clock_enable(struct clk_hw *hw)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+
-+	clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
-+
-+	return 0;
-+}
-+
-+static void cpg_div6_clock_disable(struct clk_hw *hw)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+
-+	/* DIV6 clocks require the divisor field to be non-zero when stopping
-+	 * the clock.
-+	 */
-+	clk_writel(CPG_DIV6_CKSTP | CPG_DIV6_DIV(CPG_DIV6_DIV_MASK),
-+		   clock->reg);
-+}
-+
-+static int cpg_div6_clock_is_enabled(struct clk_hw *hw)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+
-+	return !(clk_readl(clock->reg) & CPG_DIV6_CKSTP);
-+}
-+
-+static unsigned long cpg_div6_clock_recalc_rate(struct clk_hw *hw,
-+						unsigned long parent_rate)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+	unsigned int div = (clk_readl(clock->reg) & CPG_DIV6_DIV_MASK) + 1;
-+
-+	return parent_rate / div;
-+}
-+
-+static unsigned int cpg_div6_clock_calc_div(unsigned long rate,
-+					    unsigned long parent_rate)
-+{
-+	unsigned int div;
-+
-+	div = DIV_ROUND_CLOSEST(parent_rate, rate);
-+	return clamp_t(unsigned int, div, 1, 64);
-+}
-+
-+static long cpg_div6_clock_round_rate(struct clk_hw *hw, unsigned long rate,
-+				      unsigned long *parent_rate)
-+{
-+	unsigned int div = cpg_div6_clock_calc_div(rate, *parent_rate);
-+
-+	return *parent_rate / div;
-+}
-+
-+static int cpg_div6_clock_set_rate(struct clk_hw *hw, unsigned long rate,
-+				   unsigned long parent_rate)
-+{
-+	struct div6_clock *clock = to_div6_clock(hw);
-+	unsigned int div = cpg_div6_clock_calc_div(rate, parent_rate);
-+
-+	clock->div = div;
-+
-+	/* Only program the new divisor if the clock isn't stopped. */
-+	if (!(clk_readl(clock->reg) & CPG_DIV6_CKSTP))
-+		clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops cpg_div6_clock_ops = {
-+	.enable = cpg_div6_clock_enable,
-+	.disable = cpg_div6_clock_disable,
-+	.is_enabled = cpg_div6_clock_is_enabled,
-+	.recalc_rate = cpg_div6_clock_recalc_rate,
-+	.round_rate = cpg_div6_clock_round_rate,
-+	.set_rate = cpg_div6_clock_set_rate,
-+};
-+
-+static void __init cpg_div6_clock_init(struct device_node *np)
-+{
-+	struct clk_init_data init;
-+	struct div6_clock *clock;
-+	const char *parent_name;
-+	const char *name;
-+	struct clk *clk;
-+	int ret;
-+
-+	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
-+	if (!clock) {
-+		pr_err("%s: failed to allocate %s DIV6 clock\n",
-+		       __func__, np->name);
-+		return;
-+	}
-+
-+	/* Remap the clock register and read the divisor. Disabling the
-+	 * clock overwrites the divisor, so we need to cache its value for the
-+	 * enable operation.
-+	 */
-+	clock->reg = of_iomap(np, 0);
-+	if (clock->reg == NULL) {
-+		pr_err("%s: failed to map %s DIV6 clock register\n",
-+		       __func__, np->name);
-+		goto error;
-+	}
-+
-+	clock->div = (clk_readl(clock->reg) & CPG_DIV6_DIV_MASK) + 1;
-+
-+	/* Parse the DT properties. */
-+	ret = of_property_read_string(np, "clock-output-names", &name);
-+	if (ret < 0) {
-+		pr_err("%s: failed to get %s DIV6 clock output name\n",
-+		       __func__, np->name);
-+		goto error;
-+	}
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+	if (parent_name == NULL) {
-+		pr_err("%s: failed to get %s DIV6 clock parent name\n",
-+		       __func__, np->name);
-+		goto error;
-+	}
-+
-+	/* Register the clock. */
-+	init.name = name;
-+	init.ops = &cpg_div6_clock_ops;
-+	init.flags = CLK_IS_BASIC;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+
-+	clock->hw.init = &init;
-+
-+	clk = clk_register(NULL, &clock->hw);
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: failed to register %s DIV6 clock (%ld)\n",
-+		       __func__, np->name, PTR_ERR(clk));
-+		goto error;
-+	}
-+
-+	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+
-+	return;
-+
-+error:
-+	if (clock->reg)
-+		iounmap(clock->reg);
-+	kfree(clock);
-+}
-+CLK_OF_DECLARE(cpg_div6_clk, "renesas,cpg-div6-clock", cpg_div6_clock_init);
--- 
-1.8.3.2
+> +Required properties:
+> +- compatible: should be: "haoyu,hym8563"
+> +- reg: i2c address
+> +- gpios: alarm interrupt gpio
 
+Why is this specified as a GPIO and not as an interrupt?
+
+--cjNfFEtZoUGcCUIb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSnI3zAAoJELSic+t+oim9mJMP/jV7/3NN0h1XZsWJouY0MDpn
+yR0rv4J1AirhVArU4fDUJiDHVBIRyTIQCB5kWYq/0ztjrIFFj3IaCLXI52v8EYv1
+BVuW+YPvmjFD+HRRslOkT4YfiBEFEd8qi6VFzjSKgNNHCXzzaaZTapx0YWXmNcBc
+RN4kBWbBKo5/GHjH25YxnhphF38k6k0fPIFhnUGthpywgFCPPbjpBE7SVcxDlzqD
+2buqRrSkh0q8jr1FrAGRda7MEpTn4rL5tAxQANP1GyCUpXOIyAVR5w+ExWNjK1/Q
+wsasWShU3QfVp2w+FDw4ETO/6KPaM2qtknStvH4wTkH7zQHIyHzhc3+i2gqWKk6M
+pcFyFIroLB6ZLy0yBK33B4F9Df7r20Aj0P6LEHYQn01RJ7BcgEAR3CEusezXwWL5
+CpDT0KbSgfzuesYqfVKyEr7wABKWXR4ijc0fuvXC9VLEhpCEN9YcgMpxCrRq90yn
++RjIIwAdagmFwi3X3EVFIdZTD729l9dnFpo7epjyE4fuBnEFmeBGey3VVhDEmn6d
+LzuzfRMq1jNJQBnJ8jVjSiseONgcBYNMX3tT6qi1Z5vmiawtoUu10UIru87Qtx0d
+VBtb/u9+YVblsnCdbIB/oEGSE5snTHbgW5b6yNDOJljil9InetBov8XQ1LawwlqY
+j7b3RCD9HTjFC4utsPW3
+=6n80
+-----END PGP SIGNATURE-----
+
+--cjNfFEtZoUGcCUIb--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
