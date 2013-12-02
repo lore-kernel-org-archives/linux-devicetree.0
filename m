@@ -1,56 +1,48 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v2 2/2] clk: add accuracy support for fixed clock
-Date: Sun, 1 Dec 2013 22:15:58 -0500
-Message-ID: <20131202031558.GB29282@titan.lakedaemon.net>
-References: <1385556285-19180-1-git-send-email-b.brezillon@overkiz.com>
- <1385556285-19180-3-git-send-email-b.brezillon@overkiz.com>
- <20131127145620.GR2879@titan.lakedaemon.net>
- <5296298C.9040300@overkiz.com>
- <20131127181042.16819.36364@quantum>
- <5296F8B2.9080807@overkiz.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 2/2] ARM: dts: Update display clock frequency for Origen-4412
+Date: Mon, 2 Dec 2013 09:44:40 +0530
+Message-ID: <CAK9yfHxrafJFcEhGksKygkaJmAx+MeLvfhncr_y0YKb6CznPQA@mail.gmail.com>
+References: <1380171018-24229-1-git-send-email-sachin.kamat@linaro.org>
+	<1380171018-24229-2-git-send-email-sachin.kamat@linaro.org>
+	<085801cedf90$6e2a6580$4a7f3080$@org>
+	<CAHbNUh2gW3KV_T2iJ=m5a9qe0nsNUzXuHS=fHYDeoXMn9H-Leg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5296F8B2.9080807@overkiz.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: boris brezillon <b.brezillon@overkiz.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAHbNUh2gW3KV_T2iJ=m5a9qe0nsNUzXuHS=fHYDeoXMn9H-Leg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <tushar.behera@linaro.org>
+Cc: Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Sachin Kamat <sachin.kamat@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 28, 2013 at 09:02:58AM +0100, boris brezillon wrote:
-> On 27/11/2013 19:10, Mike Turquette wrote:
-> >Quoting boris brezillon (2013-11-27 09:19:08)
-> >>>On Wed, Nov 27, 2013 at 01:44:45PM +0100, Boris BREZILLON wrote:
-...
-> >>>I would also prefer to see an unknown accuracy be -1.
-> >>I decided to keep 0 as a default value for unimplemented recalc_accuracy
-> >>(or unspecified fixed accuracy) to keep existing implementation coherent.
-> >>
-> >>0 means the clk is perfect, and I thought it would be easier to handle a
-> >>perfect clk (even if this is not really the case) than handling an error
-> >>case.
-> >>
-> >>Another aspect is the propagation of the clk accuracy accross the clk tree.
-> >>Returning -1 in the middle of the clk chain will drop the previous clk
-> >>accuracy
-> >>calculation.
-> >>
-> >>Anyway, I can change this if you think this is more appropriate.
-> >What about the absence of the property?
-> >Instead of requiring a -1 value
-> >can we simply detect that the property does not exist? This is nicer for
-> >backwards compatibility with existing DTS.
-> 
-> I already handle the absence of the clock-accuracy property.
-> In this case the clock is considered perfect (accuracy = 0 ppb).
+On 13 November 2013 09:17, Tushar Behera <tushar.behera@linaro.org> wrote:
+> On 12 November 2013 15:47, Kukjin Kim <kgene@kernel.org> wrote:
+>> Sachin Kamat wrote:
+>>>
+>> + dt ml.
+>>
+>>> As per the timing information for supported panel, the value should
+>>> be between 47.2 MHz to 47.9 MHz for 60Hz refresh rate.
+>>>
+>>> Total horizontal pixels = 1024 (x-res) + 80 (margin) + 48 (hsync) = 1152
+>>> Total vertical pixels = 600 (y-res) + 80 (margin) + 3 (vsync) = 653
+>>
+>> Should be 683?
+>>
+>>>
+>>> Target pixel clock rate for refresh rate @60 Hz
+>>>       = 1152 * 653 * 60 = 47208960 Hz ~ 47.5 MHz
+>>>
+>> Same here.
+>>
+>
+> Yes, typo in both the cases, however the calculation is right. The
+> same typo in patch 1/2 also. You may please fix them while applying.
+>
 
-Yeah, in order to calculate the theoretical accuracy of a leaf node, a
-missing accuracy in the middle of the chain really derails things.
-Since my previous concern (modelling the real accuracy of the clocks) is
-not an issue here, I think assuming the absent accuracy is 0 is fine.
-Especially since all Boris is trying to do is avoid the RC clocks.
 
-thx,
+Ping Kukjin.
 
-Jason.
+-- 
+With warm regards,
+Sachin
