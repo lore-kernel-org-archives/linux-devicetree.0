@@ -1,65 +1,72 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] gpu: host1x: Add MIPI pad calibration DT bindings
-Date: Mon,  2 Dec 2013 14:28:54 +0100
-Message-ID: <1385990934-20809-1-git-send-email-treding@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v4 0/3] Renesas R-Car Gen2 Common Clock Framework drivers
+Date: Mon,  2 Dec 2013 14:33:34 +0100
+Message-ID: <1385991214-28003-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Introduce device tree bindings for the MIPI pad calibration controller
-found on Tegra SoCs. The controller can be used to perform calibration
-of pads used for DSI and CSI peripherals.
+Hello,
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/misc/nvidia,tegra114-mipi.txt         | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/nvidia,tegra114-mipi.txt
+This is the fourth and hopefully final version of the CCF clock drivers for
+the Renesas R-Car R8A7790 (H2) and R8A7791 (M2) SoCs. I plan to send a pull
+request on Wednesday to Mike Turquette and have thus rebased the patches on
+top of v3.13-rc1 and removed the arch/ specific changes.
 
-diff --git a/Documentation/devicetree/bindings/misc/nvidia,tegra114-mipi.txt b/Documentation/devicetree/bindings/misc/nvidia,tegra114-mipi.txt
-new file mode 100644
-index 000000000000..beb75ec7f6fc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/nvidia,tegra114-mipi.txt
-@@ -0,0 +1,37 @@
-+NVIDIA Tegra MIPI pad calibration controller
-+
-+Required properties:
-+- compatible: "nvidia,tegra<chip>-mipi"
-+- reg: Physical base address and length of the controller's registers.
-+- clocks: The clock consumed by the controller.
-+- #nvidia,mipi-calibrate-cells: Should be 1. The cell is a bitmask of the pads
-+  that need to be calibrated for a given device.
-+
-+User nodes need to contain an nvidia,mipi-calibrate property that has a
-+phandle to refer to the calibration controller node and a bitmask of the pads
-+that need to be calibrated.
-+
-+Example:
-+
-+	mipi: mipi@700e3000 {
-+		compatible = "nvidia,tegra114-mipi";
-+		reg = <0x700e3000 0x100>;
-+		clocks = <&tegra_car TEGRA114_CLK_MIPI_CAL>;
-+		#nvidia,mipi-calibrate-cells = <1>;
-+	};
-+
-+	...
-+
-+	host1x@50000000 {
-+		...
-+
-+		dsi@54300000 {
-+			...
-+
-+			nvidia,mipi-calibrate = <&mipi 0x060>;
-+
-+			...
-+		};
-+
-+		...
-+	};
+The patches are pretty self-explanatory and described in their respective
+commit message. The R8A7790 and R8A7791 datasheets are unfortunately not
+publicly available.
+
+Changes compared to v3:
+
+- Clarified the usage of the reg and clocks DT properties for the MSTP driver
+- Rebased on top of v3.13-rc1
+- Dropped the arch/ specific changes
+
+Changes compared to v2:
+
+- Fixed I2C MSTP clocks parents (hp -> p)
+- Added Z and Z2 clocks
+- Added r8a7791 clocks to DT
+
+Changes compared to v1:
+
+- The core CPG clocks driver now supports the r8a7791 SoC in addition to the
+r8a7790. They are collectively refered to as 'R-Car Gen2'. The driver has thus
+been renamed to clk-rcar-gen2.c. The DT bindings have been updated accordingly.
+- Several MSTP clocks have been added to the r8a7790-clock.h header and a new
+header has been added for the r8a7791
+- The r8a7790 dtsi patches that add and reference clocks have been added to
+this series.
+
+Laurent Pinchart (3):
+  clk: shmobile: Add R-Car Gen2 clocks support
+  clk: shmobile: Add DIV6 clock support
+  clk: shmobile: Add MSTP clock support
+
+ .../bindings/clock/renesas,cpg-div6-clocks.txt     |  28 ++
+ .../bindings/clock/renesas,cpg-mstp-clocks.txt     |  51 ++++
+ .../clock/renesas,rcar-gen2-cpg-clocks.txt         |  32 +++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/shmobile/Makefile                      |   7 +
+ drivers/clk/shmobile/clk-div6.c                    | 185 +++++++++++++
+ drivers/clk/shmobile/clk-mstp.c                    | 229 ++++++++++++++++
+ drivers/clk/shmobile/clk-rcar-gen2.c               | 298 +++++++++++++++++++++
+ include/linux/clk/shmobile.h                       |  19 ++
+ 9 files changed, 850 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+ create mode 100644 drivers/clk/shmobile/Makefile
+ create mode 100644 drivers/clk/shmobile/clk-div6.c
+ create mode 100644 drivers/clk/shmobile/clk-mstp.c
+ create mode 100644 drivers/clk/shmobile/clk-rcar-gen2.c
+ create mode 100644 include/linux/clk/shmobile.h
+
 -- 
-1.8.4.2
+Regards,
+
+Laurent Pinchart
+
