@@ -1,65 +1,98 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Device Tree Maturity Project
-Date: Mon, 2 Dec 2013 18:24:58 +0000
-Message-ID: <20131202182458.GR12952@e106331-lin.cambridge.arm.com>
-References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail.com>
- <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com>
- <20131122112223.GB8406@e106331-lin.cambridge.arm.com>
- <20131127143655.F25E4C404EC@trevor.secretlab.ca>
- <1385740653.25763.53.camel@kazak.uk.xensource.com>
- <E3A7FE14-3D7E-4949-8B16-D11E2E6E54ED@codeaurora.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC 1/2] Documentation: arm: add cache DT bindings
+Date: Mon, 2 Dec 2013 18:34:12 +0000
+Message-ID: <20131202183412.GA13791@e102568-lin.cambridge.arm.com>
+References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1386001205-11978-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <D010BD06-683A-4500-AF13-64699ECEF808@codeaurora.org>
+ <20131202175055.GA13125@e102568-lin.cambridge.arm.com>
+ <CB2ECFBB-A959-4A44-B301-0188EA5599A3@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CB2ECFBB-A959-4A44-B301-0188EA5599A3@codeaurora.org>
 Content-Disposition: inline
-In-Reply-To: <E3A7FE14-3D7E-4949-8B16-D11E2E6E54ED-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dave P Martin <Dave.Martin@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2013 at 06:09:22PM +0000, Kumar Gala wrote:
+On Mon, Dec 02, 2013 at 05:59:56PM +0000, Kumar Gala wrote:
 > 
-> On Nov 29, 2013, at 9:57 AM, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
+> On Dec 2, 2013, at 11:50 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
 > 
-> > On Wed, 2013-11-27 at 14:36 +0000, Grant Likely wrote:
-> >> On Fri, 22 Nov 2013 11:22:23 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> >>> On Wed, Nov 20, 2013 at 11:56:39AM +0000, Grant Likely wrote:
-> >>>> On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
-> >>>> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> >>>>> To help keep track of what is going on, I would like to have a short
-> >>>>> stand up meeting once a week. Looking at my calendar, I can make
-> >>>>> 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
-> >>>> 
-> >>>> Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
-> >>> 
-> >>> Apologies for begin a little late to the party...
-> >>> 
-> >>> I have a regular fortnightly meeting on Thursdays, and for the next few
-> >>> weeks (until the new year) I'm otherwise engaged on Fridays, so Tuesdays
-> >>> would be preferable for me.
+> > On Mon, Dec 02, 2013 at 05:28:41PM +0000, Kumar Gala wrote:
 > >> 
-> >> I started with Fridays, but it sounds like Tuesday works for everyone.
-> >> I've moved the meeting to next Tuesday.
+> >> On Dec 2, 2013, at 10:20 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> >> 
+> >>> On ARM systems the cache topology cannot be probed at runtime, in
+> >>> particular, it is impossible to probe which CPUs share a given cache
+> >>> level. Power management software requires this knowledge to implement
+> >>> optimized power down sequences, hence this patch adds a document that
+> >>> defines the DT cache bindings for ARM systems. The bindings are compliant
+> >>> with ePAPR (PowerPC bindings), and rely on the cache bindings already
+> >>> standardized in the ePAPR v1.1 document; ARM required updates are underlined
+> >>> in the binding document.
+> >>> 
+> >>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> >>> ---
+> >>> Documentation/devicetree/bindings/arm/cache.txt | 25 +++++++++++++++++++++++++
+> >>> 1 file changed, 25 insertions(+)
+> >>> create mode 100644 Documentation/devicetree/bindings/arm/cache.txt
+> >>> 
+> >>> diff --git a/Documentation/devicetree/bindings/arm/cache.txt b/Documentation/devicetree/bindings/arm/cache.txt
+> >>> new file mode 100644
+> >>> index 0000000..009cddb
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/arm/cache.txt
+> >>> @@ -0,0 +1,25 @@
+> >>> +==========================================
+> >>> +ARM processors cache binding description
+> >>> +==========================================
+> >>> +
+> >>> +Device tree bindings for ARM processor caches adhere to the cache bindings
+> >>> +described in [3], in section 3.8 for multi-level and shared caches.
+> >>> +
+> >>> +On ARM, internal caches cannot be described in the cpu node but require
+> >>> +specific nodes marked with compatible string set to "cache" (see [3],
+> >>> +section 3.8).
+> >> 
+> >> can you explain why
 > > 
-> > Should I have gotten an update meeting request?
-> > 
-> >> This Friday would have been off
-> >> anyway because of some minor holiday in the US.
-> > 
-> > :-)
-> > 
-> > Ian.
+> > ARM v7 and v8 processors have a concept of cache levels which is valid
+> > even for internal caches. So either we add a cache-level property to
+> > internal caches or we do not use them for ARM.
 > 
-> So are we meeting tomorrow (Tue Dec 3rd)?
+> There isn't anything precluding a cachel-level property for internal caches.
+> 
+> > On top of that the definition of internal caches in the ePAPR is not
+> > well defined (for ARM) (what if you have multiple levels of internal
+> > caches ? - do we describe just L1 in the cpu node ?).
+> 
+> ePAPR has examples of multiple level's of internal cache in the cpu node.
 
-I hope so.
+Where ? 3.7.3 (ePAPR v1.1) Internal (L1) Cache properties ? I do not think so.
 
-Grant?
+It does by using the definitions in 3.8 "Multi level and shared caches".
 
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So, since the cache bindings in 3.8 allow to describe a cache hierarchy
+on ARM, that's what I used. Declaring L1 in the CPU node buys us nothing, so
+I do not think there is a point in using it on ARM. That's why instead
+of changing the bindings for internal (L1) caches to require cache-level
+we should just ignore them IMHO.
+
+ePAPR v1.1 contains a bug (example page 47 - line 47) since a cpu node cannot
+contain a cache-level property, that's not a property of internal caches and
+it has to be declared in a node with:
+
+compatible = "cache";
+
+unless my understanding of ePAPR is wrong.
+
+All I am saying is that multi-level cache bindings can be used to
+describe all cache hierarchies for ARM, we do not need internal (L1)
+cache bindings at all, it is just legacy stuff.
+
+Lorenzo
+
