@@ -1,77 +1,80 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v1 1/1] dts: bindings: add mpc5121 clocks binding document
-Date: Mon, 2 Dec 2013 17:55:20 +0100
-Message-ID: <20131202165520.GX2982@book.gsilab.sittig.org>
-References: <20131202094656.GA12952@e106331-lin.cambridge.arm.com>
- <1385994034-2513-1-git-send-email-gsi@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1385994034-2513-1-git-send-email-gsi-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH RFC 1/2] Documentation: arm: add cache DT bindings
+Date: Mon, 2 Dec 2013 11:28:41 -0600
+Message-ID: <D010BD06-683A-4500-AF13-64699ECEF808@codeaurora.org>
+References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com> <1386001205-11978-2-git-send-email-lorenzo.pieralisi@arm.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1386001205-11978-2-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Dave Martin <dave.martin@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2013 at 15:20 +0100, Gerhard Sittig wrote:
+
+On Dec 2, 2013, at 10:20 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+
+> On ARM systems the cache topology cannot be probed at runtime, in
+> particular, it is impossible to probe which CPUs share a given cache
+> level. Power management software requires this knowledge to implement
+> optimized power down sequences, hence this patch adds a document that
+> defines the DT cache bindings for ARM systems. The bindings are compliant
+> with ePAPR (PowerPC bindings), and rely on the cache bindings already
+> standardized in the ePAPR v1.1 document; ARM required updates are underlined
+> in the binding document.
 > 
-> add a clock bindings documentation file for Freescale MPC5121
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> ---
+> Documentation/devicetree/bindings/arm/cache.txt | 25 +++++++++++++++++++++++++
+> 1 file changed, 25 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/arm/cache.txt
 > 
-> this binding implements and uses existing common clock bindings,
-> it does not introduce a new binding semantics but discusses the
-> specific use on Freescale MPC5121 and provides examples
-> 
-> [ ... ]
-> 
+> diff --git a/Documentation/devicetree/bindings/arm/cache.txt b/Documentation/devicetree/bindings/arm/cache.txt
+> new file mode 100644
+> index 0000000..009cddb
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/mpc5121-clock.txt
-> @@ -0,0 +1,95 @@
-> +Device Tree Clock bindings for Freescale MPC5121
+> +++ b/Documentation/devicetree/bindings/arm/cache.txt
+> @@ -0,0 +1,25 @@
+> +==========================================
+> +ARM processors cache binding description
+> +==========================================
 > +
-> [ ... ]
+> +Device tree bindings for ARM processor caches adhere to the cache bindings
+> +described in [3], in section 3.8 for multi-level and shared caches.
 > +
-> +Required properties:
-> +- compatible:	shall contain "fsl,mpc5121-clock"
-> +- reg:		shall specify the start address and length of the
-> +		clock module's set of control registers
-> +- #clock-cells:	shall be 1; defines the number of integer cells
-> +		required for a clock specifier which references
-> +		this clock provider
+> +On ARM, internal caches cannot be described in the cpu node but require
+> +specific nodes marked with compatible string set to "cache" (see [3],
+> +section 3.8).
 
-In hindsight the wording is not good (especially 'reg'), will see
-how I can improve this.  And the layout may improve some more.
+can you explain why
 
 > +
-> +Optional properties:
-> +- clocks:	list of phandle and clock specifier pairs for the
-> +		node's input clocks, following the common clock
-> +		consumers binding; should be empty, or one XTAL/OSC
-> +		clock reference
-> +- clock-names:	list of clock input name strings sorted in the same
-> +		order as the 'clocks' property
+> +Furthermore the cache bindings in [3] require the following property update:
+> +
+> +- [Table 3.9] cache-level: This property of cache nodes must match the cache
+> +			   level encoded in the processors CLIDR (v7) and
+> +			   CLIDR_EL1 (v8) registers, as described in [1][2].
+> +
+> +All other properties and rules apply.
+> +
+> +[1] ARMv7-AR Reference Manual
+> +    http://infocenter.arm.com/help/index.jsp
+> +[2] ARMv8-A Reference Manual
+> +    http://infocenter.arm.com/help/index.jsp
+> +[3] ePAPR standard
+> +    https://www.power.org/documentation/epapr-version-1-1/
+> -- 
+> 1.8.4
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Mark, I very much like your suggestion to state that 'clocks'
-should match 'clock-names' (and not vice versa, found in another
-thread, after having sent this patch).
-
-And noticed that 'clock-names' still does not say that the
-XTAL/OSC should go by the name "osc".  And should not say that at
-most one clock is accepted or how their order is.
-
-
-So I will wait for more feedback, but can tell already that v1
-needs an update before becoming acceptable.  Thank you for your
-patience. :)
-
-
-virtually yours
-Gerhard Sittig
 -- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
