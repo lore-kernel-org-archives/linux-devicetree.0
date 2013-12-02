@@ -1,146 +1,368 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH RFC 1/2] Documentation: arm: add cache DT bindings
-Date: Mon, 2 Dec 2013 11:59:56 -0600
-Message-ID: <CB2ECFBB-A959-4A44-B301-0188EA5599A3@codeaurora.org>
-References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com> <1386001205-11978-2-git-send-email-lorenzo.pieralisi@arm.com> <D010BD06-683A-4500-AF13-64699ECEF808@codeaurora.org> <20131202175055.GA13125@e102568-lin.cambridge.arm.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
-Content-Type: text/plain; charset=windows-1252
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH v3 1/2] mmc: arasan: Add driver for Arasan SDHCI
+Date: Mon,  2 Dec 2013 10:02:36 -0800
+Message-ID: <1386007357-11956-1-git-send-email-soren.brinkmann@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20131202175055.GA13125@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dave P Martin <Dave.Martin@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+Add a driver for Arasan's SDHCI controller core.
 
-On Dec 2, 2013, at 11:50 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.c=
-om> wrote:
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Acked-by: Rob Herring <rob.herring@calxeda.com> [binding]
+---
+As discussed, I left binding and license header as is and fixed the typ=
+os.
 
-> On Mon, Dec 02, 2013 at 05:28:41PM +0000, Kumar Gala wrote:
->>=20
->> On Dec 2, 2013, at 10:20 AM, Lorenzo Pieralisi <lorenzo.pieralisi@ar=
-m.com> wrote:
->>=20
->>> On ARM systems the cache topology cannot be probed at runtime, in
->>> particular, it is impossible to probe which CPUs share a given cach=
-e
->>> level. Power management software requires this knowledge to impleme=
-nt
->>> optimized power down sequences, hence this patch adds a document th=
+v3:
+ - fix typo in binding documentation
+ - add missing '>' in MODULE_AUTHOR string
+v2:
+ - document 'interrupts' and 'interrupt-parent' properties in the drive=
+r
+   bindings
+ - append '-8.9a' IP version specifier to comaptibility string
+
+   	Thanks,
+	S=C3=B6ren
+
+ .../devicetree/bindings/mmc/arasan,sdhci.txt       |  27 +++
+ MAINTAINERS                                        |   1 +
+ drivers/mmc/host/Kconfig                           |  12 ++
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/sdhci-of-arasan.c                 | 224 +++++++++++++=
+++++++++
+ 5 files changed, 265 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/arasan,sdhci.=
+txt
+ create mode 100644 drivers/mmc/host/sdhci-of-arasan.c
+
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/D=
+ocumentation/devicetree/bindings/mmc/arasan,sdhci.txt
+new file mode 100644
+index 000000000000..98ee2abbe138
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+@@ -0,0 +1,27 @@
++Device Tree Bindings for the Arasan SDHCI Controller
++
++  The bindings follow the mmc[1], clock[2] and interrupt[3] bindings. =
+Only
++  deviations are documented here.
++
++  [1] Documentation/devicetree/bindings/mmc/mmc.txt
++  [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
++  [3] Documentation/devicetree/bindings/interrupt-controller/interrupt=
+s.txt
++
++Required Properties:
++  - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a'
++  - reg: From mmc bindings: Register location and length.
++  - clocks: From clock bindings: Handles to clock inputs.
++  - clock-names: From clock bindings: Tuple including "clk_xin" and "c=
+lk_ahb"
++  - interrupts: Interrupt specifier
++  - interrupt-parent: Phandle for the interrupt controller that servic=
+es
++		      interrupts for this device.
++
++Example:
++	sdhci@e0100000 {
++		compatible =3D "arasan,sdhci-8.9a";
++		reg =3D <0xe0100000 0x1000>;
++		clock-names =3D "clk_xin", "clk_ahb";
++		clocks =3D <&clkc 21>, <&clkc 32>;
++		interrupt-parent =3D <&gic>;
++		interrupts =3D <0 24 4>;
++	} ;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f216db847022..9c98792335d9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1371,6 +1371,7 @@ T:	git git://git.xilinx.com/linux-xlnx.git
+ S:	Supported
+ F:	arch/arm/mach-zynq/
+ F:	drivers/cpuidle/cpuidle-zynq.c
++F:	drivers/mmc/host/sdhci-of-arasan.c
+=20
+ ARM SMMU DRIVER
+ M:	Will Deacon <will.deacon@arm.com>
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 7fc5099e44b2..1eb090c187bb 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -104,6 +104,18 @@ config MMC_SDHCI_PLTFM
+=20
+ 	  If unsure, say N.
+=20
++config MMC_SDHCI_OF_ARASAN
++	tristate "SDHCI OF support for the Arasan SDHCI controllers"
++	depends on MMC_SDHCI_PLTFM
++	depends on OF
++	help
++	  This selects the Arasan Secure Digital Host Controller Interface
++	  (SDHCI). This hardware is found e.g. in Xilinx' Zynq SoC.
++
++	  If you have a controller with this interface, say Y or M here.
++
++	  If unsure, say N.
++
+ config MMC_SDHCI_OF_ESDHC
+ 	tristate "SDHCI OF support for the Freescale eSDHC controller"
+ 	depends on MMC_SDHCI_PLTFM
+diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+index c41d0c364509..f93617ec6548 100644
+--- a/drivers/mmc/host/Makefile
++++ b/drivers/mmc/host/Makefile
+@@ -57,6 +57,7 @@ obj-$(CONFIG_MMC_SDHCI_CNS3XXX)		+=3D sdhci-cns3xxx.o
+ obj-$(CONFIG_MMC_SDHCI_ESDHC_IMX)	+=3D sdhci-esdhc-imx.o
+ obj-$(CONFIG_MMC_SDHCI_DOVE)		+=3D sdhci-dove.o
+ obj-$(CONFIG_MMC_SDHCI_TEGRA)		+=3D sdhci-tegra.o
++obj-$(CONFIG_MMC_SDHCI_OF_ARASAN)	+=3D sdhci-of-arasan.o
+ obj-$(CONFIG_MMC_SDHCI_OF_ESDHC)	+=3D sdhci-of-esdhc.o
+ obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+=3D sdhci-of-hlwd.o
+ obj-$(CONFIG_MMC_SDHCI_BCM_KONA)	+=3D sdhci-bcm-kona.o
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhc=
+i-of-arasan.c
+new file mode 100644
+index 000000000000..f7c7cf62437d
+--- /dev/null
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -0,0 +1,224 @@
++/*
++ * Arasan Secure Digital Host Controller Interface.
++ * Copyright (C) 2011 - 2012 Michal Simek <monstr@monstr.eu>
++ * Copyright (c) 2012 Wind River Systems, Inc.
++ * Copyright (C) 2013 Pengutronix e.K.
++ * Copyright (C) 2013 Xilinx Inc.
++ *
++ * Based on sdhci-of-esdhc.c
++ *
++ * Copyright (c) 2007 Freescale Semiconductor, Inc.
++ * Copyright (c) 2009 MontaVista Software, Inc.
++ *
++ * Authors: Xiaobo Xie <X.Xie@freescale.com>
++ *	    Anton Vorontsov <avorontsov@ru.mvista.com>
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License as published b=
+y
++ * the Free Software Foundation; either version 2 of the License, or (=
 at
->>> defines the DT cache bindings for ARM systems. The bindings are com=
-pliant
->>> with ePAPR (PowerPC bindings), and rely on the cache bindings alrea=
-dy
->>> standardized in the ePAPR v1.1 document; ARM required updates are u=
-nderlined
->>> in the binding document.
->>>=20
->>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->>> ---
->>> Documentation/devicetree/bindings/arm/cache.txt | 25 ++++++++++++++=
-+++++++++++
->>> 1 file changed, 25 insertions(+)
->>> create mode 100644 Documentation/devicetree/bindings/arm/cache.txt
->>>=20
->>> diff --git a/Documentation/devicetree/bindings/arm/cache.txt b/Docu=
-mentation/devicetree/bindings/arm/cache.txt
->>> new file mode 100644
->>> index 0000000..009cddb
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/arm/cache.txt
->>> @@ -0,0 +1,25 @@
->>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> +ARM processors cache binding description
->>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> +
->>> +Device tree bindings for ARM processor caches adhere to the cache =
-bindings
->>> +described in [3], in section 3.8 for multi-level and shared caches=
-=2E
->>> +
->>> +On ARM, internal caches cannot be described in the cpu node but re=
-quire
->>> +specific nodes marked with compatible string set to "cache" (see [=
-3],
->>> +section 3.8).
->>=20
->> can you explain why
->=20
-> ARM v7 and v8 processors have a concept of cache levels which is vali=
-d
-> even for internal caches. So either we add a cache-level property to
-> internal caches or we do not use them for ARM.
-
-There isn=92t anything precluding a cachel-level property for internal =
-caches.
-
-> On top of that the definition of internal caches in the ePAPR is not
-> well defined (for ARM) (what if you have multiple levels of internal
-> caches ? - do we describe just L1 in the cpu node ?).
-
-ePAPR has examples of multiple level=92s of internal cache in the cpu n=
-ode.
-
-> Overall I think that is better to describe every cache object with a =
-node
-> and a compatible string, and shared caches are just cache nodes point=
-ed at
-> by multiple nodes (and private caches are just pointed at by one phan=
-dle
-> in the respective cpu node).
->=20
-> No strong position on that though, provided every cache "object" on A=
-RM has a
-> cache-level attached to it.
->=20
-> Lorenzo
->=20
->>> +
->>> +Furthermore the cache bindings in [3] require the following proper=
-ty update:
->>> +
->>> +- [Table 3.9] cache-level: This property of cache nodes must match=
- the cache
->>> +			   level encoded in the processors CLIDR (v7) and
->>> +			   CLIDR_EL1 (v8) registers, as described in [1][2].
->>> +
->>> +All other properties and rules apply.
->>> +
->>> +[1] ARMv7-AR Reference Manual
->>> +    http://infocenter.arm.com/help/index.jsp
->>> +[2] ARMv8-A Reference Manual
->>> +    http://infocenter.arm.com/help/index.jsp
->>> +[3] ePAPR standard
->>> +    https://www.power.org/documentation/epapr-version-1-1/
->>> --=20
->>> 1.8.4
->>>=20
->>>=20
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe devicetre=
-e" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>=20
->> --=20
->> Employee of Qualcomm Innovation Center, Inc.
->> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, h=
-osted by The Linux Foundation
->>=20
->>=20
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree"=
- in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
++ * your option) any later version.
++ */
++
++#include <linux/module.h>
++#include "sdhci-pltfm.h"
++
++#define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
++
++#define CLK_CTRL_TIMEOUT_SHIFT		16
++#define CLK_CTRL_TIMEOUT_MASK		(0xf << CLK_CTRL_TIMEOUT_SHIFT)
++#define CLK_CTRL_TIMEOUT_MIN_EXP	13
++
++/**
++ * struct sdhci_arasan_data
++ * @clk_ahb:	Pointer to the AHB clock
++ */
++struct sdhci_arasan_data {
++	struct clk	*clk_ahb;
++};
++
++static unsigned int sdhci_arasan_get_timeout_clock(struct sdhci_host *=
+host)
++{
++	u32 div;
++	unsigned long freq;
++	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
++
++	div =3D readl(host->ioaddr + SDHCI_ARASAN_CLK_CTRL_OFFSET);
++	div =3D (div & CLK_CTRL_TIMEOUT_MASK) >> CLK_CTRL_TIMEOUT_SHIFT;
++
++	freq =3D clk_get_rate(pltfm_host->clk);
++	freq /=3D 1 << (CLK_CTRL_TIMEOUT_MIN_EXP + div);
++
++	return freq;
++}
++
++static struct sdhci_ops sdhci_arasan_ops =3D {
++	.get_max_clock =3D sdhci_pltfm_clk_get_max_clock,
++	.get_timeout_clock =3D sdhci_arasan_get_timeout_clock,
++};
++
++static struct sdhci_pltfm_data sdhci_arasan_pdata =3D {
++	.ops =3D &sdhci_arasan_ops,
++};
++
++#ifdef CONFIG_PM_SLEEP
++/**
++ * sdhci_arasan_suspend - Suspend method for the driver
++ * @dev:	Address of the device structure
++ * Returns 0 on success and error value on error
++ *
++ * Put the device in a low power state.
++ */
++static int sdhci_arasan_suspend(struct device *dev)
++{
++	struct platform_device *pdev =3D to_platform_device(dev);
++	struct sdhci_host *host =3D platform_get_drvdata(pdev);
++	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
++	struct sdhci_arasan_data *sdhci_arasan =3D pltfm_host->priv;
++	int ret;
++
++	ret =3D sdhci_suspend_host(host);
++	if (ret)
++		return ret;
++
++	clk_disable(pltfm_host->clk);
++	clk_disable(sdhci_arasan->clk_ahb);
++
++	return 0;
++}
++
++/**
++ * sdhci_arasan_resume - Resume method for the driver
++ * @dev:	Address of the device structure
++ * Returns 0 on success and error value on error
++ *
++ * Resume operation after suspend
++ */
++static int sdhci_arasan_resume(struct device *dev)
++{
++	struct platform_device *pdev =3D to_platform_device(dev);
++	struct sdhci_host *host =3D platform_get_drvdata(pdev);
++	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
++	struct sdhci_arasan_data *sdhci_arasan =3D pltfm_host->priv;
++	int ret;
++
++	ret =3D clk_enable(sdhci_arasan->clk_ahb);
++	if (ret) {
++		dev_err(dev, "Cannot enable AHB clock.\n");
++		return ret;
++	}
++
++	ret =3D clk_enable(pltfm_host->clk);
++	if (ret) {
++		dev_err(dev, "Cannot enable SD clock.\n");
++		clk_disable(sdhci_arasan->clk_ahb);
++		return ret;
++	}
++
++	return sdhci_resume_host(host);
++}
++#endif /* ! CONFIG_PM_SLEEP */
++
++static SIMPLE_DEV_PM_OPS(sdhci_arasan_dev_pm_ops, sdhci_arasan_suspend=
+,
++			 sdhci_arasan_resume);
++
++static int sdhci_arasan_probe(struct platform_device *pdev)
++{
++	int ret;
++	struct clk *clk_xin;
++	struct sdhci_host *host;
++	struct sdhci_pltfm_host *pltfm_host;
++	struct sdhci_arasan_data *sdhci_arasan;
++
++	sdhci_arasan =3D devm_kzalloc(&pdev->dev, sizeof(*sdhci_arasan),
++			GFP_KERNEL);
++	if (!sdhci_arasan)
++		return -ENOMEM;
++
++	sdhci_arasan->clk_ahb =3D devm_clk_get(&pdev->dev, "clk_ahb");
++	if (IS_ERR(sdhci_arasan->clk_ahb)) {
++		dev_err(&pdev->dev, "clk_ahb clock not found.\n");
++		return PTR_ERR(sdhci_arasan->clk_ahb);
++	}
++
++	clk_xin =3D devm_clk_get(&pdev->dev, "clk_xin");
++	if (IS_ERR(clk_xin)) {
++		dev_err(&pdev->dev, "clk_xin clock not found.\n");
++		return PTR_ERR(clk_xin);
++	}
++
++	ret =3D clk_prepare_enable(sdhci_arasan->clk_ahb);
++	if (ret) {
++		dev_err(&pdev->dev, "Unable to enable AHB clock.\n");
++		return ret;
++	}
++
++	ret =3D clk_prepare_enable(clk_xin);
++	if (ret) {
++		dev_err(&pdev->dev, "Unable to enable SD clock.\n");
++		goto clk_dis_ahb;
++	}
++
++	host =3D sdhci_pltfm_init(pdev, &sdhci_arasan_pdata, 0);
++	if (IS_ERR(host)) {
++		ret =3D PTR_ERR(host);
++		dev_err(&pdev->dev, "platform init failed (%u)\n", ret);
++		goto clk_disable_all;
++	}
++
++	sdhci_get_of_property(pdev);
++	pltfm_host =3D sdhci_priv(host);
++	pltfm_host->priv =3D sdhci_arasan;
++	pltfm_host->clk =3D clk_xin;
++
++	ret =3D sdhci_add_host(host);
++	if (ret) {
++		dev_err(&pdev->dev, "platform register failed (%u)\n", ret);
++		goto err_pltfm_free;
++	}
++
++	return 0;
++
++err_pltfm_free:
++	sdhci_pltfm_free(pdev);
++clk_disable_all:
++	clk_disable_unprepare(clk_xin);
++clk_dis_ahb:
++	clk_disable_unprepare(sdhci_arasan->clk_ahb);
++
++	return ret;
++}
++
++static int sdhci_arasan_remove(struct platform_device *pdev)
++{
++	struct sdhci_host *host =3D platform_get_drvdata(pdev);
++	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
++	struct sdhci_arasan_data *sdhci_arasan =3D pltfm_host->priv;
++
++	clk_disable_unprepare(pltfm_host->clk);
++	clk_disable_unprepare(sdhci_arasan->clk_ahb);
++
++	return sdhci_pltfm_unregister(pdev);
++}
++
++static const struct of_device_id sdhci_arasan_of_match[] =3D {
++	{ .compatible =3D "arasan,sdhci-8.9a" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, sdhci_arasan_of_match);
++
++static struct platform_driver sdhci_arasan_driver =3D {
++	.driver =3D {
++		.name =3D "sdhci-arasan",
++		.owner =3D THIS_MODULE,
++		.of_match_table =3D sdhci_arasan_of_match,
++		.pm =3D &sdhci_arasan_dev_pm_ops,
++	},
++	.probe =3D sdhci_arasan_probe,
++	.remove =3D sdhci_arasan_remove,
++};
++
++module_platform_driver(sdhci_arasan_driver);
++
++MODULE_DESCRIPTION("Driver for the Arasan SDHCI Controller");
++MODULE_AUTHOR("Soeren Brinkmann <soren.brinkmann@xilinx.com>");
++MODULE_LICENSE("GPL");
 --=20
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
-ed by The Linux Foundation
+1.8.4.4
 
