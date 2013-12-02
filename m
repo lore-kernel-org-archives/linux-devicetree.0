@@ -1,65 +1,209 @@
-From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Subject: [PATCH 2/3] usb: phy-ulpi: Add EXTVBUSIND,CHRGVBUS flag support
-Date: Mon,  2 Dec 2013 15:05:18 +0800
-Message-ID: <1385967919-13258-3-git-send-email-chris.ruehl@gtsys.com.hk>
+From: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Subject: [PATCH 3/3] usb: phy-generic: Add ULPI VBUS support
+Date: Mon,  2 Dec 2013 15:05:19 +0800
+Message-ID: <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk>
 References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385967919-13258-1-git-send-email-chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com, gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Ruehl <chris.ruehl@gtsys.com.hk>
 List-Id: devicetree@vger.kernel.org
 
-usb: phy-ulpi: Add EXTVBUSIND,CHRGVBUS flag support
+usb: phy-generic: Add ULPI VBUS support
 
-ULPI like ISP1504 support external vbus power indication
-used in combination with vbus switches mic2075.
+Some platforms need to set the VBUS parameters of the ULPI
+like ISP1504 which interact with overcurrent protection and
+power switch MIC2575. Therefore it requires to set
+* DRVVBUS
+* DRVVBUS_EXT
+* EXTVBUSIND
+* CHRGVBUS
+of the ULPI.
+This patch add support for it.
 
-Signed-off-by: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Devicetree configuration example:
+
+usbphy0: usbphy@0x10024170 {
+ compatible = "usb-nop-xceiv";
+ reg = <0x10024170 0x4>; /* ULPI Viewport OTG */
+ clocks = <&clks 75>;
+ clock-names = "main_clk";
+};
+
+&usbphy0 {
+        reset-gpios = <&gpio1 31 1>;
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_usbphy0 &pinctrl_usbotg1>;
+        ulpi_set_vbus = <0x0f>;
+};
+
+Please refer to the phy-bindings.txt for the value of ulpi_set_vbus commit
+with this patch.
+
+Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
 ---
- drivers/usb/phy/phy-ulpi.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/phy/phy-bindings.txt       |   15 ++++++
+ drivers/usb/phy/phy-generic.c                      |   50 +++++++++++++++++++-
+ drivers/usb/phy/phy-generic.h                      |    3 ++
+ 3 files changed, 67 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/phy/phy-ulpi.c b/drivers/usb/phy/phy-ulpi.c
-index 217339d..e2f15c4 100644
---- a/drivers/usb/phy/phy-ulpi.c
-+++ b/drivers/usb/phy/phy-ulpi.c
-@@ -180,6 +180,8 @@ static int ulpi_init(struct usb_phy *phy)
- 	int i, vid, pid, ret;
- 	u32 ulpi_id = 0;
+diff --git a/Documentation/devicetree/bindings/phy/phy-bindings.txt b/Documentation/devicetree/bindings/phy/phy-bindings.txt
+index 8ae844f..b109b2f 100644
+--- a/Documentation/devicetree/bindings/phy/phy-bindings.txt
++++ b/Documentation/devicetree/bindings/phy/phy-bindings.txt
+@@ -34,6 +34,18 @@ phys : the phandle for the PHY device (used by the PHY subsystem)
+ phy-names : the names of the PHY corresponding to the PHYs present in the
+ 	    *phys* phandle
  
-+	pr_info("ULPI Viewport 0x%p\n",phy->io_priv);
++Optional Properties:
++reset-gpios :	GPIO used to reset ULPI like ISP1504 with
++		0 = reset active high ; 1 = reset active low.
++cs-gpios :	GPIO used to activate a ULPI like ISP1504 with
++		0 = reset acitive high; 1 = reset active low.
++ulpi_set_vbus :	ULPI configuation parameter to program the VBUS signaling of 
++		ISP1504 or similar chipsets.
++		Set the parameter:
++		DRVVBUS = (1) DRVVBUS_EXT = (1<<1) EXTVBUSIND = (1<<2) CHRGVBUS = (1<<3)
++		eg: DRVVBUS | DRVVBUS_EXT = 0x03
++		    ulpi_set_vbus = <0x03>
 +
- 	for (i = 0; i < 4; i++) {
- 		ret = usb_phy_io_read(phy, ULPI_PRODUCT_ID_HIGH - i);
- 		if (ret < 0)
-@@ -237,7 +239,8 @@ static int ulpi_set_vbus(struct usb_otg *otg, bool on)
- 	struct usb_phy *phy = otg->phy;
- 	unsigned int flags = usb_phy_io_read(phy, ULPI_OTG_CTRL);
+ Example 1:
+ usb1: usb_otg_ss@xxx {
+     compatible = "xxx";
+@@ -44,6 +56,9 @@ usb1: usb_otg_ss@xxx {
+     phy-names = "usb2phy", "usb3phy";
+     .
+     .
++    reset-gpios = <&gpio6 19 0> /*high active pin */
++    cs-gpios = <&gpio6 20 1> /* low active pin */
++    ulpi_set_vbus = <0x0f>;
+ };
  
--	flags &= ~(ULPI_OTG_CTRL_DRVVBUS | ULPI_OTG_CTRL_DRVVBUS_EXT);
-+	flags &= ~(ULPI_OTG_CTRL_DRVVBUS | ULPI_OTG_CTRL_DRVVBUS_EXT |
-+			ULPI_OTG_CTRL_EXTVBUSIND | ULPI_OTG_CTRL_CHRGVBUS);
+ This node represents a controller that uses two PHYs, one for usb2 and one for
+diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic.c
+index ff4d68c..9c26b58 100644
+--- a/drivers/usb/phy/phy-generic.c
++++ b/drivers/usb/phy/phy-generic.c
+@@ -30,6 +30,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/usb/otg.h>
++#include <linux/usb/ulpi.h>
+ #include <linux/usb/usb_phy_gen_xceiv.h>
+ #include <linux/slab.h>
+ #include <linux/clk.h>
+@@ -99,6 +100,11 @@ int usb_gen_phy_init(struct usb_phy *phy)
+ 	/* De-assert RESET */
+ 	nop_reset_set(nop, 0);
  
- 	if (on) {
- 		if (phy->flags & ULPI_OTG_DRVVBUS)
-@@ -245,6 +248,12 @@ static int ulpi_set_vbus(struct usb_otg *otg, bool on)
- 
- 		if (phy->flags & ULPI_OTG_DRVVBUS_EXT)
- 			flags |= ULPI_OTG_CTRL_DRVVBUS_EXT;
++	if (nop->ulpi_vbus > 0) {
++		nop->ulpi->init(nop->ulpi);
++		nop->ulpi->otg->set_vbus(nop->ulpi->otg,true);
++	}
 +
-+		if (phy->flags & ULPI_OTG_EXTVBUSIND)
-+			flags |= ULPI_OTG_CTRL_EXTVBUSIND;
-+
-+		if (phy->flags & ULPI_OTG_CHRGVBUS)
-+			flags |= ULPI_OTG_CTRL_CHRGVBUS;
- 	}
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(usb_gen_phy_init);
+@@ -107,6 +113,10 @@ void usb_gen_phy_shutdown(struct usb_phy *phy)
+ {
+ 	struct usb_phy_gen_xceiv *nop = dev_get_drvdata(phy->dev);
  
- 	return usb_phy_io_write(phy, flags, ULPI_OTG_CTRL);
++	if (nop->ulpi_vbus > 0) {
++		nop->ulpi->otg->set_vbus(nop->ulpi->otg,false);
++	}
++
+ 	/* Assert RESET */
+ 	nop_reset_set(nop, 1);
+ 
+@@ -154,6 +164,27 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_gen_xceiv *nop,
+ {
+ 	int err;
+ 
++	if (nop->ulpi_vbus > 0) {
++		unsigned int flags = 0;
++
++		if (nop->ulpi_vbus & 0x1)
++			flags |= ULPI_OTG_DRVVBUS;
++		if (nop->ulpi_vbus & 0x2)
++			flags |= ULPI_OTG_DRVVBUS_EXT;
++		if (nop->ulpi_vbus & 0x4)
++			flags |= ULPI_OTG_EXTVBUSIND;
++		if (nop->ulpi_vbus & 0x8)
++			flags |= ULPI_OTG_CHRGVBUS;
++
++		nop->ulpi = otg_ulpi_create(&ulpi_viewport_access_ops, flags);
++		if (!nop->ulpi) {
++			dev_err(dev, "Failed create ULPI Phy\n");
++			return -ENOMEM;
++		}
++		dev_dbg(dev, "Create ULPI Phy\n");
++		nop->ulpi->io_priv =  nop->viewport;
++	}
++
+ 	nop->phy.otg = devm_kzalloc(dev, sizeof(*nop->phy.otg),
+ 			GFP_KERNEL);
+ 	if (!nop->phy.otg)
+@@ -253,14 +284,15 @@ static int usb_phy_gen_xceiv_probe(struct platform_device *pdev)
+ 
+ 	if (dev->of_node) {
+ 		struct device_node *node = dev->of_node;
++		struct resource	*res;
+ 		enum of_gpio_flags flags;
+ 		enum of_gpio_flags csflags;
++		u32 ulpi_vbus;
+ 
+ 		if (of_property_read_u32(node, "clock-frequency", &clk_rate))
+ 			clk_rate = 0;
+ 
+ 		needs_vcc = of_property_read_bool(node, "vcc-supply");
+-
+ 		nop->gpio_reset = of_get_named_gpio_flags(node, "reset-gpios",
+ 								0, &flags);
+ 
+@@ -274,6 +306,22 @@ static int usb_phy_gen_xceiv_probe(struct platform_device *pdev)
+ 		if (gpio_is_valid(nop->gpio_chipselect))
+ 			nop->cs_active_low = csflags & OF_GPIO_ACTIVE_LOW;
+ 
++		err = of_property_read_u32(node, "ulpi_set_vbus",&ulpi_vbus);
++		if (err) {
++			nop->ulpi_vbus = -1;
++			nop->viewport = NULL;
++			ulpi_vbus = 0;
++		} else {
++			dev_dbg(dev,"ULPI ulpi_set_vbus 0x%02x",ulpi_vbus);
++			nop->ulpi_vbus = ulpi_vbus;
++			res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++			nop->viewport = devm_ioremap_resource(dev, res);
++			if (IS_ERR(nop->viewport)) {
++				dev_err(dev,"No IORESOURCE_MEM for ULPI Viewport");
++				return PTR_ERR(nop->viewport);
++			}
++		}
++
+ 	} else if (pdata) {
+ 		type = pdata->type;
+ 		clk_rate = pdata->clk_rate;
+diff --git a/drivers/usb/phy/phy-generic.h b/drivers/usb/phy/phy-generic.h
+index 97eafc2..0f6f1fc 100644
+--- a/drivers/usb/phy/phy-generic.h
++++ b/drivers/usb/phy/phy-generic.h
+@@ -3,13 +3,16 @@
+ 
+ struct usb_phy_gen_xceiv {
+ 	struct usb_phy phy;
++	struct usb_phy *ulpi;
+ 	struct device *dev;
+ 	struct clk *clk;
+ 	struct regulator *vcc;
+ 	int gpio_reset;
+ 	int gpio_chipselect;
++	int ulpi_vbus;
+ 	bool reset_active_low;
+ 	bool cs_active_low;
++	void __iomem *viewport;
+ };
+ 
+ int usb_gen_phy_init(struct usb_phy *phy);
 -- 
 1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
