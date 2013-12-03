@@ -1,232 +1,352 @@
-From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] usb: phy-generic: Add ULPI VBUS support
-Date: Tue, 03 Dec 2013 10:46:31 +0800
-Message-ID: <529D4607.9080709@gtsys.com.hk>
-References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk> <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk> <20131202182204.GQ12952@e106331-lin.cambridge.arm.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH v8 1/2] PWM: atmel-pwm: add PWM controller driver
+Date: Tue, 3 Dec 2013 11:09:12 +0800
+Message-ID: <529D4B58.9020700@atmel.com>
+References: <1384766002-2852-1-git-send-email-voice.shen@atmel.com>
+ <20131202105957.GD18060@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131202182204.GQ12952-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131202105957.GD18060@ulmo.nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, Bo Shen <voice.shen@atmel.com>, galak@codeaurora.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, December 03, 2013 02:22 AM, Mark Rutland wrote:
-> On Mon, Dec 02, 2013 at 07:05:19AM +0000, Chris Ruehl wrote:
->> usb: phy-generic: Add ULPI VBUS support
->>
->> Some platforms need to set the VBUS parameters of the ULPI
->> like ISP1504 which interact with overcurrent protection and
->> power switch MIC2575. Therefore it requires to set
->> * DRVVBUS
->> * DRVVBUS_EXT
->> * EXTVBUSIND
->> * CHRGVBUS
->> of the ULPI.
->> This patch add support for it.
->
-> Could you elaborate on when we need to do this and why?
+Hi Thierry,
 
-Hi Mark,
-
-If the parameters not set properly for this kind of board design
-(ULPI + MIC) the 5V USB power is unstable and result errors while detecting and
-running a usb-device.
-
->
->>
->> Devicetree configuration example:
->>
->> usbphy0: usbphy@0x10024170 {
->>   compatible = "usb-nop-xceiv";
->>   reg =<0x10024170 0x4>; /* ULPI Viewport OTG */
->>   clocks =<&clks 75>;
->>   clock-names = "main_clk";
->> };
->>
->> &usbphy0 {
->>          reset-gpios =<&gpio1 31 1>;
->>          pinctrl-names = "default";
->>          pinctrl-0 =<&pinctrl_usbphy0&pinctrl_usbotg1>;
->>          ulpi_set_vbus =<0x0f>;
->> };
->>
->> Please refer to the phy-bindings.txt for the value of ulpi_set_vbus commit
->> with this patch.
->>
->> Signed-off-by: Chris Ruehl<chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
->> ---
->>   .../devicetree/bindings/phy/phy-bindings.txt       |   15 ++++++
->>   drivers/usb/phy/phy-generic.c                      |   50 +++++++++++++++++++-
->>   drivers/usb/phy/phy-generic.h                      |    3 ++
->>   3 files changed, 67 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-bindings.txt b/Documentation/devicetree/bindings/phy/phy-bindings.txt
->> index 8ae844f..b109b2f 100644
->> --- a/Documentation/devicetree/bindings/phy/phy-bindings.txt
->> +++ b/Documentation/devicetree/bindings/phy/phy-bindings.txt
->> @@ -34,6 +34,18 @@ phys : the phandle for the PHY device (used by the PHY subsystem)
->>   phy-names : the names of the PHY corresponding to the PHYs present in the
->>   	    *phys* phandle
->>
->> +Optional Properties:
->> +reset-gpios :	GPIO used to reset ULPI like ISP1504 with
->> +		0 = reset active high ; 1 = reset active low.
->
-> The format of the gpio-specifier doesn't matter here.
-
-I write this description because its takes me half a day to figure out that
-the gpio definition must set <&gpioX num 1> to activate low rather then
-<&gpioX num 0> which is active high! Only want to give people a hand. I don't
-mind if you want to truncate it to:
-
-reset-gpios :	GPIO used to reset ULPI
-cs-gpios:	GPIO used to select a ULPI chipset
-
->
-> Why do you need to mention the ISP1504? Either this is generic, or it
-> doesn't belong here.
->
-> Perhaps we need a ulpi-phy binding document. This and the rest of the
-> patch is strongly tied to ULPI.
-
-
->
->> +cs-gpios :	GPIO used to activate a ULPI like ISP1504 with
->> +		0 = reset acitive high; 1 = reset active low.
->
-> Again, the format of the gpio-specifier is not a concern here. I'm also
-> a little confused as to the name "cs-gpios" for something that activates
-> the ULPI.
->
->> +ulpi_set_vbus :	ULPI configuation parameter to program the VBUS signaling of
->> +		ISP1504 or similar chipsets.
->
-> Could you elaborate on this? Is this applicable to any ULPI PHY? The
-> description implies that it's somewhat tied to ISP1504 (if it's not,
-> drop the mention of ISP1504).
->
-> Why exactly do we need this, and why should it live in the DT?
->
-> Why can se not figure this out automatically, or have defaults that work
-> in more places?
-
-We talk about board specific design, some designs need to set the VBUS flags 
-others not, but its all run on the same generic kernel functions. FMHO this is
-exactly what DT is designed for. The problem is how to encode the VBUS setup
-a) easy to understand
-b) easy to decode in the code
-
-Drivers like phy-tegra-usb using there own hard coded ulpi setup, I think this
-patch offers a way to work with the phy-generic.
-
->
-> Also, s/_/-/ on property names please.
-
-got it.
-
->
->> +		Set the parameter:
->> +		DRVVBUS = (1) DRVVBUS_EXT = (1<<1) EXTVBUSIND = (1<<2) CHRGVBUS = (1<<3)
->> +		eg: DRVVBUS | DRVVBUS_EXT = 0x03
->> +		    ulpi_set_vbus =<0x03>
->
-> I don't like putting arbitrary bitfields like this in DT. They're
-> illegible and easy to abuse
-
-Sorry, but for the pinctrl (e.g fsl,imx27-pinctrl.txt) its done this way too, 
-and for the code logic its becomes very simple. A solution with Boolean
-ulpi-set-drvvbus
-..
-ulpi-set-chrgvbus
-result in much more code in the kernel, by four times calling 
-of_property_read_bool() vs. one time of_property_read_u32()
-and the overhead the logic to encode it into a u32.
-
->
-> Boolean properties are nicer for flags.
->
-> What exactly do these flags mean?
-
-The flags names related to the phy-ulpi.c used names ULPI_OTG_DRVVBUS ...
-DRVVBUS 	enables the general logic for USB-VBUS in the ULPI
-DRVVBUS_EXT	enables the external power out
-DRVBUSIND	enables the logic for overcurrent protection and fault detection
-CHRGVBUS 	enables the pump to stabilize the 5V output power level
-
->
+On 12/02/2013 06:59 PM, Thierry Reding wrote:
+> On Mon, Nov 18, 2013 at 05:13:21PM +0800, Bo Shen wrote:
 > [...]
+>> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+> [...]
+>> +/* Max value for duty and period
 >
->> @@ -253,14 +284,15 @@ static int usb_phy_gen_xceiv_probe(struct platform_device *pdev)
->>
->>   	if (dev->of_node) {
->>   		struct device_node *node = dev->of_node;
->> +		struct resource	*res;
->>   		enum of_gpio_flags flags;
->>   		enum of_gpio_flags csflags;
->> +		u32 ulpi_vbus;
->>
->>   		if (of_property_read_u32(node, "clock-frequency",&clk_rate))
->>   			clk_rate = 0;
->>
->>   		needs_vcc = of_property_read_bool(node, "vcc-supply");
->> -
->>   		nop->gpio_reset = of_get_named_gpio_flags(node, "reset-gpios",
->>   								0,&flags);
+> Block comments should be of this form:
 >
-> Why the random line deletion?
+> 	/*
+> 	 * Max value ...
+> 	 * ...
+> 	 */
 
-Ups that's should be happen while I had a earlier release.. I missed it.
+OK, I will use this style.
 
+>> +static int atmel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +		int duty_ns, int period_ns)
+>> +{
+>> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+>> +	unsigned long clk_rate, prd, dty;
+>> +	unsigned long long div;
+>> +	int ret, pres = 0;
+>> +
+>> +	clk_rate = clk_get_rate(atmel_pwm->clk);
+>> +	div = clk_rate;
+>> +
+>> +	/* Calculate the period cycles */
+>> +	while (div > PWM_MAX_PRD) {
+>> +		div = clk_rate / (1 << pres);
+>> +		div = div * period_ns;
+>> +		/* 1/Hz = 100000000 ns */
 >
->>
->> @@ -274,6 +306,22 @@ static int usb_phy_gen_xceiv_probe(struct platform_device *pdev)
->>   		if (gpio_is_valid(nop->gpio_chipselect))
->>   			nop->cs_active_low = csflags&  OF_GPIO_ACTIVE_LOW;
->>
->> +		err = of_property_read_u32(node, "ulpi_set_vbus",&ulpi_vbus);
-add spaces here
->> +		if (err) {
->> +			nop->ulpi_vbus = -1;
->> +			nop->viewport = NULL;
+> I don't think that comment is needed.
 
->> +			ulpi_vbus = 0;
-remove this its unused
+This is asked to be added.
+And, I think keep it and it won't hurt, what do you think?
 
->> +		} else {
->> +			dev_dbg(dev,"ULPI ulpi_set_vbus 0x%02x",ulpi_vbus);
-add spaces here
->> +			nop->ulpi_vbus = ulpi_vbus;
->> +			res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +		do_div(div, 1000000000);
+>> +
+>> +		if (pres++ > PRD_MAX_PRES) {
+>> +			dev_err(chip->dev, "pres exceed the maximum value\n");
 >
-> This wasn't described in the binding document, and it's ULPI specific. I
+> "exceeds"
 
-You right, we looking IORESOURCE_MEM for the ULPI-Viewport which I missed to 
-mentioned.
-The reg = <> for the current phy: phy@0 defines in the imx27.dtmi was unused.
-1) I moved it to the AIPI2
-2) merge them into the usb address range
-to the the ULPI viewport available when needed.
+Thanks for correct it.
 
-
-> think we need a separate ulpi-phy binding that builds upon the generic
-> one.
+>> +			return -EINVAL;
+>> +		}
+>> +	}
+>> +
+>> +	/* Calculate the duty cycles */
+>> +	prd = div;
+>> +	div *= duty_ns;
+>> +	do_div(div, period_ns);
+>> +	dty = div;
+>> +
+>> +	ret = clk_enable(atmel_pwm->clk);
+>> +	if (ret) {
+>> +		dev_err(chip->dev, "failed to enable pwm clock\n");
 >
-I agree with this.
+> "PWM clock"
 
-> Thanks,
-> Mark.
+OK, I will change all low case pwm to upper case PWM.
 
-Thanks for the review.
-Chris
+>> +static void atmel_pwm_config_v1(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +				int dty, int prd)
+>> +{
+>> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+>> +	unsigned int val;
+>> +
+>> +	/*
+>> +	 * If the PWM channel is disabled, write value to duty and period
+>> +	 * registers directly.
+>> +	 * If the PWM channel is enabled, using the update register, it needs
+>> +	 * to set bit 10 of CMR to 0
+>> +	 */
+>
+> I think it would make sense to split this comment and move each part
+> into the respective conditional branch.
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK, I will split them.
+
+>> +	if (test_bit(PWMF_ENABLED, &pwm->flags)) {
+>> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CUPD, dty);
+>> +
+>> +		val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
+>> +		val &= ~PWM_CMR_UPD_CDTY;
+>> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
+>> +	} else {
+>> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CDTY, dty);
+>> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CPRD, prd);
+>> +	}
+>> +}
+>> +
+>> +static void atmel_pwm_config_v2(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +				int dty, int prd)
+>> +{
+>> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+>> +
+>> +	/*
+>> +	 * If the PWM channel is disabled, write value to duty and period
+>> +	 * registers directly.
+>> +	 * If the PWM channel is enabled, using the duty update register to
+>> +	 * update the value.
+>> +	 */
+>
+> Same here.
+>
+>> +	if (test_bit(PWMF_ENABLED, &pwm->flags)) {
+>> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CDTYUPD, dty);
+>> +	} else {
+>> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CDTY, dty);
+>> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CPRD, prd);
+>> +	}
+>> +}
+>
+> Neither version 1 nor version 2 seem to be able to change the period
+> while the channel is enabled. Perhaps that should be checked for in
+> atmel_pwm_config() and an error (-EBUSY) returned?
+
+The period is configured in dt in device tree, or platform data in non 
+device tree. Nowhere will update period. So, not code to update period.
+Am I right? If not, please figure out.
+
+>> +
+>> +static int atmel_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +		enum pwm_polarity polarity)
+>> +{
+>> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+>> +	u32 val = 0;
+>> +	int ret;
+>> +
+>> +	if (polarity == PWM_POLARITY_NORMAL)
+>> +		val &= ~PWM_CMR_CPOL;
+>> +	else
+>> +		val |= PWM_CMR_CPOL;
+>
+> I think I've mentioned this before, but val is always assigned to 0, so
+> clearing a bit is a superfluous. Perhaps you need to readl the CMR
+> register first before toggling the bit here?
+
+Thanks, we should read CMR, and set the CPOL accordingly.
+
+>> +
+>> +	ret = clk_enable(atmel_pwm->clk);
+>> +	if (ret) {
+>> +		dev_err(chip->dev, "failed to enable pwm clock\n");
+>
+> "PWM clock"
+>
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id atmel_pwm_dt_ids[] = {
+>> +	{
+>> +		.compatible = "atmel,at91sam9rl-pwm",
+>> +		.data = &atmel_pwm_data_v1,
+>> +	}, {
+>> +		.compatible = "atmel,sama5d3-pwm",
+>> +		.data = &atmel_pwm_data_v2,
+>> +	}, {
+>> +		/* sentinel */
+>> +	},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, atmel_pwm_dt_ids);
+>> +#endif
+>
+> I don't think you can do this. You use this table in a call to
+> of_match_device() later on, in code which isn't protected by a
+> corresponding #ifdef.
+
+I will remove #ifdef.
+
+>> +static inline const struct atmel_pwm_data * __init
+>> +	atmel_pwm_get_driver_data(struct platform_device *pdev)
+>
+> I don't think __init is warranted here. In fact I think this will give
+> you a build warning, because this code is called from atmel_pwm_probe(),
+> which in turn isn't marked __init.
+
+OK, I will remove __init.
+
+> Also it's probably not worth marking this inline explicitly. It isn't
+> all that short, and the compiler will likely inline it anyway since it's
+> only called once.
+
+It only called one, so, it can be inline.
+
+>> +{
+>> +	if (pdev->dev.of_node) {
+>> +		const struct of_device_id *match;
+>> +		match = of_match_device(atmel_pwm_dt_ids, &pdev->dev);
+>
+> Blank line between the above two for readability.
+
+OK, I will add one blank line.
+
+>> +		if (match == NULL)
+>> +			return NULL;
+>> +		return match->data;
+>
+> Same here. And "if (!match)" rather than "if (match == NULL)".
+
+OK, I will change like this.
+
+>> +	}
+>> +
+>> +	return (struct atmel_pwm_data *)
+>> +		platform_get_device_id(pdev)->driver_data;
+>
+> Please use a temporary variable here to make this more readable, like
+> so:
+>
+> 	struct platform_device_id *id = platform_get_device_id(pdev);
+>
+> 	...
+>
+> 	return (struct atmel_pwm_data *)id->driver;
+>
+>> +}
+
+OK, I will change like this.
+
+>> +static int atmel_pwm_probe(struct platform_device *pdev)
+>> +{
+>> +	const struct atmel_pwm_data *data;
+>> +	struct atmel_pwm_chip *atmel_pwm;
+>> +	struct resource *res;
+>> +	int ret;
+>> +
+>> +	atmel_pwm = devm_kzalloc(&pdev->dev, sizeof(*atmel_pwm), GFP_KERNEL);
+>> +	if (!atmel_pwm)
+>> +		return -ENOMEM;
+>
+> You could move this further down, so that memory doesn't get allocated
+> if atmel_pwm_get_driver_data() or platform_get_resource() fails.
+
+OK, I will move this down.
+
+>> +
+>> +	data = atmel_pwm_get_driver_data(pdev);
+>> +	if (!data)
+>> +		return -ENODEV;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (!res)
+>> +		return -ENODEV;
+>
+> No need to check the return value here. devm_ioremap_resource() checks
+> it for you.
+
+OK, I will remove this check.
+
+>> +
+>> +	atmel_pwm->base = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(atmel_pwm->base))
+>> +		return PTR_ERR(atmel_pwm->base);
+>> +
+>> +	atmel_pwm->clk = devm_clk_get(&pdev->dev, NULL);
+>> +	if (IS_ERR(atmel_pwm->clk))
+>> +		return PTR_ERR(atmel_pwm->clk);
+>> +
+>> +	ret = clk_prepare(atmel_pwm->clk);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "failed to prepare pwm clock\n");
+>
+> "PWM clock"
+>
+>> +		return ret;
+>> +	}
+>> +
+>> +	atmel_pwm->chip.dev = &pdev->dev;
+>> +	atmel_pwm->chip.ops = &atmel_pwm_ops;
+>> +	if (pdev->dev.of_node) {
+>
+> Blank line between the above two for readability.
+
+OK, I will add blank line.
+
+>> +		atmel_pwm->chip.of_xlate = of_pwm_xlate_with_flags;
+>> +		atmel_pwm->chip.of_pwm_n_cells = 3;
+>> +		atmel_pwm->chip.base = -1;
+>> +	} else {
+>> +		atmel_pwm->chip.base = pdev->id;
+>
+> That's not correct. The chip cannot be tied to pdev->id, because that ID
+> is the instance number of the device. So typically you would have
+> devices name like this:
+>
+> 	atmel-pwm.0
+> 	atmel-pwm.1
+> 	...
+>
+> Now, if you have that, then you won't be able to register the second
+> instance because the first instance will already have requested PWMs
+> 0-3, and setting .base to 1 will cause PWMs 1-4 to be requested, which
+> intersects with the range of the first instance.
+>
+> The same applies of course if you have other PWM controllers in the
+> system which have similar instance names.
+>
+> So the right thing to do here is to provide that number via platform
+> data so that platform code can define it, knowing in advance all ranges
+> for all other PWM controllers and thereby make sure there's no
+> intersection.
+
+OK, I will fix this.
+
+>> +	}
+>> +	atmel_pwm->chip.npwm = 4;
+>
+> Blank line between the above two for readability.
+
+OK, I will add blank line.
+
+>> +	atmel_pwm->config = data->config;
+>> +
+>> +	ret = pwmchip_add(&atmel_pwm->chip);
+>> +	if (ret < 0) {
+>> +		dev_err(&pdev->dev, "failed to add pwm chip %d\n", ret);
+>
+> "PWM chip"
+>
+> Thierry
+
+Best Regards,
+Bo Shen
