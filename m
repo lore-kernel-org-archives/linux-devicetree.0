@@ -1,70 +1,161 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 05/17] ARM: dts: imx6: add anatop phandle for usbphy
-Date: Tue, 3 Dec 2013 15:36:59 +0800
-Message-ID: <1386056231-17258-6-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH v4 16/17] usb: phy-mxs: fix the problem by only using 1st controller's register
+Date: Tue, 3 Dec 2013 15:37:10 +0800
+Message-ID: <1386056231-17258-17-git-send-email-peter.chen@freescale.com>
 References: <1386056231-17258-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1386056231-17258-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add anatop phandle for usbphy
+We fix the problem that we only use the 1st controller's related
+registers at mxs_phy_disconnect_line, but in fact, it needs to
+access registers according to different PHYs.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi |    2 ++
- arch/arm/boot/dts/imx6sl.dtsi  |    2 ++
- 2 files changed, 4 insertions(+), 0 deletions(-)
+ drivers/usb/phy/phy-mxs-usb.c |   89 +++++++++++++++++++++++++++++------------
+ 1 files changed, 63 insertions(+), 26 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 59154dc..4e74962 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -557,6 +557,7 @@
- 				reg = <0x020c9000 0x1000>;
- 				interrupts = <0 44 0x04>;
- 				clocks = <&clks 182>;
-+				fsl,anatop = <&anatop>;
- 			};
+diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+index 4c2dfcd..542b6ec 100644
+--- a/drivers/usb/phy/phy-mxs-usb.c
++++ b/drivers/usb/phy/phy-mxs-usb.c
+@@ -62,17 +62,23 @@
+ #define ANADIG_ANA_MISC0_CLR			0x158
  
- 			usbphy2: usbphy@020ca000 {
-@@ -564,6 +565,7 @@
- 				reg = <0x020ca000 0x1000>;
- 				interrupts = <0 45 0x04>;
- 				clocks = <&clks 183>;
-+				fsl,anatop = <&anatop>;
- 			};
+ #define ANADIG_USB1_VBUS_DET_STAT		0x1c0
++#define ANADIG_USB2_VBUS_DET_STAT		0x220
  
- 			snvs@020cc000 {
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 28558f1..30322b5 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -489,6 +489,7 @@
- 				reg = <0x020c9000 0x1000>;
- 				interrupts = <0 44 0x04>;
- 				clocks = <&clks IMX6SL_CLK_USBPHY1>;
-+				fsl,anatop = <&anatop>;
- 			};
+ #define ANADIG_USB1_LOOPBACK_SET		0x1e4
+ #define ANADIG_USB1_LOOPBACK_CLR		0x1e8
++#define ANADIG_USB2_LOOPBACK_SET		0x244
++#define ANADIG_USB2_LOOPBACK_CLR		0x248
  
- 			usbphy2: usbphy@020ca000 {
-@@ -496,6 +497,7 @@
- 				reg = <0x020ca000 0x1000>;
- 				interrupts = <0 45 0x04>;
- 				clocks = <&clks IMX6SL_CLK_USBPHY2>;
-+				fsl,anatop = <&anatop>;
- 			};
+ #define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG	BIT(12)
+ #define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG_SL BIT(11)
  
- 			snvs@020cc000 {
+ #define BM_ANADIG_USB1_VBUS_DET_STAT_VBUS_VALID	BIT(3)
++#define BM_ANADIG_USB2_VBUS_DET_STAT_VBUS_VALID	BIT(3)
+ 
+ #define BM_ANADIG_USB1_LOOPBACK_UTMI_DIG_TST1	BIT(2)
+ #define BM_ANADIG_USB1_LOOPBACK_TSTI_TX_EN	BIT(5)
++#define BM_ANADIG_USB2_LOOPBACK_UTMI_DIG_TST1	BIT(2)
++#define BM_ANADIG_USB2_LOOPBACK_TSTI_TX_EN	BIT(5)
+ 
+ #define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
+ 
+@@ -182,12 +188,61 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+ 	return 0;
+ }
+ 
+-static void mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool on)
++/* Return true if the vbus is there */
++static bool mxs_phy_get_vbus_status(struct mxs_phy *mxs_phy)
++{
++	unsigned int vbus_value;
++
++	if (mxs_phy->port_id == 0)
++		regmap_read(mxs_phy->regmap_anatop,
++			ANADIG_USB1_VBUS_DET_STAT,
++			&vbus_value);
++	else if (mxs_phy->port_id == 1)
++		regmap_read(mxs_phy->regmap_anatop,
++			ANADIG_USB2_VBUS_DET_STAT,
++			&vbus_value);
++
++	if (vbus_value & BM_ANADIG_USB1_VBUS_DET_STAT_VBUS_VALID)
++		return true;
++	else
++		return false;
++}
++
++static void __mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool disconnect)
+ {
+ 	void __iomem *base = mxs_phy->phy.io_priv;
++	u32 reg;
++
++	if (disconnect)
++		writel_relaxed(BM_USBPHY_DEBUG_CLKGATE,
++			base + HW_USBPHY_DEBUG_CLR);
++
++	if (mxs_phy->port_id == 0) {
++		reg = disconnect ? ANADIG_USB1_LOOPBACK_SET
++			: ANADIG_USB1_LOOPBACK_CLR;
++		regmap_write(mxs_phy->regmap_anatop, reg,
++			BM_ANADIG_USB1_LOOPBACK_UTMI_DIG_TST1 |
++			BM_ANADIG_USB1_LOOPBACK_TSTI_TX_EN);
++	} else if (mxs_phy->port_id == 1) {
++		reg = disconnect ? ANADIG_USB2_LOOPBACK_SET
++			: ANADIG_USB2_LOOPBACK_CLR;
++		regmap_write(mxs_phy->regmap_anatop, reg,
++			BM_ANADIG_USB2_LOOPBACK_UTMI_DIG_TST1 |
++			BM_ANADIG_USB2_LOOPBACK_TSTI_TX_EN);
++	}
++
++	if (!disconnect)
++		writel_relaxed(BM_USBPHY_DEBUG_CLKGATE,
++			base + HW_USBPHY_DEBUG_SET);
++
++	/* Delay some time, and let Linestate be SE0 for controller */
++	if (disconnect)
++		usleep_range(500, 1000);
++}
++
++static void mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool on)
++{
+ 	bool vbus_is_on = false;
+-	static bool line_is_disconnected;
+-	unsigned int vbus_value = 0;
+ 
+ 	/* If the SoCs don't need to disconnect line without vbus, quit */
+ 	if (!(mxs_phy->data->flags & MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS))
+@@ -197,31 +252,13 @@ static void mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool on)
+ 	if (!mxs_phy->regmap_anatop)
+ 		return;
+ 
+-	regmap_read(mxs_phy->regmap_anatop, ANADIG_USB1_VBUS_DET_STAT,
+-			&vbus_value);
+-	if (vbus_value & BM_ANADIG_USB1_VBUS_DET_STAT_VBUS_VALID)
+-		vbus_is_on = true;
++	vbus_is_on = mxs_phy_get_vbus_status(mxs_phy);
+ 
+-	if (on && !vbus_is_on) {
+-		writel_relaxed(BM_USBPHY_DEBUG_CLKGATE,
+-			base + HW_USBPHY_DEBUG_CLR);
+-		regmap_write(mxs_phy->regmap_anatop, ANADIG_USB1_LOOPBACK_SET,
+-				BM_ANADIG_USB1_LOOPBACK_UTMI_DIG_TST1 |
+-				BM_ANADIG_USB1_LOOPBACK_TSTI_TX_EN);
+-		/* Delay some time, and let Linestate be SE0 for controller */
+-		usleep_range(500, 1000);
+-		line_is_disconnected = true;
+-	} else if (line_is_disconnected) {
+-		regmap_write(mxs_phy->regmap_anatop, ANADIG_USB1_LOOPBACK_CLR,
+-				BM_ANADIG_USB1_LOOPBACK_UTMI_DIG_TST1 |
+-				BM_ANADIG_USB1_LOOPBACK_TSTI_TX_EN);
+-		writel_relaxed(BM_USBPHY_DEBUG_CLKGATE,
+-				base + HW_USBPHY_DEBUG_SET);
+-		line_is_disconnected = false;
+-	}
++	if (on && !vbus_is_on)
++		__mxs_phy_disconnect_line(mxs_phy, true);
++	else
++		__mxs_phy_disconnect_line(mxs_phy, false);
+ 
+-	dev_dbg(mxs_phy->phy.dev, "line is %s\n", line_is_disconnected
+-			? "disconnected" : "connected");
+ }
+ 
+ static void mxs_phy_enable_ldo_in_suspend(struct mxs_phy *mxs_phy, bool on)
 -- 
 1.7.8
 
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
