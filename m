@@ -1,123 +1,112 @@
-From: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-Subject: [PATCHv3 3/3] ARM: dts: imx27-apf27dev: Add pinctrl for cspi, sdhci, leds and keys
-Date: Tue,  3 Dec 2013 12:10:15 +0100
-Message-ID: <1386069015-10718-3-git-send-email-gwenhael.goavec-merou@armadeus.com>
-References: <1386069015-10718-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
- <1386069015-10718-2-git-send-email-gwenhael.goavec-merou@armadeus.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH RFC] dt: bindings: submitting patches document
+Date: Tue, 03 Dec 2013 13:09:15 +0000
+Message-ID: <20131203130915.50A89C40750@trevor.secretlab.ca>
+References: <1383759120-21571-1-git-send-email-jason@lakedaemon.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386069015-10718-2-git-send-email-gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1383759120-21571-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+On Wed,  6 Nov 2013 17:32:00 +0000, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> ---
+> All,
+> 
+> Since I've now had to answer this question a couple of times, I thought it
+> might be worth trying to put it in a document.  I don't like long documents, so
+> this is pretty concise, and most likely wrong.  Hence, RFC.  :)
+> 
+> I also dislike quoting people from my imperfect memory, much better to have an
+> agreed upon document we can point people towards.
+> 
+> thx,
+> 
+> Jason.
+> 
+>  .../devicetree/bindings/submitting-patches.txt     | 52 ++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/submitting-patches.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
+> new file mode 100644
+> index 000000000000..5a84d5ebb0f5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/submitting-patches.txt
+> @@ -0,0 +1,52 @@
+> +
+> +  Submitting devicetree (DT) binding patches
+> +
+> +I. For patch submitters
+> +
+> +  0) Normal patch submission rules from Documentation/SubmittingPatches
+> +     applies.
+> +
+> +  1) The Documentation/ portion of the patch should be a separate patch
+> +     and clearly labelled as such.  For example:
+> +
+> +       [PATCH X/Y] dt: binding: mvebu mbus driver
+> +
+> +     This makes the binding portion easy to find among large patch series.
 
-- add chip-select pinctrl for cspi
-- add card-detect for sdhci2
-- add pinctrl for gpio-leds and gpio-keys
- 
----
-Changelog:
-v3:
- * use short subject and add commit log
+Sure. I don't actually care here since I filter on whether or not
+Documentation/devicetree/bindings is one of the file diffs. I don't have
+any objections to this however.
 
- arch/arm/boot/dts/imx27-apf27dev.dts | 34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+> +
+> +  2) Submit the entire series to the devicetree mailinglist at
+> +
+> +       devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +
+> +II. For sub-system maintainers
+> +
+> +  1) If you aren't comfortable reviewing a given binding, reply to it and ask
+> +     the devicetree maintainers for guidance.  This will help them prioritize
+> +     which ones to review and which ones are ok to let go.
+> +
+> +  2) If you are comfortable with the binding, and it hasn't received an
+> +     Acked-by from the devicetree maintainers after a few weeks, go ahead and
+> +     take it.
 
-diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
-index a794b1a..17dd206 100644
---- a/arch/arm/boot/dts/imx27-apf27dev.dts
-+++ b/arch/arm/boot/dts/imx27-apf27dev.dts
-@@ -38,6 +38,8 @@
- 
- 	gpio-keys {
- 		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_keys>;
- 
- 		user-key {
- 			label = "user";
-@@ -48,6 +50,8 @@
- 
- 	leds {
- 		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
- 
- 		user {
- 			label = "Heartbeat";
-@@ -61,7 +65,7 @@
- 	fsl,spi-num-chipselects = <1>;
- 	cs-gpios = <&gpio4 28 GPIO_ACTIVE_LOW>;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_cspi1>;
-+	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
- 	status = "okay";
- };
- 
-@@ -71,7 +75,7 @@
- 		   <&gpio4 27 GPIO_ACTIVE_LOW>,
- 		   <&gpio2 17 GPIO_ACTIVE_LOW>;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_cspi2>;
-+	pinctrl-0 = <&pinctrl_cspi2 &pinctrl_cspi2_cs>;
- 	status = "okay";
- };
- 
-@@ -107,10 +111,30 @@
- 			fsl,pins = <MX27_CSPI1_PINGRP1>;
- 		};
- 
-+		pinctrl_cspi1_cs: cspi1csgrp {
-+			fsl,pins = <MX27_PAD_CSPI1_SS0__GPIO4_28 0x0>;
-+		};
-+
- 		pinctrl_cspi2: cspi2grp {
- 			fsl,pins = <MX27_CSPI2_PINGRP1>;
- 		};
- 
-+		pinctrl_cspi2_cs: cspi2csgrp {
-+			fsl,pins = <
-+				MX27_PAD_CSI_D5__GPIO2_17 0x0
-+				MX27_PAD_CSPI2_SS0__GPIO4_21 0x0
-+				MX27_PAD_CSPI1_SS1__GPIO4_27 0x0
-+			>;
-+		};
-+
-+		pinctrl_gpio_leds: gpioledsgrp {
-+			fsl,pins = <MX27_PAD_PC_VS1__GPIO6_14 0x0>;
-+		};
-+
-+		pinctrl_gpio_keys: gpiokeysgrp {
-+			fsl,pins = <MX27_PAD_PC_VS2__GPIO6_13 0x0>;
-+		};
-+
- 		pinctrl_imxfb1: imxfbgrp {
- 			fsl,pins = <MX27_FB_PINGRP1>;
- 		};
-@@ -130,6 +154,10 @@
- 		pinctrl_sdhc2: sdhc2grp {
- 			fsl,pins = <MX27_SDHC2_PINGRP1>;
- 		};
-+
-+		pinctrl_sdhc2_cd: sdhc2cdgrp {
-+			fsl,pins = <MX27_PAD_TOUT__GPIO3_14 0x0>;
-+		};
- 	};
- };
- 
-@@ -137,7 +165,7 @@
- 	bus-width = <4>;
- 	cd-gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_sdhc2>;
-+	pinctrl-0 = <&pinctrl_sdhc2 &pinctrl_sdhc2_cd>;
- 	status = "okay";
- };
- 
--- 
-1.8.3.2
+Providing it isn't a subsystem binding. Driver specific stuff this is
+okay for. Stuff that impacts the entire subsystem really needs to be
+reviewed.
+
+> +
+> +  3) For a series going though multiple trees, the binding patch should be
+> +     kept with the driver using the binding.
+> +
+> +III.  General binding rules
+> +
+> +  1) Don't hold up a binding because it isn't perfect.
+> +
+> +  2) Use specific compatible strings so that if we need to add a feature (DMA)
+> +     in the future, we can create a new compatible string.
+
+3) Bindings can be augmented, but the driver shouldn't break when given
+the old binding. ie. add additional properties, but don't change the
+meaning of an existing property. For drivers, default to the original
+behaviour when a newly added property is missing.
+
+> +
+> +  3) Ideally, all bindings receive sufficient review.  In the real world, we
+> +     need to prioritize.  Bindings for a specific block of IP aren't as
+> +     critical as a binding for a common subsystem, like PCI.
+> +
+> +  4) Don't submit bindings for staging or unstable.  That will be decided by
+> +     the devicetree maintainers *after* discussion on the mailinglist.
+> +
+> +IV. Notes
+> +
+> +  This document is intended as a general familiarization with the process as
+> +  decided at the 2013 Kernel Summit.  When in doubt, the current word of the
+> +  devicetree maintainers overrules this document.  In that situation, a patch
+> +  updating this document would be appreciated.
+> -- 
+> 1.8.4.2
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
