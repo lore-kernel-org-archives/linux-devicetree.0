@@ -1,28 +1,27 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor prefix for LG Corporation
-Date: Mon, 2 Dec 2013 23:43:21 -0600
-Message-ID: <CAL_JsqJTygb4Qw=8UjY92xn9Sq3DHDRAvNxEONgzacbYdXDwww@mail.gmail.com>
-References: <1384769479-7324-1-git-send-email-treding@nvidia.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v6] of: add vendor prefix for GMT
+Date: Mon, 2 Dec 2013 23:43:51 -0600
+Message-ID: <CAL_JsqK=-Pts_-Gz3+EYEiCufYrMWD8L-9Lv7Ru6K52PRhshFg@mail.gmail.com>
+References: <1384340349-8626-1-git-send-email-wni@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1384769479-7324-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1384340349-8626-1-git-send-email-wni@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Wei Ni <wni@nvidia.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Landley <rob@landley.net>, khali@linux-fr.org, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 4:11 AM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Wed, Nov 13, 2013 at 4:59 AM, Wei Ni <wni@nvidia.com> wrote:
+> Adding Global Mixed-mode Technology Inc. to the list
+> of devicetree vendor prefixes.
+>
+> Signed-off-by: Wei Ni <wni@nvidia.com>
+> Acked-by: Stephen Warren <swarren@nvidia.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
 >  1 file changed, 1 insertion(+)
 
 Applied for 3.13.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
