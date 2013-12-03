@@ -1,35 +1,62 @@
-From: Peter Chen <Peter.Chen@freescale.com>
-Subject: RE: [PATCH v4 17/17] usb: phy-mxs: do not set PWD.RXPWD1PT1 for low
- speed connection
-Date: Tue, 3 Dec 2013 09:48:36 +0000
-Message-ID: <F281D0F91ED19E4D8E63A7504E8A6498041410CD@039-SN2MPN1-021.039d.mgd.msft.net>
-References: <1386056231-17258-1-git-send-email-peter.chen@freescale.com>
- <1386056231-17258-18-git-send-email-peter.chen@freescale.com>
- <529D9BF7.1080707@pengutronix.de>
- <F281D0F91ED19E4D8E63A7504E8A649804141031@039-SN2MPN1-021.039d.mgd.msft.net>
- <529DA44C.9090702@pengutronix.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 1/7] usb: dwc3: get "usb_phy" only if the platform
+ indicates the presence of PHY's
+Date: Tue, 3 Dec 2013 15:20:39 +0530
+Message-ID: <529DA96F.3000903@ti.com>
+References: <1381866857-3861-1-git-send-email-kishon@ti.com>
+ <1381866857-3861-2-git-send-email-kishon@ti.com>
+ <20131017163828.GH11611@gimli> <5280EB5C.1040001@ti.com>
+ <20131125213213.GV18046@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <529DA44C.9090702@pengutronix.de>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: "balbi@ti.com" <balbi@ti.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "festevam@gmail.com" <festevam@gmail.com>, "marex@denx.de" <marex@denx.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, Frank Li <Frank.Li@freescale.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131125213213.GV18046@saruman.home>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: balbi@ti.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux@arm.linux.org.uk, bcousson@baylibre.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tony@atomide.com, gregkh@linuxfoundation.org, swarren@wwwdotorg.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org, s.nawrocki@samsung.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-IA0KPiANCj4gT24gMTIvMDMvMjAxMyAxMDoxOSBBTSwgUGV0ZXIgQ2hlbiB3cm90ZToNCj4gPj4g
-T24gMTIvMDMvMjAxMyAwODozNyBBTSwgUGV0ZXIgQ2hlbiB3cm90ZToNCj4gPj4+IEF0IHZlcnkg
-cmFyZSBjYXNlcywgdGhlIFNvRiB3aWxsIG5vdCBzZW5kIG91dCBhZnRlciByZXN1bWUgd2l0aA0K
-PiA+Pj4gbG93IHNwZWVkIGNvbm5lY3Rpb24uIFRoZSB3b3JrYXJvdW5kIGlzIGRvIG5vdCBwb3dl
-ciBkb3duDQo+ID4+PiBQV0QuUlhQV0QxUFQxIGJpdCBkdXJpbmcgdGhlIHN1c3BlbmQuDQo+ID4+
-DQo+ID4+IElzIHRoaXMgYWxzbyBhIGZpeCBmb3IgbmV3bHkgYWRkZWQgY29kZT8gSWYgc28gcGxl
-YXNlIGFsc28gc3F1YXNoLg0KPiANCj4gPiBObywgaXQgaXMgYSB3b3JrYXJvdW5kIGZvciBuZXcg
-cHJvYmxlbS4NCj4gDQo+IElmIHRoaXMgd291bGQgYmUgYSBmaXgsIGl0J3MgYmV0dGVyIHRvIHB1
-dCB0aGlzIGFzIGZpcnN0IHBhdGNoIGludG8gYQ0KPiBzZXJpZXMsIHNvIHRoYXQgaXQgY2FuIGJl
-IGFwcGxpZWQgdG8gdGhlIHN0YWJsZSB0cmVlcyBlYXNpZXIuDQo+IA0KDQpJdCBpcyBpbnRyb2R1
-Y2VkIGJ5IFszLzE3XSwgd2l0aG91dCBbMy8xN10gaXQgbmVlZHMgYW5vdGhlciBmaXggd2hpY2gN
-CndlIGhhdmUgbm90IGludGVuZGVkIHRvIHVzZS4gSSB3aWxsIHNxdWFzaCB0aGVtLCB0aGFua3Mu
-DQoNClBldGVyDQoNCiANCg0KDQo=
+Hi,
 
+On Tuesday 26 November 2013 03:02 AM, Felipe Balbi wrote:
+> Hi,
+> 
+> On Mon, Nov 11, 2013 at 08:06:12PM +0530, Kishon Vijay Abraham I wrote:
+>>>> diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
+>>>> index 7db34f0..49ffa6d 100644
+>>>> --- a/drivers/usb/dwc3/platform_data.h
+>>>> +++ b/drivers/usb/dwc3/platform_data.h
+>>>> @@ -24,4 +24,6 @@ struct dwc3_platform_data {
+>>>>  	enum usb_device_speed maximum_speed;
+>>>>  	enum usb_dr_mode dr_mode;
+>>>>  	bool tx_fifo_resize;
+>>>> +	bool usb2_phy;
+>>>> +	bool usb3_phy;
+>>>
+>>> This would look better as a quirks flag, then we could:
+>>>
+>>> unsigned long quirks;
+>>> #define DWC3_QUIRK_NO_USB3_PHY	BIT(0)
+>>> #define DWC3_QUIRK_NO_USB2_PHY	BIT(1)
+>>
+>> Should this quirk be used for dt also? Currently we find if it has usb3 phy or
+>> usb2 phy from the dt data only. But if we add a quirk, we'll have to add a
+>> property to populate the quirk no?
+> 
+> either we use the quirk, or use the fact that no <&usb2_phy> phandle is
+> defined, would work both ways, no ?
+
+In my v3, I've made both to use quirks since we don't want to have separate
+mechanism for dt and non-dt stuff to know the presence of a particular PHY.
+
+Thanks
+Kishon
