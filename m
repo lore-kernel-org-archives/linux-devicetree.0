@@ -1,58 +1,79 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 1/2] regulator: max14577: Add regulator driver for
- Maxim 14577
-Date: Tue, 3 Dec 2013 18:10:28 +0000
-Message-ID: <20131203181028.GK27568@sirena.org.uk>
-References: <1385559982-32039-1-git-send-email-k.kozlowski@samsung.com>
- <20131127152042.GY14725@sirena.org.uk>
- <20131127152358.GP3296@lee--X1>
- <20131127154221.GZ14725@sirena.org.uk>
- <20131127161323.GS3296@lee--X1>
- <20131127162859.GD14725@sirena.org.uk>
- <1385993555.5573.3.camel@AMDC1943>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 01/31] ARM: tegra: add missing clock documentation to
+ DT bindings
+Date: Tue, 03 Dec 2013 11:31:00 -0700
+Message-ID: <529E2364.6000205@wwwdotorg.org>
+References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org> <1384548866-13141-2-git-send-email-swarren@wwwdotorg.org> <20131129114900.GN22771@ulmo.nvidia.com> <529B8888.3010801@wwwdotorg.org> <20131202085257.GA17834@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="o0dA3wbhdegQN8Av"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385993555.5573.3.camel@AMDC1943>
-Sender: linux-doc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131202085257.GA17834-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 12/02/2013 01:52 AM, Thierry Reding wrote:
+> On Sun, Dec 01, 2013 at 12:05:44PM -0700, Stephen Warren wrote:
+>> On 11/29/2013 04:49 AM, Thierry Reding wrote:
+>>> On Fri, Nov 15, 2013 at 01:53:56PM -0700, Stephen Warren wrote:
+>>>  [...]
+>>>> @@ -60,6 +81,12 @@ of the following host1x client modules: - 
+>>>> compatible: "nvidia,tegra<chip>-dc" - reg: Physical base
+>>>> address and length of the controller's registers. -
+>>>> interrupts: The interrupt outputs from the controller. +  -
+>>>> clocks : Must contain an entry for each entry in clock-names.
+>>>> +    See ../clocks/clock-bindings.txt for details. +  -
+>>>> clock-names : Must include the following entries: +    -
+>>>> disp1 or disp2 (depending on the controller instance)
+>>> 
+>>> I'm not sure if this makes sense. The name could be the same 
+>>> independent of which controller uses it. If it isn't then the 
+>>> driver would need additional code to find out which instance it
+>>> is and construct a dynamic string.
+>>> 
+>>> Any objection to just make this entry "disp", or "dc"?
+>> 
+>> This patch simply documents the binding that the various drivers 
+>> already require and/or whatever is already in the DT files if
+>> there are any clocks the drivers don't currently use. I did
+>> consider fixing up all the current usage to actually be sane, but
+>> that would require even more driver changes (in addition to those
+>> required for the reset framework patches).
+> 
+> Okay, I understand. I still think we should change the usage for
+> this particular use-case subsequently. In retrospect the entry in
+> clock-names wasn't thought out very well. It seems like the reason
+> for using disp1 and disp2 respectively was so that it would match
+> the system-wide clock name, rather than the clock's label within
+> the display controller's context.
+> 
+> Just to clarify what I mean, if we stick to the above, then we'll
+> need to add code to the driver along the lines of:
+> 
+> char clock_name[6];
+> 
+> if (regs->start == 0x54200000) index = 1; else index = 2;
+> 
+> sprintf(clock_name, "disp%u", index);
+> 
+> clk = devm_clk_get(&pdev->dev, clock_name);
+> 
+> rather than the much more simple and elegant:
+> 
+> clk = devm_clk_get(&pdev->dev, "disp");
+> 
+> The whole purpose of the clock consumer ID is to be generic and as
+> such independent of the specific IP block or instance thereof.
 
---o0dA3wbhdegQN8Av
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think if the code needs this clock, I'd be tempted to do the following:
 
-On Mon, Dec 02, 2013 at 03:12:35PM +0100, Krzysztof Kozlowski wrote:
+clk = clk_get(dev, "disp1");
+if (IS_ERR(clk) && PTR_ERR(clk) != -EPROBE_DEFERRED)
+    clk = clk_get(dev, "disp2");
+if (IS_ERR(clk))
+    return PTR_ERR(clk);
 
-> Do you wish me to change the patch to previous version using
-> of_get_child_by_name()?
-
-It'd be more standard, yes.
-
---o0dA3wbhdegQN8Av
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSnh6RAAoJELSic+t+oim94cUQAJA2BhUV63rITb//j/++KGYM
-m1wxTeby0VwA9tG2riwDTLqfzhQMC5buSW6iBIainby/2i3gvZM6GgtRwi4pIWjA
-+cFhQvJRfZ4G967xiFQOBbPnsT/2TKkwePmX1rHEtmBDirm9H8w8+9rZ8Alw44o8
-N6ahw7gsVp6tEeYOSS4faz+5JY+LN2M0ci2x9QaEEtu9babfrAqE8bAsc8d/4b2d
-oQb5nX6e8WUZIxpyGNfTpLFaqd1gpYiXYjeU8UgAL9UWO1paN1oyveNaDRLu+gt9
-VhPGGruolQoBKQhHOprcaA2IWvVOI18VbWBWa611s0Kj4OQUG1lN7dwegudiS/hH
-7rEffrAPybCAKYQpR3TeS+NJWZsRBoy1HdAA11qE9VqawXUGPL+6eVtOAhFvIGj4
-r6jIk29TO8a/uHENkBFfaNCZRpYAHgWCir8l69GG9fik5CPEbNtuOpzCIl3W4tWR
-k8COVCDtHw3M9obK2+G+tT+NUEUWIJvn4K+lVOY+eR50J0U7x4TC+T3Od42i0zcO
-sPdVyVRdMRlSiQ3iKH7Uq3uME6535ijZ0Y2kajPlZPjaxVwLPAHsucENDCWPrcdL
-vLnNX8n4ofd/g5wezc7BPJk+oOotMtlAWV/LOaICXl3FXarvw3UCEvH4ri7BEoLR
-nn80v1D7cz9Vecf391QT
-=EwAT
------END PGP SIGNATURE-----
-
---o0dA3wbhdegQN8Av--
+That avoids having to hard-code IP block base addresses and construct
+clock names at run-time.
