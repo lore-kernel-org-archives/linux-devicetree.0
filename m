@@ -1,61 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/4] MFD: TPS65218: Add driver for the TPS65218 PMIC
-Date: Tue, 3 Dec 2013 13:28:04 +0000
-Message-ID: <20131203132804.GU27568@sirena.org.uk>
-References: <1386053006-6480-1-git-send-email-j-keerthy@ti.com>
- <1386053006-6480-3-git-send-email-j-keerthy@ti.com>
- <20131203092410.GD11828@lee--X1>
- <529DAD2B.4040909@ti.com>
- <20131203112107.GP11828@lee--X1>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: imx27: add pwm pingrp
+Date: Tue, 3 Dec 2013 21:32:54 +0800
+Message-ID: <20131203133252.GI13726@S2101-09.ap.freescale.net>
+References: <1386069015-10718-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+OC8RVH7U83T7eJX"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131203112107.GP11828@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Keerthy <a0393675@ti.com>, Keerthy <j-keerthy@ti.com>, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, grant.likely@linaro.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+In-Reply-To: <1386069015-10718-1-git-send-email-gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Gwenhael Goavec-Merou <gwenhael.goavec-merou-W7CSdorvuhNZroRs9YW3xA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 03, 2013 at 12:10:13PM +0100, Gwenhael Goavec-Merou wrote:
+> From: Gwenhael Goavec-Merou <gwenhael.goavec-merou-W7CSdorvuhNZroRs9YW3xA@public.gmane.org>
+> 
+> Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-W7CSdorvuhNZroRs9YW3xA@public.gmane.org>
 
---+OC8RVH7U83T7eJX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied all 3 with some small fix-ups (see replies to patch #2 and #3).
 
-On Tue, Dec 03, 2013 at 11:21:07AM +0000, Lee Jones wrote:
+Shawn
 
-> other is that you shouldn't be doing this at all with regulators. Mark
-> likes the idea of having a single regulator controller node which
-> contains all of these individual regulator sub-nodes and you initiate
-> a single call to for_each_child_of_node() within the driver in order
-> to register them all.
+> ---
+>  arch/arm/boot/dts/imx27-pingrp.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx27-pingrp.h b/arch/arm/boot/dts/imx27-pingrp.h
+> index f3fbf5a..edc1e90 100644
+> --- a/arch/arm/boot/dts/imx27-pingrp.h
+> +++ b/arch/arm/boot/dts/imx27-pingrp.h
+> @@ -88,6 +88,9 @@
+>  #define MX27_OWIRE1_PINGRP1 \
+>  	MX27_PAD_RTCK__OWIRE 0x0
+>  
+> +#define MX27_PWM_PINGRP1 \
+> +	MX27_PAD_PWMO__PWMO 0x0
+> +
+>  #define MX27_SDHC1_PINGRP1 \
+>  	MX27_PAD_SD1_CLK__SD1_CLK \
+>  	MX27_PAD_SD1_CMD__SD1_CMD \
+> -- 
+> 1.8.3.2
+> 
 
-That's not really the case, it depends on how the hardware is
-structured.  If the regulators are not laid out in a regular fashion or
-otherwise reusable then the above big bag of regulators makes sense.  If
-the hardware is reusable then things are different.
-
---+OC8RVH7U83T7eJX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSndxgAAoJELSic+t+oim9cBUP/06WWWYrjhT9fJn2COoIxdZm
-bQmYBjMo0J2CIqBtpYmCc5bGWRYO+IY+R23mzOE1NQ2KxLlHqxbZavvG1B1y5D/8
-ypi8z+f3zib8jNacSv1wqIgajskRT6X3WPpsxtZGIk6K2j2Q9B7bVv8HFHzVjtwC
-gpFwGuC9RjsSn80PtnJ5ymE15oYj1xPIrTJHmmDsWC5HmLIayEPJ4GvAGuHO6DTy
-I+inkTPpGr1dT3nqR7R1p/wgOFFnAGtV0Wv+E0XwI+NLfWcPEesFSGSE5IKPpr6c
-F4iGuFiRZL27bccWz3PjRCozsceXdsE36oNyE4l4HE3zCgYuZTvTK9w2ExXTi5ZE
-hUZmeWcOOkJBmKTAZc7oAXGDZHSZWFq2IETxNUjfhDyM1kWUq1p24V04aWoVtkNz
-BiD1mJbPa0DTziBCtMzlp8erVnjTPJSeHmzTIrYZH6GnKkLsBbFTD/WhsqC1pMNc
-CMDyFCfUAdyF3yBF2KiyyO5XEIrcN2OBn5H7Qc4Z+KMXBaHPtQtTvCu0qwK3W4hg
-KuoqL6YV6/DmeXrNk2r/yLKC0H3Q7Al1wntu/rk+I1YdUPRVlrFSeQD5pUcltcaW
-/DH/+TOu3I115kYlgMDIK+45zwR0K3GzhJkMdCXtqiNY3keqsgTOXMQEU6JyTUHZ
-2mfX6wXcDEqAh+gkwqKR
-=fI/p
------END PGP SIGNATURE-----
-
---+OC8RVH7U83T7eJX--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
