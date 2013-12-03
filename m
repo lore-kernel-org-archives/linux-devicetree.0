@@ -1,26 +1,29 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] hwmon: ntc_thermistor: Fix typo (pullup-uV -> pullup-uv)
-Date: Mon, 2 Dec 2013 23:44:41 -0600
-Message-ID: <CAL_JsqLQaAJiaCYh3=NyEM7h02z_UCmeX8q_L-Cguj==F9pfbw@mail.gmail.com>
-References: <1382492690-4056-1-git-send-email-cw00.choi@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: delete nvidia,tegra20-spi.txt binding
+Date: Tue, 3 Dec 2013 00:01:57 -0600
+Message-ID: <CAL_JsqLP0wFqJXpr2H25Jj-4iWDgA2QsToXUhhV3dZnc1tEA2Q@mail.gmail.com>
+References: <1385419075-11414-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1382492690-4056-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Jonathan Cameron <jic23@kernel.org>, ch.naveen@samsung.com, Douglas Anderson <dianders@chromium.org>, Lars-Peter Clausen <lars@metafoo.de>, Sachin Kamat <sachin.kamat@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385419075-11414-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 22, 2013 at 8:44 PM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> This patch fix typo of property name from 'pullup-uV' to 'pullup-uv'.
-> The ntc_thermistor.c use 'pullup-uv' when parsing dt data.
+On Mon, Nov 25, 2013 at 4:37 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 >
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> This binding shouldn't exist; Tegra20 has two forms of SPI controller
+> that are documented separately in nvidia,tegra20-sflash.txt and
+> nvidia,tegra20-slink.txt.
+>
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
+>  Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt | 5 -----
+>  1 file changed, 5 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt
 
 Applied for 3.13.
 
