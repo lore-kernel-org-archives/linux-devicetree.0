@@ -1,95 +1,58 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v4 09/17] usb: phy-mxs: Enable IC fixes for related SoCs
-Date: Tue, 03 Dec 2013 09:27:35 +0100
-Message-ID: <529D95F7.8060705@pengutronix.de>
-References: <1386056231-17258-1-git-send-email-peter.chen@freescale.com> <1386056231-17258-10-git-send-email-peter.chen@freescale.com>
+From: Sathya Prakash M R <sathyap@ti.com>
+Subject: [PATCH 0/4] Add Display support for AM43xx
+Date: Tue, 3 Dec 2013 14:03:44 +0530
+Message-ID: <1386059629-1234-1-git-send-email-sathyap@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="qiW0wauqsdieICrhfUDsqbfl8Xg9uvWT2"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386056231-17258-10-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com, tomi.valkeinen@ti.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, paul@pwsan.com
+Cc: Sathya Prakash M R <sathyap@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---qiW0wauqsdieICrhfUDsqbfl8Xg9uvWT2
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+This patch series adds DSS support to the AM43x. The DPI LCD
+panel is supported on both am43x-epos-evm and am437x-gp-evm.
+The LCD panel is from OSD model: OSD057T0559-34TS
 
-On 12/03/2013 08:37 AM, Peter Chen wrote:
-> Some PHY bugs are fixed by IC logic, but these bits are not
-> enabled by default, so we enable them at driver.
->=20
-> Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> ---
->  drivers/usb/phy/phy-mxs-usb.c |   20 ++++++++++++++++++++
->  1 files changed, 20 insertions(+), 0 deletions(-)
->=20
-> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-us=
-b.c
-> index 8738890..0908d74 100644
-> --- a/drivers/usb/phy/phy-mxs-usb.c
-> +++ b/drivers/usb/phy/phy-mxs-usb.c
-> @@ -31,6 +31,10 @@
->  #define HW_USBPHY_CTRL_SET			0x34
->  #define HW_USBPHY_CTRL_CLR			0x38
-> =20
-> +#define HW_USBPHY_IP				0x90
-> +#define HW_USBPHY_IP_SET			0x94
-> +#define HW_USBPHY_IP_CLR			0x98
-> +
->  #define BM_USBPHY_CTRL_SFTRST			BIT(31)
->  #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
->  #define BM_USBPHY_CTRL_ENAUTOSET_USBCLKS	BIT(26)
-> @@ -42,6 +46,8 @@
->  #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
->  #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
-> =20
-> +#define BM_USBPHY_IP_FIX                       (BIT(17) | BIT(18))
-> +
->  #define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
-> =20
->  /* Do disconnection between PHY and controller without vbus */
-> @@ -97,6 +103,16 @@ struct mxs_phy {
->  	struct regmap *regmap_anatop;
->  };
-> =20
-> +static inline bool is_imx6q_phy(struct mxs_phy *mxs_phy)
-> +{
-> +	return mxs_phy->data =3D=3D &imx6q_phy_data;
-> +}
-> +
-> +static inline bool is_imx6sl_phy(struct mxs_phy *mxs_phy)
-> +{
-> +	return mxs_phy->data =3D=3D &imx6sl_phy_data;
-> +}
+Done on top of 3.13-rc1 and below dependent patches
 
-Why don't you use a a BIT() here as in Patch 2/17, too?
+Sourav patches adding device nodes for epos [1] and gp [2] evm
+[1]: https://patchwork.kernel.org/patch/3246701/
+[2]: https://patchwork.kernel.org/patch/3246751/
 
-Marc
+Tomi patch adding DT support to DSS [3]
+[3]: https://patchwork.kernel.org/patch/2841721/
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+AM43xx has a dedicated display pll. Hence tomi patch improving
+func clock handling is needed [4]
+[4]: https://patchwork.kernel.org/patch/3196221/
 
+Tested on am43x-epos-evm and am437x-gp-evm.
 
---qiW0wauqsdieICrhfUDsqbfl8Xg9uvWT2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Sathya Prakash M R (3):
+  OMAPDSS: Add DSS features for AM43xx
+  ARM: OMAP2+: AM43xx DSS Hwmod
+  ARM: DTS: AM43x: Add DSS node
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+Tomi Valkeinen (1):
+  ARM: AM43xx: fix dpll init in bypass mode
 
-iEYEARECAAYFAlKdlfcACgkQjTAFq1RaXHP8fwCfStt3jBW/DhqCCKgDCfKqhrDa
-lbwAn2T8j8XYN3A8aGii9vaKXfr10fI/
-=HtZt
------END PGP SIGNATURE-----
+ arch/arm/boot/dts/am4372.dtsi              |   28 ++++++++
+ arch/arm/boot/dts/am437x-gp-evm.dts        |   68 ++++++++++++++++++
+ arch/arm/boot/dts/am43x-epos-evm.dts       |   64 +++++++++++++++++
+ arch/arm/boot/dts/am43xx-clocks.dtsi       |    2 +
+ arch/arm/mach-omap2/clkt_dpll.c            |    4 +-
+ arch/arm/mach-omap2/display.c              |    2 +
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c |  104 ++++++++++++++++++++++++++++
+ arch/arm/mach-omap2/prcm43xx.h             |    1 +
+ drivers/video/omap2/dss/dispc.c            |    1 +
+ drivers/video/omap2/dss/dpi.c              |    2 +
+ drivers/video/omap2/dss/dsi.c              |    1 +
+ drivers/video/omap2/dss/dss.c              |   11 +++
+ drivers/video/omap2/dss/dss_features.c     |   67 ++++++++++++++++++
+ include/video/omapdss.h                    |    1 +
+ 14 files changed, 354 insertions(+), 2 deletions(-)
 
---qiW0wauqsdieICrhfUDsqbfl8Xg9uvWT2--
+-- 
+1.7.9.5
+
