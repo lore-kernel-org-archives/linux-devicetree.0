@@ -1,103 +1,75 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH 2/4] MFD: TPS65218: Add driver for the TPS65218 PMIC
-Date: Tue, 3 Dec 2013 15:36:35 +0530
-Message-ID: <529DAD2B.4040909@ti.com>
-References: <1386053006-6480-1-git-send-email-j-keerthy@ti.com> <1386053006-6480-3-git-send-email-j-keerthy@ti.com> <20131203092410.GD11828@lee--X1>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH RESEND v5 1/2] PWM: PXA: add device tree support to PWM
+ driver
+Date: Tue, 3 Dec 2013 11:17:15 +0100
+Message-ID: <20131203101714.GG21178@ulmo.nvidia.com>
+References: <1379791174-2369-1-git-send-email-mikedunn@newsguy.com>
+ <1379791174-2369-2-git-send-email-mikedunn@newsguy.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131203092410.GD11828@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Keerthy <j-keerthy@ti.com>, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, grant.likely@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="p7qwJlK53pWzbayA"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1379791174-2369-2-git-send-email-mikedunn@newsguy.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Mike Dunn <mikedunn@newsguy.com>
+Cc: linux-pwm@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chao Xie <chao.xie@marvell.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 03 December 2013 02:54 PM, Lee Jones wrote:
->> The TPS65218 chip is a power management IC for Portable Navigation Systems
->> and Tablet Computing devices. It contains the following components:
->>
->>   - Regulators.
->>   - Over Temperature warning and Shut down.
->>
->> This patch adds support for tps65218 mfd device. At this time only
->> the regulator functionality is made available.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   drivers/mfd/Kconfig          |   14 ++
->>   drivers/mfd/Makefile         |    1 +
->>   drivers/mfd/tps65218.c       |  281 +++++++++++++++++++++++++++++++++++++++++
->>   include/linux/mfd/tps65218.h |  288 ++++++++++++++++++++++++++++++++++++++++++
-> <snip>
->
->> +config MFD_TPS65218
->> +	tristate "TI TPS65218 Power Management chips"
->> +	depends on I2C
->> +	select MFD_CORE
->> +	select REGMAP_I2C
->> +	help
->> +	  If you say yes here you get support for the TPS65218 series of
->> +	  Power Management chips.
->> +	  These include voltage regulators, gpio and other features
->> +	  that are often used in portable devices.
-> Perhaps you should add a note that only the regulator component is
-> currently supported.
-Ok. I will add it.
 
-> <snip>
->
->> new file mode 100644
->> index 0000000..8c61640
->> --- /dev/null
->> +++ b/drivers/mfd/tps65218.c
->> @@ -0,0 +1,281 @@
->> +/*
->> + * TPS65218 chip family multi-function driver
-> Instead of calling it an MFD driver (is there such a thing?) I think
-> you should mention its true purpose, as per the datasheet.
+--p7qwJlK53pWzbayA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok.
+On Sat, Sep 21, 2013 at 12:19:33PM -0700, Mike Dunn wrote:
+> This patch adds device tree support to the PXA's PWM driver.  Nothing
+> needs to be extracted from the device tree node by the PWM device.
+> Client devices need only specify the period; the per-chip index is
+> implicitly zero because one device node must be present for each PWM
+> output in use.  This approach is more convenient due to the wide
+> variability in the number of PWM channels present across the various PXA
+> variants, and is made possible by the fact that the register sets for
+> each PWM channel are segregated from each other.  An of_xlate() method
+> is added to parse this single-cell node.  The existing ID table is
+> reused for the match table data.
+>=20
+> Tested on a Palm Treo 680 (both platform data and DT cases).
+>=20
+> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 30 +++++++++++++
+>  drivers/pwm/pwm-pxa.c                             | 52 +++++++++++++++++=
++++++-
+>  2 files changed, 81 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
 
->
-> <snip>
->
->> +static const struct of_device_id of_tps65218_match_table[] = {
->> +	{ .compatible = "ti,tps65218", },
->> +	{ /* end */ }
-> I think the end comment is superfluous.
->
-> However, if you _really_ want to put something in there, I dislike
-> "/* Sentinel */" the least.
+Hi Mike,
 
-I will remove it.
->
->> +static int tps65218_probe(struct i2c_client *client,
->> +				const struct i2c_device_id *ids)
->> +{
-> <snip>
->
->> +	ret = of_platform_populate(client->dev.of_node, NULL, NULL,
->> +				   &client->dev);
-> What are you trying to do here?
->
-> Register each regulator as a platform device?
+It looks like this fell through the cracks. Is this patch still the
+latest one you have? Should it still be applied?
 
-Yeah. The probe will be called for every regulator separately.
+Thierry
 
-> <snip>
->
->> +static const struct i2c_device_id tps65218_id_table[] = {
->> +	{"tps65218", TPS65218},
->> +};
-> This has a different structure to of_tps65218_match_table, please
-> ensure they're the same. I prefer spaces after '{' and before '}'.
+--p7qwJlK53pWzbayA
+Content-Type: application/pgp-signature
 
-Ok. I will add a space after '{' and before '}'. Sorry I did not
-follow tps65218_id_table being different than of_tps65218_match_table.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-One is of the type of_device_id and the other i2c_device_id.
->
-> <snip>
->
+iQIcBAEBAgAGBQJSna+qAAoJEN0jrNd/PrOhEN0P/j/R50+IlIwPL9vuovuV1xj3
+SZJ0gRHT1PXnytE1PFB5+HIbreYhSQTQ79hfYfxSdYi5h2KVcxLneSEkfGYLLAj9
+J70ju3wlKflwYtAp06ssXKxIUVnvYk8kVUxgjpzbq7cMEhHelAvLpcKqD6TnAfIn
+3z8y6ZtzcuzsRHIahFTdB75Kb+tjkWfgLOxDfFUTwzU01xaLDNFIZzU4ngF4Rtqz
+gxXqTKSFDDvsCn5LHgqOxhjSQdA24x7Q+Nc6oMe/XsB0u1HfmuSb+vU7mmaYrMM4
+1ASzxjfTaBHfArx4u2CdjOI+Or/6nlJdknKc1wc/hbFoTTjsuuNZHtQyifFpy2mh
+xg6h05QWJLr/SSckWtkjQ377CSqwvg88Jzlr3TTAtywmuIrNvS2mxt2IgdHZLMKT
+pjlYZhrp4KqlZVwrXgHbO0FL7tpn7BphFD6L9JcwBOYcoxiO/ATuQ3rQ4esRHF6V
+o3lj7JvJFQ/Nla0blL+awexm+sNpwKh1ru6lCGe6naT2IFK4I7TGiu3rc0WLvDG4
+cFxf8z907/1ZS4PmBfhb0dUMcupLJS92PMboyO+lLW3FnkU7rHFihfXFIGq9ezuu
+cAiIs/z0kfhcEYOUjmfQG2UAZLEwT2GU7q4I+0Ra+KrWHZdljev8IiSwQ/ETRIbS
+m8leBaf+QWNUiWkeGsvI
+=YbHE
+-----END PGP SIGNATURE-----
 
+--p7qwJlK53pWzbayA--
