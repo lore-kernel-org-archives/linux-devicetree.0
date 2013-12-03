@@ -1,149 +1,84 @@
-From: Michael Grzeschik <mgr@pengutronix.de>
-Subject: Re: [PATCH v4 02/17] usb: phy-mxs: Add platform judgement code
-Date: Tue, 3 Dec 2013 11:24:16 +0100
-Message-ID: <20131203102416.GB27635@pengutronix.de>
-References: <1386056231-17258-1-git-send-email-peter.chen@freescale.com>
- <1386056231-17258-3-git-send-email-peter.chen@freescale.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 3/4] pwm: add LP3943 PWM driver
+Date: Tue, 3 Dec 2013 11:24:56 +0100
+Message-ID: <20131203102455.GH21178@ulmo.nvidia.com>
+References: <1378949630-6275-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="r5lq+205vWdkqwtk"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1386056231-17258-3-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+In-Reply-To: <1378949630-6275-1-git-send-email-milo.kim@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 03, 2013 at 03:36:56PM +0800, Peter Chen wrote:
-> The mxs-phy has several bugs and features at different
-> versions, the driver code can get it through of_device_id.data.
-> 
-> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+
+--r5lq+205vWdkqwtk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Sep 12, 2013 at 10:33:50AM +0900, Milo Kim wrote:
+> This is the other of the LP3943 MFD driver.
+> LP3943 can be used as a PWM generator, up to 2 channels.
+>=20
+> * Two PWM generators supported
+>=20
+> * Supported PWM operations
+>   request, free, config, enable and disable
+>=20
+> * Pin assignment
+>   A driver data, 'pin_used' is checked when a PWM is requested.
+>   If the output pin is already assigned, then returns as failure.
+>   If the pin is available, 'pin_used' is set.
+>   When the PWM is not used anymore, then it is cleared.
+>   It is defined as unsigned long type for atomic bit operation APIs,
+>   but only LSB 16bits are used because LP3943 has 16 outputs.
+>=20
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Milo Kim <milo.kim@ti.com>
 > ---
->  drivers/usb/phy/phy-mxs-usb.c |   58 ++++++++++++++++++++++++++++++++++------
->  1 files changed, 49 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-> index 545844b..f6cbc78 100644
-> --- a/drivers/usb/phy/phy-mxs-usb.c
-> +++ b/drivers/usb/phy/phy-mxs-usb.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * Copyright 2012 Freescale Semiconductor, Inc.
-> + * Copyright 2012-2013 Freescale Semiconductor, Inc.
->   * Copyright (C) 2012 Marek Vasut <marex@denx.de>
->   * on behalf of DENX Software Engineering GmbH
->   *
-> @@ -20,6 +20,7 @@
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
-> +#include <linux/of_device.h>
->  
->  #define DRIVER_NAME "mxs_phy"
->  
-> @@ -34,13 +35,55 @@
->  #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
->  #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
->  
-> +#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
-> +
-> +/* Do disconnection between PHY and controller without vbus */
-> +#define MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS	BIT(0)
-> +
-> +/*
-> + * The PHY will be in messy if there is an wakeup after putting
-> + * bus to suspend (set portsc.suspendM) but before setting PHY to low
-> + * power mode (set portsc.phcd).
-> + */
-> +#define MXS_PHY_ABNORAML_IN_SUSPEND		BIT(1)
+> * Patch v3
+>   Manual polarity not supported any more.
+>   Add encapsulation functions for accessing internal data structure.
+>   Use pwm_set_chip_data() and pwm_get_chip_data().
+>   And other code fixes based on Thierry's feedback.
+>=20
+>  drivers/pwm/Kconfig      |   10 ++
+>  drivers/pwm/Makefile     |    1 +
+>  drivers/pwm/pwm-lp3943.c |  314 ++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 325 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-lp3943.c
 
-ABNORAML? -> ABNORMAL
+Hi Milo,
 
-> +
-> +/*
-> + * The SOF sends too fast after resuming, it will cause disconnection
-> + * between host and high speed device.
-> + */
-> +#define MXS_PHY_SENDING_SOF_TOO_FAST		BIT(2)
-> +
-> +struct mxs_phy_data {
-> +	unsigned int flags;
-> +};
-> +
-> +static const struct mxs_phy_data imx23_phy_data = {
-> +	.flags = MXS_PHY_ABNORAML_IN_SUSPEND | MXS_PHY_SENDING_SOF_TOO_FAST,
-> +};
+Is this patchset still the latest version? I've tried to remember the
+status of this series, but I could only draw a blank.
 
-ABNORAML? -> ABNORMAL
+Thierry
 
-> +
-> +static const struct mxs_phy_data imx6q_phy_data = {
-> +	.flags = MXS_PHY_SENDING_SOF_TOO_FAST |
-> +		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-> +};
-> +
-> +static const struct mxs_phy_data imx6sl_phy_data = {
-> +	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-> +};
-> +
-> +static const struct of_device_id mxs_phy_dt_ids[] = {
-> +	{ .compatible = "fsl,imx6sl-usbphy", .data = &imx6sl_phy_data, },
-> +	{ .compatible = "fsl,imx6q-usbphy", .data = &imx6q_phy_data, },
-> +	{ .compatible = "fsl,imx23-usbphy", .data = &imx23_phy_data, },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
-> +
->  struct mxs_phy {
->  	struct usb_phy phy;
->  	struct clk *clk;
-> +	const struct mxs_phy_data *data;
->  };
->  
-> -#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
-> -
->  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
->  {
->  	int ret;
-> @@ -131,6 +174,8 @@ static int mxs_phy_probe(struct platform_device *pdev)
->  	struct clk *clk;
->  	struct mxs_phy *mxs_phy;
->  	int ret;
-> +	const struct of_device_id *of_id =
-> +			of_match_device(mxs_phy_dt_ids, &pdev->dev);
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	base = devm_ioremap_resource(&pdev->dev, res);
-> @@ -163,6 +208,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
->  	ATOMIC_INIT_NOTIFIER_HEAD(&mxs_phy->phy.notifier);
->  
->  	mxs_phy->clk = clk;
-> +	mxs_phy->data = of_id->data;
->  
->  	platform_set_drvdata(pdev, mxs_phy);
->  
-> @@ -182,12 +228,6 @@ static int mxs_phy_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id mxs_phy_dt_ids[] = {
-> -	{ .compatible = "fsl,imx23-usbphy", },
-> -	{ /* sentinel */ }
-> -};
-> -MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
-> -
->  static struct platform_driver mxs_phy_driver = {
->  	.probe = mxs_phy_probe,
->  	.remove = mxs_phy_remove,
-> -- 
-> 1.7.8
-> 
-> 
-> 
+--r5lq+205vWdkqwtk
+Content-Type: application/pgp-signature
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSnbF3AAoJEN0jrNd/PrOhqAkP/AqIOrF+xw6W734frmBfQXik
+BYS6Aic0/Tih/fTnxvjXFBegamf6/cBYLewQ8+qltUrVjODQPQB18PmEfRcS8206
+X71pwsNfWG4aKVHtNZYRxIInoKSU80jm6AGSJMjo9SS/ZAoSN6mJiNVJKeCAp3oa
+Fl5LyD6X744SrB8/pE3ak7ZSWWkKeHK6UbY0Ytf03+UgBzD6LYGbyHWJPsa2WZHS
+S6Z/tg56PWmP/coGo4g34jhe9Sl/Nn9rWUen9svEUrWcGfQ8FoMkYrnUOFVxs/xL
+uPusy30TJ6UARjo4KORxIV+tNvM5f0C6G/eGHs2NxgWUsbw3eY9bGqrMuXSVq845
++oi4J747PTGqlTyCIJ+iUZuKoPaYftuGs24Mw026QYxbsJJmyfYEzNI5jg4WR4Jp
+maG+ankJsERYYpIJaEZBWgj5VTDYtAOWGQbOJ+S4YrnABUKGX7sR4GGzL/StQ7MJ
+WJyogOkTD7HDkNRpwpxD6hfQuxxzGwD9WB7HCUkPpoejCOxwrmwWfTRa72U6fhX4
+x4uusdr7fBTPt/fx1VEJOG9hjeKUe39jgVoq5Oj/rXxgnMFQ3aRGFDA8rU8aa8CB
+Ur0MgZMBUsqxEqvtn57PoN5SatIz7B45yhtcC0OmEOhcv3xEcDkOKD/2IXnnYTmJ
+gFnDyFKaTknnVFG5IB2B
+=/gb2
+-----END PGP SIGNATURE-----
+
+--r5lq+205vWdkqwtk--
