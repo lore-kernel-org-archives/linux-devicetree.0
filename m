@@ -1,162 +1,105 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] OF: base: match each node compatible against all given
- matches first
-Date: Tue, 03 Dec 2013 23:55:07 +0100
-Message-ID: <529E614B.3070307@gmail.com>
-References: <1385663785-8643-1-git-send-email-sebastian.hesselbarth@gmail.com> <1386078720-8756-1-git-send-email-sebastian.hesselbarth@gmail.com> <alpine.SOC.1.00.1312032210480.25191@math.ut.ee>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.SOC.1.00.1312032210480.25191-ptEonEWSGqKptlylMvRsHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Meelis Roos <mroos-Y27EyoLml9s@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH] net: davinci_emac: Fix platform data handling and make
+ usable for am3517
+Date: Tue, 3 Dec 2013 15:13:02 -0800
+Message-ID: <20131203231301.GN26766@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>
+Cc: Mugunthan V N <mugunthanvnm@ti.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/03/2013 09:14 PM, Meelis Roos wrote:
->> Currently, of_match_node compares each given match against all node's
->> compatible strings with of_device_is_compatible.
->>
->> To achieve multiple compatible strings per node with ordering from
->> specific to generic, this requires given matches to be ordered from
->> specific to generic. For most of the drivers this is not true and also
->> an alphabetical ordering is more sane there.
->>
->> Therefore, this patch modifies of_match_node to match each of the node's
->> compatible strings against all given matches first, before checking the
->> next compatible string. This implies that node's compatibles are ordered
->> from specific to generic while given matches can be in any order.
->
-> I think I am on the CC: list because of a CPU detection problem report
-> on sparc64 (183912d352a242a276a7877852f107459a13aff9 (of: move
-> of_get_cpu_node implementation to DT core library) caused trouble and
+When booted with device tree, we may still have platform data passed
+as auxdata. For am3517 this is needed for passing the interrupt_enable
+and interrupt_disable callbacks that access the omap system control module
+registers. These callback functions will eventually go away when we have
+a separate system control module driver.
 
-The reason you are on Cc is that Thierry added you on last patch
-version. I cannot see how above commit should be related with this
-one, but maybe Thierry can comment on it.
+Some of the things that are currently passed as platform data we don't need
+to set up as device tree properties as they are always the same on am3517.
+So let's use a new compatible flag for those so we can get those from
+the device tree match data.
 
-> was reverted). So while your V2 patch does not cause any visible harm on
-> the same Sun E3500, my gut feeling is that an additional patch would be
-> needed to actually test it (a patch like
-> 183912d352a242a276a7877852f107459a13aff9).
+Also note that we need to fix setting of phy_dev to NULL instead of an empty
+string as the code later on uses that to find the first phy on the mdio bus.
+This seems to have been caused by 5d69e0076a72 (net: davinci_emac: switch to
+new mdio).
 
-This patch deals with matching a node with more than one compatible
-string on a (unordered) list of matches. Although not related to your
-issue, it is good to hear that it causes no harm on DT-mature archs :)
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 
-I tested it with ARM and l2x0 cache controllers, where the specific
-of_device_id (marvell,tauros3-cache) is sorted after the generic
-one (arm,pl310-cache). The corresponding node's property is
-compatible = "marvell,tauros3-cache", "arm,pl310-cache".
-
-Without this patch, of_match_node always hits the first match that
-equals _any_ of the above compatible strings. With this patch, it
-hits the matches _in order_ of the compatible strings.
-
-> Is this correct or am I missing something?
-
-Thierry?
-
->> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->> Changelog:
->> v1->v2:
->> - Allow checks against nodes with no compatible (Reported by Rob Herring)
->> - Add some comments
->>
->> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
->> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Meelis Roos <mroos-Y27EyoLml9s@public.gmane.org>
->> Cc: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>   drivers/of/base.c |   53 +++++++++++++++++++++++++++++++++++++----------------
->>   1 files changed, 37 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index f807d0e..8d007d8 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -731,24 +731,42 @@ static
->>   const struct of_device_id *__of_match_node(const struct of_device_id *matches,
->>   					   const struct device_node *node)
->>   {
->> +	const char *cp;
->> +	int cplen, l;
->> +
->>   	if (!matches)
->>   		return NULL;
->>
->> -	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
->> -		int match = 1;
->> -		if (matches->name[0])
->> -			match &= node->name
->> -				&& !strcmp(matches->name, node->name);
->> -		if (matches->type[0])
->> -			match &= node->type
->> -				&& !strcmp(matches->type, node->type);
->> -		if (matches->compatible[0])
->> -			match &= __of_device_is_compatible(node,
->> -							   matches->compatible);
->> -		if (match)
->> -			return matches;
->> -		matches++;
->> -	}
->> +	cp = __of_get_property(node, "compatible", &cplen);
->> +	do {
->> +		const struct of_device_id *m = matches;
->> +
->> +		/* Check against matches with current compatible string */
->> +		while (m->name[0] || m->type[0] || m->compatible[0]) {
->> +			int match = 1;
->> +			if (m->name[0])
->> +				match &= node->name
->> +					&& !strcmp(m->name, node->name);
->> +			if (m->type[0])
->> +				match &= node->type
->> +					&& !strcmp(m->type, node->type);
->> +			if (m->compatible[0])
->> +				match &= cp
->> +					&& !of_compat_cmp(m->compatible, cp,
->> +							strlen(m->compatible));
->> +			if (match)
->> +				return m;
->> +			m++;
->> +		}
->> +
->> +		/* Get node's next compatible string */
->> +		if (cp) {
->> +			l = strlen(cp) + 1;
->> +			cp += l;
->> +			cplen -= l;
->> +		}
->> +	} while (cp && (cplen > 0));
->> +
->>   	return NULL;
->>   }
->>
->> @@ -757,7 +775,10 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
->>    *	@matches:	array of of device match structures to search in
->>    *	@node:		the of device structure to match against
->>    *
->> - *	Low level utility function used by device matching.
->> + *	Low level utility function used by device matching. Matching order
->> + *	is to compare each of the node's compatibles with all given matches
->> + *	first. This implies node's compatible is sorted from specific to
->> + *	generic while matches can be in any order.
->>    */
->>   const struct of_device_id *of_match_node(const struct of_device_id *matches,
->>   					 const struct device_node *node)
->>
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--- a/Documentation/devicetree/bindings/net/davinci_emac.txt
++++ b/Documentation/devicetree/bindings/net/davinci_emac.txt
+@@ -4,7 +4,7 @@ This file provides information, what the device node
+ for the davinci_emac interface contains.
+ 
+ Required properties:
+-- compatible: "ti,davinci-dm6467-emac";
++- compatible: "ti,davinci-dm6467-emac" or "ti,am3517-emac"
+ - reg: Offset and length of the register set for the device
+ - ti,davinci-ctrl-reg-offset: offset to control register
+ - ti,davinci-ctrl-mod-reg-offset: offset to control module register
+--- a/drivers/net/ethernet/ti/davinci_emac.c
++++ b/drivers/net/ethernet/ti/davinci_emac.c
+@@ -61,6 +61,7 @@
+ #include <linux/davinci_emac.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_net.h>
+ 
+@@ -1752,10 +1753,14 @@ static const struct net_device_ops emac_netdev_ops = {
+ #endif
+ };
+ 
++static const struct of_device_id davinci_emac_of_match[];
++
+ static struct emac_platform_data *
+ davinci_emac_of_get_pdata(struct platform_device *pdev, struct emac_priv *priv)
+ {
+ 	struct device_node *np;
++	const struct of_device_id *match;
++	const struct emac_platform_data *auxdata;
+ 	struct emac_platform_data *pdata = NULL;
+ 	const u8 *mac_addr;
+ 
+@@ -1793,7 +1798,20 @@ davinci_emac_of_get_pdata(struct platform_device *pdev, struct emac_priv *priv)
+ 
+ 	priv->phy_node = of_parse_phandle(np, "phy-handle", 0);
+ 	if (!priv->phy_node)
+-		pdata->phy_id = "";
++		pdata->phy_id = NULL;
++
++	auxdata = pdev->dev.platform_data;
++	if (auxdata) {
++		pdata->interrupt_enable = auxdata->interrupt_enable;
++		pdata->interrupt_disable = auxdata->interrupt_disable;
++	}
++
++	match = of_match_device(davinci_emac_of_match, &pdev->dev);
++	if (match && match->data) {
++		auxdata = match->data;
++		pdata->version = auxdata->version;
++		pdata->hw_ram_addr = auxdata->hw_ram_addr;
++	}
+ 
+ 	pdev->dev.platform_data = pdata;
+ 
+@@ -2020,8 +2038,14 @@ static const struct dev_pm_ops davinci_emac_pm_ops = {
+ };
+ 
+ #if IS_ENABLED(CONFIG_OF)
++static const struct emac_platform_data am3517_emac_data = {
++	.version		= EMAC_VERSION_2,
++	.hw_ram_addr		= 0x01e20000,
++};
++
+ static const struct of_device_id davinci_emac_of_match[] = {
+ 	{.compatible = "ti,davinci-dm6467-emac", },
++	{.compatible = "ti,am3517-emac", .data = &am3517_emac_data, },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, davinci_emac_of_match);
