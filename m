@@ -1,76 +1,49 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 4/4] ARM: dts: AM437x: Add TPS65218 device tree nodes
-Date: Tue, 3 Dec 2013 12:13:25 +0530
-Message-ID: <1386053006-6480-5-git-send-email-j-keerthy@ti.com>
-References: <1386053006-6480-1-git-send-email-j-keerthy@ti.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC][PATCHv6+++ 01/13] of: introduce
+	of_property_for_earch_phandle_with_args()
+Date: Tue, 3 Dec 2013 08:46:50 +0200
+Message-ID: <20131203084650.bf498e1eb6883e38d873ef4a@nvidia.com>
+References: <20131128.145818.1345100874304396564.hdoyu@nvidia.com>
+	<20131129.134625.431945240074254704.hdoyu@nvidia.com>
+	<529B8739.60701@wwwdotorg.org>
+	<20131202.130220.1404999403649937134.hdoyu@nvidia.com>
+	<CAL_JsqKDokswB1jJN7ZT-Us0h=uTf5qHLZFUJfGFkXBjdO5XjA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386053006-6480-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, lgirdwood@gmail.com, broonie@kernel.org
-Cc: j-keerthy@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAL_JsqKDokswB1jJN7ZT-Us0h=uTf5qHLZFUJfGFkXBjdO5XjA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add TPS65218 device tree nodes. This patch is tested on am43x-epos-evm board.
+On Mon, 2 Dec 2013 15:39:25 +0100
+Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- arch/arm/boot/dts/am43x-epos-evm.dts |   41 ++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+> On Mon, Dec 2, 2013 at 5:02 AM, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> > Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Sun, 1 Dec 2013 20:00:09 +0100:
+> >
+> >> On 11/29/2013 04:46 AM, Hiroshi Doyu wrote:
+> >> ...
+> >> > Iterating over a property containing a list of phandles with arguments
+> >> > is a common operation for device drivers. This patch adds a new
+> >> > of_property_for_each_phandle_with_args() macro to make the iteration
+> >> > simpler.
+> >> >
+> >> > Introduced a new struct "of_phandle_iter" to keep the state when
+> >> > iterating over the list.
+> >> >
+> >> > Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+....
 
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index fbf9c4c..ad7000a 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -156,6 +156,47 @@
- 		reg = <0x50>;
- 	};
- 
-+	tps65218: tps65218@24 {
-+		reg = <0x24>;
-+		compatible = "ti,tps65218";
-+		interrupts = <GIC_SPI 7 IRQ_TYPE_NONE>; /* NMIn */
-+		interrupt-parent = <&gic>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		dcdc1: regulator-dcdc1 {
-+			compatible = "ti,tps65218-dcdc1";
-+			/* VDD_CORE voltage limits min of OPP50 and max of OPP100 */
-+			regulator-name = "vdd_core";
-+			regulator-min-microvolt = <912000>;
-+			regulator-max-microvolt = <1144000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		dcdc2: regulator-dcdc2 {
-+			compatible = "ti,tps65218-dcdc2";
-+			/* VDD_MPU voltage limits min of OPP50 and max of OPP_NITRO */
-+			regulator-name = "vdd_mpu";
-+			regulator-min-microvolt = <912000>;
-+			regulator-max-microvolt = <1378000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		dcdc3: regulator-dcdc3 {
-+			compatible = "ti,tps65218-dcdc3";
-+		};
-+
-+		ldo1: regulator-ldo1 {
-+			compatible = "ti,tps65218-ldo1";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+	};
-+
- 	pixcir_ts@5c {
- 		compatible = "pixcir,pixcir_ts";
- 		reg = <0x5c>;
--- 
-1.7.9.5
-
+Rob, thank you for review.
+I'll fix them and put this one into the next v7 series.
