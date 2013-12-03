@@ -1,26 +1,29 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 04/31] ARM: tegra: update DT files to add reset properties
-Date: Tue, 03 Dec 2013 11:59:42 -0700
-Message-ID: <529E2A1E.1000307@wwwdotorg.org>
-References: <1384548866-13141-1-git-send-email-swarren@wwwdotorg.org> <1384548866-13141-5-git-send-email-swarren@wwwdotorg.org> <20131129130031.GQ22771@ulmo.nvidia.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] ARM: tegra: convert device tree files to use key defines
+Date: Tue, 03 Dec 2013 13:04:12 -0700
+Message-ID: <529E393C.4010604@wwwdotorg.org>
+References: <1385989797-10879-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131129130031.GQ22771-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1385989797-10879-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: rob.herring@calxeda.com, mark.rutland@arm.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, ijc+devicetree@hellion.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2013 06:00 AM, Thierry Reding wrote:
-> On Fri, Nov 15, 2013 at 01:53:59PM -0700, Stephen Warren wrote:
-...
->> @@ -110,6 +118,8 @@ reg = <0x54080000 0x00040000>; interrupts =
->> <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>; clocks = <&tegra_car
->> TEGRA30_CLK_VI>; +			resets = <&tegra_car 164>;
+On 12/02/2013 06:09 AM, Laxman Dewangan wrote:
+> Use key code macros for all key code refernced for keys.
 > 
-> I think this needs to be 20.
+> For tegra20-seaboard.dts and tegra20-harmony.dts:
+>   The key comment for key (16th row and 1st column) is KEY_KPSLASH but
+>   code is 0x004e which is the key code for KEY_KPPLUS. As there other
+>   key exist with KY_KPPLUS, I am assuming key code is wrong and comment
+>   is fine. With this assumption, I am keeping the key code as KEY_KPSLASH.
 
-Yes, I've fixed that to be 20 in both tegra20.dtsi and tegra30.dtsi in
-this patch.
+This looks reasonable, and I'll apply it soon. What is the patch based
+on? Note that I recently sent a patch to fix the sort order of DT nodes
+in all Tegra DT files, which I'll apply early since it's a cleanup, and
+IIRC some of the KBC nodes may have been moved by that patch, so this
+may conflict. I'll see if I can rebase while applying it.
