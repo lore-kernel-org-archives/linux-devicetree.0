@@ -1,54 +1,162 @@
-From: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] DT support for ST micro accelerometers and
- gyroscopes
-Date: Tue, 3 Dec 2013 22:39:38 +0100
-Message-ID: <20131203223938.7190a01c@endymion.delvare>
-References: <1384876234-1211-1-git-send-email-maxime.ripard@free-electrons.com>
-	<528DF164.8060009@st.com>
-	<20131121131402.GF1029@lukather>
-	<52926901.9080004@kernel.org>
-	<20131125094044.GE3176@lukather>
-	<5299D3BA.8080700@kernel.org>
-	<20131130140402.21abae28@endymion.delvare>
-	<20131203212914.GC31496@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] OF: base: match each node compatible against all given
+ matches first
+Date: Tue, 03 Dec 2013 23:55:07 +0100
+Message-ID: <529E614B.3070307@gmail.com>
+References: <1385663785-8643-1-git-send-email-sebastian.hesselbarth@gmail.com> <1386078720-8756-1-git-send-email-sebastian.hesselbarth@gmail.com> <alpine.SOC.1.00.1312032210480.25191@math.ut.ee>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131203212914.GC31496@lukather>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Lilly <brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org>, Brent-Crosby <brent-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org>, Jim Wall <jimwall@q.com>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.SOC.1.00.1312032210480.25191-ptEonEWSGqKptlylMvRsHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Meelis Roos <mroos-Y27EyoLml9s@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 3 Dec 2013 22:29:14 +0100, Maxime Ripard wrote:
-> Hi Jean,
-> 
-> On Sat, Nov 30, 2013 at 02:04:02PM +0100, Jean Delvare wrote:
-> > > i2c has a generic binding that matches to the name bit of the
-> > > i2c_device_id array.  That is then exported in sysfs.  There are
-> > > quite a lot of instances of underscores out there in these names.
-> > > Thus unforutnately they can't be changed without possibly breaking
-> > > userspace.  Typically those same names are also output by IIO
-> > > though obviously we could keep that the same whilst changing the
-> > > dt binding.
-> > > 
-> > > Also the i2c binding allows binding after dropping the vendor
-> > > prefix which is even more 'interesting'. See of_modialias_node in
-> > > drivers/of/base.c
-> > > 
-> > > I'd therefore argue in favour of just leaving the underscores in
-> > > existing drivers as a nasty bit of legacy and doing our best to
-> > > not introduce any new ones!
-> > 
-> > I don't know what is the problem with underscores, but please note
-> > that hwmon i2c devices are NOT allowed to have dashes in their name
-> > because that would break libsensors.
-> 
-> As far as I remember, hwmon doesn't handle the accelerometers or
-> gyroscopes, does it?
+On 12/03/2013 09:14 PM, Meelis Roos wrote:
+>> Currently, of_match_node compares each given match against all node's
+>> compatible strings with of_device_is_compatible.
+>>
+>> To achieve multiple compatible strings per node with ordering from
+>> specific to generic, this requires given matches to be ordered from
+>> specific to generic. For most of the drivers this is not true and also
+>> an alphabetical ordering is more sane there.
+>>
+>> Therefore, this patch modifies of_match_node to match each of the node's
+>> compatible strings against all given matches first, before checking the
+>> next compatible string. This implies that node's compatibles are ordered
+>> from specific to generic while given matches can be in any order.
+>
+> I think I am on the CC: list because of a CPU detection problem report
+> on sparc64 (183912d352a242a276a7877852f107459a13aff9 (of: move
+> of_get_cpu_node implementation to DT core library) caused trouble and
 
-You remember correctly, it does not and never will.
+The reason you are on Cc is that Thierry added you on last patch
+version. I cannot see how above commit should be related with this
+one, but maybe Thierry can comment on it.
 
--- 
-Jean Delvare
+> was reverted). So while your V2 patch does not cause any visible harm on
+> the same Sun E3500, my gut feeling is that an additional patch would be
+> needed to actually test it (a patch like
+> 183912d352a242a276a7877852f107459a13aff9).
+
+This patch deals with matching a node with more than one compatible
+string on a (unordered) list of matches. Although not related to your
+issue, it is good to hear that it causes no harm on DT-mature archs :)
+
+I tested it with ARM and l2x0 cache controllers, where the specific
+of_device_id (marvell,tauros3-cache) is sorted after the generic
+one (arm,pl310-cache). The corresponding node's property is
+compatible = "marvell,tauros3-cache", "arm,pl310-cache".
+
+Without this patch, of_match_node always hits the first match that
+equals _any_ of the above compatible strings. With this patch, it
+hits the matches _in order_ of the compatible strings.
+
+> Is this correct or am I missing something?
+
+Thierry?
+
+>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>> Changelog:
+>> v1->v2:
+>> - Allow checks against nodes with no compatible (Reported by Rob Herring)
+>> - Add some comments
+>>
+>> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+>> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Meelis Roos <mroos-Y27EyoLml9s@public.gmane.org>
+>> Cc: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> ---
+>>   drivers/of/base.c |   53 +++++++++++++++++++++++++++++++++++++----------------
+>>   1 files changed, 37 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index f807d0e..8d007d8 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -731,24 +731,42 @@ static
+>>   const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+>>   					   const struct device_node *node)
+>>   {
+>> +	const char *cp;
+>> +	int cplen, l;
+>> +
+>>   	if (!matches)
+>>   		return NULL;
+>>
+>> -	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
+>> -		int match = 1;
+>> -		if (matches->name[0])
+>> -			match &= node->name
+>> -				&& !strcmp(matches->name, node->name);
+>> -		if (matches->type[0])
+>> -			match &= node->type
+>> -				&& !strcmp(matches->type, node->type);
+>> -		if (matches->compatible[0])
+>> -			match &= __of_device_is_compatible(node,
+>> -							   matches->compatible);
+>> -		if (match)
+>> -			return matches;
+>> -		matches++;
+>> -	}
+>> +	cp = __of_get_property(node, "compatible", &cplen);
+>> +	do {
+>> +		const struct of_device_id *m = matches;
+>> +
+>> +		/* Check against matches with current compatible string */
+>> +		while (m->name[0] || m->type[0] || m->compatible[0]) {
+>> +			int match = 1;
+>> +			if (m->name[0])
+>> +				match &= node->name
+>> +					&& !strcmp(m->name, node->name);
+>> +			if (m->type[0])
+>> +				match &= node->type
+>> +					&& !strcmp(m->type, node->type);
+>> +			if (m->compatible[0])
+>> +				match &= cp
+>> +					&& !of_compat_cmp(m->compatible, cp,
+>> +							strlen(m->compatible));
+>> +			if (match)
+>> +				return m;
+>> +			m++;
+>> +		}
+>> +
+>> +		/* Get node's next compatible string */
+>> +		if (cp) {
+>> +			l = strlen(cp) + 1;
+>> +			cp += l;
+>> +			cplen -= l;
+>> +		}
+>> +	} while (cp && (cplen > 0));
+>> +
+>>   	return NULL;
+>>   }
+>>
+>> @@ -757,7 +775,10 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+>>    *	@matches:	array of of device match structures to search in
+>>    *	@node:		the of device structure to match against
+>>    *
+>> - *	Low level utility function used by device matching.
+>> + *	Low level utility function used by device matching. Matching order
+>> + *	is to compare each of the node's compatibles with all given matches
+>> + *	first. This implies node's compatible is sorted from specific to
+>> + *	generic while matches can be in any order.
+>>    */
+>>   const struct of_device_id *of_match_node(const struct of_device_id *matches,
+>>   					 const struct device_node *node)
+>>
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
