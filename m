@@ -1,42 +1,88 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/3] pinctrl: Add documentation for pinctrl-msm8x74
-Date: Tue, 3 Dec 2013 10:01:03 +0100
-Message-ID: <CACRpkda515hO6daP_4FZEXiGJTPHUaT1-ZLUW7sjVtR7-XjuZQ@mail.gmail.com>
-References: <5293E7FB.6040300@wwwdotorg.org>
-	<CEB92A62.3A401%bjorn.andersson@sonymobile.com>
+From: Peter Chen <Peter.Chen@freescale.com>
+Subject: RE: [PATCH v4 17/17] usb: phy-mxs: do not set PWD.RXPWD1PT1 for low
+ speed connection
+Date: Tue, 3 Dec 2013 09:19:02 +0000
+Message-ID: <F281D0F91ED19E4D8E63A7504E8A649804141031@039-SN2MPN1-021.039d.mgd.msft.net>
+References: <1386056231-17258-1-git-send-email-peter.chen@freescale.com>
+ <1386056231-17258-18-git-send-email-peter.chen@freescale.com>
+ <529D9BF7.1080707@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CEB92A62.3A401%bjorn.andersson@sonymobile.com>
+In-Reply-To: <529D9BF7.1080707@pengutronix.de>
+Content-Language: en-US
 Sender: linux-doc-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Andersson=2C_Bj=F6rn?= <Bjorn.Andersson@sonymobile.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "balbi@ti.com" <balbi@ti.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "festevam@gmail.com" <festevam@gmail.com>, "marex@denx.de" <marex@denx.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, Frank Li <Frank.Li@freescale.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 26, 2013 at 1:52 AM, "Andersson, Bj=F6rn"
-<Bjorn.Andersson@sonymobile.com> wrote:
-> On 11/25/13 4:14 PM, "Stephen Warren" <swarren@wwwdotorg.org> wrote:
+DQogDQo+IA0KPiBPbiAxMi8wMy8yMDEzIDA4OjM3IEFNLCBQZXRlciBDaGVuIHdyb3RlOg0KPiA+
+IEF0IHZlcnkgcmFyZSBjYXNlcywgdGhlIFNvRiB3aWxsIG5vdCBzZW5kIG91dCBhZnRlciByZXN1
+bWUgd2l0aA0KPiA+IGxvdyBzcGVlZCBjb25uZWN0aW9uLiBUaGUgd29ya2Fyb3VuZCBpcyBkbyBu
+b3QgcG93ZXIgZG93bg0KPiA+IFBXRC5SWFBXRDFQVDEgYml0IGR1cmluZyB0aGUgc3VzcGVuZC4N
+Cj4gDQo+IElzIHRoaXMgYWxzbyBhIGZpeCBmb3IgbmV3bHkgYWRkZWQgY29kZT8gSWYgc28gcGxl
+YXNlIGFsc28gc3F1YXNoLg0KPiANCg0KTm8sIGl0IGlzIGEgd29ya2Fyb3VuZCBmb3IgbmV3IHBy
+b2JsZW0uDQoNCj4gPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBDaGVuIDxwZXRlci5jaGVuQGZyZWVz
+Y2FsZS5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvdXNiL3BoeS9waHktbXhzLXVzYi5jIHwg
+ICA0Nw0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQ0KPiA+ICAx
+IGZpbGVzIGNoYW5nZWQsIDQ2IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb25zKC0pDQo+ID4NCj4g
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvcGh5L3BoeS1teHMtdXNiLmMgYi9kcml2ZXJzL3Vz
+Yi9waHkvcGh5LW14cy0NCj4gdXNiLmMNCj4gPiBpbmRleCA1NDJiNmVjLi41YWU0YTU3IDEwMDY0
+NA0KPiA+IC0tLSBhL2RyaXZlcnMvdXNiL3BoeS9waHktbXhzLXVzYi5jDQo+ID4gKysrIGIvZHJp
+dmVycy91c2IvcGh5L3BoeS1teHMtdXNiLmMNCj4gPiBAQCAtNjksNiArNjksOSBAQA0KPiA+ICAj
+ZGVmaW5lIEFOQURJR19VU0IyX0xPT1BCQUNLX1NFVAkJMHgyNDQNCj4gPiAgI2RlZmluZSBBTkFE
+SUdfVVNCMl9MT09QQkFDS19DTFIJCTB4MjQ4DQo+ID4NCj4gPiArI2RlZmluZSBBTkFESUdfVVNC
+MV9NSVNDCQkJMHgxZjANCj4gPiArI2RlZmluZSBBTkFESUdfVVNCMl9NSVNDCQkJMHgyNTANCj4g
+PiArDQo+ID4gICNkZWZpbmUgQk1fQU5BRElHX0FOQV9NSVNDMF9TVE9QX01PREVfQ09ORklHCUJJ
+VCgxMikNCj4gPiAgI2RlZmluZSBCTV9BTkFESUdfQU5BX01JU0MwX1NUT1BfTU9ERV9DT05GSUdf
+U0wgQklUKDExKQ0KPiA+DQo+ID4gQEAgLTgwLDYgKzgzLDExIEBADQo+ID4gICNkZWZpbmUgQk1f
+QU5BRElHX1VTQjJfTE9PUEJBQ0tfVVRNSV9ESUdfVFNUMQlCSVQoMikNCj4gPiAgI2RlZmluZSBC
+TV9BTkFESUdfVVNCMl9MT09QQkFDS19UU1RJX1RYX0VOCUJJVCg1KQ0KPiA+DQo+ID4gKyNkZWZp
+bmUgQk1fQU5BRElHX1VTQjFfTUlTQ19SWF9WUElOX0ZTCQlCSVQoMjkpDQo+ID4gKyNkZWZpbmUg
+Qk1fQU5BRElHX1VTQjFfTUlTQ19SWF9WTUlOX0ZTCQlCSVQoMjgpDQo+ID4gKyNkZWZpbmUgQk1f
+QU5BRElHX1VTQjJfTUlTQ19SWF9WUElOX0ZTCQlCSVQoMjkpDQo+ID4gKyNkZWZpbmUgQk1fQU5B
+RElHX1VTQjJfTUlTQ19SWF9WTUlOX0ZTCQlCSVQoMjgpDQo+ID4gKw0KPiA+ICAjZGVmaW5lIHRv
+X214c19waHkocCkgY29udGFpbmVyX29mKChwKSwgc3RydWN0IG14c19waHksIHBoeSkNCj4gPg0K
+PiA+ICAvKiBEbyBkaXNjb25uZWN0aW9uIGJldHdlZW4gUEhZIGFuZCBjb250cm9sbGVyIHdpdGhv
+dXQgdmJ1cyAqLw0KPiA+IEBAIC0yOTYsMTIgKzMwNCw0OSBAQCBzdGF0aWMgdm9pZCBteHNfcGh5
+X3NodXRkb3duKHN0cnVjdCB1c2JfcGh5ICpwaHkpDQo+ID4gIAljbGtfZGlzYWJsZV91bnByZXBh
+cmUobXhzX3BoeS0+Y2xrKTsNCj4gPiAgfQ0KPiA+DQo+ID4gK3N0YXRpYyBib29sIG14c19waHlf
+aXNfbG93X3NwZWVkX2Nvbm5lY3Rpb24oc3RydWN0IG14c19waHkgKm14c19waHkpDQo+ID4gK3sN
+Cj4gPiArCXVuc2lnbmVkIGludCBsaW5lX3N0YXRlOw0KPiA+ICsJLyogYml0IGRlZmluaXRpb24g
+aXMgdGhlIHNhbWUgZm9yIGFsbCBjb250cm9sbGVycyAqLw0KPiA+ICsJdW5zaWduZWQgaW50IGRw
+X2JpdCA9IEJNX0FOQURJR19VU0IxX01JU0NfUlhfVlBJTl9GUywNCj4gPiArCQkgICAgIGRtX2Jp
+dCA9IEJNX0FOQURJR19VU0IxX01JU0NfUlhfVk1JTl9GUzsNCj4gPiArCXVuc2lnbmVkIGludCBy
+ZWcgPSBBTkFESUdfVVNCMV9NSVNDOw0KPiA+ICsNCj4gPiArCS8qIElmIHRoZSBTb0NzIGRvbid0
+IGhhdmUgYW5hdG9wLCBxdWl0ICovDQo+ID4gKwlpZiAoIW14c19waHktPnJlZ21hcF9hbmF0b3Ap
+DQo+ID4gKwkJcmV0dXJuIGZhbHNlOw0KPiA+ICsNCj4gPiArCWlmIChteHNfcGh5LT5wb3J0X2lk
+ID09IDApDQo+ID4gKwkJcmVnID0gQU5BRElHX1VTQjFfTUlTQzsNCj4gPiArCWVsc2UgaWYgKG14
+c19waHktPnBvcnRfaWQgPT0gMSkNCj4gPiArCQlyZWcgPSBBTkFESUdfVVNCMl9NSVNDOw0KPiA+
+ICsNCj4gPiArCXJlZ21hcF9yZWFkKG14c19waHktPnJlZ21hcF9hbmF0b3AsIHJlZywgJmxpbmVf
+c3RhdGUpOw0KPiA+ICsNCj4gPiArCWlmICgobGluZV9zdGF0ZSAmIChkcF9iaXQgfCBkbV9iaXQp
+KSA9PSAgZG1fYml0KQ0KPiA+ICsJCXJldHVybiB0cnVlOw0KPiA+ICsJZWxzZQ0KPiA+ICsJCXJl
+dHVybiBmYWxzZTsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgc3RhdGljIGludCBteHNfcGh5X3N1c3Bl
+bmQoc3RydWN0IHVzYl9waHkgKngsIGludCBzdXNwZW5kKQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3Qg
+bXhzX3BoeSAqbXhzX3BoeSA9IHRvX214c19waHkoeCk7DQo+ID4gKwlib29sIGxvd19zcGVlZF9j
+b25uZWN0aW9uLCB2YnVzX2lzX29uOw0KPiA+ICsNCj4gPiArCWxvd19zcGVlZF9jb25uZWN0aW9u
+ID0gbXhzX3BoeV9pc19sb3dfc3BlZWRfY29ubmVjdGlvbihteHNfcGh5KTsNCj4gPiArCXZidXNf
+aXNfb24gPSBteHNfcGh5X2dldF92YnVzX3N0YXR1cyhteHNfcGh5KTsNCj4gPg0KPiA+ICAJaWYg
+KHN1c3BlbmQpIHsNCj4gPiAtCQl3cml0ZWwoMHhmZmZmZmZmZiwgeC0+aW9fcHJpdiArIEhXX1VT
+QlBIWV9QV0QpOw0KPiA+ICsJCS8qDQo+ID4gKwkJICogRklYTUU6IERvIG5vdCBwb3dlciBkb3du
+IFJYUFdEMVBUMSBiaXQgZm9yIGxvdyBzcGVlZA0KPiANCj4gSXMgdGhpcyBGSVhNRSBzdGlsbCB0
+cnVlPw0KDQpZZXMsIHN0aWxsIG5vdCBmaW5kIHRoZSByb290IGNhdXNlLg0KDQpQZXRlcg0KDQo+
+IA0KPiA+ICsJCSAqIGNvbm5lY3QuIFRoZSBsb3cgc3BlZWQgY29ubmVjdGlvbiB3aWxsIGhhdmUg
+cHJvYmxlbSBhdA0KPiA+ICsJCSAqIHZlcnkgcmFyZSBjYXNlcyBkdXJpbmcgdXNiIHN1c3BlbmQg
+YW5kIHJlc3VtZSBwcm9jZXNzLg0KPiA+ICsJCSAqLw0KPiA+ICsJCWlmIChsb3dfc3BlZWRfY29u
+bmVjdGlvbiAmIHZidXNfaXNfb24pDQo+ID4gKwkJCXdyaXRlbCgweGZmZmJmZmZmLCB4LT5pb19w
+cml2ICsgSFdfVVNCUEhZX1BXRCk7DQo+ID4gKwkJZWxzZQ0KPiA+ICsJCQl3cml0ZWwoMHhmZmZm
+ZmZmZiwgeC0+aW9fcHJpdiArIEhXX1VTQlBIWV9QV0QpOw0KPiA+ICAJCXdyaXRlbChCTV9VU0JQ
+SFlfQ1RSTF9DTEtHQVRFLA0KPiA+ICAJCSAgICAgICB4LT5pb19wcml2ICsgSFdfVVNCUEhZX0NU
+UkxfU0VUKTsNCj4gPiAgCQljbGtfZGlzYWJsZV91bnByZXBhcmUobXhzX3BoeS0+Y2xrKTsNCj4g
+Pg0KPiANCj4gTWFyYw0KPiANCj4gLS0NCj4gUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAg
+ICAgIHwgTWFyYyBLbGVpbmUtQnVkZGUgICAgICAgICAgIHwNCj4gSW5kdXN0cmlhbCBMaW51eCBT
+b2x1dGlvbnMgICAgICAgIHwgUGhvbmU6ICs0OS0yMzEtMjgyNi05MjQgICAgIHwNCj4gVmVydHJl
+dHVuZyBXZXN0L0RvcnRtdW5kICAgICAgICAgIHwgRmF4OiAgICs0OS01MTIxLTIwNjkxNy01NTU1
+IHwNCj4gQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgIHwgaHR0cDovL3d3dy5wZW5n
+dXRyb25peC5kZSAgIHwNCg0K
 
->>> +Optional subnode-properties:
->>> +- qcom,function: A name of the function to be muxed to the specifi=
-ed
->>> +                 pins. Possible values are listed below.
->>
->>Are "pins" and "functions" generic enough now that they don't need a
->>vendor prefix? Both those property names are certainly mentioned in
->>pinctrl-bindings.txt.
->
-> I've missed that these where in pinconf-generic. I based
-> msm_dt_subnode_to_map
-> on the tegra implementation and made changes to support pinconf-gener=
-ic,
-> which
-> now seems identical with pinconf_generic_dt_subnode_to_map.
-> I'll use that directly instead.
-
-OK that's essentially one of my comments on patch 1/3 addressed,
-so looking forward to see v2.
-
-Yours,
-Linus Walleij
