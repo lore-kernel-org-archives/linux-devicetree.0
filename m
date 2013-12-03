@@ -1,217 +1,31 @@
-From: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Subject: Re: [PATCH 3/3] usb: phy-generic: Add ULPI VBUS support
-Date: Tue, 03 Dec 2013 13:24:52 +0800
-Message-ID: <529D6B24.7020502@gtsys.com.hk>
-References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk> <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk> <20131202182204.GQ12952@e106331-lin.cambridge.arm.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Documentation: net: fsl-fec.txt: Add phy-supply entry
+Date: Mon, 2 Dec 2013 23:42:26 -0600
+Message-ID: <CAL_JsqKFzQiTk+QvAyhCNg=F3G4c+by=53OYM5bvD9veq4tKSA@mail.gmail.com>
+References: <1384781287-25016-1-git-send-email-fabio.estevam@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131202182204.GQ12952@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1384781287-25016-1-git-send-email-fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Nov 18, 2013 at 7:28 AM, Fabio Estevam
+<fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> phy-supply is an optional property of the fec driver, so add it to the binding
+> documentation.
+>
+> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/net/fsl-fec.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
+Applied for 3.13.
 
-On Tuesday, December 03, 2013 02:22 AM, Mark Rutland wrote:
-> On Mon, Dec 02, 2013 at 07:05:19AM +0000, Chris Ruehl wrote:
->> usb: phy-generic: Add ULPI VBUS support
->>
->> Some platforms need to set the VBUS parameters of the ULPI
->> like ISP1504 which interact with overcurrent protection and
->> power switch MIC2575. Therefore it requires to set
->> * DRVVBUS
->> * DRVVBUS_EXT
->> * EXTVBUSIND
->> * CHRGVBUS
->> of the ULPI.
->> This patch add support for it.
->
-> Could you elaborate on when we need to do this and why?
->
->>
->> Devicetree configuration example:
->>
->> usbphy0: usbphy@0x10024170 {
->>   compatible = "usb-nop-xceiv";
->>   reg =<0x10024170 0x4>; /* ULPI Viewport OTG */
->>   clocks =<&clks 75>;
->>   clock-names = "main_clk";
->> };
->>
->> &usbphy0 {
->>          reset-gpios =<&gpio1 31 1>;
->>          pinctrl-names = "default";
->>          pinctrl-0 =<&pinctrl_usbphy0&pinctrl_usbotg1>;
->>          ulpi_set_vbus =<0x0f>;
->> };
->>
->> Please refer to the phy-bindings.txt for the value of ulpi_set_vbus commit
->> with this patch.
->>
->> Signed-off-by: Chris Ruehl<chris.ruehl@gtsys.com.hk>
->> ---
->>   .../devicetree/bindings/phy/phy-bindings.txt       |   15 ++++++
->>   drivers/usb/phy/phy-generic.c                      |   50 +++++++++++++++++++-
->>   drivers/usb/phy/phy-generic.h                      |    3 ++
->>   3 files changed, 67 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-bindings.txt b/Documentation/devicetree/bindings/phy/phy-bindings.txt
->> index 8ae844f..b109b2f 100644
->> --- a/Documentation/devicetree/bindings/phy/phy-bindings.txt
->> +++ b/Documentation/devicetree/bindings/phy/phy-bindings.txt
->> @@ -34,6 +34,18 @@ phys : the phandle for the PHY device (used by the PHY subsystem)
->>   phy-names : the names of the PHY corresponding to the PHYs present in the
->>   	    *phys* phandle
->>
->> +Optional Properties:
->> +reset-gpios :	GPIO used to reset ULPI like ISP1504 with
->> +		0 = reset active high ; 1 = reset active low.
->
-> The format of the gpio-specifier doesn't matter here.
->
-> Why do you need to mention the ISP1504? Either this is generic, or it
-> doesn't belong here.
->
-> Perhaps we need a ulpi-phy binding document. This and the rest of the
-> patch is strongly tied to ULPI.
->
->> +cs-gpios :	GPIO used to activate a ULPI like ISP1504 with
->> +		0 = reset acitive high; 1 = reset active low.
->
-> Again, the format of the gpio-specifier is not a concern here. I'm also
-> a little confused as to the name "cs-gpios" for something that activates
-> the ULPI.
->
->> +ulpi_set_vbus :	ULPI configuation parameter to program the VBUS signaling of
->> +		ISP1504 or similar chipsets.
->
-> Could you elaborate on this? Is this applicable to any ULPI PHY? The
-> description implies that it's somewhat tied to ISP1504 (if it's not,
-> drop the mention of ISP1504).
->
-> Why exactly do we need this, and why should it live in the DT?
->
-> Why can se not figure this out automatically, or have defaults that work
-> in more places?
->
-> Also, s/_/-/ on property names please.
->
->> +		Set the parameter:
->> +		DRVVBUS = (1) DRVVBUS_EXT = (1<<1) EXTVBUSIND = (1<<2) CHRGVBUS = (1<<3)
->> +		eg: DRVVBUS | DRVVBUS_EXT = 0x03
->> +		    ulpi_set_vbus =<0x03>
->
-> I don't like putting arbitrary bitfields like this in DT. They're
-> illegible and easy to abuse.
->
-> Boolean properties are nicer for flags.
->
-> What exactly do these flags mean?
->
-> [...]
->
->> @@ -253,14 +284,15 @@ static int usb_phy_gen_xceiv_probe(struct platform_device *pdev)
->>
->>   	if (dev->of_node) {
->>   		struct device_node *node = dev->of_node;
->> +		struct resource	*res;
->>   		enum of_gpio_flags flags;
->>   		enum of_gpio_flags csflags;
->> +		u32 ulpi_vbus;
->>
->>   		if (of_property_read_u32(node, "clock-frequency",&clk_rate))
->>   			clk_rate = 0;
->>
->>   		needs_vcc = of_property_read_bool(node, "vcc-supply");
->> -
->>   		nop->gpio_reset = of_get_named_gpio_flags(node, "reset-gpios",
->>   								0,&flags);
->
-> Why the random line deletion?
->
->>
->> @@ -274,6 +306,22 @@ static int usb_phy_gen_xceiv_probe(struct platform_device *pdev)
->>   		if (gpio_is_valid(nop->gpio_chipselect))
->>   			nop->cs_active_low = csflags&  OF_GPIO_ACTIVE_LOW;
->>
->> +		err = of_property_read_u32(node, "ulpi_set_vbus",&ulpi_vbus);
->> +		if (err) {
->> +			nop->ulpi_vbus = -1;
->> +			nop->viewport = NULL;
->> +			ulpi_vbus = 0;
->> +		} else {
->> +			dev_dbg(dev,"ULPI ulpi_set_vbus 0x%02x",ulpi_vbus);
->> +			nop->ulpi_vbus = ulpi_vbus;
->> +			res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->
-> This wasn't described in the binding document, and it's ULPI specific. I
-> think we need a separate ulpi-phy binding that builds upon the generic
-> one.
->
-Mark, before commit an other patch, is it this what you looking for?
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-ulpi.txt
-@@ -0,0 +1,36 @@
-+This document explains only the device tree data binding for phy-ulpi nodes. 
-For general
-+information about PHY subsystem refer to Documentation/phy.txt
-+
-+PHY device node
-+===============
-+
-+Required Properties:
-+reg:           ULPI Viewport
-+reset-gpios :  GPIO used to reset ULPI chipset
-+
-+Optional Properties:
-+cs-gpios :     GPIO used to activate a ULPI chipset
-+ulpi-set-vbus :        ULPI configuation parameter to program the VBUS logic
-+               Set the parameter:
-+               DRVVBUS         = (1<<0)        Enable VBUS logic
-+               DRVVBUS_EXT     = (1<<1)        Enable External VBUS logic
-+               EXTVBUSIND      = (1<<2)        Enable Ext. VBUS indication and 
-fault handler
-+               CHRGVBUS        = (1<<3)        Enable VBUS charge pump logic
-+               eg: DRVVBUS | DRVVBUS_EXT = 0x03
-+                   ulpi_set_vbus = <0x03>
-+
-+For example:
-+
-+phys: phy@p {
-+    compatible = "xxx";
-+    reg = <p>;
-+    .
-+    .
-+    #phy-cells = <1>;
-+    .
-+    .
-+    reset-gpios = <&gpioX nn n>
-+    cs-gpios = <&gpioX nn n>
-+    ulpi-set-vbus = <0xXX>;
-+};
-+
-
-
-Thanks
-Chris
-
-
-
-
-> Thanks,
-> Mark.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
-GTSYS Limited RFID Technology
-A01 24/F Gold King Industrial Bld
-35-41 Tai Lin Pai Road, Kwai Chung, Hong Kong
-Fax (852) 8167 4060 - Tel (852) 3598 9488
-
-Disclaimer: http://www.gtsys.com.hk/email/classified.html
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
