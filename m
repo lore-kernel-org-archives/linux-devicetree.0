@@ -1,53 +1,49 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH] virtio: Update spec address
-Date: Tue, 3 Dec 2013 14:55:05 +0200
-Message-ID: <20131203125505.GA32687@redhat.com>
-References: <1386074421-20662-1-git-send-email-broonie@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
-Content-Disposition: inline
-In-Reply-To: <1386074421-20662-1-git-send-email-broonie@kernel.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Mark Brown <broonie@linaro.org>, linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Device Tree Maturity Project
+Date: Tue, 03 Dec 2013 13:01:41 +0000
+Message-ID: <20131203130141.14610C40750@trevor.secretlab.ca>
+References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail. com> <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com> < 20131122112223.GB8406@e106331-lin.cambridge.arm.com> <20131127143655. F25E4C404EC@trevor.secretlab.ca> <1385740653.25763.53.camel@kazak.uk. xensource.com> <20131202231211.457DAC40800@trevor.secretlab.ca> <529D15F8. 9060700@calxeda.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <529D15F8.9060700-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 03, 2013 at 12:40:21PM +0000, Mark Brown wrote:
-> From: Mark Brown <broonie@linaro.org>
+On Mon, 02 Dec 2013 17:21:28 -0600, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org> wrote:
+> On 12/02/2013 05:12 PM, Grant Likely wrote:
+> > On Fri, 29 Nov 2013 15:57:33 +0000, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
+> >> On Wed, 2013-11-27 at 14:36 +0000, Grant Likely wrote:
+> >>> On Fri, 22 Nov 2013 11:22:23 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> >>>> On Wed, Nov 20, 2013 at 11:56:39AM +0000, Grant Likely wrote:
+> >>>>> On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
+> >>>>> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> >>>>>> To help keep track of what is going on, I would like to have a short
+> >>>>>> stand up meeting once a week. Looking at my calendar, I can make
+> >>>>>> 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
+> >>>>>
+> >>>>> Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
+> >>>>
+> >>>> Apologies for begin a little late to the party...
+> >>>>
+> >>>> I have a regular fortnightly meeting on Thursdays, and for the next few
+> >>>> weeks (until the new year) I'm otherwise engaged on Fridays, so Tuesdays
+> >>>> would be preferable for me.
+> >>>
+> >>> I started with Fridays, but it sounds like Tuesday works for everyone.
+> >>> I've moved the meeting to next Tuesday.
+> >>
+> >> Should I have gotten an update meeting request?
+> > 
+> > Yes. I don't know why it didn't get out to you. I've tried to send it again.
 > 
-> According to the README at the existing URL the spec has moved to github
-> so update the documentation to match.
-> 
-> Signed-off-by: Mark Brown <broonie@linaro.org>
+> I have not seen an update either.
 
-Even that's no longer accurate :)
-There should be a new address RSN, I'll respond.
+Do you have it now?
 
-> ---
->  Documentation/devicetree/bindings/virtio/mmio.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/virtio/mmio.txt b/Documentation/devicetree/bindings/virtio/mmio.txt
-> index 5069c1b8e193..0648851d2a25 100644
-> --- a/Documentation/devicetree/bindings/virtio/mmio.txt
-> +++ b/Documentation/devicetree/bindings/virtio/mmio.txt
-> @@ -1,6 +1,6 @@
->  * virtio memory mapped device
->  
-> -See http://ozlabs.org/~rusty/virtio-spec/ for more details.
-> +See https://github.com/rustyrussell/virtio-spec for more details.
->  
->  Required properties:
->  
-> -- 
-> 1.8.5
+g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
