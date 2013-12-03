@@ -1,51 +1,75 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/4] MFD: TPS65218: Add driver for the TPS65218 PMIC
-Date: Tue, 3 Dec 2013 11:21:07 +0000
-Message-ID: <20131203112107.GP11828@lee--X1>
-References: <1386053006-6480-1-git-send-email-j-keerthy@ti.com>
- <1386053006-6480-3-git-send-email-j-keerthy@ti.com>
- <20131203092410.GD11828@lee--X1>
- <529DAD2B.4040909@ti.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 14/36] mtd: st_spi_fsm: Add device-tree binding
+ documentation
+Date: Tue, 3 Dec 2013 11:31:56 +0000
+Message-ID: <20131203113156.GB12031@lee--X1>
+References: <1385727565-25794-1-git-send-email-lee.jones@linaro.org>
+ <1385727565-25794-15-git-send-email-lee.jones@linaro.org>
+ <CACRpkdaWXBchz78Yby11VpveBDtn6FrmupS=cnNYhvHgFJsBUw@mail.gmail.com>
+ <20131202110304.GB31626@lee--X1>
+ <CACRpkdb8=RRsNRKe4Nbefu2BJ4xHakmNjxFC1gwLea=bAmOz-A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <529DAD2B.4040909@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Keerthy <a0393675@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, grant.likely@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+In-Reply-To: <CACRpkdb8=RRsNRKe4Nbefu2BJ4xHakmNjxFC1gwLea=bAmOz-A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, angus.clark-qxv4g6HH51o@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> >>+	ret =3D of_platform_populate(client->dev.of_node, NULL, NULL,
-> >>+				   &client->dev);
-> >What are you trying to do here?
+On Tue, 03 Dec 2013, Linus Walleij wrote:
+
+> On Mon, Dec 2, 2013 at 12:03 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
+te:
+> >> > +Optional properties:
+> >> > +  - st,syscfg          : Phandle to boot-device system configur=
+ation registers
+> >> > +  - st,boot-device-reg : Address of the aforementioned boot-dev=
+ice register(s)
+> >> > +  - st,boot-device-spi : Expected boot-device value if booted v=
+ia this device
+> >> > +
+> >> > +Example:
+> >> > +       spifsm: spifsm@fe902000{
+> >> > +               compatible         =3D "st,spi-fsm";
+> >> > +               reg                =3D  <0xfe902000 0x1000>;
+> >> > +               reg-names          =3D "spi-fsm";
+> >> > +               pinctrl-0          =3D <&pinctrl_fsm>;
+> >> > +               st,syscfg          =3D <&syscfg_rear>;
+> >> > +               st,boot-device-reg =3D <0x958>;
+> >> > +               st,boot-device-spi =3D <0x1a>;
+> >>
+> >> I don't think we should encode any register offsets whatsoever in =
+device
+> >> tree but maybe that's just me. (Yes, Stephen will beat me up about
+> >> pin control single, but I consider that a special case.)
+> >>
+> >> I would just put the last two things as #defines into the driver f=
+ile(s)
+> >> or - if it's related to other syscfg registers and varies with SoC=
+ incarnation,
+> >> as a #define in a shared header for that syscfg thing.
 > >
-> >Register each regulator as a platform device?
->=20
-> Yeah. The probe will be called for every regulator separately.
-
-So there are two schools of thought on this. One is that if you want
-to do it that way you should use the MFD framework to do this for you.
-There is no need to recreate functionality that already exists. The
-other is that you shouldn't be doing this at all with regulators. Mark
-likes the idea of having a single regulator controller node which
-contains all of these individual regulator sub-nodes and you initiate
-a single call to for_each_child_of_node() within the driver in order
-to register them all.
-
-<snip>
-
-> >This has a different structure to of_tps65218_match_table, please
-> >ensure they're the same. I prefer spaces after '{' and before '}'.
->=20
-> Ok. I will add a space after '{' and before '}'. Sorry I did not
-> follow tps65218_id_table being different than of_tps65218_match_table=
+> > No can do. This isn't _this_ device's register offset, this is a
+> > syscfg register offset which a) there is no driver to apply specifi=
+c
+> > register offsets to and b) are liable to change oversubsequent SoCs=
 =2E
 >=20
-> One is of the type of_device_id and the other i2c_device_id.
+> So it can be in <linux/mfd/my-sysconfig-regs.h> as
+> a
+>=20
+> #define MY_SYSCON_V1_BOOT_DEV_REG 0x958
+> #define MY_SYSCON_V1_BOOT_DEV_SPI 0x1a
+>=20
+> The kernel should know which SoC is in use and
+> act apropriately right?
 
-Shouldn't matter, it's just a formatting thing.
+And this have lots of machine_is() calls everywhere?
+
+Sounds perfect. ;)
 
 --=20
 Lee Jones
@@ -53,7 +77,7 @@ Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
-the body of a message to majordomo@vger.kernel.org
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
