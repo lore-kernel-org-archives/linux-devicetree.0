@@ -1,42 +1,53 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: tegra: Header file for pinctrl constants
-Date: Tue, 3 Dec 2013 11:34:13 +0530
-Message-ID: <529D745D.2070503@nvidia.com>
-References: <1385992502-12771-1-git-send-email-ldewangan@nvidia.com> <20131202142522.GA17566@ulmo.nvidia.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 0/4] mfd: TPS65218: Add support for TPS65218 PMIC
+Date: Tue, 3 Dec 2013 12:13:21 +0530
+Message-ID: <1386053006-6480-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131202142522.GA17566-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, lgirdwood@gmail.com, broonie@kernel.org
+Cc: j-keerthy@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 02 December 2013 07:55 PM, Thierry Reding wrote:
-> * PGP Signed by an unknown key
->
-> On Mon, Dec 02, 2013 at 07:25:01PM +0530, Laxman Dewangan wrote:
->
+The TPS65218 chip is a power management IC for Portable Navigation Systems
+and Tablet Computing devices. It contains the following components:
 
-> +
-> +/* Schmitt enable/disable */
-> +#define TEGRA_PIN_DRIVE_SCHMITT_DISABLE			0
-> +#define TEGRA_PIN_DRIVE_SCHMITT_ENABLE			1
-> These are all boolean, so I wonder if perhaps we should be simply
-> defining a single pair and reuse that in different contexts:
->
-> 	#define TEGRA_PIN_DISABLE	0
-> 	#define TEGRA_PIN_ENABLE	1
->
-> The property names should provide enough context for them to be used
-> unambiguously.
->
->
+ - Regulators.
+ - Over Temperature warning and Shut down.
 
-I can make generic ENABLE/DISABLE macro as you suggested but datasheet 
-says as 0=NORMAL, 1 = TRISTATE. and that's why I kept name very near to 
-the datasheet.
+This patch adds support for TPS65218 mfd device. At this time only
+the regulator functionality is made available.
 
-Thanks,
-Laxman
+The patch series is dependent on:
+
+http://www.spinics.net/lists/arm-kernel/msg289361.html
+
+The series is boot tested on am43x-epos-evm board.
+
+Keerthy (4):
+  mfd: DT bindings for TPS65218 PMIC
+  MFD: TPS65218: Add driver for the TPS65218 PMIC
+  Regulators: TPS65218: Add Regulator driver for TPS65218 PMIC
+  ARM: dts: AM437x: Add TPS65218 device tree nodes
+
+ Documentation/devicetree/bindings/mfd/tps65218.txt |   27 ++
+ .../devicetree/bindings/regulator/tps65218.txt     |   22 ++
+ arch/arm/boot/dts/am43x-epos-evm.dts               |   41 ++
+ drivers/mfd/Kconfig                                |   14 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/tps65218.c                             |  281 ++++++++++++++
+ drivers/regulator/Kconfig                          |    9 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/tps65218-regulator.c             |  393 ++++++++++++++++++++
+ include/linux/mfd/tps65218.h                       |  288 ++++++++++++++
+ 10 files changed, 1077 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/tps65218.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/tps65218.txt
+ create mode 100644 drivers/mfd/tps65218.c
+ create mode 100644 drivers/regulator/tps65218-regulator.c
+ create mode 100644 include/linux/mfd/tps65218.h
+
+-- 
+1.7.9.5
+
