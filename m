@@ -1,55 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/4] MFD: TPS65218: Add driver for the TPS65218 PMIC
-Date: Tue, 3 Dec 2013 15:19:01 +0000
-Message-ID: <20131203151901.GC27568@sirena.org.uk>
-References: <1386053006-6480-1-git-send-email-j-keerthy@ti.com>
- <1386053006-6480-3-git-send-email-j-keerthy@ti.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
+Subject: [PATCH v3 3/5] dt-bindings: add binding for clock-controller of s3c2443 and following
+Date: Tue, 3 Dec 2013 16:23:09 +0100
+Message-ID: <201312031623.10187.heiko@sntech.de>
+References: <201312031619.58062.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xXF8SilVSrRwayWj"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1386053006-6480-3-git-send-email-j-keerthy@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <201312031619.58062.heiko@sntech.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Thomas Abraham <thomas.abraham@linaro.org>, t.figa@samsung.com, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Starting with the s3c2443 the s3c24xx series got a new clock tree
+compared to the previous s3c24xx socs. This binding describes the
+clock controller found in the s3c2443, s3c2416 and s3c2450 socs.
 
---xXF8SilVSrRwayWj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ .../bindings/clock/samsung,s3c2443-clock.txt       |   46 ++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,s3c2443-clock.txt
 
-On Tue, Dec 03, 2013 at 12:13:23PM +0530, Keerthy wrote:
-
-> +static struct regmap_config tps65218_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +};
-
-You should consider using a register cache for at least the interrupt
-mask registers, it'll improve performance.
-
---xXF8SilVSrRwayWj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSnfZiAAoJELSic+t+oim9l48QAI/SHk/6/1208l6DU5JwCTDV
-Q7mEq14NYLImEwvmqjR5mqXkDXULmmtn+AnuweHzkbx6wVOH7KENQQgiuge0dCa9
-8WzoePzk178iH2yVMhF4acx5PyNG0WrVqRdo4DZKxF1B1r5S7LZDSrtjhM8uvM2D
-/aO4wg/k11Yq3+9YFXhXq/NTEPehI9dWktHm0+ORiRmjKdvoJQ++fwBWKg/MbIRu
-DDF6y+Yq0+WZqs1ifVdn3F+J0XZ+kPW83umBdBm4VmwAm9sczbyCfFOkyAW1hpQC
-4nfxFYChS5KMbG+SQ32PJNwhrtZdLWU2r4ODMS0lj5oeGUQlT/ioksgksoPwW6dc
-cFePpnRJ8Z/R3F4L65A5+pxmfsSV3l/CQrVSGiOREeb5iPXGhIJQ52Vf4dijecfx
-L/JUJyv9bZy/TLHg9KeRlPHwv+qC5r/myp/7E0ggSs+H52LCWmQweD+LC00lQq/B
-WoX/uhZsqZNhIAn8IpZe5ANievd/HySqOx4ZPyvcLXw7GgbMYHpN466y+rlvXlZq
-GnbOOvHimHp7pM1MrjIcuTDQ567xESCXobYv7PJDtRhfHNF37UptefWbcR8sbRtb
-u6cWdPfhuSYOyjoFKHo5XMLP2cx8xpTbD46LN4Owv1lb5ddxxHWJATvkUc1pzemY
-Ro0epDAROD1auRNMd9FD
-=Yzm7
------END PGP SIGNATURE-----
-
---xXF8SilVSrRwayWj--
+diff --git a/Documentation/devicetree/bindings/clock/samsung,s3c2443-clock.txt b/Documentation/devicetree/bindings/clock/samsung,s3c2443-clock.txt
+new file mode 100644
+index 0000000..a3eb4ed
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/samsung,s3c2443-clock.txt
+@@ -0,0 +1,46 @@
++* Samsung S3C2443 Clock Controller
++
++The S3C2443 clock controller generates and supplies clock to various controllers
++within the SoC. The clock binding described here is applicable to all SoCs in
++the s3c24x family starting with the s3c2443.
++
++Required Properties:
++
++- compatible: should be one of the following.
++  - "samsung,s3c2416-clock" - controller compatible with S3C2416 SoC.
++  - "samsung,s3c2443-clock" - controller compatible with S3C2443 SoC.
++  - "samsung,s3c2450-clock" - controller compatible with S3C2450 SoC.
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- #clock-cells: should be 1.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. Some of the clocks are available only
++on a particular SoC.
++
++All available clocks are defined as preprocessor macros in
++dt-bindings/clock/samsung,s3c2443-clock.h header and can be used in device
++tree sources.
++
++Example: Clock controller node:
++
++	clocks: clock-controller@4c000000 {
++		compatible = "samsung,s3c2416-clock";
++		reg = <0x4c000000 0x40>;
++		#clock-cells = <1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller (refer to the standard clock bindings for information about
++  "clocks" and "clock-names" properties):
++
++	serial@50004000 {
++		compatible = "samsung,s3c2440-uart";
++		reg = <0x50004000 0x4000>;
++		interrupts = <1 23 3 4>, <1 23 4 4>;
++		clock-names = "uart", "clk_uart_baud2",
++				"clk_uart_baud3";
++		clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>,
++				<&clocks SCLK_UART>;
++		status = "disabled";
++	};
+-- 
+1.7.10.4
