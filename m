@@ -1,269 +1,111 @@
-From: Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
- generic bus properties
-Date: Tue, 3 Dec 2013 11:45:12 +0000
-Message-ID: <20131203114506.GA2281@e103592.cambridge.arm.com>
-References: <20131127172806.GC2291@e103592.cambridge.arm.com>
- <20131128203322.GB14689@mithrandir>
- <20131128211009.GA26447@obsidianresearch.com>
- <20131128222232.GF14689@mithrandir>
- <20131128233147.GA19387@obsidianresearch.com>
- <20131129115815.GC3136@e103592.cambridge.arm.com>
- <20131129184341.GA25451@obsidianresearch.com>
- <20131202202543.GC2312@e103592.cambridge.arm.com>
- <20131203000740.GA30818@obsidianresearch.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
+Date: Tue, 03 Dec 2013 12:52:36 +0100
+Message-ID: <529DC604.4050600@linaro.org>
+References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com> <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20131203000740.GA30818@obsidianresearch.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Greg KH <gregkh@linuxfoundation.org>, Will Deacon <Will.Deacon@arm.com>, Thierry Reding <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hiroshi Doyu <hdoyu@nvidia.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386001205-11978-3-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Martin <dave.martin-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>, Charles Garcia Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Mark Hambleton <mark.hambleton-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2013 at 05:07:40PM -0700, Jason Gunthorpe wrote:
-> On Mon, Dec 02, 2013 at 08:25:43PM +0000, Dave Martin wrote:
-> > > This might be easier to parse as well, since you know everything under
-> > > 'axi' is related to interconnect and not jumbled with other stuff.
-> > 
-> > That is true, but I do have a concern that bolting more and more
-> > info onto the side of DT may leave us with a mess, while the "main"
-> > tree becomes increasingly fictional.
-> > 
-> > You make a lot of good points -- apologies for not responding in detail
-> > to all of them yet, but I tie myself in knots trying to say too many
-> > different things at the same time.
-> 
-> I think the main point is to observe that we are encoding a directed
-> graph onto DT, so long as the original graph can be extracted the
-> DT encoding can be whatever people like :)
+On 12/02/2013 05:20 PM, Lorenzo Pieralisi wrote:
+> ARM based platforms implement a variety of power management schemes t=
+hat
+> allow processors to enter at run-time low-power states, aka C-states
+> in ACPI jargon. The parameters defining these C-states vary on a per-=
+platform
+> basis forcing the OS to hardcode the state parameters in platform
+> specific static tables whose size grows as the number of platforms su=
+pported
+> in the kernel increases and hampers device drivers standardization.
+>
+> Therefore, this patch aims at standardizing C-state device tree bindi=
+ngs for
+> ARM platforms. Bindings define C-state parameters inclusive of entry =
+methods
+> and state latencies, to allow operating systems to retrieve the
+> configuration entries from the device tree and initialize the related
+> power management drivers, paving the way for common code in the kerne=
+l
+> to deal with power states and removing the need for static data in cu=
+rrent
+> and previous kernel versions.
+>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 
-Sure, we're just juggling different descriptions for the same thing here.
-The fact that our different representations do seem to agree on that
-is reassuring...
+Hi Lorenzo,
 
-> > In a multi-master system this isn't enough, because a node might have
-> > to have multiple parents in order to express all the master/slave
-> > relationships.
-> 
-> Right, DT is a tree, not a graph - and this is already a minor problem
-> we've seen modeling some IP blocks on the Marvell chips. They also
-> have multiple ports into the various system busses.
-> 
-> > In that case, we can choose one of the parents as the canonical one
-> > (e.g., the immediate master on the path from the coherent CPUs), or if
-> > there is no obvious canonical parent the child node can be a
-> > freestanding node in the tree (i.e., with no reg or ranges properties,
-> > either in the / { } junkyard, or in some location that makes topological
-> > sense for the device in question).  The DT herarchy retains real
-> > meaning since the direction of master/slave relationships is fixed,
-> > but the DT becomes a tree of connected trees, rather than a single
-> > tree.
-> 
-> I'm not sure this will really be a problem in practice:
-> 
-> Consider:
->  - All IP blocks we care about are going to have a CPU MMIO port for
->    control.
->  - The 'soc' tree is the MMIO hierarchy from the CPU perspective
->  - IP blocks should try to DT model as a single node when possible
-> 
-> In that case, the location of a DT node for a multiport IP is now well
-> defined: It is the path from the CPU to the MMIO port, expressed in
-> DT.
-> 
-> Further, every 'switch' is going to have MMIO to control the switch,
-> so the switch node DT locations are also well defined.
-> 
-> Basically, I think the main 'soc' tree's layout is mostly unambiguous
-> and covers all the relevant blocks.
-> 
-> You woun't get a forest of DT trees because every block must be MMIO
-> reachable.
-> 
-> It is also the same core DT tree with my suggestion or yours.
+thanks for the detailed description.
 
-Absolutely: I didn't argue this very well.
+Just a couple of typos below.
 
-The CPU's-eye view of the system determines a natural hierarchy for
-everything or almost.
+[ ... ]
 
-It's possible that there is some bus or switch that only non-CPUs
-can see.  But if the CPU has no control interface for it, that
-suggests that bus is transparent enough that it needs no control --
-and might not need to be represented in the DT at all.
+> +- cpu-power-states node
+> +
+> +	Usage: Optional - On ARM systems, is a container of processor C-sta=
+te
+> +			  nodes. If the system does not provide CPU power
+> +			  management capabilities or the processor just
+> +			  supports WFI (C1 state) a cpu-power-states node is
+> +			  not required.
+> +
+> +	Description: cpu-power-states node is a container node, where its
+> +		     subnodes describe the CPU low-power C-states.
+> +
+> +	Node name must be "cpu-power-states".
+> +
+> +	The cpu-power-states node's parent node must be cpus node.
+> +
+> +	The cpu-power-states node's child nodes can be:
+> +
+> +	- one or more state nodes
+> +
+> +	The cpu-power-states node must contain the following properties:
+> +
+> +	- compatible
+> +		Value type: <stringlist>
+> +		Usage: Required
 
-As a rule, we should never put anything in the DT that does not
-need to be described.
+Invert the field above to be consistent with the definitions below.
 
-But if we end up with deviations from this rule, floating nodes
-give us an escape route.
+[ ... ]
 
-Suppose you have a cluster of DSPs used to implement a GPU.  They
-might have their own front-side bus which they control themselves.
-In this situation, it might be more natural to represent that whole
-side cluster as a separate floating subtree within /.
+> +	- power-depth
+> +		Usage: Required
+> +		Value type: <u32>
+> +		Definition: Integer value, starting from 2 (value 0 meaning
+> +			    running and value 1 representing power depth of
+> +			    wfi (C1)), that defines the level of depth of a
+> +			    power state.
+> +			    The system denotes power states with different
+> +			    depths, an increasing value meaning less power
+> +			    consumption and might involve powering down more
+> +			    components.  Devices that are affected by
 
-But that's all very hypothetical.  In most cases, you just call
-that monstrosity "gpu" and make it look like a device -- even in
-the hardware.
+                                     ^^^ extra space
 
-> 
-> Your edge encoding also makes sense, but I think this is where I would
-> disagree the most:
-> 
-> > Slave device mapping, tree form:
-> > 	a {
-> > 		b {
-> > 			reg = < REG >;
-> > 		};
-> > 	};
-> > 
-> > Slave device mapping, detached form:
-> > 	a {
-> > 		slave-reg = < &b REG >;
-> > 	};
-> > 
-> > 	b {
-> > 	};
-> 
-> This now requires the OS to parse this dataset just to access standard
-> MMIO, and you have to change the standard existing code that parses
-> ranges and reg to support this extended format.
-> 
-> Both of those reasons seem like major downsides to me. If the OS
-> doesn't support advanced features (IOMMU, power management, etc) it
-> should not require DT parsing beyond the standard items. This may
-> become relevant when re-using a kernel DT in uboot for instance.
+[ ... ]
 
-You're right that this is a change.  However, I think that no existing
-DT needs to change, and few DTs will use it -- similar to the argument
-about why DT will normally look like a single tree.
+Thanks
+   -- Daniel
 
-In real systems, I think multi-master slaves which are accessed
-directly and not via some multi-master shared bus are not that common.
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
 
-A partial dodge would be to introduce a dummy bus node:
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-	a {
-		b {
-			reg = < REG >;
-		};
-	};
-
-becomes
-
-	a {
-		slave-ranges = < &b_bus RANGE >;
-	};
-
-	b_bus {
-		// #slave-cells = <0> is the default
-		compatible = "simple-bus";
-
-		b {
-			reg = < REG' >;
-		};
-	};
-
-Where RANGE maps REG into a's address space, and REG' is REG rebased
-to address 0.
-
-Now, we can refer indirectly to b as many times as we like, without
-using the slave-reg thing.
-
-This still needs special parsing though -- but again, only for cases
-that we already can't describe with DT.
-
-
-The common situation will be that all shared slaves are really under
-some shared bus, and that bus really has some natural location in
-the DT.  So for cases simple enough not to require these extensions,
-I think there would still be no change.
-
-> On the other hand, this is a great way to actually express the correct
-> address mapping path for every reg window - but isn't that a separate
-> issue from the IOMMU/DMA problem? You still need to describe the DMA
-> bus mastering ports on IP directly.
-
-Those problems aren't identical, but they seem closely related.
-
-My thought was that this gives us most of the language required to
-describe the mastering links for bus-mastering devices.
-
-> 
-> The side-table concept would keep the parsing completely contained
-> within the IOMMU/etc drivers, and not have it leak out into existing
-> core DT code, but it doesn't completely tidy multiple slave ports.
-> 
-> Also, I was thinking after I sent the last email that this is a good
-> time to be thinking about a future need for describing NUMA affinites
-> in DT. That is basically the same directed graph we are talking about
-> here. Trying some modeling samples with that in mind would be a good
-> idea..
-> 
-> You should also think about places to encode parameters like
-> master/slave QOS and other edge-specific tunables..
-
-The idea that some things are properties of and edge or link, not a
-node or device, overlaps with my thinking about IOMMU.  This may
-apply to any device that behaves like some adaptor or passthrough.
-
-One option is to create subnodes for these links.  I did not elaborate
-this previously, but I think allowing "slave" to be a node for the
-more complex cases where we need to add more info might help here:
-
-	dma {
-		slave {
-			compatible = "slave-link", "simple-bus";
-			ranges = < ... >;
-			iommu-foo = < ... >;
-
-			slave = < &shared_bus SLAVE-PORT >;
-		}
-	};
-
-The best way to describe multiple master ports on the DMA controller
-would need some thought.
-
-
-One option would to extend the address space on the slave node with
-additional cell(s) to carry port identifiers.  ePAPR already does
-things in this sort of way in the interrupt-map and interrupt-map-mask
-properties, to describe PCI interrupt routing.
-
-> 
-> > I may try to come up with a partial description of the Zync SoC, but
-> > I was getting myself confused when I tried it earlier ;)
-> 
-> The Zynq is interesting because all the information is public - and it
-> is a good example of the various AXI building blocks. Imagine some
-> IOMMUs in there and you have a complete scenario to talk about..
-
-Indeed.  I was impressed to see a non-trivial block diagram that wasn't
-pasted straight out of some marketing powerpoint :)
-
-It's a good example for discussion here, particularly if we add some
-IOMMUs to the mix.
-
-> It even has a coherent AXI port available for IP to hook up to. :)
-
-You mean the ACP port connecting the PL Fabric back to the CPU cluster?
-I'm guessing the PL Fabric is the interface to the FPGA logic.
-
-
-Now I need to go back to your proposal and the IOMMU thread and try to
-understand better how the approaches map onto each other.
-
-Cheers
----Dave
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
