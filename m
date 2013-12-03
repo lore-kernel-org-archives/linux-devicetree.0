@@ -1,259 +1,53 @@
-From: Sathya Prakash M R <sathyap@ti.com>
-Subject: [PATCH 4/4] ARM: DTS: AM43x: Add DSS node
-Date: Tue, 3 Dec 2013 14:03:48 +0530
-Message-ID: <1386059629-1234-5-git-send-email-sathyap@ti.com>
-References: <1386059629-1234-1-git-send-email-sathyap@ti.com>
+From: Peter Chen <Peter.Chen@freescale.com>
+Subject: RE: [PATCH v4 09/17] usb: phy-mxs: Enable IC fixes for related SoCs
+Date: Tue, 3 Dec 2013 08:38:19 +0000
+Message-ID: <F281D0F91ED19E4D8E63A7504E8A649804140F64@039-SN2MPN1-021.039d.mgd.msft.net>
+References: <1386056231-17258-1-git-send-email-peter.chen@freescale.com>
+ <1386056231-17258-10-git-send-email-peter.chen@freescale.com>
+ <529D95F7.8060705@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1386059629-1234-1-git-send-email-sathyap@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, tomi.valkeinen@ti.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, paul@pwsan.com
-Cc: Sathya Prakash M R <sathyap@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <529D95F7.8060705@pengutronix.de>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "balbi@ti.com" <balbi@ti.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "festevam@gmail.com" <festevam@gmail.com>, "marex@denx.de" <marex@denx.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, Frank Li <Frank.Li@freescale.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device node for DSS module for AM4372. Both the
-AM437x-Gp evm and Am43x-Epos evm use the same LCD panel.
-The lcd timings are added in respective dts files.
-Adds display pinctrl and enables required gpio.
-Also set the right parent clock to the DSS clock.
-
-Signed-off-by: Sathya Prakash M R <sathyap@ti.com>
----
- arch/arm/boot/dts/am4372.dtsi        |   28 ++++++++++++++
- arch/arm/boot/dts/am437x-gp-evm.dts  |   68 ++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/am43x-epos-evm.dts |   64 ++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/am43xx-clocks.dtsi |    2 +
- 4 files changed, 162 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index ea55a4e..b72a7df 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -684,6 +684,34 @@
- 			num-cs = <4>;
-                         status = "disabled";
-                 };
-+
-+		dss: dss@4832A000 {
-+			compatible = "ti,omap3-dss", "simple-bus";
-+			reg = <0x4832A000 0x200>;
-+			ti,hwmods = "dss_core";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			dispc@4832A400 {
-+				compatible = "ti,omap3-dispc";
-+				reg = <0x4832A400 0x400>;
-+				interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-+				ti,hwmods = "dss_dispc";
-+			};
-+
-+			dpi: encoder@0 {
-+				compatible = "ti,omap3-dpi";
-+			};
-+
-+			rfbi: rfbi@4832A800 {
-+				compatible = "ti,omap3-rfbi";
-+			reg = <0x4832A800 0x100>;
-+				ti,hwmods = "dss_rfbi";
-+			};
-+
-+		};
-+
- 	};
- 
- 	clocks {
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 2e79bda..e58652c6 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -24,6 +24,31 @@
- 		brightness-levels = <0 51 53 56 62 75 101 152 255>;
- 		default-brightness-level = <8>;
- 	};
-+
-+	aliases {
-+		display0 = &lcd0;
-+	};
-+
-+	lcd0: display@0 {
-+		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		video-source = <&dpi>;
-+		data-lines = <24>;
-+		panel-timing {
-+			clock-frequency = <33000000>;
-+			hactive = <800>;
-+			vactive = <480>;
-+			hfront-porch = <210>;
-+			hback-porch = <16>;
-+			hsync-len = <30>;
-+			vback-porch = <10>;
-+			vfront-porch = <22>;
-+			vsync-len = <13>;
-+			hsync-active = <0>;
-+			vsync-active = <0>;
-+			de-active = <1>;
-+			pixelclk-active = <1>;
-+		};
-+	};
- };
- 
- &am43xx_pinmux {
-@@ -46,6 +71,40 @@
- 			0x164 MUX_MODE0       /* eCAP0_in_PWM0_out.eCAP0_in_PWM0_out MODE0 */
- 		>;
- 	};
-+
-+	dss_pinctrl: dss_pinctrl {
-+		pinctrl-single,pins = <
-+			0x020 (PIN_OUTPUT_PULLUP | MUX_MODE1) /*gpmc ad 8 -> DSS DATA 23 */
-+			0x024 (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x028 (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x02C (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x030 (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x034 (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x038 (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x03C (PIN_OUTPUT_PULLUP | MUX_MODE1) /*gpmc ad 15 -> DSS DATA 16 */
-+			0x0A0 (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS DATA 0 */
-+			0x0A4 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0A8 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0AC (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0B0 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0B4 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0B8 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0BC (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0C0 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0C4 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0C8 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0CC (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0D0 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0D4 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0D8 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0DC (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS DATA 15 */
-+			0x0E0 (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS VSYNC */
-+			0x0E4 (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS HSYNC */
-+			0x0E8 (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS PCLK */
-+			0x0EC (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS AC BIAS EN */
-+			0x238 (PIN_OUTPUT_PULLUP | MUX_MODE7) /* GPIO 5_8 to select LCD / HDMI */
-+		>;
-+	};
- };
- 
- &i2c0 {
-@@ -69,3 +128,12 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ecap0_pins>;
- };
-+
-+&gpio5 {
-+	status = "okay";
-+};
-+
-+&dpi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&dss_pinctrl>;
-+};
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 2ebcde6..20e5415 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -27,6 +27,31 @@
- 		enable-active-high;
- 	};
- 
-+	aliases {
-+		display0 = &lcd0;
-+	};
-+
-+	lcd0: display@0 {
-+		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		video-source = <&dpi>;
-+		data-lines = <24>;
-+		panel-timing {
-+			clock-frequency = <33000000>;
-+			hactive = <800>;
-+			vactive = <480>;
-+			hfront-porch = <210>;
-+			hback-porch = <16>;
-+			hsync-len = <30>;
-+			vback-porch = <10>;
-+			vfront-porch = <22>;
-+			vsync-len = <13>;
-+			hsync-active = <0>;
-+			vsync-active = <0>;
-+			de-active = <1>;
-+			pixelclk-active = <1>;
-+		};
-+	};
-+
- 	am43xx_pinmux: pinmux@44e10800 {
- 		cpsw_default: cpsw_default {
- 			pinctrl-single,pins = <
-@@ -122,6 +147,40 @@
- 				0x19c (PIN_OUTPUT | MUX_MODE3)          /* mcasp0_ahclkr.spi1_cs0 */
- 			>;
- 		};
-+
-+		dss_pinctrl: dss_pinctrl {
-+		pinctrl-single,pins = <
-+			0x020 (PIN_OUTPUT_PULLUP | MUX_MODE1) /*gpmc ad 8 -> DSS DATA 23 */
-+			0x024 (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x028 (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x02C (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x030 (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x034 (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x038 (PIN_OUTPUT_PULLUP | MUX_MODE1)
-+			0x03C (PIN_OUTPUT_PULLUP | MUX_MODE1) /*gpmc ad 15 -> DSS DATA 16 */
-+			0x0A0 (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS DATA 0 */
-+			0x0A4 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0A8 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0AC (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0B0 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0B4 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0B8 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0BC (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0C0 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0C4 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0C8 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0CC (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0D0 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0D4 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0D8 (PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			0x0DC (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS DATA 15 */
-+			0x0E0 (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS VSYNC */
-+			0x0E4 (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS HSYNC */
-+			0x0E8 (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS PCLK */
-+			0x0EC (PIN_OUTPUT_PULLUP | MUX_MODE0) /* DSS AC BIAS EN */
-+			0x08C (PIN_OUTPUT_PULLUP | MUX_MODE7) /* GPMC CLK -> GPIO 2_1 to select LCD / HDMI */
-+			>;
-+		};
- 	};
- 
- 	matrix_keypad: matrix_keypad@0 {
-@@ -279,3 +338,8 @@
- 	pinctrl-0 = <&spi1_pins>;
- 	status = "okay";
- };
-+
-+&dpi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&dss_pinctrl>;
-+};
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index 85e7d4b..b20e192 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -512,6 +512,8 @@ disp_clk: disp_clk@44df4244 {
- 	compatible = "ti,mux-clock";
- 	clocks = <&dpll_disp_m2_ck>, <&dpll_core_m5_ck>, <&dpll_per_m2_ck>;
- 	reg = <0x44df4244 0x4>;
-+	bit-mask = <0x3>;
-+	set-rate-parent;
- };
- 
- dpll_extdev_ck: dpll_extdev_ck@44df2e60 {
--- 
-1.7.9.5
+IA0KPiANCj4gT24gMTIvMDMvMjAxMyAwODozNyBBTSwgUGV0ZXIgQ2hlbiB3cm90ZToNCj4gPiBT
+b21lIFBIWSBidWdzIGFyZSBmaXhlZCBieSBJQyBsb2dpYywgYnV0IHRoZXNlIGJpdHMgYXJlIG5v
+dA0KPiA+IGVuYWJsZWQgYnkgZGVmYXVsdCwgc28gd2UgZW5hYmxlIHRoZW0gYXQgZHJpdmVyLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgQ2hlbiA8cGV0ZXIuY2hlbkBmcmVlc2NhbGUu
+Y29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3VzYi9waHkvcGh5LW14cy11c2IuYyB8ICAgMjAg
+KysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlcyBjaGFuZ2VkLCAyMCBpbnNlcnRpb25z
+KCspLCAwIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL3Bo
+eS9waHktbXhzLXVzYi5jIGIvZHJpdmVycy91c2IvcGh5L3BoeS1teHMtDQo+IHVzYi5jDQo+ID4g
+aW5kZXggODczODg5MC4uMDkwOGQ3NCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3VzYi9waHkv
+cGh5LW14cy11c2IuYw0KPiA+ICsrKyBiL2RyaXZlcnMvdXNiL3BoeS9waHktbXhzLXVzYi5jDQo+
+ID4gQEAgLTMxLDYgKzMxLDEwIEBADQo+ID4gICNkZWZpbmUgSFdfVVNCUEhZX0NUUkxfU0VUCQkJ
+MHgzNA0KPiA+ICAjZGVmaW5lIEhXX1VTQlBIWV9DVFJMX0NMUgkJCTB4MzgNCj4gPg0KPiA+ICsj
+ZGVmaW5lIEhXX1VTQlBIWV9JUAkJCQkweDkwDQo+ID4gKyNkZWZpbmUgSFdfVVNCUEhZX0lQX1NF
+VAkJCTB4OTQNCj4gPiArI2RlZmluZSBIV19VU0JQSFlfSVBfQ0xSCQkJMHg5OA0KPiA+ICsNCj4g
+PiAgI2RlZmluZSBCTV9VU0JQSFlfQ1RSTF9TRlRSU1QJCQlCSVQoMzEpDQo+ID4gICNkZWZpbmUg
+Qk1fVVNCUEhZX0NUUkxfQ0xLR0FURQkJCUJJVCgzMCkNCj4gPiAgI2RlZmluZSBCTV9VU0JQSFlf
+Q1RSTF9FTkFVVE9TRVRfVVNCQ0xLUwlCSVQoMjYpDQo+ID4gQEAgLTQyLDYgKzQ2LDggQEANCj4g
+PiAgI2RlZmluZSBCTV9VU0JQSFlfQ1RSTF9FTlVUTUlMRVZFTDIJCUJJVCgxNCkNCj4gPiAgI2Rl
+ZmluZSBCTV9VU0JQSFlfQ1RSTF9FTkhPU1RESVNDT05ERVRFQ1QJQklUKDEpDQo+ID4NCj4gPiAr
+I2RlZmluZSBCTV9VU0JQSFlfSVBfRklYICAgICAgICAgICAgICAgICAgICAgICAoQklUKDE3KSB8
+IEJJVCgxOCkpDQo+ID4gKw0KPiA+ICAjZGVmaW5lIHRvX214c19waHkocCkgY29udGFpbmVyX29m
+KChwKSwgc3RydWN0IG14c19waHksIHBoeSkNCj4gPg0KPiA+ICAvKiBEbyBkaXNjb25uZWN0aW9u
+IGJldHdlZW4gUEhZIGFuZCBjb250cm9sbGVyIHdpdGhvdXQgdmJ1cyAqLw0KPiA+IEBAIC05Nyw2
+ICsxMDMsMTYgQEAgc3RydWN0IG14c19waHkgew0KPiA+ICAJc3RydWN0IHJlZ21hcCAqcmVnbWFw
+X2FuYXRvcDsNCj4gPiAgfTsNCj4gPg0KPiA+ICtzdGF0aWMgaW5saW5lIGJvb2wgaXNfaW14NnFf
+cGh5KHN0cnVjdCBteHNfcGh5ICpteHNfcGh5KQ0KPiA+ICt7DQo+ID4gKwlyZXR1cm4gbXhzX3Bo
+eS0+ZGF0YSA9PSAmaW14NnFfcGh5X2RhdGE7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBp
+bmxpbmUgYm9vbCBpc19pbXg2c2xfcGh5KHN0cnVjdCBteHNfcGh5ICpteHNfcGh5KQ0KPiA+ICt7
+DQo+ID4gKwlyZXR1cm4gbXhzX3BoeS0+ZGF0YSA9PSAmaW14NnNsX3BoeV9kYXRhOw0KPiA+ICt9
+DQo+IA0KPiBXaHkgZG9uJ3QgeW91IHVzZSBhIGEgQklUKCkgaGVyZSBhcyBpbiBQYXRjaCAyLzE3
+LCB0b28/DQo+IA0KIA0KVGhhbmtzLCBJIHdpbGwgZGVmaW5lIHRoZSB0d28gUEhZIHByb2JsZW1z
+IGFzIHRoZSByZWdpc3RlciBiaXQNCnBvc2l0aW9uIGF0IDIvMTcsIGFuZCB1c2UgdGhvc2UgdHdv
+IE1BQ1JPcyBhdCB0aGlzIHBhdGNoLg0KSXMgaXQgeW91ciBwb2ludD8NCg0KUGV0ZXINCg0KDQoN
+Cg==
 
