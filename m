@@ -1,67 +1,39 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 00/10] Reuse davinci-nand driver for Keystone arch
-Date: Tue, 3 Dec 2013 11:45:16 +0200
-Message-ID: <529DA82C.5080606@ti.com>
-References: <1385033305-13179-1-git-send-email-ivan.khoronzhuk@ti.com> <5298C0B0.4030404@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+From: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Subject: [PATCHv2 1/3] ARM: imx27: add pwm pingrp
+Date: Tue,  3 Dec 2013 08:50:50 +0100
+Message-ID: <1386057052-9978-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5298C0B0.4030404-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2013 06:28 PM, Santosh Shilimkar wrote:
-> Ivan,
-> On Thursday 21 November 2013 06:28 AM, Ivan Khoronzhuk wrote:
->> This series contains fixes and updates of Davinci nand driver in
->> order to reuse it for Keystone platform.
->>
->> The series is combination of two following series:
->> - Davinci nand driver fixes and updates:
->>    https://lkml.org/lkml/2013/11/20/271
->> - Reuse davinci-nand driver for Keystone arch
->>    https://lkml.org/lkml/2013/11/20/315
->>
->> Ivan Khoronzhuk (10):
->>    mtd: nand: davinci: fix driver registration
->>    mtd: nand: davinci: return ENOMEM if memory allocation is failed
->>    mtd: nand: davinci: check required ti,davinci-chipselect property
->>    mtd: nand: davinci: simplify error handling
->>    mtd: nand: davinci: move bindings under mtd
->>    mtd: nand: davinci: extend description of bindings
->>    mtd: nand: davinci: adjust DT properties to MTD generic
->>    mtd: nand: davinci: reuse driver for Keystone arch
->>    mtd: nand: davinci: don't set timings if AEMIF is used
->>    mtd: nand: davinci: don't request AEMIF address range
->>
->>   .../devicetree/bindings/arm/davinci/nand.txt       |   46 --------
->>   .../devicetree/bindings/mtd/davinci-nand.txt       |   94 ++++++++++++++++
->>   drivers/mtd/nand/Kconfig                           |    6 +-
->>   drivers/mtd/nand/davinci_nand.c                    |  117 +++++++++++---------
->>   4 files changed, 164 insertions(+), 99 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
->>   create mode 100644 Documentation/devicetree/bindings/mtd/davinci-nand.txt
->>
-> Please drop patch 9 from the series considering we are handling it
-> differently and repost the entire series with David in cc. David
-> has been lining up the patches.
-> 
-> Regards,
-> Santosh
-> 
+Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+---
+Changelog:
+v2:
+ * rename mail subject : pwm0 -> pwm
 
-Ok, I'll drop patch 9.
-Only question about patch
-ARM: davinci: aemif: get rid of davinci-nand driver dependency on aemif
-(http://www.spinics.net/lists/devicetree/msg13711.html).
-How would be better, the series would be based on it or vice-versa?
+ arch/arm/boot/dts/imx27-pingrp.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/arch/arm/boot/dts/imx27-pingrp.h b/arch/arm/boot/dts/imx27-pingrp.h
+index f3fbf5a..24df7dd7 100644
+--- a/arch/arm/boot/dts/imx27-pingrp.h
++++ b/arch/arm/boot/dts/imx27-pingrp.h
+@@ -88,6 +88,9 @@
+ #define MX27_OWIRE1_PINGRP1 \
+ 	MX27_PAD_RTCK__OWIRE 0x0
+ 
++#define MX27_PWM_PINGRP1 \
++	MX27_PAD_PWMO__PWMO 0x0
++
+ #define MX27_SDHC1_PINGRP1 \
+ 	MX27_PAD_SD1_CLK__SD1_CLK \
+ 	MX27_PAD_SD1_CMD__SD1_CMD \
 -- 
-Regards,
-Ivan Khoronzhuk
+1.8.3.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
