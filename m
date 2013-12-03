@@ -1,97 +1,130 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v1 1/1] powerpc/512x: dts: remove misplaced IRQ spec from 'soc' node
-Date: Tue,  3 Dec 2013 11:56:52 +0100
-Message-ID: <1386068212-11484-1-git-send-email-gsi@denx.de>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: imx27-apf27dev: Add pinctrl for cspi
+ chip-select, sdhci2 card-detect, gpio-leds and gpio-keys
+Date: Tue, 3 Dec 2013 19:01:53 +0800
+Message-ID: <20131203110152.GD13726@S2101-09.ap.freescale.net>
+References: <1385822170-98486-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
+ <1385822170-98486-2-git-send-email-gwenhael.goavec-merou@armadeus.com>
+ <1385822170-98486-3-git-send-email-gwenhael.goavec-merou@armadeus.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1385822170-98486-3-git-send-email-gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-the 'soc' node in the common .dtsi for MPC5121 has an '#interrupt-cells'
-property although this node is not an interrupt controller
+On Sat, Nov 30, 2013 at 03:36:10PM +0100, Gwenhael Goavec-Merou wrote:
+> Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
 
-remove this erroneously placed property because starting with v3.13-rc1
-lookup and resolution of 'interrupts' specs for peripherals gets misled,
-emits 'no irq domain found' WARN() messages and breaks the boot process
+Please try to keep the patch subject shorter and move necessary words
+into commit log.
 
-  irq: no irq domain found for /soc@80000000 !
-  ------------[ cut here ]------------
-  WARNING: at /home/gsi/SRC/linux-torvalds/drivers/of/platform.c:171
-  Modules linked in:
-  CPU: 0 PID: 1 Comm: swapper Tainted: G        W    3.13.0-rc1-00001-g8a66234 #8
-  task: df823bb0 ti: df834000 task.ti: df834000
-  NIP: c02b5190 LR: c02b5180 CTR: c01cf4e0
-  REGS: df835c50 TRAP: 0700   Tainted: G        W     (3.13.0-rc1-00001-g8a66234)
-  MSR: 00029032 <EE,ME,IR,DR,RI>  CR: 229a9d42  XER: 20000000
+Shawn
 
-  GPR00: c02b5180 df835d00 df823bb0 00000000 00000000 df835b18 ffffffff 00000308
-  GPR08: c0479cc0 c0480000 c0479cc0 00000308 00000308 00000000 c00040fc 00000000
-  GPR16: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 df850880
-  GPR24: df84d670 00000000 00000001 df8561a0 dffffccc df85089c 00000020 00000001
-  NIP [c02b5190] of_device_alloc+0xf4/0x1a0
-  LR [c02b5180] of_device_alloc+0xe4/0x1a0
-  Call Trace:
-  [df835d00] [c02b5180] of_device_alloc+0xe4/0x1a0 (unreliable)
-  [df835d50] [c02b5278] of_platform_device_create_pdata+0x3c/0xc8
-  [df835d70] [c02b53fc] of_platform_bus_create+0xf8/0x170
-  [df835dc0] [c02b5448] of_platform_bus_create+0x144/0x170
-  [df835e10] [c02b55a8] of_platform_bus_probe+0x98/0xe8
-  [df835e30] [c0437508] mpc512x_init+0x28/0x1c4
-  [df835e70] [c0435de8] ppc_init+0x4c/0x60
-  [df835e80] [c0003b28] do_one_initcall+0x150/0x1a4
-  [df835ef0] [c0432048] kernel_init_freeable+0x114/0x1c0
-  [df835f30] [c0004114] kernel_init+0x18/0x124
-  [df835f40] [c000e910] ret_from_kernel_thread+0x5c/0x64
-  Instruction dump:
-  409effd4 57c9103a 57de2834 7c89f050 7f83e378 7c972214 7f45d378 48001f55
-  7c63d278 7c630034 5463d97e 687a0001 <0f1a0000> 2f990000 387b0010 939b0098
-  ---[ end trace 2257f10e5a20cbdd ]---
-
-  ...
-  irq: no irq domain found for /soc@80000000 !
-  fsl-diu-fb 80002100.display: could not get DIU IRQ
-  fsl-diu-fb: probe of 80002100.display failed with error -22
-  irq: no irq domain found for /soc@80000000 !
-  mpc512x_dma 80014000.dma: Error mapping IRQ!
-  mpc512x_dma: probe of 80014000.dma failed with error -22
-  ...
-  irq: no irq domain found for /soc@80000000 !
-  fs_enet: probe of 80002800.ethernet failed with error -22
-  ...
-  irq: no irq domain found for /soc@80000000 !
-  mpc5121-rtc 80000a00.rtc: mpc5121_rtc_probe: could not request irq: 0
-  mpc5121-rtc: probe of 80000a00.rtc failed with error -22
-  ...
-
-[ best viewed with 'git diff -U5' to have DT node names in the context ]
-
-Cc: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
----
- arch/powerpc/boot/dts/mpc5121.dtsi |    1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/powerpc/boot/dts/mpc5121.dtsi b/arch/powerpc/boot/dts/mpc5121.dtsi
-index bd14c00e5146..2d7cb04ac962 100644
---- a/arch/powerpc/boot/dts/mpc5121.dtsi
-+++ b/arch/powerpc/boot/dts/mpc5121.dtsi
-@@ -75,11 +75,10 @@
- 
- 	soc@80000000 {
- 		compatible = "fsl,mpc5121-immr";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--		#interrupt-cells = <2>;
- 		ranges = <0x0 0x80000000 0x400000>;
- 		reg = <0x80000000 0x400000>;
- 		bus-frequency = <66000000>;	/* 66 MHz ips bus */
- 
- 
--- 
-1.7.10.4
+> ---
+>  arch/arm/boot/dts/imx27-apf27dev.dts | 34 +++++++++++++++++++++++++++++++---
+>  1 file changed, 31 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
+> index 6069331..c8d3cb4 100644
+> --- a/arch/arm/boot/dts/imx27-apf27dev.dts
+> +++ b/arch/arm/boot/dts/imx27-apf27dev.dts
+> @@ -38,6 +38,8 @@
+>  
+>  	gpio-keys {
+>  		compatible = "gpio-keys";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpio_keys>;
+>  
+>  		user-key {
+>  			label = "user";
+> @@ -48,6 +50,8 @@
+>  
+>  	leds {
+>  		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpio_leds>;
+>  
+>  		user {
+>  			label = "Heartbeat";
+> @@ -61,7 +65,7 @@
+>  	fsl,spi-num-chipselects = <1>;
+>  	cs-gpios = <&gpio4 28 1>;
+>  	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_cspi1>;
+> +	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
+>  	status = "okay";
+>  };
+>  
+> @@ -70,7 +74,7 @@
+>  	cs-gpios = <&gpio4 21 1>, <&gpio4 27 1>,
+>  			<&gpio2 17 1>;
+>  	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_cspi2>;
+> +	pinctrl-0 = <&pinctrl_cspi2 &pinctrl_cspi2_cs>;
+>  	status = "okay";
+>  };
+>  
+> @@ -106,10 +110,22 @@
+>  			fsl,pins = <MX27_CSPI1_PINGRP1>;
+>  		};
+>  
+> +		pinctrl_cspi1_cs: cspi1csgrp {
+> +			fsl,pins = <MX27_PAD_CSPI1_SS0__GPIO4_28 0x0>;
+> +		};
+> +
+>  		pinctrl_cspi2: cspi2grp {
+>  			fsl,pins = <MX27_CSPI2_PINGRP1>;
+>  		};
+>  
+> +		pinctrl_cspi2_cs: cspi2csgrp {
+> +			fsl,pins = <
+> +				MX27_PAD_CSI_D5__GPIO2_17 0x0
+> +				MX27_PAD_CSPI2_SS0__GPIO4_21 0x0
+> +				MX27_PAD_CSPI1_SS1__GPIO4_27 0x0
+> +			>;
+> +		};
+> +
+>  		pinctrl_imxfb1: imxfbgrp {
+>  			fsl,pins = <MX27_FB_PINGRP1>;
+>  		};
+> @@ -126,9 +142,21 @@
+>  			fsl,pins = <MX27_SDHC2_PINGRP1>;
+>  		};
+>  
+> +		pinctrl_sdhc2_cd: sdhc2cdgrp {
+> +			fsl,pins = <MX27_PAD_TOUT__GPIO3_14 0x0>;
+> +		};
+> +
+>  		pinctrl_pwm0: pwm0grp {
+>  			fsl,pins = <MX27_PWM0_PINGRP1>;
+>  		};
+> +
+> +		pinctrl_gpio_leds: gpioledsgrp {
+> +			fsl,pins = <MX27_PAD_PC_VS1__GPIO6_14 0x0>;
+> +		};
+> +
+> +		pinctrl_gpio_keys: gpiokeysgrp {
+> +			fsl,pins = <MX27_PAD_PC_VS2__GPIO6_13 0x0>;
+> +		};
+>  	};
+>  };
+>  
+> @@ -136,7 +164,7 @@
+>  	bus-width = <4>;
+>  	cd-gpios = <&gpio3 14 0>;
+>  	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_sdhc2>;
+> +	pinctrl-0 = <&pinctrl_sdhc2 &pinctrl_sdhc2_cd>;
+>  	status = "okay";
+>  };
+>  
+> -- 
+> 1.8.3.2
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
