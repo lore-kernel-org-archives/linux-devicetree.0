@@ -1,36 +1,132 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using pinfunc.
-Date: Tue, 03 Dec 2013 10:33:43 +0100
-Message-ID: <2004634.MefHDYV4b2@flatron>
-References: <1384881351-10782-1-git-send-email-t.figa@samsung.com> <2715269.S45Tc0DQGQ@flatron> <CACRpkdYDONQ-7U3hGYnx7jb0_Y=rcOcvy-2F1dO058FfOO4stg@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/4] mfd: DT bindings for TPS65218 PMIC
+Date: Tue, 3 Dec 2013 09:36:37 +0000
+Message-ID: <20131203093637.GE11828@lee--X1>
+References: <1386053006-6480-1-git-send-email-j-keerthy@ti.com>
+ <1386053006-6480-2-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYDONQ-7U3hGYnx7jb0_Y=rcOcvy-2F1dO058FfOO4stg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kevin Bracey <kevin@bracey.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kmpark@infradead.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1386053006-6480-2-git-send-email-j-keerthy@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, grant.likely@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 03 of December 2013 10:31:12 Linus Walleij wrote:
-> On Tue, Nov 26, 2013 at 1:30 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> 
-> > IMHO a way to specify a default safe state of all pins (with lowest power
-> > consumption, without possibility of glitching external devices, etc.)
-> > would be really useful for Samsung platforms (and probably Renesas ones
-> > as Kevin wrote).
-> 
-> I'm following :-)
-> 
-> Now if we could see some more details and a patch, that would
-> be great ...
+> Add DT bindings for TPS65218 PMIC.
+>=20
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/tps65218.txt |   27 ++++++++++=
+++++++++++
+>  .../devicetree/bindings/regulator/tps65218.txt     |   22 ++++++++++=
+++++++
+>  2 files changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/tps65218.tx=
+t
+>  create mode 100644 Documentation/devicetree/bindings/regulator/tps65=
+218.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/tps65218.txt b/Doc=
+umentation/devicetree/bindings/mfd/tps65218.txt
+> new file mode 100644
+> index 0000000..87cb7a8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/tps65218.txt
+> @@ -0,0 +1,27 @@
+> +The TPS65218 Integrated Power Management Chips.
+> +These chips are connected to an i2c bus.
 
-Yeah, I would like to see them too. ;)
+                                   I2C
 
-Unfortunately my make_pinctrl_default_state_patches() function is
-returning -ENOTIME at the moment. :( (I hope to get it fixed
-later this month, though.)
+> +Required properties:
+> +- compatible : Must be "ti,tps65218";
+> +- interrupts : This i2c device has an IRQ line connected to the main=
+ SoC
 
-Best regards,
-Tomasz
+                       I2C
+
+> +- interrupt-controller : Since the tps65218 support several interrup=
+ts
+
+                                               support(s) (hosts?)
+
+> +  internally, it is considered as an interrupt controller cascaded t=
+o the SoC.
+> +- #interrupt-cells =3D <2>;
+> +- interrupt-parent : The parent interrupt controller.
+
+           Phandle to ...
+
+> +Optional node:
+
+            node(s):
+
+> +- Child nodes contain in the tps65218.
+> +  It supports a number of features.
+
+Please re-phase the above two sentences to something decipherable.
+
+> +  The children nodes will thus depend of the capability of the varia=
+nt.
+
+Please, go on ...
+
+> +Example:
+> +/*
+> + * Integrated Power Management Chip
+> + */
+> +tps@24 {
+> +    compatible =3D "ti,tps65218";
+> +    reg =3D <0x24>;
+> +    interrupt-controller;
+> +    #interrupt-cells =3D <2>;
+> +    interrupt-parent =3D <&gic>;
+> +};
+
+Perhaps it would be better to centralise the documentation inclusive
+of the regulator contingent. Or at least provide a _full_ example in
+each document.
+
+> diff --git a/Documentation/devicetree/bindings/regulator/tps65218.txt=
+ b/Documentation/devicetree/bindings/regulator/tps65218.txt
+> new file mode 100644
+> index 0000000..1ccf170
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/tps65218.txt
+> @@ -0,0 +1,22 @@
+> +TPS65218 family of regulators
+> +
+> +Required properties:
+> +For tps65218 regulators/LDOs
+> +- compatible:
+> +  - "ti,tps65218-dcdc1" for DCDC1
+> +  - "ti,tps65218-dcdc2" for DCDC2
+> +  - "ti,tps65218-dcdc3" for DCDC3
+> +  - "ti,tps65218-dcdc4" for DCDC4
+> +  - "ti,tps65218-dcdc5" for DCDC5
+> +  - "ti,tps65218-dcdc6" for DCDC6
+> +  - "ti,tps65218-ldo1" for LDO1 LDO
+
+Why aren't you using 'regulator-compatible'?
+
+> +Optional properties:
+> +- Any optional property defined in bindings/regulator/regulator.txt
+> +
+> +Example:
+> +	xyz: regulator@0 {
+
+Genuine question: Is the @0 meaningful?
+
+> +		compatible =3D "ti,tps65218-dcdc1";
+> +		regulator-min-microvolt  =3D <1000000>;
+> +		regulator-max-microvolt  =3D <3000000>;
+> +	};
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
