@@ -1,108 +1,53 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 17/17] usb: phy-mxs: do not set PWD.RXPWD1PT1 for low speed connection
-Date: Tue, 3 Dec 2013 15:37:11 +0800
-Message-ID: <1386056231-17258-18-git-send-email-peter.chen@freescale.com>
-References: <1386056231-17258-1-git-send-email-peter.chen@freescale.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH 3/3] usb: phy-generic: Add ULPI VBUS support
+Date: Tue, 3 Dec 2013 10:15:56 +0200
+Message-ID: <20131203081556.GA26423@xps8300>
+References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk>
+ <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386056231-17258-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc: balbi@ti.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-At very rare cases, the SoF will not send out after resume with
-low speed connection. The workaround is do not power down
-PWD.RXPWD1PT1 bit during the suspend.
+On Mon, Dec 02, 2013 at 03:05:19PM +0800, Chris Ruehl wrote:
+> @@ -154,6 +164,27 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_gen_xceiv *nop,
+>  {
+>  	int err;
+>  
+> +	if (nop->ulpi_vbus > 0) {
+> +		unsigned int flags = 0;
+> +
+> +		if (nop->ulpi_vbus & 0x1)
+> +			flags |= ULPI_OTG_DRVVBUS;
+> +		if (nop->ulpi_vbus & 0x2)
+> +			flags |= ULPI_OTG_DRVVBUS_EXT;
+> +		if (nop->ulpi_vbus & 0x4)
+> +			flags |= ULPI_OTG_EXTVBUSIND;
+> +		if (nop->ulpi_vbus & 0x8)
+> +			flags |= ULPI_OTG_CHRGVBUS;
+> +
+> +		nop->ulpi = otg_ulpi_create(&ulpi_viewport_access_ops, flags);
+> +		if (!nop->ulpi) {
+> +			dev_err(dev, "Failed create ULPI Phy\n");
+> +			return -ENOMEM;
+> +		}
+> +		dev_dbg(dev, "Create ULPI Phy\n");
+> +		nop->ulpi->io_priv =  nop->viewport;
+> +	}
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/usb/phy/phy-mxs-usb.c |   47 ++++++++++++++++++++++++++++++++++++++++-
- 1 files changed, 46 insertions(+), 1 deletions(-)
+This is so wrong. You are registering one kind of usb phy driver from
+an other. Change drivers/usb/phy/ulpi.c to be a platform device. The
+whole flag system in it is pretty horrid. While you are at it, change
+that so it sets the values based on boolean flags from OF properties
+or platform data.
 
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 542b6ec..5ae4a57 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -69,6 +69,9 @@
- #define ANADIG_USB2_LOOPBACK_SET		0x244
- #define ANADIG_USB2_LOOPBACK_CLR		0x248
- 
-+#define ANADIG_USB1_MISC			0x1f0
-+#define ANADIG_USB2_MISC			0x250
-+
- #define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG	BIT(12)
- #define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG_SL BIT(11)
- 
-@@ -80,6 +83,11 @@
- #define BM_ANADIG_USB2_LOOPBACK_UTMI_DIG_TST1	BIT(2)
- #define BM_ANADIG_USB2_LOOPBACK_TSTI_TX_EN	BIT(5)
- 
-+#define BM_ANADIG_USB1_MISC_RX_VPIN_FS		BIT(29)
-+#define BM_ANADIG_USB1_MISC_RX_VMIN_FS		BIT(28)
-+#define BM_ANADIG_USB2_MISC_RX_VPIN_FS		BIT(29)
-+#define BM_ANADIG_USB2_MISC_RX_VMIN_FS		BIT(28)
-+
- #define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
- 
- /* Do disconnection between PHY and controller without vbus */
-@@ -296,12 +304,49 @@ static void mxs_phy_shutdown(struct usb_phy *phy)
- 	clk_disable_unprepare(mxs_phy->clk);
- }
- 
-+static bool mxs_phy_is_low_speed_connection(struct mxs_phy *mxs_phy)
-+{
-+	unsigned int line_state;
-+	/* bit definition is the same for all controllers */
-+	unsigned int dp_bit = BM_ANADIG_USB1_MISC_RX_VPIN_FS,
-+		     dm_bit = BM_ANADIG_USB1_MISC_RX_VMIN_FS;
-+	unsigned int reg = ANADIG_USB1_MISC;
-+
-+	/* If the SoCs don't have anatop, quit */
-+	if (!mxs_phy->regmap_anatop)
-+		return false;
-+
-+	if (mxs_phy->port_id == 0)
-+		reg = ANADIG_USB1_MISC;
-+	else if (mxs_phy->port_id == 1)
-+		reg = ANADIG_USB2_MISC;
-+
-+	regmap_read(mxs_phy->regmap_anatop, reg, &line_state);
-+
-+	if ((line_state & (dp_bit | dm_bit)) ==  dm_bit)
-+		return true;
-+	else
-+		return false;
-+}
-+
- static int mxs_phy_suspend(struct usb_phy *x, int suspend)
- {
- 	struct mxs_phy *mxs_phy = to_mxs_phy(x);
-+	bool low_speed_connection, vbus_is_on;
-+
-+	low_speed_connection = mxs_phy_is_low_speed_connection(mxs_phy);
-+	vbus_is_on = mxs_phy_get_vbus_status(mxs_phy);
- 
- 	if (suspend) {
--		writel(0xffffffff, x->io_priv + HW_USBPHY_PWD);
-+		/*
-+		 * FIXME: Do not power down RXPWD1PT1 bit for low speed
-+		 * connect. The low speed connection will have problem at
-+		 * very rare cases during usb suspend and resume process.
-+		 */
-+		if (low_speed_connection & vbus_is_on)
-+			writel(0xfffbffff, x->io_priv + HW_USBPHY_PWD);
-+		else
-+			writel(0xffffffff, x->io_priv + HW_USBPHY_PWD);
- 		writel(BM_USBPHY_CTRL_CLKGATE,
- 		       x->io_priv + HW_USBPHY_CTRL_SET);
- 		clk_disable_unprepare(mxs_phy->clk);
+NAK for the whole set.
+
+
 -- 
-1.7.8
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+heikki
