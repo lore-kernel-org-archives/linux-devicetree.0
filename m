@@ -1,61 +1,103 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] gpu: host1x: Add MIPI pad calibration DT bindings
-Date: Tue, 3 Dec 2013 10:52:43 +0100
-Message-ID: <20131203095242.GC21178@ulmo.nvidia.com>
-References: <1385990934-20809-1-git-send-email-treding@nvidia.com>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH 2/4] MFD: TPS65218: Add driver for the TPS65218 PMIC
+Date: Tue, 3 Dec 2013 15:36:35 +0530
+Message-ID: <529DAD2B.4040909@ti.com>
+References: <1386053006-6480-1-git-send-email-j-keerthy@ti.com> <1386053006-6480-3-git-send-email-j-keerthy@ti.com> <20131203092410.GD11828@lee--X1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1385990934-20809-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131203092410.GD11828@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Keerthy <j-keerthy@ti.com>, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, grant.likely@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 03 December 2013 02:54 PM, Lee Jones wrote:
+>> The TPS65218 chip is a power management IC for Portable Navigation Systems
+>> and Tablet Computing devices. It contains the following components:
+>>
+>>   - Regulators.
+>>   - Over Temperature warning and Shut down.
+>>
+>> This patch adds support for tps65218 mfd device. At this time only
+>> the regulator functionality is made available.
+>>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>   drivers/mfd/Kconfig          |   14 ++
+>>   drivers/mfd/Makefile         |    1 +
+>>   drivers/mfd/tps65218.c       |  281 +++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/mfd/tps65218.h |  288 ++++++++++++++++++++++++++++++++++++++++++
+> <snip>
+>
+>> +config MFD_TPS65218
+>> +	tristate "TI TPS65218 Power Management chips"
+>> +	depends on I2C
+>> +	select MFD_CORE
+>> +	select REGMAP_I2C
+>> +	help
+>> +	  If you say yes here you get support for the TPS65218 series of
+>> +	  Power Management chips.
+>> +	  These include voltage regulators, gpio and other features
+>> +	  that are often used in portable devices.
+> Perhaps you should add a note that only the regulator component is
+> currently supported.
+Ok. I will add it.
 
---XMCwj5IQnwKtuyBG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> <snip>
+>
+>> new file mode 100644
+>> index 0000000..8c61640
+>> --- /dev/null
+>> +++ b/drivers/mfd/tps65218.c
+>> @@ -0,0 +1,281 @@
+>> +/*
+>> + * TPS65218 chip family multi-function driver
+> Instead of calling it an MFD driver (is there such a thing?) I think
+> you should mention its true purpose, as per the datasheet.
 
-On Mon, Dec 02, 2013 at 02:28:54PM +0100, Thierry Reding wrote:
-[...]
-> +	host1x@50000000 {
-> +		...
-> +
-> +		dsi@54300000 {
-> +			...
-> +
-> +			nvidia,mipi-calibrate = <&mipi 0x060>;
+Ok.
 
-I just occurred to me that perhaps having a list of pad indices here
-would be easier to write and parse than a bitmask. So alternatively this
-could be:
+>
+> <snip>
+>
+>> +static const struct of_device_id of_tps65218_match_table[] = {
+>> +	{ .compatible = "ti,tps65218", },
+>> +	{ /* end */ }
+> I think the end comment is superfluous.
+>
+> However, if you _really_ want to put something in there, I dislike
+> "/* Sentinel */" the least.
 
-			nvidia,mipi-calibrate = <&mipi 5>, <&mipi 6>;
+I will remove it.
+>
+>> +static int tps65218_probe(struct i2c_client *client,
+>> +				const struct i2c_device_id *ids)
+>> +{
+> <snip>
+>
+>> +	ret = of_platform_populate(client->dev.of_node, NULL, NULL,
+>> +				   &client->dev);
+> What are you trying to do here?
+>
+> Register each regulator as a platform device?
 
-Thierry
+Yeah. The probe will be called for every regulator separately.
 
---XMCwj5IQnwKtuyBG
-Content-Type: application/pgp-signature
+> <snip>
+>
+>> +static const struct i2c_device_id tps65218_id_table[] = {
+>> +	{"tps65218", TPS65218},
+>> +};
+> This has a different structure to of_tps65218_match_table, please
+> ensure they're the same. I prefer spaces after '{' and before '}'.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Ok. I will add a space after '{' and before '}'. Sorry I did not
+follow tps65218_id_table being different than of_tps65218_match_table.
 
-iQIcBAEBAgAGBQJSnanqAAoJEN0jrNd/PrOhIbgP/AhphM0uqyjv0tyChre7Q4Wt
-opbURjzkp9q+VrFsMoEXqNT3hhRMkuVUoa3qHyCfXRXJv3SLb1rPt7N0WZSU7PaH
-U/VnCLcWP73VgVFT6uxjxfZjT8lTj8ERHFYRZmKAtLA8q4cZbJwAGEzFx4dglniZ
-zOqu/8LWxi7SpFGqBSDetcTFZ01/a+CSam+RRU3+JNYcsdkAxX774uiX0IOziVQh
-4Nh68BTJE+s3GaSvscUuMPQODeh1ZyAOmWqwvjH22eF7kVEQ3d1gp0YCA+tw9e5u
-9/jS19ZxZw1y4cdPq33TWaaeJJiflK7LFxqfohm4V0ufemkrKJaKIoMdB3VhSx9s
-89D/1gltMQX8vYninRBLO1njrvFxbPA/TZatOZGFPwsfQyWJDH/5wpL0IIx+tFrL
-LMJUqOesKONZugkckzgBoduiuYrA7uMKQxvjrhqh2F+3XC7jr4AgvftF1aPcRSiP
-qWx6KUrr1ryFWVWshT+nSlrFh4vlCIOpf88rEhbS3t60T+MeOgWhAZLVabGCpvRs
-AE8H2x2Uty4DZtMRlG8yvdFsschqPvmHCDB1TD515nWF2uEAawUm73oz4azEp3zE
-LZsQJepGFjEuGg6yM1cyifcU1jfC8S52shw5mMDaJWjYRMEJCw6ALQwBx60/OyMS
-yz4VF45CfTuRceKIzh8y
-=/yak
------END PGP SIGNATURE-----
+One is of the type of_device_id and the other i2c_device_id.
+>
+> <snip>
+>
 
---XMCwj5IQnwKtuyBG--
