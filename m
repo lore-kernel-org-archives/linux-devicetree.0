@@ -1,105 +1,70 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] net: davinci_emac: Fix platform data handling and make
- usable for am3517
-Date: Tue, 3 Dec 2013 15:13:02 -0800
-Message-ID: <20131203231301.GN26766@atomide.com>
+From: Milo Kim <milo.kim@ti.com>
+Subject: Re: [PATCH v3 3/4] pwm: add LP3943 PWM driver
+Date: Wed, 4 Dec 2013 08:27:08 +0900
+Message-ID: <529E68CC.4090808@ti.com>
+References: <1378949630-6275-1-git-send-email-milo.kim@ti.com> <20131203102455.GH21178@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: netdev-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: Mugunthan V N <mugunthanvnm@ti.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20131203102455.GH21178@ulmo.nvidia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-When booted with device tree, we may still have platform data passed
-as auxdata. For am3517 this is needed for passing the interrupt_enable
-and interrupt_disable callbacks that access the omap system control module
-registers. These callback functions will eventually go away when we have
-a separate system control module driver.
+Hi Thierry,
 
-Some of the things that are currently passed as platform data we don't need
-to set up as device tree properties as they are always the same on am3517.
-So let's use a new compatible flag for those so we can get those from
-the device tree match data.
+On 12/03/2013 07:24 PM, Thierry Reding wrote:
+> On Thu, Sep 12, 2013 at 10:33:50AM +0900, Milo Kim wrote:
+>> This is the other of the LP3943 MFD driver.
+>> LP3943 can be used as a PWM generator, up to 2 channels.
+>>
+>> * Two PWM generators supported
+>>
+>> * Supported PWM operations
+>>    request, free, config, enable and disable
+>>
+>> * Pin assignment
+>>    A driver data, 'pin_used' is checked when a PWM is requested.
+>>    If the output pin is already assigned, then returns as failure.
+>>    If the pin is available, 'pin_used' is set.
+>>    When the PWM is not used anymore, then it is cleared.
+>>    It is defined as unsigned long type for atomic bit operation APIs,
+>>    but only LSB 16bits are used because LP3943 has 16 outputs.
+>>
+>> Cc: Thierry Reding <thierry.reding@gmail.com>
+>> Signed-off-by: Milo Kim <milo.kim@ti.com>
+>> ---
+>> * Patch v3
+>>    Manual polarity not supported any more.
+>>    Add encapsulation functions for accessing internal data structure.
+>>    Use pwm_set_chip_data() and pwm_get_chip_data().
+>>    And other code fixes based on Thierry's feedback.
+>>
+>>   drivers/pwm/Kconfig      |   10 ++
+>>   drivers/pwm/Makefile     |    1 +
+>>   drivers/pwm/pwm-lp3943.c |  314 ++++++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 325 insertions(+)
+>>   create mode 100644 drivers/pwm/pwm-lp3943.c
+>
+> Hi Milo,
+>
+> Is this patchset still the latest version? I've tried to remember the
+> status of this series, but I could only draw a blank.
 
-Also note that we need to fix setting of phy_dev to NULL instead of an empty
-string as the code later on uses that to find the first phy on the mdio bus.
-This seems to have been caused by 5d69e0076a72 (net: davinci_emac: switch to
-new mdio).
+Thanks a lot for this reminder.
+I forgot to check the status.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+The latest one is the v4, but LP3943 PWM driver code is same as v3.
 
---- a/Documentation/devicetree/bindings/net/davinci_emac.txt
-+++ b/Documentation/devicetree/bindings/net/davinci_emac.txt
-@@ -4,7 +4,7 @@ This file provides information, what the device node
- for the davinci_emac interface contains.
- 
- Required properties:
--- compatible: "ti,davinci-dm6467-emac";
-+- compatible: "ti,davinci-dm6467-emac" or "ti,am3517-emac"
- - reg: Offset and length of the register set for the device
- - ti,davinci-ctrl-reg-offset: offset to control register
- - ti,davinci-ctrl-mod-reg-offset: offset to control module register
---- a/drivers/net/ethernet/ti/davinci_emac.c
-+++ b/drivers/net/ethernet/ti/davinci_emac.c
-@@ -61,6 +61,7 @@
- #include <linux/davinci_emac.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/of_irq.h>
- #include <linux/of_net.h>
- 
-@@ -1752,10 +1753,14 @@ static const struct net_device_ops emac_netdev_ops = {
- #endif
- };
- 
-+static const struct of_device_id davinci_emac_of_match[];
-+
- static struct emac_platform_data *
- davinci_emac_of_get_pdata(struct platform_device *pdev, struct emac_priv *priv)
- {
- 	struct device_node *np;
-+	const struct of_device_id *match;
-+	const struct emac_platform_data *auxdata;
- 	struct emac_platform_data *pdata = NULL;
- 	const u8 *mac_addr;
- 
-@@ -1793,7 +1798,20 @@ davinci_emac_of_get_pdata(struct platform_device *pdev, struct emac_priv *priv)
- 
- 	priv->phy_node = of_parse_phandle(np, "phy-handle", 0);
- 	if (!priv->phy_node)
--		pdata->phy_id = "";
-+		pdata->phy_id = NULL;
-+
-+	auxdata = pdev->dev.platform_data;
-+	if (auxdata) {
-+		pdata->interrupt_enable = auxdata->interrupt_enable;
-+		pdata->interrupt_disable = auxdata->interrupt_disable;
-+	}
-+
-+	match = of_match_device(davinci_emac_of_match, &pdev->dev);
-+	if (match && match->data) {
-+		auxdata = match->data;
-+		pdata->version = auxdata->version;
-+		pdata->hw_ram_addr = auxdata->hw_ram_addr;
-+	}
- 
- 	pdev->dev.platform_data = pdata;
- 
-@@ -2020,8 +2038,14 @@ static const struct dev_pm_ops davinci_emac_pm_ops = {
- };
- 
- #if IS_ENABLED(CONFIG_OF)
-+static const struct emac_platform_data am3517_emac_data = {
-+	.version		= EMAC_VERSION_2,
-+	.hw_ram_addr		= 0x01e20000,
-+};
-+
- static const struct of_device_id davinci_emac_of_match[] = {
- 	{.compatible = "ti,davinci-dm6467-emac", },
-+	{.compatible = "ti,am3517-emac", .data = &am3517_emac_data, },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, davinci_emac_of_match);
+   Update from v3 to v4:
+     Move the driver description from the documentation to the MFD 
+driver file.
+
+There are two things to be ACKed for v4.
+One is the PWM driver. (https://lkml.org/lkml/2013/9/25/11)
+The other is the documentation. (https://lkml.org/lkml/2013/9/25/10)
+
+Thanks,
+   Milo
