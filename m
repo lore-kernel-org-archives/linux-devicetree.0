@@ -1,137 +1,122 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 3/3] ARM: dts: imx27-apf27dev: Add pinctrl for cspi,
- sdhci, leds and keys
-Date: Tue, 3 Dec 2013 21:34:23 +0800
-Message-ID: <20131203133421.GK13726@S2101-09.ap.freescale.net>
-References: <1386069015-10718-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
- <1386069015-10718-2-git-send-email-gwenhael.goavec-merou@armadeus.com>
- <1386069015-10718-3-git-send-email-gwenhael.goavec-merou@armadeus.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386069015-10718-3-git-send-email-gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v2] OF: base: match each node compatible against all given matches first
+Date: Tue,  3 Dec 2013 14:52:00 +0100
+Message-ID: <1386078720-8756-1-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1385663785-8643-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1385663785-8643-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Meelis Roos <mroos@linux.ee>, Marc Kleine-Budde <mkl@pengutronix.de>, Scott Wood <scottwood@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 03, 2013 at 12:10:15PM +0100, Gwenhael Goavec-Merou wrote:
-> Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
-> 
-> - add chip-select pinctrl for cspi
-> - add card-detect for sdhci2
-> - add pinctrl for gpio-leds and gpio-keys
+Currently, of_match_node compares each given match against all node's
+compatible strings with of_device_is_compatible.
 
-I put these lines before your SoB.
+To achieve multiple compatible strings per node with ordering from
+specific to generic, this requires given matches to be ordered from
+specific to generic. For most of the drivers this is not true and also
+an alphabetical ordering is more sane there.
 
-Shawn
+Therefore, this patch modifies of_match_node to match each of the node's
+compatible strings against all given matches first, before checking the
+next compatible string. This implies that node's compatibles are ordered
+from specific to generic while given matches can be in any order.
 
->  
-> ---
-> Changelog:
-> v3:
->  * use short subject and add commit log
-> 
->  arch/arm/boot/dts/imx27-apf27dev.dts | 34 +++++++++++++++++++++++++++++++---
->  1 file changed, 31 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
-> index a794b1a..17dd206 100644
-> --- a/arch/arm/boot/dts/imx27-apf27dev.dts
-> +++ b/arch/arm/boot/dts/imx27-apf27dev.dts
-> @@ -38,6 +38,8 @@
->  
->  	gpio-keys {
->  		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_keys>;
->  
->  		user-key {
->  			label = "user";
-> @@ -48,6 +50,8 @@
->  
->  	leds {
->  		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_leds>;
->  
->  		user {
->  			label = "Heartbeat";
-> @@ -61,7 +65,7 @@
->  	fsl,spi-num-chipselects = <1>;
->  	cs-gpios = <&gpio4 28 GPIO_ACTIVE_LOW>;
->  	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_cspi1>;
-> +	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
->  	status = "okay";
->  };
->  
-> @@ -71,7 +75,7 @@
->  		   <&gpio4 27 GPIO_ACTIVE_LOW>,
->  		   <&gpio2 17 GPIO_ACTIVE_LOW>;
->  	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_cspi2>;
-> +	pinctrl-0 = <&pinctrl_cspi2 &pinctrl_cspi2_cs>;
->  	status = "okay";
->  };
->  
-> @@ -107,10 +111,30 @@
->  			fsl,pins = <MX27_CSPI1_PINGRP1>;
->  		};
->  
-> +		pinctrl_cspi1_cs: cspi1csgrp {
-> +			fsl,pins = <MX27_PAD_CSPI1_SS0__GPIO4_28 0x0>;
-> +		};
-> +
->  		pinctrl_cspi2: cspi2grp {
->  			fsl,pins = <MX27_CSPI2_PINGRP1>;
->  		};
->  
-> +		pinctrl_cspi2_cs: cspi2csgrp {
-> +			fsl,pins = <
-> +				MX27_PAD_CSI_D5__GPIO2_17 0x0
-> +				MX27_PAD_CSPI2_SS0__GPIO4_21 0x0
-> +				MX27_PAD_CSPI1_SS1__GPIO4_27 0x0
-> +			>;
-> +		};
-> +
-> +		pinctrl_gpio_leds: gpioledsgrp {
-> +			fsl,pins = <MX27_PAD_PC_VS1__GPIO6_14 0x0>;
-> +		};
-> +
-> +		pinctrl_gpio_keys: gpiokeysgrp {
-> +			fsl,pins = <MX27_PAD_PC_VS2__GPIO6_13 0x0>;
-> +		};
-> +
->  		pinctrl_imxfb1: imxfbgrp {
->  			fsl,pins = <MX27_FB_PINGRP1>;
->  		};
-> @@ -130,6 +154,10 @@
->  		pinctrl_sdhc2: sdhc2grp {
->  			fsl,pins = <MX27_SDHC2_PINGRP1>;
->  		};
-> +
-> +		pinctrl_sdhc2_cd: sdhc2cdgrp {
-> +			fsl,pins = <MX27_PAD_TOUT__GPIO3_14 0x0>;
-> +		};
->  	};
->  };
->  
-> @@ -137,7 +165,7 @@
->  	bus-width = <4>;
->  	cd-gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
->  	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_sdhc2>;
-> +	pinctrl-0 = <&pinctrl_sdhc2 &pinctrl_sdhc2_cd>;
->  	status = "okay";
->  };
->  
-> -- 
-> 1.8.3.2
-> 
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Changelog:
+v1->v2:
+- Allow checks against nodes with no compatible (Reported by Rob Herring)
+- Add some comments
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Meelis Roos <mroos@linux.ee>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Scott Wood <scottwood@freescale.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/of/base.c |   53 +++++++++++++++++++++++++++++++++++++----------------
+ 1 files changed, 37 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index f807d0e..8d007d8 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -731,24 +731,42 @@ static
+ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+ 					   const struct device_node *node)
+ {
++	const char *cp;
++	int cplen, l;
++
+ 	if (!matches)
+ 		return NULL;
+ 
+-	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
+-		int match = 1;
+-		if (matches->name[0])
+-			match &= node->name
+-				&& !strcmp(matches->name, node->name);
+-		if (matches->type[0])
+-			match &= node->type
+-				&& !strcmp(matches->type, node->type);
+-		if (matches->compatible[0])
+-			match &= __of_device_is_compatible(node,
+-							   matches->compatible);
+-		if (match)
+-			return matches;
+-		matches++;
+-	}
++	cp = __of_get_property(node, "compatible", &cplen);
++	do {
++		const struct of_device_id *m = matches;
++
++		/* Check against matches with current compatible string */
++		while (m->name[0] || m->type[0] || m->compatible[0]) {
++			int match = 1;
++			if (m->name[0])
++				match &= node->name
++					&& !strcmp(m->name, node->name);
++			if (m->type[0])
++				match &= node->type
++					&& !strcmp(m->type, node->type);
++			if (m->compatible[0])
++				match &= cp
++					&& !of_compat_cmp(m->compatible, cp,
++							strlen(m->compatible));
++			if (match)
++				return m;
++			m++;
++		}
++
++		/* Get node's next compatible string */ 
++		if (cp) {
++			l = strlen(cp) + 1;
++			cp += l;
++			cplen -= l;
++		}
++	} while (cp && (cplen > 0));
++
+ 	return NULL;
+ }
+ 
+@@ -757,7 +775,10 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+  *	@matches:	array of of device match structures to search in
+  *	@node:		the of device structure to match against
+  *
+- *	Low level utility function used by device matching.
++ *	Low level utility function used by device matching. Matching order
++ *	is to compare each of the node's compatibles with all given matches
++ *	first. This implies node's compatible is sorted from specific to
++ *	generic while matches can be in any order.
+  */
+ const struct of_device_id *of_match_node(const struct of_device_id *matches,
+ 					 const struct device_node *node)
+-- 
+1.7.2.5
