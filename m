@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 15/17] usb: phy-mxs: add controller id
-Date: Tue, 3 Dec 2013 15:37:09 +0800
-Message-ID: <1386056231-17258-16-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH v4 17/17] usb: phy-mxs: do not set PWD.RXPWD1PT1 for low speed connection
+Date: Tue, 3 Dec 2013 15:37:11 +0800
+Message-ID: <1386056231-17258-18-git-send-email-peter.chen@freescale.com>
 References: <1386056231-17258-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,40 +12,92 @@ To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.
 Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It is used to access un-regulator registers according to
-different controllers.
+At very rare cases, the SoF will not send out after resume with
+low speed connection. The workaround is do not power down
+PWD.RXPWD1PT1 bit during the suspend.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/phy/phy-mxs-usb.c |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+ drivers/usb/phy/phy-mxs-usb.c |   47 ++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 46 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 52e80d9..4c2dfcd 100644
+index 542b6ec..5ae4a57 100644
 --- a/drivers/usb/phy/phy-mxs-usb.c
 +++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -127,6 +127,7 @@ struct mxs_phy {
- 	struct clk *clk;
- 	const struct mxs_phy_data *data;
- 	struct regmap *regmap_anatop;
-+	int port_id;
- };
+@@ -69,6 +69,9 @@
+ #define ANADIG_USB2_LOOPBACK_SET		0x244
+ #define ANADIG_USB2_LOOPBACK_CLR		0x248
  
- static inline bool is_imx6q_phy(struct mxs_phy *mxs_phy)
-@@ -392,6 +393,13 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
-+	ret = of_alias_get_id(np, "usbphy");
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
-+		return ret;
-+	}
-+	mxs_phy->port_id = ret;
++#define ANADIG_USB1_MISC			0x1f0
++#define ANADIG_USB2_MISC			0x250
 +
- 	mxs_phy->phy.io_priv		= base;
- 	mxs_phy->phy.dev		= &pdev->dev;
- 	mxs_phy->phy.label		= DRIVER_NAME;
+ #define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG	BIT(12)
+ #define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG_SL BIT(11)
+ 
+@@ -80,6 +83,11 @@
+ #define BM_ANADIG_USB2_LOOPBACK_UTMI_DIG_TST1	BIT(2)
+ #define BM_ANADIG_USB2_LOOPBACK_TSTI_TX_EN	BIT(5)
+ 
++#define BM_ANADIG_USB1_MISC_RX_VPIN_FS		BIT(29)
++#define BM_ANADIG_USB1_MISC_RX_VMIN_FS		BIT(28)
++#define BM_ANADIG_USB2_MISC_RX_VPIN_FS		BIT(29)
++#define BM_ANADIG_USB2_MISC_RX_VMIN_FS		BIT(28)
++
+ #define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
+ 
+ /* Do disconnection between PHY and controller without vbus */
+@@ -296,12 +304,49 @@ static void mxs_phy_shutdown(struct usb_phy *phy)
+ 	clk_disable_unprepare(mxs_phy->clk);
+ }
+ 
++static bool mxs_phy_is_low_speed_connection(struct mxs_phy *mxs_phy)
++{
++	unsigned int line_state;
++	/* bit definition is the same for all controllers */
++	unsigned int dp_bit = BM_ANADIG_USB1_MISC_RX_VPIN_FS,
++		     dm_bit = BM_ANADIG_USB1_MISC_RX_VMIN_FS;
++	unsigned int reg = ANADIG_USB1_MISC;
++
++	/* If the SoCs don't have anatop, quit */
++	if (!mxs_phy->regmap_anatop)
++		return false;
++
++	if (mxs_phy->port_id == 0)
++		reg = ANADIG_USB1_MISC;
++	else if (mxs_phy->port_id == 1)
++		reg = ANADIG_USB2_MISC;
++
++	regmap_read(mxs_phy->regmap_anatop, reg, &line_state);
++
++	if ((line_state & (dp_bit | dm_bit)) ==  dm_bit)
++		return true;
++	else
++		return false;
++}
++
+ static int mxs_phy_suspend(struct usb_phy *x, int suspend)
+ {
+ 	struct mxs_phy *mxs_phy = to_mxs_phy(x);
++	bool low_speed_connection, vbus_is_on;
++
++	low_speed_connection = mxs_phy_is_low_speed_connection(mxs_phy);
++	vbus_is_on = mxs_phy_get_vbus_status(mxs_phy);
+ 
+ 	if (suspend) {
+-		writel(0xffffffff, x->io_priv + HW_USBPHY_PWD);
++		/*
++		 * FIXME: Do not power down RXPWD1PT1 bit for low speed
++		 * connect. The low speed connection will have problem at
++		 * very rare cases during usb suspend and resume process.
++		 */
++		if (low_speed_connection & vbus_is_on)
++			writel(0xfffbffff, x->io_priv + HW_USBPHY_PWD);
++		else
++			writel(0xffffffff, x->io_priv + HW_USBPHY_PWD);
+ 		writel(BM_USBPHY_CTRL_CLKGATE,
+ 		       x->io_priv + HW_USBPHY_CTRL_SET);
+ 		clk_disable_unprepare(mxs_phy->clk);
 -- 
 1.7.8
 
