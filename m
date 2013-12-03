@@ -1,47 +1,36 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Device Tree Maturity Project
-Date: Tue, 03 Dec 2013 13:01:41 +0000
-Message-ID: <20131203130141.14610C40750@trevor.secretlab.ca>
-References: <CACxGe6uMqTP_pBdrpR9Tio6oErrgNmR_S9dtF7VsSig_B-rP+Q@mail.gmail. com> <CACxGe6sG_p+Ui61vqsALnWxYvi1ZF8fE7_ExyCd36Q9C9wLgQQ@mail.gmail.com> < 20131122112223.GB8406@e106331-lin.cambridge.arm.com> <20131127143655. F25E4C404EC@trevor.secretlab.ca> <1385740653.25763.53.camel@kazak.uk. xensource.com> <20131202231211.457DAC40800@trevor.secretlab.ca> <529D15F8. 9060700@calxeda.com>
+From: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/3] ARM: imx27: add pwm pingrp
+Date: Tue,  3 Dec 2013 12:10:13 +0100
+Message-ID: <1386069015-10718-1-git-send-email-gwenhael.goavec-merou@armadeus.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <529D15F8.9060700-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stuart Yoder <b08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gwenhael Goavec-Merou <gwenhael.goavec-merou-W7CSdorvuhNZroRs9YW3xA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 02 Dec 2013 17:21:28 -0600, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 12/02/2013 05:12 PM, Grant Likely wrote:
-> > On Fri, 29 Nov 2013 15:57:33 +0000, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
-> >> On Wed, 2013-11-27 at 14:36 +0000, Grant Likely wrote:
-> >>> On Fri, 22 Nov 2013 11:22:23 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> >>>> On Wed, Nov 20, 2013 at 11:56:39AM +0000, Grant Likely wrote:
-> >>>>> On Wed, Nov 20, 2013 at 11:55 AM, Grant Likely
-> >>>>> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> >>>>>> To help keep track of what is going on, I would like to have a short
-> >>>>>> stand up meeting once a week. Looking at my calendar, I can make
-> >>>>>> 14:00UTC on Tuesday, Wednesday or Friday work (9:00EST, 7:00PST). I
-> >>>>>
-> >>>>> Correction: Tuesday, Thursday or Friday. Wednesday I'm booked.
-> >>>>
-> >>>> Apologies for begin a little late to the party...
-> >>>>
-> >>>> I have a regular fortnightly meeting on Thursdays, and for the next few
-> >>>> weeks (until the new year) I'm otherwise engaged on Fridays, so Tuesdays
-> >>>> would be preferable for me.
-> >>>
-> >>> I started with Fridays, but it sounds like Tuesday works for everyone.
-> >>> I've moved the meeting to next Tuesday.
-> >>
-> >> Should I have gotten an update meeting request?
-> > 
-> > Yes. I don't know why it didn't get out to you. I've tried to send it again.
-> 
-> I have not seen an update either.
+From: Gwenhael Goavec-Merou <gwenhael.goavec-merou-W7CSdorvuhNZroRs9YW3xA@public.gmane.org>
 
-Do you have it now?
+Signed-off-by: Gwenhael Goavec-Merou <gwenhael.goavec-merou-W7CSdorvuhNZroRs9YW3xA@public.gmane.org>
+---
+ arch/arm/boot/dts/imx27-pingrp.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-g.
+diff --git a/arch/arm/boot/dts/imx27-pingrp.h b/arch/arm/boot/dts/imx27-pingrp.h
+index f3fbf5a..edc1e90 100644
+--- a/arch/arm/boot/dts/imx27-pingrp.h
++++ b/arch/arm/boot/dts/imx27-pingrp.h
+@@ -88,6 +88,9 @@
+ #define MX27_OWIRE1_PINGRP1 \
+ 	MX27_PAD_RTCK__OWIRE 0x0
+ 
++#define MX27_PWM_PINGRP1 \
++	MX27_PAD_PWMO__PWMO 0x0
++
+ #define MX27_SDHC1_PINGRP1 \
+ 	MX27_PAD_SD1_CLK__SD1_CLK \
+ 	MX27_PAD_SD1_CMD__SD1_CMD \
+-- 
+1.8.3.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
