@@ -1,344 +1,173 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH V5 2/4] DRIVERS: IRQCHIP: CROSSBAR: Add support for Crossbar IP
-Date: Tue, 3 Dec 2013 15:57:23 +0530
-Message-ID: <1386066445-28245-3-git-send-email-r.sricharan@ti.com>
-References: <1386066445-28245-1-git-send-email-r.sricharan@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC] pwm: Add Freescale FTM PWM driver support
+Date: Tue, 3 Dec 2013 10:36:32 +0000
+Message-ID: <20131203103632.GB7552@e106331-lin.cambridge.arm.com>
+References: <1385979309-10505-1-git-send-email-Li.Xiubo@freescale.com>
+ <20131202123406.GK12952@e106331-lin.cambridge.arm.com>
+ <1DD289F6464F0949A2FCA5AA6DC23F828E374B@039-SN2MPN1-011.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386066445-28245-1-git-send-email-r.sricharan@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: r.sricharan@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, robherring2@gmail.com, tglx@linutronix.de, galak@codeaurora.org, rob.herring@calxeda.com, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F828E374B@039-SN2MPN1-011.039d.mgd.msft.net>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Li Xiubo <Li.Xiubo@freescale.com>
+Cc: Jingchang Lu <jingchang.lu@freescale.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Huan Wang <Huan.Wang@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rob@landley.net" <rob@landley.net>, "galak@codeaurora.org" <galak@codeaurora.org>, grant
 List-Id: devicetree@vger.kernel.org
 
-Some socs have a large number of interrupts requests to service
-the needs of its many peripherals and subsystems. All of the
-interrupt lines from the subsystems are not needed at the same
-time, so they have to be muxed to the irq-controller appropriately.
-In such places a interrupt controllers are preceded by an CROSSBAR
-that provides flexibility in muxing the device requests to the controller
-inputs.
+On Tue, Dec 03, 2013 at 04:02:48AM +0000, Li Xiubo wrote:
+> > > I'm sending the RFC patch about the FTM IP block registers read and
+> > > write endian fix for comments and more parcticed ideas.
+> > >
+> > > In Vybird VF610 Tower, all the IP blocks expect LE data. In the LS-1,
+> > > some of the IP blocks expect LE data, while others expect BE data. And
+> > > the CPU always operates in LE mode in these two platforms.
+> > 
+> > Could you elaborate on "expect BE data" please? Is this all registers
+> > within a given device, or a subset thereof?
+> > Are there data structures involved (i.e. buffers)?
+> >
+> 
+> It actually means big-endian mode, and it's all the registers and hasn't any
+> buffers or descriptors involved within FTM IP block.
+> But maybe in other IP blocks, such as eDMA and USB, should consider about the
+> buffers/descriptors issue.
 
-This driver takes care a allocating a free irq and then configuring the
-crossbar IP as a part of the mpu's irqchip callbacks. crossbar_init should
-be called right before the irqchip_init, so that it is setup to handle the
-irqchip callbacks.
+Ok. So all the registers are big-endian, and there are no memory
+accesses to care about.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Rajendra Nayak <rnayak@ti.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Signed-off-by: Sricharan R <r.sricharan@ti.com>
-Acked-by: Kumar Gala <galak@codeaurora.org> (for DT binding portion)
-Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- [v5] Used the function of_property_read_u32_index instead of raw reading
-      from DT as per comments from Mark Rutland <mark.rutland@arm.com>
+So for the binding for this device, we only have one property to worry
+about -- the endianness of all registers.
 
- .../devicetree/bindings/arm/omap/crossbar.txt      |   27 +++
- drivers/irqchip/Kconfig                            |    8 +
- drivers/irqchip/Makefile                           |    1 +
- drivers/irqchip/irq-crossbar.c                     |  208 ++++++++++++++++++++
- include/linux/irqchip/irq-crossbar.h               |   11 ++
- 5 files changed, 255 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/omap/crossbar.txt
- create mode 100644 drivers/irqchip/irq-crossbar.c
- create mode 100644 include/linux/irqchip/irq-crossbar.h
+> 
+> 
+> > >
+> > > So now I must take care of all these two cases. I'm not very sure if
+> > > there is other better ways to resolve this problem. In this patch I
+> > > have implemented two functions fsl_pwm_readl() and fsl_pwm_writel() to
+> > > replace readl() and writel(). At the same time there should add one
+> > > "endianess" property in the DT file.
+> > 
+> > If you're adding DT properties, binding updates are helpful to describe
+> > their intended use.
+> > 
+> 
+> Yes, that surely will be added later.
 
-diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-new file mode 100644
-index 0000000..fb88585
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-@@ -0,0 +1,27 @@
-+Some socs have a large number of interrupts requests to service
-+the needs of its many peripherals and subsystems. All of the
-+interrupt lines from the subsystems are not needed at the same
-+time, so they have to be muxed to the irq-controller appropriately.
-+In such places a interrupt controllers are preceded by an CROSSBAR
-+that provides flexibility in muxing the device requests to the controller
-+inputs.
-+
-+Required properties:
-+- compatible : Should be "ti,irq-crossbar"
-+- reg: Base address and the size of the crossbar registers.
-+- ti,max-irqs: Total number of irqs available at the interrupt controller.
-+- ti,reg-size: Size of a individual register in bytes. Every individual
-+	    register is assumed to be of same size. Valid sizes are 1, 2, 4.
-+- ti,irqs-reserved: List of the reserved irq lines that are not muxed using
-+		 crossbar. These interrupt lines are reserved in the soc,
-+		 so crossbar bar driver should not consider them as free
-+		 lines.
-+
-+Examples:
-+		crossbar_mpu: @4a020000 {
-+			compatible = "ti,irq-crossbar";
-+			reg = <0x4a002a48 0x130>;
-+			ti,max-irqs = <160>;
-+			ti,reg-size = <2>;
-+			ti,irqs-reserved = <0 1 2 3 5 6 131 132 139 140>;
-+		};
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 3792a1a..2efcde6 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -61,3 +61,11 @@ config VERSATILE_FPGA_IRQ_NR
-        int
-        default 4
-        depends on VERSATILE_FPGA_IRQ
-+
-+config IRQ_CROSSBAR
-+	bool
-+	help
-+	  Support for a CROSSBAR ip that preceeds the main interrupt controller.
-+	  The primary irqchip invokes the crossbar's callback which inturn allocates
-+	  a free irq and configures the IP. Thus the peripheral interrupts are
-+	  routed to one of the free irqchip interrupt lines.
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index c60b901..2edead9 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -22,3 +22,4 @@ obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
- obj-$(CONFIG_VERSATILE_FPGA_IRQ)	+= irq-versatile-fpga.o
- obj-$(CONFIG_ARCH_VT8500)		+= irq-vt8500.o
- obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
-+obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
-diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
-new file mode 100644
-index 0000000..ae605a3
---- /dev/null
-+++ b/drivers/irqchip/irq-crossbar.c
-@@ -0,0 +1,208 @@
-+/*
-+ *  drivers/irqchip/irq-crossbar.c
-+ *
-+ *  Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ *  Author: Sricharan R <r.sricharan@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/slab.h>
-+#include <linux/irqchip/arm-gic.h>
-+
-+#define IRQ_FREE	-1
-+#define GIC_IRQ_START	32
-+
-+/*
-+ * @int_max: maximum number of supported interrupts
-+ * @irq_map: array of interrupts to crossbar number mapping
-+ * @crossbar_base: crossbar base address
-+ * @register_offsets: offsets for each irq number
-+ */
-+struct crossbar_device {
-+	uint int_max;
-+	uint *irq_map;
-+	void __iomem *crossbar_base;
-+	int *register_offsets;
-+	void (*write) (int, int);
-+};
-+
-+static struct crossbar_device *cb;
-+
-+static inline void crossbar_writel(int irq_no, int cb_no)
-+{
-+	writel(cb_no, cb->crossbar_base + cb->register_offsets[irq_no]);
-+}
-+
-+static inline void crossbar_writew(int irq_no, int cb_no)
-+{
-+	writew(cb_no, cb->crossbar_base + cb->register_offsets[irq_no]);
-+}
-+
-+static inline void crossbar_writeb(int irq_no, int cb_no)
-+{
-+	writeb(cb_no, cb->crossbar_base + cb->register_offsets[irq_no]);
-+}
-+
-+static inline int allocate_free_irq(int cb_no)
-+{
-+	int i;
-+
-+	for (i = 0; i < cb->int_max; i++) {
-+		if (cb->irq_map[i] == IRQ_FREE) {
-+			cb->irq_map[i] = cb_no;
-+			return i;
-+		}
-+	}
-+
-+	return -ENODEV;
-+}
-+
-+static int crossbar_domain_map(struct irq_domain *d, unsigned int irq,
-+			       irq_hw_number_t hw)
-+{
-+	cb->write(hw - GIC_IRQ_START, cb->irq_map[hw - GIC_IRQ_START]);
-+	return 0;
-+}
-+
-+static void crossbar_domain_unmap(struct irq_domain *d, unsigned int irq)
-+{
-+	irq_hw_number_t hw = irq_get_irq_data(irq)->hwirq;
-+
-+	if (hw > GIC_IRQ_START)
-+		cb->irq_map[hw - GIC_IRQ_START] = IRQ_FREE;
-+}
-+
-+static int crossbar_domain_xlate(struct irq_domain *d,
-+				 struct device_node *controller,
-+				 const u32 *intspec, unsigned int intsize,
-+				 unsigned long *out_hwirq,
-+				 unsigned int *out_type)
-+{
-+	unsigned long ret;
-+
-+	ret = allocate_free_irq(intspec[1]);
-+
-+	if (IS_ERR_VALUE(ret))
-+		return ret;
-+
-+	*out_hwirq = ret + GIC_IRQ_START;
-+	return 0;
-+}
-+
-+const struct irq_domain_ops routable_irq_domain_ops = {
-+	.map = crossbar_domain_map,
-+	.unmap = crossbar_domain_unmap,
-+	.xlate = crossbar_domain_xlate
-+};
-+
-+static int __init crossbar_of_init(struct device_node *node)
-+{
-+	int i, size, max, reserved = 0, entry;
-+	const __be32 *irqsr;
-+
-+	cb = kzalloc(sizeof(struct cb_device *), GFP_KERNEL);
-+
-+	if (!cb)
-+		return -ENOMEM;
-+
-+	cb->crossbar_base = of_iomap(node, 0);
-+	if (!cb->crossbar_base)
-+		goto err1;
-+
-+	of_property_read_u32(node, "ti,max-irqs", &max);
-+	cb->irq_map = kzalloc(max * sizeof(int), GFP_KERNEL);
-+	if (!cb->irq_map)
-+		goto err2;
-+
-+	cb->int_max = max;
-+
-+	for (i = 0; i < max; i++)
-+		cb->irq_map[i] = IRQ_FREE;
-+
-+	/* Get and mark reserved irqs */
-+	irqsr = of_get_property(node, "ti,irqs-reserved", &size);
-+	if (irqsr) {
-+		size /= sizeof(__be32);
-+
-+		for (i = 0; i < size; i++) {
-+			of_property_read_u32_index(node,
-+						   "ti,irqs-reserved",
-+						   i, &entry);
-+			if (entry > max) {
-+				pr_err("Invalid reserved entry\n");
-+				goto err3;
-+			}
-+			cb->irq_map[entry] = 0;
-+		}
-+	}
-+
-+	cb->register_offsets = kzalloc(max * sizeof(int), GFP_KERNEL);
-+	if (!cb->register_offsets)
-+		goto err3;
-+
-+	of_property_read_u32(node, "ti,reg-size", &size);
-+
-+	switch (size) {
-+	case 1:
-+		cb->write = crossbar_writeb;
-+		break;
-+	case 2:
-+		cb->write = crossbar_writew;
-+		break;
-+	case 4:
-+		cb->write = crossbar_writel;
-+		break;
-+	default:
-+		pr_err("Invalid reg-size property\n");
-+		goto err4;
-+		break;
-+	}
-+
-+	/*
-+	 * Register offsets are not linear because of the
-+	 * reserved irqs. so find and store the offsets once.
-+	 */
-+	for (i = 0; i < max; i++) {
-+		if (!cb->irq_map[i])
-+			continue;
-+
-+		cb->register_offsets[i] = reserved;
-+		reserved += size;
-+	}
-+
-+	register_routable_domain_ops(&routable_irq_domain_ops);
-+	return 0;
-+
-+err4:
-+	kfree(cb->register_offsets);
-+err3:
-+	kfree(cb->irq_map);
-+err2:
-+	iounmap(cb->crossbar_base);
-+err1:
-+	kfree(cb);
-+	return -ENOMEM;
-+}
-+
-+static const struct of_device_id crossbar_match[] __initconst = {
-+	{ .compatible = "ti,irq-crossbar" },
-+	{}
-+};
-+
-+int irqcrossbar_init(void)
-+{
-+	struct device_node *np;
-+	np = of_find_matching_node(NULL, crossbar_match);
-+	if (!np)
-+		return -ENODEV;
-+
-+	crossbar_of_init(np);
-+	return 0;
-+}
-diff --git a/include/linux/irqchip/irq-crossbar.h b/include/linux/irqchip/irq-crossbar.h
-new file mode 100644
-index 0000000..e5537b8
---- /dev/null
-+++ b/include/linux/irqchip/irq-crossbar.h
-@@ -0,0 +1,11 @@
-+/*
-+ *  drivers/irqchip/irq-crossbar.h
-+ *
-+ *  Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+int irqcrossbar_init(void);
--- 
-1.7.9.5
+Ok. I'd like to see that at the same time as the patch modifying the
+driver.
+
+> 
+> 
+> > > +static inline u32 fsl_pwm_readl(struct fsl_pwm_chip *fpc, void
+> > > +__iomem *reg) {
+> > > +       u32 val;
+> > > +
+> > > +       val = __raw_readl(reg);
+> > > +
+> > > +       if (fpc->endianess == FTM_BIG)
+> > > +               return be32_to_cpu(val);
+> > > +       else
+> > > +               return le32_to_cpu(val); }
+> > > +
+> > > +static inline void fsl_pwm_writel(struct fsl_pwm_chip *fpc, u32 val,
+> > > +               void __iomem *reg)
+> > > +{
+> > > +       if (fpc->endianess == FTM_BIG)
+> > > +               val = cpu_to_be32(val);
+> > > +       else
+> > > +               val = cpu_to_le32(val);
+> > > +
+> > > +       __raw_writel(val, reg);
+> > > +}
+> > 
+> > Using the __raw variants also loses you the memory barriers. Does this
+> > create any ordering issues in the rest of the driver?
+> > 
+> 
+> No, I had checked about this, so I just droped them.
+> Maybe it will be much better and safer if there are some memory barriers.
+
+If you've checked, is it safe or is it not?
+
+> 
+> 
+> 
+> > > +static int fsl_pwm_probe(struct platform_device *pdev) {
+> > > +       int ret;
+> > > +       const char *endianess;
+> > > +       struct fsl_pwm_chip *fpc;
+> > > +       struct resource *res;
+> > > +       struct device_node *np = pdev->dev.of_node;
+> > > +
+> > > +       fpc = devm_kzalloc(&pdev->dev, sizeof(*fpc), GFP_KERNEL);
+> > > +       if (!fpc)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       mutex_init(&fpc->lock);
+> > > +
+> > > +       fpc->chip.dev = &pdev->dev;
+> > > +
+> > > +       ret = fsl_pwm_parse_clk_ps(fpc);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +
+> > > +       if (of_property_read_string(np, "endianess", &endianess))
+> > > +               pr_warning("missing \"endianess\" property, "
+> > > +                               "the FTM IP block is little "
+> > > +                               "endian as default\n");
+> > > +       else if (!strcmp("big", endianess))
+> > > +               fpc->endianess = FTM_BIG;
+> > 
+> > Please don't do this.
+> > 
+> > One option is to have a new compatible string -- a big-endian device can't
+> > be poked in the same way as its little-endian variants, so they're not
+> > compatible. You can then associate some data with the compatible strings to
+> > figure out which accessors to use.
+> > 
+> 
+> Do you mean:
+> + static const struct of_device_id fsl_pwm_dt_ids[] = {
+> +        { .compatible = "fsl,vf610-ftm-pwm,big-endian", },
+> +        { .compatible = "fsl,vf610-ftm-pwm,little-endian", },
+> +        { /* sentinel */ }
+> + };  ?
+
+That's one option. Something like that would be fine. Then you could
+store flags in of_device_id::data to tell you which accessors to use.
+
+> 
+> Or just adding one property in DT file likes:
+> 			pwm0: pwm@40038000 {
+> 				compatible = "fsl,vf610-ftm-pwm";
+> 				#pwm-cells = <3>;
+> 				reg = <0x40038000 0x1000>;
+> 				clock-names = "ftm0", "ftm0_fix_sel", "ftm0_ext_sel";
+> 				clocks = <&clks VF610_CLK_FTM0>,
+> 					<&clks VF610_CLK_FTM0_FIX_SEL>,
+> 					<&clks VF610_CLK_FTM0_EXT_SEL>;
+> +				big-endian;       ---> both registers and buffers/descriptors
+> Or 
+> +				big-endian-regs;  ---> registers
+> +				big-endian-desc;  ---> buffers or descriptors
+
+As you've described above, in this case we don't need to make the
+distinction. Other bindings seem to have a "big-endian" boolean property
+for this case.
+
+It's probably best to align with the existing bindings and use a
+"big-endian" boolean property.
+
+Thanks,
+Mark.
