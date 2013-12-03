@@ -1,97 +1,114 @@
-From: Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH v1 1/1] powerpc/512x: dts: remove misplaced IRQ spec
- from 'soc' node
-Date: Tue, 3 Dec 2013 15:04:32 +0100
-Message-ID: <20131203150432.2c326004@crub>
-References: <1386068212-11484-1-git-send-email-gsi@denx.de>
+From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v4 02/17] usb: phy-mxs: Add platform judgement code
+Date: Tue, 3 Dec 2013 14:09:15 +0000
+Message-ID: <F281D0F91ED19E4D8E63A7504E8A64980414134F@039-SN2MPN1-021.039d.mgd.msft.net>
+References: <1386056231-17258-1-git-send-email-peter.chen@freescale.com>
+ <1386056231-17258-3-git-send-email-peter.chen@freescale.com>
+ <20131203102416.GB27635@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1386068212-11484-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Gerhard Sittig <gsi@denx.de>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131203102416.GB27635-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  3 Dec 2013 11:56:52 +0100
-Gerhard Sittig <gsi@denx.de> wrote:
+ 
+> > +
+> > +static const struct mxs_phy_data imx23_phy_data = {
+> > +	.flags = MXS_PHY_ABNORAML_IN_SUSPEND | MXS_PHY_SENDING_SOF_TOO_FAST,
+> > +};
+> 
+> ABNORAML? -> ABNORMAL
+> 
 
-> the 'soc' node in the common .dtsi for MPC5121 has an '#interrupt-cells'
-> property although this node is not an interrupt controller
-> 
-> remove this erroneously placed property because starting with v3.13-rc1
-> lookup and resolution of 'interrupts' specs for peripherals gets misled,
-> emits 'no irq domain found' WARN() messages and breaks the boot process
-> 
->   irq: no irq domain found for /soc@80000000 !
->   ------------[ cut here ]------------
->   WARNING: at /home/gsi/SRC/linux-torvalds/drivers/of/platform.c:171
->   Modules linked in:
->   CPU: 0 PID: 1 Comm: swapper Tainted: G        W    3.13.0-rc1-00001-g8a66234 #8
->   task: df823bb0 ti: df834000 task.ti: df834000
->   NIP: c02b5190 LR: c02b5180 CTR: c01cf4e0
->   REGS: df835c50 TRAP: 0700   Tainted: G        W     (3.13.0-rc1-00001-g8a66234)
->   MSR: 00029032 <EE,ME,IR,DR,RI>  CR: 229a9d42  XER: 20000000
-> 
->   GPR00: c02b5180 df835d00 df823bb0 00000000 00000000 df835b18 ffffffff 00000308
->   GPR08: c0479cc0 c0480000 c0479cc0 00000308 00000308 00000000 c00040fc 00000000
->   GPR16: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 df850880
->   GPR24: df84d670 00000000 00000001 df8561a0 dffffccc df85089c 00000020 00000001
->   NIP [c02b5190] of_device_alloc+0xf4/0x1a0
->   LR [c02b5180] of_device_alloc+0xe4/0x1a0
->   Call Trace:
->   [df835d00] [c02b5180] of_device_alloc+0xe4/0x1a0 (unreliable)
->   [df835d50] [c02b5278] of_platform_device_create_pdata+0x3c/0xc8
->   [df835d70] [c02b53fc] of_platform_bus_create+0xf8/0x170
->   [df835dc0] [c02b5448] of_platform_bus_create+0x144/0x170
->   [df835e10] [c02b55a8] of_platform_bus_probe+0x98/0xe8
->   [df835e30] [c0437508] mpc512x_init+0x28/0x1c4
->   [df835e70] [c0435de8] ppc_init+0x4c/0x60
->   [df835e80] [c0003b28] do_one_initcall+0x150/0x1a4
->   [df835ef0] [c0432048] kernel_init_freeable+0x114/0x1c0
->   [df835f30] [c0004114] kernel_init+0x18/0x124
->   [df835f40] [c000e910] ret_from_kernel_thread+0x5c/0x64
->   Instruction dump:
->   409effd4 57c9103a 57de2834 7c89f050 7f83e378 7c972214 7f45d378 48001f55
->   7c63d278 7c630034 5463d97e 687a0001 <0f1a0000> 2f990000 387b0010 939b0098
->   ---[ end trace 2257f10e5a20cbdd ]---
-> 
->   ...
->   irq: no irq domain found for /soc@80000000 !
->   fsl-diu-fb 80002100.display: could not get DIU IRQ
->   fsl-diu-fb: probe of 80002100.display failed with error -22
->   irq: no irq domain found for /soc@80000000 !
->   mpc512x_dma 80014000.dma: Error mapping IRQ!
->   mpc512x_dma: probe of 80014000.dma failed with error -22
->   ...
->   irq: no irq domain found for /soc@80000000 !
->   fs_enet: probe of 80002800.ethernet failed with error -22
->   ...
->   irq: no irq domain found for /soc@80000000 !
->   mpc5121-rtc 80000a00.rtc: mpc5121_rtc_probe: could not request irq: 0
->   mpc5121-rtc: probe of 80000a00.rtc failed with error -22
->   ...
-> 
-> [ best viewed with 'git diff -U5' to have DT node names in the context ]
-> 
-> Cc: Anatolij Gustschin <agust@denx.de>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Gerhard Sittig <gsi@denx.de>
-> ---
->  arch/powerpc/boot/dts/mpc5121.dtsi |    1 -
->  1 file changed, 1 deletion(-)
+My careless, will change. Thanks.
 
-applied, thanks!
+Peter 
 
-Anatolij
+> > +
+> > +static const struct mxs_phy_data imx6q_phy_data = {
+> > +	.flags = MXS_PHY_SENDING_SOF_TOO_FAST |
+> > +		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
+> > +};
+> > +
+> > +static const struct mxs_phy_data imx6sl_phy_data = {
+> > +	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
+> > +};
+> > +
+> > +static const struct of_device_id mxs_phy_dt_ids[] = {
+> > +	{ .compatible = "fsl,imx6sl-usbphy", .data = &imx6sl_phy_data, },
+> > +	{ .compatible = "fsl,imx6q-usbphy", .data = &imx6q_phy_data, },
+> > +	{ .compatible = "fsl,imx23-usbphy", .data = &imx23_phy_data, },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
+> > +
+> >  struct mxs_phy {
+> >  	struct usb_phy phy;
+> >  	struct clk *clk;
+> > +	const struct mxs_phy_data *data;
+> >  };
+> >
+> > -#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
+> > -
+> >  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+> >  {
+> >  	int ret;
+> > @@ -131,6 +174,8 @@ static int mxs_phy_probe(struct platform_device
+> *pdev)
+> >  	struct clk *clk;
+> >  	struct mxs_phy *mxs_phy;
+> >  	int ret;
+> > +	const struct of_device_id *of_id =
+> > +			of_match_device(mxs_phy_dt_ids, &pdev->dev);
+> >
+> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >  	base = devm_ioremap_resource(&pdev->dev, res);
+> > @@ -163,6 +208,7 @@ static int mxs_phy_probe(struct platform_device
+> *pdev)
+> >  	ATOMIC_INIT_NOTIFIER_HEAD(&mxs_phy->phy.notifier);
+> >
+> >  	mxs_phy->clk = clk;
+> > +	mxs_phy->data = of_id->data;
+> >
+> >  	platform_set_drvdata(pdev, mxs_phy);
+> >
+> > @@ -182,12 +228,6 @@ static int mxs_phy_remove(struct platform_device
+> *pdev)
+> >  	return 0;
+> >  }
+> >
+> > -static const struct of_device_id mxs_phy_dt_ids[] = {
+> > -	{ .compatible = "fsl,imx23-usbphy", },
+> > -	{ /* sentinel */ }
+> > -};
+> > -MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
+> > -
+> >  static struct platform_driver mxs_phy_driver = {
+> >  	.probe = mxs_phy_probe,
+> >  	.remove = mxs_phy_remove,
+> > --
+> > 1.7.8
+> >
+> >
+> >
+> 
+> --
+> Pengutronix e.K.                           |
+> |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/
+> |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
+> |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555
+> |
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
