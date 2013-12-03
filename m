@@ -1,53 +1,95 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 3/3] usb: phy-generic: Add ULPI VBUS support
-Date: Tue, 3 Dec 2013 10:15:56 +0200
-Message-ID: <20131203081556.GA26423@xps8300>
-References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk>
- <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v4 09/17] usb: phy-mxs: Enable IC fixes for related SoCs
+Date: Tue, 03 Dec 2013 09:27:35 +0100
+Message-ID: <529D95F7.8060705@pengutronix.de>
+References: <1386056231-17258-1-git-send-email-peter.chen@freescale.com> <1386056231-17258-10-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc: balbi@ti.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="qiW0wauqsdieICrhfUDsqbfl8Xg9uvWT2"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1386056231-17258-10-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2013 at 03:05:19PM +0800, Chris Ruehl wrote:
-> @@ -154,6 +164,27 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_gen_xceiv *nop,
->  {
->  	int err;
->  
-> +	if (nop->ulpi_vbus > 0) {
-> +		unsigned int flags = 0;
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--qiW0wauqsdieICrhfUDsqbfl8Xg9uvWT2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On 12/03/2013 08:37 AM, Peter Chen wrote:
+> Some PHY bugs are fixed by IC logic, but these bits are not
+> enabled by default, so we enable them at driver.
+>=20
+> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> ---
+>  drivers/usb/phy/phy-mxs-usb.c |   20 ++++++++++++++++++++
+>  1 files changed, 20 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-us=
+b.c
+> index 8738890..0908d74 100644
+> --- a/drivers/usb/phy/phy-mxs-usb.c
+> +++ b/drivers/usb/phy/phy-mxs-usb.c
+> @@ -31,6 +31,10 @@
+>  #define HW_USBPHY_CTRL_SET			0x34
+>  #define HW_USBPHY_CTRL_CLR			0x38
+> =20
+> +#define HW_USBPHY_IP				0x90
+> +#define HW_USBPHY_IP_SET			0x94
+> +#define HW_USBPHY_IP_CLR			0x98
 > +
-> +		if (nop->ulpi_vbus & 0x1)
-> +			flags |= ULPI_OTG_DRVVBUS;
-> +		if (nop->ulpi_vbus & 0x2)
-> +			flags |= ULPI_OTG_DRVVBUS_EXT;
-> +		if (nop->ulpi_vbus & 0x4)
-> +			flags |= ULPI_OTG_EXTVBUSIND;
-> +		if (nop->ulpi_vbus & 0x8)
-> +			flags |= ULPI_OTG_CHRGVBUS;
+>  #define BM_USBPHY_CTRL_SFTRST			BIT(31)
+>  #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
+>  #define BM_USBPHY_CTRL_ENAUTOSET_USBCLKS	BIT(26)
+> @@ -42,6 +46,8 @@
+>  #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
+>  #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
+> =20
+> +#define BM_USBPHY_IP_FIX                       (BIT(17) | BIT(18))
 > +
-> +		nop->ulpi = otg_ulpi_create(&ulpi_viewport_access_ops, flags);
-> +		if (!nop->ulpi) {
-> +			dev_err(dev, "Failed create ULPI Phy\n");
-> +			return -ENOMEM;
-> +		}
-> +		dev_dbg(dev, "Create ULPI Phy\n");
-> +		nop->ulpi->io_priv =  nop->viewport;
-> +	}
+>  #define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
+> =20
+>  /* Do disconnection between PHY and controller without vbus */
+> @@ -97,6 +103,16 @@ struct mxs_phy {
+>  	struct regmap *regmap_anatop;
+>  };
+> =20
+> +static inline bool is_imx6q_phy(struct mxs_phy *mxs_phy)
+> +{
+> +	return mxs_phy->data =3D=3D &imx6q_phy_data;
+> +}
+> +
+> +static inline bool is_imx6sl_phy(struct mxs_phy *mxs_phy)
+> +{
+> +	return mxs_phy->data =3D=3D &imx6sl_phy_data;
+> +}
 
-This is so wrong. You are registering one kind of usb phy driver from
-an other. Change drivers/usb/phy/ulpi.c to be a platform device. The
-whole flag system in it is pretty horrid. While you are at it, change
-that so it sets the values based on boolean flags from OF properties
-or platform data.
+Why don't you use a a BIT() here as in Patch 2/17, too?
 
-NAK for the whole set.
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
--- 
-heikki
+--qiW0wauqsdieICrhfUDsqbfl8Xg9uvWT2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlKdlfcACgkQjTAFq1RaXHP8fwCfStt3jBW/DhqCCKgDCfKqhrDa
+lbwAn2T8j8XYN3A8aGii9vaKXfr10fI/
+=HtZt
+-----END PGP SIGNATURE-----
+
+--qiW0wauqsdieICrhfUDsqbfl8Xg9uvWT2--
