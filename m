@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 07/17] usb: phy: add notify suspend and resume callback
-Date: Tue, 3 Dec 2013 15:37:01 +0800
-Message-ID: <1386056231-17258-8-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH v4 14/17] ARM: dts: imx: add mxs phy controller id
+Date: Tue, 3 Dec 2013 15:37:08 +0800
+Message-ID: <1386056231-17258-15-git-send-email-peter.chen@freescale.com>
 References: <1386056231-17258-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,55 +12,68 @@ To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.
 Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-They are used to notify PHY that the controller enters suspend
-or finishes resume.
+We need to use controller id to access different register regions
+for mxs phy.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- include/linux/usb/phy.h |   23 +++++++++++++++++++++++
- 1 files changed, 23 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/imx23.dtsi   |    1 +
+ arch/arm/boot/dts/imx28.dtsi   |    2 ++
+ arch/arm/boot/dts/imx6qdl.dtsi |    2 ++
+ arch/arm/boot/dts/imx6sl.dtsi  |    2 ++
+ 4 files changed, 7 insertions(+), 0 deletions(-)
 
-diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
-index 6c0b1c5..a747960 100644
---- a/include/linux/usb/phy.h
-+++ b/include/linux/usb/phy.h
-@@ -116,6 +116,11 @@ struct usb_phy {
- 			enum usb_device_speed speed);
- 	int	(*notify_disconnect)(struct usb_phy *x,
- 			enum usb_device_speed speed);
-+	int	(*notify_suspend)(struct usb_phy *x,
-+			enum usb_device_speed speed);
-+	int	(*notify_resume)(struct usb_phy *x,
-+			enum usb_device_speed speed);
-+
- };
+diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
+index c96ceae..a231f3d 100644
+--- a/arch/arm/boot/dts/imx23.dtsi
++++ b/arch/arm/boot/dts/imx23.dtsi
+@@ -23,6 +23,7 @@
+ 		serial1 = &auart1;
+ 		spi0 = &ssp0;
+ 		spi1 = &ssp1;
++		usbphy0 = &usbphy0;
+ 	};
  
- /**
-@@ -282,6 +287,24 @@ usb_phy_notify_disconnect(struct usb_phy *x, enum usb_device_speed speed)
- 		return 0;
- }
+ 	cpus {
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+index cda19c8..671dda0 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -32,6 +32,8 @@
+ 		serial4 = &auart4;
+ 		spi0 = &ssp1;
+ 		spi1 = &ssp2;
++		usbphy0 = &usbphy0;
++		usbphy1 = &usbphy1;
+ 	};
  
-+static inline int usb_phy_notify_suspend
-+	(struct usb_phy *x, enum usb_device_speed speed)
-+{
-+	if (x && x->notify_suspend)
-+		return x->notify_suspend(x, speed);
-+	else
-+		return 0;
-+}
-+
-+static inline int usb_phy_notify_resume
-+	(struct usb_phy *x, enum usb_device_speed speed)
-+{
-+	if (x && x->notify_resume)
-+		return x->notify_resume(x, speed);
-+	else
-+		return 0;
-+}
-+
- /* notifiers */
- static inline int
- usb_register_notifier(struct usb_phy *x, struct notifier_block *nb)
+ 	cpus {
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 4e74962..c23803d 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -33,6 +33,8 @@
+ 		spi1 = &ecspi2;
+ 		spi2 = &ecspi3;
+ 		spi3 = &ecspi4;
++		usbphy0 = &usbphy1;
++		usbphy1 = &usbphy2;
+ 	};
+ 
+ 	intc: interrupt-controller@00a01000 {
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 30322b5..a06d939 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -27,6 +27,8 @@
+ 		spi1 = &ecspi2;
+ 		spi2 = &ecspi3;
+ 		spi3 = &ecspi4;
++		usbphy0 = &usbphy1;
++		usbphy1 = &usbphy2;
+ 	};
+ 
+ 	cpus {
 -- 
 1.7.8
 
