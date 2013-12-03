@@ -1,75 +1,70 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH RESEND v5 1/2] PWM: PXA: add device tree support to PWM
- driver
-Date: Tue, 3 Dec 2013 11:17:15 +0100
-Message-ID: <20131203101714.GG21178@ulmo.nvidia.com>
-References: <1379791174-2369-1-git-send-email-mikedunn@newsguy.com>
- <1379791174-2369-2-git-send-email-mikedunn@newsguy.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 14/36] mtd: st_spi_fsm: Add device-tree binding documentation
+Date: Tue, 3 Dec 2013 11:23:35 +0100
+Message-ID: <CACRpkdb8=RRsNRKe4Nbefu2BJ4xHakmNjxFC1gwLea=bAmOz-A@mail.gmail.com>
+References: <1385727565-25794-1-git-send-email-lee.jones@linaro.org>
+	<1385727565-25794-15-git-send-email-lee.jones@linaro.org>
+	<CACRpkdaWXBchz78Yby11VpveBDtn6FrmupS=cnNYhvHgFJsBUw@mail.gmail.com>
+	<20131202110304.GB31626@lee--X1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="p7qwJlK53pWzbayA"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1379791174-2369-2-git-send-email-mikedunn@newsguy.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Mike Dunn <mikedunn@newsguy.com>
-Cc: linux-pwm@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chao Xie <chao.xie@marvell.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131202110304.GB31626@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, angus.clark-qxv4g6HH51o@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Dec 2, 2013 at 12:03 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > +Optional properties:
+>> > +  - st,syscfg          : Phandle to boot-device system configuration registers
+>> > +  - st,boot-device-reg : Address of the aforementioned boot-device register(s)
+>> > +  - st,boot-device-spi : Expected boot-device value if booted via this device
+>> > +
+>> > +Example:
+>> > +       spifsm: spifsm@fe902000{
+>> > +               compatible         = "st,spi-fsm";
+>> > +               reg                =  <0xfe902000 0x1000>;
+>> > +               reg-names          = "spi-fsm";
+>> > +               pinctrl-0          = <&pinctrl_fsm>;
+>> > +               st,syscfg          = <&syscfg_rear>;
+>> > +               st,boot-device-reg = <0x958>;
+>> > +               st,boot-device-spi = <0x1a>;
+>>
+>> I don't think we should encode any register offsets whatsoever in device
+>> tree but maybe that's just me. (Yes, Stephen will beat me up about
+>> pin control single, but I consider that a special case.)
+>>
+>> I would just put the last two things as #defines into the driver file(s)
+>> or - if it's related to other syscfg registers and varies with SoC incarnation,
+>> as a #define in a shared header for that syscfg thing.
+>
+> No can do. This isn't _this_ device's register offset, this is a
+> syscfg register offset which a) there is no driver to apply specific
+> register offsets to and b) are liable to change oversubsequent SoCs.
 
---p7qwJlK53pWzbayA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So it can be in <linux/mfd/my-sysconfig-regs.h> as
+a
 
-On Sat, Sep 21, 2013 at 12:19:33PM -0700, Mike Dunn wrote:
-> This patch adds device tree support to the PXA's PWM driver.  Nothing
-> needs to be extracted from the device tree node by the PWM device.
-> Client devices need only specify the period; the per-chip index is
-> implicitly zero because one device node must be present for each PWM
-> output in use.  This approach is more convenient due to the wide
-> variability in the number of PWM channels present across the various PXA
-> variants, and is made possible by the fact that the register sets for
-> each PWM channel are segregated from each other.  An of_xlate() method
-> is added to parse this single-cell node.  The existing ID table is
-> reused for the match table data.
->=20
-> Tested on a Palm Treo 680 (both platform data and DT cases).
->=20
-> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 30 +++++++++++++
->  drivers/pwm/pwm-pxa.c                             | 52 +++++++++++++++++=
-+++++-
->  2 files changed, 81 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+#define MY_SYSCON_V1_BOOT_DEV_REG 0x958
+#define MY_SYSCON_V1_BOOT_DEV_SPI 0x1a
 
-Hi Mike,
+The kernel should know which SoC is in use and
+act apropriately right?
 
-It looks like this fell through the cracks. Is this patch still the
-latest one you have? Should it still be applied?
+But indeed, what you're doing has been done before
+in drivers/regulator/anatop-regulator.c where some
+register offset is read in from the attribute
+"anatop-delay-reg-offset". So it may be that the DT people
+need to overrule me on this one :-)
 
-Thierry
+I don't think we should hard-code knowledge of specific
+register locations into the device tree at all as that makes
+things very hard to debug.
 
---p7qwJlK53pWzbayA
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSna+qAAoJEN0jrNd/PrOhEN0P/j/R50+IlIwPL9vuovuV1xj3
-SZJ0gRHT1PXnytE1PFB5+HIbreYhSQTQ79hfYfxSdYi5h2KVcxLneSEkfGYLLAj9
-J70ju3wlKflwYtAp06ssXKxIUVnvYk8kVUxgjpzbq7cMEhHelAvLpcKqD6TnAfIn
-3z8y6ZtzcuzsRHIahFTdB75Kb+tjkWfgLOxDfFUTwzU01xaLDNFIZzU4ngF4Rtqz
-gxXqTKSFDDvsCn5LHgqOxhjSQdA24x7Q+Nc6oMe/XsB0u1HfmuSb+vU7mmaYrMM4
-1ASzxjfTaBHfArx4u2CdjOI+Or/6nlJdknKc1wc/hbFoTTjsuuNZHtQyifFpy2mh
-xg6h05QWJLr/SSckWtkjQ377CSqwvg88Jzlr3TTAtywmuIrNvS2mxt2IgdHZLMKT
-pjlYZhrp4KqlZVwrXgHbO0FL7tpn7BphFD6L9JcwBOYcoxiO/ATuQ3rQ4esRHF6V
-o3lj7JvJFQ/Nla0blL+awexm+sNpwKh1ru6lCGe6naT2IFK4I7TGiu3rc0WLvDG4
-cFxf8z907/1ZS4PmBfhb0dUMcupLJS92PMboyO+lLW3FnkU7rHFihfXFIGq9ezuu
-cAiIs/z0kfhcEYOUjmfQG2UAZLEwT2GU7q4I+0Ra+KrWHZdljev8IiSwQ/ETRIbS
-m8leBaf+QWNUiWkeGsvI
-=YbHE
------END PGP SIGNATURE-----
-
---p7qwJlK53pWzbayA--
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
