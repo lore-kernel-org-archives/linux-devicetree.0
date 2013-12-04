@@ -1,46 +1,78 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH 06/26] OMAPDSS: if dssdev->name==NULL, use alias
-Date: Wed, 4 Dec 2013 14:28:33 +0200
-Message-ID: <1386160133-24026-7-git-send-email-tomi.valkeinen@ti.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 1/3] RFC: AHCI: libahci is missing DMA
+Date: Wed, 4 Dec 2013 07:32:34 -0500
+Message-ID: <20131204123234.GC3158@htj.dyndns.org>
+References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl>
+ <1386159055-10264-2-git-send-email-oliver@schinagl.nl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1386159055-10264-2-git-send-email-oliver@schinagl.nl>
+Sender: linux-ide-owner@vger.kernel.org
+To: oliver@schinagl.nl
+Cc: grant.likely@linaro.org, ob.herring@calxeda.com, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dev@linux-sunxi.org, maxime.ripard@free-electrons.com, ijc@hellion.org.uk, hdegoede@redhat.com, oliver+list@schinagl.nl
 List-Id: devicetree@vger.kernel.org
 
-To avoid the need for a "nickname" property for each display, change
-the display registration so that the display's alias (i.e. "display0"
-etc) will be used for the dssdev->name if the display driver didn't
-provide a name.
+On Wed, Dec 04, 2013 at 01:10:53PM +0100, oliver@schinagl.nl wrote:
+> From: Oliver Schinagl <oliver@schinagl.nl>
+> 
+> The Allwinner sunxi platforms have patched in the following to enable
+> DMA. This patch enables DMA controllers for the SUNXI Architecture.
+> 
+> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+> ---
+>  drivers/ata/ahci.h    | 6 ++++++
+>  drivers/ata/libahci.c | 8 ++++++++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+> index 2289efdf..2bf2423 100644
+> --- a/drivers/ata/ahci.h
+> +++ b/drivers/ata/ahci.h
+> @@ -138,6 +138,7 @@ enum {
+>  	PORT_SCR_NTF		= 0x3c, /* SATA phy register: SNotification */
+>  	PORT_FBS		= 0x40, /* FIS-based Switching */
+>  	PORT_DEVSLP		= 0x44, /* device sleep */
+> +	PORT_DMA		= 0x70, /* direct memory access */
+>  
+>  	/* PORT_IRQ_{STAT,MASK} bits */
+>  	PORT_IRQ_COLD_PRES	= (1 << 31), /* cold presence detect */
+> @@ -209,6 +210,11 @@ enum {
+>  	PORT_DEVSLP_DSP		= (1 << 1),       /* DevSlp present */
+>  	PORT_DEVSLP_ADSE	= (1 << 0),       /* Aggressive DevSlp enable */
+>  
+> +	/* PORT_DMA bits */
+> +	PORT_DMA_SETUP_OFFSET	= 8, /* dma setup offset */
+> +	PORT_DMA_SETUP_MASK	= (0xff << PORT_DMA_SETUP_OFFSET),/* dma mask */
+> +	PORT_DMA_SETUP_INIT	= (0x44 << 0),
 
-This means that when booting with board files, we will have more
-descriptive names for displays, like "lcd1", "hdmi". With DT we'll only
-have "display0", etc. But as there are no "nicknames" for things like
-serials ports either, I hope we will do fine with this approach.
+Ummm... this doesn't belong to ahci proper, right?
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
- drivers/video/omap2/dss/display.c | 3 +++
- 1 file changed, 3 insertions(+)
+> +
+>  	/* hpriv->flags bits */
+>  
+>  #define AHCI_HFLAGS(flags)		.private_data	= (void *)(flags)
+> diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+> index c482f8c..d697a74 100644
+> --- a/drivers/ata/libahci.c
+> +++ b/drivers/ata/libahci.c
+> @@ -570,6 +570,14 @@ void ahci_start_engine(struct ata_port *ap)
+>  	void __iomem *port_mmio = ahci_port_base(ap);
+>  	u32 tmp;
+>  
+> +#ifdef CONFIG_ARCH_SUNXI
+> +	/* Setup DMA before DMA start */
+> +	tmp = readl(port_mmio + PORT_DMA);
+> +	tmp &= ~PORT_DMA_SETUP_MASK;
+> +	tmp |= PORT_DMA_SETUP_INIT << PORT_DMA_SETUP_OFFSET;
+> +	writel(tmp, port_mmio + PORT_DMA);
+> +#endif
 
-diff --git a/drivers/video/omap2/dss/display.c b/drivers/video/omap2/dss/display.c
-index 669a81fdf58e..a946cf7ed00f 100644
---- a/drivers/video/omap2/dss/display.c
-+++ b/drivers/video/omap2/dss/display.c
-@@ -137,6 +137,9 @@ int omapdss_register_display(struct omap_dss_device *dssdev)
- 	snprintf(dssdev->alias, sizeof(dssdev->alias),
- 			"display%d", disp_num_counter++);
- 
-+	if (dssdev->name == NULL)
-+		dssdev->name = dssdev->alias;
-+
- 	if (drv && drv->get_resolution == NULL)
- 		drv->get_resolution = omapdss_default_get_resolution;
- 	if (drv && drv->get_recommended_bpp == NULL)
+If this is something platform device specific, wouldn't overriding
+->port_start() which wraps around ahci_port_start() make more sense?
+
+Thanks.
+
 -- 
-1.8.3.2
-
+tejun
