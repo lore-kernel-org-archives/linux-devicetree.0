@@ -1,96 +1,64 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC] ARM: omap3: Split the pinmux core device
-Date: Wed, 04 Dec 2013 18:58:39 +0100
-Message-ID: <2098999.THrpfnVM6o@avalon>
-References: <1386177110-26424-1-git-send-email-laurent.pinchart@ideasonboard.com> <20131204172852.GP26766@atomide.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v4 1/5] watchdog: davinci: change driver to use WDT core
+Date: Wed, 4 Dec 2013 23:34:46 +0530
+Message-ID: <529F6EBE.5050703@ti.com>
+References: <1385556508-3935-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1385556508-3935-2-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131204172852.GP26766@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, sakari.ailus@iki.fi
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1385556508-3935-2-git-send-email-ivan.khoronzhuk@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, Santosh Shilimkar <santosh.shilimkar@ti.com>, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-
-On Wednesday 04 December 2013 09:28:53 Tony Lindgren wrote:
-> * Laurent Pinchart <laurent.pinchart@ideasonboard.com> [131204 09:12]:
-> > The omap3_pmx_core pinmux device in the device tree handles the system
-> > controller module (SCM) PADCONFS fonction. Its control registers are
-> > split in two distinct areas, with other SCM registers in-between. Those
-> > other registers can't thus be requested by other drivers as the memory
-> > region gets reserved by the pinmux driver.
-> > 
-> > Split the omap3_pmx_core device tree node in two for the two memory
-> > regions.
-> > 
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > ---
-> > 
-> >  arch/arm/boot/dts/omap3-beagle-xm.dts | 45 ++++++++++++++++++++++++------
-> >  arch/arm/boot/dts/omap3-beagle.dts    | 28 +++++++++++++++-------
-> >  arch/arm/boot/dts/omap3-igep0020.dts  | 26 ++++++++++----------
-> >  arch/arm/boot/dts/omap3-zoom3.dts     | 19 ++++++++++-----
-> >  arch/arm/boot/dts/omap3.dtsi          | 13 +++++++++-
-> >  5 files changed, 95 insertions(+), 36 deletions(-)
-> > 
-> > While working on the OMAP3 ISP driver I've run into a failure to request a
-> > memory region already requested by the pinctrl-single driver. This patch
-> > is an attempt to fix the problem. An alternative approach would be to
-> > support multiple reg values in the pinctrl-single driver, but that might
-> > not be much cleaner. I'm open to suggestions.
+On 11/27/2013 6:18 PM, Ivan Khoronzhuk wrote:
+> To reduce code duplicate and increase code readability use WDT core
+> code to handle WDT interface.
 > 
-> Makes sense to me to split it into two, we can save some memory that way
-> too.
+> Remove io_lock as the WDT core uses mutex to lock each wdt device.
+> Remove wdt_state as the WDT core tracks state with its own variable.
 > 
-> It should not cause problems with the wake-up interrupts either as we're
-> already using a single chained wake-up interrupt between core and wkup
-> pins.
+> The watchdog_init_timeout() can read timeout value from timeout-sec
+> property if the passed value is out of bounds. The heartbeat is
+> initialized in next way. If heartbeat is not set thought module
+> parameter, try to read it's value from WDT node timeout-sec property.
+> If node has no one, use default value.
 > 
-> Do you have some perl or sed script to look for and convert the core2
-> registers? Or do we just not have that many of them defined yet?
+> The heartbeat is hold in wdd->timeout by WDT core, so use it in
+> order to set timeout period.
+> 
+> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> ---
+>  drivers/watchdog/Kconfig       |    2 +
+>  drivers/watchdog/davinci_wdt.c |  147 ++++++++++------------------------------
+>  2 files changed, 37 insertions(+), 112 deletions(-)
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 5be6e91..eb8c89d 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -271,6 +271,8 @@ config IOP_WATCHDOG
+>  config DAVINCI_WATCHDOG
+>  	tristate "DaVinci watchdog"
+>  	depends on ARCH_DAVINCI
+> +	select WATCHDOG_CORE
+> +	select WATCHDOG_NOWAYOUT
 
-This patch should cover all the ones we have in mainline. As this is an RFC 
-I've performed the conversion manually.
+Its not clear for change log why NOWAYOUT needs to be forced on all the
+time for all users of DaVinci watchdog.
 
-> > diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts
-> > b/arch/arm/boot/dts/omap3-beagle-xm.dts index 8d7c813..7028e6a 100644
-> > --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-> > +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-
-[snip]
-
-> > @@ -152,6 +164,23 @@
-> > 
-> >  &i2c2 {
-> >  	clock-frequency = <400000>;
-> > +
-> > +	switch@73 {
-> > +		compatible = "nxp,pca9543";
-> > +		reg = <0x73>;
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		i2c@0 {
-> > +			reg = <0>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +		};
-> > +		i2c@1 {
-> > +			reg = <1>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +		};
-> > +	};
-> >  };
-> >  
-> >  &i2c3 {
-
-This should obviously not have been included. I'll submit a v2.
-
--- 
-Regards,
-
-Laurent Pinchart
-
+Thanks,
+Sekhar
