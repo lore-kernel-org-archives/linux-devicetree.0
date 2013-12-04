@@ -1,96 +1,77 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 00/26] OMAPDSS: DT support (Christmas edition)
-Date: Wed, 4 Dec 2013 17:01:20 +0100
-Message-ID: <20131204160119.GA9433@earth.universe>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] checkpatch: add DT compatible string documentation checks
+Date: Wed,  4 Dec 2013 10:03:51 -0600
+Message-ID: <1386173031-17867-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386160133-24026-1-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Stefan Roese <stefan.roese-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Dr . H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
---XsQoSWH+UP9D9v3l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This adds a simple check that any compatible strings in DeviceTree dts
+files are present in Documentation/devicetree/bindings. Vendor prefixes
+are also checked for existing in vendor-prefixes.txt These should be
+temporary checks until we have more sophisticated binding schema checking.
 
-Hi,
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+---
+v3:
+- Use a single message type UNDOCUMENTED_DT_STRING
+- Ensure '+' is at beginning of the line
+- Move vendor-prefixes.txt to variable
 
-On Wed, Dec 04, 2013 at 02:28:27PM +0200, Tomi Valkeinen wrote:
-> Here's a new version for DT support to OMAP Display Subsystem. See
-> http://article.gmane.org/gmane.linux.ports.arm.omap/102689 for the intro =
-of the
-> previous version, which contains thoughts about the related problems.
->
-> The major change in this version is the use of V4L2 and CDF style port/en=
-dpoint
-> style in the DT data. However, note that even if the DT data contains pro=
-per
-> port & endpoint data, the drivers only use the first endpoint. This is to
-> simplify the patches, as adding full support for the ports and endpoints =
-to the
-> drivers will be a big task. This approach still works with more or less a=
-ll the
-> boards, as the only cases where the simpler model is an issue are the boa=
-rds
-> with multiple display devices connected to a single output.
->=20
-> Laurent, I'd appreciate if you could have a look at the .dts changes, to =
-see if
-> there's anything that's clearly not CDF compatible.
->=20
-> The patches can also be found from:
-> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss-dt
+v2:
+- Add vendor string checking against vendor-prefixes.txt
+- Add '_', '.' and '+' as valid compatible string characters
+- Use 'grep -E' instead of egrep
 
-Will this be ready for 3.14? Depending on that I would handle
-omapdss support for the N900 differently. If this code gets merged
-into 3.14 I will update the N900 patches [0] accordingly. Otherwise
-I would suggest to take the N900 patches as is for 3.14 and I will
-take care of adding the omapdss DT support to the panel (and the
-N900.dts) separately.
+ scripts/checkpatch.pl | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-> [...]
-> - No binding documentation. I will add them for the next version, if ther=
-e are
->   no major changes needed. Hopefully the bindings are quite self-explanat=
-ory
->   for people with understanding of the hardware in question.
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 9c98100..3696366 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2034,6 +2034,31 @@ sub process {
+ 			     "Use of $flag is deprecated, please use \`$replacement->{$flag} instead.\n" . $herecurr) if ($replacement->{$flag});
+ 		}
+ 
++# check for DT compatible documentation
++		if ($realfile =~ /\.dts/ && $rawline =~ /^\+\s*compatible\s*=/) {
++			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
++
++			foreach my $compat (@compats) {
++				my $compat2 = $compat;
++				my $dt_path = "Documentation/devicetree/bindings/";
++				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
++				`grep -Erq "$compat|$compat2" $dt_path`;
++				if ( $? >> 8 ) {
++					WARN("UNDOCUMENTED_DT_STRING",
++					     "DT compatible string \"$compat\" appears un-documented -- check $dt_path\n" . $herecurr);
++				}
++
++				my $vendor = $compat;
++				my $vendor_path = $dt_path . "vendor-prefixes.txt";
++				$vendor =~ s/^([a-zA-Z0-9]+)\,.*/$1/;
++				`grep -Eq "$vendor" $vendor_path`;
++				if ( $? >> 8 ) {
++					WARN("UNDOCUMENTED_DT_STRING",
++					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vendor_path\n" . $herecurr);
++				}
++			}
++		}
++
+ # check we are in a valid source file if not then ignore this hunk
+ 		next if ($realfile !~ /\.(h|c|s|S|pl|sh)$/);
+ 
+-- 
+1.8.3.2
 
-It is :)
-
-[0] http://marc.info/?l=3Dlinux-omap&m=3D138524030509240&w=3D2
-
--- Sebastian
-
---XsQoSWH+UP9D9v3l
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSn1HPAAoJENju1/PIO/qaxsoP/iw2h7eZ2o7IovmQo4dEK/tR
-IMyJ9YC39plLGbvVK33WJgzWffcQFsMdKgwYScve8rJE+o479Qe8KCwWGsGk5p4o
-HvpZYzmxL4RjmRV9gPKmBEbmcXR3FDkpvrKVyXED726YkMPG2QuUEhgDxgWFig8H
-vCMAqqWnpEDTtcFs1jmc6GeRxwLlMfKHa+OzvzcRTr6hDP3f3cZAP2vXSzYQ8BWh
-+7p3EEJxsQWv6O8fVtLLUYKiwKi3DEUH4bmA1jc4fH8Lad0tLif3He5DGYtgQIxg
-wTa7z6t1ApnVFQMQUQmRoVhk5eGm3sgilShPnlEN4HsIPVcBm+RdpD2RL3pNCWqX
-Nl1Nu1Me5CloPZYOtffdRifw2m+N6xClzVxDn9f2GyyhOwcu7lx0WWd47b531Slg
-/suhW5MqYwcuEKsLU5OEuGPHb6vTOK5lnyScRcypHfifmVG61mI4xhn19uEa+5M9
-0jqfoLZWCN+tF05ijHYhw84EDFYPCboohDokbWW/i9wh8p7TYf6jwgOFrVClsirM
-5oLIjako5fJzw/KocgkYWBkIVduGesR9nnzoUa0kNb4wClpkEjmlTJufCDYPnXx2
-C5oD3F/nkXt/R9KfoZjt3k7hYUwAR/n5/xlpHQq2mYL8DS3x7KnCSRgMWkxDgQ6E
-I38ngL4fvCK+u4h5rV8n
-=L5ls
------END PGP SIGNATURE-----
-
---XsQoSWH+UP9D9v3l--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
