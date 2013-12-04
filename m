@@ -1,37 +1,89 @@
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH 1/4] Documentation: add dts binding for X-Gene reboot dts node.
-Date: Wed,  4 Dec 2013 10:33:20 -0800
-Message-ID: <1386182000-26607-1-git-send-email-fkan@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: patches@apm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Feng Kan <fkan@apm.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH v4 1/5] watchdog: davinci: change driver to use WDT core
+Date: Wed, 4 Dec 2013 20:42:31 +0200
+Message-ID: <529F7797.4080100@ti.com>
+References: <1385556508-3935-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1385556508-3935-2-git-send-email-ivan.khoronzhuk@ti.com>
+ <529F6EBE.5050703@ti.com> <20131204182824.GA14499@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131204182824.GA14499@roeck-us.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guenter Roeck <linux@roeck-us.net>, Sekhar Nori <nsekhar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, Santosh Shilimkar <santosh.shilimkar@ti.com>, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add dts documentation for X-Gene reboot driver.
+On 12/04/2013 08:28 PM, Guenter Roeck wrote:
+> On Wed, Dec 04, 2013 at 11:34:46PM +0530, Sekhar Nori wrote:
+>> On 11/27/2013 6:18 PM, Ivan Khoronzhuk wrote:
+>>> To reduce code duplicate and increase code readability use WDT core
+>>> code to handle WDT interface.
+>>>
+>>> Remove io_lock as the WDT core uses mutex to lock each wdt device.
+>>> Remove wdt_state as the WDT core tracks state with its own variable.
+>>>
+>>> The watchdog_init_timeout() can read timeout value from timeout-sec
+>>> property if the passed value is out of bounds. The heartbeat is
+>>> initialized in next way. If heartbeat is not set thought module
+>>> parameter, try to read it's value from WDT node timeout-sec property.
+>>> If node has no one, use default value.
+>>>
+>>> The heartbeat is hold in wdd->timeout by WDT core, so use it in
+>>> order to set timeout period.
+>>>
+>>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>> ---
+>>>   drivers/watchdog/Kconfig       |    2 +
+>>>   drivers/watchdog/davinci_wdt.c |  147 ++++++++++------------------------------
+>>>   2 files changed, 37 insertions(+), 112 deletions(-)
+>>>
+>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>>> index 5be6e91..eb8c89d 100644
+>>> --- a/drivers/watchdog/Kconfig
+>>> +++ b/drivers/watchdog/Kconfig
+>>> @@ -271,6 +271,8 @@ config IOP_WATCHDOG
+>>>   config DAVINCI_WATCHDOG
+>>>   	tristate "DaVinci watchdog"
+>>>   	depends on ARCH_DAVINCI
+>>> +	select WATCHDOG_CORE
+>>> +	select WATCHDOG_NOWAYOUT
+>>
+>> Its not clear for change log why NOWAYOUT needs to be forced on all the
+>> time for all users of DaVinci watchdog.
 
-Signed-off-by: Feng Kan <fkan@apm.com>
----
- .../devicetree/bindings/arm64/xgene/reboot.txt     |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm64/xgene/reboot.txt
+... you are right
 
-diff --git a/Documentation/devicetree/bindings/arm64/xgene/reboot.txt b/Documentation/devicetree/bindings/arm64/xgene/reboot.txt
-new file mode 100644
-index 0000000..70aabf7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm64/xgene/reboot.txt
-@@ -0,0 +1,11 @@
-+Reboot property to control system reboot on storm platforms:
-+
-+The register attribute contain the address of the reset 
-+register.
-+
-+Example:
-+
-+	reboot@17000014 {
-+		compatible = "apm,xgene-reboot";
-+		reg = <0x0 0x17000014 0x0 0x4>;
-+	};
+>>
+> Actually, thinking about it, it is not necessary and can be replaced with
+> 
+> 	watchdog_set_nowayout(wdd, 1);
+
+Good idea, I'll replace watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT) on it.
+And delete "select WATCHDOG_NOWAYOUT"
+
+> 
+> In other words, there is no need to force NOWAYOUT on _other_ watchdogs which
+> may be present in the system. Still, you are right, it would be nice to explain
+> in the changelog (or maybe even better as comment in the code) why it is
+> enforced.
+> 
+> Guenter
+> 
+
+Only question, should I repost only this patch or whole series?
+
 -- 
-1.7.6.1
+Regards,
+Ivan Khoronzhuk
