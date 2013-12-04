@@ -1,46 +1,56 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 4/5] Phy: Add DT nodes on kirkwood and Dove for the SATA
- PHY
-Date: Wed, 4 Dec 2013 20:18:26 +0100
-Message-ID: <20131204191826.GA10498@lunn.ch>
-References: <1386177364-10164-1-git-send-email-andrew@lunn.ch>
- <1386177364-10164-5-git-send-email-andrew@lunn.ch>
- <529F8A10.7010500@cogentembedded.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2] OF: base: match each node compatible against all given
+ matches first
+Date: Wed, 4 Dec 2013 13:23:52 -0600
+Message-ID: <CAL_JsqLNWRWxfD0qLsQ9crRa3_-TtykwUjuQvJQZC2E_xLhywg@mail.gmail.com>
+References: <1385663785-8643-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1386078720-8756-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <529F8A10.7010500@cogentembedded.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, kishon@ti.com, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1386078720-8756-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Meelis Roos <mroos@linux.ee>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Thierry Reding <thierry.reding@gmail.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2013 at 11:01:20PM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 12/04/2013 08:16 PM, Andrew Lunn wrote:
-> 
-> >Add nodes for the two SATA PHYs on kirkewood.
-> >Add node for the one SATA PHY on Dove.
-> >Add pHandles to the PHYs in the sata nodes.
-> 
->    I don't think this patch should be pushed thru the libata tree.
-> However, you didn't Cc linux-arm-kernel...
+On Tue, Dec 3, 2013 at 7:52 AM, Sebastian Hesselbarth
+<sebastian.hesselbarth@gmail.com> wrote:
+> Currently, of_match_node compares each given match against all node's
+> compatible strings with of_device_is_compatible.
+>
+> To achieve multiple compatible strings per node with ordering from
+> specific to generic, this requires given matches to be ordered from
+> specific to generic. For most of the drivers this is not true and also
+> an alphabetical ordering is more sane there.
+>
+> Therefore, this patch modifies of_match_node to match each of the node's
+> compatible strings against all given matches first, before checking the
+> next compatible string. This implies that node's compatibles are ordered
+> from specific to generic while given matches can be in any order.
+>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> ---
+> Changelog:
+> v1->v2:
+> - Allow checks against nodes with no compatible (Reported by Rob Herring)
+> - Add some comments
+>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Meelis Roos <mroos@linux.ee>
+> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> Cc: Scott Wood <scottwood@freescale.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/of/base.c |   53 +++++++++++++++++++++++++++++++++++++----------------
+>  1 files changed, 37 insertions(+), 16 deletions(-)
 
-I've actually no idea how this will go upstream, since it is three
-different subsystems, generic phy, libata, and arm/mvebu. I will leave
-it up to the maintainers to decide that. I can add some more CC: for
-v2.
+Applied.
 
-> >+			sata_phy0: sata_phy@0 {
-> 
->    The node should rather be named "sata-phy@0" to be in line with
-> "ethernet-phy" found in the ePAPR spec. [1], hyphen is generally
-> preferred to underscore in the device trees.
-
-O.K, will do. kirkwood.dtsi and dove.dtsi already follow this pattern
-of - in the @ part.
-
-Thanks
-	Andrew
+Rob
