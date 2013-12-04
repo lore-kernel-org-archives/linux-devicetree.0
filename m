@@ -1,128 +1,70 @@
-From: Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
-Date: Wed, 4 Dec 2013 15:20:10 +0000
-Message-ID: <20131204152010.GC2323@e103592.cambridge.arm.com>
-References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
+From: Alex Elder <alex.elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/3] clk: bcm281xx: define Broadcom kona clocks
+Date: Wed, 04 Dec 2013 09:32:31 -0600
+Message-ID: <529F4B0F.2020801@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Nicolas Pitre <nico@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, Grant Likely <grant.likely@linaro.org>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Hanjun Guo <hanjun.guo@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2013 at 04:20:05PM +0000, Lorenzo Pieralisi wrote:
-> ARM based platforms implement a variety of power management schemes that
-> allow processors to enter at run-time low-power states, aka C-states
-> in ACPI jargon. The parameters defining these C-states vary on a per-platform
-> basis forcing the OS to hardcode the state parameters in platform
-> specific static tables whose size grows as the number of platforms supported
-> in the kernel increases and hampers device drivers standardization.
-> 
-> Therefore, this patch aims at standardizing C-state device tree bindings for
-> ARM platforms. Bindings define C-state parameters inclusive of entry methods
-> and state latencies, to allow operating systems to retrieve the
-> configuration entries from the device tree and initialize the related
-> power management drivers, paving the way for common code in the kernel
-> to deal with power states and removing the need for static data in current
-> and previous kernel versions.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> +
+This series adds support for Kona clock control units (CCUs) and
+clocks, used by Broadcom BCM281xx family SoCs.  Kona CCUs are
+represented by nodes in the device tree, and the names of the clocks
+provided by a CCU are included in its node.  Implementation details
+of those clocks are defined in a C file separate from the code that
+implements the functionality used by most of the common clock
+framework.
 
-[...]
+This series depends on:
+    "Update Kona drivers to use clocks"
+    https://lkml.org/lkml/2013/11/14/450
 
-> +	- cpus
+This series (along with a version of those prerequisite patches) is
+available in the "review/bcm-kona-clocks-v2" branch of this git
+repository:
+    git://git.linaro.org/people/elder/linux.git
 
-Because cpus is really a topology subtree, it might be good to have
-different names.
+Updates:
+v2: - Address all issues raised by Mark Rutland.
 
-To avoid confusion with Mark's affinity properties, maybe a different
-word would be preferable instead of "affinity".
+					-Alex
 
-Maybe "topology" instead of "cpus", and "affected-topology" instead of
-"affinity"?
+Alex Elder (3):
+  clk: bcm281xx: define kona clock binding
+  clk: bcm281xx: add initial clock framework support
+  ARM: dts: bcm281xx: define real clocks
 
+ .../devicetree/bindings/clock/bcm-kona-clock.txt   |   93 ++
+ arch/arm/boot/dts/bcm11351.dtsi                    |  240 +++--
+ drivers/clk/Kconfig                                |    1 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/bcm/Kconfig                            |    8 +
+ drivers/clk/bcm/Makefile                           |    3 +
+ drivers/clk/bcm/clk-bcm281xx.c                     |  416 ++++++++
+ drivers/clk/bcm/clk-kona-setup.c                   |  769 +++++++++++++++
+ drivers/clk/bcm/clk-kona.c                         | 1033
+++++++++++++++++++++
+ drivers/clk/bcm/clk-kona.h                         |  414 ++++++++
+ include/dt-bindings/clock/bcm281xx.h               |   65 ++
+ 11 files changed, 2967 insertions(+), 76 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
+ create mode 100644 drivers/clk/bcm/Kconfig
+ create mode 100644 drivers/clk/bcm/Makefile
+ create mode 100644 drivers/clk/bcm/clk-bcm281xx.c
+ create mode 100644 drivers/clk/bcm/clk-kona-setup.c
+ create mode 100644 drivers/clk/bcm/clk-kona.c
+ create mode 100644 drivers/clk/bcm/clk-kona.h
+ create mode 100644 include/dt-bindings/clock/bcm281xx.h
 
-cpufreq also has its concepts of "related" and "affected" cpus, which
-tries to describe something similar (in all honesty, I always struggle
-to remember which is which ... but if we were consistent with it, that
-might help).
+-- 
+1.7.9.5
 
-> +		Usage: Optional
-> +		Value type: <phandle>
-> +		Definition: If defined, the phandle points to a node in the
-> +			    cpu-map[2] representing all CPUs on which C-state
-> +			    is valid. If not present or system is UP, the
-> +			    C-state has to be considered valid for all CPUs in
-> +			    the system.
-> +
-> +	- affinity
-> +		Usage: Optional
-> +		Value type: <phandle>
-> +		Definition: If defined, phandle points to a node in the
-> +			    cpu-map[2] that represents all CPUs that are
-> +			    affected (ie share) by the C-state and have to
-> +			    be coordinated on C-state entry/exit. If not
-> +			    present or system is UP, the C-state is local to
-> +			    a CPU and need no coordination (ie it is a CPU
-> +			    state, that does not require coordination with
-> +			    other CPUs). If present, the affinity property
-> +			    must contain a phandle to a cpu-map node that
-> +			    represents a subset, possibly inclusive of the
-> +			    CPUs described through the cpus property.
-
-Can you elaborate on how cpus and affinity might be different?
-
-The statement about "having to be coordainted" also feels a bit vague,
-though I'm not sure how much we can usefully say here.
-
-If we describe power domains more explicitly it might help with this,
-because that could bring some description of what needs to be
-coordinated.
-
-> +
-> +	- power-depth
-> +		Usage: Required
-> +		Value type: <u32>
-> +		Definition: Integer value, starting from 2 (value 0 meaning
-> +			    running and value 1 representing power depth of
-> +			    wfi (C1)), that defines the level of depth of a
-> +			    power state.
-> +			    The system denotes power states with different
-> +			    depths, an increasing value meaning less power
-> +			    consumption and might involve powering down more
-> +			    components.  Devices that are affected by
-> +			    C-states entry must define the maximum power
-> +			    depth supported in their respective device tree
-> +			    bindings so that OSPM can take decision on how
-> +			    to handle the device in question when the C-state
-> +			    is entered. All devices (per-CPU or external) with
-> +			    a power depth lower than the one defined in the
-> +			    C-state entry stop operating when the C-state
-> +			    is entered and action is required by OSPM to
-> +			    guarantee their logic and memory content is saved
-> +			    restored to guarantee proper functioning.
-
-Any reason to use numbers instead of strings?
-
-Strings make the DT more readable ... we would presumably only have to
-parse this information once, so it shouldn't be an overhead, unless there
-are hundreds of C-state nodes.
-
-[...]
-
-Cheers
----Dave
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
