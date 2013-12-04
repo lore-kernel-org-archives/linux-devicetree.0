@@ -1,7 +1,7 @@
 From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH 24/26] OMAPDSS: hdmi-connector: Add DT support
-Date: Wed, 4 Dec 2013 14:28:51 +0200
-Message-ID: <1386160133-24026-25-git-send-email-tomi.valkeinen@ti.com>
+Subject: [PATCH 18/26] ARM: omap3-beagle.dts: add display information
+Date: Wed, 4 Dec 2013 14:28:45 +0200
+Message-ID: <1386160133-24026-19-git-send-email-tomi.valkeinen@ti.com>
 References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,77 +14,84 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/video/omap2/displays-new/connector-hdmi.c | 30 +++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/arm/boot/dts/omap3-beagle.dts | 67 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-diff --git a/drivers/video/omap2/displays-new/connector-hdmi.c b/drivers/video/omap2/displays-new/connector-hdmi.c
-index 9abe2c039ae9..3919acd7028f 100644
---- a/drivers/video/omap2/displays-new/connector-hdmi.c
-+++ b/drivers/video/omap2/displays-new/connector-hdmi.c
-@@ -12,6 +12,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- 
- #include <drm/drm_edid.h>
- 
-@@ -301,6 +302,23 @@ static int hdmic_probe_pdata(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int hdmic_probe_of(struct platform_device *pdev)
-+{
-+	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
-+	struct device_node *node = pdev->dev.of_node;
-+	struct omap_dss_device *in;
+diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+index fa532aaacc68..1ca1932d02aa 100644
+--- a/arch/arm/boot/dts/omap3-beagle.dts
++++ b/arch/arm/boot/dts/omap3-beagle.dts
+@@ -178,3 +178,70 @@
+ 	mode = <3>;
+ 	power = <50>;
+ };
 +
-+	in = omapdss_of_find_source_for_first_ep(node);
-+	if (IS_ERR(in)) {
-+		dev_err(&pdev->dev, "failed to find video source\n");
-+		return PTR_ERR(in);
-+	}
++&dpi {
++	vdds_dsi-supply = <&vpll2>;
 +
-+	ddata->in = in;
-+
-+	return 0;
-+}
-+
- static int hdmic_probe(struct platform_device *pdev)
- {
- 	struct panel_drv_data *ddata;
-@@ -318,6 +336,10 @@ static int hdmic_probe(struct platform_device *pdev)
- 		r = hdmic_probe_pdata(pdev);
- 		if (r)
- 			return r;
-+	} else if (pdev->dev.of_node) {
-+		r = hdmic_probe_of(pdev);
-+		if (r)
-+			return r;
- 	} else {
- 		return -ENODEV;
- 	}
-@@ -359,12 +381,20 @@ static int __exit hdmic_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id hdmic_of_match[] = {
-+	{ .compatible = "ti,hdmi-connector", },
-+	{},
++	dpi_out: endpoint {
++		remote-endpoint = <&tfp410_in>;
++		data-lines = <24>;
++	};
 +};
 +
-+MODULE_DEVICE_TABLE(of, hdmic_of_match);
++&venc {
++	vdda_dac-supply = <&vdac>;
 +
- static struct platform_driver hdmi_connector_driver = {
- 	.probe	= hdmic_probe,
- 	.remove	= __exit_p(hdmic_remove),
- 	.driver	= {
- 		.name	= "connector-hdmi",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = hdmic_of_match,
- 	},
- };
- 
++	venc_out: endpoint {
++		remote-endpoint = <&tv_connector_in>;
++	};
++};
++
++/ {
++	aliases {
++		display0 = &dvi0;
++		display1 = &tv0;
++	};
++
++	tfp410: encoder@0 {
++		compatible = "ti,tfp410";
++		gpios = <&gpio5 10 0>;	/* 170, power-down */
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				tfp410_in: endpoint@0 {
++					remote-endpoint = <&dpi_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				tfp410_out: endpoint@1 {
++					remote-endpoint = <&dvi_connector_in>;
++				};
++			};
++		};
++	};
++
++	dvi0: connector@0 {
++		compatible = "ti,dvi_connector";
++		i2c-bus = <&i2c3>;
++
++		dvi_connector_in: endpoint {
++			remote-endpoint = <&tfp410_out>;
++		};
++	};
++
++	tv0: connector@1 {
++		compatible = "ti,svideo_connector";
++
++		tv_connector_in: endpoint {
++			remote-endpoint = <&venc_out>;
++		};
++	};
++};
 -- 
 1.8.3.2
 
