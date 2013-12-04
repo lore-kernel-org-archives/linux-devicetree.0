@@ -1,75 +1,82 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH 1/4] usb: chipidea: msm: Add device tree binding
- information
-Date: Wed, 4 Dec 2013 13:40:04 +0800
-Message-ID: <20131204054003.GB29552@shlinux1.ap.freescale.net>
-References: <1384176937-1658-1-git-send-email-iivanov@mm-sol.com>
- <1384176937-1658-2-git-send-email-iivanov@mm-sol.com>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] checkpatch: add DT compatible string documentation
+ checks
+Date: Tue, 03 Dec 2013 22:24:51 -0800
+Message-ID: <1386138291.30493.45.camel@joe-AO722>
+References: <1386130643-19449-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384176937-1658-2-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, davidb@codeaurora.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386130643-19449-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 11, 2013 at 03:35:34PM +0200, Ivan T. Ivanov wrote:
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+On Tue, 2013-12-03 at 22:17 -0600, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > 
-
-Please add something in commit log
-
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> Cc: devicetree@vger.kernel.org
+> This adds a simple check that any compatible strings in DeviceTree dts
+> files are present in Documentation/devicetree/bindings. Vendor prefixes
+> are also checked for existing in vendor-prefixes.txt These should be
+> temporary checks until we have more sophisticated binding schema checking.
+> 
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+> Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/usb/msm-hsusb.txt          |   16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> index 5ea26c6..0a85eba 100644
-> --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> @@ -15,3 +15,19 @@ Example EHCI controller device node:
->  		usb-phy = <&usb_otg>;
->  	};
+> v2:
+> - Add vendor string checking against vendor-prefixes.txt
+> - Add '_', '.' and '+' as valid compatible string characters
+> - Use 'grep -E' instead of egrep
+
+Some more trivial notes:
+
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> @@ -2034,6 +2034,29 @@ sub process {
+>  			     "Use of $flag is deprecated, please use \`$replacement->{$flag} instead.\n" . $herecurr) if ($replacement->{$flag});
+>  		}
 >  
-> +CI13xxx (Chipidea) USB controllers
+> +# check for DT compatible documentation
+> +		if ($realfile =~ /\.dts/ && $rawline =~ /\+\s*compatible\s*=/) {
+
+this should probably be $rawline =~ /^\+\s*compatible...
+
+> +			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
 > +
+> +			foreach my $compat (@compats) {
+> +				my $compat2 = $compat;
+> +				my $dt_path = "Documentation/devicetree/bindings/";
+> +				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
+> +				`grep -Erq "$compat|$compat2" $dt_path`;
+> +				if ( $? >> 8 ) {
+> +					WARN("UNDOCUMENTED_DT_BINDING",
+> +					     "DT compatible string \"$compat\" appears un-documented -- check $dt_path\n" . $herecurr);
+> +				}
+> +				my $vendor = $compat;
+> +				$vendor =~ s/^([a-zA-Z0-9]+)\,.*/$1/;
+> +				`grep -Eq "$vendor" "${dt_path}vendor-prefixes.txt"`;
 
-We have already renamed ci13xxx to ci_hdrc.
+It maybe simpler to read as:
 
-> +Required properties:
-> +- compatible: 	should contain "qcom,ci-hdrc"
-> +- reg: 			offset and length of the register set in the memory map
-> +- interrupts: 	interrupt-specifier for the controller interrupt.
-> +- usb-phy:		phandle for the PHY device
-> +- dr_mode: 		Sould be "peripheral"
-> +
+	my $vendor_path = $dt_path . "vendor-prefixes.txt";
+	`grep -Eq $vendor $vendor_path`;
 
-Please keep alignment for "reg"
+> +				if ( $? >> 8 ) {
+> +					WARN("UNDOCUMENTED_DT_VENDOR",
+> +					     "DT compatible string vendor \"$vendor\" appears un-documented -- check ${dt_path}vendor-prefixes.txt\n" . $herecurr);
 
-Peter
+					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vendor_path\n" . $herecurr)
 
-> +	gadget@f9a55000 {
-> +		compatible = "qcom,ci-hdrc";
-> +		reg = <0xf9a55000 0x400>;
-> +		dr_mode = "peripheral";
-> +		interrupts = <0 134 0>;
-> +		usb-phy = <&usb_otg>;
-> +	};
-> \ No newline at end of file
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Also I suggest using the same message type
+instead of 2 distinct ones.
 
--- 
+Maybe "UNDOCUMENTED_DT_STRING"
 
-Best Regards,
-Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
