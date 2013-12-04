@@ -1,50 +1,65 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 0/5] Update Davinci watchdog driver
-Date: Wed, 4 Dec 2013 23:40:13 +0530
-Message-ID: <529F7005.9010904@ti.com>
-References: <1385556508-3935-1-git-send-email-ivan.khoronzhuk@ti.com> <5298943D.8010608@ti.com>
+From: Mike Dunn <mikedunn@newsguy.com>
+Subject: Re: [PATCH RESEND v5 1/2] PWM: PXA: add device tree support to PWM
+ driver
+Date: Wed, 04 Dec 2013 10:21:55 -0800
+Message-ID: <529F72C3.7060503@newsguy.com>
+References: <1379791174-2369-1-git-send-email-mikedunn@newsguy.com> <1379791174-2369-2-git-send-email-mikedunn@newsguy.com> <20131203101714.GG21178@ulmo.nvidia.com> <529E26C9.30707@newsguy.com> <20131204092152.GL19943@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5298943D.8010608-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20131204092152.GL19943@ulmo.nvidia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chao Xie <chao.xie@marvell.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2013 6:48 PM, Grygorii Strashko wrote:
-> Hi Sekhar,
-> 
-> On 11/27/2013 02:48 PM, Ivan Khoronzhuk wrote:
->> These patches are intended to update Davinci watchdog to use WDT core
->> and reuse driver for keystone arch, because Keystone uses the similar
->> IP like Davinci.
+On 12/04/2013 01:21 AM, Thierry Reding wrote:
+> On Tue, Dec 03, 2013 at 10:45:29AM -0800, Mike Dunn wrote:
+>> On 12/03/2013 02:17 AM, Thierry Reding wrote:
+>>> On Sat, Sep 21, 2013 at 12:19:33PM -0700, Mike Dunn wrote:
+>>>> This patch adds device tree support to the PXA's PWM driver.  Nothing
+>>>> needs to be extracted from the device tree node by the PWM device.
+>>>> Client devices need only specify the period; the per-chip index is
+>>>> implicitly zero because one device node must be present for each PWM
+>>>> output in use.  This approach is more convenient due to the wide
+>>>> variability in the number of PWM channels present across the various PXA
+>>>> variants, and is made possible by the fact that the register sets for
+>>>> each PWM channel are segregated from each other.  An of_xlate() method
+>>>> is added to parse this single-cell node.  The existing ID table is
+>>>> reused for the match table data.
+>>>>
+>>>> Tested on a Palm Treo 680 (both platform data and DT cases).
+>>>>
+>>>> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 30 +++++++++++++
+>>>>  drivers/pwm/pwm-pxa.c                             | 52 ++++++++++++++++++++++-
+>>>>  2 files changed, 81 insertions(+), 1 deletion(-)
+>>>>  create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+>>>
+>>> Hi Mike,
+>>>
+>>> It looks like this fell through the cracks. Is this patch still the
+>>> latest one you have? Should it still be applied?
+>>>
+>>> Thierry
+>>>
 >>
->> See Documentation:
->> Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
->> Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
+>> Hi Thierry,
 >>
->> Also:
->>   - improved to support GET_TIMELEFT option.
->>   - added "clocks" and "timeout-sec" properties to DT.
+>> Funny I should hear from you about this today.... I just turned my attention
+>> back to this today and noticed that it never made it into your for-next branch.
+>>  Yes, it is the latest.  If the patch still applies cleanly, please feel free.
+>> Otherwise, I'd be glad to rework it against something more recent.
 > 
-> Do you have any additional comments to this series?
+> I've applied it to my for-next branch (with some minor whitespace fixups
+> and some tuning to how the OF match table is defined). I don't consider
+> any of the changes risky, but it'd be great if you could still test the
+> version that I pushed.
 
-I have one comment I just sent out and apart from that the series looks
-good to go from my side.
 
-> 
-> By the way patch "[PATCH] watchdog: davinci: rename platform driver to davinci-wdt"
-> https://lkml.org/lkml/2013/11/27/201 can be applied as before as after this series
-> without conflicts.
+I just tested it... looks good.  Thanks again Thierry.  Thanks also Haojian.
 
-Yes, I want to queue it from DaVinci tree just because of the amount of
-DaVinci code that patch touches, but need ack from Wim before I do that.
+Mike
 
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
