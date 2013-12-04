@@ -1,73 +1,32 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: sunxi: Add an ahci-platform compatible AHCI
- driver for the Allwinner SUNXi series of SoCs
-Date: Wed, 4 Dec 2013 12:26:02 +0000
-Message-ID: <20131204122602.GN16025@e106331-lin.cambridge.arm.com>
-References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl>
- <1386159055-10264-3-git-send-email-oliver@schinagl.nl>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] gpio: MOXA ART: rename moxart_gpio_base to base
+Date: Wed, 4 Dec 2013 13:28:41 +0100
+Message-ID: <CACRpkdaT2fmfAwuyPTuF2Pim-_g5Avd_ViwQ069qRLFM9YBvWQ@mail.gmail.com>
+References: <1385723494-8033-1-git-send-email-jonas.jensen@gmail.com>
+	<1385980079-20175-1-git-send-email-jonas.jensen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386159055-10264-3-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+In-Reply-To: <1385980079-20175-1-git-send-email-jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org" <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Cc: "tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <ob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org" <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org" <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+To: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2013 at 12:10:54PM +0000, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org wrote:
-> From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-> 
-> This patch adds support for the sunxi series of SoC's by allwinner. It
-> plugs into the ahci-platform framework.
-> 
-> Note: Currently it uses a somewhat hackish approach that probably needs
-> a lot more work, but does the same as the IMX SoC's.
-> 
-> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-> ---
->  .../devicetree/bindings/ata/ahci-sunxi.txt         |  24 ++
->  drivers/ata/Kconfig                                |   9 +
->  drivers/ata/Makefile                               |   1 +
->  drivers/ata/ahci_platform.c                        |  12 +
->  drivers/ata/ahci_sunxi.c                           | 305 +++++++++++++++++++++
->  5 files changed, 351 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ata/ahci-sunxi.txt
->  create mode 100644 drivers/ata/ahci_sunxi.c
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-sunxi.txt b/Documentation/devicetree/bindings/ata/ahci-sunxi.txt
-> new file mode 100644
-> index 0000000..0792fa5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ata/ahci-sunxi.txt
-> @@ -0,0 +1,24 @@
-> +Allwinner SUNXI AHCI SATA Controller
-> +
-> +SATA nodes are defined to describe on-chip Serial ATA controllers.
-> +Each SATA controller should have its own node.
-> +
-> +Required properties:
-> +- compatible   : compatible list, contains "allwinner,sun4i-a10-ahci"
+On Mon, Dec 2, 2013 at 11:27 AM, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-- compatible: Should contain "allwinner,sun4i-a10-ahci"
+> Renaming "moxart_gpio_base" to "base" allows better fit,
+> remove line breaks in moxart_gpio_get().
+>
+> While doing trivial cleanup, also remove fields initialized
+> with zero in moxart_template_chip.
+>
+> Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> +- reg          : <registers mapping>
+Patch applied!
 
-- reg: The offset and length of the MMIO registers.
-
-> +- interrupts   : <interrupt mapping for AHCI IRQ>
-
-- interrupts: An interrupt-specifier for the ACHI interrupt
-
-> +- clocks       : clocks for ACHI
-> +- clock-names  : clock names for AHCI
-
-Please _define_ the set of clock-names you expect. This binding is
-meaningless without it. If you require clock-names, define the clocks
-property in terms of it.
-
-Thanks,
-Mark.
+Thanks!
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
