@@ -1,118 +1,75 @@
-From: Li Xiubo <Li.Xiubo@freescale.com>
-Subject: RE: [PATCHv6 1/4] pwm: Add Freescale FTM PWM driver support
-Date: Wed, 4 Dec 2013 06:01:29 +0000
-Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F828E66C5@039-SN2MPN1-011.039d.mgd.msft.net>
-References: <1384220218-12716-1-git-send-email-Li.Xiubo@freescale.com>
- <1384220218-12716-2-git-send-email-Li.Xiubo@freescale.com>
- <20131128212510.GC14689@mithrandir> <20131128223719.GG14689@mithrandir>
- <20131202110243.GD12952@e106331-lin.cambridge.arm.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH 1/4] usb: chipidea: msm: Add device tree binding
+ information
+Date: Wed, 4 Dec 2013 13:40:04 +0800
+Message-ID: <20131204054003.GB29552@shlinux1.ap.freescale.net>
+References: <1384176937-1658-1-git-send-email-iivanov@mm-sol.com>
+ <1384176937-1658-2-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131202110243.GD12952@e106331-lin.cambridge.arm.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, "galak@codeaurora.org" <galak@codeaurora.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Shawn Guo <Shawn.Guo@freescale.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, Pawel Moll <Pawel.Moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Huan Wang <Huan.Wang@freescale.com>, Jingchang Lu <jingchang.l>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1384176937-1658-2-git-send-email-iivanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, davidb@codeaurora.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > > > +static int fsl_pwm_parse_clk_ps(struct fsl_pwm_chip *fpc)
-> > > > +{
-> > > > +	int ret;
-> > > > +	struct of_phandle_args clkspec;
-> > > > +	struct device_node *np = fpc->chip.dev->of_node;
-> > > > +
-> > > > +	fpc->sys_clk = devm_clk_get(fpc->chip.dev, "ftm0");
-> > > > +	if (IS_ERR(fpc->sys_clk)) {
-> > > > +		ret = PTR_ERR(fpc->sys_clk);
-> > > > +		dev_err(fpc->chip.dev,
-> > > > +				"failed to get \"ftm0\" clock %d\n", ret);
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	fpc->counter_clk = devm_clk_get(fpc->chip.dev, "ftm0_counter");
-> > > > +	if (IS_ERR(fpc->counter_clk)) {
-> > > > +		ret = PTR_ERR(fpc->counter_clk);
-> > > > +		dev_err(fpc->chip.dev,
-> > > > +				"failed to get \"ftm0_counter\" clock %d\n",
-> > > > +				ret);
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	ret = of_parse_phandle_with_args(np, "clocks", "#clock-cells",
-> 1,
-> > > > +					&clkspec);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	fpc->counter_clk_select = clkspec.args[0];
-> > >
-> > > This isn't at all pretty. But given that once you have access to a
-> > > struct clk there's no way to identify it, I don't know of a better
-> > > alternative.
-> >
-> > Hi Mike,
-> >
-> > I've seen this crop up a number of times now, to varying degrees of
-> > gravity. In this particular case, the driver needs to know the type of a
-> > clock because it needs to program this hardware differently depending on
-> > which clock feeds the counter. Since there is no way to obtain any kind
-> > of identifying information from a struct clk, drivers need to rely on
-> > hacks like this and manually reach into the device tree to obtain that
-> > information.
-> 
-> Which property of the clock is the consumer concerned with in this case?
+On Mon, Nov 11, 2013 at 03:35:34PM +0200, Ivan T. Ivanov wrote:
+> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 > 
 
-The "ftm0_counter" clock.
+Please add something in commit log
 
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  .../devicetree/bindings/usb/msm-hsusb.txt          |   16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> index 5ea26c6..0a85eba 100644
+> --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> @@ -15,3 +15,19 @@ Example EHCI controller device node:
+>  		usb-phy = <&usb_otg>;
+>  	};
+>  
+> +CI13xxx (Chipidea) USB controllers
+> +
 
-> From a quick look at the driver it looks like there are actually a
-> number of different input lines to the device that share the clock-name
-> "ftm0_counter", though they are actually separate and each has a
-> different divider. Have I got that right?
+We have already renamed ci13xxx to ci_hdrc.
+
+> +Required properties:
+> +- compatible: 	should contain "qcom,ci-hdrc"
+> +- reg: 			offset and length of the register set in the memory map
+> +- interrupts: 	interrupt-specifier for the controller interrupt.
+> +- usb-phy:		phandle for the PHY device
+> +- dr_mode: 		Sould be "peripheral"
+> +
+
+Please keep alignment for "reg"
+
+Peter
+
+> +	gadget@f9a55000 {
+> +		compatible = "qcom,ci-hdrc";
+> +		reg = <0xf9a55000 0x400>;
+> +		dr_mode = "peripheral";
+> +		interrupts = <0 134 0>;
+> +		usb-phy = <&usb_otg>;
+> +	};
+> \ No newline at end of file
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
 
-Yes mostly, there are three different input lines wired to the counter
-clock, but they share only one divider. And between the three lines and
-the divider there is one mux inside of the FTM IP block.
-The three clock sources are:
-"ftm0",
-"ftm0-fix",
-"ftm0-ext".
-		 _____________________________________________________
-		|									|
-		|   +++++++++++		FTM Module				|
-ftm0 -------|-->+         +							|
-		|   +         +     +++++++++++++     ++++++++++++++	|
-ftm0-fix ---|-->+   MUX   +---->+  divider  +---->+  counter   +	|
-		|   +         +     +++++++++++++     ++++++++++++++	|
-ftm0-ext ---|-->+         +							|
-		|   +++++++++++							|
-		|_____________________________________________________|
+-- 
 
-
-
-> If that's the case, having a unique clock-names value for each of those
-> lines would be the solution I'd expect. Then you just have to list the
-> one(s) that are wired up, and the driver can figure out the appropriate
-> line to use either by requesting by name until it finds a match or
-> inspecting the clock-names property.
-> 
-
-Hi Kumar,
-In the list archives for mails of "[RFC][PATCHv5 4/4] Documentation: Add
-device tree bindings for Freescale FTM PWM.",we have discussed about this.
-Is there any different with your suggestions or ideas? 
-
-
-> Is there some other property of the parent that we care about here?
-> 
-
-As I know, not yet.
-
---
 Best Regards,
- 
-
+Peter Chen
