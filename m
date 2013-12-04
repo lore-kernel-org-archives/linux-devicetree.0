@@ -1,67 +1,109 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v4 0/4] LP3943 MFD driver for a GPIO expander and a PWM
- generator
-Date: Wed, 4 Dec 2013 11:34:32 +0100
-Message-ID: <20131204103431.GC26589@ulmo.nvidia.com>
-References: <1380082975-6022-1-git-send-email-milo.kim@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CblX+4bnyfN0pR09"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1380082975-6022-1-git-send-email-milo.kim@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v6 0/3] mfd: max14577: Add max14577 MFD drivers
+Date: Wed, 04 Dec 2013 11:40:12 +0100
+Message-ID: <1386153615-25456-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---CblX+4bnyfN0pR09
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is sixth version of patchset adding drivers for MAXIM 14577 chip.
+Some parts (MFD, extcon) were already merged by maintainers so I removed them
+from the patchset.
 
-On Wed, Sep 25, 2013 at 01:22:55PM +0900, Milo Kim wrote:
-> LP3943 is an integrated device capable of driving 16 output channels.
-> It can be used for GPIO expander and PWM generators.
-> LP3493 registers are controlled via the I2C interface.
->=20
-> This patch-set consists of four parts - MFD, GPIO, PWM and documents.
->=20
-> Update from v3 to v4:
->   Move the driver description from the documentation to the MFD driver fi=
-le.
->=20
-> Milo Kim (4):
->   mfd: add LP3943 MFD driver
->   gpio: add LP3943 I2C GPIO expander driver
->   pwm: add LP3943 PWM driver
->   Documentation: add LP3943 DT bindings and document
+This version of patchset depends on the max14577 MFD core driver:
+ - mfd: max14577: Add max14577 MFD driver core
+   Merged in: git://git.linaro.org/people/ljones/mfd.git
+   https://git.linaro.org/gitweb?p=people/ljones/mfd.git;a=commit;h=47ae80d7c147caa07165fcac078c26fbe87bfc28
 
-I suspect that given the build-time dependencies Lee may want to take
-all four patches through the MFD tree, so I've acked the PWM parts.
 
-Thierry
+Description
+-----------
+The chip contains Micro-USB Interface Circuit and Li+ Battery Charger.
+It contains accessory and USB charger detection logic. It supports USB 2.0
+Hi-Speed, UART and stereo audio signals over Micro-USB connector.
 
---CblX+4bnyfN0pR09
-Content-Type: application/pgp-signature
+The battery charger is compliant with the USB Battery Charging Specification
+Revision 1.1. It has also SFOUT LDO output for powering USB devices.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+The patchset consists of following drivers:
+1. MFD core driver. (applied by Lee Jones)
+2. Extcon driver for the MUIC (Micro USB Interface Controller). (applied
+   by Chanwoo Choi)
+3. Charger driver using power supply class.
+4. Regulator driver for SFOUT and charger.
+5. Documentation of device tree bindings.
 
-iQIcBAEBAgAGBQJSnwU3AAoJEN0jrNd/PrOh7oUP/ivmm5ud0khS1wkyAYvT9w4Q
-ZLiIUS4+GIT2kHq9WArXn+69wkw4w9+t4CtWTIpoMBpLWPnVYpWe3ZSiysbk0E1R
-v2dM5KYeorjEEoHS5voRynfVzOt58XUZ9QfODv8Nn0HOCgkmzCl+uPo21MX/KA14
-iUeXV++lg7TMj+leMMaJaWClwMapLHg7q5U+x53DLMT2Qjw2lKdhjr5NqXKghuw+
-KiCL0evwe6JCAQc/5TJDJZrsYaKM1MW/+hSistDB8Deh9v3MzV0xMvPD13Pw7Coo
-nvezs7HawicHpihMkqG4oJxxARa0eFr9s62OcE9znU25twQbsXSQSnkT8g8StlA5
-f9ECApLfciCG9awJl3Nq2QB66HxSAbW3Mz+3FmD00swYcvzSNT9xTu4sWPmhjdX0
-9ZLGMMCH3pLp8TGfsGfDEGEDnbl/ZAesAxu2HWI+P3n2EkDCX6NLT+D2LmjfLOwo
-HAttQ9gnZymTfN7ejhIIsO6gJObcyEsuOE8eArMaOYAXDtnznMbziDI0CcuFgcHT
-o6nhQzuPnRdObfOZPnyeN2A5pZb2yLinklz/MURdKtFbJhgtVt2cBKGt08BUI5eL
-W4tqyEkkzy96iyyBlRGGFPS93jEBm6m5j7RIEh4gg6ZjfcZ8vjtjV4hDMm4v/cgK
-4paYhbBQzKXSU7bObC/5
-=m/Iq
------END PGP SIGNATURE-----
+The patchset is rebased on latest Linus' tree (v3.13-rc2-122-gdea4f48a0a30)
+however testing was mostly done on 3.10.
 
---CblX+4bnyfN0pR09--
+Changes since v5:
+-----------------
+1. Patches "mfd: max14577: Add max14577 MFD driver core" and "mfd: max14577:
+   Match regulator by of_compatible string" were applied by Lee Jones to his
+   tree.
+2. Patch "extcon: max14577: Add extcon-max14577 driver to support MUIC device"
+   were applied by Chanwoo Choi to his tree.
+3. Regulator (2/3): Use of_get_child_by_name() to match regulators node from DT.
+
+Changes since v4:
+-----------------
+1. Split MFD changes from regulator patch.
+
+Changes since v3:
+-----------------
+1. Applied suggestions from Lee Jones and Alexander Shiyan.
+2. Extcon (2/5): Use system_power_efficient_wq for delayed cable detection
+   (pointed by Mark Brown).
+3. Regulator (4/5): Add compatible string to regulators node so MFD core will
+   match it to the driver. Simplify and fix DT parsing. (Lee Jones)
+4. Regulator (4/5): Get rid of regulators variable. (Bartlomiej Zolnierkiewicz).
+
+Changes since v2:
+-----------------
+1. Replaced max14577-irq.c with regmap_irq_chip, as suggested by Mark Brown.
+2. Applied suggestions from review (Mark Brown, Lee Jones).
+3. Regulator: Added registering unconditionally of all regulators (Mark Brown).
+4. Regulator: Removed the "struct max14577_regulator *info" (Bartlomiej
+   Zolnierkiewicz).
+5. Extcon: Removed work-around for hardware reboot (USB cable attached with
+   factory button set to D/L mode) as it is not needed.
+
+Changes since v1:
+-----------------
+1. Applied comments from review (Mark Brown, Mark Rutland).
+2. Removed any DT bindings which are not needed.
+3. Removed "wakeup" node from bindings.
+4. Fixed interrupt handling during resume. This lead to removal of the weird
+   IRQ/GPIO code discussed during review.
+5. Minor fixes pointed by checkpatch, added authors.
+6. Use of_get_child_by_name() for accessing regulators bindings.
+7. Added documentation of bindings (fifth patch).
+
+Best regards,
+Krzysztof Kozlowski
+
+
+Krzysztof Kozlowski (3):
+  charger: max14577: Add charger support for Maxim 14577
+  regulator: max14577: Add regulator driver for Maxim 14577
+  mfd: max14577: Add device tree bindings document
+
+ Documentation/devicetree/bindings/mfd/max14577.txt |   48 +++
+ drivers/power/Kconfig                              |    7 +
+ drivers/power/Makefile                             |    1 +
+ drivers/power/max14577_charger.c                   |  311 ++++++++++++++++++++
+ drivers/regulator/Kconfig                          |    7 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/max14577.c                       |  272 +++++++++++++++++
+ 7 files changed, 647 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
+ create mode 100644 drivers/power/max14577_charger.c
+ create mode 100644 drivers/regulator/max14577.c
+
+-- 
+1.7.9.5
+
