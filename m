@@ -1,56 +1,37 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2] OF: base: match each node compatible against all given
- matches first
-Date: Wed, 4 Dec 2013 13:23:52 -0600
-Message-ID: <CAL_JsqLNWRWxfD0qLsQ9crRa3_-TtykwUjuQvJQZC2E_xLhywg@mail.gmail.com>
-References: <1385663785-8643-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1386078720-8756-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 0/2] of: irq: Ignore disabled interrupt controllers
+Date: Wed, 4 Dec 2013 13:24:55 -0600
+Message-ID: <CAL_JsqJsQdKATAQqtPtMBENOBxb3=Dy0DvXFmT3uGh1+QfPH6w@mail.gmail.com>
+References: <cover.1385623064.git.peter.crosthwaite@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386078720-8756-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Meelis Roos <mroos@linux.ee>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Thierry Reding <thierry.reding@gmail.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1385623064.git.peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: grant-likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 3, 2013 at 7:52 AM, Sebastian Hesselbarth
-<sebastian.hesselbarth@gmail.com> wrote:
-> Currently, of_match_node compares each given match against all node's
-> compatible strings with of_device_is_compatible.
+On Thu, Nov 28, 2013 at 1:26 AM, Peter Crosthwaite
+<peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi All,
 >
-> To achieve multiple compatible strings per node with ordering from
-> specific to generic, this requires given matches to be ordered from
-> specific to generic. For most of the drivers this is not true and also
-> an alphabetical ordering is more sane there.
+> These two patches support the case where an interrupt controller is
+> marked as disabled. Patch 1 fixed the dts interrupt-map search logic to
+> ignore disabled interrupt controllers. Patch 2 stops disabled interrupt
+> controllers getting probed.
 >
-> Therefore, this patch modifies of_match_node to match each of the node's
-> compatible strings against all given matches first, before checking the
-> next compatible string. This implies that node's compatibles are ordered
-> from specific to generic while given matches can be in any order.
+> Peter Crosthwaite (2):
+>   of: irq: Ignore disabled intc's when searching map
+>   of: irq: Ignore disabled interrupt controllers
 >
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> ---
-> Changelog:
-> v1->v2:
-> - Allow checks against nodes with no compatible (Reported by Rob Herring)
-> - Add some comments
->
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Meelis Roos <mroos@linux.ee>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: Scott Wood <scottwood@freescale.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/of/base.c |   53 +++++++++++++++++++++++++++++++++++++----------------
->  1 files changed, 37 insertions(+), 16 deletions(-)
+>  drivers/of/irq.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
-Applied.
+Applied both patches. Thanks.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
