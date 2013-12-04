@@ -1,78 +1,128 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH RFC 1/2] Documentation: arm: add cache DT bindings
-Date: Wed, 4 Dec 2013 15:00:09 +0000
-Message-ID: <20131204150009.GA23691@e102568-lin.cambridge.arm.com>
+From: Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
+Date: Wed, 4 Dec 2013 15:20:10 +0000
+Message-ID: <20131204152010.GC2323@e103592.cambridge.arm.com>
 References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1386001205-11978-2-git-send-email-lorenzo.pieralisi@arm.com>
- <20131204132955.GB2323@e103592.cambridge.arm.com>
+ <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20131204132955.GB2323@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Dave Martin <Dave.Martin@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
+In-Reply-To: <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Nicolas Pitre <nico@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, Grant Likely <grant.likely@linaro.org>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Hanjun Guo <hanjun.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2013 at 01:29:55PM +0000, Dave Martin wrote:
-> On Mon, Dec 02, 2013 at 04:20:04PM +0000, Lorenzo Pieralisi wrote:
-> > On ARM systems the cache topology cannot be probed at runtime, in
-> > particular, it is impossible to probe which CPUs share a given cache
-> > level. Power management software requires this knowledge to implement
-> > optimized power down sequences, hence this patch adds a document that
-> > defines the DT cache bindings for ARM systems. The bindings are compliant
-> > with ePAPR (PowerPC bindings), and rely on the cache bindings already
-> > standardized in the ePAPR v1.1 document; ARM required updates are underlined
-> > in the binding document.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cache.txt | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/cache.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/cache.txt b/Documentation/devicetree/bindings/arm/cache.txt
-> > new file mode 100644
-> > index 0000000..009cddb
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/cache.txt
-> > @@ -0,0 +1,25 @@
-> > +==========================================
-> > +ARM processors cache binding description
-> > +==========================================
-> > +
-> > +Device tree bindings for ARM processor caches adhere to the cache bindings
-> > +described in [3], in section 3.8 for multi-level and shared caches.
+On Mon, Dec 02, 2013 at 04:20:05PM +0000, Lorenzo Pieralisi wrote:
+> ARM based platforms implement a variety of power management schemes that
+> allow processors to enter at run-time low-power states, aka C-states
+> in ACPI jargon. The parameters defining these C-states vary on a per-platform
+> basis forcing the OS to hardcode the state parameters in platform
+> specific static tables whose size grows as the number of platforms supported
+> in the kernel increases and hampers device drivers standardization.
 > 
-> For architected levels of cache, most of the cache properties can be
-> probed through the system register interface.
+> Therefore, this patch aims at standardizing C-state device tree bindings for
+> ARM platforms. Bindings define C-state parameters inclusive of entry methods
+> and state latencies, to allow operating systems to retrieve the
+> configuration entries from the device tree and initialize the related
+> power management drivers, paving the way for common code in the kernel
+> to deal with power states and removing the need for static data in current
+> and previous kernel versions.
 > 
-> Should we be explicit about prohibiting properties in the DT describing
-> cache characteristics that can be probed?
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> +
 
-I think so, yes.
+[...]
 
-> > +On ARM, internal caches cannot be described in the cpu node but require
-> > +specific nodes marked with compatible string set to "cache" (see [3],
-> > +section 3.8).
-> > +
-> > +Furthermore the cache bindings in [3] require the following property update:
-> > +
-> > +- [Table 3.9] cache-level: This property of cache nodes must match the cache
-> > +			   level encoded in the processors CLIDR (v7) and
-> > +			   CLIDR_EL1 (v8) registers, as described in [1][2].
-> 
-> I still don't understand why a given cache definitely has the same level
-> number assigned to it with respect to each CPU.  Is that an architectural
-> requirement?
-> 
-> All those LoC, LoU, LoUIS properties etc. are probeable per-CPU not
-> globally...  I don't see why they couldn't be different.
+> +	- cpus
 
-That's a good point, that definitely requires investigation.
+Because cpus is really a topology subtree, it might be good to have
+different names.
 
-Thanks,
-Lorenzo
+To avoid confusion with Mark's affinity properties, maybe a different
+word would be preferable instead of "affinity".
 
+Maybe "topology" instead of "cpus", and "affected-topology" instead of
+"affinity"?
+
+
+cpufreq also has its concepts of "related" and "affected" cpus, which
+tries to describe something similar (in all honesty, I always struggle
+to remember which is which ... but if we were consistent with it, that
+might help).
+
+> +		Usage: Optional
+> +		Value type: <phandle>
+> +		Definition: If defined, the phandle points to a node in the
+> +			    cpu-map[2] representing all CPUs on which C-state
+> +			    is valid. If not present or system is UP, the
+> +			    C-state has to be considered valid for all CPUs in
+> +			    the system.
+> +
+> +	- affinity
+> +		Usage: Optional
+> +		Value type: <phandle>
+> +		Definition: If defined, phandle points to a node in the
+> +			    cpu-map[2] that represents all CPUs that are
+> +			    affected (ie share) by the C-state and have to
+> +			    be coordinated on C-state entry/exit. If not
+> +			    present or system is UP, the C-state is local to
+> +			    a CPU and need no coordination (ie it is a CPU
+> +			    state, that does not require coordination with
+> +			    other CPUs). If present, the affinity property
+> +			    must contain a phandle to a cpu-map node that
+> +			    represents a subset, possibly inclusive of the
+> +			    CPUs described through the cpus property.
+
+Can you elaborate on how cpus and affinity might be different?
+
+The statement about "having to be coordainted" also feels a bit vague,
+though I'm not sure how much we can usefully say here.
+
+If we describe power domains more explicitly it might help with this,
+because that could bring some description of what needs to be
+coordinated.
+
+> +
+> +	- power-depth
+> +		Usage: Required
+> +		Value type: <u32>
+> +		Definition: Integer value, starting from 2 (value 0 meaning
+> +			    running and value 1 representing power depth of
+> +			    wfi (C1)), that defines the level of depth of a
+> +			    power state.
+> +			    The system denotes power states with different
+> +			    depths, an increasing value meaning less power
+> +			    consumption and might involve powering down more
+> +			    components.  Devices that are affected by
+> +			    C-states entry must define the maximum power
+> +			    depth supported in their respective device tree
+> +			    bindings so that OSPM can take decision on how
+> +			    to handle the device in question when the C-state
+> +			    is entered. All devices (per-CPU or external) with
+> +			    a power depth lower than the one defined in the
+> +			    C-state entry stop operating when the C-state
+> +			    is entered and action is required by OSPM to
+> +			    guarantee their logic and memory content is saved
+> +			    restored to guarantee proper functioning.
+
+Any reason to use numbers instead of strings?
+
+Strings make the DT more readable ... we would presumably only have to
+parse this information once, so it shouldn't be an overhead, unless there
+are hundreds of C-state nodes.
+
+[...]
+
+Cheers
+---Dave
