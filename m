@@ -1,109 +1,56 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v6 3/3] mfd: max14577: Add device tree bindings document
-Date: Wed, 04 Dec 2013 19:50:05 +0900
-Message-ID: <529F08DD.2090005@samsung.com>
-References: <1386153615-25456-1-git-send-email-k.kozlowski@samsung.com>
- <1386153615-25456-4-git-send-email-k.kozlowski@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 0/4] LP3943 MFD driver for a GPIO expander and a PWM
+ generator
+Date: Wed, 4 Dec 2013 10:50:38 +0000
+Message-ID: <20131204105038.GB907@lee--X1>
+References: <1380082975-6022-1-git-send-email-milo.kim@ti.com>
+ <20131204103431.GC26589@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1386153615-25456-4-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131204103431.GC26589@ulmo.nvidia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Milo Kim <milo.kim@ti.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+> > LP3943 is an integrated device capable of driving 16 output channel=
+s.
+> > It can be used for GPIO expander and PWM generators.
+> > LP3493 registers are controlled via the I2C interface.
+> >=20
+> > This patch-set consists of four parts - MFD, GPIO, PWM and document=
+s.
+> >=20
+> > Update from v3 to v4:
+> >   Move the driver description from the documentation to the MFD dri=
+ver file.
+> >=20
+> > Milo Kim (4):
+> >   mfd: add LP3943 MFD driver
+> >   gpio: add LP3943 I2C GPIO expander driver
+> >   pwm: add LP3943 PWM driver
+> >   Documentation: add LP3943 DT bindings and document
+>=20
+> I suspect that given the build-time dependencies Lee may want to take
+> all four patches through the MFD tree, so I've acked the PWM parts.
 
-On 12/04/2013 07:40 PM, Krzysztof Kozlowski wrote:
-> Add document describing device tree bindings for MAX14577 MFD driver.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  Documentation/devicetree/bindings/mfd/max14577.txt |   48 ++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
-> new file mode 100644
-> index 000000000000..f4fd16360b6b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-> @@ -0,0 +1,48 @@
-> +MAXIM MAX14577 multi-function device
-> +
-> +MAX14577 is a Multi-function device with Micro-USB Interface Circuit, Li+
-> +Battery Charger and SFOUT LDO output for powering USB devices. It is
-> +interfaced to host controller using I2C.
-> +
-> +Required properties:
-> +- compatible : Must be "maxim,max14577".
-> +- reg : I2C slave address for the max14577 chip.
-> +- interrupts : IRQ line for the max14577 chip.
-> +- interrupt-parent :  The parent interrupt controller.
-> +
-> +Optional nodes:
-> +- regulators :
-> +  Required child node properties:
-> +  - compatible : "maxim,max14577-regulator"
-> +
-> +  Optional child nodes:
-> +    Each child node representing a regulator, following standard regulator
-> +    bindings. Valid names for a regulator are: "CHARGER" and "SAFEOUT".
-> +    The SAFEOUT is a constant voltage regulator so there is no need to specify
-> +    voltages for it.
-> +
-> +	[*] refer Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-> +Example:
-> +	max14577@25 {
-> +		compatible = "maxim,max14577";
-> +		reg = <0x25>;
-> +		interrupt-parent = <&gpx1>;
-> +		interrupts = <5 0>;
-> +
-> +		regulators {
-> +			compatible = "maxim,max14577-regulator";
-> +
-> +			safeout_reg: safeout@1 {
-> +				regulator-compatible = "SAFEOUT";
-> +				regulator-name = "SAFEOUT";
-> +			};
-> +			charger_reg: charger@0 {
-> +				regulator-compatible = "CHARGER";
-> +				regulator-name = "CHARGER";
-> +				regulator-min-microamp = <90000>;
-> +				regulator-max-microamp = <950000>;
-> +				regulator-boot-on;
-> +			};
-> +		};
+Thanks Thierry.
 
-I prefer to add dt data about max14577-muic on following:
-If extcon consumer driver need to use muic device, dts should provide following dt data.
+Milo, would you mind re-sending the patch-set complete with
+Thierry's Acks please? Also, can you send [PATCH 1/X]..[PATCH X/X] as
+replies to [PATCH 0/X], as it aids greatly with status tracking.
 
-		muic: max14577-muic {
-			compatible = "maxim, max14577-muic";
-		};
-> +	};
-> 
+Please see git send-email options:
+  `--[no-]thread` and `--[no-]chain-reply-to`
 
-For example,
-If fuel-gauge want to use extcon subsystem, dt data of fuel-gauge add 'extcon' property as following:
+=46or shallow threading, which is what I believe you want, you need:
+  `--thread --no-chain-reply-to`
 
-	fuel-gague@ {
-		compatible = "...";
-		extcon = <&muic>;
-	}
-
-
-Thanks,
-Chanwoo Choi
-
-
-
-
-
-
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
