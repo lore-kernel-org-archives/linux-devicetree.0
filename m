@@ -1,74 +1,61 @@
-From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: Re: [PATCH RESEND v5 1/2] PWM: PXA: add device tree support to PWM
- driver
-Date: Wed, 04 Dec 2013 17:17:31 +0800
-Message-ID: <529EF32B.90805@linaro.org>
-References: <1379791174-2369-1-git-send-email-mikedunn@newsguy.com> <1379791174-2369-2-git-send-email-mikedunn@newsguy.com> <20131203101714.GG21178@ulmo.nvidia.com> <529E26C9.30707@newsguy.com> <529E8193.1040606@linaro.org> <20131204090312.GK19943@ulmo.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20131204090312.GK19943@ulmo.nvidia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mike Dunn <mikedunn@newsguy.com>, linux-pwm@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chao Xie <chao.xie@marvell.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>
+From: dt.tangr@gmail.com
+Subject: [PATCH 1/2] usb: chipidea: fix mistake in device tree binding of nspire-usb to use vendor name 'lsi' instead of SoC name 'zevio'
+Date: Wed,  4 Dec 2013 20:20:07 +1100
+Message-ID: <1386148808-15065-1-git-send-email-dt.tangr@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: Daniel Tang <dt.tangr@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Daniel Tang <dt.tangr@gmail.com>
 
-On 12/04/2013 05:03 PM, Thierry Reding wrote:
-> On Wed, Dec 04, 2013 at 09:12:51AM +0800, Haojian Zhuang wrote:
->> On 12/04/2013 02:45 AM, Mike Dunn wrote:
->>> On 12/03/2013 02:17 AM, Thierry Reding wrote:
->>>> On Sat, Sep 21, 2013 at 12:19:33PM -0700, Mike Dunn wrote:
->>>>> This patch adds device tree support to the PXA's PWM driver.  Nothing
->>>>> needs to be extracted from the device tree node by the PWM device.
->>>>> Client devices need only specify the period; the per-chip index is
->>>>> implicitly zero because one device node must be present for each PWM
->>>>> output in use.  This approach is more convenient due to the wide
->>>>> variability in the number of PWM channels present across the various PXA
->>>>> variants, and is made possible by the fact that the register sets for
->>>>> each PWM channel are segregated from each other.  An of_xlate() method
->>>>> is added to parse this single-cell node.  The existing ID table is
->>>>> reused for the match table data.
->>>>>
->>>>> Tested on a Palm Treo 680 (both platform data and DT cases).
->>>>>
->>>>> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
->>>>> ---
->>>>>   Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 30 +++++++++++++
->>>>>   drivers/pwm/pwm-pxa.c                             | 52 ++++++++++++++++++++++-
->>>>>   2 files changed, 81 insertions(+), 1 deletion(-)
->>>>>   create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
->>>> Hi Mike,
->>>>
->>>> It looks like this fell through the cracks. Is this patch still the
->>>> latest one you have? Should it still be applied?
->>>>
->>>> Thierry
->>>>
->>> Hi Thierry,
->>>
->>> Funny I should hear from you about this today.... I just turned my attention
->>> back to this today and noticed that it never made it into your for-next branch.
->>>   Yes, it is the latest.  If the patch still applies cleanly, please feel free.
->>> Otherwise, I'd be glad to rework it against something more recent.
->>>
->>> Also, we never got any ACKs for patch 2/2, which just adds the nodes to
->>> arch/arm/boot/dts/pxa27x.dtsi
->>> Any advice on whom to nudge?
->>>
->>> Thanks much!
->>> Mike
->>>
->> It's fine to me.
->>
->> Acked-by: Haojian Zhuang <haojian.zhuang@linaro.org>
-> I think it's customary to take DTS file updates through the architecture
-> trees, so I think it'd be better if you took patch 2/2. There aren't any
-> dependencies between both patches either.
->
-> Thierry
-OK. Let me handle this.
+The SoC name was mistakenly used instead of the vendor name in the
+device tree binding for nspire-usb.
 
-Regards
-Haojian
+This patch fixes this before the driver becomes widely adopted.
+
+Signed-off-by: Daniel Tang <dt.tangr@gmail.com>
+---
+ Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt |    4 ++--
+ drivers/usb/chipidea/ci_hdrc_nspire.c                    |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+index 5ba8e90..ef1fcbf 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+@@ -1,7 +1,7 @@
+ * TI-Nspire USB OTG Controller
+ 
+ Required properties:
+-- compatible: Should be "zevio,nspire-usb"
++- compatible: Should be "lsi,nspire-usb"
+ - reg: Should contain registers location and length
+ - interrupts: Should contain controller interrupt
+ 
+@@ -11,7 +11,7 @@ Recommended properies:
+ Examples:
+ 		usb0: usb@B0000000 {
+ 			reg = <0xB0000000 0x1000>;
+-			compatible = "zevio,nspire-usb";
++			compatible = "lsi,nspire-usb";
+ 			interrupts = <8>;
+ 			vbus-supply = <&vbus_reg>;
+ 		};
+diff --git a/drivers/usb/chipidea/ci_hdrc_nspire.c b/drivers/usb/chipidea/ci_hdrc_nspire.c
+index 517ce41..c5c2dde 100644
+--- a/drivers/usb/chipidea/ci_hdrc_nspire.c
++++ b/drivers/usb/chipidea/ci_hdrc_nspire.c
+@@ -52,7 +52,7 @@ static int ci_hdrc_nspire_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id ci_hdrc_nspire_dt_ids[] = {
+-	{ .compatible = "zevio,nspire-usb", },
++	{ .compatible = "lsi,nspire-usb", },
+ 	{ /* sentinel */ }
+ };
+ 
+-- 
+1.7.10.4
+
