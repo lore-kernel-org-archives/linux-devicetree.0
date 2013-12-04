@@ -1,82 +1,167 @@
-From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] usb: phy-generic: Add ULPI VBUS support
-Date: Wed, 04 Dec 2013 15:16:21 +0800
-Message-ID: <529ED6C5.3000608@gtsys.com.hk>
-References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk> <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk> <20131203081556.GA26423@xps8300>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCHv3] usb: chipidea: add support for USB OTG controller on
+ TI-NSPIRE
+Date: Wed, 4 Dec 2013 15:02:56 +0800
+Message-ID: <20131204070255.GF29552@shlinux1.ap.freescale.net>
+References: <1385351617-94118-1-git-send-email-dt.tangr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131203081556.GA26423@xps8300>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1385351617-94118-1-git-send-email-dt.tangr@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: dt.tangr@gmail.com
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, December 03, 2013 04:15 PM, Heikki Krogerus wrote:
-> On Mon, Dec 02, 2013 at 03:05:19PM +0800, Chris Ruehl wrote:
->> @@ -154,6 +164,27 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_gen_xceiv *nop,
->>   {
->>   	int err;
->>
->> +	if (nop->ulpi_vbus>  0) {
->> +		unsigned int flags = 0;
->> +
->> +		if (nop->ulpi_vbus&  0x1)
->> +			flags |= ULPI_OTG_DRVVBUS;
->> +		if (nop->ulpi_vbus&  0x2)
->> +			flags |= ULPI_OTG_DRVVBUS_EXT;
->> +		if (nop->ulpi_vbus&  0x4)
->> +			flags |= ULPI_OTG_EXTVBUSIND;
->> +		if (nop->ulpi_vbus&  0x8)
->> +			flags |= ULPI_OTG_CHRGVBUS;
->> +
->> +		nop->ulpi = otg_ulpi_create(&ulpi_viewport_access_ops, flags);
->> +		if (!nop->ulpi) {
->> +			dev_err(dev, "Failed create ULPI Phy\n");
->> +			return -ENOMEM;
->> +		}
->> +		dev_dbg(dev, "Create ULPI Phy\n");
->> +		nop->ulpi->io_priv =  nop->viewport;
->> +	}
->
-> This is so wrong. You are registering one kind of usb phy driver from
-> an other. Change drivers/usb/phy/ulpi.c to be a platform device. The
-> whole flag system in it is pretty horrid. While you are at it, change
-> that so it sets the values based on boolean flags from OF properties
-> or platform data.
->
-> NAK for the whole set.
->
->
+On Mon, Nov 25, 2013 at 02:53:37PM +1100, dt.tangr@gmail.com wrote:
+> From: Daniel Tang <dt.tangr@gmail.com>
+> 
+> The USB controller in TI-NSPIRE calculators are based off either Freescale's
+> USB OTG controller or the USB controller found in the IMX233, both of which
+> are Chipidea compatible.
+> 
+> This patch adds a device tree binding for the controller.
+> 
+> Signed-off-by: Daniel Tang <dt.tangr@gmail.com>
+> ---
+> 
+> Changelog v3:
+>  * Removed redundant module aliases
+> 
+> Changelog v2:
+>  * Rename ci13xxx to ci_hdrc
+>  * Fixed alignment issues
+> 
+> .../devicetree/bindings/usb/ci-hdrc-nspire.txt     | 17 +++++
+>  drivers/usb/chipidea/Makefile                      |  1 +
+>  drivers/usb/chipidea/ci_hdrc_nspire.c              | 72 ++++++++++++++++++++++
+>  3 files changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+>  create mode 100644 drivers/usb/chipidea/ci_hdrc_nspire.c
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> new file mode 100644
+> index 0000000..5ba8e90
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> @@ -0,0 +1,17 @@
+> +* TI-Nspire USB OTG Controller
+> +
+> +Required properties:
+> +- compatible: Should be "zevio,nspire-usb"
+> +- reg: Should contain registers location and length
+> +- interrupts: Should contain controller interrupt
+> +
+> +Recommended properies:
+> +- vbus-supply: regulator for vbus
+> +
+> +Examples:
+> +		usb0: usb@B0000000 {
+> +			reg = <0xB0000000 0x1000>;
+> +			compatible = "zevio,nspire-usb";
+> +			interrupts = <8>;
+> +			vbus-supply = <&vbus_reg>;
+> +		};
+> diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+> index a99d980..245ea4d 100644
+> --- a/drivers/usb/chipidea/Makefile
+> +++ b/drivers/usb/chipidea/Makefile
+> @@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_CHIPIDEA_DEBUG)	+= debug.o
+>  # Glue/Bridge layers go here
+> 
+>  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
+> +obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_nspire.o
+> 
+>  # PCI doesn't provide stubs, need to check
+>  ifneq ($(CONFIG_PCI),)
+> diff --git a/drivers/usb/chipidea/ci_hdrc_nspire.c b/drivers/usb/chipidea/ci_hdrc_nspire.c
+> new file mode 100644
+> index 0000000..517ce41
+> --- /dev/null
+> +++ b/drivers/usb/chipidea/ci_hdrc_nspire.c
+> @@ -0,0 +1,72 @@
+> +/*
+> + *	Copyright (C) 2013 Daniel Tang <tangrs@tangrs.id.au>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2, as
+> + * published by the Free Software Foundation.
+> + *
+> + * Based off drivers/usb/chipidea/ci_hdrc_msm.c
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/usb/gadget.h>
+> +#include <linux/usb/chipidea.h>
+> +
+> +#include "ci.h"
+> +
+> +static struct ci_hdrc_platform_data ci_hdrc_nspire_platdata = {
+> +	.name			= "ci_hdrc_nspire",
+> +	.flags			= CI_HDRC_REGS_SHARED,
+> +	.capoffset		= DEF_CAPOFFSET,
+> +};
+> +
+> +static int ci_hdrc_nspire_probe(struct platform_device *pdev)
+> +{
+> +	struct platform_device *ci_pdev;
+> +
+> +	dev_dbg(&pdev->dev, "ci_hdrc_nspire_probe\n");
+> +
+> +	ci_pdev = ci_hdrc_add_device(&pdev->dev,
+> +				pdev->resource, pdev->num_resources,
+> +				&ci_hdrc_nspire_platdata);
+> +
+> +	if (IS_ERR(ci_pdev)) {
+> +		dev_err(&pdev->dev, "ci_hdrc_add_device failed!\n");
+> +		return PTR_ERR(ci_pdev);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, ci_pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ci_hdrc_nspire_remove(struct platform_device *pdev)
+> +{
+> +	struct platform_device *ci_pdev = platform_get_drvdata(pdev);
+> +
+> +	ci_hdrc_remove_device(ci_pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ci_hdrc_nspire_dt_ids[] = {
+> +	{ .compatible = "zevio,nspire-usb", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct platform_driver ci_hdrc_nspire_driver = {
+> +	.probe = ci_hdrc_nspire_probe,
+> +	.remove = ci_hdrc_nspire_remove,
+> +	.driver = {
+> +		.name = "nspire_usb",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = ci_hdrc_nspire_dt_ids,
+> +	},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, ci_hdrc_nspire_dt_ids);
+> +module_platform_driver(ci_hdrc_nspire_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.8.1.3
+> 
+> 
 
-Heikki,
-
-Thanks for your comments, even not much positive to me.. any how.
-My intention on the "horrid" path was to reduce kernel code where
-one of_read32 vs. four of_boolean. And mentioned logic is simple. But that's 
-history.
-
-On my way to find a solution for my board I'd look around and found using of
-phy-ulpi.c functions in phy-tegra-usb.c and don't mind to use them too.
-
-I accept your NAK and will work on a patch to make phy-ulpi.c working as 
-platform device.
-
-Last question to you. What you don't like on the patch to support chip-select 
-gpio of my patch-set.. I ask because you NAK the whole set.
-I really need the ChipSelect function to make my hardware work!
-
-Chris
+Applied, Thanks.
 
 -- 
-GTSYS Limited RFID Technology
-A01 24/F Gold King Industrial Bld
-35-41 Tai Lin Pai Road, Kwai Chung, Hong Kong
-Fax (852) 8167 4060 - Tel (852) 3598 9488
 
-Disclaimer: http://www.gtsys.com.hk/email/classified.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Peter Chen
+
