@@ -1,81 +1,81 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] checkpatch: add DT compatible string documentation
- checks
-Date: Tue, 03 Dec 2013 22:24:51 -0800
-Message-ID: <1386138291.30493.45.camel@joe-AO722>
-References: <1386130643-19449-1-git-send-email-robherring2@gmail.com>
+From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Subject: Re: [PATCH 3/3] usb: phy-generic: Add ULPI VBUS support
+Date: Wed, 04 Dec 2013 15:16:21 +0800
+Message-ID: <529ED6C5.3000608@gtsys.com.hk>
+References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk> <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk> <20131203081556.GA26423@xps8300>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386130643-19449-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20131203081556.GA26423@xps8300>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+To: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2013-12-03 at 22:17 -0600, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> This adds a simple check that any compatible strings in DeviceTree dts
-> files are present in Documentation/devicetree/bindings. Vendor prefixes
-> are also checked for existing in vendor-prefixes.txt These should be
-> temporary checks until we have more sophisticated binding schema checking.
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-> Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-> ---
-> v2:
-> - Add vendor string checking against vendor-prefixes.txt
-> - Add '_', '.' and '+' as valid compatible string characters
-> - Use 'grep -E' instead of egrep
+On Tuesday, December 03, 2013 04:15 PM, Heikki Krogerus wrote:
+> On Mon, Dec 02, 2013 at 03:05:19PM +0800, Chris Ruehl wrote:
+>> @@ -154,6 +164,27 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_gen_xceiv *nop,
+>>   {
+>>   	int err;
+>>
+>> +	if (nop->ulpi_vbus>  0) {
+>> +		unsigned int flags = 0;
+>> +
+>> +		if (nop->ulpi_vbus&  0x1)
+>> +			flags |= ULPI_OTG_DRVVBUS;
+>> +		if (nop->ulpi_vbus&  0x2)
+>> +			flags |= ULPI_OTG_DRVVBUS_EXT;
+>> +		if (nop->ulpi_vbus&  0x4)
+>> +			flags |= ULPI_OTG_EXTVBUSIND;
+>> +		if (nop->ulpi_vbus&  0x8)
+>> +			flags |= ULPI_OTG_CHRGVBUS;
+>> +
+>> +		nop->ulpi = otg_ulpi_create(&ulpi_viewport_access_ops, flags);
+>> +		if (!nop->ulpi) {
+>> +			dev_err(dev, "Failed create ULPI Phy\n");
+>> +			return -ENOMEM;
+>> +		}
+>> +		dev_dbg(dev, "Create ULPI Phy\n");
+>> +		nop->ulpi->io_priv =  nop->viewport;
+>> +	}
+>
+> This is so wrong. You are registering one kind of usb phy driver from
+> an other. Change drivers/usb/phy/ulpi.c to be a platform device. The
+> whole flag system in it is pretty horrid. While you are at it, change
+> that so it sets the values based on boolean flags from OF properties
+> or platform data.
+>
+> NAK for the whole set.
+>
+>
 
-Some more trivial notes:
+Heikki,
 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -2034,6 +2034,29 @@ sub process {
->  			     "Use of $flag is deprecated, please use \`$replacement->{$flag} instead.\n" . $herecurr) if ($replacement->{$flag});
->  		}
->  
-> +# check for DT compatible documentation
-> +		if ($realfile =~ /\.dts/ && $rawline =~ /\+\s*compatible\s*=/) {
+Thanks for your comments, even not much positive to me.. any how.
+My intention on the "horrid" path was to reduce kernel code where
+one of_read32 vs. four of_boolean. And mentioned logic is simple. But that's 
+history.
 
-this should probably be $rawline =~ /^\+\s*compatible...
+On my way to find a solution for my board I'd look around and found using of
+phy-ulpi.c functions in phy-tegra-usb.c and don't mind to use them too.
 
-> +			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
-> +
-> +			foreach my $compat (@compats) {
-> +				my $compat2 = $compat;
-> +				my $dt_path = "Documentation/devicetree/bindings/";
-> +				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
-> +				`grep -Erq "$compat|$compat2" $dt_path`;
-> +				if ( $? >> 8 ) {
-> +					WARN("UNDOCUMENTED_DT_BINDING",
-> +					     "DT compatible string \"$compat\" appears un-documented -- check $dt_path\n" . $herecurr);
-> +				}
-> +				my $vendor = $compat;
-> +				$vendor =~ s/^([a-zA-Z0-9]+)\,.*/$1/;
-> +				`grep -Eq "$vendor" "${dt_path}vendor-prefixes.txt"`;
+I accept your NAK and will work on a patch to make phy-ulpi.c working as 
+platform device.
 
-It maybe simpler to read as:
+Last question to you. What you don't like on the patch to support chip-select 
+gpio of my patch-set.. I ask because you NAK the whole set.
+I really need the ChipSelect function to make my hardware work!
 
-	my $vendor_path = $dt_path . "vendor-prefixes.txt";
-	`grep -Eq $vendor $vendor_path`;
+Chris
 
-> +				if ( $? >> 8 ) {
-> +					WARN("UNDOCUMENTED_DT_VENDOR",
-> +					     "DT compatible string vendor \"$vendor\" appears un-documented -- check ${dt_path}vendor-prefixes.txt\n" . $herecurr);
+-- 
+GTSYS Limited RFID Technology
+A01 24/F Gold King Industrial Bld
+35-41 Tai Lin Pai Road, Kwai Chung, Hong Kong
+Fax (852) 8167 4060 - Tel (852) 3598 9488
 
-					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vendor_path\n" . $herecurr)
-
-Also I suggest using the same message type
-instead of 2 distinct ones.
-
-Maybe "UNDOCUMENTED_DT_STRING"
-
+Disclaimer: http://www.gtsys.com.hk/email/classified.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
