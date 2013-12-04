@@ -1,376 +1,207 @@
-From: Alex Elder <alex.elder@linaro.org>
-Subject: [PATCH v2 3/3] ARM: dts: bcm281xx: define real clocks
-Date: Wed, 04 Dec 2013 09:33:56 -0600
-Message-ID: <529F4B64.9030604@linaro.org>
-References: <529F4B0F.2020801@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <529F4B0F.2020801@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@linaro.org>
-Cc: "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
+Date: Wed, 4 Dec 2013 09:36:08 -0600
+Message-ID: <24A59FCA-88E5-42BB-9AEC-CDA07841A6ED@codeaurora.org>
+References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com> <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com> <3AA6B169-C4C8-474B-B110-B912510B834E@codeaurora.org> <20131203104004.GA5694@e102568-lin.cambridge.arm.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20131203104004.GA5694@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Replace the "fake" clocks defined in the "bcm11351.dtsi" device tree
-file with real definitions backed by the new BCM281xx clock driver..
 
-Signed-off-by: Alex Elder <elder@linaro.org>
-Reviewed-by: Matt Porter <matt.porter@linaro.org>
-Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
----
-v2: - got rid of the "not_selected" clock definition
+On Dec 3, 2013, at 4:40 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
 
- arch/arm/boot/dts/bcm11351.dtsi |  240
-++++++++++++++++++++++++++-------------
- 1 file changed, 164 insertions(+), 76 deletions(-)
+> On Mon, Dec 02, 2013 at 06:08:16PM +0000, Kumar Gala wrote:
+>> 
+>> On Dec 2, 2013, at 10:20 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+>> 
+>>> ARM based platforms implement a variety of power management schemes that
+>>> allow processors to enter at run-time low-power states, aka C-states
+>>> in ACPI jargon. The parameters defining these C-states vary on a per-platform
+>>> basis forcing the OS to hardcode the state parameters in platform
+>>> specific static tables whose size grows as the number of platforms supported
+>>> in the kernel increases and hampers device drivers standardization.
+>>> 
+>>> Therefore, this patch aims at standardizing C-state device tree bindings for
+>>> ARM platforms. Bindings define C-state parameters inclusive of entry methods
+>>> and state latencies, to allow operating systems to retrieve the
+>>> configuration entries from the device tree and initialize the related
+>>> power management drivers, paving the way for common code in the kernel
+>>> to deal with power states and removing the need for static data in current
+>>> and previous kernel versions.
+>> 
+>> Where is this spec'd today in the kernel?
+> 
+> How can it be in the kernel given that these bindings have just been posted ?
+> I started coding the layer managing the C-states in the kernel, even
+> though I would avoid writing it and then restart from scratch if these
+> bindings are scrapped. Bindings should not depend on kernel code, it
+> is the other way around, right ?
 
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi
-b/arch/arm/boot/dts/bcm11351.dtsi
-index 1246885..23cddbe 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -14,6 +14,8 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
+I was guessing that there is existing code in the kernel that uses some platform data structures.  I was wondering what that code looked like today.
 
-+#include "dt-bindings/clock/bcm281xx.h"
-+
- #include "skeleton.dtsi"
+> 
+> [...]
+> 
+>>> +===========================================
+>>> +2 - state node
+>>> +===========================================
+>>> +
+>>> +A state node represents a C-state description and must be defined as follows:
+>>> +
+>>> +- state node
+>>> +
+>>> +     Description: must be child of the cpu-power-states node.
+>>> +
+>>> +     The state node name must be "state", with unit address provided by the
+>>> +     "reg" property following standard DT requirements[4].
+>>> +
+>>> +     A state node defines the following properties:
+>>> +
+>>> +     - reg
+>>> +             Usage: Required
+>>> +             Value type: <u32>
+>>> +             Definition: Standard device tree property [4] used for
+>>> +                         enumeration purposes.
+>> 
+>> I'm not sure what purpose reg is really serving here.
+> 
+> Enumeration, that's it.
+> 
+>>> +
+>>> +     - index
+>>> +             Usage: Required
+>>> +             Value type: <u32>
+>>> +             Definition: It represents C-state index, starting from 2 (index
+>>> +                         0 represents the processor state "running" and
+>>> +                         index 1 represents processor mode "WFI"; indexes 0
+>>> +                         and 1 are standard ARM states that need not be
+>>> +                         described).
+>> 
+>> any reason not to call it c-state-index"
+> 
+> Well, they are called "state" nodes, so I called it "index".
+> 
+> I really do not care, can change it if we think we should call states
+> c-states.
+> 
+>>> +
+>>> +     - entry-method
+>>> +             Value type: <stringlist>
+>>> +             Usage: Required
+>>> +             Definition: Describes the method by which a CPU enters the
+>>> +                         C-state. This property is required and must be one
+>>> +                         of:
+>>> +
+>>> +                         - "psci"
+>>> +                           ARM Standard firmware interface
+>>> +
+>>> +                         - "[vendor],[method]"
+>>> +                           An implementation dependent string with
+>>> +                           format "vendor,method", where vendor is a string
+>>> +                           denoting the name of the manufacturer and
+>>> +                           method is a string specifying the mechanism
+>>> +                           used to enter the C-state.
+>>> +
+>>> +     - psci-power-state
+>>> +             Usage: Required if entry-method property value is set to
+>>> +                    "psci".
+>>> +             Value type: <u32>
+>>> +             Definition: power_state parameter to pass to the PSCI
+>>> +                         suspend call to enter the C-state.
+>>> +
+>>> +     - latency
+>>> +             Usage: Required
+>>> +             Value type: <u32>
+>>> +             Definition: Worst case latency in microseconds required to
+>>> +                         enter and exit the C-state.
+>>> +
+>>> +     - min-residency
+>>> +             Usage: Required
+>>> +             Value type: <u32>
+>>> +             Definition: Time in microseconds required for the CPU to be in
+>>> +                         the C-state to make up for the dynamic power
+>>> +                         consumed to enter/exit the C-state in order to
+>>> +                         break even in terms of power consumption compared
+>>> +                         to C1 state (wfi).
+>>> +                         This parameter depends on the operating conditions
+>>> +                         (operating point, cache state) and must assume
+>>> +                         worst case scenario.
+>>> +
+>>> +     - cpus
+>>> +             Usage: Optional
+>>> +             Value type: <phandle>
+>>> +             Definition: If defined, the phandle points to a node in the
+>>> +                         cpu-map[2] representing all CPUs on which C-state
+>>> +                         is valid. If not present or system is UP, the
+>>> +                         C-state has to be considered valid for all CPUs in
+>>> +                         the system.
+>>> +
+>>> +     - affinity
+>>> +             Usage: Optional
+>>> +             Value type: <phandle>
+>>> +             Definition: If defined, phandle points to a node in the
+>>> +                         cpu-map[2] that represents all CPUs that are
+>>> +                         affected (ie share) by the C-state and have to
+>>> +                         be coordinated on C-state entry/exit. If not
+>>> +                         present or system is UP, the C-state is local to
+>>> +                         a CPU and need no coordination (ie it is a CPU
+>>> +                         state, that does not require coordination with
+>>> +                         other CPUs). If present, the affinity property
+>>> +                         must contain a phandle to a cpu-map node that
+>>> +                         represents a subset, possibly inclusive of the
+>>> +                         CPUs described through the cpus property.
+>>> +
+>>> +     - power-depth
+>>> +             Usage: Required
+>>> +             Value type: <u32>
+>>> +             Definition: Integer value, starting from 2 (value 0 meaning
+>>> +                         running and value 1 representing power depth of
+>>> +                         wfi (C1)), that defines the level of depth of a
+>>> +                         power state.
+>>> +                         The system denotes power states with different
+>>> +                         depths, an increasing value meaning less power
+>>> +                         consumption and might involve powering down more
+>>> +                         components.  Devices that are affected by
+>>> +                         C-states entry must define the maximum power
+>>> +                         depth supported in their respective device tree
+>>> +                         bindings so that OSPM can take decision on how
+>>> +                         to handle the device in question when the C-state
+>>> +                         is entered. All devices (per-CPU or external) with
+>>> +                         a power depth lower than the one defined in the
+>>> +                         C-state entry stop operating when the C-state
+>>> +                         is entered and action is required by OSPM to
+>>> +                         guarantee their logic and memory content is saved
+>>> +                         restored to guarantee proper functioning.
+>> 
+>> How is this different from the c-state index?
+> 
+> The idea, not sure it is worthwhile, is to represent a unique value in
+> the system. There can be multiple eg C2 states (two clusters in two
+> different power domains) with same index and different power depths.
+> 
+> Devices attached to power domains can check the power depth to detect if
+> the CPU must be prevented from entering the C-state or not, and on the
+> other hand, power depth allows to understand if a device state must be
+> saved and restored.
+> 
+> I should have added an example but there is already lots of stuff to
+> discuss for bindings as they are IMHO.
+> 
+> Lorenzo
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
- / {
-@@ -43,7 +45,7 @@
- 		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
- 		status = "disabled";
- 		reg = <0x3e000000 0x1000>;
--		clocks = <&uartb_clk>;
-+		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB>;
- 		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
- 		reg-shift = <2>;
- 		reg-io-width = <4>;
-@@ -53,7 +55,7 @@
- 		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
- 		status = "disabled";
- 		reg = <0x3e001000 0x1000>;
--		clocks = <&uartb2_clk>;
-+		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB2>;
- 		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
- 		reg-shift = <2>;
- 		reg-io-width = <4>;
-@@ -63,7 +65,7 @@
- 		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
- 		status = "disabled";
- 		reg = <0x3e002000 0x1000>;
--		clocks = <&uartb3_clk>;
-+		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB3>;
- 		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
- 		reg-shift = <2>;
- 		reg-io-width = <4>;
-@@ -73,7 +75,7 @@
- 		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
- 		status = "disabled";
- 		reg = <0x3e003000 0x1000>;
--		clocks = <&uartb4_clk>;
-+		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB4>;
- 		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
- 		reg-shift = <2>;
- 		reg-io-width = <4>;
-@@ -95,7 +97,7 @@
- 		compatible = "brcm,kona-timer";
- 		reg = <0x35006000 0x1000>;
- 		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&hub_timer_clk>;
-+		clocks = <&aon_ccu BCM281XX_AON_CCU_HUB_TIMER>;
- 	};
-
- 	gpio: gpio@35003000 {
-@@ -118,7 +120,7 @@
- 		compatible = "brcm,kona-sdhci";
- 		reg = <0x3f180000 0x10000>;
- 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&sdio1_clk>;
-+		clocks = <&master_ccu BCM281XX_MASTER_CCU_SDIO1>;
- 		status = "disabled";
- 	};
-
-@@ -126,7 +128,7 @@
- 		compatible = "brcm,kona-sdhci";
- 		reg = <0x3f190000 0x10000>;
- 		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&sdio2_clk>;
-+		clocks = <&master_ccu BCM281XX_MASTER_CCU_SDIO2>;
- 		status = "disabled";
- 	};
-
-@@ -134,7 +136,7 @@
- 		compatible = "brcm,kona-sdhci";
- 		reg = <0x3f1a0000 0x10000>;
- 		interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&sdio3_clk>;
-+		clocks = <&master_ccu BCM281XX_MASTER_CCU_SDIO3>;
- 		status = "disabled";
- 	};
-
-@@ -142,99 +144,125 @@
- 		compatible = "brcm,kona-sdhci";
- 		reg = <0x3f1b0000 0x10000>;
- 		interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&sdio4_clk>;
-+		clocks = <&master_ccu BCM281XX_MASTER_CCU_SDIO4>;
- 		status = "disabled";
- 	};
-
- 	clocks {
--		bsc1_clk: bsc1 {
--			compatible = "fixed-clock";
--			clock-frequency = <13000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		root_ccu: root_ccu {
-+			compatible = "brcm,bcm11351-root-ccu";
-+			reg = <0x35001000 0x0f00>;
-+			#clock-cells = <1>;
-+			clock-output-names = "frac_1m";
-+		};
-+
-+		hub_ccu: hub_ccu {
-+			compatible = "brcm,bcm11351-hub-ccu";
-+			reg = <0x34000000 0x0f00>;
-+			#clock-cells = <1>;
-+			clock-output-names = "tmon_1m";
-+		};
-+
-+		aon_ccu: aon_ccu {
-+			compatible = "brcm,bcm11351-aon-ccu";
-+			reg = <0x35002000 0x0f00>;
-+			#clock-cells = <1>;
-+			clock-output-names = "hub_timer",
-+					     "pmu_bsc",
-+					     "pmu_bsc_var";
-+		};
-+
-+		master_ccu: master_ccu {
-+			compatible = "brcm,bcm11351-master-ccu";
-+			reg = <0x3f001000 0x0f00>;
-+			#clock-cells = <1>;
-+			clock-output-names = "sdio1",
-+					     "sdio2",
-+					     "sdio3",
-+					     "sdio4",
-+					     "usb_ic",
-+					     "hsic2_48m",
-+					     "hsic2_12m";
-+		};
-+
-+		slave_ccu: slave_ccu {
-+			compatible = "brcm,bcm11351-slave-ccu";
-+			reg = <0x3e011000 0x0f00>;
-+			#clock-cells = <1>;
-+			clock-output-names = "uartb",
-+					     "uartb2",
-+					     "uartb3",
-+					     "uartb4",
-+					     "ssp0",
-+					     "ssp2",
-+					     "bsc1",
-+					     "bsc2",
-+					     "bsc3",
-+					     "pwm";
-+		};
-+
-+		ref_1m_clk: ref_1m {
- 			#clock-cells = <0>;
--		};
--
--		bsc2_clk: bsc2 {
--			compatible = "fixed-clock";
--			clock-frequency = <13000000>;
--			#clock-cells = <0>;
--		};
--
--		bsc3_clk: bsc3 {
--			compatible = "fixed-clock";
--			clock-frequency = <13000000>;
--			#clock-cells = <0>;
--		};
--
--		pmu_bsc_clk: pmu_bsc {
--			compatible = "fixed-clock";
--			clock-frequency = <13000000>;
--			#clock-cells = <0>;
--		};
--
--		hub_timer_clk: hub_timer {
--			compatible = "fixed-clock";
--			clock-frequency = <32768>;
--			#clock-cells = <0>;
--		};
--
--		pwm_clk: pwm {
--			compatible = "fixed-clock";
--			clock-frequency = <26000000>;
--			#clock-cells = <0>;
--		};
--
--		sdio1_clk: sdio1 {
--			compatible = "fixed-clock";
--			clock-frequency = <48000000>;
--			#clock-cells = <0>;
--		};
--
--		sdio2_clk: sdio2 {
--			compatible = "fixed-clock";
--			clock-frequency = <48000000>;
--			#clock-cells = <0>;
--		};
--
--		sdio3_clk: sdio3 {
--			compatible = "fixed-clock";
--			clock-frequency = <48000000>;
--			#clock-cells = <0>;
--		};
--
--		sdio4_clk: sdio4 {
--			compatible = "fixed-clock";
--			clock-frequency = <48000000>;
--			#clock-cells = <0>;
--		};
--
--		tmon_1m_clk: tmon_1m {
- 			compatible = "fixed-clock";
- 			clock-frequency = <1000000>;
-+		};
-+
-+		ref_32k_clk: ref_32k {
- 			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <32768>;
- 		};
-
--		uartb_clk: uartb {
-+		bbl_32k_clk: bbl_32k {
-+			#clock-cells = <0>;
- 			compatible = "fixed-clock";
--			clock-frequency = <13000000>;
-+			clock-frequency = <32768>;
-+		};
-+
-+		ref_13m_clk: ref_13m {
- 			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
- 		};
-
--		uartb2_clk: uartb2 {
-+		var_13m_clk: var_13m {
-+			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <13000000>;
-+		};
-+
-+		dft_19_5m_clk: dft_19_5m {
- 			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <19500000>;
- 		};
-
--		uartb3_clk: uartb3 {
-+		ref_crystal_clk: ref_crystal {
-+			#clock-cells = <0>;
- 			compatible = "fixed-clock";
--			clock-frequency = <13000000>;
-+			clock-frequency = <26000000>;
-+		};
-+
-+		ref_cx40_clk: ref_cx40 {
- 			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <40000000>;
- 		};
-
--		uartb4_clk: uartb4 {
-+		ref_52m_clk: ref_52m {
-+			#clock-cells = <0>;
- 			compatible = "fixed-clock";
--			clock-frequency = <13000000>;
-+			clock-frequency = <52000000>;
-+		};
-+
-+		var_52m_clk: var_52m {
- 			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <52000000>;
- 		};
-
- 		usb_otg_ahb_clk: usb_otg_ahb {
-@@ -242,5 +270,65 @@
- 			clock-frequency = <52000000>;
- 			#clock-cells = <0>;
- 		};
-+
-+		ref_96m_clk: ref_96m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <96000000>;
-+		};
-+
-+		var_96m_clk: var_96m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <96000000>;
-+		};
-+
-+		ref_104m_clk: ref_104m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <104000000>;
-+		};
-+
-+		var_104m_clk: var_104m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <104000000>;
-+		};
-+
-+		ref_156m_clk: ref_156m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <156000000>;
-+		};
-+
-+		var_156m_clk: var_156m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <156000000>;
-+		};
-+
-+		ref_208m_clk: ref_208m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <208000000>;
-+		};
-+
-+		var_208m_clk: var_208m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <208000000>;
-+		};
-+
-+		ref_312m_clk: ref_312m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <312000000>;
-+		};
-+
-+		var_312m_clk: var_312m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <312000000>;
-+		};
- 	};
- };
 -- 
-1.7.9.5
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
