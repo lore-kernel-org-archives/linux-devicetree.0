@@ -1,77 +1,87 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V2 1/2] ARM: tegra: Add header file for pinctrl constants
-Date: Wed, 4 Dec 2013 09:20:24 +0100
-Message-ID: <20131204082023.GA19943@ulmo.nvidia.com>
-References: <1386076567-14283-1-git-send-email-ldewangan@nvidia.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH 1/4] usb: chipidea: msm: Add device tree binding
+ information
+Date: Wed, 04 Dec 2013 10:33:57 +0200
+Message-ID: <1386146037.16040.13.camel@iivanov-dev.int.mm-sol.com>
+References: <1384176937-1658-1-git-send-email-iivanov@mm-sol.com>
+	 <1384176937-1658-2-git-send-email-iivanov@mm-sol.com>
+	 <20131204054003.GB29552@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1386076567-14283-1-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <20131204054003.GB29552@shlinux1.ap.freescale.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: rob.herring@calxeda.com, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, davidb@codeaurora.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Peter, 
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for reviewing this patch.
 
-On Tue, Dec 03, 2013 at 06:46:06PM +0530, Laxman Dewangan wrote:
-> This new header file defines pincontrol constants for Tegra to
-> use from Tegra's DTS file for pincontrol properties option.
->=20
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
-> Changes from V1:
-> - Get rid of lots of macro and converge it to TEGRA_PIN_ENABLE/DISABLE.
-> - Change macro name for PULL UP/DOWN/NONE.
->=20
->  include/dt-bindings/pinctrl/pinctrl-tegra.h |   40 +++++++++++++++++++++=
-++++++
->  1 files changed, 40 insertions(+), 0 deletions(-)
->  create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra.h
+On Wed, 2013-12-04 at 13:40 +0800, Peter Chen wrote: 
+> On Mon, Nov 11, 2013 at 03:35:34PM +0200, Ivan T. Ivanov wrote:
+> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > 
+> 
+> Please add something in commit log
+> 
+> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> > Cc: devicetree@vger.kernel.org
+> > ---
+> >  .../devicetree/bindings/usb/msm-hsusb.txt          |   16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> > index 5ea26c6..0a85eba 100644
+> > --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> > +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> > @@ -15,3 +15,19 @@ Example EHCI controller device node:
+> >  		usb-phy = <&usb_otg>;
+> >  	};
+> >  
+> > +CI13xxx (Chipidea) USB controllers
+> > +
+> 
+> We have already renamed ci13xxx to ci_hdrc.
 
-I like this a lot. One minor nit below.
+Yes, but the chip is still CI13XXX. Freescale documentations is also 
+referring to actual chip family.
 
-> diff --git a/include/dt-bindings/pinctrl/pinctrl-tegra.h b/include/dt-bin=
-dings/pinctrl/pinctrl-tegra.h
-> new file mode 100644
-> index 0000000..e5f02f8
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/pinctrl-tegra.h
-> @@ -0,0 +1,40 @@
-> +/*
-> + * This header provides constants for TEGRA pinctrl bindings.
+> 
+> > +Required properties:
+> > +- compatible: 	should contain "qcom,ci-hdrc"
+> > +- reg: 			offset and length of the register set in the memory map
+> > +- interrupts: 	interrupt-specifier for the controller interrupt.
+> > +- usb-phy:		phandle for the PHY device
+> > +- dr_mode: 		Sould be "peripheral"
+> > +
+> 
+> Please keep alignment for "reg"
+> 
 
-"TEGRA" -> "Tegra"
+It looks aligned in editor with smart-tab support.
 
-Other than that:
+Regards,
+Ivan
 
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSnuXHAAoJEN0jrNd/PrOhEIwP/0LQmXk7DxjSxWUik/gXsZpU
-6qCp2DzIy5HJiQqi9Wsi5GhbU1LKAHf+qtgaCdlXlMow9v6wMHpovjqcvvFlJGie
-wRTWjS9mQ2gTkjmUMuiOLnC5WrPfkMYES/9hHm6tIIdGYshtT8Xm4Hiyj8zyMyzt
-6hVtpRfJnZD621EwGEzCZeXdoL15gRbIDvE1Lqu11uUIhhwC/73JSDEkG+U0mdx9
-zN0phyZcvyq+SiLj75+m+yNHCHvF1ggUDRsfvmIBOUF4EPfJY43VbtNoU7MoRjLW
-q0tB46jK/xNYzkjxl6exnVaZg7vWm8314eurxS8ZO2NigTtPyTOqHwE8zkLum8EK
-G1aUHR9NXl9LCS8AjMs1ypR7QnQbdRXEgENzm2oxS0t6YuJd2SeY99hyYUSDNTko
-PlvVbQHQuFuIybP36tqERpMy+AB//+LrwxBqEdhfq3NydjPa6oHpb8nf74c05AqM
-iVNBMMuJDTZ7g6cvN7PUcW0U4LUj3wDNqPWHLW7eV7iJLS8ZLzSkmFKsgk8MyqPS
-zEconvWVE+DWT4xqAYGPIiDfJwuhPw9/rH9gX0sdFMIgxxdnkA21N4n0UMPTy+vL
-CljOen/8Emq70fwF8Pg48FuFGJZgsBDH5uthMwOl9YiE34JiHCjdr0auLyJ4eGHe
-x34FvzqCb0NG2WKtifXr
-=LkLM
------END PGP SIGNATURE-----
-
---bp/iNruPH9dso1Pn--
+> Peter
+> 
+> > +	gadget@f9a55000 {
+> > +		compatible = "qcom,ci-hdrc";
+> > +		reg = <0xf9a55000 0x400>;
+> > +		dr_mode = "peripheral";
+> > +		interrupts = <0 134 0>;
+> > +		usb-phy = <&usb_otg>;
+> > +	};
+> > \ No newline at end of file
+> > -- 
+> > 1.7.9.5
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 
+> 
