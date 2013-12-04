@@ -1,64 +1,78 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] mfd: max14577: Add device tree bindings document
-Date: Wed, 4 Dec 2013 13:41:56 +0000
-Message-ID: <20131204134156.GA25422@lee--X1>
-References: <1386153615-25456-1-git-send-email-k.kozlowski@samsung.com>
- <1386153615-25456-4-git-send-email-k.kozlowski@samsung.com>
- <20131204112039.GC907@lee--X1>
- <1386164272.6195.3.camel@AMDC1943>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH 1/4] usb: chipidea: msm: Add device tree binding
+ information
+Date: Wed, 4 Dec 2013 21:13:04 +0800
+Message-ID: <20131204131303.GB1573@shlinux1.ap.freescale.net>
+References: <1384176937-1658-1-git-send-email-iivanov@mm-sol.com>
+ <1384176937-1658-2-git-send-email-iivanov@mm-sol.com>
+ <20131204054003.GB29552@shlinux1.ap.freescale.net>
+ <1386146037.16040.13.camel@iivanov-dev.int.mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1386164272.6195.3.camel@AMDC1943>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1386146037.16040.13.camel@iivanov-dev.int.mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, davidb@codeaurora.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > > +MAXIM MAX14577 multi-function device
-> >=20
-> > Why is Maxim capitalised in such a way?
-> >=20
-> > If you're going to use the term Multi-Function Device, please
-> > capitalise it.
-> >=20
-> > > +MAX14577 is a Multi-function device with Micro-USB Interface Cir=
-cuit, Li+
-> >=20
-> > Same here.
->=20
-> I'll fix this. The MAXIM capitalization came from other drivers.
+On Wed, Dec 04, 2013 at 10:33:57AM +0200, Ivan T. Ivanov wrote:
+> Hi Peter, 
+> 
+> Thank you for reviewing this patch.
+> 
+> On Wed, 2013-12-04 at 13:40 +0800, Peter Chen wrote: 
+> > On Mon, Nov 11, 2013 at 03:35:34PM +0200, Ivan T. Ivanov wrote:
+> > > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > > 
+> > 
+> > Please add something in commit log
+> > 
+> > > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > ---
+> > >  .../devicetree/bindings/usb/msm-hsusb.txt          |   16 ++++++++++++++++
+> > >  1 file changed, 16 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> > > index 5ea26c6..0a85eba 100644
+> > > --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> > > +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> > > @@ -15,3 +15,19 @@ Example EHCI controller device node:
+> > >  		usb-phy = <&usb_otg>;
+> > >  	};
+> > >  
+> > > +CI13xxx (Chipidea) USB controllers
+> > > +
+> > 
+> > We have already renamed ci13xxx to ci_hdrc.
+> 
+> Yes, but the chip is still CI13XXX. Freescale documentations is also 
+> referring to actual chip family.
 
-No need to repeat mistakes. I believe it should be Maxim.
+OK, let's keep IP reference at doc. I will change the Freescale doc
+name from ci13xxx-imx.txt to ci-hdrc-imx.txt
 
-> > > +Example:
-> > > +	max14577@25 {
-> > > +		compatible =3D "maxim,max14577";
-> > > +		reg =3D <0x25>;
-> > > +		interrupt-parent =3D <&gpx1>;
-> > > +		interrupts =3D <5 0>;
-> >=20
-> > I'm gussing this is IRQ5 and the 0 is flags? If so, please use
-> > #defines for the flags.
->=20
-> This is a standard interrupt binding. The max14577 MFD core driver
-> ignores the interrupt flags and always uses IRQF_TRIGGER_FALLING. I c=
-an
-> fix this with new patch for drivers/mfd/max14577.c but still I don't =
-see
-> what should be added in documentation.
+> 
+> > 
+> > > +Required properties:
+> > > +- compatible: 	should contain "qcom,ci-hdrc"
+> > > +- reg: 			offset and length of the register set in the memory map
+> > > +- interrupts: 	interrupt-specifier for the controller interrupt.
+> > > +- usb-phy:		phandle for the PHY device
+> > > +- dr_mode: 		Sould be "peripheral"
+> > > +
+> > 
+> > Please keep alignment for "reg"
+> > 
+> 
+> It looks aligned in editor with smart-tab support.
+> 
 
-s/0/IRQ_TYPE_NONE
+OK, let's keep it
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+
+Best Regards,
+Peter Chen
