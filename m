@@ -1,175 +1,118 @@
-From: Li Xiubo <Li.Xiubo@freescale.com>
-Subject: RE: [RFC] pwm: Add Freescale FTM PWM driver support
-Date: Wed, 4 Dec 2013 03:12:15 +0000
-Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F828E5455@039-SN2MPN1-011.039d.mgd.msft.net>
-References: <1385979309-10505-1-git-send-email-Li.Xiubo@freescale.com>
- <20131202123406.GK12952@e106331-lin.cambridge.arm.com>
- <1DD289F6464F0949A2FCA5AA6DC23F828E374B@039-SN2MPN1-011.039d.mgd.msft.net>
- <20131203103632.GB7552@e106331-lin.cambridge.arm.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: mvebu: NETGEAR ReadyNAS 104 .dts file cleanup
+Date: Tue, 03 Dec 2013 21:31:03 -0600
+Message-ID: <529EA1F7.7040201@gmail.com>
+References: <cover.1385148929.git.arno@natisbad.org> <bd899cfc2b0b3d22a7442d76b3901ca81ca86f11.1385148929.git.arno@natisbad.org> <20131122213610.GC30358@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131203103632.GB7552@e106331-lin.cambridge.arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Jingchang Lu <jingchang.lu@freescale.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Huan Wang <Huan.Wang@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rob@landley.net" <rob@landley.net>, "galak@codeaurora.org" <galak@codeaurora.org>, grant
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131122213610.GC30358-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-> > > > I'm sending the RFC patch about the FTM IP block registers read
-> > > > and write endian fix for comments and more parcticed ideas.
-> > > >
-> > > > In Vybird VF610 Tower, all the IP blocks expect LE data. In the
-> > > > LS-1, some of the IP blocks expect LE data, while others expect BE
-> > > > data. And the CPU always operates in LE mode in these two platforms.
-> > >
-> > > Could you elaborate on "expect BE data" please? Is this all
-> > > registers within a given device, or a subset thereof?
-> > > Are there data structures involved (i.e. buffers)?
-> > >
-> >
-> > It actually means big-endian mode, and it's all the registers and
-> > hasn't any buffers or descriptors involved within FTM IP block.
-> > But maybe in other IP blocks, such as eDMA and USB, should consider
-> > about the buffers/descriptors issue.
+On 11/22/2013 03:36 PM, Jason Gunthorpe wrote:
+> On Fri, Nov 22, 2013 at 09:07:01PM +0100, Arnaud Ebalard wrote:
+>>  			mdio {
+>>  				phy0: ethernet-phy@0 {
+>> +					compatible = "marvell,88e1318s";
+>>  					reg = <0>;
+>>  				};
+>>  
+>>  				phy1: ethernet-phy@1 {
+>> +					compatible = "marvell,88e1318s";
+>>  					reg = <1>;
+>>  				};
+>>  			};
 > 
-> Ok. So all the registers are big-endian, and there are no memory accesses
-> to care about.
+> Just an inquiry, are these compatible strings OK?
 > 
-> So for the binding for this device, we only have one property to worry
-> about -- the endianness of all registers.
+> Documentation/devicetree/bindings/net/phy.txt doesn't really give
+> guidance.
+> 
+> For self-discoverable busses I would expect to see a structured
+> compatible string, or property, that encodes the phy-id - such as what
+> the PCI binding does with vid/did:
+> 
+> "compatible" Construct a list of names in most-specific to
+>              least-specific order. The names shall be derived from
+> 	     values of the Vendor ID, Device ID, Subsystem Vendor ID,
+> 	     Subsystem ID, Revision ID and Class Code bytes, and shall
+>              have the following form, and be placed in the list in the
+>              following order:
+> 
+>   pciVVVV,DDDD.SSSS.ssss.RR (1)
+> 
+> So, I would think something like this:
+> 
+> compatible = "ethernet-phy-id0141,0e90"; /* Marvell 88E1318 */
+> 
+> ?
+> 
+> A big rational for this is that the kernel already has complete
+> infrastructure for matching drivers to the numeric phy-id.
+>
+> I have a small patch to make the OF mdio bus scanner get the phy-id
+> from DT. I didn't use compatible string in this patch, but it would be
+> easy to change, and this demonstrates what we could do with a
+> structured compatible string (attached).
+> 
+> Grant? Rob? I could make some patches for this if you agree.
+
+Seems like a reasonable approach.
+
+Rob
+
+> 
+> Regards,
+> Jason
+> 
+> From 1aab2047b6dfb8b814673718dfa7ef0ea0c7a0ef Mon Sep 17 00:00:00 2001
+> From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> Date: Thu, 12 Sep 2013 17:36:13 -0600
+> Subject: [PATCH] of_mdio: Allow the DT to specify the phy ID and avoid
+>  autoprobing
+> 
+> This makes the generic of_mdiobus_register parse the DT property
+> 'phy-id'. If present it should be the numeric constant that matches the
+> phy-id register normally readable through MDIO.
+> 
+> When the ID is given the phy autoprobing is defeated and the phy is
+> created directly.
+> 
+> This is necessary to support phy's that cannot be autoprobed when
+> of_mdiobus_register is called. Specifically, my case has the phy in
+> reset at that time, the reset is only released once the ethernet
+> driver starts.
+> 
+> Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> ---
+>  drivers/of/of_mdio.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index d5a57a9..dbe6932 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -81,7 +81,12 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>  
+>  		is_c45 = of_device_is_compatible(child,
+>  						 "ethernet-phy-ieee802.3-c45");
+> -		phy = get_phy_device(mdio, addr, is_c45);
+> +		paddr = of_get_property(child, "phy-id", &len);
+> +		if (paddr && len <= sizeof(*paddr) && !is_c45)
+> +			phy = phy_device_create(mdio, addr, be32_to_cpup(paddr),
+> +						0, NULL);
+> +		else
+> +			phy = get_phy_device(mdio, addr, is_c45);
+>  
+>  		if (!phy || IS_ERR(phy)) {
+>  			dev_err(&mdio->dev,
 > 
 
-Yes, it is.
-
-> > > > +static inline u32 fsl_pwm_readl(struct fsl_pwm_chip *fpc, void
-> > > > +__iomem *reg) {
-> > > > +       u32 val;
-> > > > +
-> > > > +       val = __raw_readl(reg);
-> > > > +
-> > > > +       if (fpc->endianess == FTM_BIG)
-> > > > +               return be32_to_cpu(val);
-> > > > +       else
-> > > > +               return le32_to_cpu(val); }
-> > > > +
-> > > > +static inline void fsl_pwm_writel(struct fsl_pwm_chip *fpc, u32 val,
-> > > > +               void __iomem *reg) {
-> > > > +       if (fpc->endianess == FTM_BIG)
-> > > > +               val = cpu_to_be32(val);
-> > > > +       else
-> > > > +               val = cpu_to_le32(val);
-> > > > +
-> > > > +       __raw_writel(val, reg);
-> > > > +}
-> > >
-> > > Using the __raw variants also loses you the memory barriers. Does
-> > > this create any ordering issues in the rest of the driver?
-> > >
-> >
-> > No, I had checked about this, so I just droped them.
-> > Maybe it will be much better and safer if there are some memory barriers.
-> 
-> If you've checked, is it safe or is it not?
-> 
-
-Safe, but now I think I should add the memory barriers here, and that will be
-better.
-
-> >
-> >
-> >
-> > > > +static int fsl_pwm_probe(struct platform_device *pdev) {
-> > > > +       int ret;
-> > > > +       const char *endianess;
-> > > > +       struct fsl_pwm_chip *fpc;
-> > > > +       struct resource *res;
-> > > > +       struct device_node *np = pdev->dev.of_node;
-> > > > +
-> > > > +       fpc = devm_kzalloc(&pdev->dev, sizeof(*fpc), GFP_KERNEL);
-> > > > +       if (!fpc)
-> > > > +               return -ENOMEM;
-> > > > +
-> > > > +       mutex_init(&fpc->lock);
-> > > > +
-> > > > +       fpc->chip.dev = &pdev->dev;
-> > > > +
-> > > > +       ret = fsl_pwm_parse_clk_ps(fpc);
-> > > > +       if (ret < 0)
-> > > > +               return ret;
-> > > > +
-> > > > +       if (of_property_read_string(np, "endianess", &endianess))
-> > > > +               pr_warning("missing \"endianess\" property, "
-> > > > +                               "the FTM IP block is little "
-> > > > +                               "endian as default\n");
-> > > > +       else if (!strcmp("big", endianess))
-> > > > +               fpc->endianess = FTM_BIG;
-> > >
-> > > Please don't do this.
-> > >
-> > > One option is to have a new compatible string -- a big-endian device
-> > > can't be poked in the same way as its little-endian variants, so
-> > > they're not compatible. You can then associate some data with the
-> > > compatible strings to figure out which accessors to use.
-> > >
-> >
-> > Do you mean:
-> > + static const struct of_device_id fsl_pwm_dt_ids[] = {
-> > +        { .compatible = "fsl,vf610-ftm-pwm,big-endian", },
-> > +        { .compatible = "fsl,vf610-ftm-pwm,little-endian", },
-> > +        { /* sentinel */ }
-> > + };  ?
-> 
-> That's one option. Something like that would be fine. Then you could store
-> flags in of_device_id::data to tell you which accessors to use.
-> 
-I will have a try.
-
-> >
-> > Or just adding one property in DT file likes:
-> > 			pwm0: pwm@40038000 {
-> > 				compatible = "fsl,vf610-ftm-pwm";
-> > 				#pwm-cells = <3>;
-> > 				reg = <0x40038000 0x1000>;
-> > 				clock-names = "ftm0", "ftm0_fix_sel",
-> "ftm0_ext_sel";
-> > 				clocks = <&clks VF610_CLK_FTM0>,
-> > 					<&clks VF610_CLK_FTM0_FIX_SEL>,
-> > 					<&clks VF610_CLK_FTM0_EXT_SEL>;
-> > +				big-endian;       ---> both registers and
-> buffers/descriptors
-> > Or
-> > +				big-endian-regs;  ---> registers
-> > +				big-endian-desc;  ---> buffers or descriptors
-> 
-> As you've described above, in this case we don't need to make the
-> distinction. Other bindings seem to have a "big-endian" boolean property
-> for this case.
-> 
-> It's probably best to align with the existing bindings and use a "big-
-> endian" boolean property.
-> 
-Yes, I agree.
-
-Well as we can see that, PowerPC has already implemented about the big-endian
-and little-endian register reading and writing interfaces for IP block
-devices, which are just I needed here in this case. And also the same with
-other IP blocks in our Vybird , LS-1 and maybe other boards.
-So, I think there should be the similar implementations for ARM too. Or for
-every IP block, we must do the same work then. What do you think about this?
-
-
-
-Thanks,
 --
-Xiubo
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
