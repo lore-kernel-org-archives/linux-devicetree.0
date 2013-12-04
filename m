@@ -1,452 +1,234 @@
-From: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
-Subject: [PATCH 2/3] ARM: sunxi: Add an ahci-platform compatible
- AHCI driver for the Allwinner SUNXi series of SoCs
-Date: Wed,  4 Dec 2013 13:10:54 +0100
-Message-ID: <1386159055-10264-3-git-send-email-oliver@schinagl.nl>
-References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Neil Zhang <zhangwm@marvell.com>
+Subject: [PATCH v3] irqchip: mmp: add dt support for wakeup
+Date: Wed, 4 Dec 2013 20:13:34 +0800
+Message-ID: <1386159214-31483-1-git-send-email-zhangwm@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDC2JNWXZAJBB2VX7SKAKGQEL2RJTTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1386159055-10264-1-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mark.rutland@arm.com, haojian.zhuang@gmail.com, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Zhang <zhangwm@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Some of the Marvell SoCs use GIC as its interrupt controller,and ICU
+only used as wakeup logic. When AP subsystem is powered off, GIC will
+lose its context, the PMU will need ICU to wakeup the AP subsystem.
+So add wakeup entry for such kind of usage.
 
-This patch adds support for the sunxi series of SoC's by allwinner. It
-plugs into the ahci-platform framework.
-
-Note: Currently it uses a somewhat hackish approach that probably needs
-a lot more work, but does the same as the IMX SoC's.
-
-Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Signed-off-by: Neil Zhang <zhangwm@marvell.com>
 ---
- .../devicetree/bindings/ata/ahci-sunxi.txt         |  24 ++
- drivers/ata/Kconfig                                |   9 +
- drivers/ata/Makefile                               |   1 +
- drivers/ata/ahci_platform.c                        |  12 +
- drivers/ata/ahci_sunxi.c                           | 305 +++++++++++++++++++++
- 5 files changed, 351 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ata/ahci-sunxi.txt
- create mode 100644 drivers/ata/ahci_sunxi.c
+ .../devicetree/bindings/arm/mrvl/intc.txt          |   12 +-
+ drivers/irqchip/irq-mmp.c                          |  116 ++++++++++++++++++++
+ include/linux/irqchip/mmp.h                        |   13 +++
+ 3 files changed, 140 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-sunxi.txt b/Documentation/devicetree/bindings/ata/ahci-sunxi.txt
-new file mode 100644
-index 0000000..0792fa5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/ahci-sunxi.txt
-@@ -0,0 +1,24 @@
-+Allwinner SUNXI AHCI SATA Controller
-+
-+SATA nodes are defined to describe on-chip Serial ATA controllers.
-+Each SATA controller should have its own node.
-+
-+Required properties:
-+- compatible	: compatible list, contains "allwinner,sun4i-a10-ahci"
-+- reg		: <registers mapping>
-+- interrupts	: <interrupt mapping for AHCI IRQ>
-+- clocks	: clocks for ACHI
-+- clock-names	: clock names for AHCI
-+
-+Optional properties:
-+- pwr-supply	: regulator to control the power supply GPIO
-+
-+Example:
-+	ahci@01c18000 {
-+		compatible = "allwinner,sun4i-a10-ahci";
-+		reg = <0x01c18000 0x1000>;
-+		interrupts = <0 56 1>;
-+		clocks = <&ahb_gates 25>, <&pll6 0>;
-+		clock-names = "ahb_sata", "pll6_sata";
-+		pwr-supply = <&reg_ahci_5v>;
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.txt b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+index 8b53273..401be87 100644
+--- a/Documentation/devicetree/bindings/arm/mrvl/intc.txt
++++ b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+@@ -2,7 +2,7 @@
+ 
+ Required properties:
+ - compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
+-  "mrvl,mmp2-mux-intc"
++  "mrvl,mmp2-mux-intc", "mrvl,mmp-intc-wakeupgen"
+ - reg : Address and length of the register set of the interrupt controller.
+   If the interrupt controller is intc, address and length means the range
+   of the whold interrupt controller. If the interrupt controller is mux-intc,
+@@ -15,6 +15,9 @@ Required properties:
+ - interrupt-controller : Identifies the node as an interrupt controller.
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+   interrupt source.
++- mrvl,intc-gbl-mask : Specifies the address and value for global mask in the
++  interrupt controller.
++- mrvl,intc-for-cp : Specifies the irqs that will be routed to cp
+ - mrvl,intc-nr-irqs : Specifies the number of interrupts in the interrupt
+   controller.
+ - mrvl,clr-mfp-irq : Specifies the interrupt that needs to clear MFP edge
+@@ -39,6 +42,13 @@ Example:
+ 		mrvl,intc-nr-irqs = <2>;
+ 	};
+ 
++	intc: interrupt-controller@d4282000 {
++		compatible = "mrvl,mmp-intc";
++		reg = <0xd4282000 0x1000>;
++		mrvl,intc-wakeup = <0x114 0x3
++		                    0x144 0x3>;
 +	};
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index 4e73772..b87e2ba 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -106,6 +106,15 @@ config AHCI_IMX
- 
- 	  If unsure, say N.
- 
-+config AHCI_SUNXI
-+	tristate "Allwinner sunxi AHCI SATA support"
-+	depends on SATA_AHCI_PLATFORM && ARCH_SUNXI
-+	help
-+	  This option enables support for the Allwinner sunxi SoC's
-+	  onboard AHCI SATA.
 +
-+	  If unsure, say N.
-+
- config SATA_FSL
- 	tristate "Freescale 3.0Gbps SATA support"
- 	depends on FSL_SOC
-diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
-index 46518c6..246050b 100644
---- a/drivers/ata/Makefile
-+++ b/drivers/ata/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_SATA_SIL24)	+= sata_sil24.o
- obj-$(CONFIG_SATA_DWC)		+= sata_dwc_460ex.o
- obj-$(CONFIG_SATA_HIGHBANK)	+= sata_highbank.o libahci.o
- obj-$(CONFIG_AHCI_IMX)		+= ahci_imx.o
-+obj-$(CONFIG_AHCI_SUNXI)	+= ahci_sunxi.o
+ * Marvell Orion Interrupt controller
  
- # SFF w/ custom DMA
- obj-$(CONFIG_PDC_ADMA)		+= pdc_adma.o
-diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-index f955431..28ff1eb 100644
---- a/drivers/ata/ahci_platform.c
-+++ b/drivers/ata/ahci_platform.c
-@@ -31,6 +31,7 @@ enum ahci_type {
- 	AHCI,		/* standard platform ahci */
- 	IMX53_AHCI,	/* ahci on i.mx53 */
- 	STRICT_AHCI,	/* delayed DMA engine start */
-+	SUNXI_AHCI,	/* ahci on sunxi */
- };
+ Required properties
+diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+index 470c5de..6a2f4d1 100644
+--- a/drivers/irqchip/irq-mmp.c
++++ b/drivers/irqchip/irq-mmp.c
+@@ -16,6 +16,8 @@
+ #include <linux/init.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
++#include <linux/irqchip/mmp.h>
++#include <linux/irqchip/arm-gic.h>
+ #include <linux/io.h>
+ #include <linux/ioport.h>
+ #include <linux/of_address.h>
+@@ -58,6 +60,8 @@ struct mmp_intc_conf {
+ static void __iomem *mmp_icu_base;
+ static struct icu_chip_data icu_data[MAX_ICU_NR];
+ static int max_icu_nr;
++static u32 irq_for_cp[64];
++static u32 irq_for_cp_nr;	/* How many irqs will be routed to cp */
  
- static struct platform_device_id ahci_devtype[] = {
-@@ -44,6 +45,9 @@ static struct platform_device_id ahci_devtype[] = {
- 		.name = "strict-ahci",
- 		.driver_data = STRICT_AHCI,
- 	}, {
-+		.name = "sunxi-ahci",
-+		.driver_data = SUNXI_AHCI,
-+	}, {
- 		/* sentinel */
+ extern void mmp2_clear_pmic_int(void);
+ 
+@@ -123,6 +127,50 @@ static void icu_unmask_irq(struct irq_data *d)
  	}
- };
-@@ -81,6 +85,14 @@ static const struct ata_port_info ahci_port_info[] = {
- 		.udma_mask	= ATA_UDMA6,
- 		.port_ops	= &ahci_platform_ops,
- 	},
-+	[SUNXI_AHCI] = {
-+		AHCI_HFLAGS	(AHCI_HFLAG_32BIT_ONLY | AHCI_HFLAG_NO_MSI |
-+				 AHCI_HFLAG_NO_PMP | AHCI_HFLAG_YES_NCQ),
-+		.flags		= AHCI_FLAG_COMMON,
-+		.pio_mask	= ATA_PIO4,
-+		.udma_mask	= ATA_UDMA6,
-+		.port_ops	= &ahci_platform_ops,
-+	},
- };
+ }
  
- static struct scsi_host_template ahci_platform_sht = {
-diff --git a/drivers/ata/ahci_sunxi.c b/drivers/ata/ahci_sunxi.c
-new file mode 100644
-index 0000000..982641f
---- /dev/null
-+++ b/drivers/ata/ahci_sunxi.c
-@@ -0,0 +1,305 @@
-+/*
-+ * Allwinner sunxi AHCI SATA platform driver
-+ * Copyright 2013 Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-+ *
-+ * Based on the AHCI SATA platform driver by Freescale and Allwinner
-+ * Based on code from
-+ * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
-+ * Daniel Wang <danielwang-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/of_device.h>
-+#include <linux/ioport.h>
-+#include <linux/device.h>
-+#include <linux/gfp.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/errno.h>
-+#include <linux/ahci_platform.h>
-+#include "ahci.h"
-+
-+#define DRV_NAME "sunxi-sata"
-+
-+#define AHCI_BISTAFR 0x00a0
-+#define AHCI_BISTCR 0x00a4
-+#define AHCI_BISTFCTR 0x00a8
-+#define AHCI_BISTSR 0x00ac
-+#define AHCI_BISTDECR 0x00b0
-+#define AHCI_DIAGNR0 0x00b4
-+#define AHCI_DIAGNR1 0x00b8
-+#define AHCI_OOBR 0x00bc
-+#define AHCI_PHYCS0R 0x00c0
-+#define AHCI_PHYCS1R 0x00c4
-+#define AHCI_PHYCS2R 0x00c8
-+#define AHCI_TIMER1MS 0x00e0
-+#define AHCI_GPARAM1R 0x00e8
-+#define AHCI_GPARAM2R 0x00ec
-+#define AHCI_PPARAMR 0x00f0
-+#define AHCI_TESTR 0x00f4
-+#define AHCI_VERSIONR 0x00f8
-+#define AHCI_IDR 0x00fc
-+#define AHCI_RWCR 0x00fc
-+#define AHCI_P0DMACR 0x0170
-+#define AHCI_P0PHYCR 0x0178
-+#define AHCI_P0PHYSR 0x017c
-+
-+struct sunxi_ahci_data {
-+	struct platform_device *ahci_pdev;
-+	struct regulator *regulator;
-+	struct clk *sata_clk;
-+	struct clk *ahb_clk;
-+};
-+
-+static void sunxi_clrbits(void __iomem *reg, u32 clr_val)
++static int irq_ignore_wakeup(struct icu_chip_data *data, int hwirq)
 +{
-+	u32 reg_val;
++	int i;
 +
-+	reg_val = readl(reg);
-+	reg_val &= ~(clr_val);
-+	writel(reg_val, reg);
-+}
++	if (hwirq < 0 || hwirq >= data->nr_irqs)
++		return 1;
 +
-+static void sunxi_setbits(void __iomem *reg, u32 set_val)
-+{
-+	u32 reg_val;
-+
-+	reg_val = readl(reg);
-+	reg_val |= set_val;
-+	writel(reg_val, reg);
-+}
-+
-+static void sunxi_clrsetbits(void __iomem *reg, u32 clr_val, u32 set_val)
-+{
-+	u32 reg_val;
-+
-+	reg_val = readl(reg);
-+	reg_val &= ~(clr_val);
-+	reg_val |= set_val;
-+	writel(reg_val, reg);
-+}
-+
-+static u32 sunxi_getbits(void __iomem *reg, u8 mask, u8 shift)
-+{
-+	return (readl(reg) >> shift) & mask;
-+}
-+
-+static int sunxi_ahci_phy_init(struct device *dev, void __iomem *reg_base)
-+{
-+	u32 reg_val;
-+	int timeout;
-+
-+	/* This magic is from the original code */
-+	writel(0, reg_base + AHCI_RWCR);
-+	mdelay(5);
-+
-+	sunxi_setbits(reg_base + AHCI_PHYCS1R, BIT(19));
-+	sunxi_clrsetbits(reg_base + AHCI_PHYCS0R,
-+			 (0x7 << 24),
-+			 (0x5 << 24) | BIT(23) | BIT(18));
-+	sunxi_clrsetbits(reg_base + AHCI_PHYCS1R,
-+			 (0x3 << 16) | (0x1f << 8) | (0x3 << 6),
-+			 (0x2 << 16) | (0x6 << 8) | (0x2 << 6));
-+	sunxi_setbits(reg_base + AHCI_PHYCS1R, BIT(28) | BIT(15));
-+	sunxi_clrbits(reg_base + AHCI_PHYCS1R, BIT(19));
-+	sunxi_clrsetbits(reg_base + AHCI_PHYCS0R,
-+			 (0x7 << 20), (0x3 << 20));
-+	sunxi_clrsetbits(reg_base + AHCI_PHYCS2R,
-+			 (0x1f << 5), (0x19 << 5));
-+	mdelay(5);
-+
-+	sunxi_setbits(reg_base + AHCI_PHYCS0R, (0x1 << 19));
-+
-+	timeout = 0x100000;
-+	do {
-+		reg_val = sunxi_getbits(reg_base + AHCI_PHYCS0R, 0x7, 28);
-+	} while (--timeout && (reg_val != 0x2));
-+	if (!timeout)
-+		dev_err(dev, "PHY power up failed.\n");
-+
-+	sunxi_setbits(reg_base + AHCI_PHYCS2R, (0x1 << 24));
-+
-+	timeout = 0x100000;
-+	do {
-+		reg_val = sunxi_getbits(reg_base + AHCI_PHYCS2R, 0x1, 24);
-+	} while (--timeout && reg_val);
-+	if (!timeout)
-+		dev_err(dev, "PHY calibration failed.\n");
-+	mdelay(15);
-+
-+	writel(0x7, reg_base + AHCI_RWCR);
++	for (i = 0; i < irq_for_cp_nr; i++)
++		if (irq_for_cp[i] == hwirq)
++			return 1;
 +
 +	return 0;
 +}
 +
-+static int sunxi_ahci_init(struct device *dev, void __iomem *reg_base)
++static void icu_mask_irq_wakeup(struct irq_data *d)
 +{
-+	struct sunxi_ahci_data *ahci_data;
-+	int ret;
++	struct icu_chip_data *data = &icu_data[0];
++	int hwirq = d->hwirq - data->virq_base;
++	u32 r;
 +
-+	ahci_data = dev_get_drvdata(dev->parent);
++	if (irq_ignore_wakeup(data, hwirq))
++		return;
 +
-+	ret = clk_prepare_enable(ahci_data->sata_clk);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = clk_prepare_enable(ahci_data->ahb_clk);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regulator_enable(ahci_data->regulator);
-+	if (ret)
-+		return ret;
-+
-+	return sunxi_ahci_phy_init(dev, reg_base);
++	r = readl_relaxed(mmp_icu_base + (hwirq << 2));
++	r &= ~data->conf_mask;
++	r |= data->conf_disable;
++	writel_relaxed(r, mmp_icu_base + (hwirq << 2));
 +}
 +
-+static void sunxi_ahci_exit(struct device *dev)
++static void icu_unmask_irq_wakeup(struct irq_data *d)
 +{
-+	struct sunxi_ahci_data *ahci_data;
++	struct icu_chip_data *data = &icu_data[0];
++	int hwirq = d->irq - data->virq_base;
++	u32 r;
 +
-+	ahci_data = dev_get_drvdata(dev->parent);
++	if (irq_ignore_wakeup(data, hwirq))
++		return;
 +
-+	regulator_disable(ahci_data->regulator);
-+
-+	clk_disable_unprepare(ahci_data->ahb_clk);
-+	clk_disable_unprepare(ahci_data->sata_clk);
++	r = readl_relaxed(mmp_icu_base + (hwirq << 2));
++	r &= ~data->conf_mask;
++	r |= data->conf_enable;
++	writel_relaxed(r, mmp_icu_base + (hwirq << 2));
 +}
 +
-+static struct ahci_platform_data sunxi_ahci_pdata = {
-+	.init = sunxi_ahci_init,
-+	.exit = sunxi_ahci_exit,
-+};
+ struct irq_chip icu_irq_chip = {
+ 	.name		= "icu_irq",
+ 	.irq_mask	= icu_mask_irq,
+@@ -491,5 +539,73 @@ err:
+ 	irq_domain_remove(icu_data[i].domain);
+ 	return -EINVAL;
+ }
 +
-+static int sunxi_ahci_remove(struct platform_device *pdev)
++void __init mmp_of_wakeup_init(void)
 +{
-+	struct sunxi_ahci_data *ahci_data;
++	struct device_node *node;
++	int ret, nr_irqs;
++	int irq, i = 0;
 +
-+	ahci_data = platform_get_drvdata(pdev);
-+	platform_device_unregister(ahci_data->ahci_pdev);
++	node = of_find_compatible_node(NULL, NULL, "mrvl,mmp-intc-wakeupgen");
++	if (!node) {
++		pr_err("Failed to find interrupt controller in arch-mmp\n");
++		return;
++	}
 +
-+	dev_dbg(&pdev->dev, "driver unloaded\n");
++	mmp_icu_base = of_iomap(node, 0);
++	if (!mmp_icu_base) {
++		pr_err("Failed to get interrupt controller register\n");
++		return;
++	}
 +
-+	return 0;
++	ret = of_property_read_u32(node, "mrvl,intc-nr-irqs", &nr_irqs);
++	if (ret) {
++		pr_err("Not found mrvl,intc-nr-irqs property\n");
++		return;
++	}
++
++	/*
++	 * Config all the interrupt source be able to interrupt the cpu 0,
++	 * in IRQ mode, with priority 0 as masked by default.
++	 */
++	for (irq = 0; irq < nr_irqs; irq++)
++		__raw_writel(ICU_IRQ_CPU0_MASKED, mmp_icu_base + (irq << 2));
++
++	/* ICU is only used as wake up logic
++	  * disable the global irq/fiq in icu for all cores.
++	  */
++	i = 0;
++	while (1) {
++		u32 offset, val;
++		if (of_property_read_u32_index(node, "mrvl,intc-gbl-mask", i++, &offset))
++			break;
++		if (of_property_read_u32_index(node, "mrvl,intc-gbl-mask", i++, &val)) {
++			pr_warn("The params should keep pair!!!\n");
++			break;
++		}
++
++		writel_relaxed(val, mmp_icu_base + offset);
++	}
++
++	/* Get the irq lines for cp */
++	i = 0;
++	while (!of_property_read_u32_index(node, "mrvl,intc-for-cp", i, &irq_for_cp[i])) {
++		writel_relaxed(ICU_CONF_SEAGULL, mmp_icu_base + (irq_for_cp[i] << 2));
++		i++;
++	}
++	irq_for_cp_nr = i;
++
++	icu_data[0].conf_enable = mmp_conf.conf_enable;
++	icu_data[0].conf_disable = mmp_conf.conf_disable;
++	icu_data[0].conf_mask = mmp_conf.conf_mask;
++	icu_data[0].nr_irqs = nr_irqs;
++	icu_data[0].virq_base = 32;
++
++	gic_arch_extn.irq_mask = icu_mask_irq_wakeup;
++	gic_arch_extn.irq_unmask = icu_unmask_irq_wakeup;
++
++	return;
 +}
 +
-+static const struct of_device_id sunxi_ahci_of_match[] = {
-+	{ .compatible = "allwinner,sun4i-a10-ahci", .data = &sunxi_ahci_pdata},
-+	{/* sentinel */},
-+};
-+MODULE_DEVICE_TABLE(of, sunxi_ahci_of_match);
+ IRQCHIP_DECLARE(mmp2_mux_intc, "mrvl,mmp2-mux-intc", mmp2_mux_of_init);
+ #endif
+diff --git a/include/linux/irqchip/mmp.h b/include/linux/irqchip/mmp.h
+index c78a892..93b05ad 100644
+--- a/include/linux/irqchip/mmp.h
++++ b/include/linux/irqchip/mmp.h
+@@ -1,6 +1,19 @@
+ #ifndef	__IRQCHIP_MMP_H
+ #define	__IRQCHIP_MMP_H
+ 
++#define ICU_CONF_CPU3      (1 << 9)
++#define ICU_CONF_CPU2      (1 << 8)
++#define ICU_CONF_CPU1      (1 << 7)
++#define ICU_CONF_CPU0      (1 << 6)
++#define ICU_CONF_AP(n)     (1 << (6 + (n & 0x3)))
++#define ICU_CONF_AP_MASK   (0xF << 6)
++#define ICU_CONF_SEAGULL   (1 << 5)
++#define ICU_CONF_IRQ_FIQ   (1 << 4)
++#define ICU_CONF_PRIO(n)   (n & 0xF)
 +
-+static int sunxi_ahci_probe(struct platform_device *pdev)
-+{
-+	const struct ahci_platform_data *pdata;
-+	const struct of_device_id *of_dev_id;
-+	struct resource *mem, *irq, res[2];
-+	struct platform_device *ahci_pdev;
-+	struct sunxi_ahci_data *ahci_data;
-+	struct regulator *regulator;
-+	int ret;
++#define ICU_IRQ_CPU0_MASKED    (ICU_CONF_IRQ_FIQ | ICU_CONF_CPU0)
 +
-+	regulator = devm_regulator_get(&pdev->dev, "pwr");
-+	if (IS_ERR(regulator)) {
-+		ret = PTR_ERR(regulator);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "no regulator found (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ahci_data = devm_kzalloc(&pdev->dev, sizeof(*ahci_data), GFP_KERNEL);
-+	if (!ahci_data)
-+		return -ENOMEM;
-+
-+	ahci_pdev = platform_device_alloc("sunxi-ahci", -1);
-+	if (!ahci_pdev)
-+		return -ENODEV;
-+
-+	ahci_pdev->dev.parent = &pdev->dev;
-+
-+	ahci_data->regulator = regulator;
-+	ahci_data->ahb_clk = devm_clk_get(&pdev->dev, "ahb_sata");
-+	if (IS_ERR(ahci_data->ahb_clk)) {
-+		ret = PTR_ERR(ahci_data->ahb_clk);
-+		goto err_out;
-+	}
-+
-+	ahci_data->sata_clk = devm_clk_get(&pdev->dev, "pll6_sata");
-+	if (IS_ERR(ahci_data->sata_clk)) {
-+		ret = PTR_ERR(ahci_data->sata_clk);
-+		goto err_out;
-+	}
-+
-+	ahci_data->ahci_pdev = ahci_pdev;
-+	platform_set_drvdata(pdev, ahci_data);
-+
-+	ahci_pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-+	ahci_pdev->dev.dma_mask = &ahci_pdev->dev.coherent_dma_mask;
-+	ahci_pdev->dev.of_node = pdev->dev.of_node;
-+
-+	of_dev_id = of_match_device(sunxi_ahci_of_match, &pdev->dev);
-+	if (of_dev_id) {
-+		pdata = of_dev_id->data;
-+	} else {
-+		ret = -EINVAL;
-+		goto err_out;
-+	}
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	if (!mem || !irq) {
-+		ret = -ENOMEM;
-+		goto err_out;
-+	}
-+	res[0] = *mem;
-+	res[1] = *irq;
-+	ret = platform_device_add_resources(ahci_pdev, res, 2);
-+	if (ret)
-+		goto err_out;
-+
-+	ret = platform_device_add_data(ahci_pdev, pdata, sizeof(*pdata));
-+	if (ret)
-+		goto err_out;
-+
-+	ret = platform_device_add(ahci_pdev);
-+	if (ret)
-+		goto err_out;
-+
-+	return 0;
-+
-+err_out:
-+	platform_device_put(ahci_pdev);
-+	return ret;
-+}
-+
-+static struct platform_driver sunxi_ahci_driver = {
-+	.probe = sunxi_ahci_probe,
-+	.remove = sunxi_ahci_remove,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.owner = THIS_MODULE,
-+		.of_match_table = sunxi_ahci_of_match,
-+	},
-+};
-+module_platform_driver(sunxi_ahci_driver);
-+
-+MODULE_DESCRIPTION("Allwinner sunxi AHCI SATA platform driver");
-+MODULE_AUTHOR("Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("ahci:sunxi");
+ extern struct irq_chip icu_irq_chip;
+ 
++extern void __init mmp_of_wakeup_init(void);
+ #endif	/* __IRQCHIP_MMP_H */
 -- 
-1.8.3.2
+1.7.9.5
