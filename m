@@ -1,65 +1,207 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] mfd: max14577: Add device tree bindings document
-Date: Wed, 04 Dec 2013 20:09:18 +0900
-Message-ID: <529F0D5E.4060202@samsung.com>
-References: <1386153615-25456-1-git-send-email-k.kozlowski@samsung.com>
- <1386153615-25456-4-git-send-email-k.kozlowski@samsung.com>
- <529F08DD.2090005@samsung.com> <1386154579.25938.2.camel@AMDC1943>
- <529F0B75.5040004@samsung.com> <1386155011.25938.4.camel@AMDC1943>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/3] clk: bcm281xx: add initial clock framework support
+Date: Wed, 4 Dec 2013 11:14:57 +0000
+Message-ID: <20131204111457.GF16025@e106331-lin.cambridge.arm.com>
+References: <529EA78E.7060904@linaro.org>
+ <529EA80F.3050009@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1386155011.25938.4.camel@AMDC1943>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <529EA80F.3050009@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alex Elder <alex.elder@linaro.org>
+Cc: Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@linaro.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2013 08:03 PM, Krzysztof Kozlowski wrote:
-> On Wed, 2013-12-04 at 20:01 +0900, Chanwoo Choi wrote:
->> On 12/04/2013 07:56 PM, Krzysztof Kozlowski wrote:
->>> On Wed, 2013-12-04 at 19:50 +0900, Chanwoo Choi wrote:
-> (...)
->>>>
->>>> I prefer to add dt data about max14577-muic on following:
->>>> If extcon consumer driver need to use muic device, dts should provide following dt data.
->>>>
->>>> 		muic: max14577-muic {
->>>> 			compatible = "maxim, max14577-muic";
->>>> 		};
->>>>> +	};
->>>>>
->>>> For example,
->>>> If fuel-gauge want to use extcon subsystem, dt data of fuel-gauge add 'extcon' property as following:
->>>>
->>>> 	fuel-gague@ {
->>>> 		compatible = "...";
->>>> 		extcon = <&muic>;
->>>> 	}
->>>>
->>> Hi,
->>>
->>> The extcon driver itself does not use the binding. It is only needed for
->>> consumers. Is it a common practice to add to documentation such notice
->>> for consumers only?
->>
->> As you comment, It is only for extcon consumer.
->> But extcon provider driver always is operated with extcon consumer driver.
->> If dts file don't support upper dt data about extcon provider driver,
->> all of extcon consumer drivers could not use extcon subsystem.
->>
->> I thinks it is common dt data for muic device.
-> 
-> OK, I'll add it.
-> 
+On Wed, Dec 04, 2013 at 03:57:03AM +0000, Alex Elder wrote:
+> Add code for device tree support of clocks in the BCM281xx family of
+> SoCs.  Machines in this family use peripheral clocks implemented by
+> "Kona" clock control units (CCUs).  (Other Broadcom SoC families use
+> Kona style CCUs as well, but support for them is not yet upstream.)
+
+How applicable are the clocks defined in this driver to those other
+SoCs? How big will the changes need to be to add support for them?
+
+[...]
+
+> +/* A bit position must be less than the number of bits in a 32-bit
+> register. */
+
+Comment codestyle issue.
+
+[...]
+
+> +       /* Now fill in the parent names and selector arrays */
+> +       j = 0;
+> +       for (i = 0; i < orig_count; i++) {
+
+This would look nicer with j initialised in the loop initialisation:
+
+for (i = 0, j = 0; i < orig_count; i++)
+
+[...]
+
+> +static void __init kona_ccu_teardown(struct ccu_data *ccu)
+> +{
+> +       u32 i;
+> +
+> +       if (!ccu || !ccu->base)
+> +               goto done;
+> +
+> +       of_clk_del_provider(ccu->node); /* safe if never added */
+> +       of_node_put(ccu->node);
+> +
+> +       for (i = 0; i < ccu->data.clk_num; i++)
+> +               kona_clk_teardown(ccu->data.clks[i]);
+> +       kfree(ccu->data.clks);
+> +
+> +       list_del(&ccu->links);
+> +
+> +       iounmap(ccu->base);
+> +done:
+> +       kfree(ccu);
+
+What about ccu->name ?
+
+> +}
+> +
+> +/*
+> + * Set up a CCU.  Call the provided ccu_clks_setup callback to
+> + * initialize the array of clocks provided by the CCU.
+> + */
+> +void __init kona_dt_ccu_setup(struct device_node *node,
+> +                       int (*ccu_clks_setup)(struct ccu_data *))
+> +{
+> +       struct ccu_data *ccu;
+> +       struct resource res = { 0 };
+> +       resource_size_t range;
+> +       size_t name_size;
+> +       int ret;
+> +
+> +       name_size = strlen(node->name) + 1;
+> +       ccu = kzalloc(sizeof(*ccu) + name_size, GFP_KERNEL);
+> +       if (!ccu) {
+> +               pr_err("%s: unable to map allocate CCU struct for %s\n",
+> +                       __func__, node->name);
+> +               return;
+> +       }
+> +       memcpy((char *)ccu->name, node->name, name_size);
+
+You could simplify this with kstrdup.
+
+> +       INIT_LIST_HEAD(&ccu->links);
+> +
+> +       ret = of_address_to_resource(node, 0, &res);
+> +       if (ret) {
+> +               pr_err("%s: no valid CCU registers found for %s\n", __func__,
+> +                       node->name);
+> +               goto out_err;
+> +       }
+> +       ret = -EINVAL;
+> +       if (res.start > (resource_size_t)U32_MAX) {
+> +               pr_err("%s: address start too large for %s\n", __func__,
+> +                       node->name);
+> +               goto out_err;
+> +       }
+
+Why do we care? On an LPAE system, you could place devices above 4GB and
+map them in. Why impose an arbitrary limitation here?
+
+> +       if (res.start % sizeof(u32)) {
+> +               pr_err("%s: unaligned address range start %u for %s\n",
+> +                       __func__, res.start, node->name);
+> +               goto out_err;
+> +       }
+
+Is there not a more restrictive alignment constraint on the clocks?
+
+> +
+> +       range = resource_size(&res);
+> +       if (range > (resource_size_t)U32_MAX) {
+> +               pr_err("%s: address range too large for %s\n", __func__,
+> +                       node->name);
+> +               goto out_err;
+> +       }
+
+Surely there's a much smaller max size you can check for given the
+offsets you know? A size of U32_MAX seems absurd but will pass this
+test.
+
+[...]
+
+> +/*
+> + * Build a scaled divider value as close as possible to the
+> + * given whole part (div_value) and fractional part (expressed
+> + * in billionths).
+> + */
+> +u64 scaled_div_build(struct bcm_clk_div *div, u32 div_value, u32
+> billionths)
+> +{
+> +       u64 combined;
+> +
+> +       BUG_ON(!div_value);
+> +       BUG_ON(billionths > BILLION);
+
+Can billionths == BILLION ?
+
+> +
+> +       combined = (u64)div_value * BILLION + billionths;
+> +       combined <<= div->frac_width;
+> +
+> +       return do_div_round_closest(combined, BILLION);
+> +}
+
+[...]
+
+> diff --git a/drivers/clk/bcm/clk-kona.h b/drivers/clk/bcm/clk-kona.h
+> new file mode 100644
+> index 0000000..850a70a
+> --- /dev/null
+> +++ b/drivers/clk/bcm/clk-kona.h
+> @@ -0,0 +1,416 @@
+> +/*
+> + * Copyright (C) 2013 Broadcom Corporation
+> + * Copyright 2013 Linaro Limited
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation version 2.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#ifndef _CLK_KONA_H
+> +#define _CLK_KONA_H
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/slab.h>
+> +#include <linux/device.h>
+> +#include <linux/of.h>
+> +#include <linux/clk-provider.h>
+> +
+> +#define        BILLION         1000000000
+> +
+> +#ifndef U32_MAX
+
+Why the ifndef? Either this is defined elsewhere, or it's not. If it's
+available sometimes but not others, that seems like a bug in itself.
+
+I see a few other places define U32_MAX. Might it be worth unifying the
+definitions in a common header?
+
+> +#define U8_MAX ((u8)~0U)
+> +#define U32_MAX        ((u32)~0U)
+> +#define U64_MAX        ((u64)~0U)
+> +#endif /* U32_MAX */
+
+Likewise for the rest.
 
 Thanks,
-
-Best Regards,
-Chanwoo Choi
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mark.
