@@ -1,234 +1,72 @@
-From: Neil Zhang <zhangwm@marvell.com>
-Subject: [PATCH v3] irqchip: mmp: add dt support for wakeup
-Date: Wed, 4 Dec 2013 20:13:34 +0800
-Message-ID: <1386159214-31483-1-git-send-email-zhangwm@marvell.com>
+From: Olliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Subject: Re: [PATCH 0/3] AHCI: sunxi: Add sunxi AHCI driver
+Date: Wed, 04 Dec 2013 13:14:00 +0100
+Message-ID: <529F1C88.5070701@schinagl.nl>
+References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, haojian.zhuang@gmail.com, tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Zhang <zhangwm@marvell.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDDZ7YMYRMGBBYFZ7SKAKGQECN5U4RY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1386159055-10264-1-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+Cc: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some of the Marvell SoCs use GIC as its interrupt controller,and ICU
-only used as wakeup logic. When AP subsystem is powered off, GIC will
-lose its context, the PMU will need ICU to wakeup the AP subsystem.
-So add wakeup entry for such kind of usage.
+And I've spotted my first mistake (one of many I'm sure) I typo'ed Rob's 
+e-mail address. Sorry Rob.
 
-Signed-off-by: Neil Zhang <zhangwm@marvell.com>
----
- .../devicetree/bindings/arm/mrvl/intc.txt          |   12 +-
- drivers/irqchip/irq-mmp.c                          |  116 ++++++++++++++++++++
- include/linux/irqchip/mmp.h                        |   13 +++
- 3 files changed, 140 insertions(+), 1 deletion(-)
+Oliver
 
-diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.txt b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
-index 8b53273..401be87 100644
---- a/Documentation/devicetree/bindings/arm/mrvl/intc.txt
-+++ b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
-@@ -2,7 +2,7 @@
- 
- Required properties:
- - compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
--  "mrvl,mmp2-mux-intc"
-+  "mrvl,mmp2-mux-intc", "mrvl,mmp-intc-wakeupgen"
- - reg : Address and length of the register set of the interrupt controller.
-   If the interrupt controller is intc, address and length means the range
-   of the whold interrupt controller. If the interrupt controller is mux-intc,
-@@ -15,6 +15,9 @@ Required properties:
- - interrupt-controller : Identifies the node as an interrupt controller.
- - #interrupt-cells : Specifies the number of cells needed to encode an
-   interrupt source.
-+- mrvl,intc-gbl-mask : Specifies the address and value for global mask in the
-+  interrupt controller.
-+- mrvl,intc-for-cp : Specifies the irqs that will be routed to cp
- - mrvl,intc-nr-irqs : Specifies the number of interrupts in the interrupt
-   controller.
- - mrvl,clr-mfp-irq : Specifies the interrupt that needs to clear MFP edge
-@@ -39,6 +42,13 @@ Example:
- 		mrvl,intc-nr-irqs = <2>;
- 	};
- 
-+	intc: interrupt-controller@d4282000 {
-+		compatible = "mrvl,mmp-intc";
-+		reg = <0xd4282000 0x1000>;
-+		mrvl,intc-wakeup = <0x114 0x3
-+		                    0x144 0x3>;
-+	};
-+
- * Marvell Orion Interrupt controller
- 
- Required properties
-diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-index 470c5de..6a2f4d1 100644
---- a/drivers/irqchip/irq-mmp.c
-+++ b/drivers/irqchip/irq-mmp.c
-@@ -16,6 +16,8 @@
- #include <linux/init.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
-+#include <linux/irqchip/mmp.h>
-+#include <linux/irqchip/arm-gic.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/of_address.h>
-@@ -58,6 +60,8 @@ struct mmp_intc_conf {
- static void __iomem *mmp_icu_base;
- static struct icu_chip_data icu_data[MAX_ICU_NR];
- static int max_icu_nr;
-+static u32 irq_for_cp[64];
-+static u32 irq_for_cp_nr;	/* How many irqs will be routed to cp */
- 
- extern void mmp2_clear_pmic_int(void);
- 
-@@ -123,6 +127,50 @@ static void icu_unmask_irq(struct irq_data *d)
- 	}
- }
- 
-+static int irq_ignore_wakeup(struct icu_chip_data *data, int hwirq)
-+{
-+	int i;
-+
-+	if (hwirq < 0 || hwirq >= data->nr_irqs)
-+		return 1;
-+
-+	for (i = 0; i < irq_for_cp_nr; i++)
-+		if (irq_for_cp[i] == hwirq)
-+			return 1;
-+
-+	return 0;
-+}
-+
-+static void icu_mask_irq_wakeup(struct irq_data *d)
-+{
-+	struct icu_chip_data *data = &icu_data[0];
-+	int hwirq = d->hwirq - data->virq_base;
-+	u32 r;
-+
-+	if (irq_ignore_wakeup(data, hwirq))
-+		return;
-+
-+	r = readl_relaxed(mmp_icu_base + (hwirq << 2));
-+	r &= ~data->conf_mask;
-+	r |= data->conf_disable;
-+	writel_relaxed(r, mmp_icu_base + (hwirq << 2));
-+}
-+
-+static void icu_unmask_irq_wakeup(struct irq_data *d)
-+{
-+	struct icu_chip_data *data = &icu_data[0];
-+	int hwirq = d->irq - data->virq_base;
-+	u32 r;
-+
-+	if (irq_ignore_wakeup(data, hwirq))
-+		return;
-+
-+	r = readl_relaxed(mmp_icu_base + (hwirq << 2));
-+	r &= ~data->conf_mask;
-+	r |= data->conf_enable;
-+	writel_relaxed(r, mmp_icu_base + (hwirq << 2));
-+}
-+
- struct irq_chip icu_irq_chip = {
- 	.name		= "icu_irq",
- 	.irq_mask	= icu_mask_irq,
-@@ -491,5 +539,73 @@ err:
- 	irq_domain_remove(icu_data[i].domain);
- 	return -EINVAL;
- }
-+
-+void __init mmp_of_wakeup_init(void)
-+{
-+	struct device_node *node;
-+	int ret, nr_irqs;
-+	int irq, i = 0;
-+
-+	node = of_find_compatible_node(NULL, NULL, "mrvl,mmp-intc-wakeupgen");
-+	if (!node) {
-+		pr_err("Failed to find interrupt controller in arch-mmp\n");
-+		return;
-+	}
-+
-+	mmp_icu_base = of_iomap(node, 0);
-+	if (!mmp_icu_base) {
-+		pr_err("Failed to get interrupt controller register\n");
-+		return;
-+	}
-+
-+	ret = of_property_read_u32(node, "mrvl,intc-nr-irqs", &nr_irqs);
-+	if (ret) {
-+		pr_err("Not found mrvl,intc-nr-irqs property\n");
-+		return;
-+	}
-+
-+	/*
-+	 * Config all the interrupt source be able to interrupt the cpu 0,
-+	 * in IRQ mode, with priority 0 as masked by default.
-+	 */
-+	for (irq = 0; irq < nr_irqs; irq++)
-+		__raw_writel(ICU_IRQ_CPU0_MASKED, mmp_icu_base + (irq << 2));
-+
-+	/* ICU is only used as wake up logic
-+	  * disable the global irq/fiq in icu for all cores.
-+	  */
-+	i = 0;
-+	while (1) {
-+		u32 offset, val;
-+		if (of_property_read_u32_index(node, "mrvl,intc-gbl-mask", i++, &offset))
-+			break;
-+		if (of_property_read_u32_index(node, "mrvl,intc-gbl-mask", i++, &val)) {
-+			pr_warn("The params should keep pair!!!\n");
-+			break;
-+		}
-+
-+		writel_relaxed(val, mmp_icu_base + offset);
-+	}
-+
-+	/* Get the irq lines for cp */
-+	i = 0;
-+	while (!of_property_read_u32_index(node, "mrvl,intc-for-cp", i, &irq_for_cp[i])) {
-+		writel_relaxed(ICU_CONF_SEAGULL, mmp_icu_base + (irq_for_cp[i] << 2));
-+		i++;
-+	}
-+	irq_for_cp_nr = i;
-+
-+	icu_data[0].conf_enable = mmp_conf.conf_enable;
-+	icu_data[0].conf_disable = mmp_conf.conf_disable;
-+	icu_data[0].conf_mask = mmp_conf.conf_mask;
-+	icu_data[0].nr_irqs = nr_irqs;
-+	icu_data[0].virq_base = 32;
-+
-+	gic_arch_extn.irq_mask = icu_mask_irq_wakeup;
-+	gic_arch_extn.irq_unmask = icu_unmask_irq_wakeup;
-+
-+	return;
-+}
-+
- IRQCHIP_DECLARE(mmp2_mux_intc, "mrvl,mmp2-mux-intc", mmp2_mux_of_init);
- #endif
-diff --git a/include/linux/irqchip/mmp.h b/include/linux/irqchip/mmp.h
-index c78a892..93b05ad 100644
---- a/include/linux/irqchip/mmp.h
-+++ b/include/linux/irqchip/mmp.h
-@@ -1,6 +1,19 @@
- #ifndef	__IRQCHIP_MMP_H
- #define	__IRQCHIP_MMP_H
- 
-+#define ICU_CONF_CPU3      (1 << 9)
-+#define ICU_CONF_CPU2      (1 << 8)
-+#define ICU_CONF_CPU1      (1 << 7)
-+#define ICU_CONF_CPU0      (1 << 6)
-+#define ICU_CONF_AP(n)     (1 << (6 + (n & 0x3)))
-+#define ICU_CONF_AP_MASK   (0xF << 6)
-+#define ICU_CONF_SEAGULL   (1 << 5)
-+#define ICU_CONF_IRQ_FIQ   (1 << 4)
-+#define ICU_CONF_PRIO(n)   (n & 0xF)
-+
-+#define ICU_IRQ_CPU0_MASKED    (ICU_CONF_IRQ_FIQ | ICU_CONF_CPU0)
-+
- extern struct irq_chip icu_irq_chip;
- 
-+extern void __init mmp_of_wakeup_init(void);
- #endif	/* __IRQCHIP_MMP_H */
--- 
-1.7.9.5
+On 04-12-13 13:10, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org wrote:
+> From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>
+> This patch series adds Allwinner sunxi support to platform_ahci.
+> There are a few quirks here however that will need discussing.
+>
+> Allwinner added something to setup the DMA engine prior to enabling DMA in
+> libahci.c. I'm not familiar at all with the AHCI spec and not sure what
+> the proper way to implement this would have been. Don't other platforms
+> optionally require the same thing?
+>
+> Also the way ahci_platform works seems a little hack-ish, it seems like
+> something along the lines of ahci_platform_register(ahci-data) would be more
+> appropriate, but not sure yet on those details (I am just a beginner).
+>
+> Furthermore this driver should, in theory, work on the A10 but on my
+> cubieboard 1 it does not work yet (just hangs somewhere in libahci or after,
+> but not the DMA call that was altered). I've also tested it the cubietruck,
+> cubieboard 2 and olinuxino and it worked fine there.
+>
+> Thanks,
+>
+> Oliver
+>
+> Oliver Schinagl (3):
+>    RFC: AHCI: libahci is missing DMA
+>    ARM: sunxi: Add an ahci-platform compatible AHCI driver for the
+>      Allwinner SUNXi series of SoCs
+>    ARM: sunxi: dts: Add ahci support to a few A10 and A20 boards
+>
+>   .../devicetree/bindings/ata/ahci-sunxi.txt         |  24 ++
+>   arch/arm/boot/dts/sun4i-a10-cubieboard.dts         |  26 ++
+>   arch/arm/boot/dts/sun4i-a10.dtsi                   |   9 +
+>   arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |  26 ++
+>   arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |  26 ++
+>   arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts    |  26 ++
+>   arch/arm/boot/dts/sun7i-a20.dtsi                   |   9 +
+>   drivers/ata/Kconfig                                |   9 +
+>   drivers/ata/Makefile                               |   1 +
+>   drivers/ata/ahci.h                                 |   6 +
+>   drivers/ata/ahci_platform.c                        |  12 +
+>   drivers/ata/ahci_sunxi.c                           | 305 +++++++++++++++++++++
+>   drivers/ata/libahci.c                              |   8 +
+>   13 files changed, 487 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/ata/ahci-sunxi.txt
+>   create mode 100644 drivers/ata/ahci_sunxi.c
+>
