@@ -1,51 +1,74 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] usb: chipidea: fix mistake in device tree binding
- of nspire-usb to use vendor name 'lsi' instead of SoC name 'zevio'
-Date: Wed, 4 Dec 2013 12:18:49 +0000
-Message-ID: <20131204121849.GM16025@e106331-lin.cambridge.arm.com>
-References: <1386148808-15065-1-git-send-email-dt.tangr@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: sunxi: Add an ahci-platform compatible AHCI
+ driver for the Allwinner SUNXi series of SoCs
+Date: Wed, 4 Dec 2013 12:26:02 +0000
+Message-ID: <20131204122602.GN16025@e106331-lin.cambridge.arm.com>
+References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl>
+ <1386159055-10264-3-git-send-email-oliver@schinagl.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1386148808-15065-1-git-send-email-dt.tangr@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "dt.tangr@gmail.com" <dt.tangr@gmail.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+In-Reply-To: <1386159055-10264-3-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org" <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Cc: "tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <ob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org" <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org" <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2013 at 09:20:07AM +0000, dt.tangr@gmail.com wrote:
-> From: Daniel Tang <dt.tangr@gmail.com>
+On Wed, Dec 04, 2013 at 12:10:54PM +0000, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org wrote:
+> From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 > 
-> The SoC name was mistakenly used instead of the vendor name in the
-> device tree binding for nspire-usb.
+> This patch adds support for the sunxi series of SoC's by allwinner. It
+> plugs into the ahci-platform framework.
 > 
-> This patch fixes this before the driver becomes widely adopted.
-
-How widely adopted is it so far?
-
-I can't see the binding in mainline yet.
-
+> Note: Currently it uses a somewhat hackish approach that probably needs
+> a lot more work, but does the same as the IMX SoC's.
 > 
-> Signed-off-by: Daniel Tang <dt.tangr@gmail.com>
+> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt |    4 ++--
->  drivers/usb/chipidea/ci_hdrc_nspire.c                    |    2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/ata/ahci-sunxi.txt         |  24 ++
+>  drivers/ata/Kconfig                                |   9 +
+>  drivers/ata/Makefile                               |   1 +
+>  drivers/ata/ahci_platform.c                        |  12 +
+>  drivers/ata/ahci_sunxi.c                           | 305 +++++++++++++++++++++
+>  5 files changed, 351 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ata/ahci-sunxi.txt
+>  create mode 100644 drivers/ata/ahci_sunxi.c
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
-> index 5ba8e90..ef1fcbf 100644
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
-> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
-> @@ -1,7 +1,7 @@
->  * TI-Nspire USB OTG Controller
->  
->  Required properties:
-> -- compatible: Should be "zevio,nspire-usb"
-> +- compatible: Should be "lsi,nspire-usb"
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-sunxi.txt b/Documentation/devicetree/bindings/ata/ahci-sunxi.txt
+> new file mode 100644
+> index 0000000..0792fa5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/ahci-sunxi.txt
+> @@ -0,0 +1,24 @@
+> +Allwinner SUNXI AHCI SATA Controller
+> +
+> +SATA nodes are defined to describe on-chip Serial ATA controllers.
+> +Each SATA controller should have its own node.
+> +
+> +Required properties:
+> +- compatible   : compatible list, contains "allwinner,sun4i-a10-ahci"
 
-Surely this should be lsi,zevio-usb, matching the lsi,zevio-timer
-binding?
+- compatible: Should contain "allwinner,sun4i-a10-ahci"
+
+> +- reg          : <registers mapping>
+
+- reg: The offset and length of the MMIO registers.
+
+> +- interrupts   : <interrupt mapping for AHCI IRQ>
+
+- interrupts: An interrupt-specifier for the ACHI interrupt
+
+> +- clocks       : clocks for ACHI
+> +- clock-names  : clock names for AHCI
+
+Please _define_ the set of clock-names you expect. This binding is
+meaningless without it. If you require clock-names, define the clocks
+property in terms of it.
 
 Thanks,
 Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
