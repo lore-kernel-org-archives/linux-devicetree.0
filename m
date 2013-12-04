@@ -1,58 +1,118 @@
-From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/4] Regulators: TPS65218: Add Regulator driver for TPS65218
- PMIC
-Date: Wed, 4 Dec 2013 11:29:15 +0530
-Message-ID: <529EC4B3.7030009@ti.com>
-References: <1386053006-6480-1-git-send-email-j-keerthy@ti.com> <1386053006-6480-4-git-send-email-j-keerthy@ti.com> <20131203151654.GB27568@sirena.org.uk>
+From: Li Xiubo <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv6 1/4] pwm: Add Freescale FTM PWM driver support
+Date: Wed, 4 Dec 2013 06:01:29 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F828E66C5@039-SN2MPN1-011.039d.mgd.msft.net>
+References: <1384220218-12716-1-git-send-email-Li.Xiubo@freescale.com>
+ <1384220218-12716-2-git-send-email-Li.Xiubo@freescale.com>
+ <20131128212510.GC14689@mithrandir> <20131128223719.GG14689@mithrandir>
+ <20131202110243.GD12952@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131203151654.GB27568-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131202110243.GD12952@e106331-lin.cambridge.arm.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, "galak@codeaurora.org" <galak@codeaurora.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Shawn Guo <Shawn.Guo@freescale.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, Pawel Moll <Pawel.Moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Huan Wang <Huan.Wang@freescale.com>, Jingchang Lu <jingchang.l>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review Mark.
+> > > > +static int fsl_pwm_parse_clk_ps(struct fsl_pwm_chip *fpc)
+> > > > +{
+> > > > +	int ret;
+> > > > +	struct of_phandle_args clkspec;
+> > > > +	struct device_node *np = fpc->chip.dev->of_node;
+> > > > +
+> > > > +	fpc->sys_clk = devm_clk_get(fpc->chip.dev, "ftm0");
+> > > > +	if (IS_ERR(fpc->sys_clk)) {
+> > > > +		ret = PTR_ERR(fpc->sys_clk);
+> > > > +		dev_err(fpc->chip.dev,
+> > > > +				"failed to get \"ftm0\" clock %d\n", ret);
+> > > > +		return ret;
+> > > > +	}
+> > > > +
+> > > > +	fpc->counter_clk = devm_clk_get(fpc->chip.dev, "ftm0_counter");
+> > > > +	if (IS_ERR(fpc->counter_clk)) {
+> > > > +		ret = PTR_ERR(fpc->counter_clk);
+> > > > +		dev_err(fpc->chip.dev,
+> > > > +				"failed to get \"ftm0_counter\" clock %d\n",
+> > > > +				ret);
+> > > > +		return ret;
+> > > > +	}
+> > > > +
+> > > > +	ret = of_parse_phandle_with_args(np, "clocks", "#clock-cells",
+> 1,
+> > > > +					&clkspec);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > +	fpc->counter_clk_select = clkspec.args[0];
+> > >
+> > > This isn't at all pretty. But given that once you have access to a
+> > > struct clk there's no way to identify it, I don't know of a better
+> > > alternative.
+> >
+> > Hi Mike,
+> >
+> > I've seen this crop up a number of times now, to varying degrees of
+> > gravity. In this particular case, the driver needs to know the type of a
+> > clock because it needs to program this hardware differently depending on
+> > which clock feeds the counter. Since there is no way to obtain any kind
+> > of identifying information from a struct clk, drivers need to rely on
+> > hacks like this and manually reach into the device tree to obtain that
+> > information.
+> 
+> Which property of the clock is the consumer concerned with in this case?
+> 
 
-On Tuesday 03 December 2013 08:46 PM, Mark Brown wrote:
-> On Tue, Dec 03, 2013 at 12:13:24PM +0530, Keerthy wrote:
->
->> +static int tps65218_ldo1_dcdc3_vsel_to_uv(unsigned int vsel)
->> +{
->> +	int uV = 0;
->> +
->> +	if (vsel <= 26)
->> +		uV = vsel * 25000 + 900000;
->> +	else
->> +		uV = (vsel - 26) * 50000 + 1550000;
->> +
->> +	return uV;
->> +}
-> Use regulator_map_voltage_linear_range() (and similarly for most of the
-> other functions).
+The "ftm0_counter" clock.
 
-Ok.
 
->> +static const struct of_device_id tps65218_of_match[] = {
->> +	TPS65218_OF_MATCH("ti,tps65218-dcdc1", tps65218_pmic_regs[0]),
->> +	TPS65218_OF_MATCH("ti,tps65218-dcdc2", tps65218_pmic_regs[1]),
->> +	TPS65218_OF_MATCH("ti,tps65218-dcdc3", tps65218_pmic_regs[2]),
->> +	TPS65218_OF_MATCH("ti,tps65218-dcdc4", tps65218_pmic_regs[3]),
->> +	TPS65218_OF_MATCH("ti,tps65218-dcdc5", tps65218_pmic_regs[4]),
->> +	TPS65218_OF_MATCH("ti,tps65218-dcdc6", tps65218_pmic_regs[5]),
->> +	TPS65218_OF_MATCH("ti,tps65218-ldo1", tps65218_pmic_regs[6]),
->> +};
->> +MODULE_DEVICE_TABLE(of, tps65218_of_match);
-> Indexing into another array by magic number like this is both error
-> prone and hard to read.  Either use defined constants or individual
-> variables for the things being referenced.
-Okay.
+> From a quick look at the driver it looks like there are actually a
+> number of different input lines to the device that share the clock-name
+> "ftm0_counter", though they are actually separate and each has a
+> different divider. Have I got that right?
+> 
 
-Regards,
-Keerthy
+Yes mostly, there are three different input lines wired to the counter
+clock, but they share only one divider. And between the three lines and
+the divider there is one mux inside of the FTM IP block.
+The three clock sources are:
+"ftm0",
+"ftm0-fix",
+"ftm0-ext".
+		 _____________________________________________________
+		|									|
+		|   +++++++++++		FTM Module				|
+ftm0 -------|-->+         +							|
+		|   +         +     +++++++++++++     ++++++++++++++	|
+ftm0-fix ---|-->+   MUX   +---->+  divider  +---->+  counter   +	|
+		|   +         +     +++++++++++++     ++++++++++++++	|
+ftm0-ext ---|-->+         +							|
+		|   +++++++++++							|
+		|_____________________________________________________|
+
+
+
+> If that's the case, having a unique clock-names value for each of those
+> lines would be the solution I'd expect. Then you just have to list the
+> one(s) that are wired up, and the driver can figure out the appropriate
+> line to use either by requesting by name until it finds a match or
+> inspecting the clock-names property.
+> 
+
+Hi Kumar,
+In the list archives for mails of "[RFC][PATCHv5 4/4] Documentation: Add
+device tree bindings for Freescale FTM PWM.",we have discussed about this.
+Is there any different with your suggestions or ideas? 
+
+
+> Is there some other property of the parent that we care about here?
+> 
+
+As I know, not yet.
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+ 
+
