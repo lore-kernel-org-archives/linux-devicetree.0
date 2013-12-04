@@ -1,89 +1,96 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH v4 1/5] watchdog: davinci: change driver to use WDT core
-Date: Wed, 4 Dec 2013 20:42:31 +0200
-Message-ID: <529F7797.4080100@ti.com>
-References: <1385556508-3935-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1385556508-3935-2-git-send-email-ivan.khoronzhuk@ti.com>
- <529F6EBE.5050703@ti.com> <20131204182824.GA14499@roeck-us.net>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
+ generic bus properties
+Date: Wed, 4 Dec 2013 18:43:45 +0000
+Message-ID: <20131204184345.GA29268@sirena.org.uk>
+References: <20131127172806.GC2291@e103592.cambridge.arm.com>
+ <20131128203322.GB14689@mithrandir>
+ <20131128211009.GA26447@obsidianresearch.com>
+ <20131128222232.GF14689@mithrandir>
+ <20131128233147.GA19387@obsidianresearch.com>
+ <20131129023554.GA14239@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131204182824.GA14499@roeck-us.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>, Sekhar Nori <nsekhar@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, wim@iguana.be, Santosh Shilimkar <santosh.shilimkar@ti.com>, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="i6UfSqW8aw8u8VxJ"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131129023554.GA14239-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2013 08:28 PM, Guenter Roeck wrote:
-> On Wed, Dec 04, 2013 at 11:34:46PM +0530, Sekhar Nori wrote:
->> On 11/27/2013 6:18 PM, Ivan Khoronzhuk wrote:
->>> To reduce code duplicate and increase code readability use WDT core
->>> code to handle WDT interface.
->>>
->>> Remove io_lock as the WDT core uses mutex to lock each wdt device.
->>> Remove wdt_state as the WDT core tracks state with its own variable.
->>>
->>> The watchdog_init_timeout() can read timeout value from timeout-sec
->>> property if the passed value is out of bounds. The heartbeat is
->>> initialized in next way. If heartbeat is not set thought module
->>> parameter, try to read it's value from WDT node timeout-sec property.
->>> If node has no one, use default value.
->>>
->>> The heartbeat is hold in wdd->timeout by WDT core, so use it in
->>> order to set timeout period.
->>>
->>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>> ---
->>>   drivers/watchdog/Kconfig       |    2 +
->>>   drivers/watchdog/davinci_wdt.c |  147 ++++++++++------------------------------
->>>   2 files changed, 37 insertions(+), 112 deletions(-)
->>>
->>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->>> index 5be6e91..eb8c89d 100644
->>> --- a/drivers/watchdog/Kconfig
->>> +++ b/drivers/watchdog/Kconfig
->>> @@ -271,6 +271,8 @@ config IOP_WATCHDOG
->>>   config DAVINCI_WATCHDOG
->>>   	tristate "DaVinci watchdog"
->>>   	depends on ARCH_DAVINCI
->>> +	select WATCHDOG_CORE
->>> +	select WATCHDOG_NOWAYOUT
->>
->> Its not clear for change log why NOWAYOUT needs to be forced on all the
->> time for all users of DaVinci watchdog.
 
-... you are right
+--i6UfSqW8aw8u8VxJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>
-> Actually, thinking about it, it is not necessary and can be replaced with
-> 
-> 	watchdog_set_nowayout(wdd, 1);
+On Thu, Nov 28, 2013 at 06:35:54PM -0800, Greg KH wrote:
+> On Thu, Nov 28, 2013 at 04:31:47PM -0700, Jason Gunthorpe wrote:
 
-Good idea, I'll replace watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT) on it.
-And delete "select WATCHDOG_NOWAYOUT"
+> > Greg's point makes sense, but the HW guys are not designing things
+> > this way for kicks - there are real physics based reasons for some of
+> > these choices...
 
-> 
-> In other words, there is no need to force NOWAYOUT on _other_ watchdogs which
-> may be present in the system. Still, you are right, it would be nice to explain
-> in the changelog (or maybe even better as comment in the code) why it is
-> enforced.
-> 
-> Guenter
-> 
+> > eg An all-to-all bus cross bar (eg like Intel's ring bus) is engery
+> > expensive compared to a purpose built muxed bus tree. Doing coherency
+> > look ups on DMA traffic costs energy, etc.
 
-Only question, should I repost only this patch or whole series?
+> Really?  How much power exactly does it take / save?  Yes, hardware
+> people think "software is free", but when you can't actually control the
+> hardware in the software properly, well, you end up with something like
+> itanium...
 
--- 
-Regards,
-Ivan Khoronzhuk
+If you look at the hardware design decisions this stuff tends to be
+totally sensible; there's a bunch of factors at play (complexity, area
+and isolation tend to be other ones).  There's a lot of the stuff that
+we're complaining about where they can reasonably question why this is
+so complex for us.  That doesn't mean that everything that it's possible
+to do is sensible but there's definitely limitations on the kernel side
+here.
+
+> > > code to deal with those descriptions and the hardware they represent. At
+> > > some point we need to start pushing some of the complexity back into
+> > > hardware so that we can keep a sane code-base.
+
+> > Some of this is a consequence of the push to have the firmware
+> > minimal. As soon as you say the kernel has to configure the address
+> > map you've created a big complexity for it..
+
+> Why the push to make firmware "minimal"?  What is that "saving"?  You
+> just push the complexity from one place to the other, just because ARM
+> doesn't seem to have good firmware engineers, doesn't mean they should
+> punish their kernel developers :)
+
+These firmwares have tended to be ROMed or otherwise require expensive
+validation to change for sometimes sensible reasons, keeping the amount
+of code that's painful to change low will tend to make people happier if
+a change is needed.  Most people like the risk mitigation.
+
+--i6UfSqW8aw8u8VxJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSn3feAAoJELSic+t+oim9J5YP/i9uVW3el3f9Jar3w/kP709N
++ACS0JRZwJNkYeHftxZAwFuufDqrfbfbd/LRyGKTCLuoMOakrkWrX4NSx6sId+kX
+OCqT/zBsndsOVSjEY6EBcIQebEqYU94s1A1f3yn2lRNrkxTZMOGzNslBwpIQflHL
+JcaXTVm7NReLgY1l4xHpJW5YLoNbq+h6Gq0EAsYLc7gJl8u9jAT3x7zJD2cY58iO
+9mJxhQmq7FuvItlhIrgUABd5K95hw8RGA4dkx3yJNXDww1m8H213XjzVdcVhngbq
+UZVuQLum2iWFS+uJTdtGIlleqhf+guTbs+1MHO9FpEbllk6379yoTHM/824dOe/M
+emZFelu5mgjvibvrbskYTaYcknrszcFvmhyWJJd2hdB67hMeyi29VYX3EW+nVUAT
+PlwqnxE4NskhyldCBINSK6FK17RMoXMsPZsa0RzpDbcgtvVVmhWECnTIbJ8W7w6L
+0hXSMOBndhf8LmP3Ru5cL0KqU5CPKDeCHG9py5IdYwFbIRUHnJeX4nSUgtj/1yHi
+J5E0g0EbVlwfufxX5WB1nETD2CGgPFHOgxrkt+v9/enXyCq3Ig9t1MACROb+TyB0
+hLHRuR2UnozUkNU6nZLIJ9pSKYkn9DWR6b0qDS9cr87T/AIG94BMZeahuWzW4otW
+JrO74dZ27F5xacT8jC3V
+=etWJ
+-----END PGP SIGNATURE-----
+
+--i6UfSqW8aw8u8VxJ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
