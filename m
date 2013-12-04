@@ -1,70 +1,143 @@
-From: Alex Elder <alex.elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/3] clk: bcm281xx: define Broadcom kona clocks
-Date: Wed, 04 Dec 2013 09:32:31 -0600
-Message-ID: <529F4B0F.2020801@linaro.org>
+From: Alex Elder <alex.elder@linaro.org>
+Subject: [PATCH v2 1/3] clk: bcm281xx: define kona clock binding
+Date: Wed, 04 Dec 2013 09:33:16 -0600
+Message-ID: <529F4B3C.4020608@linaro.org>
+References: <529F4B0F.2020801@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <529F4B0F.2020801@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@linaro.org>
+Cc: "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for Kona clock control units (CCUs) and
-clocks, used by Broadcom BCM281xx family SoCs.  Kona CCUs are
-represented by nodes in the device tree, and the names of the clocks
-provided by a CCU are included in its node.  Implementation details
-of those clocks are defined in a C file separate from the code that
-implements the functionality used by most of the common clock
-framework.
+Document the device tree binding for Broadcom Kona architecture
+clock control units and clocks.  Kona device nodes are represented
+with compatible strings having "bcm11351" in their name.
 
-This series depends on:
-    "Update Kona drivers to use clocks"
-    https://lkml.org/lkml/2013/11/14/450
+Kona clocks are managed by "clock control units" (CCUs).  Each CCU
+has a device tree node, and within that node are defined the names
+of the clocks provided by the CCU.
 
-This series (along with a version of those prerequisite patches) is
-available in the "review/bcm-kona-clocks-v2" branch of this git
-repository:
-    git://git.linaro.org/people/elder/linux.git
+The BCM281xx family of SoCs use Kona CCUs and clocks.
 
-Updates:
-v2: - Address all issues raised by Mark Rutland.
+Signed-off-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Matt Porter <matt.porter@linaro.org>
+Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+---
+v2: - list all CCU compatible strings explicitly
+    - reworded a few things, and deleted some text
+    - CCUs and clocks are now defined at the root level
+    - added reference to header file that defines specifiers
 
-					-Alex
-
-Alex Elder (3):
-  clk: bcm281xx: define kona clock binding
-  clk: bcm281xx: add initial clock framework support
-  ARM: dts: bcm281xx: define real clocks
-
- .../devicetree/bindings/clock/bcm-kona-clock.txt   |   93 ++
- arch/arm/boot/dts/bcm11351.dtsi                    |  240 +++--
- drivers/clk/Kconfig                                |    1 +
- drivers/clk/Makefile                               |    1 +
- drivers/clk/bcm/Kconfig                            |    8 +
- drivers/clk/bcm/Makefile                           |    3 +
- drivers/clk/bcm/clk-bcm281xx.c                     |  416 ++++++++
- drivers/clk/bcm/clk-kona-setup.c                   |  769 +++++++++++++++
- drivers/clk/bcm/clk-kona.c                         | 1033
+ .../devicetree/bindings/clock/bcm-kona-clock.txt   |   93
 ++++++++++++++++++++
- drivers/clk/bcm/clk-kona.h                         |  414 ++++++++
- include/dt-bindings/clock/bcm281xx.h               |   65 ++
- 11 files changed, 2967 insertions(+), 76 deletions(-)
+ 1 file changed, 93 insertions(+)
  create mode 100644
 Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
- create mode 100644 drivers/clk/bcm/Kconfig
- create mode 100644 drivers/clk/bcm/Makefile
- create mode 100644 drivers/clk/bcm/clk-bcm281xx.c
- create mode 100644 drivers/clk/bcm/clk-kona-setup.c
- create mode 100644 drivers/clk/bcm/clk-kona.c
- create mode 100644 drivers/clk/bcm/clk-kona.h
- create mode 100644 include/dt-bindings/clock/bcm281xx.h
 
+diff --git a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
+b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
+new file mode 100644
+index 0000000..56d1f49
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
+@@ -0,0 +1,93 @@
++Broadcom Kona Family Clocks
++
++This binding is associated with Broadcom SoCs having "Kona" style
++clock control units (CCUs).  A CCU is a clock provider that manages
++a set of clock signals.  Each CCU is represented by a node in the
++device tree.
++
++This binding uses the common clock binding:
++    Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible
++	Shall have one of the following values:
++	- "brcm,bcm11351-root-ccu"
++	- "brcm,bcm11351-aon-ccu"
++	- "brcm,bcm11351-hub-ccu"
++	- "brcm,bcm11351-master-ccu"
++	- "brcm,bcm11351-slave-ccu"
++- reg
++	Shall define the base and range of the address space
++	containing clock control registers
++- #clock-cells
++	Shall have value <1>.  The permitted clock-specifier values
++	are defined below.
++- clock-output-names
++	Shall be an ordered list of strings defining the names of
++	the clocks provided by the CCU.
++
++
++BCM281XX family SoCs use Kona CCUs.  The following table defines
++the set of CCUs and clock specifiers for BCM281XX clocks.  When
++a clock consumer references a clocks, its symbolic specifier
++(rather than its numeric index value) should be used.  These
++specifiers are defined in "include/dt-bindings/clock/bcm281xx.h".
++
++    CCU     Clock           Type    Index   Specifier
++    ---     -----           ----    -----   ---------
++    root    frac_1m         peri      0     BCM281XX_ROOT_CCU_FRAC_1M
++
++    aon     hub_timer       peri      0     BCM281XX_AON_CCU_HUB_TIMER
++    aon     pmu_bsc         peri      1     BCM281XX_AON_CCU_PMU_BSC
++    aon     pmu_bsc_var     peri      2     BCM281XX_AON_CCU_PMU_BSC_VAR
++
++    hub     tmon_1m         peri      0     BCM281XX_HUB_CCU_TMON_1M
++
++    master  sdio1           peri      0     BCM281XX_MASTER_CCU_SDIO1
++    master  sdio2           peri      1     BCM281XX_MASTER_CCU_SDIO2
++    master  sdio3           peri      2     BCM281XX_MASTER_CCU_SDIO3
++    master  sdio4           peri      3     BCM281XX_MASTER_CCU_SDIO4
++    master  dmac            peri      4     BCM281XX_MASTER_CCU_DMAC
++    master  usb_ic          peri      5     BCM281XX_MASTER_CCU_USB_IC
++    master  hsic2_48m       peri      6     BCM281XX_MASTER_CCU_HSIC_48M
++    master  hsic2_12m       peri      7     BCM281XX_MASTER_CCU_HSIC_12M
++
++    slave   uartb           peri      0     BCM281XX_SLAVE_CCU_UARTB
++    slave   uartb2          peri      1     BCM281XX_SLAVE_CCU_UARTB2
++    slave   uartb3          peri      2     BCM281XX_SLAVE_CCU_UARTB3
++    slave   uartb4          peri      3     BCM281XX_SLAVE_CCU_UARTB4
++    slave   ssp0            peri      4     BCM281XX_SLAVE_CCU_SSP0
++    slave   ssp2            peri      5     BCM281XX_SLAVE_CCU_SSP2
++    slave   bsc1            peri      6     BCM281XX_SLAVE_CCU_BSC1
++    slave   bsc2            peri      7     BCM281XX_SLAVE_CCU_BSC2
++    slave   bsc3            peri      8     BCM281XX_SLAVE_CCU_BSC3
++    slave   pwm             peri      9     BCM281XX_SLAVE_CCU_PWM
++
++
++Device tree example:
++
++	slave_ccu: slave_ccu {
++		compatible = "brcm,bcm11351-slave-ccu";
++		reg = <0x3e011000 0x0f00>;
++		#clock-cells = <1>;
++		clock-output-names = "uartb",
++				     "uartb2",
++				     "uartb3",
++				     "uartb4";
++	};
++
++	ref_crystal_clk: ref_crystal {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <26000000>;
++	};
++
++	uart@3e002000 {
++		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
++		status = "disabled";
++		reg = <0x3e002000 0x1000>;
++		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB3>;
++		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++	};
 -- 
 1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
