@@ -1,30 +1,95 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] pinctrl: tegra124: add pinctrl driver for NVIDIA's Tegra124
- SoC
-Date: Wed, 04 Dec 2013 12:30:48 -0700
-Message-ID: <529F82E8.3000206@wwwdotorg.org>
-References: <1384191718-16817-1-git-send-email-aghuge@nvidia.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH v5 0/5] Update Davinci watchdog driver
+Date: Wed, 4 Dec 2013 21:39:25 +0200
+Message-ID: <1386185970-14488-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1384191718-16817-1-git-send-email-aghuge@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ashwini Ghuge <aghuge@nvidia.com>, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, linus.walleij@linaro.org, grant.likely@linaro.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, wim@iguana.be, nsekhar@ti.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, grygorii.strashko@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2013 10:41 AM, Ashwini Ghuge wrote:
-> The driver uses the common Tegra pinctrl driver utility functions to
-> implement the majority of the driver. It is based on the similar Tegra114
-> pinctrl
+These patches are intended to update Davinci watchdog to use WDT core
+and reuse driver for keystone arch, because Keystone uses the similar
+IP like Davinci.
 
-> +static const struct tegra_function  tegra124_functions[] = {
-...
-> +	FUNCTION(i2c1),
-> +	FUNCTION(i2c2),
-> +	FUNCTION(i2c3),
-> +	FUNCTION(i2c4),
-> +	FUNCTION(i2cpwr),
+See Documentation:
+Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
+Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
 
-Is that complete? Tegra124 apparently has 6 I2C controllers. Are the
-pins for the new sixth controller (0x7000d100) not affected by the pinmux?
+Also:
+ - improved to support GET_TIMELEFT option.
+ - added "clocks" and "timeout-sec" properties to DT.
+
+Based on
+git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+keystone/master
+
+v4..v5:
+- watchdog: davinci: change driver to use WDT core
+	switched off CONFIG_WATCHDOG_NOWAYOUT option
+
+v3..v4:
+- watchdog: davinci: change driver to use WDT core
+	reverted rename of platform driver to "davinci-wdt"
+	as it causes a regression on Davinci platforms.
+
+- arm: dts: keystone: add watchdog entry
+	The patch will be sent separately after series is ready.
+
+v2..v3:
+- watchdog: davinci: change driver to use WDT core
+	removed "ti,keystone-wdt" compatible from driver
+	renamed wdt device names for mach-davinci from
+		"watchdog" to "davinci-wdt"
+
+- watchdog: davinci: reuse driver for keystone arch
+	moved "clocks" property under "Optional properties"
+	improved description of "clocks" property
+
+- arm: dts: keystone: add watchdog entry
+	replaced "ti,keystone-wdt" compatible on
+		 "ti,keystone-wdt","ti,davinci-wdt"
+
+v1..v2:
+- watchdog: davinci: change driver to use WDT core
+	corrected 2011 -> 2006-2013
+	removed useless function comment
+	corrected initialization of heartbeat
+	switched on CONFIG_WATCHDOG_NOWAYOUT option
+
+- watchdog: davinci: use davinci_wdt_device structure to hold device data
+	substituted wdd to watchdog device in commit message
+
+- watchdog: davinci: add GET_TIMELEFT option support
+	corrected comment (is -> has)
+	removed redundant error message "clock freq is not set"
+
+- watchdog: davinci: add GET_STATUS option support
+	dropped
+
+- watchdog: davinci: add "timeout-sec" property
+	use consistent formatting
+
+- watchdog: davinci: reuse driver for keystone arch
+	use consistent formatting
+
+- watchdog: davinci: add "clocks" property
+	merged with above patch
+
+Ivan Khoronzhuk (5):
+  watchdog: davinci: change driver to use WDT core
+  watchdog: davinci: use davinci_wdt_device structure to hold device
+    data
+  watchdog: davinci: add GET_TIMELEFT option support
+  watchdog: davinci: add "timeout-sec" property
+  watchdog: davinci: reuse driver for keystone arch
+
+ .../devicetree/bindings/watchdog/davinci-wdt.txt   |   16 +-
+ drivers/watchdog/Kconfig                           |    5 +-
+ drivers/watchdog/davinci_wdt.c                     |  221 +++++++++-----------
+ 3 files changed, 113 insertions(+), 129 deletions(-)
+
+-- 
+1.7.9.5
