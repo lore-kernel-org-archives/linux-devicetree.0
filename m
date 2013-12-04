@@ -1,60 +1,73 @@
-From: Olliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: sunxi: Add an ahci-platform
- compatible AHCI driver for the Allwinner SUNXi series of SoCs
-Date: Wed, 04 Dec 2013 14:16:49 +0100
-Message-ID: <529F2B41.8090009@schinagl.nl>
-References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl> <1386159055-10264-3-git-send-email-oliver@schinagl.nl> <20131204123708.GD3158@htj.dyndns.org> <529F2677.3070208@schinagl.nl> <20131204131402.GG3158@htj.dyndns.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Alex Elder <alex.elder@linaro.org>
+Subject: Re: [PATCH 3/3] ARM: dts: bcm281xx: define real clocks
+Date: Wed, 04 Dec 2013 07:19:21 -0600
+Message-ID: <529F2BD9.5080808@linaro.org>
+References: <529EA78E.7060904@linaro.org> <529EA813.2070208@linaro.org> <20131204111906.GG16025@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDDZ7YMYRMGBBG6X7SKAKGQEBMLLO7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20131204131402.GG3158-Gd/HAXX7CRxy/B6EtB590w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131204111906.GG16025@e106331-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@linaro.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04-12-13 14:14, Tejun Heo wrote:
-> Hello,
->
-> On Wed, Dec 04, 2013 at 01:56:23PM +0100, Oliver Schinagl wrote:
->> I took the imx driver as example, as I wasn't sure on where to
->> start. But I don't think it's possible yet without improving
->> ahci_platform as I suggested in the cover letter. So if
->> ahci_platform needs to be improved, I guess a separate patch series
->> would be more appropriate?
+On 12/04/2013 05:19 AM, Mark Rutland wrote:
+> On Wed, Dec 04, 2013 at 03:57:07AM +0000, Alex Elder wrote:
+>> Replace the "fake" clocks defined in the "bcm11351.dtsi" device tree
+>> file with real definitions backed by the new BCM281xx clock driver..
 >>
->> So would it be acceptable to have this as the 2nd (and last?)
->> ahci_platform driver and go from there? Or do you want to block new
->> ahci_XXX drivers until ahci_platform has been improved?
->
-> I don't want to block new drivers unconditionally but at least I want
-> to know which direction we're headed in the longer term.  Right now it
-> feels like we could be at the beginning of an uncoordinated explosion
-> of these drivers which will take a hell lot mpore effort to clean up
-> after the fact.  I could be wrong and these could actually be
-> different enough to justify separate drivers and there isn't gonna be
-> an avalanche of these but again I at least want to know the general
-> direction things are headed before making any decisions.
-I'd be happy to pour it in any form that's needed. I even do the 
-modification/rewrite of ahci_platform if I get enough help as it might 
-be a little over my head initially ;)
+>> Signed-off-by: Alex Elder <elder@linaro.org>
+>> Reviewed-by: Matt Porter <matt.porter@linaro.org>
+>> Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+>> ---
+>>  arch/arm/boot/dts/bcm11351.dtsi |  222
+>> ++++++++++++++++++++++++++++-----------
+>>  1 file changed, 161 insertions(+), 61 deletions(-)
+> 
+> [...]
+> 
+>> +		/*
+>> +		    * This is a place-holder clock for peripheral
+>> +		    * clocks that set their parent clock to an
+>> +		    * out-of-range value to explicitly select
+>> +		    * "no clock" as a parent.
+>> +		    */
+>> +		not_selected_clk: not_selected {
+>>  			#clock-cells = <0>;
+>> -		};
+> 
+> Huh? This doesn't seem to be used at all in this series. Why is this
+> here?
 
-That said, I don't think it's much different at all and I do think it 
-could be much simpler. In my mind, the sunxi_ahci driver wouldn't need 
-to be much bigger then a few lines that are specific to the SoC 
-(hardware init) and registerd to the ahci_platform framework via 
-platform_ahci_register() instead of platform_device_register().
+This has been the source of confusion before.
 
-But again, point me (for dummies ;) in the right direction and I'll work 
-on it with some help.
+You're right, it's not used in the current patch.  And
+because of this, I'll delete it, and add it back once
+we have a clock supported that requires it.
 
-Oliver
->
-> Thanks.
->
+But while we're on the subject, here's what it's for.
+
+Each clock has a defined set of parent clocks, and
+each has a small integer value that represents it in
+a register that controls their selection.  In some
+cases the reset value of that register field is a
+(specific) value that has no defined clock associated
+with it.
+
+Here's an example.  There's a clock "hub_clk_ssp3_audio",
+which has three parent clocks:  "ref_crystal" (selector
+value 0),  "ref_312m" (selector value 1), and "cx40"
+(selector value 2).  But on reset, the value in that
+selector field is 3.
+
+This clock is used to represent that "none selected" value.
+
+> Thanks,
+> Mark.
+> 
+
+Thank you.  I really appreciate the reviews Mark.
+
+					-Alex
