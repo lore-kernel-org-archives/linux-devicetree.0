@@ -1,207 +1,97 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
-Date: Wed, 4 Dec 2013 09:36:08 -0600
-Message-ID: <24A59FCA-88E5-42BB-9AEC-CDA07841A6ED@codeaurora.org>
-References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com> <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com> <3AA6B169-C4C8-474B-B110-B912510B834E@codeaurora.org> <20131203104004.GA5694@e102568-lin.cambridge.arm.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20131203104004.GA5694@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 00/26] OMAPDSS: DT support (Christmas edition)
+Date: Wed, 4 Dec 2013 17:01:20 +0100
+Message-ID: <20131204160119.GA9433@earth.universe>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1386160133-24026-1-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Stefan Roese <stefan.roese-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Dr . H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On Dec 3, 2013, at 4:40 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+--XsQoSWH+UP9D9v3l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Mon, Dec 02, 2013 at 06:08:16PM +0000, Kumar Gala wrote:
->> 
->> On Dec 2, 2013, at 10:20 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
->> 
->>> ARM based platforms implement a variety of power management schemes that
->>> allow processors to enter at run-time low-power states, aka C-states
->>> in ACPI jargon. The parameters defining these C-states vary on a per-platform
->>> basis forcing the OS to hardcode the state parameters in platform
->>> specific static tables whose size grows as the number of platforms supported
->>> in the kernel increases and hampers device drivers standardization.
->>> 
->>> Therefore, this patch aims at standardizing C-state device tree bindings for
->>> ARM platforms. Bindings define C-state parameters inclusive of entry methods
->>> and state latencies, to allow operating systems to retrieve the
->>> configuration entries from the device tree and initialize the related
->>> power management drivers, paving the way for common code in the kernel
->>> to deal with power states and removing the need for static data in current
->>> and previous kernel versions.
->> 
->> Where is this spec'd today in the kernel?
-> 
-> How can it be in the kernel given that these bindings have just been posted ?
-> I started coding the layer managing the C-states in the kernel, even
-> though I would avoid writing it and then restart from scratch if these
-> bindings are scrapped. Bindings should not depend on kernel code, it
-> is the other way around, right ?
+Hi,
 
-I was guessing that there is existing code in the kernel that uses some platform data structures.  I was wondering what that code looked like today.
+On Wed, Dec 04, 2013 at 02:28:27PM +0200, Tomi Valkeinen wrote:
+> Here's a new version for DT support to OMAP Display Subsystem. See
+> http://article.gmane.org/gmane.linux.ports.arm.omap/102689 for the intro =
+of the
+> previous version, which contains thoughts about the related problems.
+>
+> The major change in this version is the use of V4L2 and CDF style port/en=
+dpoint
+> style in the DT data. However, note that even if the DT data contains pro=
+per
+> port & endpoint data, the drivers only use the first endpoint. This is to
+> simplify the patches, as adding full support for the ports and endpoints =
+to the
+> drivers will be a big task. This approach still works with more or less a=
+ll the
+> boards, as the only cases where the simpler model is an issue are the boa=
+rds
+> with multiple display devices connected to a single output.
+>=20
+> Laurent, I'd appreciate if you could have a look at the .dts changes, to =
+see if
+> there's anything that's clearly not CDF compatible.
+>=20
+> The patches can also be found from:
+> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss-dt
 
-> 
+Will this be ready for 3.14? Depending on that I would handle
+omapdss support for the N900 differently. If this code gets merged
+into 3.14 I will update the N900 patches [0] accordingly. Otherwise
+I would suggest to take the N900 patches as is for 3.14 and I will
+take care of adding the omapdss DT support to the panel (and the
+N900.dts) separately.
+
 > [...]
-> 
->>> +===========================================
->>> +2 - state node
->>> +===========================================
->>> +
->>> +A state node represents a C-state description and must be defined as follows:
->>> +
->>> +- state node
->>> +
->>> +     Description: must be child of the cpu-power-states node.
->>> +
->>> +     The state node name must be "state", with unit address provided by the
->>> +     "reg" property following standard DT requirements[4].
->>> +
->>> +     A state node defines the following properties:
->>> +
->>> +     - reg
->>> +             Usage: Required
->>> +             Value type: <u32>
->>> +             Definition: Standard device tree property [4] used for
->>> +                         enumeration purposes.
->> 
->> I'm not sure what purpose reg is really serving here.
-> 
-> Enumeration, that's it.
-> 
->>> +
->>> +     - index
->>> +             Usage: Required
->>> +             Value type: <u32>
->>> +             Definition: It represents C-state index, starting from 2 (index
->>> +                         0 represents the processor state "running" and
->>> +                         index 1 represents processor mode "WFI"; indexes 0
->>> +                         and 1 are standard ARM states that need not be
->>> +                         described).
->> 
->> any reason not to call it c-state-index"
-> 
-> Well, they are called "state" nodes, so I called it "index".
-> 
-> I really do not care, can change it if we think we should call states
-> c-states.
-> 
->>> +
->>> +     - entry-method
->>> +             Value type: <stringlist>
->>> +             Usage: Required
->>> +             Definition: Describes the method by which a CPU enters the
->>> +                         C-state. This property is required and must be one
->>> +                         of:
->>> +
->>> +                         - "psci"
->>> +                           ARM Standard firmware interface
->>> +
->>> +                         - "[vendor],[method]"
->>> +                           An implementation dependent string with
->>> +                           format "vendor,method", where vendor is a string
->>> +                           denoting the name of the manufacturer and
->>> +                           method is a string specifying the mechanism
->>> +                           used to enter the C-state.
->>> +
->>> +     - psci-power-state
->>> +             Usage: Required if entry-method property value is set to
->>> +                    "psci".
->>> +             Value type: <u32>
->>> +             Definition: power_state parameter to pass to the PSCI
->>> +                         suspend call to enter the C-state.
->>> +
->>> +     - latency
->>> +             Usage: Required
->>> +             Value type: <u32>
->>> +             Definition: Worst case latency in microseconds required to
->>> +                         enter and exit the C-state.
->>> +
->>> +     - min-residency
->>> +             Usage: Required
->>> +             Value type: <u32>
->>> +             Definition: Time in microseconds required for the CPU to be in
->>> +                         the C-state to make up for the dynamic power
->>> +                         consumed to enter/exit the C-state in order to
->>> +                         break even in terms of power consumption compared
->>> +                         to C1 state (wfi).
->>> +                         This parameter depends on the operating conditions
->>> +                         (operating point, cache state) and must assume
->>> +                         worst case scenario.
->>> +
->>> +     - cpus
->>> +             Usage: Optional
->>> +             Value type: <phandle>
->>> +             Definition: If defined, the phandle points to a node in the
->>> +                         cpu-map[2] representing all CPUs on which C-state
->>> +                         is valid. If not present or system is UP, the
->>> +                         C-state has to be considered valid for all CPUs in
->>> +                         the system.
->>> +
->>> +     - affinity
->>> +             Usage: Optional
->>> +             Value type: <phandle>
->>> +             Definition: If defined, phandle points to a node in the
->>> +                         cpu-map[2] that represents all CPUs that are
->>> +                         affected (ie share) by the C-state and have to
->>> +                         be coordinated on C-state entry/exit. If not
->>> +                         present or system is UP, the C-state is local to
->>> +                         a CPU and need no coordination (ie it is a CPU
->>> +                         state, that does not require coordination with
->>> +                         other CPUs). If present, the affinity property
->>> +                         must contain a phandle to a cpu-map node that
->>> +                         represents a subset, possibly inclusive of the
->>> +                         CPUs described through the cpus property.
->>> +
->>> +     - power-depth
->>> +             Usage: Required
->>> +             Value type: <u32>
->>> +             Definition: Integer value, starting from 2 (value 0 meaning
->>> +                         running and value 1 representing power depth of
->>> +                         wfi (C1)), that defines the level of depth of a
->>> +                         power state.
->>> +                         The system denotes power states with different
->>> +                         depths, an increasing value meaning less power
->>> +                         consumption and might involve powering down more
->>> +                         components.  Devices that are affected by
->>> +                         C-states entry must define the maximum power
->>> +                         depth supported in their respective device tree
->>> +                         bindings so that OSPM can take decision on how
->>> +                         to handle the device in question when the C-state
->>> +                         is entered. All devices (per-CPU or external) with
->>> +                         a power depth lower than the one defined in the
->>> +                         C-state entry stop operating when the C-state
->>> +                         is entered and action is required by OSPM to
->>> +                         guarantee their logic and memory content is saved
->>> +                         restored to guarantee proper functioning.
->> 
->> How is this different from the c-state index?
-> 
-> The idea, not sure it is worthwhile, is to represent a unique value in
-> the system. There can be multiple eg C2 states (two clusters in two
-> different power domains) with same index and different power depths.
-> 
-> Devices attached to power domains can check the power depth to detect if
-> the CPU must be prevented from entering the C-state or not, and on the
-> other hand, power depth allows to understand if a device state must be
-> saved and restored.
-> 
-> I should have added an example but there is already lots of stuff to
-> discuss for bindings as they are IMHO.
-> 
-> Lorenzo
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> - No binding documentation. I will add them for the next version, if ther=
+e are
+>   no major changes needed. Hopefully the bindings are quite self-explanat=
+ory
+>   for people with understanding of the hardware in question.
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+It is :)
 
+[0] http://marc.info/?l=3Dlinux-omap&m=3D138524030509240&w=3D2
+
+-- Sebastian
+
+--XsQoSWH+UP9D9v3l
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSn1HPAAoJENju1/PIO/qaxsoP/iw2h7eZ2o7IovmQo4dEK/tR
+IMyJ9YC39plLGbvVK33WJgzWffcQFsMdKgwYScve8rJE+o479Qe8KCwWGsGk5p4o
+HvpZYzmxL4RjmRV9gPKmBEbmcXR3FDkpvrKVyXED726YkMPG2QuUEhgDxgWFig8H
+vCMAqqWnpEDTtcFs1jmc6GeRxwLlMfKHa+OzvzcRTr6hDP3f3cZAP2vXSzYQ8BWh
++7p3EEJxsQWv6O8fVtLLUYKiwKi3DEUH4bmA1jc4fH8Lad0tLif3He5DGYtgQIxg
+wTa7z6t1ApnVFQMQUQmRoVhk5eGm3sgilShPnlEN4HsIPVcBm+RdpD2RL3pNCWqX
+Nl1Nu1Me5CloPZYOtffdRifw2m+N6xClzVxDn9f2GyyhOwcu7lx0WWd47b531Slg
+/suhW5MqYwcuEKsLU5OEuGPHb6vTOK5lnyScRcypHfifmVG61mI4xhn19uEa+5M9
+0jqfoLZWCN+tF05ijHYhw84EDFYPCboohDokbWW/i9wh8p7TYf6jwgOFrVClsirM
+5oLIjako5fJzw/KocgkYWBkIVduGesR9nnzoUa0kNb4wClpkEjmlTJufCDYPnXx2
+C5oD3F/nkXt/R9KfoZjt3k7hYUwAR/n5/xlpHQq2mYL8DS3x7KnCSRgMWkxDgQ6E
+I38ngL4fvCK+u4h5rV8n
+=L5ls
+-----END PGP SIGNATURE-----
+
+--XsQoSWH+UP9D9v3l--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
