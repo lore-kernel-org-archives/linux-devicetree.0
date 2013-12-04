@@ -1,50 +1,82 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/3] clk: bcm281xx: add initial clock framework support
-Date: Wed, 4 Dec 2013 14:09:51 +0000
-Message-ID: <20131204140951.GA29200@e106331-lin.cambridge.arm.com>
-References: <529EA78E.7060904@linaro.org>
- <529EA80F.3050009@linaro.org>
- <20131204111457.GF16025@e106331-lin.cambridge.arm.com>
- <529F28E3.90905@linaro.org>
- <529F34D3.5080806@linaro.org>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH 1/2] usb: chipidea: fix mistake in device tree binding
+ of nspire-usb to use vendor name 'lsi' instead of SoC name 'zevio'
+Date: Wed, 4 Dec 2013 21:44:34 +0800
+Message-ID: <20131204134433.GD1573@shlinux1.ap.freescale.net>
+References: <1386148808-15065-1-git-send-email-dt.tangr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <529F34D3.5080806@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alex Elder <alex.elder@linaro.org>
-Cc: Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@linaro.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <1386148808-15065-1-git-send-email-dt.tangr@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dt.tangr@gmail.com
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2013 at 01:57:39PM +0000, Alex Elder wrote:
-> On 12/04/2013 07:06 AM, Alex Elder wrote:
-> >>> +       name_size = strlen(node->name) + 1;
-> >>> >> +       ccu = kzalloc(sizeof(*ccu) + name_size, GFP_KERNEL);
-> >>> >> +       if (!ccu) {
-> >>> >> +               pr_err("%s: unable to map allocate CCU struct for %s\n",
-> >>> >> +                       __func__, node->name);
-> >>> >> +               return;
-> >>> >> +       }
-> >>> >> +       memcpy((char *)ccu->name, node->name, name_size);
-> >> > 
-> >> > You could simplify this with kstrdup.
-> > You are correct, and I will make that change.  I think at
-> > one point I needed the length but that doesn't appear to
-> > be the case here.
+On Wed, Dec 04, 2013 at 08:20:07PM +1100, dt.tangr@gmail.com wrote:
+> From: Daniel Tang <dt.tangr@gmail.com>
 > 
-> On second thought, no, you may have missed what was happening here.
-> I was avoiding two kmallocs() by setting aside space at the end
-> of the structure to hold its name.  It may seem silly, but this
-> avoids a possible (well, conceivable) failure case.
-
-Yes, I'd misunderstood. Sorry about that.
-
+> The SoC name was mistakenly used instead of the vendor name in the
+> device tree binding for nspire-usb.
 > 
-> However, based on your earlier question about "what about freeing
-> ccu->name?" I am going to use kstrdup() here.  I'd rather the code
-> put you at ease than look weird just to avoid an unlikely failure.
+> This patch fixes this before the driver becomes widely adopted.
+> 
+> Signed-off-by: Daniel Tang <dt.tangr@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt |    4 ++--
+>  drivers/usb/chipidea/ci_hdrc_nspire.c                    |    2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> index 5ba8e90..ef1fcbf 100644
+> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> @@ -1,7 +1,7 @@
+>  * TI-Nspire USB OTG Controller
+>  
+>  Required properties:
+> -- compatible: Should be "zevio,nspire-usb"
+> +- compatible: Should be "lsi,nspire-usb"
 
-I'm happy either way.
+lsi is vendor name, what are zevio and nspire?
+Usually, the compatible string should be "vendor_name,soc_name-module_name"
 
-Mark.
+>  - reg: Should contain registers location and length
+>  - interrupts: Should contain controller interrupt
+>  
+> @@ -11,7 +11,7 @@ Recommended properies:
+>  Examples:
+>  		usb0: usb@B0000000 {
+>  			reg = <0xB0000000 0x1000>;
+> -			compatible = "zevio,nspire-usb";
+> +			compatible = "lsi,nspire-usb";
+>  			interrupts = <8>;
+>  			vbus-supply = <&vbus_reg>;
+>  		};
+> diff --git a/drivers/usb/chipidea/ci_hdrc_nspire.c b/drivers/usb/chipidea/ci_hdrc_nspire.c
+> index 517ce41..c5c2dde 100644
+> --- a/drivers/usb/chipidea/ci_hdrc_nspire.c
+> +++ b/drivers/usb/chipidea/ci_hdrc_nspire.c
+> @@ -52,7 +52,7 @@ static int ci_hdrc_nspire_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id ci_hdrc_nspire_dt_ids[] = {
+> -	{ .compatible = "zevio,nspire-usb", },
+> +	{ .compatible = "lsi,nspire-usb", },
+>  	{ /* sentinel */ }
+>  };
+>  
+> -- 
+> 1.7.10.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+-- 
+
+Best Regards,
+Peter Chen
