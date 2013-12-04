@@ -1,129 +1,145 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3] irqchip: mmp: add dt support for wakeup
-Date: Wed, 4 Dec 2013 23:46:41 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1312042234190.30673@ionos.tec.linutronix.de>
-References: <1386159214-31483-1-git-send-email-zhangwm@marvell.com>
+From: <dinguyen@altera.com>
+Subject: [PATCHv3 1/4] clk: socfpga: Add a clock driver for SOCFPGA's system manager
+Date: Wed, 4 Dec 2013 16:52:53 -0600
+Message-ID: <1386197576-3825-2-git-send-email-dinguyen@altera.com>
+References: <1386197576-3825-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386159214-31483-1-git-send-email-zhangwm@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Zhang <zhangwm@marvell.com>
-Cc: mark.rutland@arm.com, haojian.zhuang@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1386197576-3825-1-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinh.linux@gmail.com, arnd@arndb.de, mturquette@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com
+Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dinh Nguyen <dinguyen@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 4 Dec 2013, Neil Zhang wrote:
+From: Dinh Nguyen <dinguyen@altera.com>
 
-> Some of the Marvell SoCs use GIC as its interrupt controller,and ICU
-> only used as wakeup logic. When AP subsystem is powered off, GIC will
-> lose its context, the PMU will need ICU to wakeup the AP subsystem.
-> So add wakeup entry for such kind of usage.
+The system manager is an IP block on the SOCFPGA platform. The system manager
+contains registers that control other IPs on the platform. One of the IPs that
+the system manager has control over is the SD/MMC, by way of controlling the
+clock phase on the SD/MMC Card Interface Unit.
 
-This changelog is useless.
+This patch adds a clock driver that the SD/MMC driver can use by calling
+the common clock API in order to set the appropriate register in the
+system manager by way of a syscon driver.
 
-What the heck means: "So add wakeup entry for such kind of usage" ?
+This clock driver can also be re-used for other IPs that need to poke the system
+manager.
 
-To me nothing, and I'm quite familiar with this kinds of problems. So
-please explain how someone less familiar with that can decode this?
+Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+---
+v3: Not use the syscon driver because as of 3.13-rc1, the syscon driver
+is loaded after the clock driver.
 
-> @@ -58,6 +60,8 @@ struct mmp_intc_conf {
->  static void __iomem *mmp_icu_base;
->  static struct icu_chip_data icu_data[MAX_ICU_NR];
->  static int max_icu_nr;
-> +static u32 irq_for_cp[64];
+v2: Use the syscon driver
+---
+ drivers/clk/socfpga/Makefile     |    2 +-
+ drivers/clk/socfpga/clk-sysmgr.c |   88 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 89 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/socfpga/clk-sysmgr.c
 
-64 is a magic number pulled out of thin air, right?
+diff --git a/drivers/clk/socfpga/Makefile b/drivers/clk/socfpga/Makefile
+index 0303c0b..cfceabc 100644
+--- a/drivers/clk/socfpga/Makefile
++++ b/drivers/clk/socfpga/Makefile
+@@ -1 +1 @@
+-obj-y += clk.o
++obj-y += clk.o clk-sysmgr.o
+diff --git a/drivers/clk/socfpga/clk-sysmgr.c b/drivers/clk/socfpga/clk-sysmgr.c
+new file mode 100644
+index 0000000..7538b22
+--- /dev/null
++++ b/drivers/clk/socfpga/clk-sysmgr.c
+@@ -0,0 +1,88 @@
++/*
++ * Copyright 2013 Altera Corporation <www.altera.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <linux/slab.h>
++#include <linux/clk-provider.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++
++/* SDMMC Group for System Manager defines */
++#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel)          \
++	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
++
++extern void __iomem *sys_manager_base_addr;
++
++struct socfpga_sysmgr {
++	struct clk_hw	hw;
++	u32     reg;
++};
++#define to_sysmgr_clk(p) container_of(p, struct socfpga_sysmgr, hw)
++
++static int sysmgr_set_dwmmc_drvsel_smpsel(struct clk_hw *hwclk)
++{
++	struct device_node *np;
++	struct socfpga_sysmgr *socfpga_sysmgr = to_sysmgr_clk(hwclk);
++	u32 timing[2];
++	u32 hs_timing;
++
++	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-dw-mshc");
++	of_property_read_u32_array(np, "samsung,dw-mshc-sdr-timing", timing, 2);
++	hs_timing = SYSMGR_SDMMC_CTRL_SET(timing[1], timing[0]);
++	writel(hs_timing, sys_manager_base_addr + socfpga_sysmgr->reg);
++	return 0;
++}
++
++static const struct clk_ops clk_sysmgr_sdmmc_ops = {
++	.enable = sysmgr_set_dwmmc_drvsel_smpsel,
++};
++
++static void __init socfpga_sysmgr_init(struct device_node *node, const struct clk_ops *ops)
++{
++	u32 reg;
++	struct clk *clk;
++	struct socfpga_sysmgr *socfpga_sysmgr;
++	const char *clk_name = node->name;
++	struct clk_init_data init;
++	int rc;
++
++	socfpga_sysmgr = kzalloc(sizeof(*socfpga_sysmgr), GFP_KERNEL);
++	if (WARN_ON(!socfpga_sysmgr))
++		return;
++
++	rc = of_property_read_u32(node, "reg", &reg);
++	if (WARN_ON(rc))
++		return;
++
++	socfpga_sysmgr->reg = reg;
++
++	init.name = clk_name;
++	init.ops = ops;
++	init.flags = 0;
++	init.num_parents = 0;
++
++	socfpga_sysmgr->hw.init = &init;
++	clk = clk_register(NULL, &socfpga_sysmgr->hw);
++	if (WARN_ON(IS_ERR(clk))) {
++		kfree(socfpga_sysmgr);
++		return;
++	}
++	rc = of_clk_add_provider(node, of_clk_src_simple_get, clk);
++	if (WARN_ON(rc))
++		return;
++}
++
++static void __init sysmgr_init(struct device_node *node)
++{
++	socfpga_sysmgr_init(node, &clk_sysmgr_sdmmc_ops);
++}
++CLK_OF_DECLARE(sysmgr, "altr,sysmgr-sdmmc-sdr", sysmgr_init);
+-- 
+1.7.9.5
 
-> +static u32 irq_for_cp_nr;	/* How many irqs will be routed to cp */
 
-What kind of magic nonsense is that?
-  
->  extern void mmp2_clear_pmic_int(void);
->  
-> @@ -123,6 +127,50 @@ static void icu_unmask_irq(struct irq_data *d)
->  	}
->  }
->  
-> +static int irq_ignore_wakeup(struct icu_chip_data *data, int hwirq)
-> +{
-> +	int i;
-> +
-> +	if (hwirq < 0 || hwirq >= data->nr_irqs)
-> +		return 1;
-> +
-> +	for (i = 0; i < irq_for_cp_nr; i++)
-> +		if (irq_for_cp[i] == hwirq)
-> +			return 1;
-> +
-> +	return 0;
-> +}
-
-Oh, I see. A brilliant workaround for something which is missing at
-the caller level.
-
-Why the heck do you add a totally braindead function to your driver,
-if you can avoid the call to icu_[un]mask_wakeup() in the first place?
-
-Why on earth is something calling this function, if it's a not
-supported property of that particular interrupt line?
-
-  Simply because the call site does not have an indicator to avoid
-  that call in the first place.
-
-So why are you not adding a proper mechanism to the caller level to
-avoid the call? This problem is not unique to magic marvell chips.
-
-And going through a loop over and over again is very efficient in
-terms of code size, cache footprint and power consumption, right?
-
-> +static void icu_mask_irq_wakeup(struct irq_data *d)
-> +{
-> +	struct icu_chip_data *data = &icu_data[0];
-> +	int hwirq = d->hwirq - data->virq_base;
-> +	u32 r;
-> +
-> +	if (irq_ignore_wakeup(data, hwirq))
-> +		return;
-
-And you call that loop for every invocation of icu_[un]mask_wakeup().
-
-Intelligent design, right?
-
-Now lets have a look at how this magic loop data is set up:
-
-> +void __init mmp_of_wakeup_init(void)
-> +{
-	....
-
-> +	/* Get the irq lines for cp */
-> +	i = 0;
-> +	while (!of_property_read_u32_index(node, "mrvl,intc-for-cp", i, &irq_for_cp[i])) {
-> +		writel_relaxed(ICU_CONF_SEAGULL, mmp_icu_base + (irq_for_cp[i] << 2));
-> +		i++;
-> +	}
-> +	irq_for_cp_nr = i;
-
-Amazing.
-
-I can understand the part where you setup the mmp_icu registers for
-this.
-
-But recording that information in your own magic array is beyond my
-comprehension.
-
-Now lets look at why you are doing this at all.
-
-> +	gic_arch_extn.irq_mask = icu_mask_irq_wakeup;
-> +	gic_arch_extn.irq_unmask = icu_unmask_irq_wakeup;
-
-Neil, please do not misunderstand me. You are not responsible for the
-gic_arch_extn implementation, but you should have noticed that this
-gic_arch_extn thing is ass backwards to begin with.
-
-I'm going to reply in a separate mail on this, because you have
-brought this to my attention, but you are not responsible in the first
-place for this brainfart.
-
-Thanks,
-
-	tglx
