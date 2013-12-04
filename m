@@ -1,72 +1,51 @@
-From: Olliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Subject: Re: [PATCH 0/3] AHCI: sunxi: Add sunxi AHCI driver
-Date: Wed, 04 Dec 2013 13:14:00 +0100
-Message-ID: <529F1C88.5070701@schinagl.nl>
-References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] usb: chipidea: fix mistake in device tree binding
+ of nspire-usb to use vendor name 'lsi' instead of SoC name 'zevio'
+Date: Wed, 4 Dec 2013 12:18:49 +0000
+Message-ID: <20131204121849.GM16025@e106331-lin.cambridge.arm.com>
+References: <1386148808-15065-1-git-send-email-dt.tangr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDDZ7YMYRMGBBYFZ7SKAKGQECN5U4RY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1386159055-10264-1-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
-Cc: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1386148808-15065-1-git-send-email-dt.tangr@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "dt.tangr@gmail.com" <dt.tangr@gmail.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-And I've spotted my first mistake (one of many I'm sure) I typo'ed Rob's 
-e-mail address. Sorry Rob.
+On Wed, Dec 04, 2013 at 09:20:07AM +0000, dt.tangr@gmail.com wrote:
+> From: Daniel Tang <dt.tangr@gmail.com>
+> 
+> The SoC name was mistakenly used instead of the vendor name in the
+> device tree binding for nspire-usb.
+> 
+> This patch fixes this before the driver becomes widely adopted.
 
-Oliver
+How widely adopted is it so far?
 
-On 04-12-13 13:10, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org wrote:
-> From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
->
-> This patch series adds Allwinner sunxi support to platform_ahci.
-> There are a few quirks here however that will need discussing.
->
-> Allwinner added something to setup the DMA engine prior to enabling DMA in
-> libahci.c. I'm not familiar at all with the AHCI spec and not sure what
-> the proper way to implement this would have been. Don't other platforms
-> optionally require the same thing?
->
-> Also the way ahci_platform works seems a little hack-ish, it seems like
-> something along the lines of ahci_platform_register(ahci-data) would be more
-> appropriate, but not sure yet on those details (I am just a beginner).
->
-> Furthermore this driver should, in theory, work on the A10 but on my
-> cubieboard 1 it does not work yet (just hangs somewhere in libahci or after,
-> but not the DMA call that was altered). I've also tested it the cubietruck,
-> cubieboard 2 and olinuxino and it worked fine there.
->
-> Thanks,
->
-> Oliver
->
-> Oliver Schinagl (3):
->    RFC: AHCI: libahci is missing DMA
->    ARM: sunxi: Add an ahci-platform compatible AHCI driver for the
->      Allwinner SUNXi series of SoCs
->    ARM: sunxi: dts: Add ahci support to a few A10 and A20 boards
->
->   .../devicetree/bindings/ata/ahci-sunxi.txt         |  24 ++
->   arch/arm/boot/dts/sun4i-a10-cubieboard.dts         |  26 ++
->   arch/arm/boot/dts/sun4i-a10.dtsi                   |   9 +
->   arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |  26 ++
->   arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |  26 ++
->   arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts    |  26 ++
->   arch/arm/boot/dts/sun7i-a20.dtsi                   |   9 +
->   drivers/ata/Kconfig                                |   9 +
->   drivers/ata/Makefile                               |   1 +
->   drivers/ata/ahci.h                                 |   6 +
->   drivers/ata/ahci_platform.c                        |  12 +
->   drivers/ata/ahci_sunxi.c                           | 305 +++++++++++++++++++++
->   drivers/ata/libahci.c                              |   8 +
->   13 files changed, 487 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/ata/ahci-sunxi.txt
->   create mode 100644 drivers/ata/ahci_sunxi.c
->
+I can't see the binding in mainline yet.
+
+> 
+> Signed-off-by: Daniel Tang <dt.tangr@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt |    4 ++--
+>  drivers/usb/chipidea/ci_hdrc_nspire.c                    |    2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> index 5ba8e90..ef1fcbf 100644
+> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> @@ -1,7 +1,7 @@
+>  * TI-Nspire USB OTG Controller
+>  
+>  Required properties:
+> -- compatible: Should be "zevio,nspire-usb"
+> +- compatible: Should be "lsi,nspire-usb"
+
+Surely this should be lsi,zevio-usb, matching the lsi,zevio-timer
+binding?
+
+Thanks,
+Mark.
