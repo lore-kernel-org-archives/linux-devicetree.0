@@ -1,94 +1,91 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 4/5] Phy: Add DT nodes on kirkwood and Dove for the SATA
- PHY
-Date: Wed, 04 Dec 2013 23:01:20 +0300
-Message-ID: <529F8A10.7010500@cogentembedded.com>
-References: <1386177364-10164-1-git-send-email-andrew@lunn.ch> <1386177364-10164-5-git-send-email-andrew@lunn.ch>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [RFC PATCH] Documentation: devicetree: add description for
+ generic bus properties
+Date: Wed, 4 Dec 2013 11:03:12 -0800
+Message-ID: <20131204190312.GA5070@kroah.com>
+References: <20131127172806.GC2291@e103592.cambridge.arm.com>
+ <20131128203322.GB14689@mithrandir>
+ <20131128211009.GA26447@obsidianresearch.com>
+ <20131128222232.GF14689@mithrandir>
+ <20131128233147.GA19387@obsidianresearch.com>
+ <20131129023554.GA14239@kroah.com>
+ <20131204184345.GA29268@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1386177364-10164-5-git-send-email-andrew@lunn.ch>
-Sender: linux-ide-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, kishon@ti.com
-Cc: devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131204184345.GA29268-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Wed, Dec 04, 2013 at 06:43:45PM +0000, Mark Brown wrote:
+> On Thu, Nov 28, 2013 at 06:35:54PM -0800, Greg KH wrote:
+> > On Thu, Nov 28, 2013 at 04:31:47PM -0700, Jason Gunthorpe wrote:
+> 
+> > > Greg's point makes sense, but the HW guys are not designing things
+> > > this way for kicks - there are real physics based reasons for some of
+> > > these choices...
+> 
+> > > eg An all-to-all bus cross bar (eg like Intel's ring bus) is engery
+> > > expensive compared to a purpose built muxed bus tree. Doing coherency
+> > > look ups on DMA traffic costs energy, etc.
+> 
+> > Really?  How much power exactly does it take / save?  Yes, hardware
+> > people think "software is free", but when you can't actually control the
+> > hardware in the software properly, well, you end up with something like
+> > itanium...
+> 
+> If you look at the hardware design decisions this stuff tends to be
+> totally sensible; there's a bunch of factors at play (complexity, area
+> and isolation tend to be other ones).  There's a lot of the stuff that
+> we're complaining about where they can reasonably question why this is
+> so complex for us.  That doesn't mean that everything that it's possible
+> to do is sensible but there's definitely limitations on the kernel side
+> here.
 
-On 12/04/2013 08:16 PM, Andrew Lunn wrote:
+The main reason it's so "complex" is the drive for people to have a "one
+kernel image for multiple systems" and hence the need to have DT handle
+all of this.  I don't think that requirement has been pushed back on the
+hardware engineers yet, and they are still thinking that a custom image
+per chip is ok.
 
-> Add nodes for the two SATA PHYs on kirkewood.
-> Add node for the one SATA PHY on Dove.
-> Add pHandles to the PHYs in the sata nodes.
+If the hardware designers don't have that goal, this is just going to
+get harder and harder over time, as your systems get more and more
+complex.
 
-    I don't think this patch should be pushed thru the libata tree. However, 
-you didn't Cc linux-arm-kernel...
+> > > > code to deal with those descriptions and the hardware they represent. At
+> > > > some point we need to start pushing some of the complexity back into
+> > > > hardware so that we can keep a sane code-base.
+> 
+> > > Some of this is a consequence of the push to have the firmware
+> > > minimal. As soon as you say the kernel has to configure the address
+> > > map you've created a big complexity for it..
+> 
+> > Why the push to make firmware "minimal"?  What is that "saving"?  You
+> > just push the complexity from one place to the other, just because ARM
+> > doesn't seem to have good firmware engineers, doesn't mean they should
+> > punish their kernel developers :)
+> 
+> These firmwares have tended to be ROMed or otherwise require expensive
+> validation to change for sometimes sensible reasons, keeping the amount
+> of code that's painful to change low will tend to make people happier if
+> a change is needed.  Most people like the risk mitigation.
 
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-[...]
+I love it how it's so easy to make the kernel be the part of the whole
+system stack that is simpler to change than any other :)
 
-> diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-> index 113a8bc7bee7..d56b3c675249 100644
-> --- a/arch/arm/boot/dts/dove.dtsi
-> +++ b/arch/arm/boot/dts/dove.dtsi
-> @@ -490,10 +490,21 @@
-[...]
-> +			sata_phy0: sata_phy@0 {
+I'm all for making Linux be the "firmware" and deal with these very
+low-level issues directly, but again, this drives in the face of your
+self-stated goal of "one image per architecture" for the kernel.  You
+kind of can't have it both ways it seems, so someone needs to make up
+their mind as to what it's going to be...
 
-    The node should rather be named "sata-phy@0" to be in line with 
-"ethernet-phy" found in the ePAPR spec. [1], hyphen is generally preferred to 
-underscore in the device trees.
+Best of luck with this.
 
-> +				compatible = "marvell,mvebu-sata-phy";
-> +				reg = <0xa2000 0x0334>;
-> +				clocks = <&gate_clk 3>;
-> +				clock-names = "sata";
-> +				#phy-cells = <0>;
-> +				status = "ok";
-> +			};
-> +
->   			rtc: real-time-clock@d8500 {
->   				compatible = "marvell,orion-rtc";
->   				reg = <0xd8500 0x20>;
-[...]
-> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-> index 8b73c80f1dad..5558b89d48ce 100644
-> --- a/arch/arm/boot/dts/kirkwood.dtsi
-> +++ b/arch/arm/boot/dts/kirkwood.dtsi
-> @@ -282,5 +282,23 @@
->   				/* set phy-handle property in board file */
->   			};
->   		};
-> +
-> +		sata_phy0: sata_phy@0 {
-
-    Same comment.
-
-> +			compatible = "marvell,mvebu-sata-phy";
-> +			reg = <0x82000 0x0334>;
-> +			clocks = <&gate_clk 14>;
-> +			clock-names = "sata";
-> +			#phy-cells = <0>;
-> +			status = "ok";
-> +		};
-> +
-> +		sata_phy1: sata_phy@1 {
-
-    ... and here.
-
-> +			compatible = "marvell,mvebu-sata-phy";
-> +			reg = <0x84000 0x0334>;
-> +			clocks = <&gate_clk 15>;
-> +			clock-names = "sata";
-> +			#phy-cells = <0>;
-> +			status = "ok";
-> +		};
->   	};
->   };
-
-[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
-
-WBR, Sergei
-
-
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
