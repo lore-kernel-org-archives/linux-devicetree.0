@@ -1,122 +1,125 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] mfd: max14577: Add device tree bindings document
-Date: Wed, 4 Dec 2013 11:20:39 +0000
-Message-ID: <20131204112039.GC907@lee--X1>
-References: <1386153615-25456-1-git-send-email-k.kozlowski@samsung.com>
- <1386153615-25456-4-git-send-email-k.kozlowski@samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v8] gpio: add a driver for the Synopsys DesignWare APB
+ GPIO block
+Date: Wed, 4 Dec 2013 11:56:28 +0000
+Message-ID: <20131204115628.GL16025@e106331-lin.cambridge.arm.com>
+References: <1386088876-29205-1-git-send-email-delicious.quinoa@gmail.com>
+ <1386088876-29205-2-git-send-email-delicious.quinoa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1386153615-25456-4-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1386088876-29205-2-git-send-email-delicious.quinoa@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alan Tull <delicious.quinoa@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@stericsson.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-> Add document describing device tree bindings for MAX14577 MFD driver.
->=20
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On Tue, Dec 03, 2013 at 04:41:16PM +0000, Alan Tull wrote:
+> From: Jamie Iles <jamie@jamieiles.com>
+> 
+> The Synopsys DesignWare block is used in some ARM devices (picoxcell)
+> and can be configured to provide multiple banks of GPIO pins.
+> 
+> Signed-off-by: Alan Tull <atull@altera.com>
+> Reviewed-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> 
+> v8:     - remove socfpga.dtsi changes
+>         - minor cleanup in devicetree documentation
+> v7:     - use irq_generic_chip
+>         - support one irq per gpio line or one irq for many
+>         - s/bank/port/ and other cleanup
+> v6:     - (atull) squash the set of patches
+>         - use linear irq domain
+>         - build fixes. Original driver was reviewed on v3.2.
+>         - Fix setting irq edge type for 'rising' and 'both'.
+>         - Support as a loadable module.
+>         - Use bgpio_chip's spinlock during register access.
+>         - Clean up register names to match spec
+>         - s/bank/port/ because register names use the word 'port'
+>         - s/nr-gpio/nr-gpios/
+>         - don't get/put the of_node
+>         - remove signoffs/acked-by's because of changes
+>         - other cleanup
+> v5:     - handle sparse bank population correctly
+> v3:     - depend on rather than select IRQ_DOMAIN
+>         - split IRQ support into a separate patch
+> v2:     - use Rob Herring's irqdomain in generic irq chip patches
+>         - use reg property to indicate bank index
+>         - support irqs on both edges based on LinusW's u300 driver
 > ---
->  Documentation/devicetree/bindings/mfd/max14577.txt |   48 ++++++++++=
-++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max14577.tx=
-t
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Doc=
-umentation/devicetree/bindings/mfd/max14577.txt
+>  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |   57 +++
+>  drivers/gpio/Kconfig                               |    9 +
+>  drivers/gpio/Makefile                              |    1 +
+>  drivers/gpio/gpio-dwapb.c                          |  426 ++++++++++++++++++++
+>  4 files changed, 493 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+>  create mode 100644 drivers/gpio/gpio-dwapb.c
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
 > new file mode 100644
-> index 000000000000..f4fd16360b6b
+> index 0000000..e7f144f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-> @@ -0,0 +1,48 @@
-> +MAXIM MAX14577 multi-function device
-
-Why is Maxim capitalised in such a way?
-
-If you're going to use the term Multi-Function Device, please
-capitalise it.
-
-> +MAX14577 is a Multi-function device with Micro-USB Interface Circuit=
-, Li+
-
-Same here.
-
-> +Battery Charger and SFOUT LDO output for powering USB devices. It is
-> +interfaced to host controller using I2C.
+> +++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> @@ -0,0 +1,57 @@
+> +* Synopsys DesignWare APB GPIO controller
 > +
 > +Required properties:
-> +- compatible : Must be "maxim,max14577".
-> +- reg : I2C slave address for the max14577 chip.
-> +- interrupts : IRQ line for the max14577 chip.
-> +- interrupt-parent :  The parent interrupt controller.
+> +- compatible : Should be "snps,dw-apb-gpio"
+
+s/be/contain/
+
+> +- reg : Address and length of the register set for the device
+
+As this has children with reg entries, it should have #address-cells and
+#size-cells (as the example does).
+
 > +
-> +Optional nodes:
-> +- regulators :
-> +  Required child node properties:
-> +  - compatible : "maxim,max14577-regulator"
+> +The GPIO controller has a configurable number of ports, each of which are
+> +represented as child nodes with the following properties:
 > +
-> +  Optional child nodes:
-> +    Each child node representing a regulator, following standard reg=
-ulator
-> +    bindings. Valid names for a regulator are: "CHARGER" and "SAFEOU=
-T".
-> +    The SAFEOUT is a constant voltage regulator so there is no need
-
-s/constant/fixed
-
-> +    to specify voltages for it.
-
-The whole of the "Optional nodes" explaination isn't as clear as it
-could otherwise be.=20
-
-> +	[*] refer Documentation/devicetree/bindings/regulator/regulator.txt
+> +Required properties:
+> +- compatible : "snps,dw-apb-gpio-port"
+> +- gpio-controller : Marks the device node as a gpio controller.
+> +- #gpio-cells : Should be two.  The first cell is the pin number and
+> +  the second cell is used to specify optional parameters (currently
+> +  unused).
+> +- reg : The integer port index of the port, a single cell.
+> +
+> +Optional properties:
+> +- interrupt-controller : The first port may be configured to be an interrupt
+> +controller.
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +interrupt.  Shall be set to 2.  The first cell defines the interrupt number,
+> +the second encodes the triger flags encoded as described in
+> +Documentation/devicetree/bindings/interrupts.txt
+> +- interrupt-parent : The parent interrupt controller.
+> +- interrupts : The interrupts to the parent controller raised when GPIOs
+> +generate the interrupts.
+> +- snps,nr-gpios : The number of pins in the port, a single cell.
 > +
 > +Example:
-> +	max14577@25 {
-> +		compatible =3D "maxim,max14577";
-> +		reg =3D <0x25>;
-> +		interrupt-parent =3D <&gpx1>;
-> +		interrupts =3D <5 0>;
-
-I'm gussing this is IRQ5 and the 0 is flags? If so, please use
-#defines for the flags.
-
-> +		regulators {
-> +			compatible =3D "maxim,max14577-regulator";
 > +
-> +			safeout_reg: safeout@1 {
+> +gpio: gpio@20000 {
+> +       compatible = "snps,dw-apb-gpio";
+> +       reg = <0x20000 0x1000>;
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +
+> +       porta: gpio-controller@0 {
+> +               compatible = "snps,dw-apb-gpio-port";
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+> +               snps,nr-gpio = <8>;
+> +               reg = <0>;
+> +               interrupt-controller;
+> +               #interrupt-cells = <2>;
+> +               interrupt-parent = <&vic1>;
+> +               interrupts = <0 1 2 3 4 5 6 7>;
 
-The name of the node (not the label:safeout_reg) usually depicts the
-type of device, so 'regulator@0' and 'regulator@1'. However, I'm
-unsure how this works when these nodes are encapsulated by an
-overarching 'regulators' parent node.
+Nit: please bracket list entries individually.
 
-Perhaps Mark can answer this?
+Otherwise this looks fine to me.
 
-> +				regulator-compatible =3D "SAFEOUT";
-> +				regulator-name =3D "SAFEOUT";
-> +			};
-> +			charger_reg: charger@0 {
-> +				regulator-compatible =3D "CHARGER";
-> +				regulator-name =3D "CHARGER";
-> +				regulator-min-microamp =3D <90000>;
-> +				regulator-max-microamp =3D <950000>;
-> +				regulator-boot-on;
-> +			};
-> +		};
-> +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
