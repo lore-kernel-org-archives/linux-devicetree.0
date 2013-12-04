@@ -1,145 +1,276 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
-Date: Wed, 4 Dec 2013 17:06:23 +0000
-Message-ID: <20131204170623.GB26534@e102568-lin.cambridge.arm.com>
-References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
- <20131204152010.GC2323@e103592.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20131204152010.GC2323@e103592.cambridge.arm.com>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Dave Martin <Dave.Martin@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH/RFC] ARM: omap3: Split the pinmux core device
+Date: Wed,  4 Dec 2013 18:11:50 +0100
+Message-ID: <1386177110-26424-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, sakari.ailus@iki.fi
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2013 at 03:20:10PM +0000, Dave Martin wrote:
-> On Mon, Dec 02, 2013 at 04:20:05PM +0000, Lorenzo Pieralisi wrote:
-> > ARM based platforms implement a variety of power management schemes that
-> > allow processors to enter at run-time low-power states, aka C-states
-> > in ACPI jargon. The parameters defining these C-states vary on a per-platform
-> > basis forcing the OS to hardcode the state parameters in platform
-> > specific static tables whose size grows as the number of platforms supported
-> > in the kernel increases and hampers device drivers standardization.
-> > 
-> > Therefore, this patch aims at standardizing C-state device tree bindings for
-> > ARM platforms. Bindings define C-state parameters inclusive of entry methods
-> > and state latencies, to allow operating systems to retrieve the
-> > configuration entries from the device tree and initialize the related
-> > power management drivers, paving the way for common code in the kernel
-> > to deal with power states and removing the need for static data in current
-> > and previous kernel versions.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > +
-> 
-> [...]
-> 
-> > +	- cpus
-> 
-> Because cpus is really a topology subtree, it might be good to have
-> different names.
-> 
-> To avoid confusion with Mark's affinity properties, maybe a different
-> word would be preferable instead of "affinity".
-> 
-> Maybe "topology" instead of "cpus", and "affected-topology" instead of
-> "affinity"?
-> 
-> 
-> cpufreq also has its concepts of "related" and "affected" cpus, which
-> tries to describe something similar (in all honesty, I always struggle
-> to remember which is which ... but if we were consistent with it, that
-> might help).
+The omap3_pmx_core pinmux device in the device tree handles the system
+controller module (SCM) PADCONFS fonction. Its control registers are
+split in two distinct areas, with other SCM registers in-between. Those
+other registers can't thus be requested by other drivers as the memory
+region gets reserved by the pinmux driver.
 
-Yes, I will try to come up with something clearer.
+Split the omap3_pmx_core device tree node in two for the two memory
+regions.
 
-> > +		Usage: Optional
-> > +		Value type: <phandle>
-> > +		Definition: If defined, the phandle points to a node in the
-> > +			    cpu-map[2] representing all CPUs on which C-state
-> > +			    is valid. If not present or system is UP, the
-> > +			    C-state has to be considered valid for all CPUs in
-> > +			    the system.
-> > +
-> > +	- affinity
-> > +		Usage: Optional
-> > +		Value type: <phandle>
-> > +		Definition: If defined, phandle points to a node in the
-> > +			    cpu-map[2] that represents all CPUs that are
-> > +			    affected (ie share) by the C-state and have to
-> > +			    be coordinated on C-state entry/exit. If not
-> > +			    present or system is UP, the C-state is local to
-> > +			    a CPU and need no coordination (ie it is a CPU
-> > +			    state, that does not require coordination with
-> > +			    other CPUs). If present, the affinity property
-> > +			    must contain a phandle to a cpu-map node that
-> > +			    represents a subset, possibly inclusive of the
-> > +			    CPUs described through the cpus property.
-> 
-> Can you elaborate on how cpus and affinity might be different?
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ arch/arm/boot/dts/omap3-beagle-xm.dts | 45 ++++++++++++++++++++++++++++-------
+ arch/arm/boot/dts/omap3-beagle.dts    | 28 +++++++++++++++-------
+ arch/arm/boot/dts/omap3-igep0020.dts  | 26 ++++++++++----------
+ arch/arm/boot/dts/omap3-zoom3.dts     | 19 ++++++++++-----
+ arch/arm/boot/dts/omap3.dtsi          | 13 +++++++++-
+ 5 files changed, 95 insertions(+), 36 deletions(-)
 
-I was referring to:
+While working on the OMAP3 ISP driver I've run into a failure to request a
+memory region already requested by the pinctrl-single driver. This patch is an
+attempt to fix the problem. An alternative approach would be to support
+multiple reg values in the pinctrl-single driver, but that might not be much
+cleaner. I'm open to suggestions.
 
-- cpus -> processor type (eg valid on A15 or A7, or different implementations
-  of the same processor in the same chip)
-- affinity -> power domain (a subset of the cpus that require coordination)
-
-Nowadays the distinction does not make much sense (I hardly see a power
-state valid on eg A15 clusters [cpus], where just a subset of its cpus need to
-be coordinated [affinity] - might be if other levels of caches are added or
-if you have multiple clusters of the same CPU type with different power
-states capabilities).
-
-I think this deserves more attention, and probably adding power domain
-information can remove this mumbo jumbo, there is a scary level of
-duplicated information in there.
-
-> The statement about "having to be coordainted" also feels a bit vague,
-> though I'm not sure how much we can usefully say here.
-> 
-> If we describe power domains more explicitly it might help with this,
-> because that could bring some description of what needs to be
-> coordinated.
-
-Yes, see above.
-
-> > +	- power-depth
-> > +		Usage: Required
-> > +		Value type: <u32>
-> > +		Definition: Integer value, starting from 2 (value 0 meaning
-> > +			    running and value 1 representing power depth of
-> > +			    wfi (C1)), that defines the level of depth of a
-> > +			    power state.
-> > +			    The system denotes power states with different
-> > +			    depths, an increasing value meaning less power
-> > +			    consumption and might involve powering down more
-> > +			    components.  Devices that are affected by
-> > +			    C-states entry must define the maximum power
-> > +			    depth supported in their respective device tree
-> > +			    bindings so that OSPM can take decision on how
-> > +			    to handle the device in question when the C-state
-> > +			    is entered. All devices (per-CPU or external) with
-> > +			    a power depth lower than the one defined in the
-> > +			    C-state entry stop operating when the C-state
-> > +			    is entered and action is required by OSPM to
-> > +			    guarantee their logic and memory content is saved
-> > +			    restored to guarantee proper functioning.
-> 
-> Any reason to use numbers instead of strings?
-> 
-> Strings make the DT more readable ... we would presumably only have to
-> parse this information once, so it shouldn't be an overhead, unless there
-> are hundreds of C-state nodes.
-
-Yes, but it is supposed to be a unique identifier in the entire system.
-Ok, we can create a list of strings denoting power depths, as long as
-they are "standard" fine by me, but I think that a number would be
-easier to use, even though honestly I think it is better to use power
-domains and get rid of this property altogether.
-
-Lorenzo
+diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
+index 8d7c813..7028e6a 100644
+--- a/arch/arm/boot/dts/omap3-beagle-xm.dts
++++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
+@@ -103,7 +103,7 @@
+ &omap3_pmx_core {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <
+-			&hsusbb2_pins
++			&hsusb2_pins
+ 	>;
+ 
+ 	uart3_pins: pinmux_uart3_pins {
+@@ -113,14 +113,8 @@
+ 		>;
+ 	};
+ 
+-	hsusbb2_pins: pinmux_hsusbb2_pins {
++	hsusb2_pins: pinmux_hsusb2_pins {
+ 		pinctrl-single,pins = <
+-			0x5c0 (PIN_OUTPUT | MUX_MODE3)		/* etk_d10.hsusb2_clk */
+-			0x5c2 (PIN_OUTPUT | MUX_MODE3)		/* etk_d11.hsusb2_stp */
+-			0x5c4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d12.hsusb2_dir */
+-			0x5c6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d13.hsusb2_nxt */
+-			0x5c8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d14.hsusb2_data0 */
+-			0x5cA (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d15.hsusb2_data1 */
+ 			0x1a4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi1_cs3.hsusb2_data2 */
+ 			0x1a6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_clk.hsusb2_data7 */
+ 			0x1a8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_simo.hsusb2_data4 */
+@@ -131,6 +125,24 @@
+ 	};
+ };
+ 
++&omap3_pmx_core2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++			&hsusb2_2_pins
++	>;
++
++	hsusb2_2_pins: pinmux_hsusb2_2_pins {
++		pinctrl-single,pins = <
++			0x050 (PIN_OUTPUT | MUX_MODE3)		/* etk_d10.hsusb2_clk */
++			0x052 (PIN_OUTPUT | MUX_MODE3)		/* etk_d11.hsusb2_stp */
++			0x054 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d12.hsusb2_dir */
++			0x056 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d13.hsusb2_nxt */
++			0x058 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d14.hsusb2_data0 */
++			0x05a (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d15.hsusb2_data1 */
++		>;
++	};
++};
++
+ &i2c1 {
+ 	clock-frequency = <2600000>;
+ 
+@@ -152,6 +164,23 @@
+ 
+ &i2c2 {
+ 	clock-frequency = <400000>;
++
++	switch@73 {
++		compatible = "nxp,pca9543";
++		reg = <0x73>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++		i2c@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
+ };
+ 
+ &i2c3 {
+diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+index 9764556..d2c7322 100644
+--- a/arch/arm/boot/dts/omap3-beagle.dts
++++ b/arch/arm/boot/dts/omap3-beagle.dts
+@@ -85,17 +85,11 @@
+ &omap3_pmx_core {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <
+-			&hsusbb2_pins
++			&hsusb2_pins
+ 	>;
+ 
+-	hsusbb2_pins: pinmux_hsusbb2_pins {
++	hsusb2_pins: pinmux_hsusb2_pins {
+ 		pinctrl-single,pins = <
+-			0x5c0 (PIN_OUTPUT | MUX_MODE3)		/* etk_d10.hsusb2_clk */
+-			0x5c2 (PIN_OUTPUT | MUX_MODE3)		/* etk_d11.hsusb2_stp */
+-			0x5c4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d12.hsusb2_dir */
+-			0x5c6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d13.hsusb2_nxt */
+-			0x5c8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d14.hsusb2_data0 */
+-			0x5cA (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d15.hsusb2_data1 */
+ 			0x1a4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi1_cs3.hsusb2_data2 */
+ 			0x1a6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_clk.hsusb2_data7 */
+ 			0x1a8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_simo.hsusb2_data4 */
+@@ -113,6 +107,24 @@
+ 	};
+ };
+ 
++&omap3_pmx_core2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++			&hsusb2_2_pins
++	>;
++
++	hsusb2_2_pins: pinmux_hsusb2_2_pins {
++		pinctrl-single,pins = <
++			0x050 (PIN_OUTPUT | MUX_MODE3)		/* etk_d10.hsusb2_clk */
++			0x052 (PIN_OUTPUT | MUX_MODE3)		/* etk_d11.hsusb2_stp */
++			0x054 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d12.hsusb2_dir */
++			0x056 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d13.hsusb2_nxt */
++			0x058 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d14.hsusb2_data0 */
++			0x05a (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d15.hsusb2_data1 */
++		>;
++	};
++};
++
+ &i2c1 {
+ 	clock-frequency = <2600000>;
+ 
+diff --git a/arch/arm/boot/dts/omap3-igep0020.dts b/arch/arm/boot/dts/omap3-igep0020.dts
+index d5cc792..0f77be8 100644
+--- a/arch/arm/boot/dts/omap3-igep0020.dts
++++ b/arch/arm/boot/dts/omap3-igep0020.dts
+@@ -63,7 +63,7 @@
+ 	};
+ };
+ 
+-&omap3_pmx_core {
++&omap3_pmx_core2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <
+ 		&hsusbb1_pins
+@@ -71,18 +71,18 @@
+ 
+ 	hsusbb1_pins: pinmux_hsusbb1_pins {
+ 		pinctrl-single,pins = <
+-			0x5aa (PIN_OUTPUT | MUX_MODE3)		/* etk_ctl.hsusb1_clk */
+-			0x5a8 (PIN_OUTPUT | MUX_MODE3)		/* etk_clk.hsusb1_stp */
+-			0x5bc (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d8.hsusb1_dir */
+-			0x5be (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d9.hsusb1_nxt */
+-			0x5ac (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d0.hsusb1_data0 */
+-			0x5ae (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d1.hsusb1_data1 */
+-			0x5b0 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d2.hsusb1_data2 */
+-			0x5b2 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d3.hsusb1_data7 */
+-			0x5b4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d4.hsusb1_data4 */
+-			0x5b6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d5.hsusb1_data5 */
+-			0x5b8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d6.hsusb1_data6 */
+-			0x5ba (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d7.hsusb1_data3 */
++			0x03a (PIN_OUTPUT | MUX_MODE3)		/* etk_ctl.hsusb1_clk */
++			0x038 (PIN_OUTPUT | MUX_MODE3)		/* etk_clk.hsusb1_stp */
++			0x04c (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d8.hsusb1_dir */
++			0x04e (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d9.hsusb1_nxt */
++			0x03c (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d0.hsusb1_data0 */
++			0x03e (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d1.hsusb1_data1 */
++			0x040 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d2.hsusb1_data2 */
++			0x042 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d3.hsusb1_data7 */
++			0x044 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d4.hsusb1_data4 */
++			0x046 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d5.hsusb1_data5 */
++			0x048 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d6.hsusb1_data6 */
++			0x04a (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d7.hsusb1_data3 */
+ 		>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/omap3-zoom3.dts b/arch/arm/boot/dts/omap3-zoom3.dts
+index 15eb9fe..a1bec6b 100644
+--- a/arch/arm/boot/dts/omap3-zoom3.dts
++++ b/arch/arm/boot/dts/omap3-zoom3.dts
+@@ -82,11 +82,6 @@
+ 		pinctrl-single,pins = <
+ 			0x168 (PIN_INPUT | MUX_MODE4)	/* mcbsp1_clkx.gpio_162 WLAN IRQ */
+ 			0x1a0 (PIN_INPUT_PULLUP | MUX_MODE3)	/* mcspi1_cs1.sdmmc3_cmd */
+-			0x5a8 (PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_clk.sdmmc3_clk */
+-			0x5b4 (PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d4.sdmmc3_dat0 */
+-			0x5b6 (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE2) /* etk_d5.sdmmc3_dat1 */
+-			0x5b8 (PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d6.sdmmc3_dat2 */
+-			0x5b2 (PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d3.sdmmc3_dat3 */
+ 		>;
+ 	};
+ 
+@@ -125,6 +120,18 @@
+ 	};
+ };
+ 
++&omap3_pmx_core2 {
++	mmc3_2_pins: pinmux_mmc3_2_pins {
++		pinctrl-single,pins = <
++			0x038 (PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_clk.sdmmc3_clk */
++			0x044 (PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d4.sdmmc3_dat0 */
++			0x046 (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE2) /* etk_d5.sdmmc3_dat1 */
++			0x048 (PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d6.sdmmc3_dat2 */
++			0x042 (PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d3.sdmmc3_dat3 */
++		>;
++	};
++};
++
+ &omap3_pmx_wkup {
+ 	wlan_host_wkup: pinmux_wlan_host_wkup_pins {
+ 		pinctrl-single,pins = <
+@@ -187,7 +194,7 @@
+ 	bus-width = <4>;
+ 	cap-power-off-card;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc3_pins>;
++	pinctrl-0 = <&mmc3_pins &mmc3_2_pins>;
+ };
+ 
+ &uart1 {
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index f3a0c26..c740e28 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -110,7 +110,18 @@
+ 
+ 		omap3_pmx_core: pinmux@48002030 {
+ 			compatible = "ti,omap3-padconf", "pinctrl-single";
+-			reg = <0x48002030 0x05cc>;
++			reg = <0x48002030 0x0238>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			#interrupt-cells = <1>;
++			interrupt-controller;
++			pinctrl-single,register-width = <16>;
++			pinctrl-single,function-mask = <0xff1f>;
++		};
++
++		omap3_pmx_core2: pinmux@480025a0 {
++			compatible = "ti,omap3-padconf", "pinctrl-single";
++			reg = <0x480025a0 0x005c>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			#interrupt-cells = <1>;
+-- 
+1.8.3.2
 
