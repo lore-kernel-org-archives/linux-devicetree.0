@@ -1,80 +1,94 @@
-From: Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH RFC 1/2] Documentation: arm: add cache DT bindings
-Date: Wed, 4 Dec 2013 13:29:55 +0000
-Message-ID: <20131204132955.GB2323@e103592.cambridge.arm.com>
-References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1386001205-11978-2-git-send-email-lorenzo.pieralisi@arm.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v6 3/3] mfd: max14577: Add device tree bindings document
+Date: Wed, 04 Dec 2013 14:37:52 +0100
+Message-ID: <1386164272.6195.3.camel@AMDC1943>
+References: <1386153615-25456-1-git-send-email-k.kozlowski@samsung.com>
+ <1386153615-25456-4-git-send-email-k.kozlowski@samsung.com>
+ <20131204112039.GC907@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1386001205-11978-2-git-send-email-lorenzo.pieralisi@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Nicolas Pitre <nico@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, Grant Likely <grant.likely@linaro.org>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Hanjun Guo <hanjun.guo@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <20131204112039.GC907@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 02, 2013 at 04:20:04PM +0000, Lorenzo Pieralisi wrote:
-> On ARM systems the cache topology cannot be probed at runtime, in
-> particular, it is impossible to probe which CPUs share a given cache
-> level. Power management software requires this knowledge to implement
-> optimized power down sequences, hence this patch adds a document that
-> defines the DT cache bindings for ARM systems. The bindings are compliant
-> with ePAPR (PowerPC bindings), and rely on the cache bindings already
-> standardized in the ePAPR v1.1 document; ARM required updates are underlined
-> in the binding document.
+On Wed, 2013-12-04 at 11:20 +0000, Lee Jones wrote:
+> > Add document describing device tree bindings for MAX14577 MFD driver.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/max14577.txt |   48 ++++++++++++++++++++
+> >  1 file changed, 48 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
+> > new file mode 100644
+> > index 000000000000..f4fd16360b6b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/max14577.txt
+> > @@ -0,0 +1,48 @@
+> > +MAXIM MAX14577 multi-function device
 > 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
->  Documentation/devicetree/bindings/arm/cache.txt | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/cache.txt
+> Why is Maxim capitalised in such a way?
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/cache.txt b/Documentation/devicetree/bindings/arm/cache.txt
-> new file mode 100644
-> index 0000000..009cddb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/cache.txt
-> @@ -0,0 +1,25 @@
-> +==========================================
-> +ARM processors cache binding description
-> +==========================================
-> +
-> +Device tree bindings for ARM processor caches adhere to the cache bindings
-> +described in [3], in section 3.8 for multi-level and shared caches.
+> If you're going to use the term Multi-Function Device, please
+> capitalise it.
+> 
+> > +MAX14577 is a Multi-function device with Micro-USB Interface Circuit, Li+
+> 
+> Same here.
 
-For architected levels of cache, most of the cache properties can be
-probed through the system register interface.
+I'll fix this. The MAXIM capitalization came from other drivers.
 
-Should we be explicit about prohibiting properties in the DT describing
-cache characteristics that can be probed?
+> > +Battery Charger and SFOUT LDO output for powering USB devices. It is
+> > +interfaced to host controller using I2C.
+> > +
+> > +Required properties:
+> > +- compatible : Must be "maxim,max14577".
+> > +- reg : I2C slave address for the max14577 chip.
+> > +- interrupts : IRQ line for the max14577 chip.
+> > +- interrupt-parent :  The parent interrupt controller.
+> > +
+> > +Optional nodes:
+> > +- regulators :
+> > +  Required child node properties:
+> > +  - compatible : "maxim,max14577-regulator"
+> > +
+> > +  Optional child nodes:
+> > +    Each child node representing a regulator, following standard regulator
+> > +    bindings. Valid names for a regulator are: "CHARGER" and "SAFEOUT".
+> > +    The SAFEOUT is a constant voltage regulator so there is no need
+> 
+> s/constant/fixed
+OK.
 
-> +
-> +On ARM, internal caches cannot be described in the cpu node but require
-> +specific nodes marked with compatible string set to "cache" (see [3],
-> +section 3.8).
-> +
-> +Furthermore the cache bindings in [3] require the following property update:
-> +
-> +- [Table 3.9] cache-level: This property of cache nodes must match the cache
-> +			   level encoded in the processors CLIDR (v7) and
-> +			   CLIDR_EL1 (v8) registers, as described in [1][2].
+> > +    to specify voltages for it.
+> 
+> The whole of the "Optional nodes" explaination isn't as clear as it
+> could otherwise be. 
+> 
+> > +	[*] refer Documentation/devicetree/bindings/regulator/regulator.txt
+> > +
+> > +Example:
+> > +	max14577@25 {
+> > +		compatible = "maxim,max14577";
+> > +		reg = <0x25>;
+> > +		interrupt-parent = <&gpx1>;
+> > +		interrupts = <5 0>;
+> 
+> I'm gussing this is IRQ5 and the 0 is flags? If so, please use
+> #defines for the flags.
 
-I still don't understand why a given cache definitely has the same level
-number assigned to it with respect to each CPU.  Is that an architectural
-requirement?
+This is a standard interrupt binding. The max14577 MFD core driver
+ignores the interrupt flags and always uses IRQF_TRIGGER_FALLING. I can
+fix this with new patch for drivers/mfd/max14577.c but still I don't see
+what should be added in documentation.
 
-All those LoC, LoU, LoUIS properties etc. are probeable per-CPU not
-globally...  I don't see why they couldn't be different.
 
-Cheers
----Dave
+Best regards,
+Krzysztof
+
