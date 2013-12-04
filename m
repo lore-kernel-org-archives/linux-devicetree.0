@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 6/7] clk: highbank: allow enabling by user
-Date: Wed,  4 Dec 2013 17:35:26 -0600
-Message-ID: <1386200127-23143-7-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 7/7] clk: highbank: add DT match for calxeda,ecx-3000-sregs
+Date: Wed,  4 Dec 2013 17:35:27 -0600
+Message-ID: <1386200127-23143-8-git-send-email-robherring2@gmail.com>
 References: <1386200127-23143-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1386200127-23143-1-git-send-email-robherring2@gmail.com>
@@ -12,57 +12,41 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-Allow Calxeda clock driver to be enabled by the user independent of
-ARCH_HIGHBANK.
+The system registers are a bit different overall and need a different
+compatible string, but the clock registers are similar. So for the clock
+code, we just need to match with the new compatible string.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 Cc: Mike Turquette <mturquette@linaro.org>
 ---
- arch/arm/mach-highbank/Kconfig | 1 +
- drivers/clk/Kconfig            | 5 +++++
- drivers/clk/Makefile           | 2 +-
- 3 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/clk/clk-highbank.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-highbank/Kconfig b/arch/arm/mach-highbank/Kconfig
-index 0aded64..64dba0e 100644
---- a/arch/arm/mach-highbank/Kconfig
-+++ b/arch/arm/mach-highbank/Kconfig
-@@ -15,6 +15,7 @@ config ARCH_HIGHBANK
- 	select ARM_TIMER_SP804
- 	select CACHE_L2X0
- 	select COMMON_CLK
-+	select COMMON_CLK_CALXEDA
- 	select CPU_V7
- 	select GENERIC_CLOCKEVENTS
- 	select HAVE_ARM_SCU
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 5c51115..e395e4f 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -49,6 +49,11 @@ config COMMON_CLK_VERSATILE
- 	  - RealView PB1176, EB, PB11MP and PBX
- 	  - Versatile Express
+diff --git a/drivers/clk/clk-highbank.c b/drivers/clk/clk-highbank.c
+index 89efcbc..8023146 100644
+--- a/drivers/clk/clk-highbank.c
++++ b/drivers/clk/clk-highbank.c
+@@ -278,6 +278,12 @@ static const struct clk_ops periclk_ops = {
+ 	.set_rate = clk_periclk_set_rate,
+ };
  
-+config COMMON_CLK_CALXEDA
-+	bool "Clock driver for Calxeda platforms"
-+	---help---
-+          Clock driver for Calxeda ECX based platforms.
++static struct of_device_id sregs_match[] = {
++	{ .compatible = "calxeda,ecx-3000-sregs" },
++	{ .compatible = "calxeda,hb-sregs" },
++	{}
++};
 +
- config COMMON_CLK_MAX77686
- 	tristate "Clock driver for Maxim 77686 MFD"
- 	depends on MFD_MAX77686
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 7a10bc9..6010bdb 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -13,7 +13,7 @@ obj-$(CONFIG_COMMON_CLK)	+= clk-composite.o
- obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
- obj-$(CONFIG_ARCH_EFM32)	+= clk-efm32gg.o
- obj-$(CONFIG_ARCH_NOMADIK)	+= clk-nomadik.o
--obj-$(CONFIG_ARCH_HIGHBANK)	+= clk-highbank.o
-+obj-$(CONFIG_COMMON_CLK_CALXEDA) += clk-highbank.o
- obj-$(CONFIG_ARCH_NSPIRE)	+= clk-nspire.o
- obj-$(CONFIG_ARCH_MXS)		+= mxs/
- obj-$(CONFIG_ARCH_SOCFPGA)	+= socfpga/
+ static __init struct clk *hb_clk_init(struct device_node *node, const struct clk_ops *ops)
+ {
+ 	u32 reg;
+@@ -298,7 +304,7 @@ static __init struct clk *hb_clk_init(struct device_node *node, const struct clk
+ 		return NULL;
+ 
+ 	/* Map system registers */
+-	srnp = of_find_compatible_node(NULL, NULL, "calxeda,hb-sregs");
++	srnp = of_find_matching_node(NULL, sregs_match);
+ 	hb_clk->reg = of_iomap(srnp, 0);
+ 	BUG_ON(!hb_clk->reg);
+ 	hb_clk->reg += reg;
 -- 
 1.8.3.2
