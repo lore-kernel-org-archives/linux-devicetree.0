@@ -1,255 +1,63 @@
-From: Alex Elder <alex.elder@linaro.org>
-Subject: Re: [PATCH 2/3] clk: bcm281xx: add initial clock framework support
-Date: Wed, 04 Dec 2013 07:06:43 -0600
-Message-ID: <529F28E3.90905@linaro.org>
-References: <529EA78E.7060904@linaro.org> <529EA80F.3050009@linaro.org> <20131204111457.GF16025@e106331-lin.cambridge.arm.com>
+From: Meelis Roos <mroos-Y27EyoLml9s@public.gmane.org>
+Subject: Re: [PATCH v2] OF: base: match each node compatible against all
+ given matches first
+Date: Wed, 4 Dec 2013 15:08:39 +0200 (EET)
+Message-ID: <alpine.SOC.1.00.1312041506010.8902@math.ut.ee>
+References: <1385663785-8643-1-git-send-email-sebastian.hesselbarth@gmail.com> <1386078720-8756-1-git-send-email-sebastian.hesselbarth@gmail.com> <alpine.SOC.1.00.1312032210480.25191@math.ut.ee> <529E614B.3070307@gmail.com>
+ <20131204094010.GO19943@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131204111457.GF16025@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@linaro.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131204094010.GO19943-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2013 05:14 AM, Mark Rutland wrote:
-> On Wed, Dec 04, 2013 at 03:57:03AM +0000, Alex Elder wrote:
->> Add code for device tree support of clocks in the BCM281xx family of
->> SoCs.  Machines in this family use peripheral clocks implemented by
->> "Kona" clock control units (CCUs).  (Other Broadcom SoC families use
->> Kona style CCUs as well, but support for them is not yet upstream.)
+> I added Meelis on Cc because he found a regression with my original
+> proposal (107a84e61cdd "of: match by compatible property first"). That
+> got later reverted in commit bc51b0c22ceb (Revert "of: match by
+> compatible property first"). Here's the commit message for reference:
 > 
-> How applicable are the clocks defined in this driver to those other
-> SoCs? How big will the changes need to be to add support for them?
+> commit bc51b0c22ceb
+> Author: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+> Date:   Tue Jul 10 12:49:32 2012 -0700
 > 
-> [...]
+>     Revert "of: match by compatible property first"
 > 
->> +/* A bit position must be less than the number of bits in a 32-bit
->> register. */
+>     This reverts commit 107a84e61cdd3406c842a0e4be7efffd3a05dba6.
 > 
-> Comment codestyle issue.
-
-If you mean the wrapped words, I think my mailer did that.  Otherwise
-I don't konw what the problem is.
-
-> [...]
+>     Meelis Roos reports a regression since 3.5-rc5 that stops Sun Fire V100
+>     and Sun Netra X1 sparc64 machines from booting, hanging after enabling
+>     serial console.  He bisected it to commit 107a84e61cdd.
 > 
->> +       /* Now fill in the parent names and selector arrays */
->> +       j = 0;
->> +       for (i = 0; i < orig_count; i++) {
+>     Rob Herring explains:
+>      "The problem is match combinations of compatible plus name and/or type
+>       fail to match correctly.  I have a fix for this, but given how late it
+>       is for 3.5 I think it is best to revert this for now.  There could be
+>       other cases that rely on the current although wrong behavior.  I will
+>       post an updated version for 3.6."
 > 
-> This would look nicer with j initialised in the loop initialisation:
+>     Bisected-and-reported-by: Meelis Roos <mroos-Y27EyoLml9s@public.gmane.org>
+>     Requested-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>     Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+>     Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>     Signed-off-by: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 > 
-> for (i = 0, j = 0; i < orig_count; i++)
+> So if Meelis still has access to the Sun Fire V100 and Sun Netra X1
+> machines that regressed last time around, it'd be great to get this
+> patch tested on them to verify that it indeed fixes the problem and
+> doesn't regress.
 
-If you prefer it that way it's fine with me, I'll do that.
+OK, I had forgotten about that.
 
-> 
-> [...]
-> 
->> +static void __init kona_ccu_teardown(struct ccu_data *ccu)
->> +{
->> +       u32 i;
->> +
->> +       if (!ccu || !ccu->base)
->> +               goto done;
->> +
->> +       of_clk_del_provider(ccu->node); /* safe if never added */
->> +       of_node_put(ccu->node);
->> +
->> +       for (i = 0; i < ccu->data.clk_num; i++)
->> +               kona_clk_teardown(ccu->data.clks[i]);
->> +       kfree(ccu->data.clks);
->> +
->> +       list_del(&ccu->links);
->> +
->> +       iounmap(ccu->base);
->> +done:
->> +       kfree(ccu);
-> 
-> What about ccu->name ?
+Tested successfully on the same Sun Fire V100 and Sun Netra X1, on top 
+of 3.13-rc2. The sunsu console is detected fine and I see no problem for 
+now.
 
-When the ccu structure is allocated, space beyond it is
-allocated for ccu->name and the pointer is assigned to
-that spot and filled.  Therefore we don't explicitly
-free ccu->name.  I will add a brief comment to that
-effect.
-
-> 
->> +}
->> +
->> +/*
->> + * Set up a CCU.  Call the provided ccu_clks_setup callback to
->> + * initialize the array of clocks provided by the CCU.
->> + */
->> +void __init kona_dt_ccu_setup(struct device_node *node,
->> +                       int (*ccu_clks_setup)(struct ccu_data *))
->> +{
->> +       struct ccu_data *ccu;
->> +       struct resource res = { 0 };
->> +       resource_size_t range;
->> +       size_t name_size;
->> +       int ret;
->> +
->> +       name_size = strlen(node->name) + 1;
->> +       ccu = kzalloc(sizeof(*ccu) + name_size, GFP_KERNEL);
->> +       if (!ccu) {
->> +               pr_err("%s: unable to map allocate CCU struct for %s\n",
->> +                       __func__, node->name);
->> +               return;
->> +       }
->> +       memcpy((char *)ccu->name, node->name, name_size);
-> 
-> You could simplify this with kstrdup.
-
-You are correct, and I will make that change.  I think at
-one point I needed the length but that doesn't appear to
-be the case here.
-
->> +       INIT_LIST_HEAD(&ccu->links);
->> +
->> +       ret = of_address_to_resource(node, 0, &res);
->> +       if (ret) {
->> +               pr_err("%s: no valid CCU registers found for %s\n", __func__,
->> +                       node->name);
->> +               goto out_err;
->> +       }
->> +       ret = -EINVAL;
->> +       if (res.start > (resource_size_t)U32_MAX) {
->> +               pr_err("%s: address start too large for %s\n", __func__,
->> +                       node->name);
->> +               goto out_err;
->> +       }
-> 
-> Why do we care? On an LPAE system, you could place devices above 4GB and
-> map them in. Why impose an arbitrary limitation here?
-
-I'm doing the tests here simply to validate that the values
-being used do not exceed the representable range of the
-types of objects that hold them.
-
-That being said, I think the 32-bit limit I'm imposing on
-these may also be due to an assumption about what's in the
-device tree, i.e. that #address-cells = #size-cells = 1.
-But there's no reason to assume that.  I will look at this
-again, and rework it if possible so it is agnostic about
-that--and will increase the size of the fields that hold
-the related value accordingly.
-
->> +       if (res.start % sizeof(u32)) {
->> +               pr_err("%s: unaligned address range start %u for %s\n",
->> +                       __func__, res.start, node->name);
->> +               goto out_err;
->> +       }
-> 
-> Is there not a more restrictive alignment constraint on the clocks?
-
-I don't think so.  But in any case my purpose here is doing
-very basic sanity testing.  (To be honest I think most people
-just assume all is well and don't do these sorts of tests.)
-
->> +
->> +       range = resource_size(&res);
->> +       if (range > (resource_size_t)U32_MAX) {
->> +               pr_err("%s: address range too large for %s\n", __func__,
->> +                       node->name);
->> +               goto out_err;
->> +       }
-> 
-> Surely there's a much smaller max size you can check for given the
-> offsets you know? A size of U32_MAX seems absurd but will pass this
-> test.
-
-Same answer as the last one.  I guess as long as I'm testing
-I could restrict it further (unnecessarily?), but I'm just
-making sure I don't overrun the type of ccu->range.
-
-> [...]
-> 
->> +/*
->> + * Build a scaled divider value as close as possible to the
->> + * given whole part (div_value) and fractional part (expressed
->> + * in billionths).
->> + */
->> +u64 scaled_div_build(struct bcm_clk_div *div, u32 div_value, u32
->> billionths)
->> +{
->> +       u64 combined;
->> +
->> +       BUG_ON(!div_value);
->> +       BUG_ON(billionths > BILLION);
-> 
-> Can billionths == BILLION ?
-
-Oooh!  A bug!  It should not be.  I will fix that.
-
->> +
->> +       combined = (u64)div_value * BILLION + billionths;
->> +       combined <<= div->frac_width;
->> +
->> +       return do_div_round_closest(combined, BILLION);
->> +}
-> 
-> [...]
-> 
->> diff --git a/drivers/clk/bcm/clk-kona.h b/drivers/clk/bcm/clk-kona.h
->> new file mode 100644
->> index 0000000..850a70a
->> --- /dev/null
->> +++ b/drivers/clk/bcm/clk-kona.h
->> @@ -0,0 +1,416 @@
->> +/*
->> + * Copyright (C) 2013 Broadcom Corporation
->> + * Copyright 2013 Linaro Limited
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation version 2.
->> + *
->> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->> + * kind, whether express or implied; without even the implied warranty
->> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#ifndef _CLK_KONA_H
->> +#define _CLK_KONA_H
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/list.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/slab.h>
->> +#include <linux/device.h>
->> +#include <linux/of.h>
->> +#include <linux/clk-provider.h>
->> +
->> +#define        BILLION         1000000000
->> +
->> +#ifndef U32_MAX
-> 
-> Why the ifndef? Either this is defined elsewhere, or it's not. If it's
-> available sometimes but not others, that seems like a bug in itself.
-
-This is in anticipation of submitting a patch that I've had sitting
-around for like a year to get these symbols in <linux/kernel.h>.
-I'll get rid of the #ifndef.
-
-> I see a few other places define U32_MAX. Might it be worth unifying the
-> definitions in a common header?
-
-Yes.  And most of those are mine... :)
-
->> +#define U8_MAX ((u8)~0U)
->> +#define U32_MAX        ((u32)~0U)
->> +#define U64_MAX        ((u64)~0U)
->> +#endif /* U32_MAX */
-> 
-> Likewise for the rest.
-
-Yup, that's my plan.  You've prodded me now to get this done.
-
-					-Alex
-> Thanks,
-> Mark.
-> 
+-- 
+Meelis Roos (mroos-Y27EyoLml9s@public.gmane.org)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
