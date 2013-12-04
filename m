@@ -1,78 +1,135 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] gpu: host1x: Add MIPI pad calibration DT bindings
-Date: Wed, 4 Dec 2013 10:42:19 +0100
-Message-ID: <20131204094218.GP19943@ulmo.nvidia.com>
-References: <1385990934-20809-1-git-send-email-treding@nvidia.com>
- <529E3C50.8000801@wwwdotorg.org>
+From: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 3/3] usb: phy-generic: Add ULPI VBUS support
+Date: Wed, 4 Dec 2013 11:49:36 +0200
+Message-ID: <20131204094936.GA21055@xps8300>
+References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk>
+ <1385967919-13258-4-git-send-email-chris.ruehl@gtsys.com.hk>
+ <20131203081556.GA26423@xps8300>
+ <529ED6C5.3000608@gtsys.com.hk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rJ8inJ6ig7iY3YX9"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <529E3C50.8000801-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <529ED6C5.3000608-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Chris,
 
---rJ8inJ6ig7iY3YX9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Dec 04, 2013 at 03:16:21PM +0800, Chris Ruehl wrote:
+> On Tuesday, December 03, 2013 04:15 PM, Heikki Krogerus wrote:
+> >On Mon, Dec 02, 2013 at 03:05:19PM +0800, Chris Ruehl wrote:
+> >>@@ -154,6 +164,27 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_gen_xceiv *nop,
+> >>  {
+> >>  	int err;
+> >>
+> >>+	if (nop->ulpi_vbus>  0) {
+> >>+		unsigned int flags = 0;
+> >>+
+> >>+		if (nop->ulpi_vbus&  0x1)
+> >>+			flags |= ULPI_OTG_DRVVBUS;
+> >>+		if (nop->ulpi_vbus&  0x2)
+> >>+			flags |= ULPI_OTG_DRVVBUS_EXT;
+> >>+		if (nop->ulpi_vbus&  0x4)
+> >>+			flags |= ULPI_OTG_EXTVBUSIND;
+> >>+		if (nop->ulpi_vbus&  0x8)
+> >>+			flags |= ULPI_OTG_CHRGVBUS;
+> >>+
+> >>+		nop->ulpi = otg_ulpi_create(&ulpi_viewport_access_ops, flags);
+> >>+		if (!nop->ulpi) {
+> >>+			dev_err(dev, "Failed create ULPI Phy\n");
+> >>+			return -ENOMEM;
+> >>+		}
+> >>+		dev_dbg(dev, "Create ULPI Phy\n");
+> >>+		nop->ulpi->io_priv =  nop->viewport;
+> >>+	}
+> >
+> >This is so wrong. You are registering one kind of usb phy driver from
+> >an other. Change drivers/usb/phy/ulpi.c to be a platform device. The
+> >whole flag system in it is pretty horrid. While you are at it, change
+> >that so it sets the values based on boolean flags from OF properties
+> >or platform data.
+> >
+> >NAK for the whole set.
+> >
+> >
+> 
+> Heikki,
+> 
+> Thanks for your comments, even not much positive to me.. any how.
+> My intention on the "horrid" path was to reduce kernel code where
+> one of_read32 vs. four of_boolean. And mentioned logic is simple.
+> But that's history.
 
-On Tue, Dec 03, 2013 at 01:17:20PM -0700, Stephen Warren wrote:
-> On 12/02/2013 06:28 AM, Thierry Reding wrote:
-> > Introduce device tree bindings for the MIPI pad calibration controller
-> > found on Tegra SoCs. The controller can be used to perform calibration
-> > of pads used for DSI and CSI peripherals.
->=20
-> > diff --git a/Documentation/devicetree/bindings/misc/nvidia,tegra114-mip=
-i.txt b/Documentation/devicetree/bindings/misc/nvidia,tegra114-mipi.txt
->=20
-> > +Required properties:
-> > +- compatible: "nvidia,tegra<chip>-mipi"
-> > +- reg: Physical base address and length of the controller's registers.
-> > +- clocks: The clock consumed by the controller.
->=20
-> I'd prefer all our new drivers just use clock-names from the start, so
-> we never have to specify that certain clocks must be at a certain index
-> in the clocks property. How about:
->=20
-> +  - clocks: Must contain an entry for each entry in clock-names.
-> +    See ../clocks/clock-bindings.txt for details.
-> +  - clock-names: Must include the following entries:
-> +    - mipi
->=20
-> (or "cal" or whatever makes sense there)
+I should probable explain why I have problems with them. First of all,
+things like driving the vbus should be a function that can be called
+from upper layers. struct usb_otg has the set_vbus hook for that. You
+can call it for example from your host controller's init routine. I'm
+assuming you have a host controller since you are driving vbus.
 
-"mipi-cal" sounds like a good name. That's also what the clock is
-called in the TRM.
+You don't need to set the ULPI_OTG_CHRGVBUS. It's used for the VBUS
+pulsing of SRP, which btw. is not anymore supported in OTG&EH2.0 spec,
+so just don't use that bit even if you want to start SRP.
 
-I'll repost with this fixed up and I'll move this file into the mipi
-subdirectory that I need for the MIPI DSI DT bindings anyway.
+The only of_booleans you should need are for the DRV_VBUS_EXT and
+USE_EXT_VBUS_IND. In my case I could not use even those. My controller
+provides it's own control for them, so even if I set them to my ULPI
+phy, the controller would simply override the values.
 
-Thierry
+Secondly, why those silly flags in the first place. Those flags are
+just bits in the registers. It would have been much easier and cleaner
+to deliver a small struct with default values for the registers
+instead.
 
---rJ8inJ6ig7iY3YX9
-Content-Type: application/pgp-signature
+> On my way to find a solution for my board I'd look around and found using of
+> phy-ulpi.c functions in phy-tegra-usb.c and don't mind to use them too.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+OK, IC. I have not followed what is happening with USB in linux for a
+while.
 
-iQIcBAEBAgAGBQJSnvj6AAoJEN0jrNd/PrOhwhEP/0JyW+4bGZg/1djS4VJn8wjR
-VQbZPa3hvlxVJGwmNY0304Twt/Zh9PoxMW+zWB98GiNahXNRUHaXCWR7R5lsaAnz
-gAh+Wmzvi1jziPoWtck8YwQc+RTND0lUZkup0d6JEPZqfWkYRpQTJCYdr9nCoczV
-/f1NdBg6Y/9GTgH+COTvlr5gJiAtC8N/PvG2Ih2PecIWe/ohkMe/sBw7aWZCvVWK
-0enXX+mTeJoLx0BQ6kQhPmPECxoWmsoeUIJKTsH066z/sFvIeI+eBz/mgzafUH8h
-Swg4Tzjrp6G14oRuPUhRrbPUsRiAEb6Ixa3ioEiGzOvlQza7ZfSBRmYWBgLVGDvZ
-h8agupRakdi7qKyLDYyrgYbOAbsp5Ib1aNQba2/gNBKIVecOTdDXSzImNCs5LaDs
-XLZVj3gl+r9OewpZEpS7qj8E5fsgdIWblHPBxjzSz6JdPPcyKfOLd0V4S2OoFLze
-1jCIVXxnZSZTA4EA+YfnmB3NUqpHPHpOAd0mvfdNyHpm8Ko6zkwawbT/MikVUZa+
-7QfuLcSpryIYe3n0A3JR6EvclHB2FEBqoYLDn7otWpp8ERajv9oRPgGfXbjBXizK
-FSJIGIejSlWY2vI3l0qjMP9i3IZ7oAK8dJmhi0PBrQ9IS+LRUSdKRPX1nBBYwM55
-LsWbuSV/9vEw5330HWby
-=7uqm
------END PGP SIGNATURE-----
+The whole otg_ulpi_create() thing, and the flags with it, were
+originally planned to be used from platform code. It's evil and it
+should have never been accepted into upstream kernel. The time it was
+introduced I was on vacation and nobody else seemed to care :(. All I
+was able to do was to protest afterwards.
 
---rJ8inJ6ig7iY3YX9--
+> I accept your NAK and will work on a patch to make phy-ulpi.c
+> working as platform device.
+> 
+> Last question to you. What you don't like on the patch to support
+> chip-select gpio of my patch-set.. I ask because you NAK the whole
+> set.
+> I really need the ChipSelect function to make my hardware work!
+
+OK, I did not explain my problem with that patch. I'm sorry about
+that. It also looks like I made wrong assumption with it. I thought
+that your phy (is was ISP1504 right) is just like isp1704 that I have
+worked with. On isp1704 you only have the chip_sel pin (no reset pin),
+so I thought you can not have any reason to add handler for an other
+gpio to this driver. After a quick look at isp1504 data sheet, it
+looks like you have both reset and chip_sel pins on it, which I guess
+are both connected to gpios on your platform.
+
+So I don't have a problem with that. Though I'm not sure is this
+driver the right place to handle things like these gpios, which are
+pretty phy specific, in the first place. The phy-generic was
+originally meant to be pure NOP phy driver.
+
+One comment about how to handle the gpios. You should move to the new
+gpio descriptor API. The legacy gpio API is now just a wrapper on top
+of it.
+
+
+> Chris
+> 
+
+Thanks,
+
+-- 
+heikki
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
