@@ -1,33 +1,58 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] gpio: MOXA ART: rename moxart_gpio_base to base
-Date: Wed, 4 Dec 2013 13:28:41 +0100
-Message-ID: <CACRpkdaT2fmfAwuyPTuF2Pim-_g5Avd_ViwQ069qRLFM9YBvWQ@mail.gmail.com>
-References: <1385723494-8033-1-git-send-email-jonas.jensen@gmail.com>
-	<1385980079-20175-1-git-send-email-jonas.jensen@gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCH 04/26] OMAPDSS: remove DT hacks for regulators
+Date: Wed, 4 Dec 2013 14:28:31 +0200
+Message-ID: <1386160133-24026-5-git-send-email-tomi.valkeinen@ti.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385980079-20175-1-git-send-email-jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 2, 2013 at 11:27 AM, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+For booting Panda and 4430SDP with DT, while DSS did not support DT, we
+had to had small hacks in the omapdss driver to get the regulators. With
+DT now supported in DSS, we can remove those hacks.
 
-> Renaming "moxart_gpio_base" to "base" allows better fit,
-> remove line breaks in moxart_gpio_get().
->
-> While doing trivial cleanup, also remove fields initialized
-> with zero in moxart_template_chip.
->
-> Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ drivers/video/omap2/dss/dsi.c   | 5 -----
+ drivers/video/omap2/dss/hdmi4.c | 4 ----
+ 2 files changed, 9 deletions(-)
 
-Patch applied!
+diff --git a/drivers/video/omap2/dss/dsi.c b/drivers/video/omap2/dss/dsi.c
+index 1cd3e47fd43f..18b5e84165bb 100644
+--- a/drivers/video/omap2/dss/dsi.c
++++ b/drivers/video/omap2/dss/dsi.c
+@@ -1124,11 +1124,6 @@ static int dsi_regulator_init(struct platform_device *dsidev)
+ 		return 0;
+ 
+ 	vdds_dsi = devm_regulator_get(&dsi->pdev->dev, "vdds_dsi");
+-
+-	/* DT HACK: try VCXIO to make omapdss work for o4 sdp/panda */
+-	if (IS_ERR(vdds_dsi))
+-		vdds_dsi = devm_regulator_get(&dsi->pdev->dev, "VCXIO");
+-
+ 	if (IS_ERR(vdds_dsi)) {
+ 		DSSERR("can't get VDDS_DSI regulator\n");
+ 		return PTR_ERR(vdds_dsi);
+diff --git a/drivers/video/omap2/dss/hdmi4.c b/drivers/video/omap2/dss/hdmi4.c
+index e14009614338..16e598787522 100644
+--- a/drivers/video/omap2/dss/hdmi4.c
++++ b/drivers/video/omap2/dss/hdmi4.c
+@@ -90,10 +90,6 @@ static int hdmi_init_regulator(void)
+ 
+ 	reg = devm_regulator_get(&hdmi.pdev->dev, "vdda_hdmi_dac");
+ 
+-	/* DT HACK: try VDAC to make omapdss work for o4 sdp/panda */
+-	if (IS_ERR(reg))
+-		reg = devm_regulator_get(&hdmi.pdev->dev, "VDAC");
+-
+ 	if (IS_ERR(reg)) {
+ 		DSSERR("can't get VDDA_HDMI_DAC regulator\n");
+ 		return PTR_ERR(reg);
+-- 
+1.8.3.2
 
-Thanks!
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
