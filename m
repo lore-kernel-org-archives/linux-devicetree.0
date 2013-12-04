@@ -1,106 +1,129 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH] ASoC: tegra: update module reset list for Tegra124
-Date: Wed,  4 Dec 2013 15:25:13 -0700
-Message-ID: <1386195913-24213-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3] irqchip: mmp: add dt support for wakeup
+Date: Wed, 4 Dec 2013 23:46:41 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1312042234190.30673@ionos.tec.linutronix.de>
+References: <1386159214-31483-1-git-send-email-zhangwm@marvell.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1386159214-31483-1-git-send-email-zhangwm@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Zhang <zhangwm@marvell.com>
+Cc: mark.rutland@arm.com, haojian.zhuang@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Wed, 4 Dec 2013, Neil Zhang wrote:
 
-Tegra124 adds a number of extra modules into the configlink bus, which
-must be taken out of reset before the bus is used. Update the AHUB
-driver to know about these extra modules (the AHUB HW module hosts the
-configlink bus).
+> Some of the Marvell SoCs use GIC as its interrupt controller,and ICU
+> only used as wakeup logic. When AP subsystem is powered off, GIC will
+> lose its context, the PMU will need ICU to wakeup the AP subsystem.
+> So add wakeup entry for such kind of usage.
 
-Based-on-work-by: Arun Shamanna Lakshmi <aruns-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Based-on-work-by: Songhee Baek <sbaek-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-This patch depends on "ASoC: tegra: use reset framework" to compile,
-which is ack'd and slated to go through a (large) topic branch in the
-Tegra tree. So, we can either:
+This changelog is useless.
 
-a) Merge that Tegra topic branch into the ASoC tree, then apply this.
-   Note that I haven't created the topic branch yet, since I'm still
-   waiting for DMA dependencies to be applied.
+What the heck means: "So add wakeup entry for such kind of usage" ?
 
-b) Apply this change to the Tegra tree too. This change isn't directly
-   related to the changes in the Tegra tree; it just makes use of the new
-   reset controller feature that's introduced there.
+To me nothing, and I'm quite familiar with this kinds of problems. So
+please explain how someone less familiar with that can decode this?
 
- .../bindings/sound/nvidia,tegra30-ahub.txt           |  9 +++++++++
- sound/soc/tegra/tegra30_ahub.c                       | 20 ++++++++++++++++----
- 2 files changed, 25 insertions(+), 4 deletions(-)
+> @@ -58,6 +60,8 @@ struct mmp_intc_conf {
+>  static void __iomem *mmp_icu_base;
+>  static struct icu_chip_data icu_data[MAX_ICU_NR];
+>  static int max_icu_nr;
+> +static u32 irq_for_cp[64];
 
-diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra30-ahub.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra30-ahub.txt
-index 32de7ec789aa..946e2ac46091 100644
---- a/Documentation/devicetree/bindings/sound/nvidia,tegra30-ahub.txt
-+++ b/Documentation/devicetree/bindings/sound/nvidia,tegra30-ahub.txt
-@@ -30,6 +30,15 @@ Required properties:
-   Tegra114 and later additionally require:
-   - amx
-   - adx
-+  Tegra124 and later additionally require:
-+  - amx1
-+  - adx1
-+  - afc0
-+  - afc1
-+  - afc2
-+  - afc3
-+  - afc4
-+  - afc5
- - ranges : The bus address mapping for the configlink register bus.
-   Can be empty since the mapping is 1:1.
- - dmas : Must contain an entry for each entry in clock-names.
-diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
-index 342cd4fff0a5..d6f4c9940e0c 100644
---- a/sound/soc/tegra/tegra30_ahub.c
-+++ b/sound/soc/tegra/tegra30_ahub.c
-@@ -335,9 +335,13 @@ EXPORT_SYMBOL_GPL(tegra30_ahub_unset_rx_cif_source);
- 
- #define MOD_LIST_MASK_TEGRA30	BIT(0)
- #define MOD_LIST_MASK_TEGRA114	BIT(1)
-+#define MOD_LIST_MASK_TEGRA124	BIT(2)
- 
- #define MOD_LIST_MASK_TEGRA30_OR_LATER \
--		(MOD_LIST_MASK_TEGRA30 | MOD_LIST_MASK_TEGRA114)
-+		(MOD_LIST_MASK_TEGRA30 | MOD_LIST_MASK_TEGRA114 | \
-+			MOD_LIST_MASK_TEGRA124)
-+#define MOD_LIST_MASK_TEGRA114_OR_LATER \
-+		(MOD_LIST_MASK_TEGRA114 | MOD_LIST_MASK_TEGRA124)
- 
- static const struct {
- 	const char *rst_name;
-@@ -352,8 +356,16 @@ static const struct {
- 	{ "dam1", MOD_LIST_MASK_TEGRA30_OR_LATER },
- 	{ "dam2", MOD_LIST_MASK_TEGRA30_OR_LATER },
- 	{ "spdif", MOD_LIST_MASK_TEGRA30_OR_LATER },
--	{ "amx", MOD_LIST_MASK_TEGRA114 },
--	{ "adx", MOD_LIST_MASK_TEGRA114 },
-+	{ "amx", MOD_LIST_MASK_TEGRA114_OR_LATER },
-+	{ "adx", MOD_LIST_MASK_TEGRA114_OR_LATER },
-+	{ "amx1", MOD_LIST_MASK_TEGRA124 },
-+	{ "adx1", MOD_LIST_MASK_TEGRA124 },
-+	{ "afc0", MOD_LIST_MASK_TEGRA124 },
-+	{ "afc1", MOD_LIST_MASK_TEGRA124 },
-+	{ "afc2", MOD_LIST_MASK_TEGRA124 },
-+	{ "afc3", MOD_LIST_MASK_TEGRA124 },
-+	{ "afc4", MOD_LIST_MASK_TEGRA124 },
-+	{ "afc5", MOD_LIST_MASK_TEGRA124 },
- };
- 
- #define LAST_REG(name) \
-@@ -492,7 +504,7 @@ static struct tegra30_ahub_soc_data soc_data_tegra114 = {
- };
- 
- static struct tegra30_ahub_soc_data soc_data_tegra124 = {
--	.mod_list_mask = MOD_LIST_MASK_TEGRA114,
-+	.mod_list_mask = MOD_LIST_MASK_TEGRA124,
- 	.set_audio_cif = tegra124_ahub_set_cif,
- };
- 
--- 
-1.8.1.5
+64 is a magic number pulled out of thin air, right?
+
+> +static u32 irq_for_cp_nr;	/* How many irqs will be routed to cp */
+
+What kind of magic nonsense is that?
+  
+>  extern void mmp2_clear_pmic_int(void);
+>  
+> @@ -123,6 +127,50 @@ static void icu_unmask_irq(struct irq_data *d)
+>  	}
+>  }
+>  
+> +static int irq_ignore_wakeup(struct icu_chip_data *data, int hwirq)
+> +{
+> +	int i;
+> +
+> +	if (hwirq < 0 || hwirq >= data->nr_irqs)
+> +		return 1;
+> +
+> +	for (i = 0; i < irq_for_cp_nr; i++)
+> +		if (irq_for_cp[i] == hwirq)
+> +			return 1;
+> +
+> +	return 0;
+> +}
+
+Oh, I see. A brilliant workaround for something which is missing at
+the caller level.
+
+Why the heck do you add a totally braindead function to your driver,
+if you can avoid the call to icu_[un]mask_wakeup() in the first place?
+
+Why on earth is something calling this function, if it's a not
+supported property of that particular interrupt line?
+
+  Simply because the call site does not have an indicator to avoid
+  that call in the first place.
+
+So why are you not adding a proper mechanism to the caller level to
+avoid the call? This problem is not unique to magic marvell chips.
+
+And going through a loop over and over again is very efficient in
+terms of code size, cache footprint and power consumption, right?
+
+> +static void icu_mask_irq_wakeup(struct irq_data *d)
+> +{
+> +	struct icu_chip_data *data = &icu_data[0];
+> +	int hwirq = d->hwirq - data->virq_base;
+> +	u32 r;
+> +
+> +	if (irq_ignore_wakeup(data, hwirq))
+> +		return;
+
+And you call that loop for every invocation of icu_[un]mask_wakeup().
+
+Intelligent design, right?
+
+Now lets have a look at how this magic loop data is set up:
+
+> +void __init mmp_of_wakeup_init(void)
+> +{
+	....
+
+> +	/* Get the irq lines for cp */
+> +	i = 0;
+> +	while (!of_property_read_u32_index(node, "mrvl,intc-for-cp", i, &irq_for_cp[i])) {
+> +		writel_relaxed(ICU_CONF_SEAGULL, mmp_icu_base + (irq_for_cp[i] << 2));
+> +		i++;
+> +	}
+> +	irq_for_cp_nr = i;
+
+Amazing.
+
+I can understand the part where you setup the mmp_icu registers for
+this.
+
+But recording that information in your own magic array is beyond my
+comprehension.
+
+Now lets look at why you are doing this at all.
+
+> +	gic_arch_extn.irq_mask = icu_mask_irq_wakeup;
+> +	gic_arch_extn.irq_unmask = icu_unmask_irq_wakeup;
+
+Neil, please do not misunderstand me. You are not responsible for the
+gic_arch_extn implementation, but you should have noticed that this
+gic_arch_extn thing is ass backwards to begin with.
+
+I'm going to reply in a separate mail on this, because you have
+brought this to my attention, but you are not responsible in the first
+place for this brainfart.
+
+Thanks,
+
+	tglx
