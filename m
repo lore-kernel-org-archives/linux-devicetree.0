@@ -1,55 +1,255 @@
-From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: sunxi: Add an ahci-platform
- compatible AHCI driver for the Allwinner SUNXi series of SoCs
-Date: Wed, 04 Dec 2013 13:56:23 +0100
-Message-ID: <529F2677.3070208@schinagl.nl>
-References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl> <1386159055-10264-3-git-send-email-oliver@schinagl.nl> <20131204123708.GD3158@htj.dyndns.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Alex Elder <alex.elder@linaro.org>
+Subject: Re: [PATCH 2/3] clk: bcm281xx: add initial clock framework support
+Date: Wed, 04 Dec 2013 07:06:43 -0600
+Message-ID: <529F28E3.90905@linaro.org>
+References: <529EA78E.7060904@linaro.org> <529EA80F.3050009@linaro.org> <20131204111457.GF16025@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDC2JNWXZAJBBT6N7SKAKGQEWPNPRMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20131204123708.GD3158-Gd/HAXX7CRxy/B6EtB590w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131204111457.GF16025@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@linaro.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 12/04/2013 05:14 AM, Mark Rutland wrote:
+> On Wed, Dec 04, 2013 at 03:57:03AM +0000, Alex Elder wrote:
+>> Add code for device tree support of clocks in the BCM281xx family of
+>> SoCs.  Machines in this family use peripheral clocks implemented by
+>> "Kona" clock control units (CCUs).  (Other Broadcom SoC families use
+>> Kona style CCUs as well, but support for them is not yet upstream.)
+> 
+> How applicable are the clocks defined in this driver to those other
+> SoCs? How big will the changes need to be to add support for them?
+> 
+> [...]
+> 
+>> +/* A bit position must be less than the number of bits in a 32-bit
+>> register. */
+> 
+> Comment codestyle issue.
 
-On 04-12-13 13:37, Tejun Heo wrote:
-> On Wed, Dec 04, 2013 at 01:10:54PM +0100, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org wrote:
->> From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
->>
->> This patch adds support for the sunxi series of SoC's by allwinner. It
->> plugs into the ahci-platform framework.
->>
->> Note: Currently it uses a somewhat hackish approach that probably needs
->> a lot more work, but does the same as the IMX SoC's.
->>
->> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
->> ---
->>   .../devicetree/bindings/ata/ahci-sunxi.txt         |  24 ++
->>   drivers/ata/Kconfig                                |   9 +
->>   drivers/ata/Makefile                               |   1 +
->>   drivers/ata/ahci_platform.c                        |  12 +
->>   drivers/ata/ahci_sunxi.c                           | 305 +++++++++++++++++++++
-> I'm not really liking the way things are going.  Do we really need
-> separate drivers for each platform ahci implementation.  Are they
-> really that different?  Would it be impossible to make ahci_platform
-> generic enough so that we don't eventually end up with a gazillion
-> ahci_XXX drivers?
-I took the imx driver as example, as I wasn't sure on where to start. 
-But I don't think it's possible yet without improving ahci_platform as I 
-suggested in the cover letter. So if ahci_platform needs to be improved, 
-I guess a separate patch series would be more appropriate?
+If you mean the wrapped words, I think my mailer did that.  Otherwise
+I don't konw what the problem is.
 
-So would it be acceptable to have this as the 2nd (and last?) 
-ahci_platform driver and go from there? Or do you want to block new 
-ahci_XXX drivers until ahci_platform has been improved?
+> [...]
+> 
+>> +       /* Now fill in the parent names and selector arrays */
+>> +       j = 0;
+>> +       for (i = 0; i < orig_count; i++) {
+> 
+> This would look nicer with j initialised in the loop initialisation:
+> 
+> for (i = 0, j = 0; i < orig_count; i++)
 
-Oliver
->
+If you prefer it that way it's fine with me, I'll do that.
+
+> 
+> [...]
+> 
+>> +static void __init kona_ccu_teardown(struct ccu_data *ccu)
+>> +{
+>> +       u32 i;
+>> +
+>> +       if (!ccu || !ccu->base)
+>> +               goto done;
+>> +
+>> +       of_clk_del_provider(ccu->node); /* safe if never added */
+>> +       of_node_put(ccu->node);
+>> +
+>> +       for (i = 0; i < ccu->data.clk_num; i++)
+>> +               kona_clk_teardown(ccu->data.clks[i]);
+>> +       kfree(ccu->data.clks);
+>> +
+>> +       list_del(&ccu->links);
+>> +
+>> +       iounmap(ccu->base);
+>> +done:
+>> +       kfree(ccu);
+> 
+> What about ccu->name ?
+
+When the ccu structure is allocated, space beyond it is
+allocated for ccu->name and the pointer is assigned to
+that spot and filled.  Therefore we don't explicitly
+free ccu->name.  I will add a brief comment to that
+effect.
+
+> 
+>> +}
+>> +
+>> +/*
+>> + * Set up a CCU.  Call the provided ccu_clks_setup callback to
+>> + * initialize the array of clocks provided by the CCU.
+>> + */
+>> +void __init kona_dt_ccu_setup(struct device_node *node,
+>> +                       int (*ccu_clks_setup)(struct ccu_data *))
+>> +{
+>> +       struct ccu_data *ccu;
+>> +       struct resource res = { 0 };
+>> +       resource_size_t range;
+>> +       size_t name_size;
+>> +       int ret;
+>> +
+>> +       name_size = strlen(node->name) + 1;
+>> +       ccu = kzalloc(sizeof(*ccu) + name_size, GFP_KERNEL);
+>> +       if (!ccu) {
+>> +               pr_err("%s: unable to map allocate CCU struct for %s\n",
+>> +                       __func__, node->name);
+>> +               return;
+>> +       }
+>> +       memcpy((char *)ccu->name, node->name, name_size);
+> 
+> You could simplify this with kstrdup.
+
+You are correct, and I will make that change.  I think at
+one point I needed the length but that doesn't appear to
+be the case here.
+
+>> +       INIT_LIST_HEAD(&ccu->links);
+>> +
+>> +       ret = of_address_to_resource(node, 0, &res);
+>> +       if (ret) {
+>> +               pr_err("%s: no valid CCU registers found for %s\n", __func__,
+>> +                       node->name);
+>> +               goto out_err;
+>> +       }
+>> +       ret = -EINVAL;
+>> +       if (res.start > (resource_size_t)U32_MAX) {
+>> +               pr_err("%s: address start too large for %s\n", __func__,
+>> +                       node->name);
+>> +               goto out_err;
+>> +       }
+> 
+> Why do we care? On an LPAE system, you could place devices above 4GB and
+> map them in. Why impose an arbitrary limitation here?
+
+I'm doing the tests here simply to validate that the values
+being used do not exceed the representable range of the
+types of objects that hold them.
+
+That being said, I think the 32-bit limit I'm imposing on
+these may also be due to an assumption about what's in the
+device tree, i.e. that #address-cells = #size-cells = 1.
+But there's no reason to assume that.  I will look at this
+again, and rework it if possible so it is agnostic about
+that--and will increase the size of the fields that hold
+the related value accordingly.
+
+>> +       if (res.start % sizeof(u32)) {
+>> +               pr_err("%s: unaligned address range start %u for %s\n",
+>> +                       __func__, res.start, node->name);
+>> +               goto out_err;
+>> +       }
+> 
+> Is there not a more restrictive alignment constraint on the clocks?
+
+I don't think so.  But in any case my purpose here is doing
+very basic sanity testing.  (To be honest I think most people
+just assume all is well and don't do these sorts of tests.)
+
+>> +
+>> +       range = resource_size(&res);
+>> +       if (range > (resource_size_t)U32_MAX) {
+>> +               pr_err("%s: address range too large for %s\n", __func__,
+>> +                       node->name);
+>> +               goto out_err;
+>> +       }
+> 
+> Surely there's a much smaller max size you can check for given the
+> offsets you know? A size of U32_MAX seems absurd but will pass this
+> test.
+
+Same answer as the last one.  I guess as long as I'm testing
+I could restrict it further (unnecessarily?), but I'm just
+making sure I don't overrun the type of ccu->range.
+
+> [...]
+> 
+>> +/*
+>> + * Build a scaled divider value as close as possible to the
+>> + * given whole part (div_value) and fractional part (expressed
+>> + * in billionths).
+>> + */
+>> +u64 scaled_div_build(struct bcm_clk_div *div, u32 div_value, u32
+>> billionths)
+>> +{
+>> +       u64 combined;
+>> +
+>> +       BUG_ON(!div_value);
+>> +       BUG_ON(billionths > BILLION);
+> 
+> Can billionths == BILLION ?
+
+Oooh!  A bug!  It should not be.  I will fix that.
+
+>> +
+>> +       combined = (u64)div_value * BILLION + billionths;
+>> +       combined <<= div->frac_width;
+>> +
+>> +       return do_div_round_closest(combined, BILLION);
+>> +}
+> 
+> [...]
+> 
+>> diff --git a/drivers/clk/bcm/clk-kona.h b/drivers/clk/bcm/clk-kona.h
+>> new file mode 100644
+>> index 0000000..850a70a
+>> --- /dev/null
+>> +++ b/drivers/clk/bcm/clk-kona.h
+>> @@ -0,0 +1,416 @@
+>> +/*
+>> + * Copyright (C) 2013 Broadcom Corporation
+>> + * Copyright 2013 Linaro Limited
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation version 2.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#ifndef _CLK_KONA_H
+>> +#define _CLK_KONA_H
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/list.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/device.h>
+>> +#include <linux/of.h>
+>> +#include <linux/clk-provider.h>
+>> +
+>> +#define        BILLION         1000000000
+>> +
+>> +#ifndef U32_MAX
+> 
+> Why the ifndef? Either this is defined elsewhere, or it's not. If it's
+> available sometimes but not others, that seems like a bug in itself.
+
+This is in anticipation of submitting a patch that I've had sitting
+around for like a year to get these symbols in <linux/kernel.h>.
+I'll get rid of the #ifndef.
+
+> I see a few other places define U32_MAX. Might it be worth unifying the
+> definitions in a common header?
+
+Yes.  And most of those are mine... :)
+
+>> +#define U8_MAX ((u8)~0U)
+>> +#define U32_MAX        ((u32)~0U)
+>> +#define U64_MAX        ((u64)~0U)
+>> +#endif /* U32_MAX */
+> 
+> Likewise for the rest.
+
+Yup, that's my plan.  You've prodded me now to get this done.
+
+					-Alex
+> Thanks,
+> Mark.
+> 
