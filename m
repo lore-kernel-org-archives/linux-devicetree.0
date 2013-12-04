@@ -1,69 +1,65 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/3] RFC: AHCI: libahci is missing DMA
-Date: Wed, 04 Dec 2013 16:47:31 +0400
-Message-ID: <529F2463.8080907@cogentembedded.com>
-References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl> <1386159055-10264-2-git-send-email-oliver@schinagl.nl>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 3/3] mfd: max14577: Add device tree bindings document
+Date: Wed, 4 Dec 2013 12:49:29 +0000
+Message-ID: <20131204124929.GO29268@sirena.org.uk>
+References: <1386153615-25456-1-git-send-email-k.kozlowski@samsung.com>
+ <1386153615-25456-4-git-send-email-k.kozlowski@samsung.com>
+ <20131204112039.GC907@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1386159055-10264-2-git-send-email-oliver@schinagl.nl>
-Sender: linux-ide-owner@vger.kernel.org
-To: oliver@schinagl.nl, tj@kernel.org, grant.likely@linaro.org, ob.herring@calxeda.com, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dev@linux-sunxi.org
-Cc: maxime.ripard@free-electrons.com, ijc@hellion.org.uk, hdegoede@redhat.com, oliver+list@schinagl.nl
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1bhFRg6vL9BT9osV"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131204112039.GC907@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 04-12-2013 16:10, oliver@schinagl.nl wrote:
+--1bhFRg6vL9BT9osV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> From: Oliver Schinagl <oliver@schinagl.nl>
+On Wed, Dec 04, 2013 at 11:20:39AM +0000, Lee Jones wrote:
 
-> The Allwinner sunxi platforms have patched in the following to enable
-> DMA. This patch enables DMA controllers for the SUNXI Architecture.
+> > +		regulators {
+> > +			compatible = "maxim,max14577-regulator";
+> > +
+> > +			safeout_reg: safeout@1 {
 
-> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> ---
->   drivers/ata/ahci.h    | 6 ++++++
->   drivers/ata/libahci.c | 8 ++++++++
->   2 files changed, 14 insertions(+)
+> The name of the node (not the label:safeout_reg) usually depicts the
+> type of device, so 'regulator@0' and 'regulator@1'. However, I'm
+> unsure how this works when these nodes are encapsulated by an
+> overarching 'regulators' parent node.
 
-> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-> index 2289efdf..2bf2423 100644
-> --- a/drivers/ata/ahci.h
-> +++ b/drivers/ata/ahci.h
-[...]
-> @@ -209,6 +210,11 @@ enum {
->   	PORT_DEVSLP_DSP		= (1 << 1),       /* DevSlp present */
->   	PORT_DEVSLP_ADSE	= (1 << 0),       /* Aggressive DevSlp enable */
->
-> +	/* PORT_DMA bits */
-> +	PORT_DMA_SETUP_OFFSET	= 8, /* dma setup offset */
-> +	PORT_DMA_SETUP_MASK	= (0xff << PORT_DMA_SETUP_OFFSET),/* dma mask */
-> +	PORT_DMA_SETUP_INIT	= (0x44 << 0),
+> Perhaps Mark can answer this?
 
-    Why not shift it right by PORT_DMA_SETUP_OFFSET if you do it in the next 
-file anyway?
+The name there is meaningless, the DT convention is as you describe and
+applies to any node but equally well it's just a convention and I
+struggle to see the value it adds.  Having something that humans find
+helpful is just as well.
 
-[...]
-> diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-> index c482f8c..d697a74 100644
-> --- a/drivers/ata/libahci.c
-> +++ b/drivers/ata/libahci.c
-> @@ -570,6 +570,14 @@ void ahci_start_engine(struct ata_port *ap)
->   	void __iomem *port_mmio = ahci_port_base(ap);
->   	u32 tmp;
->
-> +#ifdef CONFIG_ARCH_SUNXI
-> +	/* Setup DMA before DMA start */
-> +	tmp = readl(port_mmio + PORT_DMA);
-> +	tmp &= ~PORT_DMA_SETUP_MASK;
-> +	tmp |= PORT_DMA_SETUP_INIT << PORT_DMA_SETUP_OFFSET;
-> +	writel(tmp, port_mmio + PORT_DMA);
-> +#endif
-> +
+--1bhFRg6vL9BT9osV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-    I don't think #ifdef is appropriate here.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-WBR, Sergei
+iQIcBAEBAgAGBQJSnyTWAAoJELSic+t+oim90z8QAIXR1t+LL4kPST8O7L15eR6o
+K5CnpWwl0mEUkcp3fiffCHWnkEjaZKx92jNJ1TWjAZ96bskKZ34dvkK86Aqz1aIZ
+skvv+SS3RuqXh1YAQgqadyrWq3rSlylMl+temN/LXdejj20J/Y8dV6rVLyhryt4V
+3oroc/UVmplGty2L3MzdS/3vclwCedsk92VpzN1+f9AclPFeFUpSxe9YqpFo6rdX
+zR8E/M0OWbne3oWzYgMlS8BUoJhu2RVExgqRwM8oy0L9mwNuz+skiGqVpu8N+sSI
+9XsMtWQ0yyqfYmcFo7RPMy7OH8M8A4rTX5qMq87p0AlGdw8LJF28KTO6wh3gY0ok
+7m1SRS3fero14RhuO9r1eWuC+6O8qkbkKBOWEOv7dnn1yiAf+BjGRahMysOmhZex
+AM3oYTuA/4bEjdlgwbfmsrPYLIDfrUn7pl/pWM70ezAlyN6Iqtb0JAPjN7c0v/sp
+rEqEDQShNPKXqeATHq1jSujTwVTloXJ05ka5tQjUQzVsG3YE+BeWV4K7WsJYRe8T
+I/A9b8O/BthgqShNVqALGkgGBA/9100CZu/Z0TJ2JIXpKJEyO7NnqXd184WoYxh2
+0l8zMy/0klK0pR+zUYNb8XTP0mtDBLZdmbxoDm2kejKHcFWafjphjoPV7uBQd7Z8
+VV3nO0pSMw3Puky2B6s4
+=NHD+
+-----END PGP SIGNATURE-----
 
+--1bhFRg6vL9BT9osV--
