@@ -1,139 +1,76 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv5][ 5/8] staging: imx-drm: parallel display: add regulator support.
-Date: Thu,  5 Dec 2013 19:28:09 +0100
-Message-ID: <1386268092-21719-5-git-send-email-denis@eukrea.com>
-References: <1386268092-21719-1-git-send-email-denis@eukrea.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH V11 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and exynos5420 dtsi files
+Date: Thu, 05 Dec 2013 19:30:32 +0100
+Message-ID: <1979723.ga7TBeh7CQ@flatron>
+References: <1385613243-3559-1-git-send-email-l.krishna@samsung.com> <1468334.WxyIceyAAx@flatron> <CAD=FV=VKT2mdwNMeZrimurtHeqNBJcpbmZzXV1-es2DxKcFXqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386268092-21719-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, driverdev-devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=VKT2mdwNMeZrimurtHeqNBJcpbmZzXV1-es2DxKcFXqw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Olof Johansson <olof@lixom.net>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "cpgs ." <cpgs@samsung.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: driverdev-devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v3->v5:
-- Code clenaup.
+On Thursday 05 of December 2013 10:26:18 Doug Anderson wrote:
+> Leela Krishna,
+> 
+> On Mon, Dec 2, 2013 at 11:49 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> > On Monday 02 of December 2013 10:50:14 Olof Johansson wrote:
+> >> Hi,
+> >>
+> >> On Wed, Nov 27, 2013 at 8:34 PM, Leela Krishna Amudala
+> >> <l.krishna@samsung.com> wrote:
+> >> > This patch adds pmusysreg node to exynos5250 and exynos5420 dtsi files to
+> >> > handle PMU register accesses in a centralized way using syscon driver
+> >> >
+> >> > Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> >> > Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> >> > Reviewed-by: Doug Anderson <dianders@chromium.org>
+> >> > Tested-by: Doug Anderson <dianders@chromium.org>
+> >> > ---
+> >> >  Documentation/devicetree/bindings/arm/samsung/pmu.txt |   16 ++++++++++++++++
+> >> >  arch/arm/boot/dts/exynos5250.dtsi                     |    5 +++++
+> >> >  arch/arm/boot/dts/exynos5420.dtsi                     |    5 +++++
+> >> >  3 files changed, 26 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> >> > new file mode 100644
+> >> > index 0000000..307e727
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> >> > @@ -0,0 +1,16 @@
+> >> > +SAMSUNG Exynos SoC series PMU Registers
+> >> > +
+> >> > +Properties:
+> >> > + - name : should be 'syscon';
+> >>
+> >> It's common to use a non-abbreviated name, such as 'system-controller'
+> >> here. Or, given that it's referring to "pmusysreg" then maybe
+> >> something like "pmu-system-registers".
+> >
+> > Hmm, it's two syscons vs two system-controllers in existing device trees.
+> > I agree that system-controller sounds much better as a name for this class
+> > of devices. I don't remember why I initially suggested syscon, though.
+> > Possibly based on those two existing device trees using this name.
+> 
+> I'd vote for using "pmu-system-registers".  We end up using the
+> "syscon" subsystem but really we're describing pmu registers.
+> 
+> I'd even say that you don't need to formally specify the "name" in the
+> bindings (though I'm not up with all the latest device tree
+> requirements).  ...still you'd want to use "pmu-system-registers" in
+> the DTS changes.
 
-ChangeLog v2->v3:
-- Added some interested people in the Cc list.
-- the lcd-supply is now called display-supply (not all display are LCD)=
-=2E
-- The code and documentation was updated accordingly.
-- regulator_is_enabled now guard the regulator enables/disables because
-  regulator_disable does not check the regulator state.
----
- .../bindings/staging/imx-drm/fsl-imx-drm.txt       |    1 +
- drivers/staging/imx-drm/parallel-display.c         |   22 ++++++++++++=
-++++++++
- 2 files changed, 23 insertions(+)
+Well, since the name should specify the class of device, I would say that
+pmu-system-registers is too specific. If we want to change this, I'd say
+we should go with system-controller.
 
-diff --git a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-=
-drm.txt b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm=
-=2Etxt
-index 2d24425..4dd7ce5 100644
---- a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-+++ b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-@@ -28,6 +28,7 @@ Required properties:
- - compatible: Should be "fsl,imx-parallel-display"
- - crtc: the crtc this display is connected to, see below
- Optional properties:
-+- display-supply : phandle to the regulator device tree node if needed=
-=2E
- - interface_pix_fmt: How this display is connected to the
-   crtc. Currently supported types: "rgb24", "rgb565", "bgr666", "rgb66=
-6"
- - edid: verbatim EDID data block describing attached display.
-diff --git a/drivers/staging/imx-drm/parallel-display.c b/drivers/stagi=
-ng/imx-drm/parallel-display.c
-index 65d0c18..61c0aeb 100644
---- a/drivers/staging/imx-drm/parallel-display.c
-+++ b/drivers/staging/imx-drm/parallel-display.c
-@@ -22,6 +22,7 @@
- #include <drm/drmP.h>
- #include <drm/drm_fb_helper.h>
- #include <drm/drm_crtc_helper.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/videodev2.h>
-=20
- #include "imx-drm.h"
-@@ -35,6 +36,7 @@ struct imx_parallel_display {
- 	struct drm_encoder encoder;
- 	struct imx_drm_encoder *imx_drm_encoder;
- 	struct device *dev;
-+	struct regulator *disp_reg;
- 	void *edid;
- 	int edid_len;
- 	u32 interface_pix_fmt;
-@@ -141,6 +143,13 @@ static void imx_pd_encoder_prepare(struct drm_enco=
-der *encoder)
- {
- 	struct imx_parallel_display *imxpd =3D enc_to_imxpd(encoder);
-=20
-+	if (!IS_ERR(imxpd->disp_reg) &&
-+	    !regulator_is_enabled(imxpd->disp_reg)) {
-+		if (regulator_enable(imxpd->disp_reg))
-+			dev_err(imxpd->dev,
-+				"Failed to enable regulator.\n");
-+	}
-+
- 	imx_drm_crtc_panel_format(encoder->crtc, DRM_MODE_ENCODER_NONE,
- 			imxpd->interface_pix_fmt);
- }
-@@ -157,6 +166,12 @@ static void imx_pd_encoder_mode_set(struct drm_enc=
-oder *encoder,
-=20
- static void imx_pd_encoder_disable(struct drm_encoder *encoder)
- {
-+	struct imx_parallel_display *imxpd =3D enc_to_imxpd(encoder);
-+
-+	if (!IS_ERR(imxpd->disp_reg) && regulator_is_enabled(imxpd->disp_reg)=
-) {
-+		if (regulator_disable(imxpd->disp_reg))
-+			dev_err(imxpd->dev, "Failed to disable regulator.\n");
-+	}
- }
-=20
- static void imx_pd_encoder_destroy(struct drm_encoder *encoder)
-@@ -260,6 +275,13 @@ static int imx_pd_probe(struct platform_device *pd=
-ev)
- 	if (ret)
- 		return ret;
-=20
-+	imxpd->disp_reg =3D devm_regulator_get(&pdev->dev, "display");
-+	if (PTR_ERR(imxpd->disp_reg) =3D=3D -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	if (IS_ERR(imxpd->disp_reg))
-+		dev_dbg(&pdev->dev, "Operating without display regulator.\n");
-+
- 	ret =3D imx_drm_encoder_add_possible_crtcs(imxpd->imx_drm_encoder, np=
-);
-=20
- 	platform_set_drvdata(pdev, imxpd);
---=20
-1.7.9.5
+As for name specification inside the binding, I agree that binding should
+not require the main node to be named specifically. If we want to have
+another version anyway, let's drop this.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
