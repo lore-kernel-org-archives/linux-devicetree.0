@@ -1,107 +1,83 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCHv5][ 5/8] staging: imx-drm: parallel display: add regulator
- support.
-Date: Thu, 5 Dec 2013 21:55:31 +0100
-Message-ID: <201312052155.31894.marex@denx.de>
-References: <1386268092-21719-1-git-send-email-denis@eukrea.com>
- <1386268092-21719-5-git-send-email-denis@eukrea.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv4 2/4] clk: socfpga: Add a hook for SD/MMC driver to control CIU clock settings
+Date: Thu, 5 Dec 2013 21:57:37 +0100
+Message-ID: <201312052157.37538.arnd@arndb.de>
+References: <1386263677-7733-1-git-send-email-dinguyen@altera.com> <1386263677-7733-3-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1386268092-21719-5-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Denis Carikli <denis@eukrea.com>
-Cc: devel@driverdev.osuosl.org, Mark Rutland <mark.rutland@arm.com>, driverdev-devel@linuxdriverproject.org, Eric =?iso-8859-1?q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Dan Carpenter <dan.carpenter@oracle.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1386263677-7733-3-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinguyen@altera.com
+Cc: dinh.linux@gmail.com, mturquette@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, December 05, 2013 at 07:28:09 PM, Denis Carikli wrote:
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: devicetree@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: driverdev-devel@linuxdriverproject.org
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Shawn Guo <shawn.guo@linaro.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Eric B=E9nard <eric@eukrea.com>
-> Signed-off-by: Denis Carikli <denis@eukrea.com>
-> ---
-> ChangeLog v3->v5:
-> - Code clenaup.
-> =
+On Thursday 05 December 2013, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
+> 
+> Populate the .prepare function in the clk-ops for the "sdmmc_clk" that represents
+> the "ciu" clock for the SD/MMC driver. The prepare function will handle setting
+> the correct clock-phase for the CIU clock of the SD/MMC IP.
+> 
+> Re-use the "rockchip,rk2928-dw-mshc" binding as it is already defined and
+> appropriate for the SOCFPGA platform as well.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
 
-> ChangeLog v2->v3:
-> - Added some interested people in the Cc list.
-> - the lcd-supply is now called display-supply (not all display are LCD).
-> - The code and documentation was updated accordingly.
-> - regulator_is_enabled now guard the regulator enables/disables because
->   regulator_disable does not check the regulator state.
-> ---
->  .../bindings/staging/imx-drm/fsl-imx-drm.txt       |    1 +
->  drivers/staging/imx-drm/parallel-display.c         |   22
-> ++++++++++++++++++++ 2 files changed, 23 insertions(+)
-> =
+I think with this series we're getting closer to where things should be, but
+there are still a number of the same problems. Maybe I have misunderstood
+a few things here in how the clocks fit together, but here is what still
+looks wrong about this patch:
 
-> diff --git
-> a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-> b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt index
-> 2d24425..4dd7ce5 100644
-> --- a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-> +++ b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-> @@ -28,6 +28,7 @@ Required properties:
->  - compatible: Should be "fsl,imx-parallel-display"
->  - crtc: the crtc this display is connected to, see below
->  Optional properties:
-> +- display-supply : phandle to the regulator device tree node if needed.
->  - interface_pix_fmt: How this display is connected to the
->    crtc. Currently supported types: "rgb24", "rgb565", "bgr666", "rgb666"
->  - edid: verbatim EDID data block describing attached display.
-> diff --git a/drivers/staging/imx-drm/parallel-display.c
-> b/drivers/staging/imx-drm/parallel-display.c index 65d0c18..61c0aeb 100644
-> --- a/drivers/staging/imx-drm/parallel-display.c
-> +++ b/drivers/staging/imx-drm/parallel-display.c
-> @@ -22,6 +22,7 @@
->  #include <drm/drmP.h>
->  #include <drm/drm_fb_helper.h>
->  #include <drm/drm_crtc_helper.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/videodev2.h>
-> =
+> diff --git a/drivers/clk/socfpga/clk.c b/drivers/clk/socfpga/clk.c
+> index 60cb2f5..01baf20 100644
+> --- a/drivers/clk/socfpga/clk.c
+> +++ b/drivers/clk/socfpga/clk.c
+> @@ -55,7 +55,13 @@
+>  #define div_mask(width)	((1 << (width)) - 1)
+>  #define streq(a, b) (strcmp((a), (b)) == 0)
+>  
+> +#define SYSMGR_SDMMCGRP_CTRL_OFFSET	0x108
+> +/* SDMMC Group for System Manager defines */
+> +#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel)          \
+> +	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
+> +
+>  extern void __iomem *clk_mgr_base_addr;
+> +extern void __iomem *sys_manager_base_addr;
 
->  #include "imx-drm.h"
-> @@ -35,6 +36,7 @@ struct imx_parallel_display {
->  	struct drm_encoder encoder;
->  	struct imx_drm_encoder *imx_drm_encoder;
->  	struct device *dev;
-> +	struct regulator *disp_reg;
->  	void *edid;
->  	int edid_len;
->  	u32 interface_pix_fmt;
-> @@ -141,6 +143,13 @@ static void imx_pd_encoder_prepare(struct drm_encoder
-> *encoder) {
->  	struct imx_parallel_display *imxpd =3D enc_to_imxpd(encoder);
-> =
+As mentioned in yesterday's comments, you should not have the 'extern'
+declaration for sys_manager_base_addr here. In fact, the existing
+clk_mgr_base_addr declaration is just as wrong.
 
-> +	if (!IS_ERR(imxpd->disp_reg) &&
-> +	    !regulator_is_enabled(imxpd->disp_reg)) {
-> +		if (regulator_enable(imxpd->disp_reg))
-> +			dev_err(imxpd->dev,
-> +				"Failed to enable regulator.\n");
+> +static int sdmmc_ciuclk_prepare(struct clk_hw *hwclk)
+> +{
+> +	struct device_node *np;
+> +	u32 timing[2];
+> +	u32 hs_timing;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "rockchip,rk2928-dw-mshc");
+> +	if (of_property_read_u32_array(np, "samsung,dw-mshc-sdr-timing", timing, 2)) {
+> +		pr_err("SDMMC: cannot find samsung,dw-mshc-sdr-timing!\n");
+> +		return -ENODATA;
+> +	}
+> +	hs_timing = SYSMGR_SDMMC_CTRL_SET(timing[1], timing[0]);
+> +	writel(hs_timing, sys_manager_base_addr + SYSMGR_SDMMCGRP_CTRL_OFFSET);
+> +	return 0;
+> +}
+> +
 
-I wonder, is this linebreak needed for this function call ?
-[...]
+And in now way should the clock provider code look into the DT properties of the
+clock consumer. From what I can tell, the dw-mshc code already interprets the
+"samsung,dw-mshc-sdr-timing" property and uses the data to pass the correct
+clock rate using 'clk_set_rate()'. The clock code should only use the data passed
+in the argument to that function to set up the registers and not need to know
+at all who is setting it.
+
+I am a little confused though what the SYSMGR_SDMMCGRP_CTRL_OFFSET register actually
+does. It looks like this is just a clock divider, which should be represented as
+a separate clock node (as you had in v3) and compute the correct factor from the
+requested clock rate and the parent clock rate.
+
+	Arnd
