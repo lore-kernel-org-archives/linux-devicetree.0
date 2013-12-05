@@ -1,47 +1,97 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: ARM: gic_arch_extn (Was: [PATCH v3] irqchip: mmp: add dt
-	support for wakeup)
-Date: Thu, 5 Dec 2013 00:52:16 +0000
-Message-ID: <20131205005216.GA4360@n2100.arm.linux.org.uk>
-References: <1386159214-31483-1-git-send-email-zhangwm@marvell.com> <alpine.DEB.2.02.1312042234190.30673@ionos.tec.linutronix.de> <alpine.DEB.2.02.1312042347350.30673@ionos.tec.linutronix.de>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH v8 1/2] PWM: atmel-pwm: add PWM controller driver
+Date: Thu, 5 Dec 2013 09:11:28 +0800
+Message-ID: <529FD2C0.6080707@atmel.com>
+References: <1384766002-2852-1-git-send-email-voice.shen@atmel.com>
+ <20131202105957.GD18060@ulmo.nvidia.com> <529D4B58.9020700@atmel.com>
+ <20131203094326.GB21178@ulmo.nvidia.com> <529E9AA2.8020400@atmel.com>
+ <20131204100340.GU19943@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1312042347350.30673-3cz04HxQygjZikZi3RtOZ1XZhhPuCNm+@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131204100340.GU19943@ulmo.nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, Bo Shen <voice.shen@atmel.com>, galak@codeaurora.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 01:41:53AM +0100, Thomas Gleixner wrote:
-> @all who feel responsible for gic_arch_extn
-> 
-> On Wed, 4 Dec 2013, Thomas Gleixner wrote:
-> > I'm going to reply in a separate mail on this, because you have
-> > brought this to my attention, but you are not responsible in the first
-> > place for this brainfart.
-> 
-> Who came up with that gic_arch_extn concept in the first place?
+Hi Thierry,
 
-If you'd spend more time reviewing IRQ patches then maybe you'd catch
-this at review time.  So please stop your rediculous whinging when
-most of the problem is your own lack of time.
+On 12/04/2013 06:03 PM, Thierry Reding wrote:
+> On Wed, Dec 04, 2013 at 10:59:46AM +0800, Bo Shen wrote:
+>> Hi Thierry,
+>>
+>> On 12/03/2013 05:43 PM, Thierry Reding wrote:
+>>> On Tue, Dec 03, 2013 at 11:09:12AM +0800, Bo Shen wrote:
+>>>> On 12/02/2013 06:59 PM, Thierry Reding wrote:
+>>>>> On Mon, Nov 18, 2013 at 05:13:21PM +0800, Bo Shen wrote:
+>>> [...]
+>>>>>> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+>>> [...]
+>>>>>> +	/* Calculate the period cycles */
+>>>>>> +	while (div > PWM_MAX_PRD) {
+>>>>>> +		div = clk_rate / (1 << pres);
+>>>>>> +		div = div * period_ns;
+>>>>>> +		/* 1/Hz = 100000000 ns */
+>>>>>
+>>>>> I don't think that comment is needed.
+>>>>
+>>>> This is asked to be added.
+>>>> And, I think keep it and it won't hurt, what do you think?
+>>>
+>>> I think it's obvious that you're converting from nanoseconds because of
+>>> the _ns prefix in period_ns. But if somebody requested this and everyone
+>>> else thinks it's useful, I'm okay with keeping it.
+>>>
+>>>>>> +	if (test_bit(PWMF_ENABLED, &pwm->flags)) {
+>>>>>> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CDTYUPD, dty);
+>>>>>> +	} else {
+>>>>>> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CDTY, dty);
+>>>>>> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CPRD, prd);
+>>>>>> +	}
+>>>>>> +}
+>>>>>
+>>>>> Neither version 1 nor version 2 seem to be able to change the period
+>>>>> while the channel is enabled. Perhaps that should be checked for in
+>>>>> atmel_pwm_config() and an error (-EBUSY) returned?
+>>>>
+>>>> The period is configured in dt in device tree, or platform data in non
+>>>> device tree. Nowhere will update period. So, not code to update period.
+>>>> Am I right? If not, please figure out.
+>>>
+>>> The .config() operation allows the period to be specified. Just because
+>>> nobody currently changes it at runtime doesn't mean it can't be done.
+>>>
+>>> It is also possible that whoever wrote the device tree or platform data
+>>> didn't know that the period must be the same for all PWM channels and
+>>> therefore might use different values. If you check for this, at least
+>>> they'll notice. If you don't check for it, then they may end up having
+>>> the period reconfigured behind their backs, which may cause parts of
+>>> their setup to behave unexpectedly.
+>>
+>> Thanks for this information.
+>> I will add code for changing period.
+>
+> Just to clarify: I wouldn't want this code to allow changing the period
+> but rather reject incompatible changes to the period with an error code.
 
-If you must know, it was introduced by TI to work around the power
-management shortcomings of the architecture mandated GIC.  No it doesn't
-get called for IPIs, but it damned well needs to be called for normal
-IRQs.
+So, in this patch, just check it as you suggested in previous email, 
+would it be OK?
+--->8---
+Perhaps that should be checked for in atmel_pwm_config() and an error 
+(-EBUSY) returned?
+---8<---
 
-At the point it was created, it wasn't clear whether this also applied
-to local IRQs.  Since I *no* *longer* have visibility of what SoC stuff
-is doing with it, of course it's not going to get fixed when a common
-pattern emerges.
+> Thierry
 
-So... congratulations, you've found something which can be improved,
-which has come to light as the code has evolved and a better
-understanding of what is required has been discovered.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Bo Shen
