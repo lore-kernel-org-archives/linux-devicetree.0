@@ -1,125 +1,125 @@
-From: Denis Carikli <denis@eukrea.com>
-Subject: [PATCHv5][ 1/8] [media] v4l2: add new V4L2_PIX_FMT_RGB666 pixel
- format.
-Date: Thu,  5 Dec 2013 19:28:05 +0100
-Message-ID: <1386268092-21719-1-git-send-email-denis@eukrea.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv5][ 2/8] staging: imx-drm: Add RGB666 support for parallel display.
+Date: Thu,  5 Dec 2013 19:28:06 +0100
+Message-ID: <1386268092-21719-2-git-send-email-denis@eukrea.com>
+References: <1386268092-21719-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Marek Vasut <marex@denx.de>, devel@driverdev.osuosl.org, driverdev-devel@linuxdriverproject.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Shawn Guo <shawn.guo@linaro.org>, Denis Carikli <denis@eukrea.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386268092-21719-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, driverdev-devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhhdCBuZXcgbWFjcm8gaXMgbmVlZGVkIGJ5IHRoZSBpbXhfZHJtIHN0YWdpbmcgZHJpdmVyCiAg
-Zm9yIHN1cHBvcnRpbmcgdGhlIFFWR0EgZGlzcGxheSBvZiB0aGUgZXVrcmVhLWNwdWlteDUxIGJv
-YXJkLgoKQ2M6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4KQ2M6IFBhd2Vs
-IE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5k
-QGFybS5jb20+CkNjOiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPgpDYzog
-SWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4KQ2M6IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnCkNjOiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZv
-dW5kYXRpb24ub3JnPgpDYzogZHJpdmVyZGV2LWRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcK
-Q2M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KQ2M6IGRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKQ2M6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bS5jaGVoYWJAc2Ftc3Vu
-Zy5jb20+CkNjOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2Fy
-ZC5jb20+CkNjOiBsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IFNhc2NoYSBIYXVlciA8
-a2VybmVsQHBlbmd1dHJvbml4LmRlPgpDYzogU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9y
-Zz4KQ2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpDYzogRXJpYyBCw6lu
-YXJkIDxlcmljQGV1a3JlYS5jb20+ClNpZ25lZC1vZmYtYnk6IERlbmlzIENhcmlrbGkgPGRlbmlz
-QGV1a3JlYS5jb20+CkFja2VkLWJ5OiBNYXVybyBDYXJ2YWxobyBDaGVoYWIgPG0uY2hlaGFiQHNh
-bXN1bmcuY29tPgpBY2tlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBp
-ZGVhc29uYm9hcmQuY29tPgotLS0KQ2hhbmdlTG9nIHYzLT52NDoKLSBBZGRlZCBMYXVyZW50IFBp
-bmNoYXJ0J3MgQWNrLgoKQ2hhbmdlTG9nIHYyLT52MzoKLSBBZGRlZCBzb21lIGludGVyZXN0ZWQg
-cGVvcGxlIGluIHRoZSBDYyBsaXN0LgotIEFkZGVkIE1hdXJvIENhcnZhbGhvIENoZWhhYidzIEFj
-ay4KLSBBZGRlZCBkb2N1bWVudGF0aW9uLgotLS0KIC4uLi9Eb2NCb29rL21lZGlhL3Y0bC9waXhm
-bXQtcGFja2VkLXJnYi54bWwgICAgICAgIHwgICA3OCArKysrKysrKysrKysrKysrKysrKwogaW5j
-bHVkZS91YXBpL2xpbnV4L3ZpZGVvZGV2Mi5oICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsK
-IDIgZmlsZXMgY2hhbmdlZCwgNzkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vRG9jQm9vay9tZWRpYS92NGwvcGl4Zm10LXBhY2tlZC1yZ2IueG1sIGIvRG9jdW1lbnRh
-dGlvbi9Eb2NCb29rL21lZGlhL3Y0bC9waXhmbXQtcGFja2VkLXJnYi54bWwKaW5kZXggMTY2Yzhk
-Ni4uZjZhM2U4NCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9Eb2NCb29rL21lZGlhL3Y0bC9w
-aXhmbXQtcGFja2VkLXJnYi54bWwKKysrIGIvRG9jdW1lbnRhdGlvbi9Eb2NCb29rL21lZGlhL3Y0
-bC9waXhmbXQtcGFja2VkLXJnYi54bWwKQEAgLTI3OSw2ICsyNzksNDUgQEAgY29sb3JzcGFjZSA8
-Y29uc3RhbnQ+VjRMMl9DT0xPUlNQQUNFX1NSR0I8L2NvbnN0YW50Pi48L3BhcmE+CiAJICAgIDxl
-bnRyeT48L2VudHJ5PgogCSAgICA8ZW50cnk+PC9lbnRyeT4KIAkgIDwvcm93PgorCSAgPHJvdyBp
-ZD0iVjRMMi1QSVgtRk1ULVJHQjY2NiI+CisJICAgIDxlbnRyeT48Y29uc3RhbnQ+VjRMMl9QSVhf
-Rk1UX1JHQjY2NjwvY29uc3RhbnQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PidSR0JIJzwvZW50cnk+
-CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+cjxzdWJzY3JpcHQ+NTwvc3Vic2Ny
-aXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNjcmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRy
-eT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjM8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8
-ZW50cnk+cjxzdWJzY3JpcHQ+Mjwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1
-YnNjcmlwdD4xPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjA8
-L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0
-PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4K
-KwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD4zPC9zdWJzY3Jp
-cHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5Pmc8c3Vic2NyaXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5
-PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+MTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxl
-bnRyeT5nPHN1YnNjcmlwdD4wPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vi
-c2NyaXB0PjU8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3JpcHQ+NDwv
-c3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5iPHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+
-PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5Pgor
-CSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjE8L3N1YnNjcmlw
-dD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3JpcHQ+MDwvc3Vic2NyaXB0PjwvZW50cnk+
-CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5
-PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkg
-ICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9l
-bnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8
-ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5
-PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgIDwvcm93PgogCSAgPHJvdyBpZD0iVjRMMi1QSVgt
-Rk1ULUJHUjI0Ij4KIAkgICAgPGVudHJ5Pjxjb25zdGFudD5WNEwyX1BJWF9GTVRfQkdSMjQ8L2Nv
-bnN0YW50PjwvZW50cnk+CiAJICAgIDxlbnRyeT4nQkdSMyc8L2VudHJ5PgpAQCAtNzgxLDYgKzgy
-MCw0NSBAQCBkZWZpbmVkIGluIGVycm9yLiBEcml2ZXJzIG1heSBpbnRlcnByZXQgdGhlbSBhcyBp
-biA8eHJlZgogCSAgICA8ZW50cnk+PC9lbnRyeT4KIAkgICAgPGVudHJ5PjwvZW50cnk+CiAJICA8
-L3Jvdz4KKwkgIDxyb3c+PCEtLSBpZD0iVjRMMi1QSVgtRk1ULVJHQjY2NiIgLS0+CisJICAgIDxl
-bnRyeT48Y29uc3RhbnQ+VjRMMl9QSVhfRk1UX1JHQjY2NjwvY29uc3RhbnQ+PC9lbnRyeT4KKwkg
-ICAgPGVudHJ5PidSR0JIJzwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50
-cnk+cjxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNj
-cmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjM8L3N1
-YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+cjxzdWJzY3JpcHQ+Mjwvc3Vic2NyaXB0Pjwv
-ZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNjcmlwdD4xPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkg
-ICAgPGVudHJ5PnI8c3Vic2NyaXB0PjA8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+
-ZzxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlw
-dD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRy
-eT5nPHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5Pmc8c3Vic2Ny
-aXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+MTwvc3Vi
-c2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD4wPC9zdWJzY3JpcHQ+PC9l
-bnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjU8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAg
-ICA8ZW50cnk+YjxzdWJzY3JpcHQ+NDwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5i
-PHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0
-PjI8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5
-PmI8c3Vic2NyaXB0PjE8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3Jp
-cHQ+MDwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50
-cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5Pgor
-CSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48
-L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAg
-IDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50
-cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgIDwvcm93
-PgogCSAgPHJvdz48IS0tIGlkPSJWNEwyLVBJWC1GTVQtQkdSMjQiIC0tPgogCSAgICA8ZW50cnk+
-PGNvbnN0YW50PlY0TDJfUElYX0ZNVF9CR1IyNDwvY29uc3RhbnQ+PC9lbnRyeT4KIAkgICAgPGVu
-dHJ5PidCR1IzJzwvZW50cnk+CmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgvdmlkZW9k
-ZXYyLmggYi9pbmNsdWRlL3VhcGkvbGludXgvdmlkZW9kZXYyLmgKaW5kZXggNDM3ZjFiMC4uZThm
-ZjQxMCAxMDA2NDQKLS0tIGEvaW5jbHVkZS91YXBpL2xpbnV4L3ZpZGVvZGV2Mi5oCisrKyBiL2lu
-Y2x1ZGUvdWFwaS9saW51eC92aWRlb2RldjIuaApAQCAtMjk0LDYgKzI5NCw3IEBAIHN0cnVjdCB2
-NGwyX3BpeF9mb3JtYXQgewogI2RlZmluZSBWNEwyX1BJWF9GTVRfUkdCNTU1WCB2NGwyX2ZvdXJj
-YygnUicsICdHJywgJ0InLCAnUScpIC8qIDE2ICBSR0ItNS01LTUgQkUgICovCiAjZGVmaW5lIFY0
-TDJfUElYX0ZNVF9SR0I1NjVYIHY0bDJfZm91cmNjKCdSJywgJ0cnLCAnQicsICdSJykgLyogMTYg
-IFJHQi01LTYtNSBCRSAgKi8KICNkZWZpbmUgVjRMMl9QSVhfRk1UX0JHUjY2NiAgdjRsMl9mb3Vy
-Y2MoJ0InLCAnRycsICdSJywgJ0gnKSAvKiAxOCAgQkdSLTYtNi02CSAgKi8KKyNkZWZpbmUgVjRM
-Ml9QSVhfRk1UX1JHQjY2NiAgdjRsMl9mb3VyY2MoJ1InLCAnRycsICdCJywgJ0gnKSAvKiAxOCAg
-UkdCLTYtNi02CSAgKi8KICNkZWZpbmUgVjRMMl9QSVhfRk1UX0JHUjI0ICAgdjRsMl9mb3VyY2Mo
-J0InLCAnRycsICdSJywgJzMnKSAvKiAyNCAgQkdSLTgtOC04ICAgICAqLwogI2RlZmluZSBWNEwy
-X1BJWF9GTVRfUkdCMjQgICB2NGwyX2ZvdXJjYygnUicsICdHJywgJ0InLCAnMycpIC8qIDI0ICBS
-R0ItOC04LTggICAgICovCiAjZGVmaW5lIFY0TDJfUElYX0ZNVF9CR1IzMiAgIHY0bDJfZm91cmNj
-KCdCJywgJ0cnLCAnUicsICc0JykgLyogMzIgIEJHUi04LTgtOC04ICAgKi8KLS0gCjEuNy45LjUK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1h
-aWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYu
-bGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: driverdev-devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ChangeLog v3->v5:
+- Use the correct RGB order.
+
+ChangeLog v2->v3:
+- Added some interested people in the Cc list.
+- Removed the commit message long desciption that was just a copy of th=
+e short
+  description.
+- Rebased the patch.
+- Fixed a copy-paste error in the ipu_dc_map_clear parameter.
+---
+ .../bindings/staging/imx-drm/fsl-imx-drm.txt       |    2 +-
+ drivers/staging/imx-drm/ipu-v3/ipu-dc.c            |    9 +++++++++
+ drivers/staging/imx-drm/parallel-display.c         |    2 ++
+ 3 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-=
+drm.txt b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm=
+=2Etxt
+index b876d49..2d24425 100644
+--- a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
++++ b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
+@@ -29,7 +29,7 @@ Required properties:
+ - crtc: the crtc this display is connected to, see below
+ Optional properties:
+ - interface_pix_fmt: How this display is connected to the
+-  crtc. Currently supported types: "rgb24", "rgb565", "bgr666"
++  crtc. Currently supported types: "rgb24", "rgb565", "bgr666", "rgb66=
+6"
+ - edid: verbatim EDID data block describing attached display.
+ - ddc: phandle describing the i2c bus handling the display data
+   channel
+diff --git a/drivers/staging/imx-drm/ipu-v3/ipu-dc.c b/drivers/staging/=
+imx-drm/ipu-v3/ipu-dc.c
+index d0e3bc3..617e65b 100644
+--- a/drivers/staging/imx-drm/ipu-v3/ipu-dc.c
++++ b/drivers/staging/imx-drm/ipu-v3/ipu-dc.c
+@@ -92,6 +92,7 @@ enum ipu_dc_map {
+ 	IPU_DC_MAP_GBR24, /* TVEv2 */
+ 	IPU_DC_MAP_BGR666,
+ 	IPU_DC_MAP_BGR24,
++	IPU_DC_MAP_RGB666,
+ };
+=20
+ struct ipu_dc {
+@@ -155,6 +156,8 @@ static int ipu_pixfmt_to_map(u32 fmt)
+ 		return IPU_DC_MAP_BGR666;
+ 	case V4L2_PIX_FMT_BGR24:
+ 		return IPU_DC_MAP_BGR24;
++	case V4L2_PIX_FMT_RGB666:
++		return IPU_DC_MAP_RGB666;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -404,6 +407,12 @@ int ipu_dc_init(struct ipu_soc *ipu, struct device=
+ *dev,
+ 	ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 1, 15, 0xff); /* green */
+ 	ipu_dc_map_config(priv, IPU_DC_MAP_BGR24, 0, 23, 0xff); /* blue */
+=20
++	/* rgb666 */
++	ipu_dc_map_clear(priv, IPU_DC_MAP_RGB666);
++	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 0, 5, 0xfc); /* blue */
++	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 1, 11, 0xfc); /* green */
++	ipu_dc_map_config(priv, IPU_DC_MAP_RGB666, 2, 17, 0xfc); /* red */
++
+ 	return 0;
+ }
+=20
+diff --git a/drivers/staging/imx-drm/parallel-display.c b/drivers/stagi=
+ng/imx-drm/parallel-display.c
+index 24aa9be..bb71d6d 100644
+--- a/drivers/staging/imx-drm/parallel-display.c
++++ b/drivers/staging/imx-drm/parallel-display.c
+@@ -222,6 +222,8 @@ static int imx_pd_probe(struct platform_device *pde=
+v)
+ 			imxpd->interface_pix_fmt =3D V4L2_PIX_FMT_RGB565;
+ 		else if (!strcmp(fmt, "bgr666"))
+ 			imxpd->interface_pix_fmt =3D V4L2_PIX_FMT_BGR666;
++		else if (!strcmp(fmt, "rgb666"))
++			imxpd->interface_pix_fmt =3D V4L2_PIX_FMT_RGB666;
+ 	}
+=20
+ 	imxpd->dev =3D &pdev->dev;
+--=20
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
