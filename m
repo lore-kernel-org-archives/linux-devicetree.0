@@ -1,65 +1,55 @@
-From: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8] gpio: add a driver for the Synopsys DesignWare APB
- GPIO block
-Date: Thu, 5 Dec 2013 16:56:32 -0600
-Message-ID: <CANk1AXS2twLVbPUUcLRXnzjJsGO0TPk9CM+8M5cf-tOOaUexnA@mail.gmail.com>
-References: <1386088876-29205-1-git-send-email-delicious.quinoa@gmail.com>
-	<1386088876-29205-2-git-send-email-delicious.quinoa@gmail.com>
-	<20131205165439.GB5924@maple>
-	<CANk1AXRJK+Zy2FYEn5jBevUr5Dr_tNeFf9=GbOnzxgiSOw7j8w@mail.gmail.com>
+From: Florian Fainelli <florian@openwrt.org>
+Subject: [PATCH 3/7] net: of_mdio: do not overwrite PHY interrupt configuration
+Date: Thu, 5 Dec 2013 14:52:12 -0800
+Message-ID: <1386283936-26104-4-git-send-email-florian@openwrt.org>
+References: <1386283936-26104-1-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANk1AXRJK+Zy2FYEn5jBevUr5Dr_tNeFf9=GbOnzxgiSOw7j8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Yves Vandervennet <rocket.yvanderv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1386283936-26104-1-git-send-email-florian@openwrt.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, abrodkin@synopsys.com, rob.herring@calxeda.com, mark.rutland@arm.com, sebastian.hesselbarth@gmail.com, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 5, 2013 at 4:53 PM, delicious quinoa
-<delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Dec 5, 2013 at 10:54 AM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
->> Hi Alan,
->>
->> One minor comment below, otherwise looks great!
->>
->> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
->>
->> Thanks,
->>
->> Jamie
->>
->> On Tue, Dec 03, 2013 at 10:41:16AM -0600, Alan Tull wrote:
->>> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
->>> new file mode 100644
->>> index 0000000..e6dc61f
->>> --- /dev/null
->>> +++ b/drivers/gpio/gpio-dwapb.c
->> ...
->>> +static unsigned int dwapb_gpio_nr_ports(struct device_node *of_node)
->>> +{
->>> +     unsigned int nr_ports = 0;
->>> +     struct device_node *np;
->>> +
->>> +     for_each_child_of_node(of_node, np)
->>> +             ++nr_ports;
->>> +
->>> +     return nr_ports;
->>> +}
->>
->> I notice that we now have of_get_child_count() which didn't exist when I
->> first wrote the driver, we could use that now.
->
-> Thanks Jamie.
->
-> I'll include that in v8.  I'll post that within a few days.
->
-> Alan
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-er, I mean v9.
+If irq_of_parse_and_map fails to find an interrupt line for a given PHY,
+we will force the PHY interrupt to be PHY_POLL, completely overriding
+the previous value that the MDIO bus may have set for us (e.g:
+PHY_IGNORE_INTERRUPT). In case of failure, just restore the previous
+value.
 
-Alan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/of/of_mdio.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index f93ebca..4923ab2 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -27,7 +27,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+ {
+ 	struct phy_device *phy;
+ 	bool is_c45;
+-	int rc;
++	int rc, prev_irq;
+ 
+ 	is_c45 = of_device_is_compatible(child,
+ 					 "ethernet-phy-ieee802.3-c45");
+@@ -37,10 +37,11 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+ 		return 1;
+ 
+ 	if (mdio->irq) {
++		prev_irq= mdio->irq[addr];
+ 		mdio->irq[addr] =
+ 			irq_of_parse_and_map(child, 0);
+ 		if (!mdio->irq[addr])
+-			mdio->irq[addr] = PHY_POLL;
++			mdio->irq[addr] = prev_irq;
+ 	}
+ 
+ 	/* Associate the OF node with the device structure so it
+-- 
+1.8.3.2
