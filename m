@@ -1,50 +1,61 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2NSAxLzNdIG10ZDogbmFuZDogZ3BpbzogQWRkIERUIHBy?=
- =?UTF-8?B?b3BlcnR5IHRvIGF1dG9tYXRpY2FsbHkgZGV0ZXJtaW5lIGJ1cyB3aWR0aA==?=
-Date: Thu, 05 Dec 2013 11:45:25 +0400
-Message-ID: <1386229525.801342898@f370.i.mail.ru>
-References: <1384343884-29622-1-git-send-email-shc_work@mail.ru>
- <20131130091738.GE29397@norris.computersforpeace.net>
- <20131205021809.GK27149@ld-irv-0074.broadcom.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v3 04/10] usb: dwc3: use quirks to know if a particualr
+ platform doesn't have PHY
+Date: Thu, 5 Dec 2013 09:58:28 +0200
+Message-ID: <20131205075828.GA32583@xps8300>
+References: <1385373690-12170-1-git-send-email-kishon@ti.com>
+ <1385373690-12170-5-git-send-email-kishon@ti.com>
+ <20131204144027.GB21055@xps8300>
+ <52A01E86.50406@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20131205021809.GK27149@ld-irv-0074.broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?B?QnJpYW4gTm9ycmlz?= <computersforpeace@gmail.com>
-Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?UnVzc2VsbCBLaW5n?= <linux@arm.linux.org.uk>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?QXJ0ZW0gQml0eXV0c2tpeQ==?= <dedekind1@gmail.com>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring@calxeda.com>, linux-mtd@lists.infradead.org, =?UTF-8?B?SGFvamlhbiBaaHVhbmc=?= <haojian.zhuang@gmail.com>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>, =?UTF-8?B?RXJpYyBNaWFv?= <eric.y.miao@gmail.com>, =?UTF-8?B?RGF2aWQgV29vZGhvdXNl?= <dwmw2@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52A01E86.50406@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: balbi@ti.com, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, grant.likely@linaro.org, s.nawrocki@samsung.com, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-> On Sat, Nov 30, 2013 at 01:17:38AM -0800, Brian Norris wrote:
-> > On Fri, Nov 29, 2013 at 12:56:04PM +0400, Alexander Shiyan wrote:
-> > > Can at least part [2/3] "mtd: nand: gpio: Use devm_gpio_request_one() where possible"
-> > > be applied at this time?
+Hi,
+
+On Thu, Dec 05, 2013 at 12:04:46PM +0530, Kishon Vijay Abraham I wrote:
+> On Wednesday 04 December 2013 08:10 PM, Heikki Krogerus wrote:
+> > On Mon, Nov 25, 2013 at 03:31:24PM +0530, Kishon Vijay Abraham I wrote:
+> >> There can be systems which does not have an external phy, so get
+> >> phy only if no quirks are added that indicates the PHY is not present.
+> >> Introduced two quirk flags to indicate the *absence* of usb2 phy and
+> >> usb3 phy. Also remove checking if return value is -ENXIO since it's now
+> >> changed to always enable usb_phy layer.
 > > 
-> > Probably. I was avoiding taking things out of order in the series for
-> > now, but I'll take another look. If it looks good and applies
-> > independently, then I'll take it.
+> > Can you guys explain why is something like this needed? Like with
+> > clocks and gpios, the device drivers shouldn't need to care any more
+> > if the platform has the phys or not. -ENODEV tells you your platform
 > 
-> Patch 2 can't be applied independently. You can rebase and resend if you
-> want it applied.
-> 
-> We still haven't resolved patch 1. It doesn't seem like quite the right
-> binding.
+> Shouldn't we report if a particular platform needs a PHY and not able to get
+> it. How will a user know if a particular controller is not working because it's
+> not able to get and initialize the PHYs? Don't you think in such cases it's
+> better to fail (and return from probe) because the controller will not work
+> anyway without the PHY?
 
-I am again inclined to believe that it is necessary to completely remove
-the width parameter for the driver and always determine the bus width
-automatically when the window size is more than 1 byte.
+My point is that you do not need to separately tell this to the driver
+like you do with the quirks (if you did, then you would need to fix
+your framework and not hack the drivers).
 
----
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Like I said, ENODEV tells you that there is no phy on this platform
+for you, allowing you to safely continue. If your phy driver is not
+loaded, the framework already returns EPROBE_DEFER, right. Any other
+error when getting the phy you can consider critical. They are the
+errors telling you that you do need a phy on this platform, but
+something actually went wrong when getting it.
+
+Those "quirks" should always be avoided, and I don't see any use for
+them here.
+
+> Thanks
+> Kishon
+
+Thanks,
+
+-- 
+heikki
