@@ -1,36 +1,56 @@
-From: Daniel Tang <dt.tangr@gmail.com>
-Subject: Re: [PATCH 1/2] usb: chipidea: fix mistake in device tree binding of nspire-usb to use vendor name 'lsi' instead of SoC name 'zevio'
-Date: Thu, 5 Dec 2013 16:45:03 +1100
-Message-ID: <ABF0DEB7-5FAD-417D-80EA-BF1A52C3612A@gmail.com>
-References: <1386148808-15065-1-git-send-email-dt.tangr@gmail.com> <20131204121849.GM16025@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0 (Mac OS X Mail 6.6 \(1510\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131204121849.GM16025@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/2] ARM: shmobile: armadillo: Set vccq_sdhi0 regulator type in DT
+Date: Thu, 05 Dec 2013 06:56:48 +0100
+Message-ID: <9848623.yKHAtIGPld@avalon>
+References: <1385653493-9952-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1385653493-9952-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20131205034554.GB20388@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20131205034554.GB20388@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Simon,
 
-On 04/12/2013, at 11:18 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-
->> 
->> 
->> Required properties:
->> -- compatible: Should be "zevio,nspire-usb"
->> +- compatible: Should be "lsi,nspire-usb"
+On Thursday 05 December 2013 12:45:54 Simon Horman wrote:
+> On Thu, Nov 28, 2013 at 04:44:53PM +0100, Laurent Pinchart wrote:
+> > The mandatory regulator-type property is missing, add it.
 > 
-> Surely this should be lsi,zevio-usb, matching the lsi,zevio-timer
-> binding?
+> Thanks, I will queue this up.
 
-You're right. I'll fix up the patch and send it back in.
+Mark has rightfully commented on patch 1/2 in this series that the regulator-
+type property shouldn't be mandatory but should default to voltage. We could 
+then drop this patch.
 
-> 
-> Thanks,
-> Mark.
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> > ---
+> > 
+> >  arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> > b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts index
+> > 7b80f19..013a7cd 100644
+> > --- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> > +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> > @@ -53,6 +53,8 @@
+> > 
+> >  		regulator-name = "SDHI0 VccQ";
+> >  		regulator-min-microvolt = <1800000>;
+> >  		regulator-max-microvolt = <3300000>;
+> > 
+> > +		regulator-type = "voltage";
+> > +
+> > 
+> >  		vin-supply = <&vcc_sdhi0>;
+> >  		
+> >  		enable-gpio = <&pfc 74 GPIO_ACTIVE_HIGH>;
+-- 
+Regards,
 
-Cheers,
-Daniel Tang
+Laurent Pinchart
+
