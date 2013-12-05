@@ -1,50 +1,55 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH v3 9/9] mtd: nand: davinci: don't request AEMIF address range
-Date: Thu, 5 Dec 2013 19:25:57 +0200
-Message-ID: <1386264358-9738-10-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [PATCH v3 3/9] mtd: nand: davinci: check required ti,
+ davinci-chipselect property
+Date: Thu, 5 Dec 2013 19:25:51 +0200
+Message-ID: <1386264358-9738-4-git-send-email-ivan.khoronzhuk@ti.com>
 References: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 In-Reply-To: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
 To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, dwmw2@infradead.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The TI AEMIF driver registers are used to setup timings for each chip
-select. The same registers range is used to setup NAND settings.
-The AEMIF and NAND drivers not use the same registers in this range.
+The property "ti,davinci-chipselect" is required. So we have to check
+if it is set.
 
-In case with TI AEMIF driver, the memory address range is requested
-already by AEMIF, so we cannot request it twice, just ioremap.
-
-Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Reviewed-by: Taras Kondratiuk <taras@ti.com>
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 ---
- drivers/mtd/nand/davinci_nand.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/mtd/nand/davinci_nand.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
-index f7b21b8..0cd4dbc 100644
+index ddcd7c8..9a96ac7 100644
 --- a/drivers/mtd/nand/davinci_nand.c
 +++ b/drivers/mtd/nand/davinci_nand.c
-@@ -636,9 +636,11 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
- 	if (IS_ERR(vaddr))
- 		return PTR_ERR(vaddr);
- 
--	base = devm_ioremap_resource(&pdev->dev, res2);
--	if (IS_ERR(base))
--		return PTR_ERR(base);
-+	base = devm_ioremap(&pdev->dev, res2->start, resource_size(res2));
-+	if (!base) {
-+		dev_err(&pdev->dev, "ioremap failed for resource %pR\n", res2);
-+		return -EADDRNOTAVAIL;
-+	}
- 
- 	info->dev		= &pdev->dev;
- 	info->base		= base;
+@@ -545,6 +545,9 @@ static struct davinci_nand_pdata
+ 		if (!of_property_read_u32(pdev->dev.of_node,
+ 			"ti,davinci-chipselect", &prop))
+ 			pdev->id = prop;
++		else
++			return ERR_PTR(-EINVAL);
++
+ 		if (!of_property_read_u32(pdev->dev.of_node,
+ 			"ti,davinci-mask-ale", &prop))
+ 			pdata->mask_ale = prop;
 -- 
 1.7.9.5
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
