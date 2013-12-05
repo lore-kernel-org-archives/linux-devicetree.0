@@ -1,83 +1,61 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv4 1/4] arm: dts: Add support for SD/MMC on SOCFPGA
-Date: Thu, 5 Dec 2013 22:08:38 +0100
-Message-ID: <201312052208.38342.arnd@arndb.de>
-References: <1386263677-7733-1-git-send-email-dinguyen@altera.com> <1386263677-7733-2-git-send-email-dinguyen@altera.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 0/4] LP3943 MFD driver for a GPIO expander and a PWM
+ generator
+Date: Thu, 5 Dec 2013 21:43:41 +0000
+Message-ID: <20131205214341.GC29268@sirena.org.uk>
+References: <1380082975-6022-1-git-send-email-milo.kim@ti.com>
+ <20131204103431.GC26589@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1386263677-7733-2-git-send-email-dinguyen@altera.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dinguyen@altera.com
-Cc: dinh.linux@gmail.com, mturquette@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WbkWELb8d/6oR4nB"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131204103431.GC26589@ulmo.nvidia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Milo Kim <milo.kim@ti.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 05 December 2013, dinguyen@altera.com wrote:
-> From: Dinh Nguyen <dinguyen@altera.com>
-> 
-> Re-use the "rockchip,rk2928-dw-mshc" binding that will support SD/MMC on
-> Altera's SOCFPGA platform.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-> ---
-> v3: Re-use "rockchip,rk2928-dw-mshc" binding
-> v3: none
-> v2: none
-> ---
->  arch/arm/boot/dts/socfpga.dtsi          |   11 +++++++++++
->  arch/arm/boot/dts/socfpga_arria5.dtsi   |   12 ++++++++++++
->  arch/arm/boot/dts/socfpga_cyclone5.dtsi |   12 ++++++++++++
->  arch/arm/boot/dts/socfpga_vt.dts        |   12 ++++++++++++
->  4 files changed, 47 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index f936476..3d9f01b 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -469,6 +469,17 @@
->  			cache-level = <2>;
->  		};
->  
-> +		mmc: dwmmc0@ff704000 {
-> +			compatible = "rockchip,rk2928-dw-mshc";
-> +			reg = <0xff704000 0x1000>;
-> +			interrupts = <0 139 4>;
-> +			fifo-depth = <0x400>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
-> +			clock-names = "biu", "ciu";
-> +		};
 
+--WbkWELb8d/6oR4nB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I think it's great that you can reuse the existing driver, but I'd recommend
-using a generic compatible string here in addition to one that identifies
-your specific implementation. You can list "rockchip,rk2928-dw-mshc" as
-well, but that is probably not necessary.
+On Wed, Dec 04, 2013 at 11:34:32AM +0100, Thierry Reding wrote:
+> On Wed, Sep 25, 2013 at 01:22:55PM +0900, Milo Kim wrote:
 
-What I'd expect to see here is either
+> >   mfd: add LP3943 MFD driver
+> >   gpio: add LP3943 I2C GPIO expander driver
+> >   pwm: add LP3943 PWM driver
+> >   Documentation: add LP3943 DT bindings and document
 
-	compatible = "altr,socfpga-dw-mshc", "rockchip,rk2928-dw-mshc", "snps,dw-mshc";
+> I suspect that given the build-time dependencies Lee may want to take
+> all four patches through the MFD tree, so I've acked the PWM parts.
 
-or 
+FWIW this isn't an issue with new MFDs - since the function drivers will
+depend on the core driver it's not possible to enable them in Kconfig
+until the core driver is also merged and you don't get bisect issues.
 
-	compatible = "altr,socfpga-dw-mshc", "rockchip,rk2928-dw-mshc", "snps,dw-mshc";
+--WbkWELb8d/6oR4nB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-It's probably not too late to generalize the SDMMC_CMD_USE_HOLD_REG
-handling, which is currently the only difference between the generic
-"snps,dw-mshc" and the newer "rockchip,rk2928-dw-mshc" variant.
+iQIcBAEBAgAGBQJSoPOJAAoJELSic+t+oim90fgP/Rr9rCPDaQciOglENW/i2AnN
+Yk5bbdeAeNSjI3GhIdprtb3C/MjqJAGo+TOmDU7HLo1vzIVM54CumZCYqg6qQwKu
+W0X3jadh/PMhDW8v04ixxxNoT7Ag9qCWdGIdO/z2lKq3sDWGEn7nFmRmCQQSK8sx
+u2C+uvrnI98XQ7klNEc/y6yrqAAy/NOKX708INrS4sMFtkLSvory8N512pS53SUM
++2g3hx3LYVvLhBy30nmT7kHRvbC1aSDUmEOPW3XCOFKq5wzqTVy9F2/Ftno0W+I/
+9efSSOD7DgtUWe1mDUZbjA7H+Fbpzp+gNY+9L24mGrD8uTL/Vk7QMvsIpW/2grce
+xuEf66JAKeytsFFkbNcmQSB+NV8rivLyfxJ661a4wVDAFJg7uw46neRoGnCjZqXs
+xinFj2bC4479zkW3PiobTIeh7AHBmKpca7x/7HD1+FqDrpk3vL5SAq7KwAflCRBt
+WqR2JlqRwX19GuGoVWhJq2sYmx0wUdVRvRTzJhoJeZwMrIsZVd/W9C/sbJh3qKgX
+u4vDtO1jwUpMwKddbKIOt5/rjOm4lMmdNG9akwdsR7iplcstIQn9IkMEww4CALM9
+z3r0SModw7MrOVAdEjq9Re7gI+RDhY/NCfhsazieBh7gan5cA9NEGK9pQrTNRicX
+TQJj9JyQ55eNErjHPGsq
+=4LdU
+-----END PGP SIGNATURE-----
 
-It's quite likely that all implementations should actually set
-SDMMC_CMD_USE_HOLD_REG (if both rockchips and altera set it) and you
-don't need to have any distinction in the dw_mmc-pltfm.c driver at all.
-
-If it's actually needed on some but not others, you could add a binary
-DT property to tell the driver about it rather than keying it off of
-the compatible string. If it's needed only on older (or only on newer)
-versions of the dw-mshc design, it could be encoded as a version in the
-string, such as "snps,dw-mshc-1.234".
-
-	Arnd
+--WbkWELb8d/6oR4nB--
