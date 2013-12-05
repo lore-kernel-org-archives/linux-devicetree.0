@@ -1,121 +1,103 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH RFC 1/4] phy: Add new Exynos5 USB 3.0 PHY driver
-Date: Thu, 5 Dec 2013 13:44:36 +0530
-Message-ID: <CAFp+6iF+N+eMOd=B-J3oS_u0TEse+5V2gHkcNxN0OS+YbV_Y9g@mail.gmail.com>
-References: <1383205544-32244-1-git-send-email-gautam.vivek@samsung.com>
-	<1383205544-32244-2-git-send-email-gautam.vivek@samsung.com>
-	<527744B2.4090303@ti.com>
-	<030d01ced946$d6e23490$84a69db0$%debski@samsung.com>
-	<52779D28.9000905@ti.com>
-	<CAFp+6iH7vQ-OtMFL4pyr4tFDRchH4oh1Z0753WNgrHiUzj+kzw@mail.gmail.com>
-	<00fe01ceda0a$941957a0$bc4c06e0$%debski@samsung.com>
-	<000001ceda17$f41c2030$dc546090$%han@samsung.com>
-	<000101ceda1f$04ca6f20$0e5f4d60$%han@samsung.com>
-	<CAFp+6iFAZab35F-MOOZHcHpzSEOL=51gWBK2KZbOJS+0731GJQ@mail.gmail.com>
-	<000301ceda84$1d648bf0$582da3d0$%han@samsung.com>
-	<5280BB65.5040305@ti.com>
-	<CAFp+6iGKpzOHjwnSMvSgTehzPLQMB8madoYqMk5JPSAZfSGSTg@mail.gmail.com>
-	<528C7B0E.3080401@ti.com>
-	<CAFp+6iF3UnV-w2pYQE2THQZBGma8xpp6pqSuwXzjUN3emJnftQ@mail.gmail.com>
-	<528CD8EC.9050403@ti.com>
-	<529F3C1C.2050509@ti.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: Re: [PATCH 00/17] Add memory mapped support for ti qspi, m25p80 serial
+ flash.
+Date: Thu, 5 Dec 2013 14:39:54 +0530
+Message-ID: <52A042E2.509@ti.com>
+References: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <529F3C1C.2050509@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, Kamil Debski <k.debski@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Felipe Balbi <balbi@ti.com>, Julius Werner <jwerner@chromium.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1385451313-1875-1-git-send-email-sourav.poddar@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: computersforpeace@gmail.com
+Cc: devicetree@vger.kernel.org, balbi@ti.com, linux-spi@vger.kernel.org, broonie@kernel.org, linux-mtd@lists.infradead.org, bcousson@baylibre.com, Sourav Poddar <sourav.poddar@ti.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-
-On Wed, Dec 4, 2013 at 7:58 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi Vivek,
+Hi Brian,
+On Tuesday 26 November 2013 01:04 PM, Sourav Poddar wrote:
+> The patch series aims to add memory mapped support for TI qspi
+> contoller and also add support for the same in serial flash driver(m25p80).
 >
-> On Wednesday 20 November 2013 09:14 PM, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On Wednesday 20 November 2013 03:02 PM, Vivek Gautam wrote:
->>> On Wed, Nov 20, 2013 at 2:34 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>> On Wednesday 20 November 2013 02:27 PM, Vivek Gautam wrote:
->>>>> Hi Kishon,
->>>>>
->>>>>
->>>>> On Mon, Nov 11, 2013 at 4:41 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>>>> Hi,
->>>>> sorry for the delayed response.
->>>>>
->>>>>>
->>>>>> On Wednesday 06 November 2013 05:37 AM, Jingoo Han wrote:
->>>>>>> On Wednesday, November 06, 2013 2:58 AM, Vivek Gautam wrote:
->>>>>>>> On Tue, Nov 5, 2013 at 5:33 PM, Jingoo Han <jg1.han@samsung.com> wrote:
->>>>>>>
->>>>>>> [.....]
->>>>>>>
->>>>>>>>> USB3.0 PHY consists of two blocks such as 3.0 block and 2.0 block.
->>>>>>>>> This USB3.0 PHY can support UTMI+ and PIPE3 interface for 3.0 block
->>>>>>>>> and 2.0 block, respectively.
->>>>>>>>>
->>>>>>>>> Conclusion:
->>>>>>>>>
->>>>>>>>>    1) USB2.0 PHY: USB2.0 HOST, USB2.0 Device
->>>>>>>>>                        Base address: 0x1213 0000
->>>>>>>>>
->>>>>>>>>    2) USB3.0 PHY: USB3.0 DRD (3.0 HOST & 3.0 Device)
->>>>>>>>>                        Base address: 0x1210 0000
->>>>>>>>>                        2.0 block(UTMI+) & 3.0 block(PIPE3)
->>>>>>>>
->>>>>>>> And this is of course the PHY used by DWC3 controller, which works at
->>>>>>>> both High speed as well as Super Speed.
->>>>>>>> Right ?
->>>>>>>
->>>>>>> Right.
->>>>>>>
->>>>>>> While 3.0 block(PIPE3) can be used for Super Speed, 2.0 block(UTMI+)
->>>>>>> can be used for High speed.
->>>>>>
->>>>>> It should then come under *single IP muliple PHY* category similar to what
->>>>>> Sylwester has done.
->>>>>
->>>>> Do you mean that i should be including PHY IDs for UTMI+ phy and PIPE3
->>>>> phy present in this PHY block ?
->>>>> AFAICS the two phys (UTMI+ and PIPE3) do not really have separate
->>>>> registers to program, and that's the reason
->>>>> we program the entire PHY in a shot.
->>>>
->>>> you mean you program the same set of bits for UTMI+ and PIPE3?
->>>
->>> No, looking closely into PHY datasheet as well as Exynos5250 manual, i
->>> can see that UTMI+ and PIPE3
->>> phys have separate bit settings. So i think we should be able to
->>> segregate the two PHYs (UTMI+ and PIPE3).
->>> Pardon me for my earlier observations.
->>
->> no problem..
->>> Let me clarify more with our h/w team also on this and then i will
->>> confirm with this.
+> These feature was added as a part of the series[1]:
+> The series[1] add support for quad and memory mapped feature in spi and
+> flash driver. Based on Brian Norris suggestion on splitting the quad and
+> memory mapped feature, I had sent a seperate series for quad support which
+> has beed accepted by Brian.
 >
-> Did you get more information on this?
-
-Yes, i have been in contact with our hardware team.
-The functionality of setting up UTMI+ and PIPE3 phys separately, and
-thereby using only one functionality of the two
-at some point of time (either high speed or super speed) hasn't been
-tested so far.
-So i will be looking into this and try to find out proper init
-sequences for the two available PHYs
-separately and as soon as i get a working solution for this, i will update.
-
+> The $subject patch series takes care of the memory mapped part.
 >
-> Thanks
-> Kishon
+> Overview of memory mapped support in qspi:
+>   TI qspi controller supports memory mapped read support, switching to which
+>   requires  register modifications(qspi registers, control module register for
+>   DRA, qspi register for am43x). Once switched, the flash data can be available
+>   at a soc specific memory mapped address. For operations in normal mode, we need
+>   to keep memory mapped disable.
+>
+>   Flow of the patch is to keep the memory mapped enable by default in the driver.
+>   Whenever Normal spi mode operations are desired, we switch to configuration mode
+>   and at the end of it memory mapped is again enabled. There are few function pointers
+>   added to fecilitate easy communication between the flash and spi controllers.
+>
+> Major changes in the $subject patch based on discussion in [1]:
+>
+> - Feature has been broken down into small meaningfl patches.
+> - memcpy is done in flash driver and spi framework is bypassed.
+> - configuration of memory mapped spi controller regsiters is done
+>    through function calls from flash side.
+>
+> [1]: http://lists.infradead.org/pipermail/linux-mtd/2013-October/049058.html
+>
+>
+> Tested on DRA7 board with spansion S25FL256S flash along with some
+> internal irq crossbar patches.
+> Tested on AM437x epos evm with macronix MX66l51235l flash.
+>
+> Testing done:
+> -Erase the whole flash.
+> -write to the flash
+> -read back the flash
+> - compare the data
+>
+> Sourav Poddar (17):
+>    spi/spi.h: Add get_buf/put_buf support in spi master..
+>    spi/spi.h: Add configure from slave support.
+>    spi/qspi: parse register by name.
+>    spi/qspi: parse control module register.
+>    spi/qspi: parse memory map register.
+>    spi/qspi: Add support to switc to memory mapped operation.
+>    spi/qspi: configure set up register for memory map..
+>    spi/qspi: Add api for get_buf/put_buf.
+>    spi/spi.h: Add "mem" variable in spi master.
+>    spi/spi.h: Add mmap flag in spi master.
+>    spi/qspi: set "mmap" flag to true.
+>    spi/qspi: convert driver to enable/disable memory mapped..
+>    drivers: mtd: m25p80: Add api to configure master register .
+>    drivers: mtd: m25p80: Adapt driver to support memory mapped read.
+>    arm: dts: dra7: Add qspi device.
+>    arm: dts: am43x-epos: Add qspi device.
+>    Documentation: bindings: ti-qspi: update binding information.
+>
+>   Documentation/devicetree/bindings/spi/ti_qspi.txt |    2 +
+>   arch/arm/boot/dts/am4372.dtsi                     |   12 ++
+>   arch/arm/boot/dts/am43x-epos-evm.dts              |   28 +++++
+>   arch/arm/boot/dts/dra7-evm.dts                    |   32 ++++++
+>   arch/arm/boot/dts/dra7.dtsi                       |   13 +++
+>   drivers/mtd/devices/m25p80.c                      |   30 ++++++
+>   drivers/spi/spi-ti-qspi.c                         |  115 ++++++++++++++++++++-
+>   include/linux/spi/spi.h                           |   16 +++
+>   8 files changed, 246 insertions(+), 2 deletions(-)
+>
+Gentle ping on this series on mtd side...
 
-
-
--- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
