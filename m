@@ -1,61 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 0/4] LP3943 MFD driver for a GPIO expander and a PWM
- generator
-Date: Thu, 5 Dec 2013 21:43:41 +0000
-Message-ID: <20131205214341.GC29268@sirena.org.uk>
-References: <1380082975-6022-1-git-send-email-milo.kim@ti.com>
- <20131204103431.GC26589@ulmo.nvidia.com>
+From: Tim Kryger <tim.kryger@linaro.org>
+Subject: [RESEND PATCH] ARM: dts: bcm28155-ap: Fix Card Detection GPIO
+Date: Thu, 5 Dec 2013 13:51:44 -0800
+Message-ID: <1386280304-4227-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WbkWELb8d/6oR4nB"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131204103431.GC26589@ulmo.nvidia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Milo Kim <milo.kim@ti.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Tim Kryger <tim.kryger@linaro.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Linux Arm Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+The board schematic states that the "SD_CARD_DET_N gets pulled to GND
+when card is inserted" so the polarity has been updated to active low.
 
---WbkWELb8d/6oR4nB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Polarity is now specified with a GPIO define instead of a magic number.
 
-On Wed, Dec 04, 2013 at 11:34:32AM +0100, Thierry Reding wrote:
-> On Wed, Sep 25, 2013 at 01:22:55PM +0900, Milo Kim wrote:
+Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+Reviewed-by: Matt Porter <matt.porter@linaro.org>
+---
+ arch/arm/boot/dts/bcm28155-ap.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> >   mfd: add LP3943 MFD driver
-> >   gpio: add LP3943 I2C GPIO expander driver
-> >   pwm: add LP3943 PWM driver
-> >   Documentation: add LP3943 DT bindings and document
-
-> I suspect that given the build-time dependencies Lee may want to take
-> all four patches through the MFD tree, so I've acked the PWM parts.
-
-FWIW this isn't an issue with new MFDs - since the function drivers will
-depend on the core driver it's not possible to enable them in Kconfig
-until the core driver is also merged and you don't get bisect issues.
-
---WbkWELb8d/6oR4nB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSoPOJAAoJELSic+t+oim90fgP/Rr9rCPDaQciOglENW/i2AnN
-Yk5bbdeAeNSjI3GhIdprtb3C/MjqJAGo+TOmDU7HLo1vzIVM54CumZCYqg6qQwKu
-W0X3jadh/PMhDW8v04ixxxNoT7Ag9qCWdGIdO/z2lKq3sDWGEn7nFmRmCQQSK8sx
-u2C+uvrnI98XQ7klNEc/y6yrqAAy/NOKX708INrS4sMFtkLSvory8N512pS53SUM
-+2g3hx3LYVvLhBy30nmT7kHRvbC1aSDUmEOPW3XCOFKq5wzqTVy9F2/Ftno0W+I/
-9efSSOD7DgtUWe1mDUZbjA7H+Fbpzp+gNY+9L24mGrD8uTL/Vk7QMvsIpW/2grce
-xuEf66JAKeytsFFkbNcmQSB+NV8rivLyfxJ661a4wVDAFJg7uw46neRoGnCjZqXs
-xinFj2bC4479zkW3PiobTIeh7AHBmKpca7x/7HD1+FqDrpk3vL5SAq7KwAflCRBt
-WqR2JlqRwX19GuGoVWhJq2sYmx0wUdVRvRTzJhoJeZwMrIsZVd/W9C/sbJh3qKgX
-u4vDtO1jwUpMwKddbKIOt5/rjOm4lMmdNG9akwdsR7iplcstIQn9IkMEww4CALM9
-z3r0SModw7MrOVAdEjq9Re7gI+RDhY/NCfhsazieBh7gan5cA9NEGK9pQrTNRicX
-TQJj9JyQ55eNErjHPGsq
-=4LdU
------END PGP SIGNATURE-----
-
---WbkWELb8d/6oR4nB--
+diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
+index 08e47c2..27dd110 100644
+--- a/arch/arm/boot/dts/bcm28155-ap.dts
++++ b/arch/arm/boot/dts/bcm28155-ap.dts
+@@ -13,6 +13,8 @@
+ 
+ /dts-v1/;
+ 
++#include <dt-bindings/gpio/gpio.h>
++
+ #include "bcm11351.dtsi"
+ 
+ / {
+@@ -40,7 +42,7 @@
+ 
+ 	sdio4: sdio@3f1b0000 {
+ 		max-frequency = <48000000>;
+-		cd-gpios = <&gpio 14 0>;
++		cd-gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
+ 		status = "okay";
+ 	};
+ };
+-- 
+1.8.0.1
