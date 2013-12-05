@@ -1,56 +1,100 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using
- pinfunc.
-Date: Thu, 05 Dec 2013 18:03:02 +0100
-Message-ID: <1475204.PCyxT0KMui@amdc1227>
-References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
- <1502243.eRBlCfUhTO@amdc1227> <52A0AEB4.7090909@bracey.fi>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 13/26] ARM: omap3.dtsi: add omapdss information
+Date: Thu, 5 Dec 2013 09:05:15 -0800
+Message-ID: <20131205170514.GY26766@atomide.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+ <1386160133-24026-14-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <52A0AEB4.7090909@bracey.fi>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kevin Bracey <kevin@bracey.fi>
-Cc: Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Kyungmin Park <kmpark@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1386160133-24026-14-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 05 of December 2013 18:49:56 Kevin Bracey wrote:
-> On 05/12/2013 17:11, Tomasz Figa wrote:
-> > On Thursday 05 of December 2013 15:07:47 Mark Brown wrote:
-> >> On Tue, Dec 03, 2013 at 10:29:42AM +0100, Linus Walleij wrote:
-> >>
-> >>> So a suggested patch to support weak hogs would be interesting
-> >>> to look at. Can you provide details on how you think this would
-> >>> work?
-> >> Or should we be going and applying the default state to all devices on
-> >> init without worrying about a driver appearing?
-> > If a device isn't used, then it's often better to configure the pins for
-> > a different function, such as GPIO, to minimize leakage current.
-> >
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [131204 04:31]:
+
+Description missing.. But other than that can you please check that
+the latest patch I posted in thread "[PATCH] ARM: OMAP2+: Fix populating
+the hwmod data from device" works with this?
+
+The test to do is to remove the related reg, interrupt and dma entries
+from omap_hwmod_*_data.c, and make sure the related hwmod data is initialized
+from DT properly.
+
+I don't know if it makes sense to have them as children of dss_core, they
+really all seem to be completely independent devices?
+
+BTW, for v3.15, I'm hoping to do patches where we deprecate ti,hwmods
+property and do the lookup based on the compatible property instead ;)
+So from that point of view we need to get the device mapping right in
+the .dtsi files, and don't want to start mixing up separate devices into
+single .dtsi entry.
+
+Regards,
+
+Tony
+
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> ---
+>  arch/arm/boot/dts/omap3.dtsi | 43 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
 > 
-> And there can also be mutually-exclusive drivers choosing different 
-> default states for the same pin. I think you do need a separate "safe" 
-> indicator.
-
-That's not quite true, as on a single board you should rather have
-a single device node with "okay" status referencing given set of pins.
-Still, I think that a separate safe state is the way to go.
-
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> index f3a0c26ed0c2..6fc163201cbd 100644
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -588,5 +588,48 @@
+>  			num-eps = <16>;
+>  			ram-bits = <12>;
+>  		};
+> +
+> +		dss@48050000 {
+> +			compatible = "ti,omap3-dss", "simple-bus";
+> +			reg = <0x48050000 0x200>;
+> +			ti,hwmods = "dss_core";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			dispc@48050400 {
+> +				compatible = "ti,omap3-dispc";
+> +				reg = <0x48050400 0x400>;
+> +				interrupts = <25>;
+> +				ti,hwmods = "dss_dispc";
+> +			};
+> +
+> +			dpi: encoder@0 {
+> +				compatible = "ti,omap3-dpi";
+> +			};
+> +
+> +			sdi: encoder@1 {
+> +				compatible = "ti,omap3-sdi";
+> +			};
+> +
+> +			dsi: encoder@4804fc00 {
+> +				compatible = "ti,omap3-dsi";
+> +				reg = <0x4804fc00 0x400>;
+> +				interrupts = <25>;
+> +				ti,hwmods = "dss_dsi1";
+> +			};
+> +
+> +			rfbi: encoder@48050800 {
+> +				compatible = "ti,omap3-rfbi";
+> +				reg = <0x48050800 0x100>;
+> +				ti,hwmods = "dss_rfbi";
+> +			};
+> +
+> +			venc: encoder@48050c00 {
+> +				compatible = "ti,omap3-venc";
+> +				reg = <0x48050c00 0x100>;
+> +				ti,hwmods = "dss_venc";
+> +			};
+> +		};
+>  	};
+>  };
+> -- 
+> 1.8.3.2
 > 
-> My current thought is that  a late-init "make safe all unclaimed pins" 
-> pass would make sense - you can't really mess with pins in an automated 
-> fashion on init, as it can mess up bootloader->driver handover.   There 
-> already exist late-init "turn off all unclaimed clocks" (at least on 
-> shmobile)
-
-That's a feature of Common Clock Framework.
-
-> and "turn off all unclaimed regulators", and it would fit that 
-> model.
-
-Maybe that's the way to do it. I need to think a bit more on this,
-especially considering our (Samsung's) use cases.
-
-Best regards,
-Tomasz
