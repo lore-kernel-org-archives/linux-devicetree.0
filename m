@@ -1,101 +1,63 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH 2/2] of: add initcall with match boilerplate helpers
-Date: Thu, 5 Dec 2013 11:57:28 -0600
-Message-ID: <CAL_Jsq+4yitHCtaKZ4nNxTg3Q4pUYF9RQY4Q=VTSs4ox-iSqSQ@mail.gmail.com>
-References: <1383113571-13029-1-git-send-email-robherring2@gmail.com>
-	<CAL_JsqKHZtidrzJPH+c-zyFUQNsxtEKxOYg+Nzyo9JYNDNexug@mail.gmail.com>
-	<20131127152244.410F2C404EC@trevor.secretlab.ca>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized
+ using pinfunc.
+Date: Thu, 5 Dec 2013 18:00:22 +0000
+Message-ID: <20131205180022.GX29268@sirena.org.uk>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
+ <CACRpkdYrPd9tnO48bA_5n+-k=KEDyhY7czkCNhTZfpgF3ar+LQ@mail.gmail.com>
+ <20131205150747.GW29268@sirena.org.uk>
+ <1502243.eRBlCfUhTO@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DLfA7Wi+Vmsdqq5j"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131127152244.410F2C404EC@trevor.secretlab.ca>
+Content-Disposition: inline
+In-Reply-To: <1502243.eRBlCfUhTO@amdc1227>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kevin Bracey <kevin@bracey.fi>, Kyungmin Park <kmpark@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2013 at 9:22 AM, Grant Likely <grant.likely@linaro.org> wrote:
-> On Thu, 21 Nov 2013 17:23:14 -0600, Rob Herring <robherring2@gmail.com> wrote:
->> On Thu, Nov 21, 2013 at 6:50 AM, Grant Likely <grant.likely@linaro.org> wrote:
->> > On Wed, 30 Oct 2013 01:12:51 -0500, Rob Herring <robherring2@gmail.com> wrote:
->> >> From: Rob Herring <rob.herring@calxeda.com>
->> >>
->> >> Add boilerplate helpers to create initcalls which are conditional on
->> >> matching on devicetree properties.
 
-[snip]
+--DLfA7Wi+Vmsdqq5j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> > I'm not sure why this is necessary. I don't particularly have a problem
->> > with it, but I wouldn't normally try to filter out device drivers when
->> > the probe code simply won't get called.
->> >
->> > Considering it's paired with the previous patch that creates devices in
->> > the module init call, I'm assuming it is to support that use case. If so
->> > then I don't think it is a good idea. If there is another use case then
->> > maybe.
->>
->> This is for cases that are not drivers. Again, the motivation is how
->> do I do initialization on arm64 where there is not already some
->> conditional initialization hook. My approach to solve this is by
->> eliminating the machine_desc for highbank. While I don't really have a
->> need to do this on highbank itself, I do have a need for some of the
->> same functions present in mach-highbank for arm64.
->>
->> I realized quickly going down this path that I would have a repeated
->> pattern and that there's already a few other examples in the kernel of
->> something like this:
->>
->> static int __init some_initcall(void)
->> {
->>   if (of_machine_is_compatible("my-awesume-board"))
->>     return -ENODEV;
->>
->>   /* do some init stuff... */
->> }
->>
->> There are some examples using this here [1][2].
->
-> It's still kind of a nasty pattern. I'd like to limit the use of this as
-> much as possible and I'd like to make it as easy as possible to discover
-> where things are coming from at boot. That's one of the things I like
-> about machine_desc. It is a common entry point for SoC family specific
-> behaviour.
+On Thu, Dec 05, 2013 at 04:11:15PM +0100, Tomasz Figa wrote:
+> On Thursday 05 of December 2013 15:07:47 Mark Brown wrote:
 
-But that is really no longer true now that all the machine_desc
-function ptrs are optional. A given platform may or may not even be
-calling some machine_desc functions. So the boot flow is already very
-much a function of what is in the DTB rather than what machine is
-selected.
+> > Or should we be going and applying the default state to all devices on
+> > init without worrying about a driver appearing?
 
-> As for device drivers, the preferred model is to bind against something
-> already registered. If it is not present, then it does nothing. To me
-> there is a difference between making the behavour conditional on
-> something that was registered vs. an arbitrary value in the device tree.
-> The triggers for the former are exported in /dev/devices. The latter is
-> 'magic'.  :-)
+> If a device isn't used, then it's often better to configure the pins for
+> a different function, such as GPIO, to minimize leakage current.
 
-Again, this patch is for not device driver stuff.
+That's true but on the other hand it's much more likely that the default
+information will be there than the hog for the case when the driver
+doesn't get loaded for some reason so it's more likely that the default
+will kick in; perhaps we need to work down a list of states in order
+instead?
 
-> The problem with "if (of_machine_is_compatible())" initcalls is they are
-> an exception to the normal flow of things. You have to go searching for
-> specific strings to find out if they are getting called.
+--DLfA7Wi+Vmsdqq5j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Umm, initcall_debug is your friend here.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-A standard boilerplate here would actually help in finding these
-cases. If arm64 continues to hold the line of no machine_desc, then
-this won't be the exception. Are there currently enough exceptions to
-justify factoring out this pattern? Obviously, I think there are and
-think they will grow, not shrink.
+iQIcBAEBAgAGBQJSoL8zAAoJELSic+t+oim9tc0P/1VYr8OYjYMtRpfZVDdhkWOp
+YtV/ItbepthusLVGzFzMbWvPg+lPanub3eUj0QxDLD9mwmegVCEOXc5CQkOvvBsB
+ZzLUwdufYzG9dwrzOjTLKV76p27pb+fwpQ+ElnGrBQzwUlKY6ACOlgQ9pC0RiJXD
+gAjvIat8TurrHA2OOQ/ai2d3a1XHjFNdUsvTBltKmvGvgpbCzhnHarTSO/qFvjYq
+h+VoUgZ1yAzpglXya5wS7r/l02Y/cpKYM2rTI4eCGO17/QwVrxPpdvDrVxmBiKiy
+RyfbEOGNDBPESJnnYMfxs4G+Z7Aq+H4rMJDMnYyzoWFeujEjt5mL4ZMdLghHVi/g
+euSigZXj1XTxsaGgJtb9LcO/81OTxkyXI5/0Udygt/If4iIHqx/rSneN/vPGmUlt
+3uQGWLwEtUreBP0/LqfpNerHB7CD1SW7WEhXiTf9zOaXvC9pDmKuHoA4eXy9uALL
+yRan0uSm4zUHDEwWR4p1bn/Khzr+V4+K7cQ73p2gBtR3sc5pv468BEuQhraZlYfU
+hGSPIGwhuKFigFnM2Z6zZ71Cq4P8ZE3Ew+gIr6H+bdmsd31nufs0PRVf1ylina4d
+oDzrE75Vn/Mzfl1mG1tcUMh0cgCwGt1LLF/2Q+G2oP8aKzJ6Ruoep2ltT0HVHYEG
+Hq1iqGkns4I0mGQ9iwfL
+=bl4v
+-----END PGP SIGNATURE-----
 
-Since none of the proponents of removing/avoiding machine_desc have
-weighed in, we'll never reach any conclusion on this. I'll just
-continue to open code this as I need to.
-
-> I'm possibly splitting hairs here, but a big part of migration to the
-> Linux device model is getting rid of modules that both register a device
-> and then bind to it.
-
-There will always be bits that don't fit into the driver model.
-
-Rob
+--DLfA7Wi+Vmsdqq5j--
