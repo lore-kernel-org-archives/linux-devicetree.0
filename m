@@ -1,11 +1,10 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: =?UTF-8?q?=5BPATCH=20v3=206/9=5D=20mtd=3A=20nand=3A=20davinci=3A=20extend=20description=20of=20bindings?=
-Date: Thu, 5 Dec 2013 19:25:54 +0200
-Message-ID: <1386264358-9738-7-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [PATCH v3 4/9] mtd: nand: davinci: simplify error handling
+Date: Thu, 5 Dec 2013 19:25:52 +0200
+Message-ID: <1386264358-9738-5-git-send-email-ivan.khoronzhuk@ti.com>
 References: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -13,117 +12,161 @@ To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>,
 Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, dwmw2@infradead.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Extend bindings for davinci_nand driver to be more clear.
-This is clarification only, without semantic changes.
+There is not needed to use a lot of names for err handling.
+It complicates code support and reading.
 
+Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Reviewed-by: Taras Kondratiuk <taras@ti.com>
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 ---
- .../devicetree/bindings/mtd/davinci-nand.txt       |   77 ++++++++++++=
-++------
- 1 file changed, 54 insertions(+), 23 deletions(-)
+ drivers/mtd/nand/davinci_nand.c |   46 +++++++++++++++------------------------
+ 1 file changed, 17 insertions(+), 29 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/D=
-ocumentation/devicetree/bindings/mtd/davinci-nand.txt
-index 3545ea7..d2a3fc0 100644
---- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-@@ -1,36 +1,67 @@
--* Texas Instruments Davinci NAND
-+Device tree bindings for Texas instruments Davinci NAND controller
-=20
--This file provides information, what the device node for the
--davinci nand interface contain.
-+This file provides information, what the device node for the davinci N=
-AND
-+interface contains.
+diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+index 9a96ac7..c0be223 100644
+--- a/drivers/mtd/nand/davinci_nand.c
++++ b/drivers/mtd/nand/davinci_nand.c
+@@ -615,8 +615,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+ 	if (!info) {
+ 		dev_err(&pdev->dev, "unable to allocate memory\n");
+-		ret = -ENOMEM;
+-		goto err_nomem;
++		return -ENOMEM;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, info);
+@@ -625,20 +624,16 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 	res2 = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+ 	if (!res1 || !res2) {
+ 		dev_err(&pdev->dev, "resource missing\n");
+-		ret = -EINVAL;
+-		goto err_nomem;
++		return -EINVAL;
+ 	}
+ 
+ 	vaddr = devm_ioremap_resource(&pdev->dev, res1);
+-	if (IS_ERR(vaddr)) {
+-		ret = PTR_ERR(vaddr);
+-		goto err_ioremap;
+-	}
++	if (IS_ERR(vaddr))
++		return PTR_ERR(vaddr);
 +
-+Documentation:
-+Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
-=20
- Required properties:
--- compatible: "ti,davinci-nand";
--- reg : contain 2 offset/length values:
--        - offset and length for the access window
--        - offset and length for accessing the aemif control registers
--- ti,davinci-chipselect: Indicates on the davinci_nand driver which
--                         chipselect is used for accessing the nand.
-+
-+- compatible:			"ti,davinci-nand"
-+
-+- reg:				Contains 2 offset/length values:
-+				- offset and length for the access window.
-+				- offset and length for accessing the AEMIF
-+				control registers.
-+
-+- ti,davinci-chipselect:	number of chipselect. Indicates on the
-+				davinci_nand driver which chipselect is used
-+				for accessing the nand.
-+				Can be in the range [0-3].
-=20
- Recommended properties :
--- ti,davinci-mask-ale: mask for ale
--- ti,davinci-mask-cle: mask for cle
--- ti,davinci-mask-chipsel: mask for chipselect
--- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
--		- "none"
--		- "soft"
--		- "hw"
--- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
--- ti,davinci-nand-buswidth: buswidth 8 or 16
--- ti,davinci-nand-use-bbt: use flash based bad block table support.
+ 	base = devm_ioremap_resource(&pdev->dev, res2);
+-	if (IS_ERR(base)) {
+-		ret = PTR_ERR(base);
+-		goto err_ioremap;
+-	}
++	if (IS_ERR(base))
++		return PTR_ERR(base);
+ 
+ 	info->dev		= &pdev->dev;
+ 	info->base		= base;
+@@ -705,7 +700,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 			spin_unlock_irq(&davinci_nand_lock);
+ 
+ 			if (ret == -EBUSY)
+-				goto err_ecc;
++				return ret;
+ 
+ 			info->chip.ecc.calculate = nand_davinci_calculate_4bit;
+ 			info->chip.ecc.correct = nand_davinci_correct_4bit;
+@@ -721,8 +716,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 		info->chip.ecc.strength = pdata->ecc_bits;
+ 		break;
+ 	default:
+-		ret = -EINVAL;
+-		goto err_ecc;
++		return -EINVAL;
+ 	}
+ 	info->chip.ecc.mode = ecc_mode;
+ 
+@@ -730,7 +724,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 	if (IS_ERR(info->clk)) {
+ 		ret = PTR_ERR(info->clk);
+ 		dev_dbg(&pdev->dev, "unable to get AEMIF clock, err %d\n", ret);
+-		goto err_clk;
++		return ret;
+ 	}
+ 
+ 	ret = clk_prepare_enable(info->clk);
+@@ -759,7 +753,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 							info->core_chipsel);
+ 	if (ret < 0) {
+ 		dev_dbg(&pdev->dev, "NAND timing values setup fail\n");
+-		goto err_timing;
++		goto err;
+ 	}
+ 
+ 	spin_lock_irq(&davinci_nand_lock);
+@@ -775,7 +769,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 	ret = nand_scan_ident(&info->mtd, pdata->mask_chipsel ? 2 : 1, NULL);
+ 	if (ret < 0) {
+ 		dev_dbg(&pdev->dev, "no NAND chip(s) found\n");
+-		goto err_scan;
++		goto err;
+ 	}
+ 
+ 	/* Update ECC layout if needed ... for 1-bit HW ECC, the default
+@@ -789,7 +783,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 		if (!chunks || info->mtd.oobsize < 16) {
+ 			dev_dbg(&pdev->dev, "too small\n");
+ 			ret = -EINVAL;
+-			goto err_scan;
++			goto err;
+ 		}
+ 
+ 		/* For small page chips, preserve the manufacturer's
+@@ -820,7 +814,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 		dev_warn(&pdev->dev, "no 4-bit ECC support yet "
+ 				"for 4KiB-page NAND\n");
+ 		ret = -EIO;
+-		goto err_scan;
++		goto err;
+ 
+ syndrome_done:
+ 		info->chip.ecc.layout = &info->ecclayout;
+@@ -828,7 +822,7 @@ syndrome_done:
+ 
+ 	ret = nand_scan_tail(&info->mtd);
+ 	if (ret < 0)
+-		goto err_scan;
++		goto err;
+ 
+ 	if (pdata->parts)
+ 		ret = mtd_device_parse_register(&info->mtd, NULL, NULL,
+@@ -841,7 +835,7 @@ syndrome_done:
+ 						NULL, 0);
+ 	}
+ 	if (ret < 0)
+-		goto err_scan;
++		goto err;
+ 
+ 	val = davinci_nand_readl(info, NRCSR_OFFSET);
+ 	dev_info(&pdev->dev, "controller rev. %d.%d\n",
+@@ -849,8 +843,7 @@ syndrome_done:
+ 
+ 	return 0;
+ 
+-err_scan:
+-err_timing:
++err:
+ 	clk_disable_unprepare(info->clk);
+ 
+ err_clk_enable:
+@@ -858,11 +851,6 @@ err_clk_enable:
+ 	if (ecc_mode == NAND_ECC_HW_SYNDROME)
+ 		ecc4_busy = false;
+ 	spin_unlock_irq(&davinci_nand_lock);
 -
--nand device bindings may contain additional sub-nodes describing
--partitions of the address space. See partition.txt for more detail.
-+
-+- ti,davinci-mask-ale:		mask for ALE. Needed for executing address
-+				phase. These offset will be added to the base
-+				address for the chip select space the NAND Flash
-+				device is connected to.
-+				If not set equal to 0x08.
-+
-+- ti,davinci-mask-cle:		mask for CLE. Needed for executing command
-+				phase. These offset will be added to the base
-+				address for the chip select space the NAND Flash
-+				device is connected to.
-+				If not set equal to 0x10.
-+
-+- ti,davinci-mask-chipsel:	mask for chipselect address. Needed to mask
-+				addresses for given chipselect.
-+
-+- ti,davinci-ecc-mode:		operation mode of the NAND ecc mode. ECC mode
-+				valid values for davinci driver:
-+				- "none"
-+				- "soft"
-+				- "hw"
-+
-+- ti,davinci-ecc-bits:		used ECC bits, currently supported 1 or 4.
-+
-+- ti,davinci-nand-buswidth:	buswidth 8 or 16.
-+
-+- ti,davinci-nand-use-bbt:	use flash based bad block table support. OO=
-B
-+				identifier is saved in OOB area.
-+
-+Nand device bindings may contain additional sub-nodes describing parti=
-tions of
-+the address space. See partition.txt for more detail. The NAND Flash t=
-iming
-+values must be programmed in the chip select=E2=80=99s node of AEMIF
-+memory-controller (see Documentation/devicetree/bindings/memory-contro=
-llers/
-+davinci-aemif.txt).
-=20
- Example(da850 EVM ):
-+
- nand_cs3@62000000 {
- 	compatible =3D "ti,davinci-nand";
- 	reg =3D <0x62000000 0x807ff
--		0x68000000 0x8000>;
-+	       0x68000000 0x8000>;
- 	ti,davinci-chipselect =3D <1>;
- 	ti,davinci-mask-ale =3D <0>;
- 	ti,davinci-mask-cle =3D <0>;
---=20
+-err_ecc:
+-err_clk:
+-err_ioremap:
+-err_nomem:
+ 	return ret;
+ }
+ 
+-- 
 1.7.9.5
