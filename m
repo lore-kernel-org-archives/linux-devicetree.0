@@ -1,112 +1,86 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 1/2] mmc: sdhci-msm: Initial SDHCI MSM driver
- documentation
-Date: Thu, 5 Dec 2013 09:52:18 +0000
-Message-ID: <20131205095218.GH29200@e106331-lin.cambridge.arm.com>
-References: <1383753405-23631-1-git-send-email-gdjakov@mm-sol.com>
- <1383753405-23631-2-git-send-email-gdjakov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1383753405-23631-2-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "subhashj@codeaurora.org" <subhashj@codeaurora.org>
+From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
+Subject: [PATCH] ARM: dts: Fix mmc node on exynos5250 snow board
+Date: Thu,  5 Dec 2013 15:36:14 +0530
+Message-ID: <1386237974-2255-1-git-send-email-yuvaraj.cd@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, devicetree@vger.kernel.org
+Cc: t.figa@samsung.com, alim.akhtar@samsung.com, sonnyrao@chromium.org, dianders@chromium.org, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Commits 64c138a ("ARM: dts: Move fifo-depth property from exynos5250
+board dts") and 0c3de788 ("ARM: dts: change status property of dwmmc
+nodes for exynos5250") missed out handling the exynos5250 snow dts file.
+Delete the fifo-depth property and enable the mmc node in the snow dts
+file.
 
-Apologies for the late reply.
+Signed-off-by : Abhilash Kesavan <a.kesavan@samsung.com>
 
-On Wed, Nov 06, 2013 at 03:56:44PM +0000, Georgi Djakov wrote:
-> This patch adds documentation for Qualcomm SDHCI MSM driver.
-> It contains the differences between the core properties in mmc.txt
-> and the properties used by the sdhci-msm driver.
+Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+---
+ arch/arm/boot/dts/cros5250-common.dtsi |    7 -------
+ arch/arm/boot/dts/exynos5250-snow.dts  |    9 +++++++++
+ 2 files changed, 9 insertions(+), 7 deletions(-)
 
-Nit, but this is documentation of the binding, not the driver.
-
-> 
-> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
-> ---
->  .../devicetree/bindings/mmc/sdhci-msm.txt          |   92 ++++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> new file mode 100644
-> index 0000000..8f1a52d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -0,0 +1,92 @@
-> +* Qualcomm SDHCI controller (sdhci-msm)
-> +
-> +This file documents differences between the core properties in mmc.txt
-> +and the properties used by the sdhci-msm driver.
-> +
-> +Required properties:
-> +- compatible: should contain "qcom,sdhci-msm"
-> +- reg: should contain SDHC, SD Core register map
-
-As this seems to depend on reg-names, it would be nice to write this in
-terms of reg-names (as with clocks and clock-names).
-
-
-> +- reg-names: indicates various resources passed to driver (via reg proptery) by name
-> +	"reg-names" examples are "hc_mem" and "core_mem"
-
-Either there are a fixed set of names you expect (and therefore these
-aren't examples but rather a definition), or this property is useless.
-Please either define the set of names or remove this property.
-
-> +- interrupts: should contain SDHC interrupts
-> +- interrupt-names: indicates interrupts passed to driver (via interrupts property) by name
-> +	"interrupt-names" examples are "hc_irq" and "pwr_irq"
-
-Likewise for both points.
-
-> +- vdd-supply: phandle to the regulator for the vdd (flash core voltage) supply.
-> +- vddio-supply: phandle to the regulator for the vdd-io (i/o voltage) supply.
-> +- pinctrl-names: Should contain only one value - "default".
-> +- pinctrl-0: Should specify pin control groups used for this controller.
-> +- clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock-names
-> +- clock-names: Should contain the following:
-> +	"iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
-> +	"core"	- SDC MMC clock (MCLK) (required)
-> +	"bus"	- SDCC bus voter clock (optional)
-
-This looks good :)
-
-> +
-> +Optional properties:
-> +- qcom,bus-speed-mode: specifies the supported bus speed modes by host
-> +	The supported bus speed modes are:
-> +	"HS200_1p8v" - indicates that host can support HS200 at 1.8v
-> +	"HS200_1p2v" - indicates that host can support HS200 at 1.2v
-> +	"DDR_1p8v" - indicates that host can support DDR mode at 1.8v
-> +	"DDR_1p2v" - indicates that host can support DDR mode at 1.2v
-
-Is this a list of strings, or does the unit only support one of these?
-
-This could be a set of boolean properties instead, is this likely to
-expand in future?
-
-> +
-> +- qcom,{vdd,vdd-io}-lpm-sup - specifies whether the supply can be kept in low power mode.
-
-Boolean? Please specify types on properties.
-
-Can you elaborate on what this means? When can a supply not be kept in
-low power mode?
-
-> +- qcom,{vdd,vdd-io}-voltage-level - specifies voltage levels for the supply.
-> +	Should be specified in pairs (min, max), units uV.
-> +- qcom,{vdd,vdd-io}-current-level - specifies load levels for the supply in lpm
-> +	or high power mode (hpm). Should be specified in pairs (lpm, hpm), units uA.
-
-Can you not query these from the regulator framework?
-
-If these are configuration, why are they necessary?
-
-Thanks,
-Mark.
+diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
+index 6470536..2dd70e9 100644
+--- a/arch/arm/boot/dts/cros5250-common.dtsi
++++ b/arch/arm/boot/dts/cros5250-common.dtsi
+@@ -233,7 +233,6 @@
+ 		num-slots = <1>;
+ 		supports-highspeed;
+ 		broken-cd;
+-		fifo-depth = <0x80>;
+ 		card-detect-delay = <200>;
+ 		samsung,dw-mshc-ciu-div = <3>;
+ 		samsung,dw-mshc-sdr-timing = <2 3>;
+@@ -247,14 +246,9 @@
+ 		};
+ 	};
+ 
+-	mmc@12210000 {
+-		status = "disabled";
+-	};
+-
+ 	mmc@12220000 {
+ 		num-slots = <1>;
+ 		supports-highspeed;
+-		fifo-depth = <0x80>;
+ 		card-detect-delay = <200>;
+ 		samsung,dw-mshc-ciu-div = <3>;
+ 		samsung,dw-mshc-sdr-timing = <2 3>;
+@@ -273,7 +267,6 @@
+ 		num-slots = <1>;
+ 		supports-highspeed;
+ 		broken-cd;
+-		fifo-depth = <0x80>;
+ 		card-detect-delay = <200>;
+ 		samsung,dw-mshc-ciu-div = <3>;
+ 		samsung,dw-mshc-sdr-timing = <2 3>;
+diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+index a9395c4..67484d1 100644
+--- a/arch/arm/boot/dts/exynos5250-snow.dts
++++ b/arch/arm/boot/dts/exynos5250-snow.dts
+@@ -171,11 +171,20 @@
+ 		};
+ 	};
+ 
++	mmc@12200000 {
++		status = "okay";
++	};
++
++	mmc@12220000 {
++		status = "okay";
++	};
++
+ 	/*
+ 	 * On Snow we've got SIP WiFi and so can keep drive strengths low to
+ 	 * reduce EMI.
+ 	 */
+ 	mmc@12230000 {
++		status = "okay";
+ 		slot@0 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&sd3_clk &sd3_cmd &sd3_bus4>;
+-- 
+1.7.9.5
