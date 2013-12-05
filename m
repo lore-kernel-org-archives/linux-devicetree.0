@@ -1,56 +1,96 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/2] ARM: shmobile: armadillo: Set vccq_sdhi0 regulator type in DT
-Date: Thu, 05 Dec 2013 06:56:48 +0100
-Message-ID: <9848623.yKHAtIGPld@avalon>
-References: <1385653493-9952-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1385653493-9952-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20131205034554.GB20388@verge.net.au>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 1/5] Phy: DT binding documentation for Marvell MVEBU SATA
+ phy.
+Date: Thu, 5 Dec 2013 11:33:46 +0530
+Message-ID: <52A01742.2080405@ti.com>
+References: <1386177364-10164-1-git-send-email-andrew@lunn.ch> <1386177364-10164-2-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131205034554.GB20388@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1386177364-10164-2-git-send-email-andrew@lunn.ch>
+Sender: linux-ide-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>
+Cc: devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hi,
 
-On Thursday 05 December 2013 12:45:54 Simon Horman wrote:
-> On Thu, Nov 28, 2013 at 04:44:53PM +0100, Laurent Pinchart wrote:
-> > The mandatory regulator-type property is missing, add it.
+On Wednesday 04 December 2013 10:46 PM, Andrew Lunn wrote:
+> Describe the binding for the Marvell MVEBU SATA phy. This driver
+> can be used at least with Kirkwood, Dove and maybe others.
+> Additionally, update the SATA binding with the properties to link
+> to the phy nodes.
 > 
-> Thanks, I will queue this up.
+> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> ---
+>  Documentation/devicetree/bindings/ata/marvell.txt  |  6 ++++++
+>  .../devicetree/bindings/phy/phy-mvebu-sata.txt     | 22 ++++++++++++++++++++++
+>  2 files changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/marvell.txt b/Documentation/devicetree/bindings/ata/marvell.txt
+> index b5cdd20cde9c..e072fa105b49 100644
+> --- a/Documentation/devicetree/bindings/ata/marvell.txt
+> +++ b/Documentation/devicetree/bindings/ata/marvell.txt
+> @@ -6,11 +6,17 @@ Required Properties:
+>  - interrupts    : Interrupt controller is using
+>  - nr-ports      : Number of SATA ports in use.
+>  
+> +Optional Properties:
+> +- phys		: List of phandles to sata phys
+> +- phy-names	: Should be "0", "1", etc, one number per phandle
 
-Mark has rightfully commented on patch 1/2 in this series that the regulator-
-type property shouldn't be mandatory but should default to voltage. We could 
-then drop this patch.
+over aligned..
+> +
+>  Example:
+>  
+>  	sata@80000 {
+>  		compatible = "marvell,orion-sata";
+>  		reg = <0x80000 0x5000>;
+>  		interrupts = <21>;
+> +		phys = <&sata_phy0>, <&sata_phy1>;
+> +		phy-names = "0", "1";
 
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> > 
-> >  arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-> > b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts index
-> > 7b80f19..013a7cd 100644
-> > --- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-> > +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-> > @@ -53,6 +53,8 @@
-> > 
-> >  		regulator-name = "SDHI0 VccQ";
-> >  		regulator-min-microvolt = <1800000>;
-> >  		regulator-max-microvolt = <3300000>;
-> > 
-> > +		regulator-type = "voltage";
-> > +
-> > 
-> >  		vin-supply = <&vcc_sdhi0>;
-> >  		
-> >  		enable-gpio = <&pfc 74 GPIO_ACTIVE_HIGH>;
--- 
-Regards,
+more descriptive phy-names? sata-phy0?
+>  		nr-ports = <2>;
+>  	}
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt
+> new file mode 100644
+> index 000000000000..1cf9cef50b4b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt
 
-Laurent Pinchart
+Just name this mvebu-phy.txt so that we can add bindings of other mvebu PHYs
+here when it's added.
+> @@ -0,0 +1,22 @@
+> +* Marvell MVEBU SATA PHY
+> +
+> +Power control for the SATA phy found on Marvell MVEBU SoCs.
+> +
+> +This document extends the binding described in phy-bindings.txt
+> +
+> +Required properties :
+> +
+> + - reg		   : Offset and length of the register set for the SATA device
+> + - compatible	   : Should be "marvell,mvebu-sata-phy"
+> + - clocks	   : phandle of clock that supplies the SATA device
 
+some alignment mismatch here?
+> + - clock-names	   : Should be "sata"
+> +
+> +Example:
+> +		sata-phy@1 {
+
+The value after '@' must match the first address specified in the reg property
+of the node according to the ePAPR spec.
+> +			compatible = "marvell,mvebu-sata-phy";
+> +			reg = <0x84000 0x0334>;
+> +			clocks = <&gate_clk 15>;
+> +			clock-names = "sata";
+> +			#phy-cells = <1>;
+
+Is it on purpose that your are having phy-cells value to 1?
+
+Thanks
+Kishon
