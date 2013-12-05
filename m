@@ -1,39 +1,132 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] mtd: nand: gpio: Add DT property to
- automatically determine bus width
-Date: Wed, 4 Dec 2013 18:18:09 -0800
-Message-ID: <20131205021809.GK27149@ld-irv-0074.broadcom.com>
-References: <1384343884-29622-1-git-send-email-shc_work@mail.ru>
- <20131127012158.GR9468@ld-irv-0074.broadcom.com>
- <1385715364.73252787@f82.i.mail.ru>
- <20131130091738.GE29397@norris.computersforpeace.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv3 1/4] clk: socfpga: Add a clock driver for SOCFPGA's system manager
+Date: Thu, 5 Dec 2013 04:00:39 +0100
+Message-ID: <201312050400.40427.arnd@arndb.de>
+References: <1386197576-3825-1-git-send-email-dinguyen@altera.com> <1386197576-3825-2-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131130091738.GE29397-7ciq9WCbhwJWVhifINYOO1poFGfAdsVx5NbjCUgZEJk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1386197576-3825-2-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinguyen@altera.com
+Cc: dinh.linux@gmail.com, mturquette@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 30, 2013 at 01:17:38AM -0800, Brian Norris wrote:
-> On Fri, Nov 29, 2013 at 12:56:04PM +0400, Alexander Shiyan wrote:
-> > Can at least part [2/3] "mtd: nand: gpio: Use devm_gpio_request_one() where possible"
-> > be applied at this time?
+On Wednesday 04 December 2013, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
 > 
-> Probably. I was avoiding taking things out of order in the series for
-> now, but I'll take another look. If it looks good and applies
-> independently, then I'll take it.
+> The system manager is an IP block on the SOCFPGA platform. The system manager
+> contains registers that control other IPs on the platform. One of the IPs that
+> the system manager has control over is the SD/MMC, by way of controlling the
+> clock phase on the SD/MMC Card Interface Unit.
+> 
+> This patch adds a clock driver that the SD/MMC driver can use by calling
+> the common clock API in order to set the appropriate register in the
+> system manager by way of a syscon driver.
+> 
+> This clock driver can also be re-used for other IPs that need to poke the system
+> manager.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
 
-Patch 2 can't be applied independently. You can rebase and resend if you
-want it applied.
+I think this still gets things wrong on multiple levels.
 
-We still haven't resolved patch 1. It doesn't seem like quite the right
-binding.
+> ---
+> v3: Not use the syscon driver because as of 3.13-rc1, the syscon driver
+> is loaded after the clock driver.
+> 
+> v2: Use the syscon driver
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can't you reference the syscon driver just from the set_rate function?
+When you do that, you won't need to care if it's available until the clock
+is actually used by the sd card driver.
+
+> +
+> +#include <linux/slab.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +
+> +/* SDMMC Group for System Manager defines */
+> +#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel)          \
+> +	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
+> +
+> +extern void __iomem *sys_manager_base_addr;
+
+You definitely cannot put "extern" variable declarations into driver files.
+This is always a bug.
+
+> +static int sysmgr_set_dwmmc_drvsel_smpsel(struct clk_hw *hwclk)
+> +{
+> +	struct device_node *np;
+> +	struct socfpga_sysmgr *socfpga_sysmgr = to_sysmgr_clk(hwclk);
+> +	u32 timing[2];
+> +	u32 hs_timing;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-dw-mshc");
+> +	of_property_read_u32_array(np, "samsung,dw-mshc-sdr-timing", timing, 2);
+> +	hs_timing = SYSMGR_SDMMC_CTRL_SET(timing[1], timing[0]);
+> +	writel(hs_timing, sys_manager_base_addr + socfpga_sysmgr->reg);
+> +	return 0;
+> +}
+
+The clock driver has absolutely no business looking into the
+"samsung,dw-mshc-sdr-timing" property, that is a layering violation.
+The SD card driver should pass the frequency to the clock driver
+instead.
+
+> +static void __init socfpga_sysmgr_init(struct device_node *node, const struct clk_ops *ops)
+> +{
+> +	u32 reg;
+> +	struct clk *clk;
+> +	struct socfpga_sysmgr *socfpga_sysmgr;
+> +	const char *clk_name = node->name;
+> +	struct clk_init_data init;
+> +	int rc;
+> +
+> +	socfpga_sysmgr = kzalloc(sizeof(*socfpga_sysmgr), GFP_KERNEL);
+> +	if (WARN_ON(!socfpga_sysmgr))
+> +		return;
+> +
+> +	rc = of_property_read_u32(node, "reg", &reg);
+> +	if (WARN_ON(rc))
+> +		return;
+
+This feels wrong: drivers should not manually interpret the standard "reg"
+property. I'll let Mike comment on this, but I think what you want instead
+is to use an index into the sysmgr in the clock reference. This assumes
+that sysmgr contains a set of identical clock register blocks that can
+be indexed in a simple way.
+
+> +	socfpga_sysmgr->reg = reg;
+> +
+> +	init.name = clk_name;
+> +	init.ops = ops;
+> +	init.flags = 0;
+> +	init.num_parents = 0;
+> +
+> +	socfpga_sysmgr->hw.init = &init;
+> +	clk = clk_register(NULL, &socfpga_sysmgr->hw);
+> +	if (WARN_ON(IS_ERR(clk))) {
+> +		kfree(socfpga_sysmgr);
+> +		return;
+> +	}
+> +	rc = of_clk_add_provider(node, of_clk_src_simple_get, clk);
+> +	if (WARN_ON(rc))
+> +		return;
+> +}
+> +
+> +static void __init sysmgr_init(struct device_node *node)
+> +{
+> +	socfpga_sysmgr_init(node, &clk_sysmgr_sdmmc_ops);
+> +}
+> +CLK_OF_DECLARE(sysmgr, "altr,sysmgr-sdmmc-sdr", sysmgr_init);
+
+Along the same lines: the "altr,sysmgr-sdmmc-sdr" string doesn't make
+sense here, it should be a name given to the clock register layout
+of the sysmgr, which is presumably identical for a number of clocks,
+and cannot contain "sdmmc-sdr" in the name.
+
+	Arnd
