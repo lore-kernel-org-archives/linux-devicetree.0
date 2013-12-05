@@ -1,48 +1,68 @@
-From: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] powerpc/p1010rdb-pa: modify phy interrupt.
-Date: Thu, 5 Dec 2013 14:00:03 +0800
-Message-ID: <1386223203-22353-1-git-send-email-B45475@freescale.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: shmobile: armadillo: Set vccq_sdhi0 regulator
+ type in DT
+Date: Thu, 5 Dec 2013 15:55:36 +0900
+Message-ID: <20131205065535.GB6817@verge.net.au>
+References: <1385653493-9952-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1385653493-9952-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20131205034554.GB20388@verge.net.au>
+ <9848623.yKHAtIGPld@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9848623.yKHAtIGPld@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-It is not correct according to p1010rdb-pa user guide.
-So modify it.
+On Thu, Dec 05, 2013 at 06:56:48AM +0100, Laurent Pinchart wrote:
+> Hi Simon,
+> 
+> On Thursday 05 December 2013 12:45:54 Simon Horman wrote:
+> > On Thu, Nov 28, 2013 at 04:44:53PM +0100, Laurent Pinchart wrote:
+> > > The mandatory regulator-type property is missing, add it.
+> > 
+> > Thanks, I will queue this up.
+> 
+> Mark has rightfully commented on patch 1/2 in this series that the regulator-
+> type property shouldn't be mandatory but should default to voltage. We could 
+> then drop this patch.
 
-Signed-off-by: Zhao Qiang <B45475-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/powerpc/boot/dts/p1010rdb-pa.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I will drop it, thanks.
 
-diff --git a/arch/powerpc/boot/dts/p1010rdb-pa.dtsi b/arch/powerpc/boot/dts/p1010rdb-pa.dtsi
-index 3d275e0..0cf6c34 100644
---- a/arch/powerpc/boot/dts/p1010rdb-pa.dtsi
-+++ b/arch/powerpc/boot/dts/p1010rdb-pa.dtsi
-@@ -39,7 +39,7 @@
- };
- 
- &phy0 {
--	interrupts = <3 1 0 0>;
-+	interrupts = <1 1 0 0>;
- };
- 
- &phy1 {
-@@ -47,5 +47,5 @@
- };
- 
- &phy2 {
--	interrupts = <2 1 0 0>;
-+	interrupts = <4 1 0 0>;
- };
--- 
-1.8.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > Signed-off-by: Laurent Pinchart
+> > > <laurent.pinchart+renesas@ideasonboard.com>
+> > > ---
+> > > 
+> > >  arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> > > b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts index
+> > > 7b80f19..013a7cd 100644
+> > > --- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> > > +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> > > @@ -53,6 +53,8 @@
+> > > 
+> > >  		regulator-name = "SDHI0 VccQ";
+> > >  		regulator-min-microvolt = <1800000>;
+> > >  		regulator-max-microvolt = <3300000>;
+> > > 
+> > > +		regulator-type = "voltage";
+> > > +
+> > > 
+> > >  		vin-supply = <&vcc_sdhi0>;
+> > >  		
+> > >  		enable-gpio = <&pfc 74 GPIO_ACTIVE_HIGH>;
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
