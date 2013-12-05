@@ -1,67 +1,85 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 12/15] usb: phy: msm: Add support for secondary PHY
- control
-Date: Thu, 5 Dec 2013 10:42:52 +0000
-Message-ID: <20131205104252.GK29200@e106331-lin.cambridge.arm.com>
-References: <1384267910-32066-1-git-send-email-iivanov@mm-sol.com>
- <1384267910-32066-13-git-send-email-iivanov@mm-sol.com>
- <20131115164212.GI24831@e106331-lin.cambridge.arm.com>
- <1384779462.13631.16.camel@iivanov-dev.int.mm-sol.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V3 1/4] ARM: tegra: Add header file for pinctrl constants
+Date: Thu, 5 Dec 2013 16:14:06 +0530
+Message-ID: <1386240249-30786-2-git-send-email-ldewangan@nvidia.com>
+References: <1386240249-30786-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1384779462.13631.16.camel@iivanov-dev.int.mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "davidb@codeaurora.org" <davidb@codeaurora.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386240249-30786-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 18, 2013 at 12:57:42PM +0000, Ivan T. Ivanov wrote:
-> 
-> Hi Mark,
-> 
-> On Fri, 2013-11-15 at 16:42 +0000, Mark Rutland wrote: 
-> > On Tue, Nov 12, 2013 at 02:51:47PM +0000, Ivan T. Ivanov wrote:
-> > > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> > > 
-> > > Allow support to use 2nd HSPHY with USB2 Core.
-> > > Some platforms may have configuration to allow USB controller
-> > > work with any of the two HSPHYs present. By default driver
-> > > configures USB core to use primary HSPHY. Add support to allow
-> > > user select 2nd HSPHY using DT parameter.
-> > > 
-> > > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> > > Cc: Manu Gautam <mgautam@codeaurora.org>
-> > > Cc: devicetree@vger.kernel.org
-> > > ---
-> > >  .../devicetree/bindings/usb/msm-hsusb.txt          |    6 +++++
-> > >  drivers/usb/phy/phy-msm-usb.c                      |   24 ++++++++++++++++++--
-> > >  include/linux/usb/msm_hsusb.h                      |    1 +
-> > >  include/linux/usb/msm_hsusb_hw.h                   |    1 +
-> > >  4 files changed, 30 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> > > index 3f21204..d105ba9 100644
-> > > --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> > > +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> > > @@ -72,6 +72,12 @@ Optional properties:
-> > >  - qcom,phy-init-sequence: PHY configuration sequence. val, reg pairs
-> > >  				terminate with -1
-> > >  
-> > > +- qcom,phy-num:	Select number of pyco-phy to use, can be one of
-> > > +				0 - PHY one, default
-> > > +				1 - Second PHY
-> > > +				Some platforms may have configuration to allow USB
-> > > +				controller work with any of the two HSPHYs present.
-> > > +
-> > 
-> > Only one can be used at a time?
-> 
-> Yes only one of them. Selected at driver init time. 
+This new header file defines pincontrol constants for Tegra to
+use from Tegra's DTS file for pincontrol properties option.
 
-Ok. For a given platform, is it likely that both are wired up and
-_possibly_ usable?
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Changes from V1:
+- Get rid of lots of macro and converge it to TEGRA_PIN_ENABLE/DISABLE.
+- Change macro name for PULL UP/DOWN/NONE.
 
-Thanks
-Mark.
+Changes from V2:
+- Convert TEGRA -> Tegra.
+- Add comment on ENABLE/DSIABLE and remove from pulls.
+
+ include/dt-bindings/pinctrl/pinctrl-tegra.h |   45 +++++++++++++++++++++++++++
+ 1 files changed, 45 insertions(+), 0 deletions(-)
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra.h
+
+diff --git a/include/dt-bindings/pinctrl/pinctrl-tegra.h b/include/dt-bindings/pinctrl/pinctrl-tegra.h
+new file mode 100644
+index 0000000..ebafa49
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/pinctrl-tegra.h
+@@ -0,0 +1,45 @@
++/*
++ * This header provides constants for Tegra pinctrl bindings.
++ *
++ * Copyright (c) 2013, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * Author: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#ifndef _DT_BINDINGS_PINCTRL_TEGRA_H
++#define _DT_BINDINGS_PINCTRL_TEGRA_H
++
++/*
++ * Enable/disable for diffeent dt properties. This is applicable for
++ * properties nvidia,enable-input, nvidia,tristate, nvidia,open-drain,
++ * nvidia,lock, nvidia,rcv-sel, nvidia,high-speed-mode, nvidia,schmitt.
++ */
++#define TEGRA_PIN_DISABLE				0
++#define TEGRA_PIN_ENABLE				1
++
++#define TEGRA_PIN_PULL_NONE				0
++#define TEGRA_PIN_PULL_DOWN				1
++#define TEGRA_PIN_PULL_UP				2
++
++/* Low power mode driver */
++#define TEGRA_PIN_LP_DRIVE_DIV_8			0
++#define TEGRA_PIN_LP_DRIVE_DIV_4			1
++#define TEGRA_PIN_LP_DRIVE_DIV_2			2
++#define TEGRA_PIN_LP_DRIVE_DIV_1			3
++
++/* Rising/Falling slew rate */
++#define TEGRA_PIN_SLEW_RATE_FASTEST			0
++#define TEGRA_PIN_SLEW_RATE_FAST			1
++#define TEGRA_PIN_SLEW_RATE_SLOW			2
++#define TEGRA_PIN_SLEW_RATE_SLOWEST			3
++
++#endif
+-- 
+1.7.1.1
