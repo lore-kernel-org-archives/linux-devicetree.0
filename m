@@ -1,61 +1,138 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] DT: ATA: Add missing documentation of clocks to
- marvell binding.
-Date: Thu, 5 Dec 2013 12:22:54 +0000
-Message-ID: <20131205122254.GN29200@e106331-lin.cambridge.arm.com>
-References: <1386244271-16127-1-git-send-email-andrew@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386244271-16127-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>
+From: Kamil Debski <k.debski@samsung.com>
+Subject: [PATCH v4 0/9] phy: Add new Exynos USB 2.0 PHY driver
+Date: Thu, 05 Dec 2013 13:29:30 +0100
+Message-ID: <1386246579-25141-1-git-send-email-k.debski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kyungmin.park@samsung.com, kishon@ti.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, Kamil Debski <k.debski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 11:51:11AM +0000, Andrew Lunn wrote:
-> The marvell SATA driver can optionally make use of clocks specified in
-> the DT node. This has been available in the driver since Febuary 2012,
-> but the documentation is missing from the binding. Add it.
-> 
-> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> ---
-> FYI: This will cause merge conflicts with the SATA PHY driver comming soon.
-> ---
->  Documentation/devicetree/bindings/ata/marvell.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/marvell.txt b/Documentation/devicetree/bindings/ata/marvell.txt
-> index b5cdd20cde9c..f6c68d157749 100644
-> --- a/Documentation/devicetree/bindings/ata/marvell.txt
-> +++ b/Documentation/devicetree/bindings/ata/marvell.txt
-> @@ -6,11 +6,17 @@ Required Properties:
->  - interrupts    : Interrupt controller is using
->  - nr-ports      : Number of SATA ports in use.
->  
-> +Optional Properties:
-> +- clocks        : List of pHandles to clocks
+Hi,
 
-s/pHandle/phandle/. Don't forget the clock-specifier too!
+This is the fourth version of the patchset adding the new Exynos USB 2.0 PHY
+driver. The driver uses the Generic PHY Framework.
 
-> +- clock-names   : Must be "0", "1", mapping port number to clock.
+A month has passed since the last version. I have addressed numerous comments
+that appeared on the mailing list in this patch. I would like to specially
+thank Kishon, Tomasz, Matt and Vivek for their comments.
 
-This line leads to the erroneous impression that the clocks can be in
-arbitrary order (as is generally true for bindings with clock-names
-properties). The driver doesn't request clocks by name, and doesn't even
-look at clock-names.
+This patch contains two necessary patches to the phy core.
+It is very useful to be able to get phy using a device tree node.
 
-Please document the required order in the description of the clocks
-property. If you want to add clock-names, please add support to the
-driver or it's somewhat pointless.
+In addition this patch depends on:
+[PATCH V11 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and exynos5420 dtsi
+files [1].
 
-I also think the names could be improved, albeit slightly ("port0" is a
-little clearer than "0").
+Best wishes,
+Kamil Debski
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] - http://www.spinics.net/lists/linux-samsung-soc/msg24528.html
+
+----------------
+Changes from v3:
+- using PMU and system registers indirectly via syscon
+- change labelling
+- change Kconfig name
+- fixed typos/stray whitespace
+- move of_phy_provider_register() to the end of probe
+- add a regular error return code to the rate_to_clk functions
+- cleanup code and remove unused code
+- change struct names to avoid collisions
+- add mechanism to support multiple phys by the ehci driver
+
+----------------
+Changes from v2:
+- rebase all patches to the usb-next branch
+- fixes in the documentation file
+  - remove wrong entries in the phy node (ranges, and #address- & #size-cells)
+  - add clocks and clock-names as required properites
+  - rephrase a few sentences
+- fixes in the ehci-exynos.c file
+  - move phy_name variable next to phy in exynos_ehci_hcd
+  - remove otg from exynos_ehci_hcd as it was no longer used
+  - move devm_phy_get after the Exynos5440 skip_phy check
+- fixes in the s3c-hsotg.c file
+  - cosmetic fixes (remove empty line that was wrongfully added)
+- fixes in the main driver
+  - remove cpu_type in favour for a boolean flag matched with the compatible
+    value
+  - rename files, structures, variables and Kconfig entires - change from simple
+    "uphy" to "usb2_phy"
+  - fix multiline comments style
+  - simplify #ifdefs in of_device_id
+  - fix Kconfig description
+  - change dev_info to dev_dbg where reasonable
+  - cosmetic changes (remove wrongful blank lines)
+  - remove unnecessary reference counting
+
+----------------
+Changes from v1:
+- the changes include minor fixes of the hardware initialization of the PHY
+  module
+- some other minor fixes were introduced
+
+----------------------
+Original cover letter:
+
+Hi,
+
+This patch adds a new drive for USB PHYs for Samsung SoCs. The driver is
+using the Generic PHY Framework created by Kishon Vijay Abrahan I. It
+can be found here https://lkml.org/lkml/2013/8/21/29. This patch adds
+support to Exynos4 family of SoCs. Support for Exynos3 and Exynos5 is
+planned to be added in the near future.
+
+I welcome your comments.
+
+----------------------
+
+[1] https://lkml.org/lkml/2013/8/21/29
+
+
+Kamil Debski (8):
+  phy: core: Change the way of_phy_get is called
+  phy: core: Add devm_of_phy_get to phy-core
+  phy: Add new Exynos USB PHY driver
+  usb: ehci-s5p: Change to use phy provided by the generic phy
+    framework
+  usb: s3c-hsotg: Use the new Exynos USB phy driver with the generic
+    phy framework
+  phy: Add Exynos 5250 support to the Exynos USB 2.0 PHY driver
+  dts: Add usb2phy to Exynos 4
+  dts: Add usb2phy to Exynos 5250
+
+Mateusz Krawczuk (1):
+  phy: Add support for S5PV210 to the Exynos USB PHY driver
+
+ .../devicetree/bindings/arm/samsung/pmu.txt        |    2 +
+ .../devicetree/bindings/phy/samsung-usbphy.txt     |   56 +++
+ .../devicetree/bindings/usb/samsung-hsotg.txt      |    4 +
+ Documentation/devicetree/bindings/usb/usb-ehci.txt |   35 ++
+ arch/arm/boot/dts/exynos4.dtsi                     |   31 ++
+ arch/arm/boot/dts/exynos4210.dtsi                  |   17 +
+ arch/arm/boot/dts/exynos4x12.dtsi                  |   17 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |   33 +-
+ drivers/phy/Kconfig                                |   35 ++
+ drivers/phy/Makefile                               |    5 +
+ drivers/phy/phy-core.c                             |   43 ++-
+ drivers/phy/phy-exynos4210-usb2.c                  |  264 ++++++++++++++
+ drivers/phy/phy-exynos4212-usb2.c                  |  312 +++++++++++++++++
+ drivers/phy/phy-exynos5250-usb2.c                  |  363 ++++++++++++++++++++
+ drivers/phy/phy-s5pv210-usb2.c                     |  206 +++++++++++
+ drivers/phy/phy-samsung-usb2.c                     |  240 +++++++++++++
+ drivers/phy/phy-samsung-usb2.h                     |   74 ++++
+ drivers/usb/gadget/s3c-hsotg.c                     |   11 +-
+ drivers/usb/host/ehci-exynos.c                     |   95 +++--
+ include/linux/phy/phy.h                            |    3 +
+ 20 files changed, 1789 insertions(+), 57 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/samsung-usbphy.txt
+ create mode 100644 drivers/phy/phy-exynos4210-usb2.c
+ create mode 100644 drivers/phy/phy-exynos4212-usb2.c
+ create mode 100644 drivers/phy/phy-exynos5250-usb2.c
+ create mode 100644 drivers/phy/phy-s5pv210-usb2.c
+ create mode 100644 drivers/phy/phy-samsung-usb2.c
+ create mode 100644 drivers/phy/phy-samsung-usb2.h
+
+-- 
+1.7.9.5
