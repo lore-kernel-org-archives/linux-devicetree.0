@@ -1,54 +1,40 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] spi: dt-binding: clarify gpio chipselect language
-Date: Thu, 5 Dec 2013 17:44:00 +0100
-Message-ID: <20131205164400.GI12805@ns203013.ovh.net>
-References: <542dfeee809e73f7f071f4ae0b4f95af7736f70b.1386243545.git.baruch@tkos.co.il>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <542dfeee809e73f7f071f4ae0b4f95af7736f70b.1386243545.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v2 0/4] PHY driver for Marvell SATA
+Date: Thu,  5 Dec 2013 17:50:59 +0100
+Message-ID: <1386262263-18956-1-git-send-email-andrew@lunn.ch>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, kishon@ti.com
+Cc: devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, linux ARM <linux-arm-kernel@lists.infradead.org>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-On 13:39 Thu 05 Dec     , Baruch Siach wrote:
-> Commit 743179849015 (of_spi: add generic binding support to specify cs gpio)
-> introduced generic binding for gpio chip-select. The cs_gpio struct field,
-> however, is an internal implementation detail of the Linux SPI subsystem, and
-> should not be mentioned in the device tree binding documentation. Mention the
-> previously defined cs-gpios master node property instead.
-> 
-> Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/spi/spi-bus.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> index 800dafe..e5a4d1b 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -67,7 +67,7 @@ only 1(SINGLE), 2(DUAL) and 4(QUAD).
->  Dual/Quad mode is not allowed when 3-wire mode is used.
->  
->  If a gpio chipselect is used for the SPI slave the gpio number will be passed
-> -via the cs_gpio
-> +via the SPI master node cs-gpios property.
+This second version addresses most of the points raised during review.
 
-here it's an information about the c structure
+What has not been changed is the phy-names property. This is awaiting
+feedback on my comment that the naming follows how clocks are named in
+the driver & DT binding. For this reason i've also not added the
+Ack-by: received in the review comments.
 
-Best Regards,
-J.
->  
->  SPI example for an MPC5200 SPI bus:
->  	spi@f00 {
-> -- 
-> 1.8.4.3
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andrew Lunn (4):
+  Phy: DT binding documentation for Marvell MVEBU SATA phy.
+  Phy: Add a PHY driver for Marvell MVEBU SATA PHY.
+  SATA: MV: Add support for the optional PHYs
+  Phy: Add DT nodes on kirkwood and Dove for the SATA PHY
+
+ Documentation/devicetree/bindings/ata/marvell.txt  |   6 +
+ .../devicetree/bindings/phy/phy-mvebu.txt          |  22 ++++
+ arch/arm/boot/dts/dove.dtsi                        |  11 ++
+ arch/arm/boot/dts/kirkwood-6281.dtsi               |   2 +
+ arch/arm/boot/dts/kirkwood-6282.dtsi               |   2 +
+ arch/arm/boot/dts/kirkwood.dtsi                    |  18 +++
+ drivers/ata/sata_mv.c                              |  19 +++
+ drivers/phy/Kconfig                                |   6 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-mvebu-sata.c                       | 137 +++++++++++++++++++++
+ 10 files changed, 224 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu.txt
+ create mode 100644 drivers/phy/phy-mvebu-sata.c
+
+-- 
+1.8.5
+
