@@ -1,46 +1,52 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V11 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
- exynos5420 dtsi files
-Date: Thu, 5 Dec 2013 10:35:20 -0800
-Message-ID: <CAD=FV=UcqaG9Dw_rd-bdTAmDwdW-_yCO6HpaEr1G07AW4TWm0w@mail.gmail.com>
-References: <1385613243-3559-1-git-send-email-l.krishna@samsung.com>
-	<1468334.WxyIceyAAx@flatron>
-	<CAD=FV=VKT2mdwNMeZrimurtHeqNBJcpbmZzXV1-es2DxKcFXqw@mail.gmail.com>
-	<1979723.ga7TBeh7CQ@flatron>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: DTS: omap4-sdp: Add regulator for LCD backlight
+ (pwm-backlight)
+Date: Thu, 5 Dec 2013 10:40:07 -0800
+Message-ID: <20131205184007.GE26766@atomide.com>
+References: <1385630924-16392-1-git-send-email-peter.ujfalusi@ti.com>
+ <5297164D.9060400@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1979723.ga7TBeh7CQ@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Olof Johansson <olof@lixom.net>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "cpgs ." <cpgs@samsung.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5297164D.9060400@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sourav Poddar <sourav.poddar@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Benoit Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tomi.valkeinen@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Tomasz,
+* Sourav Poddar <sourav.poddar@ti.com> [131128 02:10]:
+> On Thursday 28 November 2013 02:58 PM, Peter Ujfalusi wrote:
+> >Since in DT booted kernel dummy regulators are no longer supported we need
+> >to provide valid phandle for the regulator needed by the backlight.
+> >On the board VBAT is used to power the LCD backlight(s).
+> >
+> >Signed-off-by: Peter Ujfalusi<peter.ujfalusi@ti.com>
+> >---
+> >Hi,
+> >
+> >This patch is needed for 3.13 to get the LCD backlight to work again.
+> Is this usage of power supply a mandatory requirement?
+> 
+> There is a thread which discusses this issue[1]:
+> http://www.spinics.net/lists/arm-kernel/msg288215.html
+> 
+> According to the above, regulator framework have support in 3.13-rc1
+> to returns
+> a dummy  regulator if there is none specified in the dts data.
+> Thierry told that there seems to be a bug in regulator in handling
+> these case.
+> 
+> Though, I also posted a patch on pwm a couple of days ago[2]
+> [2]: https://patchwork.kernel.org/patch/3246711/
+> 
+> I posted it without "power-supply" by testing it with the
+> solution proposed in [1].
+> If I dont use the solution[1], it fails for me also.
 
-On Thu, Dec 5, 2013 at 10:30 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> I'd vote for using "pmu-system-registers".  We end up using the
->> "syscon" subsystem but really we're describing pmu registers.
->>
->> I'd even say that you don't need to formally specify the "name" in the
->> bindings (though I'm not up with all the latest device tree
->> requirements).  ...still you'd want to use "pmu-system-registers" in
->> the DTS changes.
->
-> Well, since the name should specify the class of device, I would say that
-> pmu-system-registers is too specific. If we want to change this, I'd say
-> we should go with system-controller.
+Hmm so if this is not needed, I'll mark this thread as read in
+my inbox. If you guys need it please repost.
 
-...but the "compatible" is "samsung,exynos5250-pmu", "syscon", right?
-That means that the class of the device is "exynos5250-pmu", right?
-It is also compatible with the generic "syscon" class of devices.
+Regards,
 
-> As for name specification inside the binding, I agree that binding should
-> not require the main node to be named specifically. If we want to have
-> another version anyway, let's drop this.
-
-That sounds good to me.  So drop the "name" part in the bindings file
-and then apply this discussion to patch #3 in this series (the one
-that touches the .dtsi files).
-
--Doug
+Tony
