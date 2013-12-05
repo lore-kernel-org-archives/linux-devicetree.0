@@ -1,54 +1,26 @@
-From: Tim Kryger <tim.kryger@linaro.org>
-Subject: [PATCH v4 0/8] Update Kona drivers to use clocks
-Date: Thu, 5 Dec 2013 11:20:36 -0800
-Message-ID: <1386271244-3927-1-git-send-email-tim.kryger@linaro.org>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCHv5][ 3/8] staging: imx-drm: Correct BGR666 and the board's dts that use them.
+Date: Thu, 5 Dec 2013 21:52:43 +0100
+Message-ID: <201312052152.43971.marex@denx.de>
+References: <1386268092-21719-1-git-send-email-denis@eukrea.com> <1386268092-21719-3-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, Axel Lin <axel.lin@ingics.com>
-Cc: Tim Kryger <tim.kryger@linaro.org>, Device Tree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linaro Patches List <patches@linaro.org>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1386268092-21719-3-git-send-email-denis@eukrea.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Denis Carikli <denis@eukrea.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Mauro Carvalho Chehab <m.chehab@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Eric =?iso-8859-1?q?B=E9nard?= <eric@eukrea.com>
 List-Id: devicetree@vger.kernel.org
 
-This series declares the clocks present on bcm11351 (aka bcm281xx) SoCs
-to be fixed at the rates configured by development bootloaders and then
-updates the Kona drivers to make use of clock calls where appropriate.
+On Thursday, December 05, 2013 at 07:28:07 PM, Denis Carikli wrote:
+[...]
 
-Changes in v4:
-  - Rebased on v3.13-rc2
-  - DT binding documents now say "phandle + clock specifier pair"
-  - Recent change by Axel to use sdhci_pltfm_unregister must be undone
-    to allow clk_disable_unprepare to be called at the right point in
-    sdhci_bcm_kona_remove
+Can you please explain the correction here ? Why is it needed ? What was the 
+problem ?
 
-Changes in v3:
-  - Updated the commit message for the UART DTS change
-  - Added a patch to change the kona timer binding doc
-  - Updated the commit message for the kona timer driver change
-  - Updated the panic message in the kona timer driver
-  - Added a patch to change the kona sdhci binding doc
-  - Moved the SDHCI driver change earlier in the series
-  - Removed unrelated change from SDHCI driver patch
+Thanks!
 
-Changes in v2:
-  - Renamed bsc4_clk to pmu_bsc_clk
-
-Tim Kryger (8):
-  ARM: dts: Declare clocks as fixed on bcm11351
-  ARM: dts: Specify clocks for UARTs on bcm11351
-  Documentation: dt: kona-sdhci: Add clocks property
-  ARM: dts: Specify clocks for SDHCIs on bcm11351
-  mmc: sdhci-bcm-kona: Add basic use of clocks
-  Documentation: dt: kona-timer: Add clocks property
-  clocksource: kona: Add basic use of external clock
-  ARM: dts: Specify clocks for timer on bcm11351
-
- .../devicetree/bindings/arm/bcm/kona-timer.txt     |   7 +-
- .../devicetree/bindings/mmc/kona-sdhci.txt         |   4 +
- arch/arm/boot/dts/bcm11351.dtsi                    | 111 ++++++++++++++++++++-
- drivers/clocksource/bcm_kona_timer.c               |  14 ++-
- drivers/mmc/host/sdhci-bcm-kona.c                  |  37 ++++++-
- 5 files changed, 162 insertions(+), 11 deletions(-)
-
--- 
-1.8.0.1
+Best regards,
+Marek Vasut
