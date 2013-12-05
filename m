@@ -1,35 +1,80 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/1] usb: doc: rename ci13xxx-imx.txt to ci-hdrc-imx.txt
-Date: Thu, 5 Dec 2013 09:14:17 +0800
-Message-ID: <1386206057-23186-1-git-send-email-peter.chen@freescale.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: ARM: gic_arch_extn (Was: [PATCH v3] irqchip: mmp: add dt support
+ for wakeup)
+Date: Thu, 5 Dec 2013 03:12:55 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1312050157550.30673@ionos.tec.linutronix.de>
+References: <1386159214-31483-1-git-send-email-zhangwm@marvell.com> <alpine.DEB.2.02.1312042234190.30673@ionos.tec.linutronix.de> <alpine.DEB.2.02.1312042347350.30673@ionos.tec.linutronix.de> <20131205005216.GA4360@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131205005216.GA4360@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Neil Zhang <zhangwm@marvell.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, haojian.zhuang@gmail.com, LAK <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-We have already renamed the file name, change doc name at this
-patch.
+Russell,
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- .../usb/{ci13xxx-imx.txt => ci-hdrc-imx.txt}       |    0
- 1 files changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/usb/{ci13xxx-imx.txt => ci-hdrc-imx.txt} (100%)
+On Thu, 5 Dec 2013, Russell King - ARM Linux wrote:
+> On Thu, Dec 05, 2013 at 01:41:53AM +0100, Thomas Gleixner wrote:
+> > @all who feel responsible for gic_arch_extn
+> > 
+> > On Wed, 4 Dec 2013, Thomas Gleixner wrote:
+> > > I'm going to reply in a separate mail on this, because you have
+> > > brought this to my attention, but you are not responsible in the first
+> > > place for this brainfart.
+> > 
+> > Who came up with that gic_arch_extn concept in the first place?
+> 
+> If you'd spend more time reviewing IRQ patches then maybe you'd catch
+> this at review time.  So please stop your rediculous whinging when
+> most of the problem is your own lack of time.
 
-diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-rename to Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
--- 
-1.7.8
+I'm not a native english speaker, so I want to make sure in the first
+place that you meant:
 
+    "ridiculous whingeing" 
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Assumed that you meant that, let me ridicule you a bit.
+
+The gic_arch_extn concept got merged with:
+
+    commit d7ed36a4ea84e3a850f9932e2058ceef987d1acd
+    Author: Santosh Shilimkar <santosh.shilimkar@ti.com>
+    Date:   Wed Mar 2 08:03:22 2011 +0100
+
+    ARM: 6777/1: gic: Add hooks for architecture specific extensions
+
+    <SNIP>
+
+    Cc: Russell King <rmk+kernel@arm.linux.org.uk>
+    Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+    Acked-by: Colin Cross <ccross@android.com>
+    Tested-by: Colin Cross <ccross@android.com>
+    Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+
+    ---
+    arch/arm/common/gic.c		|   47 ++++++++++++....
+    arch/arm/include/asm/hardware/gic.h |    1
+
+The patch in question was never cc'ed to me and you merged it on your
+own.
+
+So now you have the chuzpe to blame me for that, just because this
+code moved to drivers/irqchip with
+
+     commit 81243e444c6e9d1625073e4a3d3bc244c8a545f0
+     Author: Rob Herring <rob.herring@calxeda.com>
+     Date:   Tue Nov 20 21:21:40 2012 -0600
+
+     irqchip: Move ARM GIC to drivers/irqchip
+    
+almost two years later?
+
+The code move neither exempts you from the responsibility of merging
+it nor does it imply a retroactive responsibility for me to review all
+patches which went into that code prior to the move.
+
+Thanks,
+
+	tglx
