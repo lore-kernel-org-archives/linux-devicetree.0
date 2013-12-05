@@ -1,33 +1,67 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using
- pinfunc.
-Date: Thu, 05 Dec 2013 16:11:15 +0100
-Message-ID: <1502243.eRBlCfUhTO@amdc1227>
-References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
- <CACRpkdYrPd9tnO48bA_5n+-k=KEDyhY7czkCNhTZfpgF3ar+LQ@mail.gmail.com>
- <20131205150747.GW29268@sirena.org.uk>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [RFC PATCH v3 1/8] mmc: omap_hsmmc: use devm_regulator API
+Date: Thu, 5 Dec 2013 20:59:15 +0530
+Message-ID: <52A09BCB.4080409@ti.com>
+References: <20130613174554.GB1403@sirena.org.uk> <1385043627-30439-1-git-send-email-balajitk@ti.com> <1385043627-30439-2-git-send-email-balajitk@ti.com> <CAPDyKFoS3i3eMKy817emRWoZ5OMKr7LgP3mjj2ePBBGcN5ZB2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20131205150747.GW29268@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kevin Bracey <kevin@bracey.fi>, Kyungmin Park <kmpark@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFoS3i3eMKy817emRWoZ5OMKr7LgP3mjj2ePBBGcN5ZB2w@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-omap <linux-omap@vger.kernel.org>, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 05 of December 2013 15:07:47 Mark Brown wrote:
-> On Tue, Dec 03, 2013 at 10:29:42AM +0100, Linus Walleij wrote:
-> 
-> > So a suggested patch to support weak hogs would be interesting
-> > to look at. Can you provide details on how you think this would
-> > work?
-> 
-> Or should we be going and applying the default state to all devices on
-> init without worrying about a driver appearing?
+On Thursday 21 November 2013 08:38 PM, Ulf Hansson wrote:
+> On 21 November 2013 15:20, Balaji T K <balajitk@ti.com> wrote:
+>> Use devm_regulator API, while at it use
+>> devm_regulator_get_optional for optional vmmc_aux supply
+>>
+>> Signed-off-by: Balaji T K <balajitk@ti.com>
+>> ---
+>>   drivers/mmc/host/omap_hsmmc.c |    6 ++----
+>>   1 files changed, 2 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+>> index dbd32ad..1eb4350 100644
+>> --- a/drivers/mmc/host/omap_hsmmc.c
+>> +++ b/drivers/mmc/host/omap_hsmmc.c
+>> @@ -316,7 +316,7 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
+>>          struct regulator *reg;
+>>          int ocr_value = 0;
+>>
+>> -       reg = regulator_get(host->dev, "vmmc");
+>> +       reg = devm_regulator_get(host->dev, "vmmc");
+>>          if (IS_ERR(reg)) {
+>>                  dev_err(host->dev, "vmmc regulator missing\n");
+>>                  return PTR_ERR(reg);
+>> @@ -336,7 +336,7 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
+>>                  }
+>>
+>>                  /* Allow an aux regulator */
+>> -               reg = regulator_get(host->dev, "vmmc_aux");
+>> +               reg = devm_regulator_get_optional(host->dev, "vmmc_aux");
+>>                  host->vcc_aux = IS_ERR(reg) ? NULL : reg;
+>>
+>>                  /* For eMMC do not power off when not in sleep state */
+>> @@ -366,8 +366,6 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
+>>
+>>   static void omap_hsmmc_reg_put(struct omap_hsmmc_host *host)
+>>   {
+>> -       regulator_put(host->vcc);
+>> -       regulator_put(host->vcc_aux);
+>>          mmc_slot(host).set_power = NULL;
+>>   }
+>
+> While you are touching this code I would suggest to convert to
+> mmc_regulator_get_supply instead. That mean the vmmc_aux change name
+> to vqmmc though, so you need to adapt for this as well then.
+>
 
-If a device isn't used, then it's often better to configure the pins for
-a different function, such as GPIO, to minimize leakage current.
+Hi Ulf,
 
-Best regards,
-Tomasz
+Thanks for the comments, I will address it on separate series.
+
+Thanks and Regards,
+Balaji T K
