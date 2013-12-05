@@ -1,74 +1,68 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] DT: ATA: Add missing documentation of clocks to
- marvell binding.
-Date: Thu, 5 Dec 2013 17:23:51 +0000
-Message-ID: <20131205172351.GP29200@e106331-lin.cambridge.arm.com>
-References: <20131205122254.GN29200@e106331-lin.cambridge.arm.com>
- <1386258619-18367-1-git-send-email-andrew@lunn.ch>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH v3 0/9] Reuse davinci-nand driver for Keystone arch
+Date: Thu, 5 Dec 2013 19:25:48 +0200
+Message-ID: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386258619-18367-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 03:50:19PM +0000, Andrew Lunn wrote:
-> The marvell SATA driver can optionally make use of clocks specified in
-> the DT node. This has been available in the driver since Febuary 2012,
-> but the documentation is missing from the binding. Add it.
-> 
-> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> ---
-> FYI: This will cause merge conflicts with the SATA PHY driver comming soon.
-> 
-> v1->v2:
-> s/pHandle/phandle/
-> Add specifier.
-> 
-> Not addressed yet is changing "0" to "port0", etc. Waiting for feedback
-> from Mark Rutland.
+This series contains fixes and updates of Davinci nand driver in
+order to reuse it for Keystone platform.
 
-I'm happy with the clock-names as they are, thanks for applying the
-other changes.
+v2..v3:
+- mtd: nand: davinci: don't set timings if AEMIF is used
+	dropped, it would be replaced by alone patch
+	ARM: davinci: aemif: get rid of davinci-nand driver dependency on aemif
 
-Thanks for fixing up the documentation!
+v1..v2
+The series is combination of two following series:
+- Davinci nand driver fixes and updates:
+https://lkml.org/lkml/2013/11/20/271
+- Reuse davinci-nand driver for Keystone arch
+https://lkml.org/lkml/2013/11/20/315
 
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+- mtd: nand: davinci: extend description of bindings
+	clarified changeset description
 
-> ---
->  Documentation/devicetree/bindings/ata/marvell.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/marvell.txt b/Documentation/devicetree/bindings/ata/marvell.txt
-> index b5cdd20cde9c..acfdb439bb6c 100644
-> --- a/Documentation/devicetree/bindings/ata/marvell.txt
-> +++ b/Documentation/devicetree/bindings/ata/marvell.txt
-> @@ -6,11 +6,17 @@ Required Properties:
->  - interrupts    : Interrupt controller is using
->  - nr-ports      : Number of SATA ports in use.
->  
-> +Optional Properties:
-> +- clocks        : List of phandle and specifier to clocks
-> +- clock-names   : Must be "0", "1", mapping port number to clock.
-> +
->  Example:
->  
->  	sata@80000 {
->  		compatible = "marvell,orion-sata";
->  		reg = <0x80000 0x5000>;
->  		interrupts = <21>;
-> +		clocks = <&gate_clk 14>, <&gate_clk 15>;
-> +		clock-names = "0", "1";
->  		nr-ports = <2>;
->  	}
-> -- 
-> 1.8.5
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- mtd: nand: davinci: reuse driver for Keystone arch
+	removed "ti,keystone-nand" compatible from driver
+
+Ivan Khoronzhuk (9):
+  mtd: nand: davinci: fix driver registration
+  mtd: nand: davinci: return ENOMEM if memory allocation is failed
+  mtd: nand: davinci: check required ti,davinci-chipselect property
+  mtd: nand: davinci: simplify error handling
+  mtd: nand: davinci: move bindings under mtd
+  mtd: nand: davinci: extend description of bindings
+  mtd: nand: davinci: adjust DT properties to MTD generic
+  mtd: nand: davinci: reuse driver for Keystone arch
+  mtd: nand: davinci: don't request AEMIF address range
+
+ .../devicetree/bindings/arm/davinci/nand.txt       |   46 ----------
+ .../devicetree/bindings/mtd/davinci-nand.txt       |   94 ++++++++++++++++++++
+ drivers/mtd/nand/Kconfig                           |    6 +-
+ drivers/mtd/nand/davinci_nand.c                    |   70 ++++++++-------
+ 4 files changed, 133 insertions(+), 83 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
+ create mode 100644 Documentation/devicetree/bindings/mtd/davinci-nand.txt
+
+-- 
+1.7.9.5
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
