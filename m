@@ -1,26 +1,107 @@
 From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCHv5][ 3/8] staging: imx-drm: Correct BGR666 and the board's dts that use them.
-Date: Thu, 5 Dec 2013 21:52:43 +0100
-Message-ID: <201312052152.43971.marex@denx.de>
-References: <1386268092-21719-1-git-send-email-denis@eukrea.com> <1386268092-21719-3-git-send-email-denis@eukrea.com>
+Subject: Re: [PATCHv5][ 5/8] staging: imx-drm: parallel display: add regulator
+ support.
+Date: Thu, 5 Dec 2013 21:55:31 +0100
+Message-ID: <201312052155.31894.marex@denx.de>
+References: <1386268092-21719-1-git-send-email-denis@eukrea.com>
+ <1386268092-21719-5-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1386268092-21719-3-git-send-email-denis@eukrea.com>
-Sender: linux-media-owner@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1386268092-21719-5-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
 To: Denis Carikli <denis@eukrea.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, driverdev-devel@linuxdriverproject.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Mauro Carvalho Chehab <m.chehab@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Eric =?iso-8859-1?q?B=E9nard?= <eric@eukrea.com>
+Cc: devel@driverdev.osuosl.org, Mark Rutland <mark.rutland@arm.com>, driverdev-devel@linuxdriverproject.org, Eric =?iso-8859-1?q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Dan Carpenter <dan.carpenter@oracle.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, December 05, 2013 at 07:28:07 PM, Denis Carikli wrote:
+On Thursday, December 05, 2013 at 07:28:09 PM, Denis Carikli wrote:
+> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: driverdev-devel@linuxdriverproject.org
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Eric B=E9nard <eric@eukrea.com>
+> Signed-off-by: Denis Carikli <denis@eukrea.com>
+> ---
+> ChangeLog v3->v5:
+> - Code clenaup.
+> =
+
+> ChangeLog v2->v3:
+> - Added some interested people in the Cc list.
+> - the lcd-supply is now called display-supply (not all display are LCD).
+> - The code and documentation was updated accordingly.
+> - regulator_is_enabled now guard the regulator enables/disables because
+>   regulator_disable does not check the regulator state.
+> ---
+>  .../bindings/staging/imx-drm/fsl-imx-drm.txt       |    1 +
+>  drivers/staging/imx-drm/parallel-display.c         |   22
+> ++++++++++++++++++++ 2 files changed, 23 insertions(+)
+> =
+
+> diff --git
+> a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
+> b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt index
+> 2d24425..4dd7ce5 100644
+> --- a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
+> +++ b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
+> @@ -28,6 +28,7 @@ Required properties:
+>  - compatible: Should be "fsl,imx-parallel-display"
+>  - crtc: the crtc this display is connected to, see below
+>  Optional properties:
+> +- display-supply : phandle to the regulator device tree node if needed.
+>  - interface_pix_fmt: How this display is connected to the
+>    crtc. Currently supported types: "rgb24", "rgb565", "bgr666", "rgb666"
+>  - edid: verbatim EDID data block describing attached display.
+> diff --git a/drivers/staging/imx-drm/parallel-display.c
+> b/drivers/staging/imx-drm/parallel-display.c index 65d0c18..61c0aeb 100644
+> --- a/drivers/staging/imx-drm/parallel-display.c
+> +++ b/drivers/staging/imx-drm/parallel-display.c
+> @@ -22,6 +22,7 @@
+>  #include <drm/drmP.h>
+>  #include <drm/drm_fb_helper.h>
+>  #include <drm/drm_crtc_helper.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/videodev2.h>
+> =
+
+>  #include "imx-drm.h"
+> @@ -35,6 +36,7 @@ struct imx_parallel_display {
+>  	struct drm_encoder encoder;
+>  	struct imx_drm_encoder *imx_drm_encoder;
+>  	struct device *dev;
+> +	struct regulator *disp_reg;
+>  	void *edid;
+>  	int edid_len;
+>  	u32 interface_pix_fmt;
+> @@ -141,6 +143,13 @@ static void imx_pd_encoder_prepare(struct drm_encoder
+> *encoder) {
+>  	struct imx_parallel_display *imxpd =3D enc_to_imxpd(encoder);
+> =
+
+> +	if (!IS_ERR(imxpd->disp_reg) &&
+> +	    !regulator_is_enabled(imxpd->disp_reg)) {
+> +		if (regulator_enable(imxpd->disp_reg))
+> +			dev_err(imxpd->dev,
+> +				"Failed to enable regulator.\n");
+
+I wonder, is this linebreak needed for this function call ?
 [...]
-
-Can you please explain the correction here ? Why is it needed ? What was the 
-problem ?
-
-Thanks!
-
-Best regards,
-Marek Vasut
