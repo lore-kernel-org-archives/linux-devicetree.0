@@ -1,231 +1,101 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv7][ 2/2] video: backlight: gpio-backlight: Add DT support.
-Date: Thu,  5 Dec 2013 18:55:09 +0100
-Message-ID: <1386266109-16071-2-git-send-email-denis@eukrea.com>
-References: <1386266109-16071-1-git-send-email-denis@eukrea.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH 2/2] of: add initcall with match boilerplate helpers
+Date: Thu, 5 Dec 2013 11:57:28 -0600
+Message-ID: <CAL_Jsq+4yitHCtaKZ4nNxTg3Q4pUYF9RQY4Q=VTSs4ox-iSqSQ@mail.gmail.com>
+References: <1383113571-13029-1-git-send-email-robherring2@gmail.com>
+	<CAL_JsqKHZtidrzJPH+c-zyFUQNsxtEKxOYg+Nzyo9JYNDNexug@mail.gmail.com>
+	<20131127152244.410F2C404EC@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386266109-16071-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131127152244.410F2C404EC@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
-Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v6->v7:
-- removed a compilation warning with the removal of the useless ret dec=
-laration.
+On Wed, Nov 27, 2013 at 9:22 AM, Grant Likely <grant.likely@linaro.org> wrote:
+> On Thu, 21 Nov 2013 17:23:14 -0600, Rob Herring <robherring2@gmail.com> wrote:
+>> On Thu, Nov 21, 2013 at 6:50 AM, Grant Likely <grant.likely@linaro.org> wrote:
+>> > On Wed, 30 Oct 2013 01:12:51 -0500, Rob Herring <robherring2@gmail.com> wrote:
+>> >> From: Rob Herring <rob.herring@calxeda.com>
+>> >>
+>> >> Add boilerplate helpers to create initcalls which are conditional on
+>> >> matching on devicetree properties.
 
-ChangeLog v5->v6:
-- The default state handling was reworked:
-  - it's now called default-state, and looks like the gpio-leds default=
--state.
-  - it now has a "keep" option, like for the gpio-leds.
-  - that "keep" option is the default when the default-state property i=
-s not set.
-- The documentation was updated accordingly.
+[snip]
 
-ChangeLog v4->v5:
-- The default-brightness property now defaults to 0 in the driver.
-- def_value int becomes a bool.
-- The check for the gpio validity has been reworked.
----
- .../bindings/video/backlight/gpio-backlight.txt    |   23 +++++++
- drivers/video/backlight/gpio_backlight.c           |   71 ++++++++++++=
-+++++---
- 2 files changed, 86 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/g=
-pio-backlight.txt
+>> > I'm not sure why this is necessary. I don't particularly have a problem
+>> > with it, but I wouldn't normally try to filter out device drivers when
+>> > the probe code simply won't get called.
+>> >
+>> > Considering it's paired with the previous patch that creates devices in
+>> > the module init call, I'm assuming it is to support that use case. If so
+>> > then I don't think it is a good idea. If there is another use case then
+>> > maybe.
+>>
+>> This is for cases that are not drivers. Again, the motivation is how
+>> do I do initialization on arm64 where there is not already some
+>> conditional initialization hook. My approach to solve this is by
+>> eliminating the machine_desc for highbank. While I don't really have a
+>> need to do this on highbank itself, I do have a need for some of the
+>> same functions present in mach-highbank for arm64.
+>>
+>> I realized quickly going down this path that I would have a repeated
+>> pattern and that there's already a few other examples in the kernel of
+>> something like this:
+>>
+>> static int __init some_initcall(void)
+>> {
+>>   if (of_machine_is_compatible("my-awesume-board"))
+>>     return -ENODEV;
+>>
+>>   /* do some init stuff... */
+>> }
+>>
+>> There are some examples using this here [1][2].
+>
+> It's still kind of a nasty pattern. I'd like to limit the use of this as
+> much as possible and I'd like to make it as easy as possible to discover
+> where things are coming from at boot. That's one of the things I like
+> about machine_desc. It is a common entry point for SoC family specific
+> behaviour.
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-bac=
-klight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-bac=
-klight.txt
-new file mode 100644
-index 0000000..f36f6e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.=
-txt
-@@ -0,0 +1,23 @@
-+gpio-backlight bindings
-+
-+Required properties:
-+  - compatible: "gpio-backlight"
-+  - gpios: describes the gpio that is used for enabling/disabling the =
-backlight
-+     (see GPIO binding[0] for more details).
-+
-+Optional properties:
-+  - default-state: The initial state of the backlight.
-+    Valid values are "on", "off", and "keep".
-+    The "keep" setting will keep the backlight at whatever its current
-+    state is, without producing a glitch. The default is keep if this
-+    property is not present.
-+
-+[0]: Documentation/devicetree/bindings/gpio/gpio.txt
-+
-+Example:
-+
-+	backlight {
-+		compatible =3D "gpio-backlight";
-+		gpios =3D <&gpio3 4 0>;
-+		default-state =3D "on";
-+	};
-diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/b=
-acklight/gpio_backlight.c
-index 6ddeba9..2e20e32 100644
---- a/drivers/video/backlight/gpio_backlight.c
-+++ b/drivers/video/backlight/gpio_backlight.c
-@@ -13,6 +13,8 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_data/gpio_backlight.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-@@ -61,6 +63,42 @@ static const struct backlight_ops gpio_backlight_ops=
- =3D {
- 	.check_fb	=3D gpio_backlight_check_fb,
- };
-=20
-+static int gpio_backlight_probe_dt(struct platform_device *pdev,
-+				   struct gpio_backlight *gbl)
-+{
-+	struct device_node *np =3D pdev->dev.of_node;
-+	enum of_gpio_flags gpio_flags;
-+	const char *state;
-+
-+	gbl->fbdev =3D NULL;
-+	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
-+
-+	if (!gpio_is_valid(gbl->gpio)) {
-+		if (gbl->gpio !=3D -EPROBE_DEFER) {
-+			dev_err(&pdev->dev,
-+				"Error: The gpios parameter is missing or invalid.\n");
-+		}
-+		return gbl->gpio;
-+	}
-+
-+	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
-+
-+	state =3D of_get_property(np, "default-state", NULL);
-+	if (state) {
-+		if (!strcmp(state, "keep"))
-+			gbl->def_value =3D BACKLIGHT_GPIO_DEFSTATE_KEEP;
-+		else if (!strcmp(state, "on"))
-+			gbl->def_value =3D BACKLIGHT_GPIO_DEFSTATE_ON;
-+		else
-+			gbl->def_value =3D BACKLIGHT_GPIO_DEFSTATE_OFF;
-+	} else {
-+		/* we don't want to touch the hardware if we're not told to */
-+		gbl->def_value =3D BACKLIGHT_GPIO_DEFSTATE_KEEP;
-+	}
-+
-+	return 0;
-+}
-+
- static int gpio_backlight_probe(struct platform_device *pdev)
- {
- 	struct gpio_backlight_platform_data *pdata =3D
-@@ -68,10 +106,12 @@ static int gpio_backlight_probe(struct platform_de=
-vice *pdev)
- 	struct backlight_properties props;
- 	struct backlight_device *bl;
- 	struct gpio_backlight *gbl;
-+	struct device_node *np =3D pdev->dev.of_node;
- 	int ret;
-=20
--	if (!pdata) {
--		dev_err(&pdev->dev, "failed to find platform data\n");
-+	if (!pdata && !np) {
-+		dev_err(&pdev->dev,
-+			"failed to find platform data or device tree node.\n");
- 		return -ENODEV;
- 	}
-=20
-@@ -80,14 +120,23 @@ static int gpio_backlight_probe(struct platform_de=
-vice *pdev)
- 		return -ENOMEM;
-=20
- 	gbl->dev =3D &pdev->dev;
--	gbl->fbdev =3D pdata->fbdev;
--	gbl->gpio =3D pdata->gpio;
--	gbl->active =3D pdata->active_low ? 0 : 1;
-+
-+	if (np) {
-+		ret =3D gpio_backlight_probe_dt(pdev, gbl);
-+		if (ret)
-+			return ret;
-+	} else {
-+		gbl->fbdev =3D pdata->fbdev;
-+		gbl->gpio =3D pdata->gpio;
-+		gbl->active =3D pdata->active_low ? 0 : 1;
-+		if (pdata->def_value !=3D BACKLIGHT_GPIO_DEFSTATE_KEEP)
-+			gbl->def_value =3D pdata->def_value;
-+	}
-=20
- 	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
- 				    (gbl->active ? GPIOF_INIT_LOW
- 						 : GPIOF_INIT_HIGH),
--				    pdata->name);
-+				    pdata ? pdata->name : "backlight");
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "unable to request GPIO\n");
- 		return ret;
-@@ -104,8 +153,8 @@ static int gpio_backlight_probe(struct platform_dev=
-ice *pdev)
- 		return PTR_ERR(bl);
- 	}
-=20
--	if (pdata->def_value !=3D BACKLIGHT_GPIO_DEFSTATE_KEEP) {
--		bl->props.brightness =3D pdata->def_value;
-+	if (gbl->def_value !=3D BACKLIGHT_GPIO_DEFSTATE_KEEP) {
-+		bl->props.brightness =3D gbl->def_value;
- 		backlight_update_status(bl);
- 	}
-=20
-@@ -113,10 +162,16 @@ static int gpio_backlight_probe(struct platform_d=
-evice *pdev)
- 	return 0;
- }
-=20
-+static struct of_device_id gpio_backlight_of_match[] =3D {
-+	{ .compatible =3D "gpio-backlight" },
-+	{ /* sentinel */ }
-+};
-+
- static struct platform_driver gpio_backlight_driver =3D {
- 	.driver		=3D {
- 		.name		=3D "gpio-backlight",
- 		.owner		=3D THIS_MODULE,
-+		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
- 	},
- 	.probe		=3D gpio_backlight_probe,
- };
---=20
-1.7.9.5
+But that is really no longer true now that all the machine_desc
+function ptrs are optional. A given platform may or may not even be
+calling some machine_desc functions. So the boot flow is already very
+much a function of what is in the DTB rather than what machine is
+selected.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> As for device drivers, the preferred model is to bind against something
+> already registered. If it is not present, then it does nothing. To me
+> there is a difference between making the behavour conditional on
+> something that was registered vs. an arbitrary value in the device tree.
+> The triggers for the former are exported in /dev/devices. The latter is
+> 'magic'.  :-)
+
+Again, this patch is for not device driver stuff.
+
+> The problem with "if (of_machine_is_compatible())" initcalls is they are
+> an exception to the normal flow of things. You have to go searching for
+> specific strings to find out if they are getting called.
+
+Umm, initcall_debug is your friend here.
+
+A standard boilerplate here would actually help in finding these
+cases. If arm64 continues to hold the line of no machine_desc, then
+this won't be the exception. Are there currently enough exceptions to
+justify factoring out this pattern? Obviously, I think there are and
+think they will grow, not shrink.
+
+Since none of the proponents of removing/avoiding machine_desc have
+weighed in, we'll never reach any conclusion on this. I'll just
+continue to open code this as I need to.
+
+> I'm possibly splitting hairs here, but a big part of migration to the
+> Linux device model is getting rid of modules that both register a device
+> and then bind to it.
+
+There will always be bits that don't fit into the driver model.
+
+Rob
