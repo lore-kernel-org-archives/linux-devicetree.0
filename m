@@ -1,59 +1,62 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [PATCH v2] DT: ATA: Add missing documentation of clocks to marvell binding.
-Date: Thu,  5 Dec 2013 16:50:19 +0100
-Message-ID: <1386258619-18367-1-git-send-email-andrew@lunn.ch>
-References: <20131205122254.GN29200@e106331-lin.cambridge.arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131205122254.GN29200-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+From: Dinh Nguyen <dinguyen@altera.com>
+Subject: Re: [PATCHv3 4/4] arm: dts: Add support for SD/MMC on SOCFPGA
+Date: Thu, 5 Dec 2013 10:14:41 -0600
+Message-ID: <1386260081.3783.0.camel@linux-builds1>
+References: <1386197576-3825-1-git-send-email-dinguyen@altera.com>
+	 <1386197576-3825-5-git-send-email-dinguyen@altera.com>
+	 <201312050407.50385.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201312050407.50385.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: dinh.linux@gmail.com, mturquette@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The marvell SATA driver can optionally make use of clocks specified in
-the DT node. This has been available in the driver since Febuary 2012,
-but the documentation is missing from the binding. Add it.
+On Thu, 2013-12-05 at 04:07 +0100, Arnd Bergmann wrote:
+> On Wednesday 04 December 2013, dinguyen@altera.com wrote:
+> 
+> > +
+> > +* compatible: should be
+> > +        - "altr,socfpga-dw-mshc": for controllers with Altera SOCFPGA
+> > +          specific extensions.
+> > +
+> > +* samsung,dw-mshc-sdr-timing: See exynos-dw-mshc.txt for more information about
+> > +	this property.
+> > +
+> > +Example:
+> > +	dwmmc0@ff704000 {
+> > +		compatible = "altr,socfpga-dw-mshc", "snps,dw-mshc";
+> > +		reg = <0xff704000 0x1000>;
+> > +		interrupts = <0 139 4>;
+> > +		fifo-depth = <0x400>;
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		clocks = <&l4_mp_clk>, <&sdmmc_clk>, <&sysmgr_sdr_mmc>;
+> > +		clock-names = "biu", "ciu", "sysmgr-sdr-mmc";
+> 
+> You add a "sysmgr-sdr-mmc" clock here without documenting it. I think what you
+> actually mean here is
+> 
+> > +		clocks = <&l4_mp_clk>, <&sysmgr_sdr_mmc>;
+> > +		clock-names = "biu", "ciu";
+> 
+> i.e. the <&sysmgr_sdr_mmc> clock is actually your "ciu". If I understand your
+> code correctly, the dw-mshc has exactly two clock inputs, biu and ciu, and
+> you use sysmgr to provide ciu. The driver code already contains logic to
+> set the rate of the ciu clock, and you just need to hook into that.
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
----
-FYI: This will cause merge conflicts with the SATA PHY driver comming soon.
+Ah yes! This is fantastic. I can definitely just re-use the ciu-clk
+hook.
 
-v1->v2:
-s/pHandle/phandle/
-Add specifier.
+Thanks!
 
-Not addressed yet is changing "0" to "port0", etc. Waiting for feedback
-from Mark Rutland.
----
- Documentation/devicetree/bindings/ata/marvell.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+Dinh
+> 
+> 	Arnd
+> 
 
-diff --git a/Documentation/devicetree/bindings/ata/marvell.txt b/Documentation/devicetree/bindings/ata/marvell.txt
-index b5cdd20cde9c..acfdb439bb6c 100644
---- a/Documentation/devicetree/bindings/ata/marvell.txt
-+++ b/Documentation/devicetree/bindings/ata/marvell.txt
-@@ -6,11 +6,17 @@ Required Properties:
- - interrupts    : Interrupt controller is using
- - nr-ports      : Number of SATA ports in use.
- 
-+Optional Properties:
-+- clocks        : List of phandle and specifier to clocks
-+- clock-names   : Must be "0", "1", mapping port number to clock.
-+
- Example:
- 
- 	sata@80000 {
- 		compatible = "marvell,orion-sata";
- 		reg = <0x80000 0x5000>;
- 		interrupts = <21>;
-+		clocks = <&gate_clk 14>, <&gate_clk 15>;
-+		clock-names = "0", "1";
- 		nr-ports = <2>;
- 	}
--- 
-1.8.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
