@@ -1,52 +1,84 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 5/7] net: of_mdio: parse "max-speed" property to set PHY
- supported features
-Date: Fri, 06 Dec 2013 03:49:04 +0300
-Message-ID: <52A11F00.1070603@cogentembedded.com>
-References: <1386283936-26104-1-git-send-email-florian@openwrt.org> <1386283936-26104-6-git-send-email-florian@openwrt.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using
+ pinfunc.
+Date: Thu, 05 Dec 2013 16:54:08 -0700
+Message-ID: <52A11220.8080509@wwwdotorg.org>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>	<528BB1F2.4080107@wwwdotorg.org>	<CAD=FV=XS0dbE7zfgDGVdp84h4fHH6tfO8aN_HNh1LbOjYy51aQ@mail.gmail.com>	<528BB913.6080409@wwwdotorg.org>	<CAH9JG2UjnL5bZzNUuJhWY3GpwPD=rJvR2O4Hcpm33G+prSS=BA@mail.gmail.com>	<CACRpkdbyjm0X9RX+8WjqQxBPyRjBOAunkqVcO-0KUd1PTdGavA@mail.gmail.com>	<5293ACA6.7060403@bracey.fi> <CACRpkdYrPd9tnO48bA_5n+-k=KEDyhY7czkCNhTZfpgF3ar+LQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1386283936-26104-6-git-send-email-florian@openwrt.org>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <florian@openwrt.org>, netdev@vger.kernel.org
-Cc: davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, abrodkin@synopsys.com, rob.herring@calxeda.com, mark.rutland@arm.com, sebastian.hesselbarth@gmail.com, Florian Fainelli <f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdYrPd9tnO48bA_5n+-k=KEDyhY7czkCNhTZfpgF3ar+LQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Bracey <kevin-Tpk74O8xG8r1KXRcyAk9cg@public.gmane.org>
+Cc: Kyungmin Park <kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 12/03/2013 02:29 AM, Linus Walleij wrote:
+...
+> So I guess what you're after is a kind of hog that will be pushed
+> aside and ignored if a struct device with an associated state appears
+> that will use the same pin?
 
-On 12/06/2013 01:52 AM, Florian Fainelli wrote:
+That probably would be useful. Perhaps we should just make all hogs not
+exclusively own the pins they configure?
 
-> From: Florian Fainelli <f.fainelli@gmail.com>
+> It is true that we currently require the tables to be strict and not
+> overlap like this, so ideally you should remove the hogs when you
+> have a device driver, but you're actually describing an interesting
+> case here:
+> 
+> What if I have a driver for this IP block, and it was supposed to
+> take care of a few pins, but I decide not to compile it into my
+> kernel? Or if I have it as a module and only modprobe it later
+> at runtime?
 
-> The "max-speed" property is defined per the ePAPR specification to
-> express the maximum speed a PHY supports. Use that property, if present
-> to set the phydev->supported features which properly restricts the PHY
-> within the range of defined speeds.
+Indeed, that's the nasty hole in pushing even static per-device pinctrl
+configuration into each device's node; the device may not appear.
 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->   drivers/of/of_mdio.c | 25 ++++++++++++++++++++++++-
->   1 file changed, 24 insertions(+), 1 deletion(-)
+Related, I prefer to put /all/ static pinctrl configuration into the
+pinctrl device's "default" state (i.e. use a hog) rather than
+configuring the static pinctrl setup per device, for another reason too:
 
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index 4923ab2..e1e19e5 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-[...]
-> @@ -58,8 +76,13 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
->   		return 1;
->   	}
->
-> +	/* Set phydev->supported based on the "max-speed" property
-> +	 * if present */
+If a particular IO controller's signals can be routed to n different
+(sets of) pins, then we need to do *both* of the following when setting
+up the pinmux:
 
-    Preferred multi-line comment style is this:
+a) Configure the pins we want to host those signals to route to/from
+that particular IO controller.
 
-/*
-  * bla
-  * bla
-  */
+b) Configure any other pins that could route to/from that particular IO
+controller as some other function; either disabled, or routed to/from
+some different IO controller.
 
-WBR, Sergei
+That is so that the IO controller's RX/input signals are not connected
+from two different sets of pins at once, which would cause two things to
+driver them. Depending on HW, this could cause on of:
+
+1) Multiple drivers -> high power usage, or even Silicon damage.
+
+2) Inconsistent configuration, with the "wrong" set of pins driving the
+IO controller's inputs, and hence the signals on the "correct" pins
+being ignored -> hard to find bug.
+
+Now, (a) could easily happen when the driver for the IO controller is
+probed. However, (b) can't, because some other IO controller may need to
+use those pins, and the two drivers (or pinctrl states for different
+devices) can't both set up those pins.
+
+The only way to solve this is to set up all pinmux state using a single
+global table (e.g. the pin controller's default state, or hog) that is
+applied early on.
+
+If we rely on resolving these conflicts in per-device default/...
+states, then that means the conflicts won't get resolved until a driver
+gets probed, if it ever does, which is too late.
+
+... and as such, I prefer only putting *dynamic* configuration into
+per-device (non-hog) nodes. (e.g. an I2C bus mux driver which actively
+changes the pinmux at run-time to move an I2C controller between
+different sets of SoC pins).
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
