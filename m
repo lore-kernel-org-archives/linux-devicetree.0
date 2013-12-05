@@ -1,61 +1,111 @@
-From: Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: chipidea: fix mistake in device tree binding of nspire-usb to use vendor name 'lsi' instead of SoC name 'zevio'
-Date: Thu, 5 Dec 2013 21:10:37 +1100
-Message-ID: <FAB4D64E-5DAD-4252-8B24-F076071D0279@gmail.com>
-References: <1386148808-15065-1-git-send-email-dt.tangr@gmail.com> <20131204134433.GD1573@shlinux1.ap.freescale.net> <38AC4BA3-DE10-47A6-B3EF-26872A88AABD@gmail.com> <20131205084909.GA25943@shlinux1.ap.freescale.net>
-Mime-Version: 1.0 (Mac OS X Mail 6.6 \(1510\))
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v7 2/2] mmc: sdhci-msm: Initial support for MSM chipsets
+Date: Thu, 5 Dec 2013 10:27:40 +0000
+Message-ID: <20131205102740.GI29200@e106331-lin.cambridge.arm.com>
+References: <1383753405-23631-1-git-send-email-gdjakov@mm-sol.com>
+ <1383753405-23631-3-git-send-email-gdjakov@mm-sol.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131205084909.GA25943-KgLukfWpBlCctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1383753405-23631-3-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "subhashj@codeaurora.org" <subhashj@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 05/12/2013, at 7:49 PM, Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-
-> On Thu, Dec 05, 2013 at 04:44:13PM +1100, Daniel Tang wrote:
->> Hi,
->> 
->> On 05/12/2013, at 12:44 AM, Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> 
->>> 
->>> lsi is vendor name, what are zevio and nspire?
->>> Usually, the compatible string should be "vendor_name,soc_name-module_name"
->>> 
->> 
->> Because this port uses documentation from reverse engineering, it's difficult to work out what is SoC specific and what is device specific. The SoC is Zevio but the driver is written for the TI-Nspire.
->> 
+On Wed, Nov 06, 2013 at 03:56:45PM +0000, Georgi Djakov wrote:
+> This platform driver adds the initial support of Secure
+> Digital Host Controller Interface compliant controller
+> found in Qualcomm MSM chipsets.
 > 
-> Please wrap the line to 80 characters.
-> 
-> The driver is written for the TI-Nspire, and you port this driver for
-> SoC Zevio platform?
+> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+> ---
+>  drivers/mmc/host/Kconfig     |   13 +
+>  drivers/mmc/host/Makefile    |    1 +
+>  drivers/mmc/host/sdhci-msm.c |  651 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 665 insertions(+)
+>  create mode 100644 drivers/mmc/host/sdhci-msm.c
 
-The TI-Nspire runs on the Zevio SoC.
+[...]
 
-> Since you use chipidea ip, we don't care the usb
-> module name at your platform, we only care the soc name which you are
-> running, it can detect the SoC platform at runtime.
-> 
+> +static int sdhci_msm_dt_parse_vreg_info(struct device *dev,
+> +                                       struct sdhci_msm_reg_data *vreg,
+> +                                       const char *vreg_name)
+> +{
+> +       int len;
+> +       const __be32 *prop;
 
-Yep, that's why the latest patch I sent in renames the device tree 
-binding to "lsi,zevio-usb" since zevio is the name of the SoC that the 
-TI-Nspire uses.
+Seeing raw property handling in drivers worries me. If there's a reason
+to touch the raw DTB we should add helpers to do it rather than leaking
+binary format issues into drivers.
 
-> At your dts patch, it still uses nspire-usb.
-> http://marc.info/?l=linux-usb&m=138614886720024&w=2
+> +       char prop_name[MAX_PROP_SIZE];
+> +       struct device_node *np = dev->of_node;
+> +
+> +       snprintf(prop_name, MAX_PROP_SIZE, "%s-supply", vreg_name);
+> +       if (!of_parse_phandle(np, prop_name, 0)) {
+> +               dev_info(dev, "No vreg data found for %s\n", vreg_name);
+> +               return -EINVAL;
+> +       }
+> +
+> +       vreg->name = vreg_name;
+> +
+> +       snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-lpm-sup", vreg_name);
+> +       if (of_get_property(np, prop_name, NULL))
+> +               vreg->lpm_sup = true;
+> +
+> +       snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-voltage-level", vreg_name);
+> +       prop = of_get_property(np, prop_name, &len);
+> +       if (!prop || (len != (2 * sizeof(__be32)))) {
+> +               dev_warn(dev, "%s %s property\n",
+> +               prop ? "invalid format" : "no", prop_name);
+> +       } else {
+> +               vreg->low_vol_level = be32_to_cpup(&prop[0]);
+> +               vreg->high_vol_level = be32_to_cpup(&prop[1]);
+> +       }
 
-I'll send a new one in right now.
+You can use of_property_read_u32_array here.
 
-> 
-> Peter
+> +
+> +       snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-current-level", vreg_name);
+> +       prop = of_get_property(np, prop_name, &len);
+> +       if (!prop || (len != (2 * sizeof(__be32)))) {
+> +               dev_warn(dev, "%s %s property\n",
+> +                        prop ? "invalid format" : "no", prop_name);
+> +       } else {
+> +               vreg->lpm_uA = be32_to_cpup(&prop[0]);
+> +               vreg->hpm_uA = be32_to_cpup(&prop[1]);
+> +       }
 
-Cheers,
-Daniel Tang--
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Likewise.
+
+[...]
+
+> +       /*
+> +        * CORE_SW_RST above may trigger power irq if previous status of PWRCTL
+> +        * was either BUS_ON or IO_HIGH_V. So before we enable the power irq
+> +        * interrupt in GIC (by registering the interrupt handler), we need to
+> +        * ensure that any pending power irq interrupt status is acknowledged
+> +        * otherwise power irq interrupt handler would be fired prematurely.
+> +        */
+> +       irq_status = readl_relaxed(msm_host->core_mem + CORE_PWRCTL_STATUS);
+> +       writel_relaxed(irq_status, (msm_host->core_mem + CORE_PWRCTL_CLEAR));
+> +       irq_ctl = readl_relaxed(msm_host->core_mem + CORE_PWRCTL_CTL);
+> +       if (irq_status & (CORE_PWRCTL_BUS_ON | CORE_PWRCTL_BUS_OFF))
+> +               irq_ctl |= CORE_PWRCTL_BUS_SUCCESS;
+> +       if (irq_status & (CORE_PWRCTL_IO_HIGH | CORE_PWRCTL_IO_LOW))
+> +               irq_ctl |= CORE_PWRCTL_IO_SUCCESS;
+> +       writel_relaxed(irq_ctl, (msm_host->core_mem + CORE_PWRCTL_CTL));
+> +       /*
+> +        * Ensure that above writes are propogated before interrupt enablement
+> +        * in GIC.
+> +        */
+> +       mb();
+
+Does this guarantee that the device has finished responding to the write
+and deasserted the interrupt line (i.e. does the device only acknowledge
+the write once that is true)?
+
+Thanks,
+Mark.
