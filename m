@@ -1,93 +1,43 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [PATCH v10 2/2] s5k5baf: add DT bindings for camera sensor
-Date: Thu, 05 Dec 2013 12:38:40 +0100
-Message-ID: <1386243520-17117-3-git-send-email-a.hajda@samsung.com>
-References: <1386243520-17117-1-git-send-email-a.hajda@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1386243520-17117-1-git-send-email-a.hajda@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Andrzej Hajda <a.hajda@samsung.com>, laurent.pinchart@ideasonboard.com, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: [PATCH] spi: dt-binding: clarify gpio chipselect language
+Date: Thu,  5 Dec 2013 13:39:05 +0200
+Message-ID: <542dfeee809e73f7f071f4ae0b4f95af7736f70b.1386243545.git.baruch@tkos.co.il>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch adds the DT bindings documentation for
-Samsung S5K5BAF Image Sensor.
+Commit 743179849015 (of_spi: add generic binding support to specify cs gpio)
+introduced generic binding for gpio chip-select. The cs_gpio struct field,
+however, is an internal implementation detail of the Linux SPI subsystem, and
+should not be mentioned in the device tree binding documentation. Mention the
+previously defined cs-gpios master node property instead.
 
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 ---
-v10
-- bindings moved to separate patch,
-- improved clocks description.
----
- .../devicetree/bindings/media/samsung-s5k5baf.txt  | 58 ++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k5baf.txt
+ Documentation/devicetree/bindings/spi/spi-bus.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/samsung-s5k5baf.txt b/Documentation/devicetree/bindings/media/samsung-s5k5baf.txt
-new file mode 100644
-index 0000000..1f51e04
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/samsung-s5k5baf.txt
-@@ -0,0 +1,58 @@
-+Samsung S5K5BAF UXGA 1/5" 2M CMOS Image Sensor with embedded SoC ISP
-+--------------------------------------------------------------------
-+
-+Required properties:
-+
-+- compatible	  : "samsung,s5k5baf";
-+- reg		  : I2C slave address of the sensor;
-+- vdda-supply	  : analog power supply 2.8V (2.6V to 3.0V);
-+- vddreg-supply	  : regulator input power supply 1.8V (1.7V to 1.9V)
-+		    or 2.8V (2.6V to 3.0);
-+- vddio-supply	  : I/O power supply 1.8V (1.65V to 1.95V)
-+		    or 2.8V (2.5V to 3.1V);
-+- stbyn-gpios	  : GPIO connected to STDBYN pin;
-+- rstn-gpios	  : GPIO connected to RSTN pin;
-+- clocks	  : list of phandle and clock specifier pairs
-+		    according to common clock bindings for the
-+		    clocks described in clock-names;
-+- clock-names	  : should include "mclk" for the sensor's master clock;
-+
-+Optional properties:
-+
-+- clock-frequency : the frequency at which the "mclk" clock should be
-+		    configured to operate, in Hz; if this property is not
-+		    specified default 24 MHz value will be used.
-+
-+The device node should contain one 'port' child node with one child 'endpoint'
-+node, according to the bindings defined in Documentation/devicetree/bindings/
-+media/video-interfaces.txt. The following are properties specific to those
-+nodes.
-+
-+endpoint node
-+-------------
-+
-+- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-+	       video-interfaces.txt. If present it should be <1> - the device
-+	       supports only one data lane without re-mapping.
-+
-+Example:
-+
-+s5k5bafx@2d {
-+	compatible = "samsung,s5k5baf";
-+	reg = <0x2d>;
-+	vdda-supply = <&cam_io_en_reg>;
-+	vddreg-supply = <&vt_core_15v_reg>;
-+	vddio-supply = <&vtcam_reg>;
-+	stbyn-gpios = <&gpl2 0 1>;
-+	rstn-gpios = <&gpl2 1 1>;
-+	clock-names = "mclk";
-+	clocks = <&clock_cam 0>;
-+	clock-frequency = <24000000>;
-+
-+	port {
-+		s5k5bafx_ep: endpoint {
-+			remote-endpoint = <&csis1_ep>;
-+			data-lanes = <1>;
-+		};
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+index 800dafe..e5a4d1b 100644
+--- a/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -67,7 +67,7 @@ only 1(SINGLE), 2(DUAL) and 4(QUAD).
+ Dual/Quad mode is not allowed when 3-wire mode is used.
+ 
+ If a gpio chipselect is used for the SPI slave the gpio number will be passed
+-via the cs_gpio
++via the SPI master node cs-gpios property.
+ 
+ SPI example for an MPC5200 SPI bus:
+ 	spi@f00 {
 -- 
-1.8.3.2
+1.8.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
