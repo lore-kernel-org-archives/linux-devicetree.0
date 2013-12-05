@@ -1,140 +1,102 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/5] Phy: DT binding documentation for Marvell MVEBU SATA
- phy.
-Date: Thu, 5 Dec 2013 16:05:03 +0530
-Message-ID: <52A056D7.5010005@ti.com>
-References: <1386177364-10164-1-git-send-email-andrew@lunn.ch> <1386177364-10164-2-git-send-email-andrew@lunn.ch> <52A01742.2080405@ti.com> <20131205094319.GD10498@lunn.ch>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 10/15] usb: phy: msm: Add device tree support and
+ binding information
+Date: Thu, 5 Dec 2013 10:41:50 +0000
+Message-ID: <20131205104150.GJ29200@e106331-lin.cambridge.arm.com>
+References: <1384267910-32066-1-git-send-email-iivanov@mm-sol.com>
+ <1384267910-32066-11-git-send-email-iivanov@mm-sol.com>
+ <20131115163818.GH24831@e106331-lin.cambridge.arm.com>
+ <1384779277.13631.13.camel@iivanov-dev.int.mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20131205094319.GD10498@lunn.ch>
-Sender: linux-ide-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1384779277.13631.13.camel-yvhxILDKWb8ylMT5ByZ5bDRGLm/uyL/D0E9HWUfgJXw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Nov 18, 2013 at 12:54:37PM +0000, Ivan T. Ivanov wrote:
+> Hi Mark, 
+> 
+> On Fri, 2013-11-15 at 16:38 +0000, Mark Rutland wrote: 
+> > On Tue, Nov 12, 2013 at 02:51:45PM +0000, Ivan T. Ivanov wrote:
+> > > From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > > 
+> > > Allows MSM OTG controller to be specified via device tree.
+> > > 
+> > > Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > > ---
+> > >  .../devicetree/bindings/usb/msm-hsusb.txt          |   57 +++++++++++++-
+> > >  drivers/usb/phy/phy-msm-usb.c                      |   79 +++++++++++++++++---
+> > >  2 files changed, 124 insertions(+), 12 deletions(-)
 
-On Thursday 05 December 2013 03:13 PM, Andrew Lunn wrote:
-> On Thu, Dec 05, 2013 at 11:33:46AM +0530, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On Wednesday 04 December 2013 10:46 PM, Andrew Lunn wrote:
->>> Describe the binding for the Marvell MVEBU SATA phy. This driver
->>> can be used at least with Kirkwood, Dove and maybe others.
->>> Additionally, update the SATA binding with the properties to link
->>> to the phy nodes.
->>>
->>> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
->>> ---
->>>  Documentation/devicetree/bindings/ata/marvell.txt  |  6 ++++++
->>>  .../devicetree/bindings/phy/phy-mvebu-sata.txt     | 22 ++++++++++++++++++++++
->>>  2 files changed, 28 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/ata/marvell.txt b/Documentation/devicetree/bindings/ata/marvell.txt
->>> index b5cdd20cde9c..e072fa105b49 100644
->>> --- a/Documentation/devicetree/bindings/ata/marvell.txt
->>> +++ b/Documentation/devicetree/bindings/ata/marvell.txt
->>> @@ -6,11 +6,17 @@ Required Properties:
->>>  - interrupts    : Interrupt controller is using
->>>  - nr-ports      : Number of SATA ports in use.
->>>  
->>> +Optional Properties:
->>> +- phys		: List of phandles to sata phys
->>> +- phy-names	: Should be "0", "1", etc, one number per phandle
->>
->> over aligned..
-> 
-> Could you explain please? Here is what it looks like without the patch
-> formatting, which could be messing up the display of tabs, due to the
-> + at the beginning:
+[...]
 
-ah.. yeah. Sorry for the noise.
+> > > +
+> > > +- dr_mode:		One of "host", "peripheral" or "otg". Defaults to "otg"
+> > 
+> > If this has a default and thus isn't required, it should be listed as
+> > optional.
+> 
+> This is part of the standard USB bindings, Perhaps I could just
+> refer to:  Documentation/devicetree/bindings/usb/generic.txt
 
-Thanks
-Kishon
-> 
-> Required Properties:
-> - compatibility : "marvell,orion-sata"
-> - reg		: Address range of controller
-> - interrupts	: Interrupt controller is using
-> - nr-ports	: Number of SATA ports in use.
-> 
-> Optional Properties:
-> - phys		: List of phandles to sata phys
-> - phy-names	: Should be "0", "1", etc, one number per phandle
-> 
-> 
-> 
->>> +
->>>  Example:
->>>  
->>>  	sata@80000 {
->>>  		compatible = "marvell,orion-sata";
->>>  		reg = <0x80000 0x5000>;
->>>  		interrupts = <21>;
->>> +		phys = <&sata_phy0>, <&sata_phy1>;
->>> +		phy-names = "0", "1";
->>
->> more descriptive phy-names? sata-phy0?
->>>  		nr-ports = <2>;
-> 
-> I could do, but i was following how the clocks work. Unfortunately,
-> the binding documentation is out of date and does not contain
-> clocks. A real example is:
-> 
-> 		sata@80000 {
-> 			compatible = "marvell,orion-sata";
-> 			reg = <0x80000 0x5000>;
-> 			interrupts = <21>;
-> 			clocks = <&gate_clk 14>, <&gate_clk 15>;
-> 			clock-names = "0", "1";
-> 			phys = <&sata_phy0>, <&sata_phy1>;
-> 			phy-names = "0", "1";
-> 			status = "disabled";
-> 		};
-> 
-> So clocks and the phy are described nearly identically. I can however
-> handle phys differently if you wish.
-> 
-> I will also submit a separate patch to the binding documentation to
-> add the clocks.
-> 
-> 
->>>  	}
->>> diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt
->>> new file mode 100644
->>> index 000000000000..1cf9cef50b4b
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt
->>
->> Just name this mvebu-phy.txt so that we can add bindings of other mvebu PHYs
->> here when it's added.
-> 
-> O.K. I also have a pcie phy driver, but it does not work
-> yet. devm_phy_get() is too restrictive for a complex device like a
-> PCIe controller.
-> 
->>> +		sata-phy@1 {
->>
->> The value after '@' must match the first address specified in the reg property
->> of the node according to the ePAPR spec.
-> 
-> O.K, will fix.
-> 
->>> +			compatible = "marvell,mvebu-sata-phy";
->>> +			reg = <0x84000 0x0334>;
->>> +			clocks = <&gate_clk 15>;
->>> +			clock-names = "sata";
->>> +			#phy-cells = <1>;
->>
->> Is it on purpose that your are having phy-cells value to 1?
-> 
-> Yes. Each instance only controls one phy.
-> 
->      Thanks
-> 	Andrew
-> 
+That would be fine, but it should also be moved to the optional
+properties section.
 
+> 
+> 
+> > 
+> > > +
+> > > +- vdccx-supply:	phandle to the regulator for the vdd supply for
+> > > +				digital circuit operation.
+> > > +- v1p8-supply:	phandle to the regulator for the 1.8V supply
+> > > +- v3p3-supply:	phandle to the regulator for the 3.3V supply
+> > > +
+> > > +- qcom,otg-control: OTG control (VBUS and ID notifications) can be one of
+> > > +				1 - PHY control
+> > > +				2 - PMIC control
+> > > +				3 - User control (via debugfs)
+> > 
+> > NAK. This does not seem like a description of the hardware, and given
+> > the debugfs comment is fundamentally tied to the way Linux functions
+> > today.
+> 
+> I will remove option 3, but rest are really property of the chipset. 
+
+Can you elaborate on the diffence please?
+
+> 
+> > 
+> > > +
+> > > +Optional properties:
+> > > +- qcom,phy-init-sequence: PHY configuration sequence. val, reg pairs
+> > > +				terminate with -1
+> > 
+> > What is this? I'm really not keen on having arbitrary register/memory
+> > poking sequences in the dt.
+> 
+> This is related Device Mode Eye Diagram test and values used could be
+> different between chipsets.
+
+Ok. Then we should encode the tuning data rather than adding a mechanism
+to allow for writes to arbitrary addresses.
+
+> 
+> > 
+> > Why does it need to be terminated? Surely the size of the property tells
+> > you that it's terminated.
+> 
+> Yes. -1 termination could be done in driver.
+
+Please do. There's no need for it to be in the DT.
+
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
