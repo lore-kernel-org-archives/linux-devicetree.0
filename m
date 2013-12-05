@@ -1,111 +1,140 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 2/2] mmc: sdhci-msm: Initial support for MSM chipsets
-Date: Thu, 5 Dec 2013 10:27:40 +0000
-Message-ID: <20131205102740.GI29200@e106331-lin.cambridge.arm.com>
-References: <1383753405-23631-1-git-send-email-gdjakov@mm-sol.com>
- <1383753405-23631-3-git-send-email-gdjakov@mm-sol.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 1/5] Phy: DT binding documentation for Marvell MVEBU SATA
+ phy.
+Date: Thu, 5 Dec 2013 16:05:03 +0530
+Message-ID: <52A056D7.5010005@ti.com>
+References: <1386177364-10164-1-git-send-email-andrew@lunn.ch> <1386177364-10164-2-git-send-email-andrew@lunn.ch> <52A01742.2080405@ti.com> <20131205094319.GD10498@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1383753405-23631-3-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "subhashj@codeaurora.org" <subhashj@codeaurora.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20131205094319.GD10498@lunn.ch>
+Sender: linux-ide-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 06, 2013 at 03:56:45PM +0000, Georgi Djakov wrote:
-> This platform driver adds the initial support of Secure
-> Digital Host Controller Interface compliant controller
-> found in Qualcomm MSM chipsets.
+Hi,
+
+On Thursday 05 December 2013 03:13 PM, Andrew Lunn wrote:
+> On Thu, Dec 05, 2013 at 11:33:46AM +0530, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Wednesday 04 December 2013 10:46 PM, Andrew Lunn wrote:
+>>> Describe the binding for the Marvell MVEBU SATA phy. This driver
+>>> can be used at least with Kirkwood, Dove and maybe others.
+>>> Additionally, update the SATA binding with the properties to link
+>>> to the phy nodes.
+>>>
+>>> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+>>> ---
+>>>  Documentation/devicetree/bindings/ata/marvell.txt  |  6 ++++++
+>>>  .../devicetree/bindings/phy/phy-mvebu-sata.txt     | 22 ++++++++++++++++++++++
+>>>  2 files changed, 28 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/ata/marvell.txt b/Documentation/devicetree/bindings/ata/marvell.txt
+>>> index b5cdd20cde9c..e072fa105b49 100644
+>>> --- a/Documentation/devicetree/bindings/ata/marvell.txt
+>>> +++ b/Documentation/devicetree/bindings/ata/marvell.txt
+>>> @@ -6,11 +6,17 @@ Required Properties:
+>>>  - interrupts    : Interrupt controller is using
+>>>  - nr-ports      : Number of SATA ports in use.
+>>>  
+>>> +Optional Properties:
+>>> +- phys		: List of phandles to sata phys
+>>> +- phy-names	: Should be "0", "1", etc, one number per phandle
+>>
+>> over aligned..
 > 
-> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
-> ---
->  drivers/mmc/host/Kconfig     |   13 +
->  drivers/mmc/host/Makefile    |    1 +
->  drivers/mmc/host/sdhci-msm.c |  651 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 665 insertions(+)
->  create mode 100644 drivers/mmc/host/sdhci-msm.c
+> Could you explain please? Here is what it looks like without the patch
+> formatting, which could be messing up the display of tabs, due to the
+> + at the beginning:
 
-[...]
+ah.. yeah. Sorry for the noise.
 
-> +static int sdhci_msm_dt_parse_vreg_info(struct device *dev,
-> +                                       struct sdhci_msm_reg_data *vreg,
-> +                                       const char *vreg_name)
-> +{
-> +       int len;
-> +       const __be32 *prop;
+Thanks
+Kishon
+> 
+> Required Properties:
+> - compatibility : "marvell,orion-sata"
+> - reg		: Address range of controller
+> - interrupts	: Interrupt controller is using
+> - nr-ports	: Number of SATA ports in use.
+> 
+> Optional Properties:
+> - phys		: List of phandles to sata phys
+> - phy-names	: Should be "0", "1", etc, one number per phandle
+> 
+> 
+> 
+>>> +
+>>>  Example:
+>>>  
+>>>  	sata@80000 {
+>>>  		compatible = "marvell,orion-sata";
+>>>  		reg = <0x80000 0x5000>;
+>>>  		interrupts = <21>;
+>>> +		phys = <&sata_phy0>, <&sata_phy1>;
+>>> +		phy-names = "0", "1";
+>>
+>> more descriptive phy-names? sata-phy0?
+>>>  		nr-ports = <2>;
+> 
+> I could do, but i was following how the clocks work. Unfortunately,
+> the binding documentation is out of date and does not contain
+> clocks. A real example is:
+> 
+> 		sata@80000 {
+> 			compatible = "marvell,orion-sata";
+> 			reg = <0x80000 0x5000>;
+> 			interrupts = <21>;
+> 			clocks = <&gate_clk 14>, <&gate_clk 15>;
+> 			clock-names = "0", "1";
+> 			phys = <&sata_phy0>, <&sata_phy1>;
+> 			phy-names = "0", "1";
+> 			status = "disabled";
+> 		};
+> 
+> So clocks and the phy are described nearly identically. I can however
+> handle phys differently if you wish.
+> 
+> I will also submit a separate patch to the binding documentation to
+> add the clocks.
+> 
+> 
+>>>  	}
+>>> diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt
+>>> new file mode 100644
+>>> index 000000000000..1cf9cef50b4b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/phy/phy-mvebu-sata.txt
+>>
+>> Just name this mvebu-phy.txt so that we can add bindings of other mvebu PHYs
+>> here when it's added.
+> 
+> O.K. I also have a pcie phy driver, but it does not work
+> yet. devm_phy_get() is too restrictive for a complex device like a
+> PCIe controller.
+> 
+>>> +		sata-phy@1 {
+>>
+>> The value after '@' must match the first address specified in the reg property
+>> of the node according to the ePAPR spec.
+> 
+> O.K, will fix.
+> 
+>>> +			compatible = "marvell,mvebu-sata-phy";
+>>> +			reg = <0x84000 0x0334>;
+>>> +			clocks = <&gate_clk 15>;
+>>> +			clock-names = "sata";
+>>> +			#phy-cells = <1>;
+>>
+>> Is it on purpose that your are having phy-cells value to 1?
+> 
+> Yes. Each instance only controls one phy.
+> 
+>      Thanks
+> 	Andrew
+> 
 
-Seeing raw property handling in drivers worries me. If there's a reason
-to touch the raw DTB we should add helpers to do it rather than leaking
-binary format issues into drivers.
-
-> +       char prop_name[MAX_PROP_SIZE];
-> +       struct device_node *np = dev->of_node;
-> +
-> +       snprintf(prop_name, MAX_PROP_SIZE, "%s-supply", vreg_name);
-> +       if (!of_parse_phandle(np, prop_name, 0)) {
-> +               dev_info(dev, "No vreg data found for %s\n", vreg_name);
-> +               return -EINVAL;
-> +       }
-> +
-> +       vreg->name = vreg_name;
-> +
-> +       snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-lpm-sup", vreg_name);
-> +       if (of_get_property(np, prop_name, NULL))
-> +               vreg->lpm_sup = true;
-> +
-> +       snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-voltage-level", vreg_name);
-> +       prop = of_get_property(np, prop_name, &len);
-> +       if (!prop || (len != (2 * sizeof(__be32)))) {
-> +               dev_warn(dev, "%s %s property\n",
-> +               prop ? "invalid format" : "no", prop_name);
-> +       } else {
-> +               vreg->low_vol_level = be32_to_cpup(&prop[0]);
-> +               vreg->high_vol_level = be32_to_cpup(&prop[1]);
-> +       }
-
-You can use of_property_read_u32_array here.
-
-> +
-> +       snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-current-level", vreg_name);
-> +       prop = of_get_property(np, prop_name, &len);
-> +       if (!prop || (len != (2 * sizeof(__be32)))) {
-> +               dev_warn(dev, "%s %s property\n",
-> +                        prop ? "invalid format" : "no", prop_name);
-> +       } else {
-> +               vreg->lpm_uA = be32_to_cpup(&prop[0]);
-> +               vreg->hpm_uA = be32_to_cpup(&prop[1]);
-> +       }
-
-Likewise.
-
-[...]
-
-> +       /*
-> +        * CORE_SW_RST above may trigger power irq if previous status of PWRCTL
-> +        * was either BUS_ON or IO_HIGH_V. So before we enable the power irq
-> +        * interrupt in GIC (by registering the interrupt handler), we need to
-> +        * ensure that any pending power irq interrupt status is acknowledged
-> +        * otherwise power irq interrupt handler would be fired prematurely.
-> +        */
-> +       irq_status = readl_relaxed(msm_host->core_mem + CORE_PWRCTL_STATUS);
-> +       writel_relaxed(irq_status, (msm_host->core_mem + CORE_PWRCTL_CLEAR));
-> +       irq_ctl = readl_relaxed(msm_host->core_mem + CORE_PWRCTL_CTL);
-> +       if (irq_status & (CORE_PWRCTL_BUS_ON | CORE_PWRCTL_BUS_OFF))
-> +               irq_ctl |= CORE_PWRCTL_BUS_SUCCESS;
-> +       if (irq_status & (CORE_PWRCTL_IO_HIGH | CORE_PWRCTL_IO_LOW))
-> +               irq_ctl |= CORE_PWRCTL_IO_SUCCESS;
-> +       writel_relaxed(irq_ctl, (msm_host->core_mem + CORE_PWRCTL_CTL));
-> +       /*
-> +        * Ensure that above writes are propogated before interrupt enablement
-> +        * in GIC.
-> +        */
-> +       mb();
-
-Does this guarantee that the device has finished responding to the write
-and deasserted the interrupt line (i.e. does the device only acknowledge
-the write once that is true)?
-
-Thanks,
-Mark.
