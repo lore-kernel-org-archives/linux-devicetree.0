@@ -1,51 +1,56 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH v8] gpio: add a driver for the Synopsys DesignWare APB
- GPIO block
-Date: Thu, 5 Dec 2013 16:54:39 +0000
-Message-ID: <20131205165439.GB5924@maple>
-References: <1386088876-29205-1-git-send-email-delicious.quinoa@gmail.com>
- <1386088876-29205-2-git-send-email-delicious.quinoa@gmail.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using
+ pinfunc.
+Date: Thu, 05 Dec 2013 18:03:02 +0100
+Message-ID: <1475204.PCyxT0KMui@amdc1227>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
+ <1502243.eRBlCfUhTO@amdc1227> <52A0AEB4.7090909@bracey.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386088876-29205-2-git-send-email-delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Yves Vandervennet <rocket.yvanderv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <52A0AEB4.7090909@bracey.fi>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kevin Bracey <kevin@bracey.fi>
+Cc: Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Kyungmin Park <kmpark@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+On Thursday 05 of December 2013 18:49:56 Kevin Bracey wrote:
+> On 05/12/2013 17:11, Tomasz Figa wrote:
+> > On Thursday 05 of December 2013 15:07:47 Mark Brown wrote:
+> >> On Tue, Dec 03, 2013 at 10:29:42AM +0100, Linus Walleij wrote:
+> >>
+> >>> So a suggested patch to support weak hogs would be interesting
+> >>> to look at. Can you provide details on how you think this would
+> >>> work?
+> >> Or should we be going and applying the default state to all devices on
+> >> init without worrying about a driver appearing?
+> > If a device isn't used, then it's often better to configure the pins for
+> > a different function, such as GPIO, to minimize leakage current.
+> >
+> 
+> And there can also be mutually-exclusive drivers choosing different 
+> default states for the same pin. I think you do need a separate "safe" 
+> indicator.
 
-One minor comment below, otherwise looks great!
+That's not quite true, as on a single board you should rather have
+a single device node with "okay" status referencing given set of pins.
+Still, I think that a separate safe state is the way to go.
 
-Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> 
+> My current thought is that  a late-init "make safe all unclaimed pins" 
+> pass would make sense - you can't really mess with pins in an automated 
+> fashion on init, as it can mess up bootloader->driver handover.   There 
+> already exist late-init "turn off all unclaimed clocks" (at least on 
+> shmobile)
 
-Thanks,
+That's a feature of Common Clock Framework.
 
-Jamie
+> and "turn off all unclaimed regulators", and it would fit that 
+> model.
 
-On Tue, Dec 03, 2013 at 10:41:16AM -0600, Alan Tull wrote:
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> new file mode 100644
-> index 0000000..e6dc61f
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-dwapb.c
-...
-> +static unsigned int dwapb_gpio_nr_ports(struct device_node *of_node)
-> +{
-> +	unsigned int nr_ports = 0;
-> +	struct device_node *np;
-> +
-> +	for_each_child_of_node(of_node, np)
-> +		++nr_ports;
-> +
-> +	return nr_ports;
-> +}
+Maybe that's the way to do it. I need to think a bit more on this,
+especially considering our (Samsung's) use cases.
 
-I notice that we now have of_get_child_count() which didn't exist when I 
-first wrote the driver, we could use that now.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
