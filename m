@@ -1,49 +1,49 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv3 4/4] arm: dts: Add support for SD/MMC on SOCFPGA
-Date: Thu, 5 Dec 2013 04:07:49 +0100
-Message-ID: <201312050407.50385.arnd@arndb.de>
-References: <1386197576-3825-1-git-send-email-dinguyen@altera.com> <1386197576-3825-5-git-send-email-dinguyen@altera.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: shmobile: armadillo: Set vccq_sdhi0 regulator
+ type in DT
+Date: Thu, 5 Dec 2013 12:45:54 +0900
+Message-ID: <20131205034554.GB20388@verge.net.au>
+References: <1385653493-9952-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1385653493-9952-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1386197576-3825-5-git-send-email-dinguyen@altera.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dinguyen@altera.com
-Cc: dinh.linux@gmail.com, mturquette@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1385653493-9952-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 December 2013, dinguyen@altera.com wrote:
+On Thu, Nov 28, 2013 at 04:44:53PM +0100, Laurent Pinchart wrote:
+> The mandatory regulator-type property is missing, add it.
 
+Thanks, I will queue this up.
+
+> 
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> ---
+>  arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> index 7b80f19..013a7cd 100644
+> --- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> @@ -53,6 +53,8 @@
+>  		regulator-name = "SDHI0 VccQ";
+>  		regulator-min-microvolt = <1800000>;
+>  		regulator-max-microvolt = <3300000>;
+> +		regulator-type = "voltage";
 > +
-> +* compatible: should be
-> +        - "altr,socfpga-dw-mshc": for controllers with Altera SOCFPGA
-> +          specific extensions.
-> +
-> +* samsung,dw-mshc-sdr-timing: See exynos-dw-mshc.txt for more information about
-> +	this property.
-> +
-> +Example:
-> +	dwmmc0@ff704000 {
-> +		compatible = "altr,socfpga-dw-mshc", "snps,dw-mshc";
-> +		reg = <0xff704000 0x1000>;
-> +		interrupts = <0 139 4>;
-> +		fifo-depth = <0x400>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		clocks = <&l4_mp_clk>, <&sdmmc_clk>, <&sysmgr_sdr_mmc>;
-> +		clock-names = "biu", "ciu", "sysmgr-sdr-mmc";
-
-You add a "sysmgr-sdr-mmc" clock here without documenting it. I think what you
-actually mean here is
-
-> +		clocks = <&l4_mp_clk>, <&sysmgr_sdr_mmc>;
-> +		clock-names = "biu", "ciu";
-
-i.e. the <&sysmgr_sdr_mmc> clock is actually your "ciu". If I understand your
-code correctly, the dw-mshc has exactly two clock inputs, biu and ciu, and
-you use sysmgr to provide ciu. The driver code already contains logic to
-set the rate of the ciu clock, and you just need to hook into that.
-
-	Arnd
+>  		vin-supply = <&vcc_sdhi0>;
+>  
+>  		enable-gpio = <&pfc 74 GPIO_ACTIVE_HIGH>;
+> -- 
+> 1.8.3.2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
