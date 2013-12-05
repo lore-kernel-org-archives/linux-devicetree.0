@@ -1,36 +1,41 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/5] Phy: DT binding documentation for Marvell MVEBU SATA
- phy.
-Date: Thu, 5 Dec 2013 10:47:04 +0100
-Message-ID: <20131205094704.GE10498@lunn.ch>
-References: <1386177364-10164-1-git-send-email-andrew@lunn.ch>
- <1386177364-10164-2-git-send-email-andrew@lunn.ch>
- <52A01742.2080405@ti.com>
- <20131205094319.GD10498@lunn.ch>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: Re: [PATCH 0/3] Add more device nodes for am43x gp evm.
+Date: Thu, 5 Dec 2013 15:18:41 +0530
+Message-ID: <52A04BF9.5030604@ti.com>
+References: <1385537479-6959-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131205094319.GD10498@lunn.ch>
-Sender: linux-ide-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1385537479-6959-1-git-send-email-sourav.poddar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sourav Poddar <sourav.poddar@ti.com>, bcousson@baylibre.com
+Cc: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, tony@atomide.com, balbi@ti.com, linux-omap@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-> > > +			compatible = "marvell,mvebu-sata-phy";
-> > > +			reg = <0x84000 0x0334>;
-> > > +			clocks = <&gate_clk 15>;
-> > > +			clock-names = "sata";
-> > > +			#phy-cells = <1>;
-> > 
-> > Is it on purpose that your are having phy-cells value to 1?
-> 
-> Yes. Each instance only controls one phy.
-
-Ah, sorry, got that wrong. As you say in a later comment, this should
-be 0. Will be fixed in v2.
-
-   Thanks
-	Andrew
-
-   
+Hi Benoit,
+On Wednesday 27 November 2013 01:01 PM, Sourav Poddar wrote:
+> The patch series adds support for enabling gpio, pwm backlight and
+> matrix gpio keys on am43x-gp-evm.
+>
+> Done on top of 3.13-rc1 + tero clock series(1) + Afzal's basic gp support(2).
+>
+> [1]: https://patchwork.kernel.org/patch/3009541/
+> [2]: https://patchwork.kernel.org/patch/3171761/
+>
+> Tested on am43x-gp-evm.
+>
+> There is a some bug while using regulators through backlight
+> driver on 3.13-rc1. So, tested pwm part with this patch[3].
+>
+> [3]: http://www.spinics.net/lists/arm-kernel/msg288215.html
+>
+> Sourav Poddar (3):
+>    arm: dts: am437x-gp-evm: Enable gpio.
+>    ARM: dts: am43x-gp-evm: Add matrix gpio keys.
+>    ARM: dts: am437x-gp-evm: Add pwm backlight support.
+>
+>   arch/arm/boot/dts/am437x-gp-evm.dts |   53 +++++++++++++++++++++++++++++++++++
+>   1 files changed, 53 insertions(+), 0 deletions(-)
+>
+Gentle pIng on this.
