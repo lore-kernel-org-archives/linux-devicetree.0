@@ -1,39 +1,125 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V11 2/3] watchdog: s3c2410_wdt: use syscon regmap
- interface to configure pmu register
-Date: Thu, 5 Dec 2013 10:27:25 -0800
-Message-ID: <CAD=FV=UJbNBpdoYuxDoCDUCEEZV3tVZA9DFagY_g0nVQcJJKYg@mail.gmail.com>
-References: <1385613243-3559-1-git-send-email-l.krishna@samsung.com>
-	<1385613243-3559-3-git-send-email-l.krishna@samsung.com>
-	<CAD=FV=XvTPbkdopAQVQt-ga2HrwwZ1MSWytMTeDAz=M91icy3g@mail.gmail.com>
+From: Denis Carikli <denis@eukrea.com>
+Subject: [PATCHv5][ 1/8] [media] v4l2: add new V4L2_PIX_FMT_RGB666 pixel
+ format.
+Date: Thu,  5 Dec 2013 19:28:05 +0100
+Message-ID: <1386268092-21719-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XvTPbkdopAQVQt-ga2HrwwZ1MSWytMTeDAz=M91icy3g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>, Wim Van Sebroeck <wim@iguana.be>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "cpgs ." <cpgs@samsung.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Marek Vasut <marex@denx.de>, devel@driverdev.osuosl.org, driverdev-devel@linuxdriverproject.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Shawn Guo <shawn.guo@linaro.org>, Denis Carikli <denis@eukrea.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Leela Krishna,
-
-On Mon, Dec 2, 2013 at 9:32 AM, Doug Anderson <dianders@chromium.org> wrote:
-> Leela Krishna,
->
-> On Wed, Nov 27, 2013 at 8:34 PM, Leela Krishna Amudala
-> <l.krishna@samsung.com> wrote:
->> Add device tree support for exynos5250 and 5420 SoCs and use syscon regmap interface
->> to configure AUTOMATIC_WDT_RESET_DISABLE and MASK_WDT_RESET_REQUEST registers of PMU
->> to mask/unmask enable/disable of watchdog in probe and s2r scenarios.
->>
->> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
->> ---
->>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   21 ++-
->>  drivers/watchdog/Kconfig                           |    1 +
->>  drivers/watchdog/s3c2410_wdt.c                     |  159 ++++++++++++++++++--
->>  3 files changed, 171 insertions(+), 10 deletions(-)
-
-Based on feedback in another patch series, perhaps you can incorporate
-<https://patchwork.kernel.org/patch/3290551/> and spin a v12?
-
--Doug
+VGhhdCBuZXcgbWFjcm8gaXMgbmVlZGVkIGJ5IHRoZSBpbXhfZHJtIHN0YWdpbmcgZHJpdmVyCiAg
+Zm9yIHN1cHBvcnRpbmcgdGhlIFFWR0EgZGlzcGxheSBvZiB0aGUgZXVrcmVhLWNwdWlteDUxIGJv
+YXJkLgoKQ2M6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4KQ2M6IFBhd2Vs
+IE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5k
+QGFybS5jb20+CkNjOiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPgpDYzog
+SWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4KQ2M6IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnCkNjOiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZv
+dW5kYXRpb24ub3JnPgpDYzogZHJpdmVyZGV2LWRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcK
+Q2M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KQ2M6IGRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKQ2M6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bS5jaGVoYWJAc2Ftc3Vu
+Zy5jb20+CkNjOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2Fy
+ZC5jb20+CkNjOiBsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IFNhc2NoYSBIYXVlciA8
+a2VybmVsQHBlbmd1dHJvbml4LmRlPgpDYzogU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9y
+Zz4KQ2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpDYzogRXJpYyBCw6lu
+YXJkIDxlcmljQGV1a3JlYS5jb20+ClNpZ25lZC1vZmYtYnk6IERlbmlzIENhcmlrbGkgPGRlbmlz
+QGV1a3JlYS5jb20+CkFja2VkLWJ5OiBNYXVybyBDYXJ2YWxobyBDaGVoYWIgPG0uY2hlaGFiQHNh
+bXN1bmcuY29tPgpBY2tlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBp
+ZGVhc29uYm9hcmQuY29tPgotLS0KQ2hhbmdlTG9nIHYzLT52NDoKLSBBZGRlZCBMYXVyZW50IFBp
+bmNoYXJ0J3MgQWNrLgoKQ2hhbmdlTG9nIHYyLT52MzoKLSBBZGRlZCBzb21lIGludGVyZXN0ZWQg
+cGVvcGxlIGluIHRoZSBDYyBsaXN0LgotIEFkZGVkIE1hdXJvIENhcnZhbGhvIENoZWhhYidzIEFj
+ay4KLSBBZGRlZCBkb2N1bWVudGF0aW9uLgotLS0KIC4uLi9Eb2NCb29rL21lZGlhL3Y0bC9waXhm
+bXQtcGFja2VkLXJnYi54bWwgICAgICAgIHwgICA3OCArKysrKysrKysrKysrKysrKysrKwogaW5j
+bHVkZS91YXBpL2xpbnV4L3ZpZGVvZGV2Mi5oICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsK
+IDIgZmlsZXMgY2hhbmdlZCwgNzkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vRG9jQm9vay9tZWRpYS92NGwvcGl4Zm10LXBhY2tlZC1yZ2IueG1sIGIvRG9jdW1lbnRh
+dGlvbi9Eb2NCb29rL21lZGlhL3Y0bC9waXhmbXQtcGFja2VkLXJnYi54bWwKaW5kZXggMTY2Yzhk
+Ni4uZjZhM2U4NCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9Eb2NCb29rL21lZGlhL3Y0bC9w
+aXhmbXQtcGFja2VkLXJnYi54bWwKKysrIGIvRG9jdW1lbnRhdGlvbi9Eb2NCb29rL21lZGlhL3Y0
+bC9waXhmbXQtcGFja2VkLXJnYi54bWwKQEAgLTI3OSw2ICsyNzksNDUgQEAgY29sb3JzcGFjZSA8
+Y29uc3RhbnQ+VjRMMl9DT0xPUlNQQUNFX1NSR0I8L2NvbnN0YW50Pi48L3BhcmE+CiAJICAgIDxl
+bnRyeT48L2VudHJ5PgogCSAgICA8ZW50cnk+PC9lbnRyeT4KIAkgIDwvcm93PgorCSAgPHJvdyBp
+ZD0iVjRMMi1QSVgtRk1ULVJHQjY2NiI+CisJICAgIDxlbnRyeT48Y29uc3RhbnQ+VjRMMl9QSVhf
+Rk1UX1JHQjY2NjwvY29uc3RhbnQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PidSR0JIJzwvZW50cnk+
+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+cjxzdWJzY3JpcHQ+NTwvc3Vic2Ny
+aXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNjcmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRy
+eT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjM8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8
+ZW50cnk+cjxzdWJzY3JpcHQ+Mjwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1
+YnNjcmlwdD4xPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjA8
+L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0
+PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4K
+KwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD4zPC9zdWJzY3Jp
+cHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5Pmc8c3Vic2NyaXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5
+PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+MTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxl
+bnRyeT5nPHN1YnNjcmlwdD4wPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vi
+c2NyaXB0PjU8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3JpcHQ+NDwv
+c3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5iPHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+
+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5Pgor
+CSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjE8L3N1YnNjcmlw
+dD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3JpcHQ+MDwvc3Vic2NyaXB0PjwvZW50cnk+
+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5
+PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkg
+ICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9l
+bnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8
+ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5
+PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgIDwvcm93PgogCSAgPHJvdyBpZD0iVjRMMi1QSVgt
+Rk1ULUJHUjI0Ij4KIAkgICAgPGVudHJ5Pjxjb25zdGFudD5WNEwyX1BJWF9GTVRfQkdSMjQ8L2Nv
+bnN0YW50PjwvZW50cnk+CiAJICAgIDxlbnRyeT4nQkdSMyc8L2VudHJ5PgpAQCAtNzgxLDYgKzgy
+MCw0NSBAQCBkZWZpbmVkIGluIGVycm9yLiBEcml2ZXJzIG1heSBpbnRlcnByZXQgdGhlbSBhcyBp
+biA8eHJlZgogCSAgICA8ZW50cnk+PC9lbnRyeT4KIAkgICAgPGVudHJ5PjwvZW50cnk+CiAJICA8
+L3Jvdz4KKwkgIDxyb3c+PCEtLSBpZD0iVjRMMi1QSVgtRk1ULVJHQjY2NiIgLS0+CisJICAgIDxl
+bnRyeT48Y29uc3RhbnQ+VjRMMl9QSVhfRk1UX1JHQjY2NjwvY29uc3RhbnQ+PC9lbnRyeT4KKwkg
+ICAgPGVudHJ5PidSR0JIJzwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50
+cnk+cjxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNj
+cmlwdD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PnI8c3Vic2NyaXB0PjM8L3N1
+YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+cjxzdWJzY3JpcHQ+Mjwvc3Vic2NyaXB0Pjwv
+ZW50cnk+CisJICAgIDxlbnRyeT5yPHN1YnNjcmlwdD4xPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkg
+ICAgPGVudHJ5PnI8c3Vic2NyaXB0PjA8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+
+ZzxzdWJzY3JpcHQ+NTwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlw
+dD40PC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRy
+eT5nPHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5Pmc8c3Vic2Ny
+aXB0PjI8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+ZzxzdWJzY3JpcHQ+MTwvc3Vi
+c2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5nPHN1YnNjcmlwdD4wPC9zdWJzY3JpcHQ+PC9l
+bnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0PjU8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAg
+ICA8ZW50cnk+YjxzdWJzY3JpcHQ+NDwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT5i
+PHN1YnNjcmlwdD4zPC9zdWJzY3JpcHQ+PC9lbnRyeT4KKwkgICAgPGVudHJ5PmI8c3Vic2NyaXB0
+PjI8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5
+PmI8c3Vic2NyaXB0PjE8L3N1YnNjcmlwdD48L2VudHJ5PgorCSAgICA8ZW50cnk+YjxzdWJzY3Jp
+cHQ+MDwvc3Vic2NyaXB0PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50
+cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48L2VudHJ5Pgor
+CSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAgIDxlbnRyeT48
+L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50cnk+CisJICAg
+IDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgICAgPGVudHJ5PjwvZW50
+cnk+CisJICAgIDxlbnRyeT48L2VudHJ5PgorCSAgICA8ZW50cnk+PC9lbnRyeT4KKwkgIDwvcm93
+PgogCSAgPHJvdz48IS0tIGlkPSJWNEwyLVBJWC1GTVQtQkdSMjQiIC0tPgogCSAgICA8ZW50cnk+
+PGNvbnN0YW50PlY0TDJfUElYX0ZNVF9CR1IyNDwvY29uc3RhbnQ+PC9lbnRyeT4KIAkgICAgPGVu
+dHJ5PidCR1IzJzwvZW50cnk+CmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgvdmlkZW9k
+ZXYyLmggYi9pbmNsdWRlL3VhcGkvbGludXgvdmlkZW9kZXYyLmgKaW5kZXggNDM3ZjFiMC4uZThm
+ZjQxMCAxMDA2NDQKLS0tIGEvaW5jbHVkZS91YXBpL2xpbnV4L3ZpZGVvZGV2Mi5oCisrKyBiL2lu
+Y2x1ZGUvdWFwaS9saW51eC92aWRlb2RldjIuaApAQCAtMjk0LDYgKzI5NCw3IEBAIHN0cnVjdCB2
+NGwyX3BpeF9mb3JtYXQgewogI2RlZmluZSBWNEwyX1BJWF9GTVRfUkdCNTU1WCB2NGwyX2ZvdXJj
+YygnUicsICdHJywgJ0InLCAnUScpIC8qIDE2ICBSR0ItNS01LTUgQkUgICovCiAjZGVmaW5lIFY0
+TDJfUElYX0ZNVF9SR0I1NjVYIHY0bDJfZm91cmNjKCdSJywgJ0cnLCAnQicsICdSJykgLyogMTYg
+IFJHQi01LTYtNSBCRSAgKi8KICNkZWZpbmUgVjRMMl9QSVhfRk1UX0JHUjY2NiAgdjRsMl9mb3Vy
+Y2MoJ0InLCAnRycsICdSJywgJ0gnKSAvKiAxOCAgQkdSLTYtNi02CSAgKi8KKyNkZWZpbmUgVjRM
+Ml9QSVhfRk1UX1JHQjY2NiAgdjRsMl9mb3VyY2MoJ1InLCAnRycsICdCJywgJ0gnKSAvKiAxOCAg
+UkdCLTYtNi02CSAgKi8KICNkZWZpbmUgVjRMMl9QSVhfRk1UX0JHUjI0ICAgdjRsMl9mb3VyY2Mo
+J0InLCAnRycsICdSJywgJzMnKSAvKiAyNCAgQkdSLTgtOC04ICAgICAqLwogI2RlZmluZSBWNEwy
+X1BJWF9GTVRfUkdCMjQgICB2NGwyX2ZvdXJjYygnUicsICdHJywgJ0InLCAnMycpIC8qIDI0ICBS
+R0ItOC04LTggICAgICovCiAjZGVmaW5lIFY0TDJfUElYX0ZNVF9CR1IzMiAgIHY0bDJfZm91cmNj
+KCdCJywgJ0cnLCAnUicsICc0JykgLyogMzIgIEJHUi04LTgtOC04ICAgKi8KLS0gCjEuNy45LjUK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1h
+aWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYu
+bGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
