@@ -1,100 +1,112 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: ARM: gic_arch_extn (Was: [PATCH v3] irqchip: mmp: add dt
-	support for wakeup)
-Date: Thu, 5 Dec 2013 09:49:31 +0000
-Message-ID: <20131205094931.GB4360@n2100.arm.linux.org.uk>
-References: <1386159214-31483-1-git-send-email-zhangwm@marvell.com> <alpine.DEB.2.02.1312042234190.30673@ionos.tec.linutronix.de> <alpine.DEB.2.02.1312042347350.30673@ionos.tec.linutronix.de> <20131205005216.GA4360@n2100.arm.linux.org.uk> <alpine.DEB.2.02.1312050157550.30673@ionos.tec.linutronix.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v7 1/2] mmc: sdhci-msm: Initial SDHCI MSM driver
+ documentation
+Date: Thu, 5 Dec 2013 09:52:18 +0000
+Message-ID: <20131205095218.GH29200@e106331-lin.cambridge.arm.com>
+References: <1383753405-23631-1-git-send-email-gdjakov@mm-sol.com>
+ <1383753405-23631-2-git-send-email-gdjakov@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1312050157550.30673-3cz04HxQygjZikZi3RtOZ1XZhhPuCNm+@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1383753405-23631-2-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "subhashj@codeaurora.org" <subhashj@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 03:12:55AM +0100, Thomas Gleixner wrote:
-> Russell,
-> 
-> On Thu, 5 Dec 2013, Russell King - ARM Linux wrote:
-> > On Thu, Dec 05, 2013 at 01:41:53AM +0100, Thomas Gleixner wrote:
-> > > @all who feel responsible for gic_arch_extn
-> > > 
-> > > On Wed, 4 Dec 2013, Thomas Gleixner wrote:
-> > > > I'm going to reply in a separate mail on this, because you have
-> > > > brought this to my attention, but you are not responsible in the first
-> > > > place for this brainfart.
-> > > 
-> > > Who came up with that gic_arch_extn concept in the first place?
-> > 
-> > If you'd spend more time reviewing IRQ patches then maybe you'd catch
-> > this at review time.  So please stop your rediculous whinging when
-> > most of the problem is your own lack of time.
-> 
-> I'm not a native english speaker, so I want to make sure in the first
-> place that you meant:
-> 
->     "ridiculous whingeing" 
-> 
-> Assumed that you meant that, let me ridicule you a bit.
-> 
-> The gic_arch_extn concept got merged with:
-> 
->     commit d7ed36a4ea84e3a850f9932e2058ceef987d1acd
->     Author: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
->     Date:   Wed Mar 2 08:03:22 2011 +0100
-> 
->     ARM: 6777/1: gic: Add hooks for architecture specific extensions
-> 
->     <SNIP>
-> 
->     Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->     Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
->     Acked-by: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
->     Tested-by: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
->     Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> 
->     ---
->     arch/arm/common/gic.c		|   47 ++++++++++++....
->     arch/arm/include/asm/hardware/gic.h |    1
-> 
-> The patch in question was never cc'ed to me and you merged it on your
-> own.
-> 
-> So now you have the chuzpe to blame me for that, just because this
-> code moved to drivers/irqchip with
-> 
->      commit 81243e444c6e9d1625073e4a3d3bc244c8a545f0
->      Author: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->      Date:   Tue Nov 20 21:21:40 2012 -0600
-> 
->      irqchip: Move ARM GIC to drivers/irqchip
->     
-> almost two years later?
-> 
-> The code move neither exempts you from the responsibility of merging
-> it nor does it imply a retroactive responsibility for me to review all
-> patches which went into that code prior to the move.
+Hi,
 
-And neither does it give you permission to send such an idiotic and
-rediculous email.
+Apologies for the late reply.
 
-I'm not going to do anything about it because "Thomas Glexiner" has
-suddenly decided he doesn't like it.
+On Wed, Nov 06, 2013 at 03:56:44PM +0000, Georgi Djakov wrote:
+> This patch adds documentation for Qualcomm SDHCI MSM driver.
+> It contains the differences between the core properties in mmc.txt
+> and the properties used by the sdhci-msm driver.
 
-As for your definition of "hotpath", you're really screwed on that
-because you don't seem to understand what is or isn't the hotpath in
-this code.
+Nit, but this is documentation of the binding, not the driver.
 
-So there's not much point discussing this with you until you:
+> 
+> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+> ---
+>  .../devicetree/bindings/mmc/sdhci-msm.txt          |   92 ++++++++++++++++++++
+>  1 file changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> new file mode 100644
+> index 0000000..8f1a52d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -0,0 +1,92 @@
+> +* Qualcomm SDHCI controller (sdhci-msm)
+> +
+> +This file documents differences between the core properties in mmc.txt
+> +and the properties used by the sdhci-msm driver.
+> +
+> +Required properties:
+> +- compatible: should contain "qcom,sdhci-msm"
+> +- reg: should contain SDHC, SD Core register map
 
-(a) calm down
-(b) analyse it properly and work out the frequency under which each
-class of IRQ (those >= 32 and those < 32) call into these functions.
+As this seems to depend on reg-names, it would be nice to write this in
+terms of reg-names (as with clocks and clock-names).
 
-To put it bluntly, you're wrong.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> +- reg-names: indicates various resources passed to driver (via reg proptery) by name
+> +	"reg-names" examples are "hc_mem" and "core_mem"
+
+Either there are a fixed set of names you expect (and therefore these
+aren't examples but rather a definition), or this property is useless.
+Please either define the set of names or remove this property.
+
+> +- interrupts: should contain SDHC interrupts
+> +- interrupt-names: indicates interrupts passed to driver (via interrupts property) by name
+> +	"interrupt-names" examples are "hc_irq" and "pwr_irq"
+
+Likewise for both points.
+
+> +- vdd-supply: phandle to the regulator for the vdd (flash core voltage) supply.
+> +- vddio-supply: phandle to the regulator for the vdd-io (i/o voltage) supply.
+> +- pinctrl-names: Should contain only one value - "default".
+> +- pinctrl-0: Should specify pin control groups used for this controller.
+> +- clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock-names
+> +- clock-names: Should contain the following:
+> +	"iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
+> +	"core"	- SDC MMC clock (MCLK) (required)
+> +	"bus"	- SDCC bus voter clock (optional)
+
+This looks good :)
+
+> +
+> +Optional properties:
+> +- qcom,bus-speed-mode: specifies the supported bus speed modes by host
+> +	The supported bus speed modes are:
+> +	"HS200_1p8v" - indicates that host can support HS200 at 1.8v
+> +	"HS200_1p2v" - indicates that host can support HS200 at 1.2v
+> +	"DDR_1p8v" - indicates that host can support DDR mode at 1.8v
+> +	"DDR_1p2v" - indicates that host can support DDR mode at 1.2v
+
+Is this a list of strings, or does the unit only support one of these?
+
+This could be a set of boolean properties instead, is this likely to
+expand in future?
+
+> +
+> +- qcom,{vdd,vdd-io}-lpm-sup - specifies whether the supply can be kept in low power mode.
+
+Boolean? Please specify types on properties.
+
+Can you elaborate on what this means? When can a supply not be kept in
+low power mode?
+
+> +- qcom,{vdd,vdd-io}-voltage-level - specifies voltage levels for the supply.
+> +	Should be specified in pairs (min, max), units uV.
+> +- qcom,{vdd,vdd-io}-current-level - specifies load levels for the supply in lpm
+> +	or high power mode (hpm). Should be specified in pairs (lpm, hpm), units uA.
+
+Can you not query these from the regulator framework?
+
+If these are configuration, why are they necessary?
+
+Thanks,
+Mark.
