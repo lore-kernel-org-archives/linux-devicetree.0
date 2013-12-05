@@ -1,133 +1,65 @@
-From: delicious quinoa <delicious.quinoa@gmail.com>
+From: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v8] gpio: add a driver for the Synopsys DesignWare APB
  GPIO block
-Date: Thu, 5 Dec 2013 16:55:32 -0600
-Message-ID: <CANk1AXRVO+=U=0zLR=orU49hn4nOmx6pZH-42tpbGk4oF5L9Og@mail.gmail.com>
+Date: Thu, 5 Dec 2013 16:56:32 -0600
+Message-ID: <CANk1AXS2twLVbPUUcLRXnzjJsGO0TPk9CM+8M5cf-tOOaUexnA@mail.gmail.com>
 References: <1386088876-29205-1-git-send-email-delicious.quinoa@gmail.com>
 	<1386088876-29205-2-git-send-email-delicious.quinoa@gmail.com>
-	<20131204115628.GL16025@e106331-lin.cambridge.arm.com>
+	<20131205165439.GB5924@maple>
+	<CANk1AXRJK+Zy2FYEn5jBevUr5Dr_tNeFf9=GbOnzxgiSOw7j8w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20131204115628.GL16025@e106331-lin.cambridge.arm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@stericsson.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CANk1AXRJK+Zy2FYEn5jBevUr5Dr_tNeFf9=GbOnzxgiSOw7j8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Yves Vandervennet <rocket.yvanderv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 4, 2013 at 5:56 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Tue, Dec 03, 2013 at 04:41:16PM +0000, Alan Tull wrote:
->> From: Jamie Iles <jamie@jamieiles.com>
+On Thu, Dec 5, 2013 at 4:53 PM, delicious quinoa
+<delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Dec 5, 2013 at 10:54 AM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
+>> Hi Alan,
 >>
->> The Synopsys DesignWare block is used in some ARM devices (picoxcell)
->> and can be configured to provide multiple banks of GPIO pins.
+>> One minor comment below, otherwise looks great!
 >>
->> Signed-off-by: Alan Tull <atull@altera.com>
->> Reviewed-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 >>
->> v8:     - remove socfpga.dtsi changes
->>         - minor cleanup in devicetree documentation
->> v7:     - use irq_generic_chip
->>         - support one irq per gpio line or one irq for many
->>         - s/bank/port/ and other cleanup
->> v6:     - (atull) squash the set of patches
->>         - use linear irq domain
->>         - build fixes. Original driver was reviewed on v3.2.
->>         - Fix setting irq edge type for 'rising' and 'both'.
->>         - Support as a loadable module.
->>         - Use bgpio_chip's spinlock during register access.
->>         - Clean up register names to match spec
->>         - s/bank/port/ because register names use the word 'port'
->>         - s/nr-gpio/nr-gpios/
->>         - don't get/put the of_node
->>         - remove signoffs/acked-by's because of changes
->>         - other cleanup
->> v5:     - handle sparse bank population correctly
->> v3:     - depend on rather than select IRQ_DOMAIN
->>         - split IRQ support into a separate patch
->> v2:     - use Rob Herring's irqdomain in generic irq chip patches
->>         - use reg property to indicate bank index
->>         - support irqs on both edges based on LinusW's u300 driver
->> ---
->>  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |   57 +++
->>  drivers/gpio/Kconfig                               |    9 +
->>  drivers/gpio/Makefile                              |    1 +
->>  drivers/gpio/gpio-dwapb.c                          |  426 ++++++++++++++++++++
->>  4 files changed, 493 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
->>  create mode 100644 drivers/gpio/gpio-dwapb.c
+>> Thanks,
 >>
->> diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
->> new file mode 100644
->> index 0000000..e7f144f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
->> @@ -0,0 +1,57 @@
->> +* Synopsys DesignWare APB GPIO controller
->> +
->> +Required properties:
->> +- compatible : Should be "snps,dw-apb-gpio"
+>> Jamie
+>>
+>> On Tue, Dec 03, 2013 at 10:41:16AM -0600, Alan Tull wrote:
+>>> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+>>> new file mode 100644
+>>> index 0000000..e6dc61f
+>>> --- /dev/null
+>>> +++ b/drivers/gpio/gpio-dwapb.c
+>> ...
+>>> +static unsigned int dwapb_gpio_nr_ports(struct device_node *of_node)
+>>> +{
+>>> +     unsigned int nr_ports = 0;
+>>> +     struct device_node *np;
+>>> +
+>>> +     for_each_child_of_node(of_node, np)
+>>> +             ++nr_ports;
+>>> +
+>>> +     return nr_ports;
+>>> +}
+>>
+>> I notice that we now have of_get_child_count() which didn't exist when I
+>> first wrote the driver, we could use that now.
 >
-> s/be/contain/
+> Thanks Jamie.
 >
->> +- reg : Address and length of the register set for the device
+> I'll include that in v8.  I'll post that within a few days.
 >
-> As this has children with reg entries, it should have #address-cells and
-> #size-cells (as the example does).
->
->> +
->> +The GPIO controller has a configurable number of ports, each of which are
->> +represented as child nodes with the following properties:
->> +
->> +Required properties:
->> +- compatible : "snps,dw-apb-gpio-port"
->> +- gpio-controller : Marks the device node as a gpio controller.
->> +- #gpio-cells : Should be two.  The first cell is the pin number and
->> +  the second cell is used to specify optional parameters (currently
->> +  unused).
->> +- reg : The integer port index of the port, a single cell.
->> +
->> +Optional properties:
->> +- interrupt-controller : The first port may be configured to be an interrupt
->> +controller.
->> +- #interrupt-cells : Specifies the number of cells needed to encode an
->> +interrupt.  Shall be set to 2.  The first cell defines the interrupt number,
->> +the second encodes the triger flags encoded as described in
->> +Documentation/devicetree/bindings/interrupts.txt
->> +- interrupt-parent : The parent interrupt controller.
->> +- interrupts : The interrupts to the parent controller raised when GPIOs
->> +generate the interrupts.
->> +- snps,nr-gpios : The number of pins in the port, a single cell.
->> +
->> +Example:
->> +
->> +gpio: gpio@20000 {
->> +       compatible = "snps,dw-apb-gpio";
->> +       reg = <0x20000 0x1000>;
->> +       #address-cells = <1>;
->> +       #size-cells = <0>;
->> +
->> +       porta: gpio-controller@0 {
->> +               compatible = "snps,dw-apb-gpio-port";
->> +               gpio-controller;
->> +               #gpio-cells = <2>;
->> +               snps,nr-gpio = <8>;
->> +               reg = <0>;
->> +               interrupt-controller;
->> +               #interrupt-cells = <2>;
->> +               interrupt-parent = <&vic1>;
->> +               interrupts = <0 1 2 3 4 5 6 7>;
->
-> Nit: please bracket list entries individually.
->
-> Otherwise this looks fine to me.
->
-> Thanks,
-> Mark.
+> Alan
 
-Hi Mark,
+er, I mean v9.
 
-Thanks for the feedback.  I'll include fixes in v9 which I'll post
-within a few days.
-
-Alan Tull
+Alan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
