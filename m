@@ -1,64 +1,76 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] regulator: gpio-regulator: Add required regulator-type property
-Date: Thu, 05 Dec 2013 01:47:04 +0100
-Message-ID: <2248657.5UVkYxaC6z@avalon>
-References: <1385653493-9952-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1385653493-9952-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20131205000928.GI29268@sirena.org.uk>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH V2 2/2] ARM: OMAP2+: board-generic: update SoC compatibility strings
+Date: Wed, 4 Dec 2013 18:49:37 -0600
+Message-ID: <1386204578-6018-3-git-send-email-nm@ti.com>
+References: <1386204578-6018-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5628607.Ntb9itnPrM"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131205000928.GI29268@sirena.org.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, linux-sh@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1386204578-6018-1-git-send-email-nm@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Now that we have standardized SoC definitions, update the
+compatibility strings in board machine descriptors. Eventually, we
+should just have SoC compatiblity here and all board specific stuff
+should disappear.
 
---nextPart5628607.Ntb9itnPrM
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+NOTE: To prevent conflict, I have not added am3517 which is addressed in:
+https://patchwork.kernel.org/patch/3279281/
 
-Hi Mark,
+ arch/arm/mach-omap2/board-generic.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-On Thursday 05 December 2013 00:09:28 Mark Brown wrote:
-> On Thu, Nov 28, 2013 at 04:44:52PM +0100, Laurent Pinchart wrote:
-> > The gpio-regulator driver requires the regulator-type property to be
-> > present. Document it as required in the DT bindings.
-> 
-> It does?  That seems needless.  It should just default to voltage and
-> provide a way override to current, though frankly I'd be astonished to see a
-> GPIO controlled current regulator at all so I'm not sure I'd even bother
-> writing the code for that until someone needs it.  As it is this will most
-> likely just be noise in the DT files and wasted cycles parsing the property.
-
-I'm fine with that. The property should still be documented in the DT bindings 
-as optional though. Or be removed completely until a GPIO-controlled current 
-regulator is needed.
-
-> Please CC maintainers...
-
-My bad, sorry.
-
+diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+index 19f1652..5356a29 100644
+--- a/arch/arm/mach-omap2/board-generic.c
++++ b/arch/arm/mach-omap2/board-generic.c
+@@ -78,6 +78,7 @@ MACHINE_END
+ 
+ #ifdef CONFIG_ARCH_OMAP3
+ static const char *omap3_boards_compat[] __initdata = {
++	"ti,omap3430",
+ 	"ti,omap3",
+ 	NULL,
+ };
+@@ -155,6 +156,8 @@ MACHINE_END
+ 
+ #ifdef CONFIG_ARCH_OMAP4
+ static const char *omap4_boards_compat[] __initdata = {
++	"ti,omap4460",
++	"ti,omap4430",
+ 	"ti,omap4",
+ 	NULL,
+ };
+@@ -175,6 +178,8 @@ MACHINE_END
+ 
+ #ifdef CONFIG_SOC_OMAP5
+ static const char *omap5_boards_compat[] __initdata = {
++	"ti,omap5432",
++	"ti,omap5430",
+ 	"ti,omap5",
+ 	NULL,
+ };
+@@ -195,6 +200,7 @@ MACHINE_END
+ 
+ #ifdef CONFIG_SOC_AM43XX
+ static const char *am43_boards_compat[] __initdata = {
++	"ti,am4372",
+ 	"ti,am43",
+ 	NULL,
+ };
+@@ -212,6 +218,7 @@ MACHINE_END
+ 
+ #ifdef CONFIG_SOC_DRA7XX
+ static const char *dra7xx_boards_compat[] __initdata = {
++	"ti,dra7xx",
+ 	"ti,dra7",
+ 	NULL,
+ };
 -- 
-Regards,
-
-Laurent Pinchart
-
---nextPart5628607.Ntb9itnPrM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJSn80NAAoJEIkPb2GL7hl1uOAH/R+F5mOMmhFCASa2iP/IPvl1
-UXzxpL8ibAMN2RL+aNuQBl32J/KW/DFbqZ0FnrrushaseU5lAiBZS1XXklkt59Vz
-z0Bsg4icgIAa/qn7N7uX3h3lijtcBWL9pS8SXasFbUMuTpLUQmpstPEH5KI6QAgm
-6XWPFUzfQXQEt2qvZ5ZZNv4I8kityV+sQjB4WqUPi5WjyU65HKP+ss+TF9Ej42yX
-L7nVJHixmq+CWd6RNovbcbrBBnSo+arzEn3GDTTqa8QQ9eXo5X2vqObUVsUBjPhb
-+L7tzhUOnHl+PrBMZywVieS5RCYdMgrubDVny8tSiSWNU3skOAkP3lydmZKc8I4=
-=evu0
------END PGP SIGNATURE-----
-
---nextPart5628607.Ntb9itnPrM--
+1.7.9.5
 
