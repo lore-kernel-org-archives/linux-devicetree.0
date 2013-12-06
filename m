@@ -1,33 +1,23 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V12 3/3] ARM: dts: update watchdog device nodes for
- Exynos5250 and Exynos5420
-Date: Fri, 6 Dec 2013 11:48:56 -0800
-Message-ID: <20131206194856.GC14464@roeck-us.net>
-References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com>
- <1386308868-30264-4-git-send-email-l.krishna@samsung.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 0/7] net: of_mdio improvements
+Date: Fri, 06 Dec 2013 14:57:57 -0500 (EST)
+Message-ID: <20131206.145757.1883774544372288081.davem@davemloft.net>
+References: <1386283936-26104-1-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1386308868-30264-4-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, wim@iguana.be, dianders@chromium.org, kgene.kim@samsung.com, t.figa@samsung.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1386283936-26104-1-git-send-email-florian@openwrt.org>
+Sender: netdev-owner@vger.kernel.org
+To: florian@openwrt.org
+Cc: netdev@vger.kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, abrodkin@synopsys.com, rob.herring@calxeda.com, mark.rutland@arm.com, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 06, 2013 at 11:17:48AM +0530, Leela Krishna Amudala wrote:
-> In Exynos5 series SoCs, PMU has registers to enable/disable mask/unmask
-> watchdog timer which is not the case with s3c series SoCs so, there is a
-> need to have different compatible names for watchdog to handle these pmu
-> registers access.
-> 
-> Hence this patch removes watchdog node from Exynos5.dtsi common file and
-> make it separate by updating existing node in Exynos5250 and adding new node
-> to Exynos5420. This patch also makes the watchdog node enabled by default
-> 
-> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> Tested-by: Doug Anderson <dianders@chromium.org>
+From: Florian Fainelli <florian@openwrt.org>
+Date: Thu, 5 Dec 2013 14:52:09 -0800
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+> This patchset contains a few improvements to the MDIO device tree parsing
+> code such as refactoring and parsing the "max-speed" property which is
+> defined in the ePAPR specification.
+
+Series applied, thanks.  I fixed up the missing space in the assignment.
