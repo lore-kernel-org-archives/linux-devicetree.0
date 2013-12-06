@@ -1,104 +1,99 @@
-From: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
-Subject: Re: [PATCH] ARM: dts: Fix mmc node on exynos5250 snow board
-Date: Fri, 6 Dec 2013 10:30:28 +0530
-Message-ID: <CAKuRcO+DTOmVrXYrRNHYhjC42rwQSX5qzPFxSiKok47VKtEsfQ@mail.gmail.com>
-References: <1386237974-2255-1-git-send-email-yuvaraj.cd@samsung.com>
-	<CAPz6YkUO7tqSa+tU_M4Do5k7dwc6MaCxX3T-3aJtG1=XQFjTRQ@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/9] phy: core: Change the way of_phy_get is called
+Date: Fri, 6 Dec 2013 11:00:44 +0530
+Message-ID: <52A16104.3080704@ti.com>
+References: <1386246579-25141-1-git-send-email-k.debski@samsung.com> <1386246579-25141-2-git-send-email-k.debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAPz6YkUO7tqSa+tU_M4Do5k7dwc6MaCxX3T-3aJtG1=XQFjTRQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sonny Rao <sonnyrao@chromium.org>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, ALIM AKHTAR <alim.akhtar@samsung.com>, Douglas Anderson <dianders@chromium.org>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386246579-25141-2-git-send-email-k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 6, 2013 at 12:19 AM, Sonny Rao <sonnyrao@chromium.org> wrote:
-> On Thu, Dec 5, 2013 at 2:06 AM, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com> wrote:
->> Commits 64c138a ("ARM: dts: Move fifo-depth property from exynos5250
->> board dts") and 0c3de788 ("ARM: dts: change status property of dwmmc
->> nodes for exynos5250") missed out handling the exynos5250 snow dts file.
->> Delete the fifo-depth property and enable the mmc node in the snow dts
->> file.
->>
->
-> Since this is really fixing two different issues, even though they
-> both affect dw_mmc, would you mind splitting this up into two
-> different commits?
- OK, I will split into two and repost.
->
->> Signed-off-by : Abhilash Kesavan <a.kesavan@samsung.com>
->>
->> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
->> ---
->>  arch/arm/boot/dts/cros5250-common.dtsi |    7 -------
->>  arch/arm/boot/dts/exynos5250-snow.dts  |    9 +++++++++
->>  2 files changed, 9 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
->> index 6470536..2dd70e9 100644
->> --- a/arch/arm/boot/dts/cros5250-common.dtsi
->> +++ b/arch/arm/boot/dts/cros5250-common.dtsi
->> @@ -233,7 +233,6 @@
->>                 num-slots = <1>;
->>                 supports-highspeed;
->>                 broken-cd;
->> -               fifo-depth = <0x80>;
->
-> Why are you deleting fifo-depth?
-fifo-depth property has been moved to SOC specific file exynos5250.dtsi
->
->>                 card-detect-delay = <200>;
->>                 samsung,dw-mshc-ciu-div = <3>;
->>                 samsung,dw-mshc-sdr-timing = <2 3>;
->> @@ -247,14 +246,9 @@
->>                 };
->>         };
->>
->> -       mmc@12210000 {
->> -               status = "disabled";
->> -       };
->> -
->>         mmc@12220000 {
->>                 num-slots = <1>;
->>                 supports-highspeed;
->> -               fifo-depth = <0x80>;
->>                 card-detect-delay = <200>;
->>                 samsung,dw-mshc-ciu-div = <3>;
->>                 samsung,dw-mshc-sdr-timing = <2 3>;
->> @@ -273,7 +267,6 @@
->>                 num-slots = <1>;
->>                 supports-highspeed;
->>                 broken-cd;
->> -               fifo-depth = <0x80>;
->>                 card-detect-delay = <200>;
->>                 samsung,dw-mshc-ciu-div = <3>;
->>                 samsung,dw-mshc-sdr-timing = <2 3>;
->> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
->> index a9395c4..67484d1 100644
->> --- a/arch/arm/boot/dts/exynos5250-snow.dts
->> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
->> @@ -171,11 +171,20 @@
->>                 };
->>         };
->>
->> +       mmc@12200000 {
->> +               status = "okay";
->> +       };
->> +
->> +       mmc@12220000 {
->> +               status = "okay";
->> +       };
->> +
->>         /*
->>          * On Snow we've got SIP WiFi and so can keep drive strengths low to
->>          * reduce EMI.
->>          */
->>         mmc@12230000 {
->> +               status = "okay";
->>                 slot@0 {
->>                         pinctrl-names = "default";
->>                         pinctrl-0 = <&sd3_clk &sd3_cmd &sd3_bus4>;
->> --
->> 1.7.9.5
->>
+Hi,
+
+On Thursday 05 December 2013 05:59 PM, Kamil Debski wrote:
+> Previously the of_phy_get function took a struct device * and
+> was declared static. It was impossible to call it from
+> another driver and thus it was impossible to get phy defined
+
+It was never intended to be called from other drivers. What's up with the
+wrapper of of_phy_get, phy_get()/devm_phy_get()? Why isn't that enough?
+
+Thanks
+Kishon
+> for a given node.
+> 
+> Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/phy/phy-core.c  |   12 +++++-------
+>  include/linux/phy/phy.h |    1 +
+>  2 files changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> index 03cf8fb..7fb3474 100644
+> --- a/drivers/phy/phy-core.c
+> +++ b/drivers/phy/phy-core.c
+> @@ -250,20 +250,17 @@ EXPORT_SYMBOL_GPL(phy_power_off);
+>   * not yet loaded. This function uses of_xlate call back function provided
+>   * while registering the phy_provider to find the phy instance.
+>   */
+> -static struct phy *of_phy_get(struct device *dev, int index)
+> +struct phy *of_phy_get(struct device_node *np, int index)
+>  {
+>  	int ret;
+>  	struct phy_provider *phy_provider;
+>  	struct phy *phy = NULL;
+>  	struct of_phandle_args args;
+>  
+> -	ret = of_parse_phandle_with_args(dev->of_node, "phys", "#phy-cells",
+> +	ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
+>  		index, &args);
+> -	if (ret) {
+> -		dev_dbg(dev, "failed to get phy in %s node\n",
+> -			dev->of_node->full_name);
+> +	if (ret)
+>  		return ERR_PTR(-ENODEV);
+> -	}
+>  
+>  	mutex_lock(&phy_provider_mutex);
+>  	phy_provider = of_phy_provider_lookup(args.np);
+> @@ -281,6 +278,7 @@ err0:
+>  
+>  	return phy;
+>  }
+> +EXPORT_SYMBOL_GPL(of_phy_get);
+>  
+>  /**
+>   * phy_put() - release the PHY
+> @@ -370,7 +368,7 @@ struct phy *phy_get(struct device *dev, const char *string)
+>  	if (dev->of_node) {
+>  		index = of_property_match_string(dev->of_node, "phy-names",
+>  			string);
+> -		phy = of_phy_get(dev, index);
+> +		phy = of_phy_get(dev->of_node, index);
+>  		if (IS_ERR(phy)) {
+>  			dev_err(dev, "unable to find phy\n");
+>  			return phy;
+> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+> index 6d72269..169f572 100644
+> --- a/include/linux/phy/phy.h
+> +++ b/include/linux/phy/phy.h
+> @@ -131,6 +131,7 @@ struct phy *phy_get(struct device *dev, const char *string);
+>  struct phy *devm_phy_get(struct device *dev, const char *string);
+>  void phy_put(struct phy *phy);
+>  void devm_phy_put(struct device *dev, struct phy *phy);
+> +struct phy *of_phy_get(struct device_node *np, int index);
+>  struct phy *of_phy_simple_xlate(struct device *dev,
+>  	struct of_phandle_args *args);
+>  struct phy *phy_create(struct device *dev, const struct phy_ops *ops,
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
