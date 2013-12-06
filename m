@@ -1,85 +1,100 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCHv5][ 2/8] staging: imx-drm: Add RGB666 support for
- parallel display.
-Date: Fri, 6 Dec 2013 14:14:04 +0100
-Message-ID: <20131206131403.GA30960@ulmo.nvidia.com>
-References: <1386268092-21719-1-git-send-email-denis@eukrea.com>
- <1386268092-21719-2-git-send-email-denis@eukrea.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2274553092747057077=="
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1386268092-21719-2-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Denis Carikli <denis@eukrea.com>
-Cc: Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Eric =?utf-8?Q?B=C3=A9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Shawn Guo <shawn.guo@linaro.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Sascha Hauer <kernel@pengutronix.de>, linux-media@vger.kernel.org, driverdev-devel@linuxdriverproject.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM64: dts: Add clock-frequency to model cpu nodes
+Date: Fri,  6 Dec 2013 13:14:43 +0000
+Message-ID: <1386335683-11405-1-git-send-email-broonie@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
---===============2274553092747057077==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
-Content-Disposition: inline
+The clock-frequency property is meaningless for the models but it's a
+mandatory property so claim that all the cores run at 1MHz.
 
+Signed-off-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm64/boot/dts/foundation-v8.dts  | 4 ++++
+ arch/arm64/boot/dts/rtsm_ve-aemv8a.dts | 4 ++++
+ 2 files changed, 8 insertions(+)
 
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+diff --git a/arch/arm64/boot/dts/foundation-v8.dts b/arch/arm64/boot/dts/foundation-v8.dts
+index 4a060906809d..f91b2fa41fb3 100644
+--- a/arch/arm64/boot/dts/foundation-v8.dts
++++ b/arch/arm64/boot/dts/foundation-v8.dts
+@@ -34,6 +34,7 @@
+ 			reg = <0x0 0x0>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			clock-frequency = <1000000>;
+ 		};
+ 		cpu@1 {
+ 			device_type = "cpu";
+@@ -41,6 +42,7 @@
+ 			reg = <0x0 0x1>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			clock-frequency = <1000000>;
+ 		};
+ 		cpu@2 {
+ 			device_type = "cpu";
+@@ -48,6 +50,7 @@
+ 			reg = <0x0 0x2>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			clock-frequency = <1000000>;
+ 		};
+ 		cpu@3 {
+ 			device_type = "cpu";
+@@ -55,6 +58,7 @@
+ 			reg = <0x0 0x3>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			clock-frequency = <1000000>;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
+index 572005ea2217..d7debfe79d9f 100644
+--- a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
++++ b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
+@@ -37,6 +37,7 @@
+ 			reg = <0x0 0x0>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			clock-frequency = <1000000>;
+ 		};
+ 		cpu@1 {
+ 			device_type = "cpu";
+@@ -44,6 +45,7 @@
+ 			reg = <0x0 0x1>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			clock-frequency = <1000000>;
+ 		};
+ 		cpu@2 {
+ 			device_type = "cpu";
+@@ -51,6 +53,7 @@
+ 			reg = <0x0 0x2>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			clock-frequency = <1000000>;
+ 		};
+ 		cpu@3 {
+ 			device_type = "cpu";
+@@ -58,6 +61,7 @@
+ 			reg = <0x0 0x3>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			clock-frequency = <1000000>;
+ 		};
+ 	};
+ 
+-- 
+1.8.5.1
 
-On Thu, Dec 05, 2013 at 07:28:06PM +0100, Denis Carikli wrote:
-[...]
-> diff --git a/drivers/staging/imx-drm/ipu-v3/ipu-dc.c b/drivers/staging/imx-drm/ipu-v3/ipu-dc.c
-[...]
-> @@ -155,6 +156,8 @@ static int ipu_pixfmt_to_map(u32 fmt)
->  		return IPU_DC_MAP_BGR666;
->  	case V4L2_PIX_FMT_BGR24:
->  		return IPU_DC_MAP_BGR24;
-> +	case V4L2_PIX_FMT_RGB666:
-> +		return IPU_DC_MAP_RGB666;
-
-Why is this DRM driver even using V4L2 pixel formats in the first place?
-
-Thierry
-
---u3/rZRmxL6MmkK24
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSoc2bAAoJEN0jrNd/PrOhHrwP/RHuIytU1Sx350RAonwEhjbe
-hZZycaxb+1j5FPvcDhAW3Sx9+sTpqZlYFJMaT7YV5v87Wq0wfKN/oA3HYdOpJFwc
-rmBcPw6Y+s4gXZPkdJcyD8y2rpaUZiyVKCNoTABuk3n+Ubpft9hqVsIX4Yry6Q/G
-5Dn3okFO7CtIXbp4f45lJ14bCD+/g+akN8jOY3q3rwrfrgKkG2x+6LGEvxlKJbao
-ZmitgdO1BrgkPNzJZIGU/odsIjLyPWXsCJa7Did3J5x5ajIoZq+LJkPkrvos7A4u
-wIQZKjx9vMVgiVaaykLq8mgtbT0Q+68HVDad1Dw2XNuvbEmbpfsAbw/dcTVheSq3
-7YHJLOCTM7vnW1BsxuQeKizRjJMg24tcNCqowD/oWEIZjDonoGruRBz5pC6y6csV
-yg3m0pSkGkD25K5lZmAuJ/opLDUy4r7v9zTeMytqssyPeC6PjLKGdDzXXs79OHE+
-DeXlnGA9xUt8fUx7SXy+MXspcGND/WQFsg1ZgPTv3/i21/uk7rmAuH0EijDJNh12
-eXXqc6b7vLJ5n5wEPODRzn5j6wkTbDPn1kxe3oojWaLseda54uLZvVLfxBx/mOJG
-cQ3GhkvL9tlRBtJ8Qp7AB+VIE5dSWLKa29c8A0tFKGlm5vR+fTCwWP9mfE85p3Pl
-qSqMDDYRWZ9ML9/ZGffL
-=pGqH
------END PGP SIGNATURE-----
-
---u3/rZRmxL6MmkK24--
-
---===============2274553092747057077==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
-
---===============2274553092747057077==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
