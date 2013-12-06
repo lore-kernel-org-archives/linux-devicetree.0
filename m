@@ -1,153 +1,152 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] of: Add simple panel device tree binding
-Date: Fri, 6 Dec 2013 15:54:28 +0100
-Message-ID: <20131206145428.GG24559@pengutronix.de>
-References: <1385145714-3022-1-git-send-email-treding@nvidia.com>
- <2120855.5UlavpPp2J@avalon>
- <20131126085911.GA27752@ulmo.nvidia.com>
- <2124722.FKim1X37Up@avalon>
- <20131206135759.GD30960@ulmo.nvidia.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
+Date: Fri, 6 Dec 2013 15:54:34 +0100
+Message-ID: <CAKfTPtAczqubAGFjEqLev2g-iLYKifr_1P3pUHf2zbhdPObA7Q@mail.gmail.com>
+References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <20131204152010.GC2323@e103592.cambridge.arm.com> <20131204170623.GB26534@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131206135759.GD30960-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20131204170623.GB26534@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Dave Martin <Dave.Martin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 06, 2013 at 02:58:00PM +0100, Thierry Reding wrote:
-> On Thu, Dec 05, 2013 at 12:45:17AM +0100, Laurent Pinchart wrote:
-> > Hi Thierry,
-> > 
-> > On Tuesday 26 November 2013 09:59:12 Thierry Reding wrote:
-> > > On Tue, Nov 26, 2013 at 02:54:41AM +0100, Laurent Pinchart wrote:
-> > > > On Friday 22 November 2013 19:41:54 Thierry Reding wrote:
-> > > > > This binding specifies a set of common properties for display panels. It
-> > > > > can be used as a basis by bindings for specific panels.
-> > > > > 
-> > > > > Bindings for three specific panels are provided to show how the simple
-> > > > > panel binding can be used.
-> > > > > 
-> > > > > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > > ---
-> > > > > This binding has already been discussed earlier. Both Laurent and Tomi
-> > > > > seemed to be generally fine with this.
-> > > > 
-> > > > That's correct, I'm generally fine with your approach, but there's still
-> > > > one point I'd like to see addressed.
-> > > > 
-> > > > As I mentioned previously, I would like to avoid adding zillions of
-> > > > compatible properties to the driver, when we could use a single property
-> > > > in the DT bindings that would specify the timings instead. This would
-> > > > lower the amount of changes made to the simple panel driver, while
-> > > > keeping DT simple enough (at least in my opinion).
-> > > > 
-> > > > Specifying the full timings in every DT source file would be pretty
-> > > > verbose and could be error-prone. However, using a single property to
-> > > > specify one of the standard display timings, as orinally proposed by Hans
-> > > > de Goede (CC'ed) during a chat at the kernel summit would in my opinion be
-> > > > a good middle-ground solution.
-> > > > 
-> > > > Would you consider adding such a property to the simple panel bindings,
-> > > > and define a common compatible string ? Each panel should of course list
-> > > > its own compatibility string in addition to the common compatible string
-> > > > in case the need for extensions arises in the future.
-> > > 
-> > > My gripe with this is that it duplicates information. By definition a simple
-> > > panel supports a limited number of display modes (typically only a single
-> > > one), so once you know the compatible value (which needs to be there anyway)
-> > > you can derive the mode from it. Adding a property that specifies the
-> > > display mode is redundant.
-> > 
-> > But that could be said of pretty much every device :-) Let's take an example I 
-> > came across today. The SPI DT bindings have a maximum clock speed property for 
-> > every device. This is usually a property of the hardware, which could have 
-> > been stored in the device drivers.
-> 
-> No it isn't. It's a board-specific property. It depends on all sorts of
-> factors such as how long the connections are between SPI master and
-> slave as well as what other electrical components happen to be in that
-> path.
-> 
-> > I don't particularly like expressing detailed device information in DT when 
-> > the information is static for a given device and easily stored in the drivers. 
-> > However, in this case, I believe the overhead of adding one mode property to 
-> > DT is worth it, as there are zillion panel models in the wild. Going back to 
-> > the SPI analogy, let's consider the m25p80 SPI flash memory driver. It 
-> > supports many models, each of them implemented by a large number of 
-> > manufacturers. The driver stores information for each model (such as the flash 
-> > size), but the maximum SPI clock frequency is specified in DT as we don't want 
-> > to have a list of all device models for all manufacturers in the driver 
-> > (granted, one of the reasons to specify the max frequency in DT is that it can 
-> > also be limited by the board, not only by the chip, but I believe my point 
-> > remains valid).
-> 
-> On the contrary, it completely invalidates your point.
-> 
-> And in fact m25p80 is another perfect example to prove my point. Having
-> display modes encoded within the panel driver and selected depending on
-> the compatible string isn't anything other than the m25p_ids table.
-> 
-> When you want to support a new type of device, you need to add a new
-> entry into the m25p_ids table, just like you would add a new display
-> mode to the panel driver.
-> 
-> > > Dave Airlie proposed something else, namely to keep a list of common
-> > > modes within the driver and have each device reference that mode
-> > > instead. I think that could work similarily well. It still requires the
-> > > driver to be touched for each new panel, but the changes will be very
-> > > small. They'll be more of the "add a new table entry" sort of change
-> > > that we have in drivers like the 8250/16550-compatible serial. Most of
-> > > that could probably be wrapped into a macro to make it concise.
-> > 
-> > That would be better, but not perfect :-) Given the very large number of panel
-> > models I would like to have a simple panel driver that doesn't need to be
-> > patched for every model. The odd cases can of course be handled in C, but the
-> > common case would really benefit from being handled in DT.
-> 
-> I really don't think the number of panels supported in mainline will be
-> overly big.
+On 4 December 2013 18:06, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> On Wed, Dec 04, 2013 at 03:20:10PM +0000, Dave Martin wrote:
+>> On Mon, Dec 02, 2013 at 04:20:05PM +0000, Lorenzo Pieralisi wrote:
+>> > ARM based platforms implement a variety of power management schemes that
+>> > allow processors to enter at run-time low-power states, aka C-states
+>> > in ACPI jargon. The parameters defining these C-states vary on a per-platform
+>> > basis forcing the OS to hardcode the state parameters in platform
+>> > specific static tables whose size grows as the number of platforms supported
+>> > in the kernel increases and hampers device drivers standardization.
+>> >
+>> > Therefore, this patch aims at standardizing C-state device tree bindings for
+>> > ARM platforms. Bindings define C-state parameters inclusive of entry methods
+>> > and state latencies, to allow operating systems to retrieve the
+>> > configuration entries from the device tree and initialize the related
+>> > power management drivers, paving the way for common code in the kernel
+>> > to deal with power states and removing the need for static data in current
+>> > and previous kernel versions.
+>> >
+>> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>> > +
+>>
+>> [...]
+>>
+>> > +   - cpus
+>>
+>> Because cpus is really a topology subtree, it might be good to have
+>> different names.
+>>
+>> To avoid confusion with Mark's affinity properties, maybe a different
+>> word would be preferable instead of "affinity".
+>>
+>> Maybe "topology" instead of "cpus", and "affected-topology" instead of
+>> "affinity"?
+>>
+>>
+>> cpufreq also has its concepts of "related" and "affected" cpus, which
+>> tries to describe something similar (in all honesty, I always struggle
+>> to remember which is which ... but if we were consistent with it, that
+>> might help).
+>
+> Yes, I will try to come up with something clearer.
+>
+>> > +           Usage: Optional
+>> > +           Value type: <phandle>
+>> > +           Definition: If defined, the phandle points to a node in the
+>> > +                       cpu-map[2] representing all CPUs on which C-state
+>> > +                       is valid. If not present or system is UP, the
+>> > +                       C-state has to be considered valid for all CPUs in
+>> > +                       the system.
+>> > +
+>> > +   - affinity
+>> > +           Usage: Optional
+>> > +           Value type: <phandle>
+>> > +           Definition: If defined, phandle points to a node in the
+>> > +                       cpu-map[2] that represents all CPUs that are
+>> > +                       affected (ie share) by the C-state and have to
+>> > +                       be coordinated on C-state entry/exit. If not
+>> > +                       present or system is UP, the C-state is local to
+>> > +                       a CPU and need no coordination (ie it is a CPU
+>> > +                       state, that does not require coordination with
+>> > +                       other CPUs). If present, the affinity property
+>> > +                       must contain a phandle to a cpu-map node that
+>> > +                       represents a subset, possibly inclusive of the
+>> > +                       CPUs described through the cpus property.
+>>
+>> Can you elaborate on how cpus and affinity might be different?
+>
+> I was referring to:
+>
+> - cpus -> processor type (eg valid on A15 or A7, or different implementations
+>   of the same processor in the same chip)
+> - affinity -> power domain (a subset of the cpus that require coordination)
+>
+> Nowadays the distinction does not make much sense (I hardly see a power
+> state valid on eg A15 clusters [cpus], where just a subset of its cpus need to
+> be coordinated [affinity] - might be if other levels of caches are added or
+> if you have multiple clusters of the same CPU type with different power
+> states capabilities).
 
-I for once have hardly seen a display twice in different projects.
+Hi Lorenzo
 
-> Even if, I will gladly take patches that add them to the
-> driver. And it isn't even a lot of work, you really just need to copy
-> this stuff from the datasheet. And the larger the number of panels the
-> kernel supports, the easier it will get to add new support because you
-> may either just be able to reuse the compatible string because somebody
-> else already added support for it, or you may be able to reuse an
-> existing mode because your panel happens to match that mode.
-> 
-> > Imagine how annoying it would be to update the USB mass storage driver
-> > with the VID:PID of every new USB flash device.
-> 
-> The electrical interface of USB is well defined and it is further well
-> specified what USB mass storage means. In addition, USB has very good
-> support for probing capabilities and characteristics. The equivalent for
-> panels would be something like EDID. If the panel provided EDID, then of
-> course you don't need to specify the mode, neither in DT nor in the
-> driver.
+not only linked to the cache. Be sure that you will have HW guys to
+group a subset of cores of a cluster under same powergate. Now that
+should probably be described thanks to power domain information as you
+said below
 
-What makes EDID useful is that it contains the modes. We don't have to
-maintain a database of all monitors available out there in the kernel.
-Still EDID data contains a vendor/model string which makes it possible
-to add quirks for a specific monitor should we have to.
-
-So I really vote for putting the mode data into dt for the 98% case and
-an exact vendor/model for the remaining quirks. This is simple anyway
-since we already have a binding for display modelines. Supporting this
-in the panel driver is trivial.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> I think this deserves more attention, and probably adding power domain
+> information can remove this mumbo jumbo, there is a scary level of
+> duplicated information in there.
+>
+>> The statement about "having to be coordainted" also feels a bit vague,
+>> though I'm not sure how much we can usefully say here.
+>>
+>> If we describe power domains more explicitly it might help with this,
+>> because that could bring some description of what needs to be
+>> coordinated.
+>
+> Yes, see above.
+>
+>> > +   - power-depth
+>> > +           Usage: Required
+>> > +           Value type: <u32>
+>> > +           Definition: Integer value, starting from 2 (value 0 meaning
+>> > +                       running and value 1 representing power depth of
+>> > +                       wfi (C1)), that defines the level of depth of a
+>> > +                       power state.
+>> > +                       The system denotes power states with different
+>> > +                       depths, an increasing value meaning less power
+>> > +                       consumption and might involve powering down more
+>> > +                       components.  Devices that are affected by
+>> > +                       C-states entry must define the maximum power
+>> > +                       depth supported in their respective device tree
+>> > +                       bindings so that OSPM can take decision on how
+>> > +                       to handle the device in question when the C-state
+>> > +                       is entered. All devices (per-CPU or external) with
+>> > +                       a power depth lower than the one defined in the
+>> > +                       C-state entry stop operating when the C-state
+>> > +                       is entered and action is required by OSPM to
+>> > +                       guarantee their logic and memory content is saved
+>> > +                       restored to guarantee proper functioning.
+>>
+>> Any reason to use numbers instead of strings?
+>>
+>> Strings make the DT more readable ... we would presumably only have to
+>> parse this information once, so it shouldn't be an overhead, unless there
+>> are hundreds of C-state nodes.
+>
+> Yes, but it is supposed to be a unique identifier in the entire system.
+> Ok, we can create a list of strings denoting power depths, as long as
+> they are "standard" fine by me, but I think that a number would be
+> easier to use, even though honestly I think it is better to use power
+> domains and get rid of this property altogether.
+>
+> Lorenzo
+>
