@@ -1,40 +1,86 @@
-From: James Cameron <quozl@laptop.org>
-Subject: Re: [PATCH] serial: rewrite pxa2xx-uart to use 8250_core
-Date: Fri, 6 Dec 2013 13:55:41 +1100
-Message-ID: <20131206025541.GL16425@us.netrek.org>
-References: <20131205043544.GA28580@kroah.com>
- <1386286149-2855-1-git-send-email-ynvich@gmail.com>
- <20131206003851.GI16425@us.netrek.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] DeviceTree fixes for 3.13
+Date: Thu, 05 Dec 2013 22:24:46 -0600
+Message-ID: <52A1518E.1080207@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131206003851.GI16425@us.netrek.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <rob.herring@calxeda.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, John Crispin <blogic@openwrt.org>, Jiri Slaby <jslaby@suse.cz>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Zhou Zhu <zzhu3@marvell.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 06, 2013 at 11:38:51AM +1100, James Cameron wrote:
-> On Fri, Dec 06, 2013 at 03:28:37AM +0400, Sergei Ianovich wrote:
-> > pxa2xx-uart was a separate uart platform driver. It was declaring
-> > the same device names and numbers as 8250 driver. As a result,
-> > it was impossible to use 8250 driver on PXA SoCs.
-> > 
-> > Upon closer examination pxa2xx-uart turned out to be a clone of
-> > 8250_core driver.
-> 
-> I'm testing this backported to 3.5 on the OLPC XO-4 [1] [2].
-> 
-> As Russell says, the getty had to change, but after that the shell
-> worked fine; no more or no less responsive.
-> 
-> What hasn't worked yet is the console; no kernel messages appear.  I
-> have tried changing command line to console=ttyS0,115200.
+Linus,
 
-My error.  Our kernel had CONFIG_CMDLINE set, changing that fixed it.
-Console is working fine.
+Please pull. Just some binding documentation updates and DT maintainers
+updates. 
 
--- 
-James Cameron
-http://quozl.linux.org.au/
+Rob
+
+The following changes since commit 6ce4eac1f600b34f2f7f58f9cd8f0503d79e42ae:
+
+  Linux 3.13-rc1 (2013-11-22 11:30:55 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/dt-fixes-for-3.13
+
+for you to fetch changes up to 2c0e641a963d073d60cb63c24614c642b6f64b21:
+
+  dt: binding: reword PowerPC 8xxx GPIO documentation (2013-12-03 00:01:03 -0600)
+
+----------------------------------------------------------------
+- Various DT binding documentation updates.
+- Add Kumar Gala and remove Stephen Warren as DT binding maintainers.
+
+----------------------------------------------------------------
+Chanwoo Choi (1):
+      hwmon: ntc_thermistor: Fix typo (pullup-uV -> pullup-uv)
+
+Fabio Estevam (1):
+      Documentation: net: fsl-fec.txt: Add phy-supply entry
+
+Gerhard Sittig (1):
+      dt: binding: reword PowerPC 8xxx GPIO documentation
+
+Kumar Gala (1):
+      MAINTAINERS: Add Kumar to Device Tree Binding maintainers group
+
+Laurent Pinchart (1):
+      clk: exynos: Fix typos in DT bindings documentation
+
+Rob Herring (1):
+      dt-bindings: add ARMv8 PMU binding
+
+Sricharan R (1):
+      ARM: dts: doc: Document missing binding for omap5-mpu
+
+Stephen Warren (2):
+      MAINTAINERS: remove swarren from DT bindings
+      ARM: tegra: delete nvidia,tegra20-spi.txt binding
+
+Thierry Reding (1):
+      of: Add vendor prefix for LG Corporation
+
+Wei Ni (1):
+      of: add vendor prefix for GMT
+
+ Documentation/devicetree/bindings/arm/omap/mpu.txt |  8 +++
+ Documentation/devicetree/bindings/arm/pmu.txt      |  1 +
+ .../devicetree/bindings/arm/samsung/exynos-adc.txt |  2 +-
+ .../devicetree/bindings/clock/exynos4-clock.txt    |  2 +-
+ .../devicetree/bindings/clock/exynos5250-clock.txt |  2 +-
+ .../devicetree/bindings/clock/exynos5420-clock.txt |  2 +-
+ .../devicetree/bindings/clock/exynos5440-clock.txt |  2 +-
+ .../devicetree/bindings/gpio/8xxx_gpio.txt         | 66 +++++++++++++---------
+ Documentation/devicetree/bindings/net/fsl-fec.txt  |  2 +
+ .../devicetree/bindings/spi/nvidia,tegra20-spi.txt |  5 --
+ .../devicetree/bindings/vendor-prefixes.txt        |  2 +
+ MAINTAINERS                                        |  2 +-
+ 12 files changed, 59 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/nvidia,tegra20-spi.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
