@@ -1,36 +1,44 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v3] ARM: davinci: aemif: get rid of davinci-nand driver
- dependency on aemif
-Date: Sat, 7 Dec 2013 02:34:32 +0530
-Message-ID: <52A23BE0.2000207@ti.com>
-References: <1386267092-18615-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 07/10] ARM: dts: sun7i: cubietruck: Enable the GMAC
+Date: Fri, 6 Dec 2013 13:09:06 -0800
+Message-ID: <CAGVrzcb_r9_p4urz4XkE2A-G85KAHJa4PJ=Gt9a4RPYQNJ6j0g@mail.gmail.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org> <1386350983-13281-8-git-send-email-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386267092-18615-1-git-send-email-ivan.khoronzhuk@ti.com>
+In-Reply-To: <1386350983-13281-8-git-send-email-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, rob@landley.net, linux@arm.linux.org.uk, mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev <netdev@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, Srinivas Kandagatla <srinivas.kandagatla@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/5/2013 11:41 PM, Ivan Khoronzhuk wrote:
-
-> diff --git a/arch/arm/mach-davinci/board-mityomapl138.c b/arch/arm/mach-davinci/board-mityomapl138.c
-> index 7aa105b..98a66ff 100644
-> --- a/arch/arm/mach-davinci/board-mityomapl138.c
-> +++ b/arch/arm/mach-davinci/board-mityomapl138.c
-> @@ -432,6 +432,9 @@ static void __init mityomapl138_setup_nand(void)
->  {
->  	platform_add_devices(mityomapl138_devices,
->  				 ARRAY_SIZE(mityomapl138_devices));
+2013/12/6 Chen-Yu Tsai <wens@csie.org>:
+> The CubieTruck uses the GMAC with an RGMII phy.
+>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+> index 8a1009d..af212a2 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+> @@ -33,6 +33,14 @@
+>                         pinctrl-0 = <&uart0_pins_a>;
+>                         status = "okay";
+>                 };
 > +
-> +	if (davinci_aemif_setup(&mityomapl138_nandflash_device))
-> +		pr_warn("%s: Cannot configure AEMIF.\n", __func__);
->  }
+> +               gmac: ethernet@01c50000 {
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&gmac_pins_rgmii>;
+> +                       snps,phy-addr = <1>;
 
-I must be missing something, but exactly why is this required for
-board-mityomapl138.c?
+What is this snps,phy-addr property? Why is not a standard device tree
+node for an Ethernet PHY node used?
 
-Thanks,
-Sekhar
+> +                       phy-mode = "rgmii";
+
+Especially since you use the relatively standard "phy-mode" property here?
+--
+Florian
