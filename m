@@ -1,58 +1,65 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH] serial: rewrite pxa2xx-uart to use 8250_core
-Date: Fri, 06 Dec 2013 14:34:17 +0400
-Message-ID: <1386326057.7152.44.camel@host5.omatika.ru>
-References: <20131205043544.GA28580@kroah.com>
-	 <1386286149-2855-1-git-send-email-ynvich@gmail.com>
-	 <20131206000253.GC21358@kroah.com>
-	 <20131206001728.GJ4360@n2100.arm.linux.org.uk>
-	 <1386322131.7152.36.camel@host5.omatika.ru>
-	 <20131206095345.GQ16425@us.netrek.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20131206095345.GQ16425@us.netrek.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: James Cameron <quozl@laptop.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ralf Baechle <ralf@linux-mips.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, John Crispin <blogic@openwrt.org>, Jiri Slaby <jslaby@suse.cz>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Zhou Zhu <zzhu3@marvell.com>
+From: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 9/9] dts: Add usb2phy to Exynos 5250
+Date: Fri, 06 Dec 2013 11:34:18 +0100
+Message-ID: <1386326058-27403-1-git-send-email-k.debski@samsung.com>
+References: <1386246579-25141-1-git-send-email-k.debski@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1386246579-25141-1-git-send-email-k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-12-06 at 20:53 +1100, James Cameron wrote:
-> I don't understand why /dev/ttyS2 (4,66) changed to /dev/ttyS0 (4,64)
-> after the patch was applied to olpc-kernel/arm-3.5 but, as you say it
-> doesn't change, perhaps there is something between 3.5 and now for me
-> to watch out for.  My problem.
+Add support of new USB 2.0 phy driver to the Exynos 5250 SoC device tree.
 
-The old pxa.c set device ids explicitly:
--static int serial_pxa_probe_dt(struct platform_device *pdev,
--                              struct uart_pxa_port *sport)
--{
--       struct device_node *np = pdev->dev.of_node;
--       int ret;
--
--       if (!np)
--               return 1;
--
--       ret = of_alias_get_id(np, "serial");
--       if (ret < 0) {
--               dev_err(&pdev->dev, "failed to get alias id, errno %d
-\n", ret);
--               return ret;
--       }
--       sport->port.line = ret;
--       return 0;
--}
+Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos5250.dtsi |   33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
 
-and
-
--       ret = serial_pxa_probe_dt(dev, sport);
--       if (ret > 0)
--               sport->port.line = dev->id;
-
-
-However, this is not possible with 8250_core. The latter assigns device
-ids strictly in the call order of serial8250_register_8250_port().
-
-Hope it helps.
-
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 2f264ad..922e0ed 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -163,6 +163,11 @@
+ 		interrupts = <0 47 0>;
+ 	};
+ 
++	sys_syscon: syscon@10040000 {
++		compatible = "samsung,exynos5250-sys", "syscon";
++		reg = <0x10050000 0x5000>;
++	};
++
+ 	pmu_syscon: syscon@10040000 {
+ 		compatible = "samsung,exynos5250-pmu", "syscon";
+ 		reg = <0x10040000 0x5000>;
+@@ -505,6 +510,14 @@
+ 
+ 		clocks = <&clock 285>;
+ 		clock-names = "usbhost";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			phys = <&usb2_phy 1>;
++			phy-names = "host";
++			status = "ok";
++		};
+ 	};
+ 
+ 	usb@12120000 {
+@@ -516,19 +529,15 @@
+ 		clock-names = "usbhost";
+ 	};
+ 
+-	usb2_phy: usbphy@12130000 {
+-		compatible = "samsung,exynos5250-usb2phy";
++	usb2_phy: phy@12130000 {
++		compatible = "samsung,exynos5250-usb2-phy";
+ 		reg = <0x12130000 0x100>;
+-		clocks = <&clock 1>, <&clock 285>;
+-		clock-names = "ext_xtal", "usbhost";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
