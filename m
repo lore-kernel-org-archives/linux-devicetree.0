@@ -1,44 +1,57 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] serial: rewrite pxa2xx-uart to use 8250_core
-Date: Fri, 6 Dec 2013 00:17:28 +0000
-Message-ID: <20131206001728.GJ4360@n2100.arm.linux.org.uk>
-References: <20131205043544.GA28580@kroah.com> <1386286149-2855-1-git-send-email-ynvich@gmail.com> <20131206000253.GC21358@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [PATCHv2 0/5] wl1251 device tree support
+Date: Fri,  6 Dec 2013 01:22:11 +0100
+Message-ID: <1386289336-26704-1-git-send-email-sre@debian.org>
+References: <1382890469-25286-1-git-send-email-sre@debian.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131206000253.GC21358-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1382890469-25286-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:SERIAL DRIVERS" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Luciano Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 04:02:53PM -0800, Greg Kroah-Hartman wrote:
-> On Fri, Dec 06, 2013 at 03:28:37AM +0400, Sergei Ianovich wrote:
-> > pxa2xx-uart was a separate uart platform driver. It was declaring
-> > the same device names and numbers as 8250 driver. As a result,
-> > it was impossible to use 8250 driver on PXA SoCs.
-> > 
-> > Upon closer examination pxa2xx-uart turned out to be a clone of
-> > 8250_core driver.
-> > 
-> > Signed-off-by: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > CC: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > CC: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> 
-> Wonderful!
-> 
-> Can someone else test this to verify it works for them on their platform
-> as well?
+Hi,
 
-I may be able to - one of the downsides though is that many of these
-systems had hard-coded scripts which started a getty on the original
-port - and that kind of makes it difficult to sort out.  This kind of
-change becomes very much one of Linus' "flag days".
+The following patchset adds device tree support to
+the spi variant of the wl1251 driver.
 
-So I'd suggest that we have a period where the old driver is still
-available, so at least people can choose to use the old major/minor
-numbers for a while.
+Changes since v1 [0]:
+ * Added some Reviewed-By: Pavel Machek
+ * Splitted DT binding documentation into its own patch
+ * Added ti, prefix to power-gpio
+ * Renamed ti,use-eeprom to ti,wl1251-has-eeprom
+ * Updated description for ti,wl1251-has-eeprom
+ * Removed boardcode update from regulator patch to avoid
+   useless merge conflicts (all relevant boardcode will be
+   removed in 3.14).
+
+[0] https://lkml.org/lkml/2013/10/27/112
+
+-- Sebastian
+
+Luciano Coelho (1):
+  wl1251: split wl251 platform data to a separate structure
+
+Sebastian Reichel (4):
+  wl1251: move power GPIO handling into the driver
+  wl1251: spi: add vio regulator support
+  wl1251: spi: add device tree support
+  Documentation: dt: wireless: Add wl1251
+
+ .../devicetree/bindings/net/wireless/ti,wl1251.txt | 39 ++++++++++++
+ arch/arm/mach-omap2/board-omap3pandora.c           |  6 +-
+ arch/arm/mach-omap2/board-rx51-peripherals.c       | 13 +---
+ drivers/net/wireless/ti/wilink_platform_data.c     | 37 +++++++++--
+ drivers/net/wireless/ti/wl1251/sdio.c              | 31 +++++++---
+ drivers/net/wireless/ti/wl1251/spi.c               | 71 ++++++++++++++++------
+ drivers/net/wireless/ti/wl1251/wl1251.h            |  4 +-
+ include/linux/wl12xx.h                             | 24 +++++++-
+ 8 files changed, 176 insertions(+), 49 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+
+-- 
+1.8.4.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
