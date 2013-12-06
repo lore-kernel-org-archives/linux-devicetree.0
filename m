@@ -1,40 +1,38 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Fri, 6 Dec 2013 02:39:14 +0100
-Message-ID: <201312060239.14832.arnd@arndb.de>
-References: <1383889128-12540-1-git-send-email-zhangfei.gao@linaro.org>
- <1383889128-12540-3-git-send-email-zhangfei.gao@linaro.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] net: davinci_emac: Fix platform data handling and make
+ usable for am3517
+Date: Thu, 05 Dec 2013 20:39:55 -0500 (EST)
+Message-ID: <20131205.203955.1282361417309480469.davem@davemloft.net>
+References: <20131203231301.GN26766@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1383889128-12540-3-git-send-email-zhangfei.gao@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Seungwon Jeon <tgih.jun@samsung.com>, linux-mmc@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Kumar Gala <galak@codeaurora.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, Dinh Nguyen <dinguyen@altera.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20131203231301.GN26766@atomide.com>
+Sender: netdev-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: mugunthanvnm@ti.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 08 November 2013, Zhangfei Gao wrote:
-> Add dw_mmc-k3.c for k3v2, support sd/emmc
+From: Tony Lindgren <tony@atomide.com>
+Date: Tue, 3 Dec 2013 15:13:02 -0800
+
+> When booted with device tree, we may still have platform data passed
+> as auxdata. For am3517 this is needed for passing the interrupt_enable
+> and interrupt_disable callbacks that access the omap system control module
+> registers. These callback functions will eventually go away when we have
+> a separate system control module driver.
 > 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Tested-by: Zhigang Wang <brooke.wangzhigang@huawei.com>
+> Some of the things that are currently passed as platform data we don't need
+> to set up as device tree properties as they are always the same on am3517.
+> So let's use a new compatible flag for those so we can get those from
+> the device tree match data.
+> 
+> Also note that we need to fix setting of phy_dev to NULL instead of an empty
+> string as the code later on uses that to find the first phy on the mdio bus.
+> This seems to have been caused by 5d69e0076a72 (net: davinci_emac: switch to
+> new mdio).
+> 
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
-We are currently having the exact same discussion problem on the altera
-version of dw_mmc: It seems that all this driver does in addition to the
-common code is to have a custom way to set up the card clocks.
-
-In both cases, there is a custom piece of IP logic providing this clock
-(here it is in the "hisilicon,pctrl" node). IMHO that should be a proper
-clock driver so you can use the existing call to clk_set_rate to set
-it up and not need a special platform driver at all.
-
-	Arnd
+Applied, thanks.
