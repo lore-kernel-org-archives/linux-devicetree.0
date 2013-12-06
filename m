@@ -1,74 +1,49 @@
-From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: sunxi: Add an ahci-platform
- compatible AHCI driver for the Allwinner SUNXi series of SoCs
-Date: Fri, 06 Dec 2013 10:12:34 +0100
-Message-ID: <52A19502.1090409@schinagl.nl>
-References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl> <1386159055-10264-3-git-send-email-oliver@schinagl.nl> <20131204123708.GD3158@htj.dyndns.org> <529F2677.3070208@schinagl.nl> <20131204131402.GG3158@htj.dyndns.org> <529F2B41.8090009@schinagl.nl> <20131204132312.GH3158@htj.dyndns.org> <20131206100117.59609a8a@skate>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: Re: [PATCH] serial: rewrite pxa2xx-uart to use 8250_core
+Date: Fri, 06 Dec 2013 13:16:52 +0400
+Message-ID: <1386321412.7152.25.camel@host5.omatika.ru>
+References: <20131205043544.GA28580@kroah.com>
+	 <1386286149-2855-1-git-send-email-ynvich@gmail.com>
+	 <20131206024211.GK16425@us.netrek.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDC2JNWXZAJBBY5KQ2KQKGQENOVH2FQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20131206100117.59609a8a@skate>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20131206024211.GK16425@us.netrek.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: James Cameron <quozl@laptop.org>
+Cc: linux-kernel@vger.kernel.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <rob.herring@calxeda.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, John Crispin <blogic@openwrt.org>, Jiri Slaby <jslaby@suse.cz>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Zhou Zhu <zzhu3@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 2013-12-06 at 13:42 +1100, James Cameron wrote:
+> On Fri, Dec 06, 2013 at 03:28:37AM +0400, Sergei Ianovich wrote:
+> > +/* Uart divisor latch write */
+> > +static void serial_pxa_dl_write(struct uart_8250_port *up, int value)
+> > +{
+> > +	serial_out(up, UART_DLL, value & 0xff);
+> > +	serial_out(up, UART_DLM, value >> 8 & 0xff);
+> > +}
+> 
+> This is a change.  drivers/tty/serial/pxa.c did read back UART_DLL as
+> an errata work around:
+> 
+> > -	/*
+> > -	 * work around Errata #75 according to Intel(R) PXA27x Processor Family
+> > -	 * Specification Update (Nov 2005)
+> > -	 */
+> > -	dll = serial_in(up, UART_DLL);
+> > -	WARN_ON(dll != (quot & 0xff));
+> 
+> If this is no longer needed, serial_pxa_dl_write can be removed
+> because it is same as default_serial_dl_write.
 
-On 06-12-13 10:01, Thomas Petazzoni wrote:
-> Dear Tejun Heo,
->
-> On Wed, 4 Dec 2013 08:23:12 -0500, Tejun Heo wrote:
->
->>> But again, point me (for dummies ;) in the right direction and I'll
->>> work on it with some help.
->> Richard and Shawn recently worked on ahci_imx.  Can you guys please
->> talk with each other and figure out what can be done to share as much
->> as possible among these new platform-specific drivers?  I'd really
->> like to see the common things factored out as much as possible with
->> only the actual hardware differences described for each device.
-> Also, please Cc me on such discussions. I have a pending AHCI platform
-> driver for another ARM SoC family. It is very similar to ahci_platform,
-> but needs to do a few more things that are SoC specific (map an
-> additional register area, and do some SoC-specific stuff with them).
->
-> For the moment, we're left with two approaches:
->
->   * Do what Oliver did, where the ahci_<foo> driver will do its own
->     SoC-specific stuff, and then will register an additional
->     platform_device to trigger the ->probe() of the generic
->     ahci_platform driver. I must say I don't really like this solution,
->     since it involves having two platform_device registered for the same
->     piece of hardware (one platform_device to trigger the ->probe of
->     ahci_<foo>, and another one to trigger the ->probe of ahci_platform).
->
->   * Duplicate in ahci_<foo> the (relatively small) amount of code that
->     is present in ahci_platform.
->
->  From my point of view, ahci_platform should be turned into a small
-> "library", that provides an API for ahci_<foo> drivers to 1/ do their
-> own custom stuff and 2/ do the common ahci_platform stuff.
->
-> This way we avoid the registration of two platform_device for the same
-> piece of hardware, and we avoid the duplication of code.
->
-> Want me to propose a RFC for this idea?
-I've started to do what sdhci does with their pltfrm driver, assuming 
-that's the right approach. Since i'm only dabbling and not always 100% 
-sure what should or shouldn't be done, it may take a little while, but 
-looks promising from my end ;)
+Thanks for spotting this. I prepared infrastructure, but the tests never
+failed so I never returned here. I've filed v2 with correct dl_write.
 
-So is the sdhci-pltfrm approach the correct one? We still have ahci_* 
-drivers, but ahci_platform.c won't be a driver in the sense that it is 
-now anymore.
+> I did not check the other errata work arounds.
 
-Oliver
->
-> Best regards,
->
-> Thomas
+I've intentionally dropped workaround for E20 from old pxa.c
+receive_chars(). 8250_core reads FIFO immediately after it checks DR bit
+in LSR, so that issue never happens. New version states this in commit
+message.
+
