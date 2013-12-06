@@ -1,272 +1,71 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] usb: chipidea: fix device tree binding for
- zevio/nspire usb driver
-Date: Fri, 6 Dec 2013 15:01:54 +0800
-Message-ID: <20131206070153.GC14002@shlinux1.ap.freescale.net>
-References: <1386225421-20018-1-git-send-email-dt.tangr@gmail.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSHYxM11bIDIvNF0gdmlkZW86IGlteGZiOiBBbHNvIGFkZCBw?=
+ =?UTF-8?B?d21yIGZvciB0aGUgZGV2aWNlIHRyZWUu?=
+Date: Fri, 06 Dec 2013 12:03:54 +0400
+Message-ID: <1386317034.190941796@f354.i.mail.ru>
+References: <1386258219-26437-1-git-send-email-denis@eukrea.com>
+ <1386258219-26437-2-git-send-email-denis@eukrea.com>
+ <20131206070525.GV24559@pengutronix.de>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386225421-20018-1-git-send-email-dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131206070525.GV24559@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?U2FzY2hhIEhhdWVy?= <s.hauer@pengutronix.de>
+Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel@pengutronix.de>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring@calxeda.com>, =?UTF-8?B?RGVuaXMgQ2FyaWtsaQ==?= <denis@eukrea.com>, =?UTF-8?B?VG9taSBWYWxrZWluZW4=?= <tomi.valkeinen@ti.com>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric@eukrea.com>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo@linaro.org>, =?UTF-8?B?SmVhbi1DaHJpc3RvcGhlIFBsYWduaW9sLVZpbGxhcmQ=?= <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 05:37:01PM +1100, dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> The device tree binding chosen for the nspire-usb driver was inappropriate and
-> should be renamed to lsi,zevio-usb.
-> 
-> References to nspire have been replaced with zevio (the SoC name)
-> 
-> Signed-off-by: Daniel Tang <dt.tangr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/ci-hdrc-nspire.txt     |   17 -----
->  .../devicetree/bindings/usb/ci-hdrc-zevio.txt      |   17 +++++
->  drivers/usb/chipidea/Makefile                      |    2 +-
->  drivers/usb/chipidea/ci_hdrc_nspire.c              |   72 --------------------
->  drivers/usb/chipidea/ci_hdrc_zevio.c               |   72 ++++++++++++++++++++
->  5 files changed, 90 insertions(+), 90 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
->  create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
->  delete mode 100644 drivers/usb/chipidea/ci_hdrc_nspire.c
->  create mode 100644 drivers/usb/chipidea/ci_hdrc_zevio.c
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
-> deleted file mode 100644
-> index ef1fcbf..0000000
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
-> +++ /dev/null
-> @@ -1,17 +0,0 @@
-> -* TI-Nspire USB OTG Controller
-> -
-> -Required properties:
-> -- compatible: Should be "lsi,nspire-usb"
-> -- reg: Should contain registers location and length
-> -- interrupts: Should contain controller interrupt
-> -
-> -Recommended properies:
-> -- vbus-supply: regulator for vbus
-> -
-> -Examples:
-> -		usb0: usb@B0000000 {
-> -			reg = <0xB0000000 0x1000>;
-> -			compatible = "lsi,nspire-usb";
-> -			interrupts = <8>;
-> -			vbus-supply = <&vbus_reg>;
-> -		};
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
-> new file mode 100644
-> index 0000000..b6c3b5c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
-> @@ -0,0 +1,17 @@
-> +* TI-Nspire USB OTG Controller
-> +
-
-TI-Nspire is a platform which uses zevio SoC, correct?
-So, please do not use TI-Nspire above.
-
-Peter
-
-> +Required properties:
-> +- compatible: Should be "lsi,zevio-usb"
-> +- reg: Should contain registers location and length
-> +- interrupts: Should contain controller interrupt
-> +
-> +Recommended properies:
-> +- vbus-supply: regulator for vbus
-> +
-> +Examples:
-> +		usb0: usb@B0000000 {
-> +			reg = <0xB0000000 0x1000>;
-> +			compatible = "lsi,zevio-usb";
-> +			interrupts = <8>;
-> +			vbus-supply = <&vbus_reg>;
-> +		};
-> diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
-> index 245ea4d..7635407 100644
-> --- a/drivers/usb/chipidea/Makefile
-> +++ b/drivers/usb/chipidea/Makefile
-> @@ -10,7 +10,7 @@ ci_hdrc-$(CONFIG_USB_CHIPIDEA_DEBUG)	+= debug.o
->  # Glue/Bridge layers go here
->  
->  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
-> -obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_nspire.o
-> +obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_zevio.o
->  
->  # PCI doesn't provide stubs, need to check
->  ifneq ($(CONFIG_PCI),)
-> diff --git a/drivers/usb/chipidea/ci_hdrc_nspire.c b/drivers/usb/chipidea/ci_hdrc_nspire.c
-> deleted file mode 100644
-> index c5c2dde..0000000
-> --- a/drivers/usb/chipidea/ci_hdrc_nspire.c
-> +++ /dev/null
-> @@ -1,72 +0,0 @@
-> -/*
-> - *	Copyright (C) 2013 Daniel Tang <tangrs-wZPxy8ob7RQXC2x5gXVKYQ@public.gmane.org>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2, as
-> - * published by the Free Software Foundation.
-> - *
-> - * Based off drivers/usb/chipidea/ci_hdrc_msm.c
-> - *
-> - */
-> -
-> -#include <linux/module.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/usb/gadget.h>
-> -#include <linux/usb/chipidea.h>
-> -
-> -#include "ci.h"
-> -
-> -static struct ci_hdrc_platform_data ci_hdrc_nspire_platdata = {
-> -	.name			= "ci_hdrc_nspire",
-> -	.flags			= CI_HDRC_REGS_SHARED,
-> -	.capoffset		= DEF_CAPOFFSET,
-> -};
-> -
-> -static int ci_hdrc_nspire_probe(struct platform_device *pdev)
-> -{
-> -	struct platform_device *ci_pdev;
-> -
-> -	dev_dbg(&pdev->dev, "ci_hdrc_nspire_probe\n");
-> -
-> -	ci_pdev = ci_hdrc_add_device(&pdev->dev,
-> -				pdev->resource, pdev->num_resources,
-> -				&ci_hdrc_nspire_platdata);
-> -
-> -	if (IS_ERR(ci_pdev)) {
-> -		dev_err(&pdev->dev, "ci_hdrc_add_device failed!\n");
-> -		return PTR_ERR(ci_pdev);
-> -	}
-> -
-> -	platform_set_drvdata(pdev, ci_pdev);
-> -
-> -	return 0;
-> -}
-> -
-> -static int ci_hdrc_nspire_remove(struct platform_device *pdev)
-> -{
-> -	struct platform_device *ci_pdev = platform_get_drvdata(pdev);
-> -
-> -	ci_hdrc_remove_device(ci_pdev);
-> -
-> -	return 0;
-> -}
-> -
-> -static const struct of_device_id ci_hdrc_nspire_dt_ids[] = {
-> -	{ .compatible = "lsi,nspire-usb", },
-> -	{ /* sentinel */ }
-> -};
-> -
-> -static struct platform_driver ci_hdrc_nspire_driver = {
-> -	.probe = ci_hdrc_nspire_probe,
-> -	.remove = ci_hdrc_nspire_remove,
-> -	.driver = {
-> -		.name = "nspire_usb",
-> -		.owner = THIS_MODULE,
-> -		.of_match_table = ci_hdrc_nspire_dt_ids,
-> -	},
-> -};
-> -
-> -MODULE_DEVICE_TABLE(of, ci_hdrc_nspire_dt_ids);
-> -module_platform_driver(ci_hdrc_nspire_driver);
-> -
-> -MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/usb/chipidea/ci_hdrc_zevio.c b/drivers/usb/chipidea/ci_hdrc_zevio.c
-> new file mode 100644
-> index 0000000..3bf6489
-> --- /dev/null
-> +++ b/drivers/usb/chipidea/ci_hdrc_zevio.c
-> @@ -0,0 +1,72 @@
-> +/*
-> + *	Copyright (C) 2013 Daniel Tang <tangrs-wZPxy8ob7RQXC2x5gXVKYQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2, as
-> + * published by the Free Software Foundation.
-> + *
-> + * Based off drivers/usb/chipidea/ci_hdrc_msm.c
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/usb/gadget.h>
-> +#include <linux/usb/chipidea.h>
-> +
-> +#include "ci.h"
-> +
-> +static struct ci_hdrc_platform_data ci_hdrc_zevio_platdata = {
-> +	.name			= "ci_hdrc_zevio",
-> +	.flags			= CI_HDRC_REGS_SHARED,
-> +	.capoffset		= DEF_CAPOFFSET,
-> +};
-> +
-> +static int ci_hdrc_zevio_probe(struct platform_device *pdev)
-> +{
-> +	struct platform_device *ci_pdev;
-> +
-> +	dev_dbg(&pdev->dev, "ci_hdrc_zevio_probe\n");
-> +
-> +	ci_pdev = ci_hdrc_add_device(&pdev->dev,
-> +				pdev->resource, pdev->num_resources,
-> +				&ci_hdrc_zevio_platdata);
-> +
-> +	if (IS_ERR(ci_pdev)) {
-> +		dev_err(&pdev->dev, "ci_hdrc_add_device failed!\n");
-> +		return PTR_ERR(ci_pdev);
-> +	}
-> +
-> +	platform_set_drvdata(pdev, ci_pdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ci_hdrc_zevio_remove(struct platform_device *pdev)
-> +{
-> +	struct platform_device *ci_pdev = platform_get_drvdata(pdev);
-> +
-> +	ci_hdrc_remove_device(ci_pdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ci_hdrc_zevio_dt_ids[] = {
-> +	{ .compatible = "lsi,zevio-usb", },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static struct platform_driver ci_hdrc_zevio_driver = {
-> +	.probe = ci_hdrc_zevio_probe,
-> +	.remove = ci_hdrc_zevio_remove,
-> +	.driver = {
-> +		.name = "zevio_usb",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = ci_hdrc_zevio_dt_ids,
-> +	},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, ci_hdrc_zevio_dt_ids);
-> +module_platform_driver(ci_hdrc_zevio_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 1.7.10.4
-> 
-> 
-
--- 
-
-Best Regards,
-Peter Chen
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiBPbiBUaHUsIERlYyAwNSwgMjAxMyBhdCAwNDo0MzozN1BNICswMTAwLCBEZW5pcyBDYXJpa2xp
+IHdyb3RlOgo+ID4gcHdtciBoYXMgdG8gYmUgc2V0IHRvIGdldCB0aGUgaW14ZmIgYmFja2xpZ2h0
+IHdvcmssCj4gPiB0aG91Z2ggcHdtciB3YXMgb25seSBjb25maWd1cmFibGUgdHJvdWdoIHRoZSBw
+bGF0Zm9ybSBkYXRhLgo+ID4gCj4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYi5oZXJyaW5nQGNhbHhl
+ZGEuY29tPgo+ID4gQ2M6IFBhd2VsIE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KPiA+IENjOiBN
+YXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPgo+ID4gQ2M6IFN0ZXBoZW4gV2FycmVu
+IDxzd2FycmVuQHd3d2RvdG9yZy5vcmc+Cj4gPiBDYzogSWFuIENhbXBiZWxsIDxpamMrZGV2aWNl
+dHJlZUBoZWxsaW9uLm9yZy51az4KPiA+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+
+ID4gQ2M6IEplYW4tQ2hyaXN0b3BoZSBQbGFnbmlvbC1WaWxsYXJkIDxwbGFnbmlvakBqY3Jvc29m
+dC5jb20+Cj4gPiBDYzogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KPiA+
+IENjOiBsaW51eC1mYmRldkB2Z2VyLmtlcm5lbC5vcmcKPiA+IENjOiBTYXNjaGEgSGF1ZXIgPGtl
+cm5lbEBwZW5ndXRyb25peC5kZT4KPiA+IENjOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKPiA+IENjOiBFcmljIELDqW5hcmQgPGVyaWNAZXVrcmVhLmNvbT4KPiA+IFNpZ25l
+ZC1vZmYtYnk6IERlbmlzIENhcmlrbGkgPGRlbmlzQGV1a3JlYS5jb20+Cj4gPiBBY2tlZC1ieTog
+SmVhbi1DaHJpc3RvcGhlIFBMQUdOSU9MLVZJTExBUkQgPHBsYWduaW9qQGpjcm9zb2Z0LmNvbT4K
+PiA+IEFja2VkLWJ5OiBHcmFudCBMaWtlbHkgPGdyYW50Lmxpa2VseUBsaW5hcm8ub3JnPgo+ID4g
+LS0tCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZnNsLGlteC1mYi50eHQgICAg
+ICAgfCAgICAzICsrKwo+ID4gIGRyaXZlcnMvdmlkZW8vaW14ZmIuYyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgICAgMiArKwo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNSBpbnNlcnRpb25z
+KCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvdmlkZW8vZnNsLGlteC1mYi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvdmlkZW8vZnNsLGlteC1mYi50eHQKPiA+IGluZGV4IDQ2ZGEwOGQuLmFjNDU3YWUgMTAwNjQ0
+Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZnNsLGlt
+eC1mYi50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRl
+by9mc2wsaW14LWZiLnR4dAo+ID4gQEAgLTE3LDYgKzE3LDkgQEAgUmVxdWlyZWQgbm9kZXM6Cj4g
+PiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICAtIGZzbCxkbWFjcjogRE1BIENvbnRyb2wgUmVn
+aXN0ZXIgdmFsdWUuIFRoaXMgaXMgb3B0aW9uYWwuIEJ5IGRlZmF1bHQsIHRoZQo+ID4gIAlyZWdp
+c3RlciBpcyBub3QgbW9kaWZpZWQgYXMgcmVjb21tZW5kZWQgYnkgdGhlIGRhdGFzaGVldC4KPiA+
+ICstIGZzbCxwd21yOiAgTENEQyBQV00gQ29udHJhc3QgQ29udHJvbCBSZWdpc3RlciB2YWx1ZS4g
+VGhhdCBwcm9wZXJ0eSBpcwo+ID4gKwlvcHRpb25hbCwgYnV0IGRlZmluaW5nIGl0IGlzIG5lY2Vz
+c2FyeSB0byBnZXQgdGhlIGJhY2tsaWdodCB3b3JraW5nLiBJZiB0aGF0Cj4gPiArCXByb3BlcnR5
+IGlzIG9tbWl0ZWQsIHRoZSByZWdpc3RlciBpcyB6ZXJvZWQuCj4gCj4gV2h5IGlzbid0IHRoaXMg
+aW1wbGVtZW50ZWQgYXMgYSBiYWNrbGlnaHQgZHJpdmVyPyBTdGF0aWMgZGV2aWNldHJlZQo+IHBy
+b3ZpZGVkIHZhbHVlcyBpcyB2ZXJ5IGxpbWl0aW5nLgoKTGV0J3MgdW5kZXJzdGFuZCB0aGUgdGVy
+bWlub2xvZ3kuClRoaXMgcmVnaXN0ZXIgc2hvdWxkIGJlIHJlbmFtZWQgYWNjb3JkaW5nIHRvIHRo
+ZSBkYXRhc2hlZXQsIGkuZS4gTFBDQ1IuCkFzIEkgcG9pbnRlZCBvdXQgZWFybGllciwgaXQgaXMg
+Tk9UIGNvbnRyb2wgdGhlIGJhY2tsaWdodCwgdGhpcyBpcyBhIGNvbnRyYXN0IGNvbnRyb2wuClll
+cywgaXQgd29ya3MgYXMgUFdNLCBidXQgbm90aGluZyBkbyB3aXRoIHRoZSBiYWNrbGlnaHQgc3Vi
+c3lzdGVtLgpZZXMsIHdlIGNhbiBtYWtlIGEgZHJpdmVyIGZvciB0aGlzIFBXTSwgYnV0IGhvdyBh
+cmUgd2UgZ29pbmcgdG8gY29udHJvbCBpdD8KSSBtaXN1bmRlcnN0b29kIHNvbWV0aGluZz8KCi0t
+LQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
