@@ -1,120 +1,97 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: Re: [PATCH v7 2/2] mmc: sdhci-msm: Initial support for MSM chipsets
-Date: Fri, 06 Dec 2013 14:02:55 +0200
-Message-ID: <52A1BCEF.30505@mm-sol.com>
-References: <1383753405-23631-1-git-send-email-gdjakov@mm-sol.com> <1383753405-23631-3-git-send-email-gdjakov@mm-sol.com> <20131205102740.GI29200@e106331-lin.cambridge.arm.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCHv7][ 2/2] video: backlight: gpio-backlight: Add DT support.
+Date: Fri, 6 Dec 2013 14:00:15 +0100
+Message-ID: <20131206130014.GB30625@ulmo.nvidia.com>
+References: <1386266109-16071-1-git-send-email-denis@eukrea.com>
+ <1386266109-16071-2-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20131205102740.GI29200@e106331-lin.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "subhashj@codeaurora.org" <subhashj@codeaurora.org>
+Content-Type: multipart/mixed; boundary="===============2265133720620764698=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1386266109-16071-2-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Denis Carikli <denis@eukrea.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Eric =?utf-8?Q?B=C3=A9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Jingoo Han <jg1.han@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Richard Purdie <rpurdie@rpsys.net>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sascha Hauer <kernel@pengutronix.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/2013 12:27 PM, Mark Rutland wrote:
-> On Wed, Nov 06, 2013 at 03:56:45PM +0000, Georgi Djakov wrote:
->> This platform driver adds the initial support of Secure
->> Digital Host Controller Interface compliant controller
->> found in Qualcomm MSM chipsets.
->>
->> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
->> ---
->>   drivers/mmc/host/Kconfig     |   13 +
->>   drivers/mmc/host/Makefile    |    1 +
->>   drivers/mmc/host/sdhci-msm.c |  651 ++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 665 insertions(+)
->>   create mode 100644 drivers/mmc/host/sdhci-msm.c
->
-> [...]
->
->> +static int sdhci_msm_dt_parse_vreg_info(struct device *dev,
->> +                                       struct sdhci_msm_reg_data *vreg,
->> +                                       const char *vreg_name)
->> +{
->> +       int len;
->> +       const __be32 *prop;
->
-> Seeing raw property handling in drivers worries me. If there's a reason
-> to touch the raw DTB we should add helpers to do it rather than leaking
-> binary format issues into drivers.
->
->> +       char prop_name[MAX_PROP_SIZE];
->> +       struct device_node *np = dev->of_node;
->> +
->> +       snprintf(prop_name, MAX_PROP_SIZE, "%s-supply", vreg_name);
->> +       if (!of_parse_phandle(np, prop_name, 0)) {
->> +               dev_info(dev, "No vreg data found for %s\n", vreg_name);
->> +               return -EINVAL;
->> +       }
->> +
->> +       vreg->name = vreg_name;
->> +
->> +       snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-lpm-sup", vreg_name);
->> +       if (of_get_property(np, prop_name, NULL))
->> +               vreg->lpm_sup = true;
->> +
->> +       snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-voltage-level", vreg_name);
->> +       prop = of_get_property(np, prop_name, &len);
->> +       if (!prop || (len != (2 * sizeof(__be32)))) {
->> +               dev_warn(dev, "%s %s property\n",
->> +               prop ? "invalid format" : "no", prop_name);
->> +       } else {
->> +               vreg->low_vol_level = be32_to_cpup(&prop[0]);
->> +               vreg->high_vol_level = be32_to_cpup(&prop[1]);
->> +       }
->
-> You can use of_property_read_u32_array here.
->
->> +
->> +       snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-current-level", vreg_name);
->> +       prop = of_get_property(np, prop_name, &len);
->> +       if (!prop || (len != (2 * sizeof(__be32)))) {
->> +               dev_warn(dev, "%s %s property\n",
->> +                        prop ? "invalid format" : "no", prop_name);
->> +       } else {
->> +               vreg->lpm_uA = be32_to_cpup(&prop[0]);
->> +               vreg->hpm_uA = be32_to_cpup(&prop[1]);
->> +       }
->
-> Likewise.
->
 
-I will clean this up use only of_property_read_u32_array() and 
-of_property_read_bool() for DT parsing. Thanks!
+--===============2265133720620764698==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
+Content-Disposition: inline
 
 
-> [...]
->
->> +       /*
->> +        * CORE_SW_RST above may trigger power irq if previous status of PWRCTL
->> +        * was either BUS_ON or IO_HIGH_V. So before we enable the power irq
->> +        * interrupt in GIC (by registering the interrupt handler), we need to
->> +        * ensure that any pending power irq interrupt status is acknowledged
->> +        * otherwise power irq interrupt handler would be fired prematurely.
->> +        */
->> +       irq_status = readl_relaxed(msm_host->core_mem + CORE_PWRCTL_STATUS);
->> +       writel_relaxed(irq_status, (msm_host->core_mem + CORE_PWRCTL_CLEAR));
->> +       irq_ctl = readl_relaxed(msm_host->core_mem + CORE_PWRCTL_CTL);
->> +       if (irq_status & (CORE_PWRCTL_BUS_ON | CORE_PWRCTL_BUS_OFF))
->> +               irq_ctl |= CORE_PWRCTL_BUS_SUCCESS;
->> +       if (irq_status & (CORE_PWRCTL_IO_HIGH | CORE_PWRCTL_IO_LOW))
->> +               irq_ctl |= CORE_PWRCTL_IO_SUCCESS;
->> +       writel_relaxed(irq_ctl, (msm_host->core_mem + CORE_PWRCTL_CTL));
->> +       /*
->> +        * Ensure that above writes are propogated before interrupt enablement
->> +        * in GIC.
->> +        */
->> +       mb();
->
-> Does this guarantee that the device has finished responding to the write
-> and deasserted the interrupt line (i.e. does the device only acknowledge
-> the write once that is true)?
->
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I am not sure that i understand your concern. The write to 
-CORE_PWRCTL_CTL should acknowledge and deassert the interrupt.
+On Thu, Dec 05, 2013 at 06:55:09PM +0100, Denis Carikli wrote:
+[...]
+> +Optional properties:
+> +  - default-state: The initial state of the backlight.
+> +    Valid values are "on", "off", and "keep".
+> +    The "keep" setting will keep the backlight at whatever its current
+> +    state is, without producing a glitch. The default is keep if this
+> +    property is not present.
 
-Thanks,
-Georgi
+I'm not sure if "on", "off" and "keep" are a good choice for this
+binding. Having strings for these tristate values seems suboptimal.
+Other bindings have chosen a representation that, transposed to this
+use-case, would read something like this:
+
+	- default-state: The initial state of the backlight. Valid
+	  values:
+	  - 0: off
+	  - 1: on
+
+	If the "default-state" property is not present, the default
+	will be to keep the current backlight state.
+
+Which is in fact the exact behaviour that your binding describes, but
+it's much more intuitive in my opinion.
+
+Thierry
+
+--hQiwHBbRI9kgIhsi
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSocpeAAoJEN0jrNd/PrOhnVoP/ihhXwbyZbJV74YZMGX9WgXN
+pdwboR+LZteIC1cUIJrdJJ3hK5dYk7+A4ilgEHQXIMltL16dl98dr2bCD9SASGXv
+Z9mxgnqGdvdPijYu7NZrbULljqwFZ4/YzOV0Lw+yz9w0j22eTz+kjsTn48OmfavJ
+vZEYihGbMIplA3JmJZexdc6Pw6CW/CXgf9lr/pYLPbsbM+gcqrBNZbmNKO0DQyD4
+4Sa1ksFkztZ8tVNnOll8eUGHa7UFNOB+t070G0MAoEFOQm+ywDZm116ZJzfGU2R7
+89yFhkl0yE40/OYXX12uxE2VTLO4arY4m16OBCAT+90oM2apIP9oD1FZ471XyDbV
+jGBqv0nO8XznkPhpqugPbVHWp1YHpMBWm4DwVbWQd7hRUtkDq2t1XAE84ibZSVny
+miRWJZsyOdj0Sq/QQ8lL7fOkKxc+OY/KZ4gzYtgavD3M9zaz+Qm7IKYJsI8itZDb
+rR0PomCBKKedbC2+OhwrxW3hejT9wq8RNs7Bu6YEmxDapVUZCbzTospGp98lzrXB
+sZiosIoy/Jc8gRHPDhdPdB72scF+evmer3+oYx5nAdkHpBWa3UIkzsCgfHQx2nOU
+VRMdwUpfE7QYeI4aAwPs+LXLafKDqRatpQyfl20KxZiJ7c1hSLvujAE0UfEFf7Fe
+piWrCMv65u8Uz0tqVnRi
+=2eOj
+-----END PGP SIGNATURE-----
+
+--hQiwHBbRI9kgIhsi--
+
+
+--===============2265133720620764698==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2265133720620764698==--
