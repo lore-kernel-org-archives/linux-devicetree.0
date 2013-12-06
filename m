@@ -1,71 +1,114 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 2/3] ARM: sunxi: Add an ahci-platform compatible AHCI
- driver for the Allwinner SUNXi series of SoCs
-Date: Fri, 06 Dec 2013 12:06:00 +0100
-Message-ID: <52A1AF98.7020003@redhat.com>
-References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl> <1386159055-10264-3-git-send-email-oliver@schinagl.nl> <20131204123708.GD3158@htj.dyndns.org> <529F2677.3070208@schinagl.nl> <20131204131402.GG3158@htj.dyndns.org> <529F2B41.8090009@schinagl.nl> <20131204132312.GH3158@htj.dyndns.org> <20131206100117.59609a8a@skate> <52A19502.1090409@schinagl.nl>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 5/9] usb: s3c-hsotg: Use the new Exynos USB phy driver
+ with the generic phy framework
+Date: Fri, 6 Dec 2013 16:41:51 +0530
+Message-ID: <52A1B0F7.2050501@ti.com>
+References: <1386246579-25141-1-git-send-email-k.debski@samsung.com> <1386246579-25141-6-git-send-email-k.debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <52A19502.1090409@schinagl.nl>
-Sender: linux-ide-owner@vger.kernel.org
-To: Oliver Schinagl <oliver@schinagl.nl>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Tejun Heo <tj@kernel.org>, Olliver Schinagl <oliver+list@schinagl.nl>, grant.likely@linaro.org, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dev@linux-sunxi.org, maxime.ripard@free-electrons.com, ijc@hellion.org.uk, Richard Zhu <r65037@freescale.com>, Shawn Guo <shawn.guo@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1386246579-25141-6-git-send-email-k.debski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kamil Debski <k.debski@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kyungmin.park@samsung.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 12/06/2013 10:12 AM, Oliver Schinagl wrote:
->
-> On 06-12-13 10:01, Thomas Petazzoni wrote:
->> Dear Tejun Heo,
->>
->> On Wed, 4 Dec 2013 08:23:12 -0500, Tejun Heo wrote:
->>
->>>> But again, point me (for dummies ;) in the right direction and I'll
->>>> work on it with some help.
->>> Richard and Shawn recently worked on ahci_imx.  Can you guys please
->>> talk with each other and figure out what can be done to share as much
->>> as possible among these new platform-specific drivers?  I'd really
->>> like to see the common things factored out as much as possible with
->>> only the actual hardware differences described for each device.
->> Also, please Cc me on such discussions. I have a pending AHCI platform
->> driver for another ARM SoC family. It is very similar to ahci_platform,
->> but needs to do a few more things that are SoC specific (map an
->> additional register area, and do some SoC-specific stuff with them).
->>
->> For the moment, we're left with two approaches:
->>
->>   * Do what Oliver did, where the ahci_<foo> driver will do its own
->>     SoC-specific stuff, and then will register an additional
->>     platform_device to trigger the ->probe() of the generic
->>     ahci_platform driver. I must say I don't really like this solution,
->>     since it involves having two platform_device registered for the same
->>     piece of hardware (one platform_device to trigger the ->probe of
->>     ahci_<foo>, and another one to trigger the ->probe of ahci_platform).
->>
->>   * Duplicate in ahci_<foo> the (relatively small) amount of code that
->>     is present in ahci_platform.
->>
->>  From my point of view, ahci_platform should be turned into a small
->> "library", that provides an API for ahci_<foo> drivers to 1/ do their
->> own custom stuff and 2/ do the common ahci_platform stuff.
->>
->> This way we avoid the registration of two platform_device for the same
->> piece of hardware, and we avoid the duplication of code.
->>
->> Want me to propose a RFC for this idea?
-> I've started to do what sdhci does with their pltfrm driver, assuming that's the right approach. Since i'm only dabbling and not always 100% sure what should or shouldn't be done, it may take a little while, but looks promising from my end ;)
->
-> So is the sdhci-pltfrm approach the correct one? We still have ahci_* drivers, but ahci_platform.c won't be a driver in the sense that it is now anymore.
+On Thursday 05 December 2013 05:59 PM, Kamil Debski wrote:
+> Change the used phy driver to the new Exynos USB phy driver that uses the
+> generic phy framework.
+> 
+> Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  .../devicetree/bindings/usb/samsung-hsotg.txt      |    4 ++++
+>  drivers/usb/gadget/s3c-hsotg.c                     |   11 ++++++-----
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/samsung-hsotg.txt b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
+> index b83d428..9340d06 100644
+> --- a/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
+> +++ b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
+> @@ -24,6 +24,8 @@ Required properties:
+>      - first entry: must be "otg"
+>  - vusb_d-supply: phandle to voltage regulator of digital section,
+>  - vusb_a-supply: phandle to voltage regulator of analog section.
+> +- phys: from general PHY binding: phandle to the PHY device
+> +- phy-names: from general PHY binding: should be "usb2-phy"
 
-Sounds good to me. May I suggest simply adding a new ahci_pltfrm driver for
-this and leaving the existing ahci_platform alone? Of course in the end
-we want the old ahci_platform to go away, but it is probably best to
-introduce the new one in parallel and then port things over 1 by 1
-by people who can actually test the port :)
+are you sure it's usb2-phy. The example below seems to have a different value.
 
-Regards,
+Thanks
+Kishon
 
-Hans
+>  
+>  Example
+>  -----
+> @@ -36,5 +38,7 @@ Example
+>  		clock-names = "otg";
+>  		vusb_d-supply = <&vusb_reg>;
+>  		vusb_a-supply = <&vusbdac_reg>;
+> +		phys = <&usb2phy 0>;
+> +		phy-names = "device";
+>  	};
+>  
+> diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
+> index eccb147..db096fd 100644
+> --- a/drivers/usb/gadget/s3c-hsotg.c
+> +++ b/drivers/usb/gadget/s3c-hsotg.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/phy/phy.h>
+>  
+>  #include <linux/usb/ch9.h>
+>  #include <linux/usb/gadget.h>
+> @@ -162,7 +163,7 @@ struct s3c_hsotg_ep {
+>  struct s3c_hsotg {
+>  	struct device		 *dev;
+>  	struct usb_gadget_driver *driver;
+> -	struct usb_phy		*phy;
+> +	struct phy		 *phy;
+>  	struct s3c_hsotg_plat	 *plat;
+>  
+>  	spinlock_t              lock;
+> @@ -2905,7 +2906,7 @@ static void s3c_hsotg_phy_enable(struct s3c_hsotg *hsotg)
+>  	dev_dbg(hsotg->dev, "pdev 0x%p\n", pdev);
+>  
+>  	if (hsotg->phy)
+> -		usb_phy_init(hsotg->phy);
+> +		phy_power_on(hsotg->phy);
+>  	else if (hsotg->plat->phy_init)
+>  		hsotg->plat->phy_init(pdev, hsotg->plat->phy_type);
+>  }
+> @@ -2922,7 +2923,7 @@ static void s3c_hsotg_phy_disable(struct s3c_hsotg *hsotg)
+>  	struct platform_device *pdev = to_platform_device(hsotg->dev);
+>  
+>  	if (hsotg->phy)
+> -		usb_phy_shutdown(hsotg->phy);
+> +		phy_power_off(hsotg->phy);
+>  	else if (hsotg->plat->phy_exit)
+>  		hsotg->plat->phy_exit(pdev, hsotg->plat->phy_type);
+>  }
+> @@ -3529,7 +3530,7 @@ static void s3c_hsotg_delete_debug(struct s3c_hsotg *hsotg)
+>  static int s3c_hsotg_probe(struct platform_device *pdev)
+>  {
+>  	struct s3c_hsotg_plat *plat = dev_get_platdata(&pdev->dev);
+> -	struct usb_phy *phy;
+> +	struct phy *phy;
+>  	struct device *dev = &pdev->dev;
+>  	struct s3c_hsotg_ep *eps;
+>  	struct s3c_hsotg *hsotg;
+> @@ -3544,7 +3545,7 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	}
+>  
+> -	phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+> +	phy = devm_phy_get(&pdev->dev, "usb2-phy");
+>  	if (IS_ERR(phy)) {
+>  		/* Fallback for pdata */
+>  		plat = dev_get_platdata(&pdev->dev);
+> 
