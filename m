@@ -1,49 +1,42 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCHv5][ 2/8] staging: imx-drm: Add RGB666 support for
- parallel display.
-Date: Fri, 06 Dec 2013 14:29:22 +0100
-Message-ID: <1386336562.4088.5.camel@weser.hi.pengutronix.de>
-References: <1386268092-21719-1-git-send-email-denis@eukrea.com>
-	 <1386268092-21719-2-git-send-email-denis@eukrea.com>
-	 <20131206131403.GA30960@ulmo.nvidia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 0/3] pinctrl: Qualcomm 8x74 pinctrl driver
+Date: Fri, 6 Dec 2013 14:56:59 +0100
+Message-ID: <CACRpkdaYPSJbL80tbFaNP9aTFc+_AKsT=rd-yxc0R6K-M_Tz9A@mail.gmail.com>
+References: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20131206131403.GA30960@ulmo.nvidia.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Denis Carikli <denis@eukrea.com>, Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Eric =?ISO-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Sascha Hauer <kernel@pengutronix.de>, linux-media@vger.kernel.org, driverdev-devel@linuxdriverproject.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 06.12.2013, 14:14 +0100 schrieb Thierry Reding:
-> On Thu, Dec 05, 2013 at 07:28:06PM +0100, Denis Carikli wrote:
-> [...]
-> > diff --git a/drivers/staging/imx-drm/ipu-v3/ipu-dc.c b/drivers/staging/imx-drm/ipu-v3/ipu-dc.c
-> [...]
-> > @@ -155,6 +156,8 @@ static int ipu_pixfmt_to_map(u32 fmt)
-> >  		return IPU_DC_MAP_BGR666;
-> >  	case V4L2_PIX_FMT_BGR24:
-> >  		return IPU_DC_MAP_BGR24;
-> > +	case V4L2_PIX_FMT_RGB666:
-> > +		return IPU_DC_MAP_RGB666;
-> 
-> Why is this DRM driver even using V4L2 pixel formats in the first place?
-> 
-Because imx-drm is actually a misnomer. The i.MX IPU is a multifunction
-device, which as one part has the display controllers, but also camera
-interfaces and mem-to-mem scaler devices, which are hooked up via the
-V4L2 interface.
+On Fri, Dec 6, 2013 at 3:10 AM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
 
-The generic IPU part, which is used for example for programming the DMA
-channels is using V4L2 pixel formats as a common base. We have patches
-to split this out and make this fact more visible. (The IPU core will be
-placed aside the Tegra host1x driver)
+> This series adds a pinctrl, pinmux, pinconf and gpiolib driver for the
+> Qualcomm TLMM block found in recent Qualcomm SoCs (8x60 and newer).
+> It designed with both v2 and v3 of the block in mind and comes with initial
+> definitions for the 8x74 SoCs.
+> This should be filled in with more data and definitions for more SoCs.
+>
+> Regards,
+> Bjorn
+>
+> v2
+> --
+> * Replaced subnode dt parsing with generic pinctrl function
+> * Installing irq_handler as chained irq handler
+> * Added call to handle_bad_irq() when no irqs are pending in irq handler
+> * Creating irq mapping at probe() and cleaned up the code accordingly
+> * Replaced pinctrl_add_gpio_range with gpiochip_add_pin_range
+> * Other minor updates based on review comments
 
-Regards,
-Lucas
--- 
-Pengutronix e.K.                           | Lucas Stach                 |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+I can't see any problem with these patches, and they only use standard
+bindings, so I've applied all three so we get some linux-next rotation
+and build coverage. Any remaining problems can certainly be fixed
+with incremental patches.
+
+Thanks!
+Linus Walleij
