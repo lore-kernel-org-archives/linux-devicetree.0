@@ -1,71 +1,37 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSHYyXVsgMi8yXSBBUk06IGR0czogQWRkIHN1cHBvcnQgZm9y?=
- =?UTF-8?B?IHRoZSBjcHVpbXg1MyBib2FyZCBmcm9tIEV1a3JlYSBhbmQgaXRzIGJhc2Vi?=
- =?UTF-8?B?b2FyZC4=?=
-Date: Fri, 06 Dec 2013 14:11:45 +0400
-Message-ID: <1386324705.359638944@f208.i.mail.ru>
-References: <1386323958-783-1-git-send-email-denis@eukrea.com>
- <1386323958-783-2-git-send-email-denis@eukrea.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCH 17/26] ARM: omap3-tobi.dts: add lcd (TEST)
+Date: Fri, 06 Dec 2013 11:18:58 +0100
+Message-ID: <52A1A492.8090205@epfl.ch>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-18-git-send-email-tomi.valkeinen@ti.com>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1386323958-783-2-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?RGVuaXMgQ2FyaWtsaQ==?= <denis@eukrea.com>
-Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel@pengutronix.de>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring@calxeda.com>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric@eukrea.com>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@linaro.org>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1386160133-24026-18-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hello Tomi,
 
-> The following devices/functionalities were added:
->  * Main and secondary UARTs.
->  * i2c and the pcf8563 device.
->  * Ethernet.
->  * NAND.
->  * The BP1 button.
->  * The LED.
->  * Watchdog.
->  * SD.
->  * USB host.
-...
+On 12/04/2013 01:28 PM, Tomi Valkeinen wrote:
+> This is a test for Overo with Palo43 expansion, _not_ Tobi. Palo43
+> doesn't have a dts, but seems to work ok with omap3-tobi.dts, so I used
+> it as a test.
+> 
 
-> +		reg_3p3v: regulator@0 {
-> +			reg = <0>;
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "3P3V";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-always-on;
+Looking at the schematics, both seem pretty similar indeed. The main
+difference seems to be the LCD on the palo43, and the HDMI on the Tobi
+(TFP410, as in your patch 21).
 
-"regulator-always-on" make no sense for virtual supplies.
+I only have a Tobi on my desk, so this is the reason for not supporting
+other boards... We could make a .dtsi with common stuff, then add the
+LCD to the Palo43 and HDMI to the Tobi. I was going to add some more
+support to these boards in the coming days, so I can add this too, at
+least for testing purpose.
 
-...
-> +		pinctrl_uart1: uart1grp {
-> +			fsl,pins = <MX53_UART1_PINGRP2>;
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins = <MX53_UART2_PINGRP2>;
-> +		};
-> +	};
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	fsl,uart-has-rtscts;
+Cheers,
 
-So if you use "fsl,uart-has-rtscts", should you add MX53_UART1_PINGRP3
-into pinctls too?
-
----
+Florian
