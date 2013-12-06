@@ -1,38 +1,158 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] mfd: cros ec: spi: Add delay for raising CS
-Date: Fri, 6 Dec 2013 13:12:41 -0800
-Message-ID: <CAL1qeaHGNUGCNRUa7GGMnpbkJG9rrD-2V_X7Mi664i8NPssKqQ@mail.gmail.com>
-References: <1385143550-31901-1-git-send-email-treding@nvidia.com>
-	<20131125094503.GD17722@lee--X1>
-	<20131125100428.GG22043@ulmo.nvidia.com>
-	<20131125104532.GF17722@lee--X1>
-	<20131125112852.GK22043@ulmo.nvidia.com>
-	<20131125121035.GG17722@lee--X1>
-	<20131206210244.GA1280@mithrandir>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: ARM: gic_arch_extn (Was: [PATCH v3] irqchip: mmp: add dt support
+ for wakeup)
+Date: Fri, 6 Dec 2013 22:25:49 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1312062029560.30673@ionos.tec.linutronix.de>
+References: <1386159214-31483-1-git-send-email-zhangwm@marvell.com> <alpine.DEB.2.02.1312042234190.30673@ionos.tec.linutronix.de> <alpine.DEB.2.02.1312042347350.30673@ionos.tec.linutronix.de> <20131205005216.GA4360@n2100.arm.linux.org.uk>
+ <alpine.DEB.2.02.1312050157550.30673@ionos.tec.linutronix.de> <20131205094931.GB4360@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131206210244.GA1280@mithrandir>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Bernie Thompson <bhthompson-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131205094931.GB4360@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Neil Zhang <zhangwm@marvell.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, haojian.zhuang@gmail.com, LAK <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> Bernie, Andrew, Rhyland, can anyone of you comment. Are you aware of
-> this driver being used with a non-DT setup? I suspect maybe on Intel
-> Chromebooks it might be, but I couldn't find any evidence of that in
-> the upstream kernel.
+On Thu, 5 Dec 2013, Russell King - ARM Linux wrote:
+> So there's not much point discussing this with you until you:
+> 
+> (a) calm down
 
-I'm not aware of any non-DT Chromebooks that use this driver.  The
-Intel ones are non-DT, but they don't use SPI.
+Done so :)
 
-> Are there any objections to removing non-DT support from the driver?
+> (b) analyse it properly and work out the frequency under which each
+> class of IRQ (those >= 32 and those < 32) call into these functions.
 
-Seems fine to me.
+Here you go:
+
+The frequency of invoking the gic_arch_extn callbacks is exactly equal
+to the frequency of interrupts in the system which go through the GIC
+at least for mask/unmask/eoi. The frequency of calls per interrupt
+depends on the interrupt type, but at minimum it is one.
+
+So basically it does for any interrupt independent of >= 32 or < 32:
+
+irq_fn(d)
+{
+	do_something_common(d);
+	if (gic_arch_extn.fn)
+	   gic_arch_extn.fn(d);
+	do_something_common(d);
+}
+
+which then does:
+
+extn_fn(d)
+{
+	if (this_irq_is_affected(d))
+	   do_some_more(d);
+}      
+
+So when this_irq_is_affected(d) boils down to
+
+   if (d->irq [<>] n)
+
+then I agree, that it's debatable, whether the conditonal function
+call and the simple this_irq_is_affected(d) check is worth to worry
+about. Though there are people who care about two pointless
+conditonals for various reasons.
+
+But at the point when this_irq_is_affected(d) is doing a loop lookup,
+then this really starts to smell badly.
+
+Sure you might argue, that it's the problem of that particular patch
+author to put a loop lookup into this_irq_is_affected().
+
+Fair enough, though you have to admit that the design of the
+gic_arch_extn actually enforces that, if you can't do a simple "if irq
+[<>] n" check for whatever reason.
+
+The alternative approach to that is to use different irq chip
+implementations for interrupts affected by gic_arch_extn and those
+which are not affected as we do in lot of other places do deal with
+the subtle differences of particular interrupt lines. That definitely
+would avoid that people try to stick more complex decision functions
+than "irq [<>] n" into this_irq_is_affected().
+
+Now looking at the locking szenario of GIC, it might eventually create
+quite some duplicated code, which is undesirable as well. OTOH, the
+locking requirements especially if I look at gic_[un]mask_irq and
+gic_eoi_irq are not entirely clear to me from the code.
+
+gic_[un]mask_irq(d)
+{
+	mask = 1 << SFT(gic_irq(d));
+
+	lock(controller_lock);
+	if (gic_arch_extn.irq_[un]mask)
+	   gic_arch_extn.irq_[un]mask(d);
+	writel(mask, GIC_ENABLE_[CLEAR|SET]);
+	unlock(controller_lock);
+}
+
+while
+
+gic_eoi_irq(d)
+{
+	if (gic_arch_extn.irq_eoi) {
+	   lock(controller_lock);
+	   gic_arch_extn.irq_eoi(d);
+	   unlock(controller_lock);
+	}
+	writel(gic_irq(d), GIC_EOI);
+}
+
+So is there a requirement to serialize the mask/unmask operations for
+a particular interrupt line against mask/unmask operations on a
+different core on some other interrupt line?
+
+  The operations for a particular interrupt line are already
+  serialized at the core code level.
+
+  The CLEAR/SET registers are designed to avoid locking in contrary to
+  the classic ENABLE reg, where you have to maintain consistency of
+  the full set of interrupts affected by that register.
+
+  So for the case where gic_arch_extn is not used, the locking is
+  completely pointless, right?
+
+Or is this locking required to maintain consistency between the
+gic_arch_extn.[un]mask and the GIC.[un]mask itself?
+
+And even if the locking is required for this, then having two separate
+chips with two different callbacks makes sense.
+
+gic_mask_irq()
+{
+	writel(mask, GIC_ENABLE_CLEAR);
+}
+
+gic_mask_extn_irq(d)
+{
+	lock(controller_lock);
+	gic_arch_extn.irq_mask(d);
+	gic_mask_irq(d);
+	unlock(controller_lock);
+}
+
+And then have the gic_chip and gic_extn_chip set for the various
+interrupt lines.
+
+That avoids several things:
+
+1) The locking for non gic_arch_extn interrupts
+
+2) Two conditionals for gic_arch_extn interrupts
+
+3) The enforcement of adding complex decision functions into the
+   gic_extn functions if there is no simple x < N check possible.
+
+I might have missed something as always, but at least I did a proper
+analysis of the code as it is understandable to a mere mortal.
+
+Thoughts?
 
 Thanks,
-Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+	tglx
