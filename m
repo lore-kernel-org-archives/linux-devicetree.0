@@ -1,25 +1,46 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V3 0/4] ARM: tegra: convert dts files of all Tegra platforms
- to use pinctrl defines
-Date: Thu, 05 Dec 2013 16:33:48 -0700
-Message-ID: <52A10D5C.3060002@wwwdotorg.org>
-References: <1386240249-30786-1-git-send-email-ldewangan@nvidia.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 3/7] net: of_mdio: do not overwrite PHY interrupt configuration
+Date: Fri, 06 Dec 2013 03:45:04 +0300
+Message-ID: <52A11E10.5080909@cogentembedded.com>
+References: <1386283936-26104-1-git-send-email-florian@openwrt.org> <1386283936-26104-4-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386240249-30786-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: thierry.reding@gmail.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1386283936-26104-4-git-send-email-florian@openwrt.org>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <florian@openwrt.org>, netdev@vger.kernel.org
+Cc: davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, abrodkin@synopsys.com, rob.herring@calxeda.com, mark.rutland@arm.com, sebastian.hesselbarth@gmail.com, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/2013 03:44 AM, Laxman Dewangan wrote:
-> This patch series convert dts files of all Tegra's platforms to use the pinctron
-> dt-binding macro for better readability.
+Hello.
 
-I think this series looks fine now; I'll apply soon pending what happens
-with the DMA/reset/ binding rework.
+On 12/06/2013 01:52 AM, Florian Fainelli wrote:
 
-There are quite a few typos/spelling/capitalization mistakes in the
-commit descriptions, but I'll fix them up when applying.
+> From: Florian Fainelli <f.fainelli@gmail.com>
+
+> If irq_of_parse_and_map fails to find an interrupt line for a given PHY,
+> we will force the PHY interrupt to be PHY_POLL, completely overriding
+> the previous value that the MDIO bus may have set for us (e.g:
+> PHY_IGNORE_INTERRUPT). In case of failure, just restore the previous
+> value.
+
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>   drivers/of/of_mdio.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index f93ebca..4923ab2 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+[...]
+> @@ -37,10 +37,11 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+>   		return 1;
+>
+>   	if (mdio->irq) {
+> +		prev_irq= mdio->irq[addr];
+
+    You forgot space before =.
+
+WBR, Sergei
