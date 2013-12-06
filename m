@@ -1,49 +1,44 @@
-From: James Cameron <quozl@laptop.org>
-Subject: Re: [PATCH] serial: rewrite pxa2xx-uart to use 8250_core
-Date: Fri, 6 Dec 2013 11:38:51 +1100
-Message-ID: <20131206003851.GI16425@us.netrek.org>
-References: <20131205043544.GA28580@kroah.com>
- <1386286149-2855-1-git-send-email-ynvich@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 5/7] net: of_mdio: parse "max-speed" property to set
+ PHY supported features
+Date: Thu, 05 Dec 2013 19:47:43 -0500 (EST)
+Message-ID: <20131205.194743.1170844620568623022.davem@davemloft.net>
+References: <1386283936-26104-6-git-send-email-florian@openwrt.org>
+	<52A11F00.1070603@cogentembedded.com>
+	<CAGVrzcYeRi=j3PkRbtNXwYFGOr9m7Yco0jORdp76i+DcRNpMFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1386286149-2855-1-git-send-email-ynvich@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <rob.herring@calxeda.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Zhou Zhu <zzhu3@marvell.com>, Jiri Slaby <jslaby@suse.cz>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, John Crispin <blogic@openwrt.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcYeRi=j3PkRbtNXwYFGOr9m7Yco0jORdp76i+DcRNpMFA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: f.fainelli@gmail.com
+Cc: sergei.shtylyov@cogentembedded.com, netdev@vger.kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, abrodkin@synopsys.com, rob.herring@calxeda.com, mark.rutland@arm.com, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 06, 2013 at 03:28:37AM +0400, Sergei Ianovich wrote:
-> pxa2xx-uart was a separate uart platform driver. It was declaring
-> the same device names and numbers as 8250 driver. As a result,
-> it was impossible to use 8250 driver on PXA SoCs.
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Thu, 5 Dec 2013 15:53:41 -0800
+
+> 2013/12/5 Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>:
+>>>
+>>> +       /* Set phydev->supported based on the "max-speed" property
+>>> +        * if present */
+>>
+>>
+>>    Preferred multi-line comment style is this:
+>>
+>> /*
+>>  * bla
+>>  * bla
+>>  */
 > 
-> Upon closer examination pxa2xx-uart turned out to be a clone of
-> 8250_core driver.
+> All other comments in this file are:
+> 
+> /* bla
+>  * bla
+>  */
+> 
+> which is why I used the same style.
 
-I'm testing this backported to 3.5 on the OLPC XO-4 [1] [2].
-
-As Russell says, the getty had to change, but after that the shell
-worked fine; no more or no less responsive.
-
-What hasn't worked yet is the console; no kernel messages appear.  I
-have tried changing command line to console=ttyS0,115200.
-
-1.  http://dev.laptop.org/~quozl/y/1VojGn.txt (diff relative to
-olpc-kernel/arm-3.5)
-
-2.  http://dev.laptop.org/~quozl/z/1VojLz.txt (dmesg)
-
--- 
-James Cameron
-http://quozl.linux.org.au/
+And this is the preferred format for networking, as documented in
+Documentation/networking/netdev-FAQ.txt
