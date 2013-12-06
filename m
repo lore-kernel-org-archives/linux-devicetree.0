@@ -1,140 +1,189 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 18/26] ARM: omap3-beagle.dts: add display information
-Date: Fri, 6 Dec 2013 09:41:17 +0100
-Message-ID: <CABxcv=mgQM6oHf7=-EbryAcmgJm3vf+xXqHW6BCdW8ovS29O0g@mail.gmail.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
-	<1386160133-24026-19-git-send-email-tomi.valkeinen@ti.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCHv3] usb: chipidea: add support for USB OTG controller on
+ TI-NSPIRE
+Date: Fri, 6 Dec 2013 16:21:07 +0800
+Message-ID: <20131206082106.GH14002@shlinux1.ap.freescale.net>
+References: <1385351617-94118-1-git-send-email-dt.tangr@gmail.com>
+ <20131204070255.GF29552@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1386160133-24026-19-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131204070255.GF29552@shlinux1.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dt.tangr@gmail.com
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
-
-On Wed, Dec 4, 2013 at 1:28 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> ---
->  arch/arm/boot/dts/omap3-beagle.dts | 67 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-> index fa532aaacc68..1ca1932d02aa 100644
-> --- a/arch/arm/boot/dts/omap3-beagle.dts
-> +++ b/arch/arm/boot/dts/omap3-beagle.dts
-> @@ -178,3 +178,70 @@
->         mode = <3>;
->         power = <50>;
->  };
-> +
-> +&dpi {
-> +       vdds_dsi-supply = <&vpll2>;
-> +
-> +       dpi_out: endpoint {
-> +               remote-endpoint = <&tfp410_in>;
-> +               data-lines = <24>;
-> +       };
-> +};
-> +
-> +&venc {
-> +       vdda_dac-supply = <&vdac>;
-> +
-> +       venc_out: endpoint {
-> +               remote-endpoint = <&tv_connector_in>;
-> +       };
-> +};
-> +
-> +/ {
-> +       aliases {
-> +               display0 = &dvi0;
-> +               display1 = &tv0;
-> +       };
-> +
-> +       tfp410: encoder@0 {
-> +               compatible = "ti,tfp410";
-> +               gpios = <&gpio5 10 0>;  /* 170, power-down */
-> +
-
-Shouldn't this be gpio6 instead since OMAP GPIO banks start counting
-from 1 so gpio5 + 10 is GPIO 138.
-
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       port@0 {
-> +                               reg = <0>;
-> +
-> +                               tfp410_in: endpoint@0 {
-> +                                       remote-endpoint = <&dpi_out>;
-> +                               };
-> +                       };
-> +
-> +                       port@1 {
-> +                               reg = <1>;
-> +
-> +                               tfp410_out: endpoint@1 {
-> +                                       remote-endpoint = <&dvi_connector_in>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       dvi0: connector@0 {
-> +               compatible = "ti,dvi_connector";
-> +               i2c-bus = <&i2c3>;
-> +
-> +               dvi_connector_in: endpoint {
-> +                       remote-endpoint = <&tfp410_out>;
-> +               };
-> +       };
-> +
-> +       tv0: connector@1 {
-> +               compatible = "ti,svideo_connector";
-> +
-> +               tv_connector_in: endpoint {
-> +                       remote-endpoint = <&venc_out>;
-> +               };
-> +       };
-> +};
+On Wed, Dec 04, 2013 at 03:02:56PM +0800, Peter Chen wrote:
+> On Mon, Nov 25, 2013 at 02:53:37PM +1100, dt.tangr@gmail.com wrote:
+> > From: Daniel Tang <dt.tangr@gmail.com>
+> > 
+> > The USB controller in TI-NSPIRE calculators are based off either Freescale's
+> > USB OTG controller or the USB controller found in the IMX233, both of which
+> > are Chipidea compatible.
+> > 
+> > This patch adds a device tree binding for the controller.
+> > 
+> > Signed-off-by: Daniel Tang <dt.tangr@gmail.com>
+> > ---
+> > 
+> > Changelog v3:
+> >  * Removed redundant module aliases
+> > 
+> > Changelog v2:
+> >  * Rename ci13xxx to ci_hdrc
+> >  * Fixed alignment issues
+> > 
+> > .../devicetree/bindings/usb/ci-hdrc-nspire.txt     | 17 +++++
+> >  drivers/usb/chipidea/Makefile                      |  1 +
+> >  drivers/usb/chipidea/ci_hdrc_nspire.c              | 72 ++++++++++++++++++++++
+> >  3 files changed, 90 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> >  create mode 100644 drivers/usb/chipidea/ci_hdrc_nspire.c
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> > new file mode 100644
+> > index 0000000..5ba8e90
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-nspire.txt
+> > @@ -0,0 +1,17 @@
+> > +* TI-Nspire USB OTG Controller
+> > +
+> > +Required properties:
+> > +- compatible: Should be "zevio,nspire-usb"
+> > +- reg: Should contain registers location and length
+> > +- interrupts: Should contain controller interrupt
+> > +
+> > +Recommended properies:
+> > +- vbus-supply: regulator for vbus
+> > +
+> > +Examples:
+> > +		usb0: usb@B0000000 {
+> > +			reg = <0xB0000000 0x1000>;
+> > +			compatible = "zevio,nspire-usb";
+> > +			interrupts = <8>;
+> > +			vbus-supply = <&vbus_reg>;
+> > +		};
+> > diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+> > index a99d980..245ea4d 100644
+> > --- a/drivers/usb/chipidea/Makefile
+> > +++ b/drivers/usb/chipidea/Makefile
+> > @@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_CHIPIDEA_DEBUG)	+= debug.o
+> >  # Glue/Bridge layers go here
+> > 
+> >  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
+> > +obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_nspire.o
+> > 
+> >  # PCI doesn't provide stubs, need to check
+> >  ifneq ($(CONFIG_PCI),)
+> > diff --git a/drivers/usb/chipidea/ci_hdrc_nspire.c b/drivers/usb/chipidea/ci_hdrc_nspire.c
+> > new file mode 100644
+> > index 0000000..517ce41
+> > --- /dev/null
+> > +++ b/drivers/usb/chipidea/ci_hdrc_nspire.c
+> > @@ -0,0 +1,72 @@
+> > +/*
+> > + *	Copyright (C) 2013 Daniel Tang <tangrs@tangrs.id.au>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2, as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * Based off drivers/usb/chipidea/ci_hdrc_msm.c
+> > + *
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/usb/gadget.h>
+> > +#include <linux/usb/chipidea.h>
+> > +
+> > +#include "ci.h"
+> > +
+> > +static struct ci_hdrc_platform_data ci_hdrc_nspire_platdata = {
+> > +	.name			= "ci_hdrc_nspire",
+> > +	.flags			= CI_HDRC_REGS_SHARED,
+> > +	.capoffset		= DEF_CAPOFFSET,
+> > +};
+> > +
+> > +static int ci_hdrc_nspire_probe(struct platform_device *pdev)
+> > +{
+> > +	struct platform_device *ci_pdev;
+> > +
+> > +	dev_dbg(&pdev->dev, "ci_hdrc_nspire_probe\n");
+> > +
+> > +	ci_pdev = ci_hdrc_add_device(&pdev->dev,
+> > +				pdev->resource, pdev->num_resources,
+> > +				&ci_hdrc_nspire_platdata);
+> > +
+> > +	if (IS_ERR(ci_pdev)) {
+> > +		dev_err(&pdev->dev, "ci_hdrc_add_device failed!\n");
+> > +		return PTR_ERR(ci_pdev);
+> > +	}
+> > +
+> > +	platform_set_drvdata(pdev, ci_pdev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ci_hdrc_nspire_remove(struct platform_device *pdev)
+> > +{
+> > +	struct platform_device *ci_pdev = platform_get_drvdata(pdev);
+> > +
+> > +	ci_hdrc_remove_device(ci_pdev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id ci_hdrc_nspire_dt_ids[] = {
+> > +	{ .compatible = "zevio,nspire-usb", },
+> > +	{ /* sentinel */ }
+> > +};
+> > +
+> > +static struct platform_driver ci_hdrc_nspire_driver = {
+> > +	.probe = ci_hdrc_nspire_probe,
+> > +	.remove = ci_hdrc_nspire_remove,
+> > +	.driver = {
+> > +		.name = "nspire_usb",
+> > +		.owner = THIS_MODULE,
+> > +		.of_match_table = ci_hdrc_nspire_dt_ids,
+> > +	},
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(of, ci_hdrc_nspire_dt_ids);
+> > +module_platform_driver(ci_hdrc_nspire_driver);
+> > +
+> > +MODULE_LICENSE("GPL v2");
+> > --
+> > 1.8.1.3
+> > 
+> > 
+> 
+> Applied, Thanks.
+> 
+> -- 
+> 
+> Best Regards,
+> Peter Chen
+> 
 > --
-> 1.8.3.2
->
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-Also I don't see the DSS pinmux set for this board. I guess you need
-something like the following on top:
+Hi Daniel,
 
-0x0a4 (PIN_OUTPUT | MUX_MODE0)   /* dss_pclk.dss_pclk */
-0x0a6 (PIN_OUTPUT | MUX_MODE0)   /* dss_hsync.dss_hsync */
-0x0a8 (PIN_OUTPUT | MUX_MODE0)   /* dss_vsync.dss_vsync */
-0x0aa (PIN_OUTPUT | MUX_MODE0)   /* dss_acbias.dss_acbias */
-0x0ac (PIN_OUTPUT | MUX_MODE0)   /* dss_data0.dss_data0 */
-0x0ae (PIN_OUTPUT | MUX_MODE0)   /* dss_data1.dss_data1 */
-0x0b0 (PIN_OUTPUT | MUX_MODE0)   /* dss_data2.dss_data2 */
-0x0b2 (PIN_OUTPUT | MUX_MODE0)   /* dss_data3.dss_data3 */
-0x0b4 (PIN_OUTPUT | MUX_MODE0)   /* dss_data4.dss_data4 */
-0x0b6 (PIN_OUTPUT | MUX_MODE0)   /* dss_data5.dss_data5 */
-0x0b8 (PIN_OUTPUT | MUX_MODE0)   /* dss_data6.dss_data6 */
-0x0ba (PIN_OUTPUT | MUX_MODE0)   /* dss_data7.dss_data7 */
-0x0bc (PIN_OUTPUT | MUX_MODE0)   /* dss_data8.dss_data8 */
-0x0be (PIN_OUTPUT | MUX_MODE0)   /* dss_data9.dss_data9 */
-0x0c0 (PIN_OUTPUT | MUX_MODE0)   /* dss_data10.dss_data10 */
-0x0c2 (PIN_OUTPUT | MUX_MODE0)   /* dss_data11.dss_data11 */
-0x0c4 (PIN_OUTPUT | MUX_MODE0)   /* dss_data12.dss_data12 */
-0x0c6 (PIN_OUTPUT | MUX_MODE0)   /* dss_data13.dss_data13 */
-0x0c8 (PIN_OUTPUT | MUX_MODE0)   /* dss_data14.dss_data14 */
-0x0ca (PIN_OUTPUT | MUX_MODE0)   /* dss_data15.dss_data15 */
-0x0cc (PIN_OUTPUT | MUX_MODE0)   /* dss_data16.dss_data16 */
-0x0ce (PIN_OUTPUT | MUX_MODE0)   /* dss_data17.dss_data17 */
-0x0d0 (PIN_OUTPUT | MUX_MODE0)   /* dss_data18.dss_data18 */
-0x0d2 (PIN_OUTPUT | MUX_MODE0)   /* dss_data19.dss_data19 */
-0x0d4 (PIN_OUTPUT | MUX_MODE0)   /* dss_data20.dss_data20 */
-0x0d6 (PIN_OUTPUT | MUX_MODE0)   /* dss_data21.dss_data21 */
-0x0d8 (PIN_OUTPUT | MUX_MODE0)   /* dss_data22.dss_data22 */
-0x0da (PIN_OUTPUT | MUX_MODE0)   /* dss_data23.dss_data23 */
+I have reverted this patch from my tree, since your coming one just
+rename file and doc, and I have still not sent to Greg.
 
-Best regards,
-Javier
+Please squash the two patches, and created a new one after your dts
+has been queued, I am chipidea maintainer, it is better I only queue
+driver patch, so please split your patchset like: driver patch, dts
+patch, and doc patch.
+
+-- 
+
+Best Regards,
+Peter Chen
