@@ -1,96 +1,105 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCHv13][ 3/4] video: Kconfig: Allow more broad selection of
- the imxfb framebuffer driver.
-Date: Fri, 6 Dec 2013 08:06:22 +0100
-Message-ID: <20131206070622.GW24559@pengutronix.de>
-References: <1386258219-26437-1-git-send-email-denis@eukrea.com>
- <1386258219-26437-3-git-send-email-denis@eukrea.com>
+From: Jingchang Lu <jingchang.lu@freescale.com>
+Subject: RE: [PATCH v6 3/3] dma: Add Freescale eDMA engine driver support
+Date: Fri, 6 Dec 2013 07:12:08 +0000
+Message-ID: <B56CDBE15CE27145A4B77D2D24263E8524AC79@039-SN1MPN1-003.039d.mgd.msft.net>
+References: <1379498279-16096-1-git-send-email-b35083@freescale.com>
+ <20131114104620.GB16396@e106331-lin.cambridge.arm.com>
+ <B56CDBE15CE27145A4B77D2D24263E852409CE@039-SN1MPN1-003.039d.mgd.msft.net>
+ <20131118111451.GA30853@e106331-lin.cambridge.arm.com>
+ <B56CDBE15CE27145A4B77D2D24263E852497D5@039-SN1MPN1-003.039d.mgd.msft.net>
+ <20131128060816.GQ8834@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-15"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1386258219-26437-3-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Denis Carikli <denis@eukrea.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Eric =?iso-8859-15?Q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131128060816.GQ8834@intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "lars@metafoo.de" <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 04:43:38PM +0100, Denis Carikli wrote:
-> Without that patch, a user can't select the imxfb driver when the i.MX25 =
-and/or
->   the i.MX27 device tree board are selected and that no boards that selec=
-ts
->   IMX_HAVE_PLATFORM_IMX_FB are compiled in.
-> =
-
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: devicetree@vger.kernel.org
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: Eric B=E9nard <eric@eukrea.com>
-> Signed-off-by: Denis Carikli <denis@eukrea.com>
-> Acked-by: Shawn Guo <shawn.guo@linaro.org>
-> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-
-
-Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
-
-Sascha
-
-> ---
-> ChangeLog v10->v11:
-> - moved my signed-off-by.
-> =
-
-> ChangeLog v8->v9:
-> - Added Jean-Christophe PLAGNIOL-VILLARD's ACK.
-> ---
->  drivers/video/Kconfig |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> =
-
-> diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> index 4f2e1b3..22adaee 100644
-> --- a/drivers/video/Kconfig
-> +++ b/drivers/video/Kconfig
-> @@ -363,7 +363,7 @@ config FB_SA1100
->  =
-
->  config FB_IMX
->  	tristate "Freescale i.MX1/21/25/27 LCD support"
-> -	depends on FB && IMX_HAVE_PLATFORM_IMX_FB
-> +	depends on FB && ARCH_MXC
->  	select FB_CFB_FILLRECT
->  	select FB_CFB_COPYAREA
->  	select FB_CFB_IMAGEBLIT
-> -- =
-
-> 1.7.9.5
-> =
-
-> =
-
-
--- =
-
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVmlub2QgS291bCBbbWFp
+bHRvOnZpbm9kLmtvdWxAaW50ZWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgTm92ZW1iZXIgMjgs
+IDIwMTMgMjowOCBQTQ0KPiBUbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPiBDYzogTWFyayBSdXRs
+YW5kOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgV2FuZyBIdWFuLUIxODk2NTsgbGludXgt
+DQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHNoYXduLmd1b0BsaW5hcm8ub3JnOyBsaW51eC1h
+cm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djYgMy8zXSBkbWE6IEFkZCBGcmVlc2NhbGUgZURNQSBlbmdpbmUgZHJpdmVyIHN1cHBvcnQNCj4g
+DQo+IE9uIFdlZCwgTm92IDI3LCAyMDEzIGF0IDA5OjM4OjAyQU0gKzAwMDAsIEppbmdjaGFuZyBM
+dSB3cm90ZToNCj4gPiA+ID4gPiA+ICsqIERNQU1VWA0KPiA+ID4gPiA+ID4gK1JlcXVpcmVkIHBy
+b3BlcnRpZXM6DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBObyBjb21wYXRpYmxlPw0KPiA+ID4gPiA+
+DQo+ID4gPiA+ID4gV2hlcmUgYXJlIERNQU1VWCBub2RlcyBleHBlY3RlZCB0byBsaXZlPw0KPiA+
+ID4gPiA+DQo+ID4gPiA+ID4gSG93IHRvIHRoZXkgcmVsYXRlIHRvIHRoZSBlRE1BIGNvbnRyb2xs
+ZXIgaW4gSFc/IEFyZSB0aGV5IGENCj4gPiA+ID4gPiBzdWJjb21wb25lbnQsIG9yIGEgbG9naWNh
+bGx5IHNlcGFyYXRlIHVuaXQgdGhhdCBoYXBwZW5zIHRvIGJlDQo+ID4gPiBjb25uZWN0ZWQ/DQo+
+ID4gPiA+IFtMdSBKaW5nY2hhbmctYjM1MDgzXQ0KPiA+ID4gPiBETUFNVVggaXMgYSBtdWx0aXBs
+ZXhlciBiZXR3ZWVuIGRtYSBjb250cm9sbGVyIGNoYW5uZWxzIGFuZA0KPiBwZXJpcGhlcmFsDQo+
+ID4gPiBkZWl2Y2VzLA0KPiA+ID4gPiBlYWNoIERNQU1VWCBwcm92aWRlcyAxNiBpbmRlcGVuZGVu
+dGx5IHNlbGVjdGFibGUgRE1BIGNoYW5uZWwNCj4gcm91dGVycywNCj4gPiA+IGFuZCBlYWNoDQo+
+ID4gPiA+IGNoYW5uZWwgcm91dGVyIGNhbiBiZSBhc3NpZ25lZCB0byBvbmUgb2YgdGhlIHBvc3Np
+YmxlIHBlcmlwaGVyYWwNCj4gRE1BDQo+ID4gPiBzbG90cy4NCj4gPiA+ID4gU28gaXQncyBub3Qg
+YSBzdGFuZGFsb25lIGRldmljZSwgaXQncyBqdXN0IHJlcXVpcmVkIGJ5IHRoZSBETUENCj4gPiA+
+IGNvbnRyb2xsZXIgdG8NCj4gPiA+ID4gY29ubmVjdCB0aGUgY2hhbm5lbHMgYW5kIHNsYXZlcywg
+U28gaXQncyBnb3QgYnkgRE1BIGNvbnRyb2xsZXIncw0KPiA+ID4gImZzbCxkbWEtbXV4IiBwcm9w
+ZXJ0eS4NCj4gPiA+ID4gVGhhbmtzIQ0KPiA+ID4NCj4gPiA+IE9rLg0KPiA+ID4NCj4gPiA+IEkn
+bSBub3Qgc28gc3VyZSBvbiB0aGUgd2F5IHRoaXMgaXMgZGVzY3JpYmVkLCBmcm9tIHRoZSBwb2lu
+dCBvZiB2aWV3DQo+IG9mDQo+ID4gPiB0aGUgZGV2aWNlLCBpdHMgRE1BIGNoYW5uZWwgaXMgd2ly
+ZWQgdG8gdGhlIE1VWCwgbm90IHRvIHRoZSBETUENCj4gZW5naW5lDQo+ID4gPiBkaXJlY3RseToN
+Cj4gPiA+DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICstLS0tLS0tKw0KPiA+ID4gICAg
+ICAgICAgICAgIC8tLS0tLS0tLS18REVWSUNFMHwNCj4gPiA+ICAgICAgICAgICAgICB8ICAgICAg
+ICAgKy0tLS0tLS0rDQo+ID4gPiArLS0tLS0rICAgKy0tLS0tLSsNCj4gPiA+IHwgRE1BIHw9PT18
+RE1BTVVYfA0KPiA+ID4gKy0tLS0tKyAgICstLS0tLS0rDQo+ID4gPiAgICAgICAgICAgICAgfCAg
+ICAgICAgICstLS0tLS0tKw0KPiA+ID4gICAgICAgICAgICAgIFwtLS0tLS0tLS18REVWSUNFMXwN
+Cj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgKy0tLS0tLS0rDQo+ID4gPg0KPiA+ID4gSWYg
+dGhhdCdzIHRoZSBjYXNlLCBJJ2QgZXhwZWN0IHRoZSBETUFNVVggdG8gaGF2ZSBhICNkbWEtY2Vs
+bHMgYW5kDQo+ID4gPiBkZXNjcmliZSBlYWNoIGRldmljZSBhcyBiZWluZyB3aXJlZCB0byB0aGUg
+bXV4LCBhbmQgdGhlbiB0aGUgbXV4IGFzDQo+ID4gPiBiZWluZyB3aXJlZCB0byB0aGUgRE1BLiBJ
+ZiB0aGUgTVVYZXMgYXJlIHN1Yi1ibG9ja3Mgb2YgdGhlIERNQSwgdGhlbg0KPiBJJ20NCj4gPiA+
+IG5vdCBzdXJlIHdoeSB0aGV5IG5lZWQgdG8gYmUgZGVzY3JpYmVkIGF0IGFsbC4NCj4gPiA+DQo+
+ID4gPiBDdXJyZW50bHksIHRoZSBETUEgY29kZSBpcyBoYW5kbGluZyBpbmZvcm1hdGlvbiB0aGF0
+J3Mgc3BlY2lmaWMgdG8NCj4gdGhlDQo+ID4gPiBNVVggKGkuZS4gdGhlIGNoYW5uZWwgSUQgdGhh
+dCdzIHNwZWNpZmljIHRvIHRoZSBNVVgpLCBhbmQgdGhhdCBmZWVscw0KPiBvZGQNCj4gPiA+IHVu
+bGVzcyB0aGUgTVVYIGlzIGEgY29tcG9uZW50IG9mIHRoZSBETUEgKHdoaWNoIGlmIHRydWUgSSdk
+IGV4cGVjdCBpdA0KPiB0bw0KPiA+ID4gYmUgZGVzY3JpYmVkIGRpZmZlcmVudGx5KS4NCj4gPiA+
+DQo+ID4gWWVzLCB0aGUgY29ubmVjdGlvbiBpcyBhcyB5b3VyIGltYWdpbmF0aW9uLCBleGNlcHQg
+Zm9yIGVhY2ggRE1BIGhhcyB0d28NCj4gTVVYLg0KPiA+IFRoZSBETUEgaGVscGVyIGxvb2tzIHRo
+ZSByZWdpc3RlcmVkIERNQSBlbmdpbmVlciBmb3IgRE1BIGNoYW5uZWwNCj4gYmluZGluZywNCj4g
+PiBhbmQgdGhlIHJlZ2lzdGVyZWQgRE1BIGVuZ2luZWVyIGlzIHRoZSBlRE1BIG5vZGUsIGlmIGJp
+bmRpbmcgdG8gRE1BTVVYLA0KPiA+IHRoZSBoZWxwZXIgd2lsbCBub3QgZmluZCBvdXQgdGhlIGRt
+YSBlbmdpbmVlci4NCj4gPiBUaGUgb25seSBETUFNVVggY29uZmlndXJhdGlvbiBpcyBwcm9ncmFt
+bWluZyB0aGUgc2xhdmUgaWQgaW50byBpdHMNCj4gPiBjb3JyZXNwb25kaW5nIHJlZ2lzdGVyLCBz
+byBpdHMgY29kZSBpcyBoYW5kbGVkIGJ5IHRoZSBlRE1BIGRyaXZlciwNCj4gPiB0aGUgRE1BTVVY
+IGlzIG5vdCBvcHRpb25hbC4NCj4gVGhpcyBpcyBmYWlybHkgY29tbW9uIHJlcHJlc2VudGF0aW9u
+IG9mIGhvdyBETUEgZW5naW5lcyBpbnRlcmFjdCB3aXRoDQo+IHNsYXZlDQo+IGNsaWVudHMgdmlh
+IGEgcHJvZ3JhbW1hYmxlIG11eC4gTm93IHRoZSBzbGF2ZSBpZCB2YWx1ZSBpbiB0aGlzIGNhc2UN
+Cj4gKHdoaWNoIHdlDQo+IHByb2dyYW0gdG8gbXV4KSBuZWVkcyB0byBiZSBmb3IgdGhlIGNsaWVu
+dCBhbmQgX25vdF8gZm9yIHRoZSBkbWFuZWdpbmUuDQo+IERNQQ0KPiBlbmdpbmUgd291bGQgaGF2
+ZSBhIHJlZ2lzdGVyIHRvIGNvbmZpZ3VyZSB0aGUgbXV4IHZhbHVlIHJlcXVpcmVkIGZvciB0aGUN
+Cj4gdHJhbnNhY3Rpb24uDQo+IA0KPiBUaGUgZG1hIGVuZ2luZSBBUEkgcHJvdmlkZXMgYSB3YXkg
+dG8gcHJvZ3JhbSB0aGUgc2xhdmUgaWQgKGllIG11eCB2YWx1ZSkNCj4gYW5kIElNTw0KPiB0aGlz
+IHNob3VsZCBiZSBhIHByb3BlcnR5IG9mIHNsYXZlIGRldmljZSAocGVyaGFwcyBwYXJ0IG9mIGl0
+cyBkbWENCj4gcmVzb3VyY2UpIGFuZA0KPiB1c2VkIHdoaWxlIHByb2dyYW1taW5nIGNoYW5uZWwu
+IE1ha2luZyBpdCBkbWEgZHJpdmVyIHByb3BlcnR5IG1ha2VzIG5vDQo+IHNlbnNlDQo+IGhlcmUN
+ClNpbmNlIHRoZSBETUFNVVggbm9kZSBpbiBEVFMgaXMgbm90IGEgc3RhbmRhbG9uZSBkZXZpY2Ug
+YnV0IHRpZ2h0bHktY291cGxlZCB0byB0aGUgZURNQSBjb250cm9sbGVyLA0KV291bGQgaXQgYmUg
+YmV0dGVyIGludGVncmF0ZWQgdGhlIERNQU1VWCBpbmZvIGludG8gdGhlIGVETUEgbm9kZT8gSnVz
+dCBsaWtlIHRoZSBHSUMgaGFzIGFuIGRpc3QgYW5kDQphbiBjcHUgaW50ZXJmYWNlLg0KDQplZG1h
+MDogZG1hLWNvbnRyb2xsZXJANDAwMTgwMDAgew0KCSNkbWEtY2VsbHMgPSA8Mj47DQoJY29tcGF0
+aWJsZSA9ICJmc2wsdmY2MTAtZWRtYSI7DQoJcmVnID0gPDB4NDAwMTgwMDAgMHgyMDAwPiwNCgkJ
+PDB4NDAwMjQwMDAgMHgxMDAwPiwNCgkJPDB4NDAwMjUwMDAgMHgxMDAwPjsNCglpbnRlcnJ1cHRz
+ID0gPDAgOCAweDA0PiwgPDAgOSAweDA0PjsNCglpbnRlcnJ1cHQtbmFtZXMgPSAiZWRtYS10eHJ4
+IiwgImVkbWEtZXJyIjsNCglkbWEtY2hhbm5lbHMgPSA8MzI+OyANCgljbG9ja3MgPSA8JmNsa3Mg
+VkY2MTBfQ0xLX0RNQU1VWDA+LA0KCQk8JmNsa3MgVkY2MTBfQ0xLX0RNQU1VWDE+Ow0KfTsNCg0K
+QW5kIFZpbm9kLCBJIG5vdGljZSB0aGF0IHRoZXJlIGhhcyBiZWVuIHNvbWUgZGlzY3Vzc2lvbiBv
+biB0aGUgc2xhdmVfaWQgaGFuZGxpbmcgZm9yIHRoZSBTQUkgYXVkaW8gZHJpdmVyDQosIHdoaWNo
+IHVzZXMgdGhlIGVETUEgZG9pbmcgZGF0YSB0cmFuc2Zlci4gU2luY2UgdGhlIGRyaXZlciBjb3Jl
+IGluZnJhc3RydWN0dXJlIHdvdWxkIGF1dG9tYXRpY2FsbHkgY2FsbA0KdGhlIERNQSBlbmdpbmUg
+aGVscCBmdW5jdGlvbiByZXF1ZXN0aW5nIHRoZSBjaGFubmVsIHdoaWNoIGJlIGRvbmUgYnkgdGhl
+IGRyaXZlciBpdHNlbGYsIHJlZHVjaW5nIHRoZSB3b3JrDQpvZiBpbmRpdmlkdWFsIGRldmljZSBk
+cml2ZXIuIFNvIGZvciBETUEgY29udHJvbGxlciBsaWtlIG91ciBlRE1BIHdoaWNoIGhhcyBzbGF2
+ZV9pZCBwYXJhbWV0ZXIsIGhvdyBhYm91dA0KZG9pbmcgdGhlIHNsYXZlX2lkIGNvbmZpZ3VyYXRp
+b24gZHVyaW5nIHRoZSBoZWxwIGNhbGwsIHRoaXMgY2FuIGFsc28gZnJlZXMgdGhlIGRyaXZlciBj
+b25maWd1cmluZyBpdCwgYW5kDQptYWtlIHRoZSBkcml2ZXIgY29tcGF0aWJsZSB3aXRoIHRob3Nl
+IHdobyBoYXMgbm8gc2xhdmVfaWQuIA0KVGhhbmtzIQ0KDQoNCg0KQmVzdCBSZWdhcmRzLA0KSmlu
+Z2NoYW5nDQoNCg0KDQoNCg0K
