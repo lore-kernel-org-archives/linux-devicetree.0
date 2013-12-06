@@ -1,38 +1,72 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH] serial: rewrite pxa2xx-uart to use 8250_core
-Date: Fri, 06 Dec 2013 13:28:51 +0400
-Message-ID: <1386322131.7152.36.camel@host5.omatika.ru>
-References: <20131205043544.GA28580@kroah.com>
-	 <1386286149-2855-1-git-send-email-ynvich@gmail.com>
-	 <20131206000253.GC21358@kroah.com>
-	 <20131206001728.GJ4360@n2100.arm.linux.org.uk>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCHv13][ 2/4] video: imxfb: Also add pwmr for the device tree.
+Date: Fri, 6 Dec 2013 10:30:17 +0100
+Message-ID: <20131206093017.GB24559@pengutronix.de>
+References: <1386258219-26437-1-git-send-email-denis@eukrea.com>
+ <1386317034.190941796@f354.i.mail.ru>
+ <20131206081640.GZ24559@pengutronix.de>
+ <1386318910.581671226@f322.i.mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131206001728.GJ4360@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Zhou Zhu <zzhu3@marvell.com>, Andrew Morton <akpm@linux-foundation.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, John Crispin <blogic@openwrt.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1386318910.581671226-qShh65M42GlsdVUOrk1QfQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Eric =?iso-8859-15?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-12-06 at 00:17 +0000, Russell King - ARM Linux wrote:
+On Fri, Dec 06, 2013 at 12:35:10PM +0400, Alexander Shiyan wrote:
+> > On Fri, Dec 06, 2013 at 12:03:54PM +0400, Alexander Shiyan wrote:
+> ...
+> > > > >  - fsl,dmacr: DMA Control Register value. This is optional. By default, the
+> > > > >  	register is not modified as recommended by the datasheet.
+> > > > > +- fsl,pwmr:  LCDC PWM Contrast Control Register value. That property is
+> > > > > +	optional, but defining it is necessary to get the backlight working. If that
+> > > > > +	property is ommited, the register is zeroed.
+> > > > 
+> > > > Why isn't this implemented as a backlight driver? Static devicetree
+> > > > provided values is very limiting.
+> > > 
+> > > Let's understand the terminology.
+> > > This register should be renamed according to the datasheet, i.e. LPCCR.
+> > > As I pointed out earlier, it is NOT control the backlight, this is a contrast control.
+> > > Yes, it works as PWM, but nothing do with the backlight subsystem.
+> > > Yes, we can make a driver for this PWM, but how are we going to control it?
+> > > I misunderstood something?
+> > 
+> > I stumbled upon 'get the backlight working' which implied for me that it
+> > should be a backlight driver. But you're right and now I remember we
+> > talked about this already.
+> 
+> Hallelujah.
+> 
+> > I still think this should be something adjustable, not static data.
+> > Maybe we could change the wording to something like "This property
+> > provides the default value for the contrast control register" since even
+> > if we add driver support for controlling the contrast we still want
+> > to have a sane default.
+> 
+> Sounds good.
+> 
+> > BTW the contrast could be controlled with a lcd_device (see
+> > lcd_device_register) which seems to be very easy to implement.
+> 
+> Address of register is placed within LCD area, so we cannot use this
+> memory region, I think is no so easy as you say....
 
-> I may be able to - one of the downsides though is that many of these
-> systems had hard-coded scripts which started a getty on the original
-> port - and that kind of makes it difficult to sort out.  This kind of
-> change becomes very much one of Linus' "flag days".
+We do not need a separate driver for this. Look for example at
+drivers/video/bf537-lq035.c, it just calls lcd_device_register()
+in its probe function.
 
-> So I'd suggest that we have a period where the old driver is still
-> available, so at least people can choose to use the old major/minor
-> numbers for a while.
+Sascha
 
-The patch doesn't change how the driver looks from the outside. The old
-driver was using 8250 name (ttyS), major (4) and first minor (64). So we
-only resolve an internal conflict.
-
-Kernel configuration is the place where issues may appear, since the
-patch removes CONFIG_SERIAL_PXA_CONSOLE option. I've updated all
-in-kernel users. However, out-of-kernel configs will no longer provide
-serial console, unless manually reconfigured. Is this the case we should
-worry about?
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
