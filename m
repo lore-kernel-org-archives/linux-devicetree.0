@@ -1,72 +1,27 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 08/10] ARM: dts: sun7i: cubieboard2: Enable GMAC
- instead of EMAC
-Date: Sat,  7 Dec 2013 01:29:41 +0800
-Message-ID: <1386350983-13281-9-git-send-email-wens@csie.org>
-References: <1386350983-13281-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
+ exynos5420 dtsi files
+Date: Fri, 6 Dec 2013 11:47:09 -0800
+Message-ID: <20131206194709.GA14464@roeck-us.net>
+References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com>
+ <1386308868-30264-2-git-send-email-l.krishna@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ4TRCKQKGQEUWO5ALY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1386350983-13281-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1386308868-30264-2-git-send-email-l.krishna@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Leela Krishna Amudala <l.krishna@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, wim@iguana.be, dianders@chromium.org, kgene.kim@samsung.com, t.figa@samsung.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-GMAC has better performance and fewer hardware issues.
-Use the GMAC in MII mode for ethernet instead of the EMAC.
+On Fri, Dec 06, 2013 at 11:17:46AM +0530, Leela Krishna Amudala wrote:
+> This patch adds pmusysreg node to exynos5250 and exynos5420 dtsi files to
+> handle PMU register accesses in a centralized way using syscon driver
+> 
+> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> Tested-by: Doug Anderson <dianders@chromium.org>
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index 5c51cb8..9ef5848 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -19,21 +19,6 @@
- 	compatible = "cubietech,cubieboard2", "allwinner,sun7i-a20";
- 
- 	soc@01c00000 {
--		emac: ethernet@01c0b000 {
--			pinctrl-names = "default";
--			pinctrl-0 = <&emac_pins_a>;
--			phy = <&phy1>;
--			status = "okay";
--		};
--
--		mdio@01c0b080 {
--			status = "okay";
--
--			phy1: ethernet-phy@1 {
--				reg = <1>;
--			};
--		};
--
- 		pinctrl@01c20800 {
- 			led_pins_cubieboard2: led_pins@0 {
- 				allwinner,pins = "PH20", "PH21";
-@@ -60,6 +45,14 @@
- 			pinctrl-0 = <&i2c1_pins_a>;
- 			status = "okay";
- 		};
-+
-+		gmac: ethernet@01c50000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&gmac_pins_mii>;
-+			snps,phy-addr = <1>;
-+			phy-mode = "mii";
-+			status = "okay";
-+		};
- 	};
- 
- 	leds {
--- 
-1.8.5.1
+Acked-by: Guenter Roeck <linux@roeck-us.net>
