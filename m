@@ -1,69 +1,73 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 2/3] ARM: sunxi: Add an ahci-platform compatible AHCI
- driver for the Allwinner SUNXi series of SoCs
-Date: Fri, 6 Dec 2013 10:01:17 +0100
-Message-ID: <20131206100117.59609a8a@skate>
-References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl>
-	<1386159055-10264-3-git-send-email-oliver@schinagl.nl>
-	<20131204123708.GD3158@htj.dyndns.org>
-	<529F2677.3070208@schinagl.nl>
-	<20131204131402.GG3158@htj.dyndns.org>
-	<529F2B41.8090009@schinagl.nl>
-	<20131204132312.GH3158@htj.dyndns.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND v5 0/4] LP3943 MFD driver for a GPIO expander and
+ a PWM generator
+Date: Fri, 6 Dec 2013 09:09:15 +0000
+Message-ID: <20131206090915.GA12491@lee--X1>
+References: <1386296324-23039-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20131204132312.GH3158@htj.dyndns.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Olliver Schinagl <oliver+list@schinagl.nl>, Oliver Schinagl <oliver@schinagl.nl>, grant.likely@linaro.org, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dev@linux-sunxi.org, maxime.ripard@free-electrons.com, ijc@hellion.org.uk, hdegoede@redhat.com, Richard Zhu <r65037@freescale.com>, Shawn Guo <shawn.guo@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1386296324-23039-1-git-send-email-milo.kim-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Tejun Heo,
+On Fri, 06 Dec 2013, Milo Kim wrote:
 
-On Wed, 4 Dec 2013 08:23:12 -0500, Tejun Heo wrote:
+> LP3943 is an integrated device capable of driving 16 output channels.
+> It can be used for GPIO expander and PWM generators.
+> LP3493 registers are controlled via the I2C interface.
+>=20
+> This patch-set consists of four parts - MFD, GPIO, PWM and documents.
+>=20
+> Update from v4 to v5:
+>   Add Thierry's ACK for the PWM driver and the DT documentation
+>=20
+> Milo Kim (4):
+>   mfd: add LP3943 MFD driver
+>   gpio: add LP3943 I2C GPIO expander driver
+>   pwm: add LP3943 PWM driver
+>   Documentation: add LP3943 DT bindings and document
+>=20
+>  .../devicetree/bindings/gpio/gpio-lp3943.txt       |   37 +++
+>  Documentation/devicetree/bindings/mfd/lp3943.txt   |   33 ++
+>  .../devicetree/bindings/pwm/pwm-lp3943.txt         |   58 ++++
+>  drivers/gpio/Kconfig                               |    8 +
+>  drivers/gpio/Makefile                              |    1 +
+>  drivers/gpio/gpio-lp3943.c                         |  242 ++++++++++=
++++++
+>  drivers/mfd/Kconfig                                |   11 +
+>  drivers/mfd/Makefile                               |    1 +
+>  drivers/mfd/lp3943.c                               |  167 ++++++++++=
++
+>  drivers/pwm/Kconfig                                |   10 +
+>  drivers/pwm/Makefile                               |    1 +
+>  drivers/pwm/pwm-lp3943.c                           |  314 ++++++++++=
+++++++++++
+>  include/linux/mfd/lp3943.h                         |  114 +++++++
+>  13 files changed, 997 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-lp394=
+3.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/lp3943.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-lp3943.=
+txt
+>  create mode 100644 drivers/gpio/gpio-lp3943.c
+>  create mode 100644 drivers/mfd/lp3943.c
+>  create mode 100644 drivers/pwm/pwm-lp3943.c
+>  create mode 100644 include/linux/mfd/lp3943.h
 
-> > But again, point me (for dummies ;) in the right direction and I'll
-> > work on it with some help.
-> 
-> Richard and Shawn recently worked on ahci_imx.  Can you guys please
-> talk with each other and figure out what can be done to share as much
-> as possible among these new platform-specific drivers?  I'd really
-> like to see the common things factored out as much as possible with
-> only the actual hardware differences described for each device.
+Patch-set applied, thanks Milo.
 
-Also, please Cc me on such discussions. I have a pending AHCI platform
-driver for another ARM SoC family. It is very similar to ahci_platform,
-but needs to do a few more things that are SoC specific (map an
-additional register area, and do some SoC-specific stuff with them).
-
-For the moment, we're left with two approaches:
-
- * Do what Oliver did, where the ahci_<foo> driver will do its own
-   SoC-specific stuff, and then will register an additional
-   platform_device to trigger the ->probe() of the generic
-   ahci_platform driver. I must say I don't really like this solution,
-   since it involves having two platform_device registered for the same
-   piece of hardware (one platform_device to trigger the ->probe of
-   ahci_<foo>, and another one to trigger the ->probe of ahci_platform).
-
- * Duplicate in ahci_<foo> the (relatively small) amount of code that
-   is present in ahci_platform.
-
->From my point of view, ahci_platform should be turned into a small
-"library", that provides an API for ahci_<foo> drivers to 1/ do their
-own custom stuff and 2/ do the common ahci_platform stuff.
-
-This way we avoid the registration of two platform_device for the same
-piece of hardware, and we avoid the duplication of code.
-
-Want me to propose a RFC for this idea?
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
