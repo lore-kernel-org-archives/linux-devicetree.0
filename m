@@ -1,66 +1,140 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSHYxM11bIDIvNF0gdmlkZW86IGlteGZiOiBBbHNvIGFkZCBw?=
- =?UTF-8?B?d21yIGZvciB0aGUgZGV2aWNlIHRyZWUu?=
-Date: Fri, 06 Dec 2013 12:35:10 +0400
-Message-ID: <1386318910.581671226@f322.i.mail.ru>
-References: <1386258219-26437-1-git-send-email-denis@eukrea.com>
- <1386317034.190941796@f354.i.mail.ru>
- <20131206081640.GZ24559@pengutronix.de>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 18/26] ARM: omap3-beagle.dts: add display information
+Date: Fri, 6 Dec 2013 09:41:17 +0100
+Message-ID: <CABxcv=mgQM6oHf7=-EbryAcmgJm3vf+xXqHW6BCdW8ovS29O0g@mail.gmail.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+	<1386160133-24026-19-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131206081640.GZ24559@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?U2FzY2hhIEhhdWVy?= <s.hauer@pengutronix.de>
-Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric@eukrea.com>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring@calxeda.com>, =?UTF-8?B?RGVuaXMgQ2FyaWtsaQ==?= <denis@eukrea.com>, =?UTF-8?B?VG9taSBWYWxrZWluZW4=?= <tomi.valkeinen@ti.com>, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel@pengutronix.de>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo@linaro.org>, =?UTF-8?B?SmVhbi1DaHJpc3RvcGhlIFBsYWduaW9sLVZpbGxhcmQ=?= <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1386160133-24026-19-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-> On Fri, Dec 06, 2013 at 12:03:54PM +0400, Alexander Shiyan wrote:
-...
-> > > >  - fsl,dmacr: DMA Control Register value. This is optional. By default, the
-> > > >  	register is not modified as recommended by the datasheet.
-> > > > +- fsl,pwmr:  LCDC PWM Contrast Control Register value. That property is
-> > > > +	optional, but defining it is necessary to get the backlight working. If that
-> > > > +	property is ommited, the register is zeroed.
-> > > 
-> > > Why isn't this implemented as a backlight driver? Static devicetree
-> > > provided values is very limiting.
-> > 
-> > Let's understand the terminology.
-> > This register should be renamed according to the datasheet, i.e. LPCCR.
-> > As I pointed out earlier, it is NOT control the backlight, this is a contrast control.
-> > Yes, it works as PWM, but nothing do with the backlight subsystem.
-> > Yes, we can make a driver for this PWM, but how are we going to control it?
-> > I misunderstood something?
-> 
-> I stumbled upon 'get the backlight working' which implied for me that it
-> should be a backlight driver. But you're right and now I remember we
-> talked about this already.
+Hi Tomi,
 
-Hallelujah.
+On Wed, Dec 4, 2013 at 1:28 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> ---
+>  arch/arm/boot/dts/omap3-beagle.dts | 67 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+> index fa532aaacc68..1ca1932d02aa 100644
+> --- a/arch/arm/boot/dts/omap3-beagle.dts
+> +++ b/arch/arm/boot/dts/omap3-beagle.dts
+> @@ -178,3 +178,70 @@
+>         mode = <3>;
+>         power = <50>;
+>  };
+> +
+> +&dpi {
+> +       vdds_dsi-supply = <&vpll2>;
+> +
+> +       dpi_out: endpoint {
+> +               remote-endpoint = <&tfp410_in>;
+> +               data-lines = <24>;
+> +       };
+> +};
+> +
+> +&venc {
+> +       vdda_dac-supply = <&vdac>;
+> +
+> +       venc_out: endpoint {
+> +               remote-endpoint = <&tv_connector_in>;
+> +       };
+> +};
+> +
+> +/ {
+> +       aliases {
+> +               display0 = &dvi0;
+> +               display1 = &tv0;
+> +       };
+> +
+> +       tfp410: encoder@0 {
+> +               compatible = "ti,tfp410";
+> +               gpios = <&gpio5 10 0>;  /* 170, power-down */
+> +
 
-> I still think this should be something adjustable, not static data.
-> Maybe we could change the wording to something like "This property
-> provides the default value for the contrast control register" since even
-> if we add driver support for controlling the contrast we still want
-> to have a sane default.
+Shouldn't this be gpio6 instead since OMAP GPIO banks start counting
+from 1 so gpio5 + 10 is GPIO 138.
 
-Sounds good.
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       port@0 {
+> +                               reg = <0>;
+> +
+> +                               tfp410_in: endpoint@0 {
+> +                                       remote-endpoint = <&dpi_out>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +
+> +                               tfp410_out: endpoint@1 {
+> +                                       remote-endpoint = <&dvi_connector_in>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +       dvi0: connector@0 {
+> +               compatible = "ti,dvi_connector";
+> +               i2c-bus = <&i2c3>;
+> +
+> +               dvi_connector_in: endpoint {
+> +                       remote-endpoint = <&tfp410_out>;
+> +               };
+> +       };
+> +
+> +       tv0: connector@1 {
+> +               compatible = "ti,svideo_connector";
+> +
+> +               tv_connector_in: endpoint {
+> +                       remote-endpoint = <&venc_out>;
+> +               };
+> +       };
+> +};
+> --
+> 1.8.3.2
+>
 
-> BTW the contrast could be controlled with a lcd_device (see
-> lcd_device_register) which seems to be very easy to implement.
+Also I don't see the DSS pinmux set for this board. I guess you need
+something like the following on top:
 
-Address of register is placed within LCD area, so we cannot use this
-memory region, I think is no so easy as you say....
+0x0a4 (PIN_OUTPUT | MUX_MODE0)   /* dss_pclk.dss_pclk */
+0x0a6 (PIN_OUTPUT | MUX_MODE0)   /* dss_hsync.dss_hsync */
+0x0a8 (PIN_OUTPUT | MUX_MODE0)   /* dss_vsync.dss_vsync */
+0x0aa (PIN_OUTPUT | MUX_MODE0)   /* dss_acbias.dss_acbias */
+0x0ac (PIN_OUTPUT | MUX_MODE0)   /* dss_data0.dss_data0 */
+0x0ae (PIN_OUTPUT | MUX_MODE0)   /* dss_data1.dss_data1 */
+0x0b0 (PIN_OUTPUT | MUX_MODE0)   /* dss_data2.dss_data2 */
+0x0b2 (PIN_OUTPUT | MUX_MODE0)   /* dss_data3.dss_data3 */
+0x0b4 (PIN_OUTPUT | MUX_MODE0)   /* dss_data4.dss_data4 */
+0x0b6 (PIN_OUTPUT | MUX_MODE0)   /* dss_data5.dss_data5 */
+0x0b8 (PIN_OUTPUT | MUX_MODE0)   /* dss_data6.dss_data6 */
+0x0ba (PIN_OUTPUT | MUX_MODE0)   /* dss_data7.dss_data7 */
+0x0bc (PIN_OUTPUT | MUX_MODE0)   /* dss_data8.dss_data8 */
+0x0be (PIN_OUTPUT | MUX_MODE0)   /* dss_data9.dss_data9 */
+0x0c0 (PIN_OUTPUT | MUX_MODE0)   /* dss_data10.dss_data10 */
+0x0c2 (PIN_OUTPUT | MUX_MODE0)   /* dss_data11.dss_data11 */
+0x0c4 (PIN_OUTPUT | MUX_MODE0)   /* dss_data12.dss_data12 */
+0x0c6 (PIN_OUTPUT | MUX_MODE0)   /* dss_data13.dss_data13 */
+0x0c8 (PIN_OUTPUT | MUX_MODE0)   /* dss_data14.dss_data14 */
+0x0ca (PIN_OUTPUT | MUX_MODE0)   /* dss_data15.dss_data15 */
+0x0cc (PIN_OUTPUT | MUX_MODE0)   /* dss_data16.dss_data16 */
+0x0ce (PIN_OUTPUT | MUX_MODE0)   /* dss_data17.dss_data17 */
+0x0d0 (PIN_OUTPUT | MUX_MODE0)   /* dss_data18.dss_data18 */
+0x0d2 (PIN_OUTPUT | MUX_MODE0)   /* dss_data19.dss_data19 */
+0x0d4 (PIN_OUTPUT | MUX_MODE0)   /* dss_data20.dss_data20 */
+0x0d6 (PIN_OUTPUT | MUX_MODE0)   /* dss_data21.dss_data21 */
+0x0d8 (PIN_OUTPUT | MUX_MODE0)   /* dss_data22.dss_data22 */
+0x0da (PIN_OUTPUT | MUX_MODE0)   /* dss_data23.dss_data23 */
 
----
+Best regards,
+Javier
