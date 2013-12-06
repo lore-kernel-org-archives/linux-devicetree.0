@@ -1,47 +1,152 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSHY3XVsgMi8yXSB2aWRlbzogYmFja2xpZ2h0OiBncGlvLWJh?=
- =?UTF-8?B?Y2tsaWdodDogQWRkIERUIHN1cHBvcnQu?=
-Date: Fri, 06 Dec 2013 18:48:10 +0400
-Message-ID: <1386341290.792909778@f66.i.mail.ru>
-References: <1386266109-16071-1-git-send-email-denis@eukrea.com>
- <1386335318.12471946@f258.i.mail.ru>
- <20131206141236.GA32313@ulmo.nvidia.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] of: Add simple panel device tree binding
+Date: Fri, 6 Dec 2013 15:54:28 +0100
+Message-ID: <20131206145428.GG24559@pengutronix.de>
+References: <1385145714-3022-1-git-send-email-treding@nvidia.com>
+ <2120855.5UlavpPp2J@avalon>
+ <20131126085911.GA27752@ulmo.nvidia.com>
+ <2124722.FKim1X37Up@avalon>
+ <20131206135759.GD30960@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131206141236.GA32313-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131206135759.GD30960-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?VGhpZXJyeSBSZWRpbmc=?= <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?SmluZ29vIEhhbg==?= <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?RGVuaXMgQ2FyaWtsaQ==?= <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, =?UTF-8?B?UmljaGFyZCBQdXJkaWU=?= <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, =?UTF-8?B?TGF1cmVudCBQaW5jaGFydA==?= <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, =?UTF-8?B?SmVhbi1DaHJpc3RvcGhlIFBsYWduaW9sLVZpbGxhcmQ=?= <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PiBPbiBGcmksIERlYyAwNiwgMjAxMyBhdCAwNTowODozOFBNICswNDAwLCBBbGV4YW5kZXIgU2hp
-eWFuIHdyb3RlOgo+ID4gPiBPbiBUaHUsIERlYyAwNSwgMjAxMyBhdCAwNjo1NTowOVBNICswMTAw
-LCBEZW5pcyBDYXJpa2xpIHdyb3RlOgo+ID4gPiBbLi4uXQo+ID4gPiA+ICtPcHRpb25hbCBwcm9w
-ZXJ0aWVzOgo+ID4gPiA+ICsgIC0gZGVmYXVsdC1zdGF0ZTogVGhlIGluaXRpYWwgc3RhdGUgb2Yg
-dGhlIGJhY2tsaWdodC4KPiA+ID4gPiArICAgIFZhbGlkIHZhbHVlcyBhcmUgIm9uIiwgIm9mZiIs
-IGFuZCAia2VlcCIuCj4gPiA+ID4gKyAgICBUaGUgImtlZXAiIHNldHRpbmcgd2lsbCBrZWVwIHRo
-ZSBiYWNrbGlnaHQgYXQgd2hhdGV2ZXIgaXRzIGN1cnJlbnQKPiA+ID4gPiArICAgIHN0YXRlIGlz
-LCB3aXRob3V0IHByb2R1Y2luZyBhIGdsaXRjaC4gVGhlIGRlZmF1bHQgaXMga2VlcCBpZiB0aGlz
-Cj4gPiA+ID4gKyAgICBwcm9wZXJ0eSBpcyBub3QgcHJlc2VudC4KPiA+ID4gCj4gPiA+IEknbSBu
-b3Qgc3VyZSBpZiAib24iLCAib2ZmIiBhbmQgImtlZXAiIGFyZSBhIGdvb2QgY2hvaWNlIGZvciB0
-aGlzCj4gPiA+IGJpbmRpbmcuIEhhdmluZyBzdHJpbmdzIGZvciB0aGVzZSB0cmlzdGF0ZSB2YWx1
-ZXMgc2VlbXMgc3Vib3B0aW1hbC4KPiA+ID4gT3RoZXIgYmluZGluZ3MgaGF2ZSBjaG9zZW4gYSBy
-ZXByZXNlbnRhdGlvbiB0aGF0LCB0cmFuc3Bvc2VkIHRvIHRoaXMKPiA+ID4gdXNlLWNhc2UsIHdv
-dWxkIHJlYWQgc29tZXRoaW5nIGxpa2UgdGhpczoKPiA+ID4gCj4gPiA+IAktIGRlZmF1bHQtc3Rh
-dGU6IFRoZSBpbml0aWFsIHN0YXRlIG9mIHRoZSBiYWNrbGlnaHQuIFZhbGlkCj4gPiA+IAkgIHZh
-bHVlczoKPiA+ID4gCSAgLSAwOiBvZmYKPiA+ID4gCSAgLSAxOiBvbgo+ID4gPiAKPiA+ID4gCUlm
-IHRoZSAiZGVmYXVsdC1zdGF0ZSIgcHJvcGVydHkgaXMgbm90IHByZXNlbnQsIHRoZSBkZWZhdWx0
-Cj4gPiA+IAl3aWxsIGJlIHRvIGtlZXAgdGhlIGN1cnJlbnQgYmFja2xpZ2h0IHN0YXRlLgo+ID4g
-PiAKPiA+ID4gV2hpY2ggaXMgaW4gZmFjdCB0aGUgZXhhY3QgYmVoYXZpb3VyIHRoYXQgeW91ciBi
-aW5kaW5nIGRlc2NyaWJlcywgYnV0Cj4gPiA+IGl0J3MgbXVjaCBtb3JlIGludHVpdGl2ZSBpbiBt
-eSBvcGluaW9uLgo+ID4gCj4gPiBXaHkgd2UgY2Fubm90IHVzZSBHUElPIGJpbmRpbmdzIGZvciBh
-Y3RpdmUgbGV2ZWwgaGVyZT8KPiA+IFdoYXQgYSByZWFzb24gZm9yICJrZWVwIiBzdGF0ZT8gQ2Fu
-IHRoaXMgYmUgYW4gYWRkaXRpb25hbCBwcm9wZXJ0eT8KPiAKPiBEZWZhdWx0IHN0YXRlIGFuZCBh
-Y3RpdmUgbGV2ZWwgYXJlIHR3byBkaWZmZXJlbnQgdGhpbmdzLgoKT0suIEFuZCB3aGF0IGlzICJk
-ZWZhdWx0IiBzdGF0ZT8gU3RhdGUgYmVmb3JlICJ1bmJsYW5rIj8KCi0tLQo=
+On Fri, Dec 06, 2013 at 02:58:00PM +0100, Thierry Reding wrote:
+> On Thu, Dec 05, 2013 at 12:45:17AM +0100, Laurent Pinchart wrote:
+> > Hi Thierry,
+> > 
+> > On Tuesday 26 November 2013 09:59:12 Thierry Reding wrote:
+> > > On Tue, Nov 26, 2013 at 02:54:41AM +0100, Laurent Pinchart wrote:
+> > > > On Friday 22 November 2013 19:41:54 Thierry Reding wrote:
+> > > > > This binding specifies a set of common properties for display panels. It
+> > > > > can be used as a basis by bindings for specific panels.
+> > > > > 
+> > > > > Bindings for three specific panels are provided to show how the simple
+> > > > > panel binding can be used.
+> > > > > 
+> > > > > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > > ---
+> > > > > This binding has already been discussed earlier. Both Laurent and Tomi
+> > > > > seemed to be generally fine with this.
+> > > > 
+> > > > That's correct, I'm generally fine with your approach, but there's still
+> > > > one point I'd like to see addressed.
+> > > > 
+> > > > As I mentioned previously, I would like to avoid adding zillions of
+> > > > compatible properties to the driver, when we could use a single property
+> > > > in the DT bindings that would specify the timings instead. This would
+> > > > lower the amount of changes made to the simple panel driver, while
+> > > > keeping DT simple enough (at least in my opinion).
+> > > > 
+> > > > Specifying the full timings in every DT source file would be pretty
+> > > > verbose and could be error-prone. However, using a single property to
+> > > > specify one of the standard display timings, as orinally proposed by Hans
+> > > > de Goede (CC'ed) during a chat at the kernel summit would in my opinion be
+> > > > a good middle-ground solution.
+> > > > 
+> > > > Would you consider adding such a property to the simple panel bindings,
+> > > > and define a common compatible string ? Each panel should of course list
+> > > > its own compatibility string in addition to the common compatible string
+> > > > in case the need for extensions arises in the future.
+> > > 
+> > > My gripe with this is that it duplicates information. By definition a simple
+> > > panel supports a limited number of display modes (typically only a single
+> > > one), so once you know the compatible value (which needs to be there anyway)
+> > > you can derive the mode from it. Adding a property that specifies the
+> > > display mode is redundant.
+> > 
+> > But that could be said of pretty much every device :-) Let's take an example I 
+> > came across today. The SPI DT bindings have a maximum clock speed property for 
+> > every device. This is usually a property of the hardware, which could have 
+> > been stored in the device drivers.
+> 
+> No it isn't. It's a board-specific property. It depends on all sorts of
+> factors such as how long the connections are between SPI master and
+> slave as well as what other electrical components happen to be in that
+> path.
+> 
+> > I don't particularly like expressing detailed device information in DT when 
+> > the information is static for a given device and easily stored in the drivers. 
+> > However, in this case, I believe the overhead of adding one mode property to 
+> > DT is worth it, as there are zillion panel models in the wild. Going back to 
+> > the SPI analogy, let's consider the m25p80 SPI flash memory driver. It 
+> > supports many models, each of them implemented by a large number of 
+> > manufacturers. The driver stores information for each model (such as the flash 
+> > size), but the maximum SPI clock frequency is specified in DT as we don't want 
+> > to have a list of all device models for all manufacturers in the driver 
+> > (granted, one of the reasons to specify the max frequency in DT is that it can 
+> > also be limited by the board, not only by the chip, but I believe my point 
+> > remains valid).
+> 
+> On the contrary, it completely invalidates your point.
+> 
+> And in fact m25p80 is another perfect example to prove my point. Having
+> display modes encoded within the panel driver and selected depending on
+> the compatible string isn't anything other than the m25p_ids table.
+> 
+> When you want to support a new type of device, you need to add a new
+> entry into the m25p_ids table, just like you would add a new display
+> mode to the panel driver.
+> 
+> > > Dave Airlie proposed something else, namely to keep a list of common
+> > > modes within the driver and have each device reference that mode
+> > > instead. I think that could work similarily well. It still requires the
+> > > driver to be touched for each new panel, but the changes will be very
+> > > small. They'll be more of the "add a new table entry" sort of change
+> > > that we have in drivers like the 8250/16550-compatible serial. Most of
+> > > that could probably be wrapped into a macro to make it concise.
+> > 
+> > That would be better, but not perfect :-) Given the very large number of panel
+> > models I would like to have a simple panel driver that doesn't need to be
+> > patched for every model. The odd cases can of course be handled in C, but the
+> > common case would really benefit from being handled in DT.
+> 
+> I really don't think the number of panels supported in mainline will be
+> overly big.
+
+I for once have hardly seen a display twice in different projects.
+
+> Even if, I will gladly take patches that add them to the
+> driver. And it isn't even a lot of work, you really just need to copy
+> this stuff from the datasheet. And the larger the number of panels the
+> kernel supports, the easier it will get to add new support because you
+> may either just be able to reuse the compatible string because somebody
+> else already added support for it, or you may be able to reuse an
+> existing mode because your panel happens to match that mode.
+> 
+> > Imagine how annoying it would be to update the USB mass storage driver
+> > with the VID:PID of every new USB flash device.
+> 
+> The electrical interface of USB is well defined and it is further well
+> specified what USB mass storage means. In addition, USB has very good
+> support for probing capabilities and characteristics. The equivalent for
+> panels would be something like EDID. If the panel provided EDID, then of
+> course you don't need to specify the mode, neither in DT nor in the
+> driver.
+
+What makes EDID useful is that it contains the modes. We don't have to
+maintain a database of all monitors available out there in the kernel.
+Still EDID data contains a vendor/model string which makes it possible
+to add quirks for a specific monitor should we have to.
+
+So I really vote for putting the mode data into dt for the 98% case and
+an exact vendor/model for the remaining quirks. This is simple anyway
+since we already have a binding for display modelines. Supporting this
+in the panel driver is trivial.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
