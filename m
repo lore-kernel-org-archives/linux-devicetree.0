@@ -1,126 +1,96 @@
-From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
- exynos5420 dtsi files
-Date: Fri, 06 Dec 2013 18:22:32 +0100
-Message-ID: <52A207D8.3030206@gmail.com>
-References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com> <1386308868-30264-2-git-send-email-l.krishna@samsung.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 01/10] net: stmmac: Enable stmmac main clock
+ when probing hardware
+Date: Sat,  7 Dec 2013 01:29:34 +0800
+Message-ID: <1386350983-13281-2-git-send-email-wens@csie.org>
+References: <1386350983-13281-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386308868-30264-2-git-send-email-l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBS4TRCKQKGQEF6XZICY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1386350983-13281-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
 
-Just a few minor comments...
+Guiseppe previously stated that the "stmmaceth" clock is the
+main clock that drives the IP. The stmmac driver does not
+enable this clock during the probe phase. When the driver is
+built in to the kernel, this is fine because the clock maybe
+on by default, or the boot loader had enabled it.
 
-On 12/06/2013 06:47 AM, Leela Krishna Amudala wrote:
-> This patch adds pmusysreg node to exynos5250 and exynos5420 dtsi files to
+If stmmac is built as a module, when the module is loaded,
+the clock may be found unused and disabled by the kernel.
 
-s/pmusysreg/PMU sysreg ? Similarly I would capitalize it in the subject
-line as well.
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 24 +++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
-> handle PMU register accesses in a centralized way using syscon driver
->
-> Signed-off-by: Leela Krishna Amudala<l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Tomasz Figa<t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Doug Anderson<dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Tested-by: Doug Anderson<dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/arm/samsung/pmu.txt |   15 +++++++++++++++
->   arch/arm/boot/dts/exynos5250.dtsi                     |    5 +++++
->   arch/arm/boot/dts/exynos5420.dtsi                     |    5 +++++
->   3 files changed, 25 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> new file mode 100644
-> index 0000000..f1f1552
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-
-I might be easy to confuse this with ARM Performance Monitoring Unit.
-So perhaps we should rename this file to, e.g. power-management-unit.txt ?
-
-> @@ -0,0 +1,15 @@
-> +SAMSUNG Exynos SoC series PMU Registers
-
-s/PMU/Power Management Unit ?
-
-> +
-> +Properties:
-> + - compatible : should contain two values. First value must be one from following list:
-> +		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
-> +		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
-
-s/./; ?
-
-> +		second value must be always "syscon".
-
-It might be more safe to specify it as the last value, so something along
-the lines of:
-
-	The last value should be "syscon".
-
-> +
-> + - reg : offset and length of the register set.
-> +
-> +Example :
-> +pmu_system_controller: system-controller@10040000 {
-
-Might be more sensible to use 'power_management_unit' for the label.
-
-> +	compatible = "samsung,exynos5250-pmu", "syscon";
-> +	reg =<0x10040000 0x5000>;
-> +};
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index b98ffc3..62f9e36 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -163,6 +163,11 @@
->   		interrupts =<0 47 0>;
->   	};
->
-> +	pmu_system_controller: system-controller@10040000 {
-
-s/pmu_system_controller/power_management_unit ? So it describes the 
-subsystem
-better in terms used in the SoCs User Manual ?
-
-> +		compatible = "samsung,exynos5250-pmu", "syscon";
-> +		reg =<0x10040000 0x5000>;
-> +	};
-> +
->   	watchdog {
->   		clocks =<&clock 336>;
->   		clock-names = "watchdog";
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index b1fa334..cd47db0 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -402,4 +402,9 @@
->   		clock-names = "gscl";
->   		samsung,power-domain =<&gsc_pd>;
->   	};
-> +
-> +	pmu_system_controller: system-controller@10040000 {
-
-s/pmu_system_controller/power_management_unit ?
-
-> +		compatible = "samsung,exynos5420-pmu", "syscon";
-> +		reg =<0x10040000 0x5000>;
-> +	};
->   };
-
-Otherwise looks good.
-
-Thanks,
-Sylwester
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 8d4ccd3..7da71ed 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2688,10 +2688,17 @@ struct stmmac_priv *stmmac_dvr_probe(struct device *device,
+ 	if ((phyaddr >= 0) && (phyaddr <= 31))
+ 		priv->plat->phy_addr = phyaddr;
+ 
++	priv->stmmac_clk = clk_get(priv->device, STMMAC_RESOURCE_NAME);
++	if (IS_ERR(priv->stmmac_clk)) {
++		pr_warn("%s: warning: cannot get CSR clock\n", __func__);
++		goto error_clk_get;
++	}
++	clk_prepare_enable(priv->stmmac_clk);
++
+ 	/* Init MAC and get the capabilities */
+ 	ret = stmmac_hw_init(priv);
+ 	if (ret)
+-		goto error_free_netdev;
++		goto error_hw_init;
+ 
+ 	ndev->netdev_ops = &stmmac_netdev_ops;
+ 
+@@ -2729,12 +2736,6 @@ struct stmmac_priv *stmmac_dvr_probe(struct device *device,
+ 		goto error_netdev_register;
+ 	}
+ 
+-	priv->stmmac_clk = clk_get(priv->device, STMMAC_RESOURCE_NAME);
+-	if (IS_ERR(priv->stmmac_clk)) {
+-		pr_warn("%s: warning: cannot get CSR clock\n", __func__);
+-		goto error_clk_get;
+-	}
+-
+ 	/* If a specific clk_csr value is passed from the platform
+ 	 * this means that the CSR Clock Range selection cannot be
+ 	 * changed at run-time and it is fixed. Viceversa the driver'll try to
+@@ -2759,15 +2760,18 @@ struct stmmac_priv *stmmac_dvr_probe(struct device *device,
+ 		}
+ 	}
+ 
++	clk_disable_unprepare(priv->stmmac_clk);
++
+ 	return priv;
+ 
+ error_mdio_register:
+-	clk_put(priv->stmmac_clk);
+-error_clk_get:
+ 	unregister_netdev(ndev);
+ error_netdev_register:
+ 	netif_napi_del(&priv->napi);
+-error_free_netdev:
++error_hw_init:
++	clk_disable_unprepare(priv->stmmac_clk);
++	clk_put(priv->stmmac_clk);
++error_clk_get:
+ 	free_netdev(ndev);
+ 
+ 	return NULL;
+-- 
+1.8.5.1
