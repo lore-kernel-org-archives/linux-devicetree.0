@@ -1,108 +1,89 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCHv5][ 2/8] staging: imx-drm: Add RGB666 support for
-	parallel display.
-Date: Fri, 6 Dec 2013 15:16:35 +0100
-Message-ID: <20131206141635.GB32313@ulmo.nvidia.com>
-References: <1386268092-21719-1-git-send-email-denis@eukrea.com>
-	<1386268092-21719-2-git-send-email-denis@eukrea.com>
-	<20131206131403.GA30960@ulmo.nvidia.com>
-	<1386336562.4088.5.camel@weser.hi.pengutronix.de>
+From: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCHv2 00/10] Add memory mapped support for ti qspi, m25p80 serial flash.
+Date: Fri, 6 Dec 2013 19:54:41 +0530
+Message-ID: <1386339891-32717-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1643104301=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1386336562.4088.5.camel@weser.hi.pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Denis Carikli <denis@eukrea.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Eric =?utf-8?Q?B=C3=A9nard?= <eric@eukrea.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, driverdev-devel@linuxdriverproject.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The patch series aims to add memory mapped support for TI qspi
+contoller and also add support for the same in serial flash driver(m25p80).
 
---===============1643104301==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WYTEVAkct0FjGQmd"
-Content-Disposition: inline
+These feature was added as a part of the series[1]:
+The series[1] add support for quad and memory mapped feature in spi and
+flash driver. Based on Brian Norris suggestion on splitting the quad and 
+memory mapped feature, I had sent a seperate series for quad support which 
+has beed accepted by Brian.
+
+The $subject patch series takes care of the memory mapped part.  
+
+Overview of memory mapped support in qspi:
+ TI qspi controller supports memory mapped read support, switching to which
+ requires  register modifications(qspi registers, control module register for
+ DRA, qspi register for am43x). Once switched, the flash data can be available
+ at a soc specific memory mapped address. For operations in normal mode, we need 
+ to keep memory mapped disable.
+
+ Flow of the patch is to keep the memory mapped enable by default in the driver.
+ Whenever Normal spi mode operations are desired, we switch to configuration mode
+ and at the end of it memory mapped is again enabled. There are few function pointers
+ added to fecilitate easy communication between the flash and spi controllers.
+
+Major changes in the $subject patch based on discussion in [1]:
+
+- Feature has been broken down into small meaningfl patches.
+- memcpy is done in flash driver and spi framework is bypassed.
+- configuration of memory mapped spi controller regsiters is done
+  through function calls from flash side.
+
+[1]: http://lists.infradead.org/pipermail/linux-mtd/2013-October/049058.html
+
+v1->v2:
+ Mentioned on individual patches.
+Overall change is the squashing of few patches.
 
 
---WYTEVAkct0FjGQmd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v1:
+https://patchwork.kernel.org/patch/3237091/
 
-On Fri, Dec 06, 2013 at 02:29:22PM +0100, Lucas Stach wrote:
-> Am Freitag, den 06.12.2013, 14:14 +0100 schrieb Thierry Reding:
-> > On Thu, Dec 05, 2013 at 07:28:06PM +0100, Denis Carikli wrote:
-> > [...]
-> > > diff --git a/drivers/staging/imx-drm/ipu-v3/ipu-dc.c b/drivers/stagin=
-g/imx-drm/ipu-v3/ipu-dc.c
-> > [...]
-> > > @@ -155,6 +156,8 @@ static int ipu_pixfmt_to_map(u32 fmt)
-> > >  		return IPU_DC_MAP_BGR666;
-> > >  	case V4L2_PIX_FMT_BGR24:
-> > >  		return IPU_DC_MAP_BGR24;
-> > > +	case V4L2_PIX_FMT_RGB666:
-> > > +		return IPU_DC_MAP_RGB666;
-> >=20
-> > Why is this DRM driver even using V4L2 pixel formats in the first place?
-> >=20
-> Because imx-drm is actually a misnomer. The i.MX IPU is a multifunction
-> device, which as one part has the display controllers, but also camera
-> interfaces and mem-to-mem scaler devices, which are hooked up via the
-> V4L2 interface.
->=20
-> The generic IPU part, which is used for example for programming the DMA
-> channels is using V4L2 pixel formats as a common base. We have patches
-> to split this out and make this fact more visible. (The IPU core will be
-> placed aside the Tegra host1x driver)
+Tested on DRA7 board with spansion S25FL256S flash along with some
+internal irq crossbar patches.
+Tested on AM437x epos evm with macronix MX66l51235l flash.
 
-Have you considered splitting thing up further and move out the display
-controller driver to DRM and the camera driver to V4L2? I mean, if that
-is even possible with a reasonable amount of work.
+Testing done:
+-Erase the whole flash.
+-write to the flash
+-read back the flash
+- compare the data
 
-Is the "mem-to-mem" the same as the "DMA channels" you mentioned? If it
-only does DMA, why does it even need to worry about pixel formats?
 
-Thierry
+Sourav Poddar (10):
+  spi/spi.h: Add get_buf/put_buf support in spi master..
+  spi/qspi: parse register by name.
+  spi/qspi: Add support to switc to memory mapped operation.
+  spi/qspi: configure set up register for memory map..
+  spi/qspi: Add api for get_buf/put_buf.
+  drivers: mtd: m25p80: Add api to configure master register.
+  drivers: mtd: m25p80: Adapt driver to support memory mapped read.
+  Documentation: bindings: ti-qspi: update binding information.
+  arm: dts: dra7: Add qspi device.
+  arm: dts: am43x-epos: Add qspi device.
 
---WYTEVAkct0FjGQmd
-Content-Type: application/pgp-signature
+ Documentation/devicetree/bindings/spi/ti_qspi.txt |    8 +-
+ arch/arm/boot/dts/am4372.dtsi                     |   12 ++
+ arch/arm/boot/dts/am43x-epos-evm.dts              |   28 +++++
+ arch/arm/boot/dts/dra7-evm.dts                    |   32 +++++
+ arch/arm/boot/dts/dra7.dtsi                       |   13 ++
+ drivers/mtd/devices/m25p80.c                      |   38 ++++++
+ drivers/spi/spi-ti-qspi.c                         |  130 ++++++++++++++++++++-
+ include/linux/spi/spi.h                           |   22 ++++
+ 8 files changed, 280 insertions(+), 3 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSodxCAAoJEN0jrNd/PrOh1DkP/ipc+rQpgEneNY0LjpNCfBvV
-1tfUV1IMW53DSwezVzKwXZ0zEQMGet+0oaZTkq7tkBSZFDjTjfC31DIHwbcvSGCC
-7FXE4O20l3jGekny2UCAbjMbyqZGQ9FOIQO7X/R7sq0LudaHnjZW1F5P1xhUGe7t
-6P+ej1DyL6jkwBsG9PRiVDNwSJnSZV1MgPZ3I6/ihYsfO7AAuOKnitmAwNXAbRon
-dDURlyjj9e6nFweNe1NNfVOj/4HdNv8uXme+jp5aoVpPj3sYvPLNDcemd/D7TmnA
-JSo2MI7MG/8Vl4VurzmwrovewmCFySPsgyO1JNULl6BHeojDMv7xRjz7BED55FJr
-O4KxNYm85xnQ8cBvWqiFSD9oiZdCRNPa3PbuUxD1xE+X+ZiLG6iPvAY8hztBAM9G
-oTbIMUuyvtbC+6p9v1336o7jpzUburlZVji0MR4a2PEYt+tMKKY/DW1mUyo14N1C
-5WlAcOo9Pijt3LSOga/rYQj34/KUEPIrE4APQWde+8x8u+DzuQXQFWp7Xz5W4/k2
-GVO8XQGiRFTJ2MYRIdaA7Upww4/oZONcVeOw4Wu0K/iHfYnOhoDqSdTissSqqvlK
-li0ZTlgRtwy/238X3Y8q3MDWHZxZaOqT5YtNEQzygr06Xe0qH8p9Tw2Bs29iUpkG
-ESAEPRQ6CkK9eX20KllO
-=OjnS
------END PGP SIGNATURE-----
-
---WYTEVAkct0FjGQmd--
-
---===============1643104301==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1643104301==--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
