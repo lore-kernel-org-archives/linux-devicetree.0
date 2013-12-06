@@ -1,38 +1,52 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] net: davinci_emac: Fix platform data handling and make
- usable for am3517
-Date: Thu, 05 Dec 2013 20:39:55 -0500 (EST)
-Message-ID: <20131205.203955.1282361417309480469.davem@davemloft.net>
-References: <20131203231301.GN26766@atomide.com>
+From: Milo Kim <milo.kim@ti.com>
+Subject: [PATCH v5 0/4] LP3943 MFD driver for a GPIO expander and a PWM generator
+Date: Fri, 6 Dec 2013 11:08:34 +0900
+Message-ID: <1386295714-22323-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20131203231301.GN26766@atomide.com>
-Sender: netdev-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: mugunthanvnm@ti.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Milo Kim <milo.kim@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
-Date: Tue, 3 Dec 2013 15:13:02 -0800
+LP3943 is an integrated device capable of driving 16 output channels.
+It can be used for GPIO expander and PWM generators.
+LP3493 registers are controlled via the I2C interface.
 
-> When booted with device tree, we may still have platform data passed
-> as auxdata. For am3517 this is needed for passing the interrupt_enable
-> and interrupt_disable callbacks that access the omap system control module
-> registers. These callback functions will eventually go away when we have
-> a separate system control module driver.
-> 
-> Some of the things that are currently passed as platform data we don't need
-> to set up as device tree properties as they are always the same on am3517.
-> So let's use a new compatible flag for those so we can get those from
-> the device tree match data.
-> 
-> Also note that we need to fix setting of phy_dev to NULL instead of an empty
-> string as the code later on uses that to find the first phy on the mdio bus.
-> This seems to have been caused by 5d69e0076a72 (net: davinci_emac: switch to
-> new mdio).
-> 
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+This patch-set consists of four parts - MFD, GPIO, PWM and documents.
 
-Applied, thanks.
+Update from v4 to v5:
+  Add Thierry's ACK for the PWM driver and the DT documentation
+
+Milo Kim (4):
+  mfd: add LP3943 MFD driver
+  gpio: add LP3943 I2C GPIO expander driver
+  pwm: add LP3943 PWM driver
+  Documentation: add LP3943 DT bindings and document
+
+ .../devicetree/bindings/gpio/gpio-lp3943.txt       |   37 +++
+ Documentation/devicetree/bindings/mfd/lp3943.txt   |   33 ++
+ .../devicetree/bindings/pwm/pwm-lp3943.txt         |   58 ++++
+ drivers/gpio/Kconfig                               |    8 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-lp3943.c                         |  242 +++++++++++++++
+ drivers/mfd/Kconfig                                |   11 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/lp3943.c                               |  167 +++++++++++
+ drivers/pwm/Kconfig                                |   10 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-lp3943.c                           |  314 ++++++++++++++++++++
+ include/linux/mfd/lp3943.h                         |  114 +++++++
+ 13 files changed, 997 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/lp3943.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-lp3943.txt
+ create mode 100644 drivers/gpio/gpio-lp3943.c
+ create mode 100644 drivers/mfd/lp3943.c
+ create mode 100644 drivers/pwm/pwm-lp3943.c
+ create mode 100644 include/linux/mfd/lp3943.h
+
+-- 
+1.7.10.4
+
