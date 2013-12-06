@@ -1,100 +1,149 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM64: dts: Add clock-frequency to model cpu nodes
-Date: Fri,  6 Dec 2013 13:14:43 +0000
-Message-ID: <1386335683-11405-1-git-send-email-broonie@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Kamil Debski <k.debski@samsung.com>
+Subject: RE: [PATCH v4 4/9] usb: ehci-s5p: Change to use phy provided by the
+ generic phy framework
+Date: Fri, 06 Dec 2013 14:19:05 +0100
+Message-ID: <00cf01cef285$bdca5890$395f09b0$%debski@samsung.com>
+References: <1386246579-25141-5-git-send-email-k.debski@samsung.com>
+ <Pine.LNX.4.44L0.1312051342300.869-100000@iolanthe.rowland.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <Pine.LNX.4.44L0.1312051342300.869-100000@iolanthe.rowland.org>
+Content-language: pl
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Alan Stern' <stern@rowland.harvard.edu>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, kishon@ti.com, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Alan,
 
-The clock-frequency property is meaningless for the models but it's a
-mandatory property so claim that all the cores run at 1MHz.
+Thank you for the review. Please find my replies inline.
 
-Signed-off-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm64/boot/dts/foundation-v8.dts  | 4 ++++
- arch/arm64/boot/dts/rtsm_ve-aemv8a.dts | 4 ++++
- 2 files changed, 8 insertions(+)
+> From: Alan Stern [mailto:stern@rowland.harvard.edu]
+> Sent: Thursday, December 05, 2013 7:53 PM
+> 
+> On Thu, 5 Dec 2013, Kamil Debski wrote:
+> 
+> > Change the phy provider used from the old usb phy specific to a new
+> > one using the generic phy framework.
+> >
+> > Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> 
+> > --- a/drivers/usb/host/ehci-exynos.c
+> > +++ b/drivers/usb/host/ehci-exynos.c
+> 
+> > @@ -42,10 +42,10 @@
+> >  static const char hcd_name[] = "ehci-exynos";  static struct
+> > hc_driver __read_mostly exynos_ehci_hc_driver;
+> >
+> > +#define PHY_NUMBER 3
+> >  struct exynos_ehci_hcd {
+> >  	struct clk *clk;
+> > -	struct usb_phy *phy;
+> > -	struct usb_otg *otg;
+> 
+> Are you sure you want to remove that line?
 
-diff --git a/arch/arm64/boot/dts/foundation-v8.dts b/arch/arm64/boot/dts/foundation-v8.dts
-index 4a060906809d..f91b2fa41fb3 100644
---- a/arch/arm64/boot/dts/foundation-v8.dts
-+++ b/arch/arm64/boot/dts/foundation-v8.dts
-@@ -34,6 +34,7 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			clock-frequency = <1000000>;
- 		};
- 		cpu@1 {
- 			device_type = "cpu";
-@@ -41,6 +42,7 @@
- 			reg = <0x0 0x1>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			clock-frequency = <1000000>;
- 		};
- 		cpu@2 {
- 			device_type = "cpu";
-@@ -48,6 +50,7 @@
- 			reg = <0x0 0x2>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			clock-frequency = <1000000>;
- 		};
- 		cpu@3 {
- 			device_type = "cpu";
-@@ -55,6 +58,7 @@
- 			reg = <0x0 0x3>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			clock-frequency = <1000000>;
- 		};
- 	};
+Yes, I am. The new generic phy interface does not have the otg field in it.
  
-diff --git a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-index 572005ea2217..d7debfe79d9f 100644
---- a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-+++ b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-@@ -37,6 +37,7 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			clock-frequency = <1000000>;
- 		};
- 		cpu@1 {
- 			device_type = "cpu";
-@@ -44,6 +45,7 @@
- 			reg = <0x0 0x1>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			clock-frequency = <1000000>;
- 		};
- 		cpu@2 {
- 			device_type = "cpu";
-@@ -51,6 +53,7 @@
- 			reg = <0x0 0x2>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			clock-frequency = <1000000>;
- 		};
- 		cpu@3 {
- 			device_type = "cpu";
-@@ -58,6 +61,7 @@
- 			reg = <0x0 0x3>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			clock-frequency = <1000000>;
- 		};
- 	};
- 
+> > +	struct phy *phy[PHY_NUMBER];
+> >  };
+> >
+> >  #define to_exynos_ehci(hcd) (struct exynos_ehci_hcd
+> > *)(hcd_to_ehci(hcd)->priv)
+> 
+> > @@ -102,13 +132,24 @@ static int exynos_ehci_probe(struct
+> platform_device *pdev)
+> >  					"samsung,exynos5440-ehci"))
+> >  		goto skip_phy;
+> >
+> > -	phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
+> > -	if (IS_ERR(phy)) {
+> > -		usb_put_hcd(hcd);
+> > -		dev_warn(&pdev->dev, "no platform data or transceiver
+> defined\n");
+> > -		return -EPROBE_DEFER;
+> > -	} else {
+> > -		exynos_ehci->phy = phy;
+> > +	for_each_available_child_of_node(pdev->dev.of_node, child) {
+> > +		err = of_property_read_u32(child, "reg", &phy_number);
+> > +		if (err) {
+> > +			dev_err(&pdev->dev, "Failed to parse device
+tree\n");
+> > +			return err;
+> > +		}
+> > +		if (phy_number >= PHY_NUMBER) {
+> > +			dev_err(&pdev->dev, "Failed to parse device tree -
+> number out of range\n");
+> > +			return -EINVAL;
+> 
+> Do you need to call of_node_put(child) before each of these return
+> statements?
+
+You are right, thank you for spotting this.
+
+> 
+> > +		}
+> > +		phy = devm_of_phy_get(&pdev->dev, child, 0);
+> > +		of_node_put(child);
+> > +		if (IS_ERR(phy)) {
+> > +			dev_err(&pdev->dev, "Failed to get phy number %d",
+> > +								phy_number);
+> > +			return PTR_ERR(phy);
+> > +		}
+> > +		exynos_ehci->phy[phy_number] = phy;
+> >  		exynos_ehci->otg = phy->otg;
+> 
+> Did you intend to remove this line?  Above, you removed the
+> exynos_ehci->otg field.  I can't see how this patch would ever compile
+> without an error.
+
+Yes, I had this in a separate fix patch which I forgot to squash. Sorry for
+this.
+
+> >  	}
+> >
+> > @@ -149,11 +190,11 @@ skip_phy:
+> >  		goto fail_io;
+> >  	}
+> >
+> > -	if (exynos_ehci->otg)
+> > -		exynos_ehci->otg->set_host(exynos_ehci->otg, &hcd->self);
+> > -
+> > -	if (exynos_ehci->phy)
+> > -		usb_phy_init(exynos_ehci->phy);
+> > +	err = exynos_phys_on(exynos_ehci->phy);
+> > +	if (err) {
+> > +		dev_err(&pdev->dev, "Failed to enabled phys\n");
+> > +		goto fail_phys_on;
+> 
+> Why add a new statement label?  Just goto fail_io.
+
+To me it seemed better to add a new label. I will drop it and use
+goto fail_io, as you suggested.
+
+> 
+> > +	}
+> >
+> >  	ehci = hcd_to_ehci(hcd);
+> >  	ehci->caps = hcd->regs;
+> > @@ -172,8 +213,8 @@ skip_phy:
+> >  	return 0;
+> >
+> >  fail_add_hcd:
+> > -	if (exynos_ehci->phy)
+> > -		usb_phy_shutdown(exynos_ehci->phy);
+> > +	exynos_phys_off(exynos_ehci->phy);
+> > +fail_phys_on:
+> >  fail_io:
+> >  	clk_disable_unprepare(exynos_ehci->clk);
+> >  fail_clk:
+> 
+> Alan Stern
+
+Best wishes,
 -- 
-1.8.5.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kamil Debski
+Samsung R&D Institute Poland
