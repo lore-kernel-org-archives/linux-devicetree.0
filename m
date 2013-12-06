@@ -1,123 +1,91 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 5/9] usb: s3c-hsotg: Use the new Exynos USB phy driver
- with the generic phy framework
-Date: Fri, 6 Dec 2013 10:01:01 -0500
-Message-ID: <20131206150101.GA31091@beef>
-References: <1386246579-25141-1-git-send-email-k.debski@samsung.com>
- <1386246579-25141-6-git-send-email-k.debski@samsung.com>
- <52A1B0F7.2050501@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/3] ASoC: fsl: imx-wm8962: Add headphone
+ and microphone jack plugin/out detection
+Date: Fri, 6 Dec 2013 15:03:19 +0000
+Message-ID: <20131206150319.GJ29268@sirena.org.uk>
+References: <cover.1386322845.git.b42378@freescale.com>
+ <82d3285b7efe1f98dbc3d9c0a423b2e5e454481f.1386322845.git.b42378@freescale.com>
+ <20131206144256.GI29268@sirena.org.uk>
+ <20131206143817.GB29975@MrMyself>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52A1B0F7.2050501-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============3524231876870656502=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131206143817.GB29975@MrMyself>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Nicolin Chen <b42378@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, swarren@wwwdotorg.org, linux-doc@vger.kernel.org, tiwai@suse.de, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, lgirdwood@gmail.com, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 06, 2013 at 04:41:51PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On Thursday 05 December 2013 05:59 PM, Kamil Debski wrote:
-> > Change the used phy driver to the new Exynos USB phy driver that uses the
-> > generic phy framework.
-> > 
-> > Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/usb/samsung-hsotg.txt      |    4 ++++
-> >  drivers/usb/gadget/s3c-hsotg.c                     |   11 ++++++-----
-> >  2 files changed, 10 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/samsung-hsotg.txt b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
-> > index b83d428..9340d06 100644
-> > --- a/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
-> > +++ b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
-> > @@ -24,6 +24,8 @@ Required properties:
-> >      - first entry: must be "otg"
-> >  - vusb_d-supply: phandle to voltage regulator of digital section,
-> >  - vusb_a-supply: phandle to voltage regulator of analog section.
-> > +- phys: from general PHY binding: phandle to the PHY device
-> > +- phy-names: from general PHY binding: should be "usb2-phy"
-> 
-> are you sure it's usb2-phy. The example below seems to have a different value.
 
-I requested this be changed to usb2-phy, looks like he just missed the
-update to the example.
+--===============3524231876870656502==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="K5rlT6r/WqkiQKGB"
+Content-Disposition: inline
 
-> 
-> >  
-> >  Example
-> >  -----
-> > @@ -36,5 +38,7 @@ Example
-> >  		clock-names = "otg";
-> >  		vusb_d-supply = <&vusb_reg>;
-> >  		vusb_a-supply = <&vusbdac_reg>;
-> > +		phys = <&usb2phy 0>;
-> > +		phy-names = "device";
-> >  	};
-> >  
-> > diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-> > index eccb147..db096fd 100644
-> > --- a/drivers/usb/gadget/s3c-hsotg.c
-> > +++ b/drivers/usb/gadget/s3c-hsotg.c
-> > @@ -31,6 +31,7 @@
-> >  #include <linux/regulator/consumer.h>
-> >  #include <linux/of.h>
-> >  #include <linux/of_platform.h>
-> > +#include <linux/phy/phy.h>
-> >  
-> >  #include <linux/usb/ch9.h>
-> >  #include <linux/usb/gadget.h>
-> > @@ -162,7 +163,7 @@ struct s3c_hsotg_ep {
-> >  struct s3c_hsotg {
-> >  	struct device		 *dev;
-> >  	struct usb_gadget_driver *driver;
-> > -	struct usb_phy		*phy;
-> > +	struct phy		 *phy;
-> >  	struct s3c_hsotg_plat	 *plat;
-> >  
-> >  	spinlock_t              lock;
-> > @@ -2905,7 +2906,7 @@ static void s3c_hsotg_phy_enable(struct s3c_hsotg *hsotg)
-> >  	dev_dbg(hsotg->dev, "pdev 0x%p\n", pdev);
-> >  
-> >  	if (hsotg->phy)
-> > -		usb_phy_init(hsotg->phy);
-> > +		phy_power_on(hsotg->phy);
-> >  	else if (hsotg->plat->phy_init)
-> >  		hsotg->plat->phy_init(pdev, hsotg->plat->phy_type);
-> >  }
-> > @@ -2922,7 +2923,7 @@ static void s3c_hsotg_phy_disable(struct s3c_hsotg *hsotg)
-> >  	struct platform_device *pdev = to_platform_device(hsotg->dev);
-> >  
-> >  	if (hsotg->phy)
-> > -		usb_phy_shutdown(hsotg->phy);
-> > +		phy_power_off(hsotg->phy);
-> >  	else if (hsotg->plat->phy_exit)
-> >  		hsotg->plat->phy_exit(pdev, hsotg->plat->phy_type);
-> >  }
-> > @@ -3529,7 +3530,7 @@ static void s3c_hsotg_delete_debug(struct s3c_hsotg *hsotg)
-> >  static int s3c_hsotg_probe(struct platform_device *pdev)
-> >  {
-> >  	struct s3c_hsotg_plat *plat = dev_get_platdata(&pdev->dev);
-> > -	struct usb_phy *phy;
-> > +	struct phy *phy;
-> >  	struct device *dev = &pdev->dev;
-> >  	struct s3c_hsotg_ep *eps;
-> >  	struct s3c_hsotg *hsotg;
-> > @@ -3544,7 +3545,7 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
-> >  		return -ENOMEM;
-> >  	}
-> >  
-> > -	phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-> > +	phy = devm_phy_get(&pdev->dev, "usb2-phy");
-> >  	if (IS_ERR(phy)) {
-> >  		/* Fallback for pdata */
-> >  		plat = dev_get_platdata(&pdev->dev);
-> > 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--K5rlT6r/WqkiQKGB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Dec 06, 2013 at 10:38:17PM +0800, Nicolin Chen wrote:
+> On Fri, Dec 06, 2013 at 02:42:56PM +0000, Mark Brown wrote:
+
+> > What's this uevent trying to do and why is it open coded in the driver?
+
+> That's a requirement from Android team of Freescale. By checking this
+> event they can determine whether current output is speaker or headphone
+> so as to place an icon on the notification area.
+
+> Sir, if you think this patch is not common enough or non-community style,
+> I can try to cut it down to an common one or entirely drop it.
+
+This isn't mainline stuff, this is the Android standard switch class.
+Someone should really contribute something to Android which backs it
+onto the back of ALSA jacks.  The mainline equivalent is extcon which
+does have switch class emulation but it's a bit broken in its generation
+of uevents and is also not yet integrated into the ALSA jack stuff.
+
+The thing to do is ideally integrate extcon with the ALSA jack code and
+update the Android headset observer to work with extcon (or write a
+separate extcon based observer).
+
+--K5rlT6r/WqkiQKGB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSoec0AAoJELSic+t+oim9lXwQAIc4J1A6M0xtioHHgwOpDu+8
+RIbwa8OYaRHSIS1yz5iRrEafBDMDgXee7eLk59yg0bY4l6zu2Q/x03WTc8nVtPYT
+2iA3TYtqCBI6X5QRoYH43MzJ6neTM3oE+OBwO+gIw8qUZ9EYGIWVwyH1Y5Xnzc4F
+y7mkXvbhnfZK+fH9ZAnagh39PT2Ocv1mS5tMHH01QUdTBWus/6Jz5ijT4GT8RIHy
+DfnNGIpN4IhrV2oIthG950w7YcLuQ+6ovTlMuFUj0BQvF4CRF1ZqrknBr3YCPsYE
+uTDQgAwUbanZ5hb/xBSCRizmPkLvzwfpUswzZyHM5Ce399XGNR9M//7072GQaAgT
++eHA4d2cotyxT8h3c4CCGmZIpdK5yjDtpmZbAjmwPsjMjnPXlmmIfhBX5T69B0tS
+OsaxUVdVa+7qKTPry55t+GUjVQIyMztt8Oynnepxtao9jvmqYDJ7YMI2U1DYRp72
+QNUws19qb9bpqyrFQjadX0TuylbIR9LW6/UBB1apD9tSuP+/sFOC6+s6ZQtFAa/g
+NpkWQJ7czWTL40KPP/9/6psul937FWfX2Yu68jGEPeR3JKTSh8XaJxIn/EnitLjd
+2FPr5TZpkvGW3wRLz+dXN1DVdmNNz5nhMoK+hFc7Ce005WWGGh9Zh+ALeK2svTpD
+qUDwB1WUW3AxDr29UOqP
+=37DF
+-----END PGP SIGNATURE-----
+
+--K5rlT6r/WqkiQKGB--
+
+--===============3524231876870656502==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3524231876870656502==--
