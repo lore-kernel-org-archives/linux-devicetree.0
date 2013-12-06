@@ -1,78 +1,71 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: [PATCH v2 3/4] dt: Add bindings documentation for the ADI AXI-SPDIF audio controller
-Date: Fri,  6 Dec 2013 11:02:51 +0100
-Message-ID: <1386324172-15609-3-git-send-email-lars@metafoo.de>
-References: <1386324172-15609-1-git-send-email-lars@metafoo.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386324172-15609-1-git-send-email-lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSHYyXVsgMi8yXSBBUk06IGR0czogQWRkIHN1cHBvcnQgZm9y?=
+ =?UTF-8?B?IHRoZSBjcHVpbXg1MyBib2FyZCBmcm9tIEV1a3JlYSBhbmQgaXRzIGJhc2Vi?=
+ =?UTF-8?B?b2FyZC4=?=
+Date: Fri, 06 Dec 2013 14:11:45 +0400
+Message-ID: <1386324705.359638944@f208.i.mail.ru>
+References: <1386323958-783-1-git-send-email-denis@eukrea.com>
+ <1386323958-783-2-git-send-email-denis@eukrea.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1386323958-783-2-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?RGVuaXMgQ2FyaWtsaQ==?= <denis@eukrea.com>
+Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel@pengutronix.de>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring@calxeda.com>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric@eukrea.com>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@linaro.org>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the devicetree documentation for the ADI AXI-SPDIF audio
-controller. The controller has:
- * One set of memory mapped register
- * Two clocks, one for the memory mapped register interface, one used as the
-   audio reference clock
- * A DMA interface for the transmit data
+Hello.
 
-Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> The following devices/functionalities were added:
+>  * Main and secondary UARTs.
+>  * i2c and the pcf8563 device.
+>  * Ethernet.
+>  * NAND.
+>  * The BP1 button.
+>  * The LED.
+>  * Watchdog.
+>  * SD.
+>  * USB host.
+...
+
+> +		reg_3p3v: regulator@0 {
+> +			reg = <0>;
+> +			compatible = "regulator-fixed";
+> +			regulator-name = "3P3V";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			regulator-always-on;
+
+"regulator-always-on" make no sense for virtual supplies.
+
+...
+> +		pinctrl_uart1: uart1grp {
+> +			fsl,pins = <MX53_UART1_PINGRP2>;
+> +		};
+> +
+> +		pinctrl_uart2: uart2grp {
+> +			fsl,pins = <MX53_UART2_PINGRP2>;
+> +		};
+> +	};
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	fsl,uart-has-rtscts;
+
+So if you use "fsl,uart-has-rtscts", should you add MX53_UART1_PINGRP3
+into pinctls too?
 
 ---
-Changes since v1:
-	* Use <&a ...>, <&b ...> instead of <&a ..., &b ...> in the examples
----
- .../devicetree/bindings/sound/adi,axi-spdif-tx.txt | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt b/Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt
-new file mode 100644
-index 0000000..46f3449
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt
-@@ -0,0 +1,30 @@
-+ADI AXI-SPDIF controller
-+
-+Required properties:
-+ - compatible : Must be "adi,axi-spdif-1.00.a"
-+ - reg : Must contain SPDIF core's registers location and length
-+ - clocks : Pairs of phandle and specifier referencing the controller's clocks.
-+   The controller expects two clocks, the clock used for the AXI interface and
-+   the clock used as the sampling rate reference clock sample.
-+ - clock-names: "axi" for the clock to the AXI interface, "ref" for the sample
-+   rate reference clock.
-+ - dmas: Pairs of phandle and specifier for the DMA channel that is used by
-+   the core. The core expects one dma channel for transmit.
-+ - dma-names : Must be "tx"
-+
-+For more details on the 'dma', 'dma-names', 'clock' and 'clock-names' properties
-+please check:
-+	* resource-names.txt
-+	* clock/clock-bindings.txt
-+	* dma/dma.txt
-+
-+Example:
-+
-+	spdif: spdif@0x77400000 {
-+		compatible = "adi,axi-spdif-tx-1.00.a";
-+		reg = <0x77600000 0x1000>;
-+		clocks = <&clk 15>, <&audio_clock>;
-+		clock-names = "axi", "ref";
-+		dmas = <&ps7_dma 0>;
-+		dma-names = "tx";
-+	};
--- 
-1.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
