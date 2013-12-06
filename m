@@ -1,79 +1,101 @@
 From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] usb: dwc3: get "usb_phy" only if the platform
- indicates the presence of PHY's
-Date: Fri, 6 Dec 2013 14:15:30 -0600
-Message-ID: <20131206201530.GA21086@saruman.home>
-References: <1381866857-3861-1-git-send-email-kishon@ti.com>
- <1381866857-3861-2-git-send-email-kishon@ti.com>
- <525E8E93.9010503@ti.com>
- <525E9046.3090209@ti.com>
- <525E943E.3080706@ti.com>
- <20131017145425.GE11611@gimli>
- <20131203103950.GB26423@xps8300>
+Subject: Re: [PATCH 1/3] usb: phy-generic: Add GPIO based ChipSelect
+Date: Fri, 6 Dec 2013 14:24:53 -0600
+Message-ID: <20131206202453.GF21086@saruman.home>
+References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk>
+ <1385967919-13258-2-git-send-email-chris.ruehl@gtsys.com.hk>
 Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="NGIwU0kFl1Z1A3An"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131203103950.GB26423@xps8300>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1385967919-13258-2-git-send-email-chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---uAKRQypu60I7Lcqm
+--NGIwU0kFl1Z1A3An
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 03, 2013 at 12:39:50PM +0200, Heikki Krogerus wrote:
-> Hi,
->=20
-> On Thu, Oct 17, 2013 at 09:54:26AM -0500, Felipe Balbi wrote:
-> > On Wed, Oct 16, 2013 at 04:27:26PM +0300, Roger Quadros wrote:
-> > > On 10/16/2013 04:10 PM, Kishon Vijay Abraham I wrote:
-> > > Do you know if there are users of dwc3 other than exynos5250 and omap=
-5?
-> > > If not, we should get rid of the old USB PHY altogether.
-> >=20
-> > Intel's Baytrail, at least. But they don't use DT.
->=20
-> I don't see any use for the generic-phy when the device is enumerated
-> from PCI. If dwc3 can live without phys, there should not be any
-> problem dropping the old USB PHY support.
+Hi,
 
-yeah, I don't want to drop PHY support, I want to require everybody to
-provide a PHY, otherwise we have too many options to handle and that's
-never clean.
+On Mon, Dec 02, 2013 at 03:05:17PM +0800, Chris Ruehl wrote:
+> @@ -231,27 +249,40 @@ static int usb_phy_gen_xceiv_probe(struct platform_=
+device *pdev)
+>  		return -ENOMEM;
+> =20
+>  	nop->reset_active_low =3D true;	/* default behaviour */
+> +	nop->cs_active_low =3D true;
+> =20
+>  	if (dev->of_node) {
+>  		struct device_node *node =3D dev->of_node;
+>  		enum of_gpio_flags flags;
+> +		enum of_gpio_flags csflags;
+> =20
+>  		if (of_property_read_u32(node, "clock-frequency", &clk_rate))
+>  			clk_rate =3D 0;
+> =20
+>  		needs_vcc =3D of_property_read_bool(node, "vcc-supply");
+> +
+>  		nop->gpio_reset =3D of_get_named_gpio_flags(node, "reset-gpios",
+>  								0, &flags);
+> +
+
+two unrelated changes
+
+>  		if (nop->gpio_reset =3D=3D -EPROBE_DEFER)
+>  			return -EPROBE_DEFER;
+> =20
+>  		nop->reset_active_low =3D flags & OF_GPIO_ACTIVE_LOW;
+> =20
+> +		nop->gpio_chipselect =3D of_get_named_gpio_flags(node, "cs-gpios",
+> +								0, &csflags);
+> +		if (gpio_is_valid(nop->gpio_chipselect))
+> +			nop->cs_active_low =3D csflags & OF_GPIO_ACTIVE_LOW;
+> +
+>  	} else if (pdata) {
+>  		type =3D pdata->type;
+>  		clk_rate =3D pdata->clk_rate;
+>  		needs_vcc =3D pdata->needs_vcc;
+>  		nop->gpio_reset =3D pdata->gpio_reset;
+> +		nop->gpio_chipselect =3D pdata->gpio_chipselect;
+> +	} else {
+> +		nop->gpio_reset =3D -1;
+
+This line is already going upstream, please remove it, i'll handle the
+conflict later.
 
 --=20
 balbi
 
---uAKRQypu60I7Lcqm
+--NGIwU0kFl1Z1A3An
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.15 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSojBhAAoJEIaOsuA1yqREUR4QALLZQaPF8HS/RvsATcqHZ/Ez
-Uay3F7tSpIuxcQsJFoQVkXiS8Me49/I3fTUx6DIV84B68cVBqtpWq5+MMRZxt9dP
-5XBZgk+NWcfTto9q/4bU0BTRu3N6qNttL3bpH7jtofSV3k/zDfeNiKaQABSt9qfs
-/Mt66wLuIoh1e3qBmE1+b1BrBpBkVAn0uw4kWrCulG0mGdhtyh8GeaMDej3XE9eI
-xWEmX6uy0xhq2v7coFvAGjv1pyOBiovzKVeIazwLmfHEtT0QrR4JBZ9dRcrtV7IF
-Ay7N7ZSPR9wSuGB91e/Vb8qvAJIIi8birHMCIeRJ4DRo9x+cIYkThBUzQyl8MYSg
-1LtI2+8Jcn/YpEbHg/9ZFNni3ZdOgVVllCwsWKJ4aIfuEzkLtC9/8OYRux9y4CT9
-1+4rrM5LwnHBuLfIwNlfAcOddxakPMTbv0JFnuxvykIT6z1OwqDHUURkQ0k/zvFu
-hjeamvA8wa+IkEmVb+ya3n+VMEEPbXN4AjfBTYelSl6ElpxQchO6Xna+mW8jZVf+
-uowmIVoLIeMh0i61xsjNb+7WyKhS3o6ZG3wMwPNjwYAEJs78wWTt4OvqhnLuYZUm
-bLph99N4cwtANHtbfNvS68RfHSatjhSjjNkXKMYIt0zEQgW0qgsaSVx7NnClJdOV
-J6zOq19aM9RG+Ycc+BPa
-=Bozc
+iQIcBAEBAgAGBQJSojKVAAoJEIaOsuA1yqREfOEP/1XnxdD5lyvk6aPYcpre2SC7
+HK6x5Eau3xyhTBi9LMMEXKsYBynBjr0X0vDFf5NZ5Pb9x9cT2WIMuSoLD2CQGfFL
+DtWIOUofB3DStRTjMGpIo7DdlGAVgwKT8ryb1Wa0c6IwcnORzi+5cQFTNfxQVgJl
+D17ag2mzBKQ7O27RU/D/E3tY9JMpFh3h3gKq9zX3ikyDLophZDrVnnHBA53uzhw+
+NC1+wNsFKEMXxLm66r2eSA9ZwOw6idObaCkkgbxcGr+JO/PIRzUbvFRLoYavaaeU
+tU1lKVUlvENZg8gZizZl628Jj39Cniu/HBzdgx8Zikj8OtHQebPCxS0gDZFbqA6A
+mHf/VyV1JXmkLTtEFQZbNxgrQetsjrSmm8K8j5wL++qvrSBPSfC9sf2ZH+VHYWBI
+QXvheaxDFaewMuZ/hn6uT1ChlH3rPdXAu3h3TI1qY7FQp25JW4lEpxM5GHlIEkp6
+cIxQ8RnrBhkP1xS4lw/aKS2fDKdOz0CvwbzT6z2Gqyg+kN5t83U1GN1C3G/5bMaA
+ft8qN7lSUIWxqkADWDBk7Qtngwze7gh85IpboB77RT+oE0tXYqk4mhcZM/fTFWTH
+F41heRxFOrR8caA1pqmCpXNUs6SusVq1bvcyNbLeM1E156m79/QN2ICnQS+Z5G79
+PLEIFnwynx+V1nlaRHqP
+=fKYj
 -----END PGP SIGNATURE-----
 
---uAKRQypu60I7Lcqm--
+--NGIwU0kFl1Z1A3An--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
