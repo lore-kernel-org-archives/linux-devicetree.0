@@ -1,84 +1,43 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCHv5][ 3/8] staging: imx-drm: Correct BGR666 and the board's
-	dts that use them.
-Date: Fri, 6 Dec 2013 14:07:40 +0100
-Message-ID: <20131206130739.GD30625@ulmo.nvidia.com>
-References: <1386268092-21719-1-git-send-email-denis@eukrea.com>
-	<1386268092-21719-3-git-send-email-denis@eukrea.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSHY3XVsgMi8yXSB2aWRlbzogYmFja2xpZ2h0OiBncGlvLWJh?=
+ =?UTF-8?B?Y2tsaWdodDogQWRkIERUIHN1cHBvcnQu?=
+Date: Fri, 06 Dec 2013 17:08:38 +0400
+Message-ID: <1386335318.12471946@f258.i.mail.ru>
+References: <1386266109-16071-1-git-send-email-denis@eukrea.com>
+ <1386266109-16071-2-git-send-email-denis@eukrea.com>
+ <20131206130014.GB30625@ulmo.nvidia.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0062579372=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1386268092-21719-3-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Denis Carikli <denis@eukrea.com>
-Cc: Marek Vasut <marex@denx.de>, devel@driverdev.osuosl.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, driverdev-devel@linuxdriverproject.org, Rob Herring <rob.herring@calxeda.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Eric =?utf-8?Q?B=C3=A9nard?= <eric@eukrea.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131206130014.GB30625-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?VGhpZXJyeSBSZWRpbmc=?= <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?B?RGVuaXMgQ2FyaWtsaQ==?= <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, =?UTF-8?B?SmluZ29vIEhhbg==?= <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?UmljaGFyZCBQdXJkaWU=?= <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, =?UTF-8?B?TGF1cmVudCBQaW5jaGFydA==?= <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?B?SmVhbi1DaHJpc3RvcGhlIFBsYWduaW9sLVZpbGxhcmQ=?= <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0062579372==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4zI0WCX1RcnW9Hbu"
-Content-Disposition: inline
-
-
---4zI0WCX1RcnW9Hbu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Dec 05, 2013 at 07:28:07PM +0100, Denis Carikli wrote:
-[...]
-> diff --git a/arch/arm/boot/dts/imx51-apf51dev.dts b/arch/arm/boot/dts/imx51-apf51dev.dts
-> index f36a3aa..3b6de6a 100644
-> --- a/arch/arm/boot/dts/imx51-apf51dev.dts
-> +++ b/arch/arm/boot/dts/imx51-apf51dev.dts
-> @@ -19,7 +19,7 @@
->  	display@di1 {
-               ^^^^
-
-I know this isn't introduced by your patch, but WTF???
-
-Thierry
-
---4zI0WCX1RcnW9Hbu
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSocwbAAoJEN0jrNd/PrOhP94P/0mBACQRMAUOTMWDoLqUY2jk
-69YIl1VTy33ezV1Rmhd3TBd8vEBQzJGQvIeR219KrDmKr6tPyvHwV7TSgPvARAju
-RcZ5JN91h/NsjkYAQCHIDKNwyGe5uq4uwSNZoGDOAi+a5zmS2MpjfXNPm9BbyJSf
-6vm4dGA6KPIlprBZLEbMvi4/AVnJDriBA6giuC09iEVSJhH4uI+e/DE8UsW6fCrm
-B5gZrbfcEqecrmh4kDgewmIgkBRdholuK3A1XMBWEnsbkPRHi0w8GCLMR1bwH8GP
-W+2GrQ8pmH/yjIS9Deq/aKVrM9BzbQjb4r0uKMpe2CCOI2Yx01BsIWoo3Tr83GlP
-E2AoStk1vjnHC5oY0HIvMyCD4a0l5dlUTxsN/6DrVQepYDNm4a4I9PELyX1xCQ+g
-02kMV4yuIuKewbtPxPsvSBZY3VV1XY2+F/PNrrqSd+rUIoF12bXNUQXOpClJ1R7Y
-qZem14g4JFZwhLYg7oI1F8tBVUlVGaBR0C4P6mjoyEvlWJtQdPqe/spm3xo8Lisa
-Tc2cKRXhycSo7SB/BYsMS/rt0Z5+dg8KLvNohJQ9qEVHEO1jpFimIi6r78ZrNOty
-6YfzHoT+kOZd21M3WJrOltpTx2uSkhxgOqL1uWRStiUL5kgssIXgUduN3g66oZXb
-XkD06/r1ieeI45TlOULZ
-=UUqC
------END PGP SIGNATURE-----
-
---4zI0WCX1RcnW9Hbu--
-
---===============0062579372==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============0062579372==--
+PiBPbiBUaHUsIERlYyAwNSwgMjAxMyBhdCAwNjo1NTowOVBNICswMTAwLCBEZW5pcyBDYXJpa2xp
+IHdyb3RlOgo+IFsuLi5dCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICsgIC0gZGVmYXVs
+dC1zdGF0ZTogVGhlIGluaXRpYWwgc3RhdGUgb2YgdGhlIGJhY2tsaWdodC4KPiA+ICsgICAgVmFs
+aWQgdmFsdWVzIGFyZSAib24iLCAib2ZmIiwgYW5kICJrZWVwIi4KPiA+ICsgICAgVGhlICJrZWVw
+IiBzZXR0aW5nIHdpbGwga2VlcCB0aGUgYmFja2xpZ2h0IGF0IHdoYXRldmVyIGl0cyBjdXJyZW50
+Cj4gPiArICAgIHN0YXRlIGlzLCB3aXRob3V0IHByb2R1Y2luZyBhIGdsaXRjaC4gVGhlIGRlZmF1
+bHQgaXMga2VlcCBpZiB0aGlzCj4gPiArICAgIHByb3BlcnR5IGlzIG5vdCBwcmVzZW50Lgo+IAo+
+IEknbSBub3Qgc3VyZSBpZiAib24iLCAib2ZmIiBhbmQgImtlZXAiIGFyZSBhIGdvb2QgY2hvaWNl
+IGZvciB0aGlzCj4gYmluZGluZy4gSGF2aW5nIHN0cmluZ3MgZm9yIHRoZXNlIHRyaXN0YXRlIHZh
+bHVlcyBzZWVtcyBzdWJvcHRpbWFsLgo+IE90aGVyIGJpbmRpbmdzIGhhdmUgY2hvc2VuIGEgcmVw
+cmVzZW50YXRpb24gdGhhdCwgdHJhbnNwb3NlZCB0byB0aGlzCj4gdXNlLWNhc2UsIHdvdWxkIHJl
+YWQgc29tZXRoaW5nIGxpa2UgdGhpczoKPiAKPiAJLSBkZWZhdWx0LXN0YXRlOiBUaGUgaW5pdGlh
+bCBzdGF0ZSBvZiB0aGUgYmFja2xpZ2h0LiBWYWxpZAo+IAkgIHZhbHVlczoKPiAJICAtIDA6IG9m
+Zgo+IAkgIC0gMTogb24KPiAKPiAJSWYgdGhlICJkZWZhdWx0LXN0YXRlIiBwcm9wZXJ0eSBpcyBu
+b3QgcHJlc2VudCwgdGhlIGRlZmF1bHQKPiAJd2lsbCBiZSB0byBrZWVwIHRoZSBjdXJyZW50IGJh
+Y2tsaWdodCBzdGF0ZS4KPiAKPiBXaGljaCBpcyBpbiBmYWN0IHRoZSBleGFjdCBiZWhhdmlvdXIg
+dGhhdCB5b3VyIGJpbmRpbmcgZGVzY3JpYmVzLCBidXQKPiBpdCdzIG11Y2ggbW9yZSBpbnR1aXRp
+dmUgaW4gbXkgb3Bpbmlvbi4KCldoeSB3ZSBjYW5ub3QgdXNlIEdQSU8gYmluZGluZ3MgZm9yIGFj
+dGl2ZSBsZXZlbCBoZXJlPwpXaGF0IGEgcmVhc29uIGZvciAia2VlcCIgc3RhdGU/IENhbiB0aGlz
+IGJlIGFuIGFkZGl0aW9uYWwgcHJvcGVydHk/CgotLS0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
