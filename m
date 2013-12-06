@@ -1,44 +1,35 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 5/7] net: of_mdio: parse "max-speed" property to set
- PHY supported features
-Date: Thu, 05 Dec 2013 19:47:43 -0500 (EST)
-Message-ID: <20131205.194743.1170844620568623022.davem@davemloft.net>
-References: <1386283936-26104-6-git-send-email-florian@openwrt.org>
-	<52A11F00.1070603@cogentembedded.com>
-	<CAGVrzcYeRi=j3PkRbtNXwYFGOr9m7Yco0jORdp76i+DcRNpMFA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv4 1/4] arm: dts: Add support for SD/MMC on SOCFPGA
+Date: Fri, 6 Dec 2013 01:47:51 +0100
+Message-ID: <201312060147.51489.arnd@arndb.de>
+References: <1386263677-7733-1-git-send-email-dinguyen@altera.com> <201312052208.38342.arnd@arndb.de> <1386281452.26656.8.camel@linux-builds1>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcYeRi=j3PkRbtNXwYFGOr9m7Yco0jORdp76i+DcRNpMFA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: f.fainelli@gmail.com
-Cc: sergei.shtylyov@cogentembedded.com, netdev@vger.kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, abrodkin@synopsys.com, rob.herring@calxeda.com, mark.rutland@arm.com, sebastian.hesselbarth@gmail.com
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1386281452.26656.8.camel@linux-builds1>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Dinh Nguyen <dinguyen@altera.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, mturquette@linaro.org, ian.campbell@citrix.com, pawel.moll@arm.com, tgih.jun@samsung.com, linux-mmc@vger.kernel.org, rob.herring@calxeda.com, jh80.chung@samsung.com, dinh.linux@gmail.com, cjb@laptop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Thu, 5 Dec 2013 15:53:41 -0800
+On Thursday 05 December 2013, Dinh Nguyen wrote:
+> Perhaps Seungwon and Chris might have an opinion on this:
+> 
+> From the Synopsys databook for this IP, using the SDMMC_CMD_USE_HOLD_REG
+> is not recommended for SDR104, SDR50 and DDR50 speed modes. For other
+> speeds, SDR12, and SDR25, it would be necessary to use
+> SDMMC_CMD_USE_HOLD_REG.
+> 
+> I am referencing v2.50a of the Synopsys DesignWare Cores Mobile Storage
+> Host Databook.
+> 
+> So I think a binary DT property should suffice?
 
-> 2013/12/5 Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>:
->>>
->>> +       /* Set phydev->supported based on the "max-speed" property
->>> +        * if present */
->>
->>
->>    Preferred multi-line comment style is this:
->>
->> /*
->>  * bla
->>  * bla
->>  */
-> 
-> All other comments in this file are:
-> 
-> /* bla
->  * bla
->  */
-> 
-> which is why I used the same style.
+Well, if it depends on the interface speed, it is something the driver should
+actually be able to figure out itself, since it knows the speed that is used.
 
-And this is the preferred format for networking, as documented in
-Documentation/networking/netdev-FAQ.txt
+That way, you don't even need a property or per-platform compatible string.
+
+	Arnd
