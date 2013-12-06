@@ -1,145 +1,69 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 15/26] ARM: omap4-panda.dts: add display information
-Date: Fri, 6 Dec 2013 09:57:53 +0100
-Message-ID: <CABxcv=m+-9V2qwvuQgJavQ3qOb2+fBcAoW9G_Mi33BTHCWE85g@mail.gmail.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
-	<1386160133-24026-16-git-send-email-tomi.valkeinen@ti.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 2/3] ARM: sunxi: Add an ahci-platform compatible AHCI
+ driver for the Allwinner SUNXi series of SoCs
+Date: Fri, 6 Dec 2013 10:01:17 +0100
+Message-ID: <20131206100117.59609a8a@skate>
+References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl>
+	<1386159055-10264-3-git-send-email-oliver@schinagl.nl>
+	<20131204123708.GD3158@htj.dyndns.org>
+	<529F2677.3070208@schinagl.nl>
+	<20131204131402.GG3158@htj.dyndns.org>
+	<529F2B41.8090009@schinagl.nl>
+	<20131204132312.GH3158@htj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1386160133-24026-16-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20131204132312.GH3158@htj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Olliver Schinagl <oliver+list@schinagl.nl>, Oliver Schinagl <oliver@schinagl.nl>, grant.likely@linaro.org, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dev@linux-sunxi.org, maxime.ripard@free-electrons.com, ijc@hellion.org.uk, hdegoede@redhat.com, Richard Zhu <r65037@freescale.com>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
+Dear Tejun Heo,
 
-On Wed, Dec 4, 2013 at 1:28 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> ---
->  arch/arm/boot/dts/omap4-panda-common.dtsi | 102 ++++++++++++++++++++++++++++++
->  1 file changed, 102 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> index 298e85020e1b..51a79756e67e 100644
-> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> @@ -409,3 +409,105 @@
->  &usbhsehci {
->         phys = <&hsusb1_phy>;
->  };
-> +
-> +&dpi {
-> +       dpi_out: endpoint {
-> +               remote-endpoint = <&tfp410_in>;
-> +               data-lines = <24>;
-> +       };
-> +};
-> +
-> +&dsi1 {
-> +       vdds_dsi-supply = <&vcxio>;
-> +};
-> +
-> +&dsi2 {
-> +       vdds_dsi-supply = <&vcxio>;
-> +};
-> +
-> +&hdmi {
-> +       vdda_hdmi_dac-supply = <&vdac>;
-> +
-> +       hdmi_out: endpoint {
-> +               remote-endpoint = <&tpd12s015_in>;
-> +       };
-> +};
-> +
-> +/ {
-> +       aliases {
-> +               display0 = &dvi0;
-> +               display1 = &hdmi0;
-> +       };
-> +
-> +       tfp410: encoder@0 {
-> +               compatible = "ti,tfp410";
-> +               gpios = <&gpio1 0 0>;   /* 0, power-down */
-> +
+On Wed, 4 Dec 2013 08:23:12 -0500, Tejun Heo wrote:
 
-Please use the constants from include/dt-bindings/ instead of magic
-numbers, i.e:
+> > But again, point me (for dummies ;) in the right direction and I'll
+> > work on it with some help.
+> 
+> Richard and Shawn recently worked on ahci_imx.  Can you guys please
+> talk with each other and figure out what can be done to share as much
+> as possible among these new platform-specific drivers?  I'd really
+> like to see the common things factored out as much as possible with
+> only the actual hardware differences described for each device.
 
-gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;   /* 0, power-down */
+Also, please Cc me on such discussions. I have a pending AHCI platform
+driver for another ARM SoC family. It is very similar to ahci_platform,
+but needs to do a few more things that are SoC specific (map an
+additional register area, and do some SoC-specific stuff with them).
 
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       port@0 {
-> +                               reg = <0>;
-> +
-> +                               tfp410_in: endpoint@0 {
-> +                                       remote-endpoint = <&dpi_out>;
-> +                               };
-> +                       };
-> +
-> +                       port@1 {
-> +                               reg = <1>;
-> +
-> +                               tfp410_out: endpoint@1 {
-> +                                       remote-endpoint = <&dvi_connector_in>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       dvi0: connector@0 {
-> +               compatible = "ti,dvi-connector";
-> +               i2c-bus = <&i2c3>;
-> +
-> +               dvi_connector_in: endpoint {
-> +                       remote-endpoint = <&tfp410_out>;
-> +               };
-> +       };
-> +
-> +       tpd12s015: encoder@1 {
-> +               compatible = "ti,tpd12s015";
-> +
-> +               gpios = <&gpio2 28 0>,  /* 60, CT CP HPD */
-> +                       <&gpio2 9 0>,   /* 41, LS OE */
-> +                       <&gpio2 31 0>;  /* 63, HPD */
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       port@0 {
-> +                               reg = <0>;
-> +
-> +                               tpd12s015_in: endpoint@0 {
-> +                                       remote-endpoint = <&hdmi_out>;
-> +                               };
-> +                       };
-> +
-> +                       port@1 {
-> +                               reg = <1>;
-> +
-> +                               tpd12s015_out: endpoint@1 {
-> +                                       remote-endpoint = <&hdmi_connector_in>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       hdmi0: connector@1 {
-> +               compatible = "ti,hdmi-connector";
-> +
-> +               hdmi_connector_in: endpoint {
-> +                       remote-endpoint = <&tpd12s015_out>;
-> +               };
-> +       };
-> +};
-> --
-> 1.8.3.2
->
+For the moment, we're left with two approaches:
+
+ * Do what Oliver did, where the ahci_<foo> driver will do its own
+   SoC-specific stuff, and then will register an additional
+   platform_device to trigger the ->probe() of the generic
+   ahci_platform driver. I must say I don't really like this solution,
+   since it involves having two platform_device registered for the same
+   piece of hardware (one platform_device to trigger the ->probe of
+   ahci_<foo>, and another one to trigger the ->probe of ahci_platform).
+
+ * Duplicate in ahci_<foo> the (relatively small) amount of code that
+   is present in ahci_platform.
+
+>From my point of view, ahci_platform should be turned into a small
+"library", that provides an API for ahci_<foo> drivers to 1/ do their
+own custom stuff and 2/ do the common ahci_platform stuff.
+
+This way we avoid the registration of two platform_device for the same
+piece of hardware, and we avoid the duplication of code.
+
+Want me to propose a RFC for this idea?
 
 Best regards,
-Javier
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
