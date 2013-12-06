@@ -1,114 +1,81 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] pinctrl: Add msm8x74 configuration
-Date: Fri, 06 Dec 2013 14:22:00 -0800
-Message-ID: <52A24E08.706@codeaurora.org>
-References: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com> <1386295805-13708-3-git-send-email-bjorn.andersson@sonymobile.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2 4/9] clocksource/cadence_ttc: Use enable/disable_irq
+Date: Fri, 6 Dec 2013 14:47:32 -0800
+Message-ID: <f6d25456-8e30-4792-b184-21eb02dfaa1c@AM1EHSMHS001.ehs.local>
+References: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1385514296-26702-5-git-send-email-soren.brinkmann@xilinx.com>
+ <52972F3A.9090103@linaro.org>
+ <alpine.DEB.2.02.1311281507280.30673@ionos.tec.linutronix.de>
+ <b2ed3cbc-c9df-4235-8137-93514c05bffa@DB8EHSMHS031.ehs.local>
+ <alpine.DEB.2.02.1311281939000.30673@ionos.tec.linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386295805-13708-3-git-send-email-bjorn.andersson@sonymobile.com>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1311281939000.30673@ionos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/13 18:10, Bjorn Andersson wrote:
-> Add initial definition of parameters for pinctrl-msm for the msm8x74
-> platform.
+Hi Thomas,
 
-Hmm. We've tried to remove 'x' from our code because it isn't really
-accurate and leads to more confusion. For example, 8660 and 8960 are
-vastly different with respect to SoC architecture and it was a mistake
-to name it 8x60 in the code. We should have stuck with 8660 and 8260 to
-avoid any confusion with 8960 but we didn't know that 8960 was going to
-be made at the time. While it seems convenient to just throw in the x,
-who knows what marketing will do later on and it could break the whole
-scheme.
+sorry for the delay, but I couldn't find time any earlier.
 
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index d0b6846..31c6c4a 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -208,6 +208,10 @@ config PINCTRL_MSM
->  	select PINCONF
->  	select GENERIC_PINCONF
->  
-> +config PINCTRL_MSM8X74
-> +	bool "Qualcomm 8x74 pin controller driver"
-> +	select PINCTRL_MSM
+On Thu, Nov 28, 2013 at 08:07:10PM +0100, Thomas Gleixner wrote:
+> On Thu, 28 Nov 2013, S=C3=B6ren Brinkmann wrote:
+> > On Thu, Nov 28, 2013 at 03:18:50PM +0100, Thomas Gleixner wrote:
+> > > Now the problem with this device is that it is not a per cpu
+> > > device. It's a global device, so this update can conflict with a
+> > > parallel access on the other CPU. Now the disable_irq() only prev=
+ents
+> > > that the other CPU can handle a device interrupt from that timer.=
+ But
+> > > it does not prevent any parallel access from e.g. the idle code p=
+ath
+> > > which will try to reprogram it.
+> >
+> > Does that mean interrupts need to be disabled globally? Also, does =
+the
+>=20
+> Globally disabling interrupts is not going to work, except you want t=
+o
+> use stomp_machine(). But that would be overkill.
+>=20
+> > cpuidle path depend on interrupts or can it interfere no matter wha=
+t?
+>=20
+> It can interfere no matter what. The broadcast is modified for the cp=
+u
+> which loses its per cpu timer due to the idle state via
+>=20
+>       clockevents_notify(CLOCK_EVT_NOTIFY_BROADCAST_ENTER, ...);
+> =20
+> > > Soren, is that timer used as the broadcast device ?
+> >
+> > Yes, this is the only broadcast capable timer on Zynq, AFAIK. Other=
+ than
+> > the TTC we only have the arm_global_timer and smp_twd timers, which=
+ both
+> > are per_cpu devices and thus not broadcast capable.
+>=20
+> There is a solution to this. We can identify the broadcast device in
+> the core and serialize all callers including interrupts on a differen=
+t
+> cpu against the update. So no need for the disable/enable_irq() dance=
+=2E
 
-No help?
+IIUC, and please correct me if I'm wrong, with the patch I'd simply cal=
+l
+'clockevents_update_freq() without having to disable IRQs. But I'm not
+sure whether periodic mode is covered. I found, that I had to reprogram
+the timer interval in my clock notifier callback when the timer
+frequency changes. I think 'clockevents_update_freq()' only handles
+oneshot mode. For that reason I call 'ttc_set_interval()' in the clock
+notifier in case the timer is in periodic mode. For that call we'd stil=
+l
+have possible races. I guess the best solution would be to move that
+functionality into 'clockevents_update_freq()'?
 
-> +
->  config PINCTRL_NOMADIK
->  	bool "Nomadik pin controller driver"
->  	depends on ARCH_U8500 || ARCH_NOMADIK
-> diff --git a/drivers/pinctrl/pinctrl-msm8x74.c b/drivers/pinctrl/pinctrl-msm8x74.c
-> new file mode 100644
-> index 0000000..762552b
-> --- /dev/null
-> +++ b/drivers/pinctrl/pinctrl-msm8x74.c
-> @@ -0,0 +1,636 @@
-[snip]
-> +
-> +#define FUNCTION(fname)					\
-> +	[MSM_MUX_##fname] = {				\
-> +		.name = #fname,				\
-> +		.groups = fname##_groups,		\
-> +		.ngroups = ARRAY_SIZE(fname##_groups),	\
-> +	}
-> +
-> +#define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7)	\
-> +	{						\
-> +		.name = "gpio" #id,			\
-> +		.pins = gpio##id##_pins,		\
-> +		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-> +		.funcs = {				\
-> +			MSM_MUX_NA, /* gpio mode */	\
-> +			MSM_MUX_##f1,			\
-> +			MSM_MUX_##f2,			\
-> +			MSM_MUX_##f3,			\
-> +			MSM_MUX_##f4,			\
-> +			MSM_MUX_##f5,			\
-> +			MSM_MUX_##f6,			\
-> +			MSM_MUX_##f7			\
-> +		},					\
-> +		.ctl_reg = 0x1000 + 0x10 * id ,		\
-
-Weird trailing space here.
-
-Also, do we ever plan to have anything more than the gpio pins and the
-sdc pins? It seems like we spend a lot of space describing exactly the
-same thing in these structs for each of the 146 gpio pins when we could
-just know that range 0 to 146 is gpio pins and have different code for
-that part vs the 6 or something sd pins.
-
-> +
-> +static struct of_device_id msm8x74_pinctrl_of_match[] = {
-
-const?
-
->
-> +
-> +static int __init msm8x74_pinctrl_init(void)
-> +{
-> +	return platform_driver_register(&msm8x74_pinctrl_driver);
-> +}
-> +arch_initcall(msm8x74_pinctrl_init);
-> +
-> +static void __exit msm8x74_pinctrl_exit(void)
-> +{
-> +	platform_driver_unregister(&msm8x74_pinctrl_driver);
-> +}
-> +module_exit(msm8x74_pinctrl_exit);
-
-Why not module_platform_driver()? I thought pinctrl supported deferred
-probing?
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+	S=C3=B6ren
