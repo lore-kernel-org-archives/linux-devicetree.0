@@ -1,52 +1,89 @@
-From: James Cameron <quozl@laptop.org>
-Subject: Re: [PATCH] serial: rewrite pxa2xx-uart to use 8250_core
-Date: Fri, 6 Dec 2013 20:53:45 +1100
-Message-ID: <20131206095345.GQ16425@us.netrek.org>
-References: <20131205043544.GA28580@kroah.com>
- <1386286149-2855-1-git-send-email-ynvich@gmail.com>
- <20131206000253.GC21358@kroah.com>
- <20131206001728.GJ4360@n2100.arm.linux.org.uk>
- <1386322131.7152.36.camel@host5.omatika.ru>
+From: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH v3] checkpatch: add DT compatible string documentation
+ checks
+Date: Fri, 6 Dec 2013 09:56:26 +0000
+Message-ID: <20131206095626.GD3248@bark>
+References: <1386173031-17867-1-git-send-email-robherring2@gmail.com>
+ <1386173563.30493.72.camel@joe-AO722>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1386322131.7152.36.camel@host5.omatika.ru>
-Sender: linux-serial-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ralf Baechle <ralf@linux-mips.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, John Crispin <blogic@openwrt.org>, Jiri Slaby <jslaby@suse.cz>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Zhou Zhu <zzhu3@marvell.com>
+In-Reply-To: <1386173563.30493.72.camel@joe-AO722>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 06, 2013 at 01:28:51PM +0400, Sergei Ianovich wrote:
-> On Fri, 2013-12-06 at 00:17 +0000, Russell King - ARM Linux wrote:
+On Wed, Dec 04, 2013 at 08:12:43AM -0800, Joe Perches wrote:
+> On Wed, 2013-12-04 at 10:03 -0600, Rob Herring wrote:
+> > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > 
+> > This adds a simple check that any compatible strings in DeviceTree dts
+> > files are present in Documentation/devicetree/bindings. Vendor prefixes
+> > are also checked for existing in vendor-prefixes.txt These should be
+> > temporary checks until we have more sophisticated binding schema checking.
+> > 
+> > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+> > Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 > 
-> > I may be able to - one of the downsides though is that many of these
-> > systems had hard-coded scripts which started a getty on the original
-> > port - and that kind of makes it difficult to sort out.  This kind of
-> > change becomes very much one of Linus' "flag days".
+> Signed-off-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 > 
-> > So I'd suggest that we have a period where the old driver is still
-> > available, so at least people can choose to use the old major/minor
-> > numbers for a while.
-> 
-> The patch doesn't change how the driver looks from the outside. The old
-> driver was using 8250 name (ttyS), major (4) and first minor (64). So we
-> only resolve an internal conflict.
+> > ---
+> > v3:
+> > - Use a single message type UNDOCUMENTED_DT_STRING
+> > - Ensure '+' is at beginning of the line
+> > - Move vendor-prefixes.txt to variable
+> > 
+> > v2:
+> > - Add vendor string checking against vendor-prefixes.txt
+> > - Add '_', '.' and '+' as valid compatible string characters
+> > - Use 'grep -E' instead of egrep
+> > 
+> >  scripts/checkpatch.pl | 25 +++++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> > 
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index 9c98100..3696366 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -2034,6 +2034,31 @@ sub process {
+> >  			     "Use of $flag is deprecated, please use \`$replacement->{$flag} instead.\n" . $herecurr) if ($replacement->{$flag});
+> >  		}
+> >  
+> > +# check for DT compatible documentation
+> > +		if ($realfile =~ /\.dts/ && $rawline =~ /^\+\s*compatible\s*=/) {
+> > +			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
+> > +
+> > +			foreach my $compat (@compats) {
+> > +				my $compat2 = $compat;
+> > +				my $dt_path = "Documentation/devicetree/bindings/";
+> > +				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
+> > +				`grep -Erq "$compat|$compat2" $dt_path`;
+> > +				if ( $? >> 8 ) {
+> > +					WARN("UNDOCUMENTED_DT_STRING",
+> > +					     "DT compatible string \"$compat\" appears un-documented -- check $dt_path\n" . $herecurr);
+> > +				}
+> > +
+> > +				my $vendor = $compat;
+> > +				my $vendor_path = $dt_path . "vendor-prefixes.txt";
+> > +				$vendor =~ s/^([a-zA-Z0-9]+)\,.*/$1/;
+> > +				`grep -Eq "$vendor" $vendor_path`;
+> > +				if ( $? >> 8 ) {
+> > +					WARN("UNDOCUMENTED_DT_STRING",
+> > +					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vendor_path\n" . $herecurr);
+> > +				}
+> > +			}
+> > +		}
 
-I don't understand why /dev/ttyS2 (4,66) changed to /dev/ttyS0 (4,64)
-after the patch was applied to olpc-kernel/arm-3.5 but, as you say it
-doesn't change, perhaps there is something between 3.5 and now for me
-to watch out for.  My problem.
+So this only works if you are in the top of the tree at the time when
+you run it (unless I've missed something).  So it might be appropraite
+to suppress this when the vendor-prefixes.txt file is not found.
 
-> Kernel configuration is the place where issues may appear, since the
-> patch removes CONFIG_SERIAL_PXA_CONSOLE option. I've updated all
-> in-kernel users. However, out-of-kernel configs will no longer provide
-> serial console, unless manually reconfigured. Is this the case we should
-> worry about?
-
-OLPC holds an out-of-kernel config (xo_4_defconfig); but no, I don't
-think we'd have trouble with this.  Go for it.
-
--- 
-James Cameron
-http://quozl.linux.org.au/
+-apw
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
