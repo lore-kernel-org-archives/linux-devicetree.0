@@ -1,265 +1,96 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 07/10] drivers: phy: usb3/pipe3: Adapt pipe3 driver
- to Generic PHY Framework
-Date: Fri, 6 Dec 2013 16:35:19 +0200
-Message-ID: <52A1E0A7.80901@ti.com>
-References: <1385373690-12170-1-git-send-email-kishon@ti.com> <1385373690-12170-8-git-send-email-kishon@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/3] ASoC: fsl: imx-wm8962: Add headphone
+ and microphone jack plugin/out detection
+Date: Fri, 6 Dec 2013 14:42:56 +0000
+Message-ID: <20131206144256.GI29268@sirena.org.uk>
+References: <cover.1386322845.git.b42378@freescale.com>
+ <82d3285b7efe1f98dbc3d9c0a423b2e5e454481f.1386322845.git.b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1385373690-12170-8-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, bcousson@baylibre.com, balbi@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, grant.likely@linaro.org, s.nawrocki@samsung.com, galak@codeaurora.org
+Content-Type: multipart/mixed; boundary="===============0379890623021791730=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <82d3285b7efe1f98dbc3d9c0a423b2e5e454481f.1386322845.git.b42378@freescale.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Nicolin Chen <b42378@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, swarren@wwwdotorg.org, linux-doc@vger.kernel.org, tiwai@suse.de, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, lgirdwood@gmail.com, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
 
-On 11/25/2013 12:01 PM, Kishon Vijay Abraham I wrote:
-> Adapted omap-usb3 PHY driver to Generic PHY Framework and moved phy-omap-usb3
-> driver in drivers/usb/phy to drivers/phy and also renamed the file to
-> phy-ti-pipe3 since this same driver will be used for SATA PHY and
-> PCIE PHY.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/phy/Kconfig                                |   11 +
->  drivers/phy/Makefile                               |    1 +
->  .../phy/phy-omap-usb3.c => phy/phy-ti-pipe3.c}     |  232 ++++++++++++--------
->  drivers/usb/phy/Kconfig                            |   11 -
->  drivers/usb/phy/Makefile                           |    1 -
->  5 files changed, 149 insertions(+), 107 deletions(-)
->  rename drivers/{usb/phy/phy-omap-usb3.c => phy/phy-ti-pipe3.c} (55%)
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index a344f3d..1abbfcc 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -33,6 +33,17 @@ config OMAP_USB2
->  	  The USB OTG controller communicates with the comparator using this
->  	  driver.
->  
-> +config TI_PIPE3
-> +	tristate "TI PIPE3 PHY Driver"
-> +	depends on ARCH_OMAP2PLUS || COMPILE_TEST
-> +	select GENERIC_PHY
-> +	select OMAP_CONTROL_USB
-> +	help
-> +	  Enable this to support the PIPE3 PHY that is part of TI SOCs. This
-> +	  driver takes care of all the PHY functionality apart from comparator.
-> +	  This driver interacts with the "OMAP Control PHY Driver" to power
-> +	  on/off the PHY.
-> +
->  config TWL4030_USB
->  	tristate "TWL4030 USB Transceiver Driver"
->  	depends on TWL4030_CORE && REGULATOR_TWL4030 && USB_MUSB_OMAP2PLUS
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index d0caae9..94a1a79 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -6,4 +6,5 @@ obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
->  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
->  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
->  obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
-> +obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
->  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
-> diff --git a/drivers/usb/phy/phy-omap-usb3.c b/drivers/phy/phy-ti-pipe3.c
-> similarity index 55%
-> rename from drivers/usb/phy/phy-omap-usb3.c
-> rename to drivers/phy/phy-ti-pipe3.c
-> index 0c6ba29..410b286 100644
-> --- a/drivers/usb/phy/phy-omap-usb3.c
-> +++ b/drivers/phy/phy-ti-pipe3.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * omap-usb3 - USB PHY, talking to dwc3 controller in OMAP.
-> + * phy-ti-pipe3 - PIPE3 PHY driver.
->   *
->   * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
->   * This program is free software; you can redistribute it and/or modify
-> @@ -19,10 +19,11 @@
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> -#include <linux/usb/omap_usb.h>
-> +#include <linux/phy/phy.h>
->  #include <linux/of.h>
->  #include <linux/clk.h>
->  #include <linux/err.h>
-> +#include <linux/io.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/delay.h>
->  #include <linux/usb/omap_control_usb.h>
-> @@ -52,17 +53,34 @@
->  
->  /*
->   * This is an Empirical value that works, need to confirm the actual
-> - * value required for the USB3PHY_PLL_CONFIGURATION2.PLL_IDLE status
-> - * to be correctly reflected in the USB3PHY_PLL_STATUS register.
-> + * value required for the PIPE3PHY_PLL_CONFIGURATION2.PLL_IDLE status
-> + * to be correctly reflected in the PIPE3PHY_PLL_STATUS register.
->   */
->  # define PLL_IDLE_TIME  100;
->  
-> -struct usb_dpll_map {
-> +struct pipe3_dpll_params {
-> +	u16	m;
-> +	u8	n;
-> +	u8	freq:3;
-> +	u8	sd;
-> +	u32	mf;
-> +};
-> +
-> +struct ti_pipe3 {
-> +	void __iomem		*pll_ctrl_base;
-> +	struct device		*dev;
-> +	struct device		*control_dev;
-> +	struct clk		*wkupclk;
-> +	struct clk		*sys_clk;
-> +	struct clk		*optclk;
-> +};
-> +
-> +struct pipe3_dpll_map {
->  	unsigned long rate;
-> -	struct usb_dpll_params params;
-> +	struct pipe3_dpll_params params;
->  };
->  
-> -static struct usb_dpll_map dpll_map[] = {
-> +static struct pipe3_dpll_map dpll_map[] = {
->  	{12000000, {1250, 5, 4, 20, 0} },	/* 12 MHz */
->  	{16800000, {3125, 20, 4, 20, 0} },	/* 16.8 MHz */
->  	{19200000, {1172, 8, 4, 20, 65537} },	/* 19.2 MHz */
-> @@ -71,7 +89,18 @@ static struct usb_dpll_map dpll_map[] = {
->  	{38400000, {3125, 47, 4, 20, 92843} },	/* 38.4 MHz */
->  };
->  
-> -static struct usb_dpll_params *omap_usb3_get_dpll_params(unsigned long rate)
-> +static inline u32 ti_pipe3_readl(void __iomem *addr, unsigned offset)
-> +{
-> +	return __raw_readl(addr + offset);
-> +}
-> +
-> +static inline void ti_pipe3_writel(void __iomem *addr, unsigned offset,
-> +	u32 data)
-> +{
-> +	__raw_writel(data, addr + offset);
-> +}
-> +
-> +static struct pipe3_dpll_params *ti_pipe3_get_dpll_params(unsigned long rate)
->  {
->  	int i;
->  
-> @@ -83,110 +112,113 @@ static struct usb_dpll_params *omap_usb3_get_dpll_params(unsigned long rate)
->  	return NULL;
->  }
->  
-> -static int omap_usb3_suspend(struct usb_phy *x, int suspend)
-> +static int ti_pipe3_power_off(struct phy *x)
->  {
-> -	struct omap_usb *phy = phy_to_omapusb(x);
-> -	int	val;
-> +	struct ti_pipe3 *phy = phy_get_drvdata(x);
-> +	int val;
->  	int timeout = PLL_IDLE_TIME;
->  
-> -	if (suspend && !phy->is_suspended) {
-> -		val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
-> -		val |= PLL_IDLE;
-> -		omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
-> -
-> -		do {
-> -			val = omap_usb_readl(phy->pll_ctrl_base, PLL_STATUS);
-> -			if (val & PLL_TICOPWDN)
-> -				break;
-> -			udelay(1);
-> -		} while (--timeout);
-> -
-> -		omap_control_usb_phy_power(phy->control_dev, 0);
-> -
-> -		phy->is_suspended	= 1;
-> -	} else if (!suspend && phy->is_suspended) {
-> -		phy->is_suspended	= 0;
-> -
-> -		val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
-> -		val &= ~PLL_IDLE;
-> -		omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
-> -
-> -		do {
-> -			val = omap_usb_readl(phy->pll_ctrl_base, PLL_STATUS);
-> -			if (!(val & PLL_TICOPWDN))
-> -				break;
-> -			udelay(1);
-> -		} while (--timeout);
-> -	}
-> +	val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
-> +	val |= PLL_IDLE;
-> +	ti_pipe3_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
-> +
-> +	do {
-> +		val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_STATUS);
-> +		if (val & PLL_TICOPWDN)
-> +			break;
-> +		usleep_range(1, 5);
+--===============0379890623021791730==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0EphSjNCSB1asamE"
+Content-Disposition: inline
 
-I had suggested to use sleep instead of udelay here but usleep for < 10 us might not be not optimal.
-see Documentation/timers/timers-howto.txt
 
-Why can't we just use msleep(1)?
+--0EphSjNCSB1asamE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Do we know approximately how much time it takes for the block to power down?
+On Fri, Dec 06, 2013 at 05:48:23PM +0800, Nicolin Chen wrote:
 
-> +	} while (--timeout);
+> Therefore, this patch mainly adds jack event detection feature and switchs I/O
+> routes accordingly. Meanwhile, for those monaural input cases, we also turn on
+> the ADC monomix features of WM8962 if needed.
+
+No, the kernel shouldn't be doing any route switching or other
+configuration - that should be done by userspace.  This is a policy
+decision, there are situations where for example audio should go to both
+headphones and speaker when headphones are connected in order to make
+sure notifications are audible even if headpones have been removed.
+
+> +	if (hp_status != priv->hp_active_low) {
+> +		snprintf(buf, 32, "STATE=%d", 2);
+> +		snd_soc_dapm_disable_pin(&priv->codec->dapm, "Ext Spk");
+> +		ret = imx_hp_jack_gpio.report;
+> +	} else {
+> +		snprintf(buf, 32, "STATE=%d", 0);
+> +		snd_soc_dapm_enable_pin(&priv->codec->dapm, "Ext Spk");
+> +		ret = 0;
+> +	}
 > +
+> +	envp[0] = "NAME=headphone";
+> +	envp[1] = buf;
+> +	envp[2] = NULL;
+> +	kobject_uevent_env(&pdev->dev.kobj, KOBJ_CHANGE, envp);
 
-what if there was a timeout? you need to exit with return code and preferably print an error message.
+What's this uevent trying to do and why is it open coded in the driver?
 
-> +	omap_control_usb_phy_power(phy->control_dev, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ti_pipe3_power_on(struct phy *x)
-> +{
-> +	struct ti_pipe3 *phy = phy_get_drvdata(x);
-> +	int val;
-> +	int timeout = PLL_IDLE_TIME;
-> +
-> +	val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
-> +	val &= ~PLL_IDLE;
-> +	ti_pipe3_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
-> +
-> +	do {
-> +		val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_STATUS);
-> +		if (!(val & PLL_TICOPWDN))
-> +			break;
-> +		usleep_range(1, 5);
-> +	} while (--timeout);
+--0EphSjNCSB1asamE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-here as well.
->  
->  	return 0;
->  }
->  
-> -static void omap_usb_dpll_relock(struct omap_usb *phy)
-> +static void ti_pipe3_dpll_relock(struct ti_pipe3 *phy)
->  {
->  	u32		val;
->  	unsigned long	timeout;
->  
-> -	omap_usb_writel(phy->pll_ctrl_base, PLL_GO, SET_PLL_GO);
-> +	ti_pipe3_writel(phy->pll_ctrl_base, PLL_GO, SET_PLL_GO);
->  
->  	timeout = jiffies + msecs_to_jiffies(20);
->  	do {
-> -		val = omap_usb_readl(phy->pll_ctrl_base, PLL_STATUS);
-> +		val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_STATUS);
->  		if (val & PLL_LOCK)
->  			break;
->  	} while (!WARN_ON(time_after(jiffies, timeout)));
->  }
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-cheers,
--roger
+iQIcBAEBAgAGBQJSoeJtAAoJELSic+t+oim9PrcP/jmzlN6zrUrkhIfryYC1RZuo
++w3T4BDY6eZRs0y0qC7QUC9K+Bcx4sX7g8ssIJzMUoEOF1RzlOs46/ttmgZHvuyw
+L0w1qolcgJyf4TLrJQiTs7X1pI/ZMCUzogDNIlGIGhAVGn2JZ5X9pWsvXyzYBhNx
+Lfh+PnVgTfW93KRlBwyQZkg5ewscrDQ2GPAXMnilPmUttIJT9CDBO3PTtzOGKwjK
+Fuam3KQnkNaNtJP1pIL99iWhWZVdd3uU5nmS17/Cy9Wd6jE/efpt6AYDozeyLF8H
+gNxodgNkA776vgSODFl3CcHgV+4CuNkp82LpXo6RzI2hf1RaDqCNkxup6f9W179O
+ACfi6Bw5wYo3oRVjvNF5fZVpOCtaBBXoUZ46dabh2YRuyfAIlG2XE0jxQoaX4M2A
+nULjE/YoYTipMrfHGxvpETS4K4WJ8FhFCeKxsRn3mGQijsEmMr53Ysn/I9LPxRiE
+se71+SlFlyYdPKcqYT1cqFLJ5ii1U1EzKfo2JRMHyltLc8C6DiQNBSFK/DrbvQKV
+EhP9PPUXOoq79vpmyuxV1Jnv+/eXz/5QMVkaxUJSCFhF3exDFeej6BBlKvw0KC1g
+jIbY/mljSjbFYqaaxfT5Ww9q6gf3ByZrcdfjnoCzpwbHkLeRFmG8gTZbK8iNsjXI
+0n1c0gKpk5eHMJL+2tbZ
+=IEpg
+-----END PGP SIGNATURE-----
 
+--0EphSjNCSB1asamE--
+
+--===============0379890623021791730==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0379890623021791730==--
