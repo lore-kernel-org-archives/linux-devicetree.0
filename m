@@ -1,89 +1,72 @@
-From: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH v3] checkpatch: add DT compatible string documentation
- checks
-Date: Fri, 6 Dec 2013 09:56:26 +0000
-Message-ID: <20131206095626.GD3248@bark>
-References: <1386173031-17867-1-git-send-email-robherring2@gmail.com>
- <1386173563.30493.72.camel@joe-AO722>
+From: Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH 4/4] pinctrl: tegra: add pinmux controller driver for
+ Tegra124
+Date: Fri, 6 Dec 2013 10:58:19 +0100
+Message-ID: <20131206095819.GB29035@ulmo.nvidia.com>
+References: <1386241070-4350-1-git-send-email-ldewangan@nvidia.com>
+ <1386241070-4350-5-git-send-email-ldewangan@nvidia.com>
+ <52A10C7B.8070406@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="H1spWtNR+x+ondvy"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52A10C7B.8070406@wwwdotorg.org>
 Content-Disposition: inline
-In-Reply-To: <1386173563.30493.72.camel@joe-AO722>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ashwini Ghuge <aghuge@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 04, 2013 at 08:12:43AM -0800, Joe Perches wrote:
-> On Wed, 2013-12-04 at 10:03 -0600, Rob Herring wrote:
-> > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > 
-> > This adds a simple check that any compatible strings in DeviceTree dts
-> > files are present in Documentation/devicetree/bindings. Vendor prefixes
-> > are also checked for existing in vendor-prefixes.txt These should be
-> > temporary checks until we have more sophisticated binding schema checking.
-> > 
-> > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-> > Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-> 
-> Signed-off-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-> 
-> > ---
-> > v3:
-> > - Use a single message type UNDOCUMENTED_DT_STRING
-> > - Ensure '+' is at beginning of the line
-> > - Move vendor-prefixes.txt to variable
-> > 
-> > v2:
-> > - Add vendor string checking against vendor-prefixes.txt
-> > - Add '_', '.' and '+' as valid compatible string characters
-> > - Use 'grep -E' instead of egrep
-> > 
-> >  scripts/checkpatch.pl | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> > 
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > index 9c98100..3696366 100755
-> > --- a/scripts/checkpatch.pl
-> > +++ b/scripts/checkpatch.pl
-> > @@ -2034,6 +2034,31 @@ sub process {
-> >  			     "Use of $flag is deprecated, please use \`$replacement->{$flag} instead.\n" . $herecurr) if ($replacement->{$flag});
-> >  		}
-> >  
-> > +# check for DT compatible documentation
-> > +		if ($realfile =~ /\.dts/ && $rawline =~ /^\+\s*compatible\s*=/) {
-> > +			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
-> > +
-> > +			foreach my $compat (@compats) {
-> > +				my $compat2 = $compat;
-> > +				my $dt_path = "Documentation/devicetree/bindings/";
-> > +				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
-> > +				`grep -Erq "$compat|$compat2" $dt_path`;
-> > +				if ( $? >> 8 ) {
-> > +					WARN("UNDOCUMENTED_DT_STRING",
-> > +					     "DT compatible string \"$compat\" appears un-documented -- check $dt_path\n" . $herecurr);
-> > +				}
-> > +
-> > +				my $vendor = $compat;
-> > +				my $vendor_path = $dt_path . "vendor-prefixes.txt";
-> > +				$vendor =~ s/^([a-zA-Z0-9]+)\,.*/$1/;
-> > +				`grep -Eq "$vendor" $vendor_path`;
-> > +				if ( $? >> 8 ) {
-> > +					WARN("UNDOCUMENTED_DT_STRING",
-> > +					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vendor_path\n" . $herecurr);
-> > +				}
-> > +			}
-> > +		}
+--H1spWtNR+x+ondvy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So this only works if you are in the top of the tree at the time when
-you run it (unless I've missed something).  So it might be appropraite
-to suppress this when the vendor-prefixes.txt file is not found.
+On Fri, Dec 06, 2013 at 12:30:03AM +0100, Stephen Warren wrote:
+> On 12/05/2013 03:57 AM, Laxman Dewangan wrote:
+> > From: Ashwini Ghuge <aghuge@nvidia.com>
+> >=20
+> > This adds a driver for the Tegra124 pinmux, and required
+> > parameterization data for Tegra124.
+> >=20
+> > The driver uses the common Tegra pincontrol driver utility
+> > functions to implement the majority of the driver.
+> >=20
+> > This driver is not compatible with the earlier NVIDIA's SoCs,
+> > hence add new compatibile as "nvidia,tegra124-pinmux".
+> >=20
+> > Originally written by Ashwini Gguhe.
+> > ldewangan:
+> >         - cleanup the patches,
+> >         - Fix address issue.
+>=20
+> IIRC, Thierry mentioned he had some fixes in his local branch for this
+> driver. Thierry, can you please confirm/deny this?
 
--apw
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'll try to get this version tested today and report back if any changes
+are still required.
+
+Thierry
+
+--H1spWtNR+x+ondvy
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSoZ+7AAoJEN0jrNd/PrOhgLAP/35p42XYm/W4T0mOqjTrCk/s
+4+QHkSkhQc4RCspUUerOBIHXQbKnq9l8PTUtOmWpbIruWqZIZX/50IYarg0lf9E0
+Yitg+G/7iQ/eUm1+giXRLfSxWyG9T2TekTjObKMz8ble/tw+kokCGZlPYEMbOiL2
+AgYr/yTvOSpJcxKFmEj6dYS2oGEMMXlJG3lueDnZPfW+8VyZbHNALDN+2ySY5mae
+uU42smMB0eFL4266oir2b3unZjozyhp5rJxXTURoIUvx5jZEcXEkU5nJHZZY8TQM
+FLoBUUtv7kmsRMspTBCqaqxzIBEFMUiu/70wNBkhu/ZCYUtdTkivhcVtN5cS5kJy
+WXr7q3WLLPcXDpQilKqoP5k++HWtl9IF7ZsrWBuWq2dtBQbW0nujP8JwYP+p4vdK
+voM3kuX8/me8K0vfVW6lJiXLyRmWJltfgb6pD59zsuqj2+XxA/HT4Gq+DBvbnEV8
+1Vwpg5Kq0o4T2Wfey1mhGE4KkXTtEFdG+4McY9YcQrH8PvlMUijxrYKhzQKzZgvO
+GB97ljJvDWxFrEswkoguALMN9oTE24GUXgMv43J2aY6Mj1k8RMc4BT3fch3V/xkV
+zxZqQHvk1tcUZcDMB6X9Q6OS60alTc/GHXUENRuf/Cddxcxmg3vL1rtL1foT1Soh
+7twGGWBrZ/VX8mJ1GXkg
+=NZS0
+-----END PGP SIGNATURE-----
+
+--H1spWtNR+x+ondvy--
