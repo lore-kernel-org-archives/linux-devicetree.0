@@ -1,328 +1,303 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 3/3] leds: leds-mc13783: Add devicetree support
-Date: Sat, 07 Dec 2013 12:47:18 +0100
-Message-ID: <4531338.dvjMOzW3sA@flatron>
-References: <1386397464-31033-1-git-send-email-shc_work@mail.ru>
+From: Olliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: sunxi: dts: Add ahci support to a
+ few A10 and A20 boards
+Date: Sat, 07 Dec 2013 12:47:39 +0100
+Message-ID: <52A30ADB.7090106@schinagl.nl>
+References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl> <1386159055-10264-4-git-send-email-oliver@schinagl.nl> <20131206183339.GG24519@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1386397464-31033-1-git-send-email-shc_work@mail.ru>
-Sender: linux-leds-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Philippe =?ISO-8859-1?Q?R=E9tornaz?= <philippe.retornaz@epfl.ch>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDDZ7YMYRMGBBP4WRSKQKGQELQP6B3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20131206183339.GG24519@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
+Hey maxime,
+On 06-12-13 19:33, Maxime Ripard wrote:
+> Hi Oliver,
+>
+> On Wed, Dec 04, 2013 at 01:10:55PM +0100, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org wrote:
+>> From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>>
+>> This patch adds sunxi sata support to A10 and A20 boards that have such
+>> a connector. Some boards also feature a regulator via a GPIO and support
+>> for this is also added.
+>>
+>> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>
+> Your git setup seems to be pretty uncertain about how your first name is spelled :)
+I should have formally mention it to confuse less people,
 
-Please see my comments inline.
+This is how officially my name is spelled (I left out any 'middle' 
+letters. I never really used it as such, as it confuses people and they 
+always write it wrong anyway. After years I decided that at least on 
+these patches, I should write it down properly (googleability etc in the 
+future). So formally it's Olliver 'oliver' M. Schinagl.
 
-On Saturday 07 of December 2013 10:24:24 Alexander Shiyan wrote:
-> This patch adds devicetree support for the MC13XXX LED driver.
-> 
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-> ---
->  Documentation/devicetree/bindings/mfd/mc13xxx.txt |  38 +++++
->  drivers/leds/leds-mc13783.c                       | 161 ++++++++++++++--------
->  2 files changed, 143 insertions(+), 56 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mc13xxx.txt b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
-> index abd9e3c..bdf31e8 100644
-> --- a/Documentation/devicetree/bindings/mfd/mc13xxx.txt
-> +++ b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
-> @@ -10,9 +10,37 @@ Optional properties:
->  - fsl,mc13xxx-uses-touch : Indicate the touchscreen controller is being used
->  
->  Sub-nodes:
-> +- leds : Contain the led nodes and initial register values in property
-> +  "led_control". Number of register depends of used IC, for MC13783 is 6,
-> +  for MC13892 is 4. See datasheet for bits definitions of these register.
+And no, I won't share my middle name :p
 
-Can't the driver somehow derive correct register values from LEDs listed
-as subnodes of this node? If not, I'd say that more fine grained
-properties should be used instead. What kind of configuration do these
-register control?
+There! :)
+>
+>> ---
+>>   arch/arm/boot/dts/sun4i-a10-cubieboard.dts      | 26 +++++++++++++++++++++++++
+>>   arch/arm/boot/dts/sun4i-a10.dtsi                |  9 +++++++++
+>>   arch/arm/boot/dts/sun7i-a20-cubieboard2.dts     | 26 +++++++++++++++++++++++++
+>>   arch/arm/boot/dts/sun7i-a20-cubietruck.dts      | 26 +++++++++++++++++++++++++
+>>   arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 26 +++++++++++++++++++++++++
+>>   arch/arm/boot/dts/sun7i-a20.dtsi                |  9 +++++++++
+>>   6 files changed, 122 insertions(+)
+>
+> Could you split this into several patches please?
+Yes, appologies, will take care of this! Sorry,
 
-Also s/_/-/ in property names.
+Oliver
+>
+> At least one per SoC.
+>
+>> diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+>> index 425a7db..b620084 100644
+>> --- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+>> +++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+>> @@ -42,7 +42,18 @@
+>>   			};
+>>   		};
+>>
+>> +		sata: ahci@01c18000 {
+>> +			pwr-supply = <&reg_ahci_5v>;
+>> +			status = "okay";
+>> +		};
+>> +
+>>   		pinctrl@01c20800 {
+>> +			ahci_pwr_pin: ahci_pwr_pin@0 {
+>
+> Please prefix it with name of the board.
+>
+>> +				allwinner,pins = "PB8";
+>> +				allwinner,function = "gpio_out";
+>> +				allwinner,driver = <0>;
+>> +				allwinner,pull = <0>;
+>> +			};
+>
+> Please add a newline here.
+>
+>>   			led_pins_cubieboard: led_pins@0 {
+>>   				allwinner,pins = "PH20", "PH21";
+>>   				allwinner,function = "gpio_out";
+>> @@ -86,4 +97,19 @@
+>>   			linux,default-trigger = "heartbeat";
+>>   		};
+>>   	};
+>> +
+>> +	regulators {
+>> +		compatible = "simple-bus";
+>> +		pinctrl-names = "default";
+>> +
+>> +		reg_ahci_5v: ahci-5v {
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "ahci-5v";
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			pinctrl-0 = <&ahci_pwr_pin>;
+>> +			gpio = <&pio 1 8 0>;
+>> +			enable-active-high;
+>> +		};
+>> +	};
+>>   };
+>> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+>> index 4dccdb0..53c6cdb 100644
+>> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+>> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+>> @@ -306,6 +306,15 @@
+>>   			#size-cells = <0>;
+>>   		};
+>>
+>> +		sata: ahci@01c18000 {
+>> +			compatible = "allwinner,sun4i-a10-ahci";
+>
+> Please use sun4i-ahci for consistency.
+>
+>> +			reg = <0x01c18000 0x1000>;
+>> +			interrupts = <0 56 1>;
+>
+> The interrupt here doesn't seem right. Is it actually working at all?
+>
+>> +			clocks = <&ahb_gates 25>, <&pll6 0>;
+>> +			clock-names = "ahb_sata", "pll6_sata";
+>> +			status = "disabled";
+>> +		};
+>> +
+>>   		intc: interrupt-controller@01c20400 {
+>>   			compatible = "allwinner,sun4i-ic";
+>>   			reg = <0x01c20400 0x400>;
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+>> index 5c51cb8..99c5e78 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+>> +++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+>> @@ -34,7 +34,18 @@
+>>   			};
+>>   		};
+>>
+>> +		sata: ahci@01c18000 {
+>> +			pwr-supply = <&reg_ahci_5v>;
+>> +			status = "okay";
+>> +		};
+>> +
+>>   		pinctrl@01c20800 {
+>> +			ahci_pwr_pin: ahci_pwr_pin@0 {
+>> +				allwinner,pins = "PB8";
+>> +				allwinner,function = "gpio_out";
+>> +				allwinner,drive = <0>;
+>> +				allwinner,pull = <0>;
+>> +			};
+>
+> Please add a newline here.
+>
+>>   			led_pins_cubieboard2: led_pins@0 {
+>>   				allwinner,pins = "PH20", "PH21";
+>>   				allwinner,function = "gpio_out";
+>> @@ -77,4 +88,19 @@
+>>   			gpios = <&pio 7 20 0>;
+>>   		};
+>>   	};
+>> +
+>> +	regulators {
+>> +		compatible = "simple-bus";
+>> +		pinctrl-names = "default";
+>> +
+>> +		reg_ahci_5v: ahci-5v {
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "ahci-5v";
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			pinctrl-0 = <&ahci_pwr_pin>;
+>> +			gpio = <&pio 1 8 0>;
+>> +			enable-active-high;
+>> +		};
+>> +	};
+>>   };
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>> index 8a1009d..19af23e 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>> @@ -19,7 +19,18 @@
+>>   	compatible = "cubietech,cubietruck", "allwinner,sun7i-a20";
+>>
+>>   	soc@01c00000 {
+>> +		sata: ahci@01c18000 {
+>> +			pwr-supply = <&reg_ahci_5v>;
+>> +			status = "okay";
+>> +		};
+>> +
+>>   		pinctrl@01c20800 {
+>> +			ahci_pwr_pin: ahci_pwr_pin@0 {
+>> +				allwinner,pins = "PH12";
+>> +				allwinner,function = "gpio_out";
+>> +				allwinner,driver = <0>;
+>> +				allwinner,pull = <0>;
+>> +			};
+>
+> Please add a newline here.
+>
+>>   			led_pins_cubietruck: led_pins@0 {
+>>   				allwinner,pins = "PH7", "PH11", "PH20", "PH21";
+>>   				allwinner,function = "gpio_out";
+>> @@ -60,4 +71,19 @@
+>>   			gpios = <&pio 7 7 0>;
+>>   		};
+>>   	};
+>> +
+>> +	regulators {
+>> +		compatible = "simple-bus";
+>> +		pinctrl-names = "default";
+>> +
+>> +		reg_ahci_5v: ahci-5v {
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "ahci-5v";
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			pinctrl-0 = <&ahci_pwr_pin>;
+>> +			gpio = <&pio 7 12 0>;
+>> +			enable-active-high;
+>> +		};
+>> +	};
+>>   };
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+>> index ead3013..23ed708 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+>> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+>> @@ -34,7 +34,19 @@
+>>   			};
+>>   		};
+>>
+>> +		sata: ahci@01c18000 {
+>> +			pwr-supply = <&reg_ahci_5v>;
+>> +			status = "okay";
+>> +		};
+>> +
+>>   		pinctrl@01c20800 {
+>> +			ahci_pwr_pin: ahci_pwr_pin@0 {
+>> +				allwinner,pins = "PB8";
+>> +				allwinner,function = "gpio_out";
+>> +				allwinner,drive = <0>;
+>> +				allwinner,pull = <0>;
+>> +			};
+>> +
+>>   			led_pins_olinuxino: led_pins@0 {
+>>   				allwinner,pins = "PH2";
+>>   				allwinner,function = "gpio_out";
+>> @@ -91,4 +103,18 @@
+>>   			default-state = "on";
+>>   		};
+>>   	};
+>> +
+>> +	regulators {
+>> +		compatible = "simple-bus";
+>> +
+>> +		reg_ahci_5v: ahci-5v {
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "ahci-5v";
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			pinctrl-0 = <&ahci_pwr_pin>;
+>> +			gpio = <&pio 1 8 0>;
+>> +			enable-active-high;
+>> +		};
+>> +	};
+>>   };
+>> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+>> index 0552a64..b72c69e 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+>> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+>> @@ -368,6 +368,15 @@
+>>   			};
+>>   		};
+>>
+>> +		sata: ahci@01c18000 {
+>> +			compatible = "allwinner,sun4i-a10-ahci";
+>> +			reg = <0x01c18000 0x1000>;
+>> +			interrupts = <0 56 1>;
+Will always fix this to <0 56 4> if i'm not mistaken.
 
-> +  Each led node should contain "reg", which used as LED ID (described below).
-> +  Optional properties "label" and "linux,default-trigger" is described in
-> +  Documentation/devicetree/bindings/leds/common.txt.
->  - regulators : Contain the regulator nodes. The regulators are bound using
->    their names as listed below with their registers and bits for enabling.
->  
-> +MC13783 LED IDs:
-> +    0  : Main display
-> +    1  : AUX display
-> +    2  : Keypad
-> +    3  : Red 1
-> +    4  : Green 1
-> +    5  : Blue 1
-> +    6  : Red 2
-> +    7  : Green 2
-> +    8  : Blue 2
-> +    9  : Red 3
-> +    10 : Green 3
-> +    11 : Blue 3
-> +
-> +MC13892 LED IDs:
-> +    12 : Main display
-> +    13 : AUX display
-> +    14 : Keypad
-> +    15 : Red
-> +    16 : Green
-> +    17 : Blue
-
-This looks a bit strange. Does the numbering relate to hardware design
-in any way? From what I can see, those are just enums values from Linux
-driver, which doesn't seem the right namespace to export to DT.
-
-> +
->  MC13783 regulators:
->      sw1a      : regulator SW1A      (register 24, bit 0)
->      sw1b      : regulator SW1B      (register 25, bit 0)
-> @@ -89,6 +117,16 @@ ecspi@70010000 { /* ECSPI1 */
->  		interrupt-parent = <&gpio0>;
->  		interrupts = <8>;
->  
-> +		leds {
-> +			led_control = <0x000 0x000 0x0e0 0x000>;
-> +
-> +			system_led {
-
-s/_/-/ in node name and also whenever reg property is present, node name
-should be followed by @unit-address suffix where unit-address is the
-value of first address in reg property.
-
-> +				reg = <15>;
-> +				label = "system:red:live";
-> +				linux,default-trigger = "heartbeat";
-> +			};
-> +		};
-> +
->  		regulators {
->  			sw1_reg: mc13892__sw1 {
->  				regulator-min-microvolt = <600000>;
-> diff --git a/drivers/leds/leds-mc13783.c b/drivers/leds/leds-mc13783.c
-> index ca87a1b..bc3ea2b 100644
-> --- a/drivers/leds/leds-mc13783.c
-> +++ b/drivers/leds/leds-mc13783.c
-> @@ -20,26 +20,27 @@
->  #include <linux/init.h>
->  #include <linux/platform_device.h>
->  #include <linux/leds.h>
-> +#include <linux/of.h>
->  #include <linux/workqueue.h>
->  #include <linux/mfd/mc13xxx.h>
->  
-> -#define MC13XXX_REG_LED_CONTROL(x)	(51 + (x))
-> -
-
-This and related changes qualify for a separate patch that would be
-a simple refactoring.
-
->  struct mc13xxx_led_devtype {
->  	int	led_min;
->  	int	led_max;
->  	int	num_regs;
-> +	u32	ledctrl_base;
->  };
->  
->  struct mc13xxx_led {
->  	struct led_classdev	cdev;
->  	struct work_struct	work;
-> -	struct mc13xxx		*master;
->  	enum led_brightness	new_brightness;
->  	int			id;
-> +	struct mc13xxx_leds	*leds;
->  };
->  
->  struct mc13xxx_leds {
-> +	struct mc13xxx			*master;
->  	struct mc13xxx_led_devtype	*devtype;
->  	int				num_leds;
->  	struct mc13xxx_led		led[0];
-> @@ -48,23 +49,24 @@ struct mc13xxx_leds {
->  static void mc13xxx_led_work(struct work_struct *work)
->  {
->  	struct mc13xxx_led *led = container_of(work, struct mc13xxx_led, work);
-> -	int reg, mask, value, bank, off, shift;
-> +	struct mc13xxx_leds *leds = led->leds;
-> +	unsigned int reg, mask, value, bank, off, shift;
->  
->  	switch (led->id) {
->  	case MC13783_LED_MD:
-> -		reg = MC13XXX_REG_LED_CONTROL(2);
-> +		reg = 2;
->  		shift = 9;
->  		mask = 0x0f;
->  		value = led->new_brightness >> 4;
->  		break;
->  	case MC13783_LED_AD:
-> -		reg = MC13XXX_REG_LED_CONTROL(2);
-> +		reg = 2;
->  		shift = 13;
->  		mask = 0x0f;
->  		value = led->new_brightness >> 4;
->  		break;
->  	case MC13783_LED_KP:
-> -		reg = MC13XXX_REG_LED_CONTROL(2);
-> +		reg = 2;
->  		shift = 17;
->  		mask = 0x0f;
->  		value = led->new_brightness >> 4;
-> @@ -80,25 +82,25 @@ static void mc13xxx_led_work(struct work_struct *work)
->  	case MC13783_LED_B3:
->  		off = led->id - MC13783_LED_R1;
->  		bank = off / 3;
-> -		reg = MC13XXX_REG_LED_CONTROL(3) + bank;
-> +		reg = 3 + bank;
->  		shift = (off - bank * 3) * 5 + 6;
->  		value = led->new_brightness >> 3;
->  		mask = 0x1f;
->  		break;
->  	case MC13892_LED_MD:
-> -		reg = MC13XXX_REG_LED_CONTROL(0);
-> +		reg = 0;
->  		shift = 3;
->  		mask = 0x3f;
->  		value = led->new_brightness >> 2;
->  		break;
->  	case MC13892_LED_AD:
-> -		reg = MC13XXX_REG_LED_CONTROL(0);
-> +		reg = 0;
->  		shift = 15;
->  		mask = 0x3f;
->  		value = led->new_brightness >> 2;
->  		break;
->  	case MC13892_LED_KP:
-> -		reg = MC13XXX_REG_LED_CONTROL(1);
-> +		reg = 1;
->  		shift = 3;
->  		mask = 0x3f;
->  		value = led->new_brightness >> 2;
-> @@ -108,7 +110,7 @@ static void mc13xxx_led_work(struct work_struct *work)
->  	case MC13892_LED_B:
->  		off = led->id - MC13892_LED_R;
->  		bank = off / 2;
-> -		reg = MC13XXX_REG_LED_CONTROL(2) + bank;
-> +		reg = 2 + bank;
->  		shift = (off - bank * 2) * 12 + 3;
->  		value = led->new_brightness >> 2;
->  		mask = 0x3f;
-> @@ -117,7 +119,8 @@ static void mc13xxx_led_work(struct work_struct *work)
->  		BUG();
->  	}
->  
-> -	mc13xxx_reg_rmw(led->master, reg, mask << shift, value << shift);
-> +	mc13xxx_reg_rmw(leds->master, leds->devtype->ledctrl_base + reg,
-> +			mask << shift, value << shift);
->  }
->  
->  static void mc13xxx_led_set(struct led_classdev *led_cdev,
-> @@ -130,80 +133,121 @@ static void mc13xxx_led_set(struct led_classdev *led_cdev,
->  	schedule_work(&led->work);
->  }
->  
-> +static int __init mc13xxx_led_setup_of(struct mc13xxx_leds *leds,
-> +				       struct device_node *parent)
-> +{
-> +#ifdef CONFIG_OF
-> +	struct device_node *child;
-> +	int ret, i = 0;
-> +
-> +	for_each_child_of_node(parent, child) {
-> +		ret = of_property_read_u32(child, "reg", &leds->led[i].id);
-> +		if (ret)
-> +			return ret;
-> +		leds->led[i].cdev.name = of_get_property(child, "label", NULL);
-> +		leds->led[i].cdev.default_trigger =
-> +			of_get_property(child, "linux,default-trigger", NULL);
-> +		i++;
-> +	}
-> +
-> +	return 0;
-> +#else
-> +	return -ENOTSUPP;
-> +#endif
-> +}
-
-I believe the preferred way to use conditional compilation is:
-
-#ifdef CONFIG_OF
-static int __init mc13xxx_led_setup_of(struct mc13xxx_leds *leds,
-				       struct device_node *parent)
-{
-	/* enabled variant */
-}
-#else
-static inline int mc13xxx_led_setup_of(struct mc13xxx_leds *leds,
-				       struct device_node *parent)
-{
-	return -ENOTSUPP;
-}
-#endif
-
-This doesn't pollute function body with #ifdefs and allows explicitly
-marking the disabled variant inline.
-
-> +
->  static int __init mc13xxx_led_probe(struct platform_device *pdev)
->  {
-> -	struct mc13xxx_leds_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> -	struct mc13xxx *mcdev = dev_get_drvdata(pdev->dev.parent);
-> +	struct device *dev = &pdev->dev;
-> +	struct mc13xxx_leds_platform_data *pdata = dev_get_platdata(dev);
-> +	struct mc13xxx *mcdev = dev_get_drvdata(dev->parent);
->  	struct mc13xxx_led_devtype *devtype =
->  		(struct mc13xxx_led_devtype *)pdev->id_entry->driver_data;
-> +	int i, num_leds = 0, ret = 0;
-> +	struct device_node *parent;
->  	struct mc13xxx_leds *leds;
-> -	int i, id, num_leds, ret = -ENODATA;
-> -	u32 reg, init_led = 0;
-> -
-> -	if (!pdata) {
-> -		dev_err(&pdev->dev, "Missing platform data\n");
-> -		return -ENODEV;
-> +	u32 *ctrls = NULL, init_led = 0;
-> +
-> +	of_node_get(dev->parent->of_node);
-> +	parent = of_find_node_by_name(dev->parent->of_node, "leds");
-
-Both lines above should be executed only if the device has been
-instantiated using DT.
-
-Also of_find_node_by_name() is not the correct function to use. Please
-refer to its documentation to learn why. The function that should be used
-here is of_get_child_by_name().
-
-> +
-> +	if (pdata) {
-> +		num_leds = pdata->num_leds;
-> +		ctrls = pdata->led_control;
-> +	} else if (parent) {
-> +		num_leds = of_get_child_count(parent);
-> +		ret = of_property_read_u32_array(parent, "led_control", ctrls,
-> +						 devtype->num_regs);
-
-Huh? Does this even work? The argument in place of ctrls is supposed to be
-the destination memory for read array. Your code sets ctrls to NULL above
-and then passes it to this function.
-
-> +		if (ret)
-> +			goto out_node_put;
-> +	} else {
-> +		return -ENODATA;
->  	}
-
-In general, I would rather adopt a completely different approach to DT
-enablement in this driver. Instead of splitting the probe into two almost
-completely different code paths in large if blocks, what about making
-mc13xxx_led_setup_of() allocate a platform data structure and fill it
-in with data parsed from DT, so the driver would then proceed normally as
-if the platform data were available? IMHO this should make the code much
-simpler and more readable.
-
-Best regards,
-Tomasz
+oliver
+>> +			clocks = <&ahb_gates 25>, <&pll6 0>;
+>> +			clock-names = "ahb_sata", "pll6_sata";
+>> +			status = "disabled";
+>> +		};
+>> +
+>>   		timer@01c20c00 {
+>>   			compatible = "allwinner,sun4i-timer";
+>>   			reg = <0x01c20c00 0x90>;
+>> --
+>> 1.8.3.2
+>>
+>
+> Thanks,
+> Maxime
+>
