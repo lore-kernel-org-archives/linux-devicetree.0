@@ -1,103 +1,325 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
- extensions for GMAC in Allwinner A20 SoC's
-Date: Sat, 07 Dec 2013 13:50:32 +0100
-Message-ID: <1455361.VIrFSPex2v@flatron>
-References: <1386350983-13281-1-git-send-email-wens@csie.org> <2030454.PFLhh6xOPI@flatron> <20131207114616.GM24519@lukather>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH 3/3] ARM: sunxi: dts: Add ahci support
+ to a few A10 and A20 boards
+Date: Sat, 7 Dec 2013 14:11:06 +0100
+Message-ID: <CAOMqctQShFgMRNKgw1VU86V6X-OfjRP2_KcMJisERegPokMJ3w@mail.gmail.com>
+References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl>
+ <1386159055-10264-4-git-send-email-oliver@schinagl.nl> <20131206183339.GG24519@lukather>
+ <52A30ADB.7090106@schinagl.nl>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCCYVXM26EFRBHVTRSKQKGQEPZLELJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20131207114616.GM24519@lukather>
+Return-path: <linux-sunxi+bncBCQMLUOX54MBBE55RSKQKGQEU7QGSFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52A30ADB.7090106-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 07 of December 2013 12:46:16 Maxime Ripard wrote:
-> On Sat, Dec 07, 2013 at 12:12:26PM +0100, Tomasz Figa wrote:
-> > On Saturday 07 of December 2013 11:27:10 Maxime Ripard wrote:
-> > > Chen-Yu, Mike,
-> > > 
-> > > On Sat, Dec 07, 2013 at 01:29:37AM +0800, Chen-Yu Tsai wrote:
-> > > > The Allwinner A20 has an ethernet controller that seems to be
-> > > > an early version of Synopsys DesignWare MAC 10/100/1000 Universal,
-> > > > which is supported by the stmmac driver.
-> > > > 
-> > > > Allwinner's GMAC requires setting additional registers in the SoC's
-> > > > clock control unit.
-> > > > 
-> > > > The exact version of the DWMAC IP that Allwinner uses is unknown,
-> > > > thus the exact feature set is unknown.
-> > > > 
-> > > > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > > > ---
-> > > >  .../bindings/net/allwinner,sun7i-gmac.txt          | 22 +++++++
-> > > >  drivers/net/ethernet/stmicro/stmmac/Kconfig        | 12 ++++
-> > > >  drivers/net/ethernet/stmicro/stmmac/Makefile       |  1 +
-> > > >  drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c  | 76 ++++++++++++++++++++++
-> > > >  drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  3 +
-> > > >  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |  3 +
-> > > >  6 files changed, 117 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-gmac.txt b/Documentation/devicetree/bindings/net/allwinner,sun7i-gmac.txt
-> > > > new file mode 100644
-> > > > index 0000000..271554a
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/net/allwinner,sun7i-gmac.txt
-> > > > @@ -0,0 +1,22 @@
-> > > > +* Allwinner GMAC ethernet controller
-> > > > +
-> > > > +This device is a platform glue layer for stmmac.
-> > > > +Please see stmmac.txt for the other unchanged properties.
-> > > > +
-> > > > +Required properties:
-> > > > + - compatible:  Should be "allwinner,sun7i-gmac"
-> > > 
-> > > Please use sun7i-a20-gmac here.
-> > > 
-> > > > + - reg: Address and length of register set for the device and corresponding
-> > > > +   clock control
-> > > >
-> > > > +Examples:
-> > > > +
-> > > > +	gmac: ethernet@01c50000 {
-> > > > +		compatible = "allwinner,sun7i-gmac";
-> > > > +		reg = <0x01c50000 0x10000>,
-> > > > +		      <0x01c20164 0x4>;
-> > > 
-> > > This is actually a clock, and should probably be registered in the
-> > > common clock framework.
-> > > 
-> > > Mike: This small register actually is a regular muxer/divider, except
-> > > that it has some bits that are of interest to the ethernet controller
-> > > (for example to set wether it's using GMII or RGMII to communicate
-> > > with the phy), that, as far as I'm aware of, aren't really fitting
-> > > into the CCF.
-> > > 
-> > > Do you have some recommendation on how to proceed?
-> > > 
-> > > Maybe make a thin "real" clock driver in this hardware glue, that
-> > > provides !exported function to set this *GMII thing.
-> > 
-> > Is this register part of a bigger IP block that manages clocks for other
-> > IP blocks than stmmac as well? If not, I don't see a point of exporting
-> > a clock from inside of the GMAC "domain" just to feed it back into it
-> > as the only user.
-> 
-> This register is actually part of the SoC clock controller. So it sits
-> right beside the other clocks registers controlling the clocks of the
-> other devices, and is not part of the GMAC IP itself.
+On 7 December 2013 12:47, Olliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org> wrote:
+> Hey maxime,
+>
+> On 06-12-13 19:33, Maxime Ripard wrote:
+>>
+>> Hi Oliver,
+>>
+>> On Wed, Dec 04, 2013 at 01:10:55PM +0100, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org wrote:
+>>>
+>>> From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>>>
+>>> This patch adds sunxi sata support to A10 and A20 boards that have such
+>>> a connector. Some boards also feature a regulator via a GPIO and support
+>>> for this is also added.
+>>>
+>>> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>>
+>>
+>> Your git setup seems to be pretty uncertain about how your first name is
+>> spelled :)
+>
+> I should have formally mention it to confuse less people,
+>
+> This is how officially my name is spelled (I left out any 'middle' letters.
+> I never really used it as such, as it confuses people and they always write
+> it wrong anyway. After years I decided that at least on these patches, I
+> should write it down properly (googleability etc in the future). So formally
+> it's Olliver 'oliver' M. Schinagl.
+>
+> And no, I won't share my middle name :p
+>
+> There! :)
+>
+>>
+>>> ---
+>>>   arch/arm/boot/dts/sun4i-a10-cubieboard.dts      | 26
+>>> +++++++++++++++++++++++++
+>>>   arch/arm/boot/dts/sun4i-a10.dtsi                |  9 +++++++++
+>>>   arch/arm/boot/dts/sun7i-a20-cubieboard2.dts     | 26
+>>> +++++++++++++++++++++++++
+>>>   arch/arm/boot/dts/sun7i-a20-cubietruck.dts      | 26
+>>> +++++++++++++++++++++++++
+>>>   arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 26
+>>> +++++++++++++++++++++++++
+>>>   arch/arm/boot/dts/sun7i-a20.dtsi                |  9 +++++++++
+>>>   6 files changed, 122 insertions(+)
+>>
+>>
+>> Could you split this into several patches please?
+>
+> Yes, appologies, will take care of this! Sorry,
+>
+> Oliver
+>
+>>
+>> At least one per SoC.
+>>
+>>> diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+>>> b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+>>> index 425a7db..b620084 100644
+>>> --- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+>>> +++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+>>> @@ -42,7 +42,18 @@
+>>>                         };
+>>>                 };
+>>>
+>>> +               sata: ahci@01c18000 {
+>>> +                       pwr-supply = <&reg_ahci_5v>;
+>>> +                       status = "okay";
+>>> +               };
+>>> +
+>>>                 pinctrl@01c20800 {
+>>> +                       ahci_pwr_pin: ahci_pwr_pin@0 {
+>>
+>>
+>> Please prefix it with name of the board.
+>>
+>>> +                               allwinner,pins = "PB8";
+>>> +                               allwinner,function = "gpio_out";
+>>> +                               allwinner,driver = <0>;
+>>> +                               allwinner,pull = <0>;
+>>> +                       };
+>>
+>>
+>> Please add a newline here.
+>>
+>>>                         led_pins_cubieboard: led_pins@0 {
+>>>                                 allwinner,pins = "PH20", "PH21";
+>>>                                 allwinner,function = "gpio_out";
+>>> @@ -86,4 +97,19 @@
+>>>                         linux,default-trigger = "heartbeat";
+>>>                 };
+>>>         };
+>>> +
+>>> +       regulators {
+>>> +               compatible = "simple-bus";
+>>> +               pinctrl-names = "default";
+>>> +
+>>> +               reg_ahci_5v: ahci-5v {
+>>> +                       compatible = "regulator-fixed";
+>>> +                       regulator-name = "ahci-5v";
+>>> +                       regulator-min-microvolt = <5000000>;
+>>> +                       regulator-max-microvolt = <5000000>;
+>>> +                       pinctrl-0 = <&ahci_pwr_pin>;
+>>> +                       gpio = <&pio 1 8 0>;
+>>> +                       enable-active-high;
+>>> +               };
+>>> +       };
+>>>   };
+>>> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi
+>>> b/arch/arm/boot/dts/sun4i-a10.dtsi
+>>> index 4dccdb0..53c6cdb 100644
+>>> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+>>> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+>>> @@ -306,6 +306,15 @@
+>>>                         #size-cells = <0>;
+>>>                 };
+>>>
+>>> +               sata: ahci@01c18000 {
+>>> +                       compatible = "allwinner,sun4i-a10-ahci";
+>>
+>>
+>> Please use sun4i-ahci for consistency.
+>>
+>>> +                       reg = <0x01c18000 0x1000>;
+>>> +                       interrupts = <0 56 1>;
+>>
+>>
+>> The interrupt here doesn't seem right. Is it actually working at all?
+>>
+>>> +                       clocks = <&ahb_gates 25>, <&pll6 0>;
+>>> +                       clock-names = "ahb_sata", "pll6_sata";
+>>> +                       status = "disabled";
+>>> +               };
+>>> +
+>>>                 intc: interrupt-controller@01c20400 {
+>>>                         compatible = "allwinner,sun4i-ic";
+>>>                         reg = <0x01c20400 0x400>;
+>>> diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+>>> b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+>>> index 5c51cb8..99c5e78 100644
+>>> --- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+>>> +++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+>>> @@ -34,7 +34,18 @@
+>>>                         };
+>>>                 };
+>>>
+>>> +               sata: ahci@01c18000 {
+>>> +                       pwr-supply = <&reg_ahci_5v>;
+>>> +                       status = "okay";
+>>> +               };
+>>> +
+>>>                 pinctrl@01c20800 {
+>>> +                       ahci_pwr_pin: ahci_pwr_pin@0 {
+>>> +                               allwinner,pins = "PB8";
+>>> +                               allwinner,function = "gpio_out";
+>>> +                               allwinner,drive = <0>;
+>>> +                               allwinner,pull = <0>;
+>>> +                       };
+>>
+>>
+>> Please add a newline here.
+>>
+>>>                         led_pins_cubieboard2: led_pins@0 {
+>>>                                 allwinner,pins = "PH20", "PH21";
+>>>                                 allwinner,function = "gpio_out";
+>>> @@ -77,4 +88,19 @@
+>>>                         gpios = <&pio 7 20 0>;
+>>>                 };
+>>>         };
+>>> +
+>>> +       regulators {
+>>> +               compatible = "simple-bus";
+>>> +               pinctrl-names = "default";
+>>> +
+>>> +               reg_ahci_5v: ahci-5v {
+>>> +                       compatible = "regulator-fixed";
+>>> +                       regulator-name = "ahci-5v";
+>>> +                       regulator-min-microvolt = <5000000>;
+>>> +                       regulator-max-microvolt = <5000000>;
+>>> +                       pinctrl-0 = <&ahci_pwr_pin>;
+>>> +                       gpio = <&pio 1 8 0>;
+>>> +                       enable-active-high;
+>>> +               };
+>>> +       };
+>>>   };
+>>> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>> b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>> index 8a1009d..19af23e 100644
+>>> --- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>> @@ -19,7 +19,18 @@
+>>>         compatible = "cubietech,cubietruck", "allwinner,sun7i-a20";
+>>>
+>>>         soc@01c00000 {
+>>> +               sata: ahci@01c18000 {
+>>> +                       pwr-supply = <&reg_ahci_5v>;
+>>> +                       status = "okay";
+>>> +               };
+>>> +
+>>>                 pinctrl@01c20800 {
+>>> +                       ahci_pwr_pin: ahci_pwr_pin@0 {
+>>> +                               allwinner,pins = "PH12";
+>>> +                               allwinner,function = "gpio_out";
+>>> +                               allwinner,driver = <0>;
+>>> +                               allwinner,pull = <0>;
+>>> +                       };
+>>
+>>
+>> Please add a newline here.
+>>
+>>>                         led_pins_cubietruck: led_pins@0 {
+>>>                                 allwinner,pins = "PH7", "PH11", "PH20",
+>>> "PH21";
+>>>                                 allwinner,function = "gpio_out";
+>>> @@ -60,4 +71,19 @@
+>>>                         gpios = <&pio 7 7 0>;
+>>>                 };
+>>>         };
+>>> +
+>>> +       regulators {
+>>> +               compatible = "simple-bus";
+>>> +               pinctrl-names = "default";
+>>> +
+>>> +               reg_ahci_5v: ahci-5v {
+>>> +                       compatible = "regulator-fixed";
+>>> +                       regulator-name = "ahci-5v";
+>>> +                       regulator-min-microvolt = <5000000>;
+>>> +                       regulator-max-microvolt = <5000000>;
+>>> +                       pinctrl-0 = <&ahci_pwr_pin>;
+>>> +                       gpio = <&pio 7 12 0>;
+>>> +                       enable-active-high;
+>>> +               };
+>>> +       };
+>>>   };
+>>> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+>>> b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+>>> index ead3013..23ed708 100644
+>>> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+>>> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+>>> @@ -34,7 +34,19 @@
+>>>                         };
+>>>                 };
+>>>
+>>> +               sata: ahci@01c18000 {
+>>> +                       pwr-supply = <&reg_ahci_5v>;
+>>> +                       status = "okay";
+>>> +               };
+>>> +
+>>>                 pinctrl@01c20800 {
+>>> +                       ahci_pwr_pin: ahci_pwr_pin@0 {
+>>> +                               allwinner,pins = "PB8";
+>>> +                               allwinner,function = "gpio_out";
+>>> +                               allwinner,drive = <0>;
+>>> +                               allwinner,pull = <0>;
+>>> +                       };
+>>> +
+>>>                         led_pins_olinuxino: led_pins@0 {
+>>>                                 allwinner,pins = "PH2";
+>>>                                 allwinner,function = "gpio_out";
+>>> @@ -91,4 +103,18 @@
+>>>                         default-state = "on";
+>>>                 };
+>>>         };
+>>> +
+>>> +       regulators {
+>>> +               compatible = "simple-bus";
+>>> +
+>>> +               reg_ahci_5v: ahci-5v {
+>>> +                       compatible = "regulator-fixed";
+>>> +                       regulator-name = "ahci-5v";
+>>> +                       regulator-min-microvolt = <5000000>;
+>>> +                       regulator-max-microvolt = <5000000>;
+>>> +                       pinctrl-0 = <&ahci_pwr_pin>;
+>>> +                       gpio = <&pio 1 8 0>;
+>>> +                       enable-active-high;
+>>> +               };
+>>> +       };
+>>>   };
+>>> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> b/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> index 0552a64..b72c69e 100644
+>>> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+>>> @@ -368,6 +368,15 @@
+>>>                         };
+>>>                 };
+>>>
+>>> +               sata: ahci@01c18000 {
+>>> +                       compatible = "allwinner,sun4i-a10-ahci";
+>>> +                       reg = <0x01c18000 0x1000>;
+>>> +                       interrupts = <0 56 1>;
+>
+> Will always fix this to <0 56 4> if i'm not mistaken.
 
-Is there any description for GMAC_IF_TYPE_RGMII and GMAC_TX_CLK fields?
+<0 56 1> appears to work on sun7i but sun4i has <56> in the working
+DT. The DT you sent has <0 56 1> on sun4i which somehow compiles and
+loads as DT but the driver fails.
 
-Name of the latter sounds like a normal clock mux, but the former is
-just a mystery (especially why it is a part of the clock controller).
+Thanks
 
-Best regards,
-Tomasz
+Michal
