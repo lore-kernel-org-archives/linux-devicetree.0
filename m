@@ -1,143 +1,95 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and exynos5420 dtsi files
-Date: Sat, 07 Dec 2013 01:57:27 +0100
-Message-ID: <8302228.6iSJIFqj3A@flatron>
-References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com> <1386308868-30264-2-git-send-email-l.krishna@samsung.com> <52A207D8.3030206@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 02/10] net: stmmac: Honor DT parameter to
+ force DMA store and forward mode
+Date: Sat, 7 Dec 2013 09:19:55 +0800
+Message-ID: <CAGb2v64WAV_xWNuneKZr0=7g8_=G5_q5hFax2+8xJiopnm3uPg@mail.gmail.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org>
+ <1386350983-13281-3-git-send-email-wens@csie.org> <20131206.162606.2277176361893801778.davem@davemloft.net>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <52A207D8.3030206@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc@vger.kernel.org, wim@iguana.be, dianders@chromium.org, kgene.kim@samsung.com, t.figa@samsung.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com, linux@roeck-us.net
+Content-Type: multipart/alternative; boundary=001a11c3e47ca62b1c04ece790b0
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBT7PRGKQKGQEW6XXUMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20131206.162606.2277176361893801778.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+--001a11c3e47ca62b1c04ece790b0
+Content-Type: text/plain; charset=ISO-8859-1
 
-On Friday 06 of December 2013 18:22:32 Sylwester Nawrocki wrote:
-> Hi,
-> 
-> Just a few minor comments...
+On Sat, Dec 7, 2013 at 5:26 AM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
+> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Date: Sat,  7 Dec 2013 01:29:35 +0800
+>
+>> @@ -47,6 +47,7 @@ static int stmmac_probe_config_dt(struct
+platform_device *pdev,
+>>               plat->bus_id = 0;
+>>
+>>       of_property_read_u32(np, "snps,phy-addr", &plat->phy_addr);
+>> +     plat->force_sf_dma_mode = of_property_read_bool(np,
+"snps,force_sf_dma_mode");
+>
+> Will this do the right thing for when the property is not present?
+> Right now the force_sf_dma_mode value is always false.
 
-I wouldn't really nitpick on such things, but if we end up needing another
-respin, here's what I think.
+of_property_read_bool will return false when the property is not present.
 
-> 
-> On 12/06/2013 06:47 AM, Leela Krishna Amudala wrote:
-> > This patch adds pmusysreg node to exynos5250 and exynos5420 dtsi files to
-> 
-> s/pmusysreg/PMU sysreg ? Similarly I would capitalize it in the subject
-> line as well.
+> In fact won't it override the explicit settings done elsewhere in the
+> driver?
 
-Well, since this is supposed to be a human readable description, I would
-go even further and write "...device tree node of Power Management Unit
- to...".
+Point taken. The current implementation will override settings passed from
+platform data. ORing the two would be better.
 
-> 
-> > handle PMU register accesses in a centralized way using syscon driver
-> >
-> > Signed-off-by: Leela Krishna Amudala<l.krishna@samsung.com>
-> > Reviewed-by: Tomasz Figa<t.figa@samsung.com>
-> > Reviewed-by: Doug Anderson<dianders@chromium.org>
-> > Tested-by: Doug Anderson<dianders@chromium.org>
-> > ---
-> >   Documentation/devicetree/bindings/arm/samsung/pmu.txt |   15 +++++++++++++++
-> >   arch/arm/boot/dts/exynos5250.dtsi                     |    5 +++++
-> >   arch/arm/boot/dts/exynos5420.dtsi                     |    5 +++++
-> >   3 files changed, 25 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> > new file mode 100644
-> > index 0000000..f1f1552
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> 
-> I might be easy to confuse this with ARM Performance Monitoring Unit.
-> So perhaps we should rename this file to, e.g. power-management-unit.txt ?
 
-Considering location of this file, which is arm/samsung, I think this
-name is pretty much clear. ARM PMU is a generic thing, so it couldn't
-be placed here.
+Thanks
 
-> 
-> > @@ -0,0 +1,15 @@
-> > +SAMSUNG Exynos SoC series PMU Registers
-> 
-> s/PMU/Power Management Unit ?
+-- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
 
-s/PMU Registers/Power Management Unit/
+--001a11c3e47ca62b1c04ece790b0
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > +
-> > +Properties:
-> > + - compatible : should contain two values. First value must be one from following list:
-> > +		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
-> > +		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
-> 
-> s/./; ?
-> 
-> > +		second value must be always "syscon".
-> 
-> It might be more safe to specify it as the last value, so something along
-> the lines of:
-> 
-> 	The last value should be "syscon".
-> 
-> > +
-> > + - reg : offset and length of the register set.
-> > +
-> > +Example :
-> > +pmu_system_controller: system-controller@10040000 {
-> 
-> Might be more sensible to use 'power_management_unit' for the label.
+<div dir=3D"ltr"><div><span style=3D"font-family:courier new,monospace"><br=
+>On Sat, Dec 7, 2013 at 5:26 AM, David Miller &lt;<a href=3D"mailto:davem@d=
+avemloft.net">davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org</a>&gt; wrote:<br>&gt; From: Chen-Yu Tsai=
+ &lt;<a href=3D"mailto:wens-jdAy2FN1RRM@public.gmane.org">wens-jdAy2FN1RRM@public.gmane.org</a>&gt;<br>
 
-That's quite a lot of text for a label. pmu_syscon as in previous version
-of this patch would look more sensible to me.
+&gt; Date: Sat, =A07 Dec 2013 01:29:35 +0800<br>&gt;<br>&gt;&gt; @@ -47,6 +=
+47,7 @@ static int stmmac_probe_config_dt(struct platform_device *pdev,<br>=
+&gt;&gt; =A0 =A0 =A0 =A0 =A0 =A0 =A0 plat-&gt;bus_id =3D 0;<br>&gt;&gt;<br>=
+&gt;&gt; =A0 =A0 =A0 of_property_read_u32(np, &quot;snps,phy-addr&quot;, &a=
+mp;plat-&gt;phy_addr);<br>
 
-> 
-> > +	compatible = "samsung,exynos5250-pmu", "syscon";
-> > +	reg =<0x10040000 0x5000>;
-> > +};
-> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> > index b98ffc3..62f9e36 100644
-> > --- a/arch/arm/boot/dts/exynos5250.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> > @@ -163,6 +163,11 @@
-> >   		interrupts =<0 47 0>;
-> >   	};
-> >
-> > +	pmu_system_controller: system-controller@10040000 {
-> 
-> s/pmu_system_controller/power_management_unit ? So it describes the 
-> subsystem
-> better in terms used in the SoCs User Manual ?
+&gt;&gt; + =A0 =A0 plat-&gt;force_sf_dma_mode =3D of_property_read_bool(np,=
+ &quot;snps,force_sf_dma_mode&quot;);<br>&gt;<br>&gt; Will this do the righ=
+t thing for when the property is not present?<br>&gt; Right now the force_s=
+f_dma_mode value is always false.<br>
 
-See above.
+<br>of_property_read_bool will return false when the property is not presen=
+t.<br><br>&gt; In fact won&#39;t it override the explicit settings done els=
+ewhere in the<br>&gt; driver?<br><br>Point taken. The current implementatio=
+n will override settings passed from<br>
 
-> 
-> > +		compatible = "samsung,exynos5250-pmu", "syscon";
-> > +		reg =<0x10040000 0x5000>;
-> > +	};
-> > +
-> >   	watchdog {
-> >   		clocks =<&clock 336>;
-> >   		clock-names = "watchdog";
-> > diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> > index b1fa334..cd47db0 100644
-> > --- a/arch/arm/boot/dts/exynos5420.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> > @@ -402,4 +402,9 @@
-> >   		clock-names = "gscl";
-> >   		samsung,power-domain =<&gsc_pd>;
-> >   	};
-> > +
-> > +	pmu_system_controller: system-controller@10040000 {
-> 
-> s/pmu_system_controller/power_management_unit ?
+platform data. ORing the two would be better.<br><br><br></span></div><span=
+ style=3D"font-family:courier new,monospace">Thanks<br></span></div>
 
-See above.
+<p></p>
 
-Best regards,
-Tomasz
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org<br />
+For more options, visit <a href=3D"https://groups.google.com/groups/opt_out=
+">https://groups.google.com/groups/opt_out</a>.<br />
+
+--001a11c3e47ca62b1c04ece790b0--
