@@ -1,95 +1,328 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
- extensions for GMAC in Allwinner A20 SoC's
-Date: Sat, 07 Dec 2013 12:12:26 +0100
-Message-ID: <2030454.PFLhh6xOPI@flatron>
-References: <1386350983-13281-1-git-send-email-wens@csie.org> <1386350983-13281-5-git-send-email-wens@csie.org> <20131207102710.GK24519@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 3/3] leds: leds-mc13783: Add devicetree support
+Date: Sat, 07 Dec 2013 12:47:18 +0100
+Message-ID: <4531338.dvjMOzW3sA@flatron>
+References: <1386397464-31033-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCCYVXM26EFRBH4FRSKQKGQEWEYJ5LY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20131207102710.GK24519@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1386397464-31033-1-git-send-email-shc_work@mail.ru>
+Sender: linux-leds-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Philippe =?ISO-8859-1?Q?R=E9tornaz?= <philippe.retornaz@epfl.ch>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 07 of December 2013 11:27:10 Maxime Ripard wrote:
-> Chen-Yu, Mike,
-> 
-> On Sat, Dec 07, 2013 at 01:29:37AM +0800, Chen-Yu Tsai wrote:
-> > The Allwinner A20 has an ethernet controller that seems to be
-> > an early version of Synopsys DesignWare MAC 10/100/1000 Universal,
-> > which is supported by the stmmac driver.
-> > 
-> > Allwinner's GMAC requires setting additional registers in the SoC's
-> > clock control unit.
-> > 
-> > The exact version of the DWMAC IP that Allwinner uses is unknown,
-> > thus the exact feature set is unknown.
-> > 
-> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > ---
-> >  .../bindings/net/allwinner,sun7i-gmac.txt          | 22 +++++++
-> >  drivers/net/ethernet/stmicro/stmmac/Kconfig        | 12 ++++
-> >  drivers/net/ethernet/stmicro/stmmac/Makefile       |  1 +
-> >  drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c  | 76 ++++++++++++++++++++++
-> >  drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  3 +
-> >  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |  3 +
-> >  6 files changed, 117 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-gmac.txt b/Documentation/devicetree/bindings/net/allwinner,sun7i-gmac.txt
-> > new file mode 100644
-> > index 0000000..271554a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/allwinner,sun7i-gmac.txt
-> > @@ -0,0 +1,22 @@
-> > +* Allwinner GMAC ethernet controller
-> > +
-> > +This device is a platform glue layer for stmmac.
-> > +Please see stmmac.txt for the other unchanged properties.
-> > +
-> > +Required properties:
-> > + - compatible:  Should be "allwinner,sun7i-gmac"
-> 
-> Please use sun7i-a20-gmac here.
-> 
-> > + - reg: Address and length of register set for the device and corresponding
-> > +   clock control
-> >
-> > +Examples:
-> > +
-> > +	gmac: ethernet@01c50000 {
-> > +		compatible = "allwinner,sun7i-gmac";
-> > +		reg = <0x01c50000 0x10000>,
-> > +		      <0x01c20164 0x4>;
-> 
-> This is actually a clock, and should probably be registered in the
-> common clock framework.
-> 
-> Mike: This small register actually is a regular muxer/divider, except
-> that it has some bits that are of interest to the ethernet controller
-> (for example to set wether it's using GMII or RGMII to communicate
-> with the phy), that, as far as I'm aware of, aren't really fitting
-> into the CCF.
-> 
-> Do you have some recommendation on how to proceed?
-> 
-> Maybe make a thin "real" clock driver in this hardware glue, that
-> provides !exported function to set this *GMII thing.
+Hi Alexander,
 
-Is this register part of a bigger IP block that manages clocks for other
-IP blocks than stmmac as well? If not, I don't see a point of exporting
-a clock from inside of the GMAC "domain" just to feed it back into it
-as the only user.
+Please see my comments inline.
 
-Still, without any actual knowledge about this register and registers
-next to it, I can be only guessing.
+On Saturday 07 of December 2013 10:24:24 Alexander Shiyan wrote:
+> This patch adds devicetree support for the MC13XXX LED driver.
+> 
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+> ---
+>  Documentation/devicetree/bindings/mfd/mc13xxx.txt |  38 +++++
+>  drivers/leds/leds-mc13783.c                       | 161 ++++++++++++++--------
+>  2 files changed, 143 insertions(+), 56 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mc13xxx.txt b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
+> index abd9e3c..bdf31e8 100644
+> --- a/Documentation/devicetree/bindings/mfd/mc13xxx.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
+> @@ -10,9 +10,37 @@ Optional properties:
+>  - fsl,mc13xxx-uses-touch : Indicate the touchscreen controller is being used
+>  
+>  Sub-nodes:
+> +- leds : Contain the led nodes and initial register values in property
+> +  "led_control". Number of register depends of used IC, for MC13783 is 6,
+> +  for MC13892 is 4. See datasheet for bits definitions of these register.
+
+Can't the driver somehow derive correct register values from LEDs listed
+as subnodes of this node? If not, I'd say that more fine grained
+properties should be used instead. What kind of configuration do these
+register control?
+
+Also s/_/-/ in property names.
+
+> +  Each led node should contain "reg", which used as LED ID (described below).
+> +  Optional properties "label" and "linux,default-trigger" is described in
+> +  Documentation/devicetree/bindings/leds/common.txt.
+>  - regulators : Contain the regulator nodes. The regulators are bound using
+>    their names as listed below with their registers and bits for enabling.
+>  
+> +MC13783 LED IDs:
+> +    0  : Main display
+> +    1  : AUX display
+> +    2  : Keypad
+> +    3  : Red 1
+> +    4  : Green 1
+> +    5  : Blue 1
+> +    6  : Red 2
+> +    7  : Green 2
+> +    8  : Blue 2
+> +    9  : Red 3
+> +    10 : Green 3
+> +    11 : Blue 3
+> +
+> +MC13892 LED IDs:
+> +    12 : Main display
+> +    13 : AUX display
+> +    14 : Keypad
+> +    15 : Red
+> +    16 : Green
+> +    17 : Blue
+
+This looks a bit strange. Does the numbering relate to hardware design
+in any way? From what I can see, those are just enums values from Linux
+driver, which doesn't seem the right namespace to export to DT.
+
+> +
+>  MC13783 regulators:
+>      sw1a      : regulator SW1A      (register 24, bit 0)
+>      sw1b      : regulator SW1B      (register 25, bit 0)
+> @@ -89,6 +117,16 @@ ecspi@70010000 { /* ECSPI1 */
+>  		interrupt-parent = <&gpio0>;
+>  		interrupts = <8>;
+>  
+> +		leds {
+> +			led_control = <0x000 0x000 0x0e0 0x000>;
+> +
+> +			system_led {
+
+s/_/-/ in node name and also whenever reg property is present, node name
+should be followed by @unit-address suffix where unit-address is the
+value of first address in reg property.
+
+> +				reg = <15>;
+> +				label = "system:red:live";
+> +				linux,default-trigger = "heartbeat";
+> +			};
+> +		};
+> +
+>  		regulators {
+>  			sw1_reg: mc13892__sw1 {
+>  				regulator-min-microvolt = <600000>;
+> diff --git a/drivers/leds/leds-mc13783.c b/drivers/leds/leds-mc13783.c
+> index ca87a1b..bc3ea2b 100644
+> --- a/drivers/leds/leds-mc13783.c
+> +++ b/drivers/leds/leds-mc13783.c
+> @@ -20,26 +20,27 @@
+>  #include <linux/init.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/leds.h>
+> +#include <linux/of.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/mfd/mc13xxx.h>
+>  
+> -#define MC13XXX_REG_LED_CONTROL(x)	(51 + (x))
+> -
+
+This and related changes qualify for a separate patch that would be
+a simple refactoring.
+
+>  struct mc13xxx_led_devtype {
+>  	int	led_min;
+>  	int	led_max;
+>  	int	num_regs;
+> +	u32	ledctrl_base;
+>  };
+>  
+>  struct mc13xxx_led {
+>  	struct led_classdev	cdev;
+>  	struct work_struct	work;
+> -	struct mc13xxx		*master;
+>  	enum led_brightness	new_brightness;
+>  	int			id;
+> +	struct mc13xxx_leds	*leds;
+>  };
+>  
+>  struct mc13xxx_leds {
+> +	struct mc13xxx			*master;
+>  	struct mc13xxx_led_devtype	*devtype;
+>  	int				num_leds;
+>  	struct mc13xxx_led		led[0];
+> @@ -48,23 +49,24 @@ struct mc13xxx_leds {
+>  static void mc13xxx_led_work(struct work_struct *work)
+>  {
+>  	struct mc13xxx_led *led = container_of(work, struct mc13xxx_led, work);
+> -	int reg, mask, value, bank, off, shift;
+> +	struct mc13xxx_leds *leds = led->leds;
+> +	unsigned int reg, mask, value, bank, off, shift;
+>  
+>  	switch (led->id) {
+>  	case MC13783_LED_MD:
+> -		reg = MC13XXX_REG_LED_CONTROL(2);
+> +		reg = 2;
+>  		shift = 9;
+>  		mask = 0x0f;
+>  		value = led->new_brightness >> 4;
+>  		break;
+>  	case MC13783_LED_AD:
+> -		reg = MC13XXX_REG_LED_CONTROL(2);
+> +		reg = 2;
+>  		shift = 13;
+>  		mask = 0x0f;
+>  		value = led->new_brightness >> 4;
+>  		break;
+>  	case MC13783_LED_KP:
+> -		reg = MC13XXX_REG_LED_CONTROL(2);
+> +		reg = 2;
+>  		shift = 17;
+>  		mask = 0x0f;
+>  		value = led->new_brightness >> 4;
+> @@ -80,25 +82,25 @@ static void mc13xxx_led_work(struct work_struct *work)
+>  	case MC13783_LED_B3:
+>  		off = led->id - MC13783_LED_R1;
+>  		bank = off / 3;
+> -		reg = MC13XXX_REG_LED_CONTROL(3) + bank;
+> +		reg = 3 + bank;
+>  		shift = (off - bank * 3) * 5 + 6;
+>  		value = led->new_brightness >> 3;
+>  		mask = 0x1f;
+>  		break;
+>  	case MC13892_LED_MD:
+> -		reg = MC13XXX_REG_LED_CONTROL(0);
+> +		reg = 0;
+>  		shift = 3;
+>  		mask = 0x3f;
+>  		value = led->new_brightness >> 2;
+>  		break;
+>  	case MC13892_LED_AD:
+> -		reg = MC13XXX_REG_LED_CONTROL(0);
+> +		reg = 0;
+>  		shift = 15;
+>  		mask = 0x3f;
+>  		value = led->new_brightness >> 2;
+>  		break;
+>  	case MC13892_LED_KP:
+> -		reg = MC13XXX_REG_LED_CONTROL(1);
+> +		reg = 1;
+>  		shift = 3;
+>  		mask = 0x3f;
+>  		value = led->new_brightness >> 2;
+> @@ -108,7 +110,7 @@ static void mc13xxx_led_work(struct work_struct *work)
+>  	case MC13892_LED_B:
+>  		off = led->id - MC13892_LED_R;
+>  		bank = off / 2;
+> -		reg = MC13XXX_REG_LED_CONTROL(2) + bank;
+> +		reg = 2 + bank;
+>  		shift = (off - bank * 2) * 12 + 3;
+>  		value = led->new_brightness >> 2;
+>  		mask = 0x3f;
+> @@ -117,7 +119,8 @@ static void mc13xxx_led_work(struct work_struct *work)
+>  		BUG();
+>  	}
+>  
+> -	mc13xxx_reg_rmw(led->master, reg, mask << shift, value << shift);
+> +	mc13xxx_reg_rmw(leds->master, leds->devtype->ledctrl_base + reg,
+> +			mask << shift, value << shift);
+>  }
+>  
+>  static void mc13xxx_led_set(struct led_classdev *led_cdev,
+> @@ -130,80 +133,121 @@ static void mc13xxx_led_set(struct led_classdev *led_cdev,
+>  	schedule_work(&led->work);
+>  }
+>  
+> +static int __init mc13xxx_led_setup_of(struct mc13xxx_leds *leds,
+> +				       struct device_node *parent)
+> +{
+> +#ifdef CONFIG_OF
+> +	struct device_node *child;
+> +	int ret, i = 0;
+> +
+> +	for_each_child_of_node(parent, child) {
+> +		ret = of_property_read_u32(child, "reg", &leds->led[i].id);
+> +		if (ret)
+> +			return ret;
+> +		leds->led[i].cdev.name = of_get_property(child, "label", NULL);
+> +		leds->led[i].cdev.default_trigger =
+> +			of_get_property(child, "linux,default-trigger", NULL);
+> +		i++;
+> +	}
+> +
+> +	return 0;
+> +#else
+> +	return -ENOTSUPP;
+> +#endif
+> +}
+
+I believe the preferred way to use conditional compilation is:
+
+#ifdef CONFIG_OF
+static int __init mc13xxx_led_setup_of(struct mc13xxx_leds *leds,
+				       struct device_node *parent)
+{
+	/* enabled variant */
+}
+#else
+static inline int mc13xxx_led_setup_of(struct mc13xxx_leds *leds,
+				       struct device_node *parent)
+{
+	return -ENOTSUPP;
+}
+#endif
+
+This doesn't pollute function body with #ifdefs and allows explicitly
+marking the disabled variant inline.
+
+> +
+>  static int __init mc13xxx_led_probe(struct platform_device *pdev)
+>  {
+> -	struct mc13xxx_leds_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> -	struct mc13xxx *mcdev = dev_get_drvdata(pdev->dev.parent);
+> +	struct device *dev = &pdev->dev;
+> +	struct mc13xxx_leds_platform_data *pdata = dev_get_platdata(dev);
+> +	struct mc13xxx *mcdev = dev_get_drvdata(dev->parent);
+>  	struct mc13xxx_led_devtype *devtype =
+>  		(struct mc13xxx_led_devtype *)pdev->id_entry->driver_data;
+> +	int i, num_leds = 0, ret = 0;
+> +	struct device_node *parent;
+>  	struct mc13xxx_leds *leds;
+> -	int i, id, num_leds, ret = -ENODATA;
+> -	u32 reg, init_led = 0;
+> -
+> -	if (!pdata) {
+> -		dev_err(&pdev->dev, "Missing platform data\n");
+> -		return -ENODEV;
+> +	u32 *ctrls = NULL, init_led = 0;
+> +
+> +	of_node_get(dev->parent->of_node);
+> +	parent = of_find_node_by_name(dev->parent->of_node, "leds");
+
+Both lines above should be executed only if the device has been
+instantiated using DT.
+
+Also of_find_node_by_name() is not the correct function to use. Please
+refer to its documentation to learn why. The function that should be used
+here is of_get_child_by_name().
+
+> +
+> +	if (pdata) {
+> +		num_leds = pdata->num_leds;
+> +		ctrls = pdata->led_control;
+> +	} else if (parent) {
+> +		num_leds = of_get_child_count(parent);
+> +		ret = of_property_read_u32_array(parent, "led_control", ctrls,
+> +						 devtype->num_regs);
+
+Huh? Does this even work? The argument in place of ctrls is supposed to be
+the destination memory for read array. Your code sets ctrls to NULL above
+and then passes it to this function.
+
+> +		if (ret)
+> +			goto out_node_put;
+> +	} else {
+> +		return -ENODATA;
+>  	}
+
+In general, I would rather adopt a completely different approach to DT
+enablement in this driver. Instead of splitting the probe into two almost
+completely different code paths in large if blocks, what about making
+mc13xxx_led_setup_of() allocate a platform data structure and fill it
+in with data parsed from DT, so the driver would then proceed normally as
+if the platform data were available? IMHO this should make the code much
+simpler and more readable.
 
 Best regards,
 Tomasz
