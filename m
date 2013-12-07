@@ -1,45 +1,35 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] clocksource/cadence_ttc: Use enable/disable_irq
-Date: Sat, 7 Dec 2013 11:56:06 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1312071151340.30673@ionos.tec.linutronix.de>
-References: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com> <1385514296-26702-5-git-send-email-soren.brinkmann@xilinx.com> <52972F3A.9090103@linaro.org> <alpine.DEB.2.02.1311281507280.30673@ionos.tec.linutronix.de>
- <b2ed3cbc-c9df-4235-8137-93514c05bffa@DB8EHSMHS031.ehs.local> <alpine.DEB.2.02.1311281939000.30673@ionos.tec.linutronix.de> <f6d25456-8e30-4792-b184-21eb02dfaa1c@AM1EHSMHS001.ehs.local>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 02/10] net: stmmac: Honor DT parameter to
+ force DMA store and forward mode
+Date: Sat, 07 Dec 2013 12:06:03 +0100
+Message-ID: <2994980.boLDbkkER8@flatron>
+References: <1386350983-13281-1-git-send-email-wens@csie.org> <CAGb2v67ZNtbQm+ZW5v_3wNbz1=oLhXks6gbTSjLYa=Nnoz8w-A@mail.gmail.com> <20131207100737.GI24519@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-1212725415-1386413767=:30673"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f6d25456-8e30-4792-b184-21eb02dfaa1c-dAX9Bq04yCRZbvUCbuG1mrjjLBE8jN/0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-15?Q?S=F6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCCYVXM26EFRBIECRSKQKGQEXZQV55A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20131207100737.GI24519@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: "maxime.ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "rob.herring" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1212725415-1386413767=:30673
-Content-Type: TEXT/PLAIN; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Fri, 6 Dec 2013, Sören Brinkmann wrote:
-> On Thu, Nov 28, 2013 at 08:07:10PM +0100, Thomas Gleixner wrote:
-> > There is a solution to this. We can identify the broadcast device in
-> > the core and serialize all callers including interrupts on a different
-> > cpu against the update. So no need for the disable/enable_irq() dance.
+On Saturday 07 of December 2013 11:07:37 maxime.ripard wrote:
+> On Sat, Dec 07, 2013 at 09:23:27AM +0800, Chen-Yu Tsai wrote:
+> > Point taken. The current implementation will override settings passed from
+> > platform data. ORing the two would be better.
 > 
-> IIUC, and please correct me if I'm wrong, with the patch I'd simply call
-> 'clockevents_update_freq() without having to disable IRQs. But I'm not
-> sure whether periodic mode is covered. I found, that I had to reprogram
-> the timer interval in my clock notifier callback when the timer
-> frequency changes. I think 'clockevents_update_freq()' only handles
-> oneshot mode. For that reason I call 'ttc_set_interval()' in the clock
-> notifier in case the timer is in periodic mode. For that call we'd still
-> have possible races. I guess the best solution would be to move that
-> functionality into 'clockevents_update_freq()'?
+> Platform_data and DT-based configuration are pretty unlikely to be
+> used together, so ORing it doesn't have much sense.
 
-Indeed.
+In fact, the recommended way is to always use platform data alone if it is
+present or try to parse DT otherwise, so no mixing of data from these two
+sources should be done.
 
---8323329-1212725415-1386413767=:30673--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
