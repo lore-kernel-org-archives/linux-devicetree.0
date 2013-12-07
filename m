@@ -1,92 +1,103 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 3/3] leds: leds-mc13783: Add devicetree support
-Date: Sat, 07 Dec 2013 13:14:19 +0100
-Message-ID: <1579629.IvjYnzNUAW@flatron>
-References: <1386397464-31033-1-git-send-email-shc_work@mail.ru> <4531338.dvjMOzW3sA@flatron> <1386418121.30063489@f424.i.mail.ru>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
+ extensions for GMAC in Allwinner A20 SoC's
+Date: Sat, 07 Dec 2013 13:50:32 +0100
+Message-ID: <1455361.VIrFSPex2v@flatron>
+References: <1386350983-13281-1-git-send-email-wens@csie.org> <2030454.PFLhh6xOPI@flatron> <20131207114616.GM24519@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1386418121.30063489@f424.i.mail.ru>
-Sender: linux-leds-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Philippe =?ISO-8859-1?Q?R=E9tornaz?= <philippe.retornaz@epfl.ch>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCCYVXM26EFRBHVTRSKQKGQEPZLELJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20131207114616.GM24519@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 07 of December 2013 16:08:41 Alexander Shiyan wrote:
-> > Hi Alexander,
-> > 
-> > Please see my comments inline.
-> > 
-> > On Saturday 07 of December 2013 10:24:24 Alexander Shiyan wrote:
-> > > This patch adds devicetree support for the MC13XXX LED driver.
+On Saturday 07 of December 2013 12:46:16 Maxime Ripard wrote:
+> On Sat, Dec 07, 2013 at 12:12:26PM +0100, Tomasz Figa wrote:
+> > On Saturday 07 of December 2013 11:27:10 Maxime Ripard wrote:
+> > > Chen-Yu, Mike,
 > > > 
-> > > Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-> > > ---
-> > >  Documentation/devicetree/bindings/mfd/mc13xxx.txt |  38 +++++
-> > >  drivers/leds/leds-mc13783.c                       | 161 ++++++++++++++--------
-> > >  2 files changed, 143 insertions(+), 56 deletions(-)
+> > > On Sat, Dec 07, 2013 at 01:29:37AM +0800, Chen-Yu Tsai wrote:
+> > > > The Allwinner A20 has an ethernet controller that seems to be
+> > > > an early version of Synopsys DesignWare MAC 10/100/1000 Universal,
+> > > > which is supported by the stmmac driver.
+> > > > 
+> > > > Allwinner's GMAC requires setting additional registers in the SoC's
+> > > > clock control unit.
+> > > > 
+> > > > The exact version of the DWMAC IP that Allwinner uses is unknown,
+> > > > thus the exact feature set is unknown.
+> > > > 
+> > > > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > > > ---
+> > > >  .../bindings/net/allwinner,sun7i-gmac.txt          | 22 +++++++
+> > > >  drivers/net/ethernet/stmicro/stmmac/Kconfig        | 12 ++++
+> > > >  drivers/net/ethernet/stmicro/stmmac/Makefile       |  1 +
+> > > >  drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c  | 76 ++++++++++++++++++++++
+> > > >  drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  3 +
+> > > >  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |  3 +
+> > > >  6 files changed, 117 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-gmac.txt b/Documentation/devicetree/bindings/net/allwinner,sun7i-gmac.txt
+> > > > new file mode 100644
+> > > > index 0000000..271554a
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/net/allwinner,sun7i-gmac.txt
+> > > > @@ -0,0 +1,22 @@
+> > > > +* Allwinner GMAC ethernet controller
+> > > > +
+> > > > +This device is a platform glue layer for stmmac.
+> > > > +Please see stmmac.txt for the other unchanged properties.
+> > > > +
+> > > > +Required properties:
+> > > > + - compatible:  Should be "allwinner,sun7i-gmac"
 > > > 
-> > > diff --git a/Documentation/devicetree/bindings/mfd/mc13xxx.txt b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
-> > > index abd9e3c..bdf31e8 100644
-> > > --- a/Documentation/devicetree/bindings/mfd/mc13xxx.txt
-> > > +++ b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
-> > > @@ -10,9 +10,37 @@ Optional properties:
-> > >  - fsl,mc13xxx-uses-touch : Indicate the touchscreen controller is being used
-> > >  
-> > >  Sub-nodes:
-> > > +- leds : Contain the led nodes and initial register values in property
-> > > +  "led_control". Number of register depends of used IC, for MC13783 is 6,
-> > > +  for MC13892 is 4. See datasheet for bits definitions of these register.
+> > > Please use sun7i-a20-gmac here.
+> > > 
+> > > > + - reg: Address and length of register set for the device and corresponding
+> > > > +   clock control
+> > > >
+> > > > +Examples:
+> > > > +
+> > > > +	gmac: ethernet@01c50000 {
+> > > > +		compatible = "allwinner,sun7i-gmac";
+> > > > +		reg = <0x01c50000 0x10000>,
+> > > > +		      <0x01c20164 0x4>;
+> > > 
+> > > This is actually a clock, and should probably be registered in the
+> > > common clock framework.
+> > > 
+> > > Mike: This small register actually is a regular muxer/divider, except
+> > > that it has some bits that are of interest to the ethernet controller
+> > > (for example to set wether it's using GMII or RGMII to communicate
+> > > with the phy), that, as far as I'm aware of, aren't really fitting
+> > > into the CCF.
+> > > 
+> > > Do you have some recommendation on how to proceed?
+> > > 
+> > > Maybe make a thin "real" clock driver in this hardware glue, that
+> > > provides !exported function to set this *GMII thing.
 > > 
-> > Can't the driver somehow derive correct register values from LEDs listed
-> > as subnodes of this node? If not, I'd say that more fine grained
-> > properties should be used instead. What kind of configuration do these
-> > register control?
+> > Is this register part of a bigger IP block that manages clocks for other
+> > IP blocks than stmmac as well? If not, I don't see a point of exporting
+> > a clock from inside of the GMAC "domain" just to feed it back into it
+> > as the only user.
 > 
-> Registers contain the basic state for LED (high current mode, current,
-> duty cycle, ramp etc.). Presence and bit position for each LED is individually.
-> So I decided that the use of a simple initial setup is better, especially since
-> these will not be changed during operation.
-> 
-> > > +  Each led node should contain "reg", which used as LED ID (described below).
-> > > +  Optional properties "label" and "linux,default-trigger" is described in
-> > > +  Documentation/devicetree/bindings/leds/common.txt.
-> > >  - regulators : Contain the regulator nodes. The regulators are bound using
-> > >    their names as listed below with their registers and bits for enabling.
-> > >  
-> > > +MC13783 LED IDs:
-> > > +    0  : Main display
-> > > +    1  : AUX display
-> > > +    2  : Keypad
-> > > +    3  : Red 1
-> > > +    4  : Green 1
-> > > +    5  : Blue 1
-> > > +    6  : Red 2
-> > > +    7  : Green 2
-> > > +    8  : Blue 2
-> > > +    9  : Red 3
-> > > +    10 : Green 3
-> > > +    11 : Blue 3
-> > > +
-> > > +MC13892 LED IDs:
-> > > +    12 : Main display
-> > > +    13 : AUX display
-> > > +    14 : Keypad
-> > > +    15 : Red
-> > > +    16 : Green
-> > > +    17 : Blue
-> > 
-> > This looks a bit strange. Does the numbering relate to hardware design
-> > in any way? From what I can see, those are just enums values from Linux
-> > driver, which doesn't seem the right namespace to export to DT.
-> 
-> Which a better solution here? Make names as well as for regulators?
-> Thanks.
+> This register is actually part of the SoC clock controller. So it sits
+> right beside the other clocks registers controlling the clocks of the
+> other devices, and is not part of the GMAC IP itself.
 
-I don't have anything against using simple numbers, but they should be
-somehow related to hardware layout. If such relation does not exist, then
-using the <0, number_of_leds_in_the_chip - 1> namespace should be fine.
+Is there any description for GMAC_IF_TYPE_RGMII and GMAC_TX_CLK fields?
+
+Name of the latter sounds like a normal clock mux, but the former is
+just a mystery (especially why it is a part of the clock controller).
 
 Best regards,
 Tomasz
