@@ -1,43 +1,44 @@
-From: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] dt: Describe modalias resolution in i2c/trivial-devices.txt
-Date: Sun,  8 Dec 2013 16:02:18 -0500
-Message-ID: <1386536538-14861-3-git-send-email-bgamari.foss@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [lm-sensors] [PATCH 1/3] dt: Add adt7411 to trivial devices list
+Date: Sun, 08 Dec 2013 13:44:28 -0800
+Message-ID: <52A4E83C.3000407@roeck-us.net>
 References: <1386536538-14861-1-git-send-email-bgamari.foss@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1386536538-14861-1-git-send-email-bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
-Cc: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-To someone with little device-tree experience these details aren't at
-all obvious. Make the fact that the manufacturer prefix is dropped
-explicit.
+On 12/08/2013 01:02 PM, Ben Gamari wrote:
+> Signed-off-by: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>   Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> index b1cb341..9c3a684 100644
+> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> @@ -9,6 +9,7 @@ document for it just like any other devices.
+>
+>   Compatible		Vendor / Chip
+>   ==========		=============
+> +ad,adt7411		I2C Digital 8-channel 10-bit ADC and temperature sensor
+>   ad,ad7414		SMBus/I2C Digital Temperature Sensor in 6-Pin SOT with SMBus Alert and Over Temperature Pin
+>   ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProcessor-Based Systems
+>   adi,adt7461		+/-1C TDM Extended Temp Range I.C
+>
 
-Signed-off-by: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+You should also copy the i2c mailing list (linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org)
+It is ok to copy lm-sensors, but the patches will have to be reviewed
+and applied through the other lists (or at least I think so).
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index c475c3a..59bbb07 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -1,6 +1,9 @@
- This is a list of trivial i2c devices that have simple device tree
- bindings, consisting only of a compatible field, an address and
--possibly an interrupt line.
-+possibly an interrupt line. The compatible field is used by lookup
-+the modalias for the driver which will handle the device. A
-+manufacturer prefix (separated by a comma) will be stripped off during
-+this lookup.
- 
- If a device needs more specific bindings, such as properties to
- describe some aspect of it, there needs to be a specific binding
--- 
-1.8.3.2
+Note that "ad" is the vendor prefix for "Avionic Design GmbH".
+You might want to use "adi" instead.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Guenter
