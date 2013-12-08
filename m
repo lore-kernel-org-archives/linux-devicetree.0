@@ -1,141 +1,71 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
- exynos5420 dtsi files
-Date: Sat, 07 Dec 2013 23:20:43 +0100
-Message-ID: <52A39F3B.5070806@gmail.com>
-References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com> <1386308868-30264-2-git-send-email-l.krishna@samsung.com> <52A207D8.3030206@gmail.com> <8302228.6iSJIFqj3A@flatron>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v2 0/4] PHY driver for Marvell SATA
+Date: Sat, 7 Dec 2013 20:09:58 -0500
+Message-ID: <20131208010958.GH11251@titan.lakedaemon.net>
+References: <1386262263-18956-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <8302228.6iSJIFqj3A@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc@vger.kernel.org, wim@iguana.be, dianders@chromium.org, kgene.kim@samsung.com, t.figa@samsung.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com, linux@roeck-us.net
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1386262263-18956-1-git-send-email-andrew@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: devicetree@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, kishon@ti.com, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Andrew,
 
-On 12/07/2013 01:57 AM, Tomasz Figa wrote:
-> On Friday 06 of December 2013 18:22:32 Sylwester Nawrocki wrote:
-[...]
-> I wouldn't really nitpick on such things, but if we end up needing another
-> respin, here's what I think.
+wrt merging...
 
-Yeah, I didn't really realize the iteration index for this series was 
-already
-a 2 digit number and some people could have already gotten upset or 
-seriously
-impatient. Started to regret I even bothered with posting any comments 
-to that.
-:) Anyway, I didn't request any corrections, just pointed out what could be
-improved. People are free to accept it or ignore as they see fit. And having
-seen patch series that got merged after periods like 2.5 year V12 is not
-something unusual anyway. :)
+On Thu, Dec 05, 2013 at 05:50:59PM +0100, Andrew Lunn wrote:
+> This second version addresses most of the points raised during review.
+> 
+> What has not been changed is the phy-names property. This is awaiting
+> feedback on my comment that the naming follows how clocks are named in
+> the driver & DT binding. For this reason i've also not added the
+> Ack-by: received in the review comments.
+> 
+> Andrew Lunn (4):
+>   Phy: DT binding documentation for Marvell MVEBU SATA phy.
+>   Phy: Add a PHY driver for Marvell MVEBU SATA PHY.
+>   SATA: MV: Add support for the optional PHYs
+>   Phy: Add DT nodes on kirkwood and Dove for the SATA PHY
+> 
 
->> On 12/06/2013 06:47 AM, Leela Krishna Amudala wrote:
->>> This patch adds pmusysreg node to exynos5250 and exynos5420 dtsi files to
->>
->> s/pmusysreg/PMU sysreg ? Similarly I would capitalize it in the subject
->> line as well.
->
-> Well, since this is supposed to be a human readable description, I would
-> go even further and write "...device tree node of Power Management Unit
->   to...".
+This is actually really easy.
 
-Agreed, it sounds better.
+>  Documentation/devicetree/bindings/ata/marvell.txt  |   6 +
+>  .../devicetree/bindings/phy/phy-mvebu.txt          |  22 ++++
 
->>> handle PMU register accesses in a centralized way using syscon driver
->>>
->>> Signed-off-by: Leela Krishna Amudala<l.krishna@samsung.com>
->>> Reviewed-by: Tomasz Figa<t.figa@samsung.com>
->>> Reviewed-by: Doug Anderson<dianders@chromium.org>
->>> Tested-by: Doug Anderson<dianders@chromium.org>
->>> ---
->>>    Documentation/devicetree/bindings/arm/samsung/pmu.txt |   15 +++++++++++++++
->>>    arch/arm/boot/dts/exynos5250.dtsi                     |    5 +++++
->>>    arch/arm/boot/dts/exynos5420.dtsi                     |    5 +++++
->>>    3 files changed, 25 insertions(+)
->>>    create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->>> new file mode 100644
->>> index 0000000..f1f1552
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->>
->> I might be easy to confuse this with ARM Performance Monitoring Unit.
->> So perhaps we should rename this file to, e.g. power-management-unit.txt ?
->
-> Considering location of this file, which is arm/samsung, I think this
-> name is pretty much clear. ARM PMU is a generic thing, so it couldn't
-> be placed here.
+Keep this with the phy driver patch.
 
-It's up to the patch author if they want to change it or not, I still think
-it's better to not use short acronyms like this, if we can easily make it
-unambiguous.
+>  arch/arm/boot/dts/dove.dtsi                        |  11 ++
+>  arch/arm/boot/dts/kirkwood-6281.dtsi               |   2 +
+>  arch/arm/boot/dts/kirkwood-6282.dtsi               |   2 +
+>  arch/arm/boot/dts/kirkwood.dtsi                    |  18 +++
 
->>> @@ -0,0 +1,15 @@
->>> +SAMSUNG Exynos SoC series PMU Registers
->>
->> s/PMU/Power Management Unit ?
->
-> s/PMU Registers/Power Management Unit/
+I'll take this.
 
-Yeah, that's more accurate.
+>  drivers/ata/sata_mv.c                              |  19 +++
 
->>> +Properties:
->>> + - compatible : should contain two values. First value must be one from following list:
->>> +		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
->>> +		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
->>
->> s/./; ?
->>
->>> +		second value must be always "syscon".
->>
->> It might be more safe to specify it as the last value, so something along
->> the lines of:
->>
->> 	The last value should be "syscon".
->>
->>> +
->>> + - reg : offset and length of the register set.
->>> +
->>> +Example :
->>> +pmu_system_controller: system-controller@10040000 {
->>
->> Might be more sensible to use 'power_management_unit' for the label.
->
-> That's quite a lot of text for a label. pmu_syscon as in previous version
-> of this patch would look more sensible to me.
+This uses the phy if it's available, so this can go through ata.  No
+dependency problems there.
 
-I don't think it hurts to have this long labels, what I proposed is exactly
-of same length as the original one. Anyway pmu_syscon sounds good to me too.
+>  drivers/phy/Kconfig                                |   6 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-mvebu-sata.c                       | 137 +++++++++++++++++++++
 
->>> +	compatible = "samsung,exynos5250-pmu", "syscon";
->>> +	reg =<0x10040000 0x5000>;
->>> +};
->>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->>> index b98ffc3..62f9e36 100644
->>> --- a/arch/arm/boot/dts/exynos5250.dtsi
->>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->>> @@ -163,6 +163,11 @@
->>>    		interrupts =<0 47 0>;
->>>    	};
->>>
->>> +	pmu_system_controller: system-controller@10040000 {
->>
->> s/pmu_system_controller/power_management_unit ? So it describes the
->> subsystem better in terms used in the SoCs User Manual ?
->
-> See above.
+And this can go through Kishon with the binding docs.
 
-I can't see anything wrong in such long labels, but this discussion is 
-really
-just a bike-shedding, so let's end it right now not to risk annoying 
-even more
-people! :)
+thx,
 
---
-Regards,
-Sylwester
+Jason.
