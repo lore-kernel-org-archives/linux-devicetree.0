@@ -1,118 +1,105 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v4 7/9] ARM: add Armada 1500 and Sony NSZ-GS7 device tree files
-Date: Sun,  8 Dec 2013 15:14:04 +0100
-Message-ID: <1386512047-874-8-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 8/9] ARM: add Armada 1500-mini and Chromecast device tree files
+Date: Sun,  8 Dec 2013 15:14:05 +0100
+Message-ID: <1386512047-874-9-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
  <1386512047-874-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386512047-874-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386512047-874-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds very basic device tree files for the Marvell Armada 1500 SoC
-(Berlin BG2) and the Sony NSZ-GS7 GoogleTV board. Currently, SoC only has
-nodes for cpus, some clocks, l2 cache controller, local timer, apb timers,
-uart, and interrupt controllers. The Sony NSZ-GS7 is a GoogleTV consumer
-device comprising the Armada 1500 SoC above.
+This adds very basic device tree files for the Marvell Armada
+1500-mini SoC (Berlin BG2CD) and the Google Chromecast. Currently,
+SoC only has nodes for cpu, some clocks, l2 cache controller, local
+timer, apb timers, uart, and interrupt controllers.
+The Google Chromecast is a consumer device comprising the Armada
+1500-mini SoC above.
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Reviewed-by: Jason Cooper <jason@lakedaemon.net>
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Jisheng Zhang <jszhang@marvell.com>
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
 Changelog:
 v3->v4:
 - rename dts/dtsi to vendor,name.dts[i] (Suggested by Kumar Gala)
-v2->v3:
-- none
-v1->v2:
-- add "arm,pl310-cache" compatible to l2cc (Suggested by Mark Rutland)
-- replace 88DE3xxx numbering with SoC variant name
-  (Requested by Jisheng Zhang)
-RCFv2->v1:
-- switch to (soon to be) correct "marvell,pj4b" cpu compatible
-- reference fixed-clock for uarts instead of hard-coded clock-frequency
-- disable timers except two for clksrc and clkevt
-RFCv1->RFCv2:
-- add binding documentation (Reported by Jason Cooper)
-- change l2cc from aurora to tauros3 (Reported by Thomas Petazzoni)
-- add copyright reference
-- adapt compatibles to mach-berlin instead of mach-mvebu
+- remove non-mainline l2 properties (Reported by Jisheng Zhang)
+v3:
+- initial patch
 
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Kevin Hilman <khilman@linaro.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- .../devicetree/bindings/arm/marvell,berlin.txt     |  24 +++
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/marvell,berlin2.dtsi             | 227 +++++++++++++++++++++
- arch/arm/boot/dts/sony,nsz-gs7.dts                 |  29 +++
- 4 files changed, 282 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/marvell,berlin.txt
- create mode 100644 arch/arm/boot/dts/marvell,berlin2.dtsi
- create mode 100644 arch/arm/boot/dts/sony,nsz-gs7.dts
+ arch/arm/boot/dts/Makefile               |   1 +
+ arch/arm/boot/dts/google,chromecast.dts  |  29 +++++
+ arch/arm/boot/dts/marvell,berlin2cd.dtsi | 210 +++++++++++++++++++++++++++++++
+ 3 files changed, 240 insertions(+)
+ create mode 100644 arch/arm/boot/dts/google,chromecast.dts
+ create mode 100644 arch/arm/boot/dts/marvell,berlin2cd.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell,berlin.txt b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
-new file mode 100644
-index 0000000..737afa5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
-@@ -0,0 +1,24 @@
-+Marvell Berlin SoC Family Device Tree Bindings
-+---------------------------------------------------------------
-+
-+Boards with a SoC of the Marvell Berlin family, e.g. Armada 1500
-+shall have the following properties:
-+
-+* Required root node properties:
-+compatible: must contain "marvell,berlin"
-+
-+In addition, the above compatible shall be extended with the specific
-+SoC and board used. Currently known SoC compatibles are:
-+    "marvell,berlin2"      for Marvell Armada 1500 (BG2, 88DE3100),
-+    "marvell,berlin2cd"    for Marvell Armada 1500-mini (BG2CD, 88DE3005)
-+    "marvell,berlin2ct"    for Marvell Armada ? (BG2CT, 88DE????)
-+    "marvell,berlin3"      for Marvell Armada ? (BG3, 88DE????)
-+
-+* Example:
-+
-+/ {
-+	model = "Sony NSZ-GS7";
-+	compatible = "sony,nsz-gs7", "marvell,berlin2", "marvell,berlin";
-+
-+	...
-+}
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d57c1a6..f742800 100644
+index f742800..39b5e4e 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -45,6 +45,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
- dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm11351-brt.dtb \
+@@ -46,6 +46,7 @@ dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm11351-brt.dtb \
  	bcm28155-ap.dtb
  dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
-+dtb-$(CONFIG_ARCH_BERLIN) += \
-+	sony,nsz-gs7.dtb
+ dtb-$(CONFIG_ARCH_BERLIN) += \
++	google,chromecast.dtb	\
+ 	sony,nsz-gs7.dtb
  dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
  	da850-evm.dtb
- dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
-diff --git a/arch/arm/boot/dts/marvell,berlin2.dtsi b/arch/arm/boot/dts/marvell,berlin2.dtsi
+diff --git a/arch/arm/boot/dts/google,chromecast.dts b/arch/arm/boot/dts/google,chromecast.dts
 new file mode 100644
-index 0000000..56a1af2
+index 0000000..42e37e7
 --- /dev/null
-+++ b/arch/arm/boot/dts/marvell,berlin2.dtsi
-@@ -0,0 +1,227 @@
++++ b/arch/arm/boot/dts/google,chromecast.dts
+@@ -0,0 +1,29 @@
 +/*
-+ * Device Tree Include file for Marvell Armada 1500 (Berlin BG2) SoC
++ * Device Tree file for Google Chromecast
 + *
-+ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
++ * Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++/dts-v1/;
++
++#include "marvell,berlin2cd.dtsi"
++
++/ {
++	model = "Google Chromecast";
++	compatible = "google,chromecast", "marvell,berlin2cd", "marvell,berlin";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 earlyprintk";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x20000000>; /* 512 MB */
++	};
++};
++
++&uart0 { status = "okay"; };
+diff --git a/arch/arm/boot/dts/marvell,berlin2cd.dtsi b/arch/arm/boot/dts/marvell,berlin2cd.dtsi
+new file mode 100644
+index 0000000..094968c
+--- /dev/null
++++ b/arch/arm/boot/dts/marvell,berlin2cd.dtsi
+@@ -0,0 +1,210 @@
++/*
++ * Device Tree Include file for Marvell Armada 1500-mini (Berlin BG2CD) SoC
++ *
++ * Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
 + * based on GPL'ed 2.6 kernel sources
 + *  (c) Marvell International Ltd.
@@ -126,25 +113,18 @@ index 0000000..56a1af2
 +#include <dt-bindings/interrupt-controller/arm-gic.h>
 +
 +/ {
-+	model = "Marvell Armada 1500 (BG2) SoC";
-+	compatible = "marvell,berlin2", "marvell,berlin";
++	model = "Marvell Armada 1500-mini (BG2CD) SoC";
++	compatible = "marvell,berlin2cd", "marvell,berlin";
 +
 +	cpus {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
 +		cpu@0 {
-+			compatible = "marvell,pj4b";
++			compatible = "arm,cortex-a9";
 +			device_type = "cpu";
 +			next-level-cache = <&l2>;
 +			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			compatible = "marvell,pj4b";
-+			device_type = "cpu";
-+			next-level-cache = <&l2>;
-+			reg = <1>;
 +		};
 +	};
 +
@@ -158,13 +138,13 @@ index 0000000..56a1af2
 +		cfgclk: cfg-clock {
 +			compatible = "fixed-clock";
 +			#clock-cells = <0>;
-+			clock-frequency = <100000000>;
++			clock-frequency = <75000000>;
 +		};
 +
 +		sysclk: system-clock {
 +			compatible = "fixed-clock";
 +			#clock-cells = <0>;
-+			clock-frequency = <400000000>;
++			clock-frequency = <300000000>;
 +		};
 +	};
 +
@@ -177,7 +157,7 @@ index 0000000..56a1af2
 +		ranges = <0 0xf7000000 0x1000000>;
 +
 +		l2: l2-cache-controller@ac0000 {
-+			compatible = "marvell,tauros3-cache", "arm,pl310-cache";
++			compatible = "arm,pl310-cache";
 +			reg = <0xac0000 0x1000>;
 +			cache-unified;
 +			cache-level = <2>;
@@ -315,16 +295,6 @@ index 0000000..56a1af2
 +				status = "disabled";
 +			};
 +
-+			uart2: serial@b000 {
-+				compatible = "snps,dw-apb-uart";
-+				reg = <0xb000 0x100>;
-+				reg-shift = <2>;
-+				reg-io-width = <1>;
-+				interrupts = <10>;
-+				clocks = <&smclk>;
-+				status = "disabled";
-+			};
-+
 +			sic: interrupt-controller@e000 {
 +				compatible = "snps,dw-apb-ictl";
 +				reg = <0xe000 0x400>;
@@ -336,41 +306,10 @@ index 0000000..56a1af2
 +		};
 +	};
 +};
-diff --git a/arch/arm/boot/dts/sony,nsz-gs7.dts b/arch/arm/boot/dts/sony,nsz-gs7.dts
-new file mode 100644
-index 0000000..a6b1482
---- /dev/null
-+++ b/arch/arm/boot/dts/sony,nsz-gs7.dts
-@@ -0,0 +1,29 @@
-+/*
-+ * Device Tree file for Sony NSZ-GS7
-+ *
-+ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+
-+#include "marvell,berlin2.dtsi"
-+
-+/ {
-+	model = "Sony NSZ-GS7";
-+	compatible = "sony,nsz-gs7", "marvell,berlin2", "marvell,berlin";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x40000000>; /* 1 GB */
-+	};
-+};
-+
-+&uart0 { status = "okay"; };
 -- 
 1.8.4.rc3
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
