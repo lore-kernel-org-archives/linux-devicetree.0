@@ -1,30 +1,39 @@
 From: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/3] dt: Add adt7411 to trivial devices list
-Date: Sun,  8 Dec 2013 16:02:16 -0500
-Message-ID: <1386536538-14861-1-git-send-email-bgamari.foss@gmail.com>
+Subject: [PATCH 3/3] dt: Describe modalias resolution in i2c/trivial-devices.txt
+Date: Sun,  8 Dec 2013 16:02:18 -0500
+Message-ID: <1386536538-14861-3-git-send-email-bgamari.foss@gmail.com>
+References: <1386536538-14861-1-git-send-email-bgamari.foss@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386536538-14861-1-git-send-email-bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
 Cc: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+To someone with little device-tree experience these details aren't at
+all obvious. Make the fact that the manufacturer prefix is dropped
+explicit.
+
 Signed-off-by: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index b1cb341..9c3a684 100644
+index c475c3a..59bbb07 100644
 --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
 +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -9,6 +9,7 @@ document for it just like any other devices.
+@@ -1,6 +1,9 @@
+ This is a list of trivial i2c devices that have simple device tree
+ bindings, consisting only of a compatible field, an address and
+-possibly an interrupt line.
++possibly an interrupt line. The compatible field is used by lookup
++the modalias for the driver which will handle the device. A
++manufacturer prefix (separated by a comma) will be stripped off during
++this lookup.
  
- Compatible		Vendor / Chip
- ==========		=============
-+ad,adt7411		I2C Digital 8-channel 10-bit ADC and temperature sensor
- ad,ad7414		SMBus/I2C Digital Temperature Sensor in 6-Pin SOT with SMBus Alert and Over Temperature Pin
- ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProcessor-Based Systems
- adi,adt7461		+/-1C TDM Extended Temp Range I.C
+ If a device needs more specific bindings, such as properties to
+ describe some aspect of it, there needs to be a specific binding
 -- 
 1.8.3.2
 
