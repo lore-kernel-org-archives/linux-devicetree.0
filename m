@@ -1,272 +1,95 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v4 1/9] irqchip: add DesignWare APB ICTL interrupt controller
-Date: Sun,  8 Dec 2013 15:13:58 +0100
-Message-ID: <1386512047-874-2-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1386512047-874-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386512047-874-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: lis302 DT binding for Nokia N900
+Date: Sun, 8 Dec 2013 15:48:20 +0100
+Message-ID: <20131208144818.GA26502@earth.universe>
+References: <20131203122059.GB4653@earth.universe>
+ <52A473D8.7020706@tremplin-utc.net>
+ <20131208134651.GA25587@earth.universe>
+ <52A47B84.8050009@tremplin-utc.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52A47B84.8050009-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?=C9ric?= Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>
+Cc: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds an irqchip driver and corresponding devicetree binding for the
-secondary interrupt controllers based on Synopsys DesignWare IP dw_apb_ictl.
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Jisheng Zhang <jszhang@marvell.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
----
-Changelog:
-v2->v4:
-- none
-v1->v2:
-- reword binding docu for reg property and add FIQ decoding note
-  (Suggested by Mark Rutland)
-- add cleanup on error path (Reported by Jisheng Zhang)
-RFCv1->RFCv2:
-- added copyright reference
+--XsQoSWH+UP9D9v3l
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Kevin Hilman <khilman@linaro.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- .../interrupt-controller/snps,dw-apb-ictl.txt      |  32 +++++
- drivers/irqchip/Kconfig                            |   4 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-dw-apb-ictl.c                  | 150 +++++++++++++++++++++
- 4 files changed, 187 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
- create mode 100644 drivers/irqchip/irq-dw-apb-ictl.c
+On Sun, Dec 08, 2013 at 03:00:36PM +0100, =C9ric Piel wrote:
+> On 08-12-13 14:46, Sebastian Reichel wrote:
+> :
+> >No, it's connected via I2C. Please note, that the N900's accelerometer
+> >is already supported, but only when initialized via legacy boardcode.
+> >
+> >The problem is, that I can't specify negative values in the device
+> >tree file (the device tree compiler complains). I couldn't find any
+> >example of negative numbers in any dts file, so I guess, that
+> >negative numbers are not supported.
+> >
+> :
+> >I just want to port the existing boardcode to device tree.
+> >The existing platform data is defined as rx51_lis3lv02d_data in
+> >arch/arm/mach-omap2/board-rx51-peripherals.c.
+> Oh! Yes, then the values themselves should be fine.
+> Indeed, the problem is in the parsing of the DT values.
+> Currently, lis3lv02d_init_dt() reads values as unsigned int:
+>=20
+> u32 val;
+> if (of_get_property(np, "st,axis-x", &val))
+> 	pdata->axis_x =3D val;
+>=20
+> So it's quite unlikely to get negative ;-) Is there a way to read
+> signed ints in DT? If so, I can update the driver.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
-new file mode 100644
-index 0000000..4929117
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
-@@ -0,0 +1,32 @@
-+Synopsys DesignWare APB interrupt controller (dw_apb_ictl)
-+
-+Synopsys DesignWare provides interrupt controller IP for APB known as
-+dw_apb_ictl. The IP is used as secondary interrupt controller in some SoCs with
-+APB bus, e.g. Marvell Armada 1500.
-+
-+Required properties:
-+- compatible: shall be "snps,dw-apb-ictl"
-+- reg: physical base address of the controller and length of memory mapped
-+  region starting with ENABLE_LOW register
-+- interrupt-controller: identifies the node as an interrupt controller
-+- #interrupt-cells: number of cells to encode an interrupt-specifier, shall be 1
-+- interrupts: interrupt reference to primary interrupt controller
-+- interrupt-parent: (optional) reference specific primary interrupt controller
-+
-+The interrupt sources map to the corresponding bits in the interrupt
-+registers, i.e.
-+- 0 maps to bit 0 of low interrupts,
-+- 1 maps to bit 1 of low interrupts,
-+- 32 maps to bit 0 of high interrupts,
-+- 33 maps to bit 1 of high interrupts,
-+- (optional) fast interrupts start at 64.
-+
-+Example:
-+	aic: interrupt-controller@3000 {
-+		compatible = "snps,dw-apb-ictl";
-+		reg = <0x3000 0xc00>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 3792a1a..940638d 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -30,6 +30,10 @@ config ARM_VIC_NR
- 	  The maximum number of VICs available in the system, for
- 	  power management.
- 
-+config DW_APB_ICTL
-+	bool
-+	select IRQ_DOMAIN
-+
- config IMGPDC_IRQ
- 	bool
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index c60b901..6427323 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_MMP)			+= irq-mmp.o
- obj-$(CONFIG_ARCH_MVEBU)		+= irq-armada-370-xp.o
- obj-$(CONFIG_ARCH_MXS)			+= irq-mxs.o
- obj-$(CONFIG_ARCH_S3C24XX)		+= irq-s3c24xx.o
-+obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
- obj-$(CONFIG_METAG)			+= irq-metag-ext.o
- obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
- obj-$(CONFIG_ARCH_MOXART)		+= irq-moxart.o
-diff --git a/drivers/irqchip/irq-dw-apb-ictl.c b/drivers/irqchip/irq-dw-apb-ictl.c
-new file mode 100644
-index 0000000..31e231e
---- /dev/null
-+++ b/drivers/irqchip/irq-dw-apb-ictl.c
-@@ -0,0 +1,150 @@
-+/*
-+ * Synopsys DW APB ICTL irqchip driver.
-+ *
-+ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-+ *
-+ * based on GPL'ed 2.6 kernel sources
-+ *  (c) Marvell International Ltd.
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+#include "irqchip.h"
-+
-+#define APB_INT_ENABLE_L	0x00
-+#define APB_INT_ENABLE_H	0x04
-+#define APB_INT_MASK_L		0x08
-+#define APB_INT_MASK_H		0x0c
-+#define APB_INT_FINALSTATUS_L	0x30
-+#define APB_INT_FINALSTATUS_H	0x34
-+
-+static void dw_apb_ictl_handler(unsigned int irq, struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = irq_get_chip(irq);
-+	struct irq_chip_generic *gc = irq_get_handler_data(irq);
-+	struct irq_domain *d = gc->private;
-+	u32 stat;
-+	int n;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	for (n = 0; n < gc->num_ct; n++) {
-+		stat = readl_relaxed(gc->reg_base +
-+				     APB_INT_FINALSTATUS_L + 4 * n);
-+		while (stat) {
-+			u32 hwirq = ffs(stat) - 1;
-+			generic_handle_irq(irq_find_mapping(d,
-+					    gc->irq_base + hwirq + 32 * n));
-+			stat &= ~(1 << hwirq);
-+		}
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static int __init dw_apb_ictl_init(struct device_node *np,
-+				   struct device_node *parent)
-+{
-+	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-+	struct resource r;
-+	struct irq_domain *domain;
-+	struct irq_chip_generic *gc;
-+	void __iomem *iobase;
-+	int ret, nrirqs, irq;
-+	u32 reg;
-+
-+	/* Map the parent interrupt for the chained handler */
-+	irq = irq_of_parse_and_map(np, 0);
-+	if (irq <= 0) {
-+		pr_err("%s: unable to parse irq\n", np->full_name);
-+		return -EINVAL;
-+	}
-+
-+	ret = of_address_to_resource(np, 0, &r);
-+	if (ret) {
-+		pr_err("%s: unable to get resource\n", np->full_name);
-+		return ret;
-+	}
-+
-+	if (!request_mem_region(r.start, resource_size(&r), np->full_name)) {
-+		pr_err("%s: unable to request mem region\n", np->full_name);
-+		return -ENOMEM;
-+	}
-+
-+	iobase = ioremap(r.start, resource_size(&r));
-+	if (!iobase) {
-+		pr_err("%s: unable to map resource\n", np->full_name);
-+		ret = -ENOMEM;
-+		goto err_release;
-+	}
-+
-+	/*
-+	 * DW IP can be configured to allow 2-64 irqs. We can determine
-+	 * the number of irqs supported by writing into enable register
-+	 * and look for bits not set, as corresponding flip-flops will
-+	 * have been removed by sythesis tool.
-+	 */
-+
-+	/* mask and enable all interrupts */
-+	writel(~0, iobase + APB_INT_MASK_L);
-+	writel(~0, iobase + APB_INT_MASK_H);
-+	writel(~0, iobase + APB_INT_ENABLE_L);
-+	writel(~0, iobase + APB_INT_ENABLE_H);
-+
-+	reg = readl(iobase + APB_INT_ENABLE_H);
-+	if (reg)
-+		nrirqs = 32 + fls(reg);
-+	else
-+		nrirqs = fls(readl(iobase + APB_INT_ENABLE_L));
-+
-+	domain = irq_domain_add_linear(np, nrirqs,
-+				       &irq_generic_chip_ops, NULL);
-+	if (!domain) {
-+		pr_err("%s: unable to add irq domain\n", np->full_name);
-+		ret = -ENOMEM;
-+		goto err_unmap;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(domain, 32, (nrirqs > 32) ? 2 : 1,
-+					     np->name, handle_level_irq, clr, 0,
-+					     IRQ_GC_INIT_MASK_CACHE);
-+	if (ret) {
-+		pr_err("%s: unable to alloc irq domain gc\n", np->full_name);
-+		goto err_unmap;
-+	}
-+
-+	gc = irq_get_domain_generic_chip(domain, 0);
-+	gc->private = domain;
-+	gc->reg_base = iobase;
-+
-+	gc->chip_types[0].regs.mask = APB_INT_MASK_L;
-+	gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
-+	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
-+
-+	if (nrirqs > 32) {
-+		gc->chip_types[1].regs.mask = APB_INT_MASK_H;
-+		gc->chip_types[1].chip.irq_mask = irq_gc_mask_set_bit;
-+		gc->chip_types[1].chip.irq_unmask = irq_gc_mask_clr_bit;
-+	}
-+
-+	irq_set_handler_data(irq, gc);
-+	irq_set_chained_handler(irq, dw_apb_ictl_handler);
-+
-+	return 0;
-+
-+err_unmap:
-+	iounmap(iobase);
-+err_release:
-+	release_mem_region(r.start, resource_size(&r));
-+	return ret;
-+}
-+IRQCHIP_DECLARE(dw_apb_ictl,
-+		"snps,dw-apb-ictl", dw_apb_ictl_init);
--- 
-1.8.4.rc3
+I just found a link, which describes how to put negative values into
+the DTS, so that the device tree compiler understands them and
+translates them into 2's-compliment [0].
+
+The kernel code currently does not provide of_property_read_s32(),
+but it seems that there was just no use case so far. At least one
+of the DT binding maintainers seems to be finde with introducing it
+[1].
+
+I will prepare a patch, which adds of_property_read_s32 and another
+one, which updates lis3lv02d to use the new function.
+
+[0] http://www.mail-archive.com/linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg05121.html
+[1] http://www.mail-archive.com/linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg05125.html
+
+-- Sebastian
+
+--XsQoSWH+UP9D9v3l
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSpIayAAoJENju1/PIO/qaBisP/Ay6NxLTHnkPyu8i4wlQUFc+
+Fg5B70Ar5m0cH1aTTT4MTwS2jUG8Y/Rzb9zRnZdKh4CUCJ7us6eKenDGnxY5SZ4e
+Zn/QrzveqOeHRYKlPS7SpoVKm0vOBmt/U6rSpoaN8+9MCeaqMZiBIN939uHZfNTT
+9uLHJna7M9+1EHWbCMbL/0m608SFIsOfmU+A9I3lF+oD8QAT2KQfANKxKiBNCUx2
+iVu1Dd+xlpkO6alUu90XGRsTgt0tZRJ8H8EtQwy9VO6vhj02GXDP+N+Y9zuj2BPM
+z+e0JBogDqL5G45e/cvoT5kBA4xr1aFZPRg3h31HjZGNDouBDrZWMNS+DFQ0+Obw
+qAmAipvhxRT9nkBXVYyJ/4DBU55Z2tC7HGyRwLV/u2GiWVFkGDw90SSduiR0LyaM
+HHXwxIjWD9V9fWlN40edyzL81Oz+7d+1vlp4bTCxt1dUSA6MGkRYLbf4e1fQYF0/
+05vQ/0QM648pVTYJW1s3NVRxeVyL7DeGKbzFKRdNikQIaXwQOqLgLIKX2MSTiLf1
+KFboaOe+9ifAu4UO0JGg3wKxXD1yQ4ZArL3+n1WP5Ud7g/QOMS7SKQWzFySR57j9
+n5WQz0fPQmHJS1OSOWdQOksa4dLwpci54OYgOS25qm2Rzi2cI97YaWhz8xjbD0cC
++mOWYpjM8/54SEGTgjTA
+=/s2i
+-----END PGP SIGNATURE-----
+
+--XsQoSWH+UP9D9v3l--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
