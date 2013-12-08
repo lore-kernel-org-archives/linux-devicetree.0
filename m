@@ -1,198 +1,120 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/7] net: of_mdio: factor PHY registration from of_mdiobus_register
-Date: Sun, 08 Dec 2013 10:00:16 -0600
-Message-ID: <52A49790.5080901@gmail.com>
-References: <1386283936-26104-1-git-send-email-florian@openwrt.org> <1386283936-26104-2-git-send-email-florian@openwrt.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: cpu: Document and tweak clock-frequency property
+Date: Sun, 8 Dec 2013 16:19:22 +0000
+Message-ID: <20131208161922.GK29268@sirena.org.uk>
+References: <1386331027-26065-1-git-send-email-broonie@kernel.org>
+ <52A36AB3.6060102@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1386283936-26104-2-git-send-email-florian@openwrt.org>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <florian@openwrt.org>, netdev@vger.kernel.org
-Cc: davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, abrodkin@synopsys.com, rob.herring@calxeda.com, mark.rutland@arm.com, sebastian.hesselbarth@gmail.com, Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bzuizT9vlVVqWfw+"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52A36AB3.6060102-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/2013 04:52 PM, Florian Fainelli wrote:
-> From: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> Since commit 779d835e ("net: of_mdio: scan mdiobus for PHYs without reg
-> property") we have two foreach loops which do pretty much the same
-> thing. Factor the PHY device registration in a function helper:
-> of_mdiobus_register_phy() which takes care of the details and allows for
-> future PHY specific extensions.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-A couple of formatting nits, but otherwise:
+--bzuizT9vlVVqWfw+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
+On Sat, Dec 07, 2013 at 12:36:35PM -0600, Rob Herring wrote:
+> On 12/06/2013 05:57 AM, Mark Brown wrote:
 
-BTW, unless David has objections, I'd like to see this file moved to
-drivers/net. He tends to merge the of_mdio.c changes anyway. We've moved
-most other subsystem parsing code out of drivers/of.
+> > +	- clock-frequency
+> > +		Usage: required
 
-> ---
->  drivers/of/of_mdio.c | 109 ++++++++++++++++++++++-----------------------------
->  1 file changed, 46 insertions(+), 63 deletions(-)
-> 
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index d5a57a9..82485d2 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -22,6 +22,47 @@
->  MODULE_AUTHOR("Grant Likely <grant.likely@secretlab.ca>");
->  MODULE_LICENSE("GPL");
->  
-> +static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *child,
-> +				   u32 addr)
-> +{
-> +	struct phy_device *phy;
-> +	bool is_c45;
-> +	int rc;
-> +
-> +	is_c45 = of_device_is_compatible(child,
-> +					 "ethernet-phy-ieee802.3-c45");
+> This breaks compatibility. It may be required for a feature in the
 
-This looks like it can be 1 line.
+It doesn't, it's listed as mandatory in ePAPR section 3.7.1 which is
+already part of our bindings - this is merely copying that information
+into the binding document in the kernel so that it's more discoverable=20
+and so that we can tweak the definition to reflect reality a bit more
+closely.
 
-> +
-> +	phy = get_phy_device(mdio, addr, is_c45);
-> +	if (!phy || IS_ERR(phy))
-> +		return 1;
-> +
-> +	if (mdio->irq) {
-> +		mdio->irq[addr] =
-> +			irq_of_parse_and_map(child, 0);
+> kernel to work, but should not be required in general. Perhaps we need
+> "optional/recommended" or "optional/required for new designs". Or we
+> could say required only with heterogeneous cores.
 
-ditto
+For practical purposes a robust implementation should make it optional
+(as the current ARMv7 one does) but that doesn't change the spec.
 
-> +		if (!mdio->irq[addr])
-> +			mdio->irq[addr] = PHY_POLL;
-> +	}
-> +
-> +	/* Associate the OF node with the device structure so it
-> +	 * can be looked up later */
-> +	of_node_get(child);
-> +	phy->dev.of_node = child;
-> +
-> +	/* All data is now stored in the phy struct;
-> +	 * register it */
-> +	rc = phy_device_register(phy);
-> +	if (rc) {
-> +		phy_device_free(phy);
-> +		of_node_put(child);
-> +		return 1;
-> +	}
-> +
-> +	dev_dbg(&mdio->dev, "registered phy %s at address %i\n",
-> +		 child->name, addr);
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * of_mdiobus_register - Register mii_bus and create PHYs from the device tree
->   * @mdio: pointer to mii_bus structure
-> @@ -32,11 +73,10 @@ MODULE_LICENSE("GPL");
->   */
->  int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  {
-> -	struct phy_device *phy;
->  	struct device_node *child;
->  	const __be32 *paddr;
->  	u32 addr;
-> -	bool is_c45, scanphys = false;
-> +	bool scanphys = false;
->  	int rc, i, len;
->  
->  	/* Mask out all PHYs from auto probing.  Instead the PHYs listed in
-> @@ -73,38 +113,9 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  			continue;
->  		}
->  
-> -		if (mdio->irq) {
-> -			mdio->irq[addr] = irq_of_parse_and_map(child, 0);
-> -			if (!mdio->irq[addr])
-> -				mdio->irq[addr] = PHY_POLL;
-> -		}
-> -
-> -		is_c45 = of_device_is_compatible(child,
-> -						 "ethernet-phy-ieee802.3-c45");
-> -		phy = get_phy_device(mdio, addr, is_c45);
-> -
-> -		if (!phy || IS_ERR(phy)) {
-> -			dev_err(&mdio->dev,
-> -				"cannot get PHY at address %i\n",
-> -				addr);
-> -			continue;
-> -		}
-> -
-> -		/* Associate the OF node with the device structure so it
-> -		 * can be looked up later */
-> -		of_node_get(child);
-> -		phy->dev.of_node = child;
-> -
-> -		/* All data is now stored in the phy struct; register it */
-> -		rc = phy_device_register(phy);
-> -		if (rc) {
-> -			phy_device_free(phy);
-> -			of_node_put(child);
-> +		rc = of_mdiobus_register_phy(mdio, child, addr);
-> +		if (rc)
->  			continue;
-> -		}
-> -
-> -		dev_dbg(&mdio->dev, "registered phy %s at address %i\n",
-> -			child->name, addr);
->  	}
->  
->  	if (!scanphys)
-> @@ -117,9 +128,6 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  		if (paddr)
->  			continue;
->  
-> -		is_c45 = of_device_is_compatible(child,
-> -						 "ethernet-phy-ieee802.3-c45");
-> -
->  		for (addr = 0; addr < PHY_MAX_ADDR; addr++) {
->  			/* skip already registered PHYs */
->  			if (mdio->phy_map[addr])
-> @@ -129,34 +137,9 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  			dev_info(&mdio->dev, "scan phy %s at address %i\n",
->  				 child->name, addr);
->  
-> -			phy = get_phy_device(mdio, addr, is_c45);
-> -			if (!phy || IS_ERR(phy))
-> +			rc = of_mdiobus_register_phy(mdio, child, addr);
-> +			if (rc)
->  				continue;
-> -
-> -			if (mdio->irq) {
-> -				mdio->irq[addr] =
-> -					irq_of_parse_and_map(child, 0);
-> -				if (!mdio->irq[addr])
-> -					mdio->irq[addr] = PHY_POLL;
-> -			}
-> -
-> -			/* Associate the OF node with the device structure so it
-> -			 * can be looked up later */
-> -			of_node_get(child);
-> -			phy->dev.of_node = child;
-> -
-> -			/* All data is now stored in the phy struct;
-> -			 * register it */
-> -			rc = phy_device_register(phy);
-> -			if (rc) {
-> -				phy_device_free(phy);
-> -				of_node_put(child);
-> -				continue;
-> -			}
-> -
-> -			dev_info(&mdio->dev, "registered phy %s at address %i\n",
-> -				 child->name, addr);
-> -			break;
->  		}
->  	}
->  
-> 
+> > +		Value type: <u32> or <u64>
+
+> How do I determine the size? I think generally this property which is
+> used in multiple bindings is always u32. Of course, that won't work for
+> our 5GHz parts next year.
+
+Beats me.  Actually now I recheck the spec it should be a prop encoded
+array consisting of a single element that's either u32 or u64, I guess
+the array encodes the information.
+
+> > +		Definition:
+> > +			This is specified in ePAPR as the current clock
+> > +			frequency of the CPU.  When used with these
+> > +			extensions it should reflect the maximum clock
+> > +			frequency for the CPU.
+
+> What does extensions mean? cpu topology nodes?
+
+No, it means the document being modified - the same language is used
+throughout the document to refer to the extensions it's defining on top
+of the base ePAPR CPU bindings.
+
+> It is useful to have a standard way to determine the current cpu
+> frequency. I've been asked for this several times on highbank. This
+> could be cpufreq, but there is not always a driver loaded. lshw already
+> has support for reading the frequency using this property. So I'm not
+> real sure deviating from the ePAPR is a good idea.
+
+That'd be nice but it's not terribly practical to do it in DT given that
+we have a static DT.  As soon as something does change the frequency the
+information goes bad, and I don't know how this is going to play with
+things like kexec.  One could spec that the core always needs to be
+started at top speed though that doesn't seem helpful.
+
+> If a cpu only supports 1 frequency, then clock-frequency will always
+> reflect the current and max freq. If a cpu supports multiple
+> frequencies, then it should have an OPP table with those frequencies. We
+> should then get max frequency from the OPP table rather than
+> clock-frequency. It is clear that clock-frequency is insufficient to
+> describe everything we need.
+
+Right, though encoding the operating points into DT isn't always going
+to be useful.  What I'm trying to do here is both reflect the existing
+ARMv7 usage and make the property a bit more useful.
+
+If defining it to be the maximum frequency isn't going to fly we should
+probably just override ePAPR to say it's optional and implementations
+should not rely on its accuracy.
+
+--bzuizT9vlVVqWfw+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSpJwHAAoJELSic+t+oim9zF0P/RuUJKGoJff1AhkxxONf0XQb
++FFXbsxOTZdf3Xy3xA2hI2YlA1egmQFUVUnD/jpc2d8l7EKR0VKba6xn6RY1uGht
+xPP4h4/8cMNScWUkfeHP/qAqCAmR6PgJkCDmll79RBPWENndTNdUBEebjU+pGnZw
+3z8Uxb4TI4sStnTJwxCAlbSXxEu97PHBlTFOwNVXPzDJBHudHijK2njm/9796DOj
+ona8ALFbT6gBQPo7AZY9RHu6fKg22s7UREiJEDBYORgaGsl2wm9fwTlOivToZp6L
+wQ/uwr2SBCmgaBrb+uhV7lnqo5MsGLTfXuOpkbwvt4pdW3YGJF33T+c2vOvFxINQ
+ayjm+1iXVj6nAqu2KrVn6TEBV70M8zEeJu187ufwIaRQhUqkwEeHZ0slKsiX02Dk
+lDXZHij8ZhZ4MzmMeBWreocOu+hQJ4Y65gX2fNx/0sZxBxohUEcK+c3HPXkLjijf
+HxMlqSCFqDFjbVSUWQveKR7EHlg8F+r+P+7xH2xTlkjng6MvW9TjUKjBPRTyTxeq
+bCw8l+DS9inMD6V+HlgK6CMNQV6UXgs4EW+4A2FhwTOwNRW7pHCORWv/hMp6VTvf
+zW1ZFWPrY5ntZu/2M63xUPll2AV8uPwzI6QZBb7BEAw9azNwLMwpnFsFt7AR4Vbw
+9gzOBaWCR6KFsWNDX4R0
+=H7a/
+-----END PGP SIGNATURE-----
+
+--bzuizT9vlVVqWfw+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
