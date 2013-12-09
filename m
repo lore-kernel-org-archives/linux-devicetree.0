@@ -1,80 +1,59 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
- extensions for GMAC in Allwinner A20 SoC's
-Date: Mon, 09 Dec 2013 17:16:52 +0100
-Message-ID: <52A5ECF4.6030301@redhat.com>
-References: <1386350983-13281-1-git-send-email-wens@csie.org> <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A52C.50605@st.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] ARM: at91/dt: define sama5d3 clocks
+Date: Mon, 09 Dec 2013 17:17:07 +0100
+Message-ID: <52A5ED03.2070306@overkiz.com>
+References: <1385650171-8756-1-git-send-email-b.brezillon@overkiz.com> <201312090309.23723.arnd@arndb.de> <52A582AB.6010504@overkiz.com> <201312091648.13802.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBCG2S6KQKGQEU7COVDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52A5A52C.50605-qxv4g6HH51o@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201312091648.13802.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Arnd,
 
-On 12/09/2013 12:10 PM, srinivas kandagatla wrote:
-> Hi Chen,
-> Good to know that Allwinner uses gmac.
->
-> On ST SoC, we have very similar requirements, before we merge any of
-> these changes I think we need to come up with common way to solve both
-> Allwinner and ST SOCs use cases.
->
-> I have already posted few patches on to net-dev
-> http://lkml.org/lkml/2013/11/12/243 to add Glue driver on top of stmmac
-> driver.
->
->
-> There are few reasons for the way I have done it.
->
-> 1> I did not want to modify gmac driver in any sense to when a new SOC
-> support is added.
-> 2> As the SOC specific glue logic sits on top of standard GMAC IP, it
-> makes sense to represent it proper harware hierarchy.
+On 09/12/2013 16:48, Arnd Bergmann wrote:
+> On Monday 09 December 2013, boris brezillon wrote:
+>>> You are adding "clock-names" properties in a lot of cases. Are you sure you
+>>> are using the strings that are documented in the respective device bindings
+>>> for each name? In a lot of cases, drivers just want an anonymous clock
+>>> and we don't name them.
+>> I rechecked it, and almost all drivers call [devm_]clk_get with a
+>> specific clock
+>> name, and as a result we must specify the "clock-names" property.
+>> The only exceptions I found are the spi and PIT (Periodic Interval
+>> Timer) drivers,
+>> and "clock-names" property is not defined in these nodes.
+> Yes, I understood that the *drivers* use the names, but are they actually
+> documented in the device bindings? If not, it might be better to change the
+> drivers.
 
-On top often is not the correct term / how things are done in practice.
+We have to keep both clk system working for at91 platform (new CCF based
+clk implementations and old clk implementations) for two reasons:
+1) the new clk implemetations are only compatible with DT enabled boards
+     and some at91 boards are not yet ported to DT.
+2) we decided to move to the new clk implementations in multiple steps 
+(one SoC
+     family after another) in order to ease PATCH review.
 
-Most of the time the glue are modifications to the ip block, iow in
-hardware they are not nested / hierarchical at all. We've had similar
-constructs for ahci platform drivers and there we are actively trying to
-move away from the whole nested platform devices as that has various
-issues:
+If we change the drivers to avoid specific clock name request 
+([devm]_clk_get(dev, NULL)),
+we will have to change the old static clk lookup tables
+(i.e. 
+http://lxr.free-electrons.com/source/arch/arm/mach-at91/at91sam9g45.c#L226,
+http://lxr.free-electrons.com/source/arch/arm/mach-at91/at91sam9260.c#L202, 
+...).
 
-1) It is wrong / does not reflect reality
-2) It breaks deferred probing which is often used on SOCs
+Best Regards,
 
-I actually think Wens' approach using a SOC specific init function
-in platform data is sound, and this is also used a lot else where.
+Boris
 
-As for using the nested approach elsewhere, I only know about AHCI
-platform driver doing that, and there we are actively trying to move
-away from it.
+> 	Arnd
 
-
-Now reading this has also made me take a closer look at wens' patch
-for this. Wens, I see that you directly modify registers in the ccm
-that is a big no-no instead you should add a helper function to
-sunxi-clk.c and use that, see ie:
-https://bitbucket.org/emiliolopez/linux/commits/2b95847d9aa4aa13317dd7358ffcbd951dcb5eff?at=master
-
-
-Giuseppe, I get the feeling the 0x148 registers st-gmac is using is
-the same story, but I could be wrong. One important reason why accessing
-regs like this directly is a big no no is because it is impossible to
-do proper locking between multiple users, so 2 users doing read / modify / write
-could end up racing. So accesses to such registers should always happen
-through a single driver.
-
-
-Regards,
-
-Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
