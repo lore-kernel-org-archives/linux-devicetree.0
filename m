@@ -1,118 +1,113 @@
-From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Subject: Re: [PATCH] ARM64: dts: Add clock-frequency to model cpu nodes
-Date: Mon, 09 Dec 2013 17:56:05 +0000
-Message-ID: <1386611765.3380.70.camel@linaro1.home>
-References: <1386335683-11405-1-git-send-email-broonie@kernel.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
+ extensions for GMAC in Allwinner A20 SoC's
+Date: Tue, 10 Dec 2013 01:56:49 +0800
+Message-ID: <CAGb2v64LNxnz--vn0u9zwmt7MQJZ=uz2fs0H3zDSse_XDfdK4Q@mail.gmail.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org>
+ <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A52C.50605@st.com> <52A5ECF4.6030301@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1386335683-11405-1-git-send-email-broonie@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Mark Brown <broonie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB5MITCKQKGQEDZWMLOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <52A5ECF4.6030301-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-12-06 at 13:14 +0000, Mark Brown wrote:
-> From: Mark Brown <broonie@linaro.org>
-> 
-> The clock-frequency property is meaningless for the models but it's a
-> mandatory property so claim that all the cores run at 1MHz.
+Hi,
 
-Is it a mandatory property? I know we seem to get ugly warnings if it's
-missing but I see no mention of it at all in
-Documentation/devicetree/bindings/arm/cpus.txt (am I looking in the
-wrong place?)
+On Tue, Dec 10, 2013 at 12:16 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
+>
+>
+> On 12/09/2013 12:10 PM, srinivas kandagatla wrote:
+>>
+>> Hi Chen,
+>> Good to know that Allwinner uses gmac.
+>>
+>> On ST SoC, we have very similar requirements, before we merge any of
+>> these changes I think we need to come up with common way to solve both
+>> Allwinner and ST SOCs use cases.
+>>
+>> I have already posted few patches on to net-dev
+>> http://lkml.org/lkml/2013/11/12/243 to add Glue driver on top of stmmac
+>> driver.
+>>
+>>
+>> There are few reasons for the way I have done it.
+>>
+>> 1> I did not want to modify gmac driver in any sense to when a new SOC
+>> support is added.
+>> 2> As the SOC specific glue logic sits on top of standard GMAC IP, it
+>> makes sense to represent it proper harware hierarchy.
+>
+>
+> On top often is not the correct term / how things are done in practice.
+>
+> Most of the time the glue are modifications to the ip block, iow in
+> hardware they are not nested / hierarchical at all. We've had similar
+> constructs for ahci platform drivers and there we are actively trying to
+> move away from the whole nested platform devices as that has various
+> issues:
+>
+> 1) It is wrong / does not reflect reality
+> 2) It breaks deferred probing which is often used on SOCs
+>
+> I actually think Wens' approach using a SOC specific init function
+> in platform data is sound, and this is also used a lot else where.
+>
+> As for using the nested approach elsewhere, I only know about AHCI
+> platform driver doing that, and there we are actively trying to move
+> away from it.
+>
+>
+> Now reading this has also made me take a closer look at wens' patch
+> for this. Wens, I see that you directly modify registers in the ccm
+> that is a big no-no instead you should add a helper function to
+> sunxi-clk.c and use that, see ie:
+> https://bitbucket.org/emiliolopez/linux/commits/2b95847d9aa4aa13317dd7358ffcbd951dcb5eff?at=master
 
-I think this attribute got merged into the kernel with the early power
-related scheduling efforts, but given the state of all that at the
-moment I was guessing it might be obsolete.
+Yes, this has been raised by Maxime. The odd "GMAC_IF_TYPE_RGMII" or
+"gmac interface type bit" has been bugging me.
 
--- Tixy
+Additionally, the TX clock has 2 inputs (not counting MII [1]).
+The internal one is most likely controlled by the GMAC. The clock
+rate is set internally to match the link speed. The external clock
+source has controllable dividers to get the correct clock rate.
+This shouldn't be hard to model with CCF though.
 
-> Signed-off-by: Mark Brown <broonie@linaro.org>
-> ---
->  arch/arm64/boot/dts/foundation-v8.dts  | 4 ++++
->  arch/arm64/boot/dts/rtsm_ve-aemv8a.dts | 4 ++++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/foundation-v8.dts b/arch/arm64/boot/dts/foundation-v8.dts
-> index 4a060906809d..f91b2fa41fb3 100644
-> --- a/arch/arm64/boot/dts/foundation-v8.dts
-> +++ b/arch/arm64/boot/dts/foundation-v8.dts
-> @@ -34,6 +34,7 @@
->  			reg = <0x0 0x0>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			clock-frequency = <1000000>;
->  		};
->  		cpu@1 {
->  			device_type = "cpu";
-> @@ -41,6 +42,7 @@
->  			reg = <0x0 0x1>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			clock-frequency = <1000000>;
->  		};
->  		cpu@2 {
->  			device_type = "cpu";
-> @@ -48,6 +50,7 @@
->  			reg = <0x0 0x2>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			clock-frequency = <1000000>;
->  		};
->  		cpu@3 {
->  			device_type = "cpu";
-> @@ -55,6 +58,7 @@
->  			reg = <0x0 0x3>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			clock-frequency = <1000000>;
->  		};
->  	};
->  
-> diff --git a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> index 572005ea2217..d7debfe79d9f 100644
-> --- a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> +++ b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> @@ -37,6 +37,7 @@
->  			reg = <0x0 0x0>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			clock-frequency = <1000000>;
->  		};
->  		cpu@1 {
->  			device_type = "cpu";
-> @@ -44,6 +45,7 @@
->  			reg = <0x0 0x1>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			clock-frequency = <1000000>;
->  		};
->  		cpu@2 {
->  			device_type = "cpu";
-> @@ -51,6 +53,7 @@
->  			reg = <0x0 0x2>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			clock-frequency = <1000000>;
->  		};
->  		cpu@3 {
->  			device_type = "cpu";
-> @@ -58,6 +61,7 @@
->  			reg = <0x0 0x3>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			clock-frequency = <1000000>;
->  		};
->  	};
->  
+In hardware, this is probably a mux between the GMAC clock generator
+and the GMAC data transmit logic.
+
+My current plan is to choose MII when the clock is disabled,
+and choose either of the inputs when it is enabled. I will
+have to learn more about the CCF first.
+
+[1] In MII mode, the TX clock is sent by the PHY to the MAC.
+    From the MAC's viewpoint, it seems like a clock source.
+    However, from the PHY's viewpoint, it is the provider.
+    In RGMII mode, the MAC provides the TX clock to the PHY,
+    and times the TX data lines to the clock. So in a way,
+    the PHY is the true consumer of the TX clock.
+
+
+ChenYu
+
+> Giuseppe, I get the feeling the 0x148 registers st-gmac is using is
+> the same story, but I could be wrong. One important reason why accessing
+> regs like this directly is a big no no is because it is impossible to
+> do proper locking between multiple users, so 2 users doing read / modify /
+> write
+> could end up racing. So accesses to such registers should always happen
+> through a single driver.
+>
+>
+> Regards,
+>
+> Hans
