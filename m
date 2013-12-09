@@ -1,62 +1,100 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 2/2] mmc: sdhci-msm: Initial support for MSM chipsets
-Date: Mon, 9 Dec 2013 09:46:44 +0000
-Message-ID: <20131209094644.GC28379@e106331-lin.cambridge.arm.com>
-References: <1383753405-23631-1-git-send-email-gdjakov@mm-sol.com>
- <1383753405-23631-3-git-send-email-gdjakov@mm-sol.com>
- <20131205102740.GI29200@e106331-lin.cambridge.arm.com>
- <52A1BCEF.30505@mm-sol.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v5 15/15] usb: phy-mxs: Add sync time after controller
+ clear phcd
+Date: Mon, 9 Dec 2013 17:19:52 +0800
+Message-ID: <20131209091951.GD5291@shlinux1.ap.freescale.net>
+References: <1386570664-6713-1-git-send-email-peter.chen@freescale.com>
+ <1386570664-6713-16-git-send-email-peter.chen@freescale.com>
+ <52A587CD.7010203@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52A1BCEF.30505@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "subhashj@codeaurora.org" <subhashj@codeaurora.org>
+In-Reply-To: <52A587CD.7010203@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > [...]
-> >
-> >> +       /*
-> >> +        * CORE_SW_RST above may trigger power irq if previous status of PWRCTL
-> >> +        * was either BUS_ON or IO_HIGH_V. So before we enable the power irq
-> >> +        * interrupt in GIC (by registering the interrupt handler), we need to
-> >> +        * ensure that any pending power irq interrupt status is acknowledged
-> >> +        * otherwise power irq interrupt handler would be fired prematurely.
-> >> +        */
-> >> +       irq_status = readl_relaxed(msm_host->core_mem + CORE_PWRCTL_STATUS);
-> >> +       writel_relaxed(irq_status, (msm_host->core_mem + CORE_PWRCTL_CLEAR));
-> >> +       irq_ctl = readl_relaxed(msm_host->core_mem + CORE_PWRCTL_CTL);
-> >> +       if (irq_status & (CORE_PWRCTL_BUS_ON | CORE_PWRCTL_BUS_OFF))
-> >> +               irq_ctl |= CORE_PWRCTL_BUS_SUCCESS;
-> >> +       if (irq_status & (CORE_PWRCTL_IO_HIGH | CORE_PWRCTL_IO_LOW))
-> >> +               irq_ctl |= CORE_PWRCTL_IO_SUCCESS;
-> >> +       writel_relaxed(irq_ctl, (msm_host->core_mem + CORE_PWRCTL_CTL));
-> >> +       /*
-> >> +        * Ensure that above writes are propogated before interrupt enablement
-> >> +        * in GIC.
-> >> +        */
-> >> +       mb();
-> >
-> > Does this guarantee that the device has finished responding to the write
-> > and deasserted the interrupt line (i.e. does the device only acknowledge
-> > the write once that is true)?
-> >
+On Mon, Dec 09, 2013 at 10:05:17AM +0100, Marc Kleine-Budde wrote:
+> On 12/09/2013 07:31 AM, Peter Chen wrote:
+> > After clear portsc.phcd, PHY needs 200us stable time for switch
+> > 32K clock to AHB clock.
 > 
-> I am not sure that i understand your concern. The write to 
-> CORE_PWRCTL_CTL should acknowledge and deassert the interrupt.
+> If this is a general bugbix, please move it to the start of this series
+> and add stable on Cc. I think I hit the bug on the second USB port of a
+> custom MX28 board, the stmp_reset_block() in the USB phy will fail.
 
-The mb() ensures that the write has reached the device, and the device's
-slave interface has acknowledged the write. On some devices this
-acknowledgement of the write can be asynchronous with respect to the
-device changing state in response to the write (i.e. the interrupt might
-get deasserted a short time after the write completes). Typically there
-is a register that should be polled to see whether the state change has
-completed.
+Not a bug-fix, just the requirement for the PHY leaves low power mode.
+Does the bug exists with my this patchset, or just current mainline code?
 
-Does the acknowledgement of the write only occur once the device has
-changed state? Or might it change state in the background?
+> 
+> Is the problem documented somewhere?
+> 
+> Is it possible to add the delay in the clock framework? I think only the
+> regulator framework has a configurable delay for the regulator to stabilize.
 
-Thanks,
-Mark
+It is just related to mxs PHY's hardware timing. It is better to add
+it at specific driver.
+
+Peter
+
+> 
+> > Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> > ---
+> >  drivers/usb/phy/phy-mxs-usb.c |   11 +++++++++++
+> >  1 files changed, 11 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+> > index e18fdf3..7ae5225 100644
+> > --- a/drivers/usb/phy/phy-mxs-usb.c
+> > +++ b/drivers/usb/phy/phy-mxs-usb.c
+> > @@ -151,6 +151,15 @@ static inline bool is_imx6sl_phy(struct mxs_phy *mxs_phy)
+> >  	return mxs_phy->data == &imx6sl_phy_data;
+> >  }
+> >  
+> > +/*
+> > + * PHY needs some 32K cycles to switch from 32K clock to
+> > + * bus (such as AHB/AXI, etc) clock.
+> > + */
+> > +static void mxs_phy_clock_switch(void)
+> > +{
+> > +	usleep_range(300, 400);
+> > +}
+> > +
+> >  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+> >  {
+> >  	int ret;
+> > @@ -276,6 +285,7 @@ static int mxs_phy_init(struct usb_phy *phy)
+> >  {
+> >  	struct mxs_phy *mxs_phy = to_mxs_phy(phy);
+> >  
+> > +	mxs_phy_clock_switch();
+> >  	clk_prepare_enable(mxs_phy->clk);
+> >  	return mxs_phy_hw_init(mxs_phy);
+> >  }
+> > @@ -300,6 +310,7 @@ static int mxs_phy_suspend(struct usb_phy *x, int suspend)
+> >  		       x->io_priv + HW_USBPHY_CTRL_SET);
+> >  		clk_disable_unprepare(mxs_phy->clk);
+> >  	} else {
+> > +		mxs_phy_clock_switch();
+> >  		clk_prepare_enable(mxs_phy->clk);
+> >  		writel(BM_USBPHY_CTRL_CLKGATE,
+> >  		       x->io_priv + HW_USBPHY_CTRL_CLR);
+> > 
+> 
+> Marc
+> -- 
+> Pengutronix e.K.                  | Marc Kleine-Budde           |
+> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> 
+
+
+
+-- 
+
+Best Regards,
+Peter Chen
+
