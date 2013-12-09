@@ -1,73 +1,121 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCHv13] ARM: dts: Add support for the cpuimx25 board from
- Eukrea and its baseboard.
-Date: Mon, 9 Dec 2013 11:52:52 +0800
-Message-ID: <20131209035250.GE825@S2101-09.ap.freescale.net>
-References: <1386255416-18661-1-git-send-email-denis@eukrea.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/3] usb: phy-generic: Add GPIO based ChipSelect
+Date: Sun, 8 Dec 2013 22:07:05 -0600
+Message-ID: <20131209040705.GB20608@saruman.home>
+References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk>
+ <1385967919-13258-2-git-send-email-chris.ruehl@gtsys.com.hk>
+ <20131206202453.GF21086@saruman.home>
+ <52A520BA.1000603@gtsys.com.hk>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+pHx0qQiF2pBVqBT"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1386255416-18661-1-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Denis Carikli <denis@eukrea.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <52A520BA.1000603@gtsys.com.hk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc: balbi@ti.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 03:56:56PM +0100, Denis Carikli wrote:
-> The following devices/functionalities were added:
->  * Main and secondary UARTs.
->  * i2c and the pcf8563 device.
->  * Ethernet.
->  * NAND.
->  * The BP1 button.
->  * The LED.
->  * Watchdog
->  * SD.
-> =
+--+pHx0qQiF2pBVqBT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: devicetree@vger.kernel.org
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Eric B=E9nard <eric@eukrea.com>
-> Signed-off-by: Denis Carikli <denis@eukrea.com>
-> ---
-> ChangeLog v10->v13:
-> - The display part was splitted out because it depends on other
->   patches that are not applied yet, the commit message was updated accord=
-ingly.
-> - The new GPIO and input defines are now used in the dts(i).
-> =
+Hi,
 
-> ChangeLog v9->v10:
-> - Adapted to the new pingrp patches.
-> =
+On Mon, Dec 09, 2013 at 09:45:30AM +0800, Chris Ruehl wrote:
+> On Saturday, December 07, 2013 04:24 AM, Felipe Balbi wrote:
+> >Hi,
+> >
+> >On Mon, Dec 02, 2013 at 03:05:17PM +0800, Chris Ruehl wrote:
+> >>@@ -231,27 +249,40 @@ static int usb_phy_gen_xceiv_probe(struct platfor=
+m_device *pdev)
+> >>  		return -ENOMEM;
+> >>
+> >>  	nop->reset_active_low =3D true;	/* default behaviour */
+> >>+	nop->cs_active_low =3D true;
+> >>
+> >>  	if (dev->of_node) {
+> >>  		struct device_node *node =3D dev->of_node;
+> >>  		enum of_gpio_flags flags;
+> >>+		enum of_gpio_flags csflags;
+> >>
+> >>  		if (of_property_read_u32(node, "clock-frequency",&clk_rate))
+> >>  			clk_rate =3D 0;
+> >>
+> >>  		needs_vcc =3D of_property_read_bool(node, "vcc-supply");
+> >>+
+> >>  		nop->gpio_reset =3D of_get_named_gpio_flags(node, "reset-gpios",
+> >>  								0,&flags);
+> >>+
+> >
+> >two unrelated changes
+> >
+> >>  		if (nop->gpio_reset =3D=3D -EPROBE_DEFER)
+> >>  			return -EPROBE_DEFER;
+> >>
+> >>  		nop->reset_active_low =3D flags&  OF_GPIO_ACTIVE_LOW;
+> >>
+> >>+		nop->gpio_chipselect =3D of_get_named_gpio_flags(node, "cs-gpios",
+> >>+								0,&csflags);
+> >>+		if (gpio_is_valid(nop->gpio_chipselect))
+> >>+			nop->cs_active_low =3D csflags&  OF_GPIO_ACTIVE_LOW;
+> >>+
+> >>  	} else if (pdata) {
+> >>  		type =3D pdata->type;
+> >>  		clk_rate =3D pdata->clk_rate;
+> >>  		needs_vcc =3D pdata->needs_vcc;
+> >>  		nop->gpio_reset =3D pdata->gpio_reset;
+> >>+		nop->gpio_chipselect =3D pdata->gpio_chipselect;
+> >>+	} else {
+> >>+		nop->gpio_reset =3D -1;
+> >
+> >This line is already going upstream, please remove it, i'll handle the
+> >conflict later.
+> >
+>=20
+> Beause the rest of the patch set is not ready to make it in the
+> upstream, I will checkout latest linux-next and send the patch again
+> as a single patch.
 
-> ChangeLog v8->v9:
-> - Licenses were shortened.
-> ---
->  arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi       |   60 ++++++++++
->  .../boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts  |  119 ++++++++++++++=
-++++++
->  2 files changed, 179 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
->  create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
+no, please *never* base any patches off of linux-next. That tree gets
+recreated every day and can never be considered stable. Aim at using a
+tag from Linus instead (v3.13-rc3, for example). It's a much better
+development point than linux-next.
 
-Added the dtb target into arch/arm/boot/dts/Makefile, and applied the
-patch.
+In case patch doesn't apply cleanly, different maintainers will have
+their choice of rebasing it themselves or asking author to rebase on a
+specific branch.
 
-Shawn
+By default, however, use a tag from Linus.
+
+cheers
+
+--=20
+balbi
+
+--+pHx0qQiF2pBVqBT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSpUHpAAoJEIaOsuA1yqREQpsQAJnUoyzlWXvoB/OWdL/k4yzq
+nAetity0Fworx06NI5BRiMY4ma9RiRmcZsvdtUao60hn1Ruk1tKfSyz2pZYBxt7v
+ztbS9rMuA/MRhU2X7C6gaTzsbX2a93zP7pa9VQ1ou5RmsQVOAD5FwIUTbJiwGgGZ
+1aO9J+tnSS9I9H6HABlu09B87VtPDnXcFm7LJrEIBZKrXpW6+i4KAZ7bxTrqNpOC
+dn0IRdgoF7H3i8ERLtQEbcl2qDZUAE/YE3E6x3uuNZCpNiplCfXYOt96AG+d/Fyh
+MDzcAHHlVCyPSHk+k3zNuBpA98P0aZUbjVUo6feZn2svHWpsK8TNReZMYAIkTwW8
+zP+ODJop/ozurtrQl/Tl4pq3KfK1bONi+R7N1x47opWhoih4PaZqbjg1fJ9zgszj
+MQozb+GSE3x2t7+mL1y9f7BS9pSSzdNucw+lgz6RDI1QG7RhHxt1cjFtGMMnaJxO
+TSbDvv6qszpTMQaYnFIAEwc1Cxub7X1h7x4MVnLn0aMEeuWBpNTMl7vzg27KD33J
+x8tsAt4aRia7QL6UvNvIcybRh2/Bd13n3WQSJXS85ObNJxu4pLEaBi9CcFmx8Ntp
+lfcHWGCPRgPM4kv0BpyENBx9aTrQrCE7xN98BUQSlwMY4cOGJenTn/5YTsLUd2ow
+8dOHKqgzNjOSiPo+t9gJ
+=lWCy
+-----END PGP SIGNATURE-----
+
+--+pHx0qQiF2pBVqBT--
