@@ -1,93 +1,69 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 4/4 v3] ARM: dts: Exynos5420: Add device nodes for TMU
- blocks
-Date: Mon, 09 Dec 2013 13:57:09 +0100
-Message-ID: <3503788.1T16Njt87z@amdc1227>
-References: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
- <1384238268-24671-1-git-send-email-ch.naveen@samsung.com>
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: Re: [PATCH 5/9] ARM: dts: provide DMA config to pxamci
+Date: Mon, 09 Dec 2013 17:16:37 +0400
+Message-ID: <1386594997.7152.164.camel@host5.omatika.ru>
+References: <1386348542-9584-1-git-send-email-ynvich@gmail.com>
+		 <1386543229-1542-1-git-send-email-ynvich@gmail.com>
+		 <1386543229-1542-6-git-send-email-ynvich@gmail.com>
+		 <201312090233.58592.arnd@arndb.de> <52A587A0.1050503@gmail.com>
+	 <1386581672.7152.108.camel@host5.omatika.ru> <52A59991.1060305@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1384238268-24671-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52A59991.1060305@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Daniel Mack <zonque@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, DOCUMENTATION <linux-doc@vger.kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-Hi Naveen,
+On Mon, 2013-12-09 at 11:21 +0100, Daniel Mack wrote:
+> On 12/09/2013 10:34 AM, Sergei Ianovich wrote:
+> > On Mon, 2013-12-09 at 10:04 +0100, Daniel Mack wrote:
+> >> On 12/09/2013 02:33 AM, Arnd Bergmann wrote:
+> >>> It hasn't made it upstream yet, but see http://list-archives.org/2013/08/07/linux-mtd-lists-infradead-org/patch-00-20-arm-pxa-move-core-and-drivers-to-dmaengine/f/3444199144
+> >>> for how it's done. Maybe Daniel can comment on the status of his
+> >>> patches.
+> >>
+...
+> The only real problem is the PXA camera driver, which does tricky things
+> like hot re-queuing of DMA descriptors. That one needs fixing before the
+> series can land.
 
-On Tuesday 12 of November 2013 12:07:48 Naveen Krishna Chatradhi wrote:
-> Exynos5420 SoC has per core thermal management unit.
-> 5 TMU channels 4 for CPUs and 5th for GPU.
-> 
-> This patch adds the device tree nodes to the DT device list.
-> 
-> Nodes carry the misplaced second base address and the second
-> clock to access the misplaced base address.
-> 
-> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> ---
-> Changes since v2:
-> 3. uses the new compatible strings introduced along with adding
->    support for Exynso5420.
-> 
-> Changes since v1:
-> 1. Nodes carry the misplaced second base address and the second
->    clock to access the misplaced base address.
-> 2. Correct the clock number for the TMU4
-> 
->  arch/arm/boot/dts/exynos5420.dtsi |   48 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
+My impression is that his series is hard to land. I've expressed my
+concerns about big changes in a separate mail.
 
-In addition to updating to reflect my comments to patch 3/4, please also
-see my comments inline.
+PXA device tree support issue is practically orthogonal. As of August
+2013, Daniel's dma series doesn't add any dt support. After new DMA is
+working, we will need to add dt support in the same drivers.
 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index 6ffefd1..d736b40 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -369,4 +369,52 @@
->  		clock-names = "gscl";
->  		samsung,power-domain = <&gsc_pd>;
->  	};
-> +
-> +	/* tmu for CPU0 */
-> +	tmu@10060000 {
+Basically we have three options:
+A. Wait for Daniel DMA, than for PXA clock, than do dt support
+ pros: 
+ * correct order
+ cons:
+ * need to wait, possibly a long time
+ * dt boot not possible, while we wait
 
-Instead of the comment, it might be better to add a label to the node,
-such as
+B. Provide 'hackish' support to dt, than correct hacks when DMA is
+merged.
+ pros:
+ * parallel development
+ * healthier kernel code (current PXA usb driver won't compile with dt
+enabled)
+ cons:
+ * wrong concept (like my patch 5/9) until DMA is working
+ * need to recompile dtb files when kernel changes
 
-tmu_cpu0: tmu@10060000 {
+C. Use 'fake' DMA provider dt binding to emulate existing DMA until new
+DMA is merged, than 
+ pros:
+ * parallel development
+ * healthier kernel code
+ * correct device trees from the beginning
+ cons:
+ * more work
+ * still need to recompile dtbs when clock support is merged
 
-for TMU of CPU0 and so on.
-
-> +		compatible = "samsung,exynos5420-tmu";
-> +		reg = <0x10060000 0x100>;
-> +		interrupts = <0 65 0>;
-> +		clocks = <&clock 318>;
-> +		clock-names = "tmu_apbif";
-> +	};
-> +
-> +	/* tmu for CPU1 */
-> +	tmu@10064000 {
-> +		compatible = "samsung,exynos5420-tmu";
-> +		reg = <0x10064000 0x100>;
-> +		interrupts = <0 183 0>;
-> +		clocks = <&clock 318>;
-> +		clock-names = "tmu_apbif";
-> +	};
-> +
-> +	/* tmu for CPU2 */
-> +	tmu@10068000 {
-> +		compatible = "samsung,exynos5420-tmu-triminfo";
-> +		/* 2nd reg is for the misplaced TRIMINFO register */
-
-Hmm, I'm not convinced about usefulness of this comment. Used compatible
-value directly implies the meaning of all reg entries.
-
-Best regards,
-Tomasz
+Any ideas?
 
