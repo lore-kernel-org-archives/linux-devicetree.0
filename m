@@ -1,54 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
- extensions for GMAC in Allwinner A20 SoC's
-Date: Mon, 09 Dec 2013 17:44:48 +0400
-Message-ID: <52A5C950.7070903@cogentembedded.com>
-References: <1386350983-13281-1-git-send-email-wens@csie.org> <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A7B2.4000509@st.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 15/26] ARM: omap4-panda.dts: add display information
+Date: Mon, 9 Dec 2013 16:09:09 +0100
+Message-ID: <CABxcv==-aknRfzybA6ify5JSHeiquS9bqAEXumJwhnS6PT0MfA@mail.gmail.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+	<1386160133-24026-16-git-send-email-tomi.valkeinen@ti.com>
+	<CABxcv=m+-9V2qwvuQgJavQ3qOb2+fBcAoW9G_Mi33BTHCWE85g@mail.gmail.com>
+	<52A5BDF4.2070304@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBC6MFNV32EFRBVUSS6KQKGQEFGTVJVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52A5A7B2.4000509-qxv4g6HH51o@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52A5BDF4.2070304@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Enric Balletbo Serra <eballetbo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Tomi,
 
-On 09-12-2013 15:21, srinivas kandagatla wrote:
+On Mon, Dec 9, 2013 at 1:56 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 2013-12-06 10:57, Javier Martinez Canillas wrote:
+>
+>>> +       tfp410: encoder@0 {
+>>> +               compatible = "ti,tfp410";
+>>> +               gpios = <&gpio1 0 0>;   /* 0, power-down */
+>>> +
+>>
+>> Please use the constants from include/dt-bindings/ instead of magic
+>> numbers, i.e:
+>>
+>> gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;   /* 0, power-down */
+>
+> Thanks, fixed now (for all .dts files)
+>
+> However... The TFP410 gpio is "power-down". I think we should actually
+> mark it as GPIO_ACTIVE_LOW, as setting it to 0 powers down the device.
+>
 
->> +static int sun7i_gmac_init(struct platform_device *pdev)
->> +{
->> +	struct resource *res;
->> +	struct device *dev = &pdev->dev;
->> +	void __iomem *addr = NULL;
->> +	struct plat_stmmacenet_data *plat_dat = NULL;
+yes, I looked at the TFP410 datasheet [0] and the Power Down pin is
+indeed an active-low, I just replaced to GPIO_ACTIVE_HIGH since you
+were using a constant 0 and include/dt-bindings/gpio/gpio.h defines
+GPIO_ACTIVE_HIGH  as 0.
 
-    No need to initialize it since you're assigning to it right below.
+I just asked to Enric why we use GPIO_ACTIVE_HIGH for the PD pin on
+the IGEPv2 DTS instad and is because the IGEP board uses a hardware
+signal inverter but that is a special case. I don't know about the
+Panda board since I haven't looked at its datasheet.
 
->> +	u32 priv_clk_reg;
->> +
->> +	plat_dat = dev_get_platdata(&pdev->dev);
->> +	if (!plat_dat)
->> +		return -EINVAL;
+Thanks a lot and best regards,
+Javier
 
-> dev_get_platdata will return NULL for DT, So this function will fail all
-> the time.
-
-    Indeed, unless the probe() method assigns it from the 'data' field of
-'struct of_device_id'.
-
-> How is it supposed to work?
-> Am I missing some thing?
-
-    Look at stmmac_pltfr_probe().
-
-> --srini
-
-WBR, Sergei
+[0]: http://www.ti.com/lit/ds/slds145b/slds145b.pdf
