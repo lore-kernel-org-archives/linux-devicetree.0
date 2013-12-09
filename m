@@ -1,57 +1,81 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] spi: dt-binding: clarify gpio chipselect language
-Date: Mon, 9 Dec 2013 18:01:48 +0000
-Message-ID: <20131209180148.GP29268@sirena.org.uk>
-References: <542dfeee809e73f7f071f4ae0b4f95af7736f70b.1386243545.git.baruch@tkos.co.il>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 13/26] ARM: omap3.dtsi: add omapdss information
+Date: Mon, 9 Dec 2013 10:04:25 -0800
+Message-ID: <20131209180424.GE12527@atomide.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+ <1386160133-24026-14-git-send-email-tomi.valkeinen@ti.com>
+ <20131205170514.GY26766@atomide.com>
+ <52A5BB65.5050109@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UWzACjsgnYjrQHZk"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <542dfeee809e73f7f071f4ae0b4f95af7736f70b.1386243545.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+In-Reply-To: <52A5BB65.5050109@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [131209 04:46]:
+> On 2013-12-05 19:05, Tony Lindgren wrote:
+> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [131204 04:31]:
+> > 
+> > Description missing.. But other than that can you please check that
+> > the latest patch I posted in thread "[PATCH] ARM: OMAP2+: Fix populating
+> > the hwmod data from device" works with this?
+> >
+> > The test to do is to remove the related reg, interrupt and dma entries
+> > from omap_hwmod_*_data.c, and make sure the related hwmod data is initialized
+> > from DT properly.
+> 
+> I made a quick test with panda, by applying your patch and reverting
+> b38911f3472be89551bfca740adf0009562b9873. That only effectively tests
+> the DISPC IRQ, but that worked fine.
 
---UWzACjsgnYjrQHZk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+OK I've finally pushed a real branch for the mach-omap2 board-*.c file
+removal patches at omap-for-v3.14/omap3-board-removal so you can use
+that as a base for testing. I did not apply the dpi panel pdata-quirks.c
+patch as we discussed earlier.
+ 
+> > I don't know if it makes sense to have them as children of dss_core, they
+> > really all seem to be completely independent devices?
+> 
+> The DSS subdevices depend on the dss_core. dss_core has to be powered up
+> for any of the subdevices to work. This is done automatically by the
+> runtime PM when the subdevices are children of the dss_core.
 
-On Thu, Dec 05, 2013 at 01:39:05PM +0200, Baruch Siach wrote:
-> Commit 743179849015 (of_spi: add generic binding support to specify cs gpio)
-> introduced generic binding for gpio chip-select. The cs_gpio struct field,
-> however, is an internal implementation detail of the Linux SPI subsystem, and
-> should not be mentioned in the device tree binding documentation. Mention the
-> previously defined cs-gpios master node property instead.
+OK thanks. Care to also check that it plays along nicely with the comments
+starting at line 3222 in omap_hwmod_3xxx_data.c? We should set up things
+so we can eventually remove those kind of hwmod workarounds.
+ 
+> > BTW, for v3.15, I'm hoping to do patches where we deprecate ti,hwmods
+> > property and do the lookup based on the compatible property instead ;)
+> > So from that point of view we need to get the device mapping right in
+> > the .dtsi files, and don't want to start mixing up separate devices into
+> > single .dtsi entry.
+> 
+> Hmm, was that just a general comment, or something that affects the DSS
+> DT data I have in my patch? As far as I understand, the DSS nodes
+> reflect the current hwmods correctly.
 
-Applied, thanks.
+Yes that's what we want if there is a dependency to the dss_core at the
+hardware level and the children cannot be used independently. However,
+if the children can be enabled and clocked independently, then they
+should not be children of the dss_core.
+ 
+> With the exception that DPI and SDI do not have a matching hwmod, as
+> they are really part of dss_core/dispc. They are separate nodes as they
+> are "video outputs" the same way as the other subnodes.
+> 
+> I could perhaps remove the DPI and SDI nodes, and have them as direct
+> video ports from DISPC, but... That's easier said than done.
 
---UWzACjsgnYjrQHZk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+If you need a dev entry created for those where the phandle of that dev
+is used to select the output for a board, then it makes sense to have
+them. I guess you could also set them as a pinctrl mux controller and
+then the board specific .dts file could request those outputs. But there
+may be more than just mux involved like regulators.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Regards,
 
-iQIcBAEBAgAGBQJSpgWJAAoJELSic+t+oim9/+wP+gLcD4f2+f6D1a3//iIYXYxa
-tyVAcFcZNTnfiHMkneI9sZyqRqhrKwzFuMAFulIJJYVgoFnverWn7Pd+0gw2kCmL
-+dEBfIZ/9BKcBMbugX9pom0WhWuxhsa+t26/Ns8+j6pkrIgcE/H7mxgN6igGbsq1
-8pEbrLWJp6Xsmysg5D0klQ4pRNbPGH9hlm2vC2kFkxtbp/e8tjpcjP3LeyU1no7B
-qk59pZuYZm3I52C5ktANqBuU7Ne3iHy0YZw7MtERvH03teemxrKBcFfVFZK5m5QY
-eQeGr2nlle1jbGY/303Hbmt2Zo0PXimC3WFmlsEMWB0GfIbbub6lCuvp2m+jL4Dy
-oghUI2vfrS1KhpkbvrhbL/2LpDC58wHBYcXVqoqZT3P6ILVGukMwfVc4dzC6uUWn
-lWmq2sT+nc8L5xcBa7gwri0KWeIssK+xIaV5oxpOrcngwnzJlYXgJ3Nw32VkZqPH
-M6ZtNO3mhNJeQg7x9lXjd1n/b9h7f4SkEgqkKsa/qAs0BVcGLTu7k++581WT/yjH
-HIcbLMURBDv8BRJsCeFXysM+2LFGz9iRp/9O8czLNkvxJ10uBsxHsje2WDTCn0er
-tliRKK9CtNEC02on+TKnMhG6dYjvzKbfMMVcZYPQrH6D92AxVBjSwqDx6+XsbVrF
-TDHUadcudHomQak87J9D
-=NhSo
------END PGP SIGNATURE-----
-
---UWzACjsgnYjrQHZk--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
