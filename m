@@ -1,30 +1,73 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 5/9] ARM: dts: provide DMA config to pxamci
-Date: Mon, 9 Dec 2013 02:33:58 +0100
-Message-ID: <201312090233.58592.arnd@arndb.de>
-References: <1386348542-9584-1-git-send-email-ynvich@gmail.com> <1386543229-1542-1-git-send-email-ynvich@gmail.com> <1386543229-1542-6-git-send-email-ynvich@gmail.com>
+From: Chris Ruehl <chris.ruehl-CR359r9tUDPXPF5Rlphj1Q@public.gmane.org>
+Subject: Re: [PATCH 1/3] usb: phy-generic: Add GPIO based ChipSelect
+Date: Mon, 09 Dec 2013 09:45:30 +0800
+Message-ID: <52A520BA.1000603@gtsys.com.hk>
+References: <1385967919-13258-1-git-send-email-chris.ruehl@gtsys.com.hk> <1385967919-13258-2-git-send-email-chris.ruehl@gtsys.com.hk> <20131206202453.GF21086@saruman.home>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386543229-1542-6-git-send-email-ynvich@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <zonque@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131206202453.GF21086-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 08 December 2013, Sergei Ianovich wrote:
-> Non-dts implementation supply required DMA channel numbers as
-> IORESOURCE_DMA. However, there is was no way to get them from
-> device tree.
+On Saturday, December 07, 2013 04:24 AM, Felipe Balbi wrote:
+> Hi,
+>
+> On Mon, Dec 02, 2013 at 03:05:17PM +0800, Chris Ruehl wrote:
+>> @@ -231,27 +249,40 @@ static int usb_phy_gen_xceiv_probe(struct platform_device *pdev)
+>>   		return -ENOMEM;
+>>
+>>   	nop->reset_active_low = true;	/* default behaviour */
+>> +	nop->cs_active_low = true;
+>>
+>>   	if (dev->of_node) {
+>>   		struct device_node *node = dev->of_node;
+>>   		enum of_gpio_flags flags;
+>> +		enum of_gpio_flags csflags;
+>>
+>>   		if (of_property_read_u32(node, "clock-frequency",&clk_rate))
+>>   			clk_rate = 0;
+>>
+>>   		needs_vcc = of_property_read_bool(node, "vcc-supply");
+>> +
+>>   		nop->gpio_reset = of_get_named_gpio_flags(node, "reset-gpios",
+>>   								0,&flags);
+>> +
+>
+> two unrelated changes
+>
+>>   		if (nop->gpio_reset == -EPROBE_DEFER)
+>>   			return -EPROBE_DEFER;
+>>
+>>   		nop->reset_active_low = flags&  OF_GPIO_ACTIVE_LOW;
+>>
+>> +		nop->gpio_chipselect = of_get_named_gpio_flags(node, "cs-gpios",
+>> +								0,&csflags);
+>> +		if (gpio_is_valid(nop->gpio_chipselect))
+>> +			nop->cs_active_low = csflags&  OF_GPIO_ACTIVE_LOW;
+>> +
+>>   	} else if (pdata) {
+>>   		type = pdata->type;
+>>   		clk_rate = pdata->clk_rate;
+>>   		needs_vcc = pdata->needs_vcc;
+>>   		nop->gpio_reset = pdata->gpio_reset;
+>> +		nop->gpio_chipselect = pdata->gpio_chipselect;
+>> +	} else {
+>> +		nop->gpio_reset = -1;
+>
+> This line is already going upstream, please remove it, i'll handle the
+> conflict later.
+>
 
-I just wrote a lengthy reply to this email to explain in what ways
-you got it wrong, but then I saw that Daniel has already done all
-the work in the right way in August, so nevermind that.
+Beause the rest of the patch set is not ready to make it in the upstream, I will 
+checkout latest linux-next and send the patch again as a single patch.
 
-It hasn't made it upstream yet, but see http://list-archives.org/2013/08/07/linux-mtd-lists-infradead-org/patch-00-20-arm-pxa-move-core-and-drivers-to-dmaengine/f/3444199144
-for how it's done. Maybe Daniel can comment on the status of his
-patches.
-
-	Arnd
+thanks
+Chris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
