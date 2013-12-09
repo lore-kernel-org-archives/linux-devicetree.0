@@ -1,73 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv8][ 1/5] ASoC: eukrea-tlv320: Add DT
-	support.
-Date: Mon, 9 Dec 2013 18:08:58 +0000
-Message-ID: <20131209180858.GR29268@sirena.org.uk>
-References: <1385567664-758-1-git-send-email-denis@eukrea.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V2 1/2] pinctrl: tegra: Add devicetree binding document
+ for Tegra124
+Date: Mon, 09 Dec 2013 11:11:07 -0700
+Message-ID: <52A607BB.60200@wwwdotorg.org>
+References: <1386585140-1137-1-git-send-email-ldewangan@nvidia.com> <20131209105155.GC29303@e106331-lin.cambridge.arm.com> <52A6005E.3060506@wwwdotorg.org> <20131209174859.GC1809@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4924107867650101112=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1385567664-758-1-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Denis Carikli <denis@eukrea.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Timur Tabi <timur@tabi.org>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lgirdwood@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131209174859.GC1809@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 12/09/2013 10:48 AM, Mark Rutland wrote:
+> On Mon, Dec 09, 2013 at 05:39:42PM +0000, Stephen Warren wrote:
+>> On 12/09/2013 03:51 AM, Mark Rutland wrote:
+>>> On Mon, Dec 09, 2013 at 10:32:19AM +0000, Laxman Dewangan wrote:
+>>>> This device tree binding document describes the Tegra124 pincontrol
+>>>> DT bindings. This document lists all valid properties, names, mux
+>>>> options of Tegra124 pins.
+>>>>
+>>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>>>> ---
+>>>> Changes from V1:
+>>>> - Referred the dt-binding header file on describing the nodes.
+>>>>
+>>>>  .../bindings/pinctrl/nvidia,tegra124-pinmux.txt    |  147 ++++++++++++++++++++
+>>>>  1 files changed, 147 insertions(+), 0 deletions(-)
+>>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
+>>>> new file mode 100644
+>>>> index 0000000..12ef772
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
+>>>> @@ -0,0 +1,147 @@
+>>>> +NVIDIA Tegra124 pinmux controller
+>>>> +
+>>>> +The Tegra124 pinctrl binding is very similar to the Tegra20 and Tegra30
+>>>> +pinctrl binding, as described in nvidia,tegra20-pinmux.txt and
+>>>> +nvidia,tegra30-pinmux.txt. In fact, this document assumes that binding as
+>>>> +a baseline, and only documents the differences between the two bindings.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: "nvidia,tegra124-pinmux"
+>>>> +- reg: Should contain the register physical address and length for each of
+>>>> +  the pad control and mux registers. The first bank of address must be the
+>>>> +  driver strength pad control register address and second bank address must
+>>>> +  be pinmux register address.
+>>>
+>>> The wording here could be improved. The first sentence implies an entry
+>>> for each individual register but I assume these are actually banks of
+>>> registers (the sizes in the exanple imply this). The second sentence is
+>>> more sepcific.
+>>>
+>>> How about something like:
+>>>
+>>> reg: Should contain a list of base address and size pairs for:
+>>>  * first entry - the driver strength and pad control registers
+>>
+>> If this patch gets revised, please s/driver/drive/ here.
+> 
+> Whoops. I'm too used to typing the former.
 
---===============4924107867650101112==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Jy7fHMWyH2pKEqn7"
-Content-Disposition: inline
-
-
---Jy7fHMWyH2pKEqn7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Nov 27, 2013 at 04:54:20PM +0100, Denis Carikli wrote:
-
-> Signed-off-by: Denis Carikli <denis@eukrea.com>
-
-Applied, thanks.  The way you split [PATCHv8][ 1/5] is a bit odd, as is
-the space there.
-
---Jy7fHMWyH2pKEqn7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSpgc3AAoJELSic+t+oim96hgP/A1K+4l/LKX3RDGoOthH8IOD
-9fxxbE2Rj7npbKNgOflQtq1+6urulqyMYRPj5YcBEUZ+LkzVXoUxB3Mdw1n1qc65
-phKHwZCZSqDLPCNPQa4R2DDsVYJk9ginc+VryeaU9P4r6E5Oj7e2PReUlBb2kjgx
-YFFpMpO1OhKkLZVFTzMmS+nB4ibbZlvfN8acJ2ztK9CPuISe29pSP3qV2hKEyv+J
-RnHwBTCUbhhl1hQVAomTlD276M1Ti8pdH8idpSmzfyg07+/pR0Coq19+Xtp3/O0T
-yQsNyJ/fIvTE7EXGZpvlQdr4rKD+Tn32vk9WPhWKUWi8mhBCUTUNQ2+2HXD00UUU
-Z+7u+6ZLTJ9P34GCC92Q8aJTwqUx4WdbMCeZNmsUeFqOOt4iNEhg3Jtun/D0TckP
-ZV19ebByxbtDTok8XKw+kpXoEuHzcsbRyo7lVajq9SWTueRRviyf8NVoKSBvDniP
-1T3YPWH65ATrdxQsOo0jvVekdZUXQ2M1AzyQu5RMFwj/cXAk1S7oTy4rT8Wjw4u8
-TfH/rWAzr18MRTRvOH3QX3u7JEmibnsoldkCJm7eHFjpas6BZ4Zpb9mzuIMzzqjn
-0fHvF0BZM2/UmmIVL9EOJiuBpzY7TJ8cQddrktWKoX4VA3H6xV4c0GME816XIVG6
-10oWroVnSh+7xfU9ijcH
-=Lmgs
------END PGP SIGNATURE-----
-
---Jy7fHMWyH2pKEqn7--
-
---===============4924107867650101112==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============4924107867650101112==--
+Don't worry - I pointed it out because the same typo was in the original
+patch, so I assumed that's where it came from.
