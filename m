@@ -1,44 +1,71 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH 9/9] ARM: pxa27x: device tree support ICP DAS LP-8x4x
-Date: Mon, 09 Dec 2013 19:55:30 +0400
-Message-ID: <1386604530.7152.184.camel@host5.omatika.ru>
-References: <1386348542-9584-1-git-send-email-ynvich@gmail.com>
-	 <1386543229-1542-1-git-send-email-ynvich@gmail.com>
-	 <1386543229-1542-10-git-send-email-ynvich@gmail.com>
-	 <201312090247.24978.arnd@arndb.de>
-	 <1386602213.7152.180.camel@host5.omatika.ru>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: Fix status property of mmc nodes for snow board
+Date: Mon, 9 Dec 2013 08:16:12 -0800
+Message-ID: <CAD=FV=WqgGPZaEz46JLJAPymLA5Wzehgre2Z7X4AFAWN9L_Lvg@mail.gmail.com>
+References: <1386571118-17793-1-git-send-email-yuvaraj.cd@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386602213.7152.180.camel@host5.omatika.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <zonque@gmail.com>, Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386571118-17793-1-git-send-email-yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yuvaraj Kumar C D <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-12-09 at 19:16 +0400, Sergei Ianovich wrote:
-> On Mon, 2013-12-09 at 02:47 +0100, Arnd Bergmann wrote:
-> > On Sunday 08 December 2013, Sergei Ianovich wrote:
-> > > +
-> > > +#ifdef CONFIG_PXA27x
-> > > +extern void __init pxa27x_dt_init_irq(void);
-> 
-> > > +static void __init pxa27x_init_early(void)
-> > > +{
-> > > +     pxa27x_skip_init();
-> > > +}
-> > 
-> > I would prefer not to have an init_early function at all, and instead
-> > check "if (of_have_populated_dt())" in pxa27x_init, or to split
-> > that function into two.
+Yuvaraj,
 
-Although this is counterintuitive, it works. Since of_populate_dt() is
-not required for of_have_populated_dt() to return true, should we rename
-of_have_populated_dt() to of_have_dt()?
+On Sun, Dec 8, 2013 at 10:38 PM, Yuvaraj Kumar C D <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Commit 0c3de788 ("ARM: dts: change status property of dwmmc nodes
+> for exynos5250") missed out handling the exynos5250 snow dts file.
+>
+> Signed-off-by : Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
+> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/cros5250-common.dtsi |    4 ----
+>  arch/arm/boot/dts/exynos5250-snow.dts  |    9 +++++++++
+>  2 files changed, 9 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
+> index 6470536..1ceb62e 100644
+> --- a/arch/arm/boot/dts/cros5250-common.dtsi
+> +++ b/arch/arm/boot/dts/cros5250-common.dtsi
+> @@ -247,10 +247,6 @@
+>                 };
+>         };
+>
+> -       mmc@12210000 {
+> -               status = "disabled";
+> -       };
+> -
+>         mmc@12220000 {
+>                 num-slots = <1>;
+>                 supports-highspeed;
+> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+> index a9395c4..67484d1 100644
+> --- a/arch/arm/boot/dts/exynos5250-snow.dts
+> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
+> @@ -171,11 +171,20 @@
+>                 };
+>         };
+>
+> +       mmc@12200000 {
+> +               status = "okay";
+> +       };
+> +
+> +       mmc@12220000 {
+> +               status = "okay";
+> +       };
+> +
 
-> Device tree is populated in init_machine. However, pxa27x_init is
-> executed before via postcore_initcall. The only chance to run before is
-> to use init_early. What's wrong with this function?
+I probably would have put the 12200000 and 12220000 ones in
+cros5250-common since that's where all of the other stuff relating to
+those ports is.  Some of it may need to be moved around once we get
+the HP Chromebook 11 (exynos5250-spring) in place, but until then it
+seems best to keep it all together.
 
-I was wrong.
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
