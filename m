@@ -1,27 +1,46 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: i.MX28: dts: rename usbphy pin names
-Date: Mon, 9 Dec 2013 12:43:12 +0800
-Message-ID: <20131209044310.GF825@S2101-09.ap.freescale.net>
-References: <1386341800-12098-1-git-send-email-m.grzeschik@pengutronix.de>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 2/7] pinctrl: exynos: add exynos5260 SoC specific data
+Date: Mon, 9 Dec 2013 10:21:55 +0530
+Message-ID: <CAK9yfHxJP8gUpvngcT-iu3j0+=J60X3DojRe9OXb3uek+VVqaQ@mail.gmail.com>
+References: <1386345391-23482-1-git-send-email-rahul.sharma@samsung.com>
+	<1386345391-23482-3-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386341800-12098-1-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1386345391-23482-3-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.ab@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, PANKAJ KUMAR DUBEY <pankaj.dubey@samsung.com>, yg1004.jang@samsung.com, Arun Kumar <arun.kk@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 06, 2013 at 03:56:40PM +0100, Michael Grzeschik wrote:
-> The pins have nothing todo with the phy layer. We better rename them, so
-> it gets clear they are routed to the ehci core not to any phy.
-> 
-> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Hi Rahul, Young-Gun,
 
-Applied, thanks.
+On 6 December 2013 21:26, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+> From: Young-Gun Jang <yg1004.jang@samsung.com>
+>
+> Add Samsung Exynos5260 SoC specific data to enable pinctrl
+> support for all platforms based on EXYNOS5260.
+>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Author's (Young-Gun Jang) signed-off by is missing here.
+
+[snip]
+
+> +
+> +/* pin banks of exynos5260 pin-controller 2 */
+> +static struct samsung_pin_bank exynos5260_pin_banks2[] = {
+> +       EXYNOS_PIN_BANK_EINTG(7, 0x000, "gpz0", 0x00),
+> +       EXYNOS_PIN_BANK_EINTG(4, 0x020, "gpz1", 0x04),
+> +};
+> +
+> +/*
+> + * Samsung pinctrl driver data for Exynos5260 SoC. Exynos5420 SoC includes
+
+s/5420/5260 ?
+
+-- 
+With warm regards,
+Sachin
