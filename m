@@ -1,122 +1,47 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 4/4 v4] ARM: dts: Exynos5420: Add device nodes for TMU blocks
-Date: Mon, 09 Dec 2013 22:32:33 +0100
-Message-ID: <4444992.uYV4fhSHQI@flatron>
-References: <1382004240-3282-1-git-send-email-l.krishna@samsung.com> <1384866359-16157-1-git-send-email-ch.naveen@samsung.com> <52A632DC.6040509@samsung.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 2/3] pinctrl: Add msm8x74 configuration
+Date: Mon, 09 Dec 2013 13:37:45 -0800
+Message-ID: <52A63829.10509@codeaurora.org>
+References: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com>	<1386295805-13708-3-git-send-email-bjorn.andersson@sonymobile.com>	<52A24E08.706@codeaurora.org> <CACRpkdb+9DE6WNfBSp9Y8ErhHjaE-PdezJbYvsLLhiCjXfmA-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <52A632DC.6040509@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, naveenkrishna.ch@gmail.com
-Cc: linux-pm@vger.kernel.org, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdb+9DE6WNfBSp9Y8ErhHjaE-PdezJbYvsLLhiCjXfmA-A@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+On 12/09/13 00:18, Linus Walleij wrote:
+> On Fri, Dec 6, 2013 at 11:22 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>> On 12/05/13 18:10, Bjorn Andersson wrote:
+> As the driver is merged I expect fixes to come in as additional patches.
+>
+>>> Add initial definition of parameters for pinctrl-msm for the msm8x74
+>>> platform.
+>> Hmm. We've tried to remove 'x' from our code because it isn't really
+>> accurate and leads to more confusion.
+> So does this pin controller have a real name in the data sheet?
 
-On Tuesday 10 of December 2013 06:15:08 Kukjin Kim wrote:
-> On 11/19/13 22:05, Naveen Krishna Chatradhi wrote:
-> > Exynos5420 SoC has per core thermal management unit.
-> > 5 TMU channels 4 for CPUs and 5th for GPU.
-> >
-> > This patch adds the device tree nodes to the DT device list.
-> >
-> > Nodes carry the misplaced second base address and the second
-> > clock to access the misplaced base address.
-> >
-> > Signed-off-by: Leela Krishna Amudala<l.krishna@samsung.com>
-> > Signed-off-by: Naveen Krishna Chatradhi<ch.naveen@samsung.com>
-> > Signed-off-by: Andrew Bresticker<abrestic@chromium.org>
-> > ---
-> > Changes since v3:
-> > None, Just respinning
-> >
-> > Changes since v2:
-> > 3. uses the new compatible strings introduced along with adding
-> >     support for Exynso5420.
-> >
-> > Changes since v1:
-> > 1. Nodes carry the misplaced second base address and the second
-> >     clock to access the misplaced base address.
-> > 2. Correct the clock number for the TMU4
-> >
-> >   arch/arm/boot/dts/exynos5420.dtsi |   48 +++++++++++++++++++++++++++++++++++++
-> >   1 file changed, 48 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> > index 6ffefd1..d736b40 100644
-> > --- a/arch/arm/boot/dts/exynos5420.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> > @@ -369,4 +369,52 @@
-> >   		clock-names = "gscl";
-> >   		samsung,power-domain =<&gsc_pd>;
-> >   	};
-> > +
-> > +	/* tmu for CPU0 */
-> > +	tmu@10060000 {
-> > +		compatible = "samsung,exynos5420-tmu";
-> > +		reg =<0x10060000 0x100>;
-> > +		interrupts =<0 65 0>;
-> > +		clocks =<&clock 318>;
-> > +		clock-names = "tmu_apbif";
-> > +	};
-> > +
-> > +	/* tmu for CPU1 */
-> > +	tmu@10064000 {
-> > +		compatible = "samsung,exynos5420-tmu";
-> > +		reg =<0x10064000 0x100>;
-> > +		interrupts =<0 183 0>;
-> > +		clocks =<&clock 318>;
-> > +		clock-names = "tmu_apbif";
-> > +	};
-> > +
-> > +	/* tmu for CPU2 */
-> > +	tmu@10068000 {
-> > +		compatible = "samsung,exynos5420-tmu-triminfo";
-> > +		/* 2nd reg is for the misplaced TRIMINFO register */
-> > +		reg =<0x10068000 0x100>,<0x1006c000 0x4>;
-> > +		interrupts =<0 184 0>;
-> > +		clocks =<&clock 318>;
-> > +		clock-names = "tmu_apbif";
-> > +	};
-> > +
-> > +	/* tmu for CPU3 */
-> > +	tmu@1006c000 {
-> > +		compatible = "samsung,exynos5420-tmu-triminfo-clk";
-> > +		/* 2nd reg is for the misplaced TRIMINFO register */
-> > +		reg =<0x1006c000 0x100>,<0x100a0000 0x4>;
-> > +		interrupts =<0 185 0>;
-> > +		clocks =<&clock 318>,<&clock 319>;
-> > +		clock-names = "tmu_apbif", "tmu_apbif_triminfo";
-> > +	};
-> > +
-> > +	/* tmu for GPU */
-> > +	tmu@100a0000 {
-> > +		compatible = "samsung,exynos5420-tmu-triminfo-clk";
-> > +		/* 2nd reg is for the misplaced TRIMINFO register */
-> > +		reg =<0x100a0000 0x100>,<0x10068000 0x4>;
-> > +		interrupts =<0 215 0>;
-> > +		clocks =<&clock 319>,<&clock 318>;
-> > +		clock-names = "tmu_apbif", "tmu_apbif_triminfo";
-> > +	};
-> >   };
-> 
-> BTW, there is just only this patch to support TMU on exynos5420?
+We call it TLMM (top-level mode mux). So far there have been three major
+revisions of the hardware and 8974 uses the latest version.
 
-This patch is a part of a 4-patch series, but unfortunately it was not
-sent with correct threading, so it's hard to find remaing patches,
-which are:
+>
+> I usually prefer to name the drivers after the name of the IP
+> block rather than the SoC if possible.
+>
+> Or should it just be named pinctrl-msm.c?
 
-[PATCH 1/4 v9] thermal: samsung: replace inten_ bit fields with intclr_
-[PATCH 2/4 v10] thermal: samsung: change base_common to more meaningful base_second
-[PATCH 3/4 v10] thermal: samsung: Add TMU support for Exynos5420 SoCs
+Leaving the pinctrl-msm.c file as in these patches is fine. For the SoC
+specific data files we should use the base chip name which in this case
+is 8974. I suppose the goal of pinctrl-msm8x74.c is to support 8974 and
+8074 SoCs in the same file because they're almost exactly the same minus
+some pins losing their "modem" functions. Given that, the file names are
+fine but the binding and the data structures should be specific about
+which SoC we're talking about.
 
-There are comments to be addressed to those patches, so I guest at least
-one more iteration is needed.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
 
-Naveen, it would be nice if you could send next version with proper
-threading and consistent versioning. Thanks in advance.
-
-Best regards,
-Tomasz
