@@ -1,63 +1,77 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 00/26] OMAPDSS: DT support (Christmas edition)
-Date: Mon, 9 Dec 2013 13:23:31 +0100
-Message-ID: <CABxcv=mTnAcYz3H4CzqJ8McwhxpP8aaSxOH3FFEADUiSaqd8=w@mail.gmail.com>
-References: <52A29A82.106@collabora.co.uk>
-	<52A2A3EF.1030306@collabora.co.uk>
-	<52A5B111.3010307@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 3/4 v9] thermal: samsung: Add TMU support for Exynos5420
+ SoCs
+Date: Mon, 09 Dec 2013 13:43:18 +0100
+Message-ID: <1424435.eCnbAs4DIp@amdc1227>
+References: <1378268629-2886-3-git-send-email-ch.naveen@samsung.com>
+ <1384238225-24632-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52A5B111.3010307@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1384238225-24632-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 9, 2013 at 1:01 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> On 2013-12-07 06:28, Javier Martinez Canillas wrote:
->
->> Actually, I looked at drivers/video/omap2/connector-dvi.c and it does the right
->> thing for legacy platform data probing but no for DT probing:
->>
->> static int dvic_probe_pdata(struct platform_device *pdev)
->> {
->> ..
->>               adapter = i2c_get_adapter(i2c_bus_num);
->>               if (!adapter) {
->>                       dev_err(&pdev->dev,
->>                                       "Failed to get I2C adapter, bus %d\n",
->>                                       i2c_bus_num);
->>                       return -EPROBE_DEFER;
->>               }
->> ..
->> }
->>
->> static int dvic_probe_of(struct platform_device *pdev)
->> {
->> ..
->>                adapter = of_find_i2c_adapter_by_node(adapter_node);
->>                 if (adapter == NULL) {
->>                         dev_err(&pdev->dev, "failed to parse i2c-bus\n");
->>                         omap_dss_put_device(ddata->in);
->>                         return -EINVAL;
->>                 }
->> ..
->> }
->>
->> The following patch solves the issue if you want to include in your patch-set:
->
-> Thanks, I'll add this and the omap3-igep0020 support to my DT branch.
->
+Hi Naveen, Andrew,
 
-Great, thanks a lot for working on this!
+Please see my comments inline.
 
-I'm very happy that we will have proper display support for IGEPv2 on
-v3.14 without any DT hacks or pdata-quirks :-)
+On Tuesday 12 of November 2013 12:07:05 Naveen Krishna Chatradhi wrote:
+> Exynos5420 has 5 TMU channels, the TRIMINFO register is
+> misplaced for TMU channels 2, 3 and 4
+> TRIMINFO at 0x1006c000 contains data for TMU channel 3
+> TRIMINFO at 0x100a0000 contains data for TMU channel 4
+> TRIMINFO at 0x10068000 contains data for TMU channel 2
+> 
+> This patch
+> 1 Adds the neccessary register changes and arch information
+>    to support Exynos5420 SoCs.
+> 2. Handles the gate clock for misplaced TRIMINFO register
+> 3. Updates the Documentation at
+>    Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> 
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> ---
+> Changes since v8:
+> 1. rewrote the Documentation for device tree bindings
+> 2. Merged the https://lkml.org/lkml/2013/11/7/262 (as this is a fix)
+> 3. introduces "samsung,exynos5420-tmu-triminfo" and 
+>    "samsung,exynos5420-tmu-triminfo-clk" to handle the TMU channels on
+>    Exynos5420 more appropriately
+> 
+>  .../devicetree/bindings/thermal/exynos-thermal.txt |   45 +++++++++
+>  drivers/thermal/samsung/exynos_tmu.c               |   58 ++++++++++-
+>  drivers/thermal/samsung/exynos_tmu.h               |    2 +
+>  drivers/thermal/samsung/exynos_tmu_data.c          |  106 ++++++++++++++++++++
+>  drivers/thermal/samsung/exynos_tmu_data.h          |    8 ++
+>  5 files changed, 215 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> index 116cca0..5055b31 100644
+> --- a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> @@ -6,6 +6,11 @@
+>  	       "samsung,exynos4412-tmu"
+>  	       "samsung,exynos4210-tmu"
+>  	       "samsung,exynos5250-tmu"
+> +	       "samsung,exynos5420-tmu" for TMU channel 0, 1 on Exynos5420
+> +	       "samsung,exynos5420-tmu-triminfo" for TMU channel 2 Exynos5420
+> +			(Must pass triminfo base)
+> +	       "samsung,exynos5420-tmu-triminfo-clk" for TMU channel 3 and 4
+> +			Exynos5420 (Must pass triminfo base and triminfo clock)
 
->  Tomi
+I don't think you need those two separate compatible values. Instead you
+can keep only the one that requires clock and specify the same base clock
+as triminfo clock. Also IMHO "samsung,exynos5420-tmu-ext-triminfo" would
+be a better name, as it describes the hardware better (TMU with external
+triminfo block, as opposed to normal TMU that has it internally).
+
+Otherwise the patch looks fine.
 
 Best regards,
-Javier
->
->
+Tomasz
+
