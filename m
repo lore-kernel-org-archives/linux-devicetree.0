@@ -1,89 +1,41 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/3] pinctrl: Add msm8x74 configuration
-Date: Mon, 9 Dec 2013 09:18:33 +0100
-Message-ID: <CACRpkdb+9DE6WNfBSp9Y8ErhHjaE-PdezJbYvsLLhiCjXfmA-A@mail.gmail.com>
-References: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1386295805-13708-3-git-send-email-bjorn.andersson@sonymobile.com>
-	<52A24E08.706@codeaurora.org>
+From: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] usb: ohci-exynos: Change to use phy provided by the
+ generic phy framework
+Date: Sun, 8 Dec 2013 17:55:53 -0800
+Message-ID: <20131209015553.GA27542@kroah.com>
+References: <001401ceda8f$67f1ee50$37d5caf0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52A24E08.706@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <001401ceda8f$67f1ee50$37d5caf0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Kamil Debski' <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Kyungmin Park' <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Kishon Vijay Abraham I' <kishon-l0cyMroinI0@public.gmane.org>, 'Tomasz Figa' <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Sylwester Nawrocki' <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, 'Mateusz Krawczuk' <mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Yulgon Kim' <yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Praveen Paneri' <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Anton Tikhomirov' <av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Kumar Gala' <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 6, 2013 at 11:22 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 12/05/13 18:10, Bjorn Andersson wrote:
+On Wed, Nov 06, 2013 at 10:27:49AM +0900, Jingoo Han wrote:
+> Change the phy provider used from the old usb phy specific to a new one
+> using the generic phy framework.
+> 
+> Signed-off-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Exynos OHCI driver also uses Exynos USB2.0 PHY. Thus, I make this
+> patch based-on Kamil Debski's patchset for adding Exynos USB 2.0 PHY
+> driver.
+> (http://www.spinics.net/lists/linux-samsung-soc/msg24104.html)
+> 
+>  drivers/usb/host/ohci-exynos.c |   28 ++++++++--------------------
+>  1 file changed, 8 insertions(+), 20 deletions(-)
 
-As the driver is merged I expect fixes to come in as additional patches.
+This has some fuzz when applied to my tree, care to redo it against my
+usb-next branch of the usb.git tree on git.kernel.org?
 
->> Add initial definition of parameters for pinctrl-msm for the msm8x74
->> platform.
->
-> Hmm. We've tried to remove 'x' from our code because it isn't really
-> accurate and leads to more confusion.
+thanks,
 
-So does this pin controller have a real name in the data sheet?
-
-I usually prefer to name the drivers after the name of the IP
-block rather than the SoC if possible.
-
-Or should it just be named pinctrl-msm.c?
-
->> +#define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7)     \
->> +     {                                               \
->> +             .name = "gpio" #id,                     \
->> +             .pins = gpio##id##_pins,                \
->> +             .npins = ARRAY_SIZE(gpio##id##_pins),   \
->> +             .funcs = {                              \
->> +                     MSM_MUX_NA, /* gpio mode */     \
->> +                     MSM_MUX_##f1,                   \
->> +                     MSM_MUX_##f2,                   \
->> +                     MSM_MUX_##f3,                   \
->> +                     MSM_MUX_##f4,                   \
->> +                     MSM_MUX_##f5,                   \
->> +                     MSM_MUX_##f6,                   \
->> +                     MSM_MUX_##f7                    \
->> +             },                                      \
->> +             .ctl_reg = 0x1000 + 0x10 * id ,         \
->
-> Weird trailing space here.
-
-Please send patches.
-
-> Also, do we ever plan to have anything more than the gpio pins and the
-> sdc pins? It seems like we spend a lot of space describing exactly the
-> same thing in these structs for each of the 146 gpio pins when we could
-> just know that range 0 to 146 is gpio pins and have different code for
-> that part vs the 6 or something sd pins.
-
-Some platforms use the .gpio_request_enable()/.gpio_disable_free()
-instead of one group per pin for this very reason.
-
->> +static struct of_device_id msm8x74_pinctrl_of_match[] = {
->
-> const?
-
-Please send patches.
-
->> +static int __init msm8x74_pinctrl_init(void)
->> +{
->> +     return platform_driver_register(&msm8x74_pinctrl_driver);
->> +}
->> +arch_initcall(msm8x74_pinctrl_init);
->> +
->> +static void __exit msm8x74_pinctrl_exit(void)
->> +{
->> +     platform_driver_unregister(&msm8x74_pinctrl_driver);
->> +}
->> +module_exit(msm8x74_pinctrl_exit);
->
-> Why not module_platform_driver()? I thought pinctrl supported deferred
-> probing?
-
-It does. Tested patches accepted.
-
-Yours,
-Linus Walleij
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
