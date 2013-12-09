@@ -1,92 +1,118 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] pinctrl: tegra: Add devicetree binding document
- for Tegra124
-Date: Mon, 9 Dec 2013 17:48:59 +0000
-Message-ID: <20131209174859.GC1809@e106331-lin.cambridge.arm.com>
-References: <1386585140-1137-1-git-send-email-ldewangan@nvidia.com>
- <20131209105155.GC29303@e106331-lin.cambridge.arm.com>
- <52A6005E.3060506@wwwdotorg.org>
+From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Subject: Re: [PATCH] ARM64: dts: Add clock-frequency to model cpu nodes
+Date: Mon, 09 Dec 2013 17:56:05 +0000
+Message-ID: <1386611765.3380.70.camel@linaro1.home>
+References: <1386335683-11405-1-git-send-email-broonie@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52A6005E.3060506-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1386335683-11405-1-git-send-email-broonie@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Mark Brown <broonie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2013 at 05:39:42PM +0000, Stephen Warren wrote:
-> On 12/09/2013 03:51 AM, Mark Rutland wrote:
-> > On Mon, Dec 09, 2013 at 10:32:19AM +0000, Laxman Dewangan wrote:
-> >> This device tree binding document describes the Tegra124 pincontrol
-> >> DT bindings. This document lists all valid properties, names, mux
-> >> options of Tegra124 pins.
-> >>
-> >> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >> Changes from V1:
-> >> - Referred the dt-binding header file on describing the nodes.
-> >>
-> >>  .../bindings/pinctrl/nvidia,tegra124-pinmux.txt    |  147 ++++++++++++++++++++
-> >>  1 files changed, 147 insertions(+), 0 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
-> >> new file mode 100644
-> >> index 0000000..12ef772
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
-> >> @@ -0,0 +1,147 @@
-> >> +NVIDIA Tegra124 pinmux controller
-> >> +
-> >> +The Tegra124 pinctrl binding is very similar to the Tegra20 and Tegra30
-> >> +pinctrl binding, as described in nvidia,tegra20-pinmux.txt and
-> >> +nvidia,tegra30-pinmux.txt. In fact, this document assumes that binding as
-> >> +a baseline, and only documents the differences between the two bindings.
-> >> +
-> >> +Required properties:
-> >> +- compatible: "nvidia,tegra124-pinmux"
-> >> +- reg: Should contain the register physical address and length for each of
-> >> +  the pad control and mux registers. The first bank of address must be the
-> >> +  driver strength pad control register address and second bank address must
-> >> +  be pinmux register address.
-> > 
-> > The wording here could be improved. The first sentence implies an entry
-> > for each individual register but I assume these are actually banks of
-> > registers (the sizes in the exanple imply this). The second sentence is
-> > more sepcific.
-> > 
-> > How about something like:
-> > 
-> > reg: Should contain a list of base address and size pairs for:
-> >  * first entry - the driver strength and pad control registers
+On Fri, 2013-12-06 at 13:14 +0000, Mark Brown wrote:
+> From: Mark Brown <broonie@linaro.org>
 > 
-> If this patch gets revised, please s/driver/drive/ here.
+> The clock-frequency property is meaningless for the models but it's a
+> mandatory property so claim that all the cores run at 1MHz.
 
-Whoops. I'm too used to typing the former.
+Is it a mandatory property? I know we seem to get ugly warnings if it's
+missing but I see no mention of it at all in
+Documentation/devicetree/bindings/arm/cpus.txt (am I looking in the
+wrong place?)
 
-> 
-> >  * second entry - the pinmux registers
-> > 
-> > Are these banks well defined? Where do they end?
-> 
-> Yes, the SoC includes specific banks of registers for those two types of
-> configuration. The banks end at whatever address contains the last
-> define register of that type.
-> 
-> > Is there likely to be anything built as an extension of this? Does it
-> > possibly make sense to use reg-names?
-> 
-> Any new SoC would get a new binding, since all the other configuration
-> parameters (lists of valid pins, groups, functions) would be different,
-> so there's no need for future compatibility here.
-> 
+I think this attribute got merged into the kernel with the early power
+related scheduling efforts, but given the state of all that at the
+moment I was guessing it might be obsolete.
 
-Ok, thanks for the info.
+-- Tixy
 
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Mark Brown <broonie@linaro.org>
+> ---
+>  arch/arm64/boot/dts/foundation-v8.dts  | 4 ++++
+>  arch/arm64/boot/dts/rtsm_ve-aemv8a.dts | 4 ++++
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/foundation-v8.dts b/arch/arm64/boot/dts/foundation-v8.dts
+> index 4a060906809d..f91b2fa41fb3 100644
+> --- a/arch/arm64/boot/dts/foundation-v8.dts
+> +++ b/arch/arm64/boot/dts/foundation-v8.dts
+> @@ -34,6 +34,7 @@
+>  			reg = <0x0 0x0>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			clock-frequency = <1000000>;
+>  		};
+>  		cpu@1 {
+>  			device_type = "cpu";
+> @@ -41,6 +42,7 @@
+>  			reg = <0x0 0x1>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			clock-frequency = <1000000>;
+>  		};
+>  		cpu@2 {
+>  			device_type = "cpu";
+> @@ -48,6 +50,7 @@
+>  			reg = <0x0 0x2>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			clock-frequency = <1000000>;
+>  		};
+>  		cpu@3 {
+>  			device_type = "cpu";
+> @@ -55,6 +58,7 @@
+>  			reg = <0x0 0x3>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			clock-frequency = <1000000>;
+>  		};
+>  	};
+>  
+> diff --git a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
+> index 572005ea2217..d7debfe79d9f 100644
+> --- a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
+> +++ b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
+> @@ -37,6 +37,7 @@
+>  			reg = <0x0 0x0>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			clock-frequency = <1000000>;
+>  		};
+>  		cpu@1 {
+>  			device_type = "cpu";
+> @@ -44,6 +45,7 @@
+>  			reg = <0x0 0x1>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			clock-frequency = <1000000>;
+>  		};
+>  		cpu@2 {
+>  			device_type = "cpu";
+> @@ -51,6 +53,7 @@
+>  			reg = <0x0 0x2>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			clock-frequency = <1000000>;
+>  		};
+>  		cpu@3 {
+>  			device_type = "cpu";
+> @@ -58,6 +61,7 @@
+>  			reg = <0x0 0x3>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			clock-frequency = <1000000>;
+>  		};
+>  	};
+>  
