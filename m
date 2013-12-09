@@ -1,60 +1,42 @@
-From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] ARM: at91/dt: define sama5d3 clocks
-Date: Mon, 09 Dec 2013 09:43:23 +0100
-Message-ID: <52A582AB.6010504@overkiz.com>
-References: <1385650171-8756-1-git-send-email-b.brezillon@overkiz.com> <1385650228-8906-1-git-send-email-b.brezillon@overkiz.com> <201312090309.23723.arnd@arndb.de>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v2] serial: rewrite pxa2xx-uart to use 8250_core
+Date: Mon, 9 Dec 2013 09:44:25 +0100
+Message-ID: <20131209084425.GO24559@pengutronix.de>
+References: <1386286149-2855-1-git-send-email-ynvich@gmail.com>
+ <1386321003-8960-1-git-send-email-ynvich@gmail.com>
+ <20131209083815.GA5231@xps8300>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201312090309.23723.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131209083815.GA5231@xps8300>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Sergei Ianovich <ynvich@gmail.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Cameron <quozl@laptop.org>, Russell King <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Zhou Zhu <zzhu3@marvell.com>, Andrew Morton <akpm@linux-foundation.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Stefan Seyfried <seife+kernel@b1-systems.com>, John Crispin <blogic@openwrt.org>, Paul Bolle <pebolle@tiscali.nl>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnd,
+On Mon, Dec 09, 2013 at 10:38:15AM +0200, Heikki Krogerus wrote:
+> Hi,
+> 
+> > +	return 0;
+> > +
+> > + err_clk:
+> > +	clk_unprepare(data->clk);
+> > + err_free_clk:
+> > +	devm_clk_put(&pdev->dev, data->clk);
+> > + err_free:
+> > +	devm_kfree(&pdev->dev, data);
+> 
+> And there labels could be dropped.
 
-On 09/12/2013 03:09, Arnd Bergmann wrote:
-> On Thursday 28 November 2013, Boris BREZILLON wrote:
->> @@ -92,6 +103,8 @@
->>   				dma-names = "tx", "rx";
->>   				pinctrl-names = "default";
->>   				pinctrl-0 = <&pinctrl_spi0>;
->> +				clocks = <&spi0_clk>;
->> +				clock-names = "spi_clk";
->>   				status = "disabled";
->>   			};
->>   
->> @@ -101,6 +114,8 @@
->>   				interrupts = <38 IRQ_TYPE_LEVEL_HIGH 4>;
->>   				pinctrl-names = "default";
->>   				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
->> +				clocks = <&ssc0_clk>;
->> +				clock-names = "pclk";
->>   				status = "disabled";
->>   			};
->>   
-> You are adding "clock-names" properties in a lot of cases. Are you sure you
-> are using the strings that are documented in the respective device bindings
-> for each name? In a lot of cases, drivers just want an anonymous clock
-> and we don't name them.
+This should really be fixed. Explicitly releasing devm_* allocated
+resources invalidates the whole idea of the devm functions. People
+looking for templates shouldn't find examples for this in the kernel.
 
-I rechecked it, and almost all drivers call [devm_]clk_get with a 
-specific clock
-name, and as a result we must specify the "clock-names" property.
-The only exceptions I found are the spi and PIT (Periodic Interval 
-Timer) drivers,
-and "clock-names" property is not defined in these nodes.
+Sascha
 
-
-Best Regards,
-
-Boris
->
-> 	Arnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
