@@ -1,81 +1,71 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 13/26] ARM: omap3.dtsi: add omapdss information
-Date: Mon, 9 Dec 2013 10:04:25 -0800
-Message-ID: <20131209180424.GE12527@atomide.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
- <1386160133-24026-14-git-send-email-tomi.valkeinen@ti.com>
- <20131205170514.GY26766@atomide.com>
- <52A5BB65.5050109@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: Add clock-frequency to model cpu nodes
+Date: Mon, 9 Dec 2013 18:05:41 +0000
+Message-ID: <20131209180541.GQ29268@sirena.org.uk>
+References: <1386335683-11405-1-git-send-email-broonie@kernel.org>
+ <1386611765.3380.70.camel@linaro1.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mX5f3I2XfUAeTwiv"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52A5BB65.5050109@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>
+In-Reply-To: <1386611765.3380.70.camel-K+mpW1F5uff9zxVx7UNMDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [131209 04:46]:
-> On 2013-12-05 19:05, Tony Lindgren wrote:
-> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [131204 04:31]:
-> > 
-> > Description missing.. But other than that can you please check that
-> > the latest patch I posted in thread "[PATCH] ARM: OMAP2+: Fix populating
-> > the hwmod data from device" works with this?
-> >
-> > The test to do is to remove the related reg, interrupt and dma entries
-> > from omap_hwmod_*_data.c, and make sure the related hwmod data is initialized
-> > from DT properly.
-> 
-> I made a quick test with panda, by applying your patch and reverting
-> b38911f3472be89551bfca740adf0009562b9873. That only effectively tests
-> the DISPC IRQ, but that worked fine.
 
-OK I've finally pushed a real branch for the mach-omap2 board-*.c file
-removal patches at omap-for-v3.14/omap3-board-removal so you can use
-that as a base for testing. I did not apply the dpi panel pdata-quirks.c
-patch as we discussed earlier.
- 
-> > I don't know if it makes sense to have them as children of dss_core, they
-> > really all seem to be completely independent devices?
-> 
-> The DSS subdevices depend on the dss_core. dss_core has to be powered up
-> for any of the subdevices to work. This is done automatically by the
-> runtime PM when the subdevices are children of the dss_core.
+--mX5f3I2XfUAeTwiv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-OK thanks. Care to also check that it plays along nicely with the comments
-starting at line 3222 in omap_hwmod_3xxx_data.c? We should set up things
-so we can eventually remove those kind of hwmod workarounds.
- 
-> > BTW, for v3.15, I'm hoping to do patches where we deprecate ti,hwmods
-> > property and do the lookup based on the compatible property instead ;)
-> > So from that point of view we need to get the device mapping right in
-> > the .dtsi files, and don't want to start mixing up separate devices into
-> > single .dtsi entry.
-> 
-> Hmm, was that just a general comment, or something that affects the DSS
-> DT data I have in my patch? As far as I understand, the DSS nodes
-> reflect the current hwmods correctly.
+On Mon, Dec 09, 2013 at 05:56:05PM +0000, Jon Medhurst (Tixy) wrote:
+> On Fri, 2013-12-06 at 13:14 +0000, Mark Brown wrote:
 
-Yes that's what we want if there is a dependency to the dss_core at the
-hardware level and the children cannot be used independently. However,
-if the children can be enabled and clocked independently, then they
-should not be children of the dss_core.
- 
-> With the exception that DPI and SDI do not have a matching hwmod, as
-> they are really part of dss_core/dispc. They are separate nodes as they
-> are "video outputs" the same way as the other subnodes.
-> 
-> I could perhaps remove the DPI and SDI nodes, and have them as direct
-> video ports from DISPC, but... That's easier said than done.
+> > The clock-frequency property is meaningless for the models but it's a
+> > mandatory property so claim that all the cores run at 1MHz.
 
-If you need a dev entry created for those where the phandle of that dev
-is used to select the output for a board, then it makes sense to have
-them. I guess you could also set them as a pinctrl mux controller and
-then the board specific .dts file could request those outputs. But there
-may be more than just mux involved like regulators.
+> Is it a mandatory property? I know we seem to get ugly warnings if it's
+> missing but I see no mention of it at all in
+> Documentation/devicetree/bindings/arm/cpus.txt (am I looking in the
+> wrong place?)
 
-Regards,
+It's mandatory according to ePAPR (see my separate patch copying the
+definition into our copy of the binding documents).
 
-Tony
+> I think this attribute got merged into the kernel with the early power
+> related scheduling efforts, but given the state of all that at the
+> moment I was guessing it might be obsolete.
+
+No, it's still being used.  At the minute mainline should in theory
+balance tasks well enough between the cores when they're all enabled, it
+just won't figure out that it's useful to shut one of the clusters down.
+
+--mX5f3I2XfUAeTwiv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSpgZyAAoJELSic+t+oim9cGgP/Rv7I28IShhIhDxu+hOV4UaP
+Yr5REqP3SMFdQXUXs31hvjAR7W5NoN9q2wl5hBhZvrPCWk27sDLr18MgA8UKNApY
+YsnPQiUxS8leRzScJVrhXDfbU8tE2ByiL97WDcuHwCRfuF1sErn/0boKjPDofaNT
+mQ3621F0336UdbOzX2a6niikDnHyFO2G2jJ/yuDNsP6wERlMac62f6hfvO2+F9qf
+DMc2fKOT2KFOo8OeME37MIKQirViWHCT8iu0zyTYnxztORpbnZ9VF2ZoLIw1fOn9
+Knjl4zvyQBj+a7jmZgAmsCg+zIYqQrJJMEFzl4MFfTNUtE5LGd3lE/OTcPaNQxvf
+0b4UyFQg1CIcUSMDwp7d8HWapWGYov7DhVmrB20uE+0YwZxT85CdrzqIxeuOCdsP
+oQ8mwTBhOfsHvWjKkwiKhGqUtfWMkwD6f3eV9CkUmbKttCaAD2Odt6qXhLcl+sNV
+9fsN/y05VuNxBhGbsWDwuh/4RmkupFOZZYIqZfCrBri1tGl18AQ7O9HqEbgJ02f/
+rRIHxZYNrjCO1xjXMVzr+jPs6MsTw0uYywJxcsSgVoBBl8+vOq0FxALDpEkU9OMq
+e0+aGZmh+IETEYbLm1hOy6PjicF5kYG7r/0a/qgcxlMYNYClyHKGUn3hfqgFum/D
+BGWGC7sOxWJve0JDc3jv
+=b/oi
+-----END PGP SIGNATURE-----
+
+--mX5f3I2XfUAeTwiv--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
