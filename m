@@ -1,66 +1,65 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 15/26] ARM: omap4-panda.dts: add display information
-Date: Mon, 9 Dec 2013 14:56:20 +0200
-Message-ID: <52A5BDF4.2070304@ti.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>	<1386160133-24026-16-git-send-email-tomi.valkeinen@ti.com> <CABxcv=m+-9V2qwvuQgJavQ3qOb2+fBcAoW9G_Mi33BTHCWE85g@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using pinfunc.
+Date: Mon, 9 Dec 2013 13:57:00 +0100
+Message-ID: <CACRpkdbDxNkb9XnVnfVWK9HEKj1mb+VUawh1GMe1bggQVg88KA@mail.gmail.com>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
+	<528BB1F2.4080107@wwwdotorg.org>
+	<CAD=FV=XS0dbE7zfgDGVdp84h4fHH6tfO8aN_HNh1LbOjYy51aQ@mail.gmail.com>
+	<528BB913.6080409@wwwdotorg.org>
+	<CAH9JG2UjnL5bZzNUuJhWY3GpwPD=rJvR2O4Hcpm33G+prSS=BA@mail.gmail.com>
+	<CACRpkdbyjm0X9RX+8WjqQxBPyRjBOAunkqVcO-0KUd1PTdGavA@mail.gmail.com>
+	<5293ACA6.7060403@bracey.fi>
+	<CACRpkdYrPd9tnO48bA_5n+-k=KEDyhY7czkCNhTZfpgF3ar+LQ@mail.gmail.com>
+	<52A11220.8080509@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="sweC9I40gClxwW27U3q7MX5Ud9fwMgckI"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=m+-9V2qwvuQgJavQ3qOb2+fBcAoW9G_Mi33BTHCWE85g@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <52A11220.8080509@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Kevin Bracey <kevin@bracey.fi>, Kyungmin Park <kmpark@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Tomasz Figa <t.figa@samsung.com>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---sweC9I40gClxwW27U3q7MX5Ud9fwMgckI
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Fri, Dec 6, 2013 at 12:54 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 12/03/2013 02:29 AM, Linus Walleij wrote:
 
-On 2013-12-06 10:57, Javier Martinez Canillas wrote:
+(skipped the conversation on weak hogs, we are on the same page
+here, just waiting for someone to start working on it ...)
 
->> +       tfp410: encoder@0 {
->> +               compatible =3D "ti,tfp410";
->> +               gpios =3D <&gpio1 0 0>;   /* 0, power-down */
->> +
->=20
-> Please use the constants from include/dt-bindings/ instead of magic
-> numbers, i.e:
->=20
-> gpios =3D <&gpio1 0 GPIO_ACTIVE_HIGH>;   /* 0, power-down */
+> Related, I prefer to put /all/ static pinctrl configuration into the
+> pinctrl device's "default" state (i.e. use a hog) rather than
+> configuring the static pinctrl setup per device, for another reason too:
+>
+> If a particular IO controller's signals can be routed to n different
+> (sets of) pins, then we need to do *both* of the following when setting
+> up the pinmux:
+>
+> a) Configure the pins we want to host those signals to route to/from
+> that particular IO controller.
+>
+> b) Configure any other pins that could route to/from that particular IO
+> controller as some other function; either disabled, or routed to/from
+> some different IO controller.
+>
+> That is so that the IO controller's RX/input signals are not connected
+> from two different sets of pins at once, which would cause two things to
+> driver them. Depending on HW, this could cause on of:
+>
+> 1) Multiple drivers -> high power usage, or even Silicon damage.
+>
+> 2) Inconsistent configuration, with the "wrong" set of pins driving the
+> IO controller's inputs, and hence the signals on the "correct" pins
+> being ignored -> hard to find bug.
 
-Thanks, fixed now (for all .dts files)
+I'm following, I think what we need here is to think about additional
+behaviours and electronic constraints we can encode into the drivers
+and/or the pin tables to safeguard pin states from electronically
+unsound states.
 
-However... The TFP410 gpio is "power-down". I think we should actually
-mark it as GPIO_ACTIVE_LOW, as setting it to 0 powers down the device.
+That is to say, I prefer the subsystem to be conscious about the
+electronic constraints and navigate around them or put up a road
+block, rather than trying ti avoid driving into the roadblocks by means
+of carefully crafted tables if you get the picture ...
 
- Tomi
-
-
-
---sweC9I40gClxwW27U3q7MX5Ud9fwMgckI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSpb30AAoJEPo9qoy8lh71nU0QAKXbwnH5YsMsNEZwCQWu6gTt
-J4QMj9/LP/Dcm7PMdT7Y+Acuqnen4v2zYbNeiYflOPlT02XAmk+QqmMTUeI74R6o
-l1xlqXD4NZbAy7m3BQERQFQ3uBTmrKdtnlePKm/4MpXN6d0Sdxbg1CYiFv7AetaK
-U5ES0+N6CiCb5dq1AlaAG/qAxMu28EiJQ2xRyrmThHM5jDsg29N4+zY1+Io/nlqj
-D0G/9tSUUQdLzKmPzLbDSaSnX8MAYuh8DqD3gIoQZfbaqSmTPwmwk2iIuyEQtRCs
-bpNPGP9lSkvqLWQK6o6j2eyNv/fmcRlD4nbCJhTyAcl39kWhtfO+W5Uh7zXtgioG
-mgeWiLozKbRLwtwfwrDIs2C1RzuIzrfxRoG7pQLzuMTU8dFtru1yhLwe3UfZkQPt
-B1RAc77QsbvaAfZ9UKX1/iy8JOEqOj2FyI6+QgaBVrcHduTKPOU9Lq1BZYtgnwqg
-WKQtqY+Qr8+HynjUg3eaH0wIIP+s2ZswUq34pFpVP3LuA8u9tqwkOinVaPDpLfRt
-p4FyOxMCMsqyBrGbnSyCoyCtQaGw2lc7jSgugDUBPQSX6syssxocgFBKD8NCA6fO
-Cp/0obq5q+7TSwXD4OlFdIAfySaN/FeGXeITnupGQ7jNBt/T73uN/zFZClvysTdl
-fPQHb59QlPhsA1W70Mev
-=1HkV
------END PGP SIGNATURE-----
-
---sweC9I40gClxwW27U3q7MX5Ud9fwMgckI--
+Yours,
+Linus Walleij
