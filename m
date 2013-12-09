@@ -1,47 +1,227 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] pinctrl: Add msm8x74 configuration
-Date: Mon, 09 Dec 2013 13:37:45 -0800
-Message-ID: <52A63829.10509@codeaurora.org>
-References: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com>	<1386295805-13708-3-git-send-email-bjorn.andersson@sonymobile.com>	<52A24E08.706@codeaurora.org> <CACRpkdb+9DE6WNfBSp9Y8ErhHjaE-PdezJbYvsLLhiCjXfmA-A@mail.gmail.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH] ARM: dts: Add basic devices for AM3517-craneboard
+Date: Mon, 9 Dec 2013 15:55:50 -0600
+Message-ID: <1386626150-23504-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdb+9DE6WNfBSp9Y8ErhHjaE-PdezJbYvsLLhiCjXfmA-A@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/13 00:18, Linus Walleij wrote:
-> On Fri, Dec 6, 2013 at 11:22 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->> On 12/05/13 18:10, Bjorn Andersson wrote:
-> As the driver is merged I expect fixes to come in as additional patches.
->
->>> Add initial definition of parameters for pinctrl-msm for the msm8x74
->>> platform.
->> Hmm. We've tried to remove 'x' from our code because it isn't really
->> accurate and leads to more confusion.
-> So does this pin controller have a real name in the data sheet?
+Craneboard is a hardware development platform based on the Sitara
+AM3517 ARM Cortex - A8 microprocessor device - see [1] for more
+details. Add basic devices for craneboard as replacement for the board
+file scheduled for removal as part of device tree conversion
 
-We call it TLMM (top-level mode mux). So far there have been three major
-revisions of the hardware and 8974 uses the latest version.
+[1] http://craneboard.org
 
->
-> I usually prefer to name the drivers after the name of the IP
-> block rather than the SoC if possible.
->
-> Or should it just be named pinctrl-msm.c?
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+Based on:
+git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git
+branch: omap-for-v3.14/omap3-board-removal 736e812 ARM: OMAP2+: Remove unused platform init code and headers
 
-Leaving the pinctrl-msm.c file as in these patches is fine. For the SoC
-specific data files we should use the base chip name which in this case
-is 8974. I suppose the goal of pinctrl-msm8x74.c is to support 8974 and
-8074 SoCs in the same file because they're almost exactly the same minus
-some pins losing their "modem" functions. Given that, the file names are
-fine but the binding and the data structures should be specific about
-which SoC we're talking about.
+Bootlog: http://pastebin.mozilla.org/3744412
 
+ arch/arm/boot/dts/Makefile              |    1 +
+ arch/arm/boot/dts/am3517-craneboard.dts |  174 +++++++++++++++++++++++++++++++
+ 2 files changed, 175 insertions(+)
+ create mode 100644 arch/arm/boot/dts/am3517-craneboard.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index fc37bca..ad155fc 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -205,6 +205,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+ 	am335x-boneblack.dtb \
+ 	am335x-nano.dtb \
+ 	am335x-base0033.dtb \
++	am3517-craneboard.dtb \
+ 	am3517-evm.dtb \
+ 	am3517_mt_ventoux.dtb \
+ 	am43x-epos-evm.dtb \
+diff --git a/arch/arm/boot/dts/am3517-craneboard.dts b/arch/arm/boot/dts/am3517-craneboard.dts
+new file mode 100644
+index 0000000..2d40b3f
+--- /dev/null
++++ b/arch/arm/boot/dts/am3517-craneboard.dts
+@@ -0,0 +1,174 @@
++/*
++ * See craneboard.org for more details
++ *
++ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++/dts-v1/;
++
++#include "am3517.dtsi"
++
++/ {
++	model = "TI AM3517 CraneBoard (TMDSEVM3517)";
++	compatible = "ti,am3517-craneboard", "ti,am3517", "ti,omap3";
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x10000000>;	/* 256 MB */
++	};
++
++	vbat: fixedregulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "vbat";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
++	};
++};
++
++&davinci_emac {
++	status = "okay";
++};
++
++&davinci_mdio {
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <2600000>;
++
++	tps: tps@2d {
++		reg = <0x2d>;
++	};
++};
++
++&i2c2 {
++	clock-frequency = <400000>;
++	/* goes to expansion connector */
++	status = "disabled";
++};
++
++&i2c3 {
++	clock-frequency = <400000>;
++	/* goes to expansion connector */
++	status = "disabled";
++};
++
++&mmc1 {
++	vmmc-supply = <&vdd2_reg>;
++	bus-width = <8>;
++};
++
++&mmc2 {
++	/* goes to expansion connector */
++	status = "disabled";
++};
++
++&mmc3 {
++	/* goes to expansion connector */
++	status = "disabled";
++};
++
++#include "tps65910.dtsi"
++
++&omap3_pmx_core {
++	tps_pins: pinmux_tps_pins {
++		pinctrl-single,pins = <
++			0x1b0 (PIN_INPUT_PULLUP | MUX_MODE0) /* sys_nirq.sys_nirq */
++		>;
++	};
++};
++
++&tps {
++	pinctrl-names = "default";
++	pinctrl-0 = <&tps_pins>;
++
++	interrupts = <7>; /* SYS_NIRQ cascaded to intc */
++	interrupt-parent = <&intc>;
++
++	ti,en-ck32k-xtal;
++
++	vcc1-supply = <&vbat>;
++	vcc2-supply = <&vbat>;
++	vcc3-supply = <&vbat>;
++	vcc4-supply = <&vbat>;
++	vcc5-supply = <&vbat>;
++	vcc6-supply = <&vbat>;
++	vcc7-supply = <&vbat>;
++	vccio-supply = <&vbat>;
++
++	regulators {
++		vrtc_reg: regulator@0 {
++			regulator-always-on;
++		};
++
++		vio_reg: regulator@1 {
++			regulator-always-on;
++		};
++
++		/*
++		 * Unused:
++		 * VDIG1=2.7V,300mA max
++		 * VDIG2=1.8V,300mA max
++		 */
++
++		vpll_reg: regulator@7 {
++			/* VDDS_DPLL_1V8 */
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
++		vaux1_reg: regulator@9 {
++			/* VDDS_SRAM_1V8 */
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
++		vaux2_reg: regulator@10 {
++			/* VDDA1P8V_USBPHY */
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
++		/* VAUX33 unused */
++
++		vdac_reg: regulator@8 {
++			/* VDDA_DAC_1V8 */
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
++		vmmc_reg: regulator@12 {
++			/* VDDA3P3V_USBPHY */
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++
++		vdd1_reg: regulator@2 {
++			/* VDD_CORE */
++			regulator-name = "vdd_core";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-boot-on;
++			regulator-always-on;
++		};
++
++		vdd2_reg: regulator@3 {
++			/* VDDSHV_3V3 */
++			regulator-name = "vdd_shv";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++
++		/* VDD3 unused */
++	};
++};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.7.9.5
 
