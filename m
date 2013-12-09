@@ -1,99 +1,60 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v5 12/15] usb: phy: Add set_wakeup API
-Date: Mon, 09 Dec 2013 09:41:54 +0100
-Message-ID: <52A58252.6090502@pengutronix.de>
-References: <1386570664-6713-1-git-send-email-peter.chen@freescale.com> <1386570664-6713-13-git-send-email-peter.chen@freescale.com>
+From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] ARM: at91/dt: define sama5d3 clocks
+Date: Mon, 09 Dec 2013 09:43:23 +0100
+Message-ID: <52A582AB.6010504@overkiz.com>
+References: <1385650171-8756-1-git-send-email-b.brezillon@overkiz.com> <1385650228-8906-1-git-send-email-b.brezillon@overkiz.com> <201312090309.23723.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="iUmGBa37g6xwU8xOCWdAGhLK19b8D3LKx"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386570664-6713-13-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201312090309.23723.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---iUmGBa37g6xwU8xOCWdAGhLK19b8D3LKx
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hello Arnd,
 
-On 12/09/2013 07:31 AM, Peter Chen wrote:
-> This API is used to set wakeup enable at PHY registers, in that
-> case, the PHY can be waken up from suspend due to external events,
+On 09/12/2013 03:09, Arnd Bergmann wrote:
+> On Thursday 28 November 2013, Boris BREZILLON wrote:
+>> @@ -92,6 +103,8 @@
+>>   				dma-names = "tx", "rx";
+>>   				pinctrl-names = "default";
+>>   				pinctrl-0 = <&pinctrl_spi0>;
+>> +				clocks = <&spi0_clk>;
+>> +				clock-names = "spi_clk";
+>>   				status = "disabled";
+>>   			};
+>>   
+>> @@ -101,6 +114,8 @@
+>>   				interrupts = <38 IRQ_TYPE_LEVEL_HIGH 4>;
+>>   				pinctrl-names = "default";
+>>   				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
+>> +				clocks = <&ssc0_clk>;
+>> +				clock-names = "pclk";
+>>   				status = "disabled";
+>>   			};
+>>   
+> You are adding "clock-names" properties in a lot of cases. Are you sure you
+> are using the strings that are documented in the respective device bindings
+> for each name? In a lot of cases, drivers just want an anonymous clock
+> and we don't name them.
 
-I' no native speaker, but I think it's "to be woken up".
-
-> like vbus change, dp/dm change and id change.
->=20
-> Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> ---
->  include/linux/usb/phy.h |   16 ++++++++++++++++
->  1 files changed, 16 insertions(+), 0 deletions(-)
->=20
-> diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
-> index a747960..c6ebe1d 100644
-> --- a/include/linux/usb/phy.h
-> +++ b/include/linux/usb/phy.h
-> @@ -111,6 +111,13 @@ struct usb_phy {
->  	int	(*set_suspend)(struct usb_phy *x,
->  				int suspend);
-> =20
-> +	/*
-> +	 * Set wakeup enable for PHY, in that case, the PHY can be
-> +	 * waken up from suspend status due to external events,
-> +	 * like vbus change, dp/dm change and id.
-> +	 */
-> +	int	(*set_wakeup)(struct usb_phy *x, bool enabled);
-> +
->  	/* notify phy connect status change */
->  	int	(*notify_connect)(struct usb_phy *x,
->  			enum usb_device_speed speed);
-> @@ -270,6 +277,15 @@ usb_phy_set_suspend(struct usb_phy *x, int suspend=
-)
->  }
-> =20
->  static inline int
-> +usb_phy_set_wakeup(struct usb_phy *x, bool enabled)
-> +{
-> +	if (x && x->set_wakeup)
-
-can x be NULL?
-
-> +		return x->set_wakeup(x, enabled);
-> +	else
-> +		return 0;
-> +}
-> +
-> +static inline int
->  usb_phy_notify_connect(struct usb_phy *x, enum usb_device_speed speed)=
-
->  {
->  	if (x && x->notify_connect)
->=20
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+I rechecked it, and almost all drivers call [devm_]clk_get with a 
+specific clock
+name, and as a result we must specify the "clock-names" property.
+The only exceptions I found are the spi and PIT (Periodic Interval 
+Timer) drivers,
+and "clock-names" property is not defined in these nodes.
 
 
---iUmGBa37g6xwU8xOCWdAGhLK19b8D3LKx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Best Regards,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+Boris
+>
+> 	Arnd
 
-iEYEARECAAYFAlKlglIACgkQjTAFq1RaXHNXLQCfX4Fb0GI5yphiTWsmEP3P4VG8
-2xMAnR/FW+PEmP1RMsN9J/Pbj+vR9KcN
-=yI7e
------END PGP SIGNATURE-----
-
---iUmGBa37g6xwU8xOCWdAGhLK19b8D3LKx--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
