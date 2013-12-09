@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v5 11/15] usb: phy-mxs: add controller id
-Date: Mon, 9 Dec 2013 14:31:00 +0800
-Message-ID: <1386570664-6713-12-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH v5 12/15] usb: phy: Add set_wakeup API
+Date: Mon, 9 Dec 2013 14:31:01 +0800
+Message-ID: <1386570664-6713-13-git-send-email-peter.chen@freescale.com>
 References: <1386570664-6713-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,40 +12,49 @@ To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@li
 Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-It is used to access un-regulator registers according to
-different controllers.
+This API is used to set wakeup enable at PHY registers, in that
+case, the PHY can be waken up from suspend due to external events,
+like vbus change, dp/dm change and id change.
 
 Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- drivers/usb/phy/phy-mxs-usb.c |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+ include/linux/usb/phy.h |   16 ++++++++++++++++
+ 1 files changed, 16 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index d1c319b..527aab0 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -106,6 +106,7 @@ struct mxs_phy {
- 	struct clk *clk;
- 	const struct mxs_phy_data *data;
- 	struct regmap *regmap_anatop;
-+	int port_id;
- };
+diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
+index a747960..c6ebe1d 100644
+--- a/include/linux/usb/phy.h
++++ b/include/linux/usb/phy.h
+@@ -111,6 +111,13 @@ struct usb_phy {
+ 	int	(*set_suspend)(struct usb_phy *x,
+ 				int suspend);
  
- static inline bool is_imx6q_phy(struct mxs_phy *mxs_phy)
-@@ -284,6 +285,13 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
-+	ret = of_alias_get_id(np, "usbphy");
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
-+		return ret;
-+	}
-+	mxs_phy->port_id = ret;
++	/*
++	 * Set wakeup enable for PHY, in that case, the PHY can be
++	 * waken up from suspend status due to external events,
++	 * like vbus change, dp/dm change and id.
++	 */
++	int	(*set_wakeup)(struct usb_phy *x, bool enabled);
 +
- 	mxs_phy->phy.io_priv		= base;
- 	mxs_phy->phy.dev		= &pdev->dev;
- 	mxs_phy->phy.label		= DRIVER_NAME;
+ 	/* notify phy connect status change */
+ 	int	(*notify_connect)(struct usb_phy *x,
+ 			enum usb_device_speed speed);
+@@ -270,6 +277,15 @@ usb_phy_set_suspend(struct usb_phy *x, int suspend)
+ }
+ 
+ static inline int
++usb_phy_set_wakeup(struct usb_phy *x, bool enabled)
++{
++	if (x && x->set_wakeup)
++		return x->set_wakeup(x, enabled);
++	else
++		return 0;
++}
++
++static inline int
+ usb_phy_notify_connect(struct usb_phy *x, enum usb_device_speed speed)
+ {
+ 	if (x && x->notify_connect)
 -- 
 1.7.8
 
