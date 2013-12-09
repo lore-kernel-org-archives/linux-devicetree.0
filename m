@@ -1,51 +1,105 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] ARM: at91/dt: define sama5d3 clocks
-Date: Mon, 9 Dec 2013 22:05:08 +0100
-Message-ID: <201312092205.08933.arnd@arndb.de>
-References: <1385650171-8756-1-git-send-email-b.brezillon@overkiz.com> <201312091748.58386.arnd@arndb.de> <52A5F79D.9070408@overkiz.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH 4/4 v4] ARM: dts: Exynos5420: Add device nodes for TMU
+ blocks
+Date: Tue, 10 Dec 2013 06:15:08 +0900
+Message-ID: <52A632DC.6040509@samsung.com>
+References: <1382004240-3282-1-git-send-email-l.krishna@samsung.com> <1384866359-16157-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52A5F79D.9070408-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1384866359-16157-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 December 2013, boris brezillon wrote:
-> Are you talking about drivers or clk binding documentation ?
-> In either cases they're not defined :-), but I'd like to know which 
-> file(s) I should update.
+On 11/19/13 22:05, Naveen Krishna Chatradhi wrote:
+> Exynos5420 SoC has per core thermal management unit.
+> 5 TMU channels 4 for CPUs and 5th for GPU.
+>
+> This patch adds the device tree nodes to the DT device list.
+>
+> Nodes carry the misplaced second base address and the second
+> clock to access the misplaced base address.
+>
+> Signed-off-by: Leela Krishna Amudala<l.krishna@samsung.com>
+> Signed-off-by: Naveen Krishna Chatradhi<ch.naveen@samsung.com>
+> Signed-off-by: Andrew Bresticker<abrestic@chromium.org>
+> ---
+> Changes since v3:
+> None, Just respinning
+>
+> Changes since v2:
+> 3. uses the new compatible strings introduced along with adding
+>     support for Exynso5420.
+>
+> Changes since v1:
+> 1. Nodes carry the misplaced second base address and the second
+>     clock to access the misplaced base address.
+> 2. Correct the clock number for the TMU4
+>
+>   arch/arm/boot/dts/exynos5420.dtsi |   48 +++++++++++++++++++++++++++++++++++++
+>   1 file changed, 48 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index 6ffefd1..d736b40 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -369,4 +369,52 @@
+>   		clock-names = "gscl";
+>   		samsung,power-domain =<&gsc_pd>;
+>   	};
+> +
+> +	/* tmu for CPU0 */
+> +	tmu@10060000 {
+> +		compatible = "samsung,exynos5420-tmu";
+> +		reg =<0x10060000 0x100>;
+> +		interrupts =<0 65 0>;
+> +		clocks =<&clock 318>;
+> +		clock-names = "tmu_apbif";
+> +	};
+> +
+> +	/* tmu for CPU1 */
+> +	tmu@10064000 {
+> +		compatible = "samsung,exynos5420-tmu";
+> +		reg =<0x10064000 0x100>;
+> +		interrupts =<0 183 0>;
+> +		clocks =<&clock 318>;
+> +		clock-names = "tmu_apbif";
+> +	};
+> +
+> +	/* tmu for CPU2 */
+> +	tmu@10068000 {
+> +		compatible = "samsung,exynos5420-tmu-triminfo";
+> +		/* 2nd reg is for the misplaced TRIMINFO register */
+> +		reg =<0x10068000 0x100>,<0x1006c000 0x4>;
+> +		interrupts =<0 184 0>;
+> +		clocks =<&clock 318>;
+> +		clock-names = "tmu_apbif";
+> +	};
+> +
+> +	/* tmu for CPU3 */
+> +	tmu@1006c000 {
+> +		compatible = "samsung,exynos5420-tmu-triminfo-clk";
+> +		/* 2nd reg is for the misplaced TRIMINFO register */
+> +		reg =<0x1006c000 0x100>,<0x100a0000 0x4>;
+> +		interrupts =<0 185 0>;
+> +		clocks =<&clock 318>,<&clock 319>;
+> +		clock-names = "tmu_apbif", "tmu_apbif_triminfo";
+> +	};
+> +
+> +	/* tmu for GPU */
+> +	tmu@100a0000 {
+> +		compatible = "samsung,exynos5420-tmu-triminfo-clk";
+> +		/* 2nd reg is for the misplaced TRIMINFO register */
+> +		reg =<0x100a0000 0x100>,<0x10068000 0x4>;
+> +		interrupts =<0 215 0>;
+> +		clocks =<&clock 319>,<&clock 318>;
+> +		clock-names = "tmu_apbif", "tmu_apbif_triminfo";
+> +	};
+>   };
 
-I mean bindings for the devices using these clocks. Each of them should
-list among its properties something like
+BTW, there is just only this patch to support TMU on exynos5420?
 
-|Mandatory properties:
-|  clocks:	One phandle and clock specifier for xxxx
-|  clock-names:	The name of this clock, must be "xxxx"
-
-Of course if we decide to make it an anonymous clock, we still need to
-document the fact that the clock is required.
-
-> I'd rather not change the static clock lookup tables, but if you prefer this
-> approach (and Nicolas agrees), I'll propose a series modifying the drivers
-> and clk lookup table.
-> 
-> Whatever solution is choosen, I guess I'll have to update the drivers dt
-> binding documentation anyway ;-).
-
-Ok. FWIW, I think the best way to stage the clock updates (if the decision
-is to make them anonymous) would be to duplicate all the clocks in question
-in a first patch, and then submit changes for each driver to the respective
-subsystem maintainers with a patch based on the first changeset.
-
-Once all the drivers are converted (i.e. the following merge window), we can
-remove the obsolete entries.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Kukjin
