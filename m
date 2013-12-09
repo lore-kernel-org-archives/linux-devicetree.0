@@ -1,52 +1,110 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 15/26] ARM: omap4-panda.dts: add display information
-Date: Mon, 9 Dec 2013 16:09:09 +0100
-Message-ID: <CABxcv==-aknRfzybA6ify5JSHeiquS9bqAEXumJwhnS6PT0MfA@mail.gmail.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
-	<1386160133-24026-16-git-send-email-tomi.valkeinen@ti.com>
-	<CABxcv=m+-9V2qwvuQgJavQ3qOb2+fBcAoW9G_Mi33BTHCWE85g@mail.gmail.com>
-	<52A5BDF4.2070304@ti.com>
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: Re: [PATCH 9/9] ARM: pxa27x: device tree support ICP DAS LP-8x4x
+Date: Mon, 09 Dec 2013 19:16:53 +0400
+Message-ID: <1386602213.7152.180.camel@host5.omatika.ru>
+References: <1386348542-9584-1-git-send-email-ynvich@gmail.com>
+	 <1386543229-1542-1-git-send-email-ynvich@gmail.com>
+	 <1386543229-1542-10-git-send-email-ynvich@gmail.com>
+	 <201312090247.24978.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52A5BDF4.2070304@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Enric Balletbo Serra <eballetbo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201312090247.24978.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <zonque@gmail.com>, Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
+On Mon, 2013-12-09 at 02:47 +0100, Arnd Bergmann wrote:
+> On Sunday 08 December 2013, Sergei Ianovich wrote:
+> > +
+> > +#ifdef CONFIG_PXA27x
+> > +extern void __init pxa27x_dt_init_irq(void);
 
-On Mon, Dec 9, 2013 at 1:56 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> On 2013-12-06 10:57, Javier Martinez Canillas wrote:
->
->>> +       tfp410: encoder@0 {
->>> +               compatible = "ti,tfp410";
->>> +               gpios = <&gpio1 0 0>;   /* 0, power-down */
->>> +
->>
->> Please use the constants from include/dt-bindings/ instead of magic
->> numbers, i.e:
->>
->> gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;   /* 0, power-down */
->
-> Thanks, fixed now (for all .dts files)
->
-> However... The TFP410 gpio is "power-down". I think we should actually
-> mark it as GPIO_ACTIVE_LOW, as setting it to 0 powers down the device.
->
+> This is not the right place to put an 'extern' declaration, it should go into
+> a header file if it's really needed. Ideally you would not need it at all
+> and just add an IRQCHIP_DECLARE() line into the driver to automatically
+> probe it.
 
-yes, I looked at the TFP410 datasheet [0] and the Power Down pin is
-indeed an active-low, I just replaced to GPIO_ACTIVE_HIGH since you
-were using a constant 0 and include/dt-bindings/gpio/gpio.h defines
-GPIO_ACTIVE_HIGH  as 0.
+I thought I moved it to the header in patch 6/9. I'll just drop the
+line.
 
-I just asked to Enric why we use GPIO_ACTIVE_HIGH for the PD pin on
-the IGEPv2 DTS instad and is because the IGEP board uses a hardware
-signal inverter but that is a special case. I don't know about the
-Panda board since I haven't looked at its datasheet.
+IRQCHIP_DECLARE isn't used on pxa_internal_irq_chip in
+arch/arm/mach-pxa/irq.c, probably for a reason.
 
-Thanks a lot and best regards,
-Javier
+> > +static const struct of_dev_auxdata pxa27x_auxdata_lookup[] __initconst = {
+> > +     OF_DEV_AUXDATA("mrvl,pxa-uart",         0x40100000, "pxa2xx-uart.0", NULL),
+> > +     OF_DEV_AUXDATA("mrvl,pxa-uart",         0x40200000, "pxa2xx-uart.1", NULL),
+> > +     OF_DEV_AUXDATA("mrvl,pxa-uart",         0x40700000, "pxa2xx-uart.2", NULL),
+> > +     OF_DEV_AUXDATA("mrvl,pxa-uart",         0x41600000, "pxa2xx-uart.3", NULL),
+> > +     OF_DEV_AUXDATA("marvell,pxa-mmc",       0x41100000, "pxa2xx-mci.0", NULL),
+> > +     OF_DEV_AUXDATA("intel,pxa27x-gpio",     0x40e00000, "pxa27x-gpio", NULL),
+> > +     OF_DEV_AUXDATA("marvell,pxa-ohci",      0x4c000000, "pxa27x-ohci", NULL),
+> > +     OF_DEV_AUXDATA("mrvl,pxa-i2c",          0x40301680, "pxa2xx-i2c.0", NULL),
+> > +     {}
+> > +};
+> 
+> I guess these are needed only for clock management purposes at the moment?
 
-[0]: http://www.ti.com/lit/ds/slds145b/slds145b.pdf
+Absolutely.
+
+> > +static void __init pxa27x_init_early(void)
+> > +{
+> > +     pxa27x_skip_init();
+> > +}
+> 
+> I would prefer not to have an init_early function at all, and instead
+> check "if (of_have_populated_dt())" in pxa27x_init, or to split
+> that function into two.
+
+Device tree is populated in init_machine. However, pxa27x_init is
+executed before via postcore_initcall. The only chance to run before is
+to use init_early. What's wrong with this function?
+
+> > +static const char *pxa27x_dt_board_compat[] __initdata = {
+> > +     "marvell,pxa27x",
+> > +     NULL,
+> > +};
+> > +
+> > +#ifdef CONFIG_MACH_LP8X4X
+> > +static const char *lp8x4x_dt_board_compat[] __initdata = {
+> > +     "marvell,lp8x4x",
+> > +     NULL,
+> > +};
+> 
+> Note that you should not have wildcards in any "compatible" strings.
+> Just list all the combinations here (pxa270, pxa271, pxa272, and whatever
+> you need for lp8x4x).
+
+Will do.
+
+> > +static void lp8x4x_restart(enum reboot_mode mode, const char *cmd)
+> > +{
+> > +     /* Switch off fast-bus and turbo mode */
+> > +     asm volatile("mcr       p14, 0, %0, c6, c0, 0" : :
+> > +                     "r"(2));
+> > +     /* SDRAM hangs on watchdog reset on Marvell PXA270 (erratum 71) */
+> > +     pxa_restart(REBOOT_SOFT, cmd);
+> > +}
+> > +#endif
+> > +#endif
+> 
+> Since the only difference here is the restart logic, I would prefer here to
+> have only a single DT_MACHINE_START() and do
+> 
+> static void pxa27x_restart(enum reboot_mode mode, const char *cmd)
+> {
+>         /* Switch off fast-bus and turbo mode */
+>         if (of_machine_is_compatible("marvell,lp8x4x"))
+>                 asm volatile("mcr       p14, 0, %0, c6, c0, 0" : : "r"(2));
+> 
+>         /* SDRAM hangs on watchdog reset on Marvell PXA270 (erratum 71) */
+>         if (of_machine_is_compatible("marvell,pxa270"))
+>                 pxa_restart(REBOOT_SOFT, cmd);
+> }
+
+Nice tip, thanks. I've spent 30 minutes to find something like that.
+
+If the device has fast SDRAM, which can reset itself in up to 8ms, the
+device is not affected by E71. So both checks are per-device.
