@@ -1,74 +1,51 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH 1/2] ARM: dts: Fix status property of mmc nodes for snow
- board
-Date: Tue, 10 Dec 2013 05:56:26 +0900
-Message-ID: <52A62E7A.1010006@samsung.com>
-References: <1386571118-17793-1-git-send-email-yuvaraj.cd@samsung.com> <CAD=FV=WqgGPZaEz46JLJAPymLA5Wzehgre2Z7X4AFAWN9L_Lvg@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] ARM: at91/dt: define sama5d3 clocks
+Date: Mon, 9 Dec 2013 22:05:08 +0100
+Message-ID: <201312092205.08933.arnd@arndb.de>
+References: <1385650171-8756-1-git-send-email-b.brezillon@overkiz.com> <201312091748.58386.arnd@arndb.de> <52A5F79D.9070408@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WqgGPZaEz46JLJAPymLA5Wzehgre2Z7X4AFAWN9L_Lvg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, pawel.moll@arm.com, mark.rutland@arm.com, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Sonny Rao <sonnyrao@chromium.org>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52A5F79D.9070408-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/13 01:16, Doug Anderson wrote:
-> Yuvaraj,
->
-> On Sun, Dec 8, 2013 at 10:38 PM, Yuvaraj Kumar C D<yuvaraj.cd@gmail.com>  wrote:
->> Commit 0c3de788 ("ARM: dts: change status property of dwmmc nodes
->> for exynos5250") missed out handling the exynos5250 snow dts file.
->>
->> Signed-off-by : Abhilash Kesavan<a.kesavan@samsung.com>
->>
->> Signed-off-by: Yuvaraj Kumar C D<yuvaraj.cd@samsung.com>
->> ---
->>   arch/arm/boot/dts/cros5250-common.dtsi |    4 ----
->>   arch/arm/boot/dts/exynos5250-snow.dts  |    9 +++++++++
->>   2 files changed, 9 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
->> index 6470536..1ceb62e 100644
->> --- a/arch/arm/boot/dts/cros5250-common.dtsi
->> +++ b/arch/arm/boot/dts/cros5250-common.dtsi
->> @@ -247,10 +247,6 @@
->>                  };
->>          };
->>
->> -       mmc@12210000 {
->> -               status = "disabled";
->> -       };
->> -
->>          mmc@12220000 {
->>                  num-slots =<1>;
->>                  supports-highspeed;
->> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
->> index a9395c4..67484d1 100644
->> --- a/arch/arm/boot/dts/exynos5250-snow.dts
->> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
->> @@ -171,11 +171,20 @@
->>                  };
->>          };
->>
->> +       mmc@12200000 {
->> +               status = "okay";
->> +       };
->> +
->> +       mmc@12220000 {
->> +               status = "okay";
->> +       };
->> +
->
-> I probably would have put the 12200000 and 12220000 ones in
-> cros5250-common since that's where all of the other stuff relating to
-> those ports is.  Some of it may need to be moved around once we get
-> the HP Chromebook 11 (exynos5250-spring) in place, but until then it
-> seems best to keep it all together.
->
-> -Doug
+On Monday 09 December 2013, boris brezillon wrote:
+> Are you talking about drivers or clk binding documentation ?
+> In either cases they're not defined :-), but I'd like to know which 
+> file(s) I should update.
 
-OK, sounds better, I don't know well about the HP Chromebook though ;-)
+I mean bindings for the devices using these clocks. Each of them should
+list among its properties something like
 
-- Kukjin
+|Mandatory properties:
+|  clocks:	One phandle and clock specifier for xxxx
+|  clock-names:	The name of this clock, must be "xxxx"
+
+Of course if we decide to make it an anonymous clock, we still need to
+document the fact that the clock is required.
+
+> I'd rather not change the static clock lookup tables, but if you prefer this
+> approach (and Nicolas agrees), I'll propose a series modifying the drivers
+> and clk lookup table.
+> 
+> Whatever solution is choosen, I guess I'll have to update the drivers dt
+> binding documentation anyway ;-).
+
+Ok. FWIW, I think the best way to stage the clock updates (if the decision
+is to make them anonymous) would be to duplicate all the clocks in question
+in a first patch, and then submit changes for each driver to the respective
+subsystem maintainers with a patch based on the first changeset.
+
+Once all the drivers are converted (i.e. the following merge window), we can
+remove the obsolete entries.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
