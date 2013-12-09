@@ -1,68 +1,43 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v5 03/15] usb: phy-mxs: Add auto clock and power setting
-Date: Mon, 9 Dec 2013 14:30:52 +0800
-Message-ID: <1386570664-6713-4-git-send-email-peter.chen@freescale.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: [PATCH v5 04/15] usb: doc: phy-mxs: update binding for adding anatop phandle
+Date: Mon, 9 Dec 2013 14:30:53 +0800
+Message-ID: <1386570664-6713-5-git-send-email-peter.chen@freescale.com>
 References: <1386570664-6713-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386570664-6713-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1386570664-6713-1-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
+Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With the auto setting, the PHY's clock and power can be
-recovered correctly from low power mode, it is ganranteed by IC logic.
+Add anatop phandle which is used to access anatop registers to
+control PHY's power and other USB operations.
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- drivers/usb/phy/phy-mxs-usb.c |   20 +++++++++++++++++---
- 1 files changed, 17 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/usb/mxs-phy.txt |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 6d49040..0c6f3bc 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -31,6 +31,11 @@
+diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+index d850e55..059536c 100644
+--- a/Documentation/devicetree/bindings/usb/mxs-phy.txt
++++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+@@ -5,10 +5,12 @@ Required properties:
+ for imx6dq and imx6dl, "fsl,imx6sl-usbphy" for imx6sl
+ - reg: Should contain registers location and length
+ - interrupts: Should contain phy interrupt
++- fsl,anatop: phandle for anatop register, it is only for imx6 SoC series
  
- #define BM_USBPHY_CTRL_SFTRST			BIT(31)
- #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
-+#define BM_USBPHY_CTRL_ENAUTOSET_USBCLKS	BIT(26)
-+#define BM_USBPHY_CTRL_ENAUTOCLR_USBCLKGATE	BIT(25)
-+#define BM_USBPHY_CTRL_ENAUTOCLR_PHY_PWD	BIT(20)
-+#define BM_USBPHY_CTRL_ENAUTOCLR_CLKGATE	BIT(19)
-+#define BM_USBPHY_CTRL_ENAUTO_PWRON_PLL		BIT(18)
- #define BM_USBPHY_CTRL_ENUTMILEVEL3		BIT(15)
- #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
- #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
-@@ -96,9 +101,18 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
- 	/* Power up the PHY */
- 	writel(0, base + HW_USBPHY_PWD);
- 
--	/* enable FS/LS device */
--	writel(BM_USBPHY_CTRL_ENUTMILEVEL2 |
--	       BM_USBPHY_CTRL_ENUTMILEVEL3,
-+	/*
-+	 * USB PHY Ctrl Setting
-+	 * - Auto clock/power on
-+	 * - Enable full/low speed support
-+	 */
-+	writel(BM_USBPHY_CTRL_ENAUTOSET_USBCLKS |
-+		BM_USBPHY_CTRL_ENAUTOCLR_USBCLKGATE |
-+		BM_USBPHY_CTRL_ENAUTOCLR_PHY_PWD |
-+		BM_USBPHY_CTRL_ENAUTOCLR_CLKGATE |
-+		BM_USBPHY_CTRL_ENAUTO_PWRON_PLL |
-+		BM_USBPHY_CTRL_ENUTMILEVEL2 |
-+		BM_USBPHY_CTRL_ENUTMILEVEL3,
- 	       base + HW_USBPHY_CTRL_SET);
- 
- 	return 0;
+ Example:
+ usbphy1: usbphy@020c9000 {
+ 	compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
+ 	reg = <0x020c9000 0x1000>;
+ 	interrupts = <0 44 0x04>;
++	fsl,anatop = <&anatop>;
+ };
 -- 
 1.7.8
 
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
