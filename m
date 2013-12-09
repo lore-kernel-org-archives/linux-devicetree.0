@@ -1,71 +1,42 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
- extensions for GMAC in Allwinner A20 SoC's
-Date: Mon, 9 Dec 2013 23:45:13 +0800
-Message-ID: <CAGb2v65T4jqvrW=ZX3fcEm22rU0DEgsRJ2NtXDQ2406Ou5G9MA@mail.gmail.com>
-References: <1386350983-13281-1-git-send-email-wens@csie.org>
- <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A7B2.4000509@st.com> <52A5C950.7070903@cogentembedded.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 3/6] ARM: at91/dt: define sama5d3 clocks
+Date: Mon, 9 Dec 2013 16:48:13 +0100
+Message-ID: <201312091648.13802.arnd@arndb.de>
+References: <1385650171-8756-1-git-send-email-b.brezillon@overkiz.com>
+ <201312090309.23723.arnd@arndb.de> <52A582AB.6010504@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBHOLS6KQKGQELAV7RJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <52A5C950.7070903-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52A582AB.6010504@overkiz.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: boris brezillon <b.brezillon@overkiz.com>
+Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Monday 09 December 2013, boris brezillon wrote:
+> > You are adding "clock-names" properties in a lot of cases. Are you sure you
+> > are using the strings that are documented in the respective device bindings
+> > for each name? In a lot of cases, drivers just want an anonymous clock
+> > and we don't name them.
+> 
+> I rechecked it, and almost all drivers call [devm_]clk_get with a 
+> specific clock
+> name, and as a result we must specify the "clock-names" property.
+> The only exceptions I found are the spi and PIT (Periodic Interval 
+> Timer) drivers,
+> and "clock-names" property is not defined in these nodes.
 
-On Mon, Dec 9, 2013 at 9:44 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Hello.
->
->
-> On 09-12-2013 15:21, srinivas kandagatla wrote:
->
->>> +static int sun7i_gmac_init(struct platform_device *pdev)
->>> +{
->>> +       struct resource *res;
->>> +       struct device *dev = &pdev->dev;
->>> +       void __iomem *addr = NULL;
->>> +       struct plat_stmmacenet_data *plat_dat = NULL;
->
->
->    No need to initialize it since you're assigning to it right below.
->
->
->>> +       u32 priv_clk_reg;
->>> +
->>> +       plat_dat = dev_get_platdata(&pdev->dev);
->>> +       if (!plat_dat)
->>> +               return -EINVAL;
->
->
->> dev_get_platdata will return NULL for DT, So this function will fail all
->> the time.
->
->
->    Indeed, unless the probe() method assigns it from the 'data' field of
-> 'struct of_device_id'.
->
->
->> How is it supposed to work?
->> Am I missing some thing?
->
->
->    Look at stmmac_pltfr_probe().
+Yes, I understood that the *drivers* use the names, but are they actually
+documented in the device bindings? If not, it might be better to change the
+drivers.
 
-Actually, Srinivas is right.
-The platform data assigned from the 'data field' is not the same one as
-dev_get_platdata().
-
-This is something I missed when I was reworking the patches.
-
-
-ChenYu
+	Arnd
