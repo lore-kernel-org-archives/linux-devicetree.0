@@ -1,72 +1,113 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt: Add bindings documentation for
- the ADI AXI-I2S controller
-Date: Mon, 9 Dec 2013 17:47:06 +0000
-Message-ID: <20131209174706.GI29268@sirena.org.uk>
-References: <1386324172-15609-1-git-send-email-lars@metafoo.de>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 07/10] ARM: dts: sun7i: cubietruck: Enable
+ the GMAC
+Date: Mon, 9 Dec 2013 09:48:01 -0800
+Message-ID: <CAGVrzcaVJtoVhEfV+ZiMOkm3F8NBCf2YRcZSrZPMRfQfEr1u=g@mail.gmail.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org>
+ <1386350983-13281-8-git-send-email-wens@csie.org> <CAGVrzcb_r9_p4urz4XkE2A-G85KAHJa4PJ=Gt9a4RPYQNJ6j0g@mail.gmail.com>
+ <CAGb2v64yFhkTXvdq=1VpemULhXew-5fvmSoTBzEb6iFDiSqy1Q@mail.gmail.com>
+ <CAGVrzcaxV88dU3vEVGUiEQihUHLxq+QvQVQ6VvmOFVRsqbbX7w@mail.gmail.com> <CAGb2v675Cg6S512zfM1z4b+wqE_PesDGWdgcmpzWmPzyzXqbeA@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1635298689843953650=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1386324172-15609-1-git-send-email-lars@metafoo.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCH67JWTV4DBB64ETCKQKGQEWQ5HXUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v675Cg6S512zfM1z4b+wqE_PesDGWdgcmpzWmPzyzXqbeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+2013/12/8 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
+> Florian, Giuseppe:
+>
+> On Sat, Dec 7, 2013 at 9:57 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> 2013/12/6 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
+>>> On Sat, Dec 7, 2013 at 5:09 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> 2013/12/6 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
+>>>>> The CubieTruck uses the GMAC with an RGMII phy.
+>>>>>
+>>>>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>>>>> ---
+>>>>>  arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 8 ++++++++
+>>>>>  1 file changed, 8 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>>>> index 8a1009d..af212a2 100644
+>>>>> --- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>>>> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>>>> @@ -33,6 +33,14 @@
+>>>>>                         pinctrl-0 = <&uart0_pins_a>;
+>>>>>                         status = "okay";
+>>>>>                 };
+>>>>> +
+>>>>> +               gmac: ethernet@01c50000 {
+>>>>> +                       pinctrl-names = "default";
+>>>>> +                       pinctrl-0 = <&gmac_pins_rgmii>;
+>>>>> +                       snps,phy-addr = <1>;
+>>>>
+>>>> What is this snps,phy-addr property? Why is not a standard device tree
+>>>> node for an Ethernet PHY node used?
+>>>
+>>> This property is implemented by stmmac and documented in the DT
+>>> bindings. stmmac has not been updated to use Ethernet PHY nodes.
+>>
+>> This driver property should be removed and deprecated since there is
+>> an ePAPR standardized Ethernet PHY node. What I am worried here is the
+>> loss of information, the standard Ethernet DT node allows to specify
+>> much more information (clause, maximum speed, compatible string
+>> etc...).
+>
+> Giuseppe, any thoughts on this?
+>
+>>> Removing this property will not affect the function of the driver.
+>>> The driver probes its MDIO bus and selects the lowest available
+>>> address if not specified.
+>>
+>> So if this is just giving the driver a hint on where to  probe for a
+>> PHY on the MDIO bus, then let's drop it and use the standard DT node
+>> no?
+>
+> Sure. I will remove it from the DT.
+>
+> The stmmac driver does not have a seperate MDIO bus driver, nor
+> does it support Ethernet PHY node bindings. So I will not add
+> a phy node at this moment.
 
---===============1635298689843953650==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="X9VBeeayN7LKkngA"
-Content-Disposition: inline
+This will create needless churn in the DT if you do not do it now,
+worse actually, we switch from a DT which specifically described
+Ethernet PHY nodes properly to a version where it does, to ultimately
+a newer version which does.
 
+Considering that the absence of a "snps,phy-addr" property will still
+result in the MDIO bus to be probed, keeping the existing Ethernet PHY
+nodes, referencing them correclty with a "phy-handle" property, but
+having no explicit support for these in the driver will not result in
+a functional change, and will reduce the DT churn. Also, you could
+still sneak a patch in this patchset which parses the standard
+EThernet PHY node binding.
 
---X9VBeeayN7LKkngA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>
+>>>>> +                       phy-mode = "rgmii";
+>>>>
+>>>> Especially since you use the relatively standard "phy-mode" property here?
+>>>
+>>> Used as specified in stmmac DT bindings.
+>>
+>> That one is kind of okay because of_get_phy_mode() knows about it,
+>> even though ePAPR states this should be "phy-connection-type", so I am
+>> okay with keeping that one because current practice and helpers are
+>> here.
+>
+> It seems all ARM DTs currently use "phy-mode".
 
-On Fri, Dec 06, 2013 at 11:02:49AM +0100, Lars-Peter Clausen wrote:
-> This patch adds the devicetree documentation for the ADI AXI-SPDIF audio
-> controller. The controller has:
-
-Applied all, thanks.
-
---X9VBeeayN7LKkngA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSpgIXAAoJELSic+t+oim9QWQP/0aNoV4b+dMND4wAQatakfmV
-LpNAo8B5LRLG5o6FjI0FU/sfybHPgCGQvJT+kRMIgKLYthihdNrNuGzy4KcyasSR
-U3FNFM4D/PEh3Z6cnhv5tvABmEFtn7o3tWH/KEDObvOOGUud8W0TWjDc4KW3z3ln
-ma9nUX5oVc2IYPd4bRKU0Hx2UJyAgscO+S/lB3hZcc0pAXnEM6J/0tQZzGSGGAnc
-Vb/iRpops4pvSgy4RsETRpb2PMw1jVh5aYm7o6Ew7bjNtOg2N6ArGHBdqeO6bRSf
-WzMpJnDGGt3ydqRdBF3NB3KxdYxSdnpQwrCv3SL8CdSJcjbydGf6G7boZOr+vWuJ
-ItYhUnADVOSyvX5iFtR2aDDJDwaClQaLwZGb7+yAt1ZiSo7dyT+sB8zA5xMCnZlV
-CpPDsoB942i4Im9Ep2RxCD0mPiFKtA+7Cj4AgqQ8rtJYz3Q1rWst/pzE1KRC20QH
-n3DiMn1v5G9FtbWIHpje3Knc1m+z00LdNowXCCbwaBrIjpHdv0BxwDcRc1D/7HNT
-GqJN1dEOM++AZDAecJrpKu65BLMqzPUlZ1zCARdpqddzA/lPT+YYZC/mHmAbZHxq
-Zz7DQpKPI4P5pShiwtR7DjbkueaOkyFp3nPkdowZK7xESmr5PIxcBPsNGbQO+APr
-0Yd3psyAblakotMTm4OW
-=yUjX
------END PGP SIGNATURE-----
-
---X9VBeeayN7LKkngA--
-
---===============1635298689843953650==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1635298689843953650==--
+Which is why I said "is kind of okay", but this is not what the
+standard came up with, ARM is not exactly the best DT-citizen out
+there as people are prone to making up new properties when the
+standard already defines some, anyway....
+--
+Florian
