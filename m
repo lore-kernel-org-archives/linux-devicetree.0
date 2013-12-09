@@ -1,43 +1,33 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v5 0/5] Update Davinci watchdog driver
-Date: Mon, 9 Dec 2013 11:27:23 -0500
-Message-ID: <52A5EF6B.6060700@ti.com>
-References: <1386185970-14488-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v5] clk: si570: Add a driver for SI570 oscillators
+Date: Mon, 9 Dec 2013 08:34:22 -0800
+Message-ID: <20131209163422.GA14048@roeck-us.net>
+References: <1379806839-13762-1-git-send-email-soren.brinkmann@xilinx.com>
+ <b625092b-682c-4072-85a6-9f9d7f378ec0@VA3EHSMHS043.ehs.local>
+ <20131002231751.4343.81234@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1386185970-14488-1-git-send-email-ivan.khoronzhuk@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, wim@iguana.be
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131002231751.4343.81234@quantum>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Wim,
+On Wed, Oct 02, 2013 at 04:17:51PM -0700, Mike Turquette wrote:
+> Quoting S=F6ren Brinkmann (2013-10-02 10:20:38)
+> > Hi Mike,
+> >=20
+> > could you please comment on this/apply it to clk-next?
+>=20
+> It looks good and is in the queue. Will show up in clk-next in a few
+> days.
+>=20
+What happened with this driver ? I just noticed it is not upstream,
+nor in -next. I don't recall seeing any objections, so I am a bit puzzl=
+ed.
 
-On Wednesday 04 December 2013 02:39 PM, Ivan Khoronzhuk wrote:
-> These patches are intended to update Davinci watchdog to use WDT core
-> and reuse driver for keystone arch, because Keystone uses the similar
-> IP like Davinci.
-> 
-
-[..]
-
-> v4..v5:
-> - watchdog: davinci: change driver to use WDT core
-> 	switched off CONFIG_WATCHDOG_NOWAYOUT option
-> 
-Can you please apply the series to your watchdog tree ?
-Do let me know if you want us to prepare a git branch
-to pull from.
-
-Regards,
-Santosh
+Thanks,
+Guenter
