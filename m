@@ -1,41 +1,74 @@
-From: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] usb: ohci-exynos: Change to use phy provided by the
- generic phy framework
-Date: Sun, 8 Dec 2013 17:55:53 -0800
-Message-ID: <20131209015553.GA27542@kroah.com>
-References: <001401ceda8f$67f1ee50$37d5caf0$%han@samsung.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v5 08/15] usb: phy-mxs: Add implementation of nofity_suspend
+ and notify_resume
+Date: Mon, 09 Dec 2013 09:31:28 +0100
+Message-ID: <52A57FE0.5030009@pengutronix.de>
+References: <1386570664-6713-1-git-send-email-peter.chen@freescale.com> <1386570664-6713-9-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <001401ceda8f$67f1ee50$37d5caf0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Kamil Debski' <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Kyungmin Park' <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Kishon Vijay Abraham I' <kishon-l0cyMroinI0@public.gmane.org>, 'Tomasz Figa' <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Sylwester Nawrocki' <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, 'Mateusz Krawczuk' <mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Yulgon Kim' <yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Praveen Paneri' <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Anton Tikhomirov' <av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Kumar Gala' <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="FCBUjgb2dgwxMuHLmWQOLKB6KWl5xSibp"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1386570664-6713-9-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 06, 2013 at 10:27:49AM +0900, Jingoo Han wrote:
-> Change the phy provider used from the old usb phy specific to a new one
-> using the generic phy framework.
-> 
-> Signed-off-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--FCBUjgb2dgwxMuHLmWQOLKB6KWl5xSibp
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On 12/09/2013 07:30 AM, Peter Chen wrote:
+> Implementation of notify_suspend and notify_resume will be different
+> according to mxs_phy_data->flags.
+>=20
+> Signed-off-by: Peter Chen <peter.chen@freescale.com>
 > ---
-> Exynos OHCI driver also uses Exynos USB2.0 PHY. Thus, I make this
-> patch based-on Kamil Debski's patchset for adding Exynos USB 2.0 PHY
-> driver.
-> (http://www.spinics.net/lists/linux-samsung-soc/msg24104.html)
-> 
->  drivers/usb/host/ohci-exynos.c |   28 ++++++++--------------------
->  1 file changed, 8 insertions(+), 20 deletions(-)
+>  drivers/usb/phy/phy-mxs-usb.c |   55 +++++++++++++++++++++++++++++++++=
++++++---
+>  1 files changed, 51 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-us=
+b.c
+> index 0ef930a..e3df53f 100644
+> --- a/drivers/usb/phy/phy-mxs-usb.c
+> +++ b/drivers/usb/phy/phy-mxs-usb.c
+> @@ -166,8 +166,8 @@ static int mxs_phy_suspend(struct usb_phy *x, int s=
+uspend)
+>  static int mxs_phy_on_connect(struct usb_phy *phy,
+>  		enum usb_device_speed speed)
+>  {
+> -	dev_dbg(phy->dev, "%s speed device has connected\n",
+> -		(speed =3D=3D USB_SPEED_HIGH) ? "high" : "non-high");
+> +	dev_dbg(phy->dev, "%s device has connected\n",
+> +		(speed =3D=3D USB_SPEED_HIGH) ? "HS" : "FS/LS");
 
-This has some fuzz when applied to my tree, care to redo it against my
-usb-next branch of the usb.git tree on git.kernel.org?
+What about creating a mxs_phy_dbg() function that adds the "HS" "FS/LS"
+prefix when printing?
 
-thanks,
+Marc
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--FCBUjgb2dgwxMuHLmWQOLKB6KWl5xSibp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlKlf+EACgkQjTAFq1RaXHOEqQCfTlSWndNN28/vVCTmNHcHS47f
+rdIAoIW/tBXL1PL2g505f1wJ39EQm2I4
+=Mesv
+-----END PGP SIGNATURE-----
+
+--FCBUjgb2dgwxMuHLmWQOLKB6KWl5xSibp--
