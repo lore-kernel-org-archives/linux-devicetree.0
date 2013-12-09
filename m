@@ -1,75 +1,53 @@
-From: Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH][RESEND] drivers: bus: omap_l3: remove deprecated IRQF_DISABLED
-Date: Mon,  9 Dec 2013 10:28:39 +0100
-Message-ID: <1386581319-4482-1-git-send-email-michael.opdenacker@free-electrons.com>
-References: <20131017012703.GA4704@kroah.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131017012703.GA4704-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v5 08/15] usb: phy-mxs: Add implementation of
+ nofity_suspend and notify_resume
+Date: Mon, 9 Dec 2013 17:00:42 +0800
+Message-ID: <20131209090041.GA5291@shlinux1.ap.freescale.net>
+References: <1386570664-6713-1-git-send-email-peter.chen@freescale.com>
+ <1386570664-6713-9-git-send-email-peter.chen@freescale.com>
+ <52A57FE0.5030009@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52A57FE0.5030009@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch proposes to remove the use of the IRQF_DISABLED flag
+On Mon, Dec 09, 2013 at 09:31:28AM +0100, Marc Kleine-Budde wrote:
+> On 12/09/2013 07:30 AM, Peter Chen wrote:
+> > Implementation of notify_suspend and notify_resume will be different
+> > according to mxs_phy_data->flags.
+> > 
+> > Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> > ---
+> >  drivers/usb/phy/phy-mxs-usb.c |   55 ++++++++++++++++++++++++++++++++++++++---
+> >  1 files changed, 51 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+> > index 0ef930a..e3df53f 100644
+> > --- a/drivers/usb/phy/phy-mxs-usb.c
+> > +++ b/drivers/usb/phy/phy-mxs-usb.c
+> > @@ -166,8 +166,8 @@ static int mxs_phy_suspend(struct usb_phy *x, int suspend)
+> >  static int mxs_phy_on_connect(struct usb_phy *phy,
+> >  		enum usb_device_speed speed)
+> >  {
+> > -	dev_dbg(phy->dev, "%s speed device has connected\n",
+> > -		(speed == USB_SPEED_HIGH) ? "high" : "non-high");
+> > +	dev_dbg(phy->dev, "%s device has connected\n",
+> > +		(speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
+> 
+> What about creating a mxs_phy_dbg() function that adds the "HS" "FS/LS"
+> prefix when printing?
+> 
 
-It's a NOOP since 2.6.35 and it will be removed one day.
+No, sometimes, there is no speed information when we want to debug
+mxs phy.
 
-Signed-off-by: Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/bus/omap_l3_noc.c | 4 ++--
- drivers/bus/omap_l3_smx.c | 6 ++----
- 2 files changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/bus/omap_l3_noc.c b/drivers/bus/omap_l3_noc.c
-index feeecae623f6..6ada27a911d1 100644
---- a/drivers/bus/omap_l3_noc.c
-+++ b/drivers/bus/omap_l3_noc.c
-@@ -187,7 +187,7 @@ static int omap4_l3_probe(struct platform_device *pdev)
- 	l3->debug_irq = platform_get_irq(pdev, 0);
- 	ret = request_irq(l3->debug_irq,
- 			l3_interrupt_handler,
--			IRQF_DISABLED, "l3-dbg-irq", l3);
-+			0, "l3-dbg-irq", l3);
- 	if (ret) {
- 		pr_crit("L3: request_irq failed to register for 0x%x\n",
- 						l3->debug_irq);
-@@ -197,7 +197,7 @@ static int omap4_l3_probe(struct platform_device *pdev)
- 	l3->app_irq = platform_get_irq(pdev, 1);
- 	ret = request_irq(l3->app_irq,
- 			l3_interrupt_handler,
--			IRQF_DISABLED, "l3-app-irq", l3);
-+			0, "l3-app-irq", l3);
- 	if (ret) {
- 		pr_crit("L3: request_irq failed to register for 0x%x\n",
- 						l3->app_irq);
-diff --git a/drivers/bus/omap_l3_smx.c b/drivers/bus/omap_l3_smx.c
-index acc216491b8a..769d64c0b0fe 100644
---- a/drivers/bus/omap_l3_smx.c
-+++ b/drivers/bus/omap_l3_smx.c
-@@ -238,8 +238,7 @@ static int __init omap3_l3_probe(struct platform_device *pdev)
- 
- 	l3->debug_irq = platform_get_irq(pdev, 0);
- 	ret = request_irq(l3->debug_irq, omap3_l3_app_irq,
--		IRQF_DISABLED | IRQF_TRIGGER_RISING,
--		"l3-debug-irq", l3);
-+		IRQF_TRIGGER_RISING, "l3-debug-irq", l3);
- 	if (ret) {
- 		dev_err(&pdev->dev, "couldn't request debug irq\n");
- 		goto err1;
-@@ -247,8 +246,7 @@ static int __init omap3_l3_probe(struct platform_device *pdev)
- 
- 	l3->app_irq = platform_get_irq(pdev, 1);
- 	ret = request_irq(l3->app_irq, omap3_l3_app_irq,
--		IRQF_DISABLED | IRQF_TRIGGER_RISING,
--		"l3-app-irq", l3);
-+		IRQF_TRIGGER_RISING, "l3-app-irq", l3);
- 	if (ret) {
- 		dev_err(&pdev->dev, "couldn't request app irq\n");
- 		goto err2;
 -- 
-1.8.3.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Peter Chen
+
