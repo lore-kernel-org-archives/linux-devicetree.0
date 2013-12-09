@@ -1,71 +1,80 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: Fix status property of mmc nodes for snow board
-Date: Mon, 9 Dec 2013 08:16:12 -0800
-Message-ID: <CAD=FV=WqgGPZaEz46JLJAPymLA5Wzehgre2Z7X4AFAWN9L_Lvg@mail.gmail.com>
-References: <1386571118-17793-1-git-send-email-yuvaraj.cd@samsung.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
+ extensions for GMAC in Allwinner A20 SoC's
+Date: Mon, 09 Dec 2013 17:16:52 +0100
+Message-ID: <52A5ECF4.6030301@redhat.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org> <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A52C.50605@st.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386571118-17793-1-git-send-email-yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuvaraj Kumar C D <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBCG2S6KQKGQEU7COVDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52A5A52C.50605-qxv4g6HH51o@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Yuvaraj,
+Hi,
 
-On Sun, Dec 8, 2013 at 10:38 PM, Yuvaraj Kumar C D <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Commit 0c3de788 ("ARM: dts: change status property of dwmmc nodes
-> for exynos5250") missed out handling the exynos5250 snow dts file.
+On 12/09/2013 12:10 PM, srinivas kandagatla wrote:
+> Hi Chen,
+> Good to know that Allwinner uses gmac.
 >
-> Signed-off-by : Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> On ST SoC, we have very similar requirements, before we merge any of
+> these changes I think we need to come up with common way to solve both
+> Allwinner and ST SOCs use cases.
 >
-> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/cros5250-common.dtsi |    4 ----
->  arch/arm/boot/dts/exynos5250-snow.dts  |    9 +++++++++
->  2 files changed, 9 insertions(+), 4 deletions(-)
+> I have already posted few patches on to net-dev
+> http://lkml.org/lkml/2013/11/12/243 to add Glue driver on top of stmmac
+> driver.
 >
-> diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
-> index 6470536..1ceb62e 100644
-> --- a/arch/arm/boot/dts/cros5250-common.dtsi
-> +++ b/arch/arm/boot/dts/cros5250-common.dtsi
-> @@ -247,10 +247,6 @@
->                 };
->         };
 >
-> -       mmc@12210000 {
-> -               status = "disabled";
-> -       };
-> -
->         mmc@12220000 {
->                 num-slots = <1>;
->                 supports-highspeed;
-> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-> index a9395c4..67484d1 100644
-> --- a/arch/arm/boot/dts/exynos5250-snow.dts
-> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
-> @@ -171,11 +171,20 @@
->                 };
->         };
+> There are few reasons for the way I have done it.
 >
-> +       mmc@12200000 {
-> +               status = "okay";
-> +       };
-> +
-> +       mmc@12220000 {
-> +               status = "okay";
-> +       };
-> +
+> 1> I did not want to modify gmac driver in any sense to when a new SOC
+> support is added.
+> 2> As the SOC specific glue logic sits on top of standard GMAC IP, it
+> makes sense to represent it proper harware hierarchy.
 
-I probably would have put the 12200000 and 12220000 ones in
-cros5250-common since that's where all of the other stuff relating to
-those ports is.  Some of it may need to be moved around once we get
-the HP Chromebook 11 (exynos5250-spring) in place, but until then it
-seems best to keep it all together.
+On top often is not the correct term / how things are done in practice.
 
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Most of the time the glue are modifications to the ip block, iow in
+hardware they are not nested / hierarchical at all. We've had similar
+constructs for ahci platform drivers and there we are actively trying to
+move away from the whole nested platform devices as that has various
+issues:
+
+1) It is wrong / does not reflect reality
+2) It breaks deferred probing which is often used on SOCs
+
+I actually think Wens' approach using a SOC specific init function
+in platform data is sound, and this is also used a lot else where.
+
+As for using the nested approach elsewhere, I only know about AHCI
+platform driver doing that, and there we are actively trying to move
+away from it.
+
+
+Now reading this has also made me take a closer look at wens' patch
+for this. Wens, I see that you directly modify registers in the ccm
+that is a big no-no instead you should add a helper function to
+sunxi-clk.c and use that, see ie:
+https://bitbucket.org/emiliolopez/linux/commits/2b95847d9aa4aa13317dd7358ffcbd951dcb5eff?at=master
+
+
+Giuseppe, I get the feeling the 0x148 registers st-gmac is using is
+the same story, but I could be wrong. One important reason why accessing
+regs like this directly is a big no no is because it is impossible to
+do proper locking between multiple users, so 2 users doing read / modify / write
+could end up racing. So accesses to such registers should always happen
+through a single driver.
+
+
+Regards,
+
+Hans
