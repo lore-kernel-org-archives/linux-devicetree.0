@@ -1,101 +1,112 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
- extensions for GMAC in Allwinner A20 SoC's
-Date: Mon, 09 Dec 2013 20:04:21 +0100
-Message-ID: <52A61435.6040803@redhat.com>
-References: <1386350983-13281-1-git-send-email-wens@csie.org> <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A52C.50605@st.com> <52A5ECF4.6030301@redhat.com> <CAGb2v64LNxnz--vn0u9zwmt7MQJZ=uz2fs0H3zDSse_XDfdK4Q@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: sunxi: dts: Add ahci support to a
+ few A10 and A20 boards
+Date: Mon, 9 Dec 2013 20:16:20 +0100
+Message-ID: <20131209191620.GN24519@lukather>
+References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl>
+ <1386159055-10264-4-git-send-email-oliver@schinagl.nl>
+ <20131206183339.GG24519@lukather>
+ <52A30ADB.7090106@schinagl.nl>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBPVITCKQKGQEANL333A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v64LNxnz--vn0u9zwmt7MQJZ=uz2fs0H3zDSse_XDfdK4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FhKpTYimqQF2+bfE"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2FPTCKQKGQEQEBLYIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52A30ADB.7090106-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Olliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Cc: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 12/09/2013 06:56 PM, Chen-Yu Tsai wrote:
-> Hi,
->
-> On Tue, Dec 10, 2013 at 12:16 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Hi,
->>
->>
->> On 12/09/2013 12:10 PM, srinivas kandagatla wrote:
->>>
->>> Hi Chen,
->>> Good to know that Allwinner uses gmac.
->>>
->>> On ST SoC, we have very similar requirements, before we merge any of
->>> these changes I think we need to come up with common way to solve both
->>> Allwinner and ST SOCs use cases.
->>>
->>> I have already posted few patches on to net-dev
->>> http://lkml.org/lkml/2013/11/12/243 to add Glue driver on top of stmmac
->>> driver.
->>>
->>>
->>> There are few reasons for the way I have done it.
->>>
->>> 1> I did not want to modify gmac driver in any sense to when a new SOC
->>> support is added.
->>> 2> As the SOC specific glue logic sits on top of standard GMAC IP, it
->>> makes sense to represent it proper harware hierarchy.
->>
->>
->> On top often is not the correct term / how things are done in practice.
->>
->> Most of the time the glue are modifications to the ip block, iow in
->> hardware they are not nested / hierarchical at all. We've had similar
->> constructs for ahci platform drivers and there we are actively trying to
->> move away from the whole nested platform devices as that has various
->> issues:
->>
->> 1) It is wrong / does not reflect reality
->> 2) It breaks deferred probing which is often used on SOCs
->>
->> I actually think Wens' approach using a SOC specific init function
->> in platform data is sound, and this is also used a lot else where.
->>
->> As for using the nested approach elsewhere, I only know about AHCI
->> platform driver doing that, and there we are actively trying to move
->> away from it.
->>
->>
->> Now reading this has also made me take a closer look at wens' patch
->> for this. Wens, I see that you directly modify registers in the ccm
->> that is a big no-no instead you should add a helper function to
->> sunxi-clk.c and use that, see ie:
->> https://bitbucket.org/emiliolopez/linux/commits/2b95847d9aa4aa13317dd7358ffcbd951dcb5eff?at=master
->
-> Yes, this has been raised by Maxime. The odd "GMAC_IF_TYPE_RGMII" or
-> "gmac interface type bit" has been bugging me.
->
-> Additionally, the TX clock has 2 inputs (not counting MII [1]).
-> The internal one is most likely controlled by the GMAC. The clock
-> rate is set internally to match the link speed. The external clock
-> source has controllable dividers to get the correct clock rate.
-> This shouldn't be hard to model with CCF though.
->
-> In hardware, this is probably a mux between the GMAC clock generator
-> and the GMAC data transmit logic.
->
-> My current plan is to choose MII when the clock is disabled,
-> and choose either of the inputs when it is enabled. I will
-> have to learn more about the CCF first.
+--FhKpTYimqQF2+bfE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK, in this case I would be tempted to just go with a custom sunxi
-function in the sunx-clk mode like what we have for the mmc stuff,
-but if you think you can model this with the regular clock stuff,
-that is of course fine too :)
+On Sat, Dec 07, 2013 at 12:47:39PM +0100, Olliver Schinagl wrote:
+> Hey maxime,
+> On 06-12-13 19:33, Maxime Ripard wrote:
+> >Hi Oliver,
+> >
+> >On Wed, Dec 04, 2013 at 01:10:55PM +0100, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org wrote:
+> >>From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+> >>
+> >>This patch adds sunxi sata support to A10 and A20 boards that have such
+> >>a connector. Some boards also feature a regulator via a GPIO and support
+> >>for this is also added.
+> >>
+> >>Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+> >
+> >Your git setup seems to be pretty uncertain about how your first name is=
+ spelled :)
+> I should have formally mention it to confuse less people,
+>=20
+> This is how officially my name is spelled (I left out any 'middle'
+> letters. I never really used it as such, as it confuses people and
+> they always write it wrong anyway. After years I decided that at
+> least on these patches, I should write it down properly
+> (googleability etc in the future). So formally it's Olliver 'oliver'
+> M. Schinagl.
+>=20
+> And no, I won't share my middle name :p
+>=20
+> There! :)
 
-Regards,
+My point was more that the spelling in your From is different from the
+spelling in your SoB.
 
-Hans
+> >>diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i=
+-a20.dtsi
+> >>index 0552a64..b72c69e 100644
+> >>--- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> >>+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> >>@@ -368,6 +368,15 @@
+> >>  			};
+> >>  		};
+> >>
+> >>+		sata: ahci@01c18000 {
+> >>+			compatible =3D "allwinner,sun4i-a10-ahci";
+> >>+			reg =3D <0x01c18000 0x1000>;
+> >>+			interrupts =3D <0 56 1>;
+> Will always fix this to <0 56 4> if i'm not mistaken.
+
+Only the GIC has a three-cells interrupts. So only the A20 and A31 are
+supposed to have this value.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--FhKpTYimqQF2+bfE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSphcEAAoJEBx+YmzsjxAggvkP/REzOU6lkQXL/DoVRWmei9hT
+P4GtbD5//V72PYEP75SM5QIXoUMJyQ9pQ602UecySO8hbljZIvus4po5D9RTX0Ex
+eovynNucLo1X7LJeNrg7Jj1aoLTLMTQtJgUJoTOwppA7M/JkBZFby7q4vUZTWZVt
+Gq2hk17apFhtB4icZFUTLme/Wb9JV5Rx10z6LZHMGLnV0aSzv/DWUSv9MChRrPjt
+k89W7AvL+/paa1bZ8lwlkIFfXwWCQkSbrNdRbbkfui+zFz2+wtmLJAmHq5Pg/GQW
+SUQieKyZL5AVttgvoibF8NvSZe7FLd0LR5sWtauZndDAW3cOmpnkBiDVsr/V+9Af
+vW1UHFMDYotPv2DR3ldzGAhuMlOudLaRrqtZ+5IjXup1PyO66twupB3Ea21QCsWI
+eZEs9wgc8bxeGg4gmPf8xWWytvEa43OF4hS4WlqE8rX6RXI4MSzEJC5lxPK+Y71s
+QR4SpVwRts6s1QijD8KwJiCamO0Rj+nXqt+wCMH7zdf9XgkwuUJMn0yktnSV7qNU
+kVgKGzWq0Yh91XfQHGfA3a5fvLSQ/c97mMQ8hyvUn+TQIHAOd6cVXUfgp9A9HZ/G
+z298cdTSHNDLikNQymeTNKqilh1B3qGY2CJ5u7ycOiC25KY3Dk28BW05ud/6En70
+o9v8slSKVNJ3pihspiJJ
+=h+M3
+-----END PGP SIGNATURE-----
+
+--FhKpTYimqQF2+bfE--
