@@ -1,32 +1,47 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 1/1] ARM: dts: Add initial support for Arndale Octa board
-Date: Mon, 09 Dec 2013 17:37:17 +0100
-Message-ID: <1532760.vJJg0eBWoc@amdc1227>
-References: <1385635081-21072-1-git-send-email-sachin.kamat@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 9/9] ARM: pxa27x: device tree support ICP DAS LP-8x4x
+Date: Mon, 9 Dec 2013 17:39:27 +0100
+Message-ID: <201312091739.27920.arnd@arndb.de>
+References: <1386348542-9584-1-git-send-email-ynvich@gmail.com> <1386602213.7152.180.camel@host5.omatika.ru> <1386604530.7152.184.camel@host5.omatika.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1385635081-21072-1-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386604530.7152.184.camel-7ZSkjCHmnyFmet/iJI8ZvA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sachin,
-
-On Thursday 28 of November 2013 16:08:01 Sachin Kamat wrote:
-> Arndale Octa board is based on Exynos5420 SoC. This patch
-> adds the basic support required for booting it through DT.
+On Monday 09 December 2013, Sergei Ianovich wrote:
+> anovich wrote:
+> > On Mon, 2013-12-09 at 02:47 +0100, Arnd Bergmann wrote:
+> > > On Sunday 08 December 2013, Sergei Ianovich wrote:
+> > > > +
+> > > > +#ifdef CONFIG_PXA27x
+> > > > +extern void __init pxa27x_dt_init_irq(void);
+> > 
+> > > > +static void __init pxa27x_init_early(void)
+> > > > +{
+> > > > +     pxa27x_skip_init();
+> > > > +}
+> > > 
+> > > I would prefer not to have an init_early function at all, and instead
+> > > check "if (of_have_populated_dt())" in pxa27x_init, or to split
+> > > that function into two.
 > 
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> ---
->  arch/arm/boot/dts/Makefile                    |    1 +
->  arch/arm/boot/dts/exynos5420-arndale-octa.dts |   66 +++++++++++++++++++++++++
->  2 files changed, 67 insertions(+)
->  create mode 100644 arch/arm/boot/dts/exynos5420-arndale-octa.dts
+> Although this is counterintuitive, it works. Since of_populate_dt() is
+> not required for of_have_populated_dt() to return true, should we rename
+> of_have_populated_dt() to of_have_dt()?
 
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+I don't think it's worth the change. The explanation for the current
+terminoligy is that of_unflatten() populates the DT device_node structures
+in the kernel from the FTD blob, while of_platform_populate populates the
+platform_device infrastructure from the device nodes.
 
-Best regards,
-Tomasz
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
