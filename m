@@ -1,79 +1,40 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH 5/9] ARM: dts: provide DMA config to pxamci
-Date: Mon, 09 Dec 2013 11:21:05 +0100
-Message-ID: <52A59991.1060305@gmail.com>
-References: <1386348542-9584-1-git-send-email-ynvich@gmail.com>	 <1386543229-1542-1-git-send-email-ynvich@gmail.com>	 <1386543229-1542-6-git-send-email-ynvich@gmail.com>	 <201312090233.58592.arnd@arndb.de> <52A587A0.1050503@gmail.com> <1386581672.7152.108.camel@host5.omatika.ru>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: samsung: Allow pin value to be initialized using pinfunc.
+Date: Mon, 9 Dec 2013 11:22:44 +0100
+Message-ID: <CACRpkdZ7YCt7NvDDqgv6CZS07wkfVJ1NRZHFhqKxcYbdW7pXnQ@mail.gmail.com>
+References: <1384881351-10782-1-git-send-email-t.figa@samsung.com>
+	<528BB1F2.4080107@wwwdotorg.org>
+	<CAD=FV=XS0dbE7zfgDGVdp84h4fHH6tfO8aN_HNh1LbOjYy51aQ@mail.gmail.com>
+	<528BB913.6080409@wwwdotorg.org>
+	<CAH9JG2UjnL5bZzNUuJhWY3GpwPD=rJvR2O4Hcpm33G+prSS=BA@mail.gmail.com>
+	<CACRpkdbyjm0X9RX+8WjqQxBPyRjBOAunkqVcO-0KUd1PTdGavA@mail.gmail.com>
+	<5293ACA6.7060403@bracey.fi>
+	<CACRpkdYrPd9tnO48bA_5n+-k=KEDyhY7czkCNhTZfpgF3ar+LQ@mail.gmail.com>
+	<20131205150747.GW29268@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386581672.7152.108.camel@host5.omatika.ru>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, DOCUMENTATION <linux-doc@vger.kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20131205150747.GW29268@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kevin Bracey <kevin@bracey.fi>, Kyungmin Park <kmpark@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/2013 10:34 AM, Sergei Ianovich wrote:
-> On Mon, 2013-12-09 at 10:04 +0100, Daniel Mack wrote:
->> On 12/09/2013 02:33 AM, Arnd Bergmann wrote:
->>> On Sunday 08 December 2013, Sergei Ianovich wrote:
->>>> Non-dts implementation supply required DMA channel numbers as
->>>> IORESOURCE_DMA. However, there is was no way to get them from
->>>> device tree.
->>>
->>> I just wrote a lengthy reply to this email to explain in what ways
->>> you got it wrong, but then I saw that Daniel has already done all
->>> the work in the right way in August, so nevermind that.
->>>
->>> It hasn't made it upstream yet, but see http://list-archives.org/2013/08/07/linux-mtd-lists-infradead-org/patch-00-20-arm-pxa-move-core-and-drivers-to-dmaengine/f/3444199144
->>> for how it's done. Maybe Daniel can comment on the status of his
->>> patches.
->>
->> I recently rebased all my patches on top of 3.13-rc3, and will resend in
->> couple of days.
->>
->> The real problem here is that by reworking the DMA related PXA bits, all
->> drivers have to be changed at once, and a gradual transition seems
->> impossible. For that, I was asking for help in areas where I don't have
->> any hardware to test my patches on, but unfortunately, nobody got back
->> to me yet.
-> 
-> Nice to have Daniel in this conversation. Your patch series is a big and
-> important work. However, I am not sure I will ever land as is exactly
-> for this reason.
+On Thu, Dec 5, 2013 at 4:07 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Dec 03, 2013 at 10:29:42AM +0100, Linus Walleij wrote:
+>
+>> So a suggested patch to support weak hogs would be interesting
+>> to look at. Can you provide details on how you think this would
+>> work?
+>
+> Or should we be going and applying the default state to all devices on
+> init without worrying about a driver appearing?
 
-Well, I wouldn't be so certain about that statement. As I wrote in the
-cover letter, most of the work is actually done, and I successfully
-tested the new DMA support with a some of the drivers I ported. Others
-were ported blindly, and in case of no reaction, I'd dare to merge them
-and wait for people to report back in case of trouble.
+That doesn't really work: if you have an unused device not in the
+DT you usually mark it "disabled", and then the DT core doesn't
+even create a platform_device for this node.
 
-The only real problem is the PXA camera driver, which does tricky things
-like hot re-queuing of DMA descriptors. That one needs fixing before the
-series can land.
+So doing this would involve parsing the tree and ... yuck.
 
-> My proposal in to actually add new drivers for each platform device with
-> DMA and mark new ones EXPERIMENTAL.
-
-That would cause tree-wide cross-dependencies between drivers, because
-the two DMA controllers can't be used at the same time, and the PXA
-specific API will be unavailable when the mmp-dma driver is selected. My
-patch series (and the DMA controller framework for that matter) aims for
-the opposite - the unification of APIs and drivers.
-
-> When they receive adequate testing
-> we remove the tag and mark the old one OBSOLETE. When we have a new
-> driver for every device presently supported, we will drop the whole old
-> series.
-
-Well, given the feedback I got for the series so far, I fear we'll be
-off to maintain two drivers for each peripheral for a very long time.
-
-I'd rather propose cracking the last nut that's left, and then get the
-thing merged.
-
-Arnd, Haojian? Any opinion here?
-
-
-
-Daniel
+Yours,
+Linus Walleij
