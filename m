@@ -1,42 +1,20 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] Add support for the eukrea-cpuimx28.
-Date: Mon, 9 Dec 2013 11:25:32 +0800
-Message-ID: <20131209032530.GC825@S2101-09.ap.freescale.net>
+Subject: Re: [PATCH 1/3] ARM: dts: mxs: Add 18bit pin config for lcdif.
+Date: Mon, 9 Dec 2013 11:26:07 +0800
+Message-ID: <20131209032605.GD825@S2101-09.ap.freescale.net>
 References: <1386250086-4666-1-git-send-email-denis@eukrea.com>
- <1386250086-4666-3-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1386250086-4666-3-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1386250086-4666-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 02:28:06PM +0100, Denis Carikli wrote:
-> From: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-
-Please have a proper prefix for patch subject.
-
->=20
-> The following devices/functionalities were tested:
->  * Main UART.
->  * Ethernet0.
->  * Ethernet1.
->  * SD.
->  * USB host.
->  * USB otg.
->  * Display(and its backlight).
->  * Touchscreen.
->  * Audio.
->  * nand.
->  * i2c and the pcf8563 device.
->  * The gpio buttons.
->  * The gpio leds.
->  * Watchdog
->=20
+On Thu, Dec 05, 2013 at 02:28:04PM +0100, Denis Carikli wrote:
 > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
@@ -45,56 +23,56 @@ Please have a proper prefix for patch subject.
 > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 > Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 > Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile                   |    2 +
->  arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts |   71 ++++++
->  arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts |   50 ++++
->  arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi |  326 ++++++++++++++++=
-++++++++++
->  arch/arm/mach-mxs/mach-mxs.c                 |    8 +
->  5 files changed, 457 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts
->  create mode 100644 arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts
->  create mode 100644 arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi
 
-<snip>
-
-> diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mx=
-s.c
-> index 02b17f7..3b5f57e 100644
-> --- a/arch/arm/mach-mxs/mach-mxs.c
-> +++ b/arch/arm/mach-mxs/mach-mxs.c
-> @@ -448,6 +448,12 @@ static int __init mxs_restart_init(void)
->  	return 0;
->  }
-> =20
-> +static void __init eukrea_mbmx283lc_init(void)
-> +{
-> +	enable_clk_enet_out();
-
-This shouldn't be needed since commit daa7d39 (net: freescale: fec: add
-support for optional enet_out clk) and commit (f231a9f ARM: dts: mxs:
-add enet_out clock to devicetree)
+Applied #1 and #2.
 
 Shawn
 
-> +	mxs_saif_clkmux_select(MXS_DIGCTL_SAIF_CLKMUX_EXTMSTR0);
-> +}
+> ---
+>  arch/arm/boot/dts/imx28.dtsi |   27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.d=
+tsi
+> index 51ff335..93a7e79 100644
+> --- a/arch/arm/boot/dts/imx28.dtsi
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -668,6 +668,33 @@
+>  					fsl,pull-up =3D <MXS_PULL_DISABLE>;
+>  				};
+> =20
+> +				lcdif_18bit_pins_a: lcdif-18bit@0 {
+> +					reg =3D <0>;
+> +					fsl,pinmux-ids =3D <
+> +						MX28_PAD_LCD_D00__LCD_D0
+> +						MX28_PAD_LCD_D01__LCD_D1
+> +						MX28_PAD_LCD_D02__LCD_D2
+> +						MX28_PAD_LCD_D03__LCD_D3
+> +						MX28_PAD_LCD_D04__LCD_D4
+> +						MX28_PAD_LCD_D05__LCD_D5
+> +						MX28_PAD_LCD_D06__LCD_D6
+> +						MX28_PAD_LCD_D07__LCD_D7
+> +						MX28_PAD_LCD_D08__LCD_D8
+> +						MX28_PAD_LCD_D09__LCD_D9
+> +						MX28_PAD_LCD_D10__LCD_D10
+> +						MX28_PAD_LCD_D11__LCD_D11
+> +						MX28_PAD_LCD_D12__LCD_D12
+> +						MX28_PAD_LCD_D13__LCD_D13
+> +						MX28_PAD_LCD_D14__LCD_D14
+> +						MX28_PAD_LCD_D15__LCD_D15
+> +						MX28_PAD_LCD_D16__LCD_D16
+> +						MX28_PAD_LCD_D17__LCD_D17
+> +					>;
+> +					fsl,drive-strength =3D <MXS_DRIVE_4mA>;
+> +					fsl,voltage =3D <MXS_VOLTAGE_HIGH>;
+> +					fsl,pull-up =3D <MXS_PULL_DISABLE>;
+> +				};
 > +
->  static void __init mxs_machine_init(void)
->  {
->  	struct device_node *root;
-> @@ -486,6 +492,8 @@ static void __init mxs_machine_init(void)
->  		apx4devkit_init();
->  	else if (of_machine_is_compatible("crystalfontz,cfa10036"))
->  		crystalfontz_init();
-> +	else if (of_machine_is_compatible("eukrea,mbmx283lc"))
-> +		eukrea_mbmx283lc_init();
->  	else if (of_machine_is_compatible("i2se,duckbill"))
->  		duckbill_init();
->  	else if (of_machine_is_compatible("msr,m28cu3"))
+>  				lcdif_16bit_pins_a: lcdif-16bit@0 {
+>  					reg =3D <0>;
+>  					fsl,pinmux-ids =3D <
 > --=20
 > 1.7.9.5
 >=20
