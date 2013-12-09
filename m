@@ -1,97 +1,72 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/2] Documentation: dt: Document TSC2005 DT binding
-Date: Mon, 9 Dec 2013 09:46:38 -0800
-Message-ID: <20131209174638.GC12527@atomide.com>
-References: <1386284979-9680-1-git-send-email-sre@debian.org>
- <1386284979-9680-3-git-send-email-sre@debian.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt: Add bindings documentation for
+ the ADI AXI-I2S controller
+Date: Mon, 9 Dec 2013 17:47:06 +0000
+Message-ID: <20131209174706.GI29268@sirena.org.uk>
+References: <1386324172-15609-1-git-send-email-lars@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1386284979-9680-3-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1635298689843953650=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1386324172-15609-1-git-send-email-lars@metafoo.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre@debian.org> [131205 15:11]:
-> Add devicetree binding documentation for TSC2005 touchscreen.
-> 
-> Signed-off-by: Sebastian Reichel <sre@debian.org>
-> ---
->  .../bindings/input/touchscreen/tsc2005.txt         | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-> new file mode 100644
-> index 0000000..4e7df0b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-> @@ -0,0 +1,49 @@
-> +* TSC2005 Touchscreen
-> +
-> +Required properties:
-> + - compatible		      : "ti,tsc2005"
-> + - reg			      : SPI device address
-> + - spi-max-frequency	      : Maximal SPI speed
-> + - interrupts		      : IRQ specifier
-> + - reset-gpio		      : GPIO specifier
-> +
-> +Optional properties:
-> + - ti,fuzz-x		      : integer, X noise value of the touchscreen
-> +				(defaults to 4)
-> + - ti,fuzz-y		      : integer, Y noise value of the touchscreen
-> +				(defaults to 8)
-> + - ti,fuzz-pressure	      : integer, pressure noise value of the touchscreen
-> +				(defaults to 2)
-> + - ti,max-x		      : integer, maximum reported x value
-> +				(defaults to 4096)
-> + - ti,max-y		      : integer, maximum reported y value
-> +				(defaults to 4096)
-> + - ti,max-pressure	      : integer, maximum reported pressure
-> +				(defaults to 4096)
-> + - ti,x-plate-resistance      : integer, resistance of the touchscreen's X plates
-> +				in ohm (defaults to 280)
-> + - ti,esd-recovery-timeout-ms : integer, if the touchscreen does not respond after
-> +				the configured time (in milli seconds), the driver
-> +				will reset it. This is disabled by default.
 
-Instead of adding these optional ti,* properties you can set them in the
-driver directly in the of_match table based on the compatible flag. Then
-you can pass compatible flag like ti,tsc2005-nokia-n900, or the name of
-the LCD panel. Most likely these depend on the LCD panel selected.
-
-Regards,
-
-Tony
+--===============1635298689843953650==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="X9VBeeayN7LKkngA"
+Content-Disposition: inline
 
 
-> +Example:
-> +
-> +&mcspi1 {
-> +	tsc2005@0 {
-> +		compatible = "ti,tsc2005";
-> +		spi-max-frequency = <6000000>;
-> +		reg = <0>;
-> +		reset-gpio = <&gpio4 8 GPIO_ACTIVE_HIGH>; /* 104 */
-> +		interrupt-parent = <&gpio4>;
-> +		interrupts = <4 IRQ_TYPE_NONE>; /* gpio line 100 */
-> +
-> +		ti,fuzz-x = <4>;
-> +		ti,fuzz-y = <7>;
-> +		ti,fuzz-pressure = <2>;
-> +		ti,max-x = <4096>;
-> +		ti,max-y = <4096>;
-> +		ti,max-pressure = <2048>;
-> +		ti,x-plate-resistance = <280>;
-> +		ti,esd-recovery-timeout-ms = <8000>;
-> +	};
-> +}
-> -- 
-> 1.8.4.3
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--X9VBeeayN7LKkngA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Dec 06, 2013 at 11:02:49AM +0100, Lars-Peter Clausen wrote:
+> This patch adds the devicetree documentation for the ADI AXI-SPDIF audio
+> controller. The controller has:
+
+Applied all, thanks.
+
+--X9VBeeayN7LKkngA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSpgIXAAoJELSic+t+oim9QWQP/0aNoV4b+dMND4wAQatakfmV
+LpNAo8B5LRLG5o6FjI0FU/sfybHPgCGQvJT+kRMIgKLYthihdNrNuGzy4KcyasSR
+U3FNFM4D/PEh3Z6cnhv5tvABmEFtn7o3tWH/KEDObvOOGUud8W0TWjDc4KW3z3ln
+ma9nUX5oVc2IYPd4bRKU0Hx2UJyAgscO+S/lB3hZcc0pAXnEM6J/0tQZzGSGGAnc
+Vb/iRpops4pvSgy4RsETRpb2PMw1jVh5aYm7o6Ew7bjNtOg2N6ArGHBdqeO6bRSf
+WzMpJnDGGt3ydqRdBF3NB3KxdYxSdnpQwrCv3SL8CdSJcjbydGf6G7boZOr+vWuJ
+ItYhUnADVOSyvX5iFtR2aDDJDwaClQaLwZGb7+yAt1ZiSo7dyT+sB8zA5xMCnZlV
+CpPDsoB942i4Im9Ep2RxCD0mPiFKtA+7Cj4AgqQ8rtJYz3Q1rWst/pzE1KRC20QH
+n3DiMn1v5G9FtbWIHpje3Knc1m+z00LdNowXCCbwaBrIjpHdv0BxwDcRc1D/7HNT
+GqJN1dEOM++AZDAecJrpKu65BLMqzPUlZ1zCARdpqddzA/lPT+YYZC/mHmAbZHxq
+Zz7DQpKPI4P5pShiwtR7DjbkueaOkyFp3nPkdowZK7xESmr5PIxcBPsNGbQO+APr
+0Yd3psyAblakotMTm4OW
+=yUjX
+-----END PGP SIGNATURE-----
+
+--X9VBeeayN7LKkngA--
+
+--===============1635298689843953650==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1635298689843953650==--
