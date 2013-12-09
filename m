@@ -1,59 +1,105 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH 5/9] ARM: dts: provide DMA config to pxamci
-Date: Mon, 09 Dec 2013 10:04:32 +0100
-Message-ID: <52A587A0.1050503@gmail.com>
-References: <1386348542-9584-1-git-send-email-ynvich@gmail.com>
- <1386543229-1542-1-git-send-email-ynvich@gmail.com>
- <1386543229-1542-6-git-send-email-ynvich@gmail.com>
- <201312090233.58592.arnd@arndb.de>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v5 15/15] usb: phy-mxs: Add sync time after controller
+ clear phcd
+Date: Mon, 09 Dec 2013 10:05:17 +0100
+Message-ID: <52A587CD.7010203@pengutronix.de>
+References: <1386570664-6713-1-git-send-email-peter.chen@freescale.com> <1386570664-6713-16-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201312090233.58592.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Sergei Ianovich <ynvich@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Seungwon Jeon <tgih.jun@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, DOCUMENTATION <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jaehoon Chung <jh80.chung@samsung.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="9m8ao2HWBMOBJpM88hfu7D7OKBwhwFAJ4"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1386570664-6713-16-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/2013 02:33 AM, Arnd Bergmann wrote:
-> On Sunday 08 December 2013, Sergei Ianovich wrote:
->> Non-dts implementation supply required DMA channel numbers as
->> IORESOURCE_DMA. However, there is was no way to get them from
->> device tree.
-> 
-> I just wrote a lengthy reply to this email to explain in what ways
-> you got it wrong, but then I saw that Daniel has already done all
-> the work in the right way in August, so nevermind that.
-> 
-> It hasn't made it upstream yet, but see http://list-archives.org/2013/08/07/linux-mtd-lists-infradead-org/patch-00-20-arm-pxa-move-core-and-drivers-to-dmaengine/f/3444199144
-> for how it's done. Maybe Daniel can comment on the status of his
-> patches.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--9m8ao2HWBMOBJpM88hfu7D7OKBwhwFAJ4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-I recently rebased all my patches on top of 3.13-rc3, and will resend in
-couple of days.
+On 12/09/2013 07:31 AM, Peter Chen wrote:
+> After clear portsc.phcd, PHY needs 200us stable time for switch
+> 32K clock to AHB clock.
 
-The real problem here is that by reworking the DMA related PXA bits, all
-drivers have to be changed at once, and a gradual transition seems
-impossible. For that, I was asking for help in areas where I don't have
-any hardware to test my patches on, but unfortunately, nobody got back
-to me yet.
+If this is a general bugbix, please move it to the start of this series
+and add stable on Cc. I think I hit the bug on the second USB port of a
+custom MX28 board, the stmp_reset_block() in the USB phy will fail.
 
-In particular, the pxa camera driver is something Robert (cc) wanted to
-have a look at. Robert, any updates on this?
+Is the problem documented somewhere?
+
+Is it possible to add the delay in the clock framework? I think only the
+regulator framework has a configurable delay for the regulator to stabili=
+ze.
+
+> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> ---
+>  drivers/usb/phy/phy-mxs-usb.c |   11 +++++++++++
+>  1 files changed, 11 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-us=
+b.c
+> index e18fdf3..7ae5225 100644
+> --- a/drivers/usb/phy/phy-mxs-usb.c
+> +++ b/drivers/usb/phy/phy-mxs-usb.c
+> @@ -151,6 +151,15 @@ static inline bool is_imx6sl_phy(struct mxs_phy *m=
+xs_phy)
+>  	return mxs_phy->data =3D=3D &imx6sl_phy_data;
+>  }
+> =20
+> +/*
+> + * PHY needs some 32K cycles to switch from 32K clock to
+> + * bus (such as AHB/AXI, etc) clock.
+> + */
+> +static void mxs_phy_clock_switch(void)
+> +{
+> +	usleep_range(300, 400);
+> +}
+> +
+>  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+>  {
+>  	int ret;
+> @@ -276,6 +285,7 @@ static int mxs_phy_init(struct usb_phy *phy)
+>  {
+>  	struct mxs_phy *mxs_phy =3D to_mxs_phy(phy);
+> =20
+> +	mxs_phy_clock_switch();
+>  	clk_prepare_enable(mxs_phy->clk);
+>  	return mxs_phy_hw_init(mxs_phy);
+>  }
+> @@ -300,6 +310,7 @@ static int mxs_phy_suspend(struct usb_phy *x, int s=
+uspend)
+>  		       x->io_priv + HW_USBPHY_CTRL_SET);
+>  		clk_disable_unprepare(mxs_phy->clk);
+>  	} else {
+> +		mxs_phy_clock_switch();
+>  		clk_prepare_enable(mxs_phy->clk);
+>  		writel(BM_USBPHY_CTRL_CLKGATE,
+>  		       x->io_priv + HW_USBPHY_CTRL_CLR);
+>=20
+
+Marc
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
-Anyway, I'll have to clean up some details and will resend my patches
-very soon.
+--9m8ao2HWBMOBJpM88hfu7D7OKBwhwFAJ4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
 
-Thanks,
-Daniel
+iEYEARECAAYFAlKlh80ACgkQjTAFq1RaXHNwIQCfUFbJ7ad92JXAXxVqF9JVYHdo
+nF0AoJCw6dnimGE8Wd4bm4j8LOlEPCsu
+=PtY6
+-----END PGP SIGNATURE-----
+
+--9m8ao2HWBMOBJpM88hfu7D7OKBwhwFAJ4--
