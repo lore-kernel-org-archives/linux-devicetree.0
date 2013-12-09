@@ -1,79 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 9/9] ARM: pxa27x: device tree support ICP DAS LP-8x4x
-Date: Mon, 9 Dec 2013 17:25:45 +0100
-Message-ID: <201312091725.46212.arnd@arndb.de>
-References: <1386348542-9584-1-git-send-email-ynvich@gmail.com> <201312090247.24978.arnd@arndb.de> <1386602213.7152.180.camel@host5.omatika.ru>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v5 0/5] Update Davinci watchdog driver
+Date: Mon, 9 Dec 2013 11:27:23 -0500
+Message-ID: <52A5EF6B.6060700@ti.com>
+References: <1386185970-14488-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386602213.7152.180.camel@host5.omatika.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <zonque@gmail.com>, Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1386185970-14488-1-git-send-email-ivan.khoronzhuk@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, wim@iguana.be
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 December 2013, Sergei Ianovich wrote:
-> On Mon, 2013-12-09 at 02:47 +0100, Arnd Bergmann wrote:
-> > On Sunday 08 December 2013, Sergei Ianovich wrote:
-> > > +
-> > > +#ifdef CONFIG_PXA27x
-> > > +extern void __init pxa27x_dt_init_irq(void);
+Wim,
+
+On Wednesday 04 December 2013 02:39 PM, Ivan Khoronzhuk wrote:
+> These patches are intended to update Davinci watchdog to use WDT core
+> and reuse driver for keystone arch, because Keystone uses the similar
+> IP like Davinci.
 > 
-> > This is not the right place to put an 'extern' declaration, it should go into
-> > a header file if it's really needed. Ideally you would not need it at all
-> > and just add an IRQCHIP_DECLARE() line into the driver to automatically
-> > probe it.
+
+[..]
+
+> v4..v5:
+> - watchdog: davinci: change driver to use WDT core
+> 	switched off CONFIG_WATCHDOG_NOWAYOUT option
 > 
-> I thought I moved it to the header in patch 6/9. I'll just drop the
-> line.
+Can you please apply the series to your watchdog tree ?
+Do let me know if you want us to prepare a git branch
+to pull from.
 
-Ok.
-
-> IRQCHIP_DECLARE isn't used on pxa_internal_irq_chip in
-> arch/arm/mach-pxa/irq.c, probably for a reason.
-
-Yes, you can only use it from drivers in drivers/irqchip/.
-
-> > > +static void __init pxa27x_init_early(void)
-> > > +{
-> > > +     pxa27x_skip_init();
-> > > +}
-> > 
-> > I would prefer not to have an init_early function at all, and instead
-> > check "if (of_have_populated_dt())" in pxa27x_init, or to split
-> > that function into two.
-> 
-> Device tree is populated in init_machine. However, pxa27x_init is
-> executed before via postcore_initcall. 
-
-The device tree is populated in unflatten_device_tree(), which gets
-called before init_early.
-
-> The only chance to run before is
-> to use init_early. What's wrong with this function?
-
-I generally dislike adding any platform specific hooks to "early"
-functions, i.e. stuff that runs before init_machine, and I'm pretty
-sure it's not necessary here.
-
-> > static void pxa27x_restart(enum reboot_mode mode, const char *cmd)
-> > {
-> >         /* Switch off fast-bus and turbo mode */
-> >         if (of_machine_is_compatible("marvell,lp8x4x"))
-> >                 asm volatile("mcr       p14, 0, %0, c6, c0, 0" : : "r"(2));
-> > 
-> >         /* SDRAM hangs on watchdog reset on Marvell PXA270 (erratum 71) */
-> >         if (of_machine_is_compatible("marvell,pxa270"))
-> >                 pxa_restart(REBOOT_SOFT, cmd);
-> > }
-> 
-> Nice tip, thanks. I've spent 30 minutes to find something like that.
-> 
-> If the device has fast SDRAM, which can reset itself in up to 8ms, the
-> device is not affected by E71. So both checks are per-device.
-
-Ok.
-
-	Arnd
+Regards,
+Santosh
