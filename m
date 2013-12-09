@@ -1,69 +1,75 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 3/6] ARM: at91/dt: define sama5d3 clocks
-Date: Mon, 9 Dec 2013 17:48:58 +0100
-Message-ID: <201312091748.58386.arnd@arndb.de>
-References: <1385650171-8756-1-git-send-email-b.brezillon@overkiz.com>
- <201312091648.13802.arnd@arndb.de> <52A5ED03.2070306@overkiz.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 15/26] ARM: omap4-panda.dts: add display information
+Date: Mon, 9 Dec 2013 17:53:44 +0100
+Message-ID: <CABxcv==2TS00WJduP0EUCmOgLT9x-qzTO+GzyE=R+yooGAmPEA@mail.gmail.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+	<1386160133-24026-16-git-send-email-tomi.valkeinen@ti.com>
+	<CABxcv=m+-9V2qwvuQgJavQ3qOb2+fBcAoW9G_Mi33BTHCWE85g@mail.gmail.com>
+	<52A5BDF4.2070304@ti.com>
+	<CABxcv==-aknRfzybA6ify5JSHeiquS9bqAEXumJwhnS6PT0MfA@mail.gmail.com>
+	<52A5E230.4010901@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52A5ED03.2070306@overkiz.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: boris brezillon <b.brezillon@overkiz.com>
-Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52A5E230.4010901@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Enric Balletbo Serra <eballetbo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 December 2013, boris brezillon wrote:
-> Hello Arnd,
-> 
-> On 09/12/2013 16:48, Arnd Bergmann wrote:
-> > On Monday 09 December 2013, boris brezillon wrote:
-> >>> You are adding "clock-names" properties in a lot of cases. Are you sure you
-> >>> are using the strings that are documented in the respective device bindings
-> >>> for each name? In a lot of cases, drivers just want an anonymous clock
-> >>> and we don't name them.
-> >> I rechecked it, and almost all drivers call [devm_]clk_get with a
-> >> specific clock
-> >> name, and as a result we must specify the "clock-names" property.
-> >> The only exceptions I found are the spi and PIT (Periodic Interval
-> >> Timer) drivers,
-> >> and "clock-names" property is not defined in these nodes.
-> > Yes, I understood that the *drivers* use the names, but are they actually
-> > documented in the device bindings? If not, it might be better to change the
-> > drivers.
-> 
-> We have to keep both clk system working for at91 platform (new CCF based
-> clk implementations and old clk implementations) for two reasons:
-> 1) the new clk implemetations are only compatible with DT enabled boards
->      and some at91 boards are not yet ported to DT.
-> 2) we decided to move to the new clk implementations in multiple steps 
-> (one SoC
->      family after another) in order to ease PATCH review.
-> 
-> If we change the drivers to avoid specific clock name request 
-> ([devm]_clk_get(dev, NULL)),
-> we will have to change the old static clk lookup tables
-> (i.e. 
-> http://lxr.free-electrons.com/source/arch/arm/mach-at91/at91sam9g45.c#L226,
-> http://lxr.free-electrons.com/source/arch/arm/mach-at91/at91sam9260.c#L202, 
-> ...).
+Hi Tomi,
 
-Yes, that is a bit painful, but we really need to ensure that the drivers
-implement the documented binding. If they don't match we have to either 
-review and change all the binding documents, or change the static clock
-tables and the drivers.
+On Mon, Dec 9, 2013 at 4:30 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 2013-12-09 17:09, Javier Martinez Canillas wrote:
+>> Hi Tomi,
+>>
+>> On Mon, Dec 9, 2013 at 1:56 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>>> On 2013-12-06 10:57, Javier Martinez Canillas wrote:
+>>>
+>>>>> +       tfp410: encoder@0 {
+>>>>> +               compatible = "ti,tfp410";
+>>>>> +               gpios = <&gpio1 0 0>;   /* 0, power-down */
+>>>>> +
+>>>>
+>>>> Please use the constants from include/dt-bindings/ instead of magic
+>>>> numbers, i.e:
+>>>>
+>>>> gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;   /* 0, power-down */
+>>>
+>>> Thanks, fixed now (for all .dts files)
+>>>
+>>> However... The TFP410 gpio is "power-down". I think we should actually
+>>> mark it as GPIO_ACTIVE_LOW, as setting it to 0 powers down the device.
+>>>
+>>
+>> yes, I looked at the TFP410 datasheet [0] and the Power Down pin is
+>> indeed an active-low, I just replaced to GPIO_ACTIVE_HIGH since you
+>> were using a constant 0 and include/dt-bindings/gpio/gpio.h defines
+>> GPIO_ACTIVE_HIGH  as 0.
+>>
+>> I just asked to Enric why we use GPIO_ACTIVE_HIGH for the PD pin on
+>> the IGEPv2 DTS instad and is because the IGEP board uses a hardware
+>> signal inverter but that is a special case. I don't know about the
+>> Panda board since I haven't looked at its datasheet.
+>
+> Oh. Does it work on igep? The TFP410 driver always handles the PD GPIO
+> as it were active-low. The flag is ignored.
+>
 
-Note that I have not checked your binding documents for the devices in
-question. If they already document these names, we don't need to change
-anything.
+How weird, it does work on the IGEPv2 but you are right I just looked
+at  at drivers/video/omap2/displays-new/encoder-tfp410.c and I see
+that it indeed just does:
 
-	Arnd
+r = devm_gpio_request_one(&pdev->dev, ddata->pd_gpio,
+GPIOF_OUT_INIT_LOW, "tfp410 PD");
+
+So I don't know how it is working... I'm on the road and won't have
+access to my IGEPv2 to dig further on this. Maybe Enric can shed more
+light on this.
+
+>  Tomi
+>
+>
+
+Thanks a lot and best regards,
+Javier
