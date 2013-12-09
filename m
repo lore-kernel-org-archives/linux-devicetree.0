@@ -1,79 +1,52 @@
 From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH v5 09/15] usb: phy-mxs: Enable IC fixes for related SoCs
-Date: Mon, 9 Dec 2013 17:07:50 +0800
-Message-ID: <20131209090749.GB5291@shlinux1.ap.freescale.net>
+Subject: Re: [PATCH v5 12/15] usb: phy: Add set_wakeup API
+Date: Mon, 9 Dec 2013 17:12:57 +0800
+Message-ID: <20131209091256.GC5291@shlinux1.ap.freescale.net>
 References: <1386570664-6713-1-git-send-email-peter.chen@freescale.com>
- <1386570664-6713-10-git-send-email-peter.chen@freescale.com>
- <52A58179.2050702@pengutronix.de>
+ <1386570664-6713-13-git-send-email-peter.chen@freescale.com>
+ <52A58252.6090502@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52A58179.2050702@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+In-Reply-To: <52A58252.6090502@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
 To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: marex@denx.de, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, rob.herring@calxeda.com, balbi@ti.com, kernel@pengutronix.de, grant.likely@linaro.org, shawn.guo@linaro.org, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2013 at 09:38:17AM +0100, Marc Kleine-Budde wrote:
-> On 12/09/2013 07:30 AM, Peter Chen wrote:
-> > Some PHY bugs are fixed by IC logic, but these bits are not
-> > enabled by default, so we enable them at driver.
+On Mon, Dec 09, 2013 at 09:41:54AM +0100, Marc Kleine-Budde wrote:
+> On 12/09/2013 07:31 AM, Peter Chen wrote:
+> > This API is used to set wakeup enable at PHY registers, in that
+> > case, the PHY can be waken up from suspend due to external events,
 > 
-> Which bugs are fixed by enabling this bit? Is it only suspend related?
-> Can you document them or better add a pointer to the documentation.
+> I' no native speaker, but I think it's "to be woken up".
 
-I will add more, in fact, it fixes the bug which flag BIT(1) and BIT(2)
-stands for.
-
-> 
-> Further I don't like the idea of adding code, or enabling a feature on
-> certain hardware, that is broken in the first place and fixing it in a
-> later patch. Think about squashing it into the correct patch.
-
-No fixes are related with this patch, you can see there is no "-"
-at this patch.
+Thanks, will change.
 
 > >  
-> > +static inline bool is_imx6q_phy(struct mxs_phy *mxs_phy)
+> >  static inline int
+> > +usb_phy_set_wakeup(struct usb_phy *x, bool enabled)
 > > +{
-> > +	return mxs_phy->data == &imx6q_phy_data;
-> > +}
-> > +
-> > +static inline bool is_imx6sl_phy(struct mxs_phy *mxs_phy)
-> > +{
-> > +	return mxs_phy->data == &imx6sl_phy_data;
-> > +}
+> > +	if (x && x->set_wakeup)
 > 
-> Are the two is_imx6* functions still needed?
+> can x be NULL?
+> 
 
-Will more it to [14/15], they are needed there.
+Possible, this function is PHY's API, it may be called uninitialized.
 
 Peter
 
-> 
+> > +		return x->set_wakeup(x, enabled);
+> > +	else
+> > +		return 0;
+> > +}
 > > +
-> >  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+> > +static inline int
+> >  usb_phy_notify_connect(struct usb_phy *x, enum usb_device_speed speed)
 > >  {
-> >  	int ret;
-> > @@ -123,6 +144,9 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
-> >  		BM_USBPHY_CTRL_ENUTMILEVEL3,
-> >  	       base + HW_USBPHY_CTRL_SET);
-> >  
-> > +	if (mxs_phy->data->flags & MXS_PHY_NEED_IP_FIX)
-> > +		writel(BM_USBPHY_IP_FIX, base + HW_USBPHY_IP_SET);
-> > +
-> >  	return 0;
-> >  }
+> >  	if (x && x->notify_connect)
+> > 
 > 
 > Marc
 > 
@@ -90,3 +63,4 @@ Peter
 
 Best Regards,
 Peter Chen
+
