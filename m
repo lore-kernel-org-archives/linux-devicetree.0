@@ -1,71 +1,73 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: Add clock-frequency to model cpu nodes
-Date: Mon, 9 Dec 2013 18:05:41 +0000
-Message-ID: <20131209180541.GQ29268@sirena.org.uk>
-References: <1386335683-11405-1-git-send-email-broonie@kernel.org>
- <1386611765.3380.70.camel@linaro1.home>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv8][ 1/5] ASoC: eukrea-tlv320: Add DT
+	support.
+Date: Mon, 9 Dec 2013 18:08:58 +0000
+Message-ID: <20131209180858.GR29268@sirena.org.uk>
+References: <1385567664-758-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mX5f3I2XfUAeTwiv"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386611765.3380.70.camel-K+mpW1F5uff9zxVx7UNMDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============4924107867650101112=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1385567664-758-1-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Denis Carikli <denis@eukrea.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Timur Tabi <timur@tabi.org>, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lgirdwood@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---mX5f3I2XfUAeTwiv
+--===============4924107867650101112==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Jy7fHMWyH2pKEqn7"
+Content-Disposition: inline
+
+
+--Jy7fHMWyH2pKEqn7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Dec 09, 2013 at 05:56:05PM +0000, Jon Medhurst (Tixy) wrote:
-> On Fri, 2013-12-06 at 13:14 +0000, Mark Brown wrote:
+On Wed, Nov 27, 2013 at 04:54:20PM +0100, Denis Carikli wrote:
 
-> > The clock-frequency property is meaningless for the models but it's a
-> > mandatory property so claim that all the cores run at 1MHz.
+> Signed-off-by: Denis Carikli <denis@eukrea.com>
 
-> Is it a mandatory property? I know we seem to get ugly warnings if it's
-> missing but I see no mention of it at all in
-> Documentation/devicetree/bindings/arm/cpus.txt (am I looking in the
-> wrong place?)
+Applied, thanks.  The way you split [PATCHv8][ 1/5] is a bit odd, as is
+the space there.
 
-It's mandatory according to ePAPR (see my separate patch copying the
-definition into our copy of the binding documents).
-
-> I think this attribute got merged into the kernel with the early power
-> related scheduling efforts, but given the state of all that at the
-> moment I was guessing it might be obsolete.
-
-No, it's still being used.  At the minute mainline should in theory
-balance tasks well enough between the cores when they're all enabled, it
-just won't figure out that it's useful to shut one of the clusters down.
-
---mX5f3I2XfUAeTwiv
+--Jy7fHMWyH2pKEqn7
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSpgZyAAoJELSic+t+oim9cGgP/Rv7I28IShhIhDxu+hOV4UaP
-Yr5REqP3SMFdQXUXs31hvjAR7W5NoN9q2wl5hBhZvrPCWk27sDLr18MgA8UKNApY
-YsnPQiUxS8leRzScJVrhXDfbU8tE2ByiL97WDcuHwCRfuF1sErn/0boKjPDofaNT
-mQ3621F0336UdbOzX2a6niikDnHyFO2G2jJ/yuDNsP6wERlMac62f6hfvO2+F9qf
-DMc2fKOT2KFOo8OeME37MIKQirViWHCT8iu0zyTYnxztORpbnZ9VF2ZoLIw1fOn9
-Knjl4zvyQBj+a7jmZgAmsCg+zIYqQrJJMEFzl4MFfTNUtE5LGd3lE/OTcPaNQxvf
-0b4UyFQg1CIcUSMDwp7d8HWapWGYov7DhVmrB20uE+0YwZxT85CdrzqIxeuOCdsP
-oQ8mwTBhOfsHvWjKkwiKhGqUtfWMkwD6f3eV9CkUmbKttCaAD2Odt6qXhLcl+sNV
-9fsN/y05VuNxBhGbsWDwuh/4RmkupFOZZYIqZfCrBri1tGl18AQ7O9HqEbgJ02f/
-rRIHxZYNrjCO1xjXMVzr+jPs6MsTw0uYywJxcsSgVoBBl8+vOq0FxALDpEkU9OMq
-e0+aGZmh+IETEYbLm1hOy6PjicF5kYG7r/0a/qgcxlMYNYClyHKGUn3hfqgFum/D
-BGWGC7sOxWJve0JDc3jv
-=b/oi
+iQIcBAEBAgAGBQJSpgc3AAoJELSic+t+oim96hgP/A1K+4l/LKX3RDGoOthH8IOD
+9fxxbE2Rj7npbKNgOflQtq1+6urulqyMYRPj5YcBEUZ+LkzVXoUxB3Mdw1n1qc65
+phKHwZCZSqDLPCNPQa4R2DDsVYJk9ginc+VryeaU9P4r6E5Oj7e2PReUlBb2kjgx
+YFFpMpO1OhKkLZVFTzMmS+nB4ibbZlvfN8acJ2ztK9CPuISe29pSP3qV2hKEyv+J
+RnHwBTCUbhhl1hQVAomTlD276M1Ti8pdH8idpSmzfyg07+/pR0Coq19+Xtp3/O0T
+yQsNyJ/fIvTE7EXGZpvlQdr4rKD+Tn32vk9WPhWKUWi8mhBCUTUNQ2+2HXD00UUU
+Z+7u+6ZLTJ9P34GCC92Q8aJTwqUx4WdbMCeZNmsUeFqOOt4iNEhg3Jtun/D0TckP
+ZV19ebByxbtDTok8XKw+kpXoEuHzcsbRyo7lVajq9SWTueRRviyf8NVoKSBvDniP
+1T3YPWH65ATrdxQsOo0jvVekdZUXQ2M1AzyQu5RMFwj/cXAk1S7oTy4rT8Wjw4u8
+TfH/rWAzr18MRTRvOH3QX3u7JEmibnsoldkCJm7eHFjpas6BZ4Zpb9mzuIMzzqjn
+0fHvF0BZM2/UmmIVL9EOJiuBpzY7TJ8cQddrktWKoX4VA3H6xV4c0GME816XIVG6
+10oWroVnSh+7xfU9ijcH
+=Lmgs
 -----END PGP SIGNATURE-----
 
---mX5f3I2XfUAeTwiv--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Jy7fHMWyH2pKEqn7--
+
+--===============4924107867650101112==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4924107867650101112==--
