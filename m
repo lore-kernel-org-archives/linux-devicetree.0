@@ -1,256 +1,122 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v2] ARM: dts: Add regulator entries to Exynos5420 SMDK
- board
-Date: Tue, 10 Dec 2013 06:27:27 +0900
-Message-ID: <52A635BF.9030102@samsung.com>
-References: <1386236664-27763-1-git-send-email-sachin.kamat@linaro.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 4/4 v4] ARM: dts: Exynos5420: Add device nodes for TMU blocks
+Date: Mon, 09 Dec 2013 22:32:33 +0100
+Message-ID: <4444992.uYV4fhSHQI@flatron>
+References: <1382004240-3282-1-git-send-email-l.krishna@samsung.com> <1384866359-16157-1-git-send-email-ch.naveen@samsung.com> <52A632DC.6040509@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1386236664-27763-1-git-send-email-sachin.kamat@linaro.org>
+In-Reply-To: <52A632DC.6040509@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Kukjin Kim <kgene.kim@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, naveenkrishna.ch@gmail.com
+Cc: linux-pm@vger.kernel.org, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/13 18:44, Sachin Kamat wrote:
-> Added regulator entries to Exynos5420 SMDK board.
->
-> Signed-off-by: Sachin Kamat<sachin.kamat@linaro.org>
-> ---
-> Changes since v1:
-> Changed node name
-> ---
->   arch/arm/boot/dts/exynos5420-smdk5420.dts |  216 +++++++++++++++++++++++++++++
->   1 file changed, 216 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> index fb5a1e25c632..62e1ebe4e989 100644
-> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> @@ -120,4 +120,220 @@
->   			reg =<0x50>;
->   		};
->   	};
-> +
-> +	hsi2c_4: i2c@12CA0000 {
-> +		status = "okay";
-> +
-> +		s2mps11_pmic@66 {
-> +			compatible = "samsung,s2mps11-pmic";
-> +			reg =<0x66>;
-> +			s2mps11,buck2-ramp-delay =<12>;
-> +			s2mps11,buck34-ramp-delay =<12>;
-> +			s2mps11,buck16-ramp-delay =<12>;
-> +			s2mps11,buck6-ramp-enable =<1>;
-> +			s2mps11,buck2-ramp-enable =<1>;
-> +			s2mps11,buck3-ramp-enable =<1>;
-> +			s2mps11,buck4-ramp-enable =<1>;
-> +
-> +			s2mps11_osc: clocks {
-> +				#clock-cells =<1>;
-> +				clock-output-names = "s2mps11_ap",
-> +						"s2mps11_cp", "s2mps11_bt";
-> +			};
-> +
-> +			regulators {
-> +				ldo1_reg: LDO1 {
-> +					regulator-name = "vdd_ldo1";
-> +					regulator-min-microvolt =<1000000>;
-> +					regulator-max-microvolt =<1000000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo3_reg: LDO3 {
-> +					regulator-name = "vdd_ldo3";
-> +					regulator-min-microvolt =<1800000>;
-> +					regulator-max-microvolt =<1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo5_reg: LDO5 {
-> +					regulator-name = "vdd_ldo5";
-> +					regulator-min-microvolt =<1800000>;
-> +					regulator-max-microvolt =<1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo6_reg: LDO6 {
-> +					regulator-name = "vdd_ldo6";
-> +					regulator-min-microvolt =<1000000>;
-> +					regulator-max-microvolt =<1000000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo7_reg: LDO7 {
-> +					regulator-name = "vdd_ldo7";
-> +					regulator-min-microvolt =<1800000>;
-> +					regulator-max-microvolt =<1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo8_reg: LDO8 {
-> +					regulator-name = "vdd_ldo8";
-> +					regulator-min-microvolt =<1800000>;
-> +					regulator-max-microvolt =<1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo9_reg: LDO9 {
-> +					regulator-name = "vdd_ldo9";
-> +					regulator-min-microvolt =<3000000>;
-> +					regulator-max-microvolt =<3000000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo10_reg: LDO10 {
-> +					regulator-name = "vdd_ldo10";
-> +					regulator-min-microvolt =<1800000>;
-> +					regulator-max-microvolt =<1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo11_reg: LDO11 {
-> +					regulator-name = "vdd_ldo11";
-> +					regulator-min-microvolt =<1000000>;
-> +					regulator-max-microvolt =<1000000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo12_reg: LDO12 {
-> +					regulator-name = "vdd_ldo12";
-> +					regulator-min-microvolt =<1800000>;
-> +					regulator-max-microvolt =<1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo13_reg: LDO13 {
-> +					regulator-name = "vdd_ldo13";
-> +					regulator-min-microvolt =<2800000>;
-> +					regulator-max-microvolt =<2800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo15_reg: LDO15 {
-> +					regulator-name = "vdd_ldo15";
-> +					regulator-min-microvolt =<3100000>;
-> +					regulator-max-microvolt =<3100000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo16_reg: LDO16 {
-> +					regulator-name = "vdd_ldo16";
-> +					regulator-min-microvolt =<2200000>;
-> +					regulator-max-microvolt =<2200000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo17_reg: LDO17 {
-> +					regulator-name = "tsp_avdd";
-> +					regulator-min-microvolt =<3300000>;
-> +					regulator-max-microvolt =<3300000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo19_reg: LDO19 {
-> +					regulator-name = "vdd_sd";
-> +					regulator-min-microvolt =<2800000>;
-> +					regulator-max-microvolt =<2800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo24_reg: LDO24 {
-> +					regulator-name = "tsp_io";
-> +					regulator-min-microvolt =<2800000>;
-> +					regulator-max-microvolt =<2800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				buck1_reg: BUCK1 {
-> +					regulator-name = "vdd_mif";
-> +					regulator-min-microvolt =<800000>;
-> +					regulator-max-microvolt =<1300000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck2_reg: BUCK2 {
-> +					regulator-name = "vdd_arm";
-> +					regulator-min-microvolt =<800000>;
-> +					regulator-max-microvolt =<1500000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck3_reg: BUCK3 {
-> +					regulator-name = "vdd_int";
-> +					regulator-min-microvolt =<800000>;
-> +					regulator-max-microvolt =<1400000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck4_reg: BUCK4 {
-> +					regulator-name = "vdd_g3d";
-> +					regulator-min-microvolt =<800000>;
-> +					regulator-max-microvolt =<1400000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck5_reg: BUCK5 {
-> +					regulator-name = "vdd_mem";
-> +					regulator-min-microvolt =<800000>;
-> +					regulator-max-microvolt =<1400000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck6_reg: BUCK6 {
-> +					regulator-name = "vdd_kfc";
-> +					regulator-min-microvolt =<800000>;
-> +					regulator-max-microvolt =<1500000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck7_reg: BUCK7 {
-> +					regulator-name = "vdd_1.0v_ldo";
-> +					regulator-min-microvolt =<800000>;
-> +					regulator-max-microvolt =<1500000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck8_reg: BUCK8 {
-> +					regulator-name = "vdd_1.8v_ldo";
-> +					regulator-min-microvolt =<800000>;
-> +					regulator-max-microvolt =<1500000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck9_reg: BUCK9 {
-> +					regulator-name = "vdd_2.8v_ldo";
-> +					regulator-min-microvolt =<3000000>;
-> +					regulator-max-microvolt =<3750000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck10_reg: BUCK10 {
-> +					regulator-name = "vdd_vmem";
-> +					regulator-min-microvolt =<2850000>;
-> +					regulator-max-microvolt =<2850000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +			};
-> +		};
-> +	};
->   };
+Hi Kukjin,
 
-just + DT ml.
+On Tuesday 10 of December 2013 06:15:08 Kukjin Kim wrote:
+> On 11/19/13 22:05, Naveen Krishna Chatradhi wrote:
+> > Exynos5420 SoC has per core thermal management unit.
+> > 5 TMU channels 4 for CPUs and 5th for GPU.
+> >
+> > This patch adds the device tree nodes to the DT device list.
+> >
+> > Nodes carry the misplaced second base address and the second
+> > clock to access the misplaced base address.
+> >
+> > Signed-off-by: Leela Krishna Amudala<l.krishna@samsung.com>
+> > Signed-off-by: Naveen Krishna Chatradhi<ch.naveen@samsung.com>
+> > Signed-off-by: Andrew Bresticker<abrestic@chromium.org>
+> > ---
+> > Changes since v3:
+> > None, Just respinning
+> >
+> > Changes since v2:
+> > 3. uses the new compatible strings introduced along with adding
+> >     support for Exynso5420.
+> >
+> > Changes since v1:
+> > 1. Nodes carry the misplaced second base address and the second
+> >     clock to access the misplaced base address.
+> > 2. Correct the clock number for the TMU4
+> >
+> >   arch/arm/boot/dts/exynos5420.dtsi |   48 +++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 48 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> > index 6ffefd1..d736b40 100644
+> > --- a/arch/arm/boot/dts/exynos5420.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> > @@ -369,4 +369,52 @@
+> >   		clock-names = "gscl";
+> >   		samsung,power-domain =<&gsc_pd>;
+> >   	};
+> > +
+> > +	/* tmu for CPU0 */
+> > +	tmu@10060000 {
+> > +		compatible = "samsung,exynos5420-tmu";
+> > +		reg =<0x10060000 0x100>;
+> > +		interrupts =<0 65 0>;
+> > +		clocks =<&clock 318>;
+> > +		clock-names = "tmu_apbif";
+> > +	};
+> > +
+> > +	/* tmu for CPU1 */
+> > +	tmu@10064000 {
+> > +		compatible = "samsung,exynos5420-tmu";
+> > +		reg =<0x10064000 0x100>;
+> > +		interrupts =<0 183 0>;
+> > +		clocks =<&clock 318>;
+> > +		clock-names = "tmu_apbif";
+> > +	};
+> > +
+> > +	/* tmu for CPU2 */
+> > +	tmu@10068000 {
+> > +		compatible = "samsung,exynos5420-tmu-triminfo";
+> > +		/* 2nd reg is for the misplaced TRIMINFO register */
+> > +		reg =<0x10068000 0x100>,<0x1006c000 0x4>;
+> > +		interrupts =<0 184 0>;
+> > +		clocks =<&clock 318>;
+> > +		clock-names = "tmu_apbif";
+> > +	};
+> > +
+> > +	/* tmu for CPU3 */
+> > +	tmu@1006c000 {
+> > +		compatible = "samsung,exynos5420-tmu-triminfo-clk";
+> > +		/* 2nd reg is for the misplaced TRIMINFO register */
+> > +		reg =<0x1006c000 0x100>,<0x100a0000 0x4>;
+> > +		interrupts =<0 185 0>;
+> > +		clocks =<&clock 318>,<&clock 319>;
+> > +		clock-names = "tmu_apbif", "tmu_apbif_triminfo";
+> > +	};
+> > +
+> > +	/* tmu for GPU */
+> > +	tmu@100a0000 {
+> > +		compatible = "samsung,exynos5420-tmu-triminfo-clk";
+> > +		/* 2nd reg is for the misplaced TRIMINFO register */
+> > +		reg =<0x100a0000 0x100>,<0x10068000 0x4>;
+> > +		interrupts =<0 215 0>;
+> > +		clocks =<&clock 319>,<&clock 318>;
+> > +		clock-names = "tmu_apbif", "tmu_apbif_triminfo";
+> > +	};
+> >   };
+> 
+> BTW, there is just only this patch to support TMU on exynos5420?
 
-- Kukjin
+This patch is a part of a 4-patch series, but unfortunately it was not
+sent with correct threading, so it's hard to find remaing patches,
+which are:
+
+[PATCH 1/4 v9] thermal: samsung: replace inten_ bit fields with intclr_
+[PATCH 2/4 v10] thermal: samsung: change base_common to more meaningful base_second
+[PATCH 3/4 v10] thermal: samsung: Add TMU support for Exynos5420 SoCs
+
+There are comments to be addressed to those patches, so I guest at least
+one more iteration is needed.
+
+Naveen, it would be nice if you could send next version with proper
+threading and consistent versioning. Thanks in advance.
+
+Best regards,
+Tomasz
