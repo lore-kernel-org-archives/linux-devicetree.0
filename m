@@ -1,77 +1,116 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V2 1/2] pinctrl: tegra: Add devicetree binding document
- for Tegra124
-Date: Mon, 09 Dec 2013 10:39:42 -0700
-Message-ID: <52A6005E.3060506@wwwdotorg.org>
-References: <1386585140-1137-1-git-send-email-ldewangan@nvidia.com> <20131209105155.GC29303@e106331-lin.cambridge.arm.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv2 09/10] arm: dts: dra7: Add qspi device.
+Date: Mon, 9 Dec 2013 09:42:04 -0800
+Message-ID: <20131209174203.GB12527@atomide.com>
+References: <1386339891-32717-1-git-send-email-sourav.poddar@ti.com>
+ <1386339891-32717-10-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131209105155.GC29303@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1386339891-32717-10-git-send-email-sourav.poddar-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/2013 03:51 AM, Mark Rutland wrote:
-> On Mon, Dec 09, 2013 at 10:32:19AM +0000, Laxman Dewangan wrote:
->> This device tree binding document describes the Tegra124 pincontrol
->> DT bindings. This document lists all valid properties, names, mux
->> options of Tegra124 pins.
->>
->> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->> ---
->> Changes from V1:
->> - Referred the dt-binding header file on describing the nodes.
->>
->>  .../bindings/pinctrl/nvidia,tegra124-pinmux.txt    |  147 ++++++++++++++++++++
->>  1 files changed, 147 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
->> new file mode 100644
->> index 0000000..12ef772
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
->> @@ -0,0 +1,147 @@
->> +NVIDIA Tegra124 pinmux controller
->> +
->> +The Tegra124 pinctrl binding is very similar to the Tegra20 and Tegra30
->> +pinctrl binding, as described in nvidia,tegra20-pinmux.txt and
->> +nvidia,tegra30-pinmux.txt. In fact, this document assumes that binding as
->> +a baseline, and only documents the differences between the two bindings.
->> +
->> +Required properties:
->> +- compatible: "nvidia,tegra124-pinmux"
->> +- reg: Should contain the register physical address and length for each of
->> +  the pad control and mux registers. The first bank of address must be the
->> +  driver strength pad control register address and second bank address must
->> +  be pinmux register address.
+* Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org> [131206 06:29]:
+> These add device tree entry for qspi controller driver on dra7.
+
+FYI these .dts changes need to be queued separately by Benoit and
+should be posted as a seprate series in general to avoid confusion.
+
+Regards,
+
+Tony
+ 
+> Signed-off-by: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+> ---
+> v1->v2:
+> use "MUX_MODE1" instead of numeric value
+>  arch/arm/boot/dts/dra7-evm.dts |   32 ++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/dra7.dtsi    |   13 +++++++++++++
+>  2 files changed, 45 insertions(+), 0 deletions(-)
 > 
-> The wording here could be improved. The first sentence implies an entry
-> for each individual register but I assume these are actually banks of
-> registers (the sizes in the exanple imply this). The second sentence is
-> more sepcific.
+> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+> index 5babba0..4a57fdf 100644
+> --- a/arch/arm/boot/dts/dra7-evm.dts
+> +++ b/arch/arm/boot/dts/dra7-evm.dts
+> @@ -93,6 +93,21 @@
+>  			0x24c (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_txd */
+>  		>;
+>  	};
+> +
+> +	qspi1_pins: pinmux_qspi1_pins {
+> +		pinctrl-single,pins = <
+> +			0x4c (PIN_INPUT | MUX_MODE1)  /* gpmc_a3.qspi1_cs2 */
+> +			0x50 (PIN_INPUT | MUX_MODE1)  /* gpmc_a4.qspi1_cs3 */
+> +			0x74 (PIN_INPUT | MUX_MODE1)  /* gpmc_a13.qspi1_rtclk */
+> +			0x78 (PIN_INPUT | MUX_MODE1)  /* gpmc_a14.qspi1_d3 */
+> +			0x7c (PIN_INPUT | MUX_MODE1)  /* gpmc_a15.qspi1_d2 */
+> +			0x80 (PIN_INPUT | MUX_MODE1) /* gpmc_a16.qspi1_d1 */
+> +			0x84 (PIN_INPUT | MUX_MODE1)  /* gpmc_a17.qspi1_d0 */
+> +			0x88 (PIN_INPUT | MUX_MODE1)  /* qpmc_a18.qspi1_sclk */
+> +			0xb8 (PIN_INPUT_PULLUP | MUX_MODE1)  /* gpmc_cs2.qspi1_cs0 */
+> +			0xbc (PIN_INPUT_PULLUP | MUX_MODE1)  /* gpmc_cs3.qspi1_cs1 */
+> +		>;
+> +	};
+>  };
+>  
+>  &i2c1 {
+> @@ -273,3 +288,20 @@
+>  &cpu0 {
+>  	cpu0-supply = <&smps123_reg>;
+>  };
+> +
+> +&qspi {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&qspi1_pins>;
+> +
+> +	spi-max-frequency = <48000000>;
+> +	m25p80@0 {
+> +		compatible = "s25fl256s1";
+> +		spi-max-frequency = <48000000>;
+> +		reg = <0>;
+> +		spi-tx-bus-width = <1>;
+> +		spi-rx-bus-width = <4>;
+> +		spi-cpol;
+> +		spi-cpha;
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index 67275c8..b06d899 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -582,6 +582,19 @@
+>  			dma-names = "tx0", "rx0";
+>  			status = "disabled";
+>  		};
+> +
+> +		qspi: qspi@4b300000 {
+> +			compatible = "ti,dra7xxx-qspi";
+> +			reg = <0x4b300000 0x100>, <0x4a002558 0x4>,
+> +					<0x5c000000 0x3ffffff>;
+> +			reg-names = "qspi_base", "qspi_ctrlmod", "qspi_mmap";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			ti,hwmods = "qspi";
+> +			num-cs = <4>;
+> +			interrupts = <0 124 0x4>;
+> +			status = "disabled";
+> +		};
+>  	};
+>  
+>  	clocks {
+> -- 
+> 1.7.1
 > 
-> How about something like:
-> 
-> reg: Should contain a list of base address and size pairs for:
->  * first entry - the driver strength and pad control registers
-
-If this patch gets revised, please s/driver/drive/ here.
-
->  * second entry - the pinmux registers
-> 
-> Are these banks well defined? Where do they end?
-
-Yes, the SoC includes specific banks of registers for those two types of
-configuration. The banks end at whatever address contains the last
-define register of that type.
-
-> Is there likely to be anything built as an extension of this? Does it
-> possibly make sense to use reg-names?
-
-Any new SoC would get a new binding, since all the other configuration
-parameters (lists of valid pins, groups, functions) would be different,
-so there's no need for future compatibility here.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
