@@ -1,74 +1,94 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v5 08/15] usb: phy-mxs: Add implementation of nofity_suspend
- and notify_resume
-Date: Mon, 09 Dec 2013 09:31:28 +0100
-Message-ID: <52A57FE0.5030009@pengutronix.de>
-References: <1386570664-6713-1-git-send-email-peter.chen@freescale.com> <1386570664-6713-9-git-send-email-peter.chen@freescale.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH v2 4/5] ARM: dts: exynos4x12: Device tree node definition
+ for TMU on Exynos4x12
+Date: Mon, 09 Dec 2013 09:33:25 +0100
+Message-ID: <20131209093325.51564f20@amdc2363>
+References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
+ <1381300194-13134-1-git-send-email-l.majewski@samsung.com>
+ <1381300194-13134-5-git-send-email-l.majewski@samsung.com>
+ <20131015082750.4b2f3325@amdc308.digital.local>
+ <20131127081144.5402a81e@amdc308.digital.local>
+ <004c01ceeb64$b5c708a0$215519e0$@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="FCBUjgb2dgwxMuHLmWQOLKB6KWl5xSibp"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386570664-6713-9-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <004c01ceeb64$b5c708a0$215519e0$@kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene@kernel.org, "kgene.kim@samsung.com" <kgene.kim@samsung.com>
+Cc: 'Lukasz Majewski' <l.majewski@majess.pl>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---FCBUjgb2dgwxMuHLmWQOLKB6KWl5xSibp
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Kukjin,
 
-On 12/09/2013 07:30 AM, Peter Chen wrote:
-> Implementation of notify_suspend and notify_resume will be different
-> according to mxs_phy_data->flags.
->=20
-> Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> ---
->  drivers/usb/phy/phy-mxs-usb.c |   55 +++++++++++++++++++++++++++++++++=
-+++++---
->  1 files changed, 51 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-us=
-b.c
-> index 0ef930a..e3df53f 100644
-> --- a/drivers/usb/phy/phy-mxs-usb.c
-> +++ b/drivers/usb/phy/phy-mxs-usb.c
-> @@ -166,8 +166,8 @@ static int mxs_phy_suspend(struct usb_phy *x, int s=
-uspend)
->  static int mxs_phy_on_connect(struct usb_phy *phy,
->  		enum usb_device_speed speed)
->  {
-> -	dev_dbg(phy->dev, "%s speed device has connected\n",
-> -		(speed =3D=3D USB_SPEED_HIGH) ? "high" : "non-high");
-> +	dev_dbg(phy->dev, "%s device has connected\n",
-> +		(speed =3D=3D USB_SPEED_HIGH) ? "HS" : "FS/LS");
+> Lukasz Majewski wrote:
+> > 
+> > Hi Kukjin,
+> > 
+> Hi,
+> 
+> > > Hi Kukjin,
+> > >
+> > > > The TMU device tree node definition for Exynos4x12 family of
+> > > > SoCs.
+> > > >
+> > > > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> > > > Reviewed-by: Bartlomiej Zolnierkiewicz
+> > > > <b.zolnierkie@samsung.com> Reviewed-by: Tomasz Figa
+> > > > <t.figa@samsung.com>
+> > > >
+> > > > ---
+> > > > Changes for v2:
+> > > > - None
+> > > >
+> > > >  arch/arm/boot/dts/exynos4x12.dtsi |   10 ++++++++++
+> > > >  1 file changed, 10 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm/boot/dts/exynos4x12.dtsi
+> > > > b/arch/arm/boot/dts/exynos4x12.dtsi index ad531fe..64c0ece
+> > > > 100644 --- a/arch/arm/boot/dts/exynos4x12.dtsi
+> > > > +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+> > > > @@ -176,4 +176,14 @@
+> > > >  			};
+> > > >  		};
+> > > >  	};
+> > > > +
+> > > > +	tmu@100C0000 {
+> > > > +		compatible = "samsung,exynos4412-tmu";
+> > > > +		interrupt-parent = <&combiner>;
+> > > > +		interrupts = <2 4>;
+> > > > +		reg = <0x100C0000 0x100>;
+> > > > +		clocks = <&clock 383>;
+> > > > +		clock-names = "tmu_apbif";
+> > > > +		status = "disabled";
+> > > > +	};
+> > > >  };
+> > >
+> > > Can you pull this DT node definition for TMU (as a fix to v3.12)?
+> > >
+> > > It is crucial for Exynos4412.
+> > >
+> > 
+> > Kukjin, could you pull this patch?
+> > 
+> Yes, but I'm not sure this is _really_ critical bug fix so maybe this
+> will be queued for 3.14.
 
-What about creating a mxs_phy_dbg() function that adds the "HS" "FS/LS"
-prefix when printing?
+Will you apply this patch to your Samsung tree? 
 
-Marc
+Thanks in advance.
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> 
+> If any problem, please kindly let me know.
+> 
+> Thanks,
+> Kukjin
+> 
 
 
---FCBUjgb2dgwxMuHLmWQOLKB6KWl5xSibp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+-- 
+Best regards,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+Lukasz Majewski
 
-iEYEARECAAYFAlKlf+EACgkQjTAFq1RaXHOEqQCfTlSWndNN28/vVCTmNHcHS47f
-rdIAoIW/tBXL1PL2g505f1wJ39EQm2I4
-=Mesv
------END PGP SIGNATURE-----
-
---FCBUjgb2dgwxMuHLmWQOLKB6KWl5xSibp--
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
