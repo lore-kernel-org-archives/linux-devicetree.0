@@ -1,185 +1,52 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 18/26] ARM: omap3-beagle.dts: add display information
-Date: Mon, 9 Dec 2013 14:06:32 +0200
-Message-ID: <52A5B248.5050303@ti.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>	<1386160133-24026-19-git-send-email-tomi.valkeinen@ti.com> <CABxcv=mgQM6oHf7=-EbryAcmgJm3vf+xXqHW6BCdW8ovS29O0g@mail.gmail.com>
+From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/9] ARM: dts: provide DMA config to pxamci
+Date: Mon, 09 Dec 2013 16:09:18 +0400
+Message-ID: <1386590958.7152.135.camel@host5.omatika.ru>
+References: <1386348542-9584-1-git-send-email-ynvich@gmail.com>
+		 <1386543229-1542-1-git-send-email-ynvich@gmail.com>
+		 <1386543229-1542-6-git-send-email-ynvich@gmail.com>
+		 <201312090233.58592.arnd@arndb.de> <52A587A0.1050503@gmail.com>
+	 <1386581672.7152.108.camel@host5.omatika.ru> <52A59991.1060305@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="TMLWorbCnFS0svMMRnRgDMTfaUdPJRtBD"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=mgQM6oHf7=-EbryAcmgJm3vf+xXqHW6BCdW8ovS29O0g@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52A59991.1060305-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DOCUMENTATION <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---TMLWorbCnFS0svMMRnRgDMTfaUdPJRtBD
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Mon, 2013-12-09 at 11:21 +0100, Daniel Mack wrote:
+> On 12/09/2013 10:34 AM, Sergei Ianovich wrote:
+> > Nice to have Daniel in this conversation. Your patch series is a big and
+> > important work. However, I am not sure I will ever land as is exactly
+> > for this reason.
+> 
+> Well, I wouldn't be so certain about that statement. As I wrote in the
+> cover letter, most of the work is actually done, and I successfully
+> tested the new DMA support with a some of the drivers I ported. Others
+> were ported blindly, and in case of no reaction, I'd dare to merge them
+> and wait for people to report back in case of trouble.
 
-On 2013-12-06 10:41, Javier Martinez Canillas wrote:
-> Hi Tomi,
->=20
-> On Wed, Dec 4, 2013 at 1:28 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> =
-wrote:
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
->> ---
->>  arch/arm/boot/dts/omap3-beagle.dts | 67 +++++++++++++++++++++++++++++=
-+++++++++
->>  1 file changed, 67 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/om=
-ap3-beagle.dts
->> index fa532aaacc68..1ca1932d02aa 100644
->> --- a/arch/arm/boot/dts/omap3-beagle.dts
->> +++ b/arch/arm/boot/dts/omap3-beagle.dts
->> @@ -178,3 +178,70 @@
->>         mode =3D <3>;
->>         power =3D <50>;
->>  };
->> +
->> +&dpi {
->> +       vdds_dsi-supply =3D <&vpll2>;
->> +
->> +       dpi_out: endpoint {
->> +               remote-endpoint =3D <&tfp410_in>;
->> +               data-lines =3D <24>;
->> +       };
->> +};
->> +
->> +&venc {
->> +       vdda_dac-supply =3D <&vdac>;
->> +
->> +       venc_out: endpoint {
->> +               remote-endpoint =3D <&tv_connector_in>;
->> +       };
->> +};
->> +
->> +/ {
->> +       aliases {
->> +               display0 =3D &dvi0;
->> +               display1 =3D &tv0;
->> +       };
->> +
->> +       tfp410: encoder@0 {
->> +               compatible =3D "ti,tfp410";
->> +               gpios =3D <&gpio5 10 0>;  /* 170, power-down */
->> +
->=20
-> Shouldn't this be gpio6 instead since OMAP GPIO banks start counting
-> from 1 so gpio5 + 10 is GPIO 138.
+If breaking things is an option, I am definitely wrong. I assumed the
+opposite.
 
-Yes, you're right. Good catch.
+> > My proposal in to actually add new drivers for each platform device with
+> > DMA and mark new ones EXPERIMENTAL.
+> 
+> That would cause tree-wide cross-dependencies between drivers, because
+> the two DMA controllers can't be used at the same time, and the PXA
+> specific API will be unavailable when the mmp-dma driver is selected. My
+> patch series (and the DMA controller framework for that matter) aims for
+> the opposite - the unification of APIs and drivers.
 
->> +               ports {
->> +                       #address-cells =3D <1>;
->> +                       #size-cells =3D <0>;
->> +
->> +                       port@0 {
->> +                               reg =3D <0>;
->> +
->> +                               tfp410_in: endpoint@0 {
->> +                                       remote-endpoint =3D <&dpi_out>=
-;
->> +                               };
->> +                       };
->> +
->> +                       port@1 {
->> +                               reg =3D <1>;
->> +
->> +                               tfp410_out: endpoint@1 {
->> +                                       remote-endpoint =3D <&dvi_conn=
-ector_in>;
->> +                               };
->> +                       };
->> +               };
->> +       };
->> +
->> +       dvi0: connector@0 {
->> +               compatible =3D "ti,dvi_connector";
->> +               i2c-bus =3D <&i2c3>;
->> +
->> +               dvi_connector_in: endpoint {
->> +                       remote-endpoint =3D <&tfp410_out>;
->> +               };
->> +       };
->> +
->> +       tv0: connector@1 {
->> +               compatible =3D "ti,svideo_connector";
->> +
->> +               tv_connector_in: endpoint {
->> +                       remote-endpoint =3D <&venc_out>;
->> +               };
->> +       };
->> +};
->> --
->> 1.8.3.2
->>
->=20
-> Also I don't see the DSS pinmux set for this board. I guess you need
-> something like the following on top:
->=20
-> 0x0a4 (PIN_OUTPUT | MUX_MODE0)   /* dss_pclk.dss_pclk */
-> 0x0a6 (PIN_OUTPUT | MUX_MODE0)   /* dss_hsync.dss_hsync */
-> 0x0a8 (PIN_OUTPUT | MUX_MODE0)   /* dss_vsync.dss_vsync */
-> 0x0aa (PIN_OUTPUT | MUX_MODE0)   /* dss_acbias.dss_acbias */
-> 0x0ac (PIN_OUTPUT | MUX_MODE0)   /* dss_data0.dss_data0 */
-> 0x0ae (PIN_OUTPUT | MUX_MODE0)   /* dss_data1.dss_data1 */
-> 0x0b0 (PIN_OUTPUT | MUX_MODE0)   /* dss_data2.dss_data2 */
-> 0x0b2 (PIN_OUTPUT | MUX_MODE0)   /* dss_data3.dss_data3 */
-> 0x0b4 (PIN_OUTPUT | MUX_MODE0)   /* dss_data4.dss_data4 */
-> 0x0b6 (PIN_OUTPUT | MUX_MODE0)   /* dss_data5.dss_data5 */
-> 0x0b8 (PIN_OUTPUT | MUX_MODE0)   /* dss_data6.dss_data6 */
-> 0x0ba (PIN_OUTPUT | MUX_MODE0)   /* dss_data7.dss_data7 */
-> 0x0bc (PIN_OUTPUT | MUX_MODE0)   /* dss_data8.dss_data8 */
-> 0x0be (PIN_OUTPUT | MUX_MODE0)   /* dss_data9.dss_data9 */
-> 0x0c0 (PIN_OUTPUT | MUX_MODE0)   /* dss_data10.dss_data10 */
-> 0x0c2 (PIN_OUTPUT | MUX_MODE0)   /* dss_data11.dss_data11 */
-> 0x0c4 (PIN_OUTPUT | MUX_MODE0)   /* dss_data12.dss_data12 */
-> 0x0c6 (PIN_OUTPUT | MUX_MODE0)   /* dss_data13.dss_data13 */
-> 0x0c8 (PIN_OUTPUT | MUX_MODE0)   /* dss_data14.dss_data14 */
-> 0x0ca (PIN_OUTPUT | MUX_MODE0)   /* dss_data15.dss_data15 */
-> 0x0cc (PIN_OUTPUT | MUX_MODE0)   /* dss_data16.dss_data16 */
-> 0x0ce (PIN_OUTPUT | MUX_MODE0)   /* dss_data17.dss_data17 */
-> 0x0d0 (PIN_OUTPUT | MUX_MODE0)   /* dss_data18.dss_data18 */
-> 0x0d2 (PIN_OUTPUT | MUX_MODE0)   /* dss_data19.dss_data19 */
-> 0x0d4 (PIN_OUTPUT | MUX_MODE0)   /* dss_data20.dss_data20 */
-> 0x0d6 (PIN_OUTPUT | MUX_MODE0)   /* dss_data21.dss_data21 */
-> 0x0d8 (PIN_OUTPUT | MUX_MODE0)   /* dss_data22.dss_data22 */
-> 0x0da (PIN_OUTPUT | MUX_MODE0)   /* dss_data23.dss_data23 */
+Not sure I got this point. My proposal is to keep the existing DMA
+intact until we are ready to remove it. I understand this approach
+requires considerably more work inside DMA to allow both driver to
+coexist than wholesale replacement. I still think big change is risky.
 
-True. I need to add something like this to all the dts files.
-
-You didn't have muxing in the omap3-igep0020 patch you gave. Is the
-muxing already set in some other patch?
-
- Tomi
-
-
-
---TMLWorbCnFS0svMMRnRgDMTfaUdPJRtBD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSpbJIAAoJEPo9qoy8lh71jbgP/202AqtG4v6jpY0ocMmNTep1
-1yKesysZq72yojw8AgeExWgCg7R7OwMvA0JuKNKX4iOvQe/BiWPbwKf4x1gPAwYd
-QyklCqrFNZ0qt5eQ6uyxYzNn2KcwXb7ScpZcIuRsYuWxh+KGolzdWDrCmpFIUVyB
-su32003WGwGoVkIpnB3PNCi/IaFeHN3amBVswCr2Lv3lmYaPEPc0qmV0cGi+IOLq
-Zi9VQsS8vk3kXYTQO1JAkIGrELj9sbKaxYYyvHzl/OkFKC3XuOZVuchCFjnaou63
-fHd3QVwE1MmwECisJj1C7U64Vs+JMT0loGw7f82BZUmi+KPU5lwI1DJeoY65pJgW
-5LIAC+3zwy0aKVFaJRf77H/fOAduQJJG4t8cBMSivN4pg6LESzFM9QK9SKo7Dngh
-tvWyiGzu6d6mL+Dczu0LW8N76anKgWK69KQpN7RQ+/n3A8W1iVYUeZRstlDtBz/n
-me9JAswYtIRNCh4wNVUcCmBblfrsGtWogKxOZmniXxG3T+kaNJ6AVNqek0wVmAHs
-wa+NqJ3dr++lzTofFdmUiI6sN7fZEOWof2srG869HzF9DM7WKHX1/zvVUog33/hb
-oPJ/AsNrKcl8upC6xkaz5R+FN429vTYQBmZ8I10yffcmmGmDADdjSmmwatrMQcbl
-vF/RyqduopGgquIS+Di1
-=24rd
------END PGP SIGNATURE-----
-
---TMLWorbCnFS0svMMRnRgDMTfaUdPJRtBD--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
