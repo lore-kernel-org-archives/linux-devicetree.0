@@ -1,62 +1,69 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v5 15/15] usb: phy-mxs: Add sync time after controller clear phcd
-Date: Mon, 9 Dec 2013 14:31:04 +0800
-Message-ID: <1386570664-6713-16-git-send-email-peter.chen@freescale.com>
-References: <1386570664-6713-1-git-send-email-peter.chen@freescale.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 04/10] usb: dwc3: use quirks to know if a particualr
+ platform doesn't have PHY
+Date: Mon, 9 Dec 2013 12:43:37 +0530
+Message-ID: <52A56DA1.1010808@ti.com>
+References: <1385373690-12170-1-git-send-email-kishon@ti.com>
+ <1385373690-12170-5-git-send-email-kishon@ti.com>
+ <20131204144027.GB21055@xps8300> <52A01E86.50406@ti.com>
+ <20131205075828.GA32583@xps8300>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386570664-6713-1-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
-Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131205075828.GA32583@xps8300>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, rob@landley.net, pawel.moll@arm.com, linux-doc@vger.kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, bcousson@baylibre.com, galak@codeaurora.org, swarren@wwwdotorg.org, s.nawrocki@samsung.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-After clear portsc.phcd, PHY needs 200us stable time for switch
-32K clock to AHB clock.
+Hi,
 
-Signed-off-by: Peter Chen <peter.chen@freescale.com>
----
- drivers/usb/phy/phy-mxs-usb.c |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
+On Thursday 05 December 2013 01:28 PM, Heikki Krogerus wrote:
+> Hi,
+>
+> On Thu, Dec 05, 2013 at 12:04:46PM +0530, Kishon Vijay Abraham I wrote:
+>> On Wednesday 04 December 2013 08:10 PM, Heikki Krogerus wrote:
+>>> On Mon, Nov 25, 2013 at 03:31:24PM +0530, Kishon Vijay Abraham I wrote:
+>>>> There can be systems which does not have an external phy, so get
+>>>> phy only if no quirks are added that indicates the PHY is not present.
+>>>> Introduced two quirk flags to indicate the *absence* of usb2 phy and
+>>>> usb3 phy. Also remove checking if return value is -ENXIO since it's now
+>>>> changed to always enable usb_phy layer.
+>>>
+>>> Can you guys explain why is something like this needed? Like with
+>>> clocks and gpios, the device drivers shouldn't need to care any more
+>>> if the platform has the phys or not. -ENODEV tells you your platform
+>>
+>> Shouldn't we report if a particular platform needs a PHY and not able to get
+>> it. How will a user know if a particular controller is not working because it's
+>> not able to get and initialize the PHYs? Don't you think in such cases it's
+>> better to fail (and return from probe) because the controller will not work
+>> anyway without the PHY?
+>
+> My point is that you do not need to separately tell this to the driver
+> like you do with the quirks (if you did, then you would need to fix
+> your framework and not hack the drivers).
+>
+> Like I said, ENODEV tells you that there is no phy on this platform
+> for you, allowing you to safely continue. If your phy driver is not
+> loaded, the framework already returns EPROBE_DEFER, right. Any other
 
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index e18fdf3..7ae5225 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -151,6 +151,15 @@ static inline bool is_imx6sl_phy(struct mxs_phy *mxs_phy)
- 	return mxs_phy->data == &imx6sl_phy_data;
- }
- 
-+/*
-+ * PHY needs some 32K cycles to switch from 32K clock to
-+ * bus (such as AHB/AXI, etc) clock.
-+ */
-+static void mxs_phy_clock_switch(void)
-+{
-+	usleep_range(300, 400);
-+}
-+
- static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
- {
- 	int ret;
-@@ -276,6 +285,7 @@ static int mxs_phy_init(struct usb_phy *phy)
- {
- 	struct mxs_phy *mxs_phy = to_mxs_phy(phy);
- 
-+	mxs_phy_clock_switch();
- 	clk_prepare_enable(mxs_phy->clk);
- 	return mxs_phy_hw_init(mxs_phy);
- }
-@@ -300,6 +310,7 @@ static int mxs_phy_suspend(struct usb_phy *x, int suspend)
- 		       x->io_priv + HW_USBPHY_CTRL_SET);
- 		clk_disable_unprepare(mxs_phy->clk);
- 	} else {
-+		mxs_phy_clock_switch();
- 		clk_prepare_enable(mxs_phy->clk);
- 		writel(BM_USBPHY_CTRL_CLKGATE,
- 		       x->io_priv + HW_USBPHY_CTRL_CLR);
--- 
-1.7.8
+right. but that doesn't consider broken dt data. With quirks we'll able 
+to tell if a controller in a particular platform has PHY or not without 
+depending on the dt data.
+> error when getting the phy you can consider critical. They are the
+> errors telling you that you do need a phy on this platform, but
+> something actually went wrong when getting it.
+Not on all scenarios though :-s
 
-
+Thanks
+Kishon
