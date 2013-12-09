@@ -1,64 +1,34 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v5 15/15] usb: phy-mxs: Add sync time after controller
- clear phcd
-Date: Mon, 09 Dec 2013 11:00:39 +0100
-Message-ID: <52A594C7.2000007@pengutronix.de>
-References: <1386570664-6713-1-git-send-email-peter.chen@freescale.com> <1386570664-6713-16-git-send-email-peter.chen@freescale.com> <52A587CD.7010203@pengutronix.de> <20131209091951.GD5291@shlinux1.ap.freescale.net>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH 01/10] net: stmmac: Enable stmmac main
+ clock when probing hardware
+Date: Mon, 09 Dec 2013 11:09:31 +0100
+Message-ID: <52A596DB.7040001@redhat.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org> <1386350983-13281-2-git-send-email-wens@csie.org> <20131207103335.GL24519@lukather> <CAGb2v65YOSq_BMWSzSHX8w_hbo+0vwquBT2pnLuwNVZkWRfLvA@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="bbVhgT820CTgHBPKmrWqCVMewPCX3IXQt"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131209091951.GD5291@shlinux1.ap.freescale.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBYVNS2KQKGQEWVB5WDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v65YOSq_BMWSzSHX8w_hbo+0vwquBT2pnLuwNVZkWRfLvA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---bbVhgT820CTgHBPKmrWqCVMewPCX3IXQt
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Chen-Yu,
 
-On 12/09/2013 10:19 AM, Peter Chen wrote:
-> On Mon, Dec 09, 2013 at 10:05:17AM +0100, Marc Kleine-Budde wrote:
->> On 12/09/2013 07:31 AM, Peter Chen wrote:
->>> After clear portsc.phcd, PHY needs 200us stable time for switch
->>> 32K clock to AHB clock.
->>
->> If this is a general bugbix, please move it to the start of this serie=
-s
->> and add stable on Cc. I think I hit the bug on the second USB port of =
-a
->> custom MX28 board, the stmp_reset_block() in the USB phy will fail.
->=20
-> Not a bug-fix, just the requirement for the PHY leaves low power mode.
-> Does the bug exists with my this patchset, or just current mainline cod=
-e?
+It seems this patch is not enough, gmac won't work for me
+with this patchset (*), unless I boot with an uboot which
+also has the gmac patches.
 
-I see, I found this strange thing on v3.8, but can try on v3.13-rc3.
+Regards,
 
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Hans
 
 
---bbVhgT820CTgHBPKmrWqCVMewPCX3IXQt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlKllMcACgkQjTAFq1RaXHP7mQCdE8woG7fgTQad1TqFMxICUQ9j
-CgAAnidX3ICoOcuF1+WJez0f/2LaJjPI
-=nks9
------END PGP SIGNATURE-----
-
---bbVhgT820CTgHBPKmrWqCVMewPCX3IXQt--
+*) see my sunxi-test tree where I've dropped your
+old version and added this version.
