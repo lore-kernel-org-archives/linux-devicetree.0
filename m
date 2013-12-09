@@ -1,90 +1,46 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 9/9] ARM: pxa27x: device tree support ICP DAS LP-8x4x
-Date: Mon, 9 Dec 2013 02:47:24 +0100
-Message-ID: <201312090247.24978.arnd@arndb.de>
-References: <1386348542-9584-1-git-send-email-ynvich@gmail.com> <1386543229-1542-1-git-send-email-ynvich@gmail.com> <1386543229-1542-10-git-send-email-ynvich@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] ARM: at91/dt: define sama5d3 clocks
+Date: Mon, 9 Dec 2013 03:09:23 +0100
+Message-ID: <201312090309.23723.arnd@arndb.de>
+References: <1385650171-8756-1-git-send-email-b.brezillon@overkiz.com> <1385650228-8906-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
-  charset="iso-8859-15"
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386543229-1542-10-git-send-email-ynvich@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <zonque@gmail.com>, Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385650228-8906-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 08 December 2013, Sergei Ianovich wrote:
-> +
-> +#ifdef CONFIG_PXA27x
-> +extern void __init pxa27x_dt_init_irq(void);
+On Thursday 28 November 2013, Boris BREZILLON wrote:
+> @@ -92,6 +103,8 @@
+>  				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_spi0>;
+> +				clocks = <&spi0_clk>;
+> +				clock-names = "spi_clk";
+>  				status = "disabled";
+>  			};
+>  
+> @@ -101,6 +114,8 @@
+>  				interrupts = <38 IRQ_TYPE_LEVEL_HIGH 4>;
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
+> +				clocks = <&ssc0_clk>;
+> +				clock-names = "pclk";
+>  				status = "disabled";
+>  			};
+>  
 
-This is not the right place to put an 'extern' declaration, it should go into
-a header file if it's really needed. Ideally you would not need it at all
-and just add an IRQCHIP_DECLARE() line into the driver to automatically
-probe it.
-
-> +static const struct of_dev_auxdata pxa27x_auxdata_lookup[] __initconst = {
-> +	OF_DEV_AUXDATA("mrvl,pxa-uart",		0x40100000, "pxa2xx-uart.0", NULL),
-> +	OF_DEV_AUXDATA("mrvl,pxa-uart",		0x40200000, "pxa2xx-uart.1", NULL),
-> +	OF_DEV_AUXDATA("mrvl,pxa-uart",		0x40700000, "pxa2xx-uart.2", NULL),
-> +	OF_DEV_AUXDATA("mrvl,pxa-uart",		0x41600000, "pxa2xx-uart.3", NULL),
-> +	OF_DEV_AUXDATA("marvell,pxa-mmc",	0x41100000, "pxa2xx-mci.0", NULL),
-> +	OF_DEV_AUXDATA("intel,pxa27x-gpio",	0x40e00000, "pxa27x-gpio", NULL),
-> +	OF_DEV_AUXDATA("marvell,pxa-ohci",	0x4c000000, "pxa27x-ohci", NULL),
-> +	OF_DEV_AUXDATA("mrvl,pxa-i2c",		0x40301680, "pxa2xx-i2c.0", NULL),
-> +	{}
-> +};
-
-I guess these are needed only for clock management purposes at the moment?
-
-> +static void __init pxa27x_init_early(void)
-> +{
-> +	pxa27x_skip_init();
-> +}
-
-I would prefer not to have an init_early function at all, and instead
-check "if (of_have_populated_dt())" in pxa27x_init, or to split
-that function into two.
-
-> +static const char *pxa27x_dt_board_compat[] __initdata = {
-> +	"marvell,pxa27x",
-> +	NULL,
-> +};
-> +
-> +#ifdef CONFIG_MACH_LP8X4X
-> +static const char *lp8x4x_dt_board_compat[] __initdata = {
-> +	"marvell,lp8x4x",
-> +	NULL,
-> +};
-
-Note that you should not have wildcards in any "compatible" strings.
-Just list all the combinations here (pxa270, pxa271, pxa272, and whatever
-you need for lp8x4x).
-
-> +static void lp8x4x_restart(enum reboot_mode mode, const char *cmd)
-> +{
-> +	/* Switch off fast-bus and turbo mode */
-> +	asm volatile("mcr       p14, 0, %0, c6, c0, 0" : :
-> +			"r"(2));
-> +	/* SDRAM hangs on watchdog reset on Marvell PXA270 (erratum 71) */
-> +	pxa_restart(REBOOT_SOFT, cmd);
-> +}
-> +#endif
-> +#endif
-
-Since the only difference here is the restart logic, I would prefer here to
-have only a single DT_MACHINE_START() and do
-
-static void pxa27x_restart(enum reboot_mode mode, const char *cmd)
-{
-	/* Switch off fast-bus and turbo mode */
-	if (of_machine_is_compatible("marvell,lp8x4x"))
-		asm volatile("mcr       p14, 0, %0, c6, c0, 0" : : "r"(2));
-
-	/* SDRAM hangs on watchdog reset on Marvell PXA270 (erratum 71) */
-	if (of_machine_is_compatible("marvell,pxa270"))
-		pxa_restart(REBOOT_SOFT, cmd);
-}
+You are adding "clock-names" properties in a lot of cases. Are you sure you
+are using the strings that are documented in the respective device bindings
+for each name? In a lot of cases, drivers just want an anonymous clock
+and we don't name them.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
