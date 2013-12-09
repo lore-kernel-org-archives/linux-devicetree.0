@@ -1,38 +1,106 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 02/10] net: stmmac: Honor DT parameter
- to force DMA store and forward mode
-Date: Mon, 9 Dec 2013 10:59:38 +0800
-Message-ID: <CAGb2v64BMNjbbc7j2XesuPEXZV+RnjtP1sAPQ4icU=-wjh3YNQ@mail.gmail.com>
-References: <1386350983-13281-1-git-send-email-wens@csie.org>
- <CAGb2v67ZNtbQm+ZW5v_3wNbz1=oLhXks6gbTSjLYa=Nnoz8w-A@mail.gmail.com>
- <20131207100737.GI24519@lukather> <2994980.boLDbkkER8@flatron>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] Add support for the eukrea-cpuimx28.
+Date: Mon, 9 Dec 2013 11:25:32 +0800
+Message-ID: <20131209032530.GC825@S2101-09.ap.freescale.net>
+References: <1386250086-4666-1-git-send-email-denis@eukrea.com>
+ <1386250086-4666-3-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBL7ESSKQKGQE4GNZSUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <2994980.boLDbkkER8@flatron>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: "maxime.ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1386250086-4666-3-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 7, 2013 at 7:06 PM, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Saturday 07 of December 2013 11:07:37 maxime.ripard wrote:
->> On Sat, Dec 07, 2013 at 09:23:27AM +0800, Chen-Yu Tsai wrote:
->> > Point taken. The current implementation will override settings passed from
->> > platform data. ORing the two would be better.
->>
->> Platform_data and DT-based configuration are pretty unlikely to be
->> used together, so ORing it doesn't have much sense.
->
-> In fact, the recommended way is to always use platform data alone if it is
-> present or try to parse DT otherwise, so no mixing of data from these two
-> sources should be done.
+On Thu, Dec 05, 2013 at 02:28:06PM +0100, Denis Carikli wrote:
+> From: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 
-Would binding platform data with compatibles, as I did so in this patch
-series, be a bad idea then?
+Please have a proper prefix for patch subject.
+
+>=20
+> The following devices/functionalities were tested:
+>  * Main UART.
+>  * Ethernet0.
+>  * Ethernet1.
+>  * SD.
+>  * USB host.
+>  * USB otg.
+>  * Display(and its backlight).
+>  * Touchscreen.
+>  * Audio.
+>  * nand.
+>  * i2c and the pcf8563 device.
+>  * The gpio buttons.
+>  * The gpio leds.
+>  * Watchdog
+>=20
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile                   |    2 +
+>  arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts |   71 ++++++
+>  arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts |   50 ++++
+>  arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi |  326 ++++++++++++++++=
+++++++++++
+>  arch/arm/mach-mxs/mach-mxs.c                 |    8 +
+>  5 files changed, 457 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts
+>  create mode 100644 arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts
+>  create mode 100644 arch/arm/boot/dts/imx28-eukrea-mbmx28lc.dtsi
+
+<snip>
+
+> diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mx=
+s.c
+> index 02b17f7..3b5f57e 100644
+> --- a/arch/arm/mach-mxs/mach-mxs.c
+> +++ b/arch/arm/mach-mxs/mach-mxs.c
+> @@ -448,6 +448,12 @@ static int __init mxs_restart_init(void)
+>  	return 0;
+>  }
+> =20
+> +static void __init eukrea_mbmx283lc_init(void)
+> +{
+> +	enable_clk_enet_out();
+
+This shouldn't be needed since commit daa7d39 (net: freescale: fec: add
+support for optional enet_out clk) and commit (f231a9f ARM: dts: mxs:
+add enet_out clock to devicetree)
+
+Shawn
+
+> +	mxs_saif_clkmux_select(MXS_DIGCTL_SAIF_CLKMUX_EXTMSTR0);
+> +}
+> +
+>  static void __init mxs_machine_init(void)
+>  {
+>  	struct device_node *root;
+> @@ -486,6 +492,8 @@ static void __init mxs_machine_init(void)
+>  		apx4devkit_init();
+>  	else if (of_machine_is_compatible("crystalfontz,cfa10036"))
+>  		crystalfontz_init();
+> +	else if (of_machine_is_compatible("eukrea,mbmx283lc"))
+> +		eukrea_mbmx283lc_init();
+>  	else if (of_machine_is_compatible("i2se,duckbill"))
+>  		duckbill_init();
+>  	else if (of_machine_is_compatible("msr,m28cu3"))
+> --=20
+> 1.7.9.5
+>=20
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
