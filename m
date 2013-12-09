@@ -1,59 +1,28 @@
-From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] ARM: at91/dt: define sama5d3 clocks
-Date: Mon, 09 Dec 2013 17:17:07 +0100
-Message-ID: <52A5ED03.2070306@overkiz.com>
-References: <1385650171-8756-1-git-send-email-b.brezillon@overkiz.com> <201312090309.23723.arnd@arndb.de> <52A582AB.6010504@overkiz.com> <201312091648.13802.arnd@arndb.de>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 2/2] ARM: dts:Move fifo-depth property from cros5250-common.dtsi
+Date: Mon, 9 Dec 2013 08:19:30 -0800
+Message-ID: <CAD=FV=Vg5Zfw8ABB_1CT9p7qhfi4Mm4pkjd8T==aN=2St4x5=w@mail.gmail.com>
+References: <1386571118-17793-1-git-send-email-yuvaraj.cd@samsung.com>
+	<1386571118-17793-2-git-send-email-yuvaraj.cd@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201312091648.13802.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1386571118-17793-2-git-send-email-yuvaraj.cd@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, pawel.moll@arm.com, mark.rutland@arm.com, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Sonny Rao <sonnyrao@chromium.org>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnd,
+Yuvaraj,
 
-On 09/12/2013 16:48, Arnd Bergmann wrote:
-> On Monday 09 December 2013, boris brezillon wrote:
->>> You are adding "clock-names" properties in a lot of cases. Are you sure you
->>> are using the strings that are documented in the respective device bindings
->>> for each name? In a lot of cases, drivers just want an anonymous clock
->>> and we don't name them.
->> I rechecked it, and almost all drivers call [devm_]clk_get with a
->> specific clock
->> name, and as a result we must specify the "clock-names" property.
->> The only exceptions I found are the spi and PIT (Periodic Interval
->> Timer) drivers,
->> and "clock-names" property is not defined in these nodes.
-> Yes, I understood that the *drivers* use the names, but are they actually
-> documented in the device bindings? If not, it might be better to change the
-> drivers.
+On Sun, Dec 8, 2013 at 10:38 PM, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com> wrote:
+> Commit 64c138a ("ARM: dts: Move fifo-depth property from exynos5250
+> board dts") missed out handling the exynos5250 snow dts file.
+> Deletes the fifo-depth property, as this property has been moved to
+> SOC specific exynos5250.dtsi file.
+>
+> Signed-off-by : Abhilash Kesavan <a.kesavan@samsung.com>
+>
+> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 
-We have to keep both clk system working for at91 platform (new CCF based
-clk implementations and old clk implementations) for two reasons:
-1) the new clk implemetations are only compatible with DT enabled boards
-     and some at91 boards are not yet ported to DT.
-2) we decided to move to the new clk implementations in multiple steps 
-(one SoC
-     family after another) in order to ease PATCH review.
-
-If we change the drivers to avoid specific clock name request 
-([devm]_clk_get(dev, NULL)),
-we will have to change the old static clk lookup tables
-(i.e. 
-http://lxr.free-electrons.com/source/arch/arm/mach-at91/at91sam9g45.c#L226,
-http://lxr.free-electrons.com/source/arch/arm/mach-at91/at91sam9260.c#L202, 
-...).
-
-Best Regards,
-
-Boris
-
-> 	Arnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Doug Anderson <dianders@chromium.org>
