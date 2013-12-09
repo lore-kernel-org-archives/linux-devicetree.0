@@ -1,63 +1,66 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 1/4 v10] thermal: samsung: replace inten_ bit fields with
- intclr_
-Date: Mon, 09 Dec 2013 13:51:35 +0100
-Message-ID: <4489646.QoKFUWLh9W@amdc1227>
-References: <1384238168-24561-1-git-send-email-ch.naveen@samsung.com>
- <1384866259-15983-1-git-send-email-ch.naveen@samsung.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 15/26] ARM: omap4-panda.dts: add display information
+Date: Mon, 9 Dec 2013 14:56:20 +0200
+Message-ID: <52A5BDF4.2070304@ti.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>	<1386160133-24026-16-git-send-email-tomi.valkeinen@ti.com> <CABxcv=m+-9V2qwvuQgJavQ3qOb2+fBcAoW9G_Mi33BTHCWE85g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1384866259-15983-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="sweC9I40gClxwW27U3q7MX5Ud9fwMgckI"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=m+-9V2qwvuQgJavQ3qOb2+fBcAoW9G_Mi33BTHCWE85g@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Naveen,
+--sweC9I40gClxwW27U3q7MX5Ud9fwMgckI
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tuesday 19 of November 2013 18:34:19 Naveen Krishna Chatradhi wrote:
-> This patch replaces the inten_rise_shift/mask and inten_fall_shift/mask
-> with intclr_rise_shift/mask and intclr_fall_shift/mask respectively.
-> Currently, inten_rise_shift/mask and inten_fall_shift/mask bits are only used
-> to configure intclr related registers.
-> 
-> Description of H/W:
-> The offset for the bits in the CLEAR register are not consistent across TMU
-> modules in Exynso5250, 5420 and 5440.
-> 
-> On Exynos5250, the FALL interrupt related en, status and clear bits are
-> available at an offset of
-> 16 in INTEN, INTSTAT registers and at an offset of
-> 12 in INTCLEAR register.
-> 
-> On Exynos5420, the FALL interrupt related en, status and clear bits are
-> available at an offset of
-> 16 in INTEN, INTSTAT and INTCLEAR registers.
-> 
-> On Exynos5440,
-> the FALL_IRQEN bits are at an offset of 4
-> and the RISE_IRQEN bits are at an offset of 0
-> 
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> Acked-by: Amit Daniel Kachhap <amit.daniel@samsung.com>
-> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> ---
-> Changes since v9:
-> Just respinning
-> 
-> Changes since v8:
-> 1. Modified the patch description,
-> 2. replaces the inten_rise/fall_shift/mask with intclr_rise/fall_shift/mask
-> 
->  drivers/thermal/samsung/exynos_tmu.c      |    6 +++---
->  drivers/thermal/samsung/exynos_tmu.h      |   16 ++++++++--------
->  drivers/thermal/samsung/exynos_tmu_data.c |   18 +++++++++---------
->  drivers/thermal/samsung/exynos_tmu_data.h |    4 ++--
->  4 files changed, 22 insertions(+), 22 deletions(-)
+On 2013-12-06 10:57, Javier Martinez Canillas wrote:
 
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+>> +       tfp410: encoder@0 {
+>> +               compatible =3D "ti,tfp410";
+>> +               gpios =3D <&gpio1 0 0>;   /* 0, power-down */
+>> +
+>=20
+> Please use the constants from include/dt-bindings/ instead of magic
+> numbers, i.e:
+>=20
+> gpios =3D <&gpio1 0 GPIO_ACTIVE_HIGH>;   /* 0, power-down */
 
-Best regards,
-Tomasz
+Thanks, fixed now (for all .dts files)
+
+However... The TFP410 gpio is "power-down". I think we should actually
+mark it as GPIO_ACTIVE_LOW, as setting it to 0 powers down the device.
+
+ Tomi
+
+
+
+--sweC9I40gClxwW27U3q7MX5Ud9fwMgckI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJSpb30AAoJEPo9qoy8lh71nU0QAKXbwnH5YsMsNEZwCQWu6gTt
+J4QMj9/LP/Dcm7PMdT7Y+Acuqnen4v2zYbNeiYflOPlT02XAmk+QqmMTUeI74R6o
+l1xlqXD4NZbAy7m3BQERQFQ3uBTmrKdtnlePKm/4MpXN6d0Sdxbg1CYiFv7AetaK
+U5ES0+N6CiCb5dq1AlaAG/qAxMu28EiJQ2xRyrmThHM5jDsg29N4+zY1+Io/nlqj
+D0G/9tSUUQdLzKmPzLbDSaSnX8MAYuh8DqD3gIoQZfbaqSmTPwmwk2iIuyEQtRCs
+bpNPGP9lSkvqLWQK6o6j2eyNv/fmcRlD4nbCJhTyAcl39kWhtfO+W5Uh7zXtgioG
+mgeWiLozKbRLwtwfwrDIs2C1RzuIzrfxRoG7pQLzuMTU8dFtru1yhLwe3UfZkQPt
+B1RAc77QsbvaAfZ9UKX1/iy8JOEqOj2FyI6+QgaBVrcHduTKPOU9Lq1BZYtgnwqg
+WKQtqY+Qr8+HynjUg3eaH0wIIP+s2ZswUq34pFpVP3LuA8u9tqwkOinVaPDpLfRt
+p4FyOxMCMsqyBrGbnSyCoyCtQaGw2lc7jSgugDUBPQSX6syssxocgFBKD8NCA6fO
+Cp/0obq5q+7TSwXD4OlFdIAfySaN/FeGXeITnupGQ7jNBt/T73uN/zFZClvysTdl
+fPQHb59QlPhsA1W70Mev
+=1HkV
+-----END PGP SIGNATURE-----
+
+--sweC9I40gClxwW27U3q7MX5Ud9fwMgckI--
