@@ -1,43 +1,73 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] Add support for the eukrea-cpuimx28.
-Date: Mon, 9 Dec 2013 11:31:57 +0800
-Message-ID: <20131209033150.GA6265@S2101-09.ap.freescale.net>
-References: <1386250086-4666-1-git-send-email-denis@eukrea.com>
- <1386250086-4666-3-git-send-email-denis@eukrea.com>
- <20131209032530.GC825@S2101-09.ap.freescale.net>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCHv13] ARM: dts: Add support for the cpuimx25 board from
+ Eukrea and its baseboard.
+Date: Mon, 9 Dec 2013 11:52:52 +0800
+Message-ID: <20131209035250.GE825@S2101-09.ap.freescale.net>
+References: <1386255416-18661-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20131209032530.GC825-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1386255416-18661-1-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Denis Carikli <denis@eukrea.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2013 at 11:25:32AM +0800, Shawn Guo wrote:
-> > diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mxs.c
-> > index 02b17f7..3b5f57e 100644
-> > --- a/arch/arm/mach-mxs/mach-mxs.c
-> > +++ b/arch/arm/mach-mxs/mach-mxs.c
-> > @@ -448,6 +448,12 @@ static int __init mxs_restart_init(void)
-> >  	return 0;
-> >  }
-> >  
-> > +static void __init eukrea_mbmx283lc_init(void)
-> > +{
-> > +	enable_clk_enet_out();
-> 
-> This shouldn't be needed since commit daa7d39 (net: freescale: fec: add
-> support for optional enet_out clk) and commit (f231a9f ARM: dts: mxs:
-> add enet_out clock to devicetree)
+On Thu, Dec 05, 2013 at 03:56:56PM +0100, Denis Carikli wrote:
+> The following devices/functionalities were added:
+>  * Main and secondary UARTs.
+>  * i2c and the pcf8563 device.
+>  * Ethernet.
+>  * NAND.
+>  * The BP1 button.
+>  * The LED.
+>  * Watchdog
+>  * SD.
+> =
 
-I just fixed it up and apply the patch.  Please test it and report back
-if it does not work for you.
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Eric B=E9nard <eric@eukrea.com>
+> Signed-off-by: Denis Carikli <denis@eukrea.com>
+> ---
+> ChangeLog v10->v13:
+> - The display part was splitted out because it depends on other
+>   patches that are not applied yet, the commit message was updated accord=
+ingly.
+> - The new GPIO and input defines are now used in the dts(i).
+> =
+
+> ChangeLog v9->v10:
+> - Adapted to the new pingrp patches.
+> =
+
+> ChangeLog v8->v9:
+> - Licenses were shortened.
+> ---
+>  arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi       |   60 ++++++++++
+>  .../boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts  |  119 ++++++++++++++=
+++++++
+>  2 files changed, 179 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
+>  create mode 100644 arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
+
+Added the dtb target into arch/arm/boot/dts/Makefile, and applied the
+patch.
 
 Shawn
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
