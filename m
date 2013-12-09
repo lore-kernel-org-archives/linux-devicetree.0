@@ -1,87 +1,71 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 15/26] ARM: omap4-panda.dts: add display information
-Date: Mon, 9 Dec 2013 17:30:56 +0200
-Message-ID: <52A5E230.4010901@ti.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>	<1386160133-24026-16-git-send-email-tomi.valkeinen@ti.com>	<CABxcv=m+-9V2qwvuQgJavQ3qOb2+fBcAoW9G_Mi33BTHCWE85g@mail.gmail.com>	<52A5BDF4.2070304@ti.com> <CABxcv==-aknRfzybA6ify5JSHeiquS9bqAEXumJwhnS6PT0MfA@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
+ extensions for GMAC in Allwinner A20 SoC's
+Date: Mon, 9 Dec 2013 23:45:13 +0800
+Message-ID: <CAGb2v65T4jqvrW=ZX3fcEm22rU0DEgsRJ2NtXDQ2406Ou5G9MA@mail.gmail.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org>
+ <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A7B2.4000509@st.com> <52A5C950.7070903@cogentembedded.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="4duuXIeLVqLNCRgn2UfVTAoLsmpupwcJF"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CABxcv==-aknRfzybA6ify5JSHeiquS9bqAEXumJwhnS6PT0MfA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Enric Balletbo Serra <eballetbo@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBHOLS6KQKGQELAV7RJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <52A5C950.7070903-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---4duuXIeLVqLNCRgn2UfVTAoLsmpupwcJF
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On 2013-12-09 17:09, Javier Martinez Canillas wrote:
-> Hi Tomi,
->=20
-> On Mon, Dec 9, 2013 at 1:56 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> =
-wrote:
->> On 2013-12-06 10:57, Javier Martinez Canillas wrote:
->>
->>>> +       tfp410: encoder@0 {
->>>> +               compatible =3D "ti,tfp410";
->>>> +               gpios =3D <&gpio1 0 0>;   /* 0, power-down */
->>>> +
->>>
->>> Please use the constants from include/dt-bindings/ instead of magic
->>> numbers, i.e:
->>>
->>> gpios =3D <&gpio1 0 GPIO_ACTIVE_HIGH>;   /* 0, power-down */
->>
->> Thanks, fixed now (for all .dts files)
->>
->> However... The TFP410 gpio is "power-down". I think we should actually=
+On Mon, Dec 9, 2013 at 9:44 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Hello.
+>
+>
+> On 09-12-2013 15:21, srinivas kandagatla wrote:
+>
+>>> +static int sun7i_gmac_init(struct platform_device *pdev)
+>>> +{
+>>> +       struct resource *res;
+>>> +       struct device *dev = &pdev->dev;
+>>> +       void __iomem *addr = NULL;
+>>> +       struct plat_stmmacenet_data *plat_dat = NULL;
+>
+>
+>    No need to initialize it since you're assigning to it right below.
+>
+>
+>>> +       u32 priv_clk_reg;
+>>> +
+>>> +       plat_dat = dev_get_platdata(&pdev->dev);
+>>> +       if (!plat_dat)
+>>> +               return -EINVAL;
+>
+>
+>> dev_get_platdata will return NULL for DT, So this function will fail all
+>> the time.
+>
+>
+>    Indeed, unless the probe() method assigns it from the 'data' field of
+> 'struct of_device_id'.
+>
+>
+>> How is it supposed to work?
+>> Am I missing some thing?
+>
+>
+>    Look at stmmac_pltfr_probe().
 
->> mark it as GPIO_ACTIVE_LOW, as setting it to 0 powers down the device.=
+Actually, Srinivas is right.
+The platform data assigned from the 'data field' is not the same one as
+dev_get_platdata().
 
->>
->=20
-> yes, I looked at the TFP410 datasheet [0] and the Power Down pin is
-> indeed an active-low, I just replaced to GPIO_ACTIVE_HIGH since you
-> were using a constant 0 and include/dt-bindings/gpio/gpio.h defines
-> GPIO_ACTIVE_HIGH  as 0.
->=20
-> I just asked to Enric why we use GPIO_ACTIVE_HIGH for the PD pin on
-> the IGEPv2 DTS instad and is because the IGEP board uses a hardware
-> signal inverter but that is a special case. I don't know about the
-> Panda board since I haven't looked at its datasheet.
-
-Oh. Does it work on igep? The TFP410 driver always handles the PD GPIO
-as it were active-low. The flag is ignored.
-
- Tomi
+This is something I missed when I was reworking the patches.
 
 
-
---4duuXIeLVqLNCRgn2UfVTAoLsmpupwcJF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSpeIwAAoJEPo9qoy8lh712vwP/junXGTfx4TuqekJmb/Ku/Bv
-BmKGuZ8RmHKhLpvOU+byZycjgYLpW0GNhc3VBb311Sya8KUlg94Q9RNBiwfnx5Tv
-xkiAkkOVuQaV5RxztR9uATIGmbFsrZWP8Ksx+CSE7eBGRDvtqxOJ8NjYMzxEkwEQ
-0XbxMEV8rfFPMmMC3HeAqy6YSVwi+K0F7vvPyJ9ljW0XjmBEHqZmHC3H3O1ip/06
-n7dsn63rkTCx0SJ7JVxI1VzIIcDFEHx1tFh1ghUQ4iLFlPpXxiTNCJDKqhQrxLBA
-nDFxvP2pDBAH9YC4mWazzo6CXJhBXmvBdgHenhnFpn9uuzF3cdbbvWQ3BZennzbn
-B2DTPPc6nQYKZPUerVhtGFFI/w5TVt7llbksApAov8fSr+cVqJhs+epxvNslvGp7
-vz98w0zggQuCyVAKdEUdT0QJpYGmpH8k6rJpJiZJofBejA+XPmXsxb+esE+aBfkI
-kN5r/KRTttQ2oO7VBD7Um2aa7C06cJ2TGbUJIKBJAKC+wqDgo7rPjXk3MPfPjhSS
-El5f9nokc7/fZ/IMZ149/BBeaKyhEEuA3Fp9dEIfy2obSr1QIdbEH0gfN8PEQJ2L
-Hs27jlcVc6ik0OQ7GW5iZDgkIkZC8VGCadRu3edMT9YISL+sYMQHF1VqbZ3/9IQc
-g791tyWvg05eP1vg4O14
-=uMAt
------END PGP SIGNATURE-----
-
---4duuXIeLVqLNCRgn2UfVTAoLsmpupwcJF--
+ChenYu
