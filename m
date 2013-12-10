@@ -1,63 +1,134 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] spi: dt-binding: clarify gpio chipselect language
-Date: Tue, 10 Dec 2013 11:26:44 +0000
-Message-ID: <20131210112313.GF1809@e106331-lin.cambridge.arm.com>
-References: <542dfeee809e73f7f071f4ae0b4f95af7736f70b.1386243545.git.baruch@tkos.co.il>
- <20131205164400.GI12805@ns203013.ovh.net>
- <20131208053712.GA3869@tarshish>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [RFC PATCH v3 2/8] mmc: omap_hsmmc: handle vcc and vcc_aux independently
+Date: Tue, 10 Dec 2013 17:18:20 +0530
+Message-ID: <52A6FF84.40901@ti.com>
+References: <20130613174554.GB1403@sirena.org.uk> <1385043627-30439-1-git-send-email-balajitk@ti.com> <1385043627-30439-3-git-send-email-balajitk@ti.com> <CAPDyKFqAT+Zd4LmAJ91g603LXx2rAfoRhF1UK4XNzSUVNS0X9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131208053712.GA3869@tarshish>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFqAT+Zd4LmAJ91g603LXx2rAfoRhF1UK4XNzSUVNS0X9w@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-omap <linux-omap@vger.kernel.org>, Benoit Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 08, 2013 at 05:37:12AM +0000, Baruch Siach wrote:
-> Hi Jean-Christophe,
-> 
-> On Thu, Dec 05, 2013 at 05:44:00PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 13:39 Thu 05 Dec     , Baruch Siach wrote:
-> > > Commit 743179849015 (of_spi: add generic binding support to specify cs gpio)
-> > > introduced generic binding for gpio chip-select. The cs_gpio struct field,
-> > > however, is an internal implementation detail of the Linux SPI subsystem, and
-> > > should not be mentioned in the device tree binding documentation. Mention the
-> > > previously defined cs-gpios master node property instead.
-> > > 
-> > > Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/spi/spi-bus.txt | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > > index 800dafe..e5a4d1b 100644
-> > > --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > > +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > > @@ -67,7 +67,7 @@ only 1(SINGLE), 2(DUAL) and 4(QUAD).
-> > >  Dual/Quad mode is not allowed when 3-wire mode is used.
-> > >  
-> > >  If a gpio chipselect is used for the SPI slave the gpio number will be passed
-> > > -via the cs_gpio
-> > > +via the SPI master node cs-gpios property.
-> > 
-> > here it's an information about the c structure
-> 
-> Is binding documentation the place for implementation notes? Especially since 
-> cs_gpio struct member is never mentioned in this document, and its name is 
-> confusingly similar to the cs-gpios property name.
+On Tuesday 10 December 2013 04:39 PM, Ulf Hansson wrote:
+> On 21 November 2013 15:20, Balaji T K <balajitk@ti.com> wrote:
+>> handle vcc and vcc_aux independently to reduce indent.
+>>
+>> Signed-off-by: Balaji T K <balajitk@ti.com>
+>> ---
+>>   drivers/mmc/host/omap_hsmmc.c |   54 +++++++++++++++++++----------------------
+>>   1 files changed, 25 insertions(+), 29 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+>> index 1eb4350..342be25 100644
+>> --- a/drivers/mmc/host/omap_hsmmc.c
+>> +++ b/drivers/mmc/host/omap_hsmmc.c
+>> @@ -286,11 +286,12 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
+>>           * chips/cards need an interface voltage rail too.
+>>           */
+>>          if (power_on) {
+>> -               ret = mmc_regulator_set_ocr(host->mmc, host->vcc, vdd);
+>> +               if (host->vcc)
+>> +                       ret = mmc_regulator_set_ocr(host->mmc, host->vcc, vdd);
+>>                  /* Enable interface voltage rail, if needed */
+>>                  if (ret == 0 && host->vcc_aux) {
+>>                          ret = regulator_enable(host->vcc_aux);
+>> -                       if (ret < 0)
+>> +                       if (ret < 0 && host->vcc)
+>>                                  ret = mmc_regulator_set_ocr(host->mmc,
+>>                                                          host->vcc, 0);
+>>                  }
+>> @@ -298,7 +299,7 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
+>>                  /* Shut down the rail */
+>>                  if (host->vcc_aux)
+>>                          ret = regulator_disable(host->vcc_aux);
+>> -               if (!ret) {
+>> +               if (host->vcc) {
+>>                          /* Then proceed to shut down the local regulator */
+>>                          ret = mmc_regulator_set_ocr(host->mmc,
+>>                                                  host->vcc, 0);
+>> @@ -318,10 +319,10 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
+>>
+>>          reg = devm_regulator_get(host->dev, "vmmc");
+>>          if (IS_ERR(reg)) {
+>> -               dev_err(host->dev, "vmmc regulator missing\n");
+>> +               dev_err(host->dev, "unable to get vmmc regulator %ld\n",
+>> +                       PTR_ERR(reg));
+>>                  return PTR_ERR(reg);
+>>          } else {
+>> -               mmc_slot(host).set_power = omap_hsmmc_set_power;
+>>                  host->vcc = reg;
+>>                  ocr_value = mmc_regulator_get_ocrmask(reg);
+>>                  if (!mmc_slot(host).ocr_mask) {
+>> @@ -334,31 +335,26 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
+>>                                  return -EINVAL;
+>>                          }
+>>                  }
+>> +       }
+>> +       mmc_slot(host).set_power = omap_hsmmc_set_power;
+>>
+>> -               /* Allow an aux regulator */
+>> -               reg = devm_regulator_get_optional(host->dev, "vmmc_aux");
+>> -               host->vcc_aux = IS_ERR(reg) ? NULL : reg;
+>> +       /* Allow an aux regulator */
+>> +       reg = devm_regulator_get_optional(host->dev, "vmmc_aux");
+>> +       host->vcc_aux = IS_ERR(reg) ? NULL : reg;
+>>
+>> -               /* For eMMC do not power off when not in sleep state */
+>> -               if (mmc_slot(host).no_regulator_off_init)
+>> -                       return 0;
+>> -               /*
+>> -               * UGLY HACK:  workaround regulator framework bugs.
+>> -               * When the bootloader leaves a supply active, it's
+>> -               * initialized with zero usecount ... and we can't
+>> -               * disable it without first enabling it.  Until the
+>> -               * framework is fixed, we need a workaround like this
+>> -               * (which is safe for MMC, but not in general).
+>> -               */
+>
+> The above problem is handled by the mmc core layer. I certainly think
+> you shall adopt your code to it.
+Hi Ulf,
 
-Preferably, a binding document should not refer to any implementation
-details of drivers or subsystems using the binding. The implementation
-can change separately from the binding, and separating the two keeps us
-honest.
+how about optional vqmmc, omap_hsmmc does call mmc_regulator_set_ocr for vmmc
+Am I missing something?
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Kind regards
+> Ulf Hansson
+>
+>> -               if (regulator_is_enabled(host->vcc) > 0 ||
+>> -                   (host->vcc_aux && regulator_is_enabled(host->vcc_aux))) {
+>> -                       int vdd = ffs(mmc_slot(host).ocr_mask) - 1;
+>> +       /* For eMMC do not power off when not in sleep state */
+>> +       if (mmc_slot(host).no_regulator_off_init)
+>> +               return 0;
+>> +       /*
+>> +        * To disable boot_on regulator, enable regulator
+>> +        * to increase usecount and then disable it.
+>> +        */
+>> +       if ((host->vcc && regulator_is_enabled(host->vcc) > 0) ||
+>> +           (host->vcc_aux && regulator_is_enabled(host->vcc_aux))) {
+>> +               int vdd = ffs(mmc_slot(host).ocr_mask) - 1;
+>>
+>> -                       mmc_slot(host).set_power(host->dev, host->slot_id,
+>> -                                                1, vdd);
+>> -                       mmc_slot(host).set_power(host->dev, host->slot_id,
+>> -                                                0, 0);
+>> -               }
+>> +               mmc_slot(host).set_power(host->dev, host->slot_id, 1, vdd);
+>> +               mmc_slot(host).set_power(host->dev, host->slot_id, 0, 0);
+>>          }
+>>
+>>          return 0;
+>> --
+>> 1.7.5.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
