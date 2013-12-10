@@ -1,39 +1,42 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCHv2 00/10] Add memory mapped support for ti qspi, m25p80 serial flash.
-Date: Tue, 10 Dec 2013 19:34:01 +0100
-Message-ID: <201312101934.01300.marex@denx.de>
-References: <1386339891-32717-1-git-send-email-sourav.poddar@ti.com> <201312101922.10618.marex@denx.de> <20131210182904.GG11468@sirena.org.uk>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: [RFC v2] Beaglebone-Black HDMI audio
+Date: Tue, 10 Dec 2013 20:52:30 +0200
+Message-ID: <cover.1386504183.git.jsarha__46449.1895203993$1386701570$gmane$org@ti.com>
+References: <cover.1384862950.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131210182904.GG11468@sirena.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Sourav Poddar <sourav.poddar@ti.com>, linux-spi@vger.kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, balbi@ti.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1384862950.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, December 10, 2013 at 07:29:04 PM, Mark Brown wrote:
-> On Tue, Dec 10, 2013 at 07:22:10PM +0100, Marek Vasut wrote:
-> > On Tuesday, December 10, 2013 at 05:11:43 PM, Mark Brown wrote:
-> > > There is some stuff that pushes up into the controller in that while
-> > > the device is in memory mapped mode as far as I can tell it's not safe
-> > > to do other accesses so if someone's put more than one device on the
-> > > SPI bus we need to handle interactions there.
-> > 
-> > OK, so it's either-or . That seems OK, you might want to have two drivers
-> > for this ip block, one to handle it as a SPI block and one to handle it
-> > as a SPI-NOR block. ... that is of course, if these two modes can't work
-> > together.
-> 
-> Or the client disables the memory map when it's not actively being used
-> and the stops other transfers starting while the mapping is in place.
-> I'd expect we'll have to cope with shared use at some point, hardware
-> engineers will probably build such systems.
+The first post of this patch had some addresses missing so here it comes again.
+ 
+Changes since the first RFC version of the patch:
+- Change sound node's compatible property
+  form: "ti,am33xx-beaglebone-black" to "ti,am33xx-beaglebone-black-audio"
 
-Aren't we fixing the problem at the wrong place ? Maybe it's about time to fix 
-the engineers ;-)
+The patch has been rebased on top of:
+git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.13/dts
+
+The associated code changes can be found here:
+http://mailman.alsa-project.org/pipermail/alsa-devel/2013-December/069897.html
 
 Best regards,
-Marek Vasut
+Jyri
+
+Jyri Sarha (1):
+  ARM/dts: am335x-boneblack: Add HDMI audio support
+
+ arch/arm/boot/dts/am335x-boneblack.dts |   52 ++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
