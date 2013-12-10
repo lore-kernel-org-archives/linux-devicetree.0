@@ -1,75 +1,58 @@
-From: Alex Elder <alex.elder@linaro.org>
-Subject: Re: [PATCH v2 0/3] clk: bcm281xx: define Broadcom kona clocks
-Date: Tue, 10 Dec 2013 15:11:36 -0600
-Message-ID: <52A78388.90904@linaro.org>
-References: <529F4B0F.2020801@linaro.org>
+From: Antti Miettinen <ananaza@iki.fi>
+Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
+Date: Wed, 11 Dec 2013 00:04:27 +0200
+Message-ID: <87haaggy6s.fsf@iki.fi>
+References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
+	<1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
+	<87lhztgqsj.fsf@iki.fi>
+	<20131210132719.GC15543@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <529F4B0F.2020801@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@linaro.org>
-Cc: "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20131210132719.GC15543@e102568-lin.cambridge.arm.com> (Lorenzo
+	Pieralisi's message of "Tue, 10 Dec 2013 13:27:19 +0000")
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dave P Martin <Dave.Martin@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2013 09:32 AM, Alex Elder wrote:
-> This series adds support for Kona clock control units (CCUs) and
-> clocks, used by Broadcom BCM281xx family SoCs.  Kona CCUs are
-> represented by nodes in the device tree, and the names of the clocks
-> provided by a CCU are included in its node.  Implementation details
-> of those clocks are defined in a C file separate from the code that
-> implements the functionality used by most of the common clock
-> framework.
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+> I do not think we should think about how the kernel uses this data.
+> We should strive to make DT data representative of HW C-states and
+> that's very complex, as you mentioned (it depends at what granularity
+> we want these bits of info).
+>
+> When we are happy with the bindings we can then code the kernel accordingly.
+>
+> Please let me know how you would like to have these bindings extended
+> (eg adding operating points), getting feedback is the main reason why
+> I posted them in the first place.
 
-Ping?
+Hmm.. I'd like to challenge that a bit. I guess we are not defining DT
+bindings just for the joy of modelling the hardware? We should care
+whether kernel needs the data and have some idea of how the data will be
+used.
 
-If you need me to re-send the series as separate messages, say
-so and I'll gladly do it.
+As you say, modelling C state details is not trivial. It might be
+possible to construct an approximate formula for e.g. entry/exit latency
+that takes CPU frequency, memory frequency and PMIC ramp rates as
+input. Also, in principle we could estimate power based on clocks,
+voltages, temperature etc. As we probably do not want to put function
+definitions to DT, the DT would contain e.g. coefficients for functions
+that would need to be platform neutral.
 
-Thank you.
+Is this what you'd like to see? There has been some research in
+estimating power without actually measuring it, e.g. the google
+powertutor people have written some papers about this. The latencies
+could be measured to some extend with instrumentation in the kernel and
+the measurement results could be used to tune some parameters.
 
-					-Alex
+Or would you rather have tables, which specify latencies and power
+levels and the tables would be indexed with frequencies and voltages?
 
-> This series depends on:
->     "Update Kona drivers to use clocks"
->     https://lkml.org/lkml/2013/11/14/450
-> 
-> This series (along with a version of those prerequisite patches) is
-> available in the "review/bcm-kona-clocks-v2" branch of this git
-> repository:
->     git://git.linaro.org/people/elder/linux.git
-> 
-> Updates:
-> v2: - Address all issues raised by Mark Rutland.
-> 
-> 					-Alex
-> 
-> Alex Elder (3):
->   clk: bcm281xx: define kona clock binding
->   clk: bcm281xx: add initial clock framework support
->   ARM: dts: bcm281xx: define real clocks
-> 
->  .../devicetree/bindings/clock/bcm-kona-clock.txt   |   93 ++
->  arch/arm/boot/dts/bcm11351.dtsi                    |  240 +++--
->  drivers/clk/Kconfig                                |    1 +
->  drivers/clk/Makefile                               |    1 +
->  drivers/clk/bcm/Kconfig                            |    8 +
->  drivers/clk/bcm/Makefile                           |    3 +
->  drivers/clk/bcm/clk-bcm281xx.c                     |  416 ++++++++
->  drivers/clk/bcm/clk-kona-setup.c                   |  769 +++++++++++++++
->  drivers/clk/bcm/clk-kona.c                         | 1033
-> ++++++++++++++++++++
->  drivers/clk/bcm/clk-kona.h                         |  414 ++++++++
->  include/dt-bindings/clock/bcm281xx.h               |   65 ++
->  11 files changed, 2967 insertions(+), 76 deletions(-)
->  create mode 100644
-> Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
->  create mode 100644 drivers/clk/bcm/Kconfig
->  create mode 100644 drivers/clk/bcm/Makefile
->  create mode 100644 drivers/clk/bcm/clk-bcm281xx.c
->  create mode 100644 drivers/clk/bcm/clk-kona-setup.c
->  create mode 100644 drivers/clk/bcm/clk-kona.c
->  create mode 100644 drivers/clk/bcm/clk-kona.h
->  create mode 100644 include/dt-bindings/clock/bcm281xx.h
-> 
+Anyway, I would really like to see the option of having the state choice
+in the driver. One possible way to achieve this would be to allow for
+the driver to export an optional "choose" method. If that exists the
+governor would offload the decision to the driver.
+
+	--Antti
