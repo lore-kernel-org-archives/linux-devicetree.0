@@ -1,120 +1,255 @@
-From: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv2 09/10] arm: dts: dra7: Add qspi device.
-Date: Tue, 10 Dec 2013 09:55:15 +0530
-Message-ID: <52A697AB.1060404@ti.com>
-References: <1386339891-32717-1-git-send-email-sourav.poddar@ti.com> <1386339891-32717-10-git-send-email-sourav.poddar@ti.com> <20131209174203.GB12527@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131209174203.GB12527-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 1/1] ARM: dts: Add PMIC support to arndale-octa
+Date: Tue, 10 Dec 2013 11:59:18 +0530
+Message-ID: <1386656958-28292-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, kgene.kim@samsung.com, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 December 2013 11:12 PM, Tony Lindgren wrote:
-> * Sourav Poddar<sourav.poddar-l0cyMroinI0@public.gmane.org>  [131206 06:29]:
->> These add device tree entry for qspi controller driver on dra7.
-> FYI these .dts changes need to be queued separately by Benoit and
-> should be posted as a seprate series in general to avoid confusion.
->
-Ok, thanks!
-I posted this for review along with other code changes.
+Added PMIC node to Arndale-Octa board.
 
-I will post them seperately to Benoit.
-> Regards,
->
-> Tony
->
->> Signed-off-by: Sourav Poddar<sourav.poddar-l0cyMroinI0@public.gmane.org>
->> ---
->> v1->v2:
->> use "MUX_MODE1" instead of numeric value
->>   arch/arm/boot/dts/dra7-evm.dts |   32 ++++++++++++++++++++++++++++++++
->>   arch/arm/boot/dts/dra7.dtsi    |   13 +++++++++++++
->>   2 files changed, 45 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
->> index 5babba0..4a57fdf 100644
->> --- a/arch/arm/boot/dts/dra7-evm.dts
->> +++ b/arch/arm/boot/dts/dra7-evm.dts
->> @@ -93,6 +93,21 @@
->>   			0x24c (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_txd */
->>   		>;
->>   	};
->> +
->> +	qspi1_pins: pinmux_qspi1_pins {
->> +		pinctrl-single,pins =<
->> +			0x4c (PIN_INPUT | MUX_MODE1)  /* gpmc_a3.qspi1_cs2 */
->> +			0x50 (PIN_INPUT | MUX_MODE1)  /* gpmc_a4.qspi1_cs3 */
->> +			0x74 (PIN_INPUT | MUX_MODE1)  /* gpmc_a13.qspi1_rtclk */
->> +			0x78 (PIN_INPUT | MUX_MODE1)  /* gpmc_a14.qspi1_d3 */
->> +			0x7c (PIN_INPUT | MUX_MODE1)  /* gpmc_a15.qspi1_d2 */
->> +			0x80 (PIN_INPUT | MUX_MODE1) /* gpmc_a16.qspi1_d1 */
->> +			0x84 (PIN_INPUT | MUX_MODE1)  /* gpmc_a17.qspi1_d0 */
->> +			0x88 (PIN_INPUT | MUX_MODE1)  /* qpmc_a18.qspi1_sclk */
->> +			0xb8 (PIN_INPUT_PULLUP | MUX_MODE1)  /* gpmc_cs2.qspi1_cs0 */
->> +			0xbc (PIN_INPUT_PULLUP | MUX_MODE1)  /* gpmc_cs3.qspi1_cs1 */
->> +		>;
->> +	};
->>   };
->>
->>   &i2c1 {
->> @@ -273,3 +288,20 @@
->>   &cpu0 {
->>   	cpu0-supply =<&smps123_reg>;
->>   };
->> +
->> +&qspi {
->> +	status = "okay";
->> +	pinctrl-names = "default";
->> +	pinctrl-0 =<&qspi1_pins>;
->> +
->> +	spi-max-frequency =<48000000>;
->> +	m25p80@0 {
->> +		compatible = "s25fl256s1";
->> +		spi-max-frequency =<48000000>;
->> +		reg =<0>;
->> +		spi-tx-bus-width =<1>;
->> +		spi-rx-bus-width =<4>;
->> +		spi-cpol;
->> +		spi-cpha;
->> +	};
->> +};
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index 67275c8..b06d899 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->> +++ b/arch/arm/boot/dts/dra7.dtsi
->> @@ -582,6 +582,19 @@
->>   			dma-names = "tx0", "rx0";
->>   			status = "disabled";
->>   		};
->> +
->> +		qspi: qspi@4b300000 {
->> +			compatible = "ti,dra7xxx-qspi";
->> +			reg =<0x4b300000 0x100>,<0x4a002558 0x4>,
->> +					<0x5c000000 0x3ffffff>;
->> +			reg-names = "qspi_base", "qspi_ctrlmod", "qspi_mmap";
->> +			#address-cells =<1>;
->> +			#size-cells =<0>;
->> +			ti,hwmods = "qspi";
->> +			num-cs =<4>;
->> +			interrupts =<0 124 0x4>;
->> +			status = "disabled";
->> +		};
->>   	};
->>
->>   	clocks {
->> -- 
->> 1.7.1
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+---
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts |  220 +++++++++++++++++++++++++
+ 1 file changed, 220 insertions(+)
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+index 7340745ff979..7d94d8d3b118 100644
+--- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
++++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+@@ -11,6 +11,7 @@
+ 
+ /dts-v1/;
+ #include "exynos5420.dtsi"
++#include <dt-bindings/interrupt-controller/irq.h>
+ 
+ / {
+ 	model = "Insignal Arndale Octa evaluation board based on EXYNOS5420";
+@@ -63,4 +64,223 @@
+ 			bus-width = <4>;
+ 		};
+ 	};
++
++	hsi2c_4: i2c@12CA0000 {
++		status = "okay";
++
++		s2mps11_pmic@66 {
++			compatible = "samsung,s2mps11-pmic";
++			reg = <0x66>;
++			s2mps11,buck2-ramp-delay = <12>;
++			s2mps11,buck34-ramp-delay = <12>;
++			s2mps11,buck16-ramp-delay = <12>;
++			s2mps11,buck6-ramp-enable = <1>;
++			s2mps11,buck2-ramp-enable = <1>;
++			s2mps11,buck3-ramp-enable = <1>;
++			s2mps11,buck4-ramp-enable = <1>;
++
++			interrupt-parent = <&gpx3>;
++			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
++
++			s2mps11_osc: clocks {
++				#clock-cells = <1>;
++				clock-output-names = "s2mps11_ap",
++						"s2mps11_cp", "s2mps11_bt";
++			};
++
++			regulators {
++				ldo1_reg: LDO1 {
++					regulator-name = "vdd_ldo1";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-always-on;
++				};
++
++				ldo3_reg: LDO3 {
++					regulator-name = "vdd_ldo3";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++				};
++
++				ldo5_reg: LDO5 {
++					regulator-name = "vdd_ldo5";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++				};
++
++				ldo6_reg: LDO6 {
++					regulator-name = "vdd_ldo6";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-always-on;
++				};
++
++				ldo7_reg: LDO7 {
++					regulator-name = "vdd_ldo7";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++				};
++
++				ldo8_reg: LDO8 {
++					regulator-name = "vdd_ldo8";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++				};
++
++				ldo9_reg: LDO9 {
++					regulator-name = "vdd_ldo9";
++					regulator-min-microvolt = <3000000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-always-on;
++				};
++
++				ldo10_reg: LDO10 {
++					regulator-name = "vdd_ldo10";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++				};
++
++				ldo11_reg: LDO11 {
++					regulator-name = "vdd_ldo11";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-always-on;
++				};
++
++				ldo12_reg: LDO12 {
++					regulator-name = "vdd_ldo12";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++				};
++
++				ldo13_reg: LDO13 {
++					regulator-name = "vdd_ldo13";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-always-on;
++				};
++
++				ldo15_reg: LDO15 {
++					regulator-name = "vdd_ldo15";
++					regulator-min-microvolt = <3100000>;
++					regulator-max-microvolt = <3100000>;
++					regulator-always-on;
++				};
++
++				ldo16_reg: LDO16 {
++					regulator-name = "vdd_ldo16";
++					regulator-min-microvolt = <2200000>;
++					regulator-max-microvolt = <2200000>;
++					regulator-always-on;
++				};
++
++				ldo17_reg: LDO17 {
++					regulator-name = "tsp_avdd";
++					regulator-min-microvolt = <3300000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-always-on;
++				};
++
++				ldo19_reg: LDO19 {
++					regulator-name = "vdd_sd";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-always-on;
++				};
++
++				ldo24_reg: LDO24 {
++					regulator-name = "tsp_io";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-always-on;
++				};
++
++				buck1_reg: BUCK1 {
++					regulator-name = "vdd_mif";
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1300000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				buck2_reg: BUCK2 {
++					regulator-name = "vdd_arm";
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				buck3_reg: BUCK3 {
++					regulator-name = "vdd_int";
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1400000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				buck4_reg: BUCK4 {
++					regulator-name = "vdd_g3d";
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1400000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				buck5_reg: BUCK5 {
++					regulator-name = "vdd_mem";
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1400000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				buck6_reg: BUCK6 {
++					regulator-name = "vdd_kfc";
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				buck7_reg: BUCK7 {
++					regulator-name = "vdd_1.0v_ldo";
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				buck8_reg: BUCK8 {
++					regulator-name = "vdd_1.8v_ldo";
++					regulator-min-microvolt = <800000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				buck9_reg: BUCK9 {
++					regulator-name = "vdd_2.8v_ldo";
++					regulator-min-microvolt = <3000000>;
++					regulator-max-microvolt = <3750000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				buck10_reg: BUCK10 {
++					regulator-name = "vdd_vmem";
++					regulator-min-microvolt = <2850000>;
++					regulator-max-microvolt = <2850000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++			};
++		};
++	};
+ };
+-- 
+1.7.9.5
