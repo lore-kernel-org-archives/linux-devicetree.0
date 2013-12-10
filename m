@@ -1,118 +1,88 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 07/10] ARM: dts: sun7i: cubietruck: Enable
- the GMAC
-Date: Tue, 10 Dec 2013 09:23:48 -0800
-Message-ID: <CAGVrzca7v3FMg1QT+LFQkPOf-o33=U0zpv_t8tkBSrrY+L+6+g@mail.gmail.com>
-References: <1386350983-13281-1-git-send-email-wens@csie.org>
- <1386350983-13281-8-git-send-email-wens@csie.org> <CAGVrzcb_r9_p4urz4XkE2A-G85KAHJa4PJ=Gt9a4RPYQNJ6j0g@mail.gmail.com>
- <CAGb2v64yFhkTXvdq=1VpemULhXew-5fvmSoTBzEb6iFDiSqy1Q@mail.gmail.com>
- <CAGVrzcaxV88dU3vEVGUiEQihUHLxq+QvQVQ6VvmOFVRsqbbX7w@mail.gmail.com>
- <CAGb2v675Cg6S512zfM1z4b+wqE_PesDGWdgcmpzWmPzyzXqbeA@mail.gmail.com>
- <CAGVrzcaVJtoVhEfV+ZiMOkm3F8NBCf2YRcZSrZPMRfQfEr1u=g@mail.gmail.com> <CAGb2v665xtY4m4uCTb_iMojG+ox0HvyCgz6p0P7oxJVvZ0SW9w@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv4 2/4] clk: socfpga: Add a hook for SD/MMC driver to control CIU clock settings
+Date: Tue, 10 Dec 2013 19:15:47 +0100
+Message-ID: <201312101915.47648.arnd@arndb.de>
+References: <1386263677-7733-1-git-send-email-dinguyen@altera.com> <201312052157.37538.arnd@arndb.de> <52A7206C.4040500@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCH67JWTV4DBBTU4TWKQKGQEDK7CT6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v665xtY4m4uCTb_iMojG+ox0HvyCgz6p0P7oxJVvZ0SW9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <52A7206C.4040500@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Dinh Nguyen <dinh.linux@gmail.com>
+Cc: dinguyen@altera.com, mturquette@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2013/12/9 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
-> On Tue, Dec 10, 2013 at 1:48 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> 2013/12/8 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
->>> Florian, Giuseppe:
->>>
->>> On Sat, Dec 7, 2013 at 9:57 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> 2013/12/6 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
->>>>> On Sat, Dec 7, 2013 at 5:09 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>>> 2013/12/6 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
->>>>>>> The CubieTruck uses the GMAC with an RGMII phy.
->>>>>>>
->>>>>>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->>>>>>> ---
->>>>>>>  arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 8 ++++++++
->>>>>>>  1 file changed, 8 insertions(+)
->>>>>>>
->>>>>>> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->>>>>>> index 8a1009d..af212a2 100644
->>>>>>> --- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->>>>>>> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->>>>>>> @@ -33,6 +33,14 @@
->>>>>>>                         pinctrl-0 = <&uart0_pins_a>;
->>>>>>>                         status = "okay";
->>>>>>>                 };
->>>>>>> +
->>>>>>> +               gmac: ethernet@01c50000 {
->>>>>>> +                       pinctrl-names = "default";
->>>>>>> +                       pinctrl-0 = <&gmac_pins_rgmii>;
->>>>>>> +                       snps,phy-addr = <1>;
->>>>>>
->>>>>> What is this snps,phy-addr property? Why is not a standard device tree
->>>>>> node for an Ethernet PHY node used?
->>>>>
->>>>> This property is implemented by stmmac and documented in the DT
->>>>> bindings. stmmac has not been updated to use Ethernet PHY nodes.
->>>>
->>>> This driver property should be removed and deprecated since there is
->>>> an ePAPR standardized Ethernet PHY node. What I am worried here is the
->>>> loss of information, the standard Ethernet DT node allows to specify
->>>> much more information (clause, maximum speed, compatible string
->>>> etc...).
->>>
->>> Giuseppe, any thoughts on this?
->>>
->>>>> Removing this property will not affect the function of the driver.
->>>>> The driver probes its MDIO bus and selects the lowest available
->>>>> address if not specified.
->>>>
->>>> So if this is just giving the driver a hint on where to  probe for a
->>>> PHY on the MDIO bus, then let's drop it and use the standard DT node
->>>> no?
->>>
->>> Sure. I will remove it from the DT.
->>>
->>> The stmmac driver does not have a seperate MDIO bus driver, nor
->>> does it support Ethernet PHY node bindings. So I will not add
->>> a phy node at this moment.
->>
->> This will create needless churn in the DT if you do not do it now,
->> worse actually, we switch from a DT which specifically described
->> Ethernet PHY nodes properly to a version where it does, to ultimately
->> a newer version which does.
->>
->> Considering that the absence of a "snps,phy-addr" property will still
->> result in the MDIO bus to be probed, keeping the existing Ethernet PHY
->> nodes, referencing them correclty with a "phy-handle" property, but
->> having no explicit support for these in the driver will not result in
->> a functional change, and will reduce the DT churn. Also, you could
->> still sneak a patch in this patchset which parses the standard
->> EThernet PHY node binding.
->
-> I see. Adding the PHY node should be no trouble at all.
-> Is there a requirement for a seperate mdio bus in the DT?
+On Tuesday 10 December 2013, Dinh Nguyen wrote:
+> On 12/5/13 2:57 PM, Arnd Bergmann wrote:
 
-Not really no, in that case the MDIO bus is implicitely implemented as
-part of the Ethernet MAC controller, this is just fine.
+> > And in now way should the clock provider code look into the DT properties of the
+> > clock consumer. From what I can tell, the dw-mshc code already interprets the
+> > "samsung,dw-mshc-sdr-timing" property and uses the data to pass the correct
+> > clock rate using 'clk_set_rate()'. The clock code should only use the data passed
+> > in the argument to that function to set up the registers and not need to know
+> > at all who is setting it.
+> You're right, the dw-mshc code interprets "samsung,dw-mshc-sdr-timing",
+> but it is
+> currently doing it in the platform specific code(dw_mmc-exynos and
+> dw_mmc-socfpga).
+> I was thinking I can remove the platform specific for SOCFPGA. But
+> perhaps now that
+> patch "mmc: dw_mmc: Make the use of the hold reg generic" is
+> progressing, and
+> that patch reads "samsung,dw-mshc-sdr-timing" in the generic dw_mmc
+> code, I can now
+> pass it through the clk_set_rate call.
 
-> I do not see it in the ePAPR. The stmmac mdio is not a seperate
-> driver, as is for most network controllers I presume.
-> Would attaching the PHY nodes directly under the ethernet controller
-> suffice?
+Ok, good.
 
-Sure, that is what most Ethernet driver do actually. They register
-their own MDIO bus and make sure PHYs get attached to it.
+> My initial thought to read "samsung,dw-mshc-sdr-timing" in the socfpga clock
+> driver's was that the SOCFPGA's sdmmc_clk only role in life is to feed
+> the sdmmc block. So
+> reading the phase shift bits that adjust this clock does seem weird, but
+> a straightforward way
+> of doing it. I stuck it in the function in .prepare function because the
+> setting of the clock's phase
+> shift also requires that CIU clock be turned off while the bits are
+> toggled, so the prepare function
+> seems to work perfectly. So I think you're only concern is that I should
+> figure out a way to pass
+> the values of "samsung,dw-mshc-sdr-timing" from the dw_mmc driver to the
+> clock driver, correct?
+> 
+> Yes, I can read the "samsung,dw-mshc-sdr-timing" in the dw_mmc code and
+> pass it to the clock
+> driver using clk_set_rate(), but this method seems more cumbersome, as
+> this clk_set_rate does not
+> have anything to do with setting the rate, but only the phase shift
+> settings of the clock.
 
->
-> We can then introduce PHY node support to the driver and
-> remove the "snps,phy-addr" property at the same time.
+I see, that does indeed sound a bit strange and is probably not the
+best API. I'm not that familiar with what is actually going on at the
+hardware level. Can you explain in a little more detail what the phase
+setting is about? What are the possible values here and what units
+are being used?
 
-Sure, sounds good, thanks!
--- 
-Florian
+> > I am a little confused though what the SYSMGR_SDMMCGRP_CTRL_OFFSET register actually
+> > does. It looks like this is just a clock divider, which should be represented as
+> > a separate clock node (as you had in v3) and compute the correct factor from the
+> > requested clock rate and the parent clock rate.
+> The SYSMGR_SDMMCGRP_CTRL_OFFSET is just putting the 2 values of
+> "samsung,dw-mshc-sdr-timing"
+> into a a single u32 value to be written to the register.
+> "samsung,dw-mshc-sdr-timing" has 2 values that
+> controls the phase shift of 2 clocks, the drive clock and the sample clock.
+
+Do other clocks ever have the same requirement? Would it make sense to have
+a generic clk_set_phase interface for this?
+
+If not, could the values alternatively (i.e. departing from the samsung
+method) be encoded in the clock specifier? That would come down to setting
+#clock-cells = <2> for this clock and using a complex clock in the mshc
+node to point at it using
+
+	<&phandle $phase1 $phase2>
+	Arnd
+
+	Arnd
