@@ -1,103 +1,100 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [RFC v2] ARM/dts: am335x-boneblack: Add HDMI audio support
-Date: Tue, 10 Dec 2013 20:52:31 +0200
-Message-ID: <f3c6306b5f283910630602c373407cbf4df91cea.1386504183.git.jsarha__15908.9257861071$1386701574$gmane$org@ti.com>
-References: <cover.1386504183.git.jsarha@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/1] ARM: dts: Add PMIC support to arndale-octa
+Date: Tue, 10 Dec 2013 18:54:16 +0000
+Message-ID: <20131210185416.GH11468@sirena.org.uk>
+References: <1386656958-28292-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1386504183.git.jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IbVRjBtIbJdbeK1C"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1386656958-28292-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Adds mcasp0_pins, clk_mcasp0_fixed, clk_mcasp0, mcasp0, hdmi_audio,
-and sound nodes.
 
-Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am335x-boneblack.dts |   52 ++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+--IbVRjBtIbJdbeK1C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-index 6b71ad9..860ea98 100644
---- a/arch/arm/boot/dts/am335x-boneblack.dts
-+++ b/arch/arm/boot/dts/am335x-boneblack.dts
-@@ -60,12 +60,35 @@
- 			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
- 		>;
- 	};
-+
-+	mcasp0_pins: mcasp0_pins {
-+		pinctrl-single,pins = <
-+			0x1ac (PIN_INPUT_PULLUP | MUX_MODE0) /* mcasp0_ahclkx.mcasp0_ahclkx */
-+			0x19c (PIN_OUTPUT_PULLDOWN | MUX_MODE2) /* mcasp0_ahclkr.mcasp0_axr2 */
-+			0x194 (PIN_OUTPUT_PULLUP | MUX_MODE0) /* mcasp0_fsx.mcasp0_fsx */
-+			0x190 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mcasp0_aclkx.mcasp0_aclkx */
-+			0x06c (PIN_OUTPUT_PULLUP | MUX_MODE7) /* gpmc_a11.gpio1_27 */
-+		>;
-+	};
- };
- 
- &lcdc {
- 	status = "okay";
- };
- 
-+&mcasp0	{
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcasp0_pins>;
-+	status = "okay";
-+	op-mode = <0>;	/* MCASP_IIS_MODE */
-+	tdm-slots = <2>;
-+	serial-dir = <	/* 0: INACTIVE, 1: TX, 2: RX */
-+			0 0 1 0
-+		>;
-+	tx-num-evt = <1>;
-+	rx-num-evt = <1>;
-+};
-+
- / {
- 	hdmi {
- 		compatible = "ti,tilcdc,slave";
-@@ -75,4 +98,33 @@
- 		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
- 		status = "okay";
- 	};
-+
-+	clk_mcasp0_fixed: clk_mcasp0_fixed {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <24576000>;
-+	};
-+
-+	clk_mcasp0: clk_mcasp0 {
-+		#clock-cells = <0>;
-+		compatible = "gpio-clock";
-+		clocks = <&clk_mcasp0_fixed>;
-+		enable-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>; /* BeagleBone Black Clk enable on GPIO1_27 */
-+	};
-+
-+	hdmi_audio: hdmi_audio@0 {
-+	       compatible = "linux,hdmi-audio";
-+	       status = "okay";
-+	};
-+
-+	sound {
-+		compatible = "ti,am33xx-beaglebone-black-audio";
-+		ti,model = "TI BeagleBone Black";
-+		ti,audio-codec = <&hdmi_audio>;
-+		ti,mcasp-controller = <&mcasp0>;
-+		ti,audio-routing =
-+			"HDMI Out",	"TX";
-+		clocks = <&clk_mcasp0>;
-+		clock-names = "ti,codec-clock";
-+	};
- };
--- 
-1.7.9.5
+On Tue, Dec 10, 2013 at 11:59:18AM +0530, Sachin Kamat wrote:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Added PMIC node to Arndale-Octa board.
+
+Is there a bootloader posted for this anywhere yet?
+
+> +			regulators {
+> +				ldo1_reg: LDO1 {
+> +					regulator-name =3D "vdd_ldo1";
+
+So, there is a label on the schematic for PVDD_LDO1 but it's not
+entirely obvious why that's there as throughout the rest of the
+schematic it's got the rather more constructive name PVDD_ALIVE_1V0. =20
+We should really be using the more readable versions of the names
+in the DT since the whole point in overriding the driver default
+names is to make it easier to associate the kernel diagnostics with
+the schematic, what the DT is doing here serves no purpose.
+
+The same comment applies to all the LDO supplies.
+
+> +				buck2_reg: BUCK2 {
+> +					regulator-name =3D "vdd_arm";
+> +					regulator-min-microvolt =3D <800000>;
+> +					regulator-max-microvolt =3D <1500000>;
+> +					regulator-always-on;
+> +					regulator-boot-on;
+> +				};
+
+Why are you specifying boot-on?  It doesn't seem terribly plausible that
+the cores won't be powered on boot, or that we can't tell what the state
+is by reading the registers.
+
+Same for all the DCDCs.
+
+> +				buck7_reg: BUCK7 {
+> +					regulator-name =3D "vdd_1.0v_ldo";
+> +					regulator-min-microvolt =3D <800000>;
+> +					regulator-max-microvolt =3D <1500000>;
+> +					regulator-always-on;
+> +					regulator-boot-on;
+> +				};
+
+This doesn't correspond to the schematic which says that BUCK7 is
+supplying VIN_LLDO_1V4 (the input for some of the LDOs).  The voltage
+range specified there doesn't seem terribly sensible either, are you
+sure you haven't just got the underlying voltage range for the DCDC?
+I can't see why you'd want to raise the voltage over 1.4V (that's rather
+defeating the point) and while it'd be nice to have the core be able to
+vary supply to track the headroom needed by the LDOs none of the LDOs
+were configured with variable voltage so even if we implemented that
+it'd never be used.
+
+Similar issues apply to the other bucks being used to drop the battery
+voltage for LDO supplies.
+
+--IbVRjBtIbJdbeK1C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSp2NUAAoJELSic+t+oim9V+IP/R6qpbCeakBJ3zaPfcTGROdg
+Law/Dm248qNFtMsfPGhYg0j9+KUobwrUIaJfqpgOfo0bG28gtXOGJD52irOh0E38
+gMrBnxskOXSfQY7+WirpRK1LvaQMbUO7osDzcxEx+/Kfz5jiFmxocgEkdEv9JxnY
+CSapz9+XVD2xA6XXdqEwfX9WoqVkQY/XRBcXsAeNgJ3cEHpmf1Y7Cb89kUeqddhp
+Ti5aZZiIsml3WckR8EeOuNCbHf2R5G5w0PFHVGGrFCqW2z9JBHF/AHEi5mFqwYmf
+GTqUoCPQcCncUeDj2HRG3/WomhkOva8xa/69qmx52Rfk4s1cLzNMqf6qaRziDjph
+ldI8r6+BaS92nZYoHWpdsWqFbRiPnareIyUyOkhWBLIodnqGug5LSLhk/a5vQ20n
+WHFEaYbKcc/MZtDiD7o665vqclD27ukgDxbxg55NFpSZoFHGdBXHvAfz6HzPOc7u
+3R7Vfsoix5BoSXprDcVVZi+pyz8nk1oflNfKyfSCPSPzvKsNYoSfvY201bhUQlGq
+hkPMk02Z3pb9mEJe6EObwtSRIxQmDRbP4RCVJi0EdfW3+5pWsiMhKaH5/OCmwo7q
+AVATW2jps60DXR3UfleC9MWcVcpbtsYdCkyJVhHooSG2d2+gLPGB9eP+Bj4YYvYE
+qoBt/egTM6VaoW8e/SXx
+=pKsc
+-----END PGP SIGNATURE-----
+
+--IbVRjBtIbJdbeK1C--
