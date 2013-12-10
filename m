@@ -1,57 +1,71 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/5] Phy: DT binding documentation for Marvell MVEBU SATA
- phy.
-Date: Tue, 10 Dec 2013 23:59:00 +0100
-Message-ID: <20131210225900.GB17875@lunn.ch>
-References: <1386177364-10164-1-git-send-email-andrew@lunn.ch>
- <1386177364-10164-2-git-send-email-andrew@lunn.ch>
- <52A01742.2080405@ti.com>
- <20131205094319.GD10498@lunn.ch>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: Question about how PCI subsystem uses device trees
+Date: Tue, 10 Dec 2013 16:21:04 -0700
+Message-ID: <CAErSpo7XQeMr+t3e93-vrFBNmF2w7aQ1UqY8bnSRxQcc+uah1w@mail.gmail.com>
+References: <a8c8cc16a5424e45b226bb40425b3772@DM2PR05MB671.namprd05.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131205094319.GD10498@lunn.ch>
-Sender: linux-ide-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, kishon@ti.com
-Cc: Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <a8c8cc16a5424e45b226bb40425b3772@DM2PR05MB671.namprd05.prod.outlook.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rajat Jain <rajatjain@juniper.net>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 10:43:19AM +0100, Andrew Lunn wrote:
-> > >  Example:
-> > >  
-> > >  	sata@80000 {
-> > >  		compatible = "marvell,orion-sata";
-> > >  		reg = <0x80000 0x5000>;
-> > >  		interrupts = <21>;
-> > > +		phys = <&sata_phy0>, <&sata_phy1>;
-> > > +		phy-names = "0", "1";
-> > 
-> > more descriptive phy-names? sata-phy0?
-> > >  		nr-ports = <2>;
-> 
-> I could do, but i was following how the clocks work. Unfortunately,
-> the binding documentation is out of date and does not contain
-> clocks. A real example is:
-> 
->               sata@80000 {
->                       compatible = "marvell,orion-sata";
->                       reg = <0x80000 0x5000>;
->                       interrupts = <21>;
->                       clocks = <&gate_clk 14>, <&gate_clk 15>;
->                       clock-names = "0", "1";
->                       phys = <&sata_phy0>, <&sata_phy1>;
->                       phy-names = "0", "1";
->                       status = "disabled";
->               };
-> 
-> So clocks and the phy are described nearly identically. I can however
-> handle phys differently if you wish.
+[+cc devicetree list; I'm devicetree-illiterate]
 
-Hi Kishon
-
-Please could you comment on this. Are you O.K. if i use the same
-naming scheme for phys as clocks?
-
-Thanks
-	Andrew
+On Tue, Dec 10, 2013 at 12:53 PM, Rajat Jain <rajatjain@juniper.net> wrote:
+> Hello,
+>
+> I am trying to understand and create device tree for a new powerpc platform. (Please feel free to point out any problems with my device tree below.) My questions:
+>
+> 1) For a PCI-PCI bridge that I'm representing like this:
+>
+> pcie@2,3 {
+>         vendor-id = <0x10b5>;
+>       device-id = <0x8618>;
+>       class-code = <0x060400>;
+>       #size-cells = <2>;
+>       #address-cells = <3>;
+>       device_type = "pci";
+>       bus-range = <0x20 0x2f>;
+>       reg = <0x00021800 0x00000000 0x000000000        /* Cfg:2.3.0: */
+>              0x00000000 0x00000000>;
+>       ranges = <0x02000000 0x00000000 0xA0000000      /* Mem behind bridge: 0xA0000000 - 0xA03FFFFF */
+>                 0x02000000 0x00000000 0xA0000000
+>                 0x00000000 0x04000000>;
+> };
+>
+> Is the above is only to _notify_ the kernel that this is how the firmware shall be setting the PCI bridge (Thus firmware has obligation of setting it like this before passing control to the kernel), and hence the kernel will merely take note of it and not really configure the bridge registers?
+>
+> Or is the above telling the kernel that this is how the kernel should _setup_ the device (thus firmware does not set up the device, but rather the kernel use this info to setup the device)?
+>
+> 2) For an PCI endpoint that I am representing like this:
+>
+>
+> xyz@20,0 {
+>         vendor-id = ...
+>       device-id = ...
+>       class-code = <0x0880>;
+>       compatible = ...
+>         ...
+>       reg = <0x00200000 0x00000000 0x00000000 /* Cfg:20.0.0: */
+>              0x00000000 0x00000000
+>              0x02200010 0x00000000 0xA0000000 /* Mem:20.0.0:(Bar0) 64MB@0xA0000000 */
+>              0x00000000 0x04000000>;
+>         ...
+> };
+>
+> Does the above tell the kernel to _program_ the BAR0 register using the above address? Or does it cause the kernel to assume that the BAR0 has been programmed with this address?
+>
+> 3) Lastly, what is the difference in behavior when I select PCI_PROBE_NORMAL over PCI_PROBE_DEVTREE?
+>
+> Thanks,
+>
+> Rajat
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
