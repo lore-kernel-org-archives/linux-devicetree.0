@@ -1,142 +1,83 @@
 From: Christian Daudt <bcm@fixthebug.org>
-Subject: Re: [PATCH v4 1/8] ARM: dts: Declare clocks as fixed on bcm11351
-Date: Mon, 9 Dec 2013 23:18:56 -0800
-Message-ID: <CAEPRUYrw_owwBYEmmXO3=OG9pXrKPrJTwF+jPVm4+-Vvf0Xorw@mail.gmail.com>
-References: <1386271244-3927-1-git-send-email-tim.kryger@linaro.org>
-	<1386271244-3927-2-git-send-email-tim.kryger@linaro.org>
+Subject: Re: [PATCH 1/2] ARM: dts: bcm281xx: Add i2c busses
+Date: Mon, 9 Dec 2013 23:28:31 -0800
+Message-ID: <CAEPRUYpbHUsxOkG-VuVwVv7kakBJNnwTa-8+DNMbQ-xZNpPFnw@mail.gmail.com>
+References: <1386373528-13045-1-git-send-email-tim.kryger@linaro.org>
+	<1386373528-13045-2-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1386271244-3927-2-git-send-email-tim.kryger@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1386373528-13045-2-git-send-email-tim.kryger@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Tim Kryger <tim.kryger@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, Axel Lin <axel.lin@ingics.com>, Device Tree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linaro Patches List <patches@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linaro Patches List <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Applied to armsoc/for-3.14/dt
-
- thanks,
-   csd
-
-
-On Thu, Dec 5, 2013 at 11:20 AM, Tim Kryger <tim.kryger@linaro.org> wrote:
-> Declare clocks that are enabled and configured by bootloaders as fixed
-> rate clocks in the DTS such that device drivers may use standard clock
-> function calls.
+On Fri, Dec 6, 2013 at 3:45 PM, Tim Kryger <tim.kryger@linaro.org> wrote:
+> Add the DTS nodes for all the i2c busses in the SoC.
 >
 > Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
-> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> Reviewed-by: Christian Daudt <csd@broadcom.com>
 > Reviewed-by: Matt Porter <matt.porter@linaro.org>
+> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
 > ---
->  arch/arm/boot/dts/bcm11351.dtsi | 97 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 97 insertions(+)
+>  arch/arm/boot/dts/bcm11351.dtsi | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 >
 > diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-> index b0c0610..eca6fbc 100644
+> index 1246885..4bfd7e3 100644
 > --- a/arch/arm/boot/dts/bcm11351.dtsi
 > +++ b/arch/arm/boot/dts/bcm11351.dtsi
-> @@ -142,4 +142,101 @@
+> @@ -146,6 +146,46 @@
 >                 status = "disabled";
 >         };
 >
-> +       clocks {
-> +               bsc1_clk: bsc1 {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <13000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               bsc2_clk: bsc2 {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <13000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               bsc3_clk: bsc3 {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <13000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               pmu_bsc_clk: pmu_bsc {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <13000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               hub_timer_clk: hub_timer {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <32768>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               pwm_clk: pwm {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <26000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               sdio1_clk: sdio1 {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <48000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               sdio2_clk: sdio2 {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <48000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               sdio3_clk: sdio3 {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <48000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               sdio4_clk: sdio4 {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <48000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               tmon_1m_clk: tmon_1m {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <1000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               uartb_clk: uartb {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <13000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               uartb2_clk: uartb2 {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <13000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               uartb3_clk: uartb3 {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <13000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               uartb4_clk: uartb4 {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <13000000>;
-> +                       #clock-cells = <0>;
-> +               };
-> +
-> +               usb_otg_ahb_clk: usb_otg_ahb {
-> +                       compatible = "fixed-clock";
-> +                       clock-frequency = <52000000>;
-> +                       #clock-cells = <0>;
-> +               };
+> +       i2c@3e016000 {
+> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
+> +               reg = <0x3e016000 0x80>;
+> +               interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               clocks = <&bsc1_clk>;
+> +               status = "disabled";
 > +       };
->  };
+> +
+> +       i2c@3e017000 {
+> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
+> +               reg = <0x3e017000 0x80>;
+> +               interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               clocks = <&bsc2_clk>;
+> +               status = "disabled";
+> +       };
+> +
+> +       i2c@3e018000 {
+> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
+> +               reg = <0x3e018000 0x80>;
+> +               interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               clocks = <&bsc3_clk>;
+> +               status = "disabled";
+> +       };
+> +
+> +       i2c@3500d000 {
+> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
+> +               reg = <0x3500d000 0x80>;
+> +               interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               clocks = <&pmu_bsc_clk>;
+> +               status = "disabled";
+> +       };
+> +
+>         clocks {
+>                 bsc1_clk: bsc1 {
+>                         compatible = "fixed-clock";
 > --
 > 1.8.0.1
 >
+Applied to armsoc/for-3.14/dt
+ thanks,
+  csd
