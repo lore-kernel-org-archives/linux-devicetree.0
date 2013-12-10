@@ -1,56 +1,58 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: add hym8563 binding
-Date: Tue, 10 Dec 2013 11:17:13 +0000
-Message-ID: <20131210111713.GF29268@sirena.org.uk>
-References: <201312092219.11342.heiko@sntech.de>
- <201312092220.30894.heiko@sntech.de>
+Subject: Re: [PATCH] ASoC: tegra: update module reset list for Tegra124
+Date: Tue, 10 Dec 2013 11:19:15 +0000
+Message-ID: <20131210111915.GG29268@sirena.org.uk>
+References: <1386195913-24213-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IHeoZqE8eTKrPZZA"
+	protocol="application/pgp-signature"; boundary="7tGYYWp2rWczQsSS"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201312092220.30894.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1386195913-24213-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Richard Weinberger <richard.weinberger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---IHeoZqE8eTKrPZZA
-Content-Type: text/plain; charset=iso-8859-1
+--7tGYYWp2rWczQsSS
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 09, 2013 at 10:20:30PM +0100, Heiko St=FCbner wrote:
-> Add binding documentation for the hym8563 rtc chip.
+On Wed, Dec 04, 2013 at 03:25:13PM -0700, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 >=20
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Tegra124 adds a number of extra modules into the configlink bus, which
+> must be taken out of reset before the bus is used. Update the AHUB
+> driver to know about these extra modules (the AHUB HW module hosts the
+> configlink bus).
 
-Reviewed-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Mark Brown <broonie-QSEj5FYQhm64UlQgPVntAg@public.gmane.org
 
---IHeoZqE8eTKrPZZA
+--7tGYYWp2rWczQsSS
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSpvg2AAoJELSic+t+oim9OT4P/jksKFNrcA9bM0Cxewsi4Fh/
-f+iwT7hJP9S5t1OrGd2KhGqA5dgXqlnv/NoOfjSekFxhGhkWjlv3AmimUmMa1dsd
-J70F/zBSPLGHIUxc6eiQc3X0saDi5VL/o9J68KcWCspseh9tmFw8a9UYFM1qLXoM
-eBoMw7bu9GVbB6J5HDcEgklYry52wYW14JlPgKgXFQaczlBtq3HeXUQajKIE/tbb
-aFtI8hKcKVDQqil4QRSv4M2ASz+UXlhKxuJKHgvU4Ob217gsokazzbWcpBhKsu+U
-kz2EuoVZP2dBUhgMOyHkWC7hJRnKHSkurErgew5XPM9A5rhshe+Zlsa1sSzL4l9R
-h19ouWgOdjHJip+vkiWn3DuK193WBnw2w4CJ+WuEcQfdl1zEyS9QTGKQua1NTZwc
-cqLhRPHUMkDKyrff39kI7aXfcUUliMzynWjYqRZSmwCgEqH8hKmU4YO8j/w8WPSF
-pEy2FcPOdggyIiEnUPWoUtFOE9EiaGjJEaZy7Gf36CL5xfBtKRhSZjTa8RbuvMmd
-GhiWmr2xBtBmdAj28SqGeuCAmEPXBCBKZ/zfLHvio+oXRSOKk9j2ynWAnnESDmAm
-pHRoHDOIFQ/0ue8cEF2qT3HyEtIxiIeMRtzwmyL1EKeTp1TIXJhzNdXJtShT+AbK
-9hl32tPtI8zD1d0NZOfw
-=LbhQ
+iQIcBAEBAgAGBQJSpviwAAoJELSic+t+oim92xsP/04YlV5bIjUnaWjxrD6OqvLi
+RhRdCzUddgqzUFng7gRG+8oNLa+EH0+ANsSUB9FFYoyEKATxPmFLNP7PfhoxGBt1
+5ai2w5+l/wPm9ZxM/iF0L/taNzU4Mx+IbYyS8ZhXy8m6dx0ISJMKFfBhQUxB0pdw
+cCAMPXMEZJPbHK5d5ADLuW0YfcRKO9Nzi4hnTwlujrvImiXHwaysN3nSzbKdRilk
+18VTdvr2kE92XD4wu2b6iOU/a4y2Sbiq5onvRsD3fjRu2hSPrRfw3Hop1IqaYZ+J
+aQImilRNZSmDfQA8DEDV8k544s+Y7n4IgWHBJeHAsXkVzSz4o6ay399D07SDMjfZ
+LM5/+PpZI7LzoUZC70rfehv5NaFDbGq8WOfedNs0YzXfpJrnxzzJLQ305sqV7Lu0
+QRiC+2LximM7qL4So+0wi3X+moArsR1dvyrN43z7KjjlynBN3cfHa7B7JIubDs/d
+qUXfTnazp8hkpN+fr4vcc7uCIihesZ9828jpX9B6aXtUnEDH3zFyIZvSI32Uij6E
+zZHnUhOyma8IWZHwywDesi5Tpq5In7zrORE0rQLfYmxCIsPghbuUlDgIIxxEt4qR
+LrolcI6TzyTxudjYxCyA7iTilYJhB/hiv19L5NccgmtFGfuT6N6rGuCtzf7i0EAM
+Jb7rfgLLjOvKjn25PwCt
+=Tq5k
 -----END PGP SIGNATURE-----
 
---IHeoZqE8eTKrPZZA--
+--7tGYYWp2rWczQsSS--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
