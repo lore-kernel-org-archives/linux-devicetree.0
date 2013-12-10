@@ -1,65 +1,62 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH v5 0/3] Exynos 5410 support
-Date: Tue, 10 Dec 2013 08:40:39 -0800
-Message-ID: <87ppp48xrs.fsf@linaro.org>
-References: <1386685599-31536-1-git-send-email-v.tyrtov@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/3] mfd: always assign of_node in mfd_add_device()
+Date: Tue, 10 Dec 2013 09:54:21 -0700
+Message-ID: <52A7473D.5020109@wwwdotorg.org>
+References: <1386626809-6251-1-git-send-email-swarren@wwwdotorg.org> <20131210084042.GN12675@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386685599-31536-1-git-send-email-v.tyrtov@samsung.com>
-	(Vyacheslav Tyrtov's message of "Tue, 10 Dec 2013 18:26:36 +0400")
-Sender: linux-doc-owner@vger.kernel.org
-To: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>, Dave.Martin@arm.com, nicolas.pitre@linaro.org, tomasz.figa@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131210084042.GN12675@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Vyacheslav Tyrtov <v.tyrtov@samsung.com> writes:
+On 12/10/2013 01:40 AM, Lee Jones wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> mfd_add_device() assigns .of_node in the device objects it creates only
+>> if the mfd_cell for the device has the .of_compatible field set and the
+>> DT node for the top-level MFD device contains a child whose compatible
+>> property matches the cell's .of_compatible field.
+>>
+>> This leaves .of_node unset in many cases. When this happens, entries in
+>> the DT /aliases property which refer to the top-level MFD DT node will
+>> never match the MFD child devices, hence causing the requested alias not
+>> to be honored.
+>>
+>> Solve this by setting each MFD child device's .of_node equal to the top-
+>> level MFD device's .of_node field in the cases where it would otherwise
+>> remain unset.
+> 
+> How sure are you that this will be void of repercussions?
 
-> The series of patches represent support of Exynos 5410 SoC
->
-> The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture
->
-> Patches add new platform description, support of clock controller and device 
-> tree for Exynos 5410.
->
-> Dual cluster support for Exynos 5410 (EDCS) has been removed from this series 
-> This patches is activating only the big cluster (all A15 cores)
+I'm simply hopeful:-) It doesn't seem likely that this would cause any
+issues, since presumably any devices that are being instantiated from DT
+either already work correctly, or wouldn't be affected by this change
+since they're manually searching whatever the appropriate DT node is.
+Are there any particular points you think I should look into?
 
-Testing this series on top of v3.13-rc3, plus a couple of other
-necessary changes (which should've probably been noted in the changelog):
+>> The first use-case for this will be aliases for the TPS6586x's RTC
+>> device.
+> 
+> Isn't it viable to supply the of_compatible strings for these nodes
+> and search the parent for its alias property instead?
 
-1) change CONFIG_NR_CPUS=8 in .config
-2) add the exynos combiner patch from Chander:
-   [PATCH v2] irqchip: exynos-combiner: remove hard-coded irq_base value
+I did think of that, but there are two reasons I chose not to do that
+initially:
 
-I'm still only seeing 2 out of 4 cores come up on my odroid-xu:
+a) It requires that every single top-level MFD driver be edited to set
+the .of_compatible field in their mfd_cells array, whereas this patch
+automatically works for all drivers.
 
-[    0.045000] CPU: Testing write buffer coherency: ok
-[    0.045000] CPU0: update cpu_power 1024
-[    0.045000] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-[    0.045000] Setting up static identity map for 0x403717d8 - 0x40371830
-[    0.045000] CPU1: Booted secondary processor
-[    0.065000] CPU1: update cpu_power 1024
-[    0.065000] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
-[    1.075000] CPU2: failed to boot: -38
-[    2.075000] CPU3: failed to boot: -38
-[    2.075000] Brought up 2 CPUs
-[    2.075000] SMP: Total of 2 processors activated.
-[    2.075000] CPU: All CPU(s) started in SVC mode.
-
-Full boot log below.
-
-Kevin
-
-
-Connected to odroid-xu console [channel connected] (~$quit to exit)
-(user:khilman) is already connected
-(user:khilman) is already connected
-
-~$hardreset
-
-/ # 
-Command(odroid-xu console)> hardreset
-(user:khilman) Reboot odroid-xu
-.~;+wQt.
+b) The mfd_cells .of_compatible field is a single entry, whereas a
+top-level MFD driver could support an arbitrary number of DT compatible
+values. I suppose one could work around this by setting the mfd_cells
+.of_compatible field at run-time based on the actual compatible value of
+the top-level DT node, but that feels icky.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
