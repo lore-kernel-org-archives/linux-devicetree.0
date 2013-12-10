@@ -1,64 +1,52 @@
-From: Tarek Dakhran <t.dakhran@samsung.com>
-Subject: Re: [PATCH v4 2/4] clk: exynos5410: register clocks using common clock
- framework
-Date: Tue, 10 Dec 2013 13:50:25 +0400
-Message-ID: <52A6E3E1.1060907@samsung.com>
-References: <1385456288-20398-1-git-send-email-v.tyrtov@samsung.com>
- <1385456288-20398-3-git-send-email-v.tyrtov@samsung.com>
- <1914850.6CAa0SzDWP@amdc1227> <52A62A27.7080408@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <52A62A27.7080408@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>
-Cc: Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Mark Rutland <mark.rutland@arm.com>, nicolas.pitre@linaro.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, linux-doc@vger.kernel.org, tomasz.figa@gmail.com, Naour Romain <romain.naour@openwide.fr>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Dave.Martin@arm.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, linux-samsung-soc@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v1 1/1] powerpc/512x: dts: remove misplaced IRQ spec from 'soc' node (5125)
+Date: Tue, 10 Dec 2013 10:51:08 +0100
+Message-ID: <1386669068-2477-1-git-send-email-gsi@denx.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/2013 12:37 AM, Kukjin Kim wrote:
-> On 12/10/13 01:34, Tomasz Figa wrote:
->> Hi Vyacheslav, Tarek,
->>
->> On Tuesday 26 of November 2013 12:58:06 Vyacheslav Tyrtov wrote:
->>> From: Tarek Dakhran<t.dakhran@samsung.com>
->>>
->>> The EXYNOS5410 clocks are statically listed and registered
->>> using the Samsung specific common clock helper functions.
->>>
->>> Signed-off-by: Tarek Dakhran<t.dakhran@samsung.com>
->>> Signed-off-by: Vyacheslav Tyrtov<v.tyrtov@samsung.com>
->>> ---
->>>   .../devicetree/bindings/clock/exynos5410-clock.txt |  54 +++++
->>>   drivers/clk/samsung/Makefile                       |   1 +
->>>   drivers/clk/samsung/clk-exynos5410.c               | 239 
->>> +++++++++++++++++++++
->>>   include/dt-bindings/clock/exynos5410.h             |  32 +++
->>>   4 files changed, 326 insertions(+)
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/clock/exynos5410-clock.txt
->>>   create mode 100644 drivers/clk/samsung/clk-exynos5410.c
->>>   create mode 100644 include/dt-bindings/clock/exynos5410.h
->>
->> Acked-by: Tomasz Figa<t.figa@samsung.com>
->>
-> Tomasz, thanks for your ack on clk stuff.
->
->> This should go through Samsung tree, I guess, since it's a dependency
->> of other patches in this series and doesn't depend on any things from
->> clock tree. Mike, Kukjin, are you okay with this?
->>
-> Yeah, I'm fine on this series but 4th patch for supporting dual cluster.
->
-> Let me take 1 to 3 patches firstly. Thanks.
-> - Kukjin
->
+the 'soc' node in the MPC5125 "tower" board .dts has an '#interrupt-cells'
+property although this node is not an interrupt controller
 
-Hi,
+remove this erroneously placed property because starting with v3.13-rc1
+lookup and resolution of 'interrupts' specs for peripherals gets misled
+(tries to use the 'soc' as the interrupt parent which fails), emits
+'no irq domain found' WARN() messages and breaks the boot process
 
-Today (10/12/2013) I will release [PATCH v5] without dual cluster support.
-EDCS (exynos dual cluster support) will be moved to separate patch.
+[ best viewed with 'git diff -U5' to have DT node names in the context ]
 
-Best regards,
-     Tarek Dakhran.
+Cc: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
 
+---
+
+note that this is not a resend of the previous MPC5121 fix, but instead
+is a fix for MPC5125 along the same lines of the MPC5121 fix
+---
+ arch/powerpc/boot/dts/mpc5125twr.dts |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/powerpc/boot/dts/mpc5125twr.dts b/arch/powerpc/boot/dts/mpc5125twr.dts
+index 4177b62240c2..0a0fe92216ae 100644
+--- a/arch/powerpc/boot/dts/mpc5125twr.dts
++++ b/arch/powerpc/boot/dts/mpc5125twr.dts
+@@ -58,7 +58,6 @@
+ 		compatible = "fsl,mpc5121-immr";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		#interrupt-cells = <2>;
+ 		ranges = <0x0 0x80000000 0x400000>;
+ 		reg = <0x80000000 0x400000>;
+ 		bus-frequency = <66000000>;	// 66 MHz ips bus
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
