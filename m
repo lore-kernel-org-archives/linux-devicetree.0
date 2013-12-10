@@ -1,63 +1,57 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v4 5/7] ARM: dts: add pbias dt node
-Date: Tue, 10 Dec 2013 14:42:53 -0800
-Message-ID: <20131210224252.GX13171@atomide.com>
-References: <1385043627-30439-1-git-send-email-balajitk@ti.com>
- <1386670577-3530-1-git-send-email-balajitk@ti.com>
- <1386670577-3530-6-git-send-email-balajitk@ti.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/5] Phy: DT binding documentation for Marvell MVEBU SATA
+ phy.
+Date: Tue, 10 Dec 2013 23:59:00 +0100
+Message-ID: <20131210225900.GB17875@lunn.ch>
+References: <1386177364-10164-1-git-send-email-andrew@lunn.ch>
+ <1386177364-10164-2-git-send-email-andrew@lunn.ch>
+ <52A01742.2080405@ti.com>
+ <20131205094319.GD10498@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1386670577-3530-6-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org
+In-Reply-To: <20131205094319.GD10498@lunn.ch>
+Sender: linux-ide-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, kishon@ti.com
+Cc: Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-* Balaji T K <balajitk@ti.com> [131210 02:17]:
-> Add pbias regulator node as a child of system control
-> module - syscon.
+On Thu, Dec 05, 2013 at 10:43:19AM +0100, Andrew Lunn wrote:
+> > >  Example:
+> > >  
+> > >  	sata@80000 {
+> > >  		compatible = "marvell,orion-sata";
+> > >  		reg = <0x80000 0x5000>;
+> > >  		interrupts = <21>;
+> > > +		phys = <&sata_phy0>, <&sata_phy1>;
+> > > +		phy-names = "0", "1";
+> > 
+> > more descriptive phy-names? sata-phy0?
+> > >  		nr-ports = <2>;
 > 
-> Signed-off-by: Balaji T K <balajitk@ti.com>
-> ---
->  arch/arm/boot/dts/dra7.dtsi     |   14 ++++++++++++++
->  arch/arm/boot/dts/omap2430.dtsi |   14 ++++++++++++++
->  arch/arm/boot/dts/omap3.dtsi    |   14 ++++++++++++++
->  arch/arm/boot/dts/omap4.dtsi    |   14 ++++++++++++++
->  arch/arm/boot/dts/omap5.dtsi    |   14 ++++++++++++++
->  5 files changed, 70 insertions(+), 0 deletions(-)
+> I could do, but i was following how the clocks work. Unfortunately,
+> the binding documentation is out of date and does not contain
+> clocks. A real example is:
 > 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index d0df4c4..1a52676 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -119,6 +119,19 @@
->  			pinctrl-single,function-mask = <0x3fffffff>;
->  		};
->  
-> +		tisyscon: tisyscon@4A100600 {
-> +			compatible = "ti,control-syscon", "syscon", "simple-bus";
-> +			reg = <0x4A002E00 0x4>;
+>               sata@80000 {
+>                       compatible = "marvell,orion-sata";
+>                       reg = <0x80000 0x5000>;
+>                       interrupts = <21>;
+>                       clocks = <&gate_clk 14>, <&gate_clk 15>;
+>                       clock-names = "0", "1";
+>                       phys = <&sata_phy0>, <&sata_phy1>;
+>                       phy-names = "0", "1";
+>                       status = "disabled";
+>               };
+> 
+> So clocks and the phy are described nearly identically. I can however
+> handle phys differently if you wish.
 
-This should map the whole GENERAL area of the SCM register space instead
-in one or multiple sections or driver instances. This way the same driver
-can be used for the misc SCM registers from other drivers.
+Hi Kishon
 
-If you don't define it that way now, you'll end up with broken child driver
-offsets in the .dts files later on.
+Please could you comment on this. Are you O.K. if i use the same
+naming scheme for phys as clocks?
 
-> +				pbias_regulator: pbias_regulator {
-> +					compatible = "regulator-pbias-omap5";
-> +					pbias-reg-offset = <0>;
-> +					regulator-name = "pbias_regulator";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <3000000>;
-> +					regulator-enable-ramp-delay = <10>;
-
-Then the pbias_regulator needs to have the standard reg property as an
-offset from the SCM GENERAL base address.
-
-Regards,
-
-Tony
+Thanks
+	Andrew
