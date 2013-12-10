@@ -1,13 +1,14 @@
 From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH 1/2] arm: dts: keystone: add watchdog entry
-Date: Tue, 10 Dec 2013 16:52:35 +0200
-Message-ID: <52A72AB3.5000900@ti.com>
+Subject: Re: [PATCH 2/2] arm: keystone: enable watchdog support
+Date: Tue, 10 Dec 2013 16:53:53 +0200
+Message-ID: <52A72B01.9090305@ti.com>
 References: <1386686869-729-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1386686869-729-2-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1386686869-729-1-git-send-email-ivan.khoronzhuk@ti.com>
+In-Reply-To: <1386686869-729-2-git-send-email-ivan.khoronzhuk@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -27,34 +28,31 @@ linux-arm-kernel@lists.infradead.org
 linux-kernel@vger.kernel.org
 
 On 12/10/2013 04:47 PM, Ivan Khoronzhuk wrote:
-> Add watchdog entry to keystone device tree.
+> After Keystone watchdog driver updates are already merged we can
+> enable WDT in config.
 >
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
 > Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 > ---
 > Based on
 > git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
 > keystone/master
 >
->   arch/arm/boot/dts/keystone.dtsi |    6 ++++++
->   1 file changed, 6 insertions(+)
+>   arch/arm/configs/keystone_defconfig |    2 ++
+>   1 file changed, 2 insertions(+)
 >
-> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-> index f6d6d9e..54a8ff7 100644
-> --- a/arch/arm/boot/dts/keystone.dtsi
-> +++ b/arch/arm/boot/dts/keystone.dtsi
-> @@ -181,5 +181,11 @@
->   			interrupts = <GIC_SPI 300 IRQ_TYPE_EDGE_RISING>;
->   			clocks = <&clkspi>;
->   		};
-> +
-> +		wdt: wdt@022f0080 {
-> +			compatible = "ti,keystone-wdt","ti,davinci-wdt";
-> +			reg = <0x022f0080 0x80>;
-> +			clocks = <&clkwdtimer0>;
-> +		};
->   	};
->   };
+> diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
+> index 9943e5d..8bd940c 100644
+> --- a/arch/arm/configs/keystone_defconfig
+> +++ b/arch/arm/configs/keystone_defconfig
+> @@ -129,6 +129,8 @@ CONFIG_SPI_DAVINCI=y
+>   CONFIG_SPI_SPIDEV=y
+>   # CONFIG_HWMON is not set
+>   CONFIG_WATCHDOG=y
+> +CONFIG_WATCHDOG_CORE=y
+> +CONFIG_DAVINCI_WATCHDOG=y
+>   # CONFIG_USB_SUPPORT is not set
+>   CONFIG_DMADEVICES=y
+>   CONFIG_COMMON_CLK_DEBUG=y
 >
 
 
