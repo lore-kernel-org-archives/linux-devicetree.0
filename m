@@ -1,69 +1,127 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when populating
- interrupts
-Date: Tue, 10 Dec 2013 03:39:02 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1312100331460.32309@utopia.booyaka.com>
-References: <20131123004334.GJ10023@atomide.com> <20131123005509.GJ16735@ n2100.arm.linux.org.uk> <20131123010850.GN10023@atomide.com> < 20131123011515.GO10023@atomide.com> <20131123015034.GP10023@atomide.com>
- <20131124212757.7D224C402A3@trevor.secretlab.ca>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 07/10] ARM: dts: sun7i: cubietruck: Enable
+ the GMAC
+Date: Tue, 10 Dec 2013 12:11:00 +0800
+Message-ID: <CAGb2v665xtY4m4uCTb_iMojG+ox0HvyCgz6p0P7oxJVvZ0SW9w@mail.gmail.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org>
+ <1386350983-13281-8-git-send-email-wens@csie.org> <CAGVrzcb_r9_p4urz4XkE2A-G85KAHJa4PJ=Gt9a4RPYQNJ6j0g@mail.gmail.com>
+ <CAGb2v64yFhkTXvdq=1VpemULhXew-5fvmSoTBzEb6iFDiSqy1Q@mail.gmail.com>
+ <CAGVrzcaxV88dU3vEVGUiEQihUHLxq+QvQVQ6VvmOFVRsqbbX7w@mail.gmail.com>
+ <CAGb2v675Cg6S512zfM1z4b+wqE_PesDGWdgcmpzWmPzyzXqbeA@mail.gmail.com> <CAGVrzcaVJtoVhEfV+ZiMOkm3F8NBCf2YRcZSrZPMRfQfEr1u=g@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131124212757.7D224C402A3@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB2VITKKQKGQEBBB6LTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGVrzcaVJtoVhEfV+ZiMOkm3F8NBCf2YRcZSrZPMRfQfEr1u=g@mail.gmail.com>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant, Rob,
+On Tue, Dec 10, 2013 at 1:48 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 2013/12/8 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
+>> Florian, Giuseppe:
+>>
+>> On Sat, Dec 7, 2013 at 9:57 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> 2013/12/6 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
+>>>> On Sat, Dec 7, 2013 at 5:09 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> 2013/12/6 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
+>>>>>> The CubieTruck uses the GMAC with an RGMII phy.
+>>>>>>
+>>>>>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>>>>>> ---
+>>>>>>  arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 8 ++++++++
+>>>>>>  1 file changed, 8 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>>>>> index 8a1009d..af212a2 100644
+>>>>>> --- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>>>>> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>>>>> @@ -33,6 +33,14 @@
+>>>>>>                         pinctrl-0 = <&uart0_pins_a>;
+>>>>>>                         status = "okay";
+>>>>>>                 };
+>>>>>> +
+>>>>>> +               gmac: ethernet@01c50000 {
+>>>>>> +                       pinctrl-names = "default";
+>>>>>> +                       pinctrl-0 = <&gmac_pins_rgmii>;
+>>>>>> +                       snps,phy-addr = <1>;
+>>>>>
+>>>>> What is this snps,phy-addr property? Why is not a standard device tree
+>>>>> node for an Ethernet PHY node used?
+>>>>
+>>>> This property is implemented by stmmac and documented in the DT
+>>>> bindings. stmmac has not been updated to use Ethernet PHY nodes.
+>>>
+>>> This driver property should be removed and deprecated since there is
+>>> an ePAPR standardized Ethernet PHY node. What I am worried here is the
+>>> loss of information, the standard Ethernet DT node allows to specify
+>>> much more information (clause, maximum speed, compatible string
+>>> etc...).
+>>
+>> Giuseppe, any thoughts on this?
+>>
+>>>> Removing this property will not affect the function of the driver.
+>>>> The driver probes its MDIO bus and selects the lowest available
+>>>> address if not specified.
+>>>
+>>> So if this is just giving the driver a hint on where to  probe for a
+>>> PHY on the MDIO bus, then let's drop it and use the standard DT node
+>>> no?
+>>
+>> Sure. I will remove it from the DT.
+>>
+>> The stmmac driver does not have a seperate MDIO bus driver, nor
+>> does it support Ethernet PHY node bindings. So I will not add
+>> a phy node at this moment.
+>
+> This will create needless churn in the DT if you do not do it now,
+> worse actually, we switch from a DT which specifically described
+> Ethernet PHY nodes properly to a version where it does, to ultimately
+> a newer version which does.
+>
+> Considering that the absence of a "snps,phy-addr" property will still
+> result in the MDIO bus to be probed, keeping the existing Ethernet PHY
+> nodes, referencing them correclty with a "phy-handle" property, but
+> having no explicit support for these in the driver will not result in
+> a functional change, and will reduce the DT churn. Also, you could
+> still sneak a patch in this patchset which parses the standard
+> EThernet PHY node binding.
 
-On Sun, 24 Nov 2013, Grant Likely wrote:
+I see. Adding the PHY node should be no trouble at all.
+Is there a requirement for a seperate mdio bus in the DT?
+I do not see it in the ePAPR. The stmmac mdio is not a seperate
+driver, as is for most network controllers I presume.
+Would attaching the PHY nodes directly under the ethernet controller
+suffice?
 
-> On Fri, 22 Nov 2013 17:50:35 -0800, Tony Lindgren <tony@atomide.com> wrote:
-> > * Tony Lindgren <tony@atomide.com> [131122 17:16]:
-> > > * Tony Lindgren <tony@atomide.com> [131122 17:09]:
-> > > > * Russell King - ARM Linux <linux@arm.linux.org.uk> [131122 16:56]:
-> > > > > On Fri, Nov 22, 2013 at 04:43:35PM -0800, Tony Lindgren wrote:
-> > > > > > +		/* See of_device_resource_notify for populating interrupts */
-> > > > > > +		for (i = 0; i < num_irq; i++, res++) {
-> > > > > > +			res->flags = IORESOURCE_IRQ;
-> > > > > > +			res->start = -EPROBE_DEFER;
-> > > > > > +			res->end = -EPROBE_DEFER;
-> > > > > 
-> > > > > NAK.  Definitely a bad idea to start introducing magic values other into
-> > > > > resources.  Please don't do this.
-> > > > 
-> > > > Do you have any better ideas on how to sort out this issue then?
-> > > 
-> > > I guess we could allocate all the resources lazily here, I'll take a look
-> > > at that.
-> > 
-> > Here's a version that allocates the resources lazily with the notifier.
-> > Seems to boot, need to play with it a bit more though to make sure we're
-> > not overwriting resources for any legacy devices.
-> 
-> Blurg. Using a notifier really feels like we don't have a good handle on
-> a reasonable solution yet. Basically it means we're hooking into the
-> driver core without /looking/ like we're hooking into the driver core. I
-> don't think this is any better, but I don't have a better suggestion at
-> the moment.   :-(
+We can then introduce PHY node support to the driver and
+remove the "snps,phy-addr" property at the same time.
 
-Unfortunately this patch, or something that accomplishes the same results, 
-is somewhat high-priority for us on OMAP.  OMAP37xx got prematurely 
-converted to DT booting, and now dynamic power management is broken:
+ChenYu
 
-    http://marc.info/?l=linux-arm-kernel&m=138658294830408&w=2
-
-Tony writes that this patch is one of the two patches needed to get things 
-working again:
-
-    http://marc.info/?l=linux-arm-kernel&m=138660942506846&w=2
-
-Is it possible to get this patch, or something similar, merged for 
-v3.13-rc?
-
-Once something like PM is broken, it's pretty easy for other broken 
-patches to make it into the tree, since it becomes very difficult to test 
-without turning into a maintainer denial-of-service attack.
-
-
-- Paul
+>>
+>>>>>> +                       phy-mode = "rgmii";
+>>>>>
+>>>>> Especially since you use the relatively standard "phy-mode" property here?
+>>>>
+>>>> Used as specified in stmmac DT bindings.
+>>>
+>>> That one is kind of okay because of_get_phy_mode() knows about it,
+>>> even though ePAPR states this should be "phy-connection-type", so I am
+>>> okay with keeping that one because current practice and helpers are
+>>> here.
+>>
+>> It seems all ARM DTs currently use "phy-mode".
+>
+> Which is why I said "is kind of okay", but this is not what the
+> standard came up with, ARM is not exactly the best DT-citizen out
+> there as people are prone to making up new properties when the
+> standard already defines some, anyway....
+> --
+> Florian
