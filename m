@@ -1,255 +1,92 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH] gpio: Driver for SYSCON-based GPIOs
-Date: Tue, 10 Dec 2013 19:26:56 +0400
-Message-ID: <1386689216-5139-1-git-send-email-shc_work@mail.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 1/7] ARM: EXYNOS: initial board support for exynos5260 SoC
+Date: Tue, 10 Dec 2013 16:57:23 +0100
+Message-ID: <2452273.S9E2sU17uX@amdc1227>
+References: <1386345391-23482-1-git-send-email-rahul.sharma@samsung.com>
+ <1386345391-23482-2-git-send-email-rahul.sharma@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1386345391-23482-2-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@linaro.org, kgene.kim@samsung.com, thomas.ab@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, pankaj.dubey@samsung.com, yg1004.jang@samsung.com, arun.kk@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SYSCON driver was designed for using memory areas (registers)
-that are used in several subsystems. There are systems (CPUs)
-which use bits in one register for various purposes and thus
-should be handled by various kernel subsystems. This driver
-allows you to use the individual SYSCON bits as GPIOs.
+Hi Pankaj, Rahul, Arun,
 
-Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- .../devicetree/bindings/gpio/gpio-syscon.txt       |  22 +++
- drivers/gpio/Kconfig                               |   6 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-syscon.c                         | 159 +++++++++++++++++++++
- 4 files changed, 188 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-syscon.txt
- create mode 100644 drivers/gpio/gpio-syscon.c
+In addition to issues already pointed by Sachin, please also see my
+comments inline.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-syscon.txt b/Documentation/devicetree/bindings/gpio/gpio-syscon.txt
-new file mode 100644
-index 0000000..d8ecfe2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-syscon.txt
-@@ -0,0 +1,22 @@
-+* SYSCON-based GPIO driver
-+
-+Required properties:
-+- compatible: Should be "gpio-syscon".
-+- syscon: Phandle to syscon device node.
-+- gpio-controller: Marks the device node as a gpio controller.
-+- #gpio-cells: Should be two. The first cell is the pin number and
-+  the second cell is used to specify the gpio polarity:
-+    0 = Active high,
-+    1 = Active low.
-+- bit-offset: Offset to the first bit used by driver.
-+- bit-count: Number of bits used.
-+
-+Example:
-+	sysgpio: sysgpio {
-+		compatible = "gpio-syscon";
-+		syscon = <&syscon>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		bit-offset = <4>;
-+		bit-count = <1>;
-+	};
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 365ea61..5eee6e7 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -259,6 +259,12 @@ config GPIO_STA2X11
- 	  Say yes here to support the STA2x11/ConneXt GPIO device.
- 	  The GPIO module has 128 GPIO pins with alternate functions.
- 
-+config GPIO_SYSCON
-+	tristate "GPIO based on SYSCON"
-+	depends on MFD_SYSCON && OF
-+	help
-+	  Say yes here to support GPIO functionality though SYSCON driver.
-+
- config GPIO_TS5500
- 	tristate "TS-5500 DIO blocks and compatibles"
- 	help
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 95d7359..130bc76 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -75,6 +75,7 @@ obj-$(CONFIG_GPIO_STA2X11)	+= gpio-sta2x11.o
- obj-$(CONFIG_GPIO_STMPE)	+= gpio-stmpe.o
- obj-$(CONFIG_GPIO_STP_XWAY)	+= gpio-stp-xway.o
- obj-$(CONFIG_GPIO_SX150X)	+= gpio-sx150x.o
-+obj-$(CONFIG_GPIO_SYSCON)	+= gpio-syscon.o
- obj-$(CONFIG_GPIO_TB10X)	+= gpio-tb10x.o
- obj-$(CONFIG_GPIO_TC3589X)	+= gpio-tc3589x.o
- obj-$(CONFIG_ARCH_TEGRA)	+= gpio-tegra.o
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-new file mode 100644
-index 0000000..2d02cc1
---- /dev/null
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -0,0 +1,159 @@
-+/*
-+ *  SYSCON GPIO driver
-+ *
-+ *  Copyright (C) 2013 Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+
-+#define GPIO_SYSCON_INPUT	(1 << 0)
-+#define GPIO_SYSCON_OUTPUT	(1 << 1)
-+
-+/* SYSCON driver is designed to use 32-bit wide registers */
-+#define SYSCON_REG_SIZE		(4)
-+#define SYSCON_REG_BITS		(SYSCON_REG_SIZE * 8)
-+
-+struct syscon_gpio_priv {
-+	struct gpio_chip	chip;
-+	struct regmap		*syscon;
-+	unsigned int		bit_offset;
-+};
-+
-+static inline struct syscon_gpio_priv *to_syscon_gpio(struct gpio_chip *chip)
-+{
-+	return container_of(chip, struct syscon_gpio_priv, chip);
-+}
-+
-+static int syscon_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
-+	unsigned int val, offs = priv->bit_offset + offset;
-+	int ret;
-+
-+	ret = regmap_read(priv->syscon,
-+			  (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return !!(val & (offs % SYSCON_REG_BITS));
-+}
-+
-+static void syscon_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
-+{
-+	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
-+	unsigned int offs = priv->bit_offset + offset;
-+
-+	regmap_update_bits(priv->syscon,
-+			   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
-+			   offs % SYSCON_REG_BITS,
-+			   val ? (offs % SYSCON_REG_BITS) : 0);
-+}
-+
-+static int syscon_gpio_dir_in(struct gpio_chip *chip, unsigned offset)
-+{
-+	return 0;
-+}
-+
-+static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
-+{
-+	syscon_gpio_set(chip, offset, val);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id syscon_gpio_ids[] = {
-+	{
-+		.compatible	= "gpio-syscon-input",
-+		.data		= (void *)GPIO_SYSCON_INPUT,
-+	},
-+	{
-+		.compatible	= "gpio-syscon-output",
-+		.data		= (void *)GPIO_SYSCON_OUTPUT,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
-+
-+static int syscon_gpio_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *of_id =
-+		of_match_device(syscon_gpio_ids, &pdev->dev);
-+	struct device_node *np = pdev->dev.of_node;
-+	struct syscon_gpio_priv *priv;
-+	unsigned int flags;
-+	u32 ngpio;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->syscon = syscon_regmap_lookup_by_phandle(np, "syscon");
-+	if (IS_ERR(priv->syscon))
-+		return PTR_ERR(priv->syscon);
-+
-+	ret = of_property_read_u32(np, "bit-offset", &priv->bit_offset);
-+	if (ret)
-+		return ret;
-+
-+	ret = of_property_read_u32(np, "bit-count", &ngpio);
-+	if (ret)
-+		return ret;
-+
-+	/* Sanity check */
-+	if (ngpio < 1 || ngpio > (u16)-1)
-+		return -EINVAL;
-+
-+	flags = (unsigned int)of_id->data;
-+
-+	priv->chip.owner = THIS_MODULE;
-+	priv->chip.label = dev_name(&pdev->dev);
-+	priv->chip.base = -1;
-+	priv->chip.ngpio = ngpio;
-+	if (flags & GPIO_SYSCON_INPUT) {
-+		priv->chip.get = syscon_gpio_get;
-+		priv->chip.direction_input = syscon_gpio_dir_in;
-+	}
-+	if (flags & GPIO_SYSCON_OUTPUT) {
-+		priv->chip.set = syscon_gpio_set;
-+		priv->chip.direction_output = syscon_gpio_dir_out;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return gpiochip_add(&priv->chip);
-+}
-+
-+static int syscon_gpio_remove(struct platform_device *pdev)
-+{
-+	struct syscon_gpio_priv *priv = platform_get_drvdata(pdev);
-+
-+	return gpiochip_remove(&priv->chip);
-+}
-+
-+static struct platform_driver syscon_gpio_driver = {
-+	.driver	= {
-+		.name		= "gpio-syscon",
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= syscon_gpio_ids,
-+	},
-+	.probe	= syscon_gpio_probe,
-+	.remove	= syscon_gpio_remove,
-+};
-+module_platform_driver(syscon_gpio_driver);
-+
-+MODULE_AUTHOR("Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>");
-+MODULE_DESCRIPTION("SYSCON GPIO driver");
-+MODULE_LICENSE("GPL");
--- 
-1.8.3.2
+On Friday 06 of December 2013 21:26:25 Rahul Sharma wrote:
+> From: Pankaj Dubey <pankaj.dubey@samsung.com>
+> 
+> This patch add basic arch side support for exynos5260 SoC.
+> 
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> ---
+>  arch/arm/mach-exynos/Kconfig                 |    9 +++++++++
+>  arch/arm/mach-exynos/common.c                |   19 ++++++++++++++++++-
+>  arch/arm/mach-exynos/cpuidle.c               |    2 +-
+>  arch/arm/mach-exynos/include/mach/map.h      |    1 +
+>  arch/arm/mach-exynos/include/mach/regs-pmu.h |    4 ++++
+>  arch/arm/mach-exynos/mach-exynos5-dt.c       |    1 +
+>  arch/arm/plat-samsung/include/plat/cpu.h     |    8 ++++++++
+>  arch/arm/plat-samsung/include/plat/map-s5p.h |    1 +
+>  8 files changed, 43 insertions(+), 2 deletions(-)
+[snip]
+> diff --git a/arch/arm/mach-exynos/cpuidle.c b/arch/arm/mach-exynos/cpuidle.c
+> index ddbfe87..405c11a 100644
+> --- a/arch/arm/mach-exynos/cpuidle.c
+> +++ b/arch/arm/mach-exynos/cpuidle.c
+> @@ -120,7 +120,7 @@ static int exynos4_enter_core0_aftr(struct cpuidle_device *dev,
+>  	cpu_suspend(0, idle_finisher);
+>  
+>  #ifdef CONFIG_SMP
+> -	if (!soc_is_exynos5250())
+> +	if (!soc_is_exynos5250() || soc_is_exynos5260())
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The added OR condition doesn't affect the if condition in any way, because
+when running on Exynos5260, soc_is_exynos5250() will return false and make
+the whole condition evaluate to true.
+
+Shouldn't it be
+
+	if (!soc_is_exynos5250() && !soc_is_exynos5260())
+
+if Exynos5260 doesn't need scu_enable(), or left as is if it needs?
+
+>  		scu_enable(S5P_VA_SCU);
+>  #endif
+>  	cpu_pm_exit();
+> diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
+> index 7b046b5..bd6fa02 100644
+> --- a/arch/arm/mach-exynos/include/mach/map.h
+> +++ b/arch/arm/mach-exynos/include/mach/map.h
+> @@ -29,6 +29,7 @@
+>  #define EXYNOS4210_PA_SYSRAM_NS		0x0203F000
+>  #define EXYNOS4x12_PA_SYSRAM_NS		0x0204F000
+>  #define EXYNOS5250_PA_SYSRAM_NS		0x0204F000
+> +#define EXYNOS5260_PA_SYSRAM_NS		0x02073000
+>  
+>  #define EXYNOS_PA_CHIPID		0x10000000
+>  
+> diff --git a/arch/arm/mach-exynos/include/mach/regs-pmu.h b/arch/arm/mach-exynos/include/mach/regs-pmu.h
+> index 2cdb63e..09ae29a 100644
+> --- a/arch/arm/mach-exynos/include/mach/regs-pmu.h
+> +++ b/arch/arm/mach-exynos/include/mach/regs-pmu.h
+> @@ -234,6 +234,10 @@
+>  
+>  #define EXYNOS5_SYS_WDTRESET					(1 << 20)
+>  
+> +#define EXYNOS5260_A7_WDTRST					(1 << 24)
+> +#define EXYNOS5260_A15_WDTRST					(1 << 23)
+> +#define EXYNOS5260_SYS_WDTRESET	(EXYNOS5260_A7_WDTRST || EXYNOS5260_A15_WDTRST)
+> +
+
+Are these definitions needed? I don't see any user in this patch.
+
+Best regards,
+Tomasz
