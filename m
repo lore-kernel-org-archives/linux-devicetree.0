@@ -1,55 +1,103 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v2 0/8] clk: max77686: Clock provider implementation fixes
-Date: Tue, 31 Dec 2013 11:42:15 -0800
-Message-ID: <20131231194215.12054.39705@quantum>
-References: <1386864441-19561-1-git-send-email-t.figa@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1386864441-19561-1-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Tomasz Figa <t.figa@samsung.com>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <devicetree-owner@vger.kernel.org>
+Received: from arroyo.ext.ti.com ([192.94.94.40]:56845 "EHLO arroyo.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750922Ab3LJSwh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Tue, 10 Dec 2013 13:52:37 -0500
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [RFC v2] ARM/dts: am335x-boneblack: Add HDMI audio support
+Date: Tue, 10 Dec 2013 20:52:31 +0200
+Message-ID: <f3c6306b5f283910630602c373407cbf4df91cea.1386504183.git.jsarha@ti.com>
+In-Reply-To: <cover.1386504183.git.jsarha@ti.com>
+References: <cover.1386504183.git.jsarha@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: bcousson@baylibre.com, devicetree@vger.kernel.org
+Cc: Jyri Sarha <jsarha@ti.com>
+List-ID: <devicetree@vger.kernel.org>
 
-Quoting Tomasz Figa (2013-12-12 08:07:13)
-> This series intends to improve clock provider impementation of max77686
-> PMIC driver. First two patches are simple fixes of current implementation
-> to allow correct control of provided clocks. Further patches refactor
-> the driver to make the code cleaner and prepare for further patches. Then
-> last two patches add registration of OF clock provider and adjust device
-> tree nodes of boards containing max77686 chip to contain properties
-> required by clock provider.
+Adds mcasp0_pins, clk_mcasp0_fixed, clk_mcasp0, mcasp0, hdmi_audio,
+and sound nodes.
 
-Acked-by: Mike Turquette <mturquette@linaro.org>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ arch/arm/boot/dts/am335x-boneblack.dts |   52 ++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-> 
-> Tested on Exynos4412-based Trats2 board, with additional patches adding
-> driver being a consumer of one of max77686 clocks.
-> 
-> Changes since v1:
->  - rebased on top of current clk-next (no functional changes)
-> 
-> Tomasz Figa (8):
->   clk: max77686: Correct callback used for checking clock status
->   clk: max77686: Provide .recalc_rate() operation
->   clk: max77686: Refactor successful exit of probe function
->   clk: max77686: Make max77686_clk_register() return struct clk *
->   clk: max77686: Fix clean-up in error and remove paths
->   clk: max77686: Refactor driver data handling
->   clk: max77686: Register OF clock provider
->   ARM: dts: Add clock provider specific properties to max77686 node
-> 
->  .../devicetree/bindings/clock/maxim,max77686.txt   | 38 +++++++++
->  Documentation/devicetree/bindings/mfd/max77686.txt |  3 +
->  arch/arm/boot/dts/cros5250-common.dtsi             |  1 +
->  arch/arm/boot/dts/exynos4412-odroidx.dts           |  1 +
->  arch/arm/boot/dts/exynos4412-trats2.dts            |  1 +
->  drivers/clk/clk-max77686.c                         | 97 +++++++++++++---------
->  6 files changed, 104 insertions(+), 37 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/maxim,max77686.txt
-> 
-> -- 
-> 1.8.4.3
-> 
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index 6b71ad9..860ea98 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -60,12 +60,35 @@
+ 			0x1b0 0x03      /* xdma_event_intr0, OMAP_MUX_MODE3 | AM33XX_PIN_OUTPUT */
+ 		>;
+ 	};
++
++	mcasp0_pins: mcasp0_pins {
++		pinctrl-single,pins = <
++			0x1ac (PIN_INPUT_PULLUP | MUX_MODE0) /* mcasp0_ahclkx.mcasp0_ahclkx */
++			0x19c (PIN_OUTPUT_PULLDOWN | MUX_MODE2) /* mcasp0_ahclkr.mcasp0_axr2 */
++			0x194 (PIN_OUTPUT_PULLUP | MUX_MODE0) /* mcasp0_fsx.mcasp0_fsx */
++			0x190 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mcasp0_aclkx.mcasp0_aclkx */
++			0x06c (PIN_OUTPUT_PULLUP | MUX_MODE7) /* gpmc_a11.gpio1_27 */
++		>;
++	};
+ };
+ 
+ &lcdc {
+ 	status = "okay";
+ };
+ 
++&mcasp0	{
++	pinctrl-names = "default";
++	pinctrl-0 = <&mcasp0_pins>;
++	status = "okay";
++	op-mode = <0>;	/* MCASP_IIS_MODE */
++	tdm-slots = <2>;
++	serial-dir = <	/* 0: INACTIVE, 1: TX, 2: RX */
++			0 0 1 0
++		>;
++	tx-num-evt = <1>;
++	rx-num-evt = <1>;
++};
++
+ / {
+ 	hdmi {
+ 		compatible = "ti,tilcdc,slave";
+@@ -75,4 +98,33 @@
+ 		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
+ 		status = "okay";
+ 	};
++
++	clk_mcasp0_fixed: clk_mcasp0_fixed {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <24576000>;
++	};
++
++	clk_mcasp0: clk_mcasp0 {
++		#clock-cells = <0>;
++		compatible = "gpio-clock";
++		clocks = <&clk_mcasp0_fixed>;
++		enable-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>; /* BeagleBone Black Clk enable on GPIO1_27 */
++	};
++
++	hdmi_audio: hdmi_audio@0 {
++	       compatible = "linux,hdmi-audio";
++	       status = "okay";
++	};
++
++	sound {
++		compatible = "ti,am33xx-beaglebone-black-audio";
++		ti,model = "TI BeagleBone Black";
++		ti,audio-codec = <&hdmi_audio>;
++		ti,mcasp-controller = <&mcasp0>;
++		ti,audio-routing =
++			"HDMI Out",	"TX";
++		clocks = <&clk_mcasp0>;
++		clock-names = "ti,codec-clock";
++	};
+ };
+-- 
+1.7.9.5
+
