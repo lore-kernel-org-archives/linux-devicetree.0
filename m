@@ -1,58 +1,38 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: tegra: update module reset list for Tegra124
-Date: Tue, 10 Dec 2013 11:19:15 +0000
-Message-ID: <20131210111915.GG29268@sirena.org.uk>
-References: <1386195913-24213-1-git-send-email-swarren@wwwdotorg.org>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v1 1/1] powerpc/512x: dts: remove misplaced IRQ spec from
+ 'soc' node
+Date: Tue, 10 Dec 2013 12:24:16 +0100
+Message-ID: <20131210112416.GQ2982@book.gsilab.sittig.org>
+References: <1386068212-11484-1-git-send-email-gsi@denx.de>
+ <20131203150432.2c326004@crub>
+ <20131210100501.GO2982@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7tGYYWp2rWczQsSS"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1386195913-24213-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20131210100501.GO2982-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, matteo.facchinetti-rF44gyYGg1k3ahhDiVHSzw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 10, 2013 at 11:05 +0100, Gerhard Sittig wrote:
+> 
+> FYI: I only noticed yesterday that MPC5125 suffers from the same
+> issue, have sent <1386669068-2477-1-git-send-email-gsi-ynQEQJNshbs@public.gmane.org>
+> to fix that as well.  Both patches may get squashed when going
+> upstream.  Don't have a dump at hand for MPC5125 as I don't have
+> access to hardware.
 
---7tGYYWp2rWczQsSS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Had a thinko there, the MPC5121 fix already went upstream, while
+the MPC5125 fix is pending.  So there is no squashing.  Nevermind.
 
-On Wed, Dec 04, 2013 at 03:25:13PM -0700, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> Tegra124 adds a number of extra modules into the configlink bus, which
-> must be taken out of reset before the bus is used. Update the AHUB
-> driver to know about these extra modules (the AHUB HW module hosts the
-> configlink bus).
 
-Acked-by: Mark Brown <broonie-QSEj5FYQhm64UlQgPVntAg@public.gmane.org
-
---7tGYYWp2rWczQsSS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSpviwAAoJELSic+t+oim92xsP/04YlV5bIjUnaWjxrD6OqvLi
-RhRdCzUddgqzUFng7gRG+8oNLa+EH0+ANsSUB9FFYoyEKATxPmFLNP7PfhoxGBt1
-5ai2w5+l/wPm9ZxM/iF0L/taNzU4Mx+IbYyS8ZhXy8m6dx0ISJMKFfBhQUxB0pdw
-cCAMPXMEZJPbHK5d5ADLuW0YfcRKO9Nzi4hnTwlujrvImiXHwaysN3nSzbKdRilk
-18VTdvr2kE92XD4wu2b6iOU/a4y2Sbiq5onvRsD3fjRu2hSPrRfw3Hop1IqaYZ+J
-aQImilRNZSmDfQA8DEDV8k544s+Y7n4IgWHBJeHAsXkVzSz4o6ay399D07SDMjfZ
-LM5/+PpZI7LzoUZC70rfehv5NaFDbGq8WOfedNs0YzXfpJrnxzzJLQ305sqV7Lu0
-QRiC+2LximM7qL4So+0wi3X+moArsR1dvyrN43z7KjjlynBN3cfHa7B7JIubDs/d
-qUXfTnazp8hkpN+fr4vcc7uCIihesZ9828jpX9B6aXtUnEDH3zFyIZvSI32Uij6E
-zZHnUhOyma8IWZHwywDesi5Tpq5In7zrORE0rQLfYmxCIsPghbuUlDgIIxxEt4qR
-LrolcI6TzyTxudjYxCyA7iTilYJhB/hiv19L5NccgmtFGfuT6N6rGuCtzf7i0EAM
-Jb7rfgLLjOvKjn25PwCt
-=Tq5k
------END PGP SIGNATURE-----
-
---7tGYYWp2rWczQsSS--
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
