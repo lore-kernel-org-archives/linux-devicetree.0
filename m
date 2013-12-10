@@ -1,40 +1,120 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH 5/9] ARM: dts: provide DMA config to pxamci
-Date: Tue, 10 Dec 2013 08:25:21 +0400
-Message-ID: <1386649521.7152.196.camel@host5.omatika.ru>
-References: <1386348542-9584-1-git-send-email-ynvich@gmail.com>
-	 <52A59991.1060305@gmail.com> <1386590958.7152.135.camel@host5.omatika.ru>
-	 <201312100125.18754.arnd@arndb.de>
+From: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2 09/10] arm: dts: dra7: Add qspi device.
+Date: Tue, 10 Dec 2013 09:55:15 +0530
+Message-ID: <52A697AB.1060404@ti.com>
+References: <1386339891-32717-1-git-send-email-sourav.poddar@ti.com> <1386339891-32717-10-git-send-email-sourav.poddar@ti.com> <20131209174203.GB12527@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201312100125.18754.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Daniel Mack <zonque@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, DOCUMENTATION <linux-doc@vger.kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131209174203.GB12527-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2013-12-10 at 01:25 +0100, Arnd Bergmann wrote:
-> We never intentionally break things that people are using, but there are
-> cases where doing blind changes is the best way forward. We should
-> always try to find people to test patches on real hardware if possible,
-> which is only possible if there are people around that have the hardware
-> and that are going to run new kernels on them.
-> 
-> In case of PXA dmaengine support, I think the benefits of applying the
-> series far outweigh the breakage potential. A lot of the drivers are
-> shared with MMP, which is going to be DT-only eventually and will require
-> the new dmaengine code. Some PXA drivers may be shared with SA1100,
-> which has also converted to dmaengine although there are no plans to
-> ever support DT on sa1100.
-> 
-> We certainly need to be extra careful if we want to move things over
-> at once and cannot test all the drivers. I'd be happier if it could
-> be done gradually by having some drivers use the new interface and
-> other drivers use the old one, but I don't see how that can be done
-> here.
+On Monday 09 December 2013 11:12 PM, Tony Lindgren wrote:
+> * Sourav Poddar<sourav.poddar-l0cyMroinI0@public.gmane.org>  [131206 06:29]:
+>> These add device tree entry for qspi controller driver on dra7.
+> FYI these .dts changes need to be queued separately by Benoit and
+> should be posted as a seprate series in general to avoid confusion.
+>
+Ok, thanks!
+I posted this for review along with other code changes.
 
-Thanks for detailed explanation. I see there is strong support for the
-big change. Lets hope it'll be smooth. I'll strest test Daniel's changes
-and report the results.
+I will post them seperately to Benoit.
+> Regards,
+>
+> Tony
+>
+>> Signed-off-by: Sourav Poddar<sourav.poddar-l0cyMroinI0@public.gmane.org>
+>> ---
+>> v1->v2:
+>> use "MUX_MODE1" instead of numeric value
+>>   arch/arm/boot/dts/dra7-evm.dts |   32 ++++++++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/dra7.dtsi    |   13 +++++++++++++
+>>   2 files changed, 45 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+>> index 5babba0..4a57fdf 100644
+>> --- a/arch/arm/boot/dts/dra7-evm.dts
+>> +++ b/arch/arm/boot/dts/dra7-evm.dts
+>> @@ -93,6 +93,21 @@
+>>   			0x24c (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_txd */
+>>   		>;
+>>   	};
+>> +
+>> +	qspi1_pins: pinmux_qspi1_pins {
+>> +		pinctrl-single,pins =<
+>> +			0x4c (PIN_INPUT | MUX_MODE1)  /* gpmc_a3.qspi1_cs2 */
+>> +			0x50 (PIN_INPUT | MUX_MODE1)  /* gpmc_a4.qspi1_cs3 */
+>> +			0x74 (PIN_INPUT | MUX_MODE1)  /* gpmc_a13.qspi1_rtclk */
+>> +			0x78 (PIN_INPUT | MUX_MODE1)  /* gpmc_a14.qspi1_d3 */
+>> +			0x7c (PIN_INPUT | MUX_MODE1)  /* gpmc_a15.qspi1_d2 */
+>> +			0x80 (PIN_INPUT | MUX_MODE1) /* gpmc_a16.qspi1_d1 */
+>> +			0x84 (PIN_INPUT | MUX_MODE1)  /* gpmc_a17.qspi1_d0 */
+>> +			0x88 (PIN_INPUT | MUX_MODE1)  /* qpmc_a18.qspi1_sclk */
+>> +			0xb8 (PIN_INPUT_PULLUP | MUX_MODE1)  /* gpmc_cs2.qspi1_cs0 */
+>> +			0xbc (PIN_INPUT_PULLUP | MUX_MODE1)  /* gpmc_cs3.qspi1_cs1 */
+>> +		>;
+>> +	};
+>>   };
+>>
+>>   &i2c1 {
+>> @@ -273,3 +288,20 @@
+>>   &cpu0 {
+>>   	cpu0-supply =<&smps123_reg>;
+>>   };
+>> +
+>> +&qspi {
+>> +	status = "okay";
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 =<&qspi1_pins>;
+>> +
+>> +	spi-max-frequency =<48000000>;
+>> +	m25p80@0 {
+>> +		compatible = "s25fl256s1";
+>> +		spi-max-frequency =<48000000>;
+>> +		reg =<0>;
+>> +		spi-tx-bus-width =<1>;
+>> +		spi-rx-bus-width =<4>;
+>> +		spi-cpol;
+>> +		spi-cpha;
+>> +	};
+>> +};
+>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>> index 67275c8..b06d899 100644
+>> --- a/arch/arm/boot/dts/dra7.dtsi
+>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>> @@ -582,6 +582,19 @@
+>>   			dma-names = "tx0", "rx0";
+>>   			status = "disabled";
+>>   		};
+>> +
+>> +		qspi: qspi@4b300000 {
+>> +			compatible = "ti,dra7xxx-qspi";
+>> +			reg =<0x4b300000 0x100>,<0x4a002558 0x4>,
+>> +					<0x5c000000 0x3ffffff>;
+>> +			reg-names = "qspi_base", "qspi_ctrlmod", "qspi_mmap";
+>> +			#address-cells =<1>;
+>> +			#size-cells =<0>;
+>> +			ti,hwmods = "qspi";
+>> +			num-cs =<4>;
+>> +			interrupts =<0 124 0x4>;
+>> +			status = "disabled";
+>> +		};
+>>   	};
+>>
+>>   	clocks {
+>> -- 
+>> 1.7.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
