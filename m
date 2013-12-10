@@ -1,94 +1,91 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCHv2 04/10] spi/qspi: configure set up register for memory map.
-Date: Tue, 10 Dec 2013 13:57:54 +0100
-Message-ID: <201312101357.54874.marex@denx.de>
-References: <1386339891-32717-1-git-send-email-sourav.poddar@ti.com> <1386339891-32717-5-git-send-email-sourav.poddar@ti.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
+Subject: [PATCH v4 3/7] dt-bindings: add binding for clock-controller of s3c2443 and following
+Date: Tue, 10 Dec 2013 16:17:09 +0100
+Message-ID: <201312101617.09867.heiko@sntech.de>
+References: <201312101614.29781.heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
-  charset="us-ascii"
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386339891-32717-5-git-send-email-sourav.poddar-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <201312101614.29781.heiko@sntech.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Thomas Abraham <thomas.abraham@linaro.org>, t.figa@samsung.com, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, December 06, 2013 at 03:24:45 PM, Sourav Poddar wrote:
-> These add api to configure set up registers which will be used
-> for memory mapped operations.
-> 
-> These was provided as a pointer in the earlier patch and can be
-> used by the slave devices to configure the master controller as an
-> when required according to the usecases.
-> 
-> Signed-off-by: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/spi/spi-ti-qspi.c |   29 +++++++++++++++++++++++++++++
->  1 files changed, 29 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
-> index 48294d1..e4a8afc 100644
-> --- a/drivers/spi/spi-ti-qspi.c
-> +++ b/drivers/spi/spi-ti-qspi.c
-> @@ -117,6 +117,10 @@ struct ti_qspi {
->  #define MEM_CS		(1 << 8)
->  #define MEM_CS_DIS	(0 << 8)
-> 
-> +#define QSPI_SETUP0_RD_NORMAL   (0x0 << 12)
-> +#define QSPI_SETUP0_RD_DUAL     (0x1 << 12)
-> +#define QSPI_SETUP0_RD_QUAD     (0x3 << 12)
-> +
->  #define	QSPI_FRAME			4096
-> 
->  #define QSPI_AUTOSUSPEND_TIMEOUT         2000
-> @@ -220,6 +224,30 @@ static int ti_qspi_setup(struct spi_device *spi)
->  	return 0;
->  }
-> 
-> +static void ti_qspi_configure_from_slave(struct spi_device *spi)
-> +{
-> +	struct ti_qspi  *qspi = spi_master_get_devdata(spi->master);
-> +	struct slave_info info = spi->info;
-> +	u32 memval, mode;
-> +
-> +	mode = spi->mode & (SPI_RX_DUAL | SPI_RX_QUAD);
-> +	memval =  (info.read_opcode << 0) | (info.program_opcode << 16) |
-> +		((info.addr_width - 1) << 8) | (info.dummy_cycles << 10);
-> +
-> +	switch (mode) {
-> +	case SPI_RX_DUAL:
-> +		memval |= QSPI_SETUP0_RD_DUAL;
-> +		break;
-> +	case SPI_RX_QUAD:
-> +		memval |= QSPI_SETUP0_RD_QUAD;
-> +		break;
-> +	default:
+Starting with the s3c2443 the s3c24xx series got a new clock tree
+compared to the previous s3c24xx socs. This binding describes the
+clock controller found in the s3c2443, s3c2416 and s3c2450 socs.
 
-You want to catch invalid/unsupported mode here instead, so please add 'case 0:' 
-for 1-bit transfer and treat default: as an error .
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Tomasz Figa <t.figa@samsung.com>
+---
+ .../bindings/clock/samsung,s3c2443-clock.txt       |   56 ++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,s3c2443-clock.txt
 
-> +		memval |= QSPI_SETUP0_RD_NORMAL;
-> +		break;
-> +	}
-> +	ti_qspi_write(qspi, memval, QSPI_SPI_SETUP0_REG);
-> +}
-> +
->  static void ti_qspi_restore_ctx(struct ti_qspi *qspi)
->  {
->  	struct ti_qspi_regs *ctx_reg = &qspi->ctx_reg;
-> @@ -488,6 +516,7 @@ static int ti_qspi_probe(struct platform_device *pdev)
->  	master->dev.of_node = pdev->dev.of_node;
->  	master->bits_per_word_mask = BIT(32 - 1) | BIT(16 - 1) | BIT(8 - 1);
->  	master->mmap = true;
-> +	master->configure_from_slave = ti_qspi_configure_from_slave;
-> 
->  	if (!of_property_read_u32(np, "num-cs", &num_cs))
->  		master->num_chipselect = num_cs;
-
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/samsung,s3c2443-clock.txt b/Documentation/devicetree/bindings/clock/samsung,s3c2443-clock.txt
+new file mode 100644
+index 0000000..a2d94c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/samsung,s3c2443-clock.txt
+@@ -0,0 +1,56 @@
++* Samsung S3C2443 Clock Controller
++
++The S3C2443 clock controller generates and supplies clock to various controllers
++within the SoC. The clock binding described here is applicable to all SoCs in
++the s3c24x family starting with the s3c2443.
++
++Required Properties:
++
++- compatible: should be one of the following.
++  - "samsung,s3c2416-clock" - controller compatible with S3C2416 SoC.
++  - "samsung,s3c2443-clock" - controller compatible with S3C2443 SoC.
++  - "samsung,s3c2450-clock" - controller compatible with S3C2450 SoC.
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- #clock-cells: should be 1.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. Some of the clocks are available only
++on a particular SoC.
++
++All available clocks are defined as preprocessor macros in
++dt-bindings/clock/samsung,s3c2443-clock.h header and can be used in device
++tree sources.
++
++External clocks:
++
++There are several clocks that are generated outside the SoC. It is expected
++that they are defined using standard clock bindings with following
++clock-output-names:
++ - "xti" - crystal input - required,
++ - "ext" - external clock source - optional,
++ - "ext_i2s" - external I2S clock - optional,
++ - "ext_uart" - external uart clock - optional,
++
++Example: Clock controller node:
++
++	clocks: clock-controller@4c000000 {
++		compatible = "samsung,s3c2416-clock";
++		reg = <0x4c000000 0x40>;
++		#clock-cells = <1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller (refer to the standard clock bindings for information about
++  "clocks" and "clock-names" properties):
++
++	serial@50004000 {
++		compatible = "samsung,s3c2440-uart";
++		reg = <0x50004000 0x4000>;
++		interrupts = <1 23 3 4>, <1 23 4 4>;
++		clock-names = "uart", "clk_uart_baud2",
++				"clk_uart_baud3";
++		clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>,
++				<&clocks SCLK_UART>;
++		status = "disabled";
++	};
+-- 
+1.7.10.4
