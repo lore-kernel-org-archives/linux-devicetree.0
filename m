@@ -1,328 +1,266 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: [PATCH v5 3/7] regulator: add pbias regulator support
-Date: Tue, 10 Dec 2013 20:04:58 +0530
-Message-ID: <1386686098-7779-1-git-send-email-balajitk@ti.com>
-References: <20131210104005.GB29268@sirena.org.uk>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 07/10] drivers: phy: usb3/pipe3: Adapt pipe3 driver
+ to Generic PHY Framework
+Date: Tue, 10 Dec 2013 20:10:03 +0530
+Message-ID: <52A727C3.5020608@ti.com>
+References: <1385373690-12170-1-git-send-email-kishon@ti.com>
+ <1385373690-12170-8-git-send-email-kishon@ti.com> <52A1E0A7.80901@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20131210104005.GB29268@sirena.org.uk>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org
-Cc: tony@atomide.com, Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52A1E0A7.80901@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>, bcousson@baylibre.com, balbi@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Cc: mark.rutland@arm.com, linux@arm.linux.org.uk, s.nawrocki@samsung.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tony@atomide.com, gregkh@linuxfoundation.org, swarren@wwwdotorg.org, rob.herring@calxeda.com, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-pbias register controls internal power supply to sd card i/o pads
-in most OMAPs (OMAP2-5, DRA7).
-Control bits for selecting voltage level and
-enabling/disabling are in the same PBIAS register.
+Hi,
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
----
- Documentation/devicetree/bindings/regulator/pbias-regulator.txt |   21 
- drivers/regulator/Kconfig                                       |    9 
- drivers/regulator/Makefile                                      |    1 
- drivers/regulator/pbias-regulator.c                             |  236 ++++++++++
- 4 files changed, 267 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/pbias-regulator.txt
- create mode 100644 drivers/regulator/pbias-regulator.c
+On Friday 06 December 2013 08:05 PM, Roger Quadros wrote:
+> Hi Kishon,
+> 
+> On 11/25/2013 12:01 PM, Kishon Vijay Abraham I wrote:
+>> Adapted omap-usb3 PHY driver to Generic PHY Framework and moved phy-omap-usb3
+>> driver in drivers/usb/phy to drivers/phy and also renamed the file to
+>> phy-ti-pipe3 since this same driver will be used for SATA PHY and
+>> PCIE PHY.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/phy/Kconfig                                |   11 +
+>>  drivers/phy/Makefile                               |    1 +
+>>  .../phy/phy-omap-usb3.c => phy/phy-ti-pipe3.c}     |  232 ++++++++++++--------
+>>  drivers/usb/phy/Kconfig                            |   11 -
+>>  drivers/usb/phy/Makefile                           |    1 -
+>>  5 files changed, 149 insertions(+), 107 deletions(-)
+>>  rename drivers/{usb/phy/phy-omap-usb3.c => phy/phy-ti-pipe3.c} (55%)
+>>
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index a344f3d..1abbfcc 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -33,6 +33,17 @@ config OMAP_USB2
+>>  	  The USB OTG controller communicates with the comparator using this
+>>  	  driver.
+>>  
+>> +config TI_PIPE3
+>> +	tristate "TI PIPE3 PHY Driver"
+>> +	depends on ARCH_OMAP2PLUS || COMPILE_TEST
+>> +	select GENERIC_PHY
+>> +	select OMAP_CONTROL_USB
+>> +	help
+>> +	  Enable this to support the PIPE3 PHY that is part of TI SOCs. This
+>> +	  driver takes care of all the PHY functionality apart from comparator.
+>> +	  This driver interacts with the "OMAP Control PHY Driver" to power
+>> +	  on/off the PHY.
+>> +
+>>  config TWL4030_USB
+>>  	tristate "TWL4030 USB Transceiver Driver"
+>>  	depends on TWL4030_CORE && REGULATOR_TWL4030 && USB_MUSB_OMAP2PLUS
+>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>> index d0caae9..94a1a79 100644
+>> --- a/drivers/phy/Makefile
+>> +++ b/drivers/phy/Makefile
+>> @@ -6,4 +6,5 @@ obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+>>  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+>>  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+>>  obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+>> +obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
+>>  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+>> diff --git a/drivers/usb/phy/phy-omap-usb3.c b/drivers/phy/phy-ti-pipe3.c
+>> similarity index 55%
+>> rename from drivers/usb/phy/phy-omap-usb3.c
+>> rename to drivers/phy/phy-ti-pipe3.c
+>> index 0c6ba29..410b286 100644
+>> --- a/drivers/usb/phy/phy-omap-usb3.c
+>> +++ b/drivers/phy/phy-ti-pipe3.c
+>> @@ -1,5 +1,5 @@
+>>  /*
+>> - * omap-usb3 - USB PHY, talking to dwc3 controller in OMAP.
+>> + * phy-ti-pipe3 - PIPE3 PHY driver.
+>>   *
+>>   * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
+>>   * This program is free software; you can redistribute it and/or modify
+>> @@ -19,10 +19,11 @@
+>>  #include <linux/module.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/slab.h>
+>> -#include <linux/usb/omap_usb.h>
+>> +#include <linux/phy/phy.h>
+>>  #include <linux/of.h>
+>>  #include <linux/clk.h>
+>>  #include <linux/err.h>
+>> +#include <linux/io.h>
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/delay.h>
+>>  #include <linux/usb/omap_control_usb.h>
+>> @@ -52,17 +53,34 @@
+>>  
+>>  /*
+>>   * This is an Empirical value that works, need to confirm the actual
+>> - * value required for the USB3PHY_PLL_CONFIGURATION2.PLL_IDLE status
+>> - * to be correctly reflected in the USB3PHY_PLL_STATUS register.
+>> + * value required for the PIPE3PHY_PLL_CONFIGURATION2.PLL_IDLE status
+>> + * to be correctly reflected in the PIPE3PHY_PLL_STATUS register.
+>>   */
+>>  # define PLL_IDLE_TIME  100;
+>>  
+>> -struct usb_dpll_map {
+>> +struct pipe3_dpll_params {
+>> +	u16	m;
+>> +	u8	n;
+>> +	u8	freq:3;
+>> +	u8	sd;
+>> +	u32	mf;
+>> +};
+>> +
+>> +struct ti_pipe3 {
+>> +	void __iomem		*pll_ctrl_base;
+>> +	struct device		*dev;
+>> +	struct device		*control_dev;
+>> +	struct clk		*wkupclk;
+>> +	struct clk		*sys_clk;
+>> +	struct clk		*optclk;
+>> +};
+>> +
+>> +struct pipe3_dpll_map {
+>>  	unsigned long rate;
+>> -	struct usb_dpll_params params;
+>> +	struct pipe3_dpll_params params;
+>>  };
+>>  
+>> -static struct usb_dpll_map dpll_map[] = {
+>> +static struct pipe3_dpll_map dpll_map[] = {
+>>  	{12000000, {1250, 5, 4, 20, 0} },	/* 12 MHz */
+>>  	{16800000, {3125, 20, 4, 20, 0} },	/* 16.8 MHz */
+>>  	{19200000, {1172, 8, 4, 20, 65537} },	/* 19.2 MHz */
+>> @@ -71,7 +89,18 @@ static struct usb_dpll_map dpll_map[] = {
+>>  	{38400000, {3125, 47, 4, 20, 92843} },	/* 38.4 MHz */
+>>  };
+>>  
+>> -static struct usb_dpll_params *omap_usb3_get_dpll_params(unsigned long rate)
+>> +static inline u32 ti_pipe3_readl(void __iomem *addr, unsigned offset)
+>> +{
+>> +	return __raw_readl(addr + offset);
+>> +}
+>> +
+>> +static inline void ti_pipe3_writel(void __iomem *addr, unsigned offset,
+>> +	u32 data)
+>> +{
+>> +	__raw_writel(data, addr + offset);
+>> +}
+>> +
+>> +static struct pipe3_dpll_params *ti_pipe3_get_dpll_params(unsigned long rate)
+>>  {
+>>  	int i;
+>>  
+>> @@ -83,110 +112,113 @@ static struct usb_dpll_params *omap_usb3_get_dpll_params(unsigned long rate)
+>>  	return NULL;
+>>  }
+>>  
+>> -static int omap_usb3_suspend(struct usb_phy *x, int suspend)
+>> +static int ti_pipe3_power_off(struct phy *x)
+>>  {
+>> -	struct omap_usb *phy = phy_to_omapusb(x);
+>> -	int	val;
+>> +	struct ti_pipe3 *phy = phy_get_drvdata(x);
+>> +	int val;
+>>  	int timeout = PLL_IDLE_TIME;
+>>  
+>> -	if (suspend && !phy->is_suspended) {
+>> -		val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
+>> -		val |= PLL_IDLE;
+>> -		omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
+>> -
+>> -		do {
+>> -			val = omap_usb_readl(phy->pll_ctrl_base, PLL_STATUS);
+>> -			if (val & PLL_TICOPWDN)
+>> -				break;
+>> -			udelay(1);
+>> -		} while (--timeout);
+>> -
+>> -		omap_control_usb_phy_power(phy->control_dev, 0);
+>> -
+>> -		phy->is_suspended	= 1;
+>> -	} else if (!suspend && phy->is_suspended) {
+>> -		phy->is_suspended	= 0;
+>> -
+>> -		val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
+>> -		val &= ~PLL_IDLE;
+>> -		omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
+>> -
+>> -		do {
+>> -			val = omap_usb_readl(phy->pll_ctrl_base, PLL_STATUS);
+>> -			if (!(val & PLL_TICOPWDN))
+>> -				break;
+>> -			udelay(1);
+>> -		} while (--timeout);
+>> -	}
+>> +	val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
+>> +	val |= PLL_IDLE;
+>> +	ti_pipe3_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
+>> +
+>> +	do {
+>> +		val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_STATUS);
+>> +		if (val & PLL_TICOPWDN)
+>> +			break;
+>> +		usleep_range(1, 5);
+> 
+> I had suggested to use sleep instead of udelay here but usleep for < 10 us might not be not optimal.
+> see Documentation/timers/timers-howto.txt
 
-Index: lo/Documentation/devicetree/bindings/regulator/pbias-regulator.txt
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ lo/Documentation/devicetree/bindings/regulator/pbias-regulator.txt	2013-12-10 16:58:28.907927745 +0530
-@@ -0,0 +1,21 @@
-+PBIAS internal regulator for SD card i/o pads on OMAP SoCs.
-+
-+Required properties:
-+- compatible:
-+  - "regulator-pbias-omap2" for OMAP2
-+  - "regulator-pbias-omap3" for OMAP3
-+  - "regulator-pbias-omap4" for OMAP4
-+  - "regulator-pbias-omap5" for OMAP5, DRA7
-+- pbias-reg-offset: PBIAS control register offset from syscon base address
-+
-+Optional properties:
-+- Any optional property defined in bindings/regulator/regulator.txt
-+
-+Example:
-+
-+		pbias_regulator: pbias_regulator {
-+			pbias-reg-offset = <0>;
-+			regulator-name = "pbias_regulator";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3000000>;
-+	};
-Index: lo/drivers/regulator/Kconfig
-===================================================================
---- lo.orig/drivers/regulator/Kconfig	2013-12-10 16:58:16.411852457 +0530
-+++ lo/drivers/regulator/Kconfig	2013-12-10 17:08:29.291513120 +0530
-@@ -369,6 +369,15 @@ config REGULATOR_PALMAS
- 	  on the muxing. This is handled automatically in the driver by
- 	  reading the mux info from OTP.
- 
-+config REGULATOR_PBIAS
-+	tristate "PBIAS OMAP regulator driver"
-+	depends on (ARCH_OMAP || COMPILE_TEST) && MFD_SYSCON
-+	help
-+	 Say y here to support pbias regulator for mmc1:SD card i/o
-+	 on OMAP SoCs.
-+	 This driver provides support for OMAP pbias modelled
-+	 regulators.
-+
- config REGULATOR_PCAP
- 	tristate "Motorola PCAP2 regulator driver"
- 	depends on EZX_PCAP
-Index: lo/drivers/regulator/Makefile
-===================================================================
---- lo.orig/drivers/regulator/Makefile	2013-12-10 16:58:16.411852457 +0530
-+++ lo/drivers/regulator/Makefile	2013-12-10 16:58:28.915927793 +0530
-@@ -52,6 +52,7 @@ obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=
- obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
- obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
- obj-$(CONFIG_REGULATOR_TPS51632) += tps51632-regulator.o
-+obj-$(CONFIG_REGULATOR_PBIAS) += pbias-regulator.o
- obj-$(CONFIG_REGULATOR_PCAP) += pcap-regulator.o
- obj-$(CONFIG_REGULATOR_PCF50633) += pcf50633-regulator.o
- obj-$(CONFIG_REGULATOR_RC5T583)  += rc5t583-regulator.o
-Index: lo/drivers/regulator/pbias-regulator.c
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ lo/drivers/regulator/pbias-regulator.c	2013-12-10 17:06:51.046930033 +0530
-@@ -0,0 +1,236 @@
-+/*
-+ * pbias-regulator.c
-+ *
-+ * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ * Author: Balaji T K <balajitk@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/delay.h>
-+#include <linux/mutex.h>
-+#include <linux/module.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+
-+struct pbias_reg_info {
-+	u32 enable;
-+	u32 enable_mask;
-+	u32 vmode;
-+	char *name;
-+};
-+
-+struct pbias_regulator_data {
-+	struct regulator_desc desc;
-+	void __iomem *pbias_addr;
-+	unsigned int pbias_reg;
-+	struct regulator_dev *dev;
-+	struct regmap *syscon;
-+	const struct pbias_reg_info *info;
-+	int voltage;
-+};
-+
-+static int pbias_regulator_set_voltage(struct regulator_dev *dev,
-+			int min_uV, int max_uV, unsigned *selector)
-+{
-+	struct pbias_regulator_data *data = rdev_get_drvdata(dev);
-+	const struct pbias_reg_info *info = data->info;
-+	int ret, vmode;
-+
-+	if (min_uV <= 1800000)
-+		vmode = 0;
-+	else if (min_uV > 1800000)
-+		vmode = info->vmode;
-+
-+	ret = regmap_update_bits(data->syscon, data->pbias_reg,
-+						info->vmode, vmode);
-+
-+	return ret;
-+}
-+
-+static int pbias_regulator_get_voltage(struct regulator_dev *rdev)
-+{
-+	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
-+	const struct pbias_reg_info *info = data->info;
-+	int value, voltage;
-+
-+	regmap_read(data->syscon, data->pbias_reg, &value);
-+	value &= info->vmode;
-+
-+	voltage = value ? 1800000 : 3000000;
-+
-+	return voltage;
-+}
-+
-+static int pbias_regulator_enable(struct regulator_dev *rdev)
-+{
-+	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
-+	const struct pbias_reg_info *info = data->info;
-+	int ret;
-+
-+	ret = regmap_update_bits(data->syscon, data->pbias_reg,
-+					info->enable_mask, info->enable);
-+
-+	return ret;
-+}
-+
-+static int pbias_regulator_disable(struct regulator_dev *rdev)
-+{
-+	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
-+	const struct pbias_reg_info *info = data->info;
-+	int ret;
-+
-+	ret = regmap_update_bits(data->syscon, data->pbias_reg,
-+						info->enable_mask, 0);
-+	return ret;
-+}
-+
-+static int pbias_regulator_is_enable(struct regulator_dev *rdev)
-+{
-+	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
-+	const struct pbias_reg_info *info = data->info;
-+	int value;
-+
-+	regmap_read(data->syscon, data->pbias_reg, &value);
-+
-+	return (value & info->enable_mask) == info->enable_mask;
-+}
-+
-+static struct regulator_ops pbias_regulator_voltage_ops = {
-+	.set_voltage	= pbias_regulator_set_voltage,
-+	.get_voltage	= pbias_regulator_get_voltage,
-+	.enable		= pbias_regulator_enable,
-+	.disable	= pbias_regulator_disable,
-+	.is_enabled	= pbias_regulator_is_enable,
-+};
-+
-+static const struct pbias_reg_info pbias_omap3 = {
-+	.enable = BIT(1),
-+	.enable_mask = BIT(1),
-+	.vmode = BIT(0),
-+	.name = "pbias_omap3"
-+};
-+
-+static const struct pbias_reg_info pbias_omap4 = {
-+	.enable = BIT(26) | BIT(22),
-+	.enable_mask = BIT(26) | BIT(25) | BIT(22),
-+	.vmode = BIT(21),
-+	.name = "pbias_omap4"
-+};
-+
-+static const struct pbias_reg_info pbias_omap5 = {
-+	.enable = BIT(27) | BIT(26),
-+	.enable_mask = BIT(27) | BIT(25) | BIT(26),
-+	.vmode = BIT(21),
-+	.name = "pbias_omap5"
-+};
-+
-+static const struct of_device_id pbias_of_match[] = {
-+	{ .compatible = "regulator-pbias-omap3", .data = &pbias_omap3},
-+	{ .compatible = "regulator-pbias-omap4", .data = &pbias_omap4},
-+	{ .compatible = "regulator-pbias-omap5", .data = &pbias_omap5},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, pbias_of_match);
-+
-+static int pbias_regulator_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *syscon_np;
-+	struct pbias_regulator_data *drvdata;
-+	const struct of_device_id *id;
-+	struct regulator_init_data *initdata;
-+	struct regulator_config cfg = { };
-+	int ret;
-+
-+	drvdata = devm_kzalloc(&pdev->dev, sizeof(struct pbias_regulator_data),
-+			       GFP_KERNEL);
-+	if (drvdata == NULL) {
-+		dev_err(&pdev->dev, "Failed to allocate device data\n");
-+		return -ENOMEM;
-+	}
-+
-+	id = of_match_device(of_match_ptr(pbias_of_match), &pdev->dev);
-+	if (!id)
-+		return -ENODEV;
-+
-+	drvdata->info = id->data;
-+	if (!drvdata->info)
-+		return -ENODEV;
-+
-+	initdata = of_get_regulator_init_data(&pdev->dev, np);
-+	if (!initdata)
-+		return -EINVAL;
-+
-+	ret = of_property_read_u32(np, "pbias-reg-offset",
-+				   &drvdata->pbias_reg);
-+	if (ret) {
-+		dev_err(&pdev->dev, "no pbias-reg-offset property set\n");
-+		return ret;
-+	}
-+
-+	syscon_np = of_get_parent(np);
-+	if (!syscon_np)
-+		return -ENODEV;
-+
-+	drvdata->syscon = syscon_node_to_regmap(syscon_np);
-+	of_node_put(syscon_np);
-+	if (IS_ERR(drvdata->syscon))
-+		return PTR_ERR(drvdata->syscon);
-+
-+	drvdata->desc.name = drvdata->info->name;
-+	drvdata->desc.owner = THIS_MODULE;
-+	drvdata->desc.type = REGULATOR_VOLTAGE;
-+	drvdata->desc.ops = &pbias_regulator_voltage_ops;
-+	drvdata->desc.n_voltages = 2;
-+
-+	cfg.dev = &pdev->dev;
-+	cfg.init_data = initdata;
-+	cfg.driver_data = drvdata;
-+	cfg.of_node = np;
-+
-+	drvdata->dev = devm_regulator_register(&pdev->dev, &drvdata->desc,
-+									&cfg);
-+	if (IS_ERR(drvdata->dev)) {
-+		ret = PTR_ERR(drvdata->dev);
-+		dev_err(&pdev->dev, "Failed to register regulator: %d\n", ret);
-+		goto err_regulator;
-+	}
-+
-+	platform_set_drvdata(pdev, drvdata);
-+
-+err_regulator:
-+	return ret;
-+}
-+
-+static struct platform_driver pbias_regulator_driver = {
-+	.probe		= pbias_regulator_probe,
-+	.driver		= {
-+		.name		= "pbias-regulator",
-+		.owner		= THIS_MODULE,
-+		.of_match_table = of_match_ptr(pbias_of_match),
-+	},
-+};
-+
-+module_platform_driver(pbias_regulator_driver);
-+
-+MODULE_AUTHOR("Balaji T K <balajitk@ti.com>");
-+MODULE_DESCRIPTION("pbias voltage regulator");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:pbias-regulator");
+ok.
+> 
+> Why can't we just use msleep(1)?
+
+isn't it too long?
+> 
+> Do we know approximately how much time it takes for the block to power down?
+
+I have to check that. But long time back for OMAP5 it used to vary from board
+to board.
+> 
+>> +	} while (--timeout);
+>> +
+> 
+> what if there was a timeout? you need to exit with return code and preferably print an error message.
+
+hmm.. yeah.
+> 
+>> +	omap_control_usb_phy_power(phy->control_dev, 0);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ti_pipe3_power_on(struct phy *x)
+>> +{
+>> +	struct ti_pipe3 *phy = phy_get_drvdata(x);
+>> +	int val;
+>> +	int timeout = PLL_IDLE_TIME;
+>> +
+>> +	val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
+>> +	val &= ~PLL_IDLE;
+>> +	ti_pipe3_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
+>> +
+>> +	do {
+>> +		val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_STATUS);
+>> +		if (!(val & PLL_TICOPWDN))
+>> +			break;
+>> +		usleep_range(1, 5);
+>> +	} while (--timeout);
+> 
+> here as well.
+
+ok.
+
+Thanks
+Kishon
