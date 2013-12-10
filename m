@@ -1,70 +1,63 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Device tree meeting notes for 10-Dec-2013
-Date: Tue, 10 Dec 2013 14:45:11 +0000
-Message-ID: <CACxGe6vfRZ6D6hn3RhPO2zaMxVbyNHMjjKxSZuEg_ov-CYhMGQ@mail.gmail.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH 1/2] arm: dts: keystone: add watchdog entry
+Date: Tue, 10 Dec 2013 16:52:35 +0200
+Message-ID: <52A72AB3.5000900@ti.com>
+References: <1386686869-729-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1386686869-729-1-git-send-email-ivan.khoronzhuk@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, grygorii.strashko@ti.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-=46rom today's meeting:
++ CC
+devicetree@vger.kernel.org
+linux-arm-kernel@lists.infradead.org
+linux-kernel@vger.kernel.org
 
-Attendees:
-Mark Rutland
-Rob Herring
-Ian Campbell
-Stuart Yoder
-Tomasz Figa
-Grant Likely
+On 12/10/2013 04:47 PM, Ivan Khoronzhuk wrote:
+> Add watchdog entry to keystone device tree.
+>
+> Acked-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> ---
+> Based on
+> git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+> keystone/master
+>
+>   arch/arm/boot/dts/keystone.dtsi |    6 ++++++
+>   1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+> index f6d6d9e..54a8ff7 100644
+> --- a/arch/arm/boot/dts/keystone.dtsi
+> +++ b/arch/arm/boot/dts/keystone.dtsi
+> @@ -181,5 +181,11 @@
+>   			interrupts = <GIC_SPI 300 IRQ_TYPE_EDGE_RISING>;
+>   			clocks = <&clkspi>;
+>   		};
+> +
+> +		wdt: wdt@022f0080 {
+> +			compatible = "ti,keystone-wdt","ti,davinci-wdt";
+> +			reg = <0x022f0080 0x80>;
+> +			clocks = <&clkwdtimer0>;
+> +		};
+>   	};
+>   };
+>
 
-Meeting notes:
------------------------
 
-Action item update
----------------------------------
-
-Stuart: Power.org update - Rob Leshana is head of power.org committee.
-Is going to raise the question with the head of power.org. Is in
-progress. Need to follow up. Initial impression is that it was
-received positively. Stuart will keep us up to date.
-
-Jason: Sent email to list for status
-
-Rob: Prototype script for checking compatible values.
-
-Schema: Still reading patches, deferring discussion to next week.
-
-Other business.
-------------------------------
-Details of Kernel=92s implementation behaviour:
-
-Mark: Is it worth fixing the i2c devicetree alias mux?
-i2c_match_device() needs to be fixed to return NULL if the device
-matches against a DT or ACPI match table. SPI has the same problem.
-Decision: Yes it should be fixed, Mark to provide patches
-
-Also, Linux currently inherits #address-cells and #size-cells from
-parent nodes if a bus node is missing the properties. ePAPR says not
-to do this. Do we need to fix Linux?  Grant: The reason of the
-behaviour is to work around some PowerPC machines that were missing
-properties. Stuart: Was surprised at what ePAPR says; thought the
-kernel behaviour was what ePAPR specified. Conclusion: Don=92t feel lik=
-e
-there is any reason to change this.
-
-Discussion on of_clk_init(). Mark: There are problems where
-of_clk_init() users are initializing clocks that are on busses which
-are not yet enabled. What do we do about this? As much as possible
-need to push clock drivers to be normal platform devices. It does not
-make sense to use of_clk_init() unless the clock absolutely needs to
-be initialized really early in the boot process (ie. so that the
-busses all work). Mark to write some documentation on best practices
-for using of_clk_init() and of_intc_init().
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Ivan Khoronzhuk
