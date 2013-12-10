@@ -1,58 +1,61 @@
-From: Antti Miettinen <ananaza@iki.fi>
-Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
-Date: Wed, 11 Dec 2013 00:04:27 +0200
-Message-ID: <87haaggy6s.fsf@iki.fi>
-References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
-	<1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
-	<87lhztgqsj.fsf@iki.fi>
-	<20131210132719.GC15543@e102568-lin.cambridge.arm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 3/7] regulator: add pbias regulator support
+Date: Tue, 10 Dec 2013 14:39:32 -0800
+Message-ID: <20131210223932.GW13171@atomide.com>
+References: <20131210104005.GB29268@sirena.org.uk>
+ <1386686098-7779-1-git-send-email-balajitk@ti.com>
+ <20131210183330.GK13171@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20131210132719.GC15543@e102568-lin.cambridge.arm.com> (Lorenzo
-	Pieralisi's message of "Tue, 10 Dec 2013 13:27:19 +0000")
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dave P Martin <Dave.Martin@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131210183330.GK13171@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>
+Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
-> I do not think we should think about how the kernel uses this data.
-> We should strive to make DT data representative of HW C-states and
-> that's very complex, as you mentioned (it depends at what granularity
-> we want these bits of info).
->
-> When we are happy with the bindings we can then code the kernel accordingly.
->
-> Please let me know how you would like to have these bindings extended
-> (eg adding operating points), getting feedback is the main reason why
-> I posted them in the first place.
+* Tony Lindgren <tony@atomide.com> [131210 10:34]:
+> * Balaji T K <balajitk@ti.com> [131210 06:36]:
+> > pbias register controls internal power supply to sd card i/o pads
+> > in most OMAPs (OMAP2-5, DRA7).
+> > Control bits for selecting voltage level and
+> > enabling/disabling are in the same PBIAS register.
+> 
+> Good to see this, few comments below.
+> 
+> > +++ lo/Documentation/devicetree/bindings/regulator/pbias-regulator.txt	2013-12-10 16:58:28.907927745 +0530
+> > @@ -0,0 +1,21 @@
+> > +PBIAS internal regulator for SD card i/o pads on OMAP SoCs.
+> > +
+> > +Required properties:
+> > +- compatible:
+> > +  - "regulator-pbias-omap2" for OMAP2
+> > +  - "regulator-pbias-omap3" for OMAP3
+> > +  - "regulator-pbias-omap4" for OMAP4
+> > +  - "regulator-pbias-omap5" for OMAP5, DRA7
+> > +- pbias-reg-offset: PBIAS control register offset from syscon base address
+> > +
+> > +Optional properties:
+> > +- Any optional property defined in bindings/regulator/regulator.txt
+> > +
+> > +Example:
+> > +
+> > +		pbias_regulator: pbias_regulator {
 
-Hmm.. I'd like to challenge that a bit. I guess we are not defining DT
-bindings just for the joy of modelling the hardware? We should care
-whether kernel needs the data and have some idea of how the data will be
-used.
+Hmm one more comment. This should containe the standard property:
+			reg = <0x02b0 0x4>;
 
-As you say, modelling C state details is not trivial. It might be
-possible to construct an approximate formula for e.g. entry/exit latency
-that takes CPU frequency, memory frequency and PMIC ramp rates as
-input. Also, in principle we could estimate power based on clocks,
-voltages, temperature etc. As we probably do not want to put function
-definitions to DT, the DT would contain e.g. coefficients for functions
-that would need to be platform neutral.
+And the parent SCM driver should claim the whole SCM GENERAL register
+area as defined in "Table 13-68. GENERAL Register Summary" for omap3
+for example. So that would be the following for the parent:
 
-Is this what you'd like to see? There has been some research in
-estimating power without actually measuring it, e.g. the google
-powertutor people have written some papers about this. The latencies
-could be measured to some extend with instrumentation in the kernel and
-the measurement results could be used to tune some parameters.
+			reg = <0x48002270 xxx>;
 
-Or would you rather have tables, which specify latencies and power
-levels and the tables would be indexed with frequencies and voltages?
+The size needs to be checked and it may need multiple regions or instances
+defined. That way we can use the drivers/mfd/syscon.c SCM driver for all
+the misc registers without having to redo the bindings.
 
-Anyway, I would really like to see the option of having the state choice
-in the driver. One possible way to achieve this would be to allow for
-the driver to export an optional "choose" method. If that exists the
-governor would offload the decision to the driver.
+Regards,
 
-	--Antti
+Tony
