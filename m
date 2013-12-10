@@ -1,53 +1,82 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v4 0/9] ARM: Initial support for Marvell Berlin SoCs
-Date: Tue, 10 Dec 2013 21:02:32 +0100
-Message-ID: <52A77358.5070602@gmail.com>
-References: <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com> <52A674F1.7000104@gmail.com> <20131210191653.GA10105@quad.lixom.net> <201312102033.00953.arnd@arndb.de> <CAOesGMhMAC56AK5YwA2ROzQ5b6HuWXzF31HDCyx7fYzka6WvHQ@mail.gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMhMAC56AK5YwA2ROzQ5b6HuWXzF31HDCyx7fYzka6WvHQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 01/10] net: stmmac: Enable stmmac main clock
+ when probing hardware
+Date: Tue, 10 Dec 2013 21:05:29 +0100
+Message-ID: <20131210200529.GD3651@lukather>
+References: <1386350983-13281-1-git-send-email-wens@csie.org>
+ <1386350983-13281-2-git-send-email-wens@csie.org>
+ <20131207103335.GL24519@lukather>
+ <CAGb2v65YOSq_BMWSzSHX8w_hbo+0vwquBT2pnLuwNVZkWRfLvA@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Qrgsu6vtpU/OV/zm"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBG7KTWKQKGQEPPEQPSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65YOSq_BMWSzSHX8w_hbo+0vwquBT2pnLuwNVZkWRfLvA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/2013 08:38 PM, Olof Johansson wrote:
-> On Tue, Dec 10, 2013 at 11:33 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Tuesday 10 December 2013, Olof Johansson wrote:
->>>> I started with mach-mvebu in the first RFC, but Berlin SoCs are from a
->>>> different business unit at Marvell and are more PXA compatible than
->>>> Orion/Kirkwood/Armada 370/XP. Most notably, they lack the "mbus" and
->>>> IP is either from PXA/MMP or Synopsys DW. Thomas Petazzoni and also
->>>> Jisheng Zhang from Marvell suggested to not put it into mvebu but
->>>> have a different mach folder instead.
->>>
->>> Hmm, ok. Well, maybe later on we can look at aggregating them more again. It'd
->>> be nice to get fewer top-level platform directories per vendor.
->>
->> I possibly a lot of directories just become empty in the long run and
->> we remove them once all all code has been subsystemized and drivered.
->
-> For mobile SoCs it's somewhat unlikely that it will ever be completely
-> empty, but maybe. Either way, once the contents is small enough it's a
-> lot easier to move around and aggregate into one platform.
 
-Well, I plan to add no code at all to mach-berlin except machine init.
-If there would be some mach-multiv7, I'd be happy to put it in there.
+--Qrgsu6vtpU/OV/zm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-mach-mvebu is still a moving target and adding it there would cause more
-trouble than it helps. Adding the other Orion SoCs will be enough for
-now.
+Hi,
 
-About the dts/dtsi naming, I really have no preference. I had
-soc-vendor-boardname style before v4. About the new naming, I liked
-that SoC dtsi are named after soc-vendor,soc-type.dtsi while boards are
-named after board-vendor,board-name.dts. It kind of matches what you
-will look for if you have e.g. the Google Chromecast and not know about
-the Soc used.
+On Mon, Dec 09, 2013 at 10:43:29AM +0800, Chen-Yu Tsai wrote:
+> >> @@ -2759,15 +2760,18 @@ struct stmmac_priv *stmmac_dvr_probe(struct de=
+vice *device,
+> >>               }
+> >>       }
+> >>
+> >> +     clk_disable_unprepare(priv->stmmac_clk);
+> >> +
+> >
+> > Hu? Why do you disable the clock? don't you need it afterwards?
+>=20
+> The clock is enabled in *_open (when the network interface is used),
+> and disabled in *_close.
 
-We still have some time before the ARM merge window for 3.14 closes,
-right? So I can have another round of code moving and renaming within
-this patch set ;)
+Maybe it is the real issue then.
 
-Sebastian
+Why don't you move the clk_disable to _remove then?
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--Qrgsu6vtpU/OV/zm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSp3QJAAoJEBx+YmzsjxAgCBEQAKY/ZEZloHcDGaHYS0RqXDhM
+GKZTcV9duag9I2sSRxbzDXeldJYIOOZ3g5lraAhhu0Qk9JEAUt4+Tw8WjHJcxNIV
+shIxhRdGZW4hcoQDiYU3KIt88Bt5rvUrbz3vxWgaKKv9pjQ2b9Qz9AwnAJfosp8z
+ufhZ6dqnSHzIhXUx2yyIEuaO1Rb0LKhfGUP8zzFFfKRLmED13ctCUaqc3mUo56+s
+TlSQsiWwKZ19tHoGoq3T76TGGb0fiDrMvnlQM6OGmye9EufgEtQW2v6xUSMTmKWG
+myOfPxRjRfH7c5nK7L5s0e7e/cZZaepISBjDABa2kXAiY7nlzlrzk4bNMM+NuS65
+jugXp1UIPPXqkPUag551JsS0A6dJarplIjwLmOvq8GBK7wFpjDFuYgfivr3o7BSb
+UggC9cMwoFv7YsYF4pLwkLkUTAhOsxFht6v6Tfm6Y51AjtxqYWMZr3Llve9F41l7
+2hiLygT5y0JplrTmgrSvMcFpOBUDCXkk7+pw5c6/WhDUcLhaNOS+8ioOyzJmW7mX
+RAp7GSpkmc+wykNso5z0ACXTXftyG9EKq4sTHnsKJdqu7r1PPEyTOM+4LWMkf+QY
+BuElAYHcU2sQsra91+VuQO+Ug66sHmOgCI176p5VeAHClvdw7u2F89QVa+f54Eyr
+AmEl1ZSm8vUj9/XcrSK1
+=784y
+-----END PGP SIGNATURE-----
+
+--Qrgsu6vtpU/OV/zm--
