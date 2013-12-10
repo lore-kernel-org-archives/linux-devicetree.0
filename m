@@ -1,82 +1,69 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH v11 4/4] ARM: dts: Exynos5420: Add device nodes for TMU blocks
-Date: Tue, 10 Dec 2013 12:13:07 +0530
-Message-ID: <1386657787-21654-1-git-send-email-ch.naveen@samsung.com>
-References: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
+From: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: bcm28155-ap: Enable all the i2c busses
+Date: Mon, 9 Dec 2013 23:07:30 -0800
+Message-ID: <CAEPRUYquqJ+y7+ZV12_uKnRq+XkoYZ7M7JNbsZBCPzVRGgGJ8w@mail.gmail.com>
+References: <1386373528-13045-1-git-send-email-tim.kryger@linaro.org>
+	<1386373528-13045-3-git-send-email-tim.kryger@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386373528-13045-3-git-send-email-tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches List <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Exynos5420 SoC has per core thermal management unit.
-5 TMU channels 4 for CPUs and 5th for GPU.
+Applied to armsoc/for-3.14/dt
+ thanks,
+   csd
 
-This patch adds the device tree nodes to the DT device list.
 
-Nodes carry the misplaced second base address and the second
-clock to access the misplaced base address.
-
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
----
-Changes since previous version:
-1. used lables instead of comment lines
-2. pass the same clock as trimfo_apbif clock for TMU channel 2
-
- arch/arm/boot/dts/exynos5420.dtsi |   40 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index b1fa334..c62cde6 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -402,4 +402,44 @@
- 		clock-names = "gscl";
- 		samsung,power-domain = <&gsc_pd>;
- 	};
-+
-+	tmu_cpu0:tmu@10060000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x10060000 0x100>;
-+		interrupts = <0 65 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	tmu_cpu1:tmu@10064000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x10064000 0x100>;
-+		interrupts = <0 183 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	tmu_cpu2:tmu@10068000 {
-+		compatible = "samsung,exynos5420-tmu-ext-triminfo";
-+		reg = <0x10068000 0x100>, <0x1006c000 0x4>;
-+		interrupts = <0 184 0>;
-+		clocks = <&clock 318>, <&clock 318>;
-+		clock-names = "tmu_apbif", "tmu_apbif_triminfo";
-+	};
-+
-+	tmu_cpu3:tmu@1006c000 {
-+		compatible = "samsung,exynos5420-tmu-ext-triminfo";
-+		reg = <0x1006c000 0x100>, <0x100a0000 0x4>;
-+		interrupts = <0 185 0>;
-+		clocks = <&clock 318>, <&clock 319>;
-+		clock-names = "tmu_apbif", "tmu_apbif_triminfo";
-+	};
-+
-+	tmu_gpu:tmu@100a0000 {
-+		compatible = "samsung,exynos5420-tmu-ext-triminfo";
-+		reg = <0x100a0000 0x100>, <0x10068000 0x4>;
-+		interrupts = <0 215 0>;
-+		clocks = <&clock 319>, <&clock 318>;
-+		clock-names = "tmu_apbif", "tmu_apbif_triminfo";
-+	};
- };
--- 
-1.7.10.4
+On Fri, Dec 6, 2013 at 3:45 PM, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Enable all available i2c busses.
+>
+> Signed-off-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/bcm28155-ap.dts | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
+> index 08e47c2..bab302d 100644
+> --- a/arch/arm/boot/dts/bcm28155-ap.dts
+> +++ b/arch/arm/boot/dts/bcm28155-ap.dts
+> @@ -27,6 +27,26 @@
+>                 status = "okay";
+>         };
+>
+> +       i2c@3e016000 {
+> +               status="okay";
+> +               clock-frequency = <400000>;
+> +       };
+> +
+> +       i2c@3e017000 {
+> +               status="okay";
+> +               clock-frequency = <400000>;
+> +       };
+> +
+> +       i2c@3e018000 {
+> +               status="okay";
+> +               clock-frequency = <400000>;
+> +       };
+> +
+> +       i2c@3500d000 {
+> +               status="okay";
+> +               clock-frequency = <400000>;
+> +       };
+> +
+>         sdio1: sdio@3f180000 {
+>                 max-frequency = <48000000>;
+>                 status = "okay";
+> --
+> 1.8.0.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
