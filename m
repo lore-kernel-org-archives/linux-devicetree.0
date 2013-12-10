@@ -1,81 +1,59 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
-Date: Tue, 10 Dec 2013 13:27:19 +0000
-Message-ID: <20131210132719.GC15543@e102568-lin.cambridge.arm.com>
-References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
- <87lhztgqsj.fsf@iki.fi>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Device tree meeting notes from last week
+Date: Tue, 10 Dec 2013 13:58:17 +0000
+Message-ID: <CACxGe6vJ0P4-LyPHRpLO7cLs_TS0S=YD=Dw7n9g2V-qjUvWgKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <87lhztgqsj.fsf@iki.fi>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Antti Miettinen <ananaza@iki.fi>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dave P Martin <Dave.Martin@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 10, 2013 at 06:31:56AM +0000, Antti Miettinen wrote:
-> Hi Lorenzo,
-> 
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
-> > +	- latency
-> > +		Usage: Required
-> > +		Value type: <u32>
-> > +		Definition: Worst case latency in microseconds required to
-> > +			    enter and exit the C-state.
-> > +
-> > +	- min-residency
-> > +		Usage: Required
-> > +		Value type: <u32>
-> > +		Definition: Time in microseconds required for the CPU to be in
-> > +			    the C-state to make up for the dynamic power
-> > +			    consumed to enter/exit the C-state in order to
-> > +			    break even in terms of power consumption compared
-> > +			    to C1 state (wfi).
-> > +			    This parameter depends on the operating conditions
-> > +			    (operating point, cache state) and must assume
-> > +			    worst case scenario.
-> 
-> I have a concern with these. I know it is not the fault of this patch as
-> these parameters are what current cpuidle governor/driver interface
-> uses, but..
+Sorry for being rather late on getting these out.
 
-Concern is shared, that's why these bindings hit the list as early as
-possible. Just to mention that, I wanted to keep them as OS agnostic
-as I could, and I think min-residency might make sense (I mentioned
-it has to cater for the worst case, which depends on a number of
-run-time states as you describe below).
+Attendees:
+Rob Herring
+Mark Rutland
+Pavel Moll
+Jason Cooper
+Tomasz Figa
+David Woodhouse
 
-> Power state entry/exit latencies can be vary quite a lot. Especially CPU
-> and memory frequencies affect them as can e.g. PMIC properties. Also
-> power level during entry/exit depends on clocks and voltages. Also the
-> power level of a sleep state can be context dependent (clocks and
-> voltages). These mean that also the minimum residency for energy break
-> even varies. Defining a minimum residency against C1 is a bit
-> arbitrary. There is no guarantee that the break even order of idle
-> states remains constant over device context changes.
+Should the ABI and policy documents be separate?
+Jason: happy to have it split up or in a single document.
 
-Agree 100%.
 
-> I have not really properly thought through this but here's an idea.. how
-> about an alternative interface between governor and driver? The cpuidle
-> core would provide the expected wakeup time and currently enforced
-> minimum latency to the driver and the driver would make the decision
-> about the state to choose.
+ePAPR: No Stuart no conversation
 
-I do not think we should think about how the kernel uses this data.
-We should strive to make DT data representative of HW C-states and
-that's very complex, as you mentioned (it depends at what granularity
-we want these bits of info).
+Devicetree.org: Should approach Linux Foundation for taking
+responsibility of devicetree.org.
 
-When we are happy with the bindings we can then code the kernel accordingly.
+ACTION on Grant to follow up with LF
 
-Please let me know how you would like to have these bindings extended
-(eg adding operating points), getting feedback is the main reason why
-I posted them in the first place.
+Best Practices document: ACTION on MARK to produce first version next week.
 
-Thank you,
-Lorenzo
+Self Test: Waiting on overlays
 
+Schema validation
+Tomasz: Looking at extending DTC to support schema language. Working
+on validation part. Expect some RFC in near future (before the end of
+the year)
+
+New Business
+----------------------------
+David: Update on ACPI work.
+Grant: Do we want to do exactly the same thing in ACPI that we do in DT?
+David: Of the opinion that OS should be in control, if we have to do
+it in DT, why wouldn't we do it in ACPI?
+Grant: We should push for DT and ACPI bindings to be identical
+David: it is going to be hard to depend on firmware to setup the hardware
+David: Settled on following vocabulary: Translation is bad.
+Transliteration is more what we want. The drivers shouldn't have to
+know what it is actually backed onto in the common case
+David: Big issue is the plethora of different data types. The bios
+authors will always get it wrong. ACPI doesn't have a schema validator
+either.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
