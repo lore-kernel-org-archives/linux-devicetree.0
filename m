@@ -1,100 +1,113 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/1] ARM: dts: Add PMIC support to arndale-octa
-Date: Tue, 10 Dec 2013 18:54:16 +0000
-Message-ID: <20131210185416.GH11468@sirena.org.uk>
-References: <1386656958-28292-1-git-send-email-sachin.kamat@linaro.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v4 0/9] ARM: Initial support for Marvell Berlin SoCs
+Date: Tue, 10 Dec 2013 11:16:53 -0800
+Message-ID: <20131210191653.GA10105@quad.lixom.net>
+References: <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1386512047-874-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20131210014043.GA32701@quad.lixom.net>
+ <52A674F1.7000104@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IbVRjBtIbJdbeK1C"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1386656958-28292-1-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com
+In-Reply-To: <52A674F1.7000104@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 10, 2013 at 02:57:05AM +0100, Sebastian Hesselbarth wrote:
+> On 12/10/2013 02:40 AM, Olof Johansson wrote:
+> >On Sun, Dec 08, 2013 at 03:13:57PM +0100, Sebastian Hesselbarth wrote:
+> >>Hopefully last round of initial support patches for Marvell Berlin SoCs
+> >>before I can send the final PR for v3.14.
+> >>
+> >>Compared to last version sent, this patch set has now a Reviewed-by from
+> >>Thomas Gleixner for the irqchip driver (Thanks for that!). Also, l2x0
+> >>compatibles can now be reordered alphabetically instead of by derivate
+> >>thanks to [1].
+> >>
+> >>Marvell Docs have been updated to not mention Armada 1000 which has been
+> >>discontinued by Marvell and vanished from their website. The dtsi/dts file
+> >>have been renamed to vendor,name.dts[i], which is the preferred new naming
+> >>scheme.
+> >>
+> >>Open issues are the never ending dw_apb_timers_of story, which I ignore
+> >>for now and hope they get in someday. Also, TWD SMP dependency and
+> >>early l2x0_of_init will be addressed at a later date. At the current
+> >>feature set of Berlin SoC, I don't see why the above issues should further
+> >>stall this patches.
+> >>
+> >>I guess, all patches can go through ARM SoC tree, except Tauros3 patch
+> >>which I should submit to Russell's patch tracker?
+> >
+> >Yep, sounds good.
+> >
+> >I took a cursory glance at the patchset and it looks sane to me. I didn't
+> >review in detail though.
+> >
+> >One open question: Why don't you just add this to mach-mvebu? I thought
+> >all modern Marvell platforms were going to converge on that eventually
+> >anyway, and it's easy to add it now that it's early and simple..
+> 
+> Olof,
+> 
+> I started with mach-mvebu in the first RFC, but Berlin SoCs are from a
+> different business unit at Marvell and are more PXA compatible than
+> Orion/Kirkwood/Armada 370/XP. Most notably, they lack the "mbus" and
+> IP is either from PXA/MMP or Synopsys DW. Thomas Petazzoni and also
+> Jisheng Zhang from Marvell suggested to not put it into mvebu but
+> have a different mach folder instead.
 
---IbVRjBtIbJdbeK1C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hmm, ok. Well, maybe later on we can look at aggregating them more again. It'd
+be nice to get fewer top-level platform directories per vendor.
 
-On Tue, Dec 10, 2013 at 11:59:18AM +0530, Sachin Kamat wrote:
+> >Also, see below:
+> >
+> >>Sebastian Hesselbarth (9):
+> >>   irqchip: add DesignWare APB ICTL interrupt controller
+> >>   MAINTAINERS: add ARM Marvell Berlin SoC
+> >>   ARM: l2x0: add Marvell Tauros3 support
+> >>   ARM: add Marvell Berlin SoC familiy to Marvell doc
+> >>   ARM: add Marvell Berlin SoCs to multi_v7_defconfig
+> >>   ARM: add Marvell Berlin UART0 lowlevel debug
+> >>   ARM: add Armada 1500 and Sony NSZ-GS7 device tree files
+> >>   ARM: add Armada 1500-mini and Chromecast device tree files
+> >>   ARM: add initial support for Marvell Berlin SoCs
+> >>
+> >>  Documentation/arm/Marvell/README                   |  24 +++
+> >>  Documentation/devicetree/bindings/arm/l2cc.txt     |  23 ++-
+> >>  .../devicetree/bindings/arm/marvell,berlin.txt     |  24 +++
+> >>  .../interrupt-controller/snps,dw-apb-ictl.txt      |  32 +++
+> >>  MAINTAINERS                                        |   6 +
+> >>  arch/arm/Kconfig                                   |   2 +
+> >>  arch/arm/Kconfig.debug                             |  10 +
+> >>  arch/arm/Makefile                                  |   1 +
+> >>  arch/arm/boot/dts/Makefile                         |   3 +
+> >>  arch/arm/boot/dts/google,chromecast.dts            |  29 +++
+> >>  arch/arm/boot/dts/marvell,berlin2.dtsi             | 227 +++++++++++++++++++++
+> >>  arch/arm/boot/dts/marvell,berlin2cd.dtsi           | 210 +++++++++++++++++++
+> >>  arch/arm/boot/dts/sony,nsz-gs7.dts                 |  29 +++
+> >
+> >We have had a long-standing standard of naming the dts files
+> ><family>-<board>.dts (or <soc_vendor>-<board>.dts).  Let's continue
+> >sticking to that since it helps keep the namespace somewhat segmented per
+> >platform in arch/arm/boot/dts.
+> 
+> Also, here: I had the naming that way until v3, then Kumar suggested to
+> use prefixed naming scheme. Maybe I got it wrong?
+> 
+> Are you suggesting to name the above back to:
+> berlin2[cd].dtsi,
+> berlin2-nsz-gs7.dts, and
+> berlin2cd-chromecast.dts?
 
-> Added PMIC node to Arndale-Octa board.
+Personally I prefer something similar to the mach-directory name as prefix, so
+berlin-<soc number>.dts and then berlin-chromecast.dts, etc. But I'm not that
+picky, if you have something else you prefer then that's fine too.
 
-Is there a bootloader posted for this anywhere yet?
+At some point we should restructure the dts directory into subdirectories,
+which will remove some of these requirements, but we're not there quite yet.
 
-> +			regulators {
-> +				ldo1_reg: LDO1 {
-> +					regulator-name =3D "vdd_ldo1";
 
-So, there is a label on the schematic for PVDD_LDO1 but it's not
-entirely obvious why that's there as throughout the rest of the
-schematic it's got the rather more constructive name PVDD_ALIVE_1V0. =20
-We should really be using the more readable versions of the names
-in the DT since the whole point in overriding the driver default
-names is to make it easier to associate the kernel diagnostics with
-the schematic, what the DT is doing here serves no purpose.
-
-The same comment applies to all the LDO supplies.
-
-> +				buck2_reg: BUCK2 {
-> +					regulator-name =3D "vdd_arm";
-> +					regulator-min-microvolt =3D <800000>;
-> +					regulator-max-microvolt =3D <1500000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-
-Why are you specifying boot-on?  It doesn't seem terribly plausible that
-the cores won't be powered on boot, or that we can't tell what the state
-is by reading the registers.
-
-Same for all the DCDCs.
-
-> +				buck7_reg: BUCK7 {
-> +					regulator-name =3D "vdd_1.0v_ldo";
-> +					regulator-min-microvolt =3D <800000>;
-> +					regulator-max-microvolt =3D <1500000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-
-This doesn't correspond to the schematic which says that BUCK7 is
-supplying VIN_LLDO_1V4 (the input for some of the LDOs).  The voltage
-range specified there doesn't seem terribly sensible either, are you
-sure you haven't just got the underlying voltage range for the DCDC?
-I can't see why you'd want to raise the voltage over 1.4V (that's rather
-defeating the point) and while it'd be nice to have the core be able to
-vary supply to track the headroom needed by the LDOs none of the LDOs
-were configured with variable voltage so even if we implemented that
-it'd never be used.
-
-Similar issues apply to the other bucks being used to drop the battery
-voltage for LDO supplies.
-
---IbVRjBtIbJdbeK1C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSp2NUAAoJELSic+t+oim9V+IP/R6qpbCeakBJ3zaPfcTGROdg
-Law/Dm248qNFtMsfPGhYg0j9+KUobwrUIaJfqpgOfo0bG28gtXOGJD52irOh0E38
-gMrBnxskOXSfQY7+WirpRK1LvaQMbUO7osDzcxEx+/Kfz5jiFmxocgEkdEv9JxnY
-CSapz9+XVD2xA6XXdqEwfX9WoqVkQY/XRBcXsAeNgJ3cEHpmf1Y7Cb89kUeqddhp
-Ti5aZZiIsml3WckR8EeOuNCbHf2R5G5w0PFHVGGrFCqW2z9JBHF/AHEi5mFqwYmf
-GTqUoCPQcCncUeDj2HRG3/WomhkOva8xa/69qmx52Rfk4s1cLzNMqf6qaRziDjph
-ldI8r6+BaS92nZYoHWpdsWqFbRiPnareIyUyOkhWBLIodnqGug5LSLhk/a5vQ20n
-WHFEaYbKcc/MZtDiD7o665vqclD27ukgDxbxg55NFpSZoFHGdBXHvAfz6HzPOc7u
-3R7Vfsoix5BoSXprDcVVZi+pyz8nk1oflNfKyfSCPSPzvKsNYoSfvY201bhUQlGq
-hkPMk02Z3pb9mEJe6EObwtSRIxQmDRbP4RCVJi0EdfW3+5pWsiMhKaH5/OCmwo7q
-AVATW2jps60DXR3UfleC9MWcVcpbtsYdCkyJVhHooSG2d2+gLPGB9eP+Bj4YYvYE
-qoBt/egTM6VaoW8e/SXx
-=pKsc
------END PGP SIGNATURE-----
-
---IbVRjBtIbJdbeK1C--
+-Olof
