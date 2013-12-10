@@ -1,255 +1,66 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 1/1] ARM: dts: Add PMIC support to arndale-octa
-Date: Tue, 10 Dec 2013 11:59:18 +0530
-Message-ID: <1386656958-28292-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, kgene.kim@samsung.com, sachin.kamat@linaro.org
+From: Antti Miettinen <ananaza@iki.fi>
+Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
+Date: Tue, 10 Dec 2013 08:31:56 +0200
+Message-ID: <87lhztgqsj.fsf@iki.fi>
+References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
+ (Lorenzo Pieralisi's message of "Mon, 2 Dec 2013 16:20:05 +0000")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, Grant Likely <grant.likely@linaro.org>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Added PMIC node to Arndale-Octa board.
+Hi Lorenzo,
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
- arch/arm/boot/dts/exynos5420-arndale-octa.dts |  220 +++++++++++++++++++++++++
- 1 file changed, 220 insertions(+)
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+> +	- latency
+> +		Usage: Required
+> +		Value type: <u32>
+> +		Definition: Worst case latency in microseconds required to
+> +			    enter and exit the C-state.
+> +
+> +	- min-residency
+> +		Usage: Required
+> +		Value type: <u32>
+> +		Definition: Time in microseconds required for the CPU to be in
+> +			    the C-state to make up for the dynamic power
+> +			    consumed to enter/exit the C-state in order to
+> +			    break even in terms of power consumption compared
+> +			    to C1 state (wfi).
+> +			    This parameter depends on the operating conditions
+> +			    (operating point, cache state) and must assume
+> +			    worst case scenario.
 
-diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-index 7340745ff979..7d94d8d3b118 100644
---- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-+++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-@@ -11,6 +11,7 @@
- 
- /dts-v1/;
- #include "exynos5420.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "Insignal Arndale Octa evaluation board based on EXYNOS5420";
-@@ -63,4 +64,223 @@
- 			bus-width = <4>;
- 		};
- 	};
-+
-+	hsi2c_4: i2c@12CA0000 {
-+		status = "okay";
-+
-+		s2mps11_pmic@66 {
-+			compatible = "samsung,s2mps11-pmic";
-+			reg = <0x66>;
-+			s2mps11,buck2-ramp-delay = <12>;
-+			s2mps11,buck34-ramp-delay = <12>;
-+			s2mps11,buck16-ramp-delay = <12>;
-+			s2mps11,buck6-ramp-enable = <1>;
-+			s2mps11,buck2-ramp-enable = <1>;
-+			s2mps11,buck3-ramp-enable = <1>;
-+			s2mps11,buck4-ramp-enable = <1>;
-+
-+			interrupt-parent = <&gpx3>;
-+			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			s2mps11_osc: clocks {
-+				#clock-cells = <1>;
-+				clock-output-names = "s2mps11_ap",
-+						"s2mps11_cp", "s2mps11_bt";
-+			};
-+
-+			regulators {
-+				ldo1_reg: LDO1 {
-+					regulator-name = "vdd_ldo1";
-+					regulator-min-microvolt = <1000000>;
-+					regulator-max-microvolt = <1000000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo3_reg: LDO3 {
-+					regulator-name = "vdd_ldo3";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo5_reg: LDO5 {
-+					regulator-name = "vdd_ldo5";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo6_reg: LDO6 {
-+					regulator-name = "vdd_ldo6";
-+					regulator-min-microvolt = <1000000>;
-+					regulator-max-microvolt = <1000000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo7_reg: LDO7 {
-+					regulator-name = "vdd_ldo7";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo8_reg: LDO8 {
-+					regulator-name = "vdd_ldo8";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo9_reg: LDO9 {
-+					regulator-name = "vdd_ldo9";
-+					regulator-min-microvolt = <3000000>;
-+					regulator-max-microvolt = <3000000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo10_reg: LDO10 {
-+					regulator-name = "vdd_ldo10";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo11_reg: LDO11 {
-+					regulator-name = "vdd_ldo11";
-+					regulator-min-microvolt = <1000000>;
-+					regulator-max-microvolt = <1000000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo12_reg: LDO12 {
-+					regulator-name = "vdd_ldo12";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo13_reg: LDO13 {
-+					regulator-name = "vdd_ldo13";
-+					regulator-min-microvolt = <2800000>;
-+					regulator-max-microvolt = <2800000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo15_reg: LDO15 {
-+					regulator-name = "vdd_ldo15";
-+					regulator-min-microvolt = <3100000>;
-+					regulator-max-microvolt = <3100000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo16_reg: LDO16 {
-+					regulator-name = "vdd_ldo16";
-+					regulator-min-microvolt = <2200000>;
-+					regulator-max-microvolt = <2200000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo17_reg: LDO17 {
-+					regulator-name = "tsp_avdd";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo19_reg: LDO19 {
-+					regulator-name = "vdd_sd";
-+					regulator-min-microvolt = <2800000>;
-+					regulator-max-microvolt = <2800000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo24_reg: LDO24 {
-+					regulator-name = "tsp_io";
-+					regulator-min-microvolt = <2800000>;
-+					regulator-max-microvolt = <2800000>;
-+					regulator-always-on;
-+				};
-+
-+				buck1_reg: BUCK1 {
-+					regulator-name = "vdd_mif";
-+					regulator-min-microvolt = <800000>;
-+					regulator-max-microvolt = <1300000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				buck2_reg: BUCK2 {
-+					regulator-name = "vdd_arm";
-+					regulator-min-microvolt = <800000>;
-+					regulator-max-microvolt = <1500000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				buck3_reg: BUCK3 {
-+					regulator-name = "vdd_int";
-+					regulator-min-microvolt = <800000>;
-+					regulator-max-microvolt = <1400000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				buck4_reg: BUCK4 {
-+					regulator-name = "vdd_g3d";
-+					regulator-min-microvolt = <800000>;
-+					regulator-max-microvolt = <1400000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				buck5_reg: BUCK5 {
-+					regulator-name = "vdd_mem";
-+					regulator-min-microvolt = <800000>;
-+					regulator-max-microvolt = <1400000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				buck6_reg: BUCK6 {
-+					regulator-name = "vdd_kfc";
-+					regulator-min-microvolt = <800000>;
-+					regulator-max-microvolt = <1500000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				buck7_reg: BUCK7 {
-+					regulator-name = "vdd_1.0v_ldo";
-+					regulator-min-microvolt = <800000>;
-+					regulator-max-microvolt = <1500000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				buck8_reg: BUCK8 {
-+					regulator-name = "vdd_1.8v_ldo";
-+					regulator-min-microvolt = <800000>;
-+					regulator-max-microvolt = <1500000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				buck9_reg: BUCK9 {
-+					regulator-name = "vdd_2.8v_ldo";
-+					regulator-min-microvolt = <3000000>;
-+					regulator-max-microvolt = <3750000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				buck10_reg: BUCK10 {
-+					regulator-name = "vdd_vmem";
-+					regulator-min-microvolt = <2850000>;
-+					regulator-max-microvolt = <2850000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+			};
-+		};
-+	};
- };
--- 
-1.7.9.5
+I have a concern with these. I know it is not the fault of this patch as
+these parameters are what current cpuidle governor/driver interface
+uses, but..
+
+Power state entry/exit latencies can be vary quite a lot. Especially CPU
+and memory frequencies affect them as can e.g. PMIC properties. Also
+power level during entry/exit depends on clocks and voltages. Also the
+power level of a sleep state can be context dependent (clocks and
+voltages). These mean that also the minimum residency for energy break
+even varies. Defining a minimum residency against C1 is a bit
+arbitrary. There is no guarantee that the break even order of idle
+states remains constant over device context changes.
+
+I have not really properly thought through this but here's an idea.. how
+about an alternative interface between governor and driver? The cpuidle
+core would provide the expected wakeup time and currently enforced
+minimum latency to the driver and the driver would make the decision
+about the state to choose.
+
+	--Antti
