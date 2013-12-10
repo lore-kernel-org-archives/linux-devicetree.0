@@ -1,42 +1,81 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv8][ 2/5] ARM: dts: mbimxsd25: Add sound support.
-Date: Tue, 10 Dec 2013 20:49:22 +0800
-Message-ID: <20131210124920.GA26728@S2101-09.ap.freescale.net>
-References: <1385567664-758-1-git-send-email-denis@eukrea.com>
- <1385567664-758-2-git-send-email-denis@eukrea.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
+Date: Tue, 10 Dec 2013 13:27:19 +0000
+Message-ID: <20131210132719.GC15543@e102568-lin.cambridge.arm.com>
+References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <87lhztgqsj.fsf@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <87lhztgqsj.fsf@iki.fi>
 Content-Disposition: inline
-In-Reply-To: <1385567664-758-2-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Antti Miettinen <ananaza@iki.fi>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dave P Martin <Dave.Martin@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 27, 2013 at 04:54:21PM +0100, Denis Carikli wrote:
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+On Tue, Dec 10, 2013 at 06:31:56AM +0000, Antti Miettinen wrote:
+> Hi Lorenzo,
+> 
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+> > +	- latency
+> > +		Usage: Required
+> > +		Value type: <u32>
+> > +		Definition: Worst case latency in microseconds required to
+> > +			    enter and exit the C-state.
+> > +
+> > +	- min-residency
+> > +		Usage: Required
+> > +		Value type: <u32>
+> > +		Definition: Time in microseconds required for the CPU to be in
+> > +			    the C-state to make up for the dynamic power
+> > +			    consumed to enter/exit the C-state in order to
+> > +			    break even in terms of power consumption compared
+> > +			    to C1 state (wfi).
+> > +			    This parameter depends on the operating conditions
+> > +			    (operating point, cache state) and must assume
+> > +			    worst case scenario.
+> 
+> I have a concern with these. I know it is not the fault of this patch as
+> these parameters are what current cpuidle governor/driver interface
+> uses, but..
 
-Applied this one and mbimxsd51 one, but not the other two, as I do not
-have imx35-eukrea-mbimxsd35-baseboard.dts and
-imx53-eukrea-mbimxsd53-baseboard.dts in my tree.
+Concern is shared, that's why these bindings hit the list as early as
+possible. Just to mention that, I wanted to keep them as OS agnostic
+as I could, and I think min-residency might make sense (I mentioned
+it has to cater for the worst case, which depends on a number of
+run-time states as you describe below).
 
-Shawn
+> Power state entry/exit latencies can be vary quite a lot. Especially CPU
+> and memory frequencies affect them as can e.g. PMIC properties. Also
+> power level during entry/exit depends on clocks and voltages. Also the
+> power level of a sleep state can be context dependent (clocks and
+> voltages). These mean that also the minimum residency for energy break
+> even varies. Defining a minimum residency against C1 is a bit
+> arbitrary. There is no guarantee that the break even order of idle
+> states remains constant over device context changes.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Agree 100%.
+
+> I have not really properly thought through this but here's an idea.. how
+> about an alternative interface between governor and driver? The cpuidle
+> core would provide the expected wakeup time and currently enforced
+> minimum latency to the driver and the driver would make the decision
+> about the state to choose.
+
+I do not think we should think about how the kernel uses this data.
+We should strive to make DT data representative of HW C-states and
+that's very complex, as you mentioned (it depends at what granularity
+we want these bits of info).
+
+When we are happy with the bindings we can then code the kernel accordingly.
+
+Please let me know how you would like to have these bindings extended
+(eg adding operating points), getting feedback is the main reason why
+I posted them in the first place.
+
+Thank you,
+Lorenzo
+
