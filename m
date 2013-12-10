@@ -1,201 +1,132 @@
-From: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
-Subject: Re: [PATCH V2 2/2] ARM: dts: Enable ahci sata and sata phy
-Date: Tue, 10 Dec 2013 14:26:52 +0530
-Message-ID: <CAKuRcOK89Zvh+WD4-VC7UvdR1dp1WfJvr89Pej5TZ=9KRx4-rQ@mail.gmail.com>
-References: <1384158778-27555-1-git-send-email-yuvaraj.cd@samsung.com>
-	<1384158778-27555-3-git-send-email-yuvaraj.cd@samsung.com>
-	<5292EED4.2080708@ti.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 1/2] ARM: dts: Enable RTC node in exynos4.dtsi file
+Date: Tue, 10 Dec 2013 14:37:13 +0530
+Message-ID: <CAK9yfHwgCkFZV7pE3t2pu7xYnvCD8DErgZTJPyDVQcE+s57pvA@mail.gmail.com>
+References: <1382438215-13215-1-git-send-email-sachin.kamat@linaro.org>
+	<528353F7.4050004@samsung.com>
+	<1764307.sx88zLt93L@amdc1032>
+	<2781292.vINFB8v7mM@flatron>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5292EED4.2080708@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: "kgene.kim@samsung.com" <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, sachin.kamat@linaro.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Christoffer Dall <christoffer.dall@linaro.org>, aditya.ps@samsung.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2781292.vINFB8v7mM@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 25, 2013 at 12:01 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi,
+On 13 November 2013 17:51, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> On Wednesday 13 of November 2013 12:52:05 Bartlomiej Zolnierkiewicz wrote:
 >
-> On Monday 11 November 2013 02:02 PM, Yuvaraj Kumar C D wrote:
->> This patch adds dt entry for ahci sata controller and its
->> corresponding phy controller.phy node has been added w.r.t
->> new generic phy framework.
->>
->> Changes since V1:
->>       1.Minor changes to node name convention
->>       2.Updated binding document.
->>
->> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
->> ---
->>  .../devicetree/bindings/ata/exynos-sata-phy.txt    |   19 +++++++++++++-----
->>  .../devicetree/bindings/ata/exynos-sata.txt        |   17 +++++++++++-----
->>  arch/arm/boot/dts/exynos5250-arndale.dts           |    9 ++++++++-
->>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    8 ++------
->>  arch/arm/boot/dts/exynos5250.dtsi                  |   21 ++++++++++++++++----
->>  5 files changed, 53 insertions(+), 21 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
->> index 37824fa..a679e17 100644
->> --- a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
->> +++ b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
->> @@ -4,11 +4,20 @@ SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
->>  Each SATA PHY controller should have its own node.
->>
->>  Required properties:
->> -- compatible        : compatible list, contains "samsung,exynos5-sata-phy"
->> +- compatible        : compatible list, contains "samsung,exynos5250-sata-phy"
+> [+ DT maintainers]
 >
-> What if someone is already using samsung,exynos5-sata-phy? You can mark the old
-> one as deprecated and add the new compatible string.
-AFAIK, there is no driver using it.In the initial version of sata phy
-driver,only the DT part has been merged.So it was there
-without any user.
->>  - reg               : <registers mapping>
 >>
->>  Example:
->> -        sata@ffe07000 {
->> -                compatible = "samsung,exynos5-sata-phy";
->> -                reg = <0xffe07000 0x1000>;
->> -        };
->> +     sata_phy: sata-phy@12170000 {
->> +             compatible = "samsung,exynos5250-sata-phy";
->> +             reg = <0x12170000 0x1ff>;
->> +             clocks = <&clock 287>;
->> +             clock-names = "sata_phyctrl";
->> +             #phy-cells = <0>;
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             ranges;
->> +             sataphy-pmu {
->> +                     reg = <0x10040724 0x4>;
->> +                     };
+>> Hi,
+>>
+>> On Wednesday, November 13, 2013 11:27:03 AM Sylwester Nawrocki wrote:
+>> > On 13/11/13 09:08, Tomasz Figa wrote:
+>> > >> As was discussed earlier too, status field of DT node is not supposed
+>> > >> > to be used for
+>> > >> > keeping an IP enabled or disabled. That should be done via the kernel
+>> > >> > config. The DT status
+>> > >> > is mostly to indicate the hardware status of the IP on the SoC/board.
+>> > >> > If the node fully defines the hardware,
+>> > >> > then it should be kept enabled by default unless such enabling causes
+>> > >> > some issues with other IPs due to
+>> > >> > pin sharing conflicts, etc. In the above case the node completely
+>> > >> > defines the hardware and hence there is no
+>> > >> > reason to keep it disabled.
+>> > >
+>> > > That's correct. (Unless I'm missing some board specific dependency of RTC.
+>> > > If so, please correct me.)
 >
-> alignment problem..
-ok
->> +     };
->> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt b/Documentation/devicetree/bindings/ata/exynos-sata.txt
->> index 0849f10..8ec7327 100644
->> --- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
->> +++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
->> @@ -8,10 +8,17 @@ Required properties:
->>  - interrupts        : <interrupt mapping for SATA IRQ>
->>  - reg               : <registers mapping>
->>  - samsung,sata-freq : <frequency in MHz>
->> +- phys              : as mentioned in phy-bindings.txt
->> +- phy-names         : as mentioned in phy-bindings.txt
->>
->>  Example:
->> -        sata@ffe08000 {
->> -                compatible = "samsung,exynos5-sata";
->> -                reg = <0xffe08000 0x1000>;
->> -                interrupts = <115>;
->> -        };
->> +     sata@122F0000 {
+> Well, I was missing one indeed. RTC requires an external 32.768KHz clock,
+> which must be provided by an oscillator or any other clock source on the
+> board. However...
 >
-> use lower case here..
-ok
->> +             compatible = "snps,dwc-ahci";
->> +             samsung,sata-freq = <66>;
->> +             reg = <0x122F0000 0x1ff>;
-> here too..
-ok
->> +             interrupts = <0 115 0>;
->> +             clocks = <&clock 277>, <&clock 143>;
->> +             clock-names = "sata", "sclk_sata";
->> +             phys = <&sata_phy>;
->> +             phy-names = "sata-phy";
->> +     };
->> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
->> index b77a37e..434e4f3 100644
->> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
->> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
->> @@ -381,7 +381,14 @@
->>       };
+>> >
+>> > I don't really like this argument. Why not allow the firmware to decide
+>> > which devices are relevant and should be handled by the kernel ?
+>> > And since we are aiming at single kernel config, if I understand things
+>> > correctly, I can't see anything else than dts that could hold the machine
+>> > *configuration*.
+>> >
+>> > So let's not make all stuff enabled by default, that's not something we
+>> > want on those mobile device SoCs. We should not be making fine system
+>> > tuning more difficult than necessary.
+>> >
+>> > I'm with Kukjin on this matter and would prefer patches like the $subject
+>> > patch not be merged.
 >>
->>       i2c@121D0000 {
->> -             status = "disabled";
->> +             samsung,i2c-sda-delay = <100>;
->> +             samsung,i2c-max-bus-freq = <40000>;
->> +             samsung,i2c-slave-addr = <0x38>;
->> +
->> +             sata-phy {
->> +                     compatible = "sata-phy-i2c";
+>> I generally agree with Sylwester and Kukjin that devices should not be
+>> enabled by default in dtsi files.  However in a particular case of RTC
+>> support there should be an exception from the generic rule and RTC
+>> should be enabled for all EXYNOS boards (we have RTC driver config
+>> option already enabled in our exynos_defconfig and we are also already
+>> enabling RTC device explicitly in EXYNOS5250 dtsi file).
 >
-> Do you have documentation for this compatible string?
-Sorry missed that.I will add in the next version.
->> +                     reg = <0x38>;
->> +             };
->>       };
->>
->>       mmc_0: mmc@12200000 {
->> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> index 13746df..eeeeef9 100644
->> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> @@ -90,16 +90,12 @@
->>               samsung,i2c-max-bus-freq = <40000>;
->>               samsung,i2c-slave-addr = <0x38>;
->>
->> -             sata-phy {
->> -                     compatible = "samsung,sata-phy";
->> +             sata-phy@38 {
->> +                     compatible = "sata-phy-i2c";
->>                       reg = <0x38>;
->>               };
->>       };
->>
->> -     sata@122F0000 {
->> -             samsung,sata-freq = <66>;
->> -     };
->> -
->>       i2c@12C80000 {
->>               samsung,i2c-sda-delay = <100>;
->>               samsung,i2c-max-bus-freq = <66000>;
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> index 80b5df5..d24db31 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -46,6 +46,7 @@
->>               i2c6 = &i2c_6;
->>               i2c7 = &i2c_7;
->>               i2c8 = &i2c_8;
->> +             i2c9 = &i2c_9;
->>               pinctrl0 = &pinctrl_0;
->>               pinctrl1 = &pinctrl_1;
->>               pinctrl2 = &pinctrl_2;
->> @@ -216,16 +217,28 @@
->>       };
->>
->>       sata@122F0000 {
->> -             compatible = "samsung,exynos5-sata-ahci";
->> +             compatible = "snps,dwc-ahci";
->> +             samsung,sata-freq = <66>;
->>               reg = <0x122F0000 0x1ff>;
->>               interrupts = <0 115 0>;
->>               clocks = <&clock 277>, <&clock 143>;
->>               clock-names = "sata", "sclk_sata";
->> +             phys = <&sata_phy>;
->> +             phy-names = "sata-phy";
->>       };
->>
->> -     sata-phy@12170000 {
->> -             compatible = "samsung,exynos5-sata-phy";
->> +     sata_phy: sata-phy@12170000 {
->> +             compatible = "samsung,exynos5250-sata-phy";
->>               reg = <0x12170000 0x1ff>;
->> +             clocks = <&clock 287>;
->> +             clock-names = "sata_phyctrl";
->> +             #phy-cells = <0>;
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             ranges;
->> +             sataphy-pmu {
->> +                     reg = <0x10040724 0x4>;
->> +                     };
+> I believe the rule is clear and we already went through enough discussion
+> about this. To clarify again:
 >
-> alignment problem here..
-Ok
+> Device Tree should not restrict possible use cases of particular hardware
+> that are allowed by particular integration of such hardware on particular
+> board. This means that if there are no technical reasons to mark such
+> hardware as disabled on particular board, this should not be done. Let
+> me show you this on several examples:
 >
-> Thanks
-> Kishon
+> 1. SoC X has an MMC controller, which needs N pins of the SoC to be
+> routed to an MMC slot. Our board X1 does _not_ have necessary traces on
+> its PCB. In this case the MMC controller must be marked as disabled.
+>
+> 2. SoC X has an MMC controller, which needs N pins of the SoC to be
+> routed to an MMC slot. Our board X2 _does_ have necessary traces on its
+> PCB, so when user inserts an MMC card into the slot he expects that the
+> system detects it. In this case the MMC controller must _not_ be marked
+> as disabled.
+>
+> 3. SoC X has a built-in 2D graphics accelerator. It does not have any
+> output pads nor any requirements with respect to the board - it's purely
+> a mem-to-mem device. A user might want to run a rootfs that uses it to
+> accelerate his applications, so this device must _not_ be marked as
+> disabled.
+>
+> 4. SoC X has a image processing block, consisting of two functions:
+>  - a camera interface, that requires SoC pads to be connected to a camera
+>    sensor,
+>  - general-purpose image scaler and format converter, that can operate
+>    either on input of camera interface or on images stored in memory.
+> This case is more interesting. Even if board does not have a physical
+> camera interface, the binding should be designed in a way that allows
+> enabling only the memory-to-memory scaler. Then such IP must be marked
+> okay regardless of board support, because the camera interface will be
+> used only if relevant board-specific properties are provided.
+>
+> To sum up, I would not interpret the "disabled" value of "status" property
+> as the opposite of "enabled", but rather as "disabled" in "disabled
+> person".
+>
+> Anyway, I'd like to get a confirmation (or denial) from other Device Tree
+> maintainers and if what I've written above is correct, maybe we should
+> put this somewhere in kernel documentation.
+
+Ping..
+
+In the absence of kernel documentation formulating the guidelines for
+enabling/disabling
+of IP (nodes), the current code should be the reference for someone
+doing this for a given
+platform. However, the current code (Exynos DT files) itself is not
+consistent one way or the
+other w.r.t to the above points. For e.g. commit 73784475febf ("ARM:
+dts: Update the "status"
+property of RTC DT node for Exynos5250 SoC") does the exact same thing
+done by this patch.
+Similarly in exynos5420.dtsi. I am sure there are other similar
+examples as well. I think there should be
+one consistent guideline, atleast for accepting patches of this nature
+(for this platform).
+
+
+-- 
+With warm regards,
+Sachin
