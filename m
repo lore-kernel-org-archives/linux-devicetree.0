@@ -1,114 +1,188 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: [PATCH 1/3] of: Fix early OF builtup on kobj-ification
-Date: Tue, 10 Dec 2013 16:13:51 +0200
-Message-ID: <1386684833-24112-2-git-send-email-panto@antoniou-consulting.com>
-References: <1386684833-24112-1-git-send-email-panto@antoniou-consulting.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386684833-24112-1-git-send-email-panto@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <panto@antoniou-consulting.com>
+From: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+Subject: [PATCH v5 1/3] ARM: EXYNOS: Add support for EXYNOS5410 SoC
+Date: Tue, 10 Dec 2013 18:26:37 +0400
+Message-ID: <1386685599-31536-2-git-send-email-v.tyrtov@samsung.com>
+References: <1386685599-31536-1-git-send-email-v.tyrtov@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1386685599-31536-1-git-send-email-v.tyrtov@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>, Tyrtov Vyacheslav <v.tyrtov@samsung.com>, Dave.Martin@arm.com, nicolas.pitre@linaro.org, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-When booting platforms that do very early OF initialization before
-core_initcalls are performed of_init is called too late.
+From: Tarek Dakhran <t.dakhran@samsung.com>
 
-This results in a hard-hard without getting a chance to output anything.
+EXYNOS5410 is SoC in Samsung's Exynos5 SoC series.
+Add initial support for this SoC.
 
-Fixed by adding a flag that marks when init has been done, and
-performing the per-node init at that time.
-
-Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
 ---
- drivers/of/base.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
+ arch/arm/mach-exynos/Kconfig                 | 10 ++++++++++
+ arch/arm/mach-exynos/common.c                | 18 ++++++++++++++++++
+ arch/arm/mach-exynos/include/mach/map.h      |  1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c       |  1 +
+ arch/arm/mach-exynos/platsmp.c               |  2 ++
+ arch/arm/plat-samsung/include/plat/cpu.h     |  8 ++++++++
+ arch/arm/plat-samsung/include/plat/map-s5p.h |  3 +++
+ 7 files changed, 43 insertions(+)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 734689b..a4f3dda 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -98,7 +98,7 @@ int __weak of_node_to_nid(struct device_node *np)
-  */
- struct device_node *of_node_get(struct device_node *node)
- {
--	if (node)
-+	if (node && of_kset)
- 		kobject_get(&node->kobj);
- 	return node;
+diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+index f9d67a0..1414bc6 100644
+--- a/arch/arm/mach-exynos/Kconfig
++++ b/arch/arm/mach-exynos/Kconfig
+@@ -93,6 +93,16 @@ config SOC_EXYNOS5250
+ 	help
+ 	  Enable EXYNOS5250 SoC support
+ 
++config SOC_EXYNOS5410
++	bool "SAMSUNG EXYNOS5410"
++	default y
++	depends on ARCH_EXYNOS5
++	select PM_GENERIC_DOMAINS if PM_RUNTIME
++	select S5P_PM if PM_SLEEP
++	select S5P_SLEEP if PM_SLEEP
++	help
++	  Enable EXYNOS5410 SoC support
++
+ config SOC_EXYNOS5420
+ 	bool "SAMSUNG EXYNOS5420"
+ 	default y
+diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
+index 61d2906..4768608 100644
+--- a/arch/arm/mach-exynos/common.c
++++ b/arch/arm/mach-exynos/common.c
+@@ -52,6 +52,7 @@ static const char name_exynos4210[] = "EXYNOS4210";
+ static const char name_exynos4212[] = "EXYNOS4212";
+ static const char name_exynos4412[] = "EXYNOS4412";
+ static const char name_exynos5250[] = "EXYNOS5250";
++static const char name_exynos5410[] = "EXYNOS5410";
+ static const char name_exynos5420[] = "EXYNOS5420";
+ static const char name_exynos5440[] = "EXYNOS5440";
+ 
+@@ -85,6 +86,12 @@ static struct cpu_table cpu_ids[] __initdata = {
+ 		.init		= exynos_init,
+ 		.name		= name_exynos5250,
+ 	}, {
++		.idcode		= EXYNOS5410_SOC_ID,
++		.idmask		= EXYNOS5_SOC_MASK,
++		.map_io		= exynos5_map_io,
++		.init		= exynos_init,
++		.name		= name_exynos5410,
++	}, {
+ 		.idcode		= EXYNOS5420_SOC_ID,
+ 		.idmask		= EXYNOS5_SOC_MASK,
+ 		.map_io		= exynos5_map_io,
+@@ -215,6 +222,15 @@ static struct map_desc exynos4x12_iodesc[] __initdata = {
+ 	},
+ };
+ 
++static struct map_desc exynos5410_iodesc[] __initdata = {
++	{
++		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
++		.pfn		= __phys_to_pfn(EXYNOS5410_PA_SYSRAM_NS),
++		.length		= SZ_4K,
++		.type		= MT_DEVICE,
++	},
++};
++
+ static struct map_desc exynos5250_iodesc[] __initdata = {
+ 	{
+ 		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
+@@ -374,6 +390,8 @@ static void __init exynos5_map_io(void)
+ 
+ 	if (soc_is_exynos5250())
+ 		iotable_init(exynos5250_iodesc, ARRAY_SIZE(exynos5250_iodesc));
++	if (soc_is_exynos5410())
++		iotable_init(exynos5410_iodesc, ARRAY_SIZE(exynos5410_iodesc));
  }
-@@ -156,7 +156,7 @@ static void of_node_release(struct kobject *kobj)
-  */
- void of_node_put(struct device_node *node)
- {
--	if (node)
-+	if (node && of_kset)
- 		kobject_put(&node->kobj);
- }
- EXPORT_SYMBOL(of_node_put);
-@@ -202,9 +202,16 @@ static const char *safe_name(struct kobject *kobj, const char *orig_name)
- static int __of_add_property(struct device_node *np, struct property *pp)
- {
- 	int rc;
-+	bool secure;
-+
-+	/* note that we don't take a lock here */
-+
-+	/* fake the return while of_init is not yet called */
-+	if (!of_kset)
-+		return 0;
  
- 	/* Important: Don't leak passwords */
--	bool secure = strncmp(pp->name, "security-", 9) == 0;
-+	secure = strncmp(pp->name, "security-", 9) == 0;
+ struct bus_type exynos_subsys = {
+diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
+index 7b046b5..894f431 100644
+--- a/arch/arm/mach-exynos/include/mach/map.h
++++ b/arch/arm/mach-exynos/include/mach/map.h
+@@ -29,6 +29,7 @@
+ #define EXYNOS4210_PA_SYSRAM_NS		0x0203F000
+ #define EXYNOS4x12_PA_SYSRAM_NS		0x0204F000
+ #define EXYNOS5250_PA_SYSRAM_NS		0x0204F000
++#define EXYNOS5410_PA_SYSRAM_NS		0x02073000
  
- 	pp->attr.attr.name = safe_name(&np->kobj, pp->name);
- 	pp->attr.attr.mode = secure ? S_IRUSR : S_IRUGO;
-@@ -222,6 +229,12 @@ static int __of_node_add(struct device_node *np)
- 	struct property *pp;
- 	int rc;
+ #define EXYNOS_PA_CHIPID		0x10000000
  
-+	/* note that we don't take a lock here */
-+
-+	/* fake the return while of_init is not yet called */
-+	if (!of_kset)
-+		return 0;
-+
- 	np->kobj.kset = of_kset;
- 	if (!np->parent) {
- 		/* Nodes without parents are new top level trees */
-@@ -245,11 +258,14 @@ static int __of_node_add(struct device_node *np)
- int of_node_add(struct device_node *np)
+diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+index 1fe075a..7f78f66 100644
+--- a/arch/arm/mach-exynos/mach-exynos5-dt.c
++++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+@@ -50,6 +50,7 @@ static void __init exynos5_dt_machine_init(void)
+ 
+ static char const *exynos5_dt_compat[] __initdata = {
+ 	"samsung,exynos5250",
++	"samsung,exynos5410",
+ 	"samsung,exynos5420",
+ 	"samsung,exynos5440",
+ 	NULL
+diff --git a/arch/arm/mach-exynos/platsmp.c b/arch/arm/mach-exynos/platsmp.c
+index 58b43e6..6506ce6 100644
+--- a/arch/arm/mach-exynos/platsmp.c
++++ b/arch/arm/mach-exynos/platsmp.c
+@@ -40,6 +40,8 @@ static inline void __iomem *cpu_boot_reg_base(void)
  {
- 	int rc = 0;
--	kobject_init(&np->kobj, &of_node_ktype);
-+
-+	/* fake the return while of_init is not yet called */
- 	mutex_lock(&of_aliases_mutex);
-+	kobject_init(&np->kobj, &of_node_ktype);
- 	if (of_kset)
- 		rc = __of_node_add(np);
- 	mutex_unlock(&of_aliases_mutex);
-+
- 	return rc;
+ 	if (soc_is_exynos4210() && samsung_rev() == EXYNOS4210_REV_1_1)
+ 		return S5P_INFORM5;
++	if (soc_is_exynos5410())
++		return EXYNOS5410_BOOT_REG;
+ 	return S5P_VA_SYSRAM;
  }
  
-@@ -275,14 +291,16 @@ static int __init of_init(void)
+diff --git a/arch/arm/plat-samsung/include/plat/cpu.h b/arch/arm/plat-samsung/include/plat/cpu.h
+index 335beb3..8f09488 100644
+--- a/arch/arm/plat-samsung/include/plat/cpu.h
++++ b/arch/arm/plat-samsung/include/plat/cpu.h
+@@ -46,6 +46,7 @@ extern unsigned long samsung_cpu_id;
+ #define EXYNOS4_CPU_MASK	0xFFFE0000
  
- 	/* Make sure all nodes added before this time get added to sysfs */
- 	mutex_lock(&of_aliases_mutex);
+ #define EXYNOS5250_SOC_ID	0x43520000
++#define EXYNOS5410_SOC_ID	0xE5410000
+ #define EXYNOS5420_SOC_ID	0xE5420000
+ #define EXYNOS5440_SOC_ID	0xE5440000
+ #define EXYNOS5_SOC_MASK	0xFFFFF000
+@@ -68,6 +69,7 @@ IS_SAMSUNG_CPU(exynos4210, EXYNOS4210_CPU_ID, EXYNOS4_CPU_MASK)
+ IS_SAMSUNG_CPU(exynos4212, EXYNOS4212_CPU_ID, EXYNOS4_CPU_MASK)
+ IS_SAMSUNG_CPU(exynos4412, EXYNOS4412_CPU_ID, EXYNOS4_CPU_MASK)
+ IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
++IS_SAMSUNG_CPU(exynos5410, EXYNOS5410_SOC_ID, EXYNOS5_SOC_MASK)
+ IS_SAMSUNG_CPU(exynos5420, EXYNOS5420_SOC_ID, EXYNOS5_SOC_MASK)
+ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+ 
+@@ -148,6 +150,12 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+ # define soc_is_exynos5250()	0
+ #endif
+ 
++#if defined(CONFIG_SOC_EXYNOS5410)
++# define soc_is_exynos5410()	is_samsung_exynos5410()
++#else
++# define soc_is_exynos5410()	0
++#endif
 +
- 	for_each_of_allnodes(np)
- 		__of_node_add(np);
--	mutex_unlock(&of_aliases_mutex);
+ #if defined(CONFIG_SOC_EXYNOS5420)
+ # define soc_is_exynos5420()	is_samsung_exynos5420()
+ #else
+diff --git a/arch/arm/plat-samsung/include/plat/map-s5p.h b/arch/arm/plat-samsung/include/plat/map-s5p.h
+index c186786..31cac97 100644
+--- a/arch/arm/plat-samsung/include/plat/map-s5p.h
++++ b/arch/arm/plat-samsung/include/plat/map-s5p.h
+@@ -57,6 +57,9 @@
+ #define S3C_UART_OFFSET		(0x400)
+ #endif
  
- 	/* Symlink in /proc as required by userspace ABI */
- 	if (of_allnodes)
- 		proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
- 
-+	mutex_unlock(&of_aliases_mutex);
++#define S5P_VA_SYSRAM_NS_X(x)	(S5P_VA_SYSRAM_NS + (x))
++#define EXYNOS5410_BOOT_REG	S5P_VA_SYSRAM_NS_X(0x1c)
 +
- 	return 0;
- }
- core_initcall(of_init);
+ #include <plat/map-s3c.h>
+ 
+ #endif /* __ASM_PLAT_MAP_S5P_H */
 -- 
-1.7.12
+1.8.1.5
+
