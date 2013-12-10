@@ -1,66 +1,68 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 5/9] ARM: dts: provide DMA config to pxamci
-Date: Tue, 10 Dec 2013 01:25:18 +0100
-Message-ID: <201312100125.18754.arnd@arndb.de>
-References: <1386348542-9584-1-git-send-email-ynvich@gmail.com> <52A59991.1060305@gmail.com> <1386590958.7152.135.camel@host5.omatika.ru>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v2 2/3] pinctrl: Add msm8x74 configuration
+Date: Tue, 10 Dec 2013 00:27:01 -0800
+Message-ID: <20131210082700.GE11990@sonymobile.com>
+References: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1386295805-13708-3-git-send-email-bjorn.andersson@sonymobile.com>
+ <52A24E08.706@codeaurora.org>
+ <CACRpkdb+9DE6WNfBSp9Y8ErhHjaE-PdezJbYvsLLhiCjXfmA-A@mail.gmail.com>
+ <52A63829.10509@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386590958.7152.135.camel@host5.omatika.ru>
+Content-Disposition: inline
+In-Reply-To: <52A63829.10509@codeaurora.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: Daniel Mack <zonque@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, DOCUMENTATION <linux-doc@vger.kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 December 2013, Sergei Ianovich wrote:
-> On Mon, 2013-12-09 at 11:21 +0100, Daniel Mack wrote:
-> > On 12/09/2013 10:34 AM, Sergei Ianovich wrote:
-> > > Nice to have Daniel in this conversation. Your patch series is a big and
-> > > important work. However, I am not sure I will ever land as is exactly
-> > > for this reason.
-> > 
-> > Well, I wouldn't be so certain about that statement. As I wrote in the
-> > cover letter, most of the work is actually done, and I successfully
-> > tested the new DMA support with a some of the drivers I ported. Others
-> > were ported blindly, and in case of no reaction, I'd dare to merge them
-> > and wait for people to report back in case of trouble.
+On Mon 09 Dec 13:37 PST 2013, Stephen Boyd wrote:
+
+> On 12/09/13 00:18, Linus Walleij wrote:
+> > On Fri, Dec 6, 2013 at 11:22 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> >> On 12/05/13 18:10, Bjorn Andersson wrote:
+> > As the driver is merged I expect fixes to come in as additional patches.
+> >
+> >>> Add initial definition of parameters for pinctrl-msm for the msm8x74
+> >>> platform.
+> >> Hmm. We've tried to remove 'x' from our code because it isn't really
+> >> accurate and leads to more confusion.
+> > So does this pin controller have a real name in the data sheet?
 > 
-> If breaking things is an option, I am definitely wrong. I assumed the
-> opposite.
-
-We never intentionally break things that people are using, but there are
-cases where doing blind changes is the best way forward. We should
-always try to find people to test patches on real hardware if possible,
-which is only possible if there are people around that have the hardware
-and that are going to run new kernels on them.
-
-In case of PXA dmaengine support, I think the benefits of applying the
-series far outweigh the breakage potential. A lot of the drivers are
-shared with MMP, which is going to be DT-only eventually and will require
-the new dmaengine code. Some PXA drivers may be shared with SA1100,
-which has also converted to dmaengine although there are no plans to
-ever support DT on sa1100.
-
-> > > My proposal in to actually add new drivers for each platform device with
-> > > DMA and mark new ones EXPERIMENTAL.
-> > 
-> > That would cause tree-wide cross-dependencies between drivers, because
-> > the two DMA controllers can't be used at the same time, and the PXA
-> > specific API will be unavailable when the mmp-dma driver is selected. My
-> > patch series (and the DMA controller framework for that matter) aims for
-> > the opposite - the unification of APIs and drivers.
+> We call it TLMM (top-level mode mux). So far there have been three major
+> revisions of the hardware and 8974 uses the latest version.
 > 
-> Not sure I got this point. My proposal is to keep the existing DMA
-> intact until we are ready to remove it. I understand this approach
-> requires considerably more work inside DMA to allow both driver to
-> coexist than wholesale replacement. I still think big change is risky.
 
-We certainly need to be extra careful if we want to move things over
-at once and cannot test all the drivers. I'd be happier if it could
-be done gradually by having some drivers use the new interface and
-other drivers use the old one, but I don't see how that can be done
-here.
+The pinctrl-msm.c driver would be the TLMM (v2 and v3) driver...
 
-	Arnd
+> >
+> > I usually prefer to name the drivers after the name of the IP
+> > block rather than the SoC if possible.
+> >
+> > Or should it just be named pinctrl-msm.c?
+> 
+> Leaving the pinctrl-msm.c file as in these patches is fine. For the SoC
+> specific data files we should use the base chip name which in this case
+> is 8974. I suppose the goal of pinctrl-msm8x74.c is to support 8974 and
+> 8074 SoCs in the same file because they're almost exactly the same minus
+> some pins losing their "modem" functions. Given that, the file names are
+> fine but the binding and the data structures should be specific about
+> which SoC we're talking about.
+
+...and the pinctrl-msm8x74.c would be the data for SoCs matching that name.
+
+Currently we know that 8074 is a 8974 without modem and the document I have
+describing this incarnation of the SoC describes 8274, 8674 and 8974.
+
+So as Stephen suggest; we could keep the name pinctrl-msm8x74.c as is and
+we change the compatible to be explicit about this is qcom,msm8974-pinctrl.
+
+That would give us room to handle any differences between 8074 and 8974 within
+this file.
+
+What do you say? Should I prepare a patch for this?
+
+Regards,
+Bjorn
+
