@@ -1,88 +1,67 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 2/7] pinctrl: exynos: add exynos5260 SoC specific data
-Date: Tue, 10 Dec 2013 17:04:26 +0100
-Message-ID: <1548210.PeZ57k2d5L@amdc1227>
-References: <1386345391-23482-1-git-send-email-rahul.sharma@samsung.com>
- <1386345391-23482-3-git-send-email-rahul.sharma@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 00/10] Add memory mapped support for ti qspi, m25p80
+ serial flash.
+Date: Tue, 10 Dec 2013 16:11:43 +0000
+Message-ID: <20131210161143.GK29268@sirena.org.uk>
+References: <1386339891-32717-1-git-send-email-sourav.poddar@ti.com>
+ <201312101349.13564.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1386345391-23482-3-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@linaro.org, kgene.kim@samsung.com, thomas.ab@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, pankaj.dubey@samsung.com, yg1004.jang@samsung.com, arun.kk@samsung.com, r.sh.open@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jWPLtjN/TlbXOuX3"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201312101349.13564.marex-ynQEQJNshbs@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Young-Gun, Pankaj, Rahul, Arun,
 
-Please see my comments inline.
+--jWPLtjN/TlbXOuX3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Friday 06 of December 2013 21:26:26 Rahul Sharma wrote:
-> From: Young-Gun Jang <yg1004.jang@samsung.com>
-> 
-> Add Samsung Exynos5260 SoC specific data to enable pinctrl
-> support for all platforms based on EXYNOS5260.
-[snip]
-> diff --git a/drivers/pinctrl/pinctrl-exynos.c b/drivers/pinctrl/pinctrl-exynos.c
-> index 155b1b3..9a93df6 100644
-> --- a/drivers/pinctrl/pinctrl-exynos.c
-> +++ b/drivers/pinctrl/pinctrl-exynos.c
-> @@ -1042,6 +1042,88 @@ struct samsung_pin_ctrl exynos5250_pin_ctrl[] = {
->  	},
->  };
->  
-> +/* pin banks of exynos5260 pin-controller 0 */
-> +static struct samsung_pin_bank exynos5260_pin_banks0[] = {
-> +	EXYNOS_PIN_BANK_EINTG(4, 0x000, "gpa0", 0x00),
-> +	EXYNOS_PIN_BANK_EINTG(7, 0x020, "gpa1", 0x04),
-> +	EXYNOS_PIN_BANK_EINTG(8, 0x040, "gpa2", 0x08),
-> +	EXYNOS_PIN_BANK_EINTG(5, 0x060, "gpb0", 0x0c),
-> +	EXYNOS_PIN_BANK_EINTG(4, 0x080, "gpb1", 0x10),
-> +	EXYNOS_PIN_BANK_EINTG(5, 0x0A0, "gpb2", 0x14),
-> +	EXYNOS_PIN_BANK_EINTG(8, 0x0C0, "gpb3", 0x18),
-> +	EXYNOS_PIN_BANK_EINTG(8, 0x0E0, "gpb4", 0x1c),
-> +	EXYNOS_PIN_BANK_EINTG(8, 0x100, "gpb5", 0x20),
-> +	EXYNOS_PIN_BANK_EINTG(8, 0x120, "gpd0", 0x24),
-> +	EXYNOS_PIN_BANK_EINTG(7, 0x140, "gpd1", 0x28),
-> +	EXYNOS_PIN_BANK_EINTG(5, 0x160, "gpd2", 0x2c),
-> +	EXYNOS_PIN_BANK_EINTG(8, 0x180, "gpe0", 0x30),
-> +	EXYNOS_PIN_BANK_EINTG(5, 0x1A0, "gpe1", 0x34),
-> +	EXYNOS_PIN_BANK_EINTG(4, 0x1C0, "gpf0", 0x38),
-> +	EXYNOS_PIN_BANK_EINTG(8, 0x1E0, "gpf1", 0x3c),
-> +	EXYNOS_PIN_BANK_EINTG(2, 0x200, "gpk0", 0x40),
-> +	EXYNOS_PIN_BANK_EINTW(8, 0xC00, "gpx0", 0x00),
-> +	EXYNOS_PIN_BANK_EINTW(8, 0xC20, "gpx1", 0x04),
-> +	EXYNOS_PIN_BANK_EINTW(8, 0xC40, "gpx2", 0x08),
-> +	EXYNOS_PIN_BANK_EINTW(8, 0xC60, "gpx3", 0x0c),
+On Tue, Dec 10, 2013 at 01:49:13PM +0100, Marek Vasut wrote:
 
-nit: Please use lowercase hexadecimal characters. Despite of already
-existing code, lowercase is the preferred way.
+> My question is, shall we not wait for the new SPI NOR framework to be wel=
+l=20
+> fleshed out and only then implement this controller driver on top of it ?
 
-> +};
-> +
-> +/* pin banks of exynos5260 pin-controller 1 */
-> +static struct samsung_pin_bank exynos5260_pin_banks1[] = {
-> +	EXYNOS_PIN_BANK_EINTG(7, 0x000, "gpc0", 0x00),
-> +	EXYNOS_PIN_BANK_EINTG(6, 0x020, "gpc1", 0x04),
-> +	EXYNOS_PIN_BANK_EINTG(7, 0x040, "gpc2", 0x08),
-> +	EXYNOS_PIN_BANK_EINTG(4, 0x060, "gpc3", 0x0c),
-> +	EXYNOS_PIN_BANK_EINTG(4, 0x080, "gpc4", 0x10),
-> +};
-> +
-> +/* pin banks of exynos5260 pin-controller 2 */
-> +static struct samsung_pin_bank exynos5260_pin_banks2[] = {
-> +	EXYNOS_PIN_BANK_EINTG(7, 0x000, "gpz0", 0x00),
-> +	EXYNOS_PIN_BANK_EINTG(4, 0x020, "gpz1", 0x04),
-> +};
-> +
-> +/*
-> + * Samsung pinctrl driver data for Exynos5260 SoC. Exynos5420 SoC includes
-> + * four gpio/pin-mux/pinconfig controllers.
+> I have a feeling this patchset adds quite a lot of ad-hoc hacks into the =
+m25p80=20
+> driver, which would become dead code once converted to the SPI NOR framew=
+ork.
 
-Hmm, I can see only three of them below. Is there one left undefined?
+There is some stuff that pushes up into the controller in that while the
+device is in memory mapped mode as far as I can tell it's not safe to do
+other accesses so if someone's put more than one device on the SPI bus
+we need to handle interactions there.
 
-Otherwise, the patch looks fine.
+--jWPLtjN/TlbXOuX3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Best regards,
-Tomasz
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSpz08AAoJELSic+t+oim9CsgP/RKihfzVyXn4iAdbIi35lGk+
+UIp4ZMCB8ZhcKnuYZ/h3IskvxE2uscwSjyrZCSSB1ftuz5gSZftK1++duadAP6nU
+BztSGxPK1W74Nd2q+ogY1sfJsj5ICzH21PFw/M7gWS6JT0hczjbFhHFN7OLLYXye
+uoSVGlsKKhXvx/csPaPjjn2n/LkGMGhVOHyKNzDPcyPPfA2vKwzNckDJW1JHWx0K
+eXCDKkG6jczb1qKPvW1wfXzIy1arYlsxMwSMd/QrPhVziBSPPS7/7mCZGCl6QahI
+bUnYMY8gdNxFZi8d1JPk/ZDCScdHEAJihe+IpZ5YXGlwSVHztGe2ebydz5Z5IcTq
+pYjTIZWPeJYtrIkpOBpFTUX/O5EmO6EyE2bloqn75AoJov+DyhhZE+9wZszeZD+7
+oOy/AV89eQn3xlzmgm79KeKzxA/OrstreA/K1djS7vx5EtR5YlUL9N1Y/uhAiV5G
+//BufIYsX3zGQmKHA8e2C/ZB99d6AJIIyH2FoBBh+zhUadR/1HSpqoLa8AfuVNEz
+ByDlG4UJH5maHldkcYu09WQyEVg2qGVmFbBT5p1V39+ECFGvzCAmed0R1XfVRaZD
+frjPzzzmeRo+Vd1XmLkkwxPH98rsSLtr+lS9tCJnnw38IzcOV1r8dlkJrDaNwXrp
+lt1fWSzEK3EIBwlBkIu4
+=xR23
+-----END PGP SIGNATURE-----
+
+--jWPLtjN/TlbXOuX3--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
