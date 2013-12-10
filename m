@@ -1,83 +1,66 @@
-From: Christian Daudt <bcm@fixthebug.org>
-Subject: Re: [PATCH 1/2] ARM: dts: bcm281xx: Add i2c busses
-Date: Mon, 9 Dec 2013 23:28:31 -0800
-Message-ID: <CAEPRUYpbHUsxOkG-VuVwVv7kakBJNnwTa-8+DNMbQ-xZNpPFnw@mail.gmail.com>
-References: <1386373528-13045-1-git-send-email-tim.kryger@linaro.org>
-	<1386373528-13045-2-git-send-email-tim.kryger@linaro.org>
+From: Rajat Jain <rajatjain-3r7Miqu9kMnR7s880joybQ@public.gmane.org>
+Subject: 3 Basic question about devicetrees
+Date: Tue, 10 Dec 2013 07:40:36 +0000
+Message-ID: <e5f7bc7e131b4e92a2d48597952a9eb5@DM2PR05MB671.namprd05.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386373528-13045-2-git-send-email-tim.kryger@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Kryger <tim.kryger@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linaro Patches List <patches@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 6, 2013 at 3:45 PM, Tim Kryger <tim.kryger@linaro.org> wrote:
-> Add the DTS nodes for all the i2c busses in the SoC.
->
-> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
-> Reviewed-by: Christian Daudt <csd@broadcom.com>
-> Reviewed-by: Matt Porter <matt.porter@linaro.org>
-> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-> ---
->  arch/arm/boot/dts/bcm11351.dtsi | 40 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-> index 1246885..4bfd7e3 100644
-> --- a/arch/arm/boot/dts/bcm11351.dtsi
-> +++ b/arch/arm/boot/dts/bcm11351.dtsi
-> @@ -146,6 +146,46 @@
->                 status = "disabled";
->         };
->
-> +       i2c@3e016000 {
-> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
-> +               reg = <0x3e016000 0x80>;
-> +               interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               clocks = <&bsc1_clk>;
-> +               status = "disabled";
-> +       };
-> +
-> +       i2c@3e017000 {
-> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
-> +               reg = <0x3e017000 0x80>;
-> +               interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               clocks = <&bsc2_clk>;
-> +               status = "disabled";
-> +       };
-> +
-> +       i2c@3e018000 {
-> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
-> +               reg = <0x3e018000 0x80>;
-> +               interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               clocks = <&bsc3_clk>;
-> +               status = "disabled";
-> +       };
-> +
-> +       i2c@3500d000 {
-> +               compatible = "brcm,bcm11351-i2c", "brcm,kona-i2c";
-> +               reg = <0x3500d000 0x80>;
-> +               interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               clocks = <&pmu_bsc_clk>;
-> +               status = "disabled";
-> +       };
-> +
->         clocks {
->                 bsc1_clk: bsc1 {
->                         compatible = "fixed-clock";
-> --
-> 1.8.0.1
->
-Applied to armsoc/for-3.14/dt
- thanks,
-  csd
+Hello,
+
+I'm a newbie to devicetrees, and am trying to understand and create device tree for a new powerpc platform. My questions: 
+
+1) For a PCI-PCI bridge that I'm representing like this:
+
+pcie@2,3 {
+	vendor-id = <0x10b5>;
+      device-id = <0x8618>;
+      class-code = <0x060400>;
+      #size-cells = <2>;
+      #address-cells = <3>;
+      device_type = "pci";
+      bus-range = <0x20 0x2f>;
+      reg = <0x00021800 0x00000000 0x000000000        /* Cfg:2.3.0: */
+             0x00000000 0x00000000>;
+      ranges = <0x02000000 0x00000000 0xA0000000      /* Mem behind bridge: 0xA0000000 - 0xA03FFFFF */
+                0x02000000 0x00000000 0xA0000000
+                0x00000000 0x04000000>;
+};
+
+Is the above is only to _notify_ the kernel that this is how the firmware shall be setting the PCI bridge (Thus firmware has obligation of setting it like this before passing control to the kernel), and hence the kernel will merely take note of it? 
+
+Or is the above telling the kernel that this is how the kernel should _setup_ the device (thus firmware does not set up the device, but rather the kernel use this info to setup the device)?
+
+2) For an PCI endpoint that I am representing like this:
+
+
+xyz@20,0 {
+	vendor-id = ...
+      device-id = ...
+      class-code = <0x0880>;
+      compatible = ...
+	...
+      reg = <0x00200000 0x00000000 0x00000000 /* Cfg:20.0.0: */
+             0x00000000 0x00000000
+             0x02200010 0x00000000 0xA0000000 /* Mem:20.0.0:(Bar0) 64MB@0xA0000000 */
+             0x00000000 0x04000000>;
+	...
+};
+
+Does the above tell the kernel to _program_ the BAR0 register using the above address? Or does it cause the kernel to assume that the BAR0 has been programmed with this address?
+
+3) Lastly, what is the difference in behavior when I select PCI_PROBE_NORMAL over PCI_PROBE_DEVTREE? 
+
+Thanks,
+
+Rajat
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
