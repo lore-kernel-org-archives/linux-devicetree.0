@@ -1,40 +1,65 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v4 0/9] ARM: Initial support for Marvell Berlin SoCs
-Date: Tue, 10 Dec 2013 11:38:29 -0800
-Message-ID: <CAOesGMhMAC56AK5YwA2ROzQ5b6HuWXzF31HDCyx7fYzka6WvHQ@mail.gmail.com>
-References: <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<52A674F1.7000104@gmail.com>
-	<20131210191653.GA10105@quad.lixom.net>
-	<201312102033.00953.arnd@arndb.de>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH] dt: Document a compatible entry for MDIO ethernet Phys
+Date: Tue, 10 Dec 2013 12:39:47 -0700
+Message-ID: <20131210193947.GU5429@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201312102033.00953.arnd-r2nGTMty4D4@public.gmane.org>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 10, 2013 at 11:33 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 10 December 2013, Olof Johansson wrote:
->> > I started with mach-mvebu in the first RFC, but Berlin SoCs are from a
->> > different business unit at Marvell and are more PXA compatible than
->> > Orion/Kirkwood/Armada 370/XP. Most notably, they lack the "mbus" and
->> > IP is either from PXA/MMP or Synopsys DW. Thomas Petazzoni and also
->> > Jisheng Zhang from Marvell suggested to not put it into mvebu but
->> > have a different mach folder instead.
->>
->> Hmm, ok. Well, maybe later on we can look at aggregating them more again. It'd
->> be nice to get fewer top-level platform directories per vendor.
->
-> I possibly a lot of directories just become empty in the long run and
-> we remove them once all all code has been subsystemized and drivered.
+This describes a compatible entry of the form:
+  ethernet-phy-idAAAA,BBBB
+Which is modelled after the PCI structured compatible entry
+(pciVVVV,DDDD.SSSS.ssss.RR)
 
-For mobile SoCs it's somewhat unlikely that it will ever be completely
-empty, but maybe. Either way, once the contents is small enough it's a
-lot easier to move around and aggregate into one platform.
+If present the OF core will be able to use this information to
+directly create the correct phy without auto probing the bus.
 
--Olof
+Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/phy.txt | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+Patch to parse this compatible string to follow if this binding is
+acceptable.
+
+Please see
+
+http://www.spinics.net/lists/devicetree/msg13175.html
+
+For discussion and a conceptual parsing patch.
+
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index 7cd18fb..d70b535 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -23,10 +23,18 @@ Optional Properties:
+   assume clause 22. The compatible list may also contain other
+   elements.
+ 
++  If the phy's identifier is known then the list may contain an entry
++  of the form: "ethernet-phy-idAAAA,BBBB" where
++     AAAA - The value of the 16 bit Phy Identifier 1 register as
++            4 hex digits. This is the chip vendor OUI bits 3:18
++     BBBB - The value of the 16 bit Phy Identifier 2 register as
++            4 hex digits. This is the chip vendor OUI bits 19:24,
++            followed by 10 bits of a vendor specific ID.
++
+ Example:
+ 
+ ethernet-phy@0 {
+-	compatible = "ethernet-phy-ieee802.3-c22";
++	compatible = "ethernet-phy-id0141,0e90", "ethernet-phy-ieee802.3-c22";
+ 	linux,phandle = <2452000>;
+ 	interrupt-parent = <40000>;
+ 	interrupts = <35 1>;
+-- 
+1.8.1.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
