@@ -1,88 +1,84 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH v2 2/3] pinctrl: Add msm8x74 configuration
-Date: Tue, 10 Dec 2013 00:41:41 -0800
-Message-ID: <20131210084140.GF11990@sonymobile.com>
-References: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1386295805-13708-3-git-send-email-bjorn.andersson@sonymobile.com>
- <52A24E08.706@codeaurora.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v4 0/9] ARM: Initial support for Marvell Berlin SoCs
+Date: Mon, 9 Dec 2013 17:40:43 -0800
+Message-ID: <20131210014043.GA32701@quad.lixom.net>
+References: <1383661723-17956-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1386512047-874-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52A24E08.706@codeaurora.org>
+In-Reply-To: <1386512047-874-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 06 Dec 14:22 PST 2013, Stephen Boyd wrote:
+Hi,
 
-> > +config PINCTRL_MSM8X74
-> > +	bool "Qualcomm 8x74 pin controller driver"
-> > +	select PINCTRL_MSM
+On Sun, Dec 08, 2013 at 03:13:57PM +0100, Sebastian Hesselbarth wrote:
+> Hopefully last round of initial support patches for Marvell Berlin SoCs
+> before I can send the final PR for v3.14.
 > 
-> No help?
+> Compared to last version sent, this patch set has now a Reviewed-by from
+> Thomas Gleixner for the irqchip driver (Thanks for that!). Also, l2x0
+> compatibles can now be reordered alphabetically instead of by derivate
+> thanks to [1].
 > 
-
-I could write something up, although I guess someone will add a
-select PINCTRL_MSM8X74 in the mach-msm Kconfig and then we're done
-with it.
-
-> > +		.ctl_reg = 0x1000 + 0x10 * id ,		\
+> Marvell Docs have been updated to not mention Armada 1000 which has been
+> discontinued by Marvell and vanished from their website. The dtsi/dts file
+> have been renamed to vendor,name.dts[i], which is the preferred new naming
+> scheme.
 > 
-> Weird trailing space here.
+> Open issues are the never ending dw_apb_timers_of story, which I ignore
+> for now and hope they get in someday. Also, TWD SMP dependency and
+> early l2x0_of_init will be addressed at a later date. At the current
+> feature set of Berlin SoC, I don't see why the above issues should further
+> stall this patches.
 > 
+> I guess, all patches can go through ARM SoC tree, except Tauros3 patch
+> which I should submit to Russell's patch tracker?
 
-Oops.
+Yep, sounds good.
 
-> Also, do we ever plan to have anything more than the gpio pins and the
-> sdc pins? It seems like we spend a lot of space describing exactly the
-> same thing in these structs for each of the 146 gpio pins when we could
-> just know that range 0 to 146 is gpio pins and have different code for
-> that part vs the 6 or something sd pins.
+I took a cursory glance at the patchset and it looks sane to me. I didn't
+review in detail though.
+
+One open question: Why don't you just add this to mach-mvebu? I thought
+all modern Marvell platforms were going to converge on that eventually
+anyway, and it's easy to add it now that it's early and simple..
+
+Also, see below:
+
+> Sebastian Hesselbarth (9):
+>   irqchip: add DesignWare APB ICTL interrupt controller
+>   MAINTAINERS: add ARM Marvell Berlin SoC
+>   ARM: l2x0: add Marvell Tauros3 support
+>   ARM: add Marvell Berlin SoC familiy to Marvell doc
+>   ARM: add Marvell Berlin SoCs to multi_v7_defconfig
+>   ARM: add Marvell Berlin UART0 lowlevel debug
+>   ARM: add Armada 1500 and Sony NSZ-GS7 device tree files
+>   ARM: add Armada 1500-mini and Chromecast device tree files
+>   ARM: add initial support for Marvell Berlin SoCs
 > 
+>  Documentation/arm/Marvell/README                   |  24 +++
+>  Documentation/devicetree/bindings/arm/l2cc.txt     |  23 ++-
+>  .../devicetree/bindings/arm/marvell,berlin.txt     |  24 +++
+>  .../interrupt-controller/snps,dw-apb-ictl.txt      |  32 +++
+>  MAINTAINERS                                        |   6 +
+>  arch/arm/Kconfig                                   |   2 +
+>  arch/arm/Kconfig.debug                             |  10 +
+>  arch/arm/Makefile                                  |   1 +
+>  arch/arm/boot/dts/Makefile                         |   3 +
+>  arch/arm/boot/dts/google,chromecast.dts            |  29 +++
+>  arch/arm/boot/dts/marvell,berlin2.dtsi             | 227 +++++++++++++++++++++
+>  arch/arm/boot/dts/marvell,berlin2cd.dtsi           | 210 +++++++++++++++++++
+>  arch/arm/boot/dts/sony,nsz-gs7.dts                 |  29 +++
 
-We have to have a pingroup list, so I did look at having that list
-referencing a common object with the gpio/sdc specific data.
+We have had a long-standing standard of naming the dts files
+<family>-<board>.dts (or <soc_vendor>-<board>.dts).  Let's continue
+sticking to that since it helps keep the namespace somewhat segmented per
+platform in arch/arm/boot/dts.
 
-But just having it in one large blob is the way that other pinctrl
-drivers does it and hence a common problem to pinctrl and multi-platform
-arm support.
 
-I have not seen any code in the open referencing the other pins, so I
-left them out for now.
-
-> > +
-> > +static struct of_device_id msm8x74_pinctrl_of_match[] = {
-> 
-> const?
-> 
-
-Of course.
-
-> >
-> > +
-> > +static int __init msm8x74_pinctrl_init(void)
-> > +{
-> > +	return platform_driver_register(&msm8x74_pinctrl_driver);
-> > +}
-> > +arch_initcall(msm8x74_pinctrl_init);
-> > +
-> > +static void __exit msm8x74_pinctrl_exit(void)
-> > +{
-> > +	platform_driver_unregister(&msm8x74_pinctrl_driver);
-> > +}
-> > +module_exit(msm8x74_pinctrl_exit);
-> 
-> Why not module_platform_driver()? I thought pinctrl supported deferred
-> probing?
-> 
-
-As this pinctrl/gpiochip/interrupt-controller is a fairly central part
-of the system there's plenty of things that would just end up being deferred.
-
-Most other pinctrl driver does arch_initcall or core_initcall, so I followed
-suit and brought it in early.
-
-Regards,
-Bjorn
+-Olof
