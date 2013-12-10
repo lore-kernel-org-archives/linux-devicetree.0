@@ -1,128 +1,57 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [RFC PATCH v3 2/8] mmc: omap_hsmmc: handle vcc and vcc_aux independently
-Date: Tue, 10 Dec 2013 12:09:46 +0100
-Message-ID: <CAPDyKFqAT+Zd4LmAJ91g603LXx2rAfoRhF1UK4XNzSUVNS0X9w@mail.gmail.com>
-References: <20130613174554.GB1403@sirena.org.uk>
-	<1385043627-30439-1-git-send-email-balajitk@ti.com>
-	<1385043627-30439-3-git-send-email-balajitk@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: add hym8563 binding
+Date: Tue, 10 Dec 2013 11:17:13 +0000
+Message-ID: <20131210111713.GF29268@sirena.org.uk>
+References: <201312092219.11342.heiko@sntech.de>
+ <201312092220.30894.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1385043627-30439-3-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap <linux-omap@vger.kernel.org>, Benoit Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IHeoZqE8eTKrPZZA"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201312092220.30894.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Richard Weinberger <richard.weinberger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 November 2013 15:20, Balaji T K <balajitk@ti.com> wrote:
-> handle vcc and vcc_aux independently to reduce indent.
->
-> Signed-off-by: Balaji T K <balajitk@ti.com>
-> ---
->  drivers/mmc/host/omap_hsmmc.c |   54 +++++++++++++++++++----------------------
->  1 files changed, 25 insertions(+), 29 deletions(-)
->
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index 1eb4350..342be25 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -286,11 +286,12 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
->          * chips/cards need an interface voltage rail too.
->          */
->         if (power_on) {
-> -               ret = mmc_regulator_set_ocr(host->mmc, host->vcc, vdd);
-> +               if (host->vcc)
-> +                       ret = mmc_regulator_set_ocr(host->mmc, host->vcc, vdd);
->                 /* Enable interface voltage rail, if needed */
->                 if (ret == 0 && host->vcc_aux) {
->                         ret = regulator_enable(host->vcc_aux);
-> -                       if (ret < 0)
-> +                       if (ret < 0 && host->vcc)
->                                 ret = mmc_regulator_set_ocr(host->mmc,
->                                                         host->vcc, 0);
->                 }
-> @@ -298,7 +299,7 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
->                 /* Shut down the rail */
->                 if (host->vcc_aux)
->                         ret = regulator_disable(host->vcc_aux);
-> -               if (!ret) {
-> +               if (host->vcc) {
->                         /* Then proceed to shut down the local regulator */
->                         ret = mmc_regulator_set_ocr(host->mmc,
->                                                 host->vcc, 0);
-> @@ -318,10 +319,10 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
->
->         reg = devm_regulator_get(host->dev, "vmmc");
->         if (IS_ERR(reg)) {
-> -               dev_err(host->dev, "vmmc regulator missing\n");
-> +               dev_err(host->dev, "unable to get vmmc regulator %ld\n",
-> +                       PTR_ERR(reg));
->                 return PTR_ERR(reg);
->         } else {
-> -               mmc_slot(host).set_power = omap_hsmmc_set_power;
->                 host->vcc = reg;
->                 ocr_value = mmc_regulator_get_ocrmask(reg);
->                 if (!mmc_slot(host).ocr_mask) {
-> @@ -334,31 +335,26 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
->                                 return -EINVAL;
->                         }
->                 }
-> +       }
-> +       mmc_slot(host).set_power = omap_hsmmc_set_power;
->
-> -               /* Allow an aux regulator */
-> -               reg = devm_regulator_get_optional(host->dev, "vmmc_aux");
-> -               host->vcc_aux = IS_ERR(reg) ? NULL : reg;
-> +       /* Allow an aux regulator */
-> +       reg = devm_regulator_get_optional(host->dev, "vmmc_aux");
-> +       host->vcc_aux = IS_ERR(reg) ? NULL : reg;
->
-> -               /* For eMMC do not power off when not in sleep state */
-> -               if (mmc_slot(host).no_regulator_off_init)
-> -                       return 0;
-> -               /*
-> -               * UGLY HACK:  workaround regulator framework bugs.
-> -               * When the bootloader leaves a supply active, it's
-> -               * initialized with zero usecount ... and we can't
-> -               * disable it without first enabling it.  Until the
-> -               * framework is fixed, we need a workaround like this
-> -               * (which is safe for MMC, but not in general).
-> -               */
 
-The above problem is handled by the mmc core layer. I certainly think
-you shall adopt your code to it.
+--IHeoZqE8eTKrPZZA
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Kind regards
-Ulf Hansson
+On Mon, Dec 09, 2013 at 10:20:30PM +0100, Heiko St=FCbner wrote:
+> Add binding documentation for the hym8563 rtc chip.
+>=20
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-> -               if (regulator_is_enabled(host->vcc) > 0 ||
-> -                   (host->vcc_aux && regulator_is_enabled(host->vcc_aux))) {
-> -                       int vdd = ffs(mmc_slot(host).ocr_mask) - 1;
-> +       /* For eMMC do not power off when not in sleep state */
-> +       if (mmc_slot(host).no_regulator_off_init)
-> +               return 0;
-> +       /*
-> +        * To disable boot_on regulator, enable regulator
-> +        * to increase usecount and then disable it.
-> +        */
-> +       if ((host->vcc && regulator_is_enabled(host->vcc) > 0) ||
-> +           (host->vcc_aux && regulator_is_enabled(host->vcc_aux))) {
-> +               int vdd = ffs(mmc_slot(host).ocr_mask) - 1;
->
-> -                       mmc_slot(host).set_power(host->dev, host->slot_id,
-> -                                                1, vdd);
-> -                       mmc_slot(host).set_power(host->dev, host->slot_id,
-> -                                                0, 0);
-> -               }
-> +               mmc_slot(host).set_power(host->dev, host->slot_id, 1, vdd);
-> +               mmc_slot(host).set_power(host->dev, host->slot_id, 0, 0);
->         }
->
->         return 0;
-> --
-> 1.7.5.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+--IHeoZqE8eTKrPZZA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSpvg2AAoJELSic+t+oim9OT4P/jksKFNrcA9bM0Cxewsi4Fh/
+f+iwT7hJP9S5t1OrGd2KhGqA5dgXqlnv/NoOfjSekFxhGhkWjlv3AmimUmMa1dsd
+J70F/zBSPLGHIUxc6eiQc3X0saDi5VL/o9J68KcWCspseh9tmFw8a9UYFM1qLXoM
+eBoMw7bu9GVbB6J5HDcEgklYry52wYW14JlPgKgXFQaczlBtq3HeXUQajKIE/tbb
+aFtI8hKcKVDQqil4QRSv4M2ASz+UXlhKxuJKHgvU4Ob217gsokazzbWcpBhKsu+U
+kz2EuoVZP2dBUhgMOyHkWC7hJRnKHSkurErgew5XPM9A5rhshe+Zlsa1sSzL4l9R
+h19ouWgOdjHJip+vkiWn3DuK193WBnw2w4CJ+WuEcQfdl1zEyS9QTGKQua1NTZwc
+cqLhRPHUMkDKyrff39kI7aXfcUUliMzynWjYqRZSmwCgEqH8hKmU4YO8j/w8WPSF
+pEy2FcPOdggyIiEnUPWoUtFOE9EiaGjJEaZy7Gf36CL5xfBtKRhSZjTa8RbuvMmd
+GhiWmr2xBtBmdAj28SqGeuCAmEPXBCBKZ/zfLHvio+oXRSOKk9j2ynWAnnESDmAm
+pHRoHDOIFQ/0ue8cEF2qT3HyEtIxiIeMRtzwmyL1EKeTp1TIXJhzNdXJtShT+AbK
+9hl32tPtI8zD1d0NZOfw
+=LbhQ
+-----END PGP SIGNATURE-----
+
+--IHeoZqE8eTKrPZZA--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
