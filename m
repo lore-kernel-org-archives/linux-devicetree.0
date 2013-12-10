@@ -1,97 +1,158 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 3/7] regulator: add pbias regulator support
-Date: Tue, 10 Dec 2013 10:40:05 +0000
-Message-ID: <20131210104005.GB29268@sirena.org.uk>
-References: <1385043627-30439-1-git-send-email-balajitk@ti.com>
- <1386670577-3530-1-git-send-email-balajitk@ti.com>
- <1386670577-3530-4-git-send-email-balajitk@ti.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH 2/2] memory: ti-aemif: add bindings for AEMIF driver
+Date: Tue, 10 Dec 2013 12:40:40 +0200
+Message-ID: <52A6EFA8.8090804@ti.com>
+References: <1384962416-14862-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1384962416-14862-3-git-send-email-ivan.khoronzhuk@ti.com>
+ <817E4263-5E61-4471-AED0-5C97FD2B902F@kernel.crashing.org>
+ <5294CC0C.9000203@ti.com>
+ <01B6F752-AD19-437E-B6A6-CC167B6C34BF@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Y6v6BlSmAeeSvrQk"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1386670577-3530-4-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, tony@atomide.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <01B6F752-AD19-437E-B6A6-CC167B6C34BF@kernel.crashing.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kumar Gala <galak@kernel.crashing.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-mtd@lists.infradead.org, Rob Landley <rob@landley.net>, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 12/10/2013 01:09 AM, Kumar Gala wrote:
+> =
 
---Y6v6BlSmAeeSvrQk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Nov 26, 2013, at 10:27 AM, Grygorii Strashko <grygorii.strashko@ti.com=
+> wrote:
+> =
 
-On Tue, Dec 10, 2013 at 03:46:13PM +0530, Balaji T K wrote:
+>> On 11/22/2013 11:04 PM, Kumar Gala wrote:
+>>>
+>>> On Nov 20, 2013, at 9:46 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com> w=
+rote:
+>>>
+>>>> Add bindings for AEMIF controller drivers/memory/ti-aemif.c
+>>>>
+>>>
+>>> Binding shouldn=92t normally refer to code.
+>>>
+>>> Just saying something like:
+>>>
+>>> Adding binging for TI Async External Memory Interface (AEMIF) controlle=
+r.
+>>>
+>>>
+>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>>> ---
+>>>> .../bindings/memory-controllers/ti-aemif.txt       |  198 ++++++++++++=
+++++++++
+>>>> 1 file changed, 198 insertions(+)
+>>>> create mode 100644 Documentation/devicetree/bindings/memory-controller=
+s/ti-aemif.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/ti-a=
+emif.txt b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
+>>>> new file mode 100644
+>>>> index 0000000..be0c0cb
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
+>>>> @@ -0,0 +1,198 @@
+>>>> +* Device tree bindings for Texas instruments AEMIF controller
+>>>> +
+>>>> +Th Async External Memory Interface (EMIF16/AEMIF) controller is inten=
+ded to
+>>>
+>>> The?
+>>>
+>>>> +provide a glue-less interface to a variety of asynchronous memory dev=
+ices like
+>>>> +ASRA M, NOR and NAND memory. A total of 256M bytes of any of these me=
+mories
+>>>> +can be accessed at any given time via four chip selects with 64M byte=
+ access
+>>>> +per chip select. Synchronous memories such as DDR1 SD RAM, SDR SDRAM
+>>>> +and Mobile SDR are not supported.
+>>>> +
+>>>> +Documentation:
+>>>> +Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
+>>>> +OMAP-L138 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
+>>>> +Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
+>>>> +
+>>>> +Required properties:
+>>>> +
+>>>> +- compatible:		"ti,davinci-aemif"
+>>>> +			"ti,keystone-aemif"
+>>>> +			"ti,omap-L138-aemif"
+>>>> +
+>>>> +- #address-cells:	Must be 2. The first cell is the memory partition
+>>>> +			number. The 0 partition is for chip selects. And the
+>>>> +			second cell is the offset into the partition, for the 0
+>>>> +			partition it corresponds to chip select offset.
+>>>> +
+>>>
+>>> Is the first cell just the chip select number?
+>>
+>> No. It's rather memory range/partition number. Now there are 2 partition=
+s:
+>> - control partition which is common for all CS interfaces
+>> - CS-specific partition/range
+>> (this one can be splitted according to specific SoC requirement)
+>>
+>> As per Keystone TCI6638K2K
+>> Datasheet http://www.ti.com/lit/ds/sprs836d/sprs836d.pdf:
+>>
+>> 1) the memory range 0 will be from 0x30000000 size 0x10000000:
+>> 00 3000 0000 - 00 33FF FFFF 64M EMIF16 CE0
+>> 00 3400 0000 - 00 37FF FFFF 64M EMIF16 CE1
+>> 00 3800 0000 - 00 3BFF FFFF 64M EMIF16 CE2
+>> 00 3C00 0000 - 00 3FFF FFFF 64M EMIF16 CE3
+>>
+>> 2) the memory range 1:
+>> 00 2100 0A00 - 00 2100 0AFF 256 AEMIF Config
+>>
+>> And AEMIF node contains definition:
+>> ranges =3D <0 0 0x30000000 0x10000000
+>> 	  1 0 0x21000A00 0x0000100>;
+>>
+>>
+>> Child node has (nand):
+>> reg =3D <0 0 0x4000000 (cs0)
+>>         - or - 0 0x4000000 0x4000000 (cs1)
+>>         - or - 0 0x8000000 0x4000000 (cs2)
+>> 	- or - 0 0xC000000 0x4000000 (cs3)
+>> 	- and -
+>>         1 0 0x0000100>; (for all cs)
+>>
+>> For example for cs2 child node the resulting mem range 0 will be calcula=
+ted as
+>>
+>> from: 0x30000000 + (0 0x8000000 - 0 0)
+>> size: 0x4000000
+>>
+>> We don't encode CS number in reg/ranges, because it will allow simply ch=
+ange
+>> AEMIF DT definitions depending on each SoC
+>> (AEMIF CS memory range can be continuous as above or not, if not - addit=
+ional
+>> range/partition can be added and child device can select the proper one).
+> =
 
-> +config REGULATOR_PBIAS
-> +	tristate "PBIAS OMAP regulator driver"
-> +	depends on ARCH_OMAP && MFD_SYSCON
+> This is quite confusing.  I think the ranges property needs far more desc=
+ription as part of the top level controller node.  It spec out what the var=
+ious fields are in the ranges property.
+> =
 
-That should be (ARCH_OMAP || COMPILE_TEST) && MFD_SYSCON
 
-> +static int pbias_regulator_set_voltage(struct regulator_dev *dev,
-> +			int min_uV, int max_uV, unsigned *selector)
-> +{
-> +	struct pbias_regulator_data *data = rdev_get_drvdata(dev);
-> +	const struct pbias_reg_info *info = data->info;
-> +	int ret, vmode;
-> +
-> +	if (min_uV <= 1800000)
-> +		vmode = 0;
-> +	else if (min_uV > 1800000)
-> +		vmode = info->vmode;
-> +
-> +	ret = regmap_update_bits(data->syscon, data->pbias_reg,
-> +						info->vmode, vmode);
-> +	data->voltage = min_uV;
+Yes, you are right, description is quite poor. I should describe it more cl=
+early
 
-This is exactly the same as it was the first time it was posted and is
-still buggy.  To repeat the get and set voltage functions should reflect
-the actual voltage set in the hardware.
+-- =
 
-> +static int pbias_regulator_is_enable(struct regulator_dev *rdev)
-> +{
-> +	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
-> +	const struct pbias_reg_info *info = data->info;
-> +	int value;
-> +
-> +	regmap_read(data->syscon, data->pbias_reg, &value);
-> +
-> +	return value & info->enable_mask;
-> +}
-
-If the enable mask really can have multiple bits this won't do the right
-thing - it'll return true if any bits are set.  It needs to make sure
-all the bits are set.
-
-> +#if CONFIG_OF
-
-Why?
-
-> +	drvdata->desc.n_voltages = 3;
-
-This doesn't match your implementation which can only set two voltages.
-
---Y6v6BlSmAeeSvrQk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSpu+BAAoJELSic+t+oim93y4QAIOSQ/XtYlTWEtImzEqZHmXX
-oLQJPpcslbp+Qam0Um2hZe5WVg4131HhhH2vQl3TplcW/JU1oxUUEbn2rH7Stguz
-5aC7uY9493Ue9mdrh39u90MIl2/u6c2aP2RU5K1RS6qkSFdLl5pSaWeGVBfwh2Rg
-x38c11SQkjEbXHg0w05xTjoNz+C7Y2wWdkYlKLkObmCiBZLC4SvNMFXepK7E8HYC
-UuUJf8XNpjOBCS3qWxiwvORZLQGO24pipfooVTa2ynCOKy6YcVEIw3mLxiyYdAg6
-BG+O9+M+y9urKyRVQhlgevJTMYycEQq5E0cOJIp0v/UkO0XZCspf7dyOpFwMN0mJ
-f1/G8MjHdVsKoxSa/uR/M/YKoyVq4B8vFCVu+HWXcQ+cpT8PZ6polY31VY2CS9W7
-Mu7EJitTgElg08FOipjqy6w7HRcEkM9lfWMPPL2CS71DGvobfb6mfoWNkLm7EVd5
-gp3prrauF49GusHWRelmZUkNSqS5WKp/hxK3OzsgapYfGvI0JWRq4mXeuMf0p6IJ
-miPl5p89bv3ElURzDqF6AB+ofXAYklX63w36QS9BFUw/rW8Jp3/0rs3oR25l9abp
-NFS57wYzJAzh9HuRvcMtDvkNJBB/jeoV8FlT4Aktz7H67C4axJX84pa6XMC7X6MZ
-klrc5uOYJR/8sWkOGcQb
-=witk
------END PGP SIGNATURE-----
-
---Y6v6BlSmAeeSvrQk--
+Regards,
+Ivan Khoronzhuk
