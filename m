@@ -1,67 +1,65 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 00/10] Add memory mapped support for ti qspi, m25p80
- serial flash.
-Date: Tue, 10 Dec 2013 16:11:43 +0000
-Message-ID: <20131210161143.GK29268@sirena.org.uk>
-References: <1386339891-32717-1-git-send-email-sourav.poddar@ti.com>
- <201312101349.13564.marex@denx.de>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH v5 0/3] Exynos 5410 support
+Date: Tue, 10 Dec 2013 08:40:39 -0800
+Message-ID: <87ppp48xrs.fsf@linaro.org>
+References: <1386685599-31536-1-git-send-email-v.tyrtov@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jWPLtjN/TlbXOuX3"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201312101349.13564.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1386685599-31536-1-git-send-email-v.tyrtov@samsung.com>
+	(Vyacheslav Tyrtov's message of "Tue, 10 Dec 2013 18:26:36 +0400")
+Sender: linux-doc-owner@vger.kernel.org
+To: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>, Dave.Martin@arm.com, nicolas.pitre@linaro.org, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Vyacheslav Tyrtov <v.tyrtov@samsung.com> writes:
 
---jWPLtjN/TlbXOuX3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The series of patches represent support of Exynos 5410 SoC
+>
+> The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture
+>
+> Patches add new platform description, support of clock controller and device 
+> tree for Exynos 5410.
+>
+> Dual cluster support for Exynos 5410 (EDCS) has been removed from this series 
+> This patches is activating only the big cluster (all A15 cores)
 
-On Tue, Dec 10, 2013 at 01:49:13PM +0100, Marek Vasut wrote:
+Testing this series on top of v3.13-rc3, plus a couple of other
+necessary changes (which should've probably been noted in the changelog):
 
-> My question is, shall we not wait for the new SPI NOR framework to be wel=
-l=20
-> fleshed out and only then implement this controller driver on top of it ?
+1) change CONFIG_NR_CPUS=8 in .config
+2) add the exynos combiner patch from Chander:
+   [PATCH v2] irqchip: exynos-combiner: remove hard-coded irq_base value
 
-> I have a feeling this patchset adds quite a lot of ad-hoc hacks into the =
-m25p80=20
-> driver, which would become dead code once converted to the SPI NOR framew=
-ork.
+I'm still only seeing 2 out of 4 cores come up on my odroid-xu:
 
-There is some stuff that pushes up into the controller in that while the
-device is in memory mapped mode as far as I can tell it's not safe to do
-other accesses so if someone's put more than one device on the SPI bus
-we need to handle interactions there.
+[    0.045000] CPU: Testing write buffer coherency: ok
+[    0.045000] CPU0: update cpu_power 1024
+[    0.045000] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.045000] Setting up static identity map for 0x403717d8 - 0x40371830
+[    0.045000] CPU1: Booted secondary processor
+[    0.065000] CPU1: update cpu_power 1024
+[    0.065000] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+[    1.075000] CPU2: failed to boot: -38
+[    2.075000] CPU3: failed to boot: -38
+[    2.075000] Brought up 2 CPUs
+[    2.075000] SMP: Total of 2 processors activated.
+[    2.075000] CPU: All CPU(s) started in SVC mode.
 
---jWPLtjN/TlbXOuX3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Full boot log below.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Kevin
 
-iQIcBAEBAgAGBQJSpz08AAoJELSic+t+oim9CsgP/RKihfzVyXn4iAdbIi35lGk+
-UIp4ZMCB8ZhcKnuYZ/h3IskvxE2uscwSjyrZCSSB1ftuz5gSZftK1++duadAP6nU
-BztSGxPK1W74Nd2q+ogY1sfJsj5ICzH21PFw/M7gWS6JT0hczjbFhHFN7OLLYXye
-uoSVGlsKKhXvx/csPaPjjn2n/LkGMGhVOHyKNzDPcyPPfA2vKwzNckDJW1JHWx0K
-eXCDKkG6jczb1qKPvW1wfXzIy1arYlsxMwSMd/QrPhVziBSPPS7/7mCZGCl6QahI
-bUnYMY8gdNxFZi8d1JPk/ZDCScdHEAJihe+IpZ5YXGlwSVHztGe2ebydz5Z5IcTq
-pYjTIZWPeJYtrIkpOBpFTUX/O5EmO6EyE2bloqn75AoJov+DyhhZE+9wZszeZD+7
-oOy/AV89eQn3xlzmgm79KeKzxA/OrstreA/K1djS7vx5EtR5YlUL9N1Y/uhAiV5G
-//BufIYsX3zGQmKHA8e2C/ZB99d6AJIIyH2FoBBh+zhUadR/1HSpqoLa8AfuVNEz
-ByDlG4UJH5maHldkcYu09WQyEVg2qGVmFbBT5p1V39+ECFGvzCAmed0R1XfVRaZD
-frjPzzzmeRo+Vd1XmLkkwxPH98rsSLtr+lS9tCJnnw38IzcOV1r8dlkJrDaNwXrp
-lt1fWSzEK3EIBwlBkIu4
-=xR23
------END PGP SIGNATURE-----
 
---jWPLtjN/TlbXOuX3--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Connected to odroid-xu console [channel connected] (~$quit to exit)
+(user:khilman) is already connected
+(user:khilman) is already connected
+
+~$hardreset
+
+/ # 
+Command(odroid-xu console)> hardreset
+(user:khilman) Reboot odroid-xu
+.~;+wQt.
