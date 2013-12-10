@@ -1,46 +1,88 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH 2/2] time: clockevents: Adjust timer interval when frequency changes
-Date: Mon,  9 Dec 2013 16:34:46 -0800
-Message-ID: <1386635686-15686-3-git-send-email-soren.brinkmann@xilinx.com>
-References: <alpine.DEB.2.02.1312071151340.30673@ionos.tec.linutronix.de>
- <1386635686-15686-1-git-send-email-soren.brinkmann@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386635686-15686-1-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v2 2/3] pinctrl: Add msm8x74 configuration
+Date: Tue, 10 Dec 2013 00:41:41 -0800
+Message-ID: <20131210084140.GF11990@sonymobile.com>
+References: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1386295805-13708-3-git-send-email-bjorn.andersson@sonymobile.com>
+ <52A24E08.706@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52A24E08.706@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-To adjust the timer's interval in periodic mode, the clockevent device
-is put into periodic mode during clockevents_update_freq() in case the
-timer is in periodic mode.
+On Fri 06 Dec 14:22 PST 2013, Stephen Boyd wrote:
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
----
- kernel/time/clockevents.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+> > +config PINCTRL_MSM8X74
+> > +	bool "Qualcomm 8x74 pin controller driver"
+> > +	select PINCTRL_MSM
+> 
+> No help?
+> 
 
-diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
-index 641d91003a45..f85e5fda9c66 100644
---- a/kernel/time/clockevents.c
-+++ b/kernel/time/clockevents.c
-@@ -443,10 +443,13 @@ int __clockevents_update_freq(struct clock_event_device *dev, u32 freq)
- {
- 	clockevents_config(dev, freq);
- 
--	if (dev->mode != CLOCK_EVT_MODE_ONESHOT)
--		return 0;
-+	if (dev->mode == CLOCK_EVT_MODE_ONESHOT)
-+		return clockevents_program_event(dev, dev->next_event, false);
-+
-+	if (dev->mode == CLOCK_EVT_MODE_PERIODIC)
-+		dev->set_mode(CLOCK_EVT_MODE_PERIODIC, dev);
- 
--	return clockevents_program_event(dev, dev->next_event, false);
-+	return 0;
- }
- 
- /**
--- 
-1.8.5.1
+I could write something up, although I guess someone will add a
+select PINCTRL_MSM8X74 in the mach-msm Kconfig and then we're done
+with it.
+
+> > +		.ctl_reg = 0x1000 + 0x10 * id ,		\
+> 
+> Weird trailing space here.
+> 
+
+Oops.
+
+> Also, do we ever plan to have anything more than the gpio pins and the
+> sdc pins? It seems like we spend a lot of space describing exactly the
+> same thing in these structs for each of the 146 gpio pins when we could
+> just know that range 0 to 146 is gpio pins and have different code for
+> that part vs the 6 or something sd pins.
+> 
+
+We have to have a pingroup list, so I did look at having that list
+referencing a common object with the gpio/sdc specific data.
+
+But just having it in one large blob is the way that other pinctrl
+drivers does it and hence a common problem to pinctrl and multi-platform
+arm support.
+
+I have not seen any code in the open referencing the other pins, so I
+left them out for now.
+
+> > +
+> > +static struct of_device_id msm8x74_pinctrl_of_match[] = {
+> 
+> const?
+> 
+
+Of course.
+
+> >
+> > +
+> > +static int __init msm8x74_pinctrl_init(void)
+> > +{
+> > +	return platform_driver_register(&msm8x74_pinctrl_driver);
+> > +}
+> > +arch_initcall(msm8x74_pinctrl_init);
+> > +
+> > +static void __exit msm8x74_pinctrl_exit(void)
+> > +{
+> > +	platform_driver_unregister(&msm8x74_pinctrl_driver);
+> > +}
+> > +module_exit(msm8x74_pinctrl_exit);
+> 
+> Why not module_platform_driver()? I thought pinctrl supported deferred
+> probing?
+> 
+
+As this pinctrl/gpiochip/interrupt-controller is a fairly central part
+of the system there's plenty of things that would just end up being deferred.
+
+Most other pinctrl driver does arch_initcall or core_initcall, so I followed
+suit and brought it in early.
+
+Regards,
+Bjorn
