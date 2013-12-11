@@ -1,160 +1,161 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] net: smc91x: Fix device tree based configuration so
- it's usable
-Date: Wed, 11 Dec 2013 13:22:11 -0800
-Message-ID: <20131211212211.GQ3448@atomide.com>
-References: <20131127185657.GA26766@atomide.com>
- <52A8ADE6.8010209@ti.com>
- <20131211.154426.2252395344655389568.davem@davemloft.net>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH v5 0/3] Exynos 5410 support
+Date: Thu, 12 Dec 2013 07:29:41 +0900
+Message-ID: <52A8E755.4080600@samsung.com>
+References: <1386685599-31536-1-git-send-email-v.tyrtov@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131211.154426.2252395344655389568.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1386685599-31536-1-git-send-email-v.tyrtov@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, nicolas.pitre@linaro.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, linux-doc@vger.kernel.org, tomasz.figa@gmail.com, Naour Romain <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Dave.Martin@arm.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, linux-samsung-soc@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-* David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> [131211 12:45]:
-> From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> > please feel free to add my:
-> > Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> > 
-> > Also tested on SDP2430:
-> > http://pastebin.mozilla.org/3756403
-> 
-> That patch needs changes, it adds a warning when CONFIG_OF is disabled
-> because the variable 'np' only gets used in the CONFIG_OF protected
-> code block yet is declared unconditionally.
+On 12/10/13 23:26, Vyacheslav Tyrtov wrote:
+> The series of patches represent support of Exynos 5410 SoC
+>
+> The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture
+>
+> Patches add new platform description, support of clock controller and device
+> tree for Exynos 5410.
+>
+> Dual cluster support for Exynos 5410 (EDCS) has been removed from this series
+> This patches is activating only the big cluster (all A15 cores)
+>
+> EDCS patch, which allows all 8 CPU cores (4 x A7 and 4 x A15)
+> to run at the same time, will be released separately
+>
+> Has been build on v3.13-rc3
+> Has been tested on Exynos 5410 reference board (exynos_defconfig)
+>
+> Thanks for all your comments to Tomasz Figa, Dave Martin and Nicolas Pitre.
+> I hope, this is enough clean and hasn't any dependencies to go through
+> Samsung tree. Kukjin, what do you think about it?
+>
 
-Oops, sorry about that I thought I had tested it with omap1_defconfig
-that's using the legacy booting.
+OK, looks good and I've applied.
 
-Below is a fixed version, I kept Nishant's ack as the change was to
-just to move np to be within the CONFIG_OF block.
+Thanks,
+Kukjin
 
-Regards,
 
-Tony
-
-8< --------------------------------
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Date: Wed, 11 Dec 2013 13:04:27 -0800
-Subject: [PATCH] net: smc91x: Fix device tree based configuration so it's usable
-
-Commit 89ce376c6bdc (drivers/net: Use of_match_ptr() macro in smc91x.c)
-added minimal device tree support to smc91x, but it's not working on
-many platforms because of the lack of some key configuration bits.
-
-Fix the issue by parsing the necessary configuration like the
-smc911x driver is doing. As most smc91x users seem to use 16-bit
-access, let's default to that if no reg-io-width is specified.
-
-Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-
---- a/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-+++ b/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
-@@ -8,3 +8,7 @@ Required properties:
- Optional properties:
- - phy-device : phandle to Ethernet phy
- - local-mac-address : Ethernet mac address to use
-+- reg-io-width : Mask of sizes (in bytes) of the IO accesses that
-+  are supported on the device.  Valid value for SMSC LAN91c111 are
-+  1, 2 or 4.  If it's omitted or invalid, the size would be 2 meaning
-+  16-bit access only.
---- a/drivers/net/ethernet/smsc/smc91x.c
-+++ b/drivers/net/ethernet/smsc/smc91x.c
-@@ -82,6 +82,7 @@ static const char version[] =
- #include <linux/mii.h>
- #include <linux/workqueue.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
-@@ -2184,6 +2185,15 @@ static void smc_release_datacs(struct platform_device *pdev, struct net_device *
- 	}
- }
- 
-+#if IS_BUILTIN(CONFIG_OF)
-+static const struct of_device_id smc91x_match[] = {
-+	{ .compatible = "smsc,lan91c94", },
-+	{ .compatible = "smsc,lan91c111", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, smc91x_match);
-+#endif
-+
- /*
-  * smc_init(void)
-  *   Input parameters:
-@@ -2198,6 +2208,7 @@ static void smc_release_datacs(struct platform_device *pdev, struct net_device *
- static int smc_drv_probe(struct platform_device *pdev)
- {
- 	struct smc91x_platdata *pd = dev_get_platdata(&pdev->dev);
-+	const struct of_device_id *match = NULL;
- 	struct smc_local *lp;
- 	struct net_device *ndev;
- 	struct resource *res, *ires;
-@@ -2217,11 +2228,34 @@ static int smc_drv_probe(struct platform_device *pdev)
- 	 */
- 
- 	lp = netdev_priv(ndev);
-+	lp->cfg.flags = 0;
- 
- 	if (pd) {
- 		memcpy(&lp->cfg, pd, sizeof(lp->cfg));
- 		lp->io_shift = SMC91X_IO_SHIFT(lp->cfg.flags);
--	} else {
-+	}
-+
-+#if IS_BUILTIN(CONFIG_OF)
-+	match = of_match_device(of_match_ptr(smc91x_match), &pdev->dev);
-+	if (match) {
-+		struct device_node *np = pdev->dev.of_node;
-+		u32 val;
-+
-+		/* Combination of IO widths supported, default to 16-bit */
-+		if (!of_property_read_u32(np, "reg-io-width", &val)) {
-+			if (val & 1)
-+				lp->cfg.flags |= SMC91X_USE_8BIT;
-+			if ((val == 0) || (val & 2))
-+				lp->cfg.flags |= SMC91X_USE_16BIT;
-+			if (val & 4)
-+				lp->cfg.flags |= SMC91X_USE_32BIT;
-+		} else {
-+			lp->cfg.flags |= SMC91X_USE_16BIT;
-+		}
-+	}
-+#endif
-+
-+	if (!pd && !match) {
- 		lp->cfg.flags |= (SMC_CAN_USE_8BIT)  ? SMC91X_USE_8BIT  : 0;
- 		lp->cfg.flags |= (SMC_CAN_USE_16BIT) ? SMC91X_USE_16BIT : 0;
- 		lp->cfg.flags |= (SMC_CAN_USE_32BIT) ? SMC91X_USE_32BIT : 0;
-@@ -2370,15 +2404,6 @@ static int smc_drv_resume(struct device *dev)
- 	return 0;
- }
- 
--#ifdef CONFIG_OF
--static const struct of_device_id smc91x_match[] = {
--	{ .compatible = "smsc,lan91c94", },
--	{ .compatible = "smsc,lan91c111", },
--	{},
--};
--MODULE_DEVICE_TABLE(of, smc91x_match);
--#endif
--
- static struct dev_pm_ops smc_drv_pm_ops = {
- 	.suspend	= smc_drv_suspend,
- 	.resume		= smc_drv_resume,
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Vyacheslav.
+>
+>
+> Changelog:
+>
+> v5:
+> 	EDCS removed to separate patch.
+>
+> 	In arch/arm/mach-exynos/Kconfig
+> 1. Removed select ARM_CCI and MCPM.
+> 	In arch/arm/mach-exynos/platsmp.c
+> 1. Added correct boot_reg for exynos5410.
+> 	In arch/arm/boot/dts/exynos5410.dtsi
+> 1. Removed cortex-a7 cpu nodes and cci node.
+>
+> v4:
+> 	In arch/arm/mach-exynos/edcs.c
+> 1. Renamed all exynos_ prefixes to edcs_.
+> 2. Reworked edcs_core_power_up/down functions.
+> 3. Removed exynos_core_power_control function.
+> 4. Added this_core_to_pcpu function.
+> 5. Added core_power_state function which detects if cpu is being reset.
+> 6. Replaced cache flush sequences with v7_exit_coherency_flush().
+> 7. exynos_core_power_down moved to lock protected area.
+> 8. edcs_power_down_finish implemented.
+> 	In Documentation/devicetree/bindings/clock/exynos5410-clock.txt
+> 1. External clocks documented.
+> 	In arch/arm/boot/dts/exynos5410-smdk5410.dts
+> 1. oscclk node corrected according to ePAPR recommendation.
+> 	In arch/arm/boot/dts/exynos5410.dtsi
+> 1. mct@101C0000 node renamed to timer@101C0000.
+> 2. "interrupt-controller" line removed from mct node.
+> 3. mct_map renamed to interrupt_map.
+> 	In arch/arm/mach-exynos/Kconfig
+> 1. some cosmetic corrections.
+> 	In include/dt-bindings/clock/exynos5410.h
+> 1. Unnecessary defines removed.
+>
+> v3:
+> 	In drivers/clk/samsung/clk-exynos5410.c
+> 1. Fixed rate clock "samsung,clock-oscclk" removed.
+> 	In arch/arm/boot/dts/exynos5410.dtsi
+> 1. In mct node clock CLK_FIN_PLL replaced with generic fixed rate oscclk.
+> 	In arch/arm/boot/dts/exynos5410-smdk5410.dts
+> 1. Fixed rate oscclk clock added.
+> 	In arch/arm/mach-exynos/edcs.c
+> 1. Added write memory barrier in exynos_core_power_control function.
+> 2. __raw_readl/__raw_writel replaced with readl_relaxed/writel_relaxed.
+> 3. #define added for some magic constants.
+> 4. Disabled the GIC CPU interface in exynos_power_down function.
+>
+> v2:
+> 	In drivers/clk/samsung/clk-exynos5410.c
+> 1. Clock driver converted to use preprocessor macros instead of enums.
+>     Clock IDs now defined in include/dt-bindings/clock/exynos5410.h.
+> 2. Unused spinlock removed.
+> 3. Function exynos5410_clk_init defined as static.
+>     Struct exynos5410_fixed_rate_ext_clks defined as static.
+>     Struct exynos5410_mux_clks defined as static.
+>     Struct exynos5410_div_clks defined as static.
+>     Struct exynos5410_gate_clks defined as static.
+> 4. Removed aliases.
+> 5. Pll's magic register offsets defined as preprocessor macros.
+> 6. Redundant check of device_node pointer removed.
+> 	
+> 	In arch/arm/boot/dts/exynos5410.dtsi
+> 1. dwmmcX nodes renamed to mmc.
+>     dwmmc_X renamed to mmc_X.
+>     dwmmc status="disabled" field added.
+>     fifo-depth field moved from arch/arm/boot/dts/exynos5410-smdk5410.dts
+> 2. Blank lines added where necessary.
+> 3. cpu@ suffixes corrected.
+> 4. edcs node removed.
+> 5. Hexadecimal characters case corrected.
+> 6. Clock IDs replaced with preprocessor macros.
+> 	
+> 	In arch/arm/boot/dts/exynos5410-smdk5410.dts
+> 1. status = "okay" field added to mmc nodes.
+> 	
+> 	In arch/arm/mach-exynos/edcs.c
+> 1. "kfs_" prefix replaced with "edcs_"
+> 2. EDCS_CPUS_PER_CLUSTER and EDCS_CLUSTERS defined instead of MCPM's values.
+> 3. Cache handling sequence borrowed from arch/arm/mach-vexpress/tc2_pm.c
+> 4. mcpm_sync_init() call added.
+> 5. power management functions reworked.
+> 	
+> 	Other
+> 1. Documentation/devicetree/bindings/clock/exynos5410-clock.txt corrected.
+> 2. Removed smdk5410_defconfig. Instead SOC_EXYNOS5410 now selects MCPM and
+>     ARM_CCI in arch/arm/mach-exynos/Kconfig.
+> 3. edcs_status driver removed.
+>
+> Tarek Dakhran (3):
+>    ARM: EXYNOS: Add support for EXYNOS5410 SoC
+>    clk: exynos5410: register clocks using common clock framework
+>    ARM: dts: Add initial device tree support for EXYNOS5410
+>
+>   .../devicetree/bindings/clock/exynos5410-clock.txt |  54 +++++
+>   arch/arm/boot/dts/Makefile                         |   1 +
+>   arch/arm/boot/dts/exynos5410-smdk5410.dts          |  72 +++++++
+>   arch/arm/boot/dts/exynos5410.dtsi                  | 145 +++++++++++++
+>   arch/arm/mach-exynos/Kconfig                       |  10 +
+>   arch/arm/mach-exynos/common.c                      |  18 ++
+>   arch/arm/mach-exynos/include/mach/map.h            |   1 +
+>   arch/arm/mach-exynos/mach-exynos5-dt.c             |   1 +
+>   arch/arm/mach-exynos/platsmp.c                     |   2 +
+>   arch/arm/plat-samsung/include/plat/cpu.h           |   8 +
+>   arch/arm/plat-samsung/include/plat/map-s5p.h       |   3 +
+>   drivers/clk/samsung/Makefile                       |   1 +
+>   drivers/clk/samsung/clk-exynos5410.c               | 239 +++++++++++++++++++++
+>   include/dt-bindings/clock/exynos5410.h             |  32 +++
+>   14 files changed, 587 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/clock/exynos5410-clock.txt
+>   create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
+>   create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
+>   create mode 100644 drivers/clk/samsung/clk-exynos5410.c
+>   create mode 100644 include/dt-bindings/clock/exynos5410.h
+>
