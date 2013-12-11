@@ -1,66 +1,62 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH RFC] net: of_mdio: Scan PHYs which have device_type set to ethernet-phy
-Date: Wed, 11 Dec 2013 09:15:44 +0000
-Message-ID: <20131211091544.EA4F7C4061A@trevor.secretlab.ca>
-References: <1384441556-20674-1-git-send-email-srinivas.kandagatla@st.com> < 1695129.4QIGmmVPkX@lenovo>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] mfd: always assign of_node in mfd_add_device()
+Date: Wed, 11 Dec 2013 09:24:35 +0000
+Message-ID: <20131211092435.GC16780@lee--X1>
+References: <1386626809-6251-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1695129.4QIGmmVPkX@lenovo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@st.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1386626809-6251-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Dec 2013 07:15:54 +0000, Florian Fainelli <f.fainelli@gmail.=
-com> wrote:
-> Le jeudi 14 novembre 2013, 15:05:56 Srinivas Kandagatla a =C3=A9crit =
-:
-> > According to Documentation/devicetree/bindings/net/phy.txt device_t=
-ype
-> > property of PHY nodes is mandatory, which should be set to
-> > "ethernet-phy". This patch adds check in scanning phys and only sca=
-ns
-> > node which have device-type set to "ethernet-phy".
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 >=20
-> Please CC netdev@vger.kernel.org as there might be networking folks n=
-ot=20
-> actively following devicetree-discuss.
+> mfd_add_device() assigns .of_node in the device objects it creates on=
+ly
+> if the mfd_cell for the device has the .of_compatible field set and t=
+he
+> DT node for the top-level MFD device contains a child whose compatibl=
+e
+> property matches the cell's .of_compatible field.
 >=20
-> >=20
-> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> > ---
-> >  drivers/of/of_mdio.c |    7 +++++++
-> >  1 files changed, 7 insertions(+), 0 deletions(-)
-> >=20
-> > diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> > index d5a57a9..78c53c7 100644
-> > --- a/drivers/of/of_mdio.c
-> > +++ b/drivers/of/of_mdio.c
-> > @@ -57,6 +57,9 @@ int of_mdiobus_register(struct mii_bus *mdio, str=
-uct
-> > device_node *np)
-> >=20
-> >  	/* Loop over the child nodes and register a phy_device for each o=
-ne */
-> >  	for_each_available_child_of_node(np, child) {
-> > +		/* A PHY must have device_type set to "ethernet-phy" */
-> > +		if (of_node_cmp(child->type, "ethernet-phy"))
-> > +			continue;
+> This leaves .of_node unset in many cases. When this happens, entries =
+in
+> the DT /aliases property which refer to the top-level MFD DT node wil=
+l
+> never match the MFD child devices, hence causing the requested alias =
+not
+> to be honored.
 >=20
-> As already stated by Grant this will break quite a lot of platforms o=
-ut there.=20
-> Technically speaking, ePAPR v1.1 only specifies that "cpu" and "memor=
-y" nodes=20
-> should have a "device_type" property for compatibility. Altough I do =
-agree=20
-> that it is nice to have a properly set "device_type", we can't always=
- rely on=20
-> that.=20
+> Solve this by setting each MFD child device's .of_node equal to the t=
+op-
+> level MFD device's .of_node field in the cases where it would otherwi=
+se
+> remain unset.
+>=20
+> The first use-case for this will be aliases for the TPS6586x's RTC
+> device.
+>=20
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/mfd/mfd-core.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Actually it is the opposite. device_type is deprecated and has been for
-a long time now. Device bindings should not not be using device_type
-unless it is there for legacy compatibility.
+I've tentatively applied this patch, but if it starts to cause more
+problems than it solves we'll have to endeavour to find a different
+solution.
 
-g.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
