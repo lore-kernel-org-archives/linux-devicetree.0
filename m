@@ -1,61 +1,54 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Wed, 11 Dec 2013 23:53:13 +0800
-Message-ID: <52A88A69.6040102@linaro.org>
-References: <1386770541-15056-1-git-send-email-zhangfei.gao@linaro.org> <1386770541-15056-3-git-send-email-zhangfei.gao@linaro.org> <201312111549.14017.arnd@arndb.de> <52A8868A.3000105@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/2] net: smc91x: Read hardware behavior flags from
+ device tree
+Date: Wed, 11 Dec 2013 08:04:40 -0800
+Message-ID: <20131211160440.GA13171@atomide.com>
+References: <1386757305-12545-1-git-send-email-nm@ti.com>
+ <1386757305-12545-2-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <52A8868A.3000105@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Chris Ball <cjb@laptop.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1386757305-12545-2-git-send-email-nm@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+* Nishanth Menon <nm@ti.com> [131211 02:23]:
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/smsc91x.txt
+> @@ -0,0 +1,45 @@
+> +* Smart Mixed-Signal Connectivity (SMSC) LAN91c94/91c111 Controller
+> +
+> +Required properties:
+> +- compatible : Should be one of:
+> +	"smsc,lan91c94"
+> +	"smsc,lan91c111"
+> +- reg : Address and length of the io space for SMSC LAN
+> +- interrupts : Should contain SMSC LAN interrupt line
+> +- interrupt-parent : Should be the phandle for the interrupt controller
+> +  that services interrupts for this device
+> +
+> +Optional properties:
+> +- reg-shift : Specify the quantity to shift the register offsets by
+> +- reg-io-width : Specify the size (in bytes) of the IO accesses that
+> +  should be performed on the device.  Valid value for SMSC LAN is
+> +  1, 2 or 4.
 
+I posted a minimal regression fix for this a few weeks ago that we
+should merge to the v3.13-rc cycle:
 
-On 12/11/2013 11:36 PM, zhangfei wrote:
->
->
-> On 12/11/2013 10:49 PM, Arnd Bergmann wrote:
->> On Wednesday 11 December 2013, Zhangfei Gao wrote:
->
->>> +Required Properties:
->>> +
->>> +* compatible: should be one of the following.
->>> +  - "hisilicon,hi4511-dw-mshc": for controllers with hi4511 specific
->>> extentions.
->>> +* clk-table-num: should be number of clks in clk-table required by
->>> each mmc timing
->>> +* clk-table: should clock list required by each mmc timing
->>
->> I have not seen "clk-table" and "clk-table-num" before. Are these
->> standard
->> properties? What are the units that are used here, what does the index
->> mean?
->>
->
-> "clk-table" and "clk-table-num" are private properties.
-> Instead simply on/off, the ip need different ciu clock for each timing
-> mode.
-> Take emmc as example,
-> clk-table-num = <8>;
-> clk-table =
+http://www.spinics.net/lists/netdev/msg258913.html
 
-My bad, this is for sd.
-> <13000000 50000000 0 0 13000000 50000000 0 100000000>;
+Care to ack that one? Then if that works for you, maybe rebase these on
+that one for the upcoming merge window?
 
-<25000000 0 50000000 25000000 50000000 100000000 0 50000000>;
-> MMC_TIMING_LEGACY mode, 25M should be set with parent clock 180M,
-> MMC_TIMING_MMC_HS mode, 50M is required with parent clock 360M
->
-> "clk-table" list all clocks to be set in all supported timing one by one.
-> "clk-table-num" is the table number, since not find function getting
-> table number.
-> For example, next version will support MMC_TIMING_MMC_HS200 mode, the
-> clk-table-num = <9> with 9 clocks in the "clk-table"
->
-> Thanks
->
->
+Note that for the -rc cycle we don't need these extra properties as we
+can get the interrupts from the struct resource after fix
+4a43d686fe336c (of/irq: Pass trigger type in IRQ resource flags)
+got merged.
+
+Regards,
+
+Tony
