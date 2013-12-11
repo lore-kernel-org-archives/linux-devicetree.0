@@ -1,195 +1,253 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: Re: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
- exynos5420 dtsi files
-Date: Wed, 11 Dec 2013 21:22:45 +0900
-Message-ID: <CAL1wa8fTuOMk9=G3JhdpNOE8=FPTfMSJ_mB-7jo1pNF1cAavgg@mail.gmail.com>
-References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com>
- <1386308868-30264-2-git-send-email-l.krishna@samsung.com> <52A207D8.3030206@gmail.com>
- <8302228.6iSJIFqj3A@flatron> <52A39F3B.5070806@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <52A39F3B.5070806@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Douglas Anderson <dianders@chromium.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "cpgs ." <cpgs@samsung.com>, Guenter Roeck <linux@roeck-us.net>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 3/3] OF: kobj ops should only happen on attached nodes
+Date: Wed, 11 Dec 2013 13:14:50 +0000
+Message-ID: <20131211131450.EE33BC4061A@trevor.secretlab.ca>
+References: <1386684833-24112-1-git-send-email-panto@antoniou-consulting.com > <1386684833-24112-4-git-send-email-panto@antoniou-consulting.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1386684833-24112-4-git-send-email-panto@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 10 Dec 2013 16:13:53 +0200, Pantelis Antoniou <panto@antoniou-consulting.com> wrote:
+> kobject operation should only take place on already attached (live)
+> device nodes. The same restriction applies to the invocation of
+> device tree notifiers.
+> 
+> Introduce a simple of_node_is_attached() test which tests whether
+> the given node is attached via means of the allnodes member.
+> 
+> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+> ---
+>  drivers/of/base.c | 87 ++++++++++++++++++++++++++++++++++++++++---------------
+>  1 file changed, 64 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index db0de86..c6299bd 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -89,6 +89,13 @@ int __weak of_node_to_nid(struct device_node *np)
+>  #endif
+>  
+>  #if defined(CONFIG_OF_DYNAMIC)
+> +
+> +/* simple test for figuring out if node is attached */
+> +static inline int of_node_is_attached(struct device_node *np)
+> +{
+> +	return np && np->allnodes == &of_allnodes;
+> +}
+> +
+>  /**
+>   *	of_node_get - Increment refcount of a node
+>   *	@node:	Node to inc refcount, NULL is supported to
+> @@ -98,7 +105,7 @@ int __weak of_node_to_nid(struct device_node *np)
+>   */
+>  struct device_node *of_node_get(struct device_node *node)
+>  {
+> -	if (node && of_kset)
+> +	if (node && of_kset && of_node_is_attached(node))
+>  		kobject_get(&node->kobj);
 
-As I was in travel not accessed my mails.
+Remind me, what is the reason for not wanting to refcount unattached
+nodes? I would think that doing a refcount is still desirable, even if
+it doesn't show up in sysfs.
 
-I'll try to post next version of this series tomorrow addressing
-Sylwester's comments.
+I know we talked about this on IRC, but I don't remember the conclusion
+we came to.
 
-Best Wishes,
-Leela Krishna.
+>  	return node;
+>  }
+> @@ -156,7 +163,7 @@ static void of_node_release(struct kobject *kobj)
+>   */
+>  void of_node_put(struct device_node *node)
+>  {
+> -	if (node && of_kset)
+> +	if (node && of_kset && of_node_is_attached(node))
+>  		kobject_put(&node->kobj);
+>  }
+>  EXPORT_SYMBOL(of_node_put);
+> @@ -210,6 +217,10 @@ static int __of_add_property(struct device_node *np, struct property *pp)
+>  	if (!of_kset)
+>  		return 0;
+>  
+> +	/* don't do anything with a detached node */
+> +	if (!of_node_is_attached(np))
+> +		return 0;
+> +
 
-On Sun, Dec 8, 2013 at 7:20 AM, Sylwester Nawrocki
-<sylvester.nawrocki@gmail.com> wrote:
-> Hi Tomasz,
->
->
-> On 12/07/2013 01:57 AM, Tomasz Figa wrote:
->>
->> On Friday 06 of December 2013 18:22:32 Sylwester Nawrocki wrote:
->
-> [...]
->
->> I wouldn't really nitpick on such things, but if we end up needing another
->> respin, here's what I think.
->
->
-> Yeah, I didn't really realize the iteration index for this series was
-> already
-> a 2 digit number and some people could have already gotten upset or
-> seriously
-> impatient. Started to regret I even bothered with posting any comments to
-> that.
-> :) Anyway, I didn't request any corrections, just pointed out what could be
-> improved. People are free to accept it or ignore as they see fit. And having
-> seen patch series that got merged after periods like 2.5 year V12 is not
-> something unusual anyway. :)
->
->
->>> On 12/06/2013 06:47 AM, Leela Krishna Amudala wrote:
->>>>
->>>> This patch adds pmusysreg node to exynos5250 and exynos5420 dtsi files
->>>> to
->>>
->>>
->>> s/pmusysreg/PMU sysreg ? Similarly I would capitalize it in the subject
->>> line as well.
->>
->>
->> Well, since this is supposed to be a human readable description, I would
->> go even further and write "...device tree node of Power Management Unit
->>   to...".
->
->
-> Agreed, it sounds better.
->
->
->>>> handle PMU register accesses in a centralized way using syscon driver
->>>>
->>>> Signed-off-by: Leela Krishna Amudala<l.krishna@samsung.com>
->>>> Reviewed-by: Tomasz Figa<t.figa@samsung.com>
->>>> Reviewed-by: Doug Anderson<dianders@chromium.org>
->>>> Tested-by: Doug Anderson<dianders@chromium.org>
->>>> ---
->>>>    Documentation/devicetree/bindings/arm/samsung/pmu.txt |   15
->>>> +++++++++++++++
->>>>    arch/arm/boot/dts/exynos5250.dtsi                     |    5 +++++
->>>>    arch/arm/boot/dts/exynos5420.dtsi                     |    5 +++++
->>>>    3 files changed, 25 insertions(+)
->>>>    create mode 100644
->>>> Documentation/devicetree/bindings/arm/samsung/pmu.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->>>> b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->>>> new file mode 100644
->>>> index 0000000..f1f1552
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->>>
->>>
->>> I might be easy to confuse this with ARM Performance Monitoring Unit.
->>> So perhaps we should rename this file to, e.g. power-management-unit.txt
->>> ?
->>
->>
->> Considering location of this file, which is arm/samsung, I think this
->> name is pretty much clear. ARM PMU is a generic thing, so it couldn't
->> be placed here.
->
->
-> It's up to the patch author if they want to change it or not, I still think
-> it's better to not use short acronyms like this, if we can easily make it
-> unambiguous.
->
->
->>>> @@ -0,0 +1,15 @@
->>>> +SAMSUNG Exynos SoC series PMU Registers
->>>
->>>
->>> s/PMU/Power Management Unit ?
->>
->>
->> s/PMU Registers/Power Management Unit/
->
->
-> Yeah, that's more accurate.
->
->
->>>> +Properties:
->>>> + - compatible : should contain two values. First value must be one from
->>>> following list:
->>>> +                  - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
->>>> +                  - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
->>>
->>>
->>> s/./; ?
->>>
->>>> +               second value must be always "syscon".
->>>
->>>
->>> It might be more safe to specify it as the last value, so something along
->>> the lines of:
->>>
->>>         The last value should be "syscon".
->>>
->>>> +
->>>> + - reg : offset and length of the register set.
->>>> +
->>>> +Example :
->>>> +pmu_system_controller: system-controller@10040000 {
->>>
->>>
->>> Might be more sensible to use 'power_management_unit' for the label.
->>
->>
->> That's quite a lot of text for a label. pmu_syscon as in previous version
->> of this patch would look more sensible to me.
->
->
-> I don't think it hurts to have this long labels, what I proposed is exactly
-> of same length as the original one. Anyway pmu_syscon sounds good to me too.
->
->
->>>> +       compatible = "samsung,exynos5250-pmu", "syscon";
->>>> +       reg =<0x10040000 0x5000>;
->>>> +};
->>>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
->>>> b/arch/arm/boot/dts/exynos5250.dtsi
->>>> index b98ffc3..62f9e36 100644
->>>> --- a/arch/arm/boot/dts/exynos5250.dtsi
->>>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->>>> @@ -163,6 +163,11 @@
->>>>                 interrupts =<0 47 0>;
->>>>         };
->>>>
->>>> +       pmu_system_controller: system-controller@10040000 {
->>>
->>>
->>> s/pmu_system_controller/power_management_unit ? So it describes the
->>> subsystem better in terms used in the SoCs User Manual ?
->>
->>
->> See above.
->
->
-> I can't see anything wrong in such long labels, but this discussion is
-> really
-> just a bike-shedding, so let's end it right now not to risk annoying even
-> more
-> people! :)
->
-> --
-> Regards,
-> Sylwester
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
-> in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm concerned about this whole approach. It "feels" wrong to me.
+Perhaps the mistake is to having the unflatten routine be the one also
+adding the nodes to the tree. The whole thing could be sidestepped if
+unflattening the data structure was a completely separate step from
+attaching it to the live tree.
+
+We could rework fdt.c (and pdt.c) to not touch allnodes at all and then
+have a separate function that walks the unflattened device tree and
+attaches the lot at once. That would make it easier for you to grab an
+unflattened tree and work with it before adding nodes to the core tree.
+
+>  	/* Important: Don't leak passwords */
+>  	secure = strncmp(pp->name, "security-", 9) == 0;
+>  
+> @@ -235,6 +246,9 @@ static int __of_node_add(struct device_node *np)
+>  	if (!of_kset)
+>  		return 0;
+>  
+> +	if (!of_node_is_attached(np))
+> +		return 0;
+> +
+>  	np->kobj.kset = of_kset;
+>  	if (!np->parent) {
+>  		/* Nodes without parents are new top level trees */
+> @@ -259,6 +273,9 @@ int of_node_add(struct device_node *np)
+>  {
+>  	int rc = 0;
+>  
+> +	if (!of_node_is_attached(np))
+> +		return 0;
+> +
+>  	/* fake the return while of_init is not yet called */
+>  	mutex_lock(&of_aliases_mutex);
+>  	kobject_init(&np->kobj, &of_node_ktype);
+> @@ -274,10 +291,16 @@ static void of_node_remove(struct device_node *np)
+>  {
+>  	struct property *pp;
+>  
+> +	/* don't do anything with a detached node */
+> +	if (!of_node_is_attached(np))
+> +		return;
+> +
+>  	for_each_property_of_node(np, pp)
+>  		sysfs_remove_bin_file(&np->kobj, &pp->attr);
+>  
+>  	kobject_del(&np->kobj);
+> +
+> +	of_node_put(np);
+>  }
+>  #endif
+>  
+> @@ -1626,9 +1649,11 @@ int of_add_property(struct device_node *np, struct property *prop)
+>  	unsigned long flags;
+>  	int rc;
+>  
+> -	rc = of_property_notify(OF_RECONFIG_ADD_PROPERTY, np, prop);
+> -	if (rc)
+> -		return rc;
+> +	if (of_node_is_attached(np)) {
+> +		rc = of_property_notify(OF_RECONFIG_ADD_PROPERTY, np, prop);
+> +		if (rc)
+> +			return rc;
+> +	}
+>  
+>  	prop->next = NULL;
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+> @@ -1664,9 +1689,11 @@ int of_remove_property(struct device_node *np, struct property *prop)
+>  	int found = 0;
+>  	int rc;
+>  
+> -	rc = of_property_notify(OF_RECONFIG_REMOVE_PROPERTY, np, prop);
+> -	if (rc)
+> -		return rc;
+> +	if (of_node_is_attached(np)) {
+> +		rc = of_property_notify(OF_RECONFIG_REMOVE_PROPERTY, np, prop);
+> +		if (rc)
+> +			return rc;
+> +	}
+>  
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	next = &np->properties;
+> @@ -1686,7 +1713,8 @@ int of_remove_property(struct device_node *np, struct property *prop)
+>  	if (!found)
+>  		return -ENODEV;
+>  
+> -	sysfs_remove_bin_file(&np->kobj, &prop->attr);
+> +	if (of_node_is_attached(np))
+> +		sysfs_remove_bin_file(&np->kobj, &prop->attr);
+>  
+>  	return 0;
+>  }
+> @@ -1706,9 +1734,11 @@ int of_update_property(struct device_node *np, struct property *newprop)
+>  	unsigned long flags;
+>  	int rc, found = 0;
+>  
+> -	rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
+> -	if (rc)
+> -		return rc;
+> +	if (of_node_is_attached(np)) {
+> +		rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
+> +		if (rc)
+> +			return rc;
+> +	}
+>  
+>  	if (!newprop->name)
+>  		return -EINVAL;
+> @@ -1736,9 +1766,11 @@ int of_update_property(struct device_node *np, struct property *newprop)
+>  	if (!found)
+>  		return -ENODEV;
+>  
+> -	/* Update the sysfs attribute */
+> -	sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+> -	__of_add_property(np, newprop);
+> +	if (of_node_is_attached(np)) {
+> +		/* Update the sysfs attribute */
+> +		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+> +		__of_add_property(np, newprop);
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -1782,10 +1814,6 @@ int of_attach_node(struct device_node *np)
+>  	unsigned long flags;
+>  	int rc;
+>  
+> -	rc = of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, np);
+> -	if (rc)
+> -		return rc;
+> -
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	np->sibling = np->parent->child;
+>  	np->allnext = of_allnodes;
+> @@ -1794,7 +1822,18 @@ int of_attach_node(struct device_node *np)
+>  	np->allnodes = &of_allnodes;
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  
+> -	of_node_add(np);
+> +	rc = of_node_add(np);
+> +	if (rc != 0)
+> +		goto err_detach;
+> +
+> +	rc = of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, np);
+> +	if (rc)
+> +		goto err_detach;
+> +
+
+I'm pretty sure the notifier is where it is to allow a notifier callback
+to intercepted it before it gets attached to the tree. I suspect this
+change will break prom_reconfig_notifier. Notifying after
+attachment, or before removal will require a separate set of notifiers.
+
+> +	return 0;
+> +
+> +err_detach:
+> +	of_node_remove(np);
+>  	return 0;
+>  }
+>  
+> @@ -1810,9 +1849,11 @@ int of_detach_node(struct device_node *np)
+>  	unsigned long flags;
+>  	int rc = 0;
+>  
+> -	rc = of_reconfig_notify(OF_RECONFIG_DETACH_NODE, np);
+> -	if (rc)
+> -		return rc;
+> +	if (of_node_is_attached(np)) {
+> +		rc = of_reconfig_notify(OF_RECONFIG_DETACH_NODE, np);
+> +		if (rc)
+> +			return rc;
+> +	}
+>  
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  
+> -- 
+> 1.7.12
+> 
