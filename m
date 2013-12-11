@@ -1,60 +1,62 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2] net: smc91x: Read hardware behavior flags from device tree
-Date: Wed, 11 Dec 2013 12:27:55 -0600
-Message-ID: <CAGo_u6oHPJSfDF=9WVTb2ukmwxDoasho=4L7qJmnYng6-84N0Q@mail.gmail.com>
-References: <1386757305-12545-1-git-send-email-nm@ti.com>
-	<1386757305-12545-2-git-send-email-nm@ti.com>
-	<20131211160440.GA13171@atomide.com>
+From: Dinh Nguyen <dinguyen@altera.com>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Wed, 11 Dec 2013 12:48:10 -0600
+Message-ID: <1386787690.20516.10.camel@linux-builds1>
+References: <1383889128-12540-1-git-send-email-zhangfei.gao@linaro.org>
+	 <201312060239.14832.arnd@arndb.de>
+	 <CAMj5BkhyiJ7Uc-GiRZP3TNMq3NvHW-MVuPT6t+7FN8KBWAJR5A@mail.gmail.com>
+	 <201312110445.54336.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131211160440.GA13171-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201312110445.54336.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Zhangfei Gao <zhangfei.gao@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Seungwon Jeon <tgih.jun@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Kumar Gala <galak@codeaurora.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2013 at 10:04 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> * Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [131211 02:23]:
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/smsc91x.txt
->> @@ -0,0 +1,45 @@
->> +* Smart Mixed-Signal Connectivity (SMSC) LAN91c94/91c111 Controller
->> +
->> +Required properties:
->> +- compatible : Should be one of:
->> +     "smsc,lan91c94"
->> +     "smsc,lan91c111"
->> +- reg : Address and length of the io space for SMSC LAN
->> +- interrupts : Should contain SMSC LAN interrupt line
->> +- interrupt-parent : Should be the phandle for the interrupt controller
->> +  that services interrupts for this device
->> +
->> +Optional properties:
->> +- reg-shift : Specify the quantity to shift the register offsets by
->> +- reg-io-width : Specify the size (in bytes) of the IO accesses that
->> +  should be performed on the device.  Valid value for SMSC LAN is
->> +  1, 2 or 4.
->
-> I posted a minimal regression fix for this a few weeks ago that we
-> should merge to the v3.13-rc cycle:
->
-> http://www.spinics.net/lists/netdev/msg258913.html
->
-> Care to ack that one?
-Done.
+On Wed, 2013-12-11 at 04:45 +0100, Arnd Bergmann wrote:
+> On Wednesday 11 December 2013, Zhangfei Gao wrote:
+> > Thanks for the good suggestion, it can be abstracted to clock.
+> > 
+> > The issue for this version's ip is there are some registers need to be
+> > set, including fixed factor and phase, which may be required to be
+> > tuned, however it can be hide in clock.
+> > 
+> > Double checked next version's ip, it is more intelligent and only
+> > fixed factor is required, more like a clock, and all these register
+> > accessing are NOT required.
+> > 
+> > Will update new version to abstract these chip depended registers to clock.
+> 
+> Ok, please stay in contact with Dinh Nguyen over this, since his side
+> is work-in-progress and we are still evaluating how to best encode
+> the phase setting in DT in a generic form.
 
-> Then if that works for you, maybe rebase these on
-> that one for the upcoming merge window?
-it seems like omap is the only folks who are currently using this
-driver in dt form, I kinda proposed to do these as add on changes to
-your patch, lets see if anyone cares about it.
+Will the bindings "samsung,dw-mshc-sdr-timing" and
+"samsung,dw-mshc-ddr-timing" also work for the k3 platform as well? I
+think they should work, but just wanted to verify.
 
-but I agree to drop my series at this point,
+Heiko, on the rockchip platform, can you check to see if you have these
+cclk_in_drv and cclk_sample settings for the phase shift of the clocks?
+The SD/MMC IP version(2.40a) on Rockchip is the same version that is on
+SOCFPGA, so I think these settings are there. They can be located in
+some other "system" register block like SOCFPGA. The possible reason
+that you have not need to set them in the Rockchip code could be that
+the bootloader/firmware has already set them if you are booting from the
+SD/MMC source. You may need to set the clock phase settings if you boot
+from a non-SD source.
 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think the reading of the "samsung,dw-mshc-ddr-timing" and
+"samsung,dw-msh-sdr-timing" bindings can also be moved into the generic
+dw_mmc driver if the above 2 conditions are correct.
+
+Thanks,
+Din
+> 
+> 	Arnd
+> 
+
+
+
