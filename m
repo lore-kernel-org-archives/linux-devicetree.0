@@ -1,62 +1,61 @@
-From: Dinh Nguyen <dinguyen@altera.com>
-Subject: Re: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Wed, 11 Dec 2013 12:48:10 -0600
-Message-ID: <1386787690.20516.10.camel@linux-builds1>
-References: <1383889128-12540-1-git-send-email-zhangfei.gao@linaro.org>
-	 <201312060239.14832.arnd@arndb.de>
-	 <CAMj5BkhyiJ7Uc-GiRZP3TNMq3NvHW-MVuPT6t+7FN8KBWAJR5A@mail.gmail.com>
-	 <201312110445.54336.arnd@arndb.de>
+From: Sherman Yin <syin@broadcom.com>
+Subject: [PATCH v3 0/6] Add Broadcom Capri pinctrl driver
+Date: Wed, 11 Dec 2013 10:37:15 -0800
+Message-ID: <1386787041-6035-1-git-send-email-syin@broadcom.com>
+References: <1381174108-25168-1-git-send-email-syin@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201312110445.54336.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Zhangfei Gao <zhangfei.gao@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Seungwon Jeon <tgih.jun@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Kumar Gala <galak@codeaurora.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, heiko@sntech.de
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1381174108-25168-1-git-send-email-syin@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <rob.herring@calxeda.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Sherman Yin <syin@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-12-11 at 04:45 +0100, Arnd Bergmann wrote:
-> On Wednesday 11 December 2013, Zhangfei Gao wrote:
-> > Thanks for the good suggestion, it can be abstracted to clock.
-> > 
-> > The issue for this version's ip is there are some registers need to be
-> > set, including fixed factor and phase, which may be required to be
-> > tuned, however it can be hide in clock.
-> > 
-> > Double checked next version's ip, it is more intelligent and only
-> > fixed factor is required, more like a clock, and all these register
-> > accessing are NOT required.
-> > 
-> > Will update new version to abstract these chip depended registers to clock.
-> 
-> Ok, please stay in contact with Dinh Nguyen over this, since his side
-> is work-in-progress and we are still evaluating how to best encode
-> the phase setting in DT in a generic form.
+The following patches adds a pinctrl driver for Broadcom Capri (BCM281xx) SoCs.
+The first patch, adding the void * to pinctrl_pin_desc, has been previously
+discussed with LinusW.  See this thread:
 
-Will the bindings "samsung,dw-mshc-sdr-timing" and
-"samsung,dw-mshc-ddr-timing" also work for the k3 platform as well? I
-think they should work, but just wanted to verify.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/165880.html
+---
+v3: Re-worked driver to be based on generic pinconfig, addressed review
+    comments and other supporting changes:
+    - moved config selection from Kconfig to defconfig
+    - added slew-rate, input enable, input disable properties for generic
+      pinconfig
+    - added a description for PINCTRL config
+v2: Use hyphens instead of underscore in DT property names.
 
-Heiko, on the rockchip platform, can you check to see if you have these
-cclk_in_drv and cclk_sample settings for the phase shift of the clocks?
-The SD/MMC IP version(2.40a) on Rockchip is the same version that is on
-SOCFPGA, so I think these settings are there. They can be located in
-some other "system" register block like SOCFPGA. The possible reason
-that you have not need to set them in the Rockchip code could be that
-the bootloader/firmware has already set them if you are booting from the
-SD/MMC source. You may need to set the clock phase settings if you boot
-from a non-SD source.
+Sherman Yin (6):
+  pinctrl: Add void * to pinctrl_pin_desc
+  pinctrl: Adds slew-rate, input-enable/disable
+  pinctrl: Make PINCTRL selectable by defconfig/menuconfig
+  pinctrl: Add pinctrl binding for Broadcom Capri SoCs
+  ARM: pinctrl: Add Broadcom Capri pinctrl driver
+  pinctrl: Enable pinctrl for Broadcom Capri SoCs
 
-I think the reading of the "samsung,dw-mshc-ddr-timing" and
-"samsung,dw-msh-sdr-timing" bindings can also be moved into the generic
-dw_mmc driver if the above 2 conditions are correct.
+ .../bindings/pinctrl/brcm,capri-pinctrl.txt        |  429 ++++++
+ .../bindings/pinctrl/pinctrl-bindings.txt          |    3 +
+ arch/arm/boot/dts/bcm11351.dtsi                    |    4 +
+ arch/arm/configs/bcm_defconfig                     |    5 +
+ drivers/pinctrl/Kconfig                            |   13 +-
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/pinconf-generic.c                  |    4 +
+ drivers/pinctrl/pinctrl-capri.c                    | 1408 ++++++++++++++++++++
+ include/linux/pinctrl/pinconf-generic.h            |    4 +
+ include/linux/pinctrl/pinctrl.h                    |    2 +
+ 10 files changed, 1872 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,capri-pinctrl.txt
+ create mode 100644 drivers/pinctrl/pinctrl-capri.c
 
-Thanks,
-Din
-> 
-> 	Arnd
-> 
-
-
-
+-- 
+1.7.9.5
