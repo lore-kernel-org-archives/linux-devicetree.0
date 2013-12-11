@@ -1,54 +1,38 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 3/7] regulator: add pbias regulator support
-Date: Wed, 11 Dec 2013 22:46:52 +0000
-Message-ID: <20131211224652.GB11044@sirena.org.uk>
-References: <20131210104005.GB29268@sirena.org.uk>
- <1386686098-7779-1-git-send-email-balajitk@ti.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
+ exynos5420 dtsi files
+Date: Wed, 11 Dec 2013 14:57:45 -0800
+Message-ID: <CAD=FV=WZNmWdxTWzHCEtkCo7O1RZ7YDNkmNBD4wwpDc-=O1LCQ@mail.gmail.com>
+References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com>
+	<1386308868-30264-2-git-send-email-l.krishna@samsung.com>
+	<52A207D8.3030206@gmail.com>
+	<8302228.6iSJIFqj3A@flatron>
+	<52A39F3B.5070806@gmail.com>
+	<CAL1wa8fTuOMk9=G3JhdpNOE8=FPTfMSJ_mB-7jo1pNF1cAavgg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="p4qYPpj5QlsIQJ0K"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1386686098-7779-1-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, tony@atomide.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL1wa8fTuOMk9=G3JhdpNOE8=FPTfMSJ_mB-7jo1pNF1cAavgg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Leela Krishna Amudala <l.krishna@samsung.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "cpgs ." <cpgs@samsung.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
+Leela Krishna,
 
---p4qYPpj5QlsIQJ0K
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, Dec 11, 2013 at 4:22 AM, Leela Krishna Amudala
+<l.krishna@samsung.com> wrote:
+> Hi,
+>
+> As I was in travel not accessed my mails.
+>
+> I'll try to post next version of this series tomorrow addressing
+> Sylwester's comments.
 
-On Tue, Dec 10, 2013 at 08:04:58PM +0530, Balaji T K wrote:
-> pbias register controls internal power supply to sd card i/o pads
-> in most OMAPs (OMAP2-5, DRA7).
-> Control bits for selecting voltage level and
-> enabling/disabling are in the same PBIAS register.
+It's completely up to you (and Wim), of course.  ...but if it were me
+I wouldn't spin the patch at this point.  Your existing version has
+Guenter's Ack and his indication that he thinks that v12 is good
+enough to land without future spins.  You could spin with Tomasz /
+Sylwester's suggestions but remember that it is not mandatory.
 
-This looks OK from a regulator API point of view but I expect a new
-version is required to address Tony's concerns.
-
---p4qYPpj5QlsIQJ0K
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSqOtZAAoJELSic+t+oim9cA0P/iA283lESfe07m7rzjtqnHx5
-BK/WJeoCdWrfw7NI3mIZq6baFef9xOPUy1eWoPCCJTCuhRNCxsYjmEngb2jDryMa
-iXsbmmtXV8YQvQQTvLc01YhJSwPEjEsoTOgGtaoJyFpMscgZsNOyJDsj3ykGGQFt
-jj7IzBtQTrdpuhAfvAsfUzYyvEzDyJzFKY9eUExoVFcT/zov6mjBaegbP71Wro5T
-jm/WgaEEsnksTyryg3acRw0J/Sk9Iwgskb6pTcfQsA3jeHGyZesHrEweGI4Zgk9w
-EhiskmLjjua+eTFRdpTexW10IuFQdjrDhIy6vz7EqTZHxJLsOmczaSV5jW60/Sfu
-c6PPVM81vqTN4di4lRG8JPAz6lHBdde1ud/yffMdUa9CYCqOoMnRwOChsywmsDJ/
-JIFR2XkkqOVABftCQw/OVCjbO3NfaI4ayf1174AyOQjIVK2aeWxBATIqIKKy7yQv
-TmI07McdCG3BP2LY7bA4kL7Fy6fKZKpQXAjsw6PnLxubD3Lk3YdlLrzaynPv1jmF
-mK9yUCZUHjCstGRWLoyv3JS1t8WBDmYcG3m2AAVzr+3uL+Pnd3+vEktxU6hrxIV+
-19GcK8VABVm8htKPykWcOLvqaafEXO5DtvrxrEsFdArM14S3eVJZt+P/WWE1WlOE
-1uTS+UhRORFH7l653f/o
-=wwgm
------END PGP SIGNATURE-----
-
---p4qYPpj5QlsIQJ0K--
+-Doug
