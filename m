@@ -1,52 +1,57 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 3/3] clk: hisilicon: add hi3620_mmc_clks
-Date: Wed, 11 Dec 2013 23:40:39 +0800
-Message-ID: <52A88777.9030502@linaro.org>
-References: <1386770541-15056-1-git-send-email-zhangfei.gao@linaro.org> <1386770541-15056-4-git-send-email-zhangfei.gao@linaro.org> <201312111544.47519.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201312111544.47519.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Chris Ball <cjb@laptop.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org
+From: Alexander Shiyan <shc_work@mail.ru>
+Subject: [PATCH 2/2] serial: clps711x: dts: Add bindings documentation for the CLPS711X UART
+Date: Wed, 11 Dec 2013 19:52:35 +0400
+Message-ID: <1386777155-24851-1-git-send-email-shc_work@mail.ru>
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Alexander Shiyan <shc_work@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
+This patch adds the devicetree documentation for the Cirrus Logic
+CLPS711X UART.
 
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+---
+ .../bindings/serial/cirrus,clps711x-uart.txt       | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
 
-On 12/11/2013 10:44 PM, Arnd Bergmann wrote:
-> On Wednesday 11 December 2013, Zhangfei Gao wrote:
->> +PCTRL: Peripheral misc control register
->> +
->> +Required Properties:
->> +- compatible: "hisilicon,pctrl"
->> +- reg: Address and size of pctrl.
->> +
->> +Example:
->> +
->> +       /* for Hi3620 */
->> +       pctrl: pctrl@fca09000 {
->> +               compatible = "hisilicon,pctrl";
->> +               reg = <0xfca09000 0x1000>;
->> +       };
->
-> It seems you are missing the clock specific parts of the binding:
-> You should document the required value of #clock-cells as well as
-> the possible values for the clock specifier.
->
-
-It is reuse Documentation/devicetree/bindings/clock/hi3620-clock.txt via 
-adding hisilicon,hi3620-mmc-clock"
-
-- compatible: should be one of the following.
-   - "hisilicon,hi3620-clock" - controller compatible with Hi3620 SoC.
-+  - "hisilicon,hi3620-mmc-clock" - controller specific for Hi3620 mmc.
-
-- reg: physical base address of the controller and length of memory mapped
-   region.
-
-- #clock-cells: should be 1.
-
-Thanks
+diff --git a/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt b/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
+new file mode 100644
+index 0000000..8bbdd21
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
+@@ -0,0 +1,29 @@
++* Cirrus Logic CLPS711X Universal Asynchronous Receiver/Transmitter (UART)
++
++Required properties:
++- compatible: Should be "cirrus,clps711x-uart".
++- reg: Address and length of the register set for the device.
++- interrupts: Should contain UART TX and RX interrupt.
++- clocks: Should contain UART core clock number.
++- syscon: Phandle to SYSCON node, which contain UART control bits.
++
++Optional properties:
++- uart-use-ms: Indicate the UART has modem signal (DCD, DSR, CTS).
++- uart-use-irda: Indicate the UART use IRDA mode.
++
++Note: Each UART port should have an alias correctly numbered
++in "aliases" node.
++
++Example:
++	aliases {
++		serial0 = &uart1;
++	};
++
++	uart1: uart@80000480 {
++		compatible = "cirrus,clps711x-uart";
++		reg = <0x80000480 0x80>;
++		interrupts = <12 13>;
++		clocks = <&clks 11>;
++		syscon = <&syscon1>;
++		uart-use-ms;
++	};
+-- 
+1.8.3.2
 
