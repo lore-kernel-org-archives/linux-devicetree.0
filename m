@@ -1,121 +1,149 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH 5/5] dt/bindings: Remove device_type "serial" from marvell,mv64360-mpsc
-Date: Wed, 11 Dec 2013 11:15:55 +0000
-Message-ID: <1386760555-22732-6-git-send-email-grant.likely@linaro.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 3/5] dt/bindings: remove users of device_type "mdio"
+Date: Wed, 11 Dec 2013 11:15:53 +0000
+Message-ID: <1386760555-22732-4-git-send-email-grant.likely@linaro.org>
 References: <1386760555-22732-1-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386760555-22732-1-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386760555-22732-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-device_type is deprecated. There is no need to check for it in device
-driver code and no need to specify it in the device tree. Remove the
-property from stock .dts files and remove the check for it from device
-drivers. This change should be 100% backwards compatible with old device
-trees.
+device_type is a deprecated property, but some MDIO bus nodes still have
+it. Except for a couple of old binding (compatible="gianfar" and
+compatible="ucc_geth_phy") the kernel doesn't look for
+device_type="mdio" at all.
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+This patch removes all instances of device_type="mdio" from the binding
+documentation and the .dts files.
+
+Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 ---
- Documentation/devicetree/bindings/marvell.txt | 2 --
- arch/powerpc/boot/dts/c2k.dts                 | 2 --
- arch/powerpc/boot/dts/prpmc2800.dts           | 2 --
- arch/powerpc/sysdev/mv64x60_dev.c             | 2 +-
- arch/powerpc/sysdev/mv64x60_udbg.c            | 2 +-
- 5 files changed, 2 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/marvell.txt                    | 2 --
+ Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt | 1 -
+ arch/powerpc/boot/dts/ep8248e.dts                                | 1 -
+ arch/powerpc/boot/dts/holly.dts                                  | 1 -
+ arch/powerpc/boot/dts/mpc7448hpc2.dts                            | 1 -
+ arch/powerpc/boot/dts/mpc8272ads.dts                             | 1 -
+ arch/powerpc/boot/dts/pq2fads.dts                                | 1 -
+ arch/powerpc/boot/dts/prpmc2800.dts                              | 1 -
+ 8 files changed, 9 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/marvell.txt b/Documentation/devicetree/bindings/marvell.txt
-index bc287efea475..ea2b16ced49b 100644
+index 73a3d251acb1..a5409ca27bc2 100644
 --- a/Documentation/devicetree/bindings/marvell.txt
 +++ b/Documentation/devicetree/bindings/marvell.txt
-@@ -265,7 +265,6 @@ prefixed with the string "marvell,", for Marvell Technology Group Ltd.
-    serial port.
- 
+@@ -79,7 +79,6 @@ prefixed with the string "marvell,", for Marvell Technology Group Ltd.
     Required properties:
--     - device_type : "serial"
-      - compatible : "marvell,mv64360-mpsc"
-      - reg : Offset and length of the register set for this device
-      - sdma : the phandle for the SDMA node used by this port
-@@ -282,7 +281,6 @@ prefixed with the string "marvell,", for Marvell Technology Group Ltd.
+      - #address-cells : Should be <1>
+      - #size-cells : Should be <0>
+-     - device_type : Should be "mdio"
+      - compatible : Should be "marvell,mv64360-mdio"
  
-    Example Discovery MPSCINTR node:
-      mpsc@8000 {
--	     device_type = "serial";
- 	     compatible = "marvell,mv64360-mpsc";
- 	     reg = <0x8000 0x38>;
- 	     virtual-reg = <0xf1008000>;
-diff --git a/arch/powerpc/boot/dts/c2k.dts b/arch/powerpc/boot/dts/c2k.dts
-index de2044b33336..1e32903cb0a8 100644
---- a/arch/powerpc/boot/dts/c2k.dts
-+++ b/arch/powerpc/boot/dts/c2k.dts
-@@ -171,7 +171,6 @@
+    Example:
+@@ -87,7 +86,6 @@ prefixed with the string "marvell,", for Marvell Technology Group Ltd.
+      mdio {
+ 	     #address-cells = <1>;
+ 	     #size-cells = <0>;
+-	     device_type = "mdio";
+ 	     compatible = "marvell,mv64360-mdio";
+ 
+ 	     ethernet-phy@0 {
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
+index 0e4269446580..38cc6c9849ec 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
+@@ -33,7 +33,6 @@ fsl,mdc-pin : pin of port C controlling mdio clock
+ 
+ Example:
+ 	mdio@10d40 {
+-		device_type = "mdio";
+ 		compatible = "fsl,mpc8272ads-mdio-bitbang",
+ 			     "fsl,mpc8272-mdio-bitbang",
+ 			     "fsl,cpm2-mdio-bitbang";
+diff --git a/arch/powerpc/boot/dts/ep8248e.dts b/arch/powerpc/boot/dts/ep8248e.dts
+index 244934fa2419..8b3a49f34f5a 100644
+--- a/arch/powerpc/boot/dts/ep8248e.dts
++++ b/arch/powerpc/boot/dts/ep8248e.dts
+@@ -67,7 +67,6 @@
+ 			ranges;
+ 
+ 			mdio {
+-				device_type = "mdio";
+ 				compatible = "fsl,ep8248e-mdio-bitbang";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+diff --git a/arch/powerpc/boot/dts/holly.dts b/arch/powerpc/boot/dts/holly.dts
+index c6e11ebecebb..43e6f0c8e449 100644
+--- a/arch/powerpc/boot/dts/holly.dts
++++ b/arch/powerpc/boot/dts/holly.dts
+@@ -58,7 +58,6 @@
  		};
  
- 		MPSC0: mpsc@8000 {
--			device_type = "serial";
- 			compatible = "marvell,mv64360-mpsc";
- 			reg = <0x8000 0x38>;
- 			virtual-reg = <0xd8008000>;
-@@ -186,7 +185,6 @@
+ 		MDIO: mdio@6000 {
+-			device_type = "mdio";
+ 			compatible = "tsi109-mdio", "tsi108-mdio";
+ 			reg = <0x00006000 0x00000050>;
+ 			#address-cells = <1>;
+diff --git a/arch/powerpc/boot/dts/mpc7448hpc2.dts b/arch/powerpc/boot/dts/mpc7448hpc2.dts
+index 2544f3ecd6e9..20a0d22df473 100644
+--- a/arch/powerpc/boot/dts/mpc7448hpc2.dts
++++ b/arch/powerpc/boot/dts/mpc7448hpc2.dts
+@@ -68,7 +68,6 @@
  		};
  
- 		MPSC1: mpsc@9000 {
--			device_type = "serial";
- 			compatible = "marvell,mv64360-mpsc";
- 			reg = <0x9000 0x38>;
- 			virtual-reg = <0xd8009000>;
+ 		MDIO: mdio@6000 {
+-			device_type = "mdio";
+ 			compatible = "tsi108-mdio";
+ 			reg = <0x6000 0x50>;
+ 			#address-cells = <1>;
+diff --git a/arch/powerpc/boot/dts/mpc8272ads.dts b/arch/powerpc/boot/dts/mpc8272ads.dts
+index 0c92de74d065..6d2cddf64cfd 100644
+--- a/arch/powerpc/boot/dts/mpc8272ads.dts
++++ b/arch/powerpc/boot/dts/mpc8272ads.dts
+@@ -182,7 +182,6 @@
+ 			};
+ 
+ 			mdio@10d40 {
+-				device_type = "mdio";
+ 				compatible = "fsl,mpc8272ads-mdio-bitbang",
+ 				             "fsl,mpc8272-mdio-bitbang",
+ 				             "fsl,cpm2-mdio-bitbang";
+diff --git a/arch/powerpc/boot/dts/pq2fads.dts b/arch/powerpc/boot/dts/pq2fads.dts
+index 9d065cdeb5eb..0c525ff0c257 100644
+--- a/arch/powerpc/boot/dts/pq2fads.dts
++++ b/arch/powerpc/boot/dts/pq2fads.dts
+@@ -198,7 +198,6 @@
+ 			};
+ 
+ 			mdio@10d40 {
+-				device_type = "mdio";
+ 				compatible = "fsl,pq2fads-mdio-bitbang",
+ 				             "fsl,mpc8280-mdio-bitbang",
+ 				             "fsl,cpm2-mdio-bitbang";
 diff --git a/arch/powerpc/boot/dts/prpmc2800.dts b/arch/powerpc/boot/dts/prpmc2800.dts
-index 77c8db238d1c..00afaacf8c8c 100644
+index 909e8b0ead26..77c8db238d1c 100644
 --- a/arch/powerpc/boot/dts/prpmc2800.dts
 +++ b/arch/powerpc/boot/dts/prpmc2800.dts
-@@ -159,7 +159,6 @@
- 		};
- 
- 		MPSC0: mpsc@8000 {
--			device_type = "serial";
- 			compatible = "marvell,mv64360-mpsc";
- 			reg = <0x8000 0x38>;
- 			virtual-reg = <0xf1008000>;
-@@ -174,7 +173,6 @@
- 		};
- 
- 		MPSC1: mpsc@9000 {
--			device_type = "serial";
- 			compatible = "marvell,mv64360-mpsc";
- 			reg = <0x9000 0x38>;
- 			virtual-reg = <0xf1009000>;
-diff --git a/arch/powerpc/sysdev/mv64x60_dev.c b/arch/powerpc/sysdev/mv64x60_dev.c
-index a3a8fad8537d..c2dba7db71ad 100644
---- a/arch/powerpc/sysdev/mv64x60_dev.c
-+++ b/arch/powerpc/sysdev/mv64x60_dev.c
-@@ -448,7 +448,7 @@ static int __init mv64x60_device_setup(void)
- 	int err;
- 
- 	id = 0;
--	for_each_compatible_node(np, "serial", "marvell,mv64360-mpsc") {
-+	for_each_compatible_node(np, NULL, "marvell,mv64360-mpsc") {
- 		err = mv64x60_mpsc_device_setup(np, id++);
- 		if (err)
- 			printk(KERN_ERR "Failed to initialize MV64x60 "
-diff --git a/arch/powerpc/sysdev/mv64x60_udbg.c b/arch/powerpc/sysdev/mv64x60_udbg.c
-index 50a81387e9b1..3b8734b870e9 100644
---- a/arch/powerpc/sysdev/mv64x60_udbg.c
-+++ b/arch/powerpc/sysdev/mv64x60_udbg.c
-@@ -85,7 +85,7 @@ static void mv64x60_udbg_init(void)
- 	if (!stdout)
- 		return;
- 
--	for_each_compatible_node(np, "serial", "marvell,mv64360-mpsc") {
-+	for_each_compatible_node(np, NULL, "marvell,mv64360-mpsc") {
- 		if (np == stdout)
- 			break;
- 	}
+@@ -73,7 +73,6 @@
+ 		mdio {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			device_type = "mdio";
+ 			compatible = "marvell,mv64360-mdio";
+ 			PHY0: ethernet-phy@1 {
+ 				compatible = "broadcom,bcm5421";
 -- 
 1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
