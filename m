@@ -1,237 +1,67 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 10/26] OMAPDSS: add of helpers
-Date: Thu, 12 Dec 2013 00:19:56 +0100
-Message-ID: <4533892.HJaRcDt4Q8@avalon>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-11-git-send-email-tomi.valkeinen@ti.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Thu, 12 Dec 2013 00:40:58 +0100
+Message-ID: <201312120040.59345.heiko@sntech.de>
+References: <1383889128-12540-1-git-send-email-zhangfei.gao@linaro.org> <201312110445.54336.arnd@arndb.de> <1386787690.20516.10.camel@linux-builds1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1386160133-24026-11-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1386787690.20516.10.camel@linux-builds1>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Dinh Nguyen <dinguyen@altera.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Zhangfei Gao <zhangfei.gao@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Seungwon Jeon <tgih.jun@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Kumar Gala <galak@codeaurora.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
-
-On Wednesday 04 December 2013 14:28:37 Tomi Valkeinen wrote:
-> Add helpers to get ports and endpoints from DT data.
+Am Mittwoch, 11. Dezember 2013, 19:48:10 schrieb Dinh Nguyen:
+> On Wed, 2013-12-11 at 04:45 +0100, Arnd Bergmann wrote:
+> > On Wednesday 11 December 2013, Zhangfei Gao wrote:
+> > > Thanks for the good suggestion, it can be abstracted to clock.
+> > > 
+> > > The issue for this version's ip is there are some registers need to be
+> > > set, including fixed factor and phase, which may be required to be
+> > > tuned, however it can be hide in clock.
+> > > 
+> > > Double checked next version's ip, it is more intelligent and only
+> > > fixed factor is required, more like a clock, and all these register
+> > > accessing are NOT required.
+> > > 
+> > > Will update new version to abstract these chip depended registers to
+> > > clock.
+> > 
+> > Ok, please stay in contact with Dinh Nguyen over this, since his side
+> > is work-in-progress and we are still evaluating how to best encode
+> > the phase setting in DT in a generic form.
 > 
-> While all the functions in dss-of.c might be useful for panel drivers if
-> they need to parse full port/endpoint data, at the moment we only need a
-> few of them outside dss-of.c, so only those functions are exported.
-
-I totally understand that it was easier to add this code to the OMAP DSS 
-driver, but I believe we should refactor the existing drivers/media/v4l2-
-core/v4l2-of.c and move it to a non V4L2-specific location (what about 
-drivers/media ?) sooner rather than later. That's on my to-do list for 
-Saturday.
-
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> ---
->  drivers/video/omap2/dss/Makefile |   2 +-
->  drivers/video/omap2/dss/dss-of.c | 160 ++++++++++++++++++++++++++++++++++++
->  include/video/omapdss.h          |   6 ++
->  3 files changed, 167 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/video/omap2/dss/dss-of.c
+> Will the bindings "samsung,dw-mshc-sdr-timing" and
+> "samsung,dw-mshc-ddr-timing" also work for the k3 platform as well? I
+> think they should work, but just wanted to verify.
 > 
-> diff --git a/drivers/video/omap2/dss/Makefile
-> b/drivers/video/omap2/dss/Makefile index d3aa91bdd6a8..8aec8bda27cc 100644
-> --- a/drivers/video/omap2/dss/Makefile
-> +++ b/drivers/video/omap2/dss/Makefile
-> @@ -1,7 +1,7 @@
->  obj-$(CONFIG_OMAP2_DSS) += omapdss.o
->  # Core DSS files
->  omapdss-y := core.o dss.o dss_features.o dispc.o dispc_coefs.o display.o \
-> -	output.o
-> +	output.o dss-of.o
->  # DSS compat layer files
->  omapdss-y += manager.o manager-sysfs.o overlay.o overlay-sysfs.o apply.o \
->  	dispc-compat.o display-sysfs.o
-> diff --git a/drivers/video/omap2/dss/dss-of.c
-> b/drivers/video/omap2/dss/dss-of.c new file mode 100644
-> index 000000000000..9aa61d4bdb3d
-> --- /dev/null
-> +++ b/drivers/video/omap2/dss/dss-of.c
-> @@ -0,0 +1,160 @@
-> +/*
-> + * Copyright (C) 2013 Texas Instruments
-> + * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2 as published
-> by + * the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but
-> WITHOUT + * ANY WARRANTY; without even the implied warranty of
-> MERCHANTABILITY or + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> General Public License for + * more details.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/seq_file.h>
-> +
-> +#include <video/omapdss.h>
-> +
-> +#include "dss.h"
-> +#include "dss_features.h"
-> +
-> +static struct device_node *
-> +omapdss_of_get_next_port(const struct device_node *parent,
-> +			 struct device_node *prev)
-> +{
-> +	struct device_node *port = NULL;
-> +
-> +	if (!parent)
-> +		return NULL;
-> +
-> +	if (!prev) {
-> +		struct device_node *ports;
-> +		/*
-> +		 * It's the first call, we have to find a port subnode
-> +		 * within this node or within an optional 'ports' node.
-> +		 */
-> +		ports = of_get_child_by_name(parent, "ports");
-> +		if (ports)
-> +			parent = ports;
-> +
-> +		port = of_get_child_by_name(parent, "port");
-> +
-> +		/* release the 'ports' node */
-> +		of_node_put(ports);
-> +	} else {
-> +		struct device_node *ports;
-> +
-> +		ports = of_get_parent(prev);
-> +		if (!ports)
-> +			return NULL;
-> +
-> +		do {
-> +			port = of_get_next_child(ports, prev);
-> +			if (!port) {
-> +				of_node_put(ports);
-> +				return NULL;
-> +			}
-> +			prev = port;
-> +		} while (of_node_cmp(port->name, "port") != 0);
-> +	}
-> +
-> +	return port;
-> +}
-> +
-> +static struct device_node *
-> +omapdss_of_get_next_endpoint(const struct device_node *parent,
-> +			     struct device_node *prev)
-> +{
-> +	struct device_node *ep = NULL;
-> +
-> +	if (!parent)
-> +		return NULL;
-> +
-> +	do {
-> +		ep = of_get_next_child(parent, prev);
-> +		if (!ep)
-> +			return NULL;
-> +		prev = ep;
-> +	} while (of_node_cmp(ep->name, "endpoint") != 0);
-> +
-> +	return ep;
-> +}
-> +
-> +static struct device_node *
-> +omapdss_of_get_remote_device_node(const struct device_node *node)
-> +{
-> +	struct device_node *np;
-> +	int i;
-> +
-> +	np = of_parse_phandle(node, "remote-endpoint", 0);
-> +
-> +	if (!np)
-> +		return NULL;
-> +
-> +	np = of_get_next_parent(np);
-> +
-> +	for (i = 0; i < 3 && np; ++i) {
-> +		struct property *prop;
-> +
-> +		prop = of_find_property(np, "compatible", NULL);
-> +
-> +		if (prop)
-> +			return np;
-> +
-> +		np = of_get_next_parent(np);
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +struct device_node *
-> +omapdss_of_get_first_endpoint(const struct device_node *parent)
-> +{
-> +	struct device_node *port;
-> +	struct device_node *ep;
-> +
-> +	port = omapdss_of_get_next_port(parent, NULL);
-> +	if (port) {
-> +		ep = omapdss_of_get_next_endpoint(port, NULL);
-> +		of_node_put(port);
-> +	} else {
-> +		ep = omapdss_of_get_next_endpoint(parent, NULL);
-> +	}
-> +
-> +	return ep;
-> +}
-> +EXPORT_SYMBOL_GPL(omapdss_of_get_first_endpoint);
-> +
-> +struct omap_dss_device *
-> +omapdss_of_find_source_for_first_ep(struct device_node *node)
-> +{
-> +	struct device_node *ep;
-> +	struct device_node *src_node;
-> +	struct omap_dss_device *src;
-> +
-> +	ep = omapdss_of_get_first_endpoint(node);
-> +	if (!ep)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	src_node = omapdss_of_get_remote_device_node(ep);
-> +
-> +	of_node_put(ep);
-> +
-> +	if (!src_node)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	src = omap_dss_find_output_by_node(src_node);
-> +
-> +	of_node_put(src_node);
-> +
-> +	if (!src)
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +
-> +	return src;
-> +}
-> +EXPORT_SYMBOL_GPL(omapdss_of_find_source_for_first_ep);
-> diff --git a/include/video/omapdss.h b/include/video/omapdss.h
-> index 3d7c51a6f9ff..c510591df1b8 100644
-> --- a/include/video/omapdss.h
-> +++ b/include/video/omapdss.h
-> @@ -1019,4 +1019,10 @@ static inline bool omapdss_device_is_enabled(struct
-> omap_dss_device *dssdev) return dssdev->state == OMAP_DSS_DISPLAY_ACTIVE;
->  }
+> Heiko, on the rockchip platform, can you check to see if you have these
+> cclk_in_drv and cclk_sample settings for the phase shift of the clocks?
+> The SD/MMC IP version(2.40a) on Rockchip is the same version that is on
+> SOCFPGA, so I think these settings are there. They can be located in
+> some other "system" register block like SOCFPGA. The possible reason
+> that you have not need to set them in the Rockchip code could be that
+> the bootloader/firmware has already set them if you are booting from the
+> SD/MMC source. You may need to set the clock phase settings if you boot
+> from a non-SD source.
 > 
-> +struct device_node *
-> +omapdss_of_get_first_endpoint(const struct device_node *parent);
-> +
-> +struct omap_dss_device *
-> +omapdss_of_find_source_for_first_ep(struct device_node *node);
-> +
->  #endif
--- 
-Regards,
+> I think the reading of the "samsung,dw-mshc-ddr-timing" and
+> "samsung,dw-msh-sdr-timing" bindings can also be moved into the generic
+> dw_mmc driver if the above 2 conditions are correct.
 
-Laurent Pinchart
+The mmc-controller part of the rk-manual that is flying around the net, 
+mentions these cclk_in_drv and cclk_in_sample as coming from somewhere, but 
+sadly never where to get/set/access them.
 
+The doc of the USE_HOLD_REG bit also mention the required settings of these 
+cclk_in_* but nowhere is a word about the where to be found.
+
+And the manual is notable for lacking all information related to the clock 
+controller. And I also wasn't able to find any other indication where this 
+might be set.
+
+
+Heiko
