@@ -1,95 +1,131 @@
-From: Sherman Yin <syin@broadcom.com>
-Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
-Date: Tue, 10 Dec 2013 16:05:30 -0800
-Message-ID: <52A7AC4A.8010504@broadcom.com>
-References: <1380846199-12829-1-git-send-email-syin@broadcom.com> <1380846199-12829-4-git-send-email-syin@broadcom.com> <CAEPRUYqfpdp1GqxBgx-q=hyvQDe4uyi6okzHPW2QmfmPG_Z3NQ@mail.gmail.com> <525FFA40.9050901@wwwdotorg.org> <CAEPRUYq5DA982AqAmrUpsb3qc30VaFBawaXKTp2pcDvdbM-S1g@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] pinctrl: Add Qualcomm TLMM driver
+Date: Tue, 10 Dec 2013 17:42:43 -0800
+Message-ID: <52A7C313.8090208@codeaurora.org>
+References: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com> <1386295805-13708-2-git-send-email-bjorn.andersson@sonymobile.com> <52A24438.4000908@codeaurora.org> <20131210081031.GD11990@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAEPRUYq5DA982AqAmrUpsb3qc30VaFBawaXKTp2pcDvdbM-S1g@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Daudt <bcm@fixthebug.org>, Stephen Warren <swarren@wwwdotorg.org>, Kevin Hilman <khilman@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Markus Mayer <mmayer@broadcom.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20131210081031.GD11990@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13-10-17 08:31 AM, Christian Daudt wrote:
-> On Thu, Oct 17, 2013 at 7:54 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 10/17/2013 12:03 AM, Christian Daudt wrote:
->>> On Thu, Oct 3, 2013 at 5:23 PM, Sherman Yin <syin@broadcom.com> wrote:
->>>> Adds pinctrl driver for Broadcom Capri (BCM281xx) SoCs.
->>>>
->>>> Signed-off-by: Sherman Yin <syin@broadcom.com>
->>>> Reviewed-by: Christian Daudt <bcm@fixthebug.org>
->>>> Reviewed-by: Matt Porter <matt.porter@linaro.org>
->>>> ---
->>>>   arch/arm/mach-bcm/Kconfig       |    2 +
->>>>   drivers/pinctrl/Kconfig         |   10 +
->>>>   drivers/pinctrl/Makefile        |    1 +
->>>>   drivers/pinctrl/pinctrl-capri.c | 1727 +++++++++++++++++++++++++++++++++++++++
->>>>   4 files changed, 1740 insertions(+)
->>>>   create mode 100644 drivers/pinctrl/pinctrl-capri.c
->>>>
->>>> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
->>>> index 69d67f7..2546365 100644
->>>> --- a/arch/arm/mach-bcm/Kconfig
->>>> +++ b/arch/arm/mach-bcm/Kconfig
->>>> @@ -10,6 +10,8 @@ config ARCH_BCM
->>>>          select GENERIC_CLOCKEVENTS
->>>>          select GENERIC_TIME
->>>>          select GPIO_BCM
->>>> +       select PINCTRL
->>>> +       select PINCTRL_CAPRI
->>>>          select SPARSE_IRQ
->>>>          select TICK_ONESHOT
->>>>          select CACHE_L2X0
->>>
->>> On your subsequent patchset pls move this from Kconfig to
->>> arm/configs/bcm_defconfig, and break that modification into a separate
->>> patch from the drivers/* modification.
+On 12/10/13 00:10, Bjorn Andersson wrote:
+> On Fri 06 Dec 13:40 PST 2013, Stephen Boyd wrote:
+>>> +config PINCTRL_MSM
+>>> +     bool
+>> Why not tristate?
 >>
->> The other SoCs I'm familiar with all select this from their ARCH_xxx
->> config symbol.
+> I have a hard time seeing an situation where you would like to build a system
+> with this driver as a module; it would force almost the entire system to be
+> loaded at a later time...
+
+We're going to need to build everything but the essentials as modules
+for the multi-platform kernel because we're going to run into the
+problem where the kernel can't link anymore. Data heavy drivers such as
+this are  targets for that because they waste more space being built-in
+and they're not absolutely necessary to boot into an initrd that holds
+the modules for a particular device.
+
+>
+>
+>>> +     val = readl(pctrl->regs + g->intr_cfg_reg);
+>>> +     val |= BIT(g->intr_raw_status_bit);
+>>> +     if (g->intr_detection_width == 2) {
+>>> +             val &= ~(3 << g->intr_detection_bit);
+>>> +             val &= ~(1 << g->intr_polarity_bit);
+>>> +             switch (type) {
+>>> +             case IRQ_TYPE_EDGE_RISING:
+>>> +                     val |= 1 << g->intr_detection_bit;
+>>> +                     val |= BIT(g->intr_polarity_bit);
+>>> +                     break;
+>>> +             case IRQ_TYPE_EDGE_FALLING:
+>>> +                     val |= 2 << g->intr_detection_bit;
+>>> +                     val |= BIT(g->intr_polarity_bit);
+>>> +                     break;
+>>> +             case IRQ_TYPE_EDGE_BOTH:
+>>> +                     val |= 3 << g->intr_detection_bit;
+>>> +                     val |= BIT(g->intr_polarity_bit);
+>>> +                     break;
+>>> +             case IRQ_TYPE_LEVEL_LOW:
+>>> +                     break;
+>>> +             case IRQ_TYPE_LEVEL_HIGH:
+>>> +                     val |= BIT(g->intr_polarity_bit);
+>>> +                     break;
+>>> +             }
+>>> +     } else if (g->intr_detection_width == 1) {
+>>> +             val &= ~(1 << g->intr_detection_bit);
+>>> +             val &= ~(1 << g->intr_polarity_bit);
+>>> +             switch (type) {
+>>> +             case IRQ_TYPE_EDGE_RISING:
+>>> +                     val |= BIT(g->intr_detection_bit);
+>>> +                     val |= BIT(g->intr_polarity_bit);
+>>> +                     break;
+>>> +             case IRQ_TYPE_EDGE_FALLING:
+>>> +                     val |= BIT(g->intr_detection_bit);
+>>> +                     break;
+>>> +             case IRQ_TYPE_EDGE_BOTH:
+>>> +                     val |= BIT(g->intr_detection_bit);
+>>> +                     break;
+>>> +             case IRQ_TYPE_LEVEL_LOW:
+>>> +                     break;
+>>> +             case IRQ_TYPE_LEVEL_HIGH:
+>>> +                     val |= BIT(g->intr_polarity_bit);
+>>> +                     break;
+>>> +             }
+>>> +     } else {
+>>> +             BUG();
+>>> +     }
+>> This would be better written as a collection of ifs so that
+>> IRQ_TYPE_EDGE_BOTH doesn't have to be tested and we duplicate less code.
 >>
-> I had a discussion on what is best left under ARCH and what is best
-> left to defconfig with Kevin Hilman a while back and the conclusion
-> was that any config not strictly required for bootup is best left to
-> defconfig. This will allow multiplatform kernels to switch to using
-> them as loadable modules later on, something not possible with configs
-> put under ARCH_xxx.
+> I've rewritten this numerous times and this is the cleanest way I can find
+> to do this in. Yes, there's some duplication but it has a cleaner structure
+> and easier to follow than the nested if/elseif/else statements.
 >
->   Thanks,
->      csd
+> So I would like to keep it as is.
+
+Isn't this the same?
+
++     val = readl(pctrl->regs + g->intr_cfg_reg);
++     val |= BIT(g->intr_raw_status_bit);
++
++     detection_mask = BIT(g->intr_detection_width) - 1;
++     val &= ~(detection_mask << g->intr_detection_bit);
++     val &= ~BIT(g->intr_polarity_bit);
++
++     if (type & IRQ_TYPE_EDGE_RISING)
++             val |= BIT(g->intr_detection_bit);
++
++     if (type & IRQ_TYPE_EDGE_FALLING)
++             val |= g->intr_detection_width << g->intr_detection_bit;
++
++     if (!(type & IRQ_TYPE_LEVEL_LOW))
++             val |= BIT(g->intr_polarity_bit);
++
+
 >
+>
+>
+>>> +#include <linux/pinctrl/pinctrl.h>
+>>> +#include <linux/pinctrl/pinmux.h>
+>>> +#include <linux/pinctrl/pinconf.h>
+>>> +#include <linux/pinctrl/machine.h>
+>> Are any of these includes actually necessary? Can't we just forward
+>> declare struct pinctrl_pin_desc?
+>>
+> None of them are needed in the current set of patches, as these are already
+> included in the c-files before including this.
+>
+> But the right set should be: platform_device.h and pinctrl.h.
 
-I was just trying to move "select PINCTRL" to a defconfig as Christian 
-suggested.  However, CONFIG_PINCTRL is not selectable by a defconfig 
-file (the option will be gone by the time .config is generated), even 
-though PINCTRL has no dependency.  Also, this option is not visible in 
-menuconfig.
+We should be able to get away with forward declaring the structs we care
+about. C files that include this header should be including the
+pinctrl.h header file anyway, no?
 
-I found that by adding a string after "bool" in the PINCTRL config 
-definition (see diff below), CONFIG_PINCTRL will be selectable in a 
-defconfig file and this option will also be visible in menuconfig.
-
-Was this intentional or is this a bug?  To address Christian's comment, 
-I'll need to add the following patch.
-
-Regards,
-Sherman
-
-==================
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 6c70fc5..664c8e6 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -3,7 +3,7 @@
-  #
-
-  config PINCTRL
--       bool
-+       bool "Enable the pinctrl framework"
-
-  if PINCTRL
-==================
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
