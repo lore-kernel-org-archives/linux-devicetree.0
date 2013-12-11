@@ -1,59 +1,39 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/5] Phy: DT binding documentation for Marvell MVEBU SATA
- phy.
-Date: Wed, 11 Dec 2013 11:11:01 +0530
-Message-ID: <52A7FAED.7080103@ti.com>
-References: <1386177364-10164-1-git-send-email-andrew@lunn.ch> <1386177364-10164-2-git-send-email-andrew@lunn.ch> <52A01742.2080405@ti.com> <20131205094319.GD10498@lunn.ch> <20131210225900.GB17875@lunn.ch>
+From: Zhangfei Gao <zhangfei.gao@gmail.com>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Wed, 11 Dec 2013 13:47:16 +0800
+Message-ID: <CAMj5Bkgwzq5+aewF2vOJq3aDMk0yy8WVQOzdboCmMtrx1vi4nQ@mail.gmail.com>
+References: <1383889128-12540-1-git-send-email-zhangfei.gao@linaro.org>
+	<1383889128-12540-3-git-send-email-zhangfei.gao@linaro.org>
+	<001f01cef1c2$6bd0ab70$43720250$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20131210225900.GB17875@lunn.ch>
-Sender: linux-ide-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <001f01cef1c2$6bd0ab70$43720250$%jun@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Dear Seungwon
 
-On Wednesday 11 December 2013 04:29 AM, Andrew Lunn wrote:
-> On Thu, Dec 05, 2013 at 10:43:19AM +0100, Andrew Lunn wrote:
->>>>  Example:
->>>>  
->>>>  	sata@80000 {
->>>>  		compatible = "marvell,orion-sata";
->>>>  		reg = <0x80000 0x5000>;
->>>>  		interrupts = <21>;
->>>> +		phys = <&sata_phy0>, <&sata_phy1>;
->>>> +		phy-names = "0", "1";
->>>
->>> more descriptive phy-names? sata-phy0?
->>>>  		nr-ports = <2>;
->>
->> I could do, but i was following how the clocks work. Unfortunately,
->> the binding documentation is out of date and does not contain
->> clocks. A real example is:
->>
->>               sata@80000 {
->>                       compatible = "marvell,orion-sata";
->>                       reg = <0x80000 0x5000>;
->>                       interrupts = <21>;
->>                       clocks = <&gate_clk 14>, <&gate_clk 15>;
->>                       clock-names = "0", "1";
->>                       phys = <&sata_phy0>, <&sata_phy1>;
->>                       phy-names = "0", "1";
->>                       status = "disabled";
->>               };
->>
->> So clocks and the phy are described nearly identically. I can however
->> handle phys differently if you wish.
-> 
-> Hi Kishon
-> 
-> Please could you comment on this. Are you O.K. if i use the same
-> naming scheme for phys as clocks?
+On Thu, Dec 5, 2013 at 10:00 PM, Seungwon Jeon <tgih.jun@samsung.com> wrote:
 
-I'd prefer descriptive names for phys.
+>> +static DEFINE_SPINLOCK(mmc_tuning_lock);
+> Can the above variables be involved in dw_mci_k3_priv_data instead of global declaration?
+>
+Unfortunately, this can be be put in priv_data, which is different
+instance for different controller.
+Here need protect register shared by different controllers
+
+
+>> +static int dw_mci_k3_setup_clock(struct dw_mci *host)
+>> +{
+>> +     dw_mci_k3_tun(host, MMC_TIMING_LEGACY);
+> Is it necessary here?
+> When card-init, MMC_TIMING_LEGACY will be passed via dw_mci_k3_set_ios().
+
+Read register will fail if not set these register earlier, and set_ios
+is too late.
+Same reason for resume.
 
 Thanks
-Kishon
