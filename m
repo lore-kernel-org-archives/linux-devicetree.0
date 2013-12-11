@@ -1,131 +1,79 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v4 10/15] usb: phy: msm: Add device tree support and
- binding information
-Date: Wed, 11 Dec 2013 11:45:36 +0200
-Message-ID: <1386755136.16289.26.camel@iivanov-dev.int.mm-sol.com>
-References: <1384267910-32066-1-git-send-email-iivanov@mm-sol.com>
-	 <1384267910-32066-11-git-send-email-iivanov@mm-sol.com>
-	 <20131115163818.GH24831@e106331-lin.cambridge.arm.com>
-	 <1384779277.13631.13.camel@iivanov-dev.int.mm-sol.com>
-	 <20131205104150.GJ29200@e106331-lin.cambridge.arm.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] phy: Add exynos-phy driver
+Date: Wed, 11 Dec 2013 15:24:19 +0530
+Message-ID: <52A8364B.5020204@ti.com>
+References: <1385558788-10880-1-git-send-email-t.stanislaws@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131205104150.GJ29200@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "davidb@codeaurora.org" <davidb@codeaurora.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385558788-10880-1-git-send-email-t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, 
+Hi,
 
-On Thu, 2013-12-05 at 10:41 +0000, Mark Rutland wrote: 
-> On Mon, Nov 18, 2013 at 12:54:37PM +0000, Ivan T. Ivanov wrote:
-> > Hi Mark, 
-> > 
-> > On Fri, 2013-11-15 at 16:38 +0000, Mark Rutland wrote: 
-> > > On Tue, Nov 12, 2013 at 02:51:45PM +0000, Ivan T. Ivanov wrote:
-> > > > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> > > > 
-> > > > Allows MSM OTG controller to be specified via device tree.
-> > > > 
-> > > > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> > > > Cc: devicetree@vger.kernel.org
-> > > > ---
-> > > >  .../devicetree/bindings/usb/msm-hsusb.txt          |   57 +++++++++++++-
-> > > >  drivers/usb/phy/phy-msm-usb.c                      |   79 +++++++++++++++++---
-> > > >  2 files changed, 124 insertions(+), 12 deletions(-)
-> 
-> [...]
-> 
-> > > > +
-> > > > +- dr_mode:		One of "host", "peripheral" or "otg". Defaults to "otg"
-> > > 
-> > > If this has a default and thus isn't required, it should be listed as
-> > > optional.
-> > 
-> > This is part of the standard USB bindings, Perhaps I could just
-> > refer to:  Documentation/devicetree/bindings/usb/generic.txt
-> 
-> That would be fine, but it should also be moved to the optional
-> properties section.
+On Wednesday 27 November 2013 06:56 PM, Tomasz Stanislawski wrote:
+> Hello everyone,
+> The Samsung SoCs from Exynos family are enhanced with a bunch of switches
+> dedicated for IP blocks. Those switches are called PHYs in Exynos
+> specification. They are usually controlled by a single bit in a single
+> one-word-long register.
 
-Ok.
+So only enabling this switch is enough for the controller or some other actual
+PHY IP is needed along with this switch?
+
+However I'm not sure if the switch should be modelled as PHY as it is not a PHY
+in the real sense.
+
+Thanks
+Kishon
 
 > 
-> > 
-> > 
-> > > 
-> > > > +
-> > > > +- vdccx-supply:	phandle to the regulator for the vdd supply for
-> > > > +				digital circuit operation.
-> > > > +- v1p8-supply:	phandle to the regulator for the 1.8V supply
-> > > > +- v3p3-supply:	phandle to the regulator for the 3.3V supply
-> > > > +
-> > > > +- qcom,otg-control: OTG control (VBUS and ID notifications) can be one of
-> > > > +				1 - PHY control
-> > > > +				2 - PMIC control
-> > > > +				3 - User control (via debugfs)
-> > > 
-> > > NAK. This does not seem like a description of the hardware, and given
-> > > the debugfs comment is fundamentally tied to the way Linux functions
-> > > today.
-> > 
-> > I will remove option 3, but rest are really property of the chipset. 
+> A IP driver has to control such a switch in an abstract manner.  Therefore,
+> such 'enablers' were implemented as clocks in older versions of Linux kernel.
+> With the dawn of PHY subsystems, PHYs become a natural way of exporting the
+> 'enabler' functionality to drivers.  However, there is an unexpected
+> consequence. Some of those 1-bit PHYs were implemented as separate drivers.
+> This means that one has to create a struct device, struct phy, its phy provider
+> and 100-150 lines of driver code to basically set one bit.
 > 
-> Can you elaborate on the diffence please?
-
-Difference is how VBUS, ID changes, Accessory and Charger
-detection is handled. In older chips-sets they are handled
-by PHY controller, while now they are handled by external
-PMIC logic.
-
+> The DP phy driver is a good example:
+> https://lkml.org/lkml/2013/7/18/53
 > 
-> > 
-> > > 
-> > > > +
-> > > > +Optional properties:
-> > > > +- qcom,phy-init-sequence: PHY configuration sequence. val, reg pairs
-> > > > +				terminate with -1
-> > > 
-> > > What is this? I'm really not keen on having arbitrary register/memory
-> > > poking sequences in the dt.
-> > 
-> > This is related Device Mode Eye Diagram test and values used could be
-> > different between chipsets.
+> And simple-phy RFC (shares only driver code but not other resources):
+> https://lkml.org/lkml/2013/10/21/313
 > 
-> Ok. Then we should encode the tuning data rather than adding a mechanism
-> to allow for writes to arbitrary addresses.
-
-Currently: 
-
-for msm8226 sequence is < 0x44 0x80 0x68 0x81 0x24 0x82 0x13 0x83 >
-for msm8974 sequence is < 0x63 0x81 >
-
-I could reserve -1 as "do not program" value and document that 
-values in this array will be written to ULPI interface with
-ULPI_EXT_VENDOR_SPECIFIC as base address.
-
-for msm8974 sequence will be < -1 0x63 >
-
+> To avoid waste of resources I propose to create all such 1-bit phys from Exynos
+> SoC using a single device, driver and phy provider.
 > 
-> > 
-> > > 
-> > > Why does it need to be terminated? Surely the size of the property tells
-> > > you that it's terminated.
-> > 
-> > Yes. -1 termination could be done in driver.
+> This patchset contains a proposed solution.
 > 
-> Please do. There's no need for it to be in the DT.
-
-
-Thanks. Ivan
-
+> All comment are welcome.
 > 
-> Cheers,
-> Mark.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Hopefully in future the functionality introduced by this patch may be merged
+> into a larger Power Management Unit (PMU) gluer driver.  On Samsusng SoC , the
+> PMU part contains a number of register barely linked to power management (like
+> clock gating, clock dividers, CPU resetting, etc.).  It may be tempting to
+> create a hybrid driver that export clocks/phys/etc that are controlled by PMU
+> unit.
+> 
+> Regards,
+> Tomasz Stanislawski
+> 
+> Tomasz Stanislawski (1):
+>   phy: Add exynos-phy driver
+> 
+>  drivers/phy/Kconfig      |    5 ++
+>  drivers/phy/Makefile     |    1 +
+>  drivers/phy/exynos-phy.c |  152 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 158 insertions(+)
+>  create mode 100644 drivers/phy/exynos-phy.c
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
