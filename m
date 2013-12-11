@@ -1,34 +1,83 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2] of: unflatten_and_copy: handle NULL initial_boot_params
-Date: Wed, 11 Dec 2013 13:40:43 +0000
-Message-ID: <20131211134043.ACED0C4061A@trevor.secretlab.ca>
-References: <1385041454-32385-1-git-send-email-james.hogan@imgtec.com> < 528E0F7F.7010901@imgtec.com>
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <528E0F7F.7010901@imgtec.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org
-Cc: James Hogan <james.hogan@imgtec.com>, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when populating interrupts
+Date: Wed, 11 Dec 2013 13:45:53 +0000
+Message-ID: <20131211134553.2E967C4061A@trevor.secretlab.ca>
+References: <20131123004334.GJ10023@atomide.com> <20131124213651.59750C402C3 @trevor.secretlab.ca> <20131125092549.GD22043@ulmo.nvidia.com> < 20131125094954.GF22043@ulmo.nvidia.com> <20131127155629.DB612C404EC@trevor. secretlab.ca> <20131128154622.GB23201@ulmo.nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131128154622.GB23201@ulmo.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Nov 2013 13:49:51 +0000, James Hogan <james.hogan@imgtec.com> wrote:
-> On 21/11/13 13:44, James Hogan wrote:
-> > Check whether initial_boot_params is NULL before dereferencing it in
-> > unflatten_and_copy_device_tree() for the case where no device tree is
-> > available but the arch can still boot to a minimal usable system without
-> > it. In this case also log a warning for when the kernel log buffer is
-> > obtainable.
+On Thu, 28 Nov 2013 16:46:23 +0100, Thierry Reding <thierry.reding@gmail.com> wrote:
+> On Wed, Nov 27, 2013 at 03:56:29PM +0000, Grant Likely wrote:
+> > On Mon, 25 Nov 2013 10:49:55 +0100, Thierry Reding <thierry.reding@gmail.com> wrote:
+> > > 
+> > > I should maybe add: one issue that was raised during review of my
+> > > initial patch series was that we'll also need to cope with situations
+> > > like the following:
+> > > 
+> > > 	1) device's interrupt parent is probed (assigned IRQ base X)
+> > > 	2) device is probed (interrupt parent there, therefore gets
+> > > 	   assigned IRQ (X + z)
+> > > 	3) device in removed
+> > > 	4) device's interrupt parent is removed
+> > > 	5) device is probed (deferred because interrupt parent isn't
+> > > 	   there)
+> > > 	6) device's interrupt parent is probed (assigned IRQ base Y)
+> > > 	7) device is probed, gets assigned IRQ (Y + z)
+> > > 
+> > > So not only do we have to track which resources are interrupt resources,
+> > > but we also need to have them reassigned everytime the device is probed,
+> > > therefore interrupt mappings need to be properly disposed and the values
+> > > invalidated when probing is deferred or the device removed.
 > > 
-> > Signed-off-by: James Hogan <james.hogan@imgtec.com>
-> > Cc: Grant Likely <grant.likely@linaro.org>
-> > Cc: Rob Herring <rob.herring@calxeda.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-arch@vger.kernel.org
+> > Yes, that is a problem, but the only way to handle that is to always
+> > recalcuate all resource references at probe time. I don't feel good
+> > about handling that in the core. I'd rather move drivers away from
+> > referencing the resources table directly and instead use an API. Then
+> > the resources table could be missing entirely.
 > 
-> Hmm, sorry, I forgot to add Grant's:
-> Acked-by: Grant Likely <grant.likely@linaro.org>
+> Are you suggesting something like this?
 > 
-> (from v1)
+> ---
+> 
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 3a94b799f166..c894d1af3a5e 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/string.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/dma-mapping.h>
+> @@ -87,7 +88,12 @@ int platform_get_irq(struct platform_device *dev, unsigned int num)
+>                 return -ENXIO;
+>         return dev->archdata.irqs[num];
+>  #else
+> -       struct resource *r = platform_get_resource(dev, IORESOURCE_IRQ, num);
+> +       struct resource *r;
+> +
+> +       if (IS_ENABLED(CONFIG_OF) && dev->dev.of_node)
+> +               return irq_of_parse_and_map(dev->dev.of_node, num);
+> +
+> +       r = platform_get_resource(dev, IORESOURCE_IRQ, num);
 
-Applied, thanks.
+Yes. Or even more generically we could have a device_get_irq() function:
+
+int device_get_irq(struct device *dev, unsigned int num)
+{
+	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
+		return irq_of_parse_and_map(dev->of_node, num);
+	/* An ACPI hook could go here */
+	return 0
+}
+
+It would be callable by any device driver, and platform_get_irq() could
+call it too.
 
 g.
