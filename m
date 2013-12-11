@@ -1,507 +1,172 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v6] of: Make device nodes kobjects so they show up in sysfs
-Date: Wed, 11 Dec 2013 14:59:24 +0000
-Message-ID: <1386773964-14374-1-git-send-email-grant.likely@linaro.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when
+ populating interrupts
+Date: Wed, 11 Dec 2013 16:12:00 +0100
+Message-ID: <20131211151159.GA31617@ulmo.nvidia.com>
+References: <20131123004334.GJ10023@atomide.com>
+ <20131124213651.59750C402C3@trevor.secretlab.ca>
+ <20131125092549.GD22043@ulmo.nvidia.com>
+ <20131125094954.GF22043@ulmo.nvidia.com>
+ <20131127155629.DB612C404EC@trevor.secretlab.ca>
+ <20131128154622.GB23201@ulmo.nvidia.com>
+ <20131211134553.2E967C4061A@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131211134553.2E967C4061A-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Device tree nodes are already treated as objects, and we already want to
-expose them to userspace which is done using the /proc filesystem today.
-Right now the kernel has to do a lot of work to keep the /proc view in
-sync with the in-kernel representation. If device_nodes are switched to
-be kobjects then the device tree code can be a whole lot simpler. It
-also turns out that switching to using /sysfs from /proc results in
-smaller code and data size, and the userspace ABI won't change if
-/proc/device-tree symlinks to /sys/firmware/devicetree/base.
+--W/nzBZO5zC0uMSeA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-v6: Add __of_add_property() early init fixes from Pantelis
-v5: Rename firmware/ofw to firmware/devicetree
-    Fix updating property values in sysfs
-v4: Fixed build error on Powerpc
-    Fixed handling of dynamic nodes on powerpc
-v3: Fixed handling of duplicate attribute and child node names
-v2: switch to using sysfs bin_attributes which solve the problem of
-    reporting incorrect property size.
+On Wed, Dec 11, 2013 at 01:45:53PM +0000, Grant Likely wrote:
+> On Thu, 28 Nov 2013 16:46:23 +0100, Thierry Reding <thierry.reding@gmail.=
+com> wrote:
+> > On Wed, Nov 27, 2013 at 03:56:29PM +0000, Grant Likely wrote:
+> > > On Mon, 25 Nov 2013 10:49:55 +0100, Thierry Reding <thierry.reding@gm=
+ail.com> wrote:
+> > > >=20
+> > > > I should maybe add: one issue that was raised during review of my
+> > > > initial patch series was that we'll also need to cope with situatio=
+ns
+> > > > like the following:
+> > > >=20
+> > > > 	1) device's interrupt parent is probed (assigned IRQ base X)
+> > > > 	2) device is probed (interrupt parent there, therefore gets
+> > > > 	   assigned IRQ (X + z)
+> > > > 	3) device in removed
+> > > > 	4) device's interrupt parent is removed
+> > > > 	5) device is probed (deferred because interrupt parent isn't
+> > > > 	   there)
+> > > > 	6) device's interrupt parent is probed (assigned IRQ base Y)
+> > > > 	7) device is probed, gets assigned IRQ (Y + z)
+> > > >=20
+> > > > So not only do we have to track which resources are interrupt resou=
+rces,
+> > > > but we also need to have them reassigned everytime the device is pr=
+obed,
+> > > > therefore interrupt mappings need to be properly disposed and the v=
+alues
+> > > > invalidated when probing is deferred or the device removed.
+> > >=20
+> > > Yes, that is a problem, but the only way to handle that is to always
+> > > recalcuate all resource references at probe time. I don't feel good
+> > > about handling that in the core. I'd rather move drivers away from
+> > > referencing the resources table directly and instead use an API. Then
+> > > the resources table could be missing entirely.
+> >=20
+> > Are you suggesting something like this?
+> >=20
+> > ---
+> >=20
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 3a94b799f166..c894d1af3a5e 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/string.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/of_device.h>
+> > +#include <linux/of_irq.h>
+> >  #include <linux/module.h>
+> >  #include <linux/init.h>
+> >  #include <linux/dma-mapping.h>
+> > @@ -87,7 +88,12 @@ int platform_get_irq(struct platform_device *dev, un=
+signed int num)
+> >                 return -ENXIO;
+> >         return dev->archdata.irqs[num];
+> >  #else
+> > -       struct resource *r =3D platform_get_resource(dev, IORESOURCE_IR=
+Q, num);
+> > +       struct resource *r;
+> > +
+> > +       if (IS_ENABLED(CONFIG_OF) && dev->dev.of_node)
+> > +               return irq_of_parse_and_map(dev->dev.of_node, num);
+> > +
+> > +       r =3D platform_get_resource(dev, IORESOURCE_IRQ, num);
+>=20
+> Yes. Or even more generically we could have a device_get_irq() function:
+>=20
+> int device_get_irq(struct device *dev, unsigned int num)
+> {
+> 	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
+> 		return irq_of_parse_and_map(dev->of_node, num);
+> 	/* An ACPI hook could go here */
+> 	return 0
+> }
+>=20
+> It would be callable by any device driver, and platform_get_irq() could
+> call it too.
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Tested-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
----
-I'm not sending the whole series this time. Only the first patch. This
-version fixes some early boot breakage.
+So how about we make the platform_get_irq() modification for starters,
+so that the OMAP issues can be resolved and then turn our attention to
+coming up with a more generic approach. If indeed we end up with what
+you're proposing we can easily switch platform_get_irq() to use it.
 
-g.
+One of the things I'm not so sure about is how to handle other types of
+resources, since they'll be somewhat more specific to the type of
+device. That's true also for devices other than platform devices. Let's
+look at I2C devices for instance. The way to get at the IRQ number is
+via the i2c_client->irq member.
 
- Documentation/ABI/testing/sysfs-firmware-ofw   |  28 +++++
- arch/arm/boot/dts/testcases/tests-phandle.dtsi |   3 +
- arch/powerpc/platforms/pseries/dlpar.c         |   1 -
- arch/powerpc/platforms/pseries/reconfig.c      |   2 -
- arch/powerpc/sysdev/msi_bitmap.c               |   2 +-
- drivers/of/base.c                              | 165 +++++++++++++++++++++++--
- drivers/of/fdt.c                               |   3 +-
- drivers/of/pdt.c                               |   4 +-
- include/linux/of.h                             |   9 +-
- 9 files changed, 201 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-firmware-ofw
+device_get_irq() breaks down at that point because unless you want to
+add special cases for all sorts of devices you have no way of getting at
+the data if it hasn't been instantiated from DT (or ACPI). Actually, all
+devices instantiated from platform data will suffer from this if I'm not
+mistaken.
 
-diff --git a/Documentation/ABI/testing/sysfs-firmware-ofw b/Documentation/ABI/testing/sysfs-firmware-ofw
-new file mode 100644
-index 000000000000..f562b188e71d
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-firmware-ofw
-@@ -0,0 +1,28 @@
-+What:		/sys/firmware/devicetree/*
-+Date:		November 2013
-+Contact:	Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+Description:
-+		When using OpenFirmware or a Flattened Device Tree to enumerate
-+		hardware, the device tree structure will be exposed in this
-+		directory.
-+
-+		It is possible for multiple device-tree directories to exist.
-+		Some device drivers use a separate detached device tree which
-+		have no attachment to the system tree and will appear in a
-+		different subdirectory under /sys/firmware/devicetree.
-+
-+		Userspace must not use the /sys/firmware/devicetree/base
-+		path directly, but instead should follow /proc/device-tree
-+		symlink. It is possible that the absolute path will change
-+		in the future, but the symlink is the stable ABI.
-+
-+		The /proc/device-tree symlink replaces the devicetree /proc
-+		filesystem support, and has largely the same semantics and
-+		should be compatible with existing userspace.
-+
-+		The contents of /sys/firmware/devicetree/ is a
-+		hierarchy of directories, one per device tree node. The
-+		directory name is the resolved path component name (node
-+		name plus address). Properties are represented as files
-+		in the directory. The contents of each file is the exact
-+		binary data from the device tree.
-diff --git a/arch/arm/boot/dts/testcases/tests-phandle.dtsi b/arch/arm/boot/dts/testcases/tests-phandle.dtsi
-index 0007d3cd7dc2..788a4c24b8f5 100644
---- a/arch/arm/boot/dts/testcases/tests-phandle.dtsi
-+++ b/arch/arm/boot/dts/testcases/tests-phandle.dtsi
-@@ -1,6 +1,9 @@
- 
- / {
- 	testcase-data {
-+		security-password = "password";
-+		duplicate-name = "duplicate";
-+		duplicate-name { };
- 		phandle-tests {
- 			provider0: provider0 {
- 				#phandle-cells = <0>;
-diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
-index a8fe5aa3d34f..397661de19ec 100644
---- a/arch/powerpc/platforms/pseries/dlpar.c
-+++ b/arch/powerpc/platforms/pseries/dlpar.c
-@@ -11,7 +11,6 @@
-  */
- 
- #include <linux/kernel.h>
--#include <linux/kref.h>
- #include <linux/notifier.h>
- #include <linux/spinlock.h>
- #include <linux/cpu.h>
-diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
-index f93cdf55628c..0435bb65d0aa 100644
---- a/arch/powerpc/platforms/pseries/reconfig.c
-+++ b/arch/powerpc/platforms/pseries/reconfig.c
-@@ -12,7 +12,6 @@
-  */
- 
- #include <linux/kernel.h>
--#include <linux/kref.h>
- #include <linux/notifier.h>
- #include <linux/proc_fs.h>
- #include <linux/slab.h>
-@@ -70,7 +69,6 @@ static int pSeries_reconfig_add_node(const char *path, struct property *proplist
- 
- 	np->properties = proplist;
- 	of_node_set_flag(np, OF_DYNAMIC);
--	kref_init(&np->kref);
- 
- 	np->parent = derive_parent(path);
- 	if (IS_ERR(np->parent)) {
-diff --git a/arch/powerpc/sysdev/msi_bitmap.c b/arch/powerpc/sysdev/msi_bitmap.c
-index 0968b66b4cf9..8ba60424be95 100644
---- a/arch/powerpc/sysdev/msi_bitmap.c
-+++ b/arch/powerpc/sysdev/msi_bitmap.c
-@@ -202,7 +202,7 @@ void __init test_of_node(void)
- 
- 	/* There should really be a struct device_node allocator */
- 	memset(&of_node, 0, sizeof(of_node));
--	kref_init(&of_node.kref);
-+	kref_init(&of_node.kobj.kref);
- 	of_node.full_name = node_name;
- 
- 	check(0 == msi_bitmap_alloc(&bmp, size, &of_node));
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 967b3209907a..5f5eb1563f4f 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -23,6 +23,7 @@
- #include <linux/of.h>
- #include <linux/spinlock.h>
- #include <linux/slab.h>
-+#include <linux/string.h>
- #include <linux/proc_fs.h>
- 
- #include "of_private.h"
-@@ -35,6 +36,12 @@ struct device_node *of_chosen;
- struct device_node *of_aliases;
- static struct device_node *of_stdout;
- 
-+static struct kset *of_kset;
-+
-+/*
-+ * Used to protect the of_aliases; but also overloaded to hold off addition of
-+ * nodes to sysfs
-+ */
- DEFINE_MUTEX(of_aliases_mutex);
- 
- /* use when traversing tree through the allnext, child, sibling,
-@@ -92,14 +99,14 @@ int __weak of_node_to_nid(struct device_node *np)
- struct device_node *of_node_get(struct device_node *node)
- {
- 	if (node)
--		kref_get(&node->kref);
-+		kobject_get(&node->kobj);
- 	return node;
- }
- EXPORT_SYMBOL(of_node_get);
- 
--static inline struct device_node *kref_to_device_node(struct kref *kref)
-+static inline struct device_node *kobj_to_device_node(struct kobject *kobj)
- {
--	return container_of(kref, struct device_node, kref);
-+	return container_of(kobj, struct device_node, kobj);
- }
- 
- /**
-@@ -109,16 +116,15 @@ static inline struct device_node *kref_to_device_node(struct kref *kref)
-  *	In of_node_put() this function is passed to kref_put()
-  *	as the destructor.
-  */
--static void of_node_release(struct kref *kref)
-+static void of_node_release(struct kobject *kobj)
- {
--	struct device_node *node = kref_to_device_node(kref);
-+	struct device_node *node = kobj_to_device_node(kobj);
- 	struct property *prop = node->properties;
- 
- 	/* We should never be releasing nodes that haven't been detached. */
- 	if (!of_node_check_flag(node, OF_DETACHED)) {
- 		pr_err("ERROR: Bad of_node_put() on %s\n", node->full_name);
- 		dump_stack();
--		kref_init(&node->kref);
- 		return;
- 	}
- 
-@@ -151,11 +157,138 @@ static void of_node_release(struct kref *kref)
- void of_node_put(struct device_node *node)
- {
- 	if (node)
--		kref_put(&node->kref, of_node_release);
-+		kobject_put(&node->kobj);
- }
- EXPORT_SYMBOL(of_node_put);
-+#else
-+static void of_node_release(struct kobject *kobj)
-+{
-+	/* Without CONFIG_OF_DYNAMIC, no nodes gets freed */
-+}
- #endif /* CONFIG_OF_DYNAMIC */
- 
-+struct kobj_type of_node_ktype = {
-+	.release = of_node_release,
-+};
-+
-+static ssize_t of_node_property_read(struct file *filp, struct kobject *kobj,
-+				struct bin_attribute *bin_attr, char *buf,
-+				loff_t offset, size_t count)
-+{
-+	struct property *pp = container_of(bin_attr, struct property, attr);
-+	return memory_read_from_buffer(buf, count, &offset, pp->value, pp->length);
-+}
-+
-+static const char *safe_name(struct kobject *kobj, const char *orig_name)
-+{
-+	const char *name = orig_name;
-+	struct sysfs_dirent *sd;
-+	int i = 0;
-+
-+	/* don't be a hero. After 16 tries give up */
-+	while (i < 16 && (sd = sysfs_get_dirent(kobj->sd, name))) {
-+		sysfs_put(sd);
-+		if (name != orig_name)
-+			kfree(name);
-+		name = kasprintf(GFP_KERNEL, "%s#%i", orig_name, ++i);
-+	}
-+
-+	if (name != orig_name)
-+		pr_warn("device-tree: Duplicate name in %s, renamed to \"%s\"\n",
-+			kobject_name(kobj), name);
-+	return name;
-+}
-+
-+static int __of_add_property(struct device_node *np, struct property *pp)
-+{
-+	int rc;
-+
-+	/* Important: Don't leak passwords */
-+	bool secure = strncmp(pp->name, "security-", 9) == 0;
-+
-+	pp->attr.attr.name = safe_name(&np->kobj, pp->name);
-+	pp->attr.attr.mode = secure ? S_IRUSR : S_IRUGO;
-+	pp->attr.size = secure ? 0 : pp->length;
-+	pp->attr.read = of_node_property_read;
-+
-+	rc = sysfs_create_bin_file(&np->kobj, &pp->attr);
-+	WARN(rc, "error adding attribute %s to node %s\n", pp->name, np->full_name);
-+	return rc;
-+}
-+
-+static int __of_node_add(struct device_node *np)
-+{
-+	const char *name;
-+	struct property *pp;
-+	int rc;
-+
-+	np->kobj.kset = of_kset;
-+	if (!np->parent) {
-+		/* Nodes without parents are new top level trees */
-+		rc = kobject_add(&np->kobj, NULL, safe_name(&of_kset->kobj, "base"));
-+	} else {
-+		name = safe_name(&np->parent->kobj, kbasename(np->full_name));
-+		if (!name || !name[0])
-+			return -EINVAL;
-+
-+		rc = kobject_add(&np->kobj, &np->parent->kobj, "%s", name);
-+	}
-+	if (rc)
-+		return rc;
-+
-+	for_each_property_of_node(np, pp)
-+		__of_add_property(np, pp);
-+
-+	return 0;
-+}
-+
-+int of_node_add(struct device_node *np)
-+{
-+	int rc = 0;
-+	kobject_init(&np->kobj, &of_node_ktype);
-+	mutex_lock(&of_aliases_mutex);
-+	if (of_kset)
-+		rc = __of_node_add(np);
-+	mutex_unlock(&of_aliases_mutex);
-+	return rc;
-+}
-+
-+#if defined(CONFIG_OF_DYNAMIC)
-+static void of_node_remove(struct device_node *np)
-+{
-+	struct property *pp;
-+
-+	for_each_property_of_node(np, pp)
-+		sysfs_remove_bin_file(&np->kobj, &pp->attr);
-+
-+	kobject_del(&np->kobj);
-+}
-+#endif
-+
-+static int __init of_init(void)
-+{
-+	struct device_node *np;
-+
-+	of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
-+	if (!of_kset)
-+		return -ENOMEM;
-+
-+	/* Make sure all nodes added before this time get added to sysfs */
-+	mutex_lock(&of_aliases_mutex);
-+	for_each_of_allnodes(np)
-+		__of_node_add(np);
-+	mutex_unlock(&of_aliases_mutex);
-+
-+#if !defined(CONFIG_PROC_DEVICETREE)
-+	/* Symlink to the new tree when PROC_DEVICETREE is disabled */
-+	if (of_allnodes)
-+		proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
-+#endif /* CONFIG_PROC_DEVICETREE */
-+
-+	return 0;
-+}
-+core_initcall(of_init);
-+
- static struct property *__of_find_property(const struct device_node *np,
- 					   const char *name, int *lenp)
- {
-@@ -1495,6 +1628,12 @@ int of_add_property(struct device_node *np, struct property *prop)
- 	*next = prop;
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
-+	/* at early boot, bail hear and defer setup to of_init() */
-+	if (!of_kset)
-+		return 0;
-+
-+	__of_add_property(np, prop);
-+
- #ifdef CONFIG_PROC_DEVICETREE
- 	/* try to add to proc as well if it was initialized */
- 	if (np->pde)
-@@ -1541,6 +1680,12 @@ int of_remove_property(struct device_node *np, struct property *prop)
- 	if (!found)
- 		return -ENODEV;
- 
-+	/* at early boot, bail hear and defer setup to of_init() */
-+	if (!of_kset)
-+		return 0;
-+
-+	sysfs_remove_bin_file(&np->kobj, &prop->attr);
-+
- #ifdef CONFIG_PROC_DEVICETREE
- 	/* try to remove the proc node as well */
- 	if (np->pde)
-@@ -1595,6 +1740,10 @@ int of_update_property(struct device_node *np, struct property *newprop)
- 	if (!found)
- 		return -ENODEV;
- 
-+	/* Update the sysfs attribute */
-+	sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
-+	__of_add_property(np, newprop);
-+
- #ifdef CONFIG_PROC_DEVICETREE
- 	/* try to add to proc as well if it was initialized */
- 	if (np->pde)
-@@ -1671,6 +1820,7 @@ int of_attach_node(struct device_node *np)
- 	of_node_clear_flag(np, OF_DETACHED);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
-+	of_node_add(np);
- 	of_add_proc_dt_entry(np);
- 	return 0;
- }
-@@ -1743,6 +1893,7 @@ int of_detach_node(struct device_node *np)
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
- 	of_remove_proc_dt_entry(np);
-+	of_node_remove(np);
- 	return rc;
- }
- #endif /* defined(CONFIG_OF_DYNAMIC) */
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 2fa024b97c43..d5d62cd5680f 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -232,7 +232,6 @@ static void * unflatten_dt_node(struct boot_param_header *blob,
- 				dad->next->sibling = np;
- 			dad->next = np;
- 		}
--		kref_init(&np->kref);
- 	}
- 	/* process properties */
- 	while (1) {
-@@ -327,6 +326,8 @@ static void * unflatten_dt_node(struct boot_param_header *blob,
- 			np->name = "<NULL>";
- 		if (!np->type)
- 			np->type = "<NULL>";
-+
-+		of_node_add(np);
- 	}
- 	while (tag == OF_DT_BEGIN_NODE || tag == OF_DT_NOP) {
- 		if (tag == OF_DT_NOP)
-diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
-index 7b666736c168..e64fa3d3da5f 100644
---- a/drivers/of/pdt.c
-+++ b/drivers/of/pdt.c
-@@ -179,8 +179,6 @@ static struct device_node * __init of_pdt_create_node(phandle node,
- 	of_pdt_incr_unique_id(dp);
- 	dp->parent = parent;
- 
--	kref_init(&dp->kref);
--
- 	dp->name = of_pdt_get_one_property(node, "name");
- 	dp->type = of_pdt_get_one_property(node, "device_type");
- 	dp->phandle = node;
-@@ -215,6 +213,7 @@ static struct device_node * __init of_pdt_build_tree(struct device_node *parent,
- 		*nextp = &dp->allnext;
- 
- 		dp->full_name = of_pdt_build_full_name(dp);
-+		of_node_add(dp);
- 
- 		dp->child = of_pdt_build_tree(dp,
- 				of_pdt_prom_ops->getchild(node), nextp);
-@@ -245,6 +244,7 @@ void __init of_pdt_build_devicetree(phandle root_node, struct of_pdt_ops *ops)
- 	of_allnodes->path_component_name = "";
- #endif
- 	of_allnodes->full_name = "/";
-+	of_node_add(of_allnodes);
- 
- 	nextp = &of_allnodes->allnext;
- 	of_allnodes->child = of_pdt_build_tree(of_allnodes,
-diff --git a/include/linux/of.h b/include/linux/of.h
-index a4b7fdf17044..c899a89de9a8 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -18,7 +18,7 @@
- #include <linux/types.h>
- #include <linux/bitops.h>
- #include <linux/errno.h>
--#include <linux/kref.h>
-+#include <linux/kobject.h>
- #include <linux/mod_devicetable.h>
- #include <linux/spinlock.h>
- #include <linux/topology.h>
-@@ -37,6 +37,7 @@ struct property {
- 	struct property *next;
- 	unsigned long _flags;
- 	unsigned int unique_id;
-+	struct bin_attribute attr;
- };
- 
- #if defined(CONFIG_SPARC)
-@@ -57,7 +58,7 @@ struct device_node {
- 	struct	device_node *next;	/* next device of same type */
- 	struct	device_node *allnext;	/* next in list of all nodes */
- 	struct	proc_dir_entry *pde;	/* this node's proc directory */
--	struct	kref kref;
-+	struct	kobject kobj;
- 	unsigned long _flags;
- 	void	*data;
- #if defined(CONFIG_SPARC)
-@@ -74,6 +75,8 @@ struct of_phandle_args {
- 	uint32_t args[MAX_PHANDLE_ARGS];
- };
- 
-+extern int of_node_add(struct device_node *node);
-+
- #ifdef CONFIG_OF_DYNAMIC
- extern struct device_node *of_node_get(struct device_node *node);
- extern void of_node_put(struct device_node *node);
-@@ -187,6 +190,8 @@ static inline const char *of_node_full_name(const struct device_node *np)
- 	return np ? np->full_name : "<no-node>";
- }
- 
-+#define for_each_of_allnodes(dn) \
-+	for (dn = of_allnodes; dn; dn = dn->allnext)
- extern struct device_node *of_find_node_by_name(struct device_node *from,
- 	const char *name);
- #define for_each_node_by_name(dn, name) \
--- 
-1.8.3.2
+If you're saying that the device_get_irq() API should only cover cases
+where some sort of firmware interface exists such as DT or ACPI, then I
+suppose it could be made to work and drivers could rely on the subsystem
+specific locations as fallback. I guess for I2C drivers you'd have to do
+something like this:
 
+	err =3D device_get_irq(&client->dev, 0);
+	if (err >=3D 0)
+		client->irq =3D err;
+
+And then continue to use client->irq as usual. That obviously has the
+side-effect of having to do this for every single driver, whereas the
+original patches were meant to solve this in the core.
+
+Given enough time we could probably migrate everyone to the new
+interfaces, but it certainly is a lot of churn. Perhaps another
+alternative would be to unify this some more by making each subsystem
+provide special hooks that device_get_irq() and friends can call for
+fallback when none of the "firmware" functions were successful.
+
+Thierry
+
+--W/nzBZO5zC0uMSeA
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSqIC/AAoJEN0jrNd/PrOhwIkP/j18c4vcmJanow3zGDfXGe+x
+v2O1jbHeG+P5bqklFtpkaW3LzDa3DIeDQITGK0F5SVTgneIHP8J9SDcc27IrLBX3
+2+xWJmvYDbMFo6PBv5604iI6svYIfU0mjaWtLqxzANpJPl+7DrfrKlWvma1ke2/b
+0ZyV23ZtjdUyTHW2kCqz0k39KXMf70vmBDYKNJ4+nVu0O2rnjpWWjBCfsXBJXpgs
+FIBSWPNHpxu/dG1oNlkMw2WHYz/j9E3zv0hsOlyGqTuxU9i9nvAuFWueLUyQNre0
+ANMnxqFbgZtO8XQc+RGetJs+PM/9tj6FMmEOlOga8rUd5z6lFZFSkmWcoOLnQmZL
+5vm50c1v8PeZJbS9aRSFT0GdMS/EQyGH5MNAB6ktmMCqz57HJnuKqK3tnqXioziu
+iRwIyeMrU8tW5/DS6iJurA2Z7N5UMfb9Yu5tEYmMquvFu1DByMYAqNQq4wUiLVgQ
+jkr7VfhrzMLmTEH/gdlqm84HIAKpiRwsEyy9w4NH8HDoLx0MCWBKTi/fgoem4cZ7
+N9nhHnx9I9PliWGIkNqGA1ILDoMHuGHNXNRpEfeCd1KnOS7Tj0h6CKRShaEqD8QA
+WR0AWzzXMOA9X89agGpphxmC+XZBWr9r9CeuEMUOnm7U4ph0cCXQ3Q9ULklA4HWW
+4mKi5kvSXWa8mouKMOP1
+=DkNz
+-----END PGP SIGNATURE-----
+
+--W/nzBZO5zC0uMSeA--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
