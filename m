@@ -1,38 +1,143 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
- exynos5420 dtsi files
-Date: Wed, 11 Dec 2013 14:57:45 -0800
-Message-ID: <CAD=FV=WZNmWdxTWzHCEtkCo7O1RZ7YDNkmNBD4wwpDc-=O1LCQ@mail.gmail.com>
-References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com>
-	<1386308868-30264-2-git-send-email-l.krishna@samsung.com>
-	<52A207D8.3030206@gmail.com>
-	<8302228.6iSJIFqj3A@flatron>
-	<52A39F3B.5070806@gmail.com>
-	<CAL1wa8fTuOMk9=G3JhdpNOE8=FPTfMSJ_mB-7jo1pNF1cAavgg@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 05/26] ARM: OMAP2+: add omapdss_init_of()
+Date: Thu, 12 Dec 2013 00:10:18 +0100
+Message-ID: <2199639.FbGhznOLP9@avalon>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-6-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAL1wa8fTuOMk9=G3JhdpNOE8=FPTfMSJ_mB-7jo1pNF1cAavgg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "cpgs ." <cpgs@samsung.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1386160133-24026-6-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Leela Krishna,
+Hi Tomi,
 
-On Wed, Dec 11, 2013 at 4:22 AM, Leela Krishna Amudala
-<l.krishna@samsung.com> wrote:
-> Hi,
->
-> As I was in travel not accessed my mails.
->
-> I'll try to post next version of this series tomorrow addressing
-> Sylwester's comments.
+On Wednesday 04 December 2013 14:28:32 Tomi Valkeinen wrote:
+> omapdss driver uses a omapdss platform device to pass platform specific
+> function pointers and DSS hardware version from the arch code to the
+> driver. This device is needed also when booting with DT.
+> 
+> This patch adds omapdss_init_of() function, called from board-generic at
+> init time, which creates the omapdss device.
 
-It's completely up to you (and Wim), of course.  ...but if it were me
-I wouldn't spin the patch at this point.  Your existing version has
-Guenter's Ack and his indication that he thinks that v12 is good
-enough to land without future spins.  You could spin with Tomasz /
-Sylwester's suggestions but remember that it is not mandatory.
+Is this a temporary solution that you plan to later replace with DT-only 
+device instantiation ?
 
--Doug
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> ---
+>  arch/arm/mach-omap2/board-generic.c |  2 ++
+>  arch/arm/mach-omap2/common.h        |  2 ++
+>  arch/arm/mach-omap2/display.c       | 62 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 66 insertions(+)
+> 
+> diff --git a/arch/arm/mach-omap2/board-generic.c
+> b/arch/arm/mach-omap2/board-generic.c index 19f1652e94cf..0e06771d7bee
+> 100644
+> --- a/arch/arm/mach-omap2/board-generic.c
+> +++ b/arch/arm/mach-omap2/board-generic.c
+> @@ -36,6 +36,8 @@ static struct of_device_id omap_dt_match_table[]
+> __initdata = { static void __init omap_generic_init(void)
+>  {
+>  	pdata_quirks_init(omap_dt_match_table);
+> +
+> +	omapdss_init_of();
+>  }
+> 
+>  #ifdef CONFIG_SOC_OMAP2420
+> diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
+> index f7644febee81..48e9cd34cae0 100644
+> --- a/arch/arm/mach-omap2/common.h
+> +++ b/arch/arm/mach-omap2/common.h
+> @@ -308,5 +308,7 @@ extern int omap_dss_reset(struct omap_hwmod *);
+>  /* SoC specific clock initializer */
+>  extern int (*omap_clk_init)(void);
+> 
+> +int __init omapdss_init_of(void);
+> +
+>  #endif /* __ASSEMBLER__ */
+>  #endif /* __ARCH_ARM_MACH_OMAP2PLUS_COMMON_H */
+> diff --git a/arch/arm/mach-omap2/display.c b/arch/arm/mach-omap2/display.c
+> index a4e536b11ec9..3279afc5f0b5 100644
+> --- a/arch/arm/mach-omap2/display.c
+> +++ b/arch/arm/mach-omap2/display.c
+> @@ -23,6 +23,8 @@
+>  #include <linux/clk.h>
+>  #include <linux/err.h>
+>  #include <linux/delay.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> 
+>  #include <video/omapdss.h>
+>  #include "omap_hwmod.h"
+> @@ -592,3 +594,63 @@ int omap_dss_reset(struct omap_hwmod *oh)
+> 
+>  	return r;
+>  }
+> +
+> +int __init omapdss_init_of(void)
+> +{
+> +	int r;
+> +	enum omapdss_version ver;
+> +
+> +	static struct omap_dss_board_info board_data = {
+> +		.dsi_enable_pads = omap_dsi_enable_pads,
+> +		.dsi_disable_pads = omap_dsi_disable_pads,
+> +		.get_context_loss_count = omap_pm_get_dev_context_loss_count,
+> +		.set_min_bus_tput = omap_dss_set_min_bus_tput,
+> +	};
+> +
+> +	ver = omap_display_get_version();
+> +
+> +	if (ver == OMAPDSS_VER_UNKNOWN) {
+> +		pr_err("DSS not supported on this SoC\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	board_data.version = ver;
+> +
+> +	omap_display_device.dev.platform_data = &board_data;
+> +
+> +	r = platform_device_register(&omap_display_device);
+> +	if (r < 0) {
+> +		pr_err("Unable to register omapdss device\n");
+> +		return r;
+> +	}
+> +
+> +	/* create DRM device */
+> +	r = omap_init_drm();
+> +	if (r < 0) {
+> +		pr_err("Unable to register omapdrm device\n");
+> +		return r;
+> +	}
+> +
+> +	/* create vrfb device */
+> +	r = omap_init_vrfb();
+> +	if (r < 0) {
+> +		pr_err("Unable to register omapvrfb device\n");
+> +		return r;
+> +	}
+> +
+> +	/* create FB device */
+> +	r = omap_init_fb();
+> +	if (r < 0) {
+> +		pr_err("Unable to register omapfb device\n");
+> +		return r;
+> +	}
+> +
+> +	/* create V4L2 display device */
+> +	r = omap_init_vout();
+> +	if (r < 0) {
+> +		pr_err("Unable to register omap_vout device\n");
+> +		return r;
+> +	}
+> +
+> +	return 0;
+> +}
+-- 
+Regards,
+
+Laurent Pinchart
+
