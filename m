@@ -1,69 +1,48 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 06/26] OMAPDSS: if dssdev->name==NULL, use alias
-Date: Thu, 12 Dec 2013 00:56:07 +0100
-Message-ID: <10507960.9DXH4TSv2E@avalon>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-7-git-send-email-tomi.valkeinen@ti.com> <37483030.ghHfzYFSnL@avalon>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
+ exynos5420 dtsi files
+Date: Thu, 12 Dec 2013 00:57:55 +0100
+Message-ID: <CA+Ln22GysOQPQwbb-Ak=SYVpLP5zzMhecUw_pp+qv7CkAcC3=g@mail.gmail.com>
+References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com>
+	<1386308868-30264-2-git-send-email-l.krishna@samsung.com>
+	<52A207D8.3030206@gmail.com>
+	<8302228.6iSJIFqj3A@flatron>
+	<52A39F3B.5070806@gmail.com>
+	<CAL1wa8fTuOMk9=G3JhdpNOE8=FPTfMSJ_mB-7jo1pNF1cAavgg@mail.gmail.com>
+	<CAD=FV=WZNmWdxTWzHCEtkCo7O1RZ7YDNkmNBD4wwpDc-=O1LCQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <37483030.ghHfzYFSnL@avalon>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WZNmWdxTWzHCEtkCo7O1RZ7YDNkmNBD4wwpDc-=O1LCQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Leela Krishna Amudala <l.krishna@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "cpgs ." <cpgs@samsung.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
-
-On Thursday 12 December 2013 00:13:01 Laurent Pinchart wrote:
-> On Wednesday 04 December 2013 14:28:33 Tomi Valkeinen wrote:
-> > To avoid the need for a "nickname" property for each display, change
-> > the display registration so that the display's alias (i.e. "display0"
-> > etc) will be used for the dssdev->name if the display driver didn't
-> > provide a name.
-> > 
-> > This means that when booting with board files, we will have more
-> > descriptive names for displays, like "lcd1", "hdmi".
-> 
-> Where are those names used ? Are they reported to userspace, or limited to
-> kernel internal use only ?
-> 
-> > With DT we'll only have "display0", etc. But as there are no "nicknames"
-> > for things like serials ports either, I hope we will do fine with this
+2013/12/11 Doug Anderson <dianders@chromium.org>:
+> Leela Krishna,
 >
-> Just a random thought, maybe the aliases node could help here.
+> On Wed, Dec 11, 2013 at 4:22 AM, Leela Krishna Amudala
+> <l.krishna@samsung.com> wrote:
+>> Hi,
+>>
+>> As I was in travel not accessed my mails.
+>>
+>> I'll try to post next version of this series tomorrow addressing
+>> Sylwester's comments.
+>
+> It's completely up to you (and Wim), of course.  ...but if it were me
+> I wouldn't spin the patch at this point.  Your existing version has
+> Guenter's Ack and his indication that he thinks that v12 is good
+> enough to land without future spins.  You could spin with Tomasz /
+> Sylwester's suggestions but remember that it is not mandatory.
 
-I should have read the next patches before replying, sorry :-)
+As I said, at this point the comments are just nitpicks that it would be
+nice to have them addressed, but this might be done as well in incremental
+patch(es).
 
-> I'm not sure what rules govern its usage. Adding labels to display DT nodes
-> could be an option too.
+So if it's not a problem for you and you can find time for it, a re-spin would
+be nice, but it's not a necessity (unless Wim decides otherwise).
 
-A label property is still an option.
-
-> > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > ---
-> > 
-> >  drivers/video/omap2/dss/display.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/video/omap2/dss/display.c
-> > b/drivers/video/omap2/dss/display.c index 669a81fdf58e..a946cf7ed00f
-> > 100644
-> > --- a/drivers/video/omap2/dss/display.c
-> > +++ b/drivers/video/omap2/dss/display.c
-> > @@ -137,6 +137,9 @@ int omapdss_register_display(struct omap_dss_device
-> > *dssdev)
-> >  	snprintf(dssdev->alias, sizeof(dssdev->alias),
-> >  			"display%d", disp_num_counter++);
-> > 
-> > +	if (dssdev->name == NULL)
-> > +		dssdev->name = dssdev->alias;
-> > +
-> >  	if (drv && drv->get_resolution == NULL)
-> >  		drv->get_resolution = omapdss_default_get_resolution;
-> >  	if (drv && drv->get_recommended_bpp == NULL)
--- 
-Regards,
-
-Laurent Pinchart
-
+Best regards,
+Tomasz
