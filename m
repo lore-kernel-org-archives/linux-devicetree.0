@@ -1,58 +1,81 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH RFC] net: of_mdio: Scan PHYs which have device_type set to ethernet-phy
-Date: Wed, 11 Dec 2013 07:15:54 +0000
-Message-ID: <1695129.4QIGmmVPkX@lenovo>
-References: <1384441556-20674-1-git-send-email-srinivas.kandagatla@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1384441556-20674-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-Cc: devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v12 00/08] enable hisilicon hi3xxx SoC
+Date: Wed, 11 Dec 2013 15:54:49 +0800
+Message-ID: <1386748497-11290-1-git-send-email-haojian.zhuang@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le jeudi 14 novembre 2013, 15:05:56 Srinivas Kandagatla a =E9crit :
-> According to Documentation/devicetree/bindings/net/phy.txt device_typ=
-e
-> property of PHY nodes is mandatory, which should be set to
-> "ethernet-phy". This patch adds check in scanning phys and only scans
-> node which have device-type set to "ethernet-phy".
+v12:
+ 1. Add CONFIG_SMP as default selection. Add GPIOLIB as default selection.
+ 2. Use macro definition to replace constant number in IO mapping of hi3620.c.
+ 3. Add more comments in platsmp.c.
 
-Please CC netdev@vger.kernel.org as there might be networking folks not=
-=20
-actively following devicetree-discuss.
+v11:
+ 1. Add comments on iotable.
+ 2. Use dummy clock in DTS. Remove common clock binding in DTS file. Clock driver will be in another patchset.
 
->=20
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> ---
->  drivers/of/of_mdio.c |    7 +++++++
->  1 files changed, 7 insertions(+), 0 deletions(-)
->=20
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index d5a57a9..78c53c7 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -57,6 +57,9 @@ int of_mdiobus_register(struct mii_bus *mdio, struc=
-t
-> device_node *np)
->=20
->  	/* Loop over the child nodes and register a phy_device for each one=
- */
->  	for_each_available_child_of_node(np, child) {
-> +		/* A PHY must have device_type set to "ethernet-phy" */
-> +		if (of_node_cmp(child->type, "ethernet-phy"))
-> +			continue;
+v10:
+ 1. Use static IO mapping in Hi3xxx.
+ 2. Totally drop to support of Hi3716.
+ 3. Rename smp-off property to smp-offset.
+ 4. Remove hardcoding in hotplug driver.
 
-As already stated by Grant this will break quite a lot of platforms out=
- there.=20
-Technically speaking, ePAPR v1.1 only specifies that "cpu" and "memory"=
- nodes=20
-should have a "device_type" property for compatibility. Altough I do ag=
-ree=20
-that it is nice to have a properly set "device_type", we can't always r=
-ely on=20
-that.=20
---=20
-=46lorian
+v9:
+ 1. Clean code in DTS file according to Olof's comments.
+ 2. Since debug ll patch is going through Russell's tree, remove it
+ from this patch set.
+
+ v8:
+ 1. Drop to support CLK_GATE_SEPERATED_REG in common clock gate driver.
+ Support this feature in hi3xxx clock driver.
+ 2. Clean unnecessary device node in DTS.
+ 3. Define all clocks in hi3620-clk.dtsi. And all clock nodes are defined
+ in the clocks node.
+ 4. Fix the clock gate & clock mux for timer.
+ 5. Rename timer0~4 to dual_timer0~4 in DTS file. It's used to make
+ name clearer.
+
+ v7:
+ 1. Add hi3xxx_defconfig.
+ 2. Use reg property in clock node.
+ 3. Drop origin clock divider table.
+ 4. Reuse clock divider register helper.
+ 5. Reuse clock gate register helper.
+ 6. Append CLK_GATE_SEPERATED_REG flag in order to support Hisilicon
+    Hi3620 SoC.
+ 7. Rebase DEBUG_LL for Hi3xxx.
+ 8. Add more clock node in DTS file.
+
+ v6:
+ 1. Remove hisilicon string from properties in clock driver.
+ 2. Replace array by pointer in clock driver. Since only sctrl parent
+    node exists at this time.
+
+ v5:
+ 1. Remove HIWORD clk patches since they're merged into clk git tree.
+ 2. Set hisilicon,clk-reset property of clkgate node is optional.
+ 3. Update on commandline args in DTS file. Remove earlyprintk, mem, nfs.
+ 4. Move gpio-keys out of amba node in DTS file.
+
+ v4:
+ 1. Add clk gate with HIWORD mask for Rockchip.
+ 2. Update comments and code of HIWORD flags for mux/divider.
+ 3. Append a mux without HIWORD mask in Hisilicon 3620.
+ 4. Fix the pinmux setting in Hi4511.
+
+ v3:
+ 1. Use clk_register_mux_table().
+
+ v2:
+ 1. Reuse mux & divider driver. So append CLK_MUX_HIWORD_MASK &
+ CLK_DIVIDER_HIWORD_MASK for Hi3620 SoC.
+ 2. Fix system timer running too fast because wrong divider is choosen.
+ 3. Remove .init_irq in DT machine descriptor.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
