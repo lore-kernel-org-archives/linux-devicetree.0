@@ -1,149 +1,152 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/5] dt/bindings: remove users of device_type "mdio"
-Date: Wed, 11 Dec 2013 11:15:53 +0000
-Message-ID: <1386760555-22732-4-git-send-email-grant.likely@linaro.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [PATCH 4/5] dt/bindings: remove device_type "network" references
+Date: Wed, 11 Dec 2013 11:15:54 +0000
+Message-ID: <1386760555-22732-5-git-send-email-grant.likely@linaro.org>
 References: <1386760555-22732-1-git-send-email-grant.likely@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386760555-22732-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1386760555-22732-1-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <monstr@monstr.eu>
 List-Id: devicetree@vger.kernel.org
 
-device_type is a deprecated property, but some MDIO bus nodes still have
-it. Except for a couple of old binding (compatible="gianfar" and
-compatible="ucc_geth_phy") the kernel doesn't look for
-device_type="mdio" at all.
+device_type is deprecated and the kernel doesn't require it in most
+cases. The only exceptions for flat tree users are the "gianfar",
+"ucc_geth" and "ibm,emac" bindings, and arguably that requirement could
+be relaxed for ucc_geth and ibm,emac (that is a task for separate
+patches though).
 
-This patch removes all instances of device_type="mdio" from the binding
-documentation and the .dts files.
+This patch removes references to device_type="network" from the binding
+documentation where possible and removes the properties from ARM and
+microblaze dts files. This patch does not modify the powerpc .dts files
+since there are a much larger number of them affected and I think the
+ucc_geth, ibm,emac and gianfar users should be addressed before clearing
+out the references to reduce the chance of breakage.
 
-Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Michal Simek <monstr@monstr.eu>
 ---
  Documentation/devicetree/bindings/marvell.txt                    | 2 --
+ Documentation/devicetree/bindings/net/marvell-orion-net.txt      | 2 --
  Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt | 1 -
- arch/powerpc/boot/dts/ep8248e.dts                                | 1 -
- arch/powerpc/boot/dts/holly.dts                                  | 1 -
- arch/powerpc/boot/dts/mpc7448hpc2.dts                            | 1 -
- arch/powerpc/boot/dts/mpc8272ads.dts                             | 1 -
- arch/powerpc/boot/dts/pq2fads.dts                                | 1 -
- arch/powerpc/boot/dts/prpmc2800.dts                              | 1 -
- 8 files changed, 9 deletions(-)
+ arch/arm/boot/dts/dove.dtsi                                      | 1 -
+ arch/arm/boot/dts/kirkwood.dtsi                                  | 2 --
+ arch/arm/boot/dts/orion5x.dtsi                                   | 1 -
+ arch/microblaze/platform/generic/system.dts                      | 1 -
+ 7 files changed, 10 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/marvell.txt b/Documentation/devicetree/bindings/marvell.txt
-index 73a3d251acb1..a5409ca27bc2 100644
+index a5409ca27bc2..bc287efea475 100644
 --- a/Documentation/devicetree/bindings/marvell.txt
 +++ b/Documentation/devicetree/bindings/marvell.txt
-@@ -79,7 +79,6 @@ prefixed with the string "marvell,", for Marvell Technology Group Ltd.
+@@ -130,7 +130,6 @@ prefixed with the string "marvell,", for Marvell Technology Group Ltd.
+    Ethernet port node
+ 
     Required properties:
-      - #address-cells : Should be <1>
-      - #size-cells : Should be <0>
--     - device_type : Should be "mdio"
-      - compatible : Should be "marvell,mv64360-mdio"
+-     - device_type : Should be "network".
+      - compatible : Should be "marvell,mv64360-eth".
+      - reg : Should be <0>, <1>, or <2>, according to which registers
+        within the silicon block the device uses.
+@@ -143,7 +142,6 @@ prefixed with the string "marvell,", for Marvell Technology Group Ltd.
  
-    Example:
-@@ -87,7 +86,6 @@ prefixed with the string "marvell,", for Marvell Technology Group Ltd.
-      mdio {
- 	     #address-cells = <1>;
- 	     #size-cells = <0>;
--	     device_type = "mdio";
- 	     compatible = "marvell,mv64360-mdio";
+    Example Discovery Ethernet port node:
+      ethernet@0 {
+-	     device_type = "network";
+ 	     compatible = "marvell,mv64360-eth";
+ 	     reg = <0>;
+ 	     interrupts = <32>;
+diff --git a/Documentation/devicetree/bindings/net/marvell-orion-net.txt b/Documentation/devicetree/bindings/net/marvell-orion-net.txt
+index 4a10716ff59d..c233b6114242 100644
+--- a/Documentation/devicetree/bindings/net/marvell-orion-net.txt
++++ b/Documentation/devicetree/bindings/net/marvell-orion-net.txt
+@@ -32,7 +32,6 @@ Optional controller properties:
+ * Ethernet port node
  
- 	     ethernet-phy@0 {
+ Required port properties:
+- - device_type: shall be "network".
+  - compatible: shall be one of "marvell,orion-eth-port",
+       "marvell,kirkwood-eth-port".
+  - reg: port number relative to ethernet controller, shall be 0, 1, or 2.
+@@ -74,7 +73,6 @@ eth: ethernet-controller@72000 {
+ 	marvell,tx-checksum-limit = <1600>;
+ 
+ 	ethernet@0 {
+-		device_type = "network";
+ 		compatible = "marvell,orion-eth-port";
+ 		reg = <0>;
+ 		interrupts = <29>;
 diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
-index 0e4269446580..38cc6c9849ec 100644
+index 38cc6c9849ec..29b28b8f9a89 100644
 --- a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
 +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
-@@ -33,7 +33,6 @@ fsl,mdc-pin : pin of port C controlling mdio clock
- 
+@@ -10,7 +10,6 @@ Currently defined compatibles:
  Example:
- 	mdio@10d40 {
--		device_type = "mdio";
- 		compatible = "fsl,mpc8272ads-mdio-bitbang",
- 			     "fsl,mpc8272-mdio-bitbang",
- 			     "fsl,cpm2-mdio-bitbang";
-diff --git a/arch/powerpc/boot/dts/ep8248e.dts b/arch/powerpc/boot/dts/ep8248e.dts
-index 244934fa2419..8b3a49f34f5a 100644
---- a/arch/powerpc/boot/dts/ep8248e.dts
-+++ b/arch/powerpc/boot/dts/ep8248e.dts
-@@ -67,7 +67,6 @@
- 			ranges;
  
- 			mdio {
--				device_type = "mdio";
- 				compatible = "fsl,ep8248e-mdio-bitbang";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-diff --git a/arch/powerpc/boot/dts/holly.dts b/arch/powerpc/boot/dts/holly.dts
-index c6e11ebecebb..43e6f0c8e449 100644
---- a/arch/powerpc/boot/dts/holly.dts
-+++ b/arch/powerpc/boot/dts/holly.dts
-@@ -58,7 +58,6 @@
- 		};
+ 	ethernet@11300 {
+-		device_type = "network";
+ 		compatible = "fsl,mpc8272-fcc-enet",
+ 			     "fsl,cpm2-fcc-enet";
+ 		reg = <11300 20 8400 100 11390 1>;
+diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
+index 9311edf441c6..39ffabe04cc5 100644
+--- a/arch/arm/boot/dts/dove.dtsi
++++ b/arch/arm/boot/dts/dove.dtsi
+@@ -573,7 +573,6 @@
+ 				status = "disabled";
  
- 		MDIO: mdio@6000 {
--			device_type = "mdio";
- 			compatible = "tsi109-mdio", "tsi108-mdio";
- 			reg = <0x00006000 0x00000050>;
- 			#address-cells = <1>;
-diff --git a/arch/powerpc/boot/dts/mpc7448hpc2.dts b/arch/powerpc/boot/dts/mpc7448hpc2.dts
-index 2544f3ecd6e9..20a0d22df473 100644
---- a/arch/powerpc/boot/dts/mpc7448hpc2.dts
-+++ b/arch/powerpc/boot/dts/mpc7448hpc2.dts
-@@ -68,7 +68,6 @@
- 		};
+ 				ethernet-port@0 {
+-					device_type = "network";
+ 					compatible = "marvell,orion-eth-port";
+ 					reg = <0>;
+ 					interrupts = <29>;
+diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+index 8b73c80f1dad..2c9d3808d61d 100644
+--- a/arch/arm/boot/dts/kirkwood.dtsi
++++ b/arch/arm/boot/dts/kirkwood.dtsi
+@@ -253,7 +253,6 @@
+ 			status = "disabled";
  
- 		MDIO: mdio@6000 {
--			device_type = "mdio";
- 			compatible = "tsi108-mdio";
- 			reg = <0x6000 0x50>;
- 			#address-cells = <1>;
-diff --git a/arch/powerpc/boot/dts/mpc8272ads.dts b/arch/powerpc/boot/dts/mpc8272ads.dts
-index 0c92de74d065..6d2cddf64cfd 100644
---- a/arch/powerpc/boot/dts/mpc8272ads.dts
-+++ b/arch/powerpc/boot/dts/mpc8272ads.dts
-@@ -182,7 +182,6 @@
- 			};
+ 			ethernet0-port@0 {
+-				device_type = "network";
+ 				compatible = "marvell,kirkwood-eth-port";
+ 				reg = <0>;
+ 				interrupts = <11>;
+@@ -273,7 +272,6 @@
+ 			status = "disabled";
  
- 			mdio@10d40 {
--				device_type = "mdio";
- 				compatible = "fsl,mpc8272ads-mdio-bitbang",
- 				             "fsl,mpc8272-mdio-bitbang",
- 				             "fsl,cpm2-mdio-bitbang";
-diff --git a/arch/powerpc/boot/dts/pq2fads.dts b/arch/powerpc/boot/dts/pq2fads.dts
-index 9d065cdeb5eb..0c525ff0c257 100644
---- a/arch/powerpc/boot/dts/pq2fads.dts
-+++ b/arch/powerpc/boot/dts/pq2fads.dts
-@@ -198,7 +198,6 @@
- 			};
+ 			ethernet1-port@0 {
+-				device_type = "network";
+ 				compatible = "marvell,kirkwood-eth-port";
+ 				reg = <0>;
+ 				interrupts = <15>;
+diff --git a/arch/arm/boot/dts/orion5x.dtsi b/arch/arm/boot/dts/orion5x.dtsi
+index e06c37e91ac6..b1645462e270 100644
+--- a/arch/arm/boot/dts/orion5x.dtsi
++++ b/arch/arm/boot/dts/orion5x.dtsi
+@@ -154,7 +154,6 @@
+ 			status = "disabled";
  
- 			mdio@10d40 {
--				device_type = "mdio";
- 				compatible = "fsl,pq2fads-mdio-bitbang",
- 				             "fsl,mpc8280-mdio-bitbang",
- 				             "fsl,cpm2-mdio-bitbang";
-diff --git a/arch/powerpc/boot/dts/prpmc2800.dts b/arch/powerpc/boot/dts/prpmc2800.dts
-index 909e8b0ead26..77c8db238d1c 100644
---- a/arch/powerpc/boot/dts/prpmc2800.dts
-+++ b/arch/powerpc/boot/dts/prpmc2800.dts
-@@ -73,7 +73,6 @@
- 		mdio {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--			device_type = "mdio";
- 			compatible = "marvell,mv64360-mdio";
- 			PHY0: ethernet-phy@1 {
- 				compatible = "broadcom,bcm5421";
+ 			ethernet-port@0 {
+-				device_type = "network";
+ 				compatible = "marvell,orion-eth-port";
+ 				reg = <0>;
+ 				/* overwrite MAC address in bootloader */
+diff --git a/arch/microblaze/platform/generic/system.dts b/arch/microblaze/platform/generic/system.dts
+index 3f85df2b73b3..b620da23febb 100644
+--- a/arch/microblaze/platform/generic/system.dts
++++ b/arch/microblaze/platform/generic/system.dts
+@@ -222,7 +222,6 @@
+ 			ranges ;
+ 			ethernet@81c00000 {
+ 				compatible = "xlnx,xps-ll-temac-1.01.b", "xlnx,xps-ll-temac-1.00.a";
+-				device_type = "network";
+ 				interrupt-parent = <&xps_intc_0>;
+ 				interrupts = < 5 2 >;
+ 				llink-connected = <&PIM3>;
 -- 
 1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
