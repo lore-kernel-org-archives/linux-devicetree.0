@@ -1,100 +1,139 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 5/7] net: of_mdio: parse "max-speed" property to set PHY supported features
-Date: Wed, 11 Dec 2013 14:02:00 +0000
-Message-ID: <20131211140200.DCD09C4061A@trevor.secretlab.ca>
-References: <1386283936-26104-1-git-send-email-florian@openwrt.org> < 1386283936-26104-6-git-send-email-florian@openwrt.org>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1386283936-26104-6-git-send-email-florian@openwrt.org>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <florian@openwrt.org>, netdev@vger.kernel.org
-Cc: davem@davemloft.net, devicetree@vger.kernel.org, abrodkin@synopsys.com, rob.herring@calxeda.com, mark.rutland@arm.com, sebastian.hesselbarth@gmail.com, Florian Fainelli <f.fainelli@gmail.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH 1/3] mmc: dw_mmc: use slot-gpio to handle cd pin
+Date: Wed, 11 Dec 2013 22:02:19 +0800
+Message-ID: <1386770541-15056-2-git-send-email-zhangfei.gao@linaro.org>
+References: <1386770541-15056-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1386770541-15056-1-git-send-email-zhangfei.gao@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 5 Dec 2013 14:52:14 -0800, Florian Fainelli <florian@openwrt.org> wrote:
-> From: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> The "max-speed" property is defined per the ePAPR specification to
-> express the maximum speed a PHY supports. Use that property, if present
-> to set the phydev->supported features which properly restricts the PHY
-> within the range of defined speeds.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/of/of_mdio.c | 25 ++++++++++++++++++++++++-
->  1 file changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index 4923ab2..e1e19e5 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -22,12 +22,30 @@
->  MODULE_AUTHOR("Grant Likely <grant.likely@secretlab.ca>");
->  MODULE_LICENSE("GPL");
->  
-> +static void of_set_phy_supported(struct phy_device *phydev, u32 max_speed)
-> +{
-> +	phydev->supported |= PHY_DEFAULT_FEATURES;
-> +
-> +	switch (max_speed) {
-> +	default:
-> +		return;
+Suggested by Jaehoon: Use slot-gpio to handle cd-gpio
+Add function dw_mci_of_get_cd_gpio to check "cd-gpios" from dts.
+mmc_gpio_request_cd and mmc_gpio_get_cd are used to handle cd pin
 
-No need for a default clause.
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
+---
+ drivers/mmc/host/dw_mmc.c |   48 +++++++++++++++++++++++++++++++++------------
+ 1 file changed, 35 insertions(+), 13 deletions(-)
 
-> +
-> +	case SPEED_1000:
-> +		phydev->supported |= PHY_1000BT_FEATURES;
-> +	case SPEED_100:
-> +		phydev->supported |= PHY_100BT_FEATURES;
-> +	case SPEED_10:
-> +		phydev->supported |= PHY_10BT_FEATURES;
-> +	}
-> +}
-> +
->  static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *child,
->  				   u32 addr)
->  {
->  	struct phy_device *phy;
->  	bool is_c45;
->  	int rc, prev_irq;
-> +	u32 max_speed = 0;
->  
->  	is_c45 = of_device_is_compatible(child,
->  					 "ethernet-phy-ieee802.3-c45");
-> @@ -58,8 +76,13 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
->  		return 1;
->  	}
->  
-> +	/* Set phydev->supported based on the "max-speed" property
-> +	 * if present */
-> +	if (!of_property_read_u32(child, "max-speed", &max_speed))
-> +		of_set_phy_supported(phy, max_speed);
-> +
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index 4bce0deec362..a776f24f4311 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -36,6 +36,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/of.h>
+ #include <linux/of_gpio.h>
++#include <linux/mmc/slot-gpio.h>
+ 
+ #include "dw_mmc.h"
+ 
+@@ -1032,20 +1033,26 @@ static int dw_mci_get_cd(struct mmc_host *mmc)
+ 	int present;
+ 	struct dw_mci_slot *slot = mmc_priv(mmc);
+ 	struct dw_mci_board *brd = slot->host->pdata;
++	int gpio_cd = !mmc_gpio_get_cd(mmc);
+ 
+ 	/* Use platform get_cd function, else try onboard card detect */
+ 	if (brd->quirks & DW_MCI_QUIRK_BROKEN_CARD_DETECTION)
+ 		present = 1;
+ 	else if (brd->get_cd)
+ 		present = !brd->get_cd(slot->id);
++	else if (!IS_ERR_VALUE(gpio_cd))
++		present = !!gpio_cd;
+ 	else
+ 		present = (mci_readl(slot->host, CDETECT) & (1 << slot->id))
+ 			== 0 ? 1 : 0;
+ 
+-	if (present)
++	if (present) {
++		set_bit(DW_MMC_CARD_PRESENT, &slot->flags);
+ 		dev_dbg(&mmc->class_dev, "card is present\n");
+-	else
++	} else {
++		clear_bit(DW_MMC_CARD_PRESENT, &slot->flags);
+ 		dev_dbg(&mmc->class_dev, "card is not present\n");
++	}
+ 
+ 	return present;
+ }
+@@ -1926,10 +1933,6 @@ static void dw_mci_work_routine_card(struct work_struct *work)
+ 			/* Card change detected */
+ 			slot->last_detect_state = present;
+ 
+-			/* Mark card as present if applicable */
+-			if (present != 0)
+-				set_bit(DW_MMC_CARD_PRESENT, &slot->flags);
+-
+ 			/* Clean up queue if present */
+ 			mrq = slot->mrq;
+ 			if (mrq) {
+@@ -1977,8 +1980,6 @@ static void dw_mci_work_routine_card(struct work_struct *work)
+ 
+ 			/* Power down slot */
+ 			if (present == 0) {
+-				clear_bit(DW_MMC_CARD_PRESENT, &slot->flags);
+-
+ 				/* Clear down the FIFO */
+ 				dw_mci_fifo_reset(host);
+ #ifdef CONFIG_MMC_DW_IDMAC
+@@ -2079,6 +2080,26 @@ static int dw_mci_of_get_wp_gpio(struct device *dev, u8 slot)
+ 
+ 	return gpio;
+ }
++
++/* find the cd gpio for a given slot; or -1 if none specified */
++static void dw_mci_of_get_cd_gpio(struct device *dev, u8 slot,
++					struct mmc_host *mmc)
++{
++	struct device_node *np = dw_mci_of_find_slot_node(dev, slot);
++	int gpio;
++
++	if (!np)
++		return;
++
++	gpio = of_get_named_gpio(np, "cd-gpios", 0);
++
++	/* Having a missing entry is valid; return silently */
++	if (!gpio_is_valid(gpio))
++		return;
++
++	if (mmc_gpio_request_cd(mmc, gpio, 0))
++		dev_warn(dev, "gpio [%d] request failed\n", gpio);
++}
+ #else /* CONFIG_OF */
+ static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
+ {
+@@ -2096,6 +2117,11 @@ static int dw_mci_of_get_wp_gpio(struct device *dev, u8 slot)
+ {
+ 	return -EINVAL;
+ }
++static void dw_mci_of_get_cd_gpio(struct device *dev, u8 slot,
++					struct mmc_host *mmc)
++{
++	return;
++}
+ #endif /* CONFIG_OF */
+ 
+ static int dw_mci_init_slot(struct dw_mci *host, unsigned int id)
+@@ -2197,12 +2223,8 @@ static int dw_mci_init_slot(struct dw_mci *host, unsigned int id)
+ #endif /* CONFIG_MMC_DW_IDMAC */
+ 	}
+ 
+-	if (dw_mci_get_cd(mmc))
+-		set_bit(DW_MMC_CARD_PRESENT, &slot->flags);
+-	else
+-		clear_bit(DW_MMC_CARD_PRESENT, &slot->flags);
+-
+ 	slot->wp_gpio = dw_mci_of_get_wp_gpio(host->dev, slot->id);
++	dw_mci_of_get_cd_gpio(host->dev, slot->id, mmc);
+ 
+ 	ret = mmc_add_host(mmc);
+ 	if (ret)
+-- 
+1.7.9.5
 
-Why the separate function? There is no need since there is only one
-caller and the block is very short. Just do this:
-
-	if (!of_property_read_u32(child, "max-speed", &max_speed)) {
-		phydev->supported |= PHY_DEFAULT_FEATURES;
-		switch (max_speed) {
-		case SPEED_1000:
-			phydev->supported |= PHY_1000BT_FEATURES;
-		case SPEED_100:
-			phydev->supported |= PHY_100BT_FEATURES;
-		case SPEED_10:
-			phydev->supported |= PHY_10BT_FEATURES;
-		}
-	}
-
->  	dev_dbg(&mdio->dev, "registered phy %s at address %i\n",
-> -		 child->name, addr);
-> +		child->name, addr);
-
-Unrelated whitespace change. I wouldn't even bother with changing this.
-It adds noise.
-
-However, those are style concerns. The content looks fine.
-
-Acked-by: Grant Likely <grant.likely@linaro.org>
-
-g.
