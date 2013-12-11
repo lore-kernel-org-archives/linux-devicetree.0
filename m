@@ -1,135 +1,45 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v4 2/5] ARM: shmobile: r8a7791: Add clock index macros for DT sources
-Date: Wed, 11 Dec 2013 15:05:13 +0100
-Message-ID: <1386770716-21610-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1386770716-21610-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1386770716-21610-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>
+From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: [PATCH v4 0/5] Renesas R-Car Gen2 Common Clock Framework arch/ support
+Date: Wed, 11 Dec 2013 15:05:11 +0100
+Message-ID: <1386770716-21610-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add macros usable by device tree sources to reference r8a7791 clocks by
-index.
+Hello,
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- include/dt-bindings/clock/r8a7791-clock.h | 105 ++++++++++++++++++++++++++++++
- 1 file changed, 105 insertions(+)
+This is a repost of the arch patches from the "[PATCH v3 0/8] Renesas R-Car
+Gen2 Common Clock Framework support" patch series. The first three patches in
+that series have been reposted separately in the "[PATCH v4 0/3] Renesas R-Car
+Gen2 Common Clock Framework drivers" series to get merged through Mike
+Turquette's tree, while this series will go through the ARM SoC tree.
+
+I've asked Mike to provide a stable branch when merging the CCF driver
+patches.
+
+Laurent Pinchart (5):
+  ARM: shmobile: r8a7790: Add clock index macros for DT sources
+  ARM: shmobile: r8a7791: Add clock index macros for DT sources
+  ARM: shmobile: r8a7790: Add clocks
+  ARM: shmobile: r8a7790: Reference clocks
+  ARM: shmobile: r8a7791: Add clocks
+
+ arch/arm/boot/dts/r8a7790.dtsi            | 328 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/r8a7791.dtsi            | 313 ++++++++++++++++++++++++++++
+ include/dt-bindings/clock/r8a7790-clock.h | 100 +++++++++
+ include/dt-bindings/clock/r8a7791-clock.h | 105 ++++++++++
+ 4 files changed, 846 insertions(+)
+ create mode 100644 include/dt-bindings/clock/r8a7790-clock.h
  create mode 100644 include/dt-bindings/clock/r8a7791-clock.h
 
-diff --git a/include/dt-bindings/clock/r8a7791-clock.h b/include/dt-bindings/clock/r8a7791-clock.h
-new file mode 100644
-index 0000000..df1715b
---- /dev/null
-+++ b/include/dt-bindings/clock/r8a7791-clock.h
-@@ -0,0 +1,105 @@
-+/*
-+ * Copyright 2013 Ideas On Board SPRL
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_R8A7791_H__
-+#define __DT_BINDINGS_CLOCK_R8A7791_H__
-+
-+/* CPG */
-+#define R8A7791_CLK_MAIN		0
-+#define R8A7791_CLK_PLL0		1
-+#define R8A7791_CLK_PLL1		2
-+#define R8A7791_CLK_PLL3		3
-+#define R8A7791_CLK_LB			4
-+#define R8A7791_CLK_QSPI		5
-+#define R8A7791_CLK_SDH			6
-+#define R8A7791_CLK_SD0			7
-+#define R8A7791_CLK_Z			8
-+
-+/* MSTP1 */
-+#define R8A7791_CLK_TMU1		11
-+#define R8A7791_CLK_TMU3		21
-+#define R8A7791_CLK_TMU2		22
-+#define R8A7791_CLK_CMT0		24
-+#define R8A7791_CLK_TMU0		25
-+#define R8A7791_CLK_VSP1_DU1		27
-+#define R8A7791_CLK_VSP1_DU0		28
-+#define R8A7791_CLK_VSP1_SY		31
-+
-+/* MSTP2 */
-+#define R8A7791_CLK_SCIFA2		2
-+#define R8A7791_CLK_SCIFA1		3
-+#define R8A7791_CLK_SCIFA0		4
-+#define R8A7791_CLK_SCIFB0		6
-+#define R8A7791_CLK_SCIFB1		7
-+#define R8A7791_CLK_SCIFB2		16
-+#define R8A7791_CLK_DMAC		18
-+
-+/* MSTP3 */
-+#define R8A7791_CLK_TPU0		4
-+#define R8A7791_CLK_SDHI2		11
-+#define R8A7791_CLK_SDHI1		12
-+#define R8A7791_CLK_SDHI0		14
-+#define R8A7791_CLK_MMCIF0		15
-+#define R8A7791_CLK_SSUSB		28
-+#define R8A7791_CLK_CMT1		29
-+#define R8A7791_CLK_USBDMAC0		30
-+#define R8A7791_CLK_USBDMAC1		31
-+
-+/* MSTP5 */
-+#define R8A7791_CLK_THERMAL		22
-+#define R8A7791_CLK_PWM			23
-+
-+/* MSTP7 */
-+#define R8A7791_CLK_HSUSB		4
-+#define R8A7791_CLK_HSCIF2		13
-+#define R8A7791_CLK_SCIF5		14
-+#define R8A7791_CLK_SCIF4		15
-+#define R8A7791_CLK_HSCIF1		16
-+#define R8A7791_CLK_HSCIF0		17
-+#define R8A7791_CLK_SCIF3		18
-+#define R8A7791_CLK_SCIF2		19
-+#define R8A7791_CLK_SCIF1		20
-+#define R8A7791_CLK_SCIF0		21
-+#define R8A7791_CLK_DU1			23
-+#define R8A7791_CLK_DU0			24
-+#define R8A7791_CLK_LVDS0		26
-+
-+/* MSTP8 */
-+#define R8A7791_CLK_VIN2		9
-+#define R8A7791_CLK_VIN1		10
-+#define R8A7791_CLK_VIN0		11
-+#define R8A7791_CLK_ETHER		13
-+#define R8A7791_CLK_SATA1		14
-+#define R8A7791_CLK_SATA0		15
-+
-+/* MSTP9 */
-+#define R8A7791_CLK_GPIO7		4
-+#define R8A7791_CLK_GPIO6		5
-+#define R8A7791_CLK_GPIO5		7
-+#define R8A7791_CLK_GPIO4		8
-+#define R8A7791_CLK_GPIO3		9
-+#define R8A7791_CLK_GPIO2		10
-+#define R8A7791_CLK_GPIO1		11
-+#define R8A7791_CLK_GPIO0		12
-+#define R8A7791_CLK_RCAN1		15
-+#define R8A7791_CLK_RCAN0		16
-+#define R8A7791_CLK_I2C5		25
-+#define R8A7791_CLK_IICDVFS		26
-+#define R8A7791_CLK_I2C4		27
-+#define R8A7791_CLK_I2C3		28
-+#define R8A7791_CLK_I2C2		29
-+#define R8A7791_CLK_I2C1		30
-+#define R8A7791_CLK_I2C0		31
-+
-+/* MSTP11 */
-+#define R8A7791_CLK_SCIFA3		6
-+#define R8A7791_CLK_SCIFA4		7
-+#define R8A7791_CLK_SCIFA5		8
-+
-+#endif /* __DT_BINDINGS_CLOCK_R8A7791_H__ */
 -- 
-1.8.3.2
+Regards,
 
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
