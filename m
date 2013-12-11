@@ -1,135 +1,83 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/3] of: Fix early OF builtup on kobj-ification
-Date: Wed, 11 Dec 2013 14:51:19 +0000
-Message-ID: <CACxGe6vYKUCFboQ0iZqQAHcHahzA+AiRfv5nzkQhMzV=-C6UxQ@mail.gmail.com>
-References: <1386684833-24112-1-git-send-email-panto@antoniou-consulting.com> <1386684833-24112-2-git-send-email-panto@antoniou-consulting.com>
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: sunxi: Add an ahci-platform compatible AHCI
+ driver for the Allwinner SUNXi series of SoCs
+Date: Wed, 11 Dec 2013 15:51:51 +0100
+Message-ID: <52A87C07.1020102@schinagl.nl>
+References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl> <1386159055-10264-3-git-send-email-oliver@schinagl.nl> <20131204123708.GD3158@htj.dyndns.org> <529F2677.3070208@schinagl.nl> <20131204131402.GG3158@htj.dyndns.org> <529F2B41.8090009@schinagl.nl> <20131204132312.GH3158@htj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386684833-24112-2-git-send-email-panto@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131204132312.GH3158-Gd/HAXX7CRxy/B6EtB590w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Olliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 10, 2013 at 2:13 PM, Pantelis Antoniou
-<panto@antoniou-consulting.com> wrote:
-> When booting platforms that do very early OF initialization before
-> core_initcalls are performed of_init is called too late.
->
-> This results in a hard-hard without getting a chance to output anything.
->
-> Fixed by adding a flag that marks when init has been done, and
-> performing the per-node init at that time.
->
-> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
-> ---
->  drivers/of/base.c | 28 +++++++++++++++++++++++-----
->  1 file changed, 23 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 734689b..a4f3dda 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -98,7 +98,7 @@ int __weak of_node_to_nid(struct device_node *np)
->   */
->  struct device_node *of_node_get(struct device_node *node)
->  {
-> -       if (node)
-> +       if (node && of_kset)
->                 kobject_get(&node->kobj);
->         return node;
->  }
-> @@ -156,7 +156,7 @@ static void of_node_release(struct kobject *kobj)
->   */
->  void of_node_put(struct device_node *node)
->  {
-> -       if (node)
-> +       if (node && of_kset)
->                 kobject_put(&node->kobj);
->  }
+Hey all,
 
-As discussed on IRC, I don't think this is required.
+On 04-12-13 14:23, Tejun Heo wrote:
+> Hello,
+>
+> (cc'ing Richard and Shawn, hi!)
+>
+> On Wed, Dec 04, 2013 at 02:16:49PM +0100, Olliver Schinagl wrote:
+>> On 04-12-13 14:14, Tejun Heo wrote:
+>>> Hello,
+>>>
+>>> On Wed, Dec 04, 2013 at 01:56:23PM +0100, Oliver Schinagl wrote:
+>>>> I took the imx driver as example, as I wasn't sure on where to
+>>>> start. But I don't think it's possible yet without improving
+>>>> ahci_platform as I suggested in the cover letter. So if
+>>>> ahci_platform needs to be improved, I guess a separate patch series
+>>>> would be more appropriate?
+>>>>
+>>>> So would it be acceptable to have this as the 2nd (and last?)
+>>>> ahci_platform driver and go from there? Or do you want to block new
+>>>> ahci_XXX drivers until ahci_platform has been improved?
+>>> I don't want to block new drivers unconditionally but at least I want
+>>> to know which direction we're headed in the longer term.  Right now it
+>>> feels like we could be at the beginning of an uncoordinated explosion
+>>> of these drivers which will take a hell lot mpore effort to clean up
+>>> after the fact.  I could be wrong and these could actually be
+>>> different enough to justify separate drivers and there isn't gonna be
+>>> an avalanche of these but again I at least want to know the general
+>>> direction things are headed before making any decisions.
+>> I'd be happy to pour it in any form that's needed. I even do the
+>> modification/rewrite of ahci_platform if I get enough help as it
+>> might be a little over my head initially ;)
+>>
+>> That said, I don't think it's much different at all and I do think
+>> it could be much simpler. In my mind, the sunxi_ahci driver wouldn't
+>> need to be much bigger then a few lines that are specific to the SoC
+>> (hardware init) and registerd to the ahci_platform framework via
+>> platform_ahci_register() instead of platform_device_register().
+>>
+>> But again, point me (for dummies ;) in the right direction and I'll
+>> work on it with some help.
+> Richard and Shawn recently worked on ahci_imx.  Can you guys please
+> talk with each other and figure out what can be done to share as much
+> as possible among these new platform-specific drivers?  I'd really
+> like to see the common things factored out as much as possible with
+> only the actual hardware differences described for each device.
+Working on this and studying the existing ahci_platform/shci_platform 
+drivers the last few days and was figuring out why ahci_platform only 
+supports 1 clock. IMX handles this by having 3 clocks defined in the DT, 
+the first one gets enabled by default via ahci_platform, the other 2 get 
+enabled in IMX's probe function.
 
->  EXPORT_SYMBOL(of_node_put);
-> @@ -202,9 +202,16 @@ static const char *safe_name(struct kobject *kobj, const char *orig_name)
->  static int __of_add_property(struct device_node *np, struct property *pp)
->  {
->         int rc;
-> +       bool secure;
-> +
-> +       /* note that we don't take a lock here */
-> +
-> +       /* fake the return while of_init is not yet called */
-> +       if (!of_kset)
-> +               return 0;
+Is it an idea to extend this to support all clocks that would be 
+required (via a callback)? Or do we prefer having the clocks separated 
+for other technical reasons? Or do we want to handle the clocks via the 
+ahci_platform framework and extend hpriv->clk to an array of clocks?
 
-__of_add_property is called from three functions; __of_node_add(),
-of_add_property() and of_modify_property(). __of_node_add is never
-called on an unattached node. If the other two are getting called
-early, then I think they should make the check. I'll modify my patch
-to reflect that.
+Oliver
 
 >
->         /* Important: Don't leak passwords */
-> -       bool secure = strncmp(pp->name, "security-", 9) == 0;
-> +       secure = strncmp(pp->name, "security-", 9) == 0;
+> Thanks a lot!
 >
->         pp->attr.attr.name = safe_name(&np->kobj, pp->name);
->         pp->attr.attr.mode = secure ? S_IRUSR : S_IRUGO;
-> @@ -222,6 +229,12 @@ static int __of_node_add(struct device_node *np)
->         struct property *pp;
->         int rc;
->
-> +       /* note that we don't take a lock here */
-> +
-> +       /* fake the return while of_init is not yet called */
-> +       if (!of_kset)
-> +               return 0;
-> +
 
-__of_node_add() never gets called before of_kset is initialized.
-
->         np->kobj.kset = of_kset;
->         if (!np->parent) {
->                 /* Nodes without parents are new top level trees */
-> @@ -245,11 +258,14 @@ static int __of_node_add(struct device_node *np)
->  int of_node_add(struct device_node *np)
->  {
->         int rc = 0;
-> -       kobject_init(&np->kobj, &of_node_ktype);
-> +
-> +       /* fake the return while of_init is not yet called */
->         mutex_lock(&of_aliases_mutex);
-> +       kobject_init(&np->kobj, &of_node_ktype);
-
-Why the kobject_init() move?
-
->         if (of_kset)
->                 rc = __of_node_add(np);
->         mutex_unlock(&of_aliases_mutex);
-> +
->         return rc;
->  }
->
-> @@ -275,14 +291,16 @@ static int __init of_init(void)
->
->         /* Make sure all nodes added before this time get added to sysfs */
->         mutex_lock(&of_aliases_mutex);
-> +
->         for_each_of_allnodes(np)
->                 __of_node_add(np);
-> -       mutex_unlock(&of_aliases_mutex);
->
->         /* Symlink in /proc as required by userspace ABI */
->         if (of_allnodes)
->                 proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
->
-> +       mutex_unlock(&of_aliases_mutex);
-> +
->         return 0;
->  }
->  core_initcall(of_init);
-> --
-> 1.7.12
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
