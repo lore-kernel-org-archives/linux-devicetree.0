@@ -1,81 +1,87 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 1/2] I2C: EMMA Mobile I2C master driver
-Date: Wed, 11 Dec 2013 12:59:08 +0100
-Message-ID: <20131211115908.GA2564@katana>
-References: <1377688911-10911-1-git-send-email-ian.molton@codethink.co.uk>
- <1378226969-18722-1-git-send-email-ian.molton@codethink.co.uk>
- <1378226969-18722-2-git-send-email-ian.molton@codethink.co.uk>
- <20130905060429.GJ14960@verge.net.au>
- <20130925044503.GA24243@verge.net.au>
- <52A23916.40507@codethink.co.uk>
- <20131211020904.GK19992@verge.net.au>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv2 00/10] Add memory mapped support for ti qspi, m25p80
+ serial flash.
+Date: Wed, 11 Dec 2013 12:01:57 +0000
+Message-ID: <20131211120157.GS11468@sirena.org.uk>
+References: <1386339891-32717-1-git-send-email-sourav.poddar@ti.com>
+ <201312101349.13564.marex@denx.de> <52A7E7A5.5000909@ti.com>
+ <201312111144.23012.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131211020904.GK19992@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Ian Molton <ian.molton@codethink.co.uk>, magnus.damm@gmail.com, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, ben.dooks@codethink.co.uk
+Content-Type: multipart/mixed; boundary="===============0473629712568931535=="
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <201312111144.23012.marex@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Marek Vasut <marex@denx.de>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, bcousson@baylibre.com, Sourav Poddar <sourav.poddar@ti.com>, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---W/nzBZO5zC0uMSeA
+--===============0473629712568931535==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4ZVTVymsHR1TEBjP"
+Content-Disposition: inline
+
+
+--4ZVTVymsHR1TEBjP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 11, 2013 at 11:09:04AM +0900, Simon Horman wrote:
-> On Fri, Dec 06, 2013 at 08:52:38PM +0000, Ian Molton wrote:
-> > On 25/09/13 05:45, Simon Horman wrote:
-> >=20
-> > >Hi Ian,
-> > >
-> > >I spoke with Magnus and in turn Ben about this at LinuxCon in New Orle=
-ans
-> > >last week.
-> > >
-> > >Basically the position of Magnus and I is that any support for this
-> > >hardware is an incremental improvement on the current situation: no
-> > >support.
-> > >
-> > >With this in mind from an shmobile point of view I am happy for this c=
-ode.
-> > >And there is no need to wait for a review from Magnus.
-> >=20
-> > Has anyone merged this for upstream yet? If not, where should I send it?
->=20
-> I don't believe it has been merged.
->=20
-> My suggestion is to re-post it with my Ack with
-> Wolfram Sang <wsa@the-dreams.de> CCed.
+On Wed, Dec 11, 2013 at 11:44:22AM +0100, Marek Vasut wrote:
+> On Wednesday, December 11, 2013 at 05:18:45 AM, Sourav Poddar wrote:
 
-No need to resend. I have it on my todo-list. Yet, by glimpsing at it I
-found some issues which need a proper review for which I didn't have the
-time so far. I hope to have it done by this week.
+> > I did a quad mode support for m25p80 which easily got cloned into the
+> > new spi framework.
+> > Same can be done for the memory mapped support too
 
+> The quad mode didn't need any new hooks in the m25p80, did it ? That's th=
+e=20
+> difference here.
 
---W/nzBZO5zC0uMSeA
+It did, there's explicit code in the flash driver for it.  However it's
+rather more generic than this.
+
+--4ZVTVymsHR1TEBjP
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSqFOLAAoJEBQN5MwUoCm2g8EQAKLaVHmD70LiNCZc8G72nwOk
-bn32/mjbLGT3+XoPgfnyD6BibJKYcqGXx9SAUsvNCUca27b8r668jLrs2XLNx9M+
-tqQl9hsrPttszrW9hDwhab3M1dtuURxQ7YDwrBK9gFhR4pGUAlJw4Kq1KgSp9r68
-05LAJBHD9ilDS9iLAt6OZMUjX6PBNjgNySpiKtyDLMSnxjhAN2mOfZbwUogfwgxI
-NsqKy19d4qDOIkve+M9q+rU5Zi2NNkqkx0e9kDR0rYDoAITHb61z7NNHmvuViqyH
-u4p7JVrX6DsfohQqeOfOe9bMi3eZBzCZN7drh0PIk32rLOxnzylTByDFSvcRhpc9
-JejNuE+Q9zE3c+pp0uUaJ8eEQ2LW+TlgjMfAac1Il3yqR8UAYVSe1/XODntxSxn0
-BxMAsQzJJ2peHH99QyoPmeJGnxgYu4wsEsmcy3oPf7uCIot+LVGXqLOtAa4FLR5F
-K8creWTo1BTM4Y67+rOj3P9069aFbAer77FtWl04osZJZJBCWc76YnX+TzdLTALu
-bx8lattyXSLTCjkJCGJAO+2aH/FbamfoM5DKyrpYjRMdcG1A6ffT4m3hdGV4fJXG
-vwSh4vpToxurjruuYHDRC7v5RhA0FelQ1mrUAexxwlNhDsRJEbiW0PdQ6NtT5NMb
-V76QLBoncd6r7nOvXSAF
-=iQyL
+iQIcBAEBAgAGBQJSqFQyAAoJELSic+t+oim9HKEQAJ0wkfL4oYPQ+BpyWVEIsX9V
+tN9obu/c2zl+UGQlVMsaX3bfBt9r6wiNNr8g63qE7Osouoq0QD012BMfB6bMXo6H
+KprLjBBgooiYfNZwPqESa7m20f5oPJ3Zf8gTQVkT1tmD2o/nuWDl5B1tNvxmYv06
+5EDrVSRXbRgwA7WnUwziVJoYgy68EAZOIzUBIqVrXrpWbsWU40QGBUROhNr/9lqI
+7cWxuZtXu5KAFrhPizQ9edP9m/ZT6eHQVHe1hQcJA1fSbbvSVlzQz9154qg25pUj
+0cSVHscm/QqQNZF037RNO5pIhdKYIpVzMQ5JkjsVPNaM0ALbhzv3kDi4d99peXBP
+YdvEAbcmjRKwxO0hTM95kUvHI0NibeGQMmjH9hvhcufPzIM8Dap06sNvxM91IfS2
+sC47Oq3MXuEM1Uocxv0Ys0Bj9shOVDesIwpma/IW80rq15AzC0yas53duBfK5GG/
+fZFe8ioTUzguFFRvZceZLuRt7fgRmU84sFjE99Q00+e1cohBv/hVSRLgt7mxMs33
+le5LGwHEQQYPNO3njN86DfYwJo4wn8G+oC8F99SuPphFzU6VQ2hQHyMjUNRaqzXM
+/iSYIN21TkZD//EMiDzvc6IwI5u1GKQATCRdghQu9zvOa5MyU6ZLOJw9Y12vPdVt
+Fnkp22832HBo+uK1OIak
+=SqgG
 -----END PGP SIGNATURE-----
 
---W/nzBZO5zC0uMSeA--
+--4ZVTVymsHR1TEBjP--
+
+
+--===============0473629712568931535==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+--===============0473629712568931535==--
