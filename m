@@ -1,134 +1,126 @@
-From: Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
-Subject: Re: [PATCH 1/3] of: Fix early OF builtup on kobj-ification
-Date: Wed, 11 Dec 2013 08:06:42 +0100
-Message-ID: <C3A30FEB-11CB-4CEA-8CB3-B1CA53A87C61@dominion.thruhere.net>
-References: <1386684833-24112-1-git-send-email-panto@antoniou-consulting.com> <1386684833-24112-2-git-send-email-panto@antoniou-consulting.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.0 \(1822\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386684833-24112-2-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org List" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2] Documentation: Add MDIO bus node to PHY binding document
+Date: Wed, 11 Dec 2013 07:11:14 +0000
+Message-ID: <3125212.eYMMS8pR1J@lenovo>
+References: <1384174825-14249-1-git-send-email-jonas.jensen@gmail.com> <1384351669-8325-1-git-send-email-jonas.jensen@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1384351669-8325-1-git-send-email-jonas.jensen@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonas Jensen <jonas.jensen@gmail.com>
+Cc: devicetree@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-Op 10 dec. 2013, om 15:13 heeft Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> het volgende geschreven:
-
-> When booting platforms that do very early OF initialization before
-> core_initcalls are performed of_init is called too late.
-> 
-> This results in a hard-hard without getting a chance to output anything.
-
-I think that should be 'hard-hang'.
-
-regards,
-
-Koen
-
-> 
-> Fixed by adding a flag that marks when init has been done, and
-> performing the per-node init at that time.
-> 
-> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Le mercredi 13 novembre 2013, 15:07:49 Jonas Jensen a =E9crit :
+> Add MDIO bus node segment and update the example,
+> allowing trivial bindings to break out boilerplate.
+>=20
+> Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
 > ---
-> drivers/of/base.c | 28 +++++++++++++++++++++++-----
-> 1 file changed, 23 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 734689b..a4f3dda 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -98,7 +98,7 @@ int __weak of_node_to_nid(struct device_node *np)
->  */
-> struct device_node *of_node_get(struct device_node *node)
-> {
-> -	if (node)
-> +	if (node && of_kset)
-> 		kobject_get(&node->kobj);
-> 	return node;
-> }
-> @@ -156,7 +156,7 @@ static void of_node_release(struct kobject *kobj)
->  */
-> void of_node_put(struct device_node *node)
-> {
-> -	if (node)
-> +	if (node && of_kset)
-> 		kobject_put(&node->kobj);
-> }
-> EXPORT_SYMBOL(of_node_put);
-> @@ -202,9 +202,16 @@ static const char *safe_name(struct kobject *kobj, const char *orig_name)
-> static int __of_add_property(struct device_node *np, struct property *pp)
-> {
-> 	int rc;
-> +	bool secure;
-> +
-> +	/* note that we don't take a lock here */
-> +
-> +	/* fake the return while of_init is not yet called */
-> +	if (!of_kset)
-> +		return 0;
-> 
-> 	/* Important: Don't leak passwords */
-> -	bool secure = strncmp(pp->name, "security-", 9) == 0;
-> +	secure = strncmp(pp->name, "security-", 9) == 0;
-> 
-> 	pp->attr.attr.name = safe_name(&np->kobj, pp->name);
-> 	pp->attr.attr.mode = secure ? S_IRUSR : S_IRUGO;
-> @@ -222,6 +229,12 @@ static int __of_node_add(struct device_node *np)
-> 	struct property *pp;
-> 	int rc;
-> 
-> +	/* note that we don't take a lock here */
-> +
-> +	/* fake the return while of_init is not yet called */
-> +	if (!of_kset)
-> +		return 0;
-> +
-> 	np->kobj.kset = of_kset;
-> 	if (!np->parent) {
-> 		/* Nodes without parents are new top level trees */
-> @@ -245,11 +258,14 @@ static int __of_node_add(struct device_node *np)
-> int of_node_add(struct device_node *np)
-> {
-> 	int rc = 0;
-> -	kobject_init(&np->kobj, &of_node_ktype);
-> +
-> +	/* fake the return while of_init is not yet called */
-> 	mutex_lock(&of_aliases_mutex);
-> +	kobject_init(&np->kobj, &of_node_ktype);
-> 	if (of_kset)
-> 		rc = __of_node_add(np);
-> 	mutex_unlock(&of_aliases_mutex);
-> +
-> 	return rc;
-> }
-> 
-> @@ -275,14 +291,16 @@ static int __init of_init(void)
-> 
-> 	/* Make sure all nodes added before this time get added to sysfs */
-> 	mutex_lock(&of_aliases_mutex);
-> +
-> 	for_each_of_allnodes(np)
-> 		__of_node_add(np);
-> -	mutex_unlock(&of_aliases_mutex);
-> 
-> 	/* Symlink in /proc as required by userspace ABI */
-> 	if (of_allnodes)
-> 		proc_symlink("device-tree", NULL, "/sys/firmware/devicetree/base");
-> 
-> +	mutex_unlock(&of_aliases_mutex);
-> +
-> 	return 0;
-> }
-> core_initcall(of_init);
-> -- 
-> 1.7.12
-> 
-> 
+>=20
+> Notes:
+>     Thanks Mark,
+>=20
+>     This should have the changes from your comments. It also adds opt=
+ional
+> properties "compatible" and "reg", were those overlooked or left out
+> intentionally?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please CC netdev@vger.kernel.org too as there might be some interest fr=
+om=20
+networking folks not actively following devicetree-discuss.
+
+This does looks good to me, there is not much to be said to the point w=
+here I=20
+wonder if this even deserves such an example, but it cannot hurt.
+
+>=20
+>     Changes since v1:
+>=20
+>     1. reformat "MDIO bus node" description and add, node name should=
+ be
+> "mdio" 2. reformat property descriptions, describe what the cells rep=
+resent
+> 3. add optional properties
+>     4. add a description after "PHY nodes"
+>=20
+>     Applies to next-20131113
+>=20
+>  Documentation/devicetree/bindings/net/phy.txt | 48
+> ++++++++++++++++++++++----- 1 file changed, 40 insertions(+), 8
+> deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/phy.txt
+> b/Documentation/devicetree/bindings/net/phy.txt index 7cd18fb..4179a7=
+0
+> 100644
+> --- a/Documentation/devicetree/bindings/net/phy.txt
+> +++ b/Documentation/devicetree/bindings/net/phy.txt
+> @@ -1,5 +1,26 @@
+> +MDIO Bus Nodes
+> +
+> +An MDIO bus node describes an MDIO bus, and is a container for PHY n=
+odes
+> +as described below. An MDIO bus node should be named "mdio".
+> +
+> +Required properties:
+> +
+> +- #address-cells =3D Should be <1>, specifies the number of cells ne=
+eded
+> +  to encode the PHY address
+> +- #size-cells =3D Should be <0>
+> +
+> +Optional Properties:
+> +
+> +- compatible : Should contain a specific name for the MDIO bus,
+> +  if known, followed by "-mdio"
+> +- reg : Should contain register location and length
+> +
+> +
+>  PHY nodes
+>=20
+> +Describes the PHY chip. A MAC connecting the PHY may use a phandle t=
+o
+> +this node.
+> +
+>  Required properties:
+>=20
+>   - device_type : Should be "ethernet-phy"
+> @@ -23,13 +44,24 @@ Optional Properties:
+>    assume clause 22. The compatible list may also contain other
+>    elements.
+>=20
+> +
+>  Example:
+>=20
+> -ethernet-phy@0 {
+> -	compatible =3D "ethernet-phy-ieee802.3-c22";
+> -	linux,phandle =3D <2452000>;
+> -	interrupt-parent =3D <40000>;
+> -	interrupts =3D <35 1>;
+> -	reg =3D <0>;
+> -	device_type =3D "ethernet-phy";
+> -};
+> +mdio {
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <0>;
+> +
+> +	ethernet-phy@0 {
+> +		device_type =3D "ethernet-phy";
+> +		compatible =3D "...", "ethernet-phy-ieee802.3-c22";
+> +		reg =3D <0>;
+> +		interrupts =3D <24 0>;
+> +	}
+> +
+> +	ethernet-phy@1 {
+> +		device_type =3D "ethernet-phy";
+> +		compatible =3D "...";
+> +		reg =3D <1>;
+> +		interrupts =3D <35 1>;
+> +	}
+> +}
+
+--=20
+=46lorian
