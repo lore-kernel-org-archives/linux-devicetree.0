@@ -1,108 +1,100 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] of: Add simple panel device tree binding
-Date: Wed, 11 Dec 2013 16:16:58 +0200
-Message-ID: <52A873DA.9070608@ti.com>
-References: <1385145714-3022-1-git-send-email-treding@nvidia.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH 4/5] dt/bindings: remove device_type "network" references
+Date: Wed, 11 Dec 2013 15:17:37 +0100
+Message-ID: <52A87401.5030001@monstr.eu>
+References: <1386760555-22732-1-git-send-email-grant.likely@linaro.org> <1386760555-22732-5-git-send-email-grant.likely@linaro.org>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="01XBwUk99luM05tHb6WFXHsB1dqGHt1Tq"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385145714-3022-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+ protocol="application/pgp-signature";
+ boundary="vBl60LhE47qPLUR5oJjopaVBpEPhUQkau"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1386760555-22732-5-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
---01XBwUk99luM05tHb6WFXHsB1dqGHt1Tq
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--vBl60LhE47qPLUR5oJjopaVBpEPhUQkau
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On 2013-11-22 20:41, Thierry Reding wrote:
+On 12/11/2013 12:15 PM, Grant Likely wrote:
+> device_type is deprecated and the kernel doesn't require it in most
+> cases. The only exceptions for flat tree users are the "gianfar",
+> "ucc_geth" and "ibm,emac" bindings, and arguably that requirement could=
 
-> +Example:
-> +
-> +	panel: panel {
-> +		compatible =3D "cptt,claa101wb01";
-> +		ddc-i2c-bus =3D <&panelddc>;
-> +
-> +		power-supply =3D <&vdd_pnl_reg>;
-> +		enable-gpios =3D <&gpio 90 0>;
-> +
-> +		backlight =3D <&backlight>;
-> +	};
+> be relaxed for ucc_geth and ibm,emac (that is a task for separate
+> patches though).
+>=20
+> This patch removes references to device_type=3D"network" from the bindi=
+ng
+> documentation where possible and removes the properties from ARM and
+> microblaze dts files. This patch does not modify the powerpc .dts files=
 
-I'm somewhat torn with this, as I agree with Thierry that it's correct
-to have a panel database in the driver, but, on the other hand, it does
-seem impractical.
+> since there are a much larger number of them affected and I think the
+> ucc_geth, ibm,emac and gianfar users should be addressed before clearin=
+g
+> out the references to reduce the chance of breakage.
+>=20
+> Signed-off-by: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Michal Simek <monstr@monstr.eu>
+> ---
+>  Documentation/devicetree/bindings/marvell.txt                    | 2 -=
+-
+>  Documentation/devicetree/bindings/net/marvell-orion-net.txt      | 2 -=
+-
+>  Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt | 1 -=
 
-In my experience, there are lots of panels out there, and each board I
-have has a different one. So, while just a gut feeling, we could end up
-with lots of panel, each used only on one board.
+>  arch/arm/boot/dts/dove.dtsi                                      | 1 -=
 
-With a quick thought, things would work fine if we just added the
-videomode data to the DT data, instead of a driver database, as Laurent
-suggested.
+>  arch/arm/boot/dts/kirkwood.dtsi                                  | 2 -=
+-
+>  arch/arm/boot/dts/orion5x.dtsi                                   | 1 -=
 
-However... I don't think the panels are usually as simple as that. With
-the panels I've worked with, the driver has to know things like:
+>  arch/microblaze/platform/generic/system.dts                      | 1 -=
 
-- Does the power supply need to be enabled before the enable gpio, and
-if so, how long before? And the same for power off.
+>  7 files changed, 10 deletions(-)
 
-- Does the video stream need to be enabled before the enable gpio, and
-if so, how long before? And the same for power off.
+Acked-by: Michal Simek <monstr@monstr.eu>
 
-- Is the gpio enable, power down, or reset? If reset, what are the timing=
-s.
+btw: what device types can be used?
+I am having them for serial, watchdog, pci, memory, cpu, ethernet-phy
+(will remove network from our generator).
 
-Where will those be defined? This goes back to the power sequence stuff
-again... (Was the power sequences series forgotten?) And defining such
-sequences in DT data is, I think, bad idea. But having them in the
-driver would be fine. If we have those in the driver, it's better to
-have the video modes there also.
+when I grep kernel there are others types like soc, ipmi and a lot for po=
+werpc.
 
-The sequence for power, gpio and video stream is most likely common for
-most panels. Power-on is done with enabling, in order: power, video,
-gpio. And power-off is vice versa. But we need delays in between, and I
-don't know if we can have some kind of common delays that'd work for
-most of the panels.
+Thanks,
+Michal
 
-If we can, we could perhaps define in detail our "common simple panel"
-spec, which would contain sequences, timings, powers, gpios, and so on,
-so it would be easy to see if a particular panel fits into our simple
-panel spec.
-
- Tomi
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
 
---01XBwUk99luM05tHb6WFXHsB1dqGHt1Tq
+--vBl60LhE47qPLUR5oJjopaVBpEPhUQkau
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+Version: GnuPG v1.4.10 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJSqHPaAAoJEPo9qoy8lh718sUP/iVYHsQHY9/Hd4TdCHtzxgkK
-AgBrCC1fvahQqHrnFAihQtH3H9d8UseH5MMfglmbDYTlzEhHpv0oYmjWRButcGwm
-o7sTsO2kwxJO12Tz064MIzyQG14eutr9OJGcMZcs2hh2571hH8FpvP1nH13fZItD
-mKLmZlQjwocZECXBJibiuvcCsetLrK73Ae73To65mkhU1L3SQOytmEtuaiKL+C0a
-HfllUVZ9Wspi/L54upnZBZF0WuKmUjEs7SHwj1Jq/bezBM6fCMOkwLEFEzBbSgXX
-CuRackBHhtmHaa2dcJdwaMn7rJRNR3hOXQnnrxN8Ba0bCFjPxUHvjToAWhLfLzU6
-CARz1+X1K8zoyRVm4suDLfQGVXVH1opC+VywLgcSme0NO0ZaX8JjBazkwIldyuRN
-BCb6G6v4wA0+Ji4jGDHPl2FcCIyr9K+oPGccsWst7S7xvgU8JGJqy0lCQONV3csN
-/Pl+UDEBHFbfjsEL2tIr+YZzIKgN2DHNJW1owcg0DdgXkVMEzvI1l2C17xc1GV1G
-gYFwI9zy2dDaUzVtLfhU0Lejtj1BQJBEWOqgSjUBTCL/kCdrobTNSGjGWfS9ocnM
-rRPgDhun29hu2CrPSn72kEoqmtgsFRgKw+1NRwy8ssj/mfzyOQe87YwT+GnVo7HR
-B5v7fH/IgcQ473VeLptu
-=cqik
+iEYEARECAAYFAlKodAEACgkQykllyylKDCE3oQCfYWDcIe6YGTjoGRRX5ZJq78Y0
+zpwAnjr3Xmip47sdCv2q3ZOSjW6w/eIT
+=8Abu
 -----END PGP SIGNATURE-----
 
---01XBwUk99luM05tHb6WFXHsB1dqGHt1Tq--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--vBl60LhE47qPLUR5oJjopaVBpEPhUQkau--
