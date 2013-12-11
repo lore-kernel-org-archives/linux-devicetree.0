@@ -1,60 +1,48 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Wed, 11 Dec 2013 21:12:52 +0100
-Message-ID: <201312112112.52746.arnd@arndb.de>
-References: <1386770541-15056-1-git-send-email-zhangfei.gao@linaro.org> <201312111549.14017.arnd@arndb.de> <52A8868A.3000105@linaro.org>
+From: delicious quinoa <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH v9] gpio: add a driver for Synopsys DesignWare APB GPIO
+Date: Wed, 11 Dec 2013 14:15:25 -0600
+Message-ID: <CANk1AXS=CADN53aO5KVN3UorddJ0wZ2PTqwo2XmeRuxYe_DoLg@mail.gmail.com>
+References: <1386364179-28650-1-git-send-email-delicious.quinoa@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <52A8868A.3000105@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: zhangfei <zhangfei.gao@linaro.org>
-Cc: Chris Ball <cjb@laptop.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1386364179-28650-1-git-send-email-delicious.quinoa@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@stericsson.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, delicious quinoa <delicious.quinoa@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 December 2013, zhangfei wrote:
-> >
-> > I have not seen "clk-table" and "clk-table-num" before. Are these standard
-> > properties? What are the units that are used here, what does the index mean?
-> >
-> 
-> "clk-table" and "clk-table-num" are private properties.
-> Instead simply on/off, the ip need different ciu clock for each timing mode.
+On Fri, Dec 6, 2013 at 3:09 PM, Alan Tull <delicious.quinoa@gmail.com> wrote:
+> From: Alan Tull <atull@altera.com>
+>
+> Hi Linus,
+>
+> If you don't have any further comments, can you take this patch?
+>
+> Alan
 
-But aren't the times fixed for each mode? Why do you need to specify them in
-the DT? I would expect that the clock rates for each mode are set in the
-MMC and SD specifications. When you call clk_set_rate(), it should normally
-be enough to ask for the clock you actually want and let the clk subsystem
-figure out how to set up the parents and multipliers on the way.
+Basically, this is a driver that Jamie wrote and was upstreaming a few
+years ago.  For some reason it never quite made it into the kernel.  I
+picked it up, updated the interrupt support, posted it to the list and
+went through some reviews with it.
 
-> Take emmc as example,
-> clk-table-num = <8>;
-> clk-table =
-> <13000000 50000000 0 0 13000000 50000000 0 100000000>;
-> MMC_TIMING_LEGACY mode, 25M should be set with parent clock 180M,
-> MMC_TIMING_MMC_HS mode, 50M is required with parent clock 360M
-> 
-> "clk-table" list all clocks to be set in all supported timing one by one.
-> "clk-table-num" is the table number, since not find function getting 
-> table number.
-> For example, next version will support MMC_TIMING_MMC_HS200 mode, the 
-> clk-table-num = <9> with 9 clocks in the "clk-table"
+This driver has been reviewed, I hope it can make it into the kernel.
 
-If you have a property with an array, you can use of_find_property()
-to get to the 'struct property' and then read the 'length' member
-of that struct, or you can use of_property_for_each_u32() to iterate
-through each value.
+Alan
 
-While I still hope that you don't even need this array as per the reasoning
-above, if you actually need it, you should specify exactly what each
-value means, such as
-
-1. CIU clock rate in HZ for 20MHz SPI mode operation 
-2. CIU clock rate in HZ for 25MHz SD card operation
-3. CIU clock rate in HZ for 26MHz MMC card operation
-4. CIU clock rate in HZ for 50MHz SD card operation
-...
-
-	Arnd
+>
+> Jamie Iles (1):
+>   gpio: add a driver for the Synopsys DesignWare APB GPIO block
+>
+>  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |   59 +++
+>  drivers/gpio/Kconfig                               |    9 +
+>  drivers/gpio/Makefile                              |    1 +
+>  drivers/gpio/gpio-dwapb.c                          |  415 ++++++++++++++++++++
+>  4 files changed, 484 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+>  create mode 100644 drivers/gpio/gpio-dwapb.c
+>
+> --
+> 1.7.9.5
+>
+>
