@@ -1,48 +1,58 @@
-From: delicious quinoa <delicious.quinoa@gmail.com>
-Subject: Re: [PATCH v9] gpio: add a driver for Synopsys DesignWare APB GPIO
-Date: Wed, 11 Dec 2013 14:15:25 -0600
-Message-ID: <CANk1AXS=CADN53aO5KVN3UorddJ0wZ2PTqwo2XmeRuxYe_DoLg@mail.gmail.com>
-References: <1386364179-28650-1-git-send-email-delicious.quinoa@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2] net: smc91x: Fix device tree based configuration so
+ it's usable
+Date: Wed, 11 Dec 2013 15:44:26 -0500 (EST)
+Message-ID: <20131211.154426.2252395344655389568.davem@davemloft.net>
+References: <20131127185657.GA26766@atomide.com>
+	<52A8ADE6.8010209@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1386364179-28650-1-git-send-email-delicious.quinoa@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@stericsson.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, delicious quinoa <delicious.quinoa@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <52A8ADE6.8010209@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: nm@ti.com
+Cc: tony@atomide.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, nico@fluxnic.net, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 6, 2013 at 3:09 PM, Alan Tull <delicious.quinoa@gmail.com> wrote:
-> From: Alan Tull <atull@altera.com>
->
-> Hi Linus,
->
-> If you don't have any further comments, can you take this patch?
->
-> Alan
+From: Nishanth Menon <nm@ti.com>
+Date: Wed, 11 Dec 2013 12:24:38 -0600
 
-Basically, this is a driver that Jamie wrote and was upstreaming a few
-years ago.  For some reason it never quite made it into the kernel.  I
-picked it up, updated the interrupt support, posted it to the list and
-went through some reviews with it.
+> Hi Tony,
+> On 11/27/2013 12:56 PM, Tony Lindgren wrote:
+>> Commit 89ce376c6bdc (drivers/net: Use of_match_ptr() macro in smc91x.c)
+>> added minimal device tree support to smc91x, but it's not working on
+>> many platforms because of the lack of some key configuration bits.
+>> 
+>> Fix the issue by parsing the necessary configuration like the
+>> smc911x driver is doing. As most smc91x users seem to use 16-bit
+>> access, let's default to that if no reg-io-width is specified.
+>> 
+>> Cc: Nicolas Pitre <nico@fluxnic.net>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: netdev@vger.kernel.org
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>> 
+>> ---
+>> 
+>> Device tree folks, any objection to using the reg-io-width property
+>> as a mask here?
+>> 
+>> Looks like we can use reg-io-width as a mask too if needed, it seems
+>> to play fine with combinations of 1 = 8-bit, 2 = 16-bit, 4 = 32-bit
+>> and so on.
+>> 
+>> I would like to see this merged during the -rc cycle as this makes
+>> my test devices behave the same way when booted in legacy platform
+>> data mode compared to when booted with device tree.
+>> 
+> please feel free to add my:
+> Acked-by: Nishanth Menon <nm@ti.com>
+> 
+> Also tested on SDP2430:
+> http://pastebin.mozilla.org/3756403
 
-This driver has been reviewed, I hope it can make it into the kernel.
-
-Alan
-
->
-> Jamie Iles (1):
->   gpio: add a driver for the Synopsys DesignWare APB GPIO block
->
->  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |   59 +++
->  drivers/gpio/Kconfig                               |    9 +
->  drivers/gpio/Makefile                              |    1 +
->  drivers/gpio/gpio-dwapb.c                          |  415 ++++++++++++++++++++
->  4 files changed, 484 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
->  create mode 100644 drivers/gpio/gpio-dwapb.c
->
-> --
-> 1.7.9.5
->
->
+That patch needs changes, it adds a warning when CONFIG_OF is disabled
+because the variable 'np' only gets used in the CONFIG_OF protected
+code block yet is declared unconditionally.
