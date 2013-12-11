@@ -1,212 +1,48 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 06/10] sh-pfc: Support GPIO to IRQ mapping specified IRQ resources
-Date: Wed, 11 Dec 2013 04:26:26 +0100
-Message-ID: <1386732390-31724-7-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1386732390-31724-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1386732390-31724-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+From: Zhangfei Gao <zhangfei.gao@gmail.com>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Wed, 11 Dec 2013 11:31:50 +0800
+Message-ID: <CAMj5BkhyiJ7Uc-GiRZP3TNMq3NvHW-MVuPT6t+7FN8KBWAJR5A@mail.gmail.com>
+References: <1383889128-12540-1-git-send-email-zhangfei.gao@linaro.org>
+	<1383889128-12540-3-git-send-email-zhangfei.gao@linaro.org>
+	<201312060239.14832.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201312060239.14832.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Seungwon Jeon <tgih.jun@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Kumar Gala <galak@codeaurora.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, Dinh Nguyen <dinguyen@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On non-DT platforms IRQ controllers associated with the GPIOs have a
-fixed IRQ base value known at compile time. The sh-pfc driver translates
-GPIO number to IRQ numbers using a hardcoded table. This mechanism
-breaks on DT platforms, as the IRQ base values are dynamic in that case.
+Dear Arnd
 
-Fix this by specifying IRQs associated with GPIOs in IRQ resources,
-populated automatically from the device tree. When IRQ resources are
-specified the driver requires one IRQ resource per GPIO able to generate
-an interrupt, and uses the translation table to compute the IRQ resource
-offset instead of the IRQ number.
+On Fri, Dec 6, 2013 at 9:39 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 08 November 2013, Zhangfei Gao wrote:
+>> Add dw_mmc-k3.c for k3v2, support sd/emmc
+>>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> Tested-by: Zhigang Wang <brooke.wangzhigang@huawei.com>
+>
+> We are currently having the exact same discussion problem on the altera
+> version of dw_mmc: It seems that all this driver does in addition to the
+> common code is to have a custom way to set up the card clocks.
+>
+> In both cases, there is a custom piece of IP logic providing this clock
+> (here it is in the "hisilicon,pctrl" node). IMHO that should be a proper
+> clock driver so you can use the existing call to clk_set_rate to set
+> it up and not need a special platform driver at all.
+>
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- .../bindings/pinctrl/renesas,pfc-pinctrl.txt       | 14 +++++
- drivers/pinctrl/sh-pfc/core.c                      | 69 +++++++++++++++++-----
- drivers/pinctrl/sh-pfc/core.h                      |  2 +
- drivers/pinctrl/sh-pfc/gpio.c                      | 14 ++++-
- 4 files changed, 82 insertions(+), 17 deletions(-)
+Thanks for the good suggestion, it can be abstracted to clock.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-index d5dac7b..35d2e1f 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-@@ -26,6 +26,11 @@ Optional properties:
-   - #gpio-range-cells: Mandatory when the PFC doesn't handle GPIO, forbidden
-     otherwise. Should be 3.
- 
-+  - interrupts-extended: Specify the interrupts associated with external
-+    IRQ pins. This property is mandatory when the PFC handles GPIOs and
-+    forbidden otherwise. When specified, it must contain one interrupt per
-+    external IRQ, sorted by external IRQ number.
-+
- The PFC node also acts as a container for pin configuration nodes. Please refer
- to pinctrl-bindings.txt in this directory for the definition of the term "pin
- configuration node" and for the common pinctrl bindings used by client devices.
-@@ -103,6 +108,15 @@ Example 1: SH73A0 (SH-Mobile AG5) pin controller node
- 		      <0xe605801c 0x1c>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		interrupts-extended =
-+			<&irqpin0 0 0>, <&irqpin0 1 0>, <&irqpin0 2 0>, <&irqpin0 3 0>,
-+			<&irqpin0 4 0>, <&irqpin0 5 0>, <&irqpin0 6 0>, <&irqpin0 7 0>,
-+			<&irqpin1 0 0>, <&irqpin1 1 0>, <&irqpin1 2 0>, <&irqpin1 3 0>,
-+			<&irqpin1 4 0>, <&irqpin1 5 0>, <&irqpin1 6 0>, <&irqpin1 7 0>,
-+			<&irqpin2 0 0>, <&irqpin2 1 0>, <&irqpin2 2 0>, <&irqpin2 3 0>,
-+			<&irqpin2 4 0>, <&irqpin2 5 0>, <&irqpin2 6 0>, <&irqpin2 7 0>,
-+			<&irqpin3 0 0>, <&irqpin3 1 0>, <&irqpin3 2 0>, <&irqpin3 3 0>,
-+			<&irqpin3 4 0>, <&irqpin3 5 0>, <&irqpin3 6 0>, <&irqpin3 7 0>;
- 	};
- 
- Example 2: A GPIO LED node that references a GPIO
-diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
-index 7831f07..b9b464d 100644
---- a/drivers/pinctrl/sh-pfc/core.c
-+++ b/drivers/pinctrl/sh-pfc/core.c
-@@ -26,30 +26,67 @@
- 
- #include "core.h"
- 
--static int sh_pfc_ioremap(struct sh_pfc *pfc, struct platform_device *pdev)
-+static int sh_pfc_map_resources(struct sh_pfc *pfc,
-+				struct platform_device *pdev)
- {
-+	unsigned int num_windows = 0;
-+	unsigned int num_irqs = 0;
-+	struct sh_pfc_window *windows;
-+	unsigned int *irqs = NULL;
- 	struct resource *res;
--	unsigned int k;
-+	unsigned int i;
-+
-+	/* Count the MEM and IRQ resources. */
-+	for (i = 0; i < pdev->num_resources; ++i) {
-+		switch (resource_type(&pdev->resource[i])) {
-+		case IORESOURCE_MEM:
-+			num_windows++;
-+			break;
-+
-+		case IORESOURCE_IRQ:
-+			num_irqs++;
-+			break;
-+		}
-+	}
- 
--	if (pdev->num_resources == 0)
-+	if (num_windows == 0)
- 		return -EINVAL;
- 
--	pfc->windows = devm_kzalloc(pfc->dev, pdev->num_resources *
--				    sizeof(*pfc->windows), GFP_NOWAIT);
--	if (!pfc->windows)
-+	/* Allocate memory windows and IRQs arrays. */
-+	windows = devm_kzalloc(pfc->dev, num_windows * sizeof(*windows),
-+			       GFP_KERNEL);
-+	if (windows == NULL)
- 		return -ENOMEM;
- 
--	pfc->num_windows = pdev->num_resources;
-+	pfc->num_windows = num_windows;
-+	pfc->windows = windows;
- 
--	for (k = 0, res = pdev->resource; k < pdev->num_resources; k++, res++) {
--		WARN_ON(resource_type(res) != IORESOURCE_MEM);
--		pfc->windows[k].phys = res->start;
--		pfc->windows[k].size = resource_size(res);
--		pfc->windows[k].virt =
--			devm_ioremap_nocache(pfc->dev, res->start,
--					     resource_size(res));
--		if (!pfc->windows[k].virt)
-+	if (num_irqs) {
-+		irqs = devm_kzalloc(pfc->dev, num_irqs * sizeof(*irqs),
-+				    GFP_KERNEL);
-+		if (irqs == NULL)
- 			return -ENOMEM;
-+
-+		pfc->num_irqs = num_irqs;
-+		pfc->irqs = irqs;
-+	}
-+
-+	/* Fill them. */
-+	for (i = 0, res = pdev->resource; i < pdev->num_resources; i++, res++) {
-+		switch (resource_type(res)) {
-+		case IORESOURCE_MEM:
-+			windows->phys = res->start;
-+			windows->size = resource_size(res);
-+			windows->virt = devm_ioremap_resource(pfc->dev, res);
-+			if (IS_ERR(windows->virt))
-+				return -ENOMEM;
-+			windows++;
-+			break;
-+
-+		case IORESOURCE_IRQ:
-+			*irqs++ = res->start;
-+			break;
-+		}
- 	}
- 
- 	return 0;
-@@ -482,7 +519,7 @@ static int sh_pfc_probe(struct platform_device *pdev)
- 	pfc->info = info;
- 	pfc->dev = &pdev->dev;
- 
--	ret = sh_pfc_ioremap(pfc, pdev);
-+	ret = sh_pfc_map_resources(pfc, pdev);
- 	if (unlikely(ret < 0))
- 		return ret;
- 
-diff --git a/drivers/pinctrl/sh-pfc/core.h b/drivers/pinctrl/sh-pfc/core.h
-index a83b747..b7b0e6c 100644
---- a/drivers/pinctrl/sh-pfc/core.h
-+++ b/drivers/pinctrl/sh-pfc/core.h
-@@ -38,6 +38,8 @@ struct sh_pfc {
- 
- 	unsigned int num_windows;
- 	struct sh_pfc_window *windows;
-+	unsigned int num_irqs;
-+	unsigned int *irqs;
- 
- 	struct sh_pfc_pin_range *ranges;
- 	unsigned int nr_ranges;
-diff --git a/drivers/pinctrl/sh-pfc/gpio.c b/drivers/pinctrl/sh-pfc/gpio.c
-index 6a21349..6348081 100644
---- a/drivers/pinctrl/sh-pfc/gpio.c
-+++ b/drivers/pinctrl/sh-pfc/gpio.c
-@@ -211,11 +211,17 @@ static int gpio_pin_to_irq(struct gpio_chip *gc, unsigned offset)
- 
- 		for (k = 0; gpios[k] >= 0; k++) {
- 			if (gpios[k] == offset)
--				return pfc->info->gpio_irq[i].irq;
-+				goto found;
- 		}
- 	}
- 
- 	return -ENOSYS;
-+
-+found:
-+	if (pfc->num_irqs)
-+		return pfc->irqs[i];
-+	else
-+		return pfc->info->gpio_irq[i].irq;
- }
- 
- static int gpio_pin_setup(struct sh_pfc_chip *chip)
-@@ -357,6 +363,12 @@ int sh_pfc_register_gpiochip(struct sh_pfc *pfc)
- 	if (i == pfc->num_windows)
- 		return 0;
- 
-+	/* If we have IRQ resources make sure their number is correct. */
-+	if (pfc->num_irqs && pfc->num_irqs != pfc->info->gpio_irq_size) {
-+		dev_err(pfc->dev, "invalid number of IRQ resources\n");
-+		return -EINVAL;
-+	}
-+
- 	/* Register the real GPIOs chip. */
- 	chip = sh_pfc_add_gpiochip(pfc, gpio_pin_setup, &pfc->windows[i]);
- 	if (IS_ERR(chip))
--- 
-1.8.3.2
+The issue for this version's ip is there are some registers need to be
+set, including fixed factor and phase, which may be required to be
+tuned, however it can be hide in clock.
 
+Double checked next version's ip, it is more intelligent and only
+fixed factor is required, more like a clock, and all these register
+accessing are NOT required.
+
+Will update new version to abstract these chip depended registers to clock.
+
+Thanks
