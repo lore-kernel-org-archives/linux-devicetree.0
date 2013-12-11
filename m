@@ -1,72 +1,66 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 04/10] usb: dwc3: use quirks to know if a particualr
- platform doesn't have PHY
-Date: Wed, 11 Dec 2013 14:37:16 +0530
-Message-ID: <52A82B44.10408@ti.com>
-References: <1385373690-12170-1-git-send-email-kishon@ti.com>
- <1385373690-12170-5-git-send-email-kishon@ti.com>
- <20131204144027.GB21055@xps8300> <52A01E86.50406@ti.com>
- <20131205075828.GA32583@xps8300> <52A56DA1.1010808@ti.com>
- <20131209092604.GC5231@xps8300> <20131211085320.GD28456@xps8300>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH RFC] net: of_mdio: Scan PHYs which have device_type set to ethernet-phy
+Date: Wed, 11 Dec 2013 09:15:44 +0000
+Message-ID: <20131211091544.EA4F7C4061A@trevor.secretlab.ca>
+References: <1384441556-20674-1-git-send-email-srinivas.kandagatla@st.com> < 1695129.4QIGmmVPkX@lenovo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131211085320.GD28456@xps8300>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, balbi@ti.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, rob@landley.net, pawel.moll@arm.com, linux-doc@vger.kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@linaro.org, bcousson@baylibre.com, galak@codeaurora.org, swarren@wwwdotorg.org, s.nawrocki@samsung.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1695129.4QIGmmVPkX@lenovo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 December 2013 02:23 PM, Heikki Krogerus wrote:
-> Hi,
-> 
-> On Mon, Dec 09, 2013 at 11:26:04AM +0200, Heikki Krogerus wrote:
->>>>>> Can you guys explain why is something like this needed? Like with
->>>>>> clocks and gpios, the device drivers shouldn't need to care any more
->>>>>> if the platform has the phys or not. -ENODEV tells you your platform
->>>>>
->>>>> Shouldn't we report if a particular platform needs a PHY and not able to get
->>>>> it. How will a user know if a particular controller is not working because it's
->>>>> not able to get and initialize the PHYs? Don't you think in such cases it's
->>>>> better to fail (and return from probe) because the controller will not work
->>>>> anyway without the PHY?
->>>>
->>>> My point is that you do not need to separately tell this to the driver
->>>> like you do with the quirks (if you did, then you would need to fix
->>>> your framework and not hack the drivers).
->>>>
->>>> Like I said, ENODEV tells you that there is no phy on this platform
->>>> for you, allowing you to safely continue. If your phy driver is not
->>>> loaded, the framework already returns EPROBE_DEFER, right. Any other
->>>
->>> right. but that doesn't consider broken dt data. With quirks we'll
->>> able to tell if a controller in a particular platform has PHY or not
->>> without depending on the dt data.
->>
->> Broken dt data? What kind of scenario are you thinking here? Do you
->> mean case where the dt does not describe the phy on a platform that
->> depends on it? Shouldn't that problem be fixed in the dt and not
->> hacked in the drivers? Or are you thinking about something else?
->>
->> Is there a case where something like that is actually happening?
-> 
-> I'm guessing I'm not getting an answer to this one.
-> 
-> Look, this patch will not work with ACPI enumerated devices. We will
-> have a platform providing a single ACPI id, but there is a whole bunch
-> of boards based on it and we have no way of telling which of them
-> need/have phys to deal with and which ones don't.
+On Wed, 11 Dec 2013 07:15:54 +0000, Florian Fainelli <f.fainelli@gmail.=
+com> wrote:
+> Le jeudi 14 novembre 2013, 15:05:56 Srinivas Kandagatla a =C3=A9crit =
+:
+> > According to Documentation/devicetree/bindings/net/phy.txt device_t=
+ype
+> > property of PHY nodes is mandatory, which should be set to
+> > "ethernet-phy". This patch adds check in scanning phys and only sca=
+ns
+> > node which have device-type set to "ethernet-phy".
+>=20
+> Please CC netdev@vger.kernel.org as there might be networking folks n=
+ot=20
+> actively following devicetree-discuss.
+>=20
+> >=20
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> > ---
+> >  drivers/of/of_mdio.c |    7 +++++++
+> >  1 files changed, 7 insertions(+), 0 deletions(-)
+> >=20
+> > diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> > index d5a57a9..78c53c7 100644
+> > --- a/drivers/of/of_mdio.c
+> > +++ b/drivers/of/of_mdio.c
+> > @@ -57,6 +57,9 @@ int of_mdiobus_register(struct mii_bus *mdio, str=
+uct
+> > device_node *np)
+> >=20
+> >  	/* Loop over the child nodes and register a phy_device for each o=
+ne */
+> >  	for_each_available_child_of_node(np, child) {
+> > +		/* A PHY must have device_type set to "ethernet-phy" */
+> > +		if (of_node_cmp(child->type, "ethernet-phy"))
+> > +			continue;
+>=20
+> As already stated by Grant this will break quite a lot of platforms o=
+ut there.=20
+> Technically speaking, ePAPR v1.1 only specifies that "cpu" and "memor=
+y" nodes=20
+> should have a "device_type" property for compatibility. Altough I do =
+agree=20
+> that it is nice to have a properly set "device_type", we can't always=
+ rely on=20
+> that.=20
 
-Alright.. I'll drop this patch then.
+Actually it is the opposite. device_type is deprecated and has been for
+a long time now. Device bindings should not not be using device_type
+unless it is there for legacy compatibility.
 
-Thanks
-Kishon
+g.
