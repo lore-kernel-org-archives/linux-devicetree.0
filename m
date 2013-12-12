@@ -1,86 +1,104 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v5 9/9] ARM: dts: add usb udc support to bcm281xx
-Date: Thu, 12 Dec 2013 08:26:10 -0500
-Message-ID: <1386854770-2173-10-git-send-email-mporter@linaro.org>
-References: <1386854770-2173-1-git-send-email-mporter@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386854770-2173-1-git-send-email-mporter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Russell King <linux@arm.linux.org.uk>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Thu, 12 Dec 2013 21:27:16 +0800
+Message-ID: <52A9B9B4.3080105@linaro.org>
+References: <1386770541-15056-1-git-send-email-zhangfei.gao@linaro.org> <201312111549.14017.arnd@arndb.de> <52A8868A.3000105@linaro.org> <201312112112.52746.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201312112112.52746.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adds USB OTG/PHY and clock support to BCM281xx and enables
-UDC support on the bcm11351-brt and bcm28155-ap boards.
+Dear Arnd
 
-Signed-off-by: Matt Porter <mporter@linaro.org>
-Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
----
- arch/arm/boot/dts/bcm11351-brt.dts |  6 ++++++
- arch/arm/boot/dts/bcm11351.dtsi    | 18 ++++++++++++++++++
- arch/arm/boot/dts/bcm28155-ap.dts  |  8 ++++++++
- 3 files changed, 32 insertions(+)
+On 12/12/2013 04:12 AM, Arnd Bergmann wrote:
+> On Wednesday 11 December 2013, zhangfei wrote:
+>>>
+>>> I have not seen "clk-table" and "clk-table-num" before. Are these standard
+>>> properties? What are the units that are used here, what does the index mean?
+>>>
+>>
+>> "clk-table" and "clk-table-num" are private properties.
+>> Instead simply on/off, the ip need different ciu clock for each timing mode.
+>
+> But aren't the times fixed for each mode? Why do you need to specify them in
+> the DT? I would expect that the clock rates for each mode are set in the
+> MMC and SD specifications. When you call clk_set_rate(), it should normally
+> be enough to ask for the clock you actually want and let the clk subsystem
+> figure out how to set up the parents and multipliers on the way.
 
-diff --git a/arch/arm/boot/dts/bcm11351-brt.dts b/arch/arm/boot/dts/bcm11351-brt.dts
-index 23cd16d..396b704 100644
---- a/arch/arm/boot/dts/bcm11351-brt.dts
-+++ b/arch/arm/boot/dts/bcm11351-brt.dts
-@@ -44,5 +44,11 @@
- 		status = "okay";
- 	};
- 
-+	usbotg: usb@3f120000 {
-+		status = "okay";
-+	};
- 
-+	usbphy: usb-phy@3f130000 {
-+		status = "okay";
-+	};
- };
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 1246885..0fbb455 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -243,4 +243,22 @@
- 			#clock-cells = <0>;
- 		};
- 	};
-+
-+	usbotg: usb@3f120000 {
-+		compatible = "snps,dwc2";
-+		reg = <0x3f120000 0x10000>;
-+		interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&usb_otg_ahb_clk>;
-+		clock-names = "otg";
-+		phys = <&usbphy>;
-+		phy-names = "usb2-phy";
-+		status = "disabled";
-+	};
-+
-+	usbphy: usb-phy@3f130000 {
-+		compatible = "brcm,kona-usb2-phy";
-+		reg = <0x3f130000 0x28>;
-+		#phy-cells = <0>;
-+		status = "disabled";
-+	};
- };
-diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
-index 08e47c2..a3bc436 100644
---- a/arch/arm/boot/dts/bcm28155-ap.dts
-+++ b/arch/arm/boot/dts/bcm28155-ap.dts
-@@ -43,4 +43,12 @@
- 		cd-gpios = <&gpio 14 0>;
- 		status = "okay";
- 	};
-+
-+	usbotg: usb@3f120000 {
-+		status = "okay";
-+	};
-+
-+	usbphy: usb-phy@3f130000 {
-+		status = "okay";
-+	};
- };
--- 
-1.8.4
+Yes. that's will be perfect.
+
+However, currently this ip still has no such capability.
+1. Input rate for init are diferent for different controller, not the 
+init 400K, some are 13M, others are 25M, since different clock source.
+This can be easily solved by clock-freq-init = <25000000>
+2. There is maxmum limit, also can be easily solved by define CLK_MAX.
+3. However some mode can not use the max speed from ios->clock
+for example UHS_SDR104_MAX_DTR 208000000 can not be used, only half may 
+be reached, at least currently.
+
+>
+>> Take emmc as example,
+>> clk-table-num = <8>;
+>> clk-table =
+>> <13000000 50000000 0 0 13000000 50000000 0 100000000>;
+>> MMC_TIMING_LEGACY mode, 25M should be set with parent clock 180M,
+>> MMC_TIMING_MMC_HS mode, 50M is required with parent clock 360M
+>>
+>> "clk-table" list all clocks to be set in all supported timing one by one.
+>> "clk-table-num" is the table number, since not find function getting
+>> table number.
+>> For example, next version will support MMC_TIMING_MMC_HS200 mode, the
+>> clk-table-num = <9> with 9 clocks in the "clk-table"
+>
+> If you have a property with an array, you can use of_find_property()
+> to get to the 'struct property' and then read the 'length' member
+> of that struct, or you can use of_property_for_each_u32() to iterate
+> through each value.
+
+Great, this works.
+
+>
+> While I still hope that you don't even need this array as per the reasoning
+> above, if you actually need it, you should specify exactly what each
+> value means, such as
+>
+> 1. CIU clock rate in HZ for 20MHz SPI mode operation
+> 2. CIU clock rate in HZ for 25MHz SD card operation
+> 3. CIU clock rate in HZ for 26MHz MMC card operation
+> 4. CIU clock rate in HZ for 50MHz SD card operation
+> ...
+
+How about this desc
+
+* clock-freq-table: should be the frequency (in Hz) array of the ciu 
+clock
+         in each supported timing. 
+
+         1. CIU clock rate in HZ for MMC_TIMING_LEGACY mode 
+
+         2. CIU clock rate in HZ for MMC_TIMING_MMC_HS mode
+         3. CIU clock rate in HZ for MMC_TIMING_SD_HS mode
+         4. CIU clock rate in HZ for MMC_TIMING_UHS_SDR12 mode 
+
+         5. CIU clock rate in HZ for MMC_TIMING_UHS_SDR25 mode 
+
+         6. CIU clock rate in HZ for MMC_TIMING_UHS_SDR50 mode 
+
+         7. CIU clock rate in HZ for MMC_TIMING_UHS_SDR104 mode 
+
+         8. CIU clock rate in HZ for MMC_TIMING_SD_HS mode 
+
+         9. CIU clock rate in HZ for MMC_TIMING_MMC_HS200 mode 
+
+
+Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
