@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: [PATCH 2/4] ARM: dts: imx6qdl: add pingroup for enet interface in RMII mode
-Date: Thu, 12 Dec 2013 14:09:31 +0100
-Message-ID: <1386853773-1319-3-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCH 3/4] ARM: dts: imx6qdl: add new pingroup for audmux
+Date: Thu, 12 Dec 2013 14:09:32 +0100
+Message-ID: <1386853773-1319-4-git-send-email-LW@KARO-electronics.de>
 References: <1386853773-1319-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -17,32 +17,27 @@ This will be used by the TX6 modules from Ka-Ro electronics.
 
 Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-pingrp.h |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/imx6qdl-pingrp.h |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-pingrp.h b/arch/arm/boot/dts/imx=
 6qdl-pingrp.h
-index 8d71b13..4932249 100644
+index 4932249..68f18e9 100644
 --- a/arch/arm/boot/dts/imx6qdl-pingrp.h
 +++ b/arch/arm/boot/dts/imx6qdl-pingrp.h
-@@ -100,6 +100,17 @@
- 	MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL		0x1b0b0 \
- 	MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN		0x1b0b0
+@@ -32,6 +32,12 @@
+ 	MX6QDL_PAD_EIM_D25__AUD5_RXC			0x130b0 \
+ 	MX6QDL_PAD_DISP0_DAT19__AUD5_RXD		0x130b0
 =20
-+#define MX6QDL_ENET_PINGRP4					\
-+	MX6QDL_PAD_ENET_MDC__ENET_MDC			0x1b0b0	\
-+	MX6QDL_PAD_ENET_MDIO__ENET_MDIO			0x1b0b0	\
-+	MX6QDL_PAD_ENET_RXD0__ENET_RX_DATA0		0x1b0b0	\
-+	MX6QDL_PAD_ENET_RXD1__ENET_RX_DATA1		0x1b0b0	\
-+	MX6QDL_PAD_ENET_RX_ER__ENET_RX_ER		0x1b0b0	\
-+	MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN		0x1b0b0	\
-+	MX6QDL_PAD_ENET_TXD0__ENET_TX_DATA0		0x1b0b0	\
-+	MX6QDL_PAD_ENET_TXD1__ENET_TX_DATA1		0x1b0b0	\
-+	MX6QDL_PAD_ENET_CRS_DV__ENET_RX_EN		0x1b0b0
++#define MX6QDL_AUDMUX_PINGRP5 \
++	MX6QDL_PAD_KEY_ROW1__AUD5_RXD			0x130b0 \
++	MX6QDL_PAD_KEY_COL0__AUD5_TXC			0x130b0 \
++	MX6QDL_PAD_KEY_ROW0__AUD5_TXD			0x110b0 \
++	MX6QDL_PAD_KEY_COL1__AUD5_TXFS			0x130b0
 +
- #define MX6QDL_ESAI_PINGRP1 \
- 	MX6QDL_PAD_ENET_RXD0__ESAI_TX_HF_CLK		0x1b030 \
- 	MX6QDL_PAD_ENET_CRS_DV__ESAI_TX_CLK		0x1b030 \
+ #define MX6QDL_ECSPI1_PINGRP1 \
+ 	MX6QDL_PAD_EIM_D17__ECSPI1_MISO			0x100b1 \
+ 	MX6QDL_PAD_EIM_D18__ECSPI1_MOSI			0x100b1 \
 --=20
 1.7.2.5
 
