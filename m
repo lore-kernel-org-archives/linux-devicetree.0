@@ -1,87 +1,94 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH v6 0/4] ata: Add APM X-Gene SoC SATA host controller support
-Date: Thu, 12 Dec 2013 00:55:36 -0700
-Message-ID: <1386834940-30875-1-git-send-email-lho@apm.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 07/10] drivers: mtd: m25p80: Adapt driver to support
+ memory mapped read.
+Date: Thu, 12 Dec 2013 15:55:37 +0800
+Message-ID: <20131212075536.GA1596@gmail.com>
+References: <1386339891-32717-1-git-send-email-sourav.poddar@ti.com>
+ <1386339891-32717-8-git-send-email-sourav.poddar@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1386339891-32717-8-git-send-email-sourav.poddar-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the APM X-Gene SoC SATA host controller. In
-order for the host controller to work, the corresponding PHY driver
-musts also be available.
+On Fri, Dec 06, 2013 at 07:54:48PM +0530, Sourav Poddar wrote:
+> Adapt driver to do a memory mapped read.
+> @@ -109,6 +109,7 @@ struct m25p {
+>  	u8			program_opcode;
+>  	u8			*command;
+>  	enum read_type		flash_read;
+> +	void __iomem *mem_addr;
 
-v6:
- * Update binding documentation
- * Change select PHY_XGENE_SATA to PHY_XGENE
- * Add ULL to constants
- * Change indentation and comments
- * Clean up the probe functions a bit more
- * Remove xgene_ahci_remove function
- * Add the flush register to DTS
- * Remove the interrupt-parent from DTS
+I think we can remove this field.
+You can use a local variable in the m25p80_read.
 
-v5:
- * Sync up to v3 of the PHY driver
- * Remove MSLIM wrapper functions
- * Change the memory shutdown loop to use usleep_range
- * Use devm_ioremap_resource instead devm_ioremap
- * Remove suspend/resume functions as not needed
+>  };
+>  
+>  static inline struct m25p *mtd_to_m25p(struct mtd_info *mtd)
+> @@ -515,6 +516,7 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+>  	size_t *retlen, u_char *buf)
+>  {
+>  	struct m25p *flash = mtd_to_m25p(mtd);
+> +	struct spi_master *master = flash->spi->master;
+>  	struct spi_transfer t[2];
+>  	struct spi_message m;
+>  	uint8_t opcode;
+> @@ -523,6 +525,20 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+>  	pr_debug("%s: %s from 0x%08x, len %zd\n", dev_name(&flash->spi->dev),
+>  			__func__, (u32)from, len);
+>  
+> +	if (master->mmap) {
+> +		mutex_lock(&flash->lock);
+> +		/* Wait till previous write/erase is done. */
+> +		if (wait_till_ready(flash)) {
+> +			mutex_unlock(&flash->lock);
+> +			return 1;
+> +		}
+> +		flash->mem_addr = master->get_buf(master);
+> +		memcpy(buf, flash->mem_addr + from, len);
+> +		master->put_buf(master);
+> +		*retlen = len;
+> +		goto out;
+> +	}
+> +
+>  	spi_message_init(&m);
+>  	memset(t, 0, (sizeof t));
+>  
+> @@ -558,6 +574,7 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+>  
+>  	*retlen = m.actual_length - m25p_cmdsz(flash) - dummy;
+>  
+> +out:
+>  	mutex_unlock(&flash->lock);
+>  
+>  	return 0;
+> @@ -1286,6 +1303,9 @@ static int m25p_probe(struct spi_device *spi)
+>  		flash->addr_width = 3;
+>  	}
+>  
+> +	if (spi->master->configure_from_slave)
+> +		m25p80_fill_flash_information(flash);
+> +
+You have add a configure_from_slave hook in the SPI, why you also need 
+a same hook in the SPI-NOR framework?
 
-v4:
- * Remove the ID property in DT
- * Remove the temporary PHY direct function call and use PHY function
- * Change printk to pr_debug
- * Move the IOB flush addresses into the DT
- * Remove the parameters retrieval function as no longer needed
- * Remove the header file as no longer needed
- * Require v2 patch of the SATA PHY driver. Require slightly modification
-   in the Kconfig as it is moved to folder driver/phy and use Kconfig
-   PHY_XGENE_SATA instead SATA_XGENE_PHY.
+And i think the enable_mmap/disable_mmap is not needed too.
 
-v3:
- * Move out the SATA PHY to another driver
- * Remove the clock-cells entry from DTS
- * Remove debug wrapper
- * Remove delay functions wrapper
- * Clean up resource and IRQ query
- * Remove query clock name
- * Switch to use dma_set_mask/dma_coherent_mask
- * Remove un-necessary devm_kfree
- * Update GPL license header to v2
- * Spilt up function xgene_ahci_hardreset
- * Spilt up function xgene_ahci_probe
- * Remove all reference of CONFIG_ARCH_MSLIM
- * Clean up chip revision code
+All the three hooks are used to set the SPI bus controller.
 
-v2:
- * Clean up file sata_xgene.c with Lindent and etc
- * Clean up file sata_xgene_serdes.c with Lindent and etc
- * Add description to each patch
+And the SPI-NOR framework only handles the issues between the 
+SPI bus controller and the SPI-NOR, or the SPI-NOR controller and the
+SPI-NOR.
 
-v1:
- * inital version
+thanks
+Huang Shijie
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Tuan Phan <tphan@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
-Loc Ho (4):
-  ata: Export required functions by APM X-Gene SATA driver
-  Documentation: Add documentation for APM X-Gene SoC SATA host
-    controller DTS binding
-  ata: Add APM X-Gene SoC SATA host controller driver
-  arm64: Add APM X-Gene SoC SATA host controller DTS entries
 
- .../devicetree/bindings/ata/apm-xgene.txt          |   68 ++
- arch/arm64/boot/dts/apm-storm.dtsi                 |   84 ++
- drivers/ata/Kconfig                                |    8 +
- drivers/ata/Makefile                               |    1 +
- drivers/ata/ahci.h                                 |    9 +
- drivers/ata/libahci.c                              |   16 +-
- drivers/ata/sata_xgene.c                           | 1068 ++++++++++++++++++++
- 7 files changed, 1248 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/apm-xgene.txt
- create mode 100644 drivers/ata/sata_xgene.c
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
