@@ -1,78 +1,59 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/3] ARM: ux500: Configure regulator for I/O voltage for SD-card slot
-Date: Thu, 12 Dec 2013 14:31:37 +0100
-Message-ID: <1386855098-14272-3-git-send-email-ulf.hansson@linaro.org>
-References: <1386855098-14272-1-git-send-email-ulf.hansson@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386855098-14272-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] ARM: tegra: enable ams AS3722 drivers
+Date: Thu, 12 Dec 2013 19:01:03 +0530
+Message-ID: <1386855064-10993-1-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To be able to enable SDR12|25 for SD-cards, we needed to fixup the
-configuration in DT of the gpio regulator, which handles the signal
-voltage level. Some configuration were missing and some were wrong.
+ams AS3722 is the system power manager module IC for the Tegra124 based
+Venice2 platform. Enable configs for gpio, pincontrol, rtc, regulator
+support from this device.
 
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/ste-hrefprev60.dtsi  |    2 --
- arch/arm/boot/dts/ste-hrefv60plus.dtsi |    5 +++++
- arch/arm/boot/dts/ste-snowball.dts     |    6 ++----
- 3 files changed, 7 insertions(+), 6 deletions(-)
+ arch/arm/configs/tegra_defconfig |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-index af9914e..40f0ecd 100644
---- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
-+++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
-@@ -68,8 +68,6 @@
- 		vmmci: regulator-gpio {
- 			gpios = <&tc3589x_gpio 18 0x4>;
- 			enable-gpio = <&tc3589x_gpio 17 0x4>;
--
--			status = "okay";
- 		};
- 
- 		pinctrl {
-diff --git a/arch/arm/boot/dts/ste-hrefv60plus.dtsi b/arch/arm/boot/dts/ste-hrefv60plus.dtsi
-index 1f7b46b..3b6d118 100644
---- a/arch/arm/boot/dts/ste-hrefv60plus.dtsi
-+++ b/arch/arm/boot/dts/ste-hrefv60plus.dtsi
-@@ -22,6 +22,11 @@
- 			cd-gpios  = <&gpio2 31 0x4>; // 95
- 		};
- 
-+		vmmci: regulator-gpio {
-+			gpios = <&gpio0 5 0x4>;
-+			enable-gpio = <&gpio5 9 0x4>;
-+		};
-+
- 		pinctrl {
- 			/*
- 			 * Set this up using hogs, as time goes by and as seems fit, these
-diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
-index 9070c37..97d5d21 100644
---- a/arch/arm/boot/dts/ste-snowball.dts
-+++ b/arch/arm/boot/dts/ste-snowball.dts
-@@ -146,10 +146,8 @@
- 		};
- 
- 		vmmci: regulator-gpio {
--			gpios = <&gpio6 25 0x4>;
--			enable-gpio = <&gpio7 4 0x4>;
--
--			status = "okay";
-+			gpios = <&gpio7 4 0x4>;
-+			enable-gpio = <&gpio6 25 0x4>;
- 		};
- 
- 		// External Micro SD slot
+diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
+index 4461185..5cf4a48 100644
+--- a/arch/arm/configs/tegra_defconfig
++++ b/arch/arm/configs/tegra_defconfig
+@@ -137,6 +137,7 @@ CONFIG_SPI=y
+ CONFIG_SPI_TEGRA114=y
+ CONFIG_SPI_TEGRA20_SFLASH=y
+ CONFIG_SPI_TEGRA20_SLINK=y
++CONFIG_PINCTRL_AS3722=y
+ CONFIG_PINCTRL_PALMAS=y
+ CONFIG_GPIO_SYSFS=y
+ CONFIG_GPIO_PCA953X_IRQ=y
+@@ -149,6 +150,7 @@ CONFIG_CHARGER_TPS65090=y
+ CONFIG_POWER_RESET=y
+ CONFIG_POWER_RESET_GPIO=y
+ CONFIG_SENSORS_LM90=y
++CONFIG_MFD_AS3722=y
+ CONFIG_MFD_MAX8907=y
+ CONFIG_MFD_PALMAS=y
+ CONFIG_MFD_TPS65090=y
+@@ -157,6 +159,7 @@ CONFIG_MFD_TPS65910=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_REGULATOR_VIRTUAL_CONSUMER=y
++CONFIG_REGULATOR_AS3722=y
+ CONFIG_REGULATOR_GPIO=y
+ CONFIG_REGULATOR_MAX8907=y
+ CONFIG_REGULATOR_PALMAS=y
+@@ -218,6 +221,7 @@ CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
+ CONFIG_LEDS_TRIGGER_TRANSIENT=y
+ CONFIG_LEDS_TRIGGER_CAMERA=y
+ CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_AS3722=y
+ CONFIG_RTC_DRV_MAX8907=y
+ CONFIG_RTC_DRV_PALMAS=y
+ CONFIG_RTC_DRV_TPS6586X=y
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.1.1
