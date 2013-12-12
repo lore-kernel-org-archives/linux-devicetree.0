@@ -1,67 +1,49 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCH v5 3/9] usb: gadget: s3c-hsotg: enable build for other
- platforms
-Date: Thu, 12 Dec 2013 15:51:31 -0600
-Message-ID: <52AA2FE3.3060200@gmail.com>
-References: <1386854770-2173-1-git-send-email-mporter@linaro.org> <1386854770-2173-4-git-send-email-mporter@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 13/26] ARM: omap3.dtsi: add omapdss information
+Date: Thu, 12 Dec 2013 21:59:13 +0000
+Message-ID: <20131212215913.GB29072@muru.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+ <20131205170514.GY26766@atomide.com>
+ <52A5BB65.5050109@ti.com>
+ <2364383.8GWpsWSoJu@avalon>
+ <52A9760A.3000801@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386854770-2173-4-git-send-email-mporter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Linaro Patches <patches@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52A9760A.3000801@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matt,
+On Thu, Dec 12, 2013 at 10:38:34AM +0200, Tomi Valkeinen wrote:
+> On 2013-12-12 01:44, Laurent Pinchart wrote:
+> 
+> So, are they independent? I don't know =). I think they lean on the
+> independent side. dss_core is always needed for the submodules to work,
+> but for example DSI could be used without DISPC, using system DMA to
+> transfer data from memory to DSI. Not a very useful thing to do, but
+> still, there are dedicated DMA channels for that.
 
-On 12/12/13 7:26 AM, Matt Porter wrote:
-> Remove unused Samsung-specific machine include and Kconfig
-> dependency on S3C.
->
-> Signed-off-by: Matt Porter <mporter@linaro.org>
-> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-> Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
-> ---
->  drivers/usb/gadget/Kconfig     | 7 +++----
->  drivers/usb/gadget/s3c-hsotg.c | 2 --
->  2 files changed, 3 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
-> index a91e642..970bd1a 100644
-> --- a/drivers/usb/gadget/Kconfig
-> +++ b/drivers/usb/gadget/Kconfig
-> @@ -294,11 +294,10 @@ config USB_PXA27X
->  	   gadget drivers to also be dynamically linked.
->  
->  config USB_S3C_HSOTG
-> -	tristate "S3C HS/OtG USB Device controller"
-> -	depends on S3C_DEV_USB_HSOTG
-> +	tristate "Designware/S3C HS/OtG USB Device controller"
->  	help
-> -	  The Samsung S3C64XX USB2.0 high-speed gadget controller
-> -	  integrated into the S3C64XX series SoC.
-> +	  The Designware USB2.0 high-speed gadget controller
-> +	  integrated into the S3C64XX and BCM281xx series SoC.
-Thanks for doing this. The SOCFPGA platform is also using this driver.
-So perhaps a
-more generic message here?
+If they have separate hwmod entries, they should be considered separate
+independent devices for sure.
 
-Dinh
->  
->  config USB_S3C2410
->  	tristate "S3C2410 USB Device Controller"
-> diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-> index 33eb690..8ceb5ef 100644
-> --- a/drivers/usb/gadget/s3c-hsotg.c
-> +++ b/drivers/usb/gadget/s3c-hsotg.c
-> @@ -37,8 +37,6 @@
->  #include <linux/usb/phy.h>
->  #include <linux/platform_data/s3c-hsotg.h>
->  
-> -#include <mach/map.h>
-> -
->  #include "s3c-hsotg.h"
->  
->  static const char * const s3c_hsotg_supply_names[] = {
+To summarize, here are few reasons why they need to be treated as
+separate devices:
+
+1. The modules maybe clocked/powered/idled separately and can have their
+   own idle configuration so they can do the hardware based idling
+   separately.
+
+2. Doing a readback after a write to one module will not flush the write
+   to the other modules on the (bus depending on the SoC version AFAIK).
+   That can lead to nasty bugs caused by the ordering.
+
+3. If the devices are described in a different way in the .dts files
+   from the hwmod data, we will not have 1-to-1 mapping and will never
+   be able to replace ti,hwmods with just the compatible string.
+
+Regards,
+
+Tony
