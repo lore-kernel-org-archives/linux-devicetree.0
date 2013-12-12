@@ -1,301 +1,78 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
- extensions for GMAC in Allwinner A20 SoC's
-Date: Thu, 12 Dec 2013 15:27:12 +0800
-Message-ID: <CAGb2v65+QPqpNV0VhbrRpkPJ9twtXjX9DhWaj52UYYDEJZay6g@mail.gmail.com>
-References: <1386350983-13281-1-git-send-email-wens@csie.org>
- <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A52C.50605@st.com>
- <CAGb2v67WiCaMpJEzA_X6o7uOu6i3w3FCEz7=N5HY0amQb01SZA@mail.gmail.com>
- <52A72C6D.60100@st.com> <CAGb2v64qQvqJSicA6MTAxeh1sGjWY=Pk=vDq=9J3pTQW+wkXrA@mail.gmail.com>
- <52A87A74.8040807@st.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 05/26] ARM: OMAP2+: add omapdss_init_of()
+Date: Thu, 12 Dec 2013 09:30:11 +0200
+Message-ID: <52A96603.5030709@ti.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-6-git-send-email-tomi.valkeinen@ti.com> <2199639.FbGhznOLP9@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZGKUWKQKGQENVHVTLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <52A87A74.8040807-qxv4g6HH51o@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="tf4jdftRMQf6xiCtGVqaeWIgKXg8NW1RL"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <2199639.FbGhznOLP9@avalon>
+Sender: linux-omap-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--tf4jdftRMQf6xiCtGVqaeWIgKXg8NW1RL
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 11, 2013 at 10:45 PM, srinivas kandagatla
-<srinivas.kandagatla-qxv4g6HH51o@public.gmane.org> wrote:
-> Hi Chen,
->
-> On 11/12/13 12:17, Chen-Yu Tsai wrote:
->
->>>
->>> I would be good to get actual picture of this hw setup, On ST the
->>> additional glue logic which sits on top of the GMAC is to resposible for
->>> selecting the correct retime clock.
+On 2013-12-12 01:10, Laurent Pinchart wrote:
+> Hi Tomi,
+>=20
+> On Wednesday 04 December 2013 14:28:32 Tomi Valkeinen wrote:
+>> omapdss driver uses a omapdss platform device to pass platform specifi=
+c
+>> function pointers and DSS hardware version from the arch code to the
+>> driver. This device is needed also when booting with DT.
 >>
->> I would have liked to look at the internal design, how the dwmac core
->> is connected to the clock control, but that is out of the question.
->> Still, based on the documents, I think our clock controller is partially
->> intertwined with the GMAC. It takes GMAC's internally generated clock
->> as one of several inputs, then sends it back to the GMAC to time tx data.
->>
-> This is very much similar to ST glue, one of the selected clk is used
-> for retime the tx data lines. This selection is more of board dependent.
-> It totally depends on how the GMAC is wired up with PHY.
->
->> Judging by the register definitions listed in the A20 manual,
->> the SoC glue layer clocks is something like this:
->>
->>                                _________________________
->>   MII TX clock from PHY >-----|___________    _________|----> to GMAC core
->>   GMAC Int. RGMII TX clk >----|___________\__/__gate---|----> to PHY
->>   Ext. 125MHz RGMII TX clk >--|__divider__/            |
->>                               |________________________|
->>
->>
->> For MII mode, the glue layer should select the TX clock from the PHY.
->> The gate to the PHY should be disabled.
->>
->> For RGMII mode, either the internal clock generated by the GMAC core,
->> or the external 125MHz reference generated by the PHY can be selected.
->> And the clock gate to the PHY should be enabled.
->> If the 125MHz reference is used, the glue layer should select the proper
->> divider (/1, /5, /50) based on the link speed.
->>
->> For GMII mode, under 10/100 speeds, the operation matches MII mode.
->> For gigabit speeds, should use a 125MHz clock (internal or external)
->> and enable the output gate.
->>
->> The glue layer may indeed sit on top or around the GMAC core.
->> Nevertheless, its operational state does depend on the GMAC.
->> The current callbacks present in the stmmac driver are a good model
->> for this.
->
-> Callbacks are OK with me, as they give good level of abstraction as you
-> said.
->
-> But I don't like the idea of glue drivers passing the full platform data
-> to stmmac or glue driver parsing the platform data, which is going to
-> look as very ugly fixups.
->
-> Also, currently callbacks just take pdev, which seems to be forcing glue
-> drivers to use platform data as the only data structure to pass information.
->
-> My recommendation would be to add new parameter to these callbacks ,
-> which can be used for to store glue private datastructure, we could
-> actually use bsp_priv variable from platform data.
+>> This patch adds omapdss_init_of() function, called from board-generic =
+at
+>> init time, which creates the omapdss device.
+>=20
+> Is this a temporary solution that you plan to later replace with DT-onl=
+y=20
+> device instantiation ?
 
-I agree. The original design provided .custom_data, .custom_cfg,
-.bsp_priv fields in the platform data for the callbacks.
+It's a long term task to remove the "virtual" omapdss device. Removing
+the platform data that we pass has been very difficult.
 
-I am not aware of any users of these fields in the current kernel.
-Maybe the intended users, ST platforms, have migrated to DT.
+For example, we need to get the OMAP revision to know which OMAP DSS
+hardware we have. We can't get that information from the DSS hardware
+(thank you, HW designers! ;).
 
-Merging the three fields would be nice, but may break some unsuspecting
-user.
+Another is DSI pin muxing. I think we need a new pinmuxing driver for
+that, or maybe change pinmux-single quite a bit. The DSI pinmuxing is
+very simple, but the register fields are varying lengths and at varying
+positions, so pinmux-single doesn't work for it.
 
-> So the of_data structure would have some thing like:
->
-> struct stmmac_of_data {
->         void * (*setup)(struct platform_device *pdev);
->         void (*bus_setup)(struct platform_device *pdev, void *priv, void
-> __iomem *ioaddr);
->         int (*init)(struct platform_device *pdev, void *priv);
->         void (*exit)(struct platform_device *pdev, void *priv);
->         void (*fix_mac_speed)(struct platform_device *pdev, void *priv,
-> unnsigned int speed);
->
-> };
->
-> setup() would return a private data struct of glue driver which can be
-> stored in plat->bsp_priv. Should be done at DT parsing level.
+ Tomi
 
-So this would be called at the end of stmmac_probe_config_dt.
-And for non-DT platforms, they should provide .bsp_priv themselves.
 
-> Regarding the bindings, If Peppe is happy to allow optional SOC specific
-> binding in it, it is Ok with me too.
->
-> But all SOC specific resources names and properties have to be properly
-> prefexed so that its not confused with dwmac properties.
 
-I agree. SOC specific bindings should have different prefixes and
-documented separately, along with the compatible strings.
+--tf4jdftRMQf6xiCtGVqaeWIgKXg8NW1RL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-> Regarding reset, I think we can add the support in stmmac driver itself.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-Will do.
+iQIcBAEBAgAGBQJSqWYDAAoJEPo9qoy8lh71SWIP/AqkGhWSp32KXMkbsWL/TOx6
+6+ER37WHhW0i9IUBsA1xuTKXMa/T2Cw2wz+0zlMD5FXB6AUlMFe2GwccPmrDwhG5
+H7FNWjNLU4XgtqwuoAz7jQtfakOHcnz1BnNyFih7OJ1UIdoxtDv7KhpW0Pn9u4W+
+iycTvgiLx8WTg319SVUhVX2W6y8MZKpADRqby51scteo+OJnuyPcnZrdt1Y7Xnux
+mbx2HSFnJ7pV86ERHhz2VClgqHk/fvMe07cBvPBE40dMxJVy4jT9YtAsVFe8LIAA
+2sE0Ve9EPzWJCd+AzN2aGaNu7tz6/03Hzu8k4sx+pARkfpR+D6wRS4vRA7uZtq4z
+SJckEjcmuRIIux3of0KLnrLyxUgYvX5dVNJzVCtSNM5dIlhfqDfYQ/9gS5dsMbQ4
+6eilfziWni2vPFoAy/zGUjdmS6mvByMEVvICGxGnJMSclc0eQ7kM0PYbwqPItMEC
+N4ayOQbjsWXUfrGxqei9jd/TgcgVTXek+k4Yj1nx7epYhlzy9GvPi4ETjugPTx+V
+oCT4/XJp/jv8TziLP9maYW6ihAB4A3PFU3VWObO4Tzbff79cUXclMSJSZS9SIfq7
+CbTWPCHAbggOALStHNFj21Qfa6aFoY+8G5fuJ4B5+UViaZxpynwjZGxQ6y5o7XvI
+F0y1QTzUfcaTMpEbbQ8v
+=ZjTZ
+-----END PGP SIGNATURE-----
 
-> Regarding clocks, on STi glue we can not represent the configuration in
-> proper clock infrastructure.
-
-I see. Could you give me a description of the 4 tx clock inputs?
-I would like to learn a bit more about STi glue.
-
-> Am happy to change sti glue driver to this interface style, if you are
-> Ok with this approach Or if you have any other better ideas, lets discuss.
->
-> Feel free to change the above proposed new APIs..
-
-I think the original .fix_mac_speed (without *pdev) is ok.
-It likely requires link speed, interface type, and any SoC data.
-interface type is buried in platform data, so .setup should take
-care to copy it into .bsp_priv.
-
-About .bus_setup, I am unfamiliar with the use cases. Unable to comment
-on this one.
-
->>
->>>>> I see issues with this approach, which are addressed in my patches.
->>>>>
->>>>> Please have a look at the http://lkml.org/lkml/2013/11/12/462 patch on
->>>>> STi SOC glue, which does implement a very similar glue driver.
->>>>>
->>>>> Do you see any issues not to do that way?
->>>>
->>>> The glue layer driver would not have access to any of dwmac driver's
->>>> internals, nor could it respond to any state changes.
->>>
->>> Should it have access to this in the first place?
->>> Should SOC Glue driver actually change the internal data structures of
->>> the stmmac? I guess No.
->>>
->>> I think all you need is to know the interface type which can be derived
->>> from a child node as I did in my glue driver.
->>
->> The interface type is not enough. In GMII mode, you would have to change
->> the tx clock parent to match the link speed, as I mentioned in a previous
->> section.
->
-> Ok, this should be specific to the glue driver I guess.
-
-.fix_mac_speed callback will take care of this.
-
->>
->> This I am working on. Here is what I propose:
->>
->> stmmac takes a second optional clock, named "tx_clk".
->
->> The clock provider should:
->>
-> [---
->>   1. put the glue layer into MII mode when the clock is disabled
->>   2. put the glue layer into RGMII mode when the clock is enabled
->>   3. support clk_set_rate at 125, 25, or 2.5 MHz for RGMII link
->>      speed changes. This could be a no-op for the internal clock.
->>
-> ---]
-> I think this is capturing your glue implementation details which might
-> not be true with other glue drivers.
->
->> While we're at it, we can also make stmmac take an optional reset handler.
->>
->> I think this solves both our problems, while being both generic and
->> part of the gmac core hardware.
->>
->> The rest of my requirements for Allwinner A20/A31 gmac can be solved
->> with proper PHY node support, which I will implement, and
->> "snps,force_sf_dma_mode" and "snps,tx-coe" properties.
->
-> This makes sense, I think this aread would need a cleanup any way.
->
->>
->>>>>> +     plat_dat = dev_get_platdata(&pdev->dev);
->>>>> This is not valid for DT case.
->>>>> In DT case stmmac maintains its own instance of platform data.
->>>>>
->>>>> Setting platform data dynamically after probe to a device is not the
->>>>> right way to do.
->>>>
->>>> I see. And stmmac's own instance of platform data is associated with the
->>>> device in stmmac_dvr_probe. To make this work, we would have to move
->>>> setting dev->priv->plat in front of the .init callback.
->>>
->>> No it would not work either, as platform data is stmmac is stored in its
->>> private data structure.
->>
->> With these modifications, the .init and .exit callbacks will have access
->> to stmmac's private data structure, as they are passed dev as the sole
->> argument.
->
-> Your suggestion looks like a hack, lets do it properly, as I suggested
-> and at the start.
-
-Agreed. Jumping through layers of pointers is not nice.
-
->>>>
->>>> 1. .tx_coe
->>>>    This is not exported in the DT bindings.
->>>>    Looking at stmmac code, not setting this seems to disable all
->>>>    checksum offloading.
->>>
->>> Why cant this go via DT as well?
->>
->> If you and Giuseppe are OK with this, why not?
-> Am Ok with it.
->
->>>> 3. .mdio_bus_data
->>>>    The PHY mask is something we would like to have at the board level.
->>>>    The PHY on one of our boards, RTL8211E from Realtek, responds to
->>>>    commands sent to phy address 0, regardless what it's actual address is.
->>>
->>> Sounds correct.as
->>>
->>>>    This is documented in RTL8211E's datasheet:
->>>>
->>>>       The RTL8211E-VB(VL)/RTL8211EG-VB support PHY addresses from 00001 to
->>>>       00111. PHY address 0 is a broadcast from the MAC; each PHY device
->>>>       should respond.
->>>>
->>>>    Without the PHY mask, probing the MDIO bus would yield two devices,
->>>>    when in reality there is only one. This results in some confusion.
->>> Can you explain the issue in more detail.
->>>
->>> Why is it a confusion? PHYs are supposed to respond to address 00000.
->>
->> If you look under /sys/bus/mdio_bus/devices/, for PHYs supporting
->> address 00000 as broadcast, you would see 2 devices.
->> stmmac debug messages will also report 2 devices found.
->>
->> Also, not all PHY devices respond to address 00000.
->> The Realtek RTL8201CP PHY on one of our other boards, does not.
->>
->> I could not find a reference to "supposed to respond to address 00000".
->> IEEE 802.3 only defines the address space, not intended uses.
-> Here is the reference:
->
-> "22.2.4.5.5 PHYAD (PHY Address): The PHY Address is five bits, allowing
-> 32 unique PHY addresses. The first PHY address bit transmitted and
-> received is the MSB of the address. A PHY that is connected to the
-> station management entity via the mechanical interface defined in 22.6
-> shall always respond to transactions addressed to PHY Address zero
-> <00000>. A station management entity that is attached to multiple PHYs
-> must have prior knowledge of the appropriate PHY Address for each PHY."
->
->
->>
->>> MDIO bus could have multiple PHYS on the bus, it does not matter as long
->>> as you address them with correct PHYID.
->>
->> Correct. I assume by PHYID you mean PHY address.
->> Florian has pointed out that "snps,phy-addr" is !standard, and we
->> should replace it with standard PHY node support. I can address this
->> in the patch series.
->
-> I agree, if you have bandwidth cleanup in this area would be good.
->
-> Anyway I have limited access to emails for the next 3 weeks, so I can
-> not respond quickly.
->
-> Hope you have a good Christmas and new year..
->
-> Will talk to you after new year.
-
-I will get to work and get a new patch series out.
-
-Wish you a happy holiday.
-
-ChenYu
+--tf4jdftRMQf6xiCtGVqaeWIgKXg8NW1RL--
