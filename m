@@ -1,103 +1,55 @@
-From: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Subject: RE: [PATCH 01/12] SPEAr13xx: Correct dt field name for stmmac
- phy-addr
-Date: Thu, 12 Dec 2013 13:13:08 +0800
-Message-ID: <2CC2A0A4A178534D93D5159BF3BCB66189F95F6435@EAPEX1MAIL1.st.com>
-References: <cover.1386752447.git.mohit.kumar@st.com>
- <1078549fa412fb34ab2c95a6232096570abee12d.1386752447.git.mohit.kumar@st.com>
- <52A847D1.5000409@st.com> <001b01cef6d2$9104f7b0$b30ee710$%han@samsung.com>
- <52A934A2.8020101@st.com>
- <CAGb2v67tK7W12Ljb-j+KJhGQkZ_k_p0WK+kcYiRqOuQujJL1HA@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 2/3] ARM: sunxi: Add an ahci-platform compatible AHCI
+ driver for the Allwinner SUNXi series of SoCs
+Date: Thu, 12 Dec 2013 14:40:27 +0800
+Message-ID: <20131212064025.GM18380@S2101-09.ap.freescale.net>
+References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl>
+ <1386159055-10264-3-git-send-email-oliver@schinagl.nl>
+ <20131204123708.GD3158@htj.dyndns.org>
+ <529F2677.3070208@schinagl.nl>
+ <20131204131402.GG3158@htj.dyndns.org>
+ <529F2B41.8090009@schinagl.nl>
+ <20131204132312.GH3158@htj.dyndns.org>
+ <52A87C07.1020102@schinagl.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v67tK7W12Ljb-j+KJhGQkZ_k_p0WK+kcYiRqOuQujJL1HA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Rajeev KUMAR <rajeev-dlh.kumar@st.com>, Shiraz HASHIM <shiraz.hashim@st.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, Pratyush ANAND <pratyush.anand@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, spear-devel <spear-devel@list.st.com>, Viresh Kumar <viresh.linux@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Fainelli <f.fainelli@gmail.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52A87C07.1020102@schinagl.nl>
+Sender: linux-ide-owner@vger.kernel.org
+To: Olliver Schinagl <oliver@schinagl.nl>
+Cc: Tejun Heo <tj@kernel.org>, Olliver Schinagl <oliver+list@schinagl.nl>, grant.likely@linaro.org, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dev@linux-sunxi.org, maxime.ripard@free-electrons.com, ijc@hellion.org.uk, hdegoede@redhat.com, Richard Zhu <r65037@freescale.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Shiraz/Viresh,
+On Wed, Dec 11, 2013 at 03:51:51PM +0100, Olliver Schinagl wrote:
+> Working on this and studying the existing
+> ahci_platform/shci_platform drivers the last few days and was
+> figuring out why ahci_platform only supports 1 clock. IMX handles
+> this by having 3 clocks defined in the DT, the first one gets
+> enabled by default via ahci_platform, the other 2 get enabled in
+> IMX's probe function.
+> 
+> Is it an idea to extend this to support all clocks that would be
+> required (via a callback)?
 
-> -----Original Message-----
-> From: wens213@gmail.com [mailto:wens213@gmail.com] On Behalf Of
-> Chen-Yu Tsai
-> Sent: Thursday, December 12, 2013 9:37 AM
-> To: Rajeev KUMAR
-> Cc: Jingoo Han; Pratyush ANAND; devicetree@vger.kernel.org; Mohit
-> KUMAR DCG; spear-devel; Viresh Kumar; linux-pci@vger.kernel.org; linux-
-> arm-kernel@lists.infradead.org; Florian Fainelli
-> Subject: Re: [PATCH 01/12] SPEAr13xx: Correct dt field name for stmmac phy-
-> addr
-> 
-> Hi,
-> 
-> On Thu, Dec 12, 2013 at 11:59 AM, Rajeev kumar <rajeev-
-> dlh.kumar@st.com> wrote:
-> > On 12/12/2013 6:09 AM, Jingoo Han wrote:
-> >>
-> >> On Wednesday, December 11, 2013 8:09 PM, Rajeev kumar wrote:
-> >>>
-> >>> On 12/11/2013 3:08 PM, Mohit KUMAR wrote:
-> >>>>
-> >>>> DT field name for the phy address changed since kernel 3.10. Set
-> >>>> the snps,phy-addr to 0xffffffff so that the driver probes for the phy.
-> >>>>
-> >>>> Signed-off-by: Mohit Kumar<mohit.kumar@st.com>
-> >>>> Cc: Pratyush Anand<pratyush.anand@st.com>
-> >>>> Cc: Viresh Kumar<viresh.linux@gmail.com>
-> >>>> Cc: spear-devel@list.st.com
-> >>>> Cc: linux-arm-kernel@lists.infradead.org
-> >>>> Cc: devicetree@vger.kernel.org
-> >>>> ---
-> >>>>    arch/arm/boot/dts/spear13xx.dtsi |    1 +
-> >>>>    1 files changed, 1 insertions(+), 0 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/arm/boot/dts/spear13xx.dtsi
-> >>>> b/arch/arm/boot/dts/spear13xx.dtsi
-> >>>> index 4382547..3518803 100644
-> >>>> --- a/arch/arm/boot/dts/spear13xx.dtsi
-> >>>> +++ b/arch/arm/boot/dts/spear13xx.dtsi
-> >>>> @@ -155,6 +155,7 @@
-> >>>>
-> >>>>                 gmac0: eth@e2000000 {
-> >>>>                         compatible = "st,spear600-gmac";
-> >>>> +                       snps,phy-addr =<0xffffffff>;
-> >>>
-> >>>
-> >>> Don't you think it should be st,phy-addr =<0xffffffff>, as the
-> >>> manufacturer is 'st' as the compatible suggest
-> >>
-> >>
-> >> Hi Rajeev Kumar,
-> >>
-> >> According to the Documentation, it guides to use 'snps' prefix.
-> >>
-> >> In my humble opinion,
-> >> 'gmac' is a Synopsys based IP. Thus, if 'snps,phy-addr' is not ST
-> >> specific, 'snps' prefix can be used.
-> >>
-> >
-> >
-> > Very much true, I raise the point just becuase compatible =
-> > "st,spear600-gmac". Check the manufacturer name here.
-> 
-> As documented, "st,spear600-gmac" is there for backwards compatibility. It
-> should really be updated to '"snps,dwmac-<version>", "snps,dwmac"'.
-> 
-> 
-> 
-> 
-> >> ./Documentation/devicetree/bindings/net/stmmac.txt
-> >> - snps,phy-addr         phy address to connect to.
-> 
-> About the "snps,phy-addr" property, Florian recently raised the issue that
-> this is !standard. I am currently implementing proper DT ethernet phy node
-> support for stmmac. Just a heads up. :)
-> 
-- Any comment on this?
+Not really.  We did this for ahci_imx driver only because we do not want
+to churn generic ahci_platform driver with those imx specific setup
+code.  Note, beside the additional two clocks, we have some PHY
+parameters to set up in IMX IOMUXC general purpose registers, and vendor
+specific register HOST_TIMER1MS to be set up as well.
 
-Regards
-Mohit
+> Or do we prefer having the clocks
+> separated for other technical reasons? Or do we want to handle the
+> clocks via the ahci_platform framework and extend hpriv->clk to an
+> array of clocks?
+
+The direction of the generic ahci platform driver will be having it be
+a library providing helper functions, as discussed as below.
+
+https://lkml.org/lkml/2013/12/6/153
+
+We can ask the helper function to handle the common clocks and leave the
+platform specific ones to platform driver.
+
+Shawn
+
