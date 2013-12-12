@@ -1,59 +1,56 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 01/12] SPEAr13xx: Correct dt field name for stmmac phy-addr
-Date: Thu, 12 Dec 2013 09:39:07 +0900
-Message-ID: <001b01cef6d2$9104f7b0$b30ee710$%han@samsung.com>
-References: <cover.1386752447.git.mohit.kumar@st.com>
- <1078549fa412fb34ab2c95a6232096570abee12d.1386752447.git.mohit.kumar@st.com>
- <52A847D1.5000409@st.com>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH 0/3] regulator: act8865: add PMIC driver
+Date: Thu, 12 Dec 2013 09:18:48 +0800
+Message-ID: <1386811131-2720-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <52A847D1.5000409@st.com>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Rajeev kumar' <rajeev-dlh.kumar@st.com>, 'Mohit KUMAR' <mohit.kumar@st.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 'Pratyush ANAND' <pratyush.anand@st.com>, 'Viresh Kumar' <viresh.linux@gmail.com>, 'spear-devel' <spear-devel@list.st.com>, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: lgirdwood@gmail.com
+Cc: devicetree@vger.kernel.org, vpalatin@chromium.org, linux-doc@vger.kernel.org, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, wenyou.yang@atmel.com, broonie@kernel.org, grant.likely@linaro.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, December 11, 2013 8:09 PM, Rajeev kumar wrote:
-> On 12/11/2013 3:08 PM, Mohit KUMAR wrote:
-> > DT field name for the phy address changed since kernel 3.10. Set the
-> > snps,phy-addr to 0xffffffff so that the driver probes for the phy.
-> >
-> > Signed-off-by: Mohit Kumar<mohit.kumar@st.com>
-> > Cc: Pratyush Anand<pratyush.anand@st.com>
-> > Cc: Viresh Kumar<viresh.linux@gmail.com>
-> > Cc: spear-devel@list.st.com
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: devicetree@vger.kernel.org
-> > ---
-> >   arch/arm/boot/dts/spear13xx.dtsi |    1 +
-> >   1 files changed, 1 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
-> > index 4382547..3518803 100644
-> > --- a/arch/arm/boot/dts/spear13xx.dtsi
-> > +++ b/arch/arm/boot/dts/spear13xx.dtsi
-> > @@ -155,6 +155,7 @@
-> >
-> >   		gmac0: eth@e2000000 {
-> >   			compatible = "st,spear600-gmac";
-> > +			snps,phy-addr =<0xffffffff>;
-> 
-> Don't you think it should be st,phy-addr =<0xffffffff>, as the
-> manufacturer is 'st' as the compatible suggest
+Hi Liam and Mark,
 
-Hi Rajeev Kumar,
+The patch set is to add act8865 PMIC driver.
 
-According to the Documentation, it guides to use 'snps' prefix.
+The active-semi act8865 is designed as a PMIC for Atmel sama5d3x and at91sam9 series.
+Its datasheet is available at: http://www.active-semi.com/sheets/ACT8865_Datasheet.pdf.
 
-In my humble opinion,
-'gmac' is a Synopsys based IP. Thus, if 'snps,phy-addr' is
-not ST specific, 'snps' prefix can be used.
+The patches is based on the branch: for-next of git respository, 
+	git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
+and [PATCH] regulator: read low power states configuration from device tree from Vincent Palatin
+	https://patchwork.kernel.org/patch/2833667/
 
-./Documentation/devicetree/bindings/net/stmmac.txt
-- snps,phy-addr         phy address to connect to.
+Thanks.
 
-Best regards,
-Jingoo Han
+Best Regards,
+Wenyou Yang
+
+Wenyou Yang (3):
+  regulator: act8865: add PMIC(Power Management IC) driver
+  regulator: act8865: add device tree binding doc
+  ARM: dts: sama5d3xcm: add the regulator device node
+
+ .../bindings/regulator/act8865-regulator.txt       |   58 +++
+ arch/arm/boot/dts/sama5d3xcm.dtsi                  |   47 ++
+ drivers/regulator/Kconfig                          |    7 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/act8865-regulator.c              |  516 ++++++++++++++++++++
+ include/linux/regulator/act8865.h                  |   56 +++
+ 6 files changed, 685 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+ create mode 100644 drivers/regulator/act8865-regulator.c
+ create mode 100644 include/linux/regulator/act8865.h
+
+-- 
+1.7.9.5
