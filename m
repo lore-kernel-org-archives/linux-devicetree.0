@@ -1,37 +1,25 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 06/10] sh-pfc: Support GPIO to IRQ mapping specified IRQ resources
-Date: Thu, 12 Dec 2013 20:43:17 +0100
-Message-ID: <CACRpkdaga82oQyhrztN0Js8ZTUXUpKV1zUreNDAfCD+ONdNA5Q@mail.gmail.com>
-References: <1386732390-31724-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<1386732390-31724-7-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: convert device tree files to use key defines
+Date: Thu, 12 Dec 2013 13:08:35 -0700
+Message-ID: <52AA17C3.5050700@wwwdotorg.org>
+References: <1385989797-10879-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1386732390-31724-7-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385989797-10879-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2013 at 4:26 AM, Laurent Pinchart
-<laurent.pinchart+renesas@ideasonboard.com> wrote:
+On 12/02/2013 06:09 AM, Laxman Dewangan wrote:
+> Use key code macros for all key code refernced for keys.
+> 
+> For tegra20-seaboard.dts and tegra20-harmony.dts:
+>   The key comment for key (16th row and 1st column) is KEY_KPSLASH but
+>   code is 0x004e which is the key code for KEY_KPPLUS. As there other
+>   key exist with KY_KPPLUS, I am assuming key code is wrong and comment
+>   is fine. With this assumption, I am keeping the key code as KEY_KPSLASH.
 
-> On non-DT platforms IRQ controllers associated with the GPIOs have a
-> fixed IRQ base value known at compile time. The sh-pfc driver translates
-> GPIO number to IRQ numbers using a hardcoded table. This mechanism
-> breaks on DT platforms, as the IRQ base values are dynamic in that case.
->
-> Fix this by specifying IRQs associated with GPIOs in IRQ resources,
-> populated automatically from the device tree. When IRQ resources are
-> specified the driver requires one IRQ resource per GPIO able to generate
-> an interrupt, and uses the translation table to compute the IRQ resource
-> offset instead of the IRQ number.
->
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-
-Make things much better and only use standard bindings so
-patch applied.
-
-Yours,
-Linus Walleij
+I've applied this to Tegra's for-3.14/dt branch.
