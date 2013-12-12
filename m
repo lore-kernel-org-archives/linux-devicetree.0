@@ -1,90 +1,33 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/4] Documentation: Add APM X-Gene SoC 15Gbps Multi-purpose PHY driver binding documentation
-Date: Thu, 12 Dec 2013 14:27:19 +0100
-Message-ID: <201312121427.20040.arnd@arndb.de>
-References: <1386833435-30498-1-git-send-email-lho@apm.com> <1386833435-30498-2-git-send-email-lho@apm.com> <1386833435-30498-3-git-send-email-lho@apm.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1386833435-30498-3-git-send-email-lho@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: olof@lixom.net, tj@kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Matt Porter <mporter@linaro.org>
+Subject: [PATCH v5 4/9] usb: gadget: s3c-hsotg: add snps,dwc2 compatible string
+Date: Thu, 12 Dec 2013 08:26:05 -0500
+Message-ID: <1386854770-2173-5-git-send-email-mporter@linaro.org>
+References: <1386854770-2173-1-git-send-email-mporter@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1386854770-2173-1-git-send-email-mporter@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Russell King <linux@arm.linux.org.uk>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 12 December 2013, Loc Ho wrote:
-> +- reg                  : First PHY memory resource is the SDS PHY access
-> +                         resource.
-> +                         Second PHY memory resoruce is the clock and reset
-> +                         resources.
-> +                         Third PHY memory resource is the SDS PHY access
-> +                         resource outside of the IP if it is type
-> +                         "apm,xgene-phy-ext".
+Enable support for the dwc2 binding.
 
-Why do the "clock and reset" resources not use a clock driver and a reset
-driver?
+Signed-off-by: Matt Porter <mporter@linaro.org>
+---
+ drivers/usb/gadget/s3c-hsotg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I would expect these to get replaced with
-
-	clocks		: Reference to external clock input
-	resets		: Reference to reset controller input
-
-> +Optional properties:
-> +- status		: Shall be "ok" if enabled or "disabled" if disabled.
-> +			  Default is "ok".
-> +- apm,tx-eye-tuning	: Manual control to fine tune the capture of the serial
-> +			  bit lines from the automatic calibrated position.
-> +			  Two set of 3-tuple setting for Gen1, Gen2, and Gen3.
-> +			  Range from 0 to 0x7f in unit of one bit period.
-> +			  Default is 0xa.
-
-What does gen1, gen2 and gen3 refer to? Is this PCIe, SATA or serdes generations
-or all of them?
-
-Why are there two sets?
-
-Will this have to change if you add PCIe support?
-
-I would suggest using decimal notation here instead of hexadecimal since you
-are dealing with numbers couting things. Same for the others.
-
-> +- apm,tx-eye-direction	: Eye tuning manual control direction. 0 means sample
-> +			  data earlier than the nominal sampling point. 1 means
-> +			  sample data later than the nominal sampling point.
-> +			  Two set of 3-tuple setting for Gen1, Gen2, and Gen3.
-> +			  Default is 0x0.
-> +
-> +- apm,tx-boost-gain	: Frequency boost AC (LSB 3-bit) and DC (2-bit)
-> +			  gain control. Two set of 3-tuple setting for Gen1,
-> +			  Gen2, and Gen3. Range is between 0 to 0x1f in unit
-> +			  of dB. Default is 0x3.
-> +
-> +- apm,tx-amplitude	: Amplitude control. Two set of 3-tuple setting for
-> +			  Gen1, Gen2, and Gen3. Range is between 0 to 0xf in
-> +			  unit of 13.3mV. Default is 0xf.
-
-Units of 13.3mV don't seem to be useful as a generic measurement. I'd
-recommend using milivolts or microvolts.
-
-> +- apm,tx-pre-cursor1	: 1st pre-cursor emphasis taps control. Two set of
-> +			  3-tuple setting for Gen1, Gen2, and Gen3. Range is
-> +			  between 0 to 0xf in unit of 18.2mV. Default is 0x0.
-> +- apm,tx-pre-cursor2	: 2st pre-cursor emphasis taps control. Two set of
-> +			  3-tuple setting for Gen1, Gen2, and Gen3. Range is
-> +			  between 0 to 0x7 in unit of 18.2mV. Default is 0x0.
-> +- apm,tx-post-cursor	: Post-cursor emphasis taps control. Two set of
-> +			  3-tuple setting for Gen1, Gen2, and Gen3. Range is
-> +			  between 0 to 0x1f in unit of 18.2mV. Default is 0xf.
-
-Same here.
-
-> +- apm,tx-speed		: Tx operating speed. One set of 3-tuple for
-> +			  Gen1 (0x1), Gen2 (0x3), and Gen3 (0x7). Default is
-> +			  0x7.
-
-I'm completely confused by this description. Can you rephrase this?
-It sounds like the only possible values are <1 3 7> for this property.
-
-	Arnd
+diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
+index 8ceb5ef..7c5d8bd 100644
+--- a/drivers/usb/gadget/s3c-hsotg.c
++++ b/drivers/usb/gadget/s3c-hsotg.c
+@@ -3727,6 +3727,7 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
+ #ifdef CONFIG_OF
+ static const struct of_device_id s3c_hsotg_of_ids[] = {
+ 	{ .compatible = "samsung,s3c6400-hsotg", },
++	{ .compatible = "snps,dwc2", },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, s3c_hsotg_of_ids);
+-- 
+1.8.4
