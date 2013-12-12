@@ -1,61 +1,68 @@
-From: Olliver Schinagl <oliver@schinagl.nl>
-Subject: Re: [PATCH 2/3] ARM: sunxi: Add an ahci-platform compatible AHCI
- driver for the Allwinner SUNXi series of SoCs
-Date: Thu, 12 Dec 2013 09:47:28 +0100
-Message-ID: <52A97820.8020007@schinagl.nl>
-References: <1386159055-10264-1-git-send-email-oliver@schinagl.nl> <1386159055-10264-3-git-send-email-oliver@schinagl.nl> <20131204123708.GD3158@htj.dyndns.org> <529F2677.3070208@schinagl.nl> <20131204131402.GG3158@htj.dyndns.org> <529F2B41.8090009@schinagl.nl> <20131204132312.GH3158@htj.dyndns.org> <52A87C07.1020102@schinagl.nl> <20131212064025.GM18380@S2101-09.ap.freescale.net>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2 1/9] arm: dt: zynq: Remove 'clock-ranges' from TTC
+ nodes
+Date: Thu, 12 Dec 2013 09:53:13 +0100
+Message-ID: <52A97979.1030205@monstr.eu>
+References: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com> <1385514296-26702-2-git-send-email-soren.brinkmann@xilinx.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20131212064025.GM18380@S2101-09.ap.freescale.net>
-Sender: linux-ide-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Tejun Heo <tj@kernel.org>, Olliver Schinagl <oliver+list@schinagl.nl>, grant.likely@linaro.org, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dev@linux-sunxi.org, maxime.ripard@free-electrons.com, ijc@hellion.org.uk, hdegoede@redhat.com, Richard Zhu <r65037@freescale.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="OjAdEDEBDNadJWo2w2aQl0EAdPDBqucPa"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1385514296-26702-2-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--OjAdEDEBDNadJWo2w2aQl0EAdPDBqucPa
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 12-12-13 07:40, Shawn Guo wrote:
-> On Wed, Dec 11, 2013 at 03:51:51PM +0100, Olliver Schinagl wrote:
->> Working on this and studying the existing
->> ahci_platform/shci_platform drivers the last few days and was
->> figuring out why ahci_platform only supports 1 clock. IMX handles
->> this by having 3 clocks defined in the DT, the first one gets
->> enabled by default via ahci_platform, the other 2 get enabled in
->> IMX's probe function.
->>
->> Is it an idea to extend this to support all clocks that would be
->> required (via a callback)?
-> Not really.  We did this for ahci_imx driver only because we do not want
-> to churn generic ahci_platform driver with those imx specific setup
-> code.  Note, beside the additional two clocks, we have some PHY
-> parameters to set up in IMX IOMUXC general purpose registers, and vendor
-> specific register HOST_TIMER1MS to be set up as well.
-Well many SoC's have these specific things so we need a place to provide 
-for this.
+On 11/27/2013 02:04 AM, Soren Brinkmann wrote:
+> The bindings for the TTC changed in commit 'arm: zynq: Use standard
+> timer binding' (e932900a3279b5dbb6d8f43c7b369003620e137c). That change
+> removed possible subnodes from this driver rendering the 'clock-ranges'=
 
-The the question then becomes, what do we define as being the common 
-clocks? Only the clock for the SATA IP? Or also the clock to which it 
-connects to the bus? Where is the line drawn etc.
+> property invalid for this node.
+>=20
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> Acked-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  arch/arm/boot/dts/zynq-7000.dtsi | 2 --
+>  1 file changed, 2 deletions(-)
 
-E.g. a rewritten new ahci-pltfrm.c will support all clocks defined in 
-the DT for the ahci node.
->
->> Or do we prefer having the clocks
->> separated for other technical reasons? Or do we want to handle the
->> clocks via the ahci_platform framework and extend hpriv->clk to an
->> array of clocks?
-> The direction of the generic ahci platform driver will be having it be
-> a library providing helper functions, as discussed as below.
->
-> https://lkml.org/lkml/2013/12/6/153
-I know, I started this entire thread :p hence my question :)
+I think this is completely unrelated to cpufreq and should just go
+directly via arm-soc tree.
+If yes, I will add 1/9 and 2/9 to zynq/dt branch.
 
-Oliver
->
-> We can ask the helper function to handle the common clocks and leave the
-> platform specific ones to platform driver.
->
-> Shawn
->
+Thanks,
+Michal
 
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--OjAdEDEBDNadJWo2w2aQl0EAdPDBqucPa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlKpeXkACgkQykllyylKDCHxYQCfSFe9fVvZqdzQ/938oJmripDg
+gS8AnRZaMbXh1iwJuab7ocmgtZZ+RjDB
+=rSGA
+-----END PGP SIGNATURE-----
+
+--OjAdEDEBDNadJWo2w2aQl0EAdPDBqucPa--
