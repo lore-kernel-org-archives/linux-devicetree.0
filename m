@@ -1,98 +1,84 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: Re: [PATCH v5 3/7] regulator: add pbias regulator support
-Date: Thu, 12 Dec 2013 20:42:11 +0530
-Message-ID: <52A9D24B.6040902@ti.com>
-References: <20131210104005.GB29268@sirena.org.uk> <1386686098-7779-1-git-send-email-balajitk@ti.com> <20131210183330.GK13171@atomide.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v11 1/2] [media] exynos5-is: Adds DT binding documentation
+Date: Thu, 12 Dec 2013 16:32:14 +0100
+Message-ID: <52A9D6FE.30302@samsung.com>
+References: <1383650355-28838-1-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131210183330.GK13171@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1383650355-28838-1-git-send-email-arun.kk@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Arun Kumar K <arun.kk@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: shaik.ameer@samsung.com, arunkk.samsung@gmail.com, Mark Rutland <Mark.Rutland@arm.com>, Mauro Carvalho Chehab <mchehab@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 December 2013 12:03 AM, Tony Lindgren wrote:
-> * Balaji T K <balajitk@ti.com> [131210 06:36]:
->> pbias register controls internal power supply to sd card i/o pads
->> in most OMAPs (OMAP2-5, DRA7).
->> Control bits for selecting voltage level and
->> enabling/disabling are in the same PBIAS register.
->
-> Good to see this, few comments below.
->
->> +++ lo/Documentation/devicetree/bindings/regulator/pbias-regulator.txt	2013-12-10 16:58:28.907927745 +0530
->> @@ -0,0 +1,21 @@
->> +PBIAS internal regulator for SD card i/o pads on OMAP SoCs.
->> +
->> +Required properties:
->> +- compatible:
->> +  - "regulator-pbias-omap2" for OMAP2
->> +  - "regulator-pbias-omap3" for OMAP3
->> +  - "regulator-pbias-omap4" for OMAP4
->> +  - "regulator-pbias-omap5" for OMAP5, DRA7
->> +- pbias-reg-offset: PBIAS control register offset from syscon base address
->> +
->> +Optional properties:
->> +- Any optional property defined in bindings/regulator/regulator.txt
->> +
->> +Example:
->> +
->> +		pbias_regulator: pbias_regulator {
->> +			pbias-reg-offset = <0>;
->> +			regulator-name = "pbias_regulator";
->> +			regulator-min-microvolt = <1800000>;
->> +			regulator-max-microvolt = <3000000>;
->> +	};
->
-> This does not seem to support the other PBIAS controls the same
-> register has?
->
-Hi Tony,
-Thanks for the comments,
+Hi Arun,
 
->> @@ -369,6 +369,15 @@ config REGULATOR_PALMAS
->>   	  on the muxing. This is handled automatically in the driver by
->>   	  reading the mux info from OTP.
->>
->> +config REGULATOR_PBIAS
->> +	tristate "PBIAS OMAP regulator driver"
->> +	depends on (ARCH_OMAP || COMPILE_TEST) && MFD_SYSCON
->> +	help
->> +	 Say y here to support pbias regulator for mmc1:SD card i/o
->> +	 on OMAP SoCs.
->> +	 This driver provides support for OMAP pbias modelled
->> +	 regulators.
->> +
->
-> The PBIAS register is not just for MMC. Depending on the SoC revision,
+(Adding Mark and Mauro to Cc)
 
-yes, SIM pbias bit mapping are similar to MMC.
-I will try to add sim pbias to my next version.
+On 05/11/13 12:19, Arun Kumar K wrote:
+> From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> 
+> The patch adds the DT binding doc for exynos5 SoC camera
+> subsystem.
+> 
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> ---
+>  .../bindings/media/exynos5250-camera.txt           |  126 ++++++++++++++++++++
+>  1 file changed, 126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/exynos5250-camera.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/exynos5250-camera.txt b/Documentation/devicetree/bindings/media/exynos5250-camera.txt
+> new file mode 100644
+> index 0000000..09420ba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/exynos5250-camera.txt
+> @@ -0,0 +1,126 @@
+> +Samsung EXYNOS5 SoC Camera Subsystem
+> +------------------------------------
+> +
+> +The Exynos5 SoC Camera subsystem comprises of multiple sub-devices
+> +represented by separate device tree nodes. Currently this includes: FIMC-LITE,
+> +MIPI CSIS and FIMC-IS.
+> +
+> +The sub-device nodes are referenced using phandles in the common 'camera' node
+> +which also includes common properties of the whole subsystem not really
+> +specific to any single sub-device, like common camera port pins or the common
+> +camera bus clocks.
+> +
+> +Common 'camera' node
+> +--------------------
+> +
+> +Required properties:
+> +
+> +- compatible		: must be "samsung,exynos5250-fimc"
+> +- clocks		: list of clock specifiers, corresponding to entries in
+> +                          the clock-names property
+> +- clock-names		: must contain "sclk_bayer" entry
+> +- samsung,csis		: list of phandles to the mipi-csis device nodes
+> +- samsung,fimc-lite	: list of phandles to the fimc-lite device nodes
+> +- samsung,fimc-is	: phandle to the fimc-is device node
+> +
+> +The pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt must be used
+> +to define a required pinctrl state named "default".
+> +
+> +'parallel-ports' node
+> +---------------------
+> +
+> +This node should contain child 'port' nodes specifying active parallel video
+> +input ports. It includes camera A, camera B and RGB bay inputs.
+> +'reg' property in the port nodes specifies the input type:
+> + 1 - parallel camport A
+> + 2 - parallel camport B
+> + 5 - RGB camera bay
+> +
+> +3, 4 are for MIPI CSI-2 bus and are already described in samsung-mipi-csis.txt
 
-> you may also have 2 - 3 PBIAS devices in the same register. Please check
-> the 2430 TRM, it has also I2C secondary pulls in this same register. And
+Was there posted a version of this patch with Mark's comments addressed:
+http://www.spinics.net/lists/devicetree/msg11550.html ? I couldn't find it.
 
-This regulator driver will only control bits related to voltage settings
-and is not touching other bits by using masks.
-
-> on 3430, there PBIAS register has also SIM voltage bits.
->
-> Certainly nothing stops from intially implementing the MMC pieces
-> as those are needed badly, but it should be done in a way where adding
-> support for the other PBIAS bits can be done easily.
->
-
-yes, It can be easily done for SIM pbias control.
-
-> You're also missing the PBIAS interrupts, so it might be worth checking
-> the code from that point of view also to make sure adding the support
-> for interrupts won't require massive changes to the driver.
->
-
-PBIAS interrupts were never used in non-dt case, so did not consider
-while adapting for DT. However it can be added later on.
-
-Thanks and Regards,
-Balaji T K
+-- 
+Thanks,
+Sylwester
