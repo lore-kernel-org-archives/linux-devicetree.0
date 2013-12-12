@@ -1,81 +1,66 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
- extensions for GMAC in Allwinner A20 SoC's
-Date: Thu, 12 Dec 2013 10:04:15 +0100
-Message-ID: <20131212090415.GQ3651@lukather>
-References: <1386350983-13281-1-git-send-email-wens@csie.org>
- <1386350983-13281-5-git-send-email-wens@csie.org>
- <52A5A52C.50605@st.com>
- <CAGb2v67WiCaMpJEzA_X6o7uOu6i3w3FCEz7=N5HY0amQb01SZA@mail.gmail.com>
- <52A72C6D.60100@st.com>
- <CAGb2v64qQvqJSicA6MTAxeh1sGjWY=Pk=vDq=9J3pTQW+wkXrA@mail.gmail.com>
- <52A87A74.8040807@st.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v9] gpio: add a driver for Synopsys DesignWare APB GPIO
+Date: Thu, 12 Dec 2013 10:08:38 +0100
+Message-ID: <20131212090838.GD25478@pengutronix.de>
+References: <1386364179-28650-1-git-send-email-delicious.quinoa@gmail.com>
+ <CANk1AXS=CADN53aO5KVN3UorddJ0wZ2PTqwo2XmeRuxYe_DoLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tRcR9GoWqjXrt11v"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBP7YUWKQKGQEY73GKGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52A87A74.8040807-qxv4g6HH51o@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CANk1AXS=CADN53aO5KVN3UorddJ0wZ2PTqwo2XmeRuxYe_DoLg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: delicious quinoa <delicious.quinoa@gmail.com>
+Cc: Linus Walleij <linus.walleij@stericsson.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Alan!
 
---tRcR9GoWqjXrt11v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Dec 11, 2013 at 02:15:25PM -0600, delicious quinoa wrote:
+> On Fri, Dec 6, 2013 at 3:09 PM, Alan Tull <delicious.quinoa@gmail.com> wrote:
+> > From: Alan Tull <atull@altera.com>
+> >
+> > Hi Linus,
+> >
+> > If you don't have any further comments, can you take this patch?
+> >
+> > Alan
+> 
+> Basically, this is a driver that Jamie wrote and was upstreaming a few
+> years ago.  For some reason it never quite made it into the kernel.  I
+> picked it up, updated the interrupt support, posted it to the list and
+> went through some reviews with it.
+> 
+> This driver has been reviewed, I hope it can make it into the kernel.
+> 
+> Alan
+> 
 
-Hi,
+Sorry for chiming in late. I tested your driver on the Sockit and the GPIOs
+work fine (basically just tested the 4 HPS LEDS that are on this board).
 
-On Wed, Dec 11, 2013 at 02:45:08PM +0000, srinivas kandagatla wrote:
-> >>> 1. .tx_coe
-> >>>    This is not exported in the DT bindings.
-> >>>    Looking at stmmac code, not setting this seems to disable all
-> >>>    checksum offloading.
-> >>
-> >> Why cant this go via DT as well?
-> >=20
-> > If you and Giuseppe are OK with this, why not?
-> Am Ok with it.
+With the interrupt support I had a little trouble though:
+The Sockit has an ADXL345 on the i2c bus with a gpio as interrupt line.
 
-Please note that I'm opposed to this until someone explain why putting
-it in the DT is relevant (and not just convenient).
+First: When you use "interrupt-parent", you have to specify the gpio node,
+rather than the gpio-bank that has the interrupt-controller property. Is
+that expected? I'm not really sure if that is normal behavior...
 
-Maxime
+Second: The interrupt is registered as "GIC 37", which is a real interrupt on
+the Socfpga. I would expect it to be marked as "GPIO 2xx" (or something in that
+range). The interrupt from the gpiochip itself isn't registered at all ?!
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Third: The interrupt didn't work. But that might also be my failure. I guess/hope
+you tested interrupts successfully?!
 
---tRcR9GoWqjXrt11v
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+(Fourth: small typo in the documentation example: "snps,nr-gpio" instead of "snps,nr-gpios")
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+Regards,
+Steffen
 
-iQIcBAEBAgAGBQJSqXwPAAoJEBx+YmzsjxAgG/kP/2S70fcVXrFmA91M3G7MI0bq
-FXb1w7wojQiXDcHv4zvGmkpAI0MzmY3iSVbinAK+vv/ChC06hn5PUD5oQaQJHG1i
-/uPADPCdgMjbv3aG2ig4/LsSoVe75nQ/EwY/KIgpJeWkRa1dZEVLsjcH4n8jCzVb
-1qLqUTgSGtBiS+e+0JcsqfuHhH3tr7JIUCuJ6JuJs4WauKePnde0GvmANZ5o1uJe
-6Dmb/Wgqbi2qh0hryAd26+XSmonz5aVPGFZ3Iw1OaoDQNUaW/y5nD+GGbR8Qsq7V
-puEndZu4+0RyjL96GpYDT8sSc/KoVbKMVZXvwYDk6U1/DSNz2D0ASkqjVGgMTIzs
-C0n1id13BZAD2FtUghLga2Zv2gm8GQ7N/IcDf5OYrO2+AgT7V07C/PurxZzBJBPt
-SaumoPhUD+avRM1Iw1XVg8DlNB/bcbWQm4YpVQ/pe98LmxkPAkIqrxzWDQQ0P9EE
-4HjHcdBo5QJNGjgXtQ/Xo23niO1XEKOb17PcSqndf6PRS/VUR23P8i/RxAzV280K
-+lcpTXumIhOTGvjIpCTABjOxAehqdpd5FWWMYve5IMZakbpEHw79DV6R3VvDdHY9
-o7kb4Mwk1kxHOKFAk5aXElYQH4tYxv80hjOeeO5gCBlE/++StCuS/kHTSMjEKA1Y
-WzVCmVv92XJbpMKFk2xg
-=yDB+
------END PGP SIGNATURE-----
 
---tRcR9GoWqjXrt11v--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
