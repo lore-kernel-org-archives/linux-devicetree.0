@@ -1,66 +1,78 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v9] gpio: add a driver for Synopsys DesignWare APB GPIO
-Date: Thu, 12 Dec 2013 10:08:38 +0100
-Message-ID: <20131212090838.GD25478@pengutronix.de>
-References: <1386364179-28650-1-git-send-email-delicious.quinoa@gmail.com>
- <CANk1AXS=CADN53aO5KVN3UorddJ0wZ2PTqwo2XmeRuxYe_DoLg@mail.gmail.com>
+From: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>
+Subject: Re: [PATCH 06/26] OMAPDSS: if dssdev->name==NULL, use alias
+Date: Thu, 12 Dec 2013 11:05:28 +0100
+Message-ID: <20131212100527.GA860@earth.universe>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+ <1386160133-24026-7-git-send-email-tomi.valkeinen@ti.com>
+ <37483030.ghHfzYFSnL@avalon>
+ <10507960.9DXH4TSv2E@avalon>
+ <52A968BD.20304@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CANk1AXS=CADN53aO5KVN3UorddJ0wZ2PTqwo2XmeRuxYe_DoLg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: delicious quinoa <delicious.quinoa@gmail.com>
-Cc: Linus Walleij <linus.walleij@stericsson.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+In-Reply-To: <52A968BD.20304-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan!
 
-On Wed, Dec 11, 2013 at 02:15:25PM -0600, delicious quinoa wrote:
-> On Fri, Dec 6, 2013 at 3:09 PM, Alan Tull <delicious.quinoa@gmail.com> wrote:
-> > From: Alan Tull <atull@altera.com>
-> >
-> > Hi Linus,
-> >
-> > If you don't have any further comments, can you take this patch?
-> >
-> > Alan
-> 
-> Basically, this is a driver that Jamie wrote and was upstreaming a few
-> years ago.  For some reason it never quite made it into the kernel.  I
-> picked it up, updated the interrupt support, posted it to the list and
-> went through some reviews with it.
-> 
-> This driver has been reviewed, I hope it can make it into the kernel.
-> 
-> Alan
-> 
+--0OAP2g/MAC+5xKAE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for chiming in late. I tested your driver on the Sockit and the GPIOs
-work fine (basically just tested the 4 HPS LEDS that are on this board).
+On Thu, Dec 12, 2013 at 09:41:49AM +0200, Tomi Valkeinen wrote:
+> > A label property is still an option.
+>=20
+> Hmm, what do you mean? Label as in:
+>=20
+> foo : node {
+> };
+>=20
+> Isn't that 'foo' label only visible in DT itself, as a shortcut?
 
-With the interrupt support I had a little trouble though:
-The Sockit has an ADXL345 on the i2c bus with a gpio as interrupt line.
+Some driver use a "label" property like this:
 
-First: When you use "interrupt-parent", you have to specify the gpio node,
-rather than the gpio-bank that has the interrupt-controller property. Is
-that expected? I'm not really sure if that is normal behavior...
+foo : node {
+    label =3D "lcd";
 
-Second: The interrupt is registered as "GIC 37", which is a real interrupt on
-the Socfpga. I would expect it to be marked as "GPIO 2xx" (or something in that
-range). The interrupt from the gpiochip itself isn't registered at all ?!
+    ...
+};
 
-Third: The interrupt didn't work. But that might also be my failure. I guess/hope
-you tested interrupts successfully?!
+See for example
 
-(Fourth: small typo in the documentation example: "snps,nr-gpio" instead of "snps,nr-gpios")
+Documentation/devicetree/bindings/leds/common.txt
+Documentation/devicetree/bindings/mtd/partition.txt
 
-Regards,
-Steffen
+-- Sebastian
 
+--0OAP2g/MAC+5xKAE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSqYpnAAoJENju1/PIO/qaqe8P/2OoKAQ6jjpZ2Nmj8vIEQzYI
+Hxc+sKN05/IH/Qr8nkBIM9syFWZZEXPYrlRUh8VvlHeAVEYPSgL1J/7h12losPkj
+6bO+StU7T46dpUUvE8XUjmVeYkbPmX/+XLydKXlsfB8umBOE7eQ2QLyMHmR0oLlw
+sbwIvkMkOEZTNJNvnI3GOFc6i8L1dsKdhmzwnKPsDX4rUU/n0B276VZ6RzoPsFnP
+mzwlouTMQTFHdutR5AfLpEDNIKNfZN7SxfsFepMKo5dzI5ED/6vBXkpJ7bRT5Lmw
+Hx8crPFf93BtgKlAVEpL9pHcvOjtslduijg451ZsRTJrt+8ugPW1zTMzhj8+CErQ
+sMYh5afSX57fY+2cGehpOHGSVYEt7Fm/5qJ0y21DZA7qimtWrV/WpLeEPZl52BTx
+TZy5up/OZm5OaikKcTTOVUGz5slYtsS6OO4rJddTv1xAynnh/S5HO1PmhnfG+ngR
+kn20slG0cIhvqAlGI4HbjeFEjRJWVaics58yr6QkfR4L/xDtXKNPQAXj5Ju6jhX9
+47Pibgy900mn1X/jdOBledZy7d/VvhhrS/lzTGx8pJ4o6juJz0Udby79S32XGBaa
+StFtKR8xibbauJi6y4E9QuRg9yxLFHmAOQCJiIYO/p/20x+oYrVsacc7kpHhAMRr
+z9hYoP+J8enmRhDkSI8W
+=kfza
+-----END PGP SIGNATURE-----
+
+--0OAP2g/MAC+5xKAE--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
