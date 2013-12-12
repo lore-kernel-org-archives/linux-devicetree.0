@@ -1,78 +1,69 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 05/26] ARM: OMAP2+: add omapdss_init_of()
-Date: Thu, 12 Dec 2013 09:30:11 +0200
-Message-ID: <52A96603.5030709@ti.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-6-git-send-email-tomi.valkeinen@ti.com> <2199639.FbGhznOLP9@avalon>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="tf4jdftRMQf6xiCtGVqaeWIgKXg8NW1RL"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <2199639.FbGhznOLP9@avalon>
-Sender: linux-omap-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
+From: Loc Ho <lho@apm.com>
+Subject: (unknown)
+Date: Thu, 12 Dec 2013 00:30:31 -0700
+Message-ID: <1386833435-30498-1-git-send-email-lho@apm.com>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Subject: 
+Sender: linux-scsi-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
---tf4jdftRMQf6xiCtGVqaeWIgKXg8NW1RL
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+This patch adds support for APM X-Gene SoC 15Gbps Multi-purpose PHY. This
+is the physical layer interface for the corresponding host controller. This
+driver uses the new PHY generic framework posted by Kishon Vijay Abrahm.
+In addition, the new PHY generic framework is patched to provide an
+function to set the speed of the PHY.
 
-On 2013-12-12 01:10, Laurent Pinchart wrote:
-> Hi Tomi,
->=20
-> On Wednesday 04 December 2013 14:28:32 Tomi Valkeinen wrote:
->> omapdss driver uses a omapdss platform device to pass platform specifi=
-c
->> function pointers and DSS hardware version from the arch code to the
->> driver. This device is needed also when booting with DT.
->>
->> This patch adds omapdss_init_of() function, called from board-generic =
-at
->> init time, which creates the omapdss device.
->=20
-> Is this a temporary solution that you plan to later replace with DT-onl=
-y=20
-> device instantiation ?
+v4
+* Update documentation with 'apm,' instead 'apm-'
+* Change DTS override parameter to have 'apm,'
+* Add select GENERIC_PHY to Kconfig PHY_XGENE
+* Make override parameters to be pair of three values instead one
+* Some minor comment and indentation changes
+* Remove error register addition offset
+* Add ULL to constants
+* Use module_init instead subsys_initcall
+* Make DTS node based on first register address
+* Update override setting values
 
-It's a long term task to remove the "virtual" omapdss device. Removing
-the platform data that we pass has been very difficult.
+v3
+* Major re-write of the code based on various review comments
+* Support external clock only at the moment
+* Support SATA mode only at the moment
+* No UEFI support at the moment
 
-For example, we need to get the OMAP revision to know which OMAP DSS
-hardware we have. We can't get that information from the DSS hardware
-(thank you, HW designers! ;).
+v2
+* Remove port knowledge from functions
+* Make all functions static
+* Remove ID completely
+* Make resource requirement based on compatible type
+* Rename override PHY parameters with more descriptive name
+* Add override PHY parameter for per controller, per port, and per speed
+* Patch the generic PHY frame to expose set_speed operation
 
-Another is DSI pin muxing. I think we need a new pinmuxing driver for
-that, or maybe change pinmux-single quite a bit. The DSI pinmuxing is
-very simple, but the register fields are varying lengths and at varying
-positions, so pinmux-single doesn't work for it.
+v1
+* Initial version
 
- Tomi
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Tuan Phan <tphan@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+Loc Ho (4):
+  PHY: Add function set_speed to generic PHY framework
+  Documentation: Add APM X-Gene SoC 15Gbps Multi-purpose PHY driver
+    binding documentation
+  PHY: add APM X-Gene SoC 15Gbps Multi-purpose PHY driver
+  arm64: Add APM X-Gene SoC 15Gbps Multi-purpose PHY DTS entries
 
+ .../devicetree/bindings/ata/apm-xgene-phy.txt      |   89 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   31 +
+ drivers/phy/Kconfig                                |    7 +
+ drivers/phy/Makefile                               |    2 +
+ drivers/phy/phy-core.c                             |   21 +
+ drivers/phy/phy-xgene.c                            | 1854 ++++++++++++++++++++
+ include/linux/phy/phy.h                            |    8 +
+ 7 files changed, 2012 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/apm-xgene-phy.txt
+ create mode 100644 drivers/phy/phy-xgene.c
 
-
---tf4jdftRMQf6xiCtGVqaeWIgKXg8NW1RL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSqWYDAAoJEPo9qoy8lh71SWIP/AqkGhWSp32KXMkbsWL/TOx6
-6+ER37WHhW0i9IUBsA1xuTKXMa/T2Cw2wz+0zlMD5FXB6AUlMFe2GwccPmrDwhG5
-H7FNWjNLU4XgtqwuoAz7jQtfakOHcnz1BnNyFih7OJ1UIdoxtDv7KhpW0Pn9u4W+
-iycTvgiLx8WTg319SVUhVX2W6y8MZKpADRqby51scteo+OJnuyPcnZrdt1Y7Xnux
-mbx2HSFnJ7pV86ERHhz2VClgqHk/fvMe07cBvPBE40dMxJVy4jT9YtAsVFe8LIAA
-2sE0Ve9EPzWJCd+AzN2aGaNu7tz6/03Hzu8k4sx+pARkfpR+D6wRS4vRA7uZtq4z
-SJckEjcmuRIIux3of0KLnrLyxUgYvX5dVNJzVCtSNM5dIlhfqDfYQ/9gS5dsMbQ4
-6eilfziWni2vPFoAy/zGUjdmS6mvByMEVvICGxGnJMSclc0eQ7kM0PYbwqPItMEC
-N4ayOQbjsWXUfrGxqei9jd/TgcgVTXek+k4Yj1nx7epYhlzy9GvPi4ETjugPTx+V
-oCT4/XJp/jv8TziLP9maYW6ihAB4A3PFU3VWObO4Tzbff79cUXclMSJSZS9SIfq7
-CbTWPCHAbggOALStHNFj21Qfa6aFoY+8G5fuJ4B5+UViaZxpynwjZGxQ6y5o7XvI
-F0y1QTzUfcaTMpEbbQ8v
-=ZjTZ
------END PGP SIGNATURE-----
-
---tf4jdftRMQf6xiCtGVqaeWIgKXg8NW1RL--
