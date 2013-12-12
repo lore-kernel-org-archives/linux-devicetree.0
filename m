@@ -1,69 +1,54 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/3] pinctrl: Add Qualcomm TLMM driver
-Date: Thu, 12 Dec 2013 20:09:30 +0100
-Message-ID: <CACRpkdbEKUibOBk=iUi-CrHdmgV46GetyNUgomyngFAwrb=biQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] pinctrl: Add msm8x74 configuration
+Date: Thu, 12 Dec 2013 20:15:18 +0100
+Message-ID: <CACRpkdY9Z71VcS6ERiaDbg9P7qPEK_jCVXLvoCDx6YztYCnR2Q@mail.gmail.com>
 References: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1386295805-13708-2-git-send-email-bjorn.andersson@sonymobile.com>
-	<52A24438.4000908@codeaurora.org>
-	<20131210081031.GD11990@sonymobile.com>
-	<52A7C313.8090208@codeaurora.org>
+	<1386295805-13708-3-git-send-email-bjorn.andersson@sonymobile.com>
+	<52A24E08.706@codeaurora.org>
+	<20131210084140.GF11990@sonymobile.com>
+	<52A7C4BB.6000701@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52A7C313.8090208@codeaurora.org>
+In-Reply-To: <52A7C4BB.6000701@codeaurora.org>
 Sender: linux-doc-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>
 Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 11, 2013 at 2:42 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 12/10/13 00:10, Bjorn Andersson wrote:
->> On Fri 06 Dec 13:40 PST 2013, Stephen Boyd wrote:
->>>> +config PINCTRL_MSM
->>>> +     bool
->>> Why not tristate?
+On Wed, Dec 11, 2013 at 2:49 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 12/10/13 00:41, Bjorn Andersson wrote:
+>> On Fri 06 Dec 14:22 PST 2013, Stephen Boyd wrote:
+
+>>> Also, do we ever plan to have anything more than the gpio pins and the
+>>> sdc pins? It seems like we spend a lot of space describing exactly the
+>>> same thing in these structs for each of the 146 gpio pins when we could
+>>> just know that range 0 to 146 is gpio pins and have different code for
+>>> that part vs the 6 or something sd pins.
 >>>
->> I have a hard time seeing an situation where you would like to build a system
->> with this driver as a module; it would force almost the entire system to be
->> loaded at a later time...
->
-> We're going to need to build everything but the essentials as modules
-> for the multi-platform kernel because we're going to run into the
-> problem where the kernel can't link anymore. Data heavy drivers such as
-> this are  targets for that because they waste more space being built-in
-> and they're not absolutely necessary to boot into an initrd that holds
-> the modules for a particular device.
-
-This is a quite generic problem rather than a pin control problem.
-
-We're actually going to have to compile quite a few drivers into the
-kernel as well, like all irqchips and all clock sources...
-
-I think we have toyed with the idea of tagging code and data so
-that it will be discarded on non-matched platforms, I have no
-idea how that would look in practice :-(
-
-There are quite a few pin control drivers compiled into any
-present multiplatform kernels, so I wouldn't say that one
-more or less hurts us today.
-
->>>> +#include <linux/pinctrl/pinctrl.h>
->>>> +#include <linux/pinctrl/pinmux.h>
->>>> +#include <linux/pinctrl/pinconf.h>
->>>> +#include <linux/pinctrl/machine.h>
->>> Are any of these includes actually necessary? Can't we just forward
->>> declare struct pinctrl_pin_desc?
->>>
->> None of them are needed in the current set of patches, as these are already
->> included in the c-files before including this.
+>> We have to have a pingroup list, so I did look at having that list
+>> referencing a common object with the gpio/sdc specific data.
 >>
->> But the right set should be: platform_device.h and pinctrl.h.
+>> But just having it in one large blob is the way that other pinctrl
+>> drivers does it and hence a common problem to pinctrl and multi-platform
+>> arm support.
 >
-> We should be able to get away with forward declaring the structs we care
-> about. C files that include this header should be including the
-> pinctrl.h header file anyway, no?
+> I don't follow what Linus is recommending. How could
+> .gpio_request_enable()/.gpio_disable_free() help us here?
 
-Patches accepted...
+That removes the need to define a single group for each pin that
+can be used as GPIO.
+
+It is described in Documentation/pinctrl.txt under the heading
+"Pin control interaction with the GPIO subsystem"
+
+On a related key I guess drivers/gpio/gpio-msm-v2.c needs
+to be patched to call pinctrl_request_gpio()/
+pinctrl_free_gpio()/pinctrl_gpio_direction_input()/
+pinctrl_gpio_direction_output() before the GPIO back-end
+works at all so there is still time to change this (plus it is
+not part of the DT binding or anything so it can be changed
+at any time).
 
 Yours,
 Linus Walleij
