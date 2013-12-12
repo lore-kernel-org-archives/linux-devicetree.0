@@ -1,22 +1,37 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: tegra: add reset properties to Tegra124 DTs
-Date: Thu, 12 Dec 2013 12:36:47 -0700
-Message-ID: <52AA104F.4040302@wwwdotorg.org>
-References: <1385419160-11511-1-git-send-email-swarren@wwwdotorg.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 06/10] sh-pfc: Support GPIO to IRQ mapping specified IRQ resources
+Date: Thu, 12 Dec 2013 20:43:17 +0100
+Message-ID: <CACRpkdaga82oQyhrztN0Js8ZTUXUpKV1zUreNDAfCD+ONdNA5Q@mail.gmail.com>
+References: <1386732390-31724-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1386732390-31724-7-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1385419160-11511-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1386732390-31724-7-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/25/2013 03:39 PM, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Wed, Dec 11, 2013 at 4:26 AM, Laurent Pinchart
+<laurent.pinchart+renesas@ideasonboard.com> wrote:
 
-I've applied this series to Tegra's for-3.14/dt branch, but used V2 for
-patch 3/4 and 4/4.
+> On non-DT platforms IRQ controllers associated with the GPIOs have a
+> fixed IRQ base value known at compile time. The sh-pfc driver translates
+> GPIO number to IRQ numbers using a hardcoded table. This mechanism
+> breaks on DT platforms, as the IRQ base values are dynamic in that case.
+>
+> Fix this by specifying IRQs associated with GPIOs in IRQ resources,
+> populated automatically from the device tree. When IRQ resources are
+> specified the driver requires one IRQ resource per GPIO able to generate
+> an interrupt, and uses the translation table to compute the IRQ resource
+> offset instead of the IRQ number.
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+
+Make things much better and only use standard bindings so
+patch applied.
+
+Yours,
+Linus Walleij
