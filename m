@@ -1,57 +1,46 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 5/9] ARM: at91/dt: add mmc0 slot0 support to at91rm9200ek board
-Date: Thu, 12 Dec 2013 18:52:19 +0100
-Message-ID: <CACRpkdavA+wPoms2mxxQPStH7yMATyqL6HiS8HVi9bPEXL2Sqw@mail.gmail.com>
-References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
-	<1377687995-10758-1-git-send-email-b.brezillon@overkiz.com>
-	<20131120145926.GE14627@ns203013.ovh.net>
-	<528CDFFB.1020601@overkiz.com>
-	<CACRpkdboBg4YOnMNiar0DDBVnoky=zNky+Pzyp1=P_POtH15qQ@mail.gmail.com>
-	<528DE1C4.6060900@overkiz.com>
-	<CACRpkdZdweyWJefttiuiYAJ9qhahLbnj7eHUiLV_83UA41X_uQ@mail.gmail.com>
-	<5294D64D.7000100@overkiz.com>
-	<CACRpkdZoAjuWVpWZfvPgOAd7qB1ZBtC+45nD3SYay3SrMhqwVA@mail.gmail.com>
-	<52986CA8.3010601@overkiz.com>
-	<CACRpkdag5=QYsWe81ocpkMp2APaoBAOOn2r0iAVdf9DHTKrSXA@mail.gmail.com>
-	<52A59C9A.6000306@overkiz.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/2] of: add support for reading s32 property value
+Date: Thu, 12 Dec 2013 11:01:36 -0700
+Message-ID: <52A9FA00.7080506@wwwdotorg.org>
+References: <1386854693-10871-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52A59C9A.6000306@overkiz.com>
+In-Reply-To: <1386854693-10871-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: boris brezillon <b.brezillon@overkiz.com>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Joachim Eastwood <manabian@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Laxman Dewangan <ldewangan@nvidia.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org
+Cc: ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, swarren@nvidia.com, kerwinw@nvidia.com, david@gibson.dropbear.id.au
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 9, 2013 at 11:34 AM, boris brezillon
-<b.brezillon@overkiz.com> wrote:
-> [Me]
->> This has been suggested under the name "GPIO hogs" in the past.
->>
->> It would work similar to how pinctrl hogs work by associating the
->> GPIO line the controller itself, using some specific string
->> like gpio-input-hogs = <...> / gpio-output-hogs = <...>;
->>
->> The gpiolib core will then grab and set up these before
->> returning from the registration call so noone ever gets a chance
->> to use them.
->
-> One more question, and I'm done :).
->
-> In which case should we use output-high or output-low config
-> instead of gpio-output-hogs ?
+On 12/12/2013 06:24 AM, Laxman Dewangan wrote:
+> Add of_property_read_s32() to read the signed 32bit number
+> from dt property value. This supports to pass the -ve numbers
+> from dt. Use 2's complement method for represnting negative number
+> and passed as u32 from dts. When reading back the value, again
+> converted to 2's complement if msb shows as 1.
 
-This is specified in Documentation/pinctrl.txt under the
-heading "GPIO mode pitfalls".
+> diff --git a/include/linux/of.h b/include/linux/of.h
 
-Basically: the generic pinconfig output-high/output-low are
-for the case where this is a valid state for a Linux device
-driver driving a piece of hardware, like an IP-block, which
-is making use of these pins and during that usecase passes
-through states the data sheet may call "GPIO mode",
-but which are actually a way which the *device* uses
-the pins, not independent GPIO lines, like, just some
-1-bit line.
+> +static inline int of_property_read_s32(const struct device_node *np,
+> +				       const char *propname,
+> +				       s32 *out_value)
+> +{
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret = of_property_read_u32(np, propname, &val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* 2's complement if MSB is 1 */
+> +	*out_value = (val & 0x80000000U) ? -((val ^ 0xFFFFFFFFU) + 1) : val;
 
-Yours,
-Linus Walleij
+I may not be thinking straight today since I have a cold, but doesn't
+patch 2/2 encode negative values as 2's complement, and an s32 variable
+in the kernel is also encoded as 2's complement, so all you need here is
+a cast:
+
+	*out_value = (s32)val;
+
+... since the cast doesn't change the binary representation?
