@@ -1,49 +1,86 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 13/26] ARM: omap3.dtsi: add omapdss information
-Date: Thu, 12 Dec 2013 21:59:13 +0000
-Message-ID: <20131212215913.GB29072@muru.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
- <20131205170514.GY26766@atomide.com>
- <52A5BB65.5050109@ti.com>
- <2364383.8GWpsWSoJu@avalon>
- <52A9760A.3000801@ti.com>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 3/9] usb: gadget: s3c-hsotg: enable build for other
+ platforms
+Date: Thu, 12 Dec 2013 17:07:26 -0500
+Message-ID: <20131212220726.GA4205@beef>
+References: <1386854770-2173-1-git-send-email-mporter@linaro.org>
+ <1386854770-2173-4-git-send-email-mporter@linaro.org>
+ <52AA2FE3.3060200@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52A9760A.3000801@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>
+In-Reply-To: <52AA2FE3.3060200-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 12, 2013 at 10:38:34AM +0200, Tomi Valkeinen wrote:
-> On 2013-12-12 01:44, Laurent Pinchart wrote:
+On Thu, Dec 12, 2013 at 03:51:31PM -0600, Dinh Nguyen wrote:
+> Hi Matt,
 > 
-> So, are they independent? I don't know =). I think they lean on the
-> independent side. dss_core is always needed for the submodules to work,
-> but for example DSI could be used without DISPC, using system DMA to
-> transfer data from memory to DSI. Not a very useful thing to do, but
-> still, there are dedicated DMA channels for that.
+> On 12/12/13 7:26 AM, Matt Porter wrote:
+> > Remove unused Samsung-specific machine include and Kconfig
+> > dependency on S3C.
+> >
+> > Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/usb/gadget/Kconfig     | 7 +++----
+> >  drivers/usb/gadget/s3c-hsotg.c | 2 --
+> >  2 files changed, 3 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
+> > index a91e642..970bd1a 100644
+> > --- a/drivers/usb/gadget/Kconfig
+> > +++ b/drivers/usb/gadget/Kconfig
+> > @@ -294,11 +294,10 @@ config USB_PXA27X
+> >  	   gadget drivers to also be dynamically linked.
+> >  
+> >  config USB_S3C_HSOTG
+> > -	tristate "S3C HS/OtG USB Device controller"
+> > -	depends on S3C_DEV_USB_HSOTG
+> > +	tristate "Designware/S3C HS/OtG USB Device controller"
+> >  	help
+> > -	  The Samsung S3C64XX USB2.0 high-speed gadget controller
+> > -	  integrated into the S3C64XX series SoC.
+> > +	  The Designware USB2.0 high-speed gadget controller
+> > +	  integrated into the S3C64XX and BCM281xx series SoC.
+> Thanks for doing this. The SOCFPGA platform is also using this driver.
+> So perhaps a
+> more generic message here?
 
-If they have separate hwmod entries, they should be considered separate
-independent devices for sure.
+Ok, I wasn't aware since I didn't see anybody else try to fix this
+driver in mainline. How about this?
 
-To summarize, here are few reasons why they need to be treated as
-separate devices:
+	The Designware USB2.0 high-speed gadget controller
+	integrated into many SoCS.
 
-1. The modules maybe clocked/powered/idled separately and can have their
-   own idle configuration so they can do the hardware based idling
-   separately.
+If that looks better to you I'll plan to add it in an update. I would
+like to see if we can gather a couple acks at this point or if there are
+any additional DT comments before sending another update.
 
-2. Doing a readback after a write to one module will not flush the write
-   to the other modules on the (bus depending on the SoC version AFAIK).
-   That can lead to nasty bugs caused by the ordering.
+-Matt
 
-3. If the devices are described in a different way in the .dts files
-   from the hwmod data, we will not have 1-to-1 mapping and will never
-   be able to replace ti,hwmods with just the compatible string.
-
-Regards,
-
-Tony
+> >  
+> >  config USB_S3C2410
+> >  	tristate "S3C2410 USB Device Controller"
+> > diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
+> > index 33eb690..8ceb5ef 100644
+> > --- a/drivers/usb/gadget/s3c-hsotg.c
+> > +++ b/drivers/usb/gadget/s3c-hsotg.c
+> > @@ -37,8 +37,6 @@
+> >  #include <linux/usb/phy.h>
+> >  #include <linux/platform_data/s3c-hsotg.h>
+> >  
+> > -#include <mach/map.h>
+> > -
+> >  #include "s3c-hsotg.h"
+> >  
+> >  static const char * const s3c_hsotg_supply_names[] = {
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
