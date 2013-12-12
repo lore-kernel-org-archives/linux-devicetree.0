@@ -1,7 +1,7 @@
 From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v4 7/9] phy: add Broadcom Kona USB2 PHY DT binding
-Date: Thu, 12 Dec 2013 06:18:35 -0500
-Message-ID: <1386847117-21240-8-git-send-email-mporter@linaro.org>
+Subject: [PATCH v4 2/9] staging: dwc2: update DT binding to add generic clock/phy properties
+Date: Thu, 12 Dec 2013 06:18:30 -0500
+Message-ID: <1386847117-21240-3-git-send-email-mporter@linaro.org>
 References: <1386847117-21240-1-git-send-email-mporter@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1386847117-21240-1-git-send-email-mporter@linaro.org>
@@ -10,36 +10,43 @@ To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a binding that describes the Broadcom Kona USB2 PHY found
-on the BCM281xx family of SoCs.
+dwc2/s3c-hsotg require a single clock to be specified and optionally
+a generic phy. On the s3c-hsotg driver old style USB phy support is
+present as a fallback so the generic phy properties are optional.
 
 Signed-off-by: Matt Porter <mporter@linaro.org>
 Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- Documentation/devicetree/bindings/phy/bcm-phy.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/bcm-phy.txt
+ Documentation/devicetree/bindings/staging/dwc2.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/bcm-phy.txt b/Documentation/devicetree/bindings/phy/bcm-phy.txt
-new file mode 100644
-index 0000000..3dc8b3d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/bcm-phy.txt
-@@ -0,0 +1,15 @@
-+BROADCOM KONA USB2 PHY
+diff --git a/Documentation/devicetree/bindings/staging/dwc2.txt b/Documentation/devicetree/bindings/staging/dwc2.txt
+index 1a1b7cf..a1753ed 100644
+--- a/Documentation/devicetree/bindings/staging/dwc2.txt
++++ b/Documentation/devicetree/bindings/staging/dwc2.txt
+@@ -5,6 +5,14 @@ Required properties:
+ - compatible : "snps,dwc2"
+ - reg : Should contain 1 register range (address and length)
+ - interrupts : Should contain 1 interrupt
++- clocks: clock provider specifier
++- clock-names: shall be "otg"
++Refer to clk/clock-bindings.txt for generic clock consumer properties
 +
-+Required properties:
-+ - compatible: brcm,kona-usb2-phy
-+ - reg: offset and length of the PHY registers
-+ - #phy-cells: must be 0
-+Refer to phy/phy-bindings.txt for the generic PHY binding properties
-+
-+Example:
-+
-+	usbphy: usb-phy@3f130000 {
-+		compatible = "brcm,kona-usb2-phy";
-+		reg = <0x3f130000 0x28>;
-+		#phy-cells = <0>;
-+	};
++Optional properties:
++- phys: phy provider specifier
++- phy-names: shall be "device"
++Refer to phy/phy-bindings.txt for generic phy consumer properties
+ 
+ Example:
+ 
+@@ -12,4 +20,8 @@ Example:
+                 compatible = "ralink,rt3050-usb, snps,dwc2";
+                 reg = <0x101c0000 40000>;
+                 interrupts = <18>;
++		clocks = <&usb_otg_ahb_clk>;
++		clock-names = "otg";
++		phys = <&usbphy>;
++		phy-names = "usb2-phy";
+         };
 -- 
 1.8.4
