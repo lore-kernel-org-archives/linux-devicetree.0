@@ -1,53 +1,35 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 4/6] pinctrl: Add pinctrl binding for Broadcom Capri SoCs
-Date: Thu, 12 Dec 2013 21:37:36 +0100
-Message-ID: <CACRpkdY7s+eUFkg0AsaN5B9-1y_mTJ29Y-D9CkRG2GQ3JshP+w@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] pinctrl: Make PINCTRL selectable by defconfig/menuconfig
+Date: Thu, 12 Dec 2013 21:39:34 +0100
+Message-ID: <CACRpkdauqYNiby-ta3c_he2ovG__0e6ubmzZ8Bx1cP_OzK4=LQ@mail.gmail.com>
 References: <1381174108-25168-1-git-send-email-syin@broadcom.com>
 	<1386787041-6035-1-git-send-email-syin@broadcom.com>
-	<1386787041-6035-5-git-send-email-syin@broadcom.com>
+	<1386787041-6035-4-git-send-email-syin@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386787041-6035-5-git-send-email-syin@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1386787041-6035-4-git-send-email-syin@broadcom.com>
+Sender: linux-doc-owner@vger.kernel.org
 To: Sherman Yin <syin@broadcom.com>
 Cc: Rob Herring <rob.herring@calxeda.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Dec 11, 2013 at 7:37 PM, Sherman Yin <syin@broadcom.com> wrote:
 
-> Adds pinctrl driver devicetree binding for Broadcom Capri (BCM281xx) SoCs.
+> Adds a string to the PINCTRL config option so that 1) CONFIG_PINCTRL=y would
+> not be erased by make config, and 2) PINCTRL option would show up in menuconfig.
 >
 > Signed-off-by: Sherman Yin <syin@broadcom.com>
-> Reviewed-by: Christian Daudt <bcm@fixthebug.org>
-> Reviewed-by: Matt Porter <matt.porter@linaro.org>
 > ---
-> v3: Use generic pin config properties instead of brcm-specific ones.  Clarified
->     pin types (standard, i2c, hdmi).
-> v2: Use hyphens instead of underscore in DT property names.
+> v3: added to patchset
 
-Overall this is very nice!
+NAK. The pin control subsystem has been designed so that
+you should select the pin controller through select statements
+from the SoC using it.
 
-> +- bias-pull-up:                        Integer. Pull up strength in Ohm:
-> +                                       1: 1.2 kOhm
-> +                                       2: 1.8 kOhm
-> +                                       3: 720 Ohm
-> +                                       4: 2.7 kOhm
-> +                                       5: 831 Ohm
-> +                                       6: 1.08 kOhm
-> +                                       7: 568 Ohm
+This was requested at one time by Linus (Torvalds).
 
-Please do not use these custom enumerators 1 thru 7.
-Instead say that the argument is given in ohms, so for
-example:
-
-bias-pull-up = <12000>;
-
-Then translate this into the proper enumerator in your
-driver instead.
-
-No full example provided in the binding! This needs to
-be there for understanding.
+You need to convince me that this is really needed.
 
 Yours,
 Linus Walleij
