@@ -1,126 +1,108 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v4 2/4] Documentation: Add APM X-Gene SoC 15Gbps
- Multi-purpose PHY driver binding documentation
-Date: Thu, 12 Dec 2013 08:43:13 -0800
-Message-ID: <CAPw-ZTn4f7w7gxuKoeq6YfHsAfOSaZx_skbo4-MCv2EfS_oHMQ@mail.gmail.com>
-References: <1386833435-30498-1-git-send-email-lho@apm.com>
-	<1386833435-30498-2-git-send-email-lho@apm.com>
-	<1386833435-30498-3-git-send-email-lho@apm.com>
-	<201312121427.20040.arnd@arndb.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3] regulator: act8865: add PMIC(Power Management IC)
+ driver
+Date: Thu, 12 Dec 2013 16:51:49 +0000
+Message-ID: <20131212165149.GO11044@sirena.org.uk>
+References: <1386811131-2720-1-git-send-email-wenyou.yang@atmel.com>
+ <1386811131-2720-2-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <201312121427.20040.arnd@arndb.de>
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FrxVhwK/bNRjN48l"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1386811131-2720-2-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: lgirdwood@gmail.com, grant.likely@linaro.org, rob.herring@calxeda.com, vpalatin@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, plagnioj@jcrosoft.com, nicolas.ferre@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-> On Thursday 12 December 2013, Loc Ho wrote:
->> +- reg                  : First PHY memory resource is the SDS PHY access
->> +                         resource.
->> +                         Second PHY memory resoruce is the clock and reset
->> +                         resources.
->> +                         Third PHY memory resource is the SDS PHY access
->> +                         resource outside of the IP if it is type
->> +                         "apm,xgene-phy-ext".
->
-> Why do the "clock and reset" resources not use a clock driver and a reset
-> driver?
->
-> I would expect these to get replaced with
->
->         clocks          : Reference to external clock input
->         resets          : Reference to reset controller input
-[Loc Ho]
-The clock register has bit for the SDS interface, each sata ports,
-CSR, AXI interface, and the PM (power management) interface. The clock
-and CSR for all these are enabled by the host controller driver.
-Unfortunately, during calibration the SATA ports clocks must not be
-enable. This sequence is required by the hardware itself. Unless I
-separate out the two, this requirement is handled by the PHY. If you
-believe this is needed, I can have two separate clocks but it is over
-kill. You can look at function xgene_phy_sata_setup_preclk and
-xgene_phy_sata_setup_postclk.
+--FrxVhwK/bNRjN48l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->> +Optional properties:
->> +- status             : Shall be "ok" if enabled or "disabled" if disabled.
->> +                       Default is "ok".
->> +- apm,tx-eye-tuning  : Manual control to fine tune the capture of the serial
->> +                       bit lines from the automatic calibrated position.
->> +                       Two set of 3-tuple setting for Gen1, Gen2, and Gen3.
->> +                       Range from 0 to 0x7f in unit of one bit period.
->> +                       Default is 0xa.
->
-> What does gen1, gen2 and gen3 refer to? Is this PCIe, SATA or serdes generations
-> or all of them?
-[Loc Ho]
-Douglas already commented on this. Gen1 in SATA term is 1.5Gbps, Gen2
-is 3.0Gbps, and Gen3 is 6Gbps.
+On Thu, Dec 12, 2013 at 09:18:49AM +0800, Wenyou Yang wrote:
 
->
-> Why are there two sets?
-[Loc Ho]
-Each controller has two SATA ports - one set for each port.
+The main thing with this driver seems to be that it needs a bit of
+modernisation to use current kernel features and APIs - there's nothing
+terribly wrong from a quick glance through but it needs an update.
+Details below.
 
->
-> Will this have to change if you add PCIe support?
-[Loc Ho]
-So far, we don't see a need to use override setting for PCIe
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -577,5 +577,12 @@ config REGULATOR_WM8994
+>  	  This driver provides support for the voltage regulators on the
+>  	  WM8994 CODEC.
+> =20
+> +config REGULATOR_ACT8865
+> +	tristate "Active-semi act8865 voltage regulator"
+> +	depends on I2C
+> +	help
+> +	  This driver controls a active-semi act8865 voltage output
+> +	  regulator via I2C bus.
+> +
 
->
-> I would suggest using decimal notation here instead of hexadecimal since you
-> are dealing with numbers couting things. Same for the others.
-[Loc Ho]
-Okay... for future version.
+Please keep this and the Makefile sorted.
 
->
->> +- apm,tx-eye-direction       : Eye tuning manual control direction. 0 means sample
->> +                       data earlier than the nominal sampling point. 1 means
->> +                       sample data later than the nominal sampling point.
->> +                       Two set of 3-tuple setting for Gen1, Gen2, and Gen3.
->> +                       Default is 0x0.
->> +
->> +- apm,tx-boost-gain  : Frequency boost AC (LSB 3-bit) and DC (2-bit)
->> +                       gain control. Two set of 3-tuple setting for Gen1,
->> +                       Gen2, and Gen3. Range is between 0 to 0x1f in unit
->> +                       of dB. Default is 0x3.
->> +
->> +- apm,tx-amplitude   : Amplitude control. Two set of 3-tuple setting for
->> +                       Gen1, Gen2, and Gen3. Range is between 0 to 0xf in
->> +                       unit of 13.3mV. Default is 0xf.
->
-> Units of 13.3mV don't seem to be useful as a generic measurement. I'd
-> recommend using milivolts or microvolts.
-[Loc Ho]
-Each unit is 13.3mV. If I use millivolt, then someone can set fraction
-which will get round up or down. If you still strongly suggest this is
-required, then fine.
+> +static int act8865_read_reg(struct act8865_data *act8865, u8 reg)
+> +{
+> +	int ret =3D i2c_smbus_read_byte_data(act8865->client, reg);
+> +	if (ret > 0)
+> +		ret &=3D 0xff;
+> +
+> +	return ret;
+> +}
 
->
->> +- apm,tx-pre-cursor1 : 1st pre-cursor emphasis taps control. Two set of
->> +                       3-tuple setting for Gen1, Gen2, and Gen3. Range is
->> +                       between 0 to 0xf in unit of 18.2mV. Default is 0x0.
->> +- apm,tx-pre-cursor2 : 2st pre-cursor emphasis taps control. Two set of
->> +                       3-tuple setting for Gen1, Gen2, and Gen3. Range is
->> +                       between 0 to 0x7 in unit of 18.2mV. Default is 0x0.
->> +- apm,tx-post-cursor : Post-cursor emphasis taps control. Two set of
->> +                       3-tuple setting for Gen1, Gen2, and Gen3. Range is
->> +                       between 0 to 0x1f in unit of 18.2mV. Default is 0xf.
->
-> Same here.
->
->> +- apm,tx-speed               : Tx operating speed. One set of 3-tuple for
->> +                       Gen1 (0x1), Gen2 (0x3), and Gen3 (0x7). Default is
->> +                       0x7.
->
-> I'm completely confused by this description. Can you rephrase this?
-> It sounds like the only possible values are <1 3 7> for this property.
-[Loc Ho]
-Douglas already comment on this. If you believe this needs to be
-rephrased, then let me know.
+Use regmap for register I/O and use the helpers provided by the core.
 
--Loc
+> +static int act8865_set_voltage_sel(struct regulator_dev *rdev, u32 selec=
+tor)
+> +{
+> +	struct act8865_data *act8865 =3D rdev_get_drvdata(rdev);
+> +	int id =3D rdev_get_id(rdev);
+> +	u32	reg =3D act8865_vset_reg_addr(act8865, id);
+
+Throughout the file the indentation is a really strange mix of the first
+two lines (which are the normal kernel style) and the bottom line (which
+isn't).
+
+> +	pr_info("%s: suspend voltage %dmV\n", rdev->desc->name, uV / 1000);
+
+Remove noisy logging like this.
+
+> +		rdev[i] =3D regulator_register(&act8865_reg[id], &config);
+
+devm_regulator_register().
+
+> +static int __init act8865_pmu_init(void)
+> +{
+> +	return i2c_add_driver(&act8865_pmu_driver);
+> +}
+> +subsys_initcall(act8865_pmu_init);
+
+module_i2c_driver().
+
+--FrxVhwK/bNRjN48l
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSqemiAAoJELSic+t+oim9NNMP/1nxmWm8+oZLiMumjYT595+a
+/0Ej3iksxmU629Up0bMhjIqGKInS18CQRpbHOnBFKAgfdYjyGxlntMp9njkVzLR2
+WoWV0htGsdCQZ6U0L7+UP34IUPbbFt6oUpFGk5+9DwlHwTHo3+aEVnnnh5sziAVR
+sSciKmHTAHJloTwWhMYHo7xx48CxZYEuiAXSqH0CZWJA4WTZJBuVUJS7Hztu6UA6
+kG9G4NjIpa7h/K72aIIG7lkI8w2Utn1ZZy0TgBQwS0Rq3QnQY1Pgai8sM1JNZpts
+vdjEH9iVyQtFw5kDwuhRKyb2Fux0nK8kdrUXzXZmw8y+o1HwrBDRdzbvGX5oowYl
+BOT/Iqzzd0B+FU1xinIkPJFXpJpYNzIWyVH88T4MQf0JjqLcnJbOIPnPxC6HXQeY
+Qcg0wbiTsktmDuvx9mFiydBAMtNye2OIRf96scWT4k/RfYWgGR7A6ZG/U18Obmrv
+IYxxG3g3dWKR0YfstTDSidvYxVfoZXyy9vyYw245yqX6+GPg6odM/bKLohLiKGSx
+MtJhS4GV8cGd49ja4iZkP5zbceQ4MU0PxVJoI/oSDQy/q/G6CJ7zve+bLhOOhbJK
+BpnCwSGt2EDOt3zPpvMBFytOpZeNqK4/8h90qOInFIwqH1chmbegVaHnazq5dmDS
+SeHpQc5EAJYjv0xEy9RX
+=idYk
+-----END PGP SIGNATURE-----
+
+--FrxVhwK/bNRjN48l--
