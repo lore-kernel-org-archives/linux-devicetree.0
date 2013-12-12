@@ -1,103 +1,221 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v5 1/9] phy: add phy_get_bus_width()/phy_set_bus_width() calls
-Date: Thu, 12 Dec 2013 08:26:02 -0500
-Message-ID: <1386854770-2173-2-git-send-email-mporter@linaro.org>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 8/9] phy: add Broadcom Kona USB2 PHY driver
+Date: Thu, 12 Dec 2013 08:26:09 -0500
+Message-ID: <1386854770-2173-9-git-send-email-mporter@linaro.org>
 References: <1386854770-2173-1-git-send-email-mporter@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1386854770-2173-1-git-send-email-mporter@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Linaro Patches <patches@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386854770-2173-1-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a pair of APIs that allows the generic PHY subsystem to
-provide information on the PHY bus width. The PHY provider driver may
-use phy_set_bus_width() to set the bus width that the PHY supports.
-The controller driver may then use phy_get_bus_width() to fetch the
-PHY bus width in order to properly configure the controller.
+Add a driver for the internal Broadcom Kona USB 2.0 PHY found
+on the BCM281xx family of SoCs.
 
-Signed-off-by: Matt Porter <mporter@linaro.org>
+Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- include/linux/phy/phy.h | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/phy/Kconfig             |   6 ++
+ drivers/phy/Makefile            |   1 +
+ drivers/phy/phy-bcm-kona-usb2.c | 158 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 165 insertions(+)
+ create mode 100644 drivers/phy/phy-bcm-kona-usb2.c
 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 6d72269..e273e5a 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -38,6 +38,14 @@ struct phy_ops {
- };
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index a344f3d..2e87fa8 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -51,4 +51,10 @@ config PHY_EXYNOS_DP_VIDEO
+ 	help
+ 	  Support for Display Port PHY found on Samsung EXYNOS SoCs.
  
- /**
-+ * struct phy_attrs - represents phy attributes
-+ * @bus_width: Data path width implemented by PHY
++config BCM_KONA_USB2_PHY
++	tristate "Broadcom Kona USB2 PHY Driver"
++	depends on GENERIC_PHY
++	help
++	  Enable this to support the Broadcom Kona USB 2.0 PHY.
++
+ endmenu
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index d0caae9..c447f1a 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -3,6 +3,7 @@
+ #
+ 
+ obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
++obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+ obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+ obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+diff --git a/drivers/phy/phy-bcm-kona-usb2.c b/drivers/phy/phy-bcm-kona-usb2.c
+new file mode 100644
+index 0000000..0046781
+--- /dev/null
++++ b/drivers/phy/phy-bcm-kona-usb2.c
+@@ -0,0 +1,158 @@
++/*
++ * phy-bcm-kona-usb2.c - Broadcom Kona USB2 Phy Driver
++ *
++ * Copyright (C) 2013 Linaro Limited
++ * Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
-+struct phy_attrs {
-+	u32			bus_width;
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++
++#define OTGCTL			(0)
++#define OTGCTL_OTGSTAT2		BIT(31)
++#define OTGCTL_OTGSTAT1		BIT(30)
++#define OTGCTL_PRST_N_SW	BIT(11)
++#define OTGCTL_HRESET_N		BIT(10)
++#define OTGCTL_UTMI_LINE_STATE1	BIT(9)
++#define OTGCTL_UTMI_LINE_STATE0	BIT(8)
++
++#define P1CTL			(8)
++#define P1CTL_SOFT_RESET	BIT(1)
++#define P1CTL_NON_DRIVING	BIT(0)
++
++struct bcm_kona_usb {
++	void __iomem *regs;
 +};
 +
-+/**
-  * struct phy - represents the phy device
-  * @dev: phy device
-  * @id: id of the phy device
-@@ -46,6 +54,7 @@ struct phy_ops {
-  * @mutex: mutex to protect phy_ops
-  * @init_count: used to protect when the PHY is used by multiple consumers
-  * @power_count: used to protect when the PHY is used by multiple consumers
-+ * @phy_attrs: used to specify PHY specific attributes
-  */
- struct phy {
- 	struct device		dev;
-@@ -55,6 +64,7 @@ struct phy {
- 	struct mutex		mutex;
- 	int			init_count;
- 	int			power_count;
-+	struct phy_attrs	attrs;
- };
- 
- /**
-@@ -127,6 +137,14 @@ int phy_init(struct phy *phy);
- int phy_exit(struct phy *phy);
- int phy_power_on(struct phy *phy);
- int phy_power_off(struct phy *phy);
-+static inline int phy_get_bus_width(struct phy *phy)
++static void bcm_kona_usb_phy_power(struct bcm_kona_usb *phy, int on)
 +{
-+	return phy->attrs.bus_width;
-+}
-+static inline void phy_set_bus_width(struct phy *phy, int bus_width)
-+{
-+	phy->attrs.bus_width = bus_width;
-+}
- struct phy *phy_get(struct device *dev, const char *string);
- struct phy *devm_phy_get(struct device *dev, const char *string);
- void phy_put(struct phy *phy);
-@@ -199,6 +217,16 @@ static inline int phy_power_off(struct phy *phy)
- 	return -ENOSYS;
- }
- 
-+static inline int phy_get_bus_width(struct phy *phy)
-+{
-+	return -ENOSYS;
++	u32 val;
++
++	val = readl(phy->regs + OTGCTL);
++	if (on) {
++		/* Configure and power PHY */
++		val &= ~(OTGCTL_OTGSTAT2 | OTGCTL_OTGSTAT1 |
++			 OTGCTL_UTMI_LINE_STATE1 | OTGCTL_UTMI_LINE_STATE0);
++		val |= OTGCTL_PRST_N_SW | OTGCTL_HRESET_N;
++	} else {
++		val &= ~(OTGCTL_PRST_N_SW | OTGCTL_HRESET_N);
++	}
++	writel(val, phy->regs + OTGCTL);
 +}
 +
-+static inline void phy_set_bus_width(struct phy *phy, int bus_width)
++static int bcm_kona_usb_phy_init(struct phy *gphy)
 +{
-+	return;
++	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
++	u32 val;
++
++	/* Soft reset PHY */
++	val = readl(phy->regs + P1CTL);
++	val &= ~P1CTL_NON_DRIVING;
++	val |= P1CTL_SOFT_RESET;
++	writel(val, phy->regs + P1CTL);
++	writel(val & ~P1CTL_SOFT_RESET, phy->regs + P1CTL);
++	/* Reset needs to be asserted for 2ms */
++	mdelay(2);
++	writel(val | P1CTL_SOFT_RESET, phy->regs + P1CTL);
++
++	return 0;
 +}
 +
- static inline struct phy *phy_get(struct device *dev, const char *string)
- {
- 	return ERR_PTR(-ENOSYS);
++static int bcm_kona_usb_phy_power_on(struct phy *gphy)
++{
++	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
++
++	bcm_kona_usb_phy_power(phy, 1);
++
++	return 0;
++}
++
++static int bcm_kona_usb_phy_power_off(struct phy *gphy)
++{
++	struct bcm_kona_usb *phy = phy_get_drvdata(gphy);
++
++	bcm_kona_usb_phy_power(phy, 0);
++
++	return 0;
++}
++
++static struct phy_ops ops = {
++	.init		= bcm_kona_usb_phy_init,
++	.power_on	= bcm_kona_usb_phy_power_on,
++	.power_off	= bcm_kona_usb_phy_power_off,
++	.owner		= THIS_MODULE,
++};
++
++static int bcm_kona_usb2_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct bcm_kona_usb *phy;
++	struct resource *res;
++	struct phy *gphy;
++	struct phy_provider *phy_provider;
++
++	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
++	if (!phy)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	phy->regs = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(phy->regs))
++		return PTR_ERR(phy->regs);
++
++	platform_set_drvdata(pdev, phy);
++
++	phy_provider = devm_of_phy_provider_register(dev,
++			of_phy_simple_xlate);
++	if (IS_ERR(phy_provider))
++		return PTR_ERR(phy_provider);
++
++	gphy = devm_phy_create(dev, &ops, NULL);
++	if (IS_ERR(gphy))
++		return PTR_ERR(gphy);
++
++	/* The Kona PHY supports an 8-bit wide UTMI interface */
++	phy_set_bus_width(gphy, 8);
++
++	phy_set_drvdata(gphy, phy);
++
++	return 0;
++}
++
++static const struct of_device_id bcm_kona_usb2_dt_ids[] = {
++	{ .compatible = "brcm,kona-usb2-phy" },
++	{ /* sentinel */ }
++};
++
++MODULE_DEVICE_TABLE(of, bcm_kona_usb2_dt_ids);
++
++static struct platform_driver bcm_kona_usb2_driver = {
++	.probe		= bcm_kona_usb2_probe,
++	.driver		= {
++		.name	= "bcm-kona-usb2",
++		.owner	= THIS_MODULE,
++		.of_match_table = bcm_kona_usb2_dt_ids,
++	},
++};
++
++module_platform_driver(bcm_kona_usb2_driver);
++
++MODULE_ALIAS("platform:bcm-kona-usb2");
++MODULE_AUTHOR("Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
++MODULE_DESCRIPTION("BCM Kona USB 2.0 PHY driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
