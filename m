@@ -1,52 +1,54 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 2/2] pinctrl: tegra: add pinmux controller driver for Tegra124
-Date: Thu, 12 Dec 2013 22:30:30 +0100
-Message-ID: <CACRpkdbv8r68r5Lz19sqVq8g7Yk__DbjLgW9c6P6HGtWNj6M=Q@mail.gmail.com>
-References: <1386659456-16887-1-git-send-email-ldewangan@nvidia.com>
-	<1386659456-16887-2-git-send-email-ldewangan@nvidia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: Driver for SYSCON-based GPIOs
+Date: Thu, 12 Dec 2013 22:35:01 +0100
+Message-ID: <CACRpkdY9umneaukyEr4W=7AxA8XuPY=ueBCiJNjQ+AihOu3Fog@mail.gmail.com>
+References: <1386689216-5139-1-git-send-email-shc_work@mail.ru>
+	<CACRpkdZ6kcEiYuVc5CMmsstr5L1oHp-EY6QXZGeKb2f_RTgPWQ@mail.gmail.com>
+	<1386876057.320972508@f419.i.mail.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386659456-16887-2-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ashwini Ghuge <aghuge-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1386876057.320972508@f419.i.mail.ru>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 10, 2013 at 8:10 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+On Thu, Dec 12, 2013 at 8:20 PM, Alexander Shiyan <shc_work@mail.ru> wrote:
+>> On Tue, Dec 10, 2013 at 4:26 PM, Alexander Shiyan <shc_work@mail.ru> wrote:
 
-> From: Ashwini Ghuge <aghuge-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> I take it that bit-offset can be say 1024 and bit count
+>> 32 for a 32-bit register at syscon_base + 0x80?
 >
-> This adds a driver for the Tegra124 pinmux, and required
-> parameterization data for Tegra124.
->
-> The driver uses the common Tegra pincontrol driver utility
-> functions to implement the majority of the driver.
->
-> This driver is not compatible with the earlier NVIDIA's SoCs,
-> hence add new compatibile as "nvidia,tegra124-pinmux".
->
-> Originally written by Ashwini Gguhe.
-> Thierry:
->         - Cleanups in patches.
-> ldewangan:
->         - Fix some entries for groups.
->         - Fix MUX enums and group sequence.
->
-> Signed-off-by: Ashwini Ghuge <aghuge-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Tested-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> CC: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes from V1:
-> - Lots of cleanups and fixes for string separator by Thierry.
-> - Fixes for some of group entries.
-> Changes from V2:
-> - remove extra space.
-> - Added Ack and Tested by: Stephen and cc to Thierry.
+> This can be represented in DT as (0x80 << 4).
 
-Applied this v3 version, thanks!
+That's better of course but you still have to read both the
+device tree and the driver and correlate to figure out
+what's going on.
+
+>> I sort of like the syscon driver but I don't like the idea
+>> of encoding register offsets into the device tree, even
+>> less do I like the idea of encoding it in bit notation.
+>
+> I also have no idea how to present it differently.
+> Can try to specify the byte offset through the "reg" property?
+> The "bit-offset" will remain, but will point offset from the "reg" byte.
+
+This does not help. I don't want the offset inside the
+device tree at all.
+
+>> I prefer that you put a header with all the offsets
+>> into <linux/mfd/syscon-foo.h> and define all the
+>> offsets there, then to reuse this driver with several
+>> GPIO controllers all doing this GPIO-in-syscon
+>> business, to #include <linux/mfd/syscon-bar.h>
+>> etc and use the compatible string to figure out
+>> which file to pick the offsets from.
+>
+> No headers is needed. Driver will be used in DTS only.
+
+I am claiming it is needed because I don't want it to
+be inside the DTS, I want it to be in the kernel.
 
 Yours,
 Linus Walleij
