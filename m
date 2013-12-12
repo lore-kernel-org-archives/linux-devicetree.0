@@ -1,52 +1,103 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 01/10] net: stmmac: Enable stmmac main clock
- when probing hardware
-Date: Thu, 12 Dec 2013 12:31:53 +0800
-Message-ID: <CAGb2v67TkxcMSrFsMtAy8TaMG_VZWt73xZZcuqkJ71VO4y=7_w@mail.gmail.com>
-References: <1386350983-13281-1-git-send-email-wens@csie.org>
- <1386350983-13281-2-git-send-email-wens@csie.org> <20131207103335.GL24519@lukather>
- <CAGb2v65YOSq_BMWSzSHX8w_hbo+0vwquBT2pnLuwNVZkWRfLvA@mail.gmail.com> <20131210200529.GD3651@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
+Subject: RE: [PATCH 01/12] SPEAr13xx: Correct dt field name for stmmac
+ phy-addr
+Date: Thu, 12 Dec 2013 13:13:08 +0800
+Message-ID: <2CC2A0A4A178534D93D5159BF3BCB66189F95F6435@EAPEX1MAIL1.st.com>
+References: <cover.1386752447.git.mohit.kumar@st.com>
+ <1078549fa412fb34ab2c95a6232096570abee12d.1386752447.git.mohit.kumar@st.com>
+ <52A847D1.5000409@st.com> <001b01cef6d2$9104f7b0$b30ee710$%han@samsung.com>
+ <52A934A2.8020101@st.com>
+ <CAGb2v67tK7W12Ljb-j+KJhGQkZ_k_p0WK+kcYiRqOuQujJL1HA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBTXYUSKQKGQE4RI3AYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20131210200529.GD3651@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v67tK7W12Ljb-j+KJhGQkZ_k_p0WK+kcYiRqOuQujJL1HA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Rajeev KUMAR <rajeev-dlh.kumar@st.com>, Shiraz HASHIM <shiraz.hashim@st.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, Pratyush ANAND <pratyush.anand@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, spear-devel <spear-devel@list.st.com>, Viresh Kumar <viresh.linux@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Shiraz/Viresh,
 
-On Wed, Dec 11, 2013 at 4:05 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> -----Original Message-----
+> From: wens213@gmail.com [mailto:wens213@gmail.com] On Behalf Of
+> Chen-Yu Tsai
+> Sent: Thursday, December 12, 2013 9:37 AM
+> To: Rajeev KUMAR
+> Cc: Jingoo Han; Pratyush ANAND; devicetree@vger.kernel.org; Mohit
+> KUMAR DCG; spear-devel; Viresh Kumar; linux-pci@vger.kernel.org; linux-
+> arm-kernel@lists.infradead.org; Florian Fainelli
+> Subject: Re: [PATCH 01/12] SPEAr13xx: Correct dt field name for stmmac phy-
+> addr
+> 
 > Hi,
->
-> On Mon, Dec 09, 2013 at 10:43:29AM +0800, Chen-Yu Tsai wrote:
->> >> @@ -2759,15 +2760,18 @@ struct stmmac_priv *stmmac_dvr_probe(struct device *device,
->> >>               }
->> >>       }
->> >>
->> >> +     clk_disable_unprepare(priv->stmmac_clk);
->> >> +
->> >
->> > Hu? Why do you disable the clock? don't you need it afterwards?
->>
->> The clock is enabled in *_open (when the network interface is used),
->> and disabled in *_close.
->
-> Maybe it is the real issue then.
->
-> Why don't you move the clk_disable to _remove then?
+> 
+> On Thu, Dec 12, 2013 at 11:59 AM, Rajeev kumar <rajeev-
+> dlh.kumar@st.com> wrote:
+> > On 12/12/2013 6:09 AM, Jingoo Han wrote:
+> >>
+> >> On Wednesday, December 11, 2013 8:09 PM, Rajeev kumar wrote:
+> >>>
+> >>> On 12/11/2013 3:08 PM, Mohit KUMAR wrote:
+> >>>>
+> >>>> DT field name for the phy address changed since kernel 3.10. Set
+> >>>> the snps,phy-addr to 0xffffffff so that the driver probes for the phy.
+> >>>>
+> >>>> Signed-off-by: Mohit Kumar<mohit.kumar@st.com>
+> >>>> Cc: Pratyush Anand<pratyush.anand@st.com>
+> >>>> Cc: Viresh Kumar<viresh.linux@gmail.com>
+> >>>> Cc: spear-devel@list.st.com
+> >>>> Cc: linux-arm-kernel@lists.infradead.org
+> >>>> Cc: devicetree@vger.kernel.org
+> >>>> ---
+> >>>>    arch/arm/boot/dts/spear13xx.dtsi |    1 +
+> >>>>    1 files changed, 1 insertions(+), 0 deletions(-)
+> >>>>
+> >>>> diff --git a/arch/arm/boot/dts/spear13xx.dtsi
+> >>>> b/arch/arm/boot/dts/spear13xx.dtsi
+> >>>> index 4382547..3518803 100644
+> >>>> --- a/arch/arm/boot/dts/spear13xx.dtsi
+> >>>> +++ b/arch/arm/boot/dts/spear13xx.dtsi
+> >>>> @@ -155,6 +155,7 @@
+> >>>>
+> >>>>                 gmac0: eth@e2000000 {
+> >>>>                         compatible = "st,spear600-gmac";
+> >>>> +                       snps,phy-addr =<0xffffffff>;
+> >>>
+> >>>
+> >>> Don't you think it should be st,phy-addr =<0xffffffff>, as the
+> >>> manufacturer is 'st' as the compatible suggest
+> >>
+> >>
+> >> Hi Rajeev Kumar,
+> >>
+> >> According to the Documentation, it guides to use 'snps' prefix.
+> >>
+> >> In my humble opinion,
+> >> 'gmac' is a Synopsys based IP. Thus, if 'snps,phy-addr' is not ST
+> >> specific, 'snps' prefix can be used.
+> >>
+> >
+> >
+> > Very much true, I raise the point just becuase compatible =
+> > "st,spear600-gmac". Check the manufacturer name here.
+> 
+> As documented, "st,spear600-gmac" is there for backwards compatibility. It
+> should really be updated to '"snps,dwmac-<version>", "snps,dwmac"'.
+> 
+> 
+> 
+> 
+> >> ./Documentation/devicetree/bindings/net/stmmac.txt
+> >> - snps,phy-addr         phy address to connect to.
+> 
+> About the "snps,phy-addr" property, Florian recently raised the issue that
+> this is !standard. I am currently implementing proper DT ethernet phy node
+> support for stmmac. Just a heads up. :)
+> 
+- Any comment on this?
 
-I wasn't sure this was the proper way. However, looking around, it
-seems other drivers enable the clock in, _probe, and disable it in
-_remove. I will modify stmmac to do so as well.
-
-
-ChenYu
+Regards
+Mohit
