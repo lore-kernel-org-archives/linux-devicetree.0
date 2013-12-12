@@ -1,85 +1,260 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 06/26] OMAPDSS: if dssdev->name==NULL, use alias
-Date: Thu, 12 Dec 2013 16:13:04 +0200
-Message-ID: <52A9C470.2030102@ti.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-7-git-send-email-tomi.valkeinen@ti.com> <37483030.ghHfzYFSnL@avalon> <10507960.9DXH4TSv2E@avalon> <52A968BD.20304@ti.com> <20131212100527.GA860@earth.universe>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="9eflo8GpQg0DWHutV7tPBHWoAS2nVieqR"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131212100527.GA860@earth.universe>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Thu, 12 Dec 2013 22:13:11 +0800
+Message-ID: <1386857591-22507-1-git-send-email-zhangfei.gao@linaro.org>
+References: <52A9B9B4.3080105@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <52A9B9B4.3080105@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>, Zhigang Wang <brooke.wangzhigang@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
---9eflo8GpQg0DWHutV7tPBHWoAS2nVieqR
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Add dw_mmc-k3.c for k3v2, support sd/emmc
 
-On 2013-12-12 12:05, Sebastian Reichel wrote:
-> On Thu, Dec 12, 2013 at 09:41:49AM +0200, Tomi Valkeinen wrote:
->>> A label property is still an option.
->>
->> Hmm, what do you mean? Label as in:
->>
->> foo : node {
->> };
->>
->> Isn't that 'foo' label only visible in DT itself, as a shortcut?
->=20
-> Some driver use a "label" property like this:
->=20
-> foo : node {
->     label =3D "lcd";
->=20
->     ...
-> };
->=20
-> See for example
->=20
-> Documentation/devicetree/bindings/leds/common.txt
-> Documentation/devicetree/bindings/mtd/partition.txt
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Signed-off-by: Zhigang Wang <brooke.wangzhigang@huawei.com>
+---
+ .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   59 +++++++++
+ drivers/mmc/host/Kconfig                           |   10 ++
+ drivers/mmc/host/Makefile                          |    1 +
+ drivers/mmc/host/dw_mmc-k3.c                       |  128 ++++++++++++++++++++
+ 4 files changed, 198 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+ create mode 100644 drivers/mmc/host/dw_mmc-k3.c
 
-Ah, I see. That kind of label was actually the first thing I did when
-starting to work on DSS DT. But I removed it, as it didn't describe the
-hardware and I didn't see others using anything similar.
+diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+new file mode 100644
+index 000000000000..5501c7c1138f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+@@ -0,0 +1,59 @@
++* Hisilicon specific extensions to the Synopsys Designware Mobile
++  Storage Host Controller
++
++Read synopsys-dw-mshc.txt for more details
++
++The Synopsys designware mobile storage host controller is used to interface
++a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
++differences between the core Synopsys dw mshc controller properties described
++by synopsys-dw-mshc.txt and the properties used by the Hisilicon specific
++extensions to the Synopsys Designware Mobile Storage Host Controller.
++
++Required Properties:
++
++* compatible: should be one of the following.
++  - "hisilicon,hi4511-dw-mshc": for controllers with hi4511 specific extentions.
++* clock-freq-table: should be the frequency (in Hz) array of the ciu clock
++	in each	supported timing mode.
++	1. CIU clock rate in HZ for MMC_TIMING_LEGACY mode
++	2. CIU clock rate in HZ for MMC_TIMING_MMC_HS mode
++	3. CIU clock rate in HZ for MMC_TIMING_SD_HS mode
++	4. CIU clock rate in HZ for MMC_TIMING_UHS_SDR12 mode
++	5. CIU clock rate in HZ for MMC_TIMING_UHS_SDR25 mode
++	6. CIU clock rate in HZ for MMC_TIMING_UHS_SDR50 mode
++	7. CIU clock rate in HZ for MMC_TIMING_UHS_SDR104 mode
++	8. CIU clock rate in HZ for MMC_TIMING_SD_HS mode
++	9. CIU clock rate in HZ for MMC_TIMING_MMC_HS200 mode
++
++Example:
++
++	/* for Hi3620 */
++
++	/* SoC portion */
++	dwmmc_0: dwmmc0@fcd03000 {
++		compatible = "hisilicon,hi4511-dw-mshc";
++		reg = <0xfcd03000 0x1000>;
++		interrupts = <0 16 4>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&mmc_clock HI3620_SD_CIUCLK>, <&clock HI3620_DDRC_PER_CLK>;
++		clock-names = "ciu", "biu";
++		clk-table =
++		<25000000 0 50000000 25000000 50000000 100000000 0 50000000>;
++	};
++
++	/* Board portion */
++	dwmmc0@fcd03000 {
++		num-slots = <1>;
++		vmmc-supply = <&ldo12>;
++		fifo-depth = <0x100>;
++		supports-highspeed;
++		pinctrl-names = "default";
++		pinctrl-0 = <&sd_pmx_pins &sd_cfg_func1 &sd_cfg_func2>;
++		slot@0 {
++			reg = <0>;
++			bus-width = <4>;
++			disable-wp;
++			cd-gpios = <&gpio10 3 0>;
++		};
++	};
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 7fc5099e44b2..45aaa2de0f58 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -575,6 +575,16 @@ config MMC_DW_SOCFPGA
+ 	  This selects support for Altera SoCFPGA specific extensions to the
+ 	  Synopsys DesignWare Memory Card Interface driver.
+ 
++config MMC_DW_K3
++	tristate "K3 specific extensions for Synopsys DW Memory Card Interface"
++	depends on MMC_DW
++	select MMC_DW_PLTFM
++	select MMC_DW_IDMAC
++	help
++	  This selects support for Hisilicon K3 SoC specific extensions to the
++	  Synopsys DesignWare Memory Card Interface driver. Select this option
++	  for platforms based on Hisilicon K3 SoC's.
++
+ config MMC_DW_PCI
+ 	tristate "Synopsys Designware MCI support on PCI bus"
+ 	depends on MMC_DW && PCI
+diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+index c41d0c364509..64f5f8d35839 100644
+--- a/drivers/mmc/host/Makefile
++++ b/drivers/mmc/host/Makefile
+@@ -43,6 +43,7 @@ obj-$(CONFIG_MMC_DW)		+= dw_mmc.o
+ obj-$(CONFIG_MMC_DW_PLTFM)	+= dw_mmc-pltfm.o
+ obj-$(CONFIG_MMC_DW_EXYNOS)	+= dw_mmc-exynos.o
+ obj-$(CONFIG_MMC_DW_SOCFPGA)	+= dw_mmc-socfpga.o
++obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
+ obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
+ obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
+ obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
+diff --git a/drivers/mmc/host/dw_mmc-k3.c b/drivers/mmc/host/dw_mmc-k3.c
+new file mode 100644
+index 000000000000..54b2503b211f
+--- /dev/null
++++ b/drivers/mmc/host/dw_mmc-k3.c
+@@ -0,0 +1,128 @@
++/*
++ * Copyright (c) 2013 Linaro Ltd.
++ * Copyright (c) 2013 Hisilicon Limited.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/clk.h>
++#include <linux/mmc/host.h>
++#include <linux/mmc/dw_mmc.h>
++#include <linux/of_address.h>
++
++#include "dw_mmc.h"
++#include "dw_mmc-pltfm.h"
++
++#define MAX_NUMS	10
++struct dw_mci_k3_priv_data {
++	u32	clk_table[MAX_NUMS];
++};
++
++static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
++{
++	struct dw_mci_k3_priv_data *priv = host->priv;
++
++	clk_set_rate(host->ciu_clk, priv->clk_table[ios->timing]);
++	host->bus_hz = clk_get_rate(host->ciu_clk);
++}
++
++static int dw_mci_k3_parse_dt(struct dw_mci *host)
++{
++	struct dw_mci_k3_priv_data *priv;
++	struct device_node *node = host->dev->of_node;
++	struct property *prop;
++	const __be32 *cur;
++	u32 val, num = 0;
++
++	priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv) {
++		dev_err(host->dev, "mem alloc failed for private data\n");
++		return -ENOMEM;
++	}
++	host->priv = priv;
++
++	of_property_for_each_u32(node, "clock-freq-table", prop, cur, val) {
++		if (num >= MAX_NUMS)
++			break;
++		priv->clk_table[num++] = val;
++	}
++	return 0;
++}
++
++static unsigned long k3_dwmmc_caps[4] = {
++	MMC_CAP_4_BIT_DATA | MMC_CAP_SD_HIGHSPEED,
++	MMC_CAP_8_BIT_DATA | MMC_CAP_MMC_HIGHSPEED,
++	0,
++	0,
++};
++
++static const struct dw_mci_drv_data k3_drv_data = {
++	.caps			= k3_dwmmc_caps,
++	.set_ios		= dw_mci_k3_set_ios,
++	.parse_dt		= dw_mci_k3_parse_dt,
++};
++
++static const struct of_device_id dw_mci_k3_match[] = {
++	{ .compatible = "hisilicon,hi4511-dw-mshc",
++			.data = &k3_drv_data, },
++	{},
++};
++MODULE_DEVICE_TABLE(of, dw_mci_k3_match);
++
++static int dw_mci_k3_probe(struct platform_device *pdev)
++{
++	const struct dw_mci_drv_data *drv_data;
++	const struct of_device_id *match;
++
++	match = of_match_node(dw_mci_k3_match, pdev->dev.of_node);
++	drv_data = match->data;
++
++	return dw_mci_pltfm_register(pdev, drv_data);
++}
++
++static int dw_mci_k3_suspend(struct device *dev)
++{
++	struct dw_mci *host = dev_get_drvdata(dev);
++
++	if (!IS_ERR(host->ciu_clk))
++		clk_disable_unprepare(host->ciu_clk);
++
++	return dw_mci_suspend(host);
++}
++
++static int dw_mci_k3_resume(struct device *dev)
++{
++	struct dw_mci *host = dev_get_drvdata(dev);
++	int ret = 0;
++
++	ret = clk_prepare_enable(host->ciu_clk);
++	if (ret) {
++		dev_err(host->dev, "failed to enable ciu clock\n");
++		return ret;
++	}
++
++	return dw_mci_resume(host);
++}
++
++SIMPLE_DEV_PM_OPS(dw_mci_k3_pmops, dw_mci_k3_suspend, dw_mci_k3_resume);
++
++static struct platform_driver dw_mci_k3_pltfm_driver = {
++	.probe		= dw_mci_k3_probe,
++	.remove		= dw_mci_pltfm_remove,
++	.driver		= {
++		.name		= "dwmmc_k3",
++		.of_match_table	= dw_mci_k3_match,
++		.pm		= &dw_mci_k3_pmops,
++	},
++};
++
++module_platform_driver(dw_mci_k3_pltfm_driver);
++
++MODULE_DESCRIPTION("K3 Specific DW-MSHC Driver Extension");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:dwmmc-k3");
+-- 
+1.7.9.5
 
-But I guess one could argue it does describe hardware, not in electrical
-level but in conceptual level.
-
-The question is, do we need labeling for displays? For backward
-compatibility omapdss would need it, but in general? I'm quite content
-with having just display0, display1 etc. Using the alias node, those can
-be fixed and display0 is always the same display.
-
- Tomi
-
-
-
---9eflo8GpQg0DWHutV7tPBHWoAS2nVieqR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSqcRwAAoJEPo9qoy8lh71nd0P/2xR9bJ5wE+6P5Yzn2QdncQY
-jy28lMkwlC8OmXx89BIVlkVoMVi22rqUbMIrvDOc3yNDD7D3F5C1cE8yxmQD6gAW
-WpNNfvS3MR+ywNIDlxVOzKFsikNCe/acNJls+0NLWrG2/nDbGQGY23gj35wteeoH
-it7mWGrdkSM7kSo7TyAUEuW3ybbPbNOtYZk45I0kkqKZVPIL7ptXx5bswh/TWqeo
-/8nKaiA6+y3HcWemyAXUVQA+lpN0WtsnjH+7YdUg8PBKnftnYzSQkX+VABYR2fl7
-yTBNWhtQZhy4aYUqE+DV80wCOcVUzak38UElAbTcbcc/yAVIGJkaPfHlTAL4n3SE
-07P4eemqhGLBix1RXx6IO2C6+i+XbIyEGdFaMXI82Li9CTUhmgdnBRDNANnrnhPj
-6K6MGqqedTq3t0UGm5F4qHHffLWlhQnyXrVizW2fU6TYyM5VD9IqRzQNDUK1AiYt
-I2hxwk4p7SQh+XoGQL83UO8z5aOTIiwXjALzJnmFGbykMvxrNMQnnVasnF8duU/E
-FrbnsfPcAd7t6CadzwbBJjy5yg8Lu6f2GvlSTgkmFMdbJgsPxYRsPyRHBFUK9daE
-K9xj4juVqBxLlXiOZjudPHKl70drbzsAlzfw1lZdDMc9fxC/H2rNJp7SwSKVf9CV
-119QPKSOBnKqRpWGMgu2
-=Uhgw
------END PGP SIGNATURE-----
-
---9eflo8GpQg0DWHutV7tPBHWoAS2nVieqR--
