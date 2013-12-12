@@ -1,44 +1,64 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/9] phy: add
-	phy_get_bus_width()/phy_set_bus_width() calls
-Date: Thu, 12 Dec 2013 11:27:15 +0000
-Message-ID: <20131212112715.GK4360@n2100.arm.linux.org.uk>
-References: <1386847117-21240-1-git-send-email-mporter@linaro.org> <1386847117-21240-2-git-send-email-mporter@linaro.org>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: Re: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
+ exynos5420 dtsi files
+Date: Thu, 12 Dec 2013 20:32:24 +0900
+Message-ID: <CAL1wa8eMenw_iS=qXLkEfZ0hWvE7u0vgnhoWDW6YJ7j4Kc=C_A@mail.gmail.com>
+References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com>
+ <1386308868-30264-2-git-send-email-l.krishna@samsung.com> <52A207D8.3030206@gmail.com>
+ <8302228.6iSJIFqj3A@flatron> <52A39F3B.5070806@gmail.com> <CAL1wa8fTuOMk9=G3JhdpNOE8=FPTfMSJ_mB-7jo1pNF1cAavgg@mail.gmail.com>
+ <CAD=FV=WZNmWdxTWzHCEtkCo7O1RZ7YDNkmNBD4wwpDc-=O1LCQ@mail.gmail.com> <CA+Ln22GysOQPQwbb-Ak=SYVpLP5zzMhecUw_pp+qv7CkAcC3=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386847117-21240-2-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CA+Ln22GysOQPQwbb-Ak=SYVpLP5zzMhecUw_pp+qv7CkAcC3=g@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, Wim Van Sebroeck <wim@iguana.be>
+Cc: Doug Anderson <dianders@chromium.org>, Leela Krishna Amudala <l.krishna@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "cpgs ." <cpgs@samsung.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 12, 2013 at 06:18:29AM -0500, Matt Porter wrote:
->  /**
-> + * struct phy_attrs - represents phy attributes
-> + * @bus_width: Data path width implemented by PHY
-> + */
-> +struct phy_attrs {
-> +	u32			bus_width;
+Hi,
 
-Why u32?
+On Thu, Dec 12, 2013 at 8:57 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> 2013/12/11 Doug Anderson <dianders@chromium.org>:
+>> Leela Krishna,
+>>
+>> On Wed, Dec 11, 2013 at 4:22 AM, Leela Krishna Amudala
+>> <l.krishna@samsung.com> wrote:
+>>> Hi,
+>>>
+>>> As I was in travel not accessed my mails.
+>>>
+>>> I'll try to post next version of this series tomorrow addressing
+>>> Sylwester's comments.
+>>
+>> It's completely up to you (and Wim), of course.  ...but if it were me
+>> I wouldn't spin the patch at this point.  Your existing version has
+>> Guenter's Ack and his indication that he thinks that v12 is good
+>> enough to land without future spins.  You could spin with Tomasz /
+>> Sylwester's suggestions but remember that it is not mandatory.
+>
+> As I said, at this point the comments are just nitpicks that it would be
+> nice to have them addressed, but this might be done as well in incremental
+> patch(es).
+>
+> So if it's not a problem for you and you can find time for it, a re-spin would
+> be nice, but it's not a necessity (unless Wim decides otherwise).
+>
 
->  int phy_power_off(struct phy *phy);
-> +static inline u32 phy_get_bus_width(struct phy *phy)
-> +{
-> +	return phy->attrs.bus_width;
-...
->  
-> +static inline u32 phy_get_bus_width(struct phy *phy)
-> +{
-> +	return -ENOSYS;
+Okay, Then I'll drop my plan to post next version of this series.
+Anyways I don't have code repository and hardware with me now to
+re-base and test.
 
-Why u32, especially as you're returning a negative number here.
+Hello Wim,
+Can you kindly look into this series and take necessary action..?
 
-If the bus width is a small integer (I'm assuming you don't have up to
-2^30 bus signals) then what's wrong with it being an 'int' ?
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Wishes,
+Leela Krishna.
+
+
+> Best regards,
+> Tomasz
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
