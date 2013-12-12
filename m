@@ -1,86 +1,81 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: Driver for SYSCON-based GPIOs
-Date: Thu, 12 Dec 2013 19:52:38 +0100
-Message-ID: <CACRpkdZ6kcEiYuVc5CMmsstr5L1oHp-EY6QXZGeKb2f_RTgPWQ@mail.gmail.com>
-References: <1386689216-5139-1-git-send-email-shc_work@mail.ru>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2 1/9] arm: dt: zynq: Remove 'clock-ranges' from TTC
+ nodes
+Date: Thu, 12 Dec 2013 20:07:09 +0100
+Message-ID: <52AA095D.4020707@monstr.eu>
+References: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com> <1385514296-26702-2-git-send-email-soren.brinkmann@xilinx.com> <52A97979.1030205@monstr.eu> <552285d2-8d57-4509-a014-d97065232376@DB8EHSMHS004.ehs.local>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1386689216-5139-1-git-send-email-shc_work@mail.ru>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="so7JksuqHhjCfBKkHf34sCI51cxPQFvDD"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <552285d2-8d57-4509-a014-d97065232376@DB8EHSMHS004.ehs.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 10, 2013 at 4:26 PM, Alexander Shiyan <shc_work@mail.ru> wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--so7JksuqHhjCfBKkHf34sCI51cxPQFvDD
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> SYSCON driver was designed for using memory areas (registers)
-> that are used in several subsystems. There are systems (CPUs)
-> which use bits in one register for various purposes and thus
-> should be handled by various kernel subsystems. This driver
-> allows you to use the individual SYSCON bits as GPIOs.
->
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-(...)
-> ---
-> +Required properties:
-> +- compatible: Should be "gpio-syscon".
-> +- syscon: Phandle to syscon device node.
-> +- gpio-controller: Marks the device node as a gpio controller.
-> +- #gpio-cells: Should be two. The first cell is the pin number and
-> +  the second cell is used to specify the gpio polarity:
-> +    0 = Active high,
-> +    1 = Active low.
-> +- bit-offset: Offset to the first bit used by driver.
-> +- bit-count: Number of bits used.
-> +
-> +Example:
-> +       sysgpio: sysgpio {
-> +               compatible = "gpio-syscon";
-> +               syscon = <&syscon>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +               bit-offset = <4>;
-> +               bit-count = <1>;
+On 12/12/2013 06:01 PM, S=C3=B6ren Brinkmann wrote:
+> Hi Michal,
+>=20
+> On Thu, Dec 12, 2013 at 09:53:13AM +0100, Michal Simek wrote:
+>> On 11/27/2013 02:04 AM, Soren Brinkmann wrote:
+>>> The bindings for the TTC changed in commit 'arm: zynq: Use standard
+>>> timer binding' (e932900a3279b5dbb6d8f43c7b369003620e137c). That chang=
+e
+>>> removed possible subnodes from this driver rendering the 'clock-range=
+s'
+>>> property invalid for this node.
+>>>
+>>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+>>> Acked-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
+>>> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>> ---
+>>>  arch/arm/boot/dts/zynq-7000.dtsi | 2 --
+>>>  1 file changed, 2 deletions(-)
+>>
+>> I think this is completely unrelated to cpufreq and should just go
+>> directly via arm-soc tree.
+>> If yes, I will add 1/9 and 2/9 to zynq/dt branch.
+>=20
+> I agree. This is just clean up that I found during this work. The secon=
+d
+> patch could go in as well I think. cpufreq will need the CPU nodes
+> later, but I think there is no real reason to not add them now.
 
-I take it that bit-offset can be say 1024 and bit count
-32 for a 32-bit register at syscon_base + 0x80?
+ok then. 1/9 and 2/9 applied to zynq/dt branch.
 
-I have a real big problem with encoding register offsets into
-the device tree as I have stated before, it is starting to
-get real hard to debug this, like:
+Thanks,
+Michal
 
-"hmmm where did this go wrong?"
 
-"in the byte offset from the base stored in this
-other driver plus ... 1024? no wait, that is stored
-it bit notation so I need to divide by 8 ... hm which
-was it now ... and where do I have all these figures
-in my ICE debugger?"
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
-The code is not helpful anymore, you have to go in
-and reverse-engineer this and bring up a calculator
-to figure out what is going on.
 
-I sort of like the syscon driver but I don't like the idea
-of encoding register offsets into the device tree, even
-less do I like the idea of encoding it in bit notation.
 
-I prefer that you put a header with all the offsets
-into <linux/mfd/syscon-foo.h> and define all the
-offsets there, then to reuse this driver with several
-GPIO controllers all doing this GPIO-in-syscon
-business, to #include <linux/mfd/syscon-bar.h>
-etc and use the compatible string to figure out
-which file to pick the offsets from.
+--so7JksuqHhjCfBKkHf34sCI51cxPQFvDD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-I know I may be alone in thinking this so if other
-smarter people think this register-offset-in-DT
-is a real good idea I guess I need to rest my
-case... anyway I'll need the ACK of the DT
-bindings maintainers to proceed and I'd even like
-two of them to vote me down on this if I shall
-apply this to the GPIO tree.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-Yours,
-Linus Walleij
+iEYEARECAAYFAlKqCV0ACgkQykllyylKDCFghwCfXr0ypRzJemhq17qm27Qmk9Ig
+Ai0An3hX4bFsRTYpuF4AreZcxVj1E2Sg
+=NVbt
+-----END PGP SIGNATURE-----
+
+--so7JksuqHhjCfBKkHf34sCI51cxPQFvDD--
