@@ -1,73 +1,57 @@
-From: Sebastian Reichel <sre@ring0.de>
-Subject: Re: [PATCH 06/26] OMAPDSS: if dssdev->name==NULL, use alias
-Date: Thu, 12 Dec 2013 18:31:33 +0100
-Message-ID: <20131212173131.GA9607@earth.universe>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
- <20131212100527.GA860@earth.universe>
- <52A9C470.2030102@ti.com>
- <1793565.XC2oCqQxA8@avalon>
- <52A9C5D5.80801@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 5/9] ARM: at91/dt: add mmc0 slot0 support to at91rm9200ek board
+Date: Thu, 12 Dec 2013 18:52:19 +0100
+Message-ID: <CACRpkdavA+wPoms2mxxQPStH7yMATyqL6HiS8HVi9bPEXL2Sqw@mail.gmail.com>
+References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
+	<1377687995-10758-1-git-send-email-b.brezillon@overkiz.com>
+	<20131120145926.GE14627@ns203013.ovh.net>
+	<528CDFFB.1020601@overkiz.com>
+	<CACRpkdboBg4YOnMNiar0DDBVnoky=zNky+Pzyp1=P_POtH15qQ@mail.gmail.com>
+	<528DE1C4.6060900@overkiz.com>
+	<CACRpkdZdweyWJefttiuiYAJ9qhahLbnj7eHUiLV_83UA41X_uQ@mail.gmail.com>
+	<5294D64D.7000100@overkiz.com>
+	<CACRpkdZoAjuWVpWZfvPgOAd7qB1ZBtC+45nD3SYay3SrMhqwVA@mail.gmail.com>
+	<52986CA8.3010601@overkiz.com>
+	<CACRpkdag5=QYsWe81ocpkMp2APaoBAOOn2r0iAVdf9DHTKrSXA@mail.gmail.com>
+	<52A59C9A.6000306@overkiz.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52A9C5D5.80801@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52A59C9A.6000306@overkiz.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: boris brezillon <b.brezillon@overkiz.com>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Joachim Eastwood <manabian@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Dec 9, 2013 at 11:34 AM, boris brezillon
+<b.brezillon@overkiz.com> wrote:
+> [Me]
+>> This has been suggested under the name "GPIO hogs" in the past.
+>>
+>> It would work similar to how pinctrl hogs work by associating the
+>> GPIO line the controller itself, using some specific string
+>> like gpio-input-hogs = <...> / gpio-output-hogs = <...>;
+>>
+>> The gpiolib core will then grab and set up these before
+>> returning from the registration call so noone ever gets a chance
+>> to use them.
+>
+> One more question, and I'm done :).
+>
+> In which case should we use output-high or output-low config
+> instead of gpio-output-hogs ?
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is specified in Documentation/pinctrl.txt under the
+heading "GPIO mode pitfalls".
 
-On Thu, Dec 12, 2013 at 04:19:01PM +0200, Tomi Valkeinen wrote:
-> On 2013-12-12 16:15, Laurent Pinchart wrote:
->=20
-> > As you mentioned in your previous e-mail, if the labels are used by oma=
-pfb=20
-> > only, I won't strongly push to keep them. I wonder, however, when using=
-=20
-> > DRM/KMS, where do the connector labels that are displayed by xrandr for=
-=20
-> > instance come from ?
->=20
-> drivers/gpu/drm/drm_crtc.c has lists, with names like "DVI-D", "HDMI-A",
-> for connectors and encoders. Maybe from those.
+Basically: the generic pinconfig output-high/output-low are
+for the case where this is a valid state for a Linux device
+driver driving a piece of hardware, like an IP-block, which
+is making use of these pins and during that usecase passes
+through states the data sheet may call "GPIO mode",
+but which are actually a way which the *device* uses
+the pins, not independent GPIO lines, like, just some
+1-bit line.
 
-The xrandr names are generated from the list Tomi mentioned.
-=3D> drm_connector_enum_list
-
-This requires a mapping from omapdss types to DRM types, which is
-done in drivers/gpu/drm/omapdrm/omap_drv.c:get_connector_type().
-
-Currently only HDMI and DVI are handled properly.
-
--- Sebastian
-
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSqfLzAAoJENju1/PIO/qaaEIP/14Nd/ItIxLpvt/CP5CJCggD
-34JNSDVwUqXf8M+hxkTsgE70vo38OHCAmnCAJJZVx4lwCzFr8shr9pDBnW6LUiRB
-kuAqtfOczlqYvKdxy6bn58c2rU93v+V1agtBbub+R0K/+WKZFGJFRDhrsS4Xu43O
-+rhpxLf2wh71jTMfy99iEm7h/+RL+6qtQO8i4C9rq+ExwNjAi+fW8UCh5XASHmTB
-ej4brQeNsgfkMuOkrxRLNZfz/rPZ4E/9r5X+HMA9DRmKrhfXUVrxrtXql7r6DdlH
-i8R8glIzi4c/dD5ygzhRdN/BwaL/ToxaWldmZYOpd3Y9SHxf9j3PlVz3dRTas3un
-oIFSrnpUh76LnHSkN1QFR8pywVkADk1vH81lFYeeqYl1AsYfEWCbAIksBMBimnW5
-C0mQjhDWHeNJnaYXh3Q5cBZdjWXoZG6fW28YuvUGuk48Lak2XMK/qY611zwnOyQG
-WbBC29hCp1BrXznYJrrmrm3BMoZLQHLyJnxQaXvXl5WjLb/PiCUg6pem91IFWj3S
-XXzk+AUQb940Ju8IZjVsJ/hTr9L1RHO9cLTMmE7cCHfbNLjlqiKaK15bgpQBJfXL
-H9BMrnn9Jd08h40k/E76L36gSquImqOBZU25FTDQETkIeT3WA2cGJIEcBSSzY2fC
-LlyUpsF4rTiyzm3HGrN8
-=JW9A
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
+Yours,
+Linus Walleij
