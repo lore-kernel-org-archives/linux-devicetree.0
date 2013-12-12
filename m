@@ -1,71 +1,22 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gZ3BpbzogRHJpdmVyIGZvciBTWVNDT04tYmFzZWQgR1BJ?=
- =?UTF-8?B?T3M=?=
-Date: Thu, 12 Dec 2013 23:20:57 +0400
-Message-ID: <1386876057.320972508@f419.i.mail.ru>
-References: <1386689216-5139-1-git-send-email-shc_work@mail.ru>
- <CACRpkdZ6kcEiYuVc5CMmsstr5L1oHp-EY6QXZGeKb2f_RTgPWQ@mail.gmail.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: tegra: add reset properties to Tegra124 DTs
+Date: Thu, 12 Dec 2013 12:36:47 -0700
+Message-ID: <52AA104F.4040302@wwwdotorg.org>
+References: <1385419160-11511-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZ6kcEiYuVc5CMmsstr5L1oHp-EY6QXZGeKb2f_RTgPWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?B?bGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc=?= <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?UTF-8?B?S3VtYXIgR2FsYQ==?= <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385419160-11511-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8uCgo+IE9uIFR1ZSwgRGVjIDEwLCAyMDEzIGF0IDQ6MjYgUE0sIEFsZXhhbmRlciBTaGl5
-YW4gPHNoY193b3JrQG1haWwucnU+IHdyb3RlOgo+IAo+ID4gU1lTQ09OIGRyaXZlciB3YXMgZGVz
-aWduZWQgZm9yIHVzaW5nIG1lbW9yeSBhcmVhcyAocmVnaXN0ZXJzKQo+ID4gdGhhdCBhcmUgdXNl
-ZCBpbiBzZXZlcmFsIHN1YnN5c3RlbXMuIFRoZXJlIGFyZSBzeXN0ZW1zIChDUFVzKQo+ID4gd2hp
-Y2ggdXNlIGJpdHMgaW4gb25lIHJlZ2lzdGVyIGZvciB2YXJpb3VzIHB1cnBvc2VzIGFuZCB0aHVz
-Cj4gPiBzaG91bGQgYmUgaGFuZGxlZCBieSB2YXJpb3VzIGtlcm5lbCBzdWJzeXN0ZW1zLiBUaGlz
-IGRyaXZlcgo+ID4gYWxsb3dzIHlvdSB0byB1c2UgdGhlIGluZGl2aWR1YWwgU1lTQ09OIGJpdHMg
-YXMgR1BJT3MuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogQWxleGFuZGVyIFNoaXlhbiA8c2hjX3dv
-cmtAbWFpbC5ydT4KPiAoLi4uKQo+ID4gLS0tCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+
-ICstIGNvbXBhdGlibGU6IFNob3VsZCBiZSAiZ3Bpby1zeXNjb24iLgo+ID4gKy0gc3lzY29uOiBQ
-aGFuZGxlIHRvIHN5c2NvbiBkZXZpY2Ugbm9kZS4KPiA+ICstIGdwaW8tY29udHJvbGxlcjogTWFy
-a3MgdGhlIGRldmljZSBub2RlIGFzIGEgZ3BpbyBjb250cm9sbGVyLgo+ID4gKy0gI2dwaW8tY2Vs
-bHM6IFNob3VsZCBiZSB0d28uIFRoZSBmaXJzdCBjZWxsIGlzIHRoZSBwaW4gbnVtYmVyIGFuZAo+
-ID4gKyAgdGhlIHNlY29uZCBjZWxsIGlzIHVzZWQgdG8gc3BlY2lmeSB0aGUgZ3BpbyBwb2xhcml0
-eToKPiA+ICsgICAgMCA9IEFjdGl2ZSBoaWdoLAo+ID4gKyAgICAxID0gQWN0aXZlIGxvdy4KPiA+
-ICstIGJpdC1vZmZzZXQ6IE9mZnNldCB0byB0aGUgZmlyc3QgYml0IHVzZWQgYnkgZHJpdmVyLgo+
-ID4gKy0gYml0LWNvdW50OiBOdW1iZXIgb2YgYml0cyB1c2VkLgo+ID4gKwo+ID4gK0V4YW1wbGU6
-Cj4gPiArICAgICAgIHN5c2dwaW86IHN5c2dwaW8gewo+ID4gKyAgICAgICAgICAgICAgIGNvbXBh
-dGlibGUgPSAiZ3Bpby1zeXNjb24iOwo+ID4gKyAgICAgICAgICAgICAgIHN5c2NvbiA9IDwmc3lz
-Y29uPjsKPiA+ICsgICAgICAgICAgICAgICBncGlvLWNvbnRyb2xsZXI7Cj4gPiArICAgICAgICAg
-ICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47Cj4gPiArICAgICAgICAgICAgICAgYml0LW9mZnNldCA9
-IDw0PjsKPiA+ICsgICAgICAgICAgICAgICBiaXQtY291bnQgPSA8MT47Cj4gCj4gSSB0YWtlIGl0
-IHRoYXQgYml0LW9mZnNldCBjYW4gYmUgc2F5IDEwMjQgYW5kIGJpdCBjb3VudAo+IDMyIGZvciBh
-IDMyLWJpdCByZWdpc3RlciBhdCBzeXNjb25fYmFzZSArIDB4ODA/CgpUaGlzIGNhbiBiZSByZXBy
-ZXNlbnRlZCBpbiBEVCBhcyAoMHg4MCA8PCA0KS4KCj4gSSBoYXZlIGEgcmVhbCBiaWcgcHJvYmxl
-bSB3aXRoIGVuY29kaW5nIHJlZ2lzdGVyIG9mZnNldHMgaW50bwo+IHRoZSBkZXZpY2UgdHJlZSBh
-cyBJIGhhdmUgc3RhdGVkIGJlZm9yZSwgaXQgaXMgc3RhcnRpbmcgdG8KPiBnZXQgcmVhbCBoYXJk
-IHRvIGRlYnVnIHRoaXMsIGxpa2U6Cj4gCj4gImhtbW0gd2hlcmUgZGlkIHRoaXMgZ28gd3Jvbmc/
-Igo+IAo+ICJpbiB0aGUgYnl0ZSBvZmZzZXQgZnJvbSB0aGUgYmFzZSBzdG9yZWQgaW4gdGhpcwo+
-IG90aGVyIGRyaXZlciBwbHVzIC4uLiAxMDI0PyBubyB3YWl0LCB0aGF0IGlzIHN0b3JlZAo+IGl0
-IGJpdCBub3RhdGlvbiBzbyBJIG5lZWQgdG8gZGl2aWRlIGJ5IDggLi4uIGhtIHdoaWNoCj4gd2Fz
-IGl0IG5vdyAuLi4gYW5kIHdoZXJlIGRvIEkgaGF2ZSBhbGwgdGhlc2UgZmlndXJlcwo+IGluIG15
-IElDRSBkZWJ1Z2dlcj8iCj4gCj4gVGhlIGNvZGUgaXMgbm90IGhlbHBmdWwgYW55bW9yZSwgeW91
-IGhhdmUgdG8gZ28gaW4KPiBhbmQgcmV2ZXJzZS1lbmdpbmVlciB0aGlzIGFuZCBicmluZyB1cCBh
-IGNhbGN1bGF0b3IKPiB0byBmaWd1cmUgb3V0IHdoYXQgaXMgZ29pbmcgb24uCj4gCj4gSSBzb3J0
-IG9mIGxpa2UgdGhlIHN5c2NvbiBkcml2ZXIgYnV0IEkgZG9uJ3QgbGlrZSB0aGUgaWRlYQo+IG9m
-IGVuY29kaW5nIHJlZ2lzdGVyIG9mZnNldHMgaW50byB0aGUgZGV2aWNlIHRyZWUsIGV2ZW4KPiBs
-ZXNzIGRvIEkgbGlrZSB0aGUgaWRlYSBvZiBlbmNvZGluZyBpdCBpbiBiaXQgbm90YXRpb24uCgpJ
-IGFsc28gaGF2ZSBubyBpZGVhIGhvdyB0byBwcmVzZW50IGl0IGRpZmZlcmVudGx5LgpDYW4gdHJ5
-IHRvIHNwZWNpZnkgdGhlIGJ5dGUgb2Zmc2V0IHRocm91Z2ggdGhlICJyZWciIHByb3BlcnR5PwpU
-aGUgImJpdC1vZmZzZXQiIHdpbGwgcmVtYWluLCBidXQgd2lsbCBwb2ludCBvZmZzZXQgZnJvbSB0
-aGUgInJlZyIgYnl0ZS4KCj4gSSBwcmVmZXIgdGhhdCB5b3UgcHV0IGEgaGVhZGVyIHdpdGggYWxs
-IHRoZSBvZmZzZXRzCj4gaW50byA8bGludXgvbWZkL3N5c2Nvbi1mb28uaD4gYW5kIGRlZmluZSBh
-bGwgdGhlCj4gb2Zmc2V0cyB0aGVyZSwgdGhlbiB0byByZXVzZSB0aGlzIGRyaXZlciB3aXRoIHNl
-dmVyYWwKPiBHUElPIGNvbnRyb2xsZXJzIGFsbCBkb2luZyB0aGlzIEdQSU8taW4tc3lzY29uCj4g
-YnVzaW5lc3MsIHRvICNpbmNsdWRlIDxsaW51eC9tZmQvc3lzY29uLWJhci5oPgo+IGV0YyBhbmQg
-dXNlIHRoZSBjb21wYXRpYmxlIHN0cmluZyB0byBmaWd1cmUgb3V0Cj4gd2hpY2ggZmlsZSB0byBw
-aWNrIHRoZSBvZmZzZXRzIGZyb20uCgpObyBoZWFkZXJzIGlzIG5lZWRlZC4gRHJpdmVyIHdpbGwg
-YmUgdXNlZCBpbiBEVFMgb25seS4KCi4uLgotLS0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 11/25/2013 03:39 PM, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+I've applied this series to Tegra's for-3.14/dt branch, but used V2 for
+patch 3/4 and 4/4.
