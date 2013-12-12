@@ -1,63 +1,94 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
- extensions for GMAC in Allwinner A20 SoC's
-Date: Thu, 12 Dec 2013 18:31:43 +0800
-Message-ID: <CAGb2v655_83b76PTmgkDmNGCADWwTjTwW13sOgM5HFmCVkeu=w@mail.gmail.com>
-References: <1386350983-13281-1-git-send-email-wens@csie.org>
- <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A52C.50605@st.com>
- <CAGb2v67WiCaMpJEzA_X6o7uOu6i3w3FCEz7=N5HY0amQb01SZA@mail.gmail.com>
- <52A72C6D.60100@st.com> <CAGb2v64qQvqJSicA6MTAxeh1sGjWY=Pk=vDq=9J3pTQW+wkXrA@mail.gmail.com>
- <52A87A74.8040807@st.com> <20131212090415.GQ3651@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJFBU2KQKGQEI3XWG7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20131212090415.GQ3651@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Matt Porter <mporter@linaro.org>
+Subject: [PATCH v4 0/9] USB Device Controller support for BCM281xx
+Date: Thu, 12 Dec 2013 06:18:28 -0500
+Message-ID: <1386847117-21240-1-git-send-email-mporter@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Changes since v3:
+	- Rebased on 3.13-rc3
+	- Move struct phy bus_width attribute back into struct phy_attrs
+	- Fix build issue on !GENERIC_PHY
+	- Update dwc2 binding to reflect optional phy properties
+	- Rename bcm-kona-phy.txt binding to bcm-phy.txt
+	- Reorder bcm kona phy includes and use bitops
+	- phy-names changed to "usb2-phy" to match updated s3c-hsotg
+	  generic phy-ification series
 
-On Thu, Dec 12, 2013 at 5:04 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Wed, Dec 11, 2013 at 02:45:08PM +0000, srinivas kandagatla wrote:
->> >>> 1. .tx_coe
->> >>>    This is not exported in the DT bindings.
->> >>>    Looking at stmmac code, not setting this seems to disable all
->> >>>    checksum offloading.
->> >>
->> >> Why cant this go via DT as well?
->> >
->> > If you and Giuseppe are OK with this, why not?
->> Am Ok with it.
->
-> Please note that I'm opposed to this until someone explain why putting
-> it in the DT is relevant (and not just convenient).
+Changes since v2:
+	- Rebased on 3.13-rc1
+	- Fix braces in phy_get_bus_width()/phy_set_bus_width()
+	- Drop generic phy conversion to use the same support from
+	  the Exynos generic phy conversion series
+	- Modify dts support to match the "device" phy name required
+	  in the v3 Exynos generic phy conversion
+	- Add s3c-hsotg phy_init/phy_exit support
+	- Fix typo on reg property in kona phy binding
+	- Replace phy driver reg struct with offset defines
+	- Move phy soft reset to phy driver init
+	- Fix dts node names to match ePAPR conventions
 
-Checksum offloading is an optional feature[1], implemented starting
-from version 3.20a. It is not tied to a specific IP version. As such,
-using a "snps,dwmac-<version>" compatible isn't a good fit here.
+Changes since v1:
+	- Convert USB phy driver to generic phy subsystem
+	- Add phy bus width apis
+	- Drop dwc2 phy bus width DT property in favor of querying the
+	  phy provider for bus width
+	- Add generic phy/clock properties to dwc2 DT binding
+	- Add generic phy subsystem support to s3c-hsotg with the
+	  existing usb phy and pdata phy methods as a fallback
+	- Split bindings out to separate patches to match the latest
+	  DT binding review guidelines
 
-stmmac does auto-detection for optional features on MAC version > 3.50a.
-This is what Srinivas was referring to.
+This series adds USB Device Controller support for the Broadcom
+BCM281xx family of parts. BCM281xx contains a DWC2 OTG block and
+s3c-hsotg is used to support UDC operation.
 
-Unfortunately, our MAC is < 3.50a. No auto-detection. We could add a
-"snps,dwmac-tx-coe" compatible for this, or the seperate DT property.
+Part 1 adds phy bus width support to the generic phy subsystem
 
-The other way would be to pass the flags in the initial .data with the
-SoC specific compatible. Other SoCs with the same feature won't be
-able to reuse the same compatible though.
+Parts 2-6 allows s3c-hsotg to build on non-Samsung platforms, supports
+the dwc2 binding, adds phy_init/phy_exit support, and supports fetching
+phy bus width using the generic phy layer.
 
+Parts 7-8 add a generic phy binding and driver for the BCM Kona USB PHY.
 
-ChenYu
+Part 9 adds the DT nodes to enable UDC support on both BCM281xx boards
+in the kernel.
 
-[1] http://www.synopsys.com/dw/dwtb.php?a=ethernet_mac
+This series depends on:
+	- "Update Kona drivers to use clocks" v4 series
+	  https://lkml.org/lkml/2013/12/5/508
+	- "Add new Exynos USB 2.0 PHY driver" v4 series
+	  https://lkml.org/lkml/2013/12/5/166
+
+Matt Porter (9):
+  phy: add phy_get_bus_width()/phy_set_bus_width() calls
+  staging: dwc2: update DT binding to add generic clock/phy properties
+  usb: gadget: s3c-hsotg: enable build for other platforms
+  usb: gadget: s3c-hsotg: add snps,dwc2 compatible string
+  usb: gadget: s3c-hsotg: use generic phy_init()/phy_exit() support
+  usb: gadget: s3c-hsotg: get phy bus width from phy subsystem
+  phy: add Broadcom Kona USB2 PHY DT binding
+  phy: add Broadcom Kona USB2 PHY driver
+  ARM: dts: add usb udc support to bcm281xx
+
+ Documentation/devicetree/bindings/phy/bcm-phy.txt  |  15 ++
+ Documentation/devicetree/bindings/staging/dwc2.txt |  12 ++
+ arch/arm/boot/dts/bcm11351-brt.dts                 |   6 +
+ arch/arm/boot/dts/bcm11351.dtsi                    |  18 +++
+ arch/arm/boot/dts/bcm28155-ap.dts                  |   8 ++
+ drivers/phy/Kconfig                                |   6 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-kona-usb2.c                    | 158 +++++++++++++++++++++
+ drivers/usb/gadget/Kconfig                         |   7 +-
+ drivers/usb/gadget/s3c-hsotg.c                     |  22 ++-
+ drivers/usb/gadget/s3c-hsotg.h                     |   1 +
+ include/linux/phy/phy.h                            |  28 ++++
+ 12 files changed, 275 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/bcm-phy.txt
+ create mode 100644 drivers/phy/phy-bcm-kona-usb2.c
+
+-- 
+1.8.4
