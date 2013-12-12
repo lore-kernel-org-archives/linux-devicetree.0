@@ -1,81 +1,69 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 1/9] arm: dt: zynq: Remove 'clock-ranges' from TTC
- nodes
-Date: Thu, 12 Dec 2013 20:07:09 +0100
-Message-ID: <52AA095D.4020707@monstr.eu>
-References: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com> <1385514296-26702-2-git-send-email-soren.brinkmann@xilinx.com> <52A97979.1030205@monstr.eu> <552285d2-8d57-4509-a014-d97065232376@DB8EHSMHS004.ehs.local>
-Reply-To: monstr@monstr.eu
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/3] pinctrl: Add Qualcomm TLMM driver
+Date: Thu, 12 Dec 2013 20:09:30 +0100
+Message-ID: <CACRpkdbEKUibOBk=iUi-CrHdmgV46GetyNUgomyngFAwrb=biQ@mail.gmail.com>
+References: <1386295805-13708-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1386295805-13708-2-git-send-email-bjorn.andersson@sonymobile.com>
+	<52A24438.4000908@codeaurora.org>
+	<20131210081031.GD11990@sonymobile.com>
+	<52A7C313.8090208@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="so7JksuqHhjCfBKkHf34sCI51cxPQFvDD"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <552285d2-8d57-4509-a014-d97065232376@DB8EHSMHS004.ehs.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52A7C313.8090208@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---so7JksuqHhjCfBKkHf34sCI51cxPQFvDD
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 12/12/2013 06:01 PM, S=C3=B6ren Brinkmann wrote:
-> Hi Michal,
->=20
-> On Thu, Dec 12, 2013 at 09:53:13AM +0100, Michal Simek wrote:
->> On 11/27/2013 02:04 AM, Soren Brinkmann wrote:
->>> The bindings for the TTC changed in commit 'arm: zynq: Use standard
->>> timer binding' (e932900a3279b5dbb6d8f43c7b369003620e137c). That chang=
-e
->>> removed possible subnodes from this driver rendering the 'clock-range=
-s'
->>> property invalid for this node.
+On Wed, Dec 11, 2013 at 2:42 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 12/10/13 00:10, Bjorn Andersson wrote:
+>> On Fri 06 Dec 13:40 PST 2013, Stephen Boyd wrote:
+>>>> +config PINCTRL_MSM
+>>>> +     bool
+>>> Why not tristate?
 >>>
->>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
->>> Acked-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
->>> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>> ---
->>>  arch/arm/boot/dts/zynq-7000.dtsi | 2 --
->>>  1 file changed, 2 deletions(-)
+>> I have a hard time seeing an situation where you would like to build a system
+>> with this driver as a module; it would force almost the entire system to be
+>> loaded at a later time...
+>
+> We're going to need to build everything but the essentials as modules
+> for the multi-platform kernel because we're going to run into the
+> problem where the kernel can't link anymore. Data heavy drivers such as
+> this are  targets for that because they waste more space being built-in
+> and they're not absolutely necessary to boot into an initrd that holds
+> the modules for a particular device.
+
+This is a quite generic problem rather than a pin control problem.
+
+We're actually going to have to compile quite a few drivers into the
+kernel as well, like all irqchips and all clock sources...
+
+I think we have toyed with the idea of tagging code and data so
+that it will be discarded on non-matched platforms, I have no
+idea how that would look in practice :-(
+
+There are quite a few pin control drivers compiled into any
+present multiplatform kernels, so I wouldn't say that one
+more or less hurts us today.
+
+>>>> +#include <linux/pinctrl/pinctrl.h>
+>>>> +#include <linux/pinctrl/pinmux.h>
+>>>> +#include <linux/pinctrl/pinconf.h>
+>>>> +#include <linux/pinctrl/machine.h>
+>>> Are any of these includes actually necessary? Can't we just forward
+>>> declare struct pinctrl_pin_desc?
+>>>
+>> None of them are needed in the current set of patches, as these are already
+>> included in the c-files before including this.
 >>
->> I think this is completely unrelated to cpufreq and should just go
->> directly via arm-soc tree.
->> If yes, I will add 1/9 and 2/9 to zynq/dt branch.
->=20
-> I agree. This is just clean up that I found during this work. The secon=
-d
-> patch could go in as well I think. cpufreq will need the CPU nodes
-> later, but I think there is no real reason to not add them now.
+>> But the right set should be: platform_device.h and pinctrl.h.
+>
+> We should be able to get away with forward declaring the structs we care
+> about. C files that include this header should be including the
+> pinctrl.h header file anyway, no?
 
-ok then. 1/9 and 2/9 applied to zynq/dt branch.
+Patches accepted...
 
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---so7JksuqHhjCfBKkHf34sCI51cxPQFvDD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlKqCV0ACgkQykllyylKDCFghwCfXr0ypRzJemhq17qm27Qmk9Ig
-Ai0An3hX4bFsRTYpuF4AreZcxVj1E2Sg
-=NVbt
------END PGP SIGNATURE-----
-
---so7JksuqHhjCfBKkHf34sCI51cxPQFvDD--
+Yours,
+Linus Walleij
