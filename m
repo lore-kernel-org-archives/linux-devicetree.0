@@ -1,55 +1,111 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] regulator: act8865: add device tree binding doc
-Date: Thu, 12 Dec 2013 16:52:40 +0000
-Message-ID: <20131212165240.GP11044@sirena.org.uk>
-References: <1386811131-2720-1-git-send-email-wenyou.yang@atmel.com>
- <1386811131-2720-3-git-send-email-wenyou.yang@atmel.com>
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+Subject: Re: [PATCH v4 2/4] Documentation: Add APM X-Gene SoC 15Gbps
+ Multi-purpose PHY driver binding documentation
+Date: Thu, 12 Dec 2013 08:55:53 -0800
+Message-ID: <1386867353.5985.7.camel@dabdike>
+References: <1386833435-30498-1-git-send-email-lho@apm.com>
+	 <1386833435-30498-2-git-send-email-lho@apm.com>
+	 <1386833435-30498-3-git-send-email-lho@apm.com>
+	 <201312121427.20040.arnd@arndb.de> <52A9C8C5.8030809@interlog.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jXoUnAu9pZeaHebo"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1386811131-2720-3-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: lgirdwood@gmail.com, grant.likely@linaro.org, rob.herring@calxeda.com, vpalatin@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, plagnioj@jcrosoft.com, nicolas.ferre@atmel.com
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <52A9C8C5.8030809@interlog.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: dgilbert@interlog.com
+Cc: Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, olof@lixom.net, tj@kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2013-12-12 at 15:31 +0100, Douglas Gilbert wrote:
+> On 13-12-12 02:27 PM, Arnd Bergmann wrote:
+> > On Thursday 12 December 2013, Loc Ho wrote:
+> >> +- reg                  : First PHY memory resource is the SDS PHY access
+> >> +                         resource.
+> >> +                         Second PHY memory resoruce is the clock and reset
+> >> +                         resources.
+> >> +                         Third PHY memory resource is the SDS PHY access
+> >> +                         resource outside of the IP if it is type
+> >> +                         "apm,xgene-phy-ext".
+> >
+> > Why do the "clock and reset" resources not use a clock driver and a reset
+> > driver?
+> >
+> > I would expect these to get replaced with
+> >
+> > 	clocks		: Reference to external clock input
+> > 	resets		: Reference to reset controller input
+> >
+> >> +Optional properties:
+> >> +- status		: Shall be "ok" if enabled or "disabled" if disabled.
+> >> +			  Default is "ok".
+> >> +- apm,tx-eye-tuning	: Manual control to fine tune the capture of the serial
+> >> +			  bit lines from the automatic calibrated position.
+> >> +			  Two set of 3-tuple setting for Gen1, Gen2, and Gen3.
+> >> +			  Range from 0 to 0x7f in unit of one bit period.
+> >> +			  Default is 0xa.
+> >
+> > What does gen1, gen2 and gen3 refer to? Is this PCIe, SATA or serdes generations
+> > or all of them?
+> >
+> > Why are there two sets?
+> >
+> > Will this have to change if you add PCIe support?
+> >
+> > I would suggest using decimal notation here instead of hexadecimal since you
+> > are dealing with numbers couting things. Same for the others.
+> >
+> >> +- apm,tx-eye-direction	: Eye tuning manual control direction. 0 means sample
+> >> +			  data earlier than the nominal sampling point. 1 means
+> >> +			  sample data later than the nominal sampling point.
+> >> +			  Two set of 3-tuple setting for Gen1, Gen2, and Gen3.
+> >> +			  Default is 0x0.
+> >> +
+> >> +- apm,tx-boost-gain	: Frequency boost AC (LSB 3-bit) and DC (2-bit)
+> >> +			  gain control. Two set of 3-tuple setting for Gen1,
+> >> +			  Gen2, and Gen3. Range is between 0 to 0x1f in unit
+> >> +			  of dB. Default is 0x3.
+> >> +
+> >> +- apm,tx-amplitude	: Amplitude control. Two set of 3-tuple setting for
+> >> +			  Gen1, Gen2, and Gen3. Range is between 0 to 0xf in
+> >> +			  unit of 13.3mV. Default is 0xf.
+> >
+> > Units of 13.3mV don't seem to be useful as a generic measurement. I'd
+> > recommend using milivolts or microvolts.
+> >
+> >> +- apm,tx-pre-cursor1	: 1st pre-cursor emphasis taps control. Two set of
+> >> +			  3-tuple setting for Gen1, Gen2, and Gen3. Range is
+> >> +			  between 0 to 0xf in unit of 18.2mV. Default is 0x0.
+> >> +- apm,tx-pre-cursor2	: 2st pre-cursor emphasis taps control. Two set of
+> >> +			  3-tuple setting for Gen1, Gen2, and Gen3. Range is
+> >> +			  between 0 to 0x7 in unit of 18.2mV. Default is 0x0.
+> >> +- apm,tx-post-cursor	: Post-cursor emphasis taps control. Two set of
+> >> +			  3-tuple setting for Gen1, Gen2, and Gen3. Range is
+> >> +			  between 0 to 0x1f in unit of 18.2mV. Default is 0xf.
+> >
+> > Same here.
+> >
+> >> +- apm,tx-speed		: Tx operating speed. One set of 3-tuple for
+> >> +			  Gen1 (0x1), Gen2 (0x3), and Gen3 (0x7). Default is
+> >> +			  0x7.
+> >
+> > I'm completely confused by this description. Can you rephrase this?
+> > It sounds like the only possible values are <1 3 7> for this property.
+> 
+> Most likely Gen1, Gen2 and Gen3 are SATA-speak corresponding to SAS's
+> G1, G2 and G3:
+> 
+> G1   Gen1     1.5 Gbps
+> G2   Gen2     3 Gbps
+> G3   Gen3     6 Gbps
+> G4   -        12 Gbps
+> G5   -        24 Gbps
 
---jXoUnAu9pZeaHebo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Electrically, SAS phys and SATA phys are identical.  We already have a
+SAS phy abstraction in libsas ... when looking at a separable phy
+implementation, shouldn't we be doing something that works for both
+instead of just SATA?
 
-On Thu, Dec 12, 2013 at 09:18:50AM +0800, Wenyou Yang wrote:
+James
 
-> +Required properties:
-> +- compatible: "active-semi,act8865"
-> +- reg: I2C slave address
-> +- vsel-state-low: Initial state of vsel0 input is low, to select default output voltage.
 
-This needs to document which regulators exist and what strings should be
-used to select them as well.
-
---jXoUnAu9pZeaHebo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSqenVAAoJELSic+t+oim9/BkP/ApRL883vwdxH9/+6SLLTeAR
-zP56qDwEj0qQthkHO9E9X1x3Dt0FalWOAtWjIa4MYpWw9O5GSpRStbxoouugHOXh
-2sxnJip5MzFsWBaUdXgKtK+OskhdWTdZUfwqmwnT84KoyNvb3la5iQFXBAokqiDp
-LeoKK/yHmk+1MTB1AAIJVMlUjpuZcsFJO+RzQ7mVVCsqe5jIG2ZLr0Jxomg1bqgx
-tR13mW1cl3Ae1ySNd6sPc1jdFSklZiuCZ7gZvNLckqxsMTqmsmc0K5TjaG0HcOUf
-duGVI6Q27iWy7Y8nTLIJMAxhcUy5RL1CVarx5yoAPhxLgZH2ZBMVORxoZWTExFNv
-rtkImo9DptK3P4lAaTm/dvQ1e3ltN9msSbJm7rE6JSd74hhTI7vj8b8nGto5S4x8
-or38kf75syR08DE5cyvzfIUR4CwKGUryCnkMOGZIpMKOiUrQqE7CCKAw7egE38+A
-7fZ86ahHkZgdkKIMZWcWhDDKJHIF4CeAtSjhBq5FCQfd6Xvc4Xo+2zIerpIujZWp
-XKMXkIXSGX+2znLZtSEpqB4Zzn4I9wJqcYaLaD2jBC1J6brx6J0tQrW2KWB1vIU6
-rjAEXZX4cwJ0CJYSXLpiyIKZCZG4scElAjJOZXdpfRUZ2sa/OW58awawbkSf9mTp
-HveVukqe6s2U+19Qxdrj
-=748T
------END PGP SIGNATURE-----
-
---jXoUnAu9pZeaHebo--
