@@ -1,95 +1,141 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] time: Serialize calls to 'clockevents_update_freq'
- in the timing core
-Date: Thu, 12 Dec 2013 13:07:45 +0100
-Message-ID: <52A9A711.1040002@linaro.org>
-References: <alpine.DEB.2.02.1312071151340.30673@ionos.tec.linutronix.de> <1386635686-15686-1-git-send-email-soren.brinkmann@xilinx.com> <1386635686-15686-2-git-send-email-soren.brinkmann@xilinx.com> <52A87799.8010300@linaro.org> <ba4dce4a-1332-4fd8-80de-41347bb5b7b2@TX2EHSMHS005.ehs.local>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv6+ 01/13] of: introduce
+	of_property_for_earch_phandle_with_args()
+Date: Thu, 12 Dec 2013 13:14:04 +0100
+Message-ID: <20131212.141404.684884000513445038.hdoyu@nvidia.com>
+References: <20131211132845.5461FC4061A@trevor.secretlab.ca><20131211.153338.2186623380643957232.hdoyu@nvidia.com><20131212113417.BDCD0C40637@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ba4dce4a-1332-4fd8-80de-41347bb5b7b2-8XeO8fnFoNFEus+KprP3J7jjLBE8jN/0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131212113417.BDCD0C40637-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/11/2013 09:09 PM, S=C3=B6ren Brinkmann wrote:
-> Hi Daniel,
->
-> On Wed, Dec 11, 2013 at 03:32:57PM +0100, Daniel Lezcano wrote:
->> On 12/10/2013 01:34 AM, Soren Brinkmann wrote:
->>> From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
->>>
->>> We can identify the broadcast device in the core and serialize all
->>> callers including interrupts on a different CPU against the update.
->>> Also, disabling interrupts is moved into the core allowing callers =
-to
->>> leave interrutps enabled when calling clockevents_update_freq().
->>>
->>> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
->>> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>   kernel/time/clockevents.c    | 29 ++++++++++++++++++++++-------
->>>   kernel/time/tick-broadcast.c | 25 +++++++++++++++++++------
->>>   kernel/time/tick-internal.h  |  4 ++++
->>>   3 files changed, 45 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
->>> index 086ad6043bcb..641d91003a45 100644
->>> --- a/kernel/time/clockevents.c
->>> +++ b/kernel/time/clockevents.c
->>> @@ -439,6 +439,16 @@ void clockevents_config_and_register(struct cl=
-ock_event_device *dev,
->>>   }
->>>   EXPORT_SYMBOL_GPL(clockevents_config_and_register);
->>>
->>> +int __clockevents_update_freq(struct clock_event_device *dev, u32 =
-freq)
->>> +{
->>> +	clockevents_config(dev, freq);
->>> +
->>> +	if (dev->mode !=3D CLOCK_EVT_MODE_ONESHOT)
->>> +		return 0;
->>> +
->>> +	return clockevents_program_event(dev, dev->next_event, false);
->>> +}
->>> +
->>
->> ./arch/arm/kernel/smp_twd.c should be modified to call
->> __clockevents_update_freq instead of clockevents_update_freq, no ?
->
-> IIUC, the __-version is only for timer core internal usage and not an
-> exported interface. Doesn't the non-__ version work for the twd?
-> I don't see issues on my Zynq platform with these patches.
+Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote @ Thu, 12 Dec 2013 12:34:17 +0100:
 
-I don't think there is an issue but if we can rid of the extra code=20
-added in clockevents_update_freq with this patch for twd, it would make=
-=20
-sense. The __-version means the function is lockless and there is a=20
-function without '__' in the name with the lock.
+> On Wed, 11 Dec 2013 14:33:38 +0100, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> > Hi Grant,
+> >
+> > Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote @ Wed, 11 Dec 2013 14:28:45 +0100:
+> >
+> > > On Thu, 21 Nov 2013 11:57:00 -0700, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> > > > On 11/21/2013 10:17 AM, Hiroshi Doyu wrote:
+> > > > > Iterating over a property containing a list of phandles with arguments
+> > > > > is a common operation for device drivers. This patch adds a new
+> > > > > of_property_for_each_phandle_with_args() macro to make the iteration
+> > > > > simpler.
+> > > > >
+> > > > > Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > > ---
+> > > > > v6+:
+> > > > > Use the description, which Grant Likely proposed, to be full enough
+> > > > > that a future reader can figure out why a patch was written.
+> > > > >   http://lists.linuxfoundation.org/pipermail/iommu/2013-November/007062.html
+> > ...
+> >
+> > > That's right, I forgot I said that. Yes please fix the implementation.
+> >
+> > Here's the latest. I'll include this with the next v7 series.
+> >
+> > Can I get your Acked-by with this?
+> >
+> > --8<----
+> >
+> > From 8f7c0404aa68f0e8dbe0babc240590f6528ecc1f Mon Sep 17 00:00:00 2001
+> > From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > Date: Fri, 15 Nov 2013 10:52:53 +0200
+> > Subject: [PATCH] of: introduce of_property_for_each_phandle_with_args()
+> >
+> > Iterating over a property containing a list of phandles with arguments
+> > is a common operation for device drivers. This patch adds a new
+> > of_property_for_each_phandle_with_args() macro to make the iteration
+> > simpler.
+> >
+> > Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> > v7:
+> > Fixed some minors pointed by Rob and Stephen.
+> >
+> > v6++++:
+> > Iterate without intrducing a new struct.
+> >
+> > v6+++:
+> > Introduced a new struct "of_phandle_iter" to keep the state when
+> > iterating over the list.
+> >
+> > v6++:
+> > Optimized to avoid O(n^2), suggested by Stephen Warren.
+> > http://lists.linuxfoundation.org/pipermail/iommu/2013-November/007066.html
+> >
+> > I didn't introduce any struct to hold params and state here.
+> >
+> > v6+:
+> > Use the description, which Grant Likely proposed, to be full enough
+> > that a future reader can figure out why a patch was written.
+> >
+> > v5:
+> > New patch for v5.
+> >
+> > Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  drivers/of/base.c  | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/of.h | 32 ++++++++++++++++++++++++++++++++
+> >  2 files changed, 78 insertions(+)
+> >
+> > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > index f807d0e..cd4ab05 100644
+> > --- a/drivers/of/base.c
+> > +++ b/drivers/of/base.c
+> > @@ -1201,6 +1201,52 @@ void of_print_phandle_args(const char *msg, const struct of_phandle_args *args)
+> >       printk("\n");
+> >  }
+> >
+> > +const __be32 *of_phandle_iter_next(const char *cells_name, int cell_count,
+> > +                                const __be32 *cur, const __be32 *end,
+> > +                                struct of_phandle_args *out_args)
+> 
+> Having to pass in cells_name, cell_count, cur and end each time seems a
+> little odd. Can a state structure be used instead?
+> 
+> struct of_phandle_iter_state {
+>         const char *cells_name;
+>         int cells_count;
+>         const __be32 *cur;
+>         const __be32 *end;
+>         struct of_phandle_args out_args;
+> }
+> 
+> Make the caller provide one of those and fill it in with the init
+> function.
 
-> Another side note regarding the twd: Shouldn't we set the
-> CLOCK_EVT_FEAT_PERCPU flag we introduced recently for that timer?
+I rewrote this a few times and so now I have a few version of this
+implementations :-) The above proposal is similar to the version v6+++
+mentioned in the above patch note:
 
-Yes.
+> > v6+++:
+> > Introduced a new struct "of_phandle_iter" to keep the state when
+> > iterating over the list.
 
-There will be some fun with the patchset http://lwn.net/Articles/566270=
-/=20
-where the local timer could be used as a broadcast timer.
+which is:
 
+  [RFC][PATCHv6+++ 01/13] of: introduce of_property_for_earch_phandle_with_args()
+    http://lists.linuxfoundation.org/pipermail/iommu/2013-November/007087.html
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+Stephen seemed to prefer the version without state struct. I like the
+idea to not pass the same arguments repeatly. Instead, wrapping them
+in a struct with state may look better.
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So if Stephen agrees, I'll rewrite the version with state struct
+again.
