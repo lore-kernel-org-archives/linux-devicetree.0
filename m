@@ -1,168 +1,93 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv7 11/12] iommu/tegra: smmu: Rename hwgrp -> swgroups
-Date: Thu, 12 Dec 2013 09:57:12 +0200
-Message-ID: <1386835033-4701-12-git-send-email-hdoyu@nvidia.com>
-References: <1386835033-4701-1-git-send-email-hdoyu@nvidia.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: Re: [PATCHv2 07/10] drivers: mtd: m25p80: Adapt driver to support
+ memory mapped read.
+Date: Thu, 12 Dec 2013 13:45:24 +0530
+Message-ID: <52A9709C.4010606@ti.com>
+References: <1386339891-32717-1-git-send-email-sourav.poddar@ti.com> <1386339891-32717-8-git-send-email-sourav.poddar@ti.com> <20131212075536.GA1596@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386835033-4701-1-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131212075536.GA1596@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Huang Shijie <shijie8@gmail.com>
+Cc: broonie@kernel.org, linux-spi@vger.kernel.org, computersforpeace@gmail.com, marex@denx.de, devicetree@vger.kernel.org, balbi@ti.com, linux-mtd@lists.infradead.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use the correct term for SWGROUP related variables and macros.
+On Thursday 12 December 2013 01:25 PM, Huang Shijie wrote:
+> On Fri, Dec 06, 2013 at 07:54:48PM +0530, Sourav Poddar wrote:
+>> Adapt driver to do a memory mapped read.
+>> @@ -109,6 +109,7 @@ struct m25p {
+>>   	u8			program_opcode;
+>>   	u8			*command;
+>>   	enum read_type		flash_read;
+>> +	void __iomem *mem_addr;
+> I think we can remove this field.
+> You can use a local variable in the m25p80_read.
+>
+>>   };
+>>
+>>   static inline struct m25p *mtd_to_m25p(struct mtd_info *mtd)
+>> @@ -515,6 +516,7 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+>>   	size_t *retlen, u_char *buf)
+>>   {
+>>   	struct m25p *flash = mtd_to_m25p(mtd);
+>> +	struct spi_master *master = flash->spi->master;
+>>   	struct spi_transfer t[2];
+>>   	struct spi_message m;
+>>   	uint8_t opcode;
+>> @@ -523,6 +525,20 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+>>   	pr_debug("%s: %s from 0x%08x, len %zd\n", dev_name(&flash->spi->dev),
+>>   			__func__, (u32)from, len);
+>>
+>> +	if (master->mmap) {
+>> +		mutex_lock(&flash->lock);
+>> +		/* Wait till previous write/erase is done. */
+>> +		if (wait_till_ready(flash)) {
+>> +			mutex_unlock(&flash->lock);
+>> +			return 1;
+>> +		}
+>> +		flash->mem_addr = master->get_buf(master);
+>> +		memcpy(buf, flash->mem_addr + from, len);
+>> +		master->put_buf(master);
+>> +		*retlen = len;
+>> +		goto out;
+>> +	}
+>> +
+>>   	spi_message_init(&m);
+>>   	memset(t, 0, (sizeof t));
+>>
+>> @@ -558,6 +574,7 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+>>
+>>   	*retlen = m.actual_length - m25p_cmdsz(flash) - dummy;
+>>
+>> +out:
+>>   	mutex_unlock(&flash->lock);
+>>
+>>   	return 0;
+>> @@ -1286,6 +1303,9 @@ static int m25p_probe(struct spi_device *spi)
+>>   		flash->addr_width = 3;
+>>   	}
+>>
+>> +	if (spi->master->configure_from_slave)
+>> +		m25p80_fill_flash_information(flash);
+>> +
+> You have add a configure_from_slave hook in the SPI, why you also need
+> a same hook in the SPI-NOR framework?
+>
+We need a way to provoke this, currently it is placed in m25p80. If m25p80
+is removed, for where should I handle these in nor framework?
+> And i think the enable_mmap/disable_mmap is not needed too.
+>
+> All the three hooks are used to set the SPI bus controller.
 
-The term "swgroup" is the collection of "memory client". A "memory
-client" usually represents a HardWare Accelerator(HWA) like
-GPU. Sometimes a strut device can belong to multiple "swgroup" so that
-"swgroup's'" is used here. This "swgroups" is the term used in Tegra
-TRM. Rename along with TRM.
+> And the SPI-NOR framework only handles the issues between the
+> SPI bus controller and the SPI-NOR, or the SPI-NOR controller and the
+> SPI-NOR.
+My controller can be used as spi flash controller as well as a spi
+controller.
+> thanks
+> Huang Shijie
+>
+>
 
-Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-v4:
-New for v4
-
-Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/iommu/tegra-smmu.c | 36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 2b8a302..2d4b8b6 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -179,12 +179,12 @@ enum {
- 
- #define NUM_SMMU_REG_BANKS	3
- 
--#define smmu_client_enable_hwgrp(c, m)	smmu_client_set_hwgrp(c, m, 1)
--#define smmu_client_disable_hwgrp(c)	smmu_client_set_hwgrp(c, 0, 0)
--#define __smmu_client_enable_hwgrp(c, m) __smmu_client_set_hwgrp(c, m, 1)
--#define __smmu_client_disable_hwgrp(c)	__smmu_client_set_hwgrp(c, 0, 0)
-+#define smmu_client_enable_swgroups(c, m) smmu_client_set_swgroups(c, m, 1)
-+#define smmu_client_disable_swgroups(c) smmu_client_set_swgroups(c, 0, 0)
-+#define __smmu_client_enable_swgroups(c, m) __smmu_client_set_swgroups(c, m, 1)
-+#define __smmu_client_disable_swgroups(c) __smmu_client_set_swgroups(c, 0, 0)
- 
--#define HWGRP_ASID_REG(x) ((x) * sizeof(u32) + SMMU_ASID_BASE)
-+#define SWGROUPS_ASID_REG(x) ((x) * sizeof(u32) + SMMU_ASID_BASE)
- 
- /*
-  * Per client for address space
-@@ -195,7 +195,7 @@ struct smmu_client {
- 	struct device		*dev;
- 	struct list_head	list;
- 	struct smmu_as		*as;
--	unsigned long		hwgrp[2];
-+	unsigned long		swgroups[2];
- };
- 
- /*
-@@ -377,7 +377,7 @@ static int register_smmu_client(struct smmu_device *smmu,
- 
- 	client->dev = dev;
- 	client->of_node = dev->of_node;
--	memcpy(client->hwgrp, swgroups, sizeof(u64));
-+	memcpy(client->swgroups, swgroups, sizeof(u64));
- 	return insert_smmu_client(smmu, client);
- }
- 
-@@ -403,7 +403,7 @@ static int smmu_of_get_swgroups(struct device *dev, unsigned long *swgroups)
- 	return -ENODEV;
- }
- 
--static int __smmu_client_set_hwgrp(struct smmu_client *c,
-+static int __smmu_client_set_swgroups(struct smmu_client *c,
- 				   unsigned long *map, int on)
- {
- 	int i;
-@@ -412,10 +412,10 @@ static int __smmu_client_set_hwgrp(struct smmu_client *c,
- 	struct smmu_device *smmu = as->smmu;
- 
- 	if (!on)
--		map = c->hwgrp;
-+		map = c->swgroups;
- 
- 	for_each_set_bit(i, map, TEGRA_SWGROUP_MAX) {
--		offs = HWGRP_ASID_REG(i);
-+		offs = SWGROUPS_ASID_REG(i);
- 		val = smmu_read(smmu, offs);
- 		if (on) {
- 			if (val) {
-@@ -425,7 +425,7 @@ static int __smmu_client_set_hwgrp(struct smmu_client *c,
- 			}
- 
- 			val = mask;
--			memcpy(c->hwgrp, map, sizeof(u64));
-+			memcpy(c->swgroups, map, sizeof(u64));
- 		} else {
- 			WARN_ON((val & mask) == mask);
- 			val &= ~mask;
-@@ -438,7 +438,7 @@ skip:
- 	return 0;
- }
- 
--static int smmu_client_set_hwgrp(struct smmu_client *c,
-+static int smmu_client_set_swgroups(struct smmu_client *c,
- 				 unsigned long *map, int on)
- {
- 	int err;
-@@ -447,7 +447,7 @@ static int smmu_client_set_hwgrp(struct smmu_client *c,
- 	struct smmu_device *smmu = as->smmu;
- 
- 	spin_lock_irqsave(&smmu->lock, flags);
--	err = __smmu_client_set_hwgrp(c, map, on);
-+	err = __smmu_client_set_swgroups(c, map, on);
- 	spin_unlock_irqrestore(&smmu->lock, flags);
- 	return err;
- }
-@@ -487,7 +487,7 @@ static int smmu_setup_regs(struct smmu_device *smmu)
- 		smmu_write(smmu, val, SMMU_PTB_DATA);
- 
- 		list_for_each_entry(c, &as->client, list)
--			__smmu_client_set_hwgrp(c, c->hwgrp, 1);
-+			__smmu_client_set_swgroups(c, c->swgroups, 1);
- 	}
- 
- 	smmu_write(smmu, smmu->translation_enable_0, SMMU_TRANSLATION_ENABLE_0);
-@@ -815,7 +815,7 @@ static int smmu_iommu_attach_dev(struct iommu_domain *domain,
- 		return -ENOMEM;
- 
- 	client->as = as;
--	err = smmu_client_enable_hwgrp(client, client->hwgrp);
-+	err = smmu_client_enable_swgroups(client, client->swgroups);
- 	if (err)
- 		return -EINVAL;
- 
-@@ -835,7 +835,7 @@ static int smmu_iommu_attach_dev(struct iommu_domain *domain,
- 	 * Reserve "page zero" for AVP vectors using a common dummy
- 	 * page.
- 	 */
--	if (test_bit(TEGRA_SWGROUP_AVPC, client->hwgrp)) {
-+	if (test_bit(TEGRA_SWGROUP_AVPC, client->swgroups)) {
- 		struct page *page;
- 
- 		page = as->smmu->avp_vector_page;
-@@ -848,7 +848,7 @@ static int smmu_iommu_attach_dev(struct iommu_domain *domain,
- 	return 0;
- 
- err_client:
--	smmu_client_disable_hwgrp(client);
-+	smmu_client_disable_swgroups(client);
- 	spin_unlock(&as->client_lock);
- 	return err;
- }
-@@ -864,7 +864,7 @@ static void smmu_iommu_detach_dev(struct iommu_domain *domain,
- 
- 	list_for_each_entry(c, &as->client, list) {
- 		if (c->dev == dev) {
--			smmu_client_disable_hwgrp(c);
-+			smmu_client_disable_swgroups(c);
- 			list_del(&c->list);
- 			c->as = NULL;
- 			dev_dbg(smmu->dev,
--- 
-1.8.1.5
