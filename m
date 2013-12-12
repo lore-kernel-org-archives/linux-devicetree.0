@@ -1,33 +1,26 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v4 4/9] usb: gadget: s3c-hsotg: add snps,dwc2 compatible string
-Date: Thu, 12 Dec 2013 06:18:32 -0500
-Message-ID: <1386847117-21240-5-git-send-email-mporter@linaro.org>
-References: <1386847117-21240-1-git-send-email-mporter@linaro.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 2/3] OF: Add a allnodes pointer back to the tree
+Date: Thu, 12 Dec 2013 11:20:47 +0000
+Message-ID: <20131212112047.87B5BC40637@trevor.secretlab.ca>
+References: <1386684833-24112-1-git-send-email-panto@antoniou-consulting.com > <1386684833-24112-3-git-send-email-panto@antoniou-consulting.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386847117-21240-1-git-send-email-mporter@linaro.org>
+In-Reply-To: <1386684833-24112-3-git-send-email-panto@antoniou-consulting.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable support for the dwc2 binding.
+On Tue, 10 Dec 2013 16:13:52 +0200, Pantelis Antoniou <panto@antoniou-consulting.com> wrote:
+> As it stands right now there's no way for a node to point back
+> to allnodes that the top level tree tracker for now.
+> 
+> This is problematic when using unflatten_dt_node more than once
+> because is leads to the nodes to be linked incorrectly.
+> 
+> Keep track of the root allnodes on each device_node and modify
+> unflaten_dt_node to match.
 
-Signed-off-by: Matt Porter <mporter@linaro.org>
----
- drivers/usb/gadget/s3c-hsotg.c | 1 +
- 1 file changed, 1 insertion(+)
+After our conversation on IRC and the decision to split unflattening the
+tree from attaching it to be visible to the entire kernel, I'm going to
+hold off on this patch. I suspect it will change in the process.
 
-diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-index 8ceb5ef..7c5d8bd 100644
---- a/drivers/usb/gadget/s3c-hsotg.c
-+++ b/drivers/usb/gadget/s3c-hsotg.c
-@@ -3727,6 +3727,7 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
- #ifdef CONFIG_OF
- static const struct of_device_id s3c_hsotg_of_ids[] = {
- 	{ .compatible = "samsung,s3c6400-hsotg", },
-+	{ .compatible = "snps,dwc2", },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, s3c_hsotg_of_ids);
--- 
-1.8.4
+g.
