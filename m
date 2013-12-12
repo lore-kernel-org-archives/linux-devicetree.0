@@ -1,156 +1,81 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 00/26] OMAPDSS: DT support (Christmas edition)
-Date: Thu, 12 Dec 2013 10:54:48 +0200
-Message-ID: <52A979D8.3040604@ti.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1824203.Ui6fpnZVmO@avalon>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
+ extensions for GMAC in Allwinner A20 SoC's
+Date: Thu, 12 Dec 2013 10:04:15 +0100
+Message-ID: <20131212090415.GQ3651@lukather>
+References: <1386350983-13281-1-git-send-email-wens@csie.org>
+ <1386350983-13281-5-git-send-email-wens@csie.org>
+ <52A5A52C.50605@st.com>
+ <CAGb2v67WiCaMpJEzA_X6o7uOu6i3w3FCEz7=N5HY0amQb01SZA@mail.gmail.com>
+ <52A72C6D.60100@st.com>
+ <CAGb2v64qQvqJSicA6MTAxeh1sGjWY=Pk=vDq=9J3pTQW+wkXrA@mail.gmail.com>
+ <52A87A74.8040807@st.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="TJit0L8LbaepxPrJKn0HUHCsojcbVM4TO"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1824203.Ui6fpnZVmO@avalon>
-Sender: linux-omap-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
+	protocol="application/pgp-signature"; boundary="tRcR9GoWqjXrt11v"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBP7YUWKQKGQEY73GKGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52A87A74.8040807-qxv4g6HH51o@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---TJit0L8LbaepxPrJKn0HUHCsojcbVM4TO
-Content-Type: text/plain; charset=ISO-8859-1
+
+--tRcR9GoWqjXrt11v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On 2013-12-12 02:39, Laurent Pinchart wrote:
-> Hi Tomi,
->=20
-> On Wednesday 04 December 2013 14:28:27 Tomi Valkeinen wrote:
->> Hi,
->>
->> Here's a new version for DT support to OMAP Display Subsystem. See
->> http://article.gmane.org/gmane.linux.ports.arm.omap/102689 for the int=
-ro of
->> the previous version, which contains thoughts about the related proble=
-ms.
->>
->> The major change in this version is the use of V4L2 and CDF style
->> port/endpoint style in the DT data.
->=20
-> That's great, and I fully support that. This also calls for refactoring=
- the=20
-> V4L2 DT bindings and support code to share them with display devices. A=
-=20
-> bikeshedding question is where to put the common code.
+On Wed, Dec 11, 2013 at 02:45:08PM +0000, srinivas kandagatla wrote:
+> >>> 1. .tx_coe
+> >>>    This is not exported in the DT bindings.
+> >>>    Looking at stmmac code, not setting this seems to disable all
+> >>>    checksum offloading.
+> >>
+> >> Why cant this go via DT as well?
+> >=20
+> > If you and Giuseppe are OK with this, why not?
+> Am Ok with it.
 
-Thanks very much for review!
+Please note that I'm opposed to this until someone explain why putting
+it in the DT is relevant (and not just convenient).
 
-I know drivers/video is in practice "fbdev", but drivers/video (the
-words) sound like the best place for things related to video.
+Maxime
 
-We should establish a committee to ponder this important question.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Btw, I don't know if you noticed (or did I mention it somewhere): I use
-a bit shortened form of the V4L2 bindings. If there's just one endpoint,
-I omit the port node. I think that's always unambiguous (compared to
-also omitting the endpoint node, and having the properties in the main
-node, as was mentioned in some other thread).
-
-I also don't supply the same data for both endpoints, when the data is
-about the link. E.g. I think the V4L2 binding doc suggests to supply
-things like bus-width for both endpoints. I only supply the data for the
-endpoint that uses that data. With some encoders/panels the same data
-could be needed on both ends, but not in these patches.
-
->> However, note that even if the DT data contains proper port & endpoint=
- data,
->> the drivers only use the first endpoint. This is to simplify the patch=
-es, as
->> adding full support for the ports and endpoints to the drivers will be=
- a big
->> task.
->=20
-> That's perfectly fine, there's no need to implement unused features jus=
-t for=20
-> the sake of it, as long as the bindings are forward-compatible in that =
-
-> respect.
->=20
->> This approach still works with more or less all the boards, as the onl=
-y
->> cases where the simpler model is an issue are the boards with multiple=
-
->> display devices connected to a single output.
->>
->> Laurent, I'd appreciate if you could have a look at the .dts changes, =
-to see
->> if there's anything that's clearly not CDF compatible.
->=20
-> I've quickly reviewed the patch set, concentrating on the .dts changes.=
-=20
-> Overall it looks good to me, but I suspect that we will need quite some=
- time=20
-> to finalize standard bindings as there's lots of small details that nee=
-d to be=20
-> taken care of.
-
-Yes. I want to get this forward as it's becoming too much pain to manage
-things without DSS DT support, when the rest of the OMAP platform code
-is using DT.
-
-The most important thing in the DSS DT bindings for now is that they
-should contain enough information so that any future DT bindings changes
-can be handled with a boot-time conversion code.
-
-Actually, even the endpoint/port stuff is extra, as that could be
-deduced even from the "video-source" method I used in earlier DT versions=
-=2E
-
-> The major point that bothers we, as explained in my reply to one of the=
-=20
-> patches, is that I feel like the multi-device model (virtual DSS core +=
- DSS=20
-> modules) might not accurately represent the hardware. Departing from it=
-=20
-> probably sounds scary but might not be such a large change.
-
-There are actually two separate things here. One is the multi-device
-model, having separate device for each DSS submodule. The other is
-having the 'omapdss' "virtual" platform device.
-
-Note that the "dss_core" device is a real HW block, and depicted as the
-"dss" node in DT data, whereas "omapdss" device is not present in the DT
-data, and is created dynamically at boot time.
-
-The omapdss device is a legacy thing, but nowadays it is mainly used to
-pass platform data. Removing omapdss device is not easy, but the only
-questions around that is how to implement the required platform-data
-functionalities, and it doesn't affect the DT data.
-
- Tomi
-
-
-
---TJit0L8LbaepxPrJKn0HUHCsojcbVM4TO
+--tRcR9GoWqjXrt11v
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJSqXnYAAoJEPo9qoy8lh717eoP/jV6sFf/QYrx3B3SHQy5G1gN
-4gcipzRhrT5Yse499ZdH4dD1Bzf88w9GEc8dgDRKtIAKYneGNFXum3joKRvDXC5u
-ZgIoRnRBI/OrJrQsKP0hQM0e2AfxFTXICacnvisiG+EntRrHlAw+0q87pnshzSZe
-OlrwuqeFrbGvucmOtl7uWELZVKDhERIF4yMKOzlcEvv8AUWxzbBUslgtmFM1usYG
-wC0W/EEk+MigX1Q2DOBbJ7so4wk+fNVMrjPu1Hi9QMfZJrb7dQzXZt8fZ+9I1ZEN
-JRMsbiqf+Z7GuxEn+5jbU32PMl62x56PHxQxQaZIGvpw9sEOw1/iIzMUm8bcJ1x2
-MG91zIfa/KxjRAoazZe5DTrQjiSR+kTAIFDUTEBCuajBTtiAFbQ/TYe3rYeUNUCD
-lnG85F+36nx0Rytem9dZm7B6e5RR5JUO1fohWTKOiJ5yabxKiJDasLOz5aJkF1ps
-7LqmH/zxXNwZjVX3SxcDwMzn9pW+bZGYwD6Qk97yEbTeejSVWs7j7lj6D2emE7E7
-xNunEPkBNuTe32gKPy8lWw/xu4S0fgJbAdT7Y3C+9328ZEjvWlq1TZJ4nNrvEMif
-Q8fg/ykvA7PVB69Dw5fXhveZXpNUJ4UyByk87sRodXE9h4lVz+WvGDJaAXy7Q7kS
-+92ZNhNk38InBD4lPZQB
-=oPcG
+iQIcBAEBAgAGBQJSqXwPAAoJEBx+YmzsjxAgG/kP/2S70fcVXrFmA91M3G7MI0bq
+FXb1w7wojQiXDcHv4zvGmkpAI0MzmY3iSVbinAK+vv/ChC06hn5PUD5oQaQJHG1i
+/uPADPCdgMjbv3aG2ig4/LsSoVe75nQ/EwY/KIgpJeWkRa1dZEVLsjcH4n8jCzVb
+1qLqUTgSGtBiS+e+0JcsqfuHhH3tr7JIUCuJ6JuJs4WauKePnde0GvmANZ5o1uJe
+6Dmb/Wgqbi2qh0hryAd26+XSmonz5aVPGFZ3Iw1OaoDQNUaW/y5nD+GGbR8Qsq7V
+puEndZu4+0RyjL96GpYDT8sSc/KoVbKMVZXvwYDk6U1/DSNz2D0ASkqjVGgMTIzs
+C0n1id13BZAD2FtUghLga2Zv2gm8GQ7N/IcDf5OYrO2+AgT7V07C/PurxZzBJBPt
+SaumoPhUD+avRM1Iw1XVg8DlNB/bcbWQm4YpVQ/pe98LmxkPAkIqrxzWDQQ0P9EE
+4HjHcdBo5QJNGjgXtQ/Xo23niO1XEKOb17PcSqndf6PRS/VUR23P8i/RxAzV280K
++lcpTXumIhOTGvjIpCTABjOxAehqdpd5FWWMYve5IMZakbpEHw79DV6R3VvDdHY9
+o7kb4Mwk1kxHOKFAk5aXElYQH4tYxv80hjOeeO5gCBlE/++StCuS/kHTSMjEKA1Y
+WzVCmVv92XJbpMKFk2xg
+=yDB+
 -----END PGP SIGNATURE-----
 
---TJit0L8LbaepxPrJKn0HUHCsojcbVM4TO--
+--tRcR9GoWqjXrt11v--
