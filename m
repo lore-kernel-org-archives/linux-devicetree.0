@@ -1,88 +1,65 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH 3/3] ARM: dts: sama5d3xcm: add the regulator device node
-Date: Thu, 12 Dec 2013 09:18:51 +0800
-Message-ID: <1386811131-2720-4-git-send-email-wenyou.yang@atmel.com>
-References: <1386811131-2720-1-git-send-email-wenyou.yang@atmel.com>
+From: Rajeev kumar <rajeev-dlh.kumar@st.com>
+Subject: Re: [PATCH 01/12] SPEAr13xx: Correct dt field name for stmmac phy-addr
+Date: Thu, 12 Dec 2013 09:29:30 +0530
+Message-ID: <52A934A2.8020101@st.com>
+References: <cover.1386752447.git.mohit.kumar@st.com> <1078549fa412fb34ab2c95a6232096570abee12d.1386752447.git.mohit.kumar@st.com> <52A847D1.5000409@st.com> <001b01cef6d2$9104f7b0$b30ee710$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1386811131-2720-1-git-send-email-wenyou.yang@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lgirdwood@gmail.com
-Cc: devicetree@vger.kernel.org, vpalatin@chromium.org, linux-doc@vger.kernel.org, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, wenyou.yang@atmel.com, broonie@kernel.org, grant.likely@linaro.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <001b01cef6d2$9104f7b0$b30ee710$%han@samsung.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: Mohit KUMAR DCG <Mohit.KUMAR@st.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pratyush ANAND <pratyush.anand@st.com>, 'Viresh Kumar' <viresh.linux@gmail.com>, spear-devel <spear-devel@list.st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
----
- arch/arm/boot/dts/sama5d3xcm.dtsi |   47 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+On 12/12/2013 6:09 AM, Jingoo Han wrote:
+> On Wednesday, December 11, 2013 8:09 PM, Rajeev kumar wrote:
+>> On 12/11/2013 3:08 PM, Mohit KUMAR wrote:
+>>> DT field name for the phy address changed since kernel 3.10. Set the
+>>> snps,phy-addr to 0xffffffff so that the driver probes for the phy.
+>>>
+>>> Signed-off-by: Mohit Kumar<mohit.kumar@st.com>
+>>> Cc: Pratyush Anand<pratyush.anand@st.com>
+>>> Cc: Viresh Kumar<viresh.linux@gmail.com>
+>>> Cc: spear-devel@list.st.com
+>>> Cc: linux-arm-kernel@lists.infradead.org
+>>> Cc: devicetree@vger.kernel.org
+>>> ---
+>>>    arch/arm/boot/dts/spear13xx.dtsi |    1 +
+>>>    1 files changed, 1 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
+>>> index 4382547..3518803 100644
+>>> --- a/arch/arm/boot/dts/spear13xx.dtsi
+>>> +++ b/arch/arm/boot/dts/spear13xx.dtsi
+>>> @@ -155,6 +155,7 @@
+>>>
+>>>    		gmac0: eth@e2000000 {
+>>>    			compatible = "st,spear600-gmac";
+>>> +			snps,phy-addr =<0xffffffff>;
+>>
+>> Don't you think it should be st,phy-addr =<0xffffffff>, as the
+>> manufacturer is 'st' as the compatible suggest
+>
+> Hi Rajeev Kumar,
+>
+> According to the Documentation, it guides to use 'snps' prefix.
+>
+> In my humble opinion,
+> 'gmac' is a Synopsys based IP. Thus, if 'snps,phy-addr' is
+> not ST specific, 'snps' prefix can be used.
+>
 
-diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
-index 726a0f3..0da005a 100644
---- a/arch/arm/boot/dts/sama5d3xcm.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
-@@ -38,6 +38,53 @@
- 			macb0: ethernet@f0028000 {
- 				phy-mode = "rgmii";
- 			};
-+
-+			i2c1: i2c@f0018000 {
-+				pmic: act8865@5b {
-+					compatible = "active-semi,act8865";
-+					reg = <0x5b>;
-+					vsel-state-low;
-+					status = "disabled";
-+
-+					regulators {
-+						vcc_1v8_reg: DCDC_REG1 {
-+							regulator-name = "DCDC_REG1";
-+							regulator-min-microvolt = <1800000>;
-+							regulator-max-microvolt = <1800000>;
-+							regulator-always-on;
-+						};
-+
-+						vcc_1v2_reg: DCDC_REG2 {
-+							regulator-name = "DCDC_REG2";
-+							regulator-min-microvolt = <1100000>;
-+							regulator-max-microvolt = <1300000>;
-+							regulator-suspend-mem-microvolt = <1150000>;
-+							regulator-suspend-standby-microvolt = <1150000>;
-+							regulator-always-on;
-+						};
-+
-+						vcc_3v3_reg: DCDC_REG3 {
-+							regulator-name = "DCDC_REG3";
-+							regulator-min-microvolt = <3300000>;
-+							regulator-max-microvolt = <3300000>;
-+							regulator-always-on;
-+						};
-+
-+						vddfuse_reg: LDO_REG4 {
-+							regulator-name = "LDO_REG4";
-+							regulator-min-microvolt = <3300000>;
-+							regulator-max-microvolt = <3300000>;
-+							regulator-always-on;
-+						};
-+
-+						vddana_reg: LDO_REG5 {
-+							regulator-name = "LDO_REG5";
-+							regulator-min-microvolt = <2500000>;
-+							regulator-max-microvolt = <2500000>;
-+						};
-+					};
-+				};
-+			};
- 		};
- 
- 		nand0: nand@60000000 {
--- 
-1.7.9.5
+
+Very much true, I raise the point just becuase compatible = 
+"st,spear600-gmac". Check the manufacturer name here.
+
+~Rajeev
+
+> ./Documentation/devicetree/bindings/net/stmmac.txt
+> - snps,phy-addr         phy address to connect to.
+>
+> Best regards,
+> Jingoo Han
+>
