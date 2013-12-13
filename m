@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v6 05/15] ARM: dts: imx6: add anatop phandle for usbphy
-Date: Fri, 13 Dec 2013 09:23:35 +0800
-Message-ID: <1386897825-6130-6-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH v6 09/15] usb: phy-mxs: Enable IC fixes for related SoCs
+Date: Fri, 13 Dec 2013 09:23:39 +0800
+Message-ID: <1386897825-6130-10-git-send-email-peter.chen@freescale.com>
 References: <1386897825-6130-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,54 +12,82 @@ To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@li
 Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add anatop phandle for usbphy
+Two PHY bugs are fixed by IC logic, but these bits are not
+enabled by default, so we enable them at driver.
+The two bugs are: MXS_PHY_ABNORMAL_IN_SUSPEND and MXS_PHY_SENDING_SOF_TOO_FAST
+which are described at code.
 
 Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi |    2 ++
- arch/arm/boot/dts/imx6sl.dtsi  |    2 ++
- 2 files changed, 4 insertions(+), 0 deletions(-)
+ drivers/usb/phy/phy-mxs-usb.c |   23 +++++++++++++++++++++--
+ 1 files changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 59154dc..4e74962 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -557,6 +557,7 @@
- 				reg = <0x020c9000 0x1000>;
- 				interrupts = <0 44 0x04>;
- 				clocks = <&clks 182>;
-+				fsl,anatop = <&anatop>;
- 			};
+diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+index e3df53f..b446cc2 100644
+--- a/drivers/usb/phy/phy-mxs-usb.c
++++ b/drivers/usb/phy/phy-mxs-usb.c
+@@ -31,6 +31,10 @@
+ #define HW_USBPHY_CTRL_SET			0x34
+ #define HW_USBPHY_CTRL_CLR			0x38
  
- 			usbphy2: usbphy@020ca000 {
-@@ -564,6 +565,7 @@
- 				reg = <0x020ca000 0x1000>;
- 				interrupts = <0 45 0x04>;
- 				clocks = <&clks 183>;
-+				fsl,anatop = <&anatop>;
- 			};
++#define HW_USBPHY_IP				0x90
++#define HW_USBPHY_IP_SET			0x94
++#define HW_USBPHY_IP_CLR			0x98
++
+ #define BM_USBPHY_CTRL_SFTRST			BIT(31)
+ #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
+ #define BM_USBPHY_CTRL_ENAUTOSET_USBCLKS	BIT(26)
+@@ -42,6 +46,8 @@
+ #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
+ #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
  
- 			snvs@020cc000 {
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 28558f1..30322b5 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -489,6 +489,7 @@
- 				reg = <0x020c9000 0x1000>;
- 				interrupts = <0 44 0x04>;
- 				clocks = <&clks IMX6SL_CLK_USBPHY1>;
-+				fsl,anatop = <&anatop>;
- 			};
++#define BM_USBPHY_IP_FIX                       (BIT(17) | BIT(18))
++
+ #define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
  
- 			usbphy2: usbphy@020ca000 {
-@@ -496,6 +497,7 @@
- 				reg = <0x020ca000 0x1000>;
- 				interrupts = <0 45 0x04>;
- 				clocks = <&clks IMX6SL_CLK_USBPHY2>;
-+				fsl,anatop = <&anatop>;
- 			};
+ /* Do disconnection between PHY and controller without vbus */
+@@ -63,6 +69,14 @@
+ /* The SoCs who have anatop module */
+ #define MXS_PHY_HAS_ANATOP			BIT(3)
  
- 			snvs@020cc000 {
++/*
++ * IC has bug fixes logic, they include
++ * MXS_PHY_ABNORMAL_IN_SUSPEND and MXS_PHY_SENDING_SOF_TOO_FAST
++ * which are described at above flags, the RTL will handle it
++ * according to different versions.
++ */
++#define MXS_PHY_NEED_IP_FIX			BIT(4)
++
+ struct mxs_phy_data {
+ 	unsigned int flags;
+ };
+@@ -74,12 +88,14 @@ static const struct mxs_phy_data imx23_phy_data = {
+ static const struct mxs_phy_data imx6q_phy_data = {
+ 	.flags = MXS_PHY_SENDING_SOF_TOO_FAST |
+ 		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS |
+-		MXS_PHY_HAS_ANATOP,
++		MXS_PHY_HAS_ANATOP |
++		MXS_PHY_NEED_IP_FIX,
+ };
+ 
+ static const struct mxs_phy_data imx6sl_phy_data = {
+ 	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS |
+-		MXS_PHY_HAS_ANATOP,
++		MXS_PHY_HAS_ANATOP |
++		MXS_PHY_NEED_IP_FIX,
+ };
+ 
+ static const struct of_device_id mxs_phy_dt_ids[] = {
+@@ -123,6 +139,9 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+ 		BM_USBPHY_CTRL_ENUTMILEVEL3,
+ 	       base + HW_USBPHY_CTRL_SET);
+ 
++	if (mxs_phy->data->flags & MXS_PHY_NEED_IP_FIX)
++		writel(BM_USBPHY_IP_FIX, base + HW_USBPHY_IP_SET);
++
+ 	return 0;
+ }
+ 
 -- 
 1.7.8
 
