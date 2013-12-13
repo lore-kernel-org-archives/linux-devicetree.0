@@ -1,75 +1,66 @@
-From: Christian Daudt <bcm@fixthebug.org>
-Subject: Re: [PATCH v4 2/8] ARM: dts: Specify clocks for UARTs on bcm11351
-Date: Thu, 12 Dec 2013 23:56:55 -0800
-Message-ID: <CAEPRUYow0iZLugp21KEw5FtSSnXbzzu+KWt7G9QKMTPESG8JrA@mail.gmail.com>
-References: <1386271244-3927-1-git-send-email-tim.kryger@linaro.org>
-	<1386271244-3927-3-git-send-email-tim.kryger@linaro.org>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v6 01/15] usb: doc: phy-mxs: Add more compatible strings
+Date: Fri, 13 Dec 2013 15:58:28 +0800
+Message-ID: <CAL411-qxnDOOmAdD_r=Jtu8OD6sRmBP+DrkOqwy=N+KmNZuLjg@mail.gmail.com>
+References: <1386897825-6130-1-git-send-email-peter.chen@freescale.com>
+ <1386897825-6130-2-git-send-email-peter.chen@freescale.com>
+ <20131213081545.0185d3cb@ipc1.ka-ro> <CAL411-rt=_O5qaO_=AHps-LgrNyGwLdFSoCHk2POEn_p-Sn5qg@mail.gmail.com>
+ <20131213083844.060ff5ef@ipc1.ka-ro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1386271244-3927-3-git-send-email-tim.kryger@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tim Kryger <tim.kryger@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, Axel Lin <axel.lin@ingics.com>, Device Tree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linaro Patches List <patches@linaro.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131213083844.060ff5ef@ipc1.ka-ro>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Lothar_Wa=DFmann?= <LW@karo-electronics.de>
+Cc: Peter Chen <peter.chen@freescale.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, rob.herring@calxeda.com, "balbi@ti.com" <balbi@ti.com>, kernel@pengutronix.de, grant.likely@linaro.org, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 5, 2013 at 11:20 AM, Tim Kryger <tim.kryger@linaro.org> wrote:
-> The frequency property in "snps,dw-apb-uart" entries are no longer
-> required if the rate of the external clock can be determined using the
-> clk api (see e302cd9 serial: 8250_dw: add support for clk api).
+On Fri, Dec 13, 2013 at 3:38 PM, Lothar Wa=DFmann <LW@karo-electronics.=
+de> wrote:
+> Hi,
 >
-> This patch replaces the frequency property in the UART nodes of
-> bcm11351.dtsi with references to the relevant clocks following the
-> common clock binding.
+> Peter Chen wrote:
+>> On Fri, Dec 13, 2013 at 3:15 PM, Lothar Wa=DFmann <LW@karo-electroni=
+cs.de> wrote:
+>> > Hi,
+>> >
+>> > Peter Chen wrote:
+>> >> Add "fsl,imx6q-usbphy" for imx6dq and imx6dl, add
+>> >> "fsl,imx6sl-usbphy" for imx6sl.
+>> >>
+>> >> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+>> >> ---
+>> >>  Documentation/devicetree/bindings/usb/mxs-phy.txt |    3 ++-
+>> >>  1 files changed, 2 insertions(+), 1 deletions(-)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/=
+Documentation/devicetree/bindings/usb/mxs-phy.txt
+>> >> index 5835b27..d850e55 100644
+>> >> --- a/Documentation/devicetree/bindings/usb/mxs-phy.txt
+>> >> +++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+>> >> @@ -1,7 +1,8 @@
+>> >>  * Freescale MXS USB Phy Device
+>> >>
+>> >>  Required properties:
+>> >> -- compatible: Should be "fsl,imx23-usbphy"
+>> >> +- compatible: "fsl,imx23-usbphy" for imx23 and imx28, "fsl,imx6q=
+-usbphy"
+>> >> +for imx6dq and imx6dl, "fsl,imx6sl-usbphy" for imx6sl
+>> >>
+>> > indentation?
+>> >
+>>
+>> How many characters? 2 or 8?
+>>
+> I would align the line with the first character in the previous line:
+> - compatible: "fsl,imx23-usbphy" for imx23 and imx28, "fsl,imx6q-usbp=
+hy"
+>   for imx6dq and imx6dl, "fsl,imx6sl-usbphy" for imx6sl
 >
-> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
-> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-> Reviewed-by: Matt Porter <matt.porter@linaro.org>
-> ---
->  arch/arm/boot/dts/bcm11351.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-> index eca6fbc..9b99c52 100644
-> --- a/arch/arm/boot/dts/bcm11351.dtsi
-> +++ b/arch/arm/boot/dts/bcm11351.dtsi
-> @@ -43,7 +43,7 @@
->                 compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
->                 status = "disabled";
->                 reg = <0x3e000000 0x1000>;
-> -               clock-frequency = <13000000>;
-> +               clocks = <&uartb_clk>;
->                 interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
->                 reg-shift = <2>;
->                 reg-io-width = <4>;
-> @@ -53,7 +53,7 @@
->                 compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
->                 status = "disabled";
->                 reg = <0x3e001000 0x1000>;
-> -               clock-frequency = <13000000>;
-> +               clocks = <&uartb2_clk>;
->                 interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
->                 reg-shift = <2>;
->                 reg-io-width = <4>;
-> @@ -63,7 +63,7 @@
->                 compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
->                 status = "disabled";
->                 reg = <0x3e002000 0x1000>;
-> -               clock-frequency = <13000000>;
-> +               clocks = <&uartb3_clk>;
->                 interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
->                 reg-shift = <2>;
->                 reg-io-width = <4>;
-> @@ -73,7 +73,7 @@
->                 compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
->                 status = "disabled";
->                 reg = <0x3e003000 0x1000>;
-> -               clock-frequency = <13000000>;
-> +               clocks = <&uartb4_clk>;
->                 interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
->                 reg-shift = <2>;
->                 reg-io-width = <4>;
-> --
-> 1.8.0.1
->
-Reviewed-by: Christian Daudt <bcm@fixthebug.org>
+
+Thanks, will change.
+
+--=20
+BR,
+Peter Chen
