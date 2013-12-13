@@ -1,91 +1,68 @@
-From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 3/9] usb: gadget: s3c-hsotg: enable build for other
- platforms
-Date: Thu, 12 Dec 2013 18:05:19 -0600
-Message-ID: <52AA4F3F.4070907@gmail.com>
-References: <1386854770-2173-1-git-send-email-mporter@linaro.org> <1386854770-2173-4-git-send-email-mporter@linaro.org> <52AA2FE3.3060200@gmail.com> <20131212220726.GA4205@beef>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH v5 0/3] Exynos 5410 support
+Date: Thu, 12 Dec 2013 16:32:46 -0800
+Message-ID: <87haad615d.fsf@linaro.org>
+References: <1386685599-31536-1-git-send-email-v.tyrtov@samsung.com>
+	<87ppp48xrs.fsf@linaro.org> <52A836C9.9020405@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131212220726.GA4205@beef>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52A836C9.9020405@samsung.com> (Tarek Dakhran's message of "Wed,
+	11 Dec 2013 13:56:25 +0400")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tarek Dakhran <t.dakhran@samsung.com>
+Cc: Vyacheslav Tyrtov <v.tyrtov@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Dave.Martin@arm.com, nicolas.pitre@linaro.org, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Tarek Dakhran <t.dakhran@samsung.com> writes:
 
-On 12/12/13 4:07 PM, Matt Porter wrote:
-> On Thu, Dec 12, 2013 at 03:51:31PM -0600, Dinh Nguyen wrote:
->> Hi Matt,
+> On 12/10/2013 08:40 PM, Kevin Hilman wrote:
+>> Vyacheslav Tyrtov <v.tyrtov@samsung.com> writes:
 >>
->> On 12/12/13 7:26 AM, Matt Porter wrote:
->>> Remove unused Samsung-specific machine include and Kconfig
->>> dependency on S3C.
+>>> The series of patches represent support of Exynos 5410 SoC
 >>>
->>> Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>>  drivers/usb/gadget/Kconfig     | 7 +++----
->>>  drivers/usb/gadget/s3c-hsotg.c | 2 --
->>>  2 files changed, 3 insertions(+), 6 deletions(-)
+>>> The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture
 >>>
->>> diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
->>> index a91e642..970bd1a 100644
->>> --- a/drivers/usb/gadget/Kconfig
->>> +++ b/drivers/usb/gadget/Kconfig
->>> @@ -294,11 +294,10 @@ config USB_PXA27X
->>>  	   gadget drivers to also be dynamically linked.
->>>  
->>>  config USB_S3C_HSOTG
->>> -	tristate "S3C HS/OtG USB Device controller"
->>> -	depends on S3C_DEV_USB_HSOTG
->>> +	tristate "Designware/S3C HS/OtG USB Device controller"
->>>  	help
->>> -	  The Samsung S3C64XX USB2.0 high-speed gadget controller
->>> -	  integrated into the S3C64XX series SoC.
->>> +	  The Designware USB2.0 high-speed gadget controller
->>> +	  integrated into the S3C64XX and BCM281xx series SoC.
->> Thanks for doing this. The SOCFPGA platform is also using this driver.
->> So perhaps a
->> more generic message here?
-> Ok, I wasn't aware since I didn't see anybody else try to fix this
-> driver in mainline. How about this?
+>>> Patches add new platform description, support of clock controller and device
+>>> tree for Exynos 5410.
+>>>
+>>> Dual cluster support for Exynos 5410 (EDCS) has been removed from this series
+>>> This patches is activating only the big cluster (all A15 cores)
+>> Testing this series on top of v3.13-rc3, plus a couple of other
+>> necessary changes (which should've probably been noted in the changelog):
+>>
+>> 1) change CONFIG_NR_CPUS=8 in .config
+>> 2) add the exynos combiner patch from Chander:
+>>     [PATCH v2] irqchip: exynos-combiner: remove hard-coded irq_base value
+>>
+>> I'm still only seeing 2 out of 4 cores come up on my odroid-xu:
+>>
+>> [    0.045000] CPU: Testing write buffer coherency: ok
+>> [    0.045000] CPU0: update cpu_power 1024
+>> [    0.045000] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+>> [    0.045000] Setting up static identity map for 0x403717d8 - 0x40371830
+>> [    0.045000] CPU1: Booted secondary processor
+>> [    0.065000] CPU1: update cpu_power 1024
+>> [    0.065000] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+>> [    1.075000] CPU2: failed to boot: -38
+>> [    2.075000] CPU3: failed to boot: -38
+>> [    2.075000] Brought up 2 CPUs
+>> [    2.075000] SMP: Total of 2 processors activated.
+>> [    2.075000] CPU: All CPU(s) started in SVC mode.
+>>
+> Hi Kevin,
 >
-> 	The Designware USB2.0 high-speed gadget controller
-> 	integrated into many SoCS.
-That looks fine to me. Yeah, I didn't realize the s3c driver was just the
-Synopsys DWC2 peripheral driver until I saw drivers/staging/dwc2. I was
-in process of switching over to use it and then I saw your patchset.
+> EDCS(exynos dual cluster support) moved to separate patch now.
+> This patches introduce only base SoC support  (2xA15).
 
-Thanks,
-Dinh
->
-> If that looks better to you I'll plan to add it in an update. I would
-> like to see if we can gather a couple acks at this point or if there are
-> any additional DT comments before sending another update.
->
-> -Matt
->
->>>  
->>>  config USB_S3C2410
->>>  	tristate "S3C2410 USB Device Controller"
->>> diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
->>> index 33eb690..8ceb5ef 100644
->>> --- a/drivers/usb/gadget/s3c-hsotg.c
->>> +++ b/drivers/usb/gadget/s3c-hsotg.c
->>> @@ -37,8 +37,6 @@
->>>  #include <linux/usb/phy.h>
->>>  #include <linux/platform_data/s3c-hsotg.h>
->>>  
->>> -#include <mach/map.h>
->>> -
->>>  #include "s3c-hsotg.h"
->>>  
->>>  static const char * const s3c_hsotg_supply_names[] = {
+Thanks for the clarification
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I thought there were 4 A15s, and the changelog mentioned this patch
+enabled "all A15s".
+
+Kevin
+
+> Patches tested on samsung smdk5410 board.
+>
+> Next version of EDCS patches will be available soon.
+> They allow power on and boot all 8 cores.
