@@ -1,43 +1,51 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH] devicetree: macb: Document clock properties
-Date: Fri, 13 Dec 2013 14:03:25 -0800
-Message-ID: <1386972205-32733-1-git-send-email-soren.brinkmann@xilinx.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, linux-doc@vger.kernel.org
+From: =?UTF-8?B?w4lyaWMgUGllbA==?= <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>
+Subject: Re: [PATCH 0/4] lis3lv02d: update DT binding for use with Nokia N900
+Date: Fri, 13 Dec 2013 23:31:39 +0100
+Message-ID: <52AB8ACB.6000101@tremplin-utc.net>
+References: <1386968094-24554-1-git-send-email-sre@debian.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386968094-24554-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The macb driver uses the clock bindings. Document the required
-properties, especially the driver specific clock-names.
+On 13-12-13 21:54, Sebastian Reichel wrote:
+> Hi,
+>
+> The lis302 has already a DT binding described in [0],
+> which descibes misc. hardware properties. The current
+> binding does not support all values needed to convert
+> the Nokia N900's platform data to DT.
+>
+> This patchset introduces support for describing inverted
+> axis, configuration of second wakeup unit and wakeup
+> threshold support.
+Hi,
 
-Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
----
- Documentation/devicetree/bindings/net/macb.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+All the three patches related to the lis3lv02d driver look fine to me.
+Here is my signed-off for patches 2, 3, and 4:
+Signed-off-by: =C3=89ric Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 4ff65047bb9a..70af2ec12b09 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -10,6 +10,10 @@ Required properties:
- - interrupts: Should contain macb interrupt
- - phy-mode: String, operation mode of the PHY interface.
-   Supported values are: "mii", "rmii", "gmii", "rgmii".
-+- clock-names: Tuple listing input clock names.
-+	Required elements: 'pclk', 'hclk'
-+	Optional elements: 'tx_clk'
-+- clocks: Phandles to input clocks.
- 
- Optional properties:
- - local-mac-address: 6 bytes, mac address
-@@ -22,4 +26,6 @@ Examples:
- 		interrupts = <21>;
- 		phy-mode = "rmii";
- 		local-mac-address = [3a 0e 03 04 05 06];
-+		clock-names = "pclk", "hclk", "tx_clk";
-+		clocks = <&clkc 30>, <&clkc 30>, <&clkc 13>;
- 	};
--- 
-1.8.5.1
+I've got 2 side questions:
+  * How do you write a negative value in a DTS file? Is this just the=20
+very standard way (i.e., -), or do you need to use a specific technique=
+=20
+(such as 2-completemnt on 32 bits)? If it's not the standard way, it=20
+should probably be documented somewhere.
+  * Who wants to carry these patches? Can they all go via the devicetre=
+e=20
+branch? Or maybe Arnd or Greg would prefer to pick them via the misc=20
+driver branch? Both ways are fine for me...
 
+Cheers,
+=C3=89ric
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
