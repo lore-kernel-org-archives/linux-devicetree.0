@@ -1,80 +1,94 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 10/26] OMAPDSS: add of helpers
-Date: Fri, 13 Dec 2013 03:37:53 +0100
-Message-ID: <2305697.KHRE4DRTeL@avalon>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <4533892.HJaRcDt4Q8@avalon> <52A96A4E.1010006@ti.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Fri, 13 Dec 2013 10:57:47 +0800
+Message-ID: <52AA77AB.9030203@linaro.org>
+References: <1386770541-15056-1-git-send-email-zhangfei.gao@linaro.org> <201312112112.52746.arnd@arndb.de> <52A9B9B4.3080105@linaro.org> <201312122140.08566.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart21338831.8Wv3DjDfhb"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52A96A4E.1010006@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201312122140.08566.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Chris Ball <cjb@laptop.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Dinh Nguyen <dinguyen@altera.com>
 List-Id: devicetree@vger.kernel.org
 
 
---nextPart21338831.8Wv3DjDfhb
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
 
-Hi Tomi,
+On 12/13/2013 04:40 AM, Arnd Bergmann wrote:
+> On Thursday 12 December 2013, zhangfei wrote:
+>> On 12/12/2013 04:12 AM, Arnd Bergmann wrote:
+>>> On Wednesday 11 December 2013, zhangfei wrote:
+>>>
+>>> But aren't the times fixed for each mode? Why do you need to specify them in
+>>> the DT? I would expect that the clock rates for each mode are set in the
+>>> MMC and SD specifications. When you call clk_set_rate(), it should normally
+>>> be enough to ask for the clock you actually want and let the clk subsystem
+>>> figure out how to set up the parents and multipliers on the way.
+>>
+>> Yes. that's will be perfect.
+>>
+>> However, currently this ip still has no such capability.
+>>   Input rate for init are diferent for different controller, not the
+>> init 400K, some are 13M, others are 25M, since different clock source.
+>> This can be easily solved by clock-freq-init = <25000000>
+>> 2. There is maxmum limit, also can be easily solved by define CLK_MAX.
+>> 3. However some mode can not use the max speed from ios->clock
+>> for example UHS_SDR104_MAX_DTR 208000000 can not be used, only half may
+>> be reached, at least currently.
+>
+> I don't fully understand the explanation,
 
-On Thursday 12 December 2013 09:48:30 Tomi Valkeinen wrote:
-> On 2013-12-12 01:19, Laurent Pinchart wrote:
-> > On Wednesday 04 December 2013 14:28:37 Tomi Valkeinen wrote:
-> >> Add helpers to get ports and endpoints from DT data.
-> >> 
-> >> While all the functions in dss-of.c might be useful for panel drivers if
-> >> they need to parse full port/endpoint data, at the moment we only need a
-> >> few of them outside dss-of.c, so only those functions are exported.
-> > 
-> > I totally understand that it was easier to add this code to the OMAP DSS
-> > driver, but I believe we should refactor the existing drivers/media/v4l2-
-> > core/v4l2-of.c and move it to a non V4L2-specific location (what about
-> > drivers/media ?) sooner rather than later. That's on my to-do list for
-> > Saturday.
-> 
-> I agree. I just didn't want to go that way yet =).
-> 
-> Have you thought of the API? You had one version in your CDF series, but
-> I think that was a bit too limited (I don't remember right now how), so
-> I wrote my own versions.
-> 
-> What I tried to do here is to add simple ways for the drivers to iterate
-> the ports and endpoints with omapdss_of_get_next_port and
-> omapdss_of_get_next_endpoint.
-> 
-> But I'm not sure what the use pattern would be. If in most of the cases
-> the driver always goes through all the ports and all the endpoints, we
-> could as well have a helper function that goes through all the endpoints
-> in all the ports, and returns both the port and endpoint for each iteration.
+This is the ip's limitation currently, that some mode can only operate 
+at limited freq, rather than the max freq from spec.
+Will upgrade to use ios->clock once the limitation is solved.
 
-My plan is to keep it simple. I'll take the V4L2 code and add helpers needed 
-by this patch series and by my Renesas KMS drivers. I'll then see whether 
-refactoring makes sense, and will post the result. We will then add new 
-helpers whenever needed on a case by case basis.
+but if some of the other
+> people with interest in dw-mmc (I've added some more to Cc now) think
+> this makes sense, I'm fine with it too.
+>
+Could I treat this as Ack or Partially Ack for the next version :)
 
--- 
-Regards,
+>> How about this desc
+>>
+>> * clock-freq-table: should be the frequency (in Hz) array of the ciu
+>> clock
+>>           in each supported timing.
+>>
+>>           1. CIU clock rate in HZ for MMC_TIMING_LEGACY mode
+>>
+>>           2. CIU clock rate in HZ for MMC_TIMING_MMC_HS mode
+>>           3. CIU clock rate in HZ for MMC_TIMING_SD_HS mode
+>>           4. CIU clock rate in HZ for MMC_TIMING_UHS_SDR12 mode
+>>
+>>           5. CIU clock rate in HZ for MMC_TIMING_UHS_SDR25 mode
+>>
+>>           6. CIU clock rate in HZ for MMC_TIMING_UHS_SDR50 mode
+>>
+>>           7. CIU clock rate in HZ for MMC_TIMING_UHS_SDR104 mode
+>>
+>>           8. CIU clock rate in HZ for MMC_TIMING_SD_HS mode
+>>
+>>           9. CIU clock rate in HZ for MMC_TIMING_MMC_HS200 mode
+>>
+>
+> Yes, that is much better. but please avoid using Linux internal
+> identifiers (e.g. MMC_TIMING_LEGACY) and instead use the terminology from
+> the MMC and SD specs. Also 'Hz' is the official symbol for Hertz, not 'HZ'.
+>
 
-Laurent Pinchart
+Update to
 
---nextPart21338831.8Wv3DjDfhb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+* clock-freq-table: should be the frequency (in Hz) array of the ciu clock
+         in each supported mode.
+         0. CIU clock rate in Hz for DS mode
+         1. CIU clock rate in Hz for MMC HS mode
+         2. CIU clock rate in Hz for SD HS mode
+         3. CIU clock rate in Hz for SDR12 mode
+         4. CIU clock rate in Hz for SDR25 mode
+         5. CIU clock rate in Hz for SDR50 mode
+         6. CIU clock rate in Hz for SDR104 mode
+         7. CIU clock rate in Hz for DDR50 mode
+         8. CIU clock rate in Hz for HS200 mode
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJSqnMGAAoJEIkPb2GL7hl1rmYH/2LBqxvFumkqbBeufseADYAd
-g9L5BdpzNvlfL0l950NO+45isqoPv4jP4XoNI/Qxw666niCkoN+RrxFI+uUS5/YM
-0n4xjyAwTis9BwO2Qno8pOQgeceB/PBfMeeEYQF8yA3ZKaP2c1AC9zxQHBmiWxTk
-D6E+kCp8BFZfue6Y2irF2wzVJhUgswG2P8+6WmidFGxgKKvXUzztdijaz5oNFuSv
-0vcNrUeddh5yVfB61VvL5/BbmeUkp8rhdQbbFNBKmtH7mOkqAoHd92By5Xql4sNA
-s1xI9fUBtibe3t20oJHOdunvcF4EeZexHijq0Au5Xg0bgvEdKiNyENMrdnP+F2U=
-=+U19
------END PGP SIGNATURE-----
-
---nextPart21338831.8Wv3DjDfhb--
-
+Thanks
