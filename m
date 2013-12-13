@@ -1,62 +1,125 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH 01/11] dt: binding: add binding for ImgTec IR block
-Date: Fri, 13 Dec 2013 15:12:49 +0000
-Message-ID: <1386947579-26703-2-git-send-email-james.hogan@imgtec.com>
-References: <1386947579-26703-1-git-send-email-james.hogan@imgtec.com>
+From: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH RESEND v2 1/2] phy: core: Add an exported of_phy_get
+ function
+Date: Fri, 13 Dec 2013 16:26:28 +0100
+Message-ID: <008a01cef817$b24844e0$16d8cea0$%debski@samsung.com>
+References: <1386943380-28596-1-git-send-email-k.debski@samsung.com>
+ <52AB1D75.4030207@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386947579-26703-1-git-send-email-james.hogan@imgtec.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-media@vger.kernel.org
-Cc: James Hogan <james.hogan@imgtec.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <52AB1D75.4030207-l0cyMroinI0@public.gmane.org>
+Content-language: pl
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Kishon Vijay Abraham I' <kishon-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding for ImgTec Consumer Infrared block.
+Hi Kishon,
 
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: linux-media@vger.kernel.org
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Landley <rob@landley.net>
-Cc: linux-doc@vger.kernel.org
----
- Documentation/devicetree/bindings/media/img-ir.txt | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/img-ir.txt
+> From: Kishon Vijay Abraham I [mailto:kishon-l0cyMroinI0@public.gmane.org]
+> Sent: Friday, December 13, 2013 3:45 PM
+> 
+> Hi,
+> 
+> On Friday 13 December 2013 07:32 PM, Kamil Debski wrote:
+> > Previously the of_phy_get function took a struct device * and was
+> > declared static. It was impossible to call it from another driver and
+> > thus it was impossible to get phy defined for a given node. The old
+> > function was renamed to _of_phy_get and was left for internal use.
+> > of_phy_get function was added and it was exported. The function
+> > enables to get a phy for a given device tree node.
+> >
+> > Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> > It seems that my git send-email is playing up and sent the previous
+> > emails without from. This is a resend. Sorry for any confusion.
+> > ---
+> >  drivers/phy/phy-core.c  |   41 ++++++++++++++++++++++++++++++++-----
+> ----
+> >  include/linux/phy/phy.h |    1 +
+> >  2 files changed, 33 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c index
+> > 03cf8fb..f0dbd42 100644
+> > --- a/drivers/phy/phy-core.c
+> > +++ b/drivers/phy/phy-core.c
+> > @@ -240,8 +240,8 @@ out:
+> >  EXPORT_SYMBOL_GPL(phy_power_off);
+> >
+> >  /**
+> > - * of_phy_get() - lookup and obtain a reference to a phy by phandle
+> > - * @dev: device that requests this phy
+> > + * _of_phy_get() - lookup and obtain a reference to a phy by phandle
+> > + * @np: device_node for which to get the phy
+> >   * @index: the index of the phy
+> >   *
+> >   * Returns the phy associated with the given phandle value, @@
+> > -250,20 +250,17 @@ EXPORT_SYMBOL_GPL(phy_power_off);
+> >   * not yet loaded. This function uses of_xlate call back function
+> provided
+> >   * while registering the phy_provider to find the phy instance.
+> >   */
+> > -static struct phy *of_phy_get(struct device *dev, int index)
+> > +static struct phy *_of_phy_get(struct device_node *np, int index)
+> >  {
+> >  	int ret;
+> >  	struct phy_provider *phy_provider;
+> >  	struct phy *phy = NULL;
+> >  	struct of_phandle_args args;
+> >
+> > -	ret = of_parse_phandle_with_args(dev->of_node, "phys", "#phy-
+> cells",
+> > +	ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
+> >  		index, &args);
+> > -	if (ret) {
+> > -		dev_dbg(dev, "failed to get phy in %s node\n",
+> > -			dev->of_node->full_name);
+> > +	if (ret)
+> >  		return ERR_PTR(-ENODEV);
+> > -	}
+> >
+> >  	mutex_lock(&phy_provider_mutex);
+> >  	phy_provider = of_phy_provider_lookup(args.np); @@ -283,6 +280,32
+> @@
+> > err0:
+> >  }
+> >
+> >  /**
+> > + * of_phy_get() - lookup and obtain a reference to a phy using a
+> device_node.
+> > + * @np: device_node for which to get the phy
+> > + * @index: the index of the phy
+> 
+> Would be better if the user can get the PHY by string instead of index.
 
-diff --git a/Documentation/devicetree/bindings/media/img-ir.txt b/Documentation/devicetree/bindings/media/img-ir.txt
-new file mode 100644
-index 000000000000..6f623b094ea6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/img-ir.txt
-@@ -0,0 +1,20 @@
-+* ImgTec Infrared (IR) decoder
-+
-+Required properties:
-+- compatible:		Should be "img,ir"
-+- reg:			Physical base address of the controller and length of
-+			memory mapped region.
-+- interrupts:		The interrupt specifier to the cpu.
-+
-+Optional properties:
-+- clocks:		Clock specifier for base clock.
-+			Defaults to 32.768KHz if not specified.
-+
-+Example:
-+
-+	ir@02006200 {
-+		compatible = "img,ir";
-+		reg = <0x02006200 0x100>;
-+		interrupts = <29 4>;
-+		clocks = <&clk_32khz>;
-+	};
+Ok, this sounds doable. I will add of_phy_get_by_name analogous to the clk
+framework.
+
+> > + *
+> > + * Returns the phy driver, after getting a refcount to it; or
+> > + * -ENODEV if there is no such phy.  The caller is responsible for
+> > + * calling phy_put() to release that count.
+> > + */
+> > +struct phy *of_phy_get(struct device_node *np, int index) {
+> > +	struct phy *phy = NULL;
+> > +
+> > +	phy = _of_phy_get(np, index);
+> > +	if (IS_ERR(phy))
+> dev_err here?
+
+dev_err requires a dev, so it is not possible with the arguments used.
+And we do not want to add any extra parameters to keep the function call
+analogous to other of_*_get (as for example of_clk_get).
+
+Best wishes,
 -- 
-1.8.1.2
+Kamil Debski
+Samsung R&D Institute Poland
 
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
