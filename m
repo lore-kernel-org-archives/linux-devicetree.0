@@ -1,105 +1,64 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 05/26] ARM: OMAP2+: add omapdss_init_of()
-Date: Fri, 13 Dec 2013 10:40:53 +0200
-Message-ID: <52AAC815.1020704@ti.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-6-git-send-email-tomi.valkeinen@ti.com> <2199639.FbGhznOLP9@avalon> <52A96603.5030709@ti.com> <52AAC615.504@ti.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] rename ARCH_BCM to ARCH_BCM_MOBILE (clocksource)
+Date: Fri, 13 Dec 2013 09:48:33 +0100
+Message-ID: <52AAC9E1.6070405@linaro.org>
+References: <1379956836-5866-1-git-send-email-bcm@fixthebug.org> <1379956836-5866-3-git-send-email-bcm@fixthebug.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="s5eEUC6CIkhaO1lo238NtgqWtBrq3UA3J"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52AAC615.504@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379956836-5866-3-git-send-email-bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Cc: Alex Elder <alex.elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---s5eEUC6CIkhaO1lo238NtgqWtBrq3UA3J
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On 09/23/2013 07:20 PM, Christian Daudt wrote:
+> Currently ARCH_BCM has been used for Broadcom
+> Mobile V7 based SoCs. In order to allow other Broadcom
+> SoCs to also use mach-bcm directory and files, this patch
+> renames the original ARCH_BCM to ARCH_BCM_MOBILE, and
+> uses ARCH_BCM to define any Broadcom chip residing
+> in mach-bcm directory.
+>
+> Signed-off-by: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
+> Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 
-On 2013-12-13 10:32, Archit Taneja wrote:
-> On Thursday 12 December 2013 01:00 PM, Tomi Valkeinen wrote:
->> On 2013-12-12 01:10, Laurent Pinchart wrote:
->>> Hi Tomi,
->>>
->>> On Wednesday 04 December 2013 14:28:32 Tomi Valkeinen wrote:
->>>> omapdss driver uses a omapdss platform device to pass platform speci=
-fic
->>>> function pointers and DSS hardware version from the arch code to the=
-
->>>> driver. This device is needed also when booting with DT.
->>>>
->>>> This patch adds omapdss_init_of() function, called from
->>>> board-generic at
->>>> init time, which creates the omapdss device.
->>>
->>> Is this a temporary solution that you plan to later replace with DT-o=
-nly
->>> device instantiation ?
->>
->> It's a long term task to remove the "virtual" omapdss device. Removing=
-
->> the platform data that we pass has been very difficult.
->=20
-> Even if we remove the platform data, what would be the right place to
-> register the drm, fb and vout devices? We need to make sure their
-> drivers are probed only after omapdss is initialised.
-
-That's the same issue as we have already, so removing omapdss doesn't
-affect that.
-
-I don't think we have any good way to ensure those devices are not
-probed before omapdss. We just have to manage the case that omapdss has
-not been probed yet, by checking if omapdss is there and if not, return
-EPROBE_DEFER.
-
->> For example, we need to get the OMAP revision to know which OMAP DSS
->> hardware we have. We can't get that information from the DSS hardware
->> (thank you, HW designers! ;).
->>
->=20
->> Another is DSI pin muxing. I think we need a new pinmuxing driver for
->> that, or maybe change pinmux-single quite a bit. The DSI pinmuxing is
->> very simple, but the register fields are varying lengths and at varyin=
-g
->> positions, so pinmux-single doesn't work for it.
->=20
-> I have seen other OMAP drivers passing control module register info to
-> their DT node. Instead of having a pinmux driver for a single register,=
-
-> we might want to consider just passing the control module register, and=
-
-> take care of the reg fields and masks in the OMAP DSI driver itself.
-
-Yes, that's also one option. Quite ugly, though =3D).
-
- Tomi
+Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 
+> Changes from v1:
+>   - fix alpha ordering in dts/Makefile
+>   - break into 4 patches for separate subsys
+>
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makef=
+ile
+> index 704d6d3..4207ab4 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -25,7 +25,7 @@ obj-$(CONFIG_SUN4I_TIMER)	+=3D sun4i_timer.o
+>   obj-$(CONFIG_ARCH_TEGRA)	+=3D tegra20_timer.o
+>   obj-$(CONFIG_VT8500_TIMER)	+=3D vt8500_timer.o
+>   obj-$(CONFIG_ARCH_NSPIRE)	+=3D zevio-timer.o
+> -obj-$(CONFIG_ARCH_BCM)		+=3D bcm_kona_timer.o
+> +obj-$(CONFIG_ARCH_BCM_MOBILE)	+=3D bcm_kona_timer.o
+>   obj-$(CONFIG_CADENCE_TTC_TIMER)	+=3D cadence_ttc_timer.o
+>   obj-$(CONFIG_CLKSRC_EXYNOS_MCT)	+=3D exynos_mct.o
+>   obj-$(CONFIG_CLKSRC_SAMSUNG_PWM)	+=3D samsung_pwm_timer.o
+>
 
---s5eEUC6CIkhaO1lo238NtgqWtBrq3UA3J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
 
-iQIcBAEBAgAGBQJSqsgVAAoJEPo9qoy8lh71JpoP/2v09d+PoSv6MIAcO9uStrsy
-pjP15fvNDJQFbF9o9VFE2GqEZ5EU9NrfQAd7Zc8F7mX0vVHscvflKcDOvWczbtF0
-bZtKqZB3VtwhG1PQHRYx7lZPUWaCQ4iKgNiBGSoiT75gcA5w4taPY6Jd/Bk781zl
-e9SaRnA6FFWQXQZgUCMixbfYXv8QqJKNBSl4utYKTWwbOpO1ZKsMCDsnteC2OvEB
-E1d5vUCRqAhQNAToDDXLtkpjg60MmufLEgmTQn+zNO/AQRU+ag0qNdgUFEW2G7xE
-ojZSnHtrlP6mxIBV9Ylz/StHVv84kL5fr11KNoydPNJ0vOFKpTSM8O6sKTjbgQCN
-YAKDd47jiiVTpxeqdpqsN1gaaBNvS9EDNVz64WPww7K5e57kQpqQsLLtfE0RVByo
-cGc35Kh/sAcpYzBmvB92rB4HrwSiuhsGREwAoHJNE54imkhPxgpJPVYMz8SoQMDc
-SQBEr9VoxHcjFx9iwiu2tlRQkHFbfogJRTJ4mT/GIwhmbOha736f8lTjbU+F9FsZ
-TrMR1VVGYNlasmufVHKnEhjhMnY+DwIDcvfARgiSV+KSwVRR6AApVQzSjms5dS79
-L5r2vROrtolXJ8JdvdgXmkQUzdUhpEB1ROYpuIYFsPJ1Lp70mIPkefd87LllEZnU
-+CElrHYVfhO8XFMGRmva
-=G2CS
------END PGP SIGNATURE-----
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
---s5eEUC6CIkhaO1lo238NtgqWtBrq3UA3J--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
