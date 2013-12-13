@@ -1,85 +1,84 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 13/26] ARM: omap3.dtsi: add omapdss information
-Date: Fri, 13 Dec 2013 12:18:27 +0200
-Message-ID: <52AADEF3.9040808@ti.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <52A9760A.3000801@ti.com> <20131212215913.GB29072@muru.com> <1933495.zHe4JMYZyB@avalon>
+From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 07/10] ARM: dts: sun7i: cubietruck: Enable
+ the GMAC
+Date: Fri, 13 Dec 2013 11:21:56 +0100
+Message-ID: <52AADFC4.1070003@st.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org> <1386350983-13281-8-git-send-email-wens@csie.org> <CAGVrzcb_r9_p4urz4XkE2A-G85KAHJa4PJ=Gt9a4RPYQNJ6j0g@mail.gmail.com> <CAGb2v64yFhkTXvdq=1VpemULhXew-5fvmSoTBzEb6iFDiSqy1Q@mail.gmail.com> <CAGVrzcaxV88dU3vEVGUiEQihUHLxq+QvQVQ6VvmOFVRsqbbX7w@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="5aVIQkVg1o8jbUKfOcRFKlB17XSEOj5G9"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1933495.zHe4JMYZyB@avalon>
-Sender: linux-omap-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDB4X24GTMHRB4N7VOKQKGQEPL7QBVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGVrzcaxV88dU3vEVGUiEQihUHLxq+QvQVQ6VvmOFVRsqbbX7w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---5aVIQkVg1o8jbUKfOcRFKlB17XSEOj5G9
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 2013-12-13 05:27, Laurent Pinchart wrote:
-> Hi Tony,
->=20
-> On Thursday 12 December 2013 21:59:13 Tony Lindgren wrote:
->> On Thu, Dec 12, 2013 at 10:38:34AM +0200, Tomi Valkeinen wrote:
->>> On 2013-12-12 01:44, Laurent Pinchart wrote:
+On 12/7/2013 2:57 AM, Florian Fainelli wrote:
+> 2013/12/6 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
+>> On Sat, Dec 7, 2013 at 5:09 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> 2013/12/6 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
+>>>> The CubieTruck uses the GMAC with an RGMII phy.
+>>>>
+>>>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>>>> ---
+>>>>   arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 8 ++++++++
+>>>>   1 file changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>>> index 8a1009d..af212a2 100644
+>>>> --- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>>> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>>>> @@ -33,6 +33,14 @@
+>>>>                          pinctrl-0 = <&uart0_pins_a>;
+>>>>                          status = "okay";
+>>>>                  };
+>>>> +
+>>>> +               gmac: ethernet@01c50000 {
+>>>> +                       pinctrl-names = "default";
+>>>> +                       pinctrl-0 = <&gmac_pins_rgmii>;
+>>>> +                       snps,phy-addr = <1>;
 >>>
->>> So, are they independent? I don't know =3D). I think they lean on the=
-
->>> independent side. dss_core is always needed for the submodules to wor=
-k,
->>> but for example DSI could be used without DISPC, using system DMA to
->>> transfer data from memory to DSI. Not a very useful thing to do, but
->>> still, there are dedicated DMA channels for that.
+>>> What is this snps,phy-addr property? Why is not a standard device tree
+>>> node for an Ethernet PHY node used?
 >>
->> If they have separate hwmod entries, they should be considered separat=
-e
->> independent devices for sure.
+>> This property is implemented by stmmac and documented in the DT
+>> bindings. stmmac has not been updated to use Ethernet PHY nodes.
+>
+> This driver property should be removed and deprecated since there is
+> an ePAPR standardized Ethernet PHY node. What I am worried here is the
+> loss of information, the standard Ethernet DT node allows to specify
+> much more information (clause, maximum speed, compatible string
+> etc...).
+
+
+yes Florian you are right and I have already started updating the
+driver. I do not sure that I'll be able to send all the patches soon
+but for sure I can re-base them.
+
 >>
->> To summarize, here are few reasons why they need to be treated as
->> separate devices:
->=20
-> Are you talking generally here, or about the DSS modules in particular =
-?
->=20
->> 1. The modules maybe clocked/powered/idled separately and can have the=
-ir
->>    own idle configuration so they can do the hardware based idling
->>    separately.
->=20
-> I don't think this applies to the DSS modules.
-
-The DSS submodules have their own SYSCONFIG register, and idle settings
-can be set per module. So I think they idle separately, even if they are
-in a common power domain.
-
- Tomi
-
-
-
---5aVIQkVg1o8jbUKfOcRFKlB17XSEOj5G9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSqt7zAAoJEPo9qoy8lh71MM0P/2TFaj5hR7AbBT+4MTlnettS
-CivDSUs6NxyEybhIb+9WpkVuEouUiQZfuYMr2AE77+/S0V/kymQBOV/eN7c1V8e+
-76I4aI4UB5K9FIAohbdoLXBOlJ4koUUBPDH2YKlavnYRAUrZzv33DooGml0Aw5t0
-LOpEmsJOdljKaQDgK4gbbcJAHsB+se8q/i8uygGwpPCMi8rgimhobecGZYQtwVvU
-Uqpyl1rjLtkb/blxTjGPPfPsUlK6pLwOlaDrIQOO8hPoaD5nIRPlCRsUf0hI2auo
-EcnzxODMGp/D3VWaXmp3X1gitvbEALJlTE4einE+x5Y4BP39XphFJdStDM/kdZYF
-DD6KYHQQQzXXs2Kyh/XOEoXGCkDd8SklWV6EqUtAeoZtmT+qxkrLTFrm7GkeXoYN
-hKpGA57/yMGPNQJCSwSVfc3RsfAJEiPK8BCi43T1WJiVeAx7xQhIHW9MnhAzsirB
-sH2Y6xuATR3zrbHpU94TUo9U2SRRLlgHXcrVelUxbg4S5cKEtwnDrrxqR03XnrpN
-SQGj9TfEO3YbVdqu0ToXBJWfUr5u6wY2uoo8SyGYMUQW63Ogv/E8G/Y3cz3oDWLK
-FggsefdhHRqRa1RhO3/K1WG4SyXgvT2Nb+QoY7uBB54AgWO1YezrtafuGFwDZObW
-0YJD3aI82EU8fQjnXLD4
-=a/CY
------END PGP SIGNATURE-----
-
---5aVIQkVg1o8jbUKfOcRFKlB17XSEOj5G9--
+>> Removing this property will not affect the function of the driver.
+>> The driver probes its MDIO bus and selects the lowest available
+>> address if not specified.
+>
+> So if this is just giving the driver a hint on where to  probe for a
+> PHY on the MDIO bus, then let's drop it and use the standard DT node
+> no?
+>
+>>
+>>>> +                       phy-mode = "rgmii";
+>>>
+>>> Especially since you use the relatively standard "phy-mode" property here?
+>>
+>> Used as specified in stmmac DT bindings.
+>
+> That one is kind of okay because of_get_phy_mode() knows about it,
+> even though ePAPR states this should be "phy-connection-type", so I am
+> okay with keeping that one because current practice and helpers are
+> here.
+>
