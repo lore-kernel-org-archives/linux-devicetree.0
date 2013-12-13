@@ -1,86 +1,98 @@
-From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Fwd: [PATCH v4 0/2] ARM: mach-moxart: add MOXA ART SoC support
-Date: Fri, 13 Dec 2013 15:38:26 +0100
-Message-ID: <CACmBeS1oTB=aewysR67-dQfn17X_at=ajP0-ZEqbX8MarTi5_Q@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH RESEND v2 1/2] phy: core: Add an exported of_phy_get function
+Date: Fri, 13 Dec 2013 20:15:09 +0530
+Message-ID: <52AB1D75.4030207@ti.com>
+References: <1386943380-28596-1-git-send-email-k.debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1386943380-28596-1-git-send-email-k.debski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kamil Debski <k.debski@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: t.figa@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, matt.porter@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Forwarding this because I used the wrong Cc address to
-devicetree-u79uwXL29TaiAVqoAR/hOA@public.gmane.org
+Hi,
 
----------- Forwarded message ----------
-From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: 13 December 2013 15:33
-Subject: [PATCH v4 0/2] ARM: mach-moxart: add MOXA ART SoC support
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org,
-arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org,
-Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Friday 13 December 2013 07:32 PM, Kamil Debski wrote:
+> Previously the of_phy_get function took a struct device * and
+> was declared static. It was impossible to call it from
+> another driver and thus it was impossible to get phy defined
+> for a given node. The old function was renamed to _of_phy_get
+> and was left for internal use. of_phy_get function was added
+> and it was exported. The function enables to get a phy for
+> a given device tree node.
+> 
+> Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> ---
+> It seems that my git send-email is playing up and sent the previous emails
+> without from. This is a resend. Sorry for any confusion.
+> ---
+>  drivers/phy/phy-core.c  |   41 ++++++++++++++++++++++++++++++++---------
+>  include/linux/phy/phy.h |    1 +
+>  2 files changed, 33 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> index 03cf8fb..f0dbd42 100644
+> --- a/drivers/phy/phy-core.c
+> +++ b/drivers/phy/phy-core.c
+> @@ -240,8 +240,8 @@ out:
+>  EXPORT_SYMBOL_GPL(phy_power_off);
+>  
+>  /**
+> - * of_phy_get() - lookup and obtain a reference to a phy by phandle
+> - * @dev: device that requests this phy
+> + * _of_phy_get() - lookup and obtain a reference to a phy by phandle
+> + * @np: device_node for which to get the phy
+>   * @index: the index of the phy
+>   *
+>   * Returns the phy associated with the given phandle value,
+> @@ -250,20 +250,17 @@ EXPORT_SYMBOL_GPL(phy_power_off);
+>   * not yet loaded. This function uses of_xlate call back function provided
+>   * while registering the phy_provider to find the phy instance.
+>   */
+> -static struct phy *of_phy_get(struct device *dev, int index)
+> +static struct phy *_of_phy_get(struct device_node *np, int index)
+>  {
+>  	int ret;
+>  	struct phy_provider *phy_provider;
+>  	struct phy *phy = NULL;
+>  	struct of_phandle_args args;
+>  
+> -	ret = of_parse_phandle_with_args(dev->of_node, "phys", "#phy-cells",
+> +	ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
+>  		index, &args);
+> -	if (ret) {
+> -		dev_dbg(dev, "failed to get phy in %s node\n",
+> -			dev->of_node->full_name);
+> +	if (ret)
+>  		return ERR_PTR(-ENODEV);
+> -	}
+>  
+>  	mutex_lock(&phy_provider_mutex);
+>  	phy_provider = of_phy_provider_lookup(args.np);
+> @@ -283,6 +280,32 @@ err0:
+>  }
+>  
+>  /**
+> + * of_phy_get() - lookup and obtain a reference to a phy using a device_node.
+> + * @np: device_node for which to get the phy
+> + * @index: the index of the phy
 
+Would be better if the user can get the PHY by string instead of index.
+> + *
+> + * Returns the phy driver, after getting a refcount to it; or
+> + * -ENODEV if there is no such phy.  The caller is responsible for
+> + * calling phy_put() to release that count.
+> + */
+> +struct phy *of_phy_get(struct device_node *np, int index)
+> +{
+> +	struct phy *phy = NULL;
+> +
+> +	phy = _of_phy_get(np, index);
+> +	if (IS_ERR(phy))
+dev_err here?
 
-This set adds MOXA ART SoC and platform support.
-
-Changes since v3:
-1. removed platform specific UART debug files,
-   replaced by generic code under DEBUG_LL_UART_8250.
-
-arch/arm/mach-moxart/*:
-2. select DMA_OF and PHYLIB
-3. remove .init_time hook
-4. reinsert restart code that rely on watchdog register
-   (watchdog maintainers rejected arm_pm_restart in watchdog code)
-   assign arm_pm_restart from .init_machine
-5. move to ARCH_MULTI_V4T (ARCH_MULTI_V4 was removed)
-
-arch/arm/boot/dts/moxart-uc7112lx.dts:
-6. remove comments
-7. add "mdio0"/"mdio1" nodes
-8. add phy-handle/phy-mode to "mac0"/"mac1" nodes
-9. change bootargs (change root=/dev/mtdblock2 to root=/dev/mmcblk0p1)
-10. add gpio-leds node "leds"
-11. add gpio-keys-polled node "gpio_keys_polled"
-12. rename "mmc" node "sdhci"
-
-arch/arm/boot/dts/moxart.dtsi:
-13. add fixed-clock node "ref12"
-14. remove "clk" node, add nodes "clk_pll"/"clk_apb"
-15. add gpio-rtc-* (sclk|data|reset) to "rtc" node
-16. add "dma" node
-17. remove second register from "gpio" node
-
-Applies to next-20131213
-
-
-Jonas Jensen (2):
-  ARM: mach-moxart: add MOXA ART SoC platform files
-  ARM: mach-moxart: add MOXA ART SoC device tree files
-
- Documentation/devicetree/bindings/arm/moxart.txt |  12 ++
- arch/arm/Kconfig                                 |   2 +
- arch/arm/Makefile                                |   1 +
- arch/arm/boot/dts/Makefile                       |   1 +
- arch/arm/boot/dts/moxart-uc7112lx.dts            | 131 ++++++++++++++++++++
- arch/arm/boot/dts/moxart.dtsi                    | 100 +++++++++++++++
- arch/arm/configs/moxart_defconfig                | 148 +++++++++++++++++++++++
- arch/arm/mach-moxart/Kconfig                     |  31 +++++
- arch/arm/mach-moxart/Makefile                    |   3 +
- arch/arm/mach-moxart/moxart.c                    |  75 ++++++++++++
- 10 files changed, 504 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/moxart.txt
- create mode 100644 arch/arm/boot/dts/moxart-uc7112lx.dts
- create mode 100644 arch/arm/boot/dts/moxart.dtsi
- create mode 100644 arch/arm/configs/moxart_defconfig
- create mode 100644 arch/arm/mach-moxart/Kconfig
- create mode 100644 arch/arm/mach-moxart/Makefile
- create mode 100644 arch/arm/mach-moxart/moxart.c
-
---
-1.8.2.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
