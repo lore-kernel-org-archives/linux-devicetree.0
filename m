@@ -1,59 +1,138 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: RE: [PATCHv6 1/4] pwm: Add Freescale FTM PWM driver support
-Date: Fri, 13 Dec 2013 09:30:09 +0000
-Message-ID: <e2fc53d0ff1d4a0a962500be6dc6e019@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1384220218-12716-1-git-send-email-Li.Xiubo@freescale.com>
- <1384220218-12716-2-git-send-email-Li.Xiubo@freescale.com>
- <20131128212510.GC14689@mithrandir>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 16/26] ARM: omap4-sdp.dts: add display information
+Date: Fri, 13 Dec 2013 11:39:26 +0200
+Message-ID: <52AAD5CE.3010609@ti.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-17-git-send-email-tomi.valkeinen@ti.com> <52AAD2F1.2040208@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131128212510.GC14689@mithrandir>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Huan Wang <Huan.Wang@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rob@landley.net" <rob@landley.net>, Jingchang Lu <jingchang.lu@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "t.figa@samsung.com" <t.figa@samsung.com>, Shawn
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="doTAsPL9kHxipSoNBJtGPBr03K4so2Jtw"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52AAD2F1.2040208@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Archit Taneja <archit@ti.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
+--doTAsPL9kHxipSoNBJtGPBr03K4so2Jtw
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> > +	struct fsl_pwm_chip *fpc;
-> > +
-> > +	fpc = to_fsl_chip(chip);
-> > +
-> > +	period_cycles = fsl_rate_to_cycles(fpc, period_ns);
-> > +	if (period_cycles > 0xFFFF) {
-> > +		dev_err(chip->dev, "required PWM period cycles(%lu) overflow "
-> > +				"16-bits counter!\n", period_cycles);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	duty_cycles = fsl_rate_to_cycles(fpc, duty_ns);
-> > +	if (duty_cycles >= 0xFFFF) {
-> > +		dev_err(chip->dev, "required PWM duty cycles(%lu) overflow "
-> > +				"16-bits counter!\n", duty_cycles);
-> > +		return -EINVAL;
-> > +	}
-> 
-> I'm not sure the error messages are all that useful. A -EINVAL error code
-> should make it pretty clear what the problem is.
-> 
+On 2013-12-13 11:27, Archit Taneja wrote:
+> On Wednesday 04 December 2013 05:58 PM, Tomi Valkeinen wrote:
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>> ---
+>>   arch/arm/boot/dts/omap4-sdp.dts | 91
+>> +++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 91 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/omap4-sdp.dts
+>> b/arch/arm/boot/dts/omap4-sdp.dts
+>> index 5fc3f43c5a81..e3048f849612 100644
+>> --- a/arch/arm/boot/dts/omap4-sdp.dts
+>> +++ b/arch/arm/boot/dts/omap4-sdp.dts
+>> @@ -550,3 +550,94 @@
+>>       mode =3D <3>;
+>>       power =3D <50>;
+>>   };
+>> +
+>> +&dsi1 {
+>> +    vdds_dsi-supply =3D <&vcxio>;
+>> +
+>> +    dsi1_out_ep: endpoint {
+>> +        remote-endpoint =3D <&lcd0_in>;
+>> +        lanes =3D <0 1 2 3 4 5>;
+>=20
+> In the previous revision omapdss DT patchset, the lanes node was a
+> member of the panel DT node, and not the dsi DT node. Any reason to
+> change this? Does it make more sense this way?
 
-Yes, it is.
+Well, the lane configuration is programmed into the DSI HW. So DSI needs
+to know them. Thus the lanes can be considered a property of the DSI.
 
-But for the pwm leds, there hasn't any check about the return values, if
-there is something wrong, we cannot get any information about this.
+In some cases, the external encoder or panel also needs to know about
+the lanes. In that case, both DSI and the encoder/panel would contain
+the same data.
 
-So I think this error messages are useful for this case.
+My reasoning where a property belongs to:
+
+If a property is clearly internal to a device, it belongs there. For
+example, in this case vdds_dsi-supply is clearly a property of the DSI.
+
+If a property is about the link between two devices, like "lanes" here,
+it belongs to both devices. If a device does not need that data for
+anything, it can be omitted.
+
+> I suppose it's more suitable for dsi to hold the property if 2 panels
+> are connected on the same bus. Say, one with 4 data lanes, and other
+> with 2. It would be tricky for the dsi driver to get lane params from 2=
+
+> different places and merge them somehow.
+
+It doesn't matter, both would work fine. If the lanes property is in the
+DSI node, then the DSI driver finds out the lane config by finding out
+which endpoint is used for the panel that's being enabled.
+
+If the lanes property would be in the panel, the panel would pass the
+lane config to the DSI when it's enabled.
+
+But I think passing the lane config from panel to DSI (like we do
+currently) is not so nice.
+
+>> +    };
+>> +
+>> +    lcd0: display@0 {
+>> +        compatible =3D "tpo,taal", "panel-dsi-cm";
+>> +
+>> +        gpios =3D <&gpio4 6 0>;    /* 102, reset */
+>> +
+>> +        lcd0_in: endpoint {
+>> +            remote-endpoint =3D <&dsi1_out_ep>;
+>> +        };
+>> +    };
+>=20
+> Is there a reason why lcd0 and lcd1 are children nodes of dsi1 and dsi2=
+
+> respectively? I don't see this for panels on other boards.
+
+Yes. The panels are _controlled_ with DSI. We model the child-parent
+relationships in DT data based on the control. So an i2c peripheral is
+controlled via i2c master, and is thus a child of the i2c master. Same
+here. The ports/endpoints are used to define the data path, which is
+separate thing from the control path.
+
+DPI panels which don't have any way to control them (except basic things
+like gpios) are platform devices without any parent.
+
+If the DPI panel would be controlled with i2c, it'd be a child of an i2c
+master.
+
+ Tomi
 
 
---
-Xiubo
+
+--doTAsPL9kHxipSoNBJtGPBr03K4so2Jtw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJSqtXOAAoJEPo9qoy8lh71AjYP/AvsXdbXOOCBgFGSSpQtMV0d
+s/mHQ9y5p1JI/5I9qo5BVv8Ze5EiJ0E9jw4o4Ho0yLHaKmBMbzpOg+UJ3yWnScjG
+ZhdlFTUJSn1DIKH0V2FMDSHxuU/Id2g8rfV6f5MI2igpFIAFupo/A43tOEbgP6gG
+oDU+UdS6Y0eCGFxUXvsV4uLdYKVgfAAAJh9nOirlf6GB3UZscc/By9nLCmIm0Gs3
+HRibTq10Ao7gSucPkxoILOnZN+LBeaHK4KDdV0LMb2s/wiTFuLJVMX9O2QwYt79o
+tsrWKy/oULJ+06G2T0mY7+gIyISnDWizRtmzZAv4jKXspELL3zvRVdE2vfmqjXQK
+EbSWm6esgvnMFc6oSfqikVqu1YEqwm30PDywVbq7cKuAJBXGDy7hlJ0FylnbdsQ3
+TlEudPElaYcOvQGk1dXJKa0gTs5k69uhpotLEUdxsY/oTLIatTpnm0bYI/mE8drW
+bLBBxe/UK49InQoLu79Gfz7rZtWo6VI5a/2vgku3fI2uBXYnEVaK8cQcvLwA2HRv
+fC4g97e+mQi+i0HCYIS+qXE9EO7GjFlv/bCqLeZxTFCmW9f6j5DaHbx0Dj2CP6Kq
+udWaFs34U3EoGWSHmYHjHqyK8smeXwLtw0ZjvwMruX6GdVUYG5LDA6AK9cT3yzzr
+eL6lBnvqrNnjhdA72Pgx
+=uS9S
+-----END PGP SIGNATURE-----
+
+--doTAsPL9kHxipSoNBJtGPBr03K4so2Jtw--
