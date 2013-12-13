@@ -1,32 +1,63 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: ux500: Refactor common DT configs for sdi[n] devices
-Date: Fri, 13 Dec 2013 10:26:27 +0100
-Message-ID: <CACRpkdam1OUZZFR_wh0XKm1dUTDOm_=e_-mcbKnqqBWeVbVyig@mail.gmail.com>
-References: <1386855098-14272-1-git-send-email-ulf.hansson@linaro.org>
-	<1386855098-14272-2-git-send-email-ulf.hansson@linaro.org>
+From: Archit Taneja <archit@ti.com>
+Subject: Re: [PATCH 16/26] ARM: omap4-sdp.dts: add display information
+Date: Fri, 13 Dec 2013 14:57:13 +0530
+Message-ID: <52AAD2F1.2040208@ti.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-17-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386855098-14272-2-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1386160133-24026-17-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 12, 2013 at 2:31 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-
-> Remove duplicated configurations and move specific details into
-> each corresponding dtsi file for the href versions.
+On Wednesday 04 December 2013 05:58 PM, Tomi Valkeinen wrote:
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> ---
+>   arch/arm/boot/dts/omap4-sdp.dts | 91 +++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 91 insertions(+)
 >
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+> index 5fc3f43c5a81..e3048f849612 100644
+> --- a/arch/arm/boot/dts/omap4-sdp.dts
+> +++ b/arch/arm/boot/dts/omap4-sdp.dts
+> @@ -550,3 +550,94 @@
+>   	mode = <3>;
+>   	power = <50>;
+>   };
+> +
+> +&dsi1 {
+> +	vdds_dsi-supply = <&vcxio>;
+> +
+> +	dsi1_out_ep: endpoint {
+> +		remote-endpoint = <&lcd0_in>;
+> +		lanes = <0 1 2 3 4 5>;
 
-Applied to my ux500-devicetree branch, thanks!
+In the previous revision omapdss DT patchset, the lanes node was a 
+member of the panel DT node, and not the dsi DT node. Any reason to 
+change this? Does it make more sense this way?
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I suppose it's more suitable for dsi to hold the property if 2 panels 
+are connected on the same bus. Say, one with 4 data lanes, and other 
+with 2. It would be tricky for the dsi driver to get lane params from 2 
+different places and merge them somehow.
+
+> +	};
+> +
+> +	lcd0: display@0 {
+> +		compatible = "tpo,taal", "panel-dsi-cm";
+> +
+> +		gpios = <&gpio4 6 0>;	/* 102, reset */
+> +
+> +		lcd0_in: endpoint {
+> +			remote-endpoint = <&dsi1_out_ep>;
+> +		};
+> +	};
+
+Is there a reason why lcd0 and lcd1 are children nodes of dsi1 and dsi2 
+respectively? I don't see this for panels on other boards.
+
+Archit
+
