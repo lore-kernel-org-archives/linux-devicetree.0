@@ -1,56 +1,43 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/4] lis3lv02d: DT: add wakeup unit 2 and wakeup threshold
-Date: Fri, 13 Dec 2013 21:54:53 +0100
-Message-ID: <1386968094-24554-4-git-send-email-sre@debian.org>
-References: <1386968094-24554-1-git-send-email-sre@debian.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386968094-24554-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Eric Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH] devicetree: macb: Document clock properties
+Date: Fri, 13 Dec 2013 14:03:25 -0800
+Message-ID: <1386972205-32733-1-git-send-email-soren.brinkmann@xilinx.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the the wakeup threshold and
-support for the second wakeup unit to the DT based
-setup.
+The macb driver uses the clock bindings. Document the required
+properties, especially the driver specific clock-names.
 
-Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
 ---
- drivers/misc/lis3lv02d/lis3lv02d.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ Documentation/devicetree/bindings/net/macb.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/misc/lis3lv02d/lis3lv02d.c b/drivers/misc/lis3lv02d/lis3lv02d.c
-index dc4f5c7..aa61627 100644
---- a/drivers/misc/lis3lv02d/lis3lv02d.c
-+++ b/drivers/misc/lis3lv02d/lis3lv02d.c
-@@ -1033,6 +1033,23 @@ int lis3lv02d_init_dt(struct lis3lv02d *lis3)
- 		pdata->wakeup_flags |= LIS3_WAKEUP_Z_LO;
- 	if (of_get_property(np, "st,wakeup-z-hi", NULL))
- 		pdata->wakeup_flags |= LIS3_WAKEUP_Z_HI;
-+	if (of_get_property(np, "st,wakeup-threshold", &val))
-+		pdata->wakeup_thresh = val;
-+
-+	if (of_get_property(np, "st,wakeup2-x-lo", NULL))
-+		pdata->wakeup_flags2 |= LIS3_WAKEUP_X_LO;
-+	if (of_get_property(np, "st,wakeup2-x-hi", NULL))
-+		pdata->wakeup_flags2 |= LIS3_WAKEUP_X_HI;
-+	if (of_get_property(np, "st,wakeup2-y-lo", NULL))
-+		pdata->wakeup_flags2 |= LIS3_WAKEUP_Y_LO;
-+	if (of_get_property(np, "st,wakeup2-y-hi", NULL))
-+		pdata->wakeup_flags2 |= LIS3_WAKEUP_Y_HI;
-+	if (of_get_property(np, "st,wakeup2-z-lo", NULL))
-+		pdata->wakeup_flags2 |= LIS3_WAKEUP_Z_LO;
-+	if (of_get_property(np, "st,wakeup2-z-hi", NULL))
-+		pdata->wakeup_flags2 |= LIS3_WAKEUP_Z_HI;
-+	if (of_get_property(np, "st,wakeup2-threshold", &val))
-+		pdata->wakeup_thresh2 = val;
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index 4ff65047bb9a..70af2ec12b09 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -10,6 +10,10 @@ Required properties:
+ - interrupts: Should contain macb interrupt
+ - phy-mode: String, operation mode of the PHY interface.
+   Supported values are: "mii", "rmii", "gmii", "rgmii".
++- clock-names: Tuple listing input clock names.
++	Required elements: 'pclk', 'hclk'
++	Optional elements: 'tx_clk'
++- clocks: Phandles to input clocks.
  
- 	if (!of_property_read_u32(np, "st,highpass-cutoff-hz", &val)) {
- 		switch (val) {
+ Optional properties:
+ - local-mac-address: 6 bytes, mac address
+@@ -22,4 +26,6 @@ Examples:
+ 		interrupts = <21>;
+ 		phy-mode = "rmii";
+ 		local-mac-address = [3a 0e 03 04 05 06];
++		clock-names = "pclk", "hclk", "tx_clk";
++		clocks = <&clkc 30>, <&clkc 30>, <&clkc 13>;
+ 	};
 -- 
 1.8.5.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
