@@ -1,104 +1,50 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v6 1/9] phy: add phy_get_bus_width()/phy_set_bus_width() calls
-Date: Fri, 13 Dec 2013 11:51:15 -0500
-Message-ID: <1386953483-21631-2-git-send-email-mporter@linaro.org>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v6 7/9] phy: add Broadcom Kona USB2 PHY DT binding
+Date: Fri, 13 Dec 2013 11:51:21 -0500
+Message-ID: <1386953483-21631-8-git-send-email-mporter@linaro.org>
 References: <1386953483-21631-1-git-send-email-mporter@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1386953483-21631-1-git-send-email-mporter@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Dinh Nguyen <dinh.linux@gmail.com>, Linaro Patches <patches@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Russell King <linux@arm.linux.org.uk>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386953483-21631-1-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a pair of APIs that allows the generic PHY subsystem to
-provide information on the PHY bus width. The PHY provider driver may
-use phy_set_bus_width() to set the bus width that the PHY supports.
-The controller driver may then use phy_get_bus_width() to fetch the
-PHY bus width in order to properly configure the controller.
+Add a binding that describes the Broadcom Kona USB2 PHY found
+on the BCM281xx family of SoCs.
 
-Signed-off-by: Matt Porter <mporter@linaro.org>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 ---
- include/linux/phy/phy.h | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ Documentation/devicetree/bindings/phy/bcm-phy.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/bcm-phy.txt
 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 6d72269..e273e5a 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -38,6 +38,14 @@ struct phy_ops {
- };
- 
- /**
-+ * struct phy_attrs - represents phy attributes
-+ * @bus_width: Data path width implemented by PHY
-+ */
-+struct phy_attrs {
-+	u32			bus_width;
-+};
+diff --git a/Documentation/devicetree/bindings/phy/bcm-phy.txt b/Documentation/devicetree/bindings/phy/bcm-phy.txt
+new file mode 100644
+index 0000000..3dc8b3d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/bcm-phy.txt
+@@ -0,0 +1,15 @@
++BROADCOM KONA USB2 PHY
 +
-+/**
-  * struct phy - represents the phy device
-  * @dev: phy device
-  * @id: id of the phy device
-@@ -46,6 +54,7 @@ struct phy_ops {
-  * @mutex: mutex to protect phy_ops
-  * @init_count: used to protect when the PHY is used by multiple consumers
-  * @power_count: used to protect when the PHY is used by multiple consumers
-+ * @phy_attrs: used to specify PHY specific attributes
-  */
- struct phy {
- 	struct device		dev;
-@@ -55,6 +64,7 @@ struct phy {
- 	struct mutex		mutex;
- 	int			init_count;
- 	int			power_count;
-+	struct phy_attrs	attrs;
- };
- 
- /**
-@@ -127,6 +137,14 @@ int phy_init(struct phy *phy);
- int phy_exit(struct phy *phy);
- int phy_power_on(struct phy *phy);
- int phy_power_off(struct phy *phy);
-+static inline int phy_get_bus_width(struct phy *phy)
-+{
-+	return phy->attrs.bus_width;
-+}
-+static inline void phy_set_bus_width(struct phy *phy, int bus_width)
-+{
-+	phy->attrs.bus_width = bus_width;
-+}
- struct phy *phy_get(struct device *dev, const char *string);
- struct phy *devm_phy_get(struct device *dev, const char *string);
- void phy_put(struct phy *phy);
-@@ -199,6 +217,16 @@ static inline int phy_power_off(struct phy *phy)
- 	return -ENOSYS;
- }
- 
-+static inline int phy_get_bus_width(struct phy *phy)
-+{
-+	return -ENOSYS;
-+}
++Required properties:
++ - compatible: brcm,kona-usb2-phy
++ - reg: offset and length of the PHY registers
++ - #phy-cells: must be 0
++Refer to phy/phy-bindings.txt for the generic PHY binding properties
 +
-+static inline void phy_set_bus_width(struct phy *phy, int bus_width)
-+{
-+	return;
-+}
++Example:
 +
- static inline struct phy *phy_get(struct device *dev, const char *string)
- {
- 	return ERR_PTR(-ENOSYS);
++	usbphy: usb-phy@3f130000 {
++		compatible = "brcm,kona-usb2-phy";
++		reg = <0x3f130000 0x28>;
++		#phy-cells = <0>;
++	};
 -- 
 1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
