@@ -1,95 +1,49 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 6/9] usb: gadget: s3c-hsotg: get phy bus width from
- phy subsystem
-Date: Fri, 13 Dec 2013 16:32:00 +0530
-Message-ID: <52AAE928.5040308@ti.com>
-References: <1386854770-2173-1-git-send-email-mporter@linaro.org>
- <1386854770-2173-7-git-send-email-mporter@linaro.org>
+Subject: Re: [PATCH] phy: Add exynos-phy driver
+Date: Fri, 13 Dec 2013 16:52:53 +0530
+Message-ID: <52AAEE0D.7010203@ti.com>
+References: <1385558788-10880-1-git-send-email-t.stanislaws@samsung.com> <52A8364B.5020204@ti.com> <52A83B87.205@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1386854770-2173-7-git-send-email-mporter@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Porter <mporter@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Linaro Patches <patches@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <52A83B87.205@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Stanislawski <t.stanislaws@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: t.figa@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, rob.herring@calxeda.com, sylvester.nawrocki@gmail.com, kyungmin.park@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 12 December 2013 06:56 PM, Matt Porter wrote:
-> Adds support for querying the phy bus width from the generic phy
-> subsystem. Configure UTMI bus width in GUSBCFG based on this value.
+Hi,
+
+On Wednesday 11 December 2013 03:46 PM, Sylwester Nawrocki wrote:
+> On 11/12/13 10:54, Kishon Vijay Abraham I wrote:
+>> On Wednesday 27 November 2013 06:56 PM, Tomasz Stanislawski wrote:
+>>>> Hello everyone,
+>>>> The Samsung SoCs from Exynos family are enhanced with a bunch of switches
+>>>> dedicated for IP blocks. Those switches are called PHYs in Exynos
+>>>> specification. They are usually controlled by a single bit in a single
+>>>> one-word-long register.
+>>
+>> So only enabling this switch is enough for the controller or some other actual
+>> PHY IP is needed along with this switch?
+>>
+>> However I'm not sure if the switch should be modelled as PHY as it is not a PHY
+>> in the real sense.
 > 
-> Signed-off-by: Matt Porter <mporter@linaro.org>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/usb/gadget/s3c-hsotg.c | 14 +++++++++++++-
->  drivers/usb/gadget/s3c-hsotg.h |  1 +
->  2 files changed, 14 insertions(+), 1 deletion(-)
+> These are ordinary PHY devices embedded in an SoC. I wouldn't really call
+> them "switches", as they indeed provide the physical layer functionality 
+> for various interfaces, like USB, HDMI, MIPI CSI/DSI, etc. Their control 
+
+Are they used along with the phy IPs for which Kamil and others have sent
+patches or this is used in different SoCs from what Kamil uses?
+
+Thanks
+Kishon
+
+> interface is often very simple - usually only an enable and a reset 
+> control bit. But that can't change the fact they are real PHY devices,
+> so let's not call them switches, that's just untrue.
 > 
-> diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-> index e9683c2..168aaa9 100644
-> --- a/drivers/usb/gadget/s3c-hsotg.c
-> +++ b/drivers/usb/gadget/s3c-hsotg.c
-> @@ -144,6 +144,7 @@ struct s3c_hsotg_ep {
->   * @regs: The memory area mapped for accessing registers.
->   * @irq: The IRQ number we are using
->   * @supplies: Definition of USB power supplies
-> + * @phyif: PHY interface width
->   * @dedicated_fifos: Set if the hardware has dedicated IN-EP fifos.
->   * @num_of_eps: Number of available EPs (excluding EP0)
->   * @debug_root: root directrory for debugfs.
-> @@ -171,6 +172,7 @@ struct s3c_hsotg {
->  
->  	struct regulator_bulk_data supplies[ARRAY_SIZE(s3c_hsotg_supply_names)];
->  
-> +	u32			phyif;
->  	unsigned int		dedicated_fifos:1;
->  	unsigned char           num_of_eps;
->  
-> @@ -2276,7 +2278,7 @@ static void s3c_hsotg_core_init(struct s3c_hsotg *hsotg)
->  	 */
->  
->  	/* set the PLL on, remove the HNP/SRP and set the PHY */
-> -	writel(GUSBCFG_PHYIf16 | GUSBCFG_TOutCal(7) |
-> +	writel(hsotg->phyif | GUSBCFG_TOutCal(7) |
->  	       (0x5 << 10), hsotg->regs + GUSBCFG);
->  
->  	s3c_hsotg_init_fifo(hsotg);
-> @@ -3621,6 +3623,16 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
->  		goto err_supplies;
->  	}
->  
-> +	/* Set default UTMI width */
-> +	hsotg->phyif = GUSBCFG_PHYIf16;
-> +
-> +	/*
-> +	 * If using the generic PHY framework, check if the PHY bus
-> +	 * width is 8-bit and set the phyif appropriately.
-> +	 */
-> +	if (hsotg->phy && (phy_get_bus_width(phy) == 8))
-> +		hsotg->phyif = GUSBCFG_PHYIf8;
-> +
->  	if (hsotg->phy)
->  		phy_init(hsotg->phy);
->  
-> diff --git a/drivers/usb/gadget/s3c-hsotg.h b/drivers/usb/gadget/s3c-hsotg.h
-> index d650b12..85f549f 100644
-> --- a/drivers/usb/gadget/s3c-hsotg.h
-> +++ b/drivers/usb/gadget/s3c-hsotg.h
-> @@ -55,6 +55,7 @@
->  #define GUSBCFG_HNPCap				(1 << 9)
->  #define GUSBCFG_SRPCap				(1 << 8)
->  #define GUSBCFG_PHYIf16			(1 << 3)
-> +#define GUSBCFG_PHYIf8				(0 << 3)
->  #define GUSBCFG_TOutCal_MASK			(0x7 << 0)
->  #define GUSBCFG_TOutCal_SHIFT			(0)
->  #define GUSBCFG_TOutCal_LIMIT			(0x7)
+> Regards,
+> Sylwester
 > 
