@@ -1,84 +1,60 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 07/10] ARM: dts: sun7i: cubietruck: Enable
- the GMAC
-Date: Fri, 13 Dec 2013 11:21:56 +0100
-Message-ID: <52AADFC4.1070003@st.com>
-References: <1386350983-13281-1-git-send-email-wens@csie.org> <1386350983-13281-8-git-send-email-wens@csie.org> <CAGVrzcb_r9_p4urz4XkE2A-G85KAHJa4PJ=Gt9a4RPYQNJ6j0g@mail.gmail.com> <CAGb2v64yFhkTXvdq=1VpemULhXew-5fvmSoTBzEb6iFDiSqy1Q@mail.gmail.com> <CAGVrzcaxV88dU3vEVGUiEQihUHLxq+QvQVQ6VvmOFVRsqbbX7w@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 5/6] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Fri, 13 Dec 2013 10:22:52 +0000
+Message-ID: <20131213102252.GS11044@sirena.org.uk>
+References: <1381174108-25168-1-git-send-email-syin@broadcom.com>
+ <1386787041-6035-1-git-send-email-syin@broadcom.com>
+ <1386787041-6035-6-git-send-email-syin@broadcom.com>
+ <CACRpkdaeZCodKv6R+4ZS3o-5u=QQuV3JidEp7uaLsN9aYG7bqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDB4X24GTMHRB4N7VOKQKGQEPL7QBVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGVrzcaxV88dU3vEVGUiEQihUHLxq+QvQVQ6VvmOFVRsqbbX7w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lCKkSrrNUaKEhaIQ"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaeZCodKv6R+4ZS3o-5u=QQuV3JidEp7uaLsN9aYG7bqA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sherman Yin <syin@broadcom.com>, Rob Herring <rob.herring@calxeda.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/7/2013 2:57 AM, Florian Fainelli wrote:
-> 2013/12/6 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
->> On Sat, Dec 7, 2013 at 5:09 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> 2013/12/6 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
->>>> The CubieTruck uses the GMAC with an RGMII phy.
->>>>
->>>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->>>> ---
->>>>   arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 8 ++++++++
->>>>   1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->>>> index 8a1009d..af212a2 100644
->>>> --- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->>>> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->>>> @@ -33,6 +33,14 @@
->>>>                          pinctrl-0 = <&uart0_pins_a>;
->>>>                          status = "okay";
->>>>                  };
->>>> +
->>>> +               gmac: ethernet@01c50000 {
->>>> +                       pinctrl-names = "default";
->>>> +                       pinctrl-0 = <&gmac_pins_rgmii>;
->>>> +                       snps,phy-addr = <1>;
->>>
->>> What is this snps,phy-addr property? Why is not a standard device tree
->>> node for an Ethernet PHY node used?
->>
->> This property is implemented by stmmac and documented in the DT
->> bindings. stmmac has not been updated to use Ethernet PHY nodes.
->
-> This driver property should be removed and deprecated since there is
-> an ePAPR standardized Ethernet PHY node. What I am worried here is the
-> loss of information, the standard Ethernet DT node allows to specify
-> much more information (clause, maximum speed, compatible string
-> etc...).
 
+--lCKkSrrNUaKEhaIQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-yes Florian you are right and I have already started updating the
-driver. I do not sure that I'll be able to send all the patches soon
-but for sure I can re-base them.
+On Thu, Dec 12, 2013 at 09:54:50PM +0100, Linus Walleij wrote:
 
->>
->> Removing this property will not affect the function of the driver.
->> The driver probes its MDIO bus and selects the lowest available
->> address if not specified.
->
-> So if this is just giving the driver a hint on where to  probe for a
-> PHY on the MDIO bus, then let's drop it and use the standard DT node
-> no?
->
->>
->>>> +                       phy-mode = "rgmii";
->>>
->>> Especially since you use the relatively standard "phy-mode" property here?
->>
->> Used as specified in stmmac DT bindings.
->
-> That one is kind of okay because of_get_phy_mode() knows about it,
-> even though ePAPR states this should be "phy-connection-type", so I am
-> okay with keeping that one because current practice and helpers are
-> here.
->
+> This is a reimplementation of regmap for MMIO.
+> See drivers/base/regmap/regmap-mmio.c
+> Notice how regmap_update_bits() is used throughout the
+> kernel.
+
+> If you want to do this, use regmap.
+
+Or if this is very performance sensitive (which I'd not expect for
+pinctrl) there's a helper in review at the minute which just uses a
+spinlock.
+
+--lCKkSrrNUaKEhaIQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSqt/5AAoJELSic+t+oim9IgcP/R43kRMBOxBnYDq8Ij0BX7Be
+V9/gx+yft4kW5mdXfkaaYf0bqS12axkR/dGFFoo24jEdkDJG66nHw8wEEptdK016
+uPihWqrbxwxJk8FvqodRgjYmVarUvpE5wZUplSsJwTHw4FEdepznCx138I5+Q4+6
+Bh0ax2xQGKXdttp8dwxK/WjMndzJSedsmSVpX0fdXtLShSOXYFnRQEOCSpbkTVhZ
+/19Xu9htjUjjl4W0cv0g5mvyz8ne9SydcDXu/u642sNDJ0k3rHMJGMcvVtyq22RH
+lXMUYnj+6mwBlB4o74lMR92tMaTR4mcDKOyov/AfKS97jtJ6IHThavfyeQOzxkhH
+kDckQ/xrMvjiS05GUCq2/fy+XRZsfgj+yX7fZpC3UKG4LkN6zuFejo4RlOyV/0k9
+fp82jIYAyphMuBZjjAuYN9pSHRJoMdn3Wso6qlQxsLl2lzmMfe27T4SPw+GCck4x
+CJ525BgskU+JXqKUd+/0lILgQ+GvZ6vc0R5TwWAeddoaZDYcqLH908Z3+FImI3fz
+MWqeHZ8O5M0ht7mptpC4KgSTCqgwf8O0NjI0DSDte+3wS2ra41dtZ4mBdx1dVqmC
+5jv5Bi1xyYSmqQ2s5YcEGNCSGiXDUgOf/AWQu8R2T9GQi/hejUAVBFNgebUyvClN
+m0CUNDo0i5pHQOngsM7A
+=vlSZ
+-----END PGP SIGNATURE-----
+
+--lCKkSrrNUaKEhaIQ--
