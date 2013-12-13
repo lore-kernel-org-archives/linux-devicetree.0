@@ -1,70 +1,53 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 00/26] OMAPDSS: DT support (Christmas edition)
-Date: Fri, 13 Dec 2013 09:22:35 -0800
-Message-ID: <20131213172234.GD28184@atomide.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
- <1703598.NbqXAMAFOI@avalon>
- <52AADBE0.3030203@ti.com>
- <3426377.keoaFgiZkl@avalon>
- <52AB2C25.6000507@ti.com>
+From: Christian Daudt <bcm@fixthebug.org>
+Subject: Re: [PATCH v2 3/4] rename ARCH_BCM to ARCH_BCM_MOBILE (mmc)
+Date: Fri, 13 Dec 2013 09:59:44 -0800
+Message-ID: <CAEPRUYoCo9q_xq_0=OqgtmYpchVWGrJkQdnrj5Yk4SkAfNrLiQ@mail.gmail.com>
+References: <1379956836-5866-1-git-send-email-bcm@fixthebug.org>
+	<1379956836-5866-4-git-send-email-bcm@fixthebug.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52AB2C25.6000507@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1379956836-5866-4-git-send-email-bcm@fixthebug.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>
+Cc: Domenico Andreoli <cavokz@gmail.com>, Christian Daudt <csd@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Matt Porter <matt.porter@linaro.org>, Alex Elder <alex.elder@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Christian Daudt <bcm@fixthebug.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [131213 07:49]:
-> Hi Laurent, Tony,
-> 
-> On 2013-12-13 16:37, Laurent Pinchart wrote:
-> 
-> >>> - dsi_enable_pads, dsi_disable_pads: Those don't seem to be used in
-> >>> mainline. What's their purpose, and how are they implemented on platforms
-> >>> that make use of them ? Is the pinmux API an option ?
-> >>
-> >> They are used in mainline, grep again =).
-> > 
-> > The only implementations I can find in arch/arm/mach-omap2/display.c are
-> > 
-> > static int omap_dsi_enable_pads(int dsi_id, unsigned lane_mask)
-> > {
-> >         return 0;
-> > }
-> > 
-> > static void omap_dsi_disable_pads(int dsi_id, unsigned lane_mask)
-> > {
-> > }
-> 
-> Yep. It seems Tony removed the muxing for -rc2 in
-> e30b06f4d5f000c31a7747a7e7ada78a5fd419a1 ARM: OMAP2+: Remove legacy mux
-> code for display.c
-> 
-> Tony, that patch removes DSI muxing, which is not done via DT. I can't
-> test right now, but I presume DSI displays don't work at all after -rc2.
+On Mon, Sep 23, 2013 at 10:20 AM, Christian Daudt <bcm@fixthebug.org> wrote:
+> Currently ARCH_BCM has been used for Broadcom
+> Mobile V7 based SoCs. In order to allow other Broadcom
+> SoCs to also use mach-bcm directory and files, this patch
+> renames the original ARCH_BCM to ARCH_BCM_MOBILE, and
+> uses ARCH_BCM to define any Broadcom chip residing
+> in mach-bcm directory.
+>
+> Signed-off-by: Christian Daudt <bcm@fixthebug.org>
+> Acked-by: Olof Johansson <olof@lixom.net>
+>
+> Changes from v1:
+>  - fix alpha ordering in dts/Makefile
+>  - break into 4 patches for separate subsys
+>
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 7fc5099..7e89650 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -251,7 +251,7 @@ config MMC_SDHCI_S3C_DMA
+>
+>  config MMC_SDHCI_BCM_KONA
+>         tristate "SDHCI support on Broadcom KONA platform"
+> -       depends on ARCH_BCM
+> +       depends on ARCH_BCM_MOBILE
+>         select MMC_SDHCI_PLTFM
+>         help
+>           This selects the Broadcom Kona Secure Digital Host Controller
+> --
+> 1.7.10.4
+>
+Chris,
+ This is the last unacked piece of this patchset - could you pls
+review it ? Also let me know if you're pulling it in or if you want me
+to pull it into bcm to armsoc.
 
-Hmm I suggest you test against commit adfe9361b236 (ARM: dts: Add basic
-devices on am3517-evm) as it does not yet remove the legacy data and
-that's what's heading to linux next soonish.
-
-With the DT configured displays that muxing needs to be done in the
-DSS driver(s) using pinctrl-single.
-
-BTW, I suspect quite a few of the DSI using boards have been broken a
-while before 0b2aa8bed3e1 (gpio: twl4030: Fix regression for twl gpio
-output) as at least the following have been using TWL GPIO to enable
-the panel:
-
-board-3430sdp.c
-board-devkit8000.c
-board-ldp.c
-board-omap3stalker.c
-
-This was the case at least for LDP.
-
-Regards,
-
-Tony
+ Thanks,
+   csd
