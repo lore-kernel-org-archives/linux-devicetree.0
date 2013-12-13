@@ -1,7 +1,7 @@
 From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v6 3/9] usb: gadget: s3c-hsotg: enable build for other platforms
-Date: Fri, 13 Dec 2013 11:51:17 -0500
-Message-ID: <1386953483-21631-4-git-send-email-mporter@linaro.org>
+Subject: [PATCH v6 5/9] usb: gadget: s3c-hsotg: use generic phy_init()/phy_exit() support
+Date: Fri, 13 Dec 2013 11:51:19 -0500
+Message-ID: <1386953483-21631-6-git-send-email-mporter@linaro.org>
 References: <1386953483-21631-1-git-send-email-mporter@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1386953483-21631-1-git-send-email-mporter@linaro.org>
@@ -10,48 +10,37 @@ To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Dinh Nguyen <dinh.linux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove unused Samsung-specific machine include and Kconfig
-dependency on S3C.
+If a generic phy is present, call phy_init()/phy_exit(). This supports
+generic phys that must be soft reset before power on.
 
 Signed-off-by: Matt Porter <mporter@linaro.org>
-Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/usb/gadget/Kconfig     | 7 +++----
- drivers/usb/gadget/s3c-hsotg.c | 2 --
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ drivers/usb/gadget/s3c-hsotg.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
-index a91e642..181e760 100644
---- a/drivers/usb/gadget/Kconfig
-+++ b/drivers/usb/gadget/Kconfig
-@@ -294,11 +294,10 @@ config USB_PXA27X
- 	   gadget drivers to also be dynamically linked.
- 
- config USB_S3C_HSOTG
--	tristate "S3C HS/OtG USB Device controller"
--	depends on S3C_DEV_USB_HSOTG
-+	tristate "Designware/S3C HS/OtG USB Device controller"
- 	help
--	  The Samsung S3C64XX USB2.0 high-speed gadget controller
--	  integrated into the S3C64XX series SoC.
-+	  The Designware USB2.0 high-speed gadget controller
-+	  integrated into many SoCs.
- 
- config USB_S3C2410
- 	tristate "S3C2410 USB Device Controller"
 diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-index 33eb690..8ceb5ef 100644
+index 7c5d8bd..e9683c2 100644
 --- a/drivers/usb/gadget/s3c-hsotg.c
 +++ b/drivers/usb/gadget/s3c-hsotg.c
-@@ -37,8 +37,6 @@
- #include <linux/usb/phy.h>
- #include <linux/platform_data/s3c-hsotg.h>
+@@ -3621,6 +3621,9 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
+ 		goto err_supplies;
+ 	}
  
--#include <mach/map.h>
--
- #include "s3c-hsotg.h"
++	if (hsotg->phy)
++		phy_init(hsotg->phy);
++
+ 	/* usb phy enable */
+ 	s3c_hsotg_phy_enable(hsotg);
  
- static const char * const s3c_hsotg_supply_names[] = {
+@@ -3714,6 +3717,8 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
+ 	}
+ 
+ 	s3c_hsotg_phy_disable(hsotg);
++	if (hsotg->phy)
++		phy_exit(hsotg->phy);
+ 	clk_disable_unprepare(hsotg->clk);
+ 
+ 	return 0;
 -- 
 1.8.4
