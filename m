@@ -1,13 +1,10 @@
 From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Fwd: [PATCH v4 2/2] ARM: mach-moxart: add MOXA ART SoC device tree files
-Date: Fri, 13 Dec 2013 15:39:54 +0100
-Message-ID: <CACmBeS0etrrWcmqY6rQ3wQ+hBvqvd0d80pC1jBPYAmX=bBjPSA@mail.gmail.com>
-References: <1386945188-8316-1-git-send-email-jonas.jensen@gmail.com>
-	<1386945188-8316-3-git-send-email-jonas.jensen@gmail.com>
+Subject: Fwd: [PATCH v4 0/2] ARM: mach-moxart: add MOXA ART SoC support
+Date: Fri, 13 Dec 2013 15:38:26 +0100
+Message-ID: <CACmBeS1oTB=aewysR67-dQfn17X_at=ajP0-ZEqbX8MarTi5_Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386945188-8316-3-git-send-email-jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
@@ -18,306 +15,69 @@ devicetree-u79uwXL29TaiAVqoAR/hOA@public.gmane.org
 ---------- Forwarded message ----------
 From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Date: 13 December 2013 15:33
-Subject: [PATCH v4 2/2] ARM: mach-moxart: add MOXA ART SoC device tree files
+Subject: [PATCH v4 0/2] ARM: mach-moxart: add MOXA ART SoC support
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org,
 arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org,
 Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 
-Add a generic (dtsi) include file for MOXA ART SoCs.
+This set adds MOXA ART SoC and platform support.
 
-Also add a file for UC-7112-LX.
+Changes since v3:
+1. removed platform specific UART debug files,
+   replaced by generic code under DEBUG_LL_UART_8250.
 
-Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/moxart.txt |  12 +++
+arch/arm/mach-moxart/*:
+2. select DMA_OF and PHYLIB
+3. remove .init_time hook
+4. reinsert restart code that rely on watchdog register
+   (watchdog maintainers rejected arm_pm_restart in watchdog code)
+   assign arm_pm_restart from .init_machine
+5. move to ARCH_MULTI_V4T (ARCH_MULTI_V4 was removed)
+
+arch/arm/boot/dts/moxart-uc7112lx.dts:
+6. remove comments
+7. add "mdio0"/"mdio1" nodes
+8. add phy-handle/phy-mode to "mac0"/"mac1" nodes
+9. change bootargs (change root=/dev/mtdblock2 to root=/dev/mmcblk0p1)
+10. add gpio-leds node "leds"
+11. add gpio-keys-polled node "gpio_keys_polled"
+12. rename "mmc" node "sdhci"
+
+arch/arm/boot/dts/moxart.dtsi:
+13. add fixed-clock node "ref12"
+14. remove "clk" node, add nodes "clk_pll"/"clk_apb"
+15. add gpio-rtc-* (sclk|data|reset) to "rtc" node
+16. add "dma" node
+17. remove second register from "gpio" node
+
+Applies to next-20131213
+
+
+Jonas Jensen (2):
+  ARM: mach-moxart: add MOXA ART SoC platform files
+  ARM: mach-moxart: add MOXA ART SoC device tree files
+
+ Documentation/devicetree/bindings/arm/moxart.txt |  12 ++
+ arch/arm/Kconfig                                 |   2 +
+ arch/arm/Makefile                                |   1 +
  arch/arm/boot/dts/Makefile                       |   1 +
- arch/arm/boot/dts/moxart-uc7112lx.dts            | 131 +++++++++++++++++++++++
- arch/arm/boot/dts/moxart.dtsi                    | 100 +++++++++++++++++
- 4 files changed, 244 insertions(+)
+ arch/arm/boot/dts/moxart-uc7112lx.dts            | 131 ++++++++++++++++++++
+ arch/arm/boot/dts/moxart.dtsi                    | 100 +++++++++++++++
+ arch/arm/configs/moxart_defconfig                | 148 +++++++++++++++++++++++
+ arch/arm/mach-moxart/Kconfig                     |  31 +++++
+ arch/arm/mach-moxart/Makefile                    |   3 +
+ arch/arm/mach-moxart/moxart.c                    |  75 ++++++++++++
+ 10 files changed, 504 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/arm/moxart.txt
  create mode 100644 arch/arm/boot/dts/moxart-uc7112lx.dts
  create mode 100644 arch/arm/boot/dts/moxart.dtsi
+ create mode 100644 arch/arm/configs/moxart_defconfig
+ create mode 100644 arch/arm/mach-moxart/Kconfig
+ create mode 100644 arch/arm/mach-moxart/Makefile
+ create mode 100644 arch/arm/mach-moxart/moxart.c
 
-diff --git a/Documentation/devicetree/bindings/arm/moxart.txt
-b/Documentation/devicetree/bindings/arm/moxart.txt
-new file mode 100644
-index 0000000..11087ed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/moxart.txt
-@@ -0,0 +1,12 @@
-+MOXA ART device tree bindings
-+
-+Boards with the MOXA ART SoC shall have the following properties:
-+
-+Required root node property:
-+
-+compatible = "moxa,moxart";
-+
-+Boards:
-+
-+- UC-7112-LX: embedded computer
-+  compatible = "moxa,moxart-uc-7112-lx", "moxa,moxart"
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9fe33e7..f331b22 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -318,6 +318,7 @@ dtb-$(CONFIG_ARCH_VT8500) += vt8500-bv07.dtb \
- dtb-$(CONFIG_ARCH_ZYNQ) += zynq-zc702.dtb \
-        zynq-zc706.dtb \
-        zynq-zed.dtb
-+dtb-$(CONFIG_ARCH_MOXART) += moxart-uc7112lx.dtb
-
- targets += dtbs
- targets += $(dtb-y)
-diff --git a/arch/arm/boot/dts/moxart-uc7112lx.dts
-b/arch/arm/boot/dts/moxart-uc7112lx.dts
-new file mode 100644
-index 0000000..c63d013
---- /dev/null
-+++ b/arch/arm/boot/dts/moxart-uc7112lx.dts
-@@ -0,0 +1,131 @@
-+/* moxart-uc7112lx.dts - Device Tree file for MOXA UC-7112-LX
-+ *
-+ * Copyright (C) 2013 Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+
-+/dts-v1/;
-+/include/ "moxart.dtsi"
-+
-+/ {
-+       model = "MOXA UC-7112-LX";
-+       compatible = "moxa,moxart-uc-7112-lx", "moxa,moxart";
-+
-+       memory {
-+               device_type = "memory";
-+               reg = <0x0 0x2000000>;
-+       };
-+
-+       flash@80000000,0 {
-+               compatible = "numonyx,js28f128", "cfi-flash";
-+               reg = <0x80000000 0x1000000>;
-+               bank-width = <2>;
-+               #address-cells = <1>;
-+               #size-cells = <1>;
-+               partition@0 {
-+                       label = "bootloader";
-+                       reg = <0x0 0x40000>;
-+               };
-+               partition@40000 {
-+                       label = "linux kernel";
-+                       reg = <0x40000 0x1C0000>;
-+               };
-+               partition@200000 {
-+                       label = "root filesystem";
-+                       reg = <0x200000 0x800000>;
-+               };
-+               partition@a00000 {
-+                       label = "user filesystem";
-+                       reg = <0xa00000 0x600000>;
-+               };
-+       };
-+
-+       sdhci: sdhci@98e00000 {
-+               compatible = "moxa,moxart-sdhci";
-+               reg = <0x98e00000 0x5C>;
-+               interrupts = <5 0>;
-+               clocks = <&clk_apb>;
-+               dmas =  <&dma 5>,
-+                       <&dma 5>;
-+               dma-names = "tx", "rx";
-+       };
-+
-+       mdio0: mdio@90900090 {
-+               compatible = "moxa,moxart-mdio";
-+               reg = <0x90900090 0x8>;
-+               #address-cells = <1>;
-+               #size-cells = <0>;
-+
-+               ethphy0: ethernet-phy@1 {
-+                       device_type = "ethernet-phy";
-+                       compatible = "moxa,moxart-rtl8201cp",
-"ethernet-phy-ieee802.3-c22";
-+                       reg = <1>;
-+               };
-+       };
-+
-+       mdio1: mdio@92000090 {
-+               compatible = "moxa,moxart-mdio";
-+               reg = <0x92000090 0x8>;
-+               #address-cells = <1>;
-+               #size-cells = <0>;
-+
-+               ethphy1: ethernet-phy@1 {
-+                       device_type = "ethernet-phy";
-+                       compatible = "moxa,moxart-rtl8201cp",
-"ethernet-phy-ieee802.3-c22";
-+                       reg = <1>;
-+               };
-+       };
-+
-+       mac0: mac@90900000 {
-+               compatible = "moxa,moxart-mac";
-+               reg = <0x90900000 0x90>;
-+               interrupts = <25 0>;
-+               phy-handle = <&ethphy0>;
-+               phy-mode = "mii";
-+       };
-+
-+       mac1: mac@92000000 {
-+               compatible = "moxa,moxart-mac";
-+               reg = <0x92000000 0x90>;
-+               interrupts = <27 0>;
-+               phy-handle = <&ethphy1>;
-+               phy-mode = "mii";
-+       };
-+
-+       uart0: uart@98200000 {
-+               compatible = "ns16550a";
-+               reg = <0x98200000 0x20>;
-+               interrupts = <31 8>;
-+               reg-shift = <2>;
-+               reg-io-width = <4>;
-+               clock-frequency = <14745600>;
-+               status = "okay";
-+       };
-+
-+       leds {
-+               compatible = "gpio-leds";
-+               user-led {
-+                       label = "ready-led";
-+                       gpios = <&gpio 27 0x1>;
-+                       default-state = "on";
-+                       linux,default-trigger = "default-on";
-+               };
-+       };
-+
-+       gpio_keys_polled {
-+               compatible = "gpio-keys-polled";
-+               #address-cells = <1>;
-+               #size-cells = <0>;
-+               poll-interval = <500>;
-+               button@25 {
-+                       label = "GPIO Reset";
-+                       linux,code = <116>;
-+                       gpios = <&gpio 25 1>;
-+               };
-+       };
-+
-+       chosen {
-+               bootargs = "console=ttyS0,115200n8 earlyprintk
-root=/dev/mmcblk0p1 rw rootwait";
-+       };
-+};
-diff --git a/arch/arm/boot/dts/moxart.dtsi b/arch/arm/boot/dts/moxart.dtsi
-new file mode 100644
-index 0000000..0ea51ed
---- /dev/null
-+++ b/arch/arm/boot/dts/moxart.dtsi
-@@ -0,0 +1,100 @@
-+/* moxart.dtsi - Device Tree Include file for MOXA ART family SoC
-+ *
-+ * Copyright (C) 2013 Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+       compatible = "moxa,moxart";
-+       model = "MOXART";
-+       interrupt-parent = <&intc>;
-+
-+       cpus {
-+               #address-cells = <1>;
-+               #size-cells = <0>;
-+
-+               cpu@0 {
-+                       device_type = "cpu";
-+                       compatible = "faraday,fa526";
-+                       reg = <0>;
-+               };
-+       };
-+
-+       clocks {
-+               #address-cells = <1>;
-+               #size-cells = <0>;
-+
-+               ref12: ref12M {
-+                       compatible = "fixed-clock";
-+                       #clock-cells = <0>;
-+                       clock-frequency = <12000000>;
-+               };
-+       };
-+
-+       soc {
-+               compatible = "simple-bus";
-+               #address-cells = <1>;
-+               #size-cells = <1>;
-+               reg = <0x90000000 0x10000000>;
-+               ranges;
-+
-+               intc: interrupt-controller@98800000 {
-+                       compatible = "moxa,moxart-ic";
-+                       reg = <0x98800000 0x38>;
-+                       interrupt-controller;
-+                       #interrupt-cells = <2>;
-+                       interrupt-mask = <0x00080000>;
-+               };
-+
-+               clk_pll: clk_pll@98100000 {
-+                       compatible = "moxa,moxart-pll-clock";
-+                       #clock-cells = <0>;
-+                       reg = <0x98100000 0x34>;
-+                       clocks = <&ref12>;
-+               };
-+
-+               clk_apb: clk_apb@98100000 {
-+                       compatible = "moxa,moxart-apb-clock";
-+                       #clock-cells = <0>;
-+                       reg = <0x98100000 0x34>;
-+                       clocks = <&clk_pll>;
-+               };
-+
-+               timer: timer@98400000 {
-+                       compatible = "moxa,moxart-timer";
-+                       reg = <0x98400000 0x42>;
-+                       interrupts = <19 1>;
-+                       clocks = <&clk_apb>;
-+               };
-+
-+               gpio: gpio@98700000 {
-+                       gpio-controller;
-+                       #gpio-cells = <2>;
-+                       compatible = "moxa,moxart-gpio";
-+                       reg = <0x98700000 0xC>;
-+               };
-+
-+               rtc: rtc {
-+                       compatible = "moxa,moxart-rtc";
-+                       gpio-rtc-sclk = <&gpio 5 0>;
-+                       gpio-rtc-data = <&gpio 6 0>;
-+                       gpio-rtc-reset = <&gpio 7 0>;
-+               };
-+
-+               dma: dma@90500000 {
-+                       compatible = "moxa,moxart-dma";
-+                       reg = <0x90500080 0x40>;
-+                       interrupts = <24 0>;
-+                       #dma-cells = <1>;
-+               };
-+
-+               watchdog: watchdog@98500000 {
-+                       compatible = "moxa,moxart-watchdog";
-+                       reg = <0x98500000 0x10>;
-+                       clocks = <&clk_apb>;
-+               };
-+       };
-+};
 --
 1.8.2.1
 --
