@@ -1,58 +1,79 @@
-From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: [PATCH 2/2] ARM: imx6sl: Add missing spba clock to clock tree
-Date: Fri, 13 Dec 2013 23:44:08 +0800
-Message-ID: <af095eb33a2e5083bde4066bc1c910276d72daa1.1386949189.git.Guangyu.Chen@freescale.com>
-References: <cover.1386949189.git.Guangyu.Chen@freescale.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 00/26] OMAPDSS: DT support (Christmas edition)
+Date: Fri, 13 Dec 2013 17:47:49 +0200
+Message-ID: <52AB2C25.6000507@ti.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1703598.NbqXAMAFOI@avalon> <52AADBE0.3030203@ti.com> <3426377.keoaFgiZkl@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1386949189.git.Guangyu.Chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="k6imFEirtv9CVKcUsUjuG1E0jqToT7cSj"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <3426377.keoaFgiZkl@avalon>
+Sender: linux-omap-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-We are missing spba clock in imx6sl's clock tree, thus add it.
+--k6imFEirtv9CVKcUsUjuG1E0jqToT7cSj
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
----
- arch/arm/mach-imx/clk-imx6sl.c           | 1 +
- include/dt-bindings/clock/imx6sl-clock.h | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+Hi Laurent, Tony,
 
-diff --git a/arch/arm/mach-imx/clk-imx6sl.c b/arch/arm/mach-imx/clk-imx6sl.c
-index 5eb5522..3781a18 100644
---- a/arch/arm/mach-imx/clk-imx6sl.c
-+++ b/arch/arm/mach-imx/clk-imx6sl.c
-@@ -233,6 +233,7 @@ static void __init imx6sl_clocks_init(struct device_node *ccm_node)
- 	clks[IMX6SL_CLK_PWM3]         = imx_clk_gate2("pwm3",         "perclk",            base + 0x78, 20);
- 	clks[IMX6SL_CLK_PWM4]         = imx_clk_gate2("pwm4",         "perclk",            base + 0x78, 22);
- 	clks[IMX6SL_CLK_SDMA]         = imx_clk_gate2("sdma",         "ipg",               base + 0x7c, 6);
-+	clks[IMX6SL_CLK_SPBA]         = imx_clk_gate2("spba",         "ipg",               base + 0x7c, 12);
- 	clks[IMX6SL_CLK_SPDIF]        = imx_clk_gate2("spdif",        "spdif0_podf",       base + 0x7c, 14);
- 	clks[IMX6SL_CLK_SSI1]         = imx_clk_gate2("ssi1",         "ssi1_podf",         base + 0x7c, 18);
- 	clks[IMX6SL_CLK_SSI2]         = imx_clk_gate2("ssi2",         "ssi2_podf",         base + 0x7c, 20);
-diff --git a/include/dt-bindings/clock/imx6sl-clock.h b/include/dt-bindings/clock/imx6sl-clock.h
-index 4735e84..7cf5c99 100644
---- a/include/dt-bindings/clock/imx6sl-clock.h
-+++ b/include/dt-bindings/clock/imx6sl-clock.h
-@@ -144,6 +144,7 @@
- #define IMX6SL_CLK_USDHC3		131
- #define IMX6SL_CLK_USDHC4		132
- #define IMX6SL_CLK_PLL4_AUDIO_DIV	133
--#define IMX6SL_CLK_END			134
-+#define IMX6SL_CLK_SPBA			134
-+#define IMX6SL_CLK_END			135
- 
- #endif /* __DT_BINDINGS_CLOCK_IMX6SL_H */
--- 
-1.8.4
+On 2013-12-13 16:37, Laurent Pinchart wrote:
+
+>>> - dsi_enable_pads, dsi_disable_pads: Those don't seem to be used in
+>>> mainline. What's their purpose, and how are they implemented on platf=
+orms
+>>> that make use of them ? Is the pinmux API an option ?
+>>
+>> They are used in mainline, grep again =3D).
+>=20
+> The only implementations I can find in arch/arm/mach-omap2/display.c ar=
+e
+>=20
+> static int omap_dsi_enable_pads(int dsi_id, unsigned lane_mask)
+> {
+>         return 0;
+> }
+>=20
+> static void omap_dsi_disable_pads(int dsi_id, unsigned lane_mask)
+> {
+> }
+
+Yep. It seems Tony removed the muxing for -rc2 in
+e30b06f4d5f000c31a7747a7e7ada78a5fd419a1 ARM: OMAP2+: Remove legacy mux
+code for display.c
+
+Tony, that patch removes DSI muxing, which is not done via DT. I can't
+test right now, but I presume DSI displays don't work at all after -rc2.
+
+ Tomi
+
+
+
+--k6imFEirtv9CVKcUsUjuG1E0jqToT7cSj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJSqywlAAoJEPo9qoy8lh71HvIQAKyzyIWDHV78evvz46ui0P98
+JVEqVfMQLBRa/dOiUvsQQyAc7+A/3QNm6SIsBNgpu33iwEtr82DJ/lxC69IjA9Uh
+P0OHdRbcBslI/X/qH8ZWRYZye5TKHrr8Gvo1fbeSaGH8hnTwz0ikwojv+AYR8wYa
+1nvisQnHEEvQ4IvBTIX0X3nI9/h9fCUqHD1eYfK6uPGdPGbX3g3WB+noTRxRUaY0
+3YbW/zrZw71hSRqcyEqhfdMv2niexm91u61/PgkdPxsAmOmjtMdQiYQ6aiddL6t2
+PKpp+rlJZBAbUgNC36sKYQBZO7Ccl/7+oMMbhyDPT9v5uVJhaUR0dUwiQgWlIra6
++Aew30W9T/qaZ5504Vx6kPcVDfXVFKBfNkteOuzKj1qUPyOD33ihkC9TCXAGwC6S
+HNYTw1N51iRNQ/B6s8cHiynqh/G+pyK4IfYpOXztHO+Ue0inaT4FpkmfgrmZeQLo
+jOrYUS+F0pPq3hEpaNyokzxWGXiJSuFtuCSXmXrUmw8mJXTsfbe9qSTUukbiP3HH
+DcqSgb4MdV46PSfmPPCg+FcCJIjFQrYQQAph0Nd3aF3aPSYP1CaUODYJcXTlS2MN
+efaC4JaLR4Hk087f0Sv8JIhrEjenH0A4D6InFlrET0qV6AifiYe48KfX5/kjRYl2
+FfQiBaaTXKQHEiMc2yVe
+=7dfu
+-----END PGP SIGNATURE-----
+
+--k6imFEirtv9CVKcUsUjuG1E0jqToT7cSj--
