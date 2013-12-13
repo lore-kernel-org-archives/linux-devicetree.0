@@ -1,47 +1,124 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: tegra: enable ams AS3722 drivers
-Date: Fri, 13 Dec 2013 11:54:10 +0530
-Message-ID: <52AAA80A.7010905@nvidia.com>
-References: <1386855064-10993-1-git-send-email-ldewangan@nvidia.com> <52AA2891.2020502@wwwdotorg.org> <52AA2FD1.3020000@wwwdotorg.org>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v6 08/15] usb: phy-mxs: Add implementation of
+ nofity_suspend and notify_resume
+Date: Fri, 13 Dec 2013 14:31:42 +0800
+Message-ID: <CAL411-rEJN_AkmJEooVB+45qDE8n8CGNq-ODUKMhfPyuQ5fPwA@mail.gmail.com>
+References: <1386897825-6130-1-git-send-email-peter.chen@freescale.com>
+ <1386897825-6130-9-git-send-email-peter.chen@freescale.com> <20131213043236.GH867@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52AA2FD1.3020000-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131213043236.GH867@saruman.home>
+Sender: linux-doc-owner@vger.kernel.org
+To: "balbi@ti.com" <balbi@ti.com>
+Cc: Peter Chen <peter.chen@freescale.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, rob.herring@calxeda.com, kernel@pengutronix.de, grant.likely@linaro.org, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 December 2013 03:21 AM, Stephen Warren wrote:
-> On 12/12/2013 02:20 PM, Stephen Warren wrote:
->> On 12/12/2013 06:31 AM, Laxman Dewangan wrote:
->>> ams AS3722 is the system power manager module IC for the Tegra124 based
->>> Venice2 platform. Enable configs for gpio, pincontrol, rtc, regulator
->>> support from this device.
->> I've squashed patch 1/2 into Tegra's for-3.14/defconfig branch.
+On Fri, Dec 13, 2013 at 12:32 PM, Felipe Balbi <balbi@ti.com> wrote:
+> On Fri, Dec 13, 2013 at 09:23:38AM +0800, Peter Chen wrote:
+>> Implementation of notify_suspend and notify_resume will be different
+>> according to mxs_phy_data->flags.
 >>
->> I've applied patch 2/2 to Tegra's for-3.14/dt branch.
-> Actually, I'm dropping patch 2/2 since it causes a whole bunch of error
-> spew during boot:
+>> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+>> ---
+>>  drivers/usb/phy/phy-mxs-usb.c |   55 ++++++++++++++++++++++++++++++++++++++---
+>>  1 files changed, 51 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+>> index 0ef930a..e3df53f 100644
+>> --- a/drivers/usb/phy/phy-mxs-usb.c
+>> +++ b/drivers/usb/phy/phy-mxs-usb.c
+>> @@ -166,8 +166,8 @@ static int mxs_phy_suspend(struct usb_phy *x, int suspend)
+>>  static int mxs_phy_on_connect(struct usb_phy *phy,
+>>               enum usb_device_speed speed)
+>>  {
+>> -     dev_dbg(phy->dev, "%s speed device has connected\n",
+>> -             (speed == USB_SPEED_HIGH) ? "high" : "non-high");
+>> +     dev_dbg(phy->dev, "%s device has connected\n",
+>> +             (speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
 >
->> [    0.628315] tegra124-pinctrl 70000868.pinmux: invalid group "dap2_dout_pp2" for function "rsvd4"
->> [    0.635309] tegra124-pinctrl 70000868.pinmux: does not have pin group dap2_dout_pp2
->> [    0.642999] tegra124-pinctrl 70000868.pinmux: could not map group config for "dap2_dout_pp2"
->> [    0.731176] as3722-pinctrl as3722-pinctrl: pin gpio0 already requested by as3722-pinctrl; cannot claim for as3722-regulator
->> [    0.742312] as3722-pinctrl as3722-pinctrl: pin-0 (as3722-regulator) status -22
->> [    0.749526] as3722-pinctrl as3722-pinctrl: could not request pin 0 (gpio0) from group gpio0  on device as3722-pinctrl
->> [    0.760133] as3722-regulator as3722-regulator: Error applying setting, reverse things back
->> [    0.835838] as3722-regulator as3722-regulator: Failed to find supply vin-ldo1-6
->> [    0.843312] as3722-regulator as3722-regulator: regulator 8 register failed -517
->> [    0.852263] platform as3722-regulator: Driver as3722-regulator requests probe deferral
->> [    0.984920] as3722-pinctrl as3722-pinctrl: pin gpio0 already requested by as3722-pinctrl; cannot claim for as3722-rtc
->> [    0.995537] as3722-pinctrl as3722-pinctrl: pin-0 (as3722-rtc) status -22
->> [    1.002244] as3722-pinctrl as3722-pinctrl: could not request pin 0 (gpio0) from group gpio0  on device as3722-pinctrl
->> [    1.012848] as3722-rtc as3722-rtc: Error applying setting, reverse things back
+> unrelated.
+>
+>> @@ -179,8 +179,8 @@ static int mxs_phy_on_connect(struct usb_phy *phy,
+>>  static int mxs_phy_on_disconnect(struct usb_phy *phy,
+>>               enum usb_device_speed speed)
+>>  {
+>> -     dev_dbg(phy->dev, "%s speed device has disconnected\n",
+>> -             (speed == USB_SPEED_HIGH) ? "high" : "non-high");
+>> +     dev_dbg(phy->dev, "%s device has disconnected\n",
+>> +             (speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
+>
+> unrelated.
+>
 
-I did not observe this issue in my log, probably overlooked.
-I will repro this and fix/update the issue/patch.
+Marek suggested using that string, I will added it at another patch.
 
-Thanks,
-laxman
+>> @@ -189,6 +189,48 @@ static int mxs_phy_on_disconnect(struct usb_phy *phy,
+>>       return 0;
+>>  }
+>>
+>> +static int mxs_phy_on_suspend(struct usb_phy *phy,
+>> +             enum usb_device_speed speed)
+>> +{
+>> +     struct mxs_phy *mxs_phy = to_mxs_phy(phy);
+>> +
+>> +     dev_dbg(phy->dev, "%s device has suspended\n",
+>> +             (speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
+>> +
+>> +     /* delay 4ms to wait bus entering idle */
+>> +     usleep_range(4000, 5000);
+>> +
+>> +     if (mxs_phy->data->flags & MXS_PHY_ABNORMAL_IN_SUSPEND) {
+>> +             writel_relaxed(0xffffffff, phy->io_priv + HW_USBPHY_PWD);
+>> +             writel_relaxed(0, phy->io_priv + HW_USBPHY_PWD);
+>> +     }
+>> +
+>> +     if (speed == USB_SPEED_HIGH)
+>> +             writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
+>> +                             phy->io_priv + HW_USBPHY_CTRL_CLR);
+>
+> why only on HS ? So if !HS and !ABNORMAL, this is no-op.
+>
+>> +static int mxs_phy_on_resume(struct usb_phy *phy,
+>> +             enum usb_device_speed speed)
+>> +{
+>> +     dev_dbg(phy->dev, "%s device has resumed\n",
+>> +             (speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
+>> +
+>> +     if (speed == USB_SPEED_HIGH) {
+>> +             /* Make sure the device has switched to High-Speed mode */
+>> +             udelay(500);
+>> +             writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
+>> +                             phy->io_priv + HW_USBPHY_CTRL_SET);
+>> +     }
+>
+> likewise, if !HS it's a no-op.
+>
+
+Correct,  this operation is only needed for HS.
+
+>> @@ -235,6 +277,11 @@ static int mxs_phy_probe(struct platform_device *pdev)
+>>
+>>       platform_set_drvdata(pdev, mxs_phy);
+>>
+>> +     if (mxs_phy->data->flags & MXS_PHY_SENDING_SOF_TOO_FAST) {
+>> +             mxs_phy->phy.notify_suspend = mxs_phy_on_suspend;
+>> +             mxs_phy->phy.notify_resume = mxs_phy_on_resume;
+>> +     }
+>
+> hmm, and seems like you only need notify_* on a buggy device. Sorry
+> Peter but you don't have enough arguments to make me agree with this
+> (and previous) patch.
+>
+> You gotta find a better way to handle this using normal phy
+> suspend/resume calls.
+>
+
+Like I explained at previous patch, it needs to be notified during
+ehci suspend/resume.
+I admit it is a SoC bug, but all SoCs have bugs, hmm.
+Software needs the solution to workaround it which breaks the standard USB spec.
+
+-- 
+BR,
+Peter Chen
