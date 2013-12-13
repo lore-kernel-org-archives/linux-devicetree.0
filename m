@@ -1,49 +1,32 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: Re: [PATCH 0/5] Add more device nodes for am43x-epos-evm
-Date: Fri, 13 Dec 2013 14:52:05 +0530
-Message-ID: <52AAD1BD.6070903@ti.com>
-References: <1385537447-6922-1-git-send-email-sourav.poddar@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: ux500: Refactor common DT configs for sdi[n] devices
+Date: Fri, 13 Dec 2013 10:26:27 +0100
+Message-ID: <CACRpkdam1OUZZFR_wh0XKm1dUTDOm_=e_-mcbKnqqBWeVbVyig@mail.gmail.com>
+References: <1386855098-14272-1-git-send-email-ulf.hansson@linaro.org>
+	<1386855098-14272-2-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1385537447-6922-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: bcousson@baylibre.com
-Cc: Sourav Poddar <sourav.poddar@ti.com>, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, tony@atomide.com, balbi@ti.com, linux-omap@vger.kernel.org, nsekhar@ti.com, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386855098-14272-2-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Andrew Morton.
+On Thu, Dec 12, 2013 at 2:31 PM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Ping on this.
+> Remove duplicated configurations and move specific details into
+> each corresponding dtsi file for the href versions.
+>
+> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-On Wednesday 27 November 2013 01:00 PM, Sourav Poddar wrote:
-> The patch series adds support for enabling pwm backlight, i2c2, spi and
-> matrix gpio keys on am43x-gp-evm.
->
-> Done on top of 3.13-rc1 + tero clock series(1)
->
-> [1]: https://patchwork.kernel.org/patch/3009541/
->
-> Tested on am43x-gp-evm.
->
-> There is a some bug while using regulators through backlight
-> driver on 3.13-rc1. So, tested pwm part with this temporary patch[2].
->
-> [2]: http://www.spinics.net/lists/arm-kernel/msg288215.html
->
-> Darren Etheridge (1):
->    pinctrl: am43xx: dt-bindings: add MUX_MODE8
->
-> Sourav Poddar (4):
->    arm: dts: am4372: Add pwm-cellsproperty for ecap device.
->    arm: dts: am43x-epos-evm: Add I2C data.
->    arm: dts: am43x-epos-evm: Add SPI data.
->    ARM: dts: am43x-epos-evm: Add pwm backlight support.
->
->   arch/arm/boot/dts/am4372.dtsi        |    9 +++++
->   arch/arm/boot/dts/am43x-epos-evm.dts |   67 ++++++++++++++++++++++++++++++++++
->   include/dt-bindings/pinctrl/am43xx.h |    1 +
->   3 files changed, 77 insertions(+), 0 deletions(-)
->
+Applied to my ux500-devicetree branch, thanks!
 
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
