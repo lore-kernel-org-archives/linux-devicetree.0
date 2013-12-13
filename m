@@ -1,235 +1,199 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] regulator: Start using standard gpios property and deprecate some custom properties
-Date: Fri, 13 Dec 2013 12:07:14 -0800
-Message-ID: <1386965234-26461-1-git-send-email-tony@atomide.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v6 08/15] usb: phy-mxs: Add implementation of
+ nofity_suspend and notify_resume
+Date: Fri, 13 Dec 2013 14:09:24 -0600
+Message-ID: <20131213200924.GI5292@saruman.home>
+References: <1386897825-6130-1-git-send-email-peter.chen@freescale.com>
+ <1386897825-6130-9-git-send-email-peter.chen@freescale.com>
+ <20131213043236.GH867@saruman.home>
+ <CAL411-rEJN_AkmJEooVB+45qDE8n8CGNq-ODUKMhfPyuQ5fPwA@mail.gmail.com>
+Reply-To: balbi@ti.com
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============5038738977080246005=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL411-rEJN_AkmJEooVB+45qDE8n8CGNq-ODUKMhfPyuQ5fPwA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: Marek =?utf-8?B?VmHFoXV0?= <marex@denx.de>, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, Fabio Estevam <festevam@gmail.com>, Peter Chen <peter.chen@freescale.com>, kernel@pengutronix.de, grant.likely@linaro.org, Shawn Guo <shawn.guo@linaro.org>, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-We can start moving regulators to using the standard gpios property instead
-of various custom GPIO related properties. The reason for doing this is that
-at least regulator-fixed can currently cause silent bugs if "gpios" property
-is used instead of "gpio" property.
+--===============5038738977080246005==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EdRE1UL8d3mMOE6m"
+Content-Disposition: inline
 
-Fix the issue by trying to use "gpios" where possible in the drivers that
-can already use it, and if that fails, then try to use the deprecated custom
-property for getting the GPIO.
+--EdRE1UL8d3mMOE6m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/regulator/fixed-regulator.txt     |  8 ++++++--
- Documentation/devicetree/bindings/regulator/lp872x.txt    |  9 ++++++---
- .../devicetree/bindings/regulator/max8997-regulator.txt   | 15 ++++++++++-----
- Documentation/devicetree/bindings/regulator/tps65090.txt  |  6 +++++-
- drivers/regulator/fixed.c                                 |  4 +++-
- drivers/regulator/lp872x.c                                |  4 +++-
- drivers/regulator/max8997.c                               |  4 +++-
- drivers/regulator/tps65090-regulator.c                    |  7 +++++--
- 8 files changed, 41 insertions(+), 16 deletions(-)
+On Fri, Dec 13, 2013 at 02:31:42PM +0800, Peter Chen wrote:
+> On Fri, Dec 13, 2013 at 12:32 PM, Felipe Balbi <balbi@ti.com> wrote:
+> > On Fri, Dec 13, 2013 at 09:23:38AM +0800, Peter Chen wrote:
+> >> Implementation of notify_suspend and notify_resume will be different
+> >> according to mxs_phy_data->flags.
+> >>
+> >> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> >> ---
+> >>  drivers/usb/phy/phy-mxs-usb.c |   55 ++++++++++++++++++++++++++++++++=
+++++++---
+> >>  1 files changed, 51 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-u=
+sb.c
+> >> index 0ef930a..e3df53f 100644
+> >> --- a/drivers/usb/phy/phy-mxs-usb.c
+> >> +++ b/drivers/usb/phy/phy-mxs-usb.c
+> >> @@ -166,8 +166,8 @@ static int mxs_phy_suspend(struct usb_phy *x, int =
+suspend)
+> >>  static int mxs_phy_on_connect(struct usb_phy *phy,
+> >>               enum usb_device_speed speed)
+> >>  {
+> >> -     dev_dbg(phy->dev, "%s speed device has connected\n",
+> >> -             (speed =3D=3D USB_SPEED_HIGH) ? "high" : "non-high");
+> >> +     dev_dbg(phy->dev, "%s device has connected\n",
+> >> +             (speed =3D=3D USB_SPEED_HIGH) ? "HS" : "FS/LS");
+> >
+> > unrelated.
+> >
+> >> @@ -179,8 +179,8 @@ static int mxs_phy_on_connect(struct usb_phy *phy,
+> >>  static int mxs_phy_on_disconnect(struct usb_phy *phy,
+> >>               enum usb_device_speed speed)
+> >>  {
+> >> -     dev_dbg(phy->dev, "%s speed device has disconnected\n",
+> >> -             (speed =3D=3D USB_SPEED_HIGH) ? "high" : "non-high");
+> >> +     dev_dbg(phy->dev, "%s device has disconnected\n",
+> >> +             (speed =3D=3D USB_SPEED_HIGH) ? "HS" : "FS/LS");
+> >
+> > unrelated.
+> >
+>=20
+> Marek suggested using that string, I will added it at another patch.
+>=20
+> >> @@ -189,6 +189,48 @@ static int mxs_phy_on_disconnect(struct usb_phy *=
+phy,
+> >>       return 0;
+> >>  }
+> >>
+> >> +static int mxs_phy_on_suspend(struct usb_phy *phy,
+> >> +             enum usb_device_speed speed)
+> >> +{
+> >> +     struct mxs_phy *mxs_phy =3D to_mxs_phy(phy);
+> >> +
+> >> +     dev_dbg(phy->dev, "%s device has suspended\n",
+> >> +             (speed =3D=3D USB_SPEED_HIGH) ? "HS" : "FS/LS");
+> >> +
+> >> +     /* delay 4ms to wait bus entering idle */
+> >> +     usleep_range(4000, 5000);
+> >> +
+> >> +     if (mxs_phy->data->flags & MXS_PHY_ABNORMAL_IN_SUSPEND) {
+> >> +             writel_relaxed(0xffffffff, phy->io_priv + HW_USBPHY_PWD);
+> >> +             writel_relaxed(0, phy->io_priv + HW_USBPHY_PWD);
+> >> +     }
+> >> +
+> >> +     if (speed =3D=3D USB_SPEED_HIGH)
+> >> +             writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
+> >> +                             phy->io_priv + HW_USBPHY_CTRL_CLR);
+> >
+> > why only on HS ? So if !HS and !ABNORMAL, this is no-op.
+> >
+> >> +static int mxs_phy_on_resume(struct usb_phy *phy,
+> >> +             enum usb_device_speed speed)
+> >> +{
+> >> +     dev_dbg(phy->dev, "%s device has resumed\n",
+> >> +             (speed =3D=3D USB_SPEED_HIGH) ? "HS" : "FS/LS");
+> >> +
+> >> +     if (speed =3D=3D USB_SPEED_HIGH) {
+> >> +             /* Make sure the device has switched to High-Speed mode =
+*/
+> >> +             udelay(500);
+> >> +             writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
+> >> +                             phy->io_priv + HW_USBPHY_CTRL_SET);
+> >> +     }
+> >
+> > likewise, if !HS it's a no-op.
+> >
+>=20
+> Correct,  this operation is only needed for HS.
+>=20
+> >> @@ -235,6 +277,11 @@ static int mxs_phy_probe(struct platform_device *=
+pdev)
+> >>
+> >>       platform_set_drvdata(pdev, mxs_phy);
+> >>
+> >> +     if (mxs_phy->data->flags & MXS_PHY_SENDING_SOF_TOO_FAST) {
+> >> +             mxs_phy->phy.notify_suspend =3D mxs_phy_on_suspend;
+> >> +             mxs_phy->phy.notify_resume =3D mxs_phy_on_resume;
+> >> +     }
+> >
+> > hmm, and seems like you only need notify_* on a buggy device. Sorry
+> > Peter but you don't have enough arguments to make me agree with this
+> > (and previous) patch.
+> >
+> > You gotta find a better way to handle this using normal phy
+> > suspend/resume calls.
+> >
+>=20
+> Like I explained at previous patch, it needs to be notified during
+> ehci suspend/resume.
+> I admit it is a SoC bug, but all SoCs have bugs, hmm.
+> Software needs the solution to workaround it which breaks the standard US=
+B spec.
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-index 4fae41d..cabdb77 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -4,7 +4,7 @@ Required properties:
- - compatible: Must be "regulator-fixed";
- 
- Optional properties:
--- gpio: gpio to use for enable control
-+- gpios: gpio to use for enable control
- - startup-delay-us: startup time in microseconds
- - enable-active-high: Polarity of GPIO is Active high
- If this property is missing, the default assumed is Active low.
-@@ -12,6 +12,10 @@ If this property is missing, the default assumed is Active low.
-   If this property is missing then default assumption is false.
- -vin-supply: Input supply name.
- 
-+Deprecated properties:
-+- gpio: Use the standard gpios property listed above instead of
-+  this.
-+
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
- However a fixed voltage regulator is expected to have the
-@@ -25,7 +29,7 @@ Example:
- 		regulator-name = "fixed-supply";
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
--		gpio = <&gpio1 16 0>;
-+		gpios = <&gpio1 16 0>;
- 		startup-delay-us = <70000>;
- 		enable-active-high;
- 		regulator-boot-on;
-diff --git a/Documentation/devicetree/bindings/regulator/lp872x.txt b/Documentation/devicetree/bindings/regulator/lp872x.txt
-index 7818318..12a4268 100644
---- a/Documentation/devicetree/bindings/regulator/lp872x.txt
-+++ b/Documentation/devicetree/bindings/regulator/lp872x.txt
-@@ -25,7 +25,7 @@ Optional properties:
-     For more details, please see the datasheet.
- 
-   - ti,update-config: define it when LP872X_GENERAL_CFG register should be set
--  - ti,dvs-gpio: GPIO specifier for external DVS pin control of LP872x devices.
-+  - gpios: GPIO specifier for external DVS pin control of LP872x devices.
-   - ti,dvs-vsel: DVS selector. 0 = SEL_V1, 1 = SEL_V2.
-   - ti,dvs-state: initial DVS pin state. 0 = DVS_LOW, 1 = DVS_HIGH.
- 
-@@ -35,6 +35,9 @@ Optional properties:
-     For more details, please see the following binding document.
-     (Documentation/devicetree/bindings/regulator/regulator.txt)
- 
-+Deprecated properties:
-+  - ti,dvs-gpio: Use the standard gpios property listed above instead of this.
-+
- Datasheet
-   - LP8720: http://www.ti.com/lit/ds/symlink/lp8720.pdf
-   - LP8725: http://www.ti.com/lit/ds/symlink/lp8725.pdf
-@@ -50,10 +53,10 @@ lp8720@7d {
- 	ti,update-config;
- 
- 	/*
--	 * The dvs-gpio depends on the processor environment.
-+	 * The gpios depends on the processor environment.
- 	 * For example, following GPIO specifier means GPIO134 in OMAP4.
- 	 */
--	ti,dvs-gpio = <&gpio5 6 0>;
-+	gpios = <&gpio5 6 0>;
- 	ti,dvs-vsel = /bits/ 8 <1>;		/* SEL_V2 */
- 	ti,dvs-state = /bits/ 8 <1>;		/* DVS_HIGH */
- 
-diff --git a/Documentation/devicetree/bindings/regulator/max8997-regulator.txt b/Documentation/devicetree/bindings/regulator/max8997-regulator.txt
-index 5c186a7..460eac8 100644
---- a/Documentation/devicetree/bindings/regulator/max8997-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/max8997-regulator.txt
-@@ -37,6 +37,7 @@ Optional properties:
- - interrupts: Interrupt specifiers for two interrupt sources.
-   - First interrupt specifier is for 'irq1' interrupt.
-   - Second interrupt specifier is for 'alert' interrupt.
-+- gpios: The gpio dvs to use for 'buck1', 'buck2' and 'buck5'.
- - max8997,pmic-buck1-uses-gpio-dvs: 'buck1' can be controlled by gpio dvs.
- - max8997,pmic-buck2-uses-gpio-dvs: 'buck2' can be controlled by gpio dvs.
- - max8997,pmic-buck5-uses-gpio-dvs: 'buck5' can be controlled by gpio dvs.
-@@ -52,8 +53,12 @@ Additional properties required if either of the optional properties are used:
-   property should be between 0 and 7. If not specified or if out of range, the
-   default value of this property is set to 0.
- 
--- max8997,pmic-buck125-dvs-gpios: GPIO specifiers for three host gpio's used
--  for dvs. The format of the gpio specifier depends in the gpio controller.
-+- gpios: GPIO specifiers for three host gpio's used for dvs. The format of
-+  the gpio specifier depends in the gpio controller.
-+
-+Deprecated properties:
-+- max8997,pmic-buck125-dvs-gpios: Use the standard gpios property listed above
-+  instead of this.
- 
- Regulators: The regulators of max8997 that have to be instantiated should be
- included in a sub-node named 'regulators'. Regulator nodes included in this
-@@ -102,9 +107,9 @@ Example:
- 		max8997,pmic-ignore-gpiodvs-side-effect;
- 		max8997,pmic-buck125-default-dvs-idx = <0>;
- 
--		max8997,pmic-buck125-dvs-gpios = <&gpx0 0 1 0 0>, /* SET1 */
--						 <&gpx0 1 1 0 0>, /* SET2 */
--						 <&gpx0 2 1 0 0>; /* SET3 */
-+		gpios = <&gpx0 0 1 0 0>, /* SET1 */
-+			<&gpx0 1 1 0 0>, /* SET2 */
-+			<&gpx0 2 1 0 0>; /* SET3 */
- 
- 		max8997,pmic-buck1-dvs-voltage = <1350000>, <1300000>,
- 						 <1250000>, <1200000>,
-diff --git a/Documentation/devicetree/bindings/regulator/tps65090.txt b/Documentation/devicetree/bindings/regulator/tps65090.txt
-index 313a60b..05870a8 100644
---- a/Documentation/devicetree/bindings/regulator/tps65090.txt
-+++ b/Documentation/devicetree/bindings/regulator/tps65090.txt
-@@ -16,12 +16,16 @@ Required properties:
- Optional properties:
- - ti,enable-ext-control: This is applicable for DCDC1, DCDC2 and DCDC3.
-   If DCDCs are externally controlled then this property should be there.
--- "dcdc-ext-control-gpios: This is applicable for DCDC1, DCDC2 and DCDC3.
-+- gpios: This is applicable for DCDC1, DCDC2 and DCDC3.
-   If DCDCs are externally controlled and if it is from GPIO then GPIO
-   number should be provided. If it is externally controlled and no GPIO
-   entry then driver will just configure this rails as external control
-   and will not provide any enable/disable APIs.
- 
-+Deprecated properties:
-+- dcdc-ext-control-gpios: Use the standard gpios property listed above
-+  instead of this.
-+
- Each regulator is defined using the standard binding for regulators.
- 
- Example:
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index 5ea64b9..652adf7 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -77,7 +77,9 @@ of_get_fixed_voltage_config(struct device *dev)
- 	if (init_data->constraints.boot_on)
- 		config->enabled_at_boot = true;
- 
--	config->gpio = of_get_named_gpio(np, "gpio", 0);
-+	config->gpio = of_get_gpio(np, 0);
-+	if (!gpio_is_valid(config->gpio))
-+		config->gpio = of_get_named_gpio(np, "gpio", 0);
- 	/*
- 	 * of_get_named_gpio() currently returns ENODEV rather than
- 	 * EPROBE_DEFER. This code attempts to be compatible with both
-diff --git a/drivers/regulator/lp872x.c b/drivers/regulator/lp872x.c
-index 2e4734f..29192f2 100644
---- a/drivers/regulator/lp872x.c
-+++ b/drivers/regulator/lp872x.c
-@@ -863,7 +863,9 @@ static struct lp872x_platform_data
- 	if (!pdata->dvs)
- 		goto out;
- 
--	pdata->dvs->gpio = of_get_named_gpio(np, "ti,dvs-gpio", 0);
-+	pdata->dvs->gpio = of_get_gpio(np, 0);
-+	if (!gpio_is_valid(pdata->dvs->gpio))
-+		pdata->dvs->gpio = of_get_named_gpio(np, "ti,dvs-gpio", 0);
- 	of_property_read_u8(np, "ti,dvs-vsel", (u8 *)&pdata->dvs->vsel);
- 	of_property_read_u8(np, "ti,dvs-state", &dvs_state);
- 	pdata->dvs->init_state = dvs_state ? DVS_HIGH : DVS_LOW;
-diff --git a/drivers/regulator/max8997.c b/drivers/regulator/max8997.c
-index 2d618fc..0703066 100644
---- a/drivers/regulator/max8997.c
-+++ b/drivers/regulator/max8997.c
-@@ -899,7 +899,9 @@ static int max8997_pmic_dt_parse_dvs_gpio(struct platform_device *pdev,
- 	int i, gpio;
- 
- 	for (i = 0; i < 3; i++) {
--		gpio = of_get_named_gpio(pmic_np,
-+		gpio = of_get_gpio(pmic_np, i);
-+		if (!gpio_is_valid(gpio))
-+			gpio = of_get_named_gpio(pmic_np,
- 					"max8997,pmic-buck125-dvs-gpios", i);
- 		if (!gpio_is_valid(gpio)) {
- 			dev_err(&pdev->dev, "invalid gpio[%d]: %d\n", i, gpio);
-diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
-index 676f755..e118ba4 100644
---- a/drivers/regulator/tps65090-regulator.c
-+++ b/drivers/regulator/tps65090-regulator.c
-@@ -208,9 +208,12 @@ static struct tps65090_platform_data *tps65090_parse_dt_reg_data(
- 		rpdata->enable_ext_control = of_property_read_bool(
- 					tps65090_matches[idx].of_node,
- 					"ti,enable-ext-control");
--		if (rpdata->enable_ext_control)
--			rpdata->gpio = of_get_named_gpio(np,
-+		if (rpdata->enable_ext_control) {
-+			rpdata->gpio = of_get_gpio(np, 0);
-+			if (!gpio_is_valid(rpdata->gpio))
-+				rpdata->gpio = of_get_named_gpio(np,
- 					"dcdc-ext-control-gpios", 0);
-+		}
- 
- 		tps65090_pdata->reg_pdata[idx] = rpdata;
- 	}
--- 
-1.8.1.1
+Then I think what you need is a real notification mechanism. usbcore
+already notifies about buses and devices being added and removed,
+perhaps you can convince Greg to accept suspend/resume notifications.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With that, you can (conditionally) make this driver listen to usbcore
+notifications. That'll be more work, but I guess it's best in the long
+run as we won't need to keep on adding callbacks to the USB PHY
+structure just because another buggy device showed up on the market.
+
+--=20
+balbi
+
+--EdRE1UL8d3mMOE6m
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSq2l0AAoJEIaOsuA1yqRE8h8P/0OIj+9XTonE6OCwGpbNkk3z
+6mMtBNdmhpSpQ6/SUaRiR8i2B2UulSKbcOtMDBz9jgcEanL0/n5DH+FGgGTHks2N
+VhqpjD/y7yhAOSylusOosxUoegjTC2Q4387kd1ifzusBOIqlCbjcpKe/mhxjMNx1
+i78QZxJft85lK2WTWfyih8Sl3B/7vAKm0SeRfeoCWqQVZkYKsGSMVhB9c1gc6wra
+45g5bgOS67/WtD27XeXDwSxGbaW8SskFdoBYl26DlpycLEAc+QCSJ4Dijl8xXdEG
+eYAuNYPhkvGVjn5LTDmCaxw1iGouoIZva/+IiauwnWOtGcwkxad8zQkjTdLyqYtz
+EOoT1ILLRuZnVaMhOqKexK3A+f7DL7wl6xaShGRPS1De4m37IO/4BIr3vS/yGyLB
+OC8zkYuqZjCOcINnMk/ofqziE2F0oT2ZPyxRo74G1b+0L2n215HE0YVuRFGYdLXw
+LqVo6SnpGcDCFkFZN/QVLnhy7FcyIjjod6vlBrh+GEvUlLqzvzq32jiPDlLrqmpj
+aSn8w6KtSdsEYlTQdAgJvuly83H/KBLmb2X4tajeLViRWRtlGDlDAxEw7QVkjzul
+9WKYw3mV8ouMc95GdAsMf3FGkWJzGowmhRRwJ+T5zDM7lrfMf/2hVaU6gITrq9+T
+or9uvEQetl894keP35Co
+=botE
+-----END PGP SIGNATURE-----
+
+--EdRE1UL8d3mMOE6m--
+
+
+--===============5038738977080246005==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5038738977080246005==--
