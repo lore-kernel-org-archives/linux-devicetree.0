@@ -1,112 +1,128 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 06/26] OMAPDSS: if dssdev->name==NULL, use alias
-Date: Fri, 13 Dec 2013 14:01:22 +0200
-Message-ID: <52AAF712.1030209@ti.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-7-git-send-email-tomi.valkeinen@ti.com> <37483030.ghHfzYFSnL@avalon> <10507960.9DXH4TSv2E@avalon> <52A968BD.20304@ti.com> <20131212100527.GA860@earth.universe> <52A9C470.2030102@ti.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: imx6qdl: add support for Ka-Ro TX6 modules
+Date: Fri, 13 Dec 2013 20:13:09 +0800
+Message-ID: <20131213121308.GT18380@S2101-09.ap.freescale.net>
+References: <1386854880-21805-1-git-send-email-LW@KARO-electronics.de>
+ <1386854880-21805-5-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="CFkjO4ePuWtN8J1mDv5nXEpmwWoN6BJtO"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52A9C470.2030102@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Florian Vaussard <florian.vaussard@epfl.ch>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1386854880-21805-5-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---CFkjO4ePuWtN8J1mDv5nXEpmwWoN6BJtO
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Lothar,
 
-On 2013-12-12 16:13, Tomi Valkeinen wrote:
-> On 2013-12-12 12:05, Sebastian Reichel wrote:
->> On Thu, Dec 12, 2013 at 09:41:49AM +0200, Tomi Valkeinen wrote:
->>>> A label property is still an option.
->>>
->>> Hmm, what do you mean? Label as in:
->>>
->>> foo : node {
->>> };
->>>
->>> Isn't that 'foo' label only visible in DT itself, as a shortcut?
->>
->> Some driver use a "label" property like this:
->>
->> foo : node {
->>     label =3D "lcd";
->>
->>     ...
->> };
->>
->> See for example
->>
->> Documentation/devicetree/bindings/leds/common.txt
->> Documentation/devicetree/bindings/mtd/partition.txt
->=20
-> Ah, I see. That kind of label was actually the first thing I did when
-> starting to work on DSS DT. But I removed it, as it didn't describe the=
+Please check the patch against those comments that I put on the TX53
+patches.  A couple of comments embedded below.
 
-> hardware and I didn't see others using anything similar.
->=20
-> But I guess one could argue it does describe hardware, not in electrica=
-l
-> level but in conceptual level.
->=20
-> The question is, do we need labeling for displays? For backward
-> compatibility omapdss would need it, but in general? I'm quite content
-> with having just display0, display1 etc. Using the alias node, those ca=
+On Thu, Dec 12, 2013 at 02:28:00PM +0100, Lothar Wa=DFmann wrote:
+=2E..
+> @@ -0,0 +1,350 @@
+> +/*
+> + * Copyright 2013 Lothar Wa=DFmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+> + *
+> + * The code contained herein is licensed under the GNU General Publi=
+c
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx6dl.dtsi"
+> +#include "imx6qdl-tx6.dtsi"
+> +
+> +/ {
+> +	model =3D "Ka-Ro electronics TX6DL Module";
+> +	compatible =3D "fsl,imx6dl-tx6dl", "fsl,imx6dl";
+
+karo,imx6dl-tx6dl
+
+<snip>
+
+> +&iomuxc {
+> +	display {
+> +		pinctrl_disp0_1: disp0grp-1 {
+> +			fsl,pins =3D <
+> +				MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
+> +				MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x10
+> +				MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10
+> +				MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10
+> +				/* PAD DISP0_DAT0 is used for the Flexcan transceiver control */
+
+So how will this pingrp be used, without DATA00?
+
+Shawn
+
+> +				MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x10
+> +				MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x10
+> +				MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x10
+> +				MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x10
+> +				MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x10
+> +				MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x10
+> +				MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x10
+> +				MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x10
+> +				MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x10
+> +				MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x10
+> +				MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x10
+> +				MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x10
+> +				MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x10
+> +				MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x10
+> +				MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x10
+> +				MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x10
+> +				MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x10
+> +				MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x10
+> +				MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x10
+> +				MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x10
+> +				MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x10
+> +				MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x10
+> +				MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x10
+> +			>;
+> +		};
+> +
+> +		pinctrl_disp0_2: disp0grp-2 {
+> +			fsl,pins =3D <
+> +				MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
+> +				MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x10
+> +				MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10
+> +				MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10
+> +				MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x10
+> +				MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x10
+> +				MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x10
+> +				MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x10
+> +				MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x10
+> +				MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x10
+> +				MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x10
+> +				MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x10
+> +				MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x10
+> +				MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x10
+> +				MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x10
+> +				MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x10
+> +				MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x10
+> +				MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x10
+> +				MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x10
+> +				MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x10
+> +				MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x10
+> +				MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x10
+> +				MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x10
+> +				MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x10
+> +				MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x10
+> +				MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x10
+> +				MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x10
+> +				MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x10
+> +			>;
+> +		};
+> +	};
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
-> be fixed and display0 is always the same display.
-
-I came to the conclusion that it's better to add the label to keep
-backward compatibility, especially as it was very easy to add.
-
-So we'll have 'name' and 'alias' for each display (as we have already).
-
-In the current non-DT boot (which is going away):
-
-- 'alias' is created by omapdss dynamically (first display to be
-registered is display0, etc.)
-- 'name' comes from platform data
-
-In the DT boot:
-
-- 'alias' comes from the DT aliases node, or if there are no display
-aliases, it's created the same way as to non-DT. The code presumes that
-there either is a DT alias for all displays, or there are none.
-- 'name' comes from 'label' property
-
-In both non-DT and DT cases, if 'name' is NULL (i.e. not set in platform
-data or no 'label' property), the alias is used as a name.
-
-I think this works fine, and was a trivial change.
-
- Tomi
-
-
-
---CFkjO4ePuWtN8J1mDv5nXEpmwWoN6BJtO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSqvcSAAoJEPo9qoy8lh71upcQAIG+Xj8jlNkjZx9AdeRaASCQ
-Pg9N8vVRoAtyFEa5iJ5uL1RVwLNBKd/4RkS7iPNY8dXhNNetC3sL7VLEBCy4laPg
-i1vepR5cku+z651eue6mm4K/T4iEZMJY0HI1Vd34Jspek+5OZJVN2YKNLTy2Fg62
-X7GjZ42ZppFSMOqQ6oghy8DsmZNwa9QjATg8kOFbsA2QAFt1VD2QzDFS6p2mjLNh
-naVqntcPLi2v2ApUbvzxDsmtqgwCX68ZbfSJy4w+P1giNtjsnJMj/mWSHXMhonrM
-Pq984byBPbra76YdFibeQmKaMmz/F4Xu6C6En5/yUwzOwzPK/U3YqG1pfYT75yvG
-xpLHGZvOWk6gZwsbGLQt92D43MM4QtbDXiUKX5Yslhle0gnEjhRZAhTYV76P+Zna
-j8KEI42HKEz3A+DAQOEEEKsViIXHOJ6dGy1UC0VUvQ1DQYTLMGo5ElhoMPqcEDvG
-IY4xw5woYfoch03q9DIVuTdVR1QyHDs4lSYxxA628UIix+4+jzfXkbHEqjAXKm+A
-qFGhGpkXbcKGWgk3CP8lJo8iRSFY0wVBJHKsOx6ICfF7/9iz51/VFZVWMCcW6gPI
-mkGfhGF3bRMD4OHoIJ0OKVwd/pCoT14P4Coa686EiSG1IOnGDoxO9dCImvSoh4ST
-L0hEflg5NkRi5niI5gb7
-=DT6L
------END PGP SIGNATURE-----
-
---CFkjO4ePuWtN8J1mDv5nXEpmwWoN6BJtO--
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
