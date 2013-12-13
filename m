@@ -1,125 +1,51 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: imx6qdl: add support for Ka-Ro TX6 modules
-Date: Fri, 13 Dec 2013 20:13:09 +0800
-Message-ID: <20131213121308.GT18380@S2101-09.ap.freescale.net>
-References: <1386854880-21805-1-git-send-email-LW@KARO-electronics.de>
- <1386854880-21805-5-git-send-email-LW@KARO-electronics.de>
+Subject: Re: [PATCH] ARM: dts: imx53: add support for Ka-Ro TX53 modules
+Date: Fri, 13 Dec 2013 20:16:48 +0800
+Message-ID: <20131213121646.GU18380@S2101-09.ap.freescale.net>
+References: <1386852128-32220-1-git-send-email-LW@KARO-electronics.de>
+ <20131213081744.GR18380@S2101-09.ap.freescale.net>
+ <20131213105417.71a42133@ipc1.ka-ro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1386854880-21805-5-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+In-Reply-To: <20131213105417.71a42133-VjFSrY7JcPWvSplVBqRQBQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Lothar,
+On Fri, Dec 13, 2013 at 10:54:17AM +0100, Lothar Wa=DFmann wrote:
+> > > +		compatible =3D "pwm-backlight";
+> > > +		pwms =3D <&pwm2 0 500000>;
+> > > +		power-supply =3D <&reg_3v3>;
+> > > +		brightness-levels =3D <
+> > > +			100 99 98 97 96 95 94 93 92 91
+> > > +			 90 89 88 87 86 85 84 83 82 81
+> > > +			 80 79 78 77 76 75 74 73 72 71
+> > > +			 70 69 68 67 66 65 64 63 62 61
+> > > +			 60 59 58 57 56 55 54 53 52 51
+> > > +			 50 49 48 47 46 45 44 43 42 41
+> > > +			 40 39 38 37 36 35 34 33 32 31
+> > > +			 30 29 28 27 26 25 24 23 22 21
+> > > +			 20 19 18 17 16 15 14 13 12 11
+> > > +			 10  9  8  7  6  5  4  3  2  1
+> > > +			  0
+> >=20
+> > Why is it so unique to start with 100 and end with 0?  Does it even
+> > work?  Here is what I read from bindings doc.
+> >=20
+> Yes, it works. The backlight control of the displays we typically use
+> is active low. This is a poor man's way to get an inverted PWM output=
+!
+> (And one in which the number written to the sysfs file corresponds to
+> the actual duty cycle of the PWM output)
 
-Please check the patch against those comments that I put on the TX53
-patches.  A couple of comments embedded below.
-
-On Thu, Dec 12, 2013 at 02:28:00PM +0100, Lothar Wa=DFmann wrote:
-=2E..
-> @@ -0,0 +1,350 @@
-> +/*
-> + * Copyright 2013 Lothar Wa=DFmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Publi=
-c
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +#include "imx6dl.dtsi"
-> +#include "imx6qdl-tx6.dtsi"
-> +
-> +/ {
-> +	model =3D "Ka-Ro electronics TX6DL Module";
-> +	compatible =3D "fsl,imx6dl-tx6dl", "fsl,imx6dl";
-
-karo,imx6dl-tx6dl
-
-<snip>
-
-> +&iomuxc {
-> +	display {
-> +		pinctrl_disp0_1: disp0grp-1 {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
-> +				MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x10
-> +				MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10
-> +				MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10
-> +				/* PAD DISP0_DAT0 is used for the Flexcan transceiver control */
-
-So how will this pingrp be used, without DATA00?
+I think Linux pwm driver should be improved for this case rather than
+manipulate device tree in a way that violate the defined bindings.
 
 Shawn
-
-> +				MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x10
-> +				MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x10
-> +				MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x10
-> +				MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x10
-> +				MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x10
-> +				MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x10
-> +				MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x10
-> +				MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x10
-> +				MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x10
-> +				MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x10
-> +				MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x10
-> +				MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x10
-> +				MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x10
-> +				MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x10
-> +				MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x10
-> +				MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x10
-> +				MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x10
-> +				MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x10
-> +				MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x10
-> +				MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x10
-> +				MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x10
-> +				MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x10
-> +				MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x10
-> +			>;
-> +		};
-> +
-> +		pinctrl_disp0_2: disp0grp-2 {
-> +			fsl,pins =3D <
-> +				MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
-> +				MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x10
-> +				MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10
-> +				MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10
-> +				MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x10
-> +				MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x10
-> +				MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x10
-> +				MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x10
-> +				MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x10
-> +				MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x10
-> +				MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x10
-> +				MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x10
-> +				MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x10
-> +				MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x10
-> +				MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x10
-> +				MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x10
-> +				MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x10
-> +				MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x10
-> +				MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x10
-> +				MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x10
-> +				MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x10
-> +				MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x10
-> +				MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x10
-> +				MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x10
-> +				MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x10
-> +				MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x10
-> +				MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x10
-> +				MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x10
-> +			>;
-> +		};
-> +	};
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
