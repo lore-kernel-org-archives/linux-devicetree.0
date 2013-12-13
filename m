@@ -1,70 +1,127 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx53: add support for Ka-Ro TX53 modules
-Date: Fri, 13 Dec 2013 14:23:45 +0100
-Message-ID: <20131213142345.414344a6@ipc1.ka-ro>
-References: <1386852128-32220-1-git-send-email-LW@KARO-electronics.de>
-	<20131213081744.GR18380@S2101-09.ap.freescale.net>
-	<20131213105417.71a42133@ipc1.ka-ro>
-	<20131213121646.GU18380@S2101-09.ap.freescale.net>
-	<20131213134240.595d27ae@ipc1.ka-ro>
-	<20131213125719.GM24559@pengutronix.de>
-	<20131213141001.389a178e@ipc1.ka-ro>
-	<20131213131507.GN24559@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131213131507.GN24559-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Unknown <unknown@unknown.invalid>
+Subject: [PATCH v2 1/2] phy: core: Add an exported of_phy_get function
+Date: Fri, 13 Dec 2013 14:56:17 +0100
+Message-ID: <1386942978-28362-1-git-send-email-k.debski@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: <>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kishon-l0cyMroinI0@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Sascha Hauer wrote:
-> On Fri, Dec 13, 2013 at 02:10:01PM +0100, Lothar Wa=C3=9Fmann wrote:
-> > Hi,
-> >=20
-> > Sascha Hauer wrote:
-> > >=20
-> > > Actually the i.MX supports inversion in hardware. It's bit 18 in =
-the
-> > > PWMCR register.
-> > >=20
-> > I totally missed this up to now. :(
-> > Is it true for all i.MX SoCs? Or do we need to distinguish between =
-SoCs
-> > that can do the inversion and those that cannot?
->=20
-> It should work for >=3D i.MX27.
->=20
-OK, thanks.
+Previously the of_phy_get function took a struct device * and
+was declared static. It was impossible to call it from
+another driver and thus it was impossible to get phy defined
+for a given node. The old function was renamed to _of_phy_get
+and was left for internal use. of_phy_get function was added
+and it was exported. The function enables to get a phy for
+a given device tree node.
 
-> > I could provide a patch to utilize this feature, but probably not
-> > before the new year. There is something called 'vacation' in the wa=
-y. ;)
->=20
-> What's the problem? That's the time your boss can't tell you to do
-> soemthing else ;)
->=20
-Somewhere in the world are still places where there is no internet and
-no computers. ;)
+Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/phy/phy-core.c  |   41 ++++++++++++++++++++++++++++++++---------
+ include/linux/phy/phy.h |    1 +
+ 2 files changed, 33 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index 03cf8fb..f0dbd42 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -240,8 +240,8 @@ out:
+ EXPORT_SYMBOL_GPL(phy_power_off);
+ 
+ /**
+- * of_phy_get() - lookup and obtain a reference to a phy by phandle
+- * @dev: device that requests this phy
++ * _of_phy_get() - lookup and obtain a reference to a phy by phandle
++ * @np: device_node for which to get the phy
+  * @index: the index of the phy
+  *
+  * Returns the phy associated with the given phandle value,
+@@ -250,20 +250,17 @@ EXPORT_SYMBOL_GPL(phy_power_off);
+  * not yet loaded. This function uses of_xlate call back function provided
+  * while registering the phy_provider to find the phy instance.
+  */
+-static struct phy *of_phy_get(struct device *dev, int index)
++static struct phy *_of_phy_get(struct device_node *np, int index)
+ {
+ 	int ret;
+ 	struct phy_provider *phy_provider;
+ 	struct phy *phy = NULL;
+ 	struct of_phandle_args args;
+ 
+-	ret = of_parse_phandle_with_args(dev->of_node, "phys", "#phy-cells",
++	ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
+ 		index, &args);
+-	if (ret) {
+-		dev_dbg(dev, "failed to get phy in %s node\n",
+-			dev->of_node->full_name);
++	if (ret)
+ 		return ERR_PTR(-ENODEV);
+-	}
+ 
+ 	mutex_lock(&phy_provider_mutex);
+ 	phy_provider = of_phy_provider_lookup(args.np);
+@@ -283,6 +280,32 @@ err0:
+ }
+ 
+ /**
++ * of_phy_get() - lookup and obtain a reference to a phy using a device_node.
++ * @np: device_node for which to get the phy
++ * @index: the index of the phy
++ *
++ * Returns the phy driver, after getting a refcount to it; or
++ * -ENODEV if there is no such phy.  The caller is responsible for
++ * calling phy_put() to release that count.
++ */
++struct phy *of_phy_get(struct device_node *np, int index)
++{
++	struct phy *phy = NULL;
++
++	phy = _of_phy_get(np, index);
++	if (IS_ERR(phy))
++		return phy;
++
++	if (!try_module_get(phy->ops->owner))
++		return ERR_PTR(-EPROBE_DEFER);
++
++	get_device(&phy->dev);
++
++	return phy;
++}
++EXPORT_SYMBOL_GPL(of_phy_get);
++
++/**
+  * phy_put() - release the PHY
+  * @phy: the phy returned by phy_get()
+  *
+@@ -370,7 +393,7 @@ struct phy *phy_get(struct device *dev, const char *string)
+ 	if (dev->of_node) {
+ 		index = of_property_match_string(dev->of_node, "phy-names",
+ 			string);
+-		phy = of_phy_get(dev, index);
++		phy = _of_phy_get(dev->of_node, index);
+ 		if (IS_ERR(phy)) {
+ 			dev_err(dev, "unable to find phy\n");
+ 			return phy;
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 6d72269..169f572 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -131,6 +131,7 @@ struct phy *phy_get(struct device *dev, const char *string);
+ struct phy *devm_phy_get(struct device *dev, const char *string);
+ void phy_put(struct phy *phy);
+ void devm_phy_put(struct device *dev, struct phy *phy);
++struct phy *of_phy_get(struct device_node *np, int index);
+ struct phy *of_phy_simple_xlate(struct device *dev,
+ 	struct of_phandle_args *args);
+ struct phy *phy_create(struct device *dev, const struct phy_ops *ops,
+-- 
+1.7.9.5
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
-
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
-
-www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
-___________________________________________________________
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
