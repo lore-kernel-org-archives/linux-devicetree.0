@@ -1,46 +1,87 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v6 5/9] usb: gadget: s3c-hsotg: use generic phy_init()/phy_exit() support
-Date: Fri, 13 Dec 2013 11:51:19 -0500
-Message-ID: <1386953483-21631-6-git-send-email-mporter@linaro.org>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v6 6/9] usb: gadget: s3c-hsotg: get phy bus width from phy subsystem
+Date: Fri, 13 Dec 2013 11:51:20 -0500
+Message-ID: <1386953483-21631-7-git-send-email-mporter@linaro.org>
 References: <1386953483-21631-1-git-send-email-mporter@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1386953483-21631-1-git-send-email-mporter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Dinh Nguyen <dinh.linux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386953483-21631-1-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If a generic phy is present, call phy_init()/phy_exit(). This supports
-generic phys that must be soft reset before power on.
+Adds support for querying the phy bus width from the generic phy
+subsystem. Configure UTMI bus width in GUSBCFG based on this value.
 
-Signed-off-by: Matt Porter <mporter@linaro.org>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 ---
- drivers/usb/gadget/s3c-hsotg.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/gadget/s3c-hsotg.c | 14 +++++++++++++-
+ drivers/usb/gadget/s3c-hsotg.h |  1 +
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-index 7c5d8bd..e9683c2 100644
+index e9683c2..168aaa9 100644
 --- a/drivers/usb/gadget/s3c-hsotg.c
 +++ b/drivers/usb/gadget/s3c-hsotg.c
-@@ -3621,6 +3621,9 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
+@@ -144,6 +144,7 @@ struct s3c_hsotg_ep {
+  * @regs: The memory area mapped for accessing registers.
+  * @irq: The IRQ number we are using
+  * @supplies: Definition of USB power supplies
++ * @phyif: PHY interface width
+  * @dedicated_fifos: Set if the hardware has dedicated IN-EP fifos.
+  * @num_of_eps: Number of available EPs (excluding EP0)
+  * @debug_root: root directrory for debugfs.
+@@ -171,6 +172,7 @@ struct s3c_hsotg {
+ 
+ 	struct regulator_bulk_data supplies[ARRAY_SIZE(s3c_hsotg_supply_names)];
+ 
++	u32			phyif;
+ 	unsigned int		dedicated_fifos:1;
+ 	unsigned char           num_of_eps;
+ 
+@@ -2276,7 +2278,7 @@ static void s3c_hsotg_core_init(struct s3c_hsotg *hsotg)
+ 	 */
+ 
+ 	/* set the PLL on, remove the HNP/SRP and set the PHY */
+-	writel(GUSBCFG_PHYIf16 | GUSBCFG_TOutCal(7) |
++	writel(hsotg->phyif | GUSBCFG_TOutCal(7) |
+ 	       (0x5 << 10), hsotg->regs + GUSBCFG);
+ 
+ 	s3c_hsotg_init_fifo(hsotg);
+@@ -3621,6 +3623,16 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
  		goto err_supplies;
  	}
  
-+	if (hsotg->phy)
-+		phy_init(hsotg->phy);
++	/* Set default UTMI width */
++	hsotg->phyif = GUSBCFG_PHYIf16;
 +
- 	/* usb phy enable */
- 	s3c_hsotg_phy_enable(hsotg);
++	/*
++	 * If using the generic PHY framework, check if the PHY bus
++	 * width is 8-bit and set the phyif appropriately.
++	 */
++	if (hsotg->phy && (phy_get_bus_width(phy) == 8))
++		hsotg->phyif = GUSBCFG_PHYIf8;
++
+ 	if (hsotg->phy)
+ 		phy_init(hsotg->phy);
  
-@@ -3714,6 +3717,8 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
- 	}
- 
- 	s3c_hsotg_phy_disable(hsotg);
-+	if (hsotg->phy)
-+		phy_exit(hsotg->phy);
- 	clk_disable_unprepare(hsotg->clk);
- 
- 	return 0;
+diff --git a/drivers/usb/gadget/s3c-hsotg.h b/drivers/usb/gadget/s3c-hsotg.h
+index d650b12..85f549f 100644
+--- a/drivers/usb/gadget/s3c-hsotg.h
++++ b/drivers/usb/gadget/s3c-hsotg.h
+@@ -55,6 +55,7 @@
+ #define GUSBCFG_HNPCap				(1 << 9)
+ #define GUSBCFG_SRPCap				(1 << 8)
+ #define GUSBCFG_PHYIf16			(1 << 3)
++#define GUSBCFG_PHYIf8				(0 << 3)
+ #define GUSBCFG_TOutCal_MASK			(0x7 << 0)
+ #define GUSBCFG_TOutCal_SHIFT			(0)
+ #define GUSBCFG_TOutCal_LIMIT			(0x7)
 -- 
 1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
