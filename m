@@ -1,85 +1,62 @@
 From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v6 04/15] usb: doc: phy-mxs: update binding for adding
- anatop phandle
-Date: Thu, 12 Dec 2013 22:25:04 -0600
-Message-ID: <20131213042504.GE867@saruman.home>
+Subject: Re: [PATCH v6 06/15] usb: phy-mxs: Add anatop regmap
+Date: Thu, 12 Dec 2013 22:26:27 -0600
+Message-ID: <20131213042627.GF867@saruman.home>
 References: <1386897825-6130-1-git-send-email-peter.chen@freescale.com>
- <1386897825-6130-5-git-send-email-peter.chen@freescale.com>
-Reply-To: balbi@ti.com
+ <1386897825-6130-7-git-send-email-peter.chen@freescale.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8721898982499115255=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1386897825-6130-5-git-send-email-peter.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="CXFpZVxO6m2Ol4tQ"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1386897825-6130-7-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
 To: Peter Chen <peter.chen@freescale.com>
-Cc: marex@denx.de, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, rob.herring@calxeda.com, balbi@ti.com, kernel@pengutronix.de, grant.likely@linaro.org, shawn.guo@linaro.org, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Cc: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---===============8721898982499115255==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="//IivP0gvsAy3Can"
-Content-Disposition: inline
-
---//IivP0gvsAy3Can
+--CXFpZVxO6m2Ol4tQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 13, 2013 at 09:23:34AM +0800, Peter Chen wrote:
-> Add anatop phandle which is used to access anatop registers to
-> control PHY's power and other USB operations.
+Hi,
 
-no related to this patch, but this feels like OMAP's System Control
-Module (a rather simplistic IP which control power for a few other IPs).
+On Fri, Dec 13, 2013 at 09:23:36AM +0800, Peter Chen wrote:
+> @@ -226,6 +235,16 @@ static int mxs_phy_probe(struct platform_device *pde=
+v)
+> =20
+>  	platform_set_drvdata(pdev, mxs_phy);
+> =20
+> +	if (mxs_phy->data->flags & MXS_PHY_HAS_ANATOP) {
 
-We're starting to see a pattern here, eventually we will need a more
-generic approach to such types of modules. For now, don't worry :-)
+instead of the flag, you can check if that binding exist and use the
+binding itself as a flag.
 
 --=20
 balbi
 
---//IivP0gvsAy3Can
+--CXFpZVxO6m2Ol4tQ
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.15 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSqowgAAoJEIaOsuA1yqREI48P/3050nyjQvJslYgQipAdsqXz
-/pPMz99ebIDMDfAyFvx4hcjRbsj3mCgKDPJiSgEznWthqHnobMKbObdn3OO3BDl/
-NF0k5WU3aNdpKKFoeFA3vwbqutAzzwzuuOe90jhlGnRgIfqOMca07avZO6teZkbM
-lijpi+Of+iHihjFJy4J/q2IIK8I5k+YEh78rBck9vAVZ3rBLb21/5x3nsSUmI5cd
-GpiFtTexsDVImALAcsbCr0Rl3k2tC4XKulBcJceG92IlcfdE9c9mPLTFvqt6oPg9
-VQy0vJIvFaasl4lNH2Vx5IZf/zldV1ihmPRIOisCW0yeUbn7g4OljMsG9w1hajnF
-C/it9qf728kn/GoBOJ/dwiXNIb48n9vrDv/ZlWAXXJvQcrtfc8arCZo38IAuWpZK
-gffTfevWgxj0rAthmfevyM0JXkEOqlZx6AeCMfIJT2PwY1GfXSUvTBAcacTA9Bh+
-vRdcsuyIg5FtGbMUr62NnnO/o7b8ZjCnkDjPtrzLpKVk7O9JP0Xv2YBy5hNmAgjp
-BvUm2zskV91DafzO0TYig2nzaBoJtTBmuM7fyB2A/71k9n8G+Mt9pxHMBeCfCPrn
-6UnFWm45u565xRJ74zWXm6wMEWRLlIao9zcwLSgukegLoKfoe63+NNMkpnJhqig0
-65+QrUNoqBlK0zer96S6
-=wBvf
+iQIcBAEBAgAGBQJSqoxyAAoJEIaOsuA1yqRE8dcP/1fOw9ogIjqvXw9UY1exgmKD
+3yfkuWm8gmZ2sWN1Chz2LFWBS6fUlIqWr6Ug01qRlGWxBIu2IX+q0S/UgmJOQEne
+7eQif8SoY1ULOaquuzEjvS549i5fYMLvb7+VqoWaupuWL3SpddHh91w94pw/BqoV
+ezLBZdJkhfoeYf3eVgw53/GdG4sR+INccObrpj2UybmKW2bzRJCp9RwD+WOjpqaR
+OwuBjXIS18KLFIKgCWuemDuLgDTb0py/5nX/5QjEtqQom8ICCAAfctW01GKWdVdL
+496B/+7kEzzwA+Uqq/l/JevmdV5HQnG3TxAW1JdwFIhAWFFIMARbkkgmJgddRXnQ
+wvGs9XinOsB2DVP4NRZt4h98C1dpqPqbv/rlMRMPRDRLrV41jQlI1q5JMWgZ866g
+qg4bMmPzBkRZsAfURsBVuRx6cxhcIBI6xnIqy157U8M6m9UV2qMokKukBTT40Plq
+o1H+O03skejdKkwlR1xTL0wmlH9KrSa12F66MNjnhIvXZHeXKvliUajOi5zknI2q
+sz51cVMxIQ5B9M/JjXGdJHxN5u1FrbK3f8O56brCzNSbht0Ue8joY6vT3O1BHXIv
+nBzHgX7bbNgKDctIkWgN027TfrcjeujFs9ovM66Pj3ad6urT0kGv/ywZFLV5ANKr
+14/9YwPUemHbgHy9/xA1
+=Bixr
 -----END PGP SIGNATURE-----
 
---//IivP0gvsAy3Can--
-
-
---===============8721898982499115255==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8721898982499115255==--
+--CXFpZVxO6m2Ol4tQ--
