@@ -1,43 +1,117 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 1/9] phy: add phy_get_bus_width()/phy_set_bus_width()
- calls
-Date: Fri, 13 Dec 2013 15:25:50 +0530
-Message-ID: <52AAD9A6.40907@ti.com>
-References: <1386854770-2173-1-git-send-email-mporter@linaro.org>
- <1386854770-2173-2-git-send-email-mporter@linaro.org>
- <20131212181818.GI1939@saruman.home>
+From: Archit Taneja <archit@ti.com>
+Subject: Re: [PATCH 16/26] ARM: omap4-sdp.dts: add display information
+Date: Fri, 13 Dec 2013 15:28:45 +0530
+Message-ID: <52AADA55.20309@ti.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1386160133-24026-17-git-send-email-tomi.valkeinen@ti.com> <52AAD2F1.2040208@ti.com> <52AAD5CE.3010609@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131212181818.GI1939@saruman.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@ti.com, Matt Porter <mporter@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomasz Figa <t.figa@samsung.com>, Christian Daudt <bcm@fixthebug.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Kyungmin Park <kyungmin.park@samsung.com>, Linaro Patches <patches@linaro.org>, Kumar Gala <galak@codeaurora.org>, Paul Zimmerman <paulz@synopsys.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52AAD5CE.3010609@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 12 December 2013 11:48 PM, Felipe Balbi wrote:
-> Hi,
-> 
-> On Thu, Dec 12, 2013 at 08:26:02AM -0500, Matt Porter wrote:
->> This adds a pair of APIs that allows the generic PHY subsystem to
->> provide information on the PHY bus width. The PHY provider driver may
->> use phy_set_bus_width() to set the bus width that the PHY supports.
->> The controller driver may then use phy_get_bus_width() to fetch the
->> PHY bus width in order to properly configure the controller.
+On Friday 13 December 2013 03:09 PM, Tomi Valkeinen wrote:
+> On 2013-12-13 11:27, Archit Taneja wrote:
+>> On Wednesday 04 December 2013 05:58 PM, Tomi Valkeinen wrote:
+>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>>> ---
+>>>    arch/arm/boot/dts/omap4-sdp.dts | 91
+>>> +++++++++++++++++++++++++++++++++++++++++
+>>>    1 file changed, 91 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/omap4-sdp.dts
+>>> b/arch/arm/boot/dts/omap4-sdp.dts
+>>> index 5fc3f43c5a81..e3048f849612 100644
+>>> --- a/arch/arm/boot/dts/omap4-sdp.dts
+>>> +++ b/arch/arm/boot/dts/omap4-sdp.dts
+>>> @@ -550,3 +550,94 @@
+>>>        mode = <3>;
+>>>        power = <50>;
+>>>    };
+>>> +
+>>> +&dsi1 {
+>>> +    vdds_dsi-supply = <&vcxio>;
+>>> +
+>>> +    dsi1_out_ep: endpoint {
+>>> +        remote-endpoint = <&lcd0_in>;
+>>> +        lanes = <0 1 2 3 4 5>;
 >>
->> Signed-off-by: Matt Porter <mporter@linaro.org>
-> 
-> Kishon, I need your Acked-by here, if you're ok with the change.
+>> In the previous revision omapdss DT patchset, the lanes node was a
+>> member of the panel DT node, and not the dsi DT node. Any reason to
+>> change this? Does it make more sense this way?
+>
+> Well, the lane configuration is programmed into the DSI HW. So DSI needs
+> to know them. Thus the lanes can be considered a property of the DSI.
+>
+> In some cases, the external encoder or panel also needs to know about
+> the lanes. In that case, both DSI and the encoder/panel would contain
+> the same data.
+>
+> My reasoning where a property belongs to:
+>
+> If a property is clearly internal to a device, it belongs there. For
+> example, in this case vdds_dsi-supply is clearly a property of the DSI.
+>
+> If a property is about the link between two devices, like "lanes" here,
+> it belongs to both devices. If a device does not need that data for
+> anything, it can be omitted.
+>
+>> I suppose it's more suitable for dsi to hold the property if 2 panels
+>> are connected on the same bus. Say, one with 4 data lanes, and other
+>> with 2. It would be tricky for the dsi driver to get lane params from 2
+>> different places and merge them somehow.
+>
+> It doesn't matter, both would work fine. If the lanes property is in the
+> DSI node, then the DSI driver finds out the lane config by finding out
+> which endpoint is used for the panel that's being enabled.
+>
+> If the lanes property would be in the panel, the panel would pass the
+> lane config to the DSI when it's enabled.
+>
+> But I think passing the lane config from panel to DSI (like we do
+> currently) is not so nice.
 
-here it goes..
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
+Okay, that makes sense.
+
+>
+>>> +    };
+>>> +
+>>> +    lcd0: display@0 {
+>>> +        compatible = "tpo,taal", "panel-dsi-cm";
+>>> +
+>>> +        gpios = <&gpio4 6 0>;    /* 102, reset */
+>>> +
+>>> +        lcd0_in: endpoint {
+>>> +            remote-endpoint = <&dsi1_out_ep>;
+>>> +        };
+>>> +    };
+>>
+>> Is there a reason why lcd0 and lcd1 are children nodes of dsi1 and dsi2
+>> respectively? I don't see this for panels on other boards.
+>
+> Yes. The panels are _controlled_ with DSI. We model the child-parent
+> relationships in DT data based on the control. So an i2c peripheral is
+> controlled via i2c master, and is thus a child of the i2c master. Same
+> here. The ports/endpoints are used to define the data path, which is
+> separate thing from the control path.
+>
+> DPI panels which don't have any way to control them (except basic things
+> like gpios) are platform devices without any parent.
+>
+> If the DPI panel would be controlled with i2c, it'd be a child of an i2c
+> master.
+
+Ah, I thought the port/endpoint stuff had something to do with this. I 
+forgot about the parent-child relationship for the control path.
+
+In that case, for the sake of accuracy, the dsi-cm panel could get the 
+"in" parameter via the parent node wherever it's used for control, like 
+setting a DCS command for sleep out. And via 
+omapdss_of_find_source_for_first_ep() when it's used to start data 
+transfer, even though both the "in's" are finally the same dsi device?
+
+Archit
+
