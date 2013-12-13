@@ -1,80 +1,102 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
-Subject: [PATCH 07/12] dt-bindings: add documentation for s3c2410 clock controller
-Date: Fri, 13 Dec 2013 14:01:26 +0100
-Message-ID: <201312131401.27076.heiko@sntech.de>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx53: add support for Ka-Ro TX53 modules
+Date: Fri, 13 Dec 2013 14:10:01 +0100
+Message-ID: <20131213141001.389a178e@ipc1.ka-ro>
+References: <1386852128-32220-1-git-send-email-LW@KARO-electronics.de>
+	<20131213081744.GR18380@S2101-09.ap.freescale.net>
+	<20131213105417.71a42133@ipc1.ka-ro>
+	<20131213121646.GU18380@S2101-09.ap.freescale.net>
+	<20131213134240.595d27ae@ipc1.ka-ro>
+	<20131213125719.GM24559@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: t.figa@samsung.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131213125719.GM24559-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Describe the clock controller of s3c2410, s3c2440 and s3c2442.
+Hi,
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- .../bindings/clock/samsung,s3c2410-clock.txt       |   50 ++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
+Sascha Hauer wrote:
+> On Fri, Dec 13, 2013 at 01:42:40PM +0100, Lothar Wa=C3=9Fmann wrote:
+> > Hi,
+> >=20
+> > Shawn Guo wrote:
+> > > On Fri, Dec 13, 2013 at 10:54:17AM +0100, Lothar Wa=C3=9Fmann wro=
+te:
+> > > > > > +		compatible =3D "pwm-backlight";
+> > > > > > +		pwms =3D <&pwm2 0 500000>;
+> > > > > > +		power-supply =3D <&reg_3v3>;
+> > > > > > +		brightness-levels =3D <
+> > > > > > +			100 99 98 97 96 95 94 93 92 91
+> > > > > > +			 90 89 88 87 86 85 84 83 82 81
+> > > > > > +			 80 79 78 77 76 75 74 73 72 71
+> > > > > > +			 70 69 68 67 66 65 64 63 62 61
+> > > > > > +			 60 59 58 57 56 55 54 53 52 51
+> > > > > > +			 50 49 48 47 46 45 44 43 42 41
+> > > > > > +			 40 39 38 37 36 35 34 33 32 31
+> > > > > > +			 30 29 28 27 26 25 24 23 22 21
+> > > > > > +			 20 19 18 17 16 15 14 13 12 11
+> > > > > > +			 10  9  8  7  6  5  4  3  2  1
+> > > > > > +			  0
+> > > > >=20
+> > > > > Why is it so unique to start with 100 and end with 0?  Does i=
+t even
+> > > > > work?  Here is what I read from bindings doc.
+> > > > >=20
+> > > > Yes, it works. The backlight control of the displays we typical=
+ly use
+> > > > is active low. This is a poor man's way to get an inverted PWM =
+output!
+> > > > (And one in which the number written to the sysfs file correspo=
+nds to
+> > > > the actual duty cycle of the PWM output)
+> > >=20
+> > > I think Linux pwm driver should be improved for this case rather =
+than
+> > > manipulate device tree in a way that violate the defined bindings=
+=2E
+> > >
+> > I admit I would be happier with a 'polarity' flag like other PWM
+> > drivers provide it. I tried to add polarity support in the generic =
+PWM
+> > layer, so that all HW drivers that do not support inversion in HW c=
+an
+> > make use of it, but this gives problems with client drivers that do=
+n't
+> > know about the inversion and disable the PWM when the duty cycle is=
+ set
+> > to 0.
+> > Maybe I'll find some time to find a proper solution for this issue.
+>=20
+> Actually the i.MX supports inversion in hardware. It's bit 18 in the
+> PWMCR register.
+>=20
+I totally missed this up to now. :(
+Is it true for all i.MX SoCs? Or do we need to distinguish between SoCs
+that can do the inversion and those that cannot?
 
-diff --git a/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt b/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
-new file mode 100644
-index 0000000..0b64ad8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
-@@ -0,0 +1,50 @@
-+* Samsung S3C2410 Clock Controller
-+
-+The S3C2410 clock controller generates and supplies clock to various controllers
-+within the SoC. The clock binding described here is applicable to the s3c2410,
-+s3c2440 and s3c2442 SoCs in the s3c24x family.
-+
-+Required Properties:
-+
-+- compatible: should be one of the following.
-+  - "samsung,s3c2410-clock" - controller compatible with S3C2410 SoC.
-+  - "samsung,s3c2440-clock" - controller compatible with S3C2440 SoC.
-+  - "samsung,s3c2442-clock" - controller compatible with S3C2442 SoC.
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. Some of the clocks are available only
-+on a particular SoC.
-+
-+All available clocks are defined as preprocessor macros in
-+dt-bindings/clock/samsung,s3c2410-clock.h header and can be used in device
-+tree sources.
-+
-+External clocks:
-+
-+The xti clock used as input for the plls is generated outside the SoC. It is
-+expected that is are defined using standard clock bindings with a
-+clock-output-names value of "xti".
-+
-+Example: Clock controller node:
-+
-+	clocks: clock-controller@4c000000 {
-+		compatible = "samsung,s3c2410-clock";
-+		reg = <0x4c000000 0x20>;
-+		#clock-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller (refer to the standard clock bindings for information about
-+  "clocks" and "clock-names" properties):
-+
-+	serial@50004000 {
-+		compatible = "samsung,s3c2440-uart";
-+		reg = <0x50004000 0x4000>;
-+		interrupts = <1 23 3 4>, <1 23 4 4>;
-+		clock-names = "uart", "clk_uart_baud2";
-+		clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>;
-+		status = "disabled";
-+	};
--- 
-1.7.10.4
+I could provide a patch to utilize this feature, but probably not
+before the new year. There is something called 'vacation' in the way. ;=
+)
+
+
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
+
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+
+www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
+___________________________________________________________
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
