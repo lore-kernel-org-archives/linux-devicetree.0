@@ -1,66 +1,79 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 13/26] ARM: omap3.dtsi: add omapdss information
-Date: Fri, 13 Dec 2013 09:10:25 -0800
-Message-ID: <20131213171025.GC28184@atomide.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
- <52A9760A.3000801@ti.com>
- <20131212215913.GB29072@muru.com>
- <1933495.zHe4JMYZyB@avalon>
- <52AADEF3.9040808@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52AADEF3.9040808-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH v4] checkpatch: add DT compatible string documentation checks
+Date: Fri, 13 Dec 2013 11:22:37 -0600
+Message-ID: <1386955357-24444-1-git-send-email-robherring2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Joe Perches <joe@perches.com>, Grant Likely <grant.likely@linaro.org>, Andy Whitcroft <apw@canonical.com>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [131213 02:19]:
-> On 2013-12-13 05:27, Laurent Pinchart wrote:
-> > Hi Tony,
-> > 
-> > On Thursday 12 December 2013 21:59:13 Tony Lindgren wrote:
-> >> On Thu, Dec 12, 2013 at 10:38:34AM +0200, Tomi Valkeinen wrote:
-> >>> On 2013-12-12 01:44, Laurent Pinchart wrote:
-> >>>
-> >>> So, are they independent? I don't know =). I think they lean on the
-> >>> independent side. dss_core is always needed for the submodules to work,
-> >>> but for example DSI could be used without DISPC, using system DMA to
-> >>> transfer data from memory to DSI. Not a very useful thing to do, but
-> >>> still, there are dedicated DMA channels for that.
-> >>
-> >> If they have separate hwmod entries, they should be considered separate
-> >> independent devices for sure.
-> >>
-> >> To summarize, here are few reasons why they need to be treated as
-> >> separate devices:
-> > 
-> > Are you talking generally here, or about the DSS modules in particular ?
-> > 
-> >> 1. The modules maybe clocked/powered/idled separately and can have their
-> >>    own idle configuration so they can do the hardware based idling
-> >>    separately.
-> > 
-> > I don't think this applies to the DSS modules.
-> 
-> The DSS submodules have their own SYSCONFIG register, and idle settings
-> can be set per module. So I think they idle separately, even if they are
-> in a common power domain.
+From: Rob Herring <rob.herring@calxeda.com>
 
-Yes. Please see the current omap_hwmod_*_data.c files, if they are separate
-entries there, that means we need to treat them as separate devices to
-avoid the issues I listed.
+This adds a simple check that any compatible strings in DeviceTree dts
+files are present in Documentation/devicetree/bindings. Vendor prefixes
+are also checked for existing in vendor-prefixes.txt These should be
+temporary checks until we have more sophisticated binding schema checking.
 
-We do have some entries still missing from omap_hwmod_*_data.c files, like
-the SSI entries as they are undocumented. But for the existing ones there
-please follow the same layout for the .dts entries.
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Signed-off-by: Joe Perches <joe@perches.com>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Andy Whitcroft <apw@canonical.com>
+---
+v4:
+- Fix handling of no source tree or user-specified source tree
+- Check for presence of vendor-prefixes.txt
 
-Regards,
+v3:
+- Use a single message type UNDOCUMENTED_DT_STRING
+- Ensure '+' is at beginning of the line
+- Move vendor-prefixes.txt to variable
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+v2:
+- Add vendor string checking against vendor-prefixes.txt
+- Add '_', '.' and '+' as valid compatible string characters
+- Use 'grep -E' instead of egrep
+
+ scripts/checkpatch.pl | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 9c98100..e6635bb 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2034,6 +2034,33 @@ sub process {
+ 			     "Use of $flag is deprecated, please use \`$replacement->{$flag} instead.\n" . $herecurr) if ($replacement->{$flag});
+ 		}
+ 
++# check for DT compatible documentation
++		if (defined $root && $realfile =~ /\.dts/ &&
++		    $rawline =~ /^\+\s*compatible\s*=/) {
++			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
++
++			foreach my $compat (@compats) {
++				my $compat2 = $compat;
++				my $dt_path =  $root . "/Documentation/devicetree/bindings/";
++				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
++				`grep -Erq "$compat|$compat2" $dt_path`;
++				if ( $? >> 8 ) {
++					WARN("UNDOCUMENTED_DT_STRING",
++					     "DT compatible string \"$compat\" appears un-documented -- check $dt_path\n" . $herecurr);
++				}
++
++				my $vendor = $compat;
++				my $vendor_path = $dt_path . "vendor-prefixes.txt";
++				next if (! -f $vendor_path);
++				$vendor =~ s/^([a-zA-Z0-9]+)\,.*/$1/;
++				`grep -Eq "$vendor" $vendor_path`;
++				if ( $? >> 8 ) {
++					WARN("UNDOCUMENTED_DT_STRING",
++					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vendor_path\n" . $herecurr);
++				}
++			}
++		}
++
+ # check we are in a valid source file if not then ignore this hunk
+ 		next if ($realfile !~ /\.(h|c|s|S|pl|sh)$/);
+ 
+-- 
+1.8.3.2
