@@ -1,167 +1,142 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 00/26] OMAPDSS: DT support (Christmas edition)
-Date: Fri, 13 Dec 2013 04:45:32 +0100
-Message-ID: <1703598.NbqXAMAFOI@avalon>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1824203.Ui6fpnZVmO@avalon> <52A979D8.3040604@ti.com>
+From: Yuantian Tang <Yuantian.Tang@freescale.com>
+Subject: RE: [PATCH v7] clk: corenet: Adds the clock binding
+Date: Fri, 13 Dec 2013 03:39:21 +0000
+Message-ID: <9bbde68538844d4ea1d6b7688fc83317@BL2PR03MB115.namprd03.prod.outlook.com>
+References: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3070249.ECfcTHC076"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52A979D8.3040604@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-
---nextPart3070249.ECfcTHC076
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-Hi Tomi,
-
-On Thursday 12 December 2013 10:54:48 Tomi Valkeinen wrote:
-> On 2013-12-12 02:39, Laurent Pinchart wrote:
-> > On Wednesday 04 December 2013 14:28:27 Tomi Valkeinen wrote:
-> >> Hi,
-> >> 
-> >> Here's a new version for DT support to OMAP Display Subsystem. See
-> >> http://article.gmane.org/gmane.linux.ports.arm.omap/102689 for the intro
-> >> of the previous version, which contains thoughts about the related
-> >> problems.
-> >> 
-> >> The major change in this version is the use of V4L2 and CDF style
-> >> port/endpoint style in the DT data.
-> > 
-> > That's great, and I fully support that. This also calls for refactoring
-> > the V4L2 DT bindings and support code to share them with display devices.
-> > A bikeshedding question is where to put the common code.
-> 
-> Thanks very much for review!
-> 
-> I know drivers/video is in practice "fbdev", but drivers/video (the
-> words) sound like the best place for things related to video.
-
-That's an option as well, but I'm not sure I like the idea of mixing fbdev and 
-generic video in a single directory. We could use a subdirectory of 
-drivers/video.
-
-> We should establish a committee to ponder this important question.
-> 
-> Btw, I don't know if you noticed (or did I mention it somewhere): I use
-> a bit shortened form of the V4L2 bindings. If there's just one endpoint,
-> I omit the port node. I think that's always unambiguous (compared to
-> also omitting the endpoint node, and having the properties in the main
-> node, as was mentioned in some other thread).
-
-Yes, I've seen that. I need to analyze this in detail, that's planned for when 
-I'll work on sharing the DT parsing code.
-
-> I also don't supply the same data for both endpoints, when the data is about
-> the link. E.g. I think the V4L2 binding doc suggests to supply things like
-> bus-width for both endpoints. I only supply the data for the endpoint that
-> uses that data. With some encoders/panels the same data could be needed on
-> both ends, but not in these patches.
-
-How do you handle the situation where the two drivers (for each end of the 
-link) need to know the bus width for instance ?
-
-> >> However, note that even if the DT data contains proper port & endpoint
-> >> data, the drivers only use the first endpoint. This is to simplify the
-> >> patches, as adding full support for the ports and endpoints to the
-> >> drivers will be a big task.
-> > 
-> > That's perfectly fine, there's no need to implement unused features just
-> > for the sake of it, as long as the bindings are forward-compatible in
-> > that respect.
-> > 
-> >> This approach still works with more or less all the boards, as the only
-> >> cases where the simpler model is an issue are the boards with multiple
-> >> display devices connected to a single output.
-> >> 
-> >> Laurent, I'd appreciate if you could have a look at the .dts changes, to
-> >> see if there's anything that's clearly not CDF compatible.
-> > 
-> > I've quickly reviewed the patch set, concentrating on the .dts changes.
-> > Overall it looks good to me, but I suspect that we will need quite some
-> > time to finalize standard bindings as there's lots of small details that
-> > need to be taken care of.
-> 
-> Yes. I want to get this forward as it's becoming too much pain to manage
-> things without DSS DT support, when the rest of the OMAP platform code is
-> using DT.
-> 
-> The most important thing in the DSS DT bindings for now is that they should
-> contain enough information so that any future DT bindings changes can be
-> handled with a boot-time conversion code.
-
-I'm afraid I can't give you any guarantee here. The bindings will be unstable 
-for some time, and we'll have to deal with that somehow.
-
-> Actually, even the endpoint/port stuff is extra, as that could be deduced
-> even from the "video-source" method I used in earlier DT versions.
-> 
-> > The major point that bothers we, as explained in my reply to one of the
-> > patches, is that I feel like the multi-device model (virtual DSS core +
-> > DSS modules) might not accurately represent the hardware. Departing from
-> > it probably sounds scary but might not be such a large change.
-> 
-> There are actually two separate things here. One is the multi-device model,
-> having separate device for each DSS submodule. The other is having the
-> 'omapdss' "virtual" platform device.
-> 
-> Note that the "dss_core" device is a real HW block, and depicted as the
-> "dss" node in DT data, whereas "omapdss" device is not present in the DT
-> data, and is created dynamically at boot time.
-
-That's a distinction I've missed.
-
-> The omapdss device is a legacy thing, but nowadays it is mainly used to pass
-> platform data. Removing omapdss device is not easy, but the only questions
-> around that is how to implement the required platform-data functionalities,
-> and it doesn't affect the DT data.
-
-The omapdss platform data structure contains the following fields
-
-- get_context_loss_count: What is that used for ?
-
-- num_devices, devices, default_device: What are those used for ?
-
-- default_display_name: This should be easy to move to DT.
-
-- dsi_enable_pads, dsi_disable_pads: Those don't seem to be used in mainline. 
-What's their purpose, and how are they implemented on platforms that make use 
-of them ? Is the pinmux API an option ?
-
-- set_min_bus_tput: We have the same problem for the OMAP3 ISP, so a generic 
-solution is needed here.
-
-- version: Given that we detect the DSS revision based on the SoC revision, 
-I'm tempted to either explicitly encode the DSS revision in the compatible 
-string, or let the DSS driver query the SoC revision somehow. The later is 
-considered as a layering violation, but let's face it, I can't see the DSS 
-being used on a non-OMAP platform.
-
--- 
-Regards,
-
-Laurent Pinchart
-
---nextPart3070249.ECfcTHC076
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJSqoLcAAoJEIkPb2GL7hl1+asH/2ek7QsZ4swYaXXLjPuZZvUq
-7tdkGhfT/tj4MEmel4PmaIy7mcErPMsP++LSrd99GGG1c084d9fArA4xQqtLxWS0
-g1lZIysW13sKFlLEoyAwNqimTZXac6RyYkO+6HC+Jd0WQWxXxMWurd0VZ/XVH+X4
-Bib3qfJNnv4JemhdMMZORXzZIVU/Hwzaqep4Pe2AYNlgxVNp9+YtjP4eZs1vIrXC
-EiQEG/rTT3OM/RzAI8fu58eLS8BZ5DBaxXrN4nEDddILN+/ctwgRQzbHZPeNYCUv
-9QeefovEK6POsLiXzxctPWAuvQwaakrXx8snYsRfV6AAkovphz7tBIAULfTXSiw=
-=GXKO
------END PGP SIGNATURE-----
-
---nextPart3070249.ECfcTHC076--
-
+UElORy4NCg0KVGhhbmtzLA0KWXVhbnRpYW4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
+LQ0KPiBGcm9tOiBUYW5nIFl1YW50aWFuLUIyOTk4Mw0KPiBTZW50OiAyMDEzxOoxMdTCMjDI1SDQ
+x8bayP0gMTc6MDUNCj4gVG86IGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmcNCj4gQ2M6IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4g
+bWFyay5ydXRsYW5kQGFybS5jb207IFdvb2QgU2NvdHQtQjA3NDIxOyBncmFudC5saWtlbHlAc2Vj
+cmV0bGFiLmNhOyBUYW5nDQo+IFl1YW50aWFuLUIyOTk4MzsgVGFuZyBZdWFudGlhbi1CMjk5ODM7
+IExpIFlhbmctTGVvLVI1ODQ3Mg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjddIGNsazogY29yZW5ldDog
+QWRkcyB0aGUgY2xvY2sgYmluZGluZw0KPiANCj4gRnJvbTogVGFuZyBZdWFudGlhbiA8eXVhbnRp
+YW4udGFuZ0BmcmVlc2NhbGUuY29tPg0KPiANCj4gQWRkcyB0aGUgY2xvY2sgYmluZGluZ3MgZm9y
+IEZyZWVzY2FsZSBQb3dlclBDIENvcmVOZXQgcGxhdGZvcm1zDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
+OiBUYW5nIFl1YW50aWFuIDxZdWFudGlhbi5UYW5nQGZyZWVzY2FsZS5jb20+DQo+IFNpZ25lZC1v
+ZmYtYnk6IExpIFlhbmcgPGxlb2xpQGZyZWVzY2FsZS5jb20+DQo+IC0tLQ0KPiB2NzoNCj4gCS0g
+cmVmaW5lZCBzb21lIHByb3BlcnRpZXMnIGRlZmluaXRpb25zDQo+IHY2Og0KPiAJLSBzcGxpdGVk
+IHRoZSBwcmV2aW91cyBwYXRjaCBpbnRvIDIgcGFydHMsIG9uZSBpcyBmb3IgYmluZGluZyh0aGlz
+DQo+IG9uZSksDQo+IAkgIHRoZSBvdGhlciBpcyBmb3IgRFRTIG1vZGlmaWNhdGlvbih3aWxsIHN1
+Ym1pdCBvbmNlIHRoaXMgZ2V0cw0KPiBhY2NlcHRlZCkNCj4gCS0gZml4ZWQgdHlwbw0KPiAJLSBy
+ZWZpbmVkICNjbG9jay1jZWxscyBhbmQgY2xvY2stb3V0cHV0LW5hbWVzIHByb3BlcnRpZXMNCj4g
+CS0gcmVtb3ZlZCBmaXhlZC1jbG9jayBjb21wYXRpYmxlIHN0cmluZw0KPiB2NToNCj4gCS0gcmVm
+aW5lIHRoZSBiaW5kaW5nIGRvY3VtZW50DQo+IAktIHVwZGF0ZSB0aGUgY29tcGF0aWJsZSBzdHJp
+bmcNCj4gdjQ6DQo+IAktIGFkZCBiaW5kaW5nIGRvY3VtZW50DQo+IAktIHVwZGF0ZSBjb21wYXRp
+YmxlIHN0cmluZw0KPiAJLSB1cGRhdGUgdGhlIHJlZyBwcm9wZXJ0eQ0KPiB2MzoNCj4gCS0gZml4
+IHR5cG8NCj4gdjI6DQo+IAktIGFkZCB0NDI0MCwgYjQ0MjAsIGI0ODYwIHN1cHBvcnQNCj4gCS0g
+cmVtb3ZlIHBsbC80IGNsb2NrIGZyb20gcDIwNDEsIHAzMDQxIGFuZCBwNTAyMCBib2FyZA0KPiAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY29yZW5ldC1jbG9jay50eHQgICAgfCAxMjgN
+Cj4gKysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTI4IGluc2VydGlv
+bnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvY2xvY2svY29yZW5ldC0NCj4gY2xvY2sudHh0DQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2NvcmVuZXQtY2xvY2sudHh0DQo+
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2NvcmVuZXQtY2xvY2su
+dHh0DQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAuLjYwOWJhMmINCj4g
+LS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+Y2xvY2svY29yZW5ldC1jbG9jay50eHQNCj4gQEAgLTAsMCArMSwxMjggQEANCj4gKyogQ2xvY2sg
+QmxvY2sgb24gRnJlZXNjYWxlIENvcmVOZXQgUGxhdGZvcm1zDQo+ICsNCj4gK0ZyZWVzY2FsZSBD
+b3JlTmV0IGNoaXBzIHRha2UgcHJpbWFyeSBjbG9ja2luZyBpbnB1dCBmcm9tIHRoZSBleHRlcm5h
+bA0KPiArU1lTQ0xLIHNpZ25hbC4gVGhlIFNZU0NMSyBpbnB1dCAoZnJlcXVlbmN5KSBpcyBtdWx0
+aXBsaWVkIHVzaW5nDQo+ICttdWx0aXBsZSBwaGFzZSBsb2NrZWQgbG9vcHMgKFBMTCkgdG8gY3Jl
+YXRlIGEgdmFyaWV0eSBvZiBmcmVxdWVuY2llcw0KPiArd2hpY2ggY2FuIHRoZW4gYmUgcGFzc2Vk
+IHRvIGEgdmFyaWV0eSBvZiBpbnRlcm5hbCBsb2dpYywgaW5jbHVkaW5nDQo+ICtjb3JlcyBhbmQg
+cGVyaXBoZXJhbCBJUCBibG9ja3MuDQo+ICtQbGVhc2UgcmVmZXIgdG8gdGhlIFJlZmVyZW5jZSBN
+YW51YWwgZm9yIGRldGFpbHMuDQo+ICsNCj4gKzEuIENsb2NrIEJsb2NrIEJpbmRpbmcNCj4gKw0K
+PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGNvbnRhaW4g
+YSBzcGVjaWZpYyBjbG9jayBibG9jayBjb21wYXRpYmxlIHN0cmluZw0KPiArCWFuZCBhIHNpbmds
+ZSBjaGFzc2lzIGNsb2NrIGNvbXBhdGlibGUgc3RyaW5nLg0KPiArCUNsb2NrIGJsb2NrIHN0cmlu
+Z3MgaW5jbHVkZSwgYnV0IG5vdCBsaW1pdGVkIHRvLCBvbmUgb2YgdGhlOg0KPiArCSogImZzbCxw
+MjA0MS1jbG9ja2dlbiINCj4gKwkqICJmc2wscDMwNDEtY2xvY2tnZW4iDQo+ICsJKiAiZnNsLHA0
+MDgwLWNsb2NrZ2VuIg0KPiArCSogImZzbCxwNTAyMC1jbG9ja2dlbiINCj4gKwkqICJmc2wscDUw
+NDAtY2xvY2tnZW4iDQo+ICsJKiAiZnNsLHQ0MjQwLWNsb2NrZ2VuIg0KPiArCSogImZzbCxiNDQy
+MC1jbG9ja2dlbiINCj4gKwkqICJmc2wsYjQ4NjAtY2xvY2tnZW4iDQo+ICsJQ2hhc3NpcyBjbG9j
+ayBzdHJpbmdzIGluY2x1ZGU6DQo+ICsJKiAiZnNsLHFvcmlxLWNsb2NrZ2VuLTEuMCI6IGZvciBj
+aGFzc2lzIDEuMCBjbG9ja3MNCj4gKwkqICJmc2wscW9yaXEtY2xvY2tnZW4tMi4wIjogZm9yIGNo
+YXNzaXMgMi4wIGNsb2Nrcw0KPiArLSByZWc6IE9mZnNldCBhbmQgbGVuZ3RoIG9mIHRoZSBjbG9j
+ayByZWdpc3RlciBzZXQNCj4gKw0KPiArUmVjb21tZW5kZWQgcHJvcGVydGllczoNCj4gKy0gcmFu
+Z2VzOiBBbGxvd3MgdmFsaWQgdHJhbnNsYXRpb24gYmV0d2VlbiBjaGlsZCdzIGFkZHJlc3Mgc3Bh
+Y2UgYW5kDQo+ICsJcGFyZW50J3MuIE11c3QgYmUgcHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcyBz
+dWItbm9kZXMuDQo+ICstICNhZGRyZXNzLWNlbGxzOiBTcGVjaWZpZXMgdGhlIG51bWJlciBvZiBj
+ZWxscyB1c2VkIHRvIHJlcHJlc2VudA0KPiArCXBoeXNpY2FsIGJhc2UgYWRkcmVzc2VzLiAgTXVz
+dCBiZSBwcmVzZW50IGlmIHRoZSBkZXZpY2UgaGFzDQo+ICsJc3ViLW5vZGVzIGFuZCBzZXQgdG8g
+MSBpZiBwcmVzZW50DQo+ICstICNzaXplLWNlbGxzOiBTcGVjaWZpZXMgdGhlIG51bWJlciBvZiBj
+ZWxscyB1c2VkIHRvIHJlcHJlc2VudA0KPiArCXRoZSBzaXplIG9mIGFuIGFkZHJlc3MuIE11c3Qg
+YmUgcHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcw0KPiArCXN1Yi1ub2RlcyBhbmQgc2V0IHRvIDEg
+aWYgcHJlc2VudA0KPiArDQo+ICsyLiBDbG9jayBQcm92aWRlci9Db25zdW1lciBCaW5kaW5nDQo+
+ICsNCj4gK01vc3Qgb2YgdGhlIGJpbmRpbmdzIGFyZSBmcm9tIHRoZSBjb21tb24gY2xvY2sgYmlu
+ZGluZ1sxXS4NCj4gKyBbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nr
+L2Nsb2NrLWJpbmRpbmdzLnR4dA0KPiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiArLSBj
+b21wYXRpYmxlIDogU2hvdWxkIGluY2x1ZGUgb25lIG9mIHRoZSBmb2xsb3dpbmc6DQo+ICsJKiAi
+ZnNsLHFvcmlxLWNvcmUtcGxsLTEuMCIgZm9yIGNvcmUgUExMIGNsb2NrcyAodjEuMCkNCj4gKyAg
+ICAqICJmc2wscW9yaXEtY29yZS1wbGwtMi4wIiBmb3IgY29yZSBQTEwgY2xvY2tzICh2Mi4wKQ0K
+PiArICAgICogImZzbCxxb3JpcS1jb3JlLW11eC0xLjAiIGZvciBjb3JlIG11eCBjbG9ja3MgKHYx
+LjApDQo+ICsgICAgKiAiZnNsLHFvcmlxLWNvcmUtbXV4LTIuMCIgZm9yIGNvcmUgbXV4IGNsb2Nr
+cyAodjIuMCkNCj4gKwkqICJmc2wscW9yaXEtc3lzY2xrLTEuMCI6IGZvciBpbnB1dCBzeXN0ZW0g
+Y2xvY2sgKHYxLjApDQo+ICsJKiAiZnNsLHFvcmlxLXN5c2Nsay0yLjAiOiBmb3IgaW5wdXQgc3lz
+dGVtIGNsb2NrICh2Mi4wKQ0KPiArLSAjY2xvY2stY2VsbHM6IEZyb20gY29tbW9uIGNsb2NrIGJp
+bmRpbmcuIFRoZSBudW1iZXIgb2YgY2VsbHMgaW4gYQ0KPiArCWNsb2NrLXNwZWNpZmllci4gU2hv
+dWxkIGJlIDwwPiBmb3IgImZzbCxxb3JpcS1zeXNjbGstWzEsMl0uMCINCj4gKwljbG9ja3MsIG9y
+IDwxPiBmb3IgImZzbCxxb3JpcS1jb3JlLXBsbC1bMSwyXS4wIiBjbG9ja3MuDQo+ICsJRm9yICJm
+c2wscW9yaXEtY29yZS1wbGwtWzEsMl0uMCIgY2xvY2tzLCB0aGUgc2luZ2xlDQo+ICsJY2xvY2st
+c3BlY2lmaWVyIGNlbGwgbWF5IHRha2UgdGhlIGZvbGxvd2luZyB2YWx1ZXM6DQo+ICsJKiAwIC0g
+ZXF1YWwgdG8gdGhlIFBMTCBmcmVxdWVuY3kNCj4gKwkqIDEgLSBlcXVhbCB0byB0aGUgUExMIGZy
+ZXF1ZW5jeSBkaXZpZGVkIGJ5IDINCj4gKwkqIDIgLSBlcXVhbCB0byB0aGUgUExMIGZyZXF1ZW5j
+eSBkaXZpZGVkIGJ5IDQNCj4gKw0KPiArUmVjb21tZW5kZWQgcHJvcGVydGllczoNCj4gKy0gY2xv
+Y2tzOiBTaG91bGQgYmUgdGhlIHBoYW5kbGUgb2YgaW5wdXQgcGFyZW50IGNsb2NrDQo+ICstIGNs
+b2NrLW5hbWVzOiBGcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nLCBpbmRpY2F0ZXMgdGhlIGNsb2Nr
+IG5hbWUNCj4gKy0gY2xvY2stb3V0cHV0LW5hbWVzOiBGcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5n
+LCBpbmRpY2F0ZXMgdGhlIG5hbWVzIG9mDQo+ICsJb3V0cHV0IGNsb2Nrcw0KPiArLSByZWc6IFNo
+b3VsZCBiZSB0aGUgb2Zmc2V0IGFuZCBsZW5ndGggb2YgY2xvY2sgYmxvY2sgYmFzZSBhZGRyZXNz
+Lg0KPiArCVRoZSBsZW5ndGggc2hvdWxkIGJlIDQuDQo+ICsNCj4gK0V4YW1wbGUgZm9yIGNsb2Nr
+IGJsb2NrIGFuZCBjbG9jayBwcm92aWRlcjoNCj4gKy8gew0KPiArCWNsb2NrZ2VuOiBnbG9iYWwt
+dXRpbGl0aWVzQGUxMDAwIHsNCj4gKwkJY29tcGF0aWJsZSA9ICJmc2wscDUwMjAtY2xvY2tnZW4i
+LCAiZnNsLHFvcmlxLWNsb2NrZ2VuLTEuMCI7DQo+ICsJCXJhbmdlcyA9IDwweDAgMHhlMTAwMCAw
+eDEwMDA+Ow0KPiArCQlyZWcgPSA8MHhlMTAwMCAweDEwMDA+Ow0KPiArCQkjYWRkcmVzcy1jZWxs
+cyA9IDwxPjsNCj4gKwkJI3NpemUtY2VsbHMgPSA8MT47DQo+ICsNCj4gKwkJc3lzY2xrOiBzeXNj
+bGsgew0KPiArCQkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KPiArCQkJY29tcGF0aWJsZSA9ICJmc2ws
+cW9yaXEtc3lzY2xrLTEuMCI7DQo+ICsJCQljbG9jay1vdXRwdXQtbmFtZXMgPSAic3lzY2xrIjsN
+Cj4gKwkJfQ0KPiArDQo+ICsJCXBsbDA6IHBsbDBAODAwIHsNCj4gKwkJCSNjbG9jay1jZWxscyA9
+IDwxPjsNCj4gKwkJCXJlZyA9IDwweDgwMCAweDQ+Ow0KPiArCQkJY29tcGF0aWJsZSA9ICJmc2ws
+cW9yaXEtY29yZS1wbGwtMS4wIjsNCj4gKwkJCWNsb2NrcyA9IDwmc3lzY2xrPjsNCj4gKwkJCWNs
+b2NrLW91dHB1dC1uYW1lcyA9ICJwbGwwIiwgInBsbDAtZGl2MiI7DQo+ICsJCX07DQo+ICsNCj4g
+KwkJcGxsMTogcGxsMUA4MjAgew0KPiArCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiArCQkJcmVn
+ID0gPDB4ODIwIDB4ND47DQo+ICsJCQljb21wYXRpYmxlID0gImZzbCxxb3JpcS1jb3JlLXBsbC0x
+LjAiOw0KPiArCQkJY2xvY2tzID0gPCZzeXNjbGs+Ow0KPiArCQkJY2xvY2stb3V0cHV0LW5hbWVz
+ID0gInBsbDEiLCAicGxsMS1kaXYyIjsNCj4gKwkJfTsNCj4gKw0KPiArCQltdXgwOiBtdXgwQDAg
+ew0KPiArCQkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KPiArCQkJcmVnID0gPDB4MCAweDQ+Ow0KPiAr
+CQkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29yZS1tdXgtMS4wIjsNCj4gKwkJCWNsb2NrcyA9
+IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDEgMD4sIDwmcGxsMSAxPjsNCj4gKwkJCWNsb2Nr
+LW5hbWVzID0gInBsbDAiLCAicGxsMC1kaXYyIiwgInBsbDEiLCAicGxsMS1kaXYyIjsNCj4gKwkJ
+CWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4MCI7DQo+ICsJCX07DQo+ICsNCj4gKwkJbXV4MTog
+bXV4MUAyMCB7DQo+ICsJCQkjY2xvY2stY2VsbHMgPSA8MD47DQo+ICsJCQlyZWcgPSA8MHgyMCAw
+eDQ+Ow0KPiArCQkJY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY29yZS1tdXgtMS4wIjsNCj4gKwkJ
+CWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+LCA8JnBsbDEgMD4sIDwmcGxsMSAxPjsNCj4g
+KwkJCWNsb2NrLW5hbWVzID0gInBsbDAiLCAicGxsMC1kaXYyIiwgInBsbDEiLCAicGxsMS1kaXYy
+IjsNCj4gKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4MSI7DQo+ICsJCX07DQo+ICsJfTsN
+Cj4gKyAgfQ0KPiArDQo+ICtFeGFtcGxlIGZvciBjbG9jayBjb25zdW1lcjoNCj4gKw0KPiArLyB7
+DQo+ICsJY3B1MDogUG93ZXJQQyxlNTUwMEAwIHsNCj4gKwkJLi4uDQo+ICsJCWNsb2NrcyA9IDwm
+bXV4MD47DQo+ICsJCS4uLg0KPiArCX07DQo+ICsgIH0NCj4gLS0NCj4gMS44LjANCg0KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1h
+aWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96
+bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
