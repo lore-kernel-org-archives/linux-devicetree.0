@@ -1,52 +1,64 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH v2 03/16] ARM: dts: provide DMA config to pxamci
-Date: Sat, 14 Dec 2013 23:34:20 +0400
-Message-ID: <1387049660.7152.317.camel@host5.omatika.ru>
-References: <1386543229-1542-1-git-send-email-ynvich@gmail.com>
-	 <1386901645-28895-1-git-send-email-ynvich@gmail.com>
-	 <1386901645-28895-4-git-send-email-ynvich@gmail.com>
-	 <201312142006.26979.arnd@arndb.de>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: Memory mapping of config space of pcie devices
+Date: Sat, 14 Dec 2013 13:18:23 -0700
+Message-ID: <CAErSpo5k1KZuaL7jYp1-5YaxjdZseDPrFo64mJcb2tu2PWJowA@mail.gmail.com>
+References: <CAHH3p5+3Zy+YkgDS_1bJ7B84w5iHOh6-QG7LRJXo2WQHREcRHw@mail.gmail.com>
+ <CAErSpo59htYoPBoouUfSXAVXwCUQPK-TB_zG0BkE-PLhV=KRbQ@mail.gmail.com> <CAHH3p5J7Se8zu64MfoSDkAN_NtOp=qv1DcvWBAa8jWKouo0TXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201312142006.26979.arnd@arndb.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <zonque@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Viresh Kumar <viresh.kumar@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAHH3p5J7Se8zu64MfoSDkAN_NtOp=qv1DcvWBAa8jWKouo0TXg@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: shiv prakash Agarwal <chhotu.shiv@gmail.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2013-12-14 at 20:06 +0100, Arnd Bergmann wrote:
-> On Friday 13 December 2013, Sergei Ianovich wrote:
-> > Non-dts implementation supply required DMA channel numbers as
-> > IORESOURCE_DMA. However, there is was no way to get them from
-> > device tree.
-> 
-> Please update this changeset comment, I think it still refers to
-> the earlier version.
+[+cc devicetree, linux-arm-kernel]
 
----
-Non-dts implementation supply required DMA channel numbers as
-IORESOURCE_DMA. We can also get them from the device tree, if it
-is present.
----
+On Sat, Dec 14, 2013 at 1:05 PM, shiv prakash Agarwal
+<chhotu.shiv@gmail.com> wrote:
+> On Sun, Dec 15, 2013 at 12:29 AM, Bjorn Helgaas <bhelgaas@google.com>=
+ wrote:
+>> On Sat, Dec 14, 2013 at 11:32 AM, shiv prakash Agarwal
+>> <chhotu.shiv@gmail.com> wrote:
+>>> Hi All,
+>>>
+>>> How devices config spaces are mapped to host memory?
+>>> Is it being handled by core driver? I could not locate.
+>>
+>> The PCI core does not map config space into memory.  That's not even
+>> possible for the legacy config access methods, e.g., using I/O ports
+>> 0xcf8 and 0xcfc [1].
+>>
+>> If you're wondering about how Linux uses ECAM, that's mostly in
+>> arch/x86/pci/mmconfig*.  That code does ioremap the ECAM area into
+>> kernel virtual space, but only for access via pci_read_config_word()=
+,
+>> pci_write_config_word(), etc.
+>>
+>> Bjorn
+>>
+>> [1] http://en.wikipedia.org/wiki/PCI_configuration_space#Software_im=
+plementation
+>
+> Thanks Bjorn for quick reply,
+>
+> Above reference says:
+> During system initialization, firmware determines the base address fo=
+r
+> this =93stolen=94 address region and communicates it to the root comp=
+lex
+> and to the operating system. This communication method is
+> implementation-specific, and not defined in the PCI Express
+> specification.
+>
+> How above is implemented on ARM?
 
-Is this fine?
+On x86, we learn the ECAM address via ACPI (the MCFG table or a host
+bridge _CBA method).  I don't know how this is done on ARM.  I could
+imagine it being done via device tree, but I really don't know.
+Unfortunately both the address discovery and the actual ECAM accesses
+are in arch-specific code.
 
-Should I post v3, if so? 
-
-> > Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
-> > CC: Daniel Mack <zonque@gmail.com>
-> > CC: Arnd Bergmann <arnd@arndb.de>
-> 
-> The patch looks ok in case we are merging your patches for 3.14
-> and Daniel's patches later than that. If they end up in the
-> same merge window however, we'd have to be care to resolve
-> the obvious conflict in a proper way.
-
-The most recently published Daniel's patch (Aug 2013) wraps
-IORESOURCE_DMA handling on DT presence in a similar way, but doesn't do
-any actual DT processing. So there is no conflict at the moment. Daniel
-can comment better on this, though.
-
-
+Bjorn
