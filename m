@@ -1,93 +1,72 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] lis3lv02d: update DT binding for use with Nokia N900
-Date: Fri, 13 Dec 2013 23:59:22 +0100
-Message-ID: <20131213225920.GA20534@earth.universe>
-References: <1386968094-24554-1-git-send-email-sre@debian.org>
- <52AB8ACB.6000101@tremplin-utc.net>
+From: Sherman Yin <syin@broadcom.com>
+Subject: Re: [PATCH v3 4/6] pinctrl: Add pinctrl binding for Broadcom Capri
+ SoCs
+Date: Fri, 13 Dec 2013 17:16:00 -0800
+Message-ID: <52ABB150.1030702@broadcom.com>
+References: <1381174108-25168-1-git-send-email-syin@broadcom.com>	<1386787041-6035-1-git-send-email-syin@broadcom.com>	<1386787041-6035-5-git-send-email-syin@broadcom.com>
+ <CACRpkdY7s+eUFkg0AsaN5B9-1y_mTJ29Y-D9CkRG2GQ3JshP+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52AB8ACB.6000101-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?=C9ric?= Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>
-Cc: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdY7s+eUFkg0AsaN5B9-1y_mTJ29Y-D9CkRG2GQ3JshP+w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, =?ISO-8859-1?Q?Heiko_St=FCbn?= =?ISO-8859-1?Q?er?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 13-12-12 12:37 PM, Linus Walleij wrote:
+> On Wed, Dec 11, 2013 at 7:37 PM, Sherman Yin <syin@broadcom.com> wrote:
+>
+>> Adds pinctrl driver devicetree binding for Broadcom Capri (BCM281xx) SoCs.
+>>
+>> Signed-off-by: Sherman Yin <syin@broadcom.com>
+>> Reviewed-by: Christian Daudt <bcm@fixthebug.org>
+>> Reviewed-by: Matt Porter <matt.porter@linaro.org>
+>> ---
+>> v3: Use generic pin config properties instead of brcm-specific ones.  Clarified
+>>      pin types (standard, i2c, hdmi).
+>> v2: Use hyphens instead of underscore in DT property names.
+>
+> Overall this is very nice!
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks!
 
-On Fri, Dec 13, 2013 at 11:31:39PM +0100, =C9ric Piel wrote:
-> On 13-12-13 21:54, Sebastian Reichel wrote:
-> >The lis302 has already a DT binding described in [0],
-> >which descibes misc. hardware properties. The current
-> >binding does not support all values needed to convert
-> >the Nokia N900's platform data to DT.
-> >
-> >This patchset introduces support for describing inverted
-> >axis, configuration of second wakeup unit and wakeup
-> >threshold support.
->=20
-> All the three patches related to the lis3lv02d driver look fine to me.
-> Here is my signed-off for patches 2, 3, and 4:
-> Signed-off-by: =C9ric Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>
->=20
-> I've got 2 side questions:
->  * How do you write a negative value in a DTS file? Is this just the
-> very standard way (i.e., -), or do you need to use a specific
-> technique (such as 2-completemnt on 32 bits)? If it's not the
-> standard way, it should probably be documented somewhere.
+>> +- bias-pull-up:                        Integer. Pull up strength in Ohm:
+>> +                                       1: 1.2 kOhm
+>> +                                       2: 1.8 kOhm
+>> +                                       3: 720 Ohm
+>> +                                       4: 2.7 kOhm
+>> +                                       5: 831 Ohm
+>> +                                       6: 1.08 kOhm
+>> +                                       7: 568 Ohm
+>
+> Please do not use these custom enumerators 1 thru 7.
+> Instead say that the argument is given in ohms, so for
+> example:
+>
+> bias-pull-up = <12000>;
+>
+> Then translate this into the proper enumerator in your
+> driver instead.
 
-One can simply use -, but one has to put the value into (). This is
-because DT supports simple mathematical operations for the values,
-e.g. 5-10 and must have some way to distinguish between (5) (-10)
-and (5-10).
+Ok.  The 3 bits in this enumeration correspond to enabling the 3 pull up 
+Rs (1.2k, 1.8k, 2.7k) in parallel, so the enum kind of make sense. But 
+sure I can change it to actual ohms and will error out in the driver if 
+specified value is not one of the 7.
 
-Here is an example for N900 axis configuration from DT file:
+> No full example provided in the binding! This needs to
+> be there for understanding.
 
- st,axis-x =3D <1>;    /* LIS3_DEV_X */
- st,axis-y =3D <(-2)>; /* LIS3_INV_DEV_Y */
- st,axis-z =3D <(-3)>; /* LIS3_INV_DEV_Z */
+Ok Will add some examples.
 
-I had some trouble to find this out myself, so probably its a good
-idea to document this somewhere.
-
->  * Who wants to carry these patches? Can they all go via the
-> devicetree branch? Or maybe Arnd or Greg would prefer to pick them
-> via the misc driver branch? Both ways are fine for me...
-
-I don't care, but it would be nice to see this in 3.14.
-
--- Sebastian
-
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSq5FIAAoJENju1/PIO/qatMIP/2mtZr9XZRIXlLJ0CeQfSgld
-rKCReUtIJboP65G3T8AyvAEVOpz2qAVKYlmlujplsKEJmz5b6SqcXl0Rz3AwLaB1
-CqBkPUqJR6tB/fjMYhFJaiKrqVuW7j1La62jjVckl7lv9ESSq+VDKGchV3efA1a8
-iOvoUBx0lwzZE6ArZ5z+piDrOVZNpdGP89IJIANMglPfP3auoCowCMi2X1aJbjUY
-C6mh5Uxe4TmN2mswPziLUp/GRoBgriBDyKCttHLhQ2OA5VviEQJCRHCJsba4gEZE
-PkCF1y9aiMQOXvuuHRq7pMy5NGP0D5aRB3CNPDBtwbL46XsuAM1k4g9MZQjUT7Sn
-A2rJCg4k32SsQJUMrL5tFYOndVEvcHavUh4ccImhl3OyJZTWy0zayiW0RvIzi3VZ
-fFeMotJ+04GmzVXGJG6UwxYDtxNVKg5s50EcsFwjdUXiEF0SQ5GGozOd7wRWpRlG
-DsBm1VfREvrQcveelGI+SEdjyvRIAEtEFePiwHFOiT1XOh/Ils1eH0OCcPNwHLIV
-WnyqvPIPWD2ROvLKLdIt9Mqr0Zr3oFMQaRoNkV+b31kZ4S2MVbjd8po7toy70EdF
-dv3AuICQDNUYetCpqF45AWnK8zn/76UUP+/GFuPZB2/gAF0aiAU1gSLK10/kBKhX
-RTiLJVOT6yIKurzFDnb1
-=GdiH
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sherman
