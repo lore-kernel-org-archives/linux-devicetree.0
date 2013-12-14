@@ -1,347 +1,133 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH 3/3] clk: hisilicon: add hi3620_mmc_clks
-Date: Sat, 14 Dec 2013 10:12:54 +0800
-Message-ID: <1386987174-1788-4-git-send-email-zhangfei.gao@linaro.org>
-References: <1386987174-1788-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1386987174-1788-1-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 0/5] Renesas R-Car Gen2 Common Clock Framework arch/
+ support
+Date: Sat, 14 Dec 2013 11:19:01 +0900
+Message-ID: <20131214021900.GB22927@verge.net.au>
+References: <1386770716-21610-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20131214012624.GF12584@verge.net.au>
+ <3998896.4EUoySjjs7@avalon>
+ <20131214021113.GA22927@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131214021113.GA22927@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Suggest by Arnd: abstract mmc tuning as clock behavior,
-also because different soc have different tuning method and registers.
-hi3620_mmc_clks is added to handle mmc clock specifically on hi3620.
+On Sat, Dec 14, 2013 at 11:11:14AM +0900, Simon Horman wrote:
+> On Sat, Dec 14, 2013 at 02:41:44AM +0100, Laurent Pinchart wrote:
+> > Hi Simon,
+> > 
+> > On Saturday 14 December 2013 10:26:24 Simon Horman wrote:
+> > > [ CC Magnus ]
+> > > 
+> > > On Wed, Dec 11, 2013 at 03:05:11PM +0100, Laurent Pinchart wrote:
+> > > > Hello,
+> > > > 
+> > > > This is a repost of the arch patches from the "[PATCH v3 0/8] Renesas
+> > > > R-Car Gen2 Common Clock Framework support" patch series. The first three
+> > > > patches in that series have been reposted separately in the "[PATCH v4
+> > > > 0/3] Renesas R-Car Gen2 Common Clock Framework drivers" series to get
+> > > > merged through Mike Turquette's tree, while this series will go through
+> > > > the ARM SoC tree.
+> > > > 
+> > > > I've asked Mike to provide a stable branch when merging the CCF driver
+> > > > patches.
+> > > > 
+> > > > Laurent Pinchart (5):
+> > > >   ARM: shmobile: r8a7790: Add clock index macros for DT sources
+> > > >   ARM: shmobile: r8a7791: Add clock index macros for DT sources
+> > > >   ARM: shmobile: r8a7790: Add clocks
+> > > >   ARM: shmobile: r8a7790: Reference clocks
+> > > >   ARM: shmobile: r8a7791: Add clocks
+> > > >  
+> > > >  arch/arm/boot/dts/r8a7790.dtsi            | 328 +++++++++++++++++++++++++
+> > > >  arch/arm/boot/dts/r8a7791.dtsi            | 313 +++++++++++++++++++++++++
+> > > >  include/dt-bindings/clock/r8a7790-clock.h | 100 +++++++++
+> > > >  include/dt-bindings/clock/r8a7791-clock.h | 105 ++++++++++
+> > > >  4 files changed, 846 insertions(+)
+> > > >  create mode 100644 include/dt-bindings/clock/r8a7790-clock.h
+> > > >  create mode 100644 include/dt-bindings/clock/r8a7791-clock.h
+> > > 
+> > > Hi Laurent,
+> > > 
+> > > I would like to confirm the dependencies of this series with you.
+> > > As I understand things the dependencies that were not present
+> > > in renesas-devel-v3.13-rc2-20131211 are as follows.
+> > > 
+> > > If any of the patches below can be skipped without breaking this series
+> > > or the followup series "[PATCH v4 00/16] Lager and Koelsch multiplatform
+> > > support" then I am all for not treating them as dependencies at all.
+> > > 
+> > > 
+> > > * [PATCH v4 0/3] Renesas R-Car Gen2 Common Clock Framework drivers
+> > >   Status: Waiting for response from Mike Turquette
+> > 
+> > The dependency is correct, but the status has changed. Mike has merged the 
+> > patches in his tree in the clk-next-shmobile branch 
+> > (https://git.linaro.org/people/mike.turquette/linux.git/shortlog/refs/heads/clk-next-shmobile).
+> 
+> Great!
+> 
+> > > * mmc: sh_mobile_sdhi: Convert to clk_prepare/unprepare
+> > >   Status: Merged by Chris Ball. I believe we need a stable branch from him.
+> > 
+> > You can drop this dependency as the koelsch reference boards lack SDHI
+> > support and the lager reference board has the SDHI devices disabled.
+> 
+> Thanks, got it.
+> 
+> > > * spi: sh-msiof: Convert to clk_prepare/unprepare
+> > >   spi: sh-msiof: Use devm_* managed allocators
+> > >   Status: Merged by Mark Brown. I believe we need a stable branch from him.
+> > 
+> > You can drop this dependency as the lager and koelsch reference boards lack 
+> > SPI support.
+> > 
+> > > * usb: gadget: r8a66597-udc: Convert to clk_prepare/unprepare
+> > >   Status: In Felipe Balbi's next branch. It is stable, right?
+> > 
+> > Correct, but you can drop this dependency as the lager and koelsch reference 
+> > boards lack USB support.
+> 
+> Understood.
+> 
+> > > * clocksource: sh_tmu: Add clk_prepare/unprepare support
+> > >   clocksource: sh_tmu: Release clock when sh_tmu_register() fails
+> > >   clocksource: sh_mtu2: Add clk_prepare/unprepare support
+> > >   clocksource: sh_mtu2: Release clock when sh_mtu2_register() fails
+> > >   Status: Present in v3.13-rc3. No problem!
+> > > 
+> > > * clocksource: sh_cmt: Add clk_prepare/unprepare support
+> > >   Status: I think I have dropped the ball here.
+> > >           Regardless, I think it it needs to be accepted by Daniel Lezcano
+> > 
+> > That's the only missing one. Do you plan to handle this with Daniel ?
+> 
+> Yes, I will ask him to pick it up ASAP. Sorry for the mess there.
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- .../bindings/arm/hisilicon/hisilicon.txt           |   14 ++
- .../devicetree/bindings/clock/hi3620-clock.txt     |    1 +
- drivers/clk/hisilicon/clk-hi3620.c                 |  262 ++++++++++++++++++++
- include/dt-bindings/clock/hi3620-clock.h           |    5 +
- 4 files changed, 282 insertions(+)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-index 8c7a4653508d..df0a452b8526 100644
---- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-@@ -30,3 +30,17 @@ Example:
- 		resume-offset = <0x308>;
- 		reboot-offset = <0x4>;
- 	};
-+
-+PCTRL: Peripheral misc control register
-+
-+Required Properties:
-+- compatible: "hisilicon,pctrl"
-+- reg: Address and size of pctrl.
-+
-+Example:
-+
-+	/* for Hi3620 */
-+	pctrl: pctrl@fca09000 {
-+		compatible = "hisilicon,pctrl";
-+		reg = <0xfca09000 0x1000>;
-+	};
-diff --git a/Documentation/devicetree/bindings/clock/hi3620-clock.txt b/Documentation/devicetree/bindings/clock/hi3620-clock.txt
-index 4b71ab41be53..dad6269f52c5 100644
---- a/Documentation/devicetree/bindings/clock/hi3620-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/hi3620-clock.txt
-@@ -7,6 +7,7 @@ Required Properties:
- 
- - compatible: should be one of the following.
-   - "hisilicon,hi3620-clock" - controller compatible with Hi3620 SoC.
-+  - "hisilicon,hi3620-mmc-clock" - controller specific for Hi3620 mmc.
- 
- - reg: physical base address of the controller and length of memory mapped
-   region.
-diff --git a/drivers/clk/hisilicon/clk-hi3620.c b/drivers/clk/hisilicon/clk-hi3620.c
-index f24ad6a3a797..e47a4a659df7 100644
---- a/drivers/clk/hisilicon/clk-hi3620.c
-+++ b/drivers/clk/hisilicon/clk-hi3620.c
-@@ -240,3 +240,265 @@ static void __init hi3620_clk_init(struct device_node *np)
- 				   base);
- }
- CLK_OF_DECLARE(hi3620_clk, "hisilicon,hi3620-clock", hi3620_clk_init);
-+
-+struct hisi_mmc_clock {
-+	unsigned int		id;
-+	const char		*name;
-+	const char		*parent_name;
-+	unsigned long		flags;
-+	u32			clken_reg;
-+	u32			clken_bit;
-+	u32			div_reg;
-+	u32			div_off;
-+	u32			div_bits;
-+	u32			drv_reg;
-+	u32			drv_off;
-+	u32			drv_bits;
-+	u32			sam_reg;
-+	u32			sam_off;
-+	u32			sam_bits;
-+};
-+
-+struct clk_mmc {
-+	struct clk_hw	hw;
-+	u32		id;
-+	void __iomem	*clken_reg;
-+	u32		clken_bit;
-+	void __iomem	*div_reg;
-+	u32		div_off;
-+	u32		div_bits;
-+	void __iomem	*drv_reg;
-+	u32		drv_off;
-+	u32		drv_bits;
-+	void __iomem	*sam_reg;
-+	u32		sam_off;
-+	u32		sam_bits;
-+};
-+
-+#define to_mmc(_hw) container_of(_hw, struct clk_mmc, hw)
-+
-+static struct hisi_mmc_clock hi3620_mmc_clks[] __initdata = {
-+	{ HI3620_SD_CIUCLK,	"sd_bclk1", "sd_clk", CLK_SET_RATE_PARENT, 0x1f8, 0, 0x1f8, 1, 3, 0x1f8, 4, 4, 0x1f8, 8, 4},
-+	{ HI3620_MMC_CIUCLK1,   "mmc_bclk1", "mmc_clk1", CLK_SET_RATE_PARENT, 0x1f8, 12, 0x1f8, 13, 3, 0x1f8, 16, 4, 0x1f8, 20, 4},
-+	{ HI3620_MMC_CIUCLK2,   "mmc_bclk2", "mmc_clk2", CLK_SET_RATE_PARENT, 0x1f8, 24, 0x1f8, 25, 3, 0x1f8, 28, 4, 0x1fc, 0, 4},
-+	{ HI3620_MMC_CIUCLK3,   "mmc_bclk3", "mmc_clk3", CLK_SET_RATE_PARENT, 0x1fc, 4, 0x1fc, 5, 3, 0x1fc, 8, 4, 0x1fc, 12, 4},
-+};
-+
-+static unsigned long mmc_clk_recalc_rate(struct clk_hw *hw,
-+		       unsigned long parent_rate)
-+{
-+	switch (parent_rate) {
-+	case 26000000:
-+		return 13000000;
-+	case 180000000:
-+		return 25000000;
-+	case 360000000:
-+		return 50000000;
-+	case 720000000:
-+		return 100000000;
-+	default:
-+		return parent_rate;
-+	}
-+}
-+
-+static long mmc_clk_determine_rate(struct clk_hw *hw, unsigned long rate,
-+			      unsigned long *best_parent_rate,
-+			      struct clk **best_parent_p)
-+{
-+	unsigned long best = 0;
-+
-+	if (rate <= 13000000) {
-+		rate = 13000000;
-+		best = 26000000;
-+	} else if (rate <= 26000000) {
-+		rate = 25000000;
-+		best = 180000000;
-+	} else if (rate <= 52000000) {
-+		rate = 50000000;
-+		best = 360000000;
-+	} else if (rate <= 100000000) {
-+		rate = 100000000;
-+		best = 720000000;
-+	}
-+	*best_parent_rate = best;
-+	return rate;
-+}
-+
-+static u32 mmc_clk_delay(u32 val, u32 para, u32 off, u32 len)
-+{
-+	u32 i;
-+
-+	if (para >= 0) {
-+		for (i = 0; i < len; i++) {
-+			if (para % 2)
-+				val |= 1 << (off + i);
-+			else
-+				val &= ~(1 << (off + i));
-+			para = para >> 1;
-+		}
-+	}
-+	return val;
-+}
-+
-+static int mmc_clk_set_timing(struct clk_hw *hw, unsigned long rate)
-+{
-+	struct clk_mmc *mclk = to_mmc(hw);
-+	unsigned long flags;
-+	u32 sam, drv, div, val;
-+	static DEFINE_SPINLOCK(mmc_clk_lock);
-+
-+	switch (rate) {
-+	case 13000000:
-+		sam = 3;
-+		drv = 1;
-+		div = 1;
-+		break;
-+	case 25000000:
-+		sam = 13;
-+		drv = 6;
-+		div = 6;
-+		break;
-+	case 50000000:
-+		sam = 3;
-+		drv = 6;
-+		div = 6;
-+		break;
-+	case 100000000:
-+		sam = 6;
-+		drv = 4;
-+		div = 6;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_irqsave(&mmc_clk_lock, flags);
-+
-+	val = readl_relaxed(mclk->clken_reg);
-+	val &= ~(1 << mclk->clken_bit);
-+	writel_relaxed(val, mclk->clken_reg);
-+
-+	val = readl_relaxed(mclk->sam_reg);
-+	val = mmc_clk_delay(val, sam, mclk->sam_off, mclk->sam_bits);
-+	writel_relaxed(val, mclk->sam_reg);
-+
-+	val = readl_relaxed(mclk->drv_reg);
-+	val = mmc_clk_delay(val, drv, mclk->drv_off, mclk->drv_bits);
-+	writel_relaxed(val, mclk->drv_reg);
-+
-+	val = readl_relaxed(mclk->div_reg);
-+	val = mmc_clk_delay(val, div, mclk->div_off, mclk->div_bits);
-+	writel_relaxed(val, mclk->div_reg);
-+
-+	val = readl_relaxed(mclk->clken_reg);
-+	val |= 1 << mclk->clken_bit;
-+	writel_relaxed(val, mclk->clken_reg);
-+
-+	spin_unlock_irqrestore(&mmc_clk_lock, flags);
-+
-+	return 0;
-+}
-+
-+static int mmc_clk_prepare(struct clk_hw *hw)
-+{
-+	struct clk_mmc *mclk = to_mmc(hw);
-+	unsigned long rate;
-+
-+	if (mclk->id == HI3620_SD_CIUCLK)
-+		rate = 13000000;
-+	else
-+		rate = 25000000;
-+
-+	return mmc_clk_set_timing(hw, rate);
-+}
-+
-+static int mmc_clk_set_rate(struct clk_hw *hw, unsigned long rate,
-+			     unsigned long parent_rate)
-+{
-+	return mmc_clk_set_timing(hw, rate);
-+}
-+
-+static struct clk_ops clk_mmc_ops = {
-+	.prepare = mmc_clk_prepare,
-+	.determine_rate = mmc_clk_determine_rate,
-+	.set_rate = mmc_clk_set_rate,
-+	.recalc_rate = mmc_clk_recalc_rate,
-+};
-+
-+static struct clk *hisi_register_clk_mmc(struct hisi_mmc_clock *mmc_clk,
-+			void __iomem *base, struct device_node *np)
-+{
-+	struct clk_mmc *mclk;
-+	struct clk *clk;
-+	struct clk_init_data init;
-+
-+	mclk = kzalloc(sizeof(*mclk), GFP_KERNEL);
-+	if (!mclk) {
-+		pr_err("%s: fail to allocate mmc clk\n", __func__);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	init.name = mmc_clk->name;
-+	init.ops = &clk_mmc_ops;
-+	init.flags = mmc_clk->flags | CLK_IS_BASIC;
-+	init.parent_names = (mmc_clk->parent_name ? &mmc_clk->parent_name : NULL);
-+	init.num_parents = (mmc_clk->parent_name ? 1 : 0);
-+	mclk->hw.init = &init;
-+
-+	mclk->id = mmc_clk->id;
-+	mclk->clken_reg = base + mmc_clk->clken_reg;
-+	mclk->clken_bit = mmc_clk->clken_bit;
-+	mclk->div_reg = base + mmc_clk->div_reg;
-+	mclk->div_off = mmc_clk->div_off;
-+	mclk->div_bits = mmc_clk->div_bits;
-+	mclk->drv_reg = base + mmc_clk->drv_reg;
-+	mclk->drv_off = mmc_clk->drv_off;
-+	mclk->drv_bits = mmc_clk->drv_bits;
-+	mclk->sam_reg = base + mmc_clk->sam_reg;
-+	mclk->sam_off = mmc_clk->sam_off;
-+	mclk->sam_bits = mmc_clk->sam_bits;
-+
-+	clk = clk_register(NULL, &mclk->hw);
-+	if (WARN_ON(IS_ERR(clk)))
-+		kfree(mclk);
-+	return clk;
-+}
-+
-+static void __init hi3620_mmc_clk_init(struct device_node *node)
-+{
-+	void __iomem *base;
-+	int i, num = ARRAY_SIZE(hi3620_mmc_clks);
-+	struct clk_onecell_data *clk_data;
-+
-+	if (!node) {
-+		pr_err("failed to find pctrl node in DTS\n");
-+		return;
-+	}
-+
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		pr_err("failed to map pctrl\n");
-+		return;
-+	}
-+
-+	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
-+	if (WARN_ON(!clk_data))
-+		return;
-+
-+	clk_data->clks = kzalloc(sizeof(struct clk *) * num, GFP_KERNEL);
-+	if (!clk_data->clks) {
-+		pr_err("%s: fail to allocate mmc clk\n", __func__);
-+		return;
-+	}
-+
-+	for (i = 0; i < num; i++) {
-+		struct hisi_mmc_clock *mmc_clk = &hi3620_mmc_clks[i];
-+		clk_data->clks[mmc_clk->id] =
-+			hisi_register_clk_mmc(mmc_clk, base, node);
-+	}
-+
-+	clk_data->clk_num = num;
-+	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+}
-+
-+CLK_OF_DECLARE(hi3620_mmc_clk, "hisilicon,hi3620-mmc-clock", hi3620_mmc_clk_init);
-diff --git a/include/dt-bindings/clock/hi3620-clock.h b/include/dt-bindings/clock/hi3620-clock.h
-index 6eaa6a45e110..21b9d0e2eb0c 100644
---- a/include/dt-bindings/clock/hi3620-clock.h
-+++ b/include/dt-bindings/clock/hi3620-clock.h
-@@ -147,6 +147,11 @@
- #define HI3620_MMC_CLK3		217
- #define HI3620_MCU_CLK		218
- 
-+#define HI3620_SD_CIUCLK	0
-+#define HI3620_MMC_CIUCLK1	1
-+#define HI3620_MMC_CIUCLK2	2
-+#define HI3620_MMC_CIUCLK3	3
-+
- #define HI3620_NR_CLKS		219
- 
- #endif	/* __DTS_HI3620_CLOCK_H */
--- 
-1.7.9.5
+I think I may have found the reason that I dropped the ball,
+which is that I was waiting for v2 of the patch but never saw it.
 
+In order to stop me making a further mess of this would
+you be able to re-post it to Daniel directly?
+
+> > > * serial: sh-sci: Convert to clk_prepare/unprepare
+> > >   serial: sh-sci: Don't enable/disable port from within break timer
+> > >   Status: I have queued these up
+> > 
+> > -- 
+> > Regards,
+> > 
+> > Laurent Pinchart
+> > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
