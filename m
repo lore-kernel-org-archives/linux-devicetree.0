@@ -1,69 +1,43 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH] ARM: dts: add board dts file for EXYNOS4412 based TINY4412 board
-Date: Sat, 14 Dec 2013 19:57:06 +0100
-Message-ID: <23915888.rvPOtSbknd@flatron>
-References: <1384520969-2450-1-git-send-email-kasimling@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 03/16] ARM: dts: provide DMA config to pxamci
+Date: Sat, 14 Dec 2013 20:06:26 +0100
+Message-ID: <201312142006.26979.arnd@arndb.de>
+References: <1386543229-1542-1-git-send-email-ynvich@gmail.com>
+ <1386901645-28895-1-git-send-email-ynvich@gmail.com>
+ <1386901645-28895-4-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1384520969-2450-1-git-send-email-kasimling@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Ling <kasimling@gmail.com>
-Cc: rob.herring@calxeda.com, mark.rutland@arm.com, linux@arm.linux.org.uk, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, kgene.kim@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1386901645-28895-4-git-send-email-ynvich@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Ianovich <ynvich@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Viresh Kumar <viresh.kumar@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Daniel Mack <zonque@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Landley <rob@landley.net>, linux-mmc@vger.kernel.org, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alex,
+On Friday 13 December 2013, Sergei Ianovich wrote:
+> Non-dts implementation supply required DMA channel numbers as
+> IORESOURCE_DMA. However, there is was no way to get them from
+> device tree.
 
-On Friday 15 of November 2013 21:09:29 Alex Ling wrote:
-> Add a minimal board dts file for EXYNOS4412 based FriendlyARM's
-> TINY4412 board. This patch including adds the node to support
-> peripherals like UART, SD card on SDMMC2 port, and this patch
-> adds GPIO connected LEDS and configure its properties like
-> following:
-> LED1: use 'heartbeat' trigger, blinking while the board is running.
-> LED4: use 'mmc0' trigger, on when mmc0 is accessing.
-> LED2 and LED3 can be controlled from userspace.
+Please update this changeset comment, I think it still refers to
+the earlier version.
+ 
+> Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
+> CC: Daniel Mack <zonque@gmail.com>
+> CC: Arnd Bergmann <arnd@arndb.de>
 
-Well, all the LEDs can be controlled from userspace. The default trigger
-is just the initial setting, which can be changed later by userspace.
-It's just a general comment, not an issue with the patch, though.
+The patch looks ok in case we are merging your patches for 3.14
+and Daniel's patches later than that. If they end up in the
+same merge window however, we'd have to be care to resolve
+the obvious conflict in a proper way.
 
-Anyway, you don't need such detailed patch description, as you can see
-most of the things directly from the code. In case of this patch, just the
-list of supported peripherals is fine, without going into minor details,
-such as LED triggers.
-
-Also, please see my comments inline.
-
-[snip]
-> diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-> new file mode 100644
-> index 0000000..78ace14
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-[snip]
-> +	leds {
-> +		compatible = "gpio-leds";
-
-style: A blank line should be separating properties from nodes.
-
-> +		led1 {
-> +			label = "led1:heart";
-
-Are the labels for this and the LEDs below related to the hardware?
-I mean, the label should preferrably come from the board documentation,
-or a label on the PCB next to the LED. Also they shouldn't represent
-any particular use case, so you should remove the ":heart" suffix.
-
-> +			gpios = <&gpm4 0 1>;
-> +			default-state = "off";
-> +			linux,default-trigger = "heartbeat";
-> +		};
-
-style: Subnodes should be separated with blank lines.
-
-Otherwise the patch looks fine.
-
-Best regards,
-Tomasz
+	Arnd
