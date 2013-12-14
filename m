@@ -1,68 +1,52 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v3 0/9] Reuse davinci-nand driver for Keystone arch
-Date: Sat, 14 Dec 2013 14:18:36 -0500
-Message-ID: <52ACAF0C.6060205@ti.com>
-References: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com>
- <52A5F355.9020704@ti.com>
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: Re: [PATCH v2 03/16] ARM: dts: provide DMA config to pxamci
+Date: Sat, 14 Dec 2013 23:34:20 +0400
+Message-ID: <1387049660.7152.317.camel@host5.omatika.ru>
+References: <1386543229-1542-1-git-send-email-ynvich@gmail.com>
+	 <1386901645-28895-1-git-send-email-ynvich@gmail.com>
+	 <1386901645-28895-4-git-send-email-ynvich@gmail.com>
+	 <201312142006.26979.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52A5F355.9020704@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dwmw2@infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Rob Landley <rob@landley.net>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201312142006.26979.arnd@arndb.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <zonque@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Viresh Kumar <viresh.kumar@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 December 2013 11:44 AM, Santosh Shilimkar wrote:
-> David,
+On Sat, 2013-12-14 at 20:06 +0100, Arnd Bergmann wrote:
+> On Friday 13 December 2013, Sergei Ianovich wrote:
+> > Non-dts implementation supply required DMA channel numbers as
+> > IORESOURCE_DMA. However, there is was no way to get them from
+> > device tree.
 > 
-> On Thursday 05 December 2013 12:25 PM, Ivan Khoronzhuk wrote:
->> This series contains fixes and updates of Davinci nand driver in
->> order to reuse it for Keystone platform.
->>
->> v2..v3:
->> - mtd: nand: davinci: don't set timings if AEMIF is used
->> 	dropped, it would be replaced by alone patch
->> 	ARM: davinci: aemif: get rid of davinci-nand driver dependency on aemif
->>
->> v1..v2
->> The series is combination of two following series:
->> - Davinci nand driver fixes and updates:
->> https://lkml.org/lkml/2013/11/20/271
->> - Reuse davinci-nand driver for Keystone arch
->> https://lkml.org/lkml/2013/11/20/315
->>
->> - mtd: nand: davinci: extend description of bindings
->> 	clarified changeset description
->>
->> - mtd: nand: davinci: reuse driver for Keystone arch
->> 	removed "ti,keystone-nand" compatible from driver
->>
->> Ivan Khoronzhuk (9):
->>   mtd: nand: davinci: fix driver registration
->>   mtd: nand: davinci: return ENOMEM if memory allocation is failed
->>   mtd: nand: davinci: check required ti,davinci-chipselect property
->>   mtd: nand: davinci: simplify error handling
->>   mtd: nand: davinci: move bindings under mtd
->>   mtd: nand: davinci: extend description of bindings
->>   mtd: nand: davinci: adjust DT properties to MTD generic
->>   mtd: nand: davinci: reuse driver for Keystone arch
->>   mtd: nand: davinci: don't request AEMIF address range
->>
-> Can you please pick up the $subject series if you are happy
-> with it ?
-> It lets us re-use Davinci nand driver on Keystone SOCs.
-> 
-Ping..
+> Please update this changeset comment, I think it still refers to
+> the earlier version.
 
-regards,
-Santosh
+---
+Non-dts implementation supply required DMA channel numbers as
+IORESOURCE_DMA. We can also get them from the device tree, if it
+is present.
+---
+
+Is this fine?
+
+Should I post v3, if so? 
+
+> > Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
+> > CC: Daniel Mack <zonque@gmail.com>
+> > CC: Arnd Bergmann <arnd@arndb.de>
+> 
+> The patch looks ok in case we are merging your patches for 3.14
+> and Daniel's patches later than that. If they end up in the
+> same merge window however, we'd have to be care to resolve
+> the obvious conflict in a proper way.
+
+The most recently published Daniel's patch (Aug 2013) wraps
+IORESOURCE_DMA handling on DT presence in a similar way, but doesn't do
+any actual DT processing. So there is no conflict at the moment. Daniel
+can comment better on this, though.
+
+
