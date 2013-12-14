@@ -1,157 +1,210 @@
-From: Alex Ling <kasimling@gmail.com>
-Subject: Re: [PATCH] ARM: dts: add board dts file for EXYNOS4412 based
- TINY4412 board
-Date: Sat, 14 Dec 2013 13:34:13 +0800
-Message-ID: <CAHaF_kh0Oo8BOju1V6TBuLsq1iRTU-DtfFAAk2NvA+i8ttzJ=Q@mail.gmail.com>
-References: <1384520969-2450-1-git-send-email-kasimling@gmail.com> <CAHaF_kicLSUUenX-Ks-PyEX-pySPquQhDYrm2wbeq7DwoLDs=g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAHaF_kicLSUUenX-Ks-PyEX-pySPquQhDYrm2wbeq7DwoLDs=g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Mark Rutland <mark.rutland@arm.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, ijc+devicetree@hellion.org.uk, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
-Cc: Alex Ling <kasimling@gmail.com>
+From: p v sukesh <putta.pv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] pcm051 inital support uart mmc pmic
+Date: Sat, 14 Dec 2013 12:40:20 +0530
+Message-ID: <1387005020-9739-1-git-send-email-putta.pv@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: p v sukesh <putta.pv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Kukjin,
-Could you please review this patch? Thanks!
+---
+ arch/arm/boot/dts/Makefile             |    1 +
+ arch/arm/boot/dts/am335x-openboard.dts |  169 ++++++++++++++++++++++++++++++++
+ 2 files changed, 170 insertions(+)
+ create mode 100644 arch/arm/boot/dts/am335x-openboard.dts
 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d57c1a6..d88b525 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -195,6 +195,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+ 	omap4-sdp-es23plus.dtb \
+ 	omap5-uevm.dtb \
+ 	am335x-evm.dtb \
++	am335x-openboard.dtb\
+ 	am335x-evmsk.dtb \
+ 	am335x-bone.dtb \
+ 	am335x-boneblack.dtb \
+diff --git a/arch/arm/boot/dts/am335x-openboard.dts b/arch/arm/boot/dts/am335x-openboard.dts
+new file mode 100644
+index 0000000..4cc1fc9
+--- /dev/null
++++ b/arch/arm/boot/dts/am335x-openboard.dts
+@@ -0,0 +1,169 @@
++/*
++ *Device tree support for Phytec phyCORE-AM335x Board.
++ *
++ * Copyright (C) 2013 Phytec Embedded Pvt. Ltd
++ *
++ * Author: P VENKATA SUKESH<putta.pv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * Based on arch/arm/boot/dts/am335x-evm.dts
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++/dts-v1/;
++
++#include "am33xx.dtsi"
++
++/ {
++	model = "phytec phyCORE-AM3359";
++	compatible = "ti,pcm051", "ti,am33xx";
++
++        cpus {
++                cpu@0 {
++                        cpu0-supply = <&vdd1_reg>;
++                };
++        };
++
++        memory {
++                device_type = "memory";
++                reg = <0x80000000 0x20000000>; /* 512MB */
++        };
++
++        vbat: fixedregulator@0 {
++                compatible = "regulator-fixed";
++                regulator-name = "vbat";
++                regulator-min-microvolt = <5000000>;
++                regulator-max-microvolt = <5000000>;
++                regulator-boot-on;
++        };
++
++};
++
++&am33xx_pinmux {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc_s0>;
++
++	uart0_pins: pinmux_uart0_pins {
++		pinctrl-single,pins = <
++			0x170 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
++			0x174 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
++		>;
++	};
++
++	mmc_s0: mmc_s0 {
++		pinctrl-single,pins = <
++			0xF0 0x30       /* mmc0_dat3.mmc0_dat3, INPUT_PULLUP | MODE0 */
++			0xF4 0x30       /* mmc0_dat2.mmc0_dat2, INPUT_PULLUP | MODE0 */
++			0xF8 0x30       /* mmc0_dat1.mmc0_dat1, INPUT_PULLUP | MODE0 */
++			0xFC 0x30       /* mmc0_dat0.mmc0_dat0, INPUT_PULLUP | MODE0 */
++			0x100 0x30      /* mmc0_clk.mmc0_clk, INPUT_PULLUP | MODE0 */
++			0x104 0x30      /* mmc0_cmd.mmc0_cmd, INPUT_PULLUP | MODE0 */
++			0x160 0x37      /* spi0_cs1.mmc0_sdcd, INPUT_PULLUP | MODE5 */
++                        >;
++                };
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins>;
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	tps: tps@2d {
++		reg = <0x2d>;
++	};
++};
++
++#include "tps65910.dtsi"
++
++&tps {
++	vcc1-supply = <&vbat>;
++	vcc2-supply = <&vbat>;
++	vcc3-supply = <&vbat>;
++	vcc4-supply = <&vbat>;
++	vcc5-supply = <&vbat>;
++	vcc6-supply = <&vbat>;
++	vcc7-supply = <&vbat>;
++	vccio-supply = <&vbat>;
++
++	regulators {
++		vrtc_reg: regulator@0 {
++			regulator-always-on;
++		};
++
++		vio_reg: regulator@1 {
++			regulator-always-on;
++		};
++
++		vdd1_reg: regulator@2 {
++			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
++			regulator-name = "vdd_mpu";
++			regulator-min-microvolt = <912500>;
++			regulator-max-microvolt = <1312500>;
++			regulator-boot-on;
++			regulator-always-on;
++		};
++
++		vdd2_reg: regulator@3 {
++			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
++			regulator-name = "vdd_core";
++			regulator-min-microvolt = <912500>;
++			regulator-max-microvolt = <1150000>;
++			regulator-boot-on;
++			regulator-always-on;
++		};
++
++		vdd3_reg: regulator@4 {
++			regulator-always-on;
++		};
++
++		vdig1_reg: regulator@5 {
++			regulator-always-on;
++		};
++
++		vdig2_reg: regulator@6 {
++			regulator-always-on;
++		};
++
++		vpll_reg: regulator@7 {
++			regulator-always-on;
++		};
++
++		vdac_reg: regulator@8 {
++			regulator-always-on;
++		};
++
++		vaux1_reg: regulator@9 {
++			regulator-always-on;
++		};
++
++		vaux2_reg: regulator@10 {
++			regulator-always-on;
++		};
++
++		vaux33_reg: regulator@11 {
++			regulator-always-on;
++		};
++
++		vmmc_reg: regulator@12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++	};
++};
++
++&mmc1 {
++	status = "okay";
++	cd-gpios = <&gpio1 6 0>;
++	vmmc-supply = <&vmmc_reg>;
++	bus-width = <4>;
++};
++
++
+-- 
+1.7.9.5
 
-Regards,
-Alex
-
-On Fri, Nov 15, 2013 at 9:13 PM, kasim ling <kasimling@gmail.com> wrote:
-> The board compatible string will be documented after the coresponding
-> documentation is specified.
->
->
-> Regards,
-> Alex
->
-> On Fri, Nov 15, 2013 at 9:09 PM, Alex Ling <kasimling@gmail.com> wrote:
->> Add a minimal board dts file for EXYNOS4412 based FriendlyARM's
->> TINY4412 board. This patch including adds the node to support
->> peripherals like UART, SD card on SDMMC2 port, and this patch
->> adds GPIO connected LEDS and configure its properties like
->> following:
->> LED1: use 'heartbeat' trigger, blinking while the board is running.
->> LED4: use 'mmc0' trigger, on when mmc0 is accessing.
->> LED2 and LED3 can be controlled from userspace.
->>
->> Signed-off-by: Alex Ling <kasimling@gmail.com>
->> ---
->>  arch/arm/boot/dts/Makefile                |    1 +
->>  arch/arm/boot/dts/exynos4412-tiny4412.dts |   89 +++++++++++++++++++++++++++++
->>  2 files changed, 90 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/exynos4412-tiny4412.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 802720e..91671a2 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -59,6 +59,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
->>         exynos4412-odroidx.dtb \
->>         exynos4412-origen.dtb \
->>         exynos4412-smdk4412.dtb \
->> +       exynos4412-tiny4412.dtb \
->>         exynos4412-trats2.dtb \
->>         exynos5250-arndale.dtb \
->>         exynos5250-smdk5250.dtb \
->> diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
->> new file mode 100644
->> index 0000000..78ace14
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
->> @@ -0,0 +1,89 @@
->> +/*
->> + * FriendlyARM's Exynos4412 based TINY4412 board device tree source
->> + *
->> + * Copyright (c) 2013 Alex Ling <kasimling@gmail.com>
->> + *
->> + * Device tree source file for FriendlyARM's TINY4412 board which is based on
->> + * Samsung's Exynos4412 SoC.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> +*/
->> +
->> +/dts-v1/;
->> +#include "exynos4412.dtsi"
->> +
->> +/ {
->> +       model = "FriendlyARM TINY4412 board based on Exynos4412";
->> +       compatible = "friendlyarm,tiny4412", "samsung,exynos4412";
->> +
->> +       memory {
->> +               reg = <0x40000000 0x40000000>;
->> +       };
->> +
->> +       leds {
->> +               compatible = "gpio-leds";
->> +               led1 {
->> +                       label = "led1:heart";
->> +                       gpios = <&gpm4 0 1>;
->> +                       default-state = "off";
->> +                       linux,default-trigger = "heartbeat";
->> +               };
->> +               led2 {
->> +                       label = "led2";
->> +                       gpios = <&gpm4 1 1>;
->> +                       default-state = "off";
->> +               };
->> +               led3 {
->> +                       label = "led3";
->> +                       gpios = <&gpm4 2 1>;
->> +                       default-state = "off";
->> +               };
->> +               led4 {
->> +                       label = "led4:mmc0";
->> +                       gpios = <&gpm4 3 1>;
->> +                       default-state = "off";
->> +                       linux,default-trigger = "mmc0";
->> +               };
->> +       };
->> +
->> +       rtc@10070000 {
->> +               status = "okay";
->> +       };
->> +
->> +       sdhci@12530000 {
->> +               bus-width = <4>;
->> +               pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
->> +               pinctrl-names = "default";
->> +               status = "okay";
->> +       };
->> +
->> +       serial@13800000 {
->> +               status = "okay";
->> +       };
->> +
->> +       serial@13810000 {
->> +               status = "okay";
->> +       };
->> +
->> +       serial@13820000 {
->> +               status = "okay";
->> +       };
->> +
->> +       serial@13830000 {
->> +               status = "okay";
->> +       };
->> +
->> +       fixed-rate-clocks {
->> +               xxti {
->> +                       compatible = "samsung,clock-xxti";
->> +                       clock-frequency = <0>;
->> +               };
->> +
->> +               xusbxti {
->> +                       compatible = "samsung,clock-xusbxti";
->> +                       clock-frequency = <24000000>;
->> +               };
->> +       };
->> +};
->> --
->> 1.7.9.5
->>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
