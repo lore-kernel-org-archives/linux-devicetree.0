@@ -1,72 +1,82 @@
-From: Sherman Yin <syin@broadcom.com>
-Subject: Re: [PATCH v3 4/6] pinctrl: Add pinctrl binding for Broadcom Capri
- SoCs
-Date: Fri, 13 Dec 2013 17:16:00 -0800
-Message-ID: <52ABB150.1030702@broadcom.com>
-References: <1381174108-25168-1-git-send-email-syin@broadcom.com>	<1386787041-6035-1-git-send-email-syin@broadcom.com>	<1386787041-6035-5-git-send-email-syin@broadcom.com>
- <CACRpkdY7s+eUFkg0AsaN5B9-1y_mTJ29Y-D9CkRG2GQ3JshP+w@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 0/5] Renesas R-Car Gen2 Common Clock Framework arch/
+ support
+Date: Sat, 14 Dec 2013 10:26:24 +0900
+Message-ID: <20131214012624.GF12584@verge.net.au>
+References: <1386770716-21610-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdY7s+eUFkg0AsaN5B9-1y_mTJ29Y-D9CkRG2GQ3JshP+w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, =?ISO-8859-1?Q?Heiko_St=FCbn?= =?ISO-8859-1?Q?er?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1386770716-21610-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13-12-12 12:37 PM, Linus Walleij wrote:
-> On Wed, Dec 11, 2013 at 7:37 PM, Sherman Yin <syin@broadcom.com> wrote:
->
->> Adds pinctrl driver devicetree binding for Broadcom Capri (BCM281xx) SoCs.
->>
->> Signed-off-by: Sherman Yin <syin@broadcom.com>
->> Reviewed-by: Christian Daudt <bcm@fixthebug.org>
->> Reviewed-by: Matt Porter <matt.porter@linaro.org>
->> ---
->> v3: Use generic pin config properties instead of brcm-specific ones.  Clarified
->>      pin types (standard, i2c, hdmi).
->> v2: Use hyphens instead of underscore in DT property names.
->
-> Overall this is very nice!
+[ CC Magnus ]
 
-Thanks!
+On Wed, Dec 11, 2013 at 03:05:11PM +0100, Laurent Pinchart wrote:
+> Hello,
+> 
+> This is a repost of the arch patches from the "[PATCH v3 0/8] Renesas R-Car
+> Gen2 Common Clock Framework support" patch series. The first three patches in
+> that series have been reposted separately in the "[PATCH v4 0/3] Renesas R-Car
+> Gen2 Common Clock Framework drivers" series to get merged through Mike
+> Turquette's tree, while this series will go through the ARM SoC tree.
+> 
+> I've asked Mike to provide a stable branch when merging the CCF driver
+> patches.
+> 
+> Laurent Pinchart (5):
+>   ARM: shmobile: r8a7790: Add clock index macros for DT sources
+>   ARM: shmobile: r8a7791: Add clock index macros for DT sources
+>   ARM: shmobile: r8a7790: Add clocks
+>   ARM: shmobile: r8a7790: Reference clocks
+>   ARM: shmobile: r8a7791: Add clocks
+> 
+>  arch/arm/boot/dts/r8a7790.dtsi            | 328 ++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/r8a7791.dtsi            | 313 ++++++++++++++++++++++++++++
+>  include/dt-bindings/clock/r8a7790-clock.h | 100 +++++++++
+>  include/dt-bindings/clock/r8a7791-clock.h | 105 ++++++++++
+>  4 files changed, 846 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/r8a7790-clock.h
+>  create mode 100644 include/dt-bindings/clock/r8a7791-clock.h
 
->> +- bias-pull-up:                        Integer. Pull up strength in Ohm:
->> +                                       1: 1.2 kOhm
->> +                                       2: 1.8 kOhm
->> +                                       3: 720 Ohm
->> +                                       4: 2.7 kOhm
->> +                                       5: 831 Ohm
->> +                                       6: 1.08 kOhm
->> +                                       7: 568 Ohm
->
-> Please do not use these custom enumerators 1 thru 7.
-> Instead say that the argument is given in ohms, so for
-> example:
->
-> bias-pull-up = <12000>;
->
-> Then translate this into the proper enumerator in your
-> driver instead.
+Hi Laurent,
 
-Ok.  The 3 bits in this enumeration correspond to enabling the 3 pull up 
-Rs (1.2k, 1.8k, 2.7k) in parallel, so the enum kind of make sense. But 
-sure I can change it to actual ohms and will error out in the driver if 
-specified value is not one of the 7.
+I would like to confirm the dependencies of this series with you.
+As I understand things the dependencies that were not present
+in renesas-devel-v3.13-rc2-20131211 are as follows.
 
-> No full example provided in the binding! This needs to
-> be there for understanding.
+If any of the patches below can be skipped without breaking this series
+or the followup series "[PATCH v4 00/16] Lager and Koelsch multiplatform
+support" then I am all for not treating them as dependencies at all.
 
-Ok Will add some examples.
 
-Thanks,
-Sherman
+* [PATCH v4 0/3] Renesas R-Car Gen2 Common Clock Framework drivers
+  Status: Waiting for response from Mike Turquette
+
+* mmc: sh_mobile_sdhi: Convert to clk_prepare/unprepare
+  Status: Merged by Chris Ball. I believe we need a stable branch from him.
+
+* spi: sh-msiof: Convert to clk_prepare/unprepare
+  spi: sh-msiof: Use devm_* managed allocators
+  Status: Merged by Mark Brown. I believe we need a stable branch from him.
+
+* usb: gadget: r8a66597-udc: Convert to clk_prepare/unprepare
+  Status: In Felipe Balbi's next branch. It is stable, right?
+
+* clocksource: sh_tmu: Add clk_prepare/unprepare support
+  clocksource: sh_tmu: Release clock when sh_tmu_register() fails
+  clocksource: sh_mtu2: Add clk_prepare/unprepare support
+  clocksource: sh_mtu2: Release clock when sh_mtu2_register() fails
+  Status: Present in v3.13-rc3. No problem!
+
+* clocksource: sh_cmt: Add clk_prepare/unprepare support
+  Status: I think I have dropped the ball here.
+          Regardless, I think it it needs to be accepted by Daniel Lezcano
+
+* serial: sh-sci: Convert to clk_prepare/unprepare
+  serial: sh-sci: Don't enable/disable port from within break timer
+  Status: I have queued these up
