@@ -1,45 +1,104 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] ARM: dts: Add missing clocks for exynos4412 dwmmc node
-Date: Sat, 14 Dec 2013 14:24:23 +0100
-Message-ID: <6057819.pWzq25qpVf@flatron>
-References: <1386998490-19456-1-git-send-email-kasimling@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 00/26] OMAPDSS: DT support (Christmas edition)
+Date: Sat, 14 Dec 2013 06:09:14 -0800
+Message-ID: <20131214140913.GA12324@atomide.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+ <1703598.NbqXAMAFOI@avalon>
+ <52AADBE0.3030203@ti.com>
+ <3426377.keoaFgiZkl@avalon>
+ <52AB2C25.6000507@ti.com>
+ <20131213172234.GD28184@atomide.com>
+ <52AC0A18.30405@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386998490-19456-1-git-send-email-kasimling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alex Ling <kasimling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52AC0A18.30405@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alex,
-
-On Saturday 14 of December 2013 13:21:30 Alex Ling wrote:
-> This patch adds "biu" and "ciu" clocks for exynos4412 dwmmc
-> node. Without this patch, dwmmc host driver will skip enabling the
-> two clocks and it will break dwmmc host function on exynos4412.
-> Tested on FriendlyARM TINY4412 board.
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [131213 23:36]:
+> On 2013-12-13 19:22, Tony Lindgren wrote:
+> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [131213 07:49]:
+> >> Hi Laurent, Tony,
+> >>
+> >> On 2013-12-13 16:37, Laurent Pinchart wrote:
+> >>
+> >>>>> - dsi_enable_pads, dsi_disable_pads: Those don't seem to be used in
+> >>>>> mainline. What's their purpose, and how are they implemented on platforms
+> >>>>> that make use of them ? Is the pinmux API an option ?
+> >>>>
+> >>>> They are used in mainline, grep again =).
+> >>>
+> >>> The only implementations I can find in arch/arm/mach-omap2/display.c are
+> >>>
+> >>> static int omap_dsi_enable_pads(int dsi_id, unsigned lane_mask)
+> >>> {
+> >>>         return 0;
+> >>> }
+> >>>
+> >>> static void omap_dsi_disable_pads(int dsi_id, unsigned lane_mask)
+> >>> {
+> >>> }
+> >>
+> >> Yep. It seems Tony removed the muxing for -rc2 in
+> >> e30b06f4d5f000c31a7747a7e7ada78a5fd419a1 ARM: OMAP2+: Remove legacy mux
+> >> code for display.c
+> >>
+> >> Tony, that patch removes DSI muxing, which is not done via DT. I can't
+> >> test right now, but I presume DSI displays don't work at all after -rc2.
+> > 
+> > Hmm I suggest you test against commit adfe9361b236 (ARM: dts: Add basic
+> > devices on am3517-evm) as it does not yet remove the legacy data and
+> > that's what's heading to linux next soonish.
 > 
-> Signed-off-by: Alex Ling <kasimling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Changes for v2:
->    - Fix patch description as Mark Rutland suggested
+> That commit is not in the mainline. I'm talking about mainline.
+> v3.13-rc3 contains e30b06f4d5f000c31a7747a7e7ada78a5fd419a1, and that
+> breaks DSI displays (just tested). It needs to be reverted (although the
+> HDMI parts can probably be removed).
 > 
->  arch/arm/boot/dts/exynos4412.dtsi |    2 ++
->  1 file changed, 2 insertions(+)
+> Why was e30b06f4d5f000c31a7747a7e7ada78a5fd419a1 merged into -rc2? It's
+> not a fix, just a cleanup.
 
-The patch is correct, but unfortunately it's not the only thing that
-is wrong with MSHC device tree node for Exynos4x12.
+Hmm OK sorry looks like I removed some non-legacy mux framework code
+by accident. The omap_mux_* parts clearly are dead code for omap4 as
+it's been DT only since v3.10, but the omap4_dsi_mux_pads() is not
+using omap_mux_* functions.
 
-Please refer to my series fixing DW-MSHC support on Exynos4x12 (and
-enabling it on TRATS2 board):
-http://www.spinics.net/lists/arm-kernel/msg293652.html
+Yes, let's revert e30b06f4d5f0 except for the dead code parts, which
+seems to be omap4_tpd12s015_mux_pads(), right?
+ 
+> > With the DT configured displays that muxing needs to be done in the
+> > DSS driver(s) using pinctrl-single.
+> 
+> We don't have any DT configured displays in the mainline.
 
-Best regards,
-Tomasz
+Yes sorry omap4_dsi_mux_pads() should not have been removed.
+ 
+> pinctrl-single doesn't support the kind of register that contains the
+> DSI muxing. I don't know yet how that should be done. In any case, the
+> muxing via DT should've been added at the same time as removing the
+> muxing via platform callback in e30b06f4d5f000c31a77.
+> 
+> > BTW, I suspect quite a few of the DSI using boards have been broken a
+> > while before 0b2aa8bed3e1 (gpio: twl4030: Fix regression for twl gpio
+> > output) as at least the following have been using TWL GPIO to enable
+> > the panel:
+> > 
+> > board-3430sdp.c
+> > board-devkit8000.c
+> > board-ldp.c
+> > board-omap3stalker.c
+> > 
+> > This was the case at least for LDP.
+> 
+> Only 4430sdp has a DSI display in the mainline. Those boards have DPI
+> displays.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Oops right, those are DPI.
+
+Regards,
+
+Tony
