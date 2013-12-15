@@ -1,175 +1,58 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: dts: sun5i: Add new
- sun5i-a13-olinuxino-micro board
-Date: Sun, 15 Dec 2013 15:04:57 +0100
-Message-ID: <20131215140457.GG3651@lukather>
-References: <1387058295-20641-1-git-send-email-hdegoede@redhat.com>
- <1387058295-20641-4-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Alex Ling <kasimling@gmail.com>
+Subject: Re: [PATCH v2 1/1] ARM: dts: Add missing clocks for exynos4412 dwmmc
+ node
+Date: Sun, 15 Dec 2013 22:14:53 +0800
+Message-ID: <CAHaF_kimHy38cL79uZDRy-OWCDs2m0TRAQyT=JaHVfWgHLz2JA@mail.gmail.com>
+References: <1386998490-19456-1-git-send-email-kasimling@gmail.com>
+ <6057819.pWzq25qpVf@flatron>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="U5yJ31ax00IavOwq"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBG7OW2KQKGQEN6YLNCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1387058295-20641-4-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6057819.pWzq25qpVf@flatron>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Thanks for pointing out this, Tomasz. I'll use those patches instead.
 
---U5yJ31ax00IavOwq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Dec 14, 2013 at 10:58:13PM +0100, Hans de Goede wrote:
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Regards,
+Alex
 
-Commit log :)
-
-Please detail what the board is, what features it has, etc.
-
-Other than that, I'm mostly ok with this patch (except that you can
-also probably add your copyright, but that's your call :))
-
-Could you send it as a single patch, separate from this serie (since
-it's not really related in the end).
-
-Thanks!
-Maxime
-
-> ---
->  arch/arm/boot/dts/Makefile                      |  1 +
->  arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts | 66 +++++++++++++++++++=
-++++++
->  2 files changed, 67 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts
->=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index d57c1a6..b663ed7 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -255,6 +255,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D \
->  	sun4i-a10-hackberry.dtb \
->  	sun5i-a10s-olinuxino-micro.dtb \
->  	sun5i-a13-olinuxino.dtb \
-> +	sun5i-a13-olinuxino-micro.dtb \
->  	sun6i-a31-colombus.dtb \
->  	sun7i-a20-cubieboard2.dtb \
->  	sun7i-a20-cubietruck.dtb \
-> diff --git a/arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts b/arch/arm/b=
-oot/dts/sun5i-a13-olinuxino-micro.dts
-> new file mode 100644
-> index 0000000..26df7e8
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts
-> @@ -0,0 +1,66 @@
-> +/*
-> + * Copyright 2012 Maxime Ripard
-> + *
-> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +/include/ "sun5i-a13.dtsi"
-> +
-> +/ {
-> +	model =3D "Olimex A13-Olinuxino Micro";
-> +	compatible =3D "olimex,a13-olinuxino-micro", "allwinner,sun5i-a13";
-> +
-> +	soc@01c00000 {
-> +		pinctrl@01c20800 {
-> +			led_pins_olinuxinom: led_pins@0 {
-> +				allwinner,pins =3D "PG9";
-> +				allwinner,function =3D "gpio_out";
-> +				allwinner,drive =3D <1>;
-> +				allwinner,pull =3D <0>;
-> +			};
-> +		};
-> +
-> +		uart1: serial@01c28400 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&uart1_pins_b>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		i2c0: i2c@01c2ac00 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&i2c0_pins_a>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		i2c1: i2c@01c2b000 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&i2c1_pins_a>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		i2c2: i2c@01c2b400 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&i2c2_pins_a>;
-> +			status =3D "okay";
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&led_pins_olinuxinom>;
-> +
-> +		power {
-
-Could you add a label here?
-
-Something like a13-olinuxino-micro:green:power ?
-
-> +			gpios =3D <&pio 6 9 0>;
-> +			default-state =3D "on";
-> +		};
-> +	};
-> +};
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---U5yJ31ax00IavOwq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSrbcJAAoJEBx+YmzsjxAgCj8P/jPwluzCPU5XUTuVKMMzdZcB
-e6tDSjjMb6Kvab0Imdbqvt/0zsKP5tTOoVfadUAd+MSkz7Tgb7eglon/k93woTl8
-sVrWrj0WHu71JZ72SOpME4YS9Pt26uZ65sBmuZ+HMU6AA4l+b+ILUYBxPpemCOe6
-LNURNCYpfo4118tPydf11TW5auvOmjHgZM+dzT8v0YWKQWawKmFPYvv9dDln16Gt
-3b6xFPGdI6Q7i76zFmaixShd7hUVzBU9J1CluPjaLzUiq4xggojfYp46rXcnf2l7
-9wW9It7S1wmyemrUWncNvfy58HZDnPdsnmqkVUAh1UnPhpstkVtC7EYko3CkzDdv
-AsESd6SZHLv0FrCAOQxgVWbrj0PAyNQ1Pe9EP20wlfDp1FrY8+0rlzRbg4ZikJ1k
-51RcRHdZuPey4287Pm5+pboMfN0gRQAXM+ZimcXTk1wpKqGAUCKqZTEig98yjkcN
-t+9ilYTOQ5cHEEPbiCP1T1W4n1cl1WFq7yugfEm+68kC7bhnXnq1oEqHkODU+iq4
-+u6FRs4fNQ1v++iaif9p2v70uLWGKmSgTBxMEIjqjeS8grsXH1NzjehvR5qmXIBu
-eTeLEsNtUndwBhEzGGUMMmSgUzn//pB3YRzWilA/awcSmmPiPhhztMrH4AEqBfqu
-tzr4wMOGbMUaE31A4hB0
-=eyhR
------END PGP SIGNATURE-----
-
---U5yJ31ax00IavOwq--
+On Sat, Dec 14, 2013 at 9:24 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Alex,
+>
+> On Saturday 14 of December 2013 13:21:30 Alex Ling wrote:
+>> This patch adds "biu" and "ciu" clocks for exynos4412 dwmmc
+>> node. Without this patch, dwmmc host driver will skip enabling the
+>> two clocks and it will break dwmmc host function on exynos4412.
+>> Tested on FriendlyARM TINY4412 board.
+>>
+>> Signed-off-by: Alex Ling <kasimling@gmail.com>
+>> ---
+>> Changes for v2:
+>>    - Fix patch description as Mark Rutland suggested
+>>
+>>  arch/arm/boot/dts/exynos4412.dtsi |    2 ++
+>>  1 file changed, 2 insertions(+)
+>
+> The patch is correct, but unfortunately it's not the only thing that
+> is wrong with MSHC device tree node for Exynos4x12.
+>
+> Please refer to my series fixing DW-MSHC support on Exynos4x12 (and
+> enabling it on TRATS2 board):
+> http://www.spinics.net/lists/arm-kernel/msg293652.html
+>
+> Best regards,
+> Tomasz
+>
