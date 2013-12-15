@@ -1,62 +1,130 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCHv10 00/41] ARM: TI SoC clock DT conversion
-Date: Sat, 14 Dec 2013 16:51:07 -0800
-Message-ID: <20131215005107.26321.50455@quantum>
-References: <1385453182-24421-1-git-send-email-t-kristo@ti.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCHv6 1/5] mmc: dw_mmc: Add support to set the SDR and DDR
+ timing through clock framework
+Date: Sun, 15 Dec 2013 10:05:46 +0800
+Message-ID: <52AD0E7A.50208@linaro.org>
+References: <1386880245-10192-1-git-send-email-dinguyen@altera.com> <1386880245-10192-2-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1385453182-24421-1-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1386880245-10192-2-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinguyen@altera.com, dinh.linux@gmail.com, arnd@arndb.de, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, mturquette@linaro.org
+Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Tero Kristo (2013-11-26 00:05:41)
-> Hi,
-> 
-> Changes compared to v9:
-> - rebased on top of 3.13-rc1
-> - modified the low level clk register API to provide SoC specific clk_readl
->   and clk_writel support which can be registered during boot, TI SoC variant
->   uses regmap on low level
-> - dropped regmap parameter from clock init calls, instead a helper is used
->   for getting regmap index along with the register offset from DT
-> - dropped regmap parameter from clock structs, instead platform specific
->   clk_readl / clk_writel are used to parse reg parameter according to
->   platform, for TI SoC:s, this is encoded as:
->   struct clk_omap_reg {
->     u16 offset; /* register offset */
->     u16 index; /* regmap index */
+Dear Dinh
+
+On 12/13/2013 04:30 AM, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
+>
+> All implementations of the Synopsys DW SD/MMC IP have settings to control
+> the phase shift of the CIU clk. These phase shift settings are necessary for
+> the SD/MMC to correctly clock the card. All variants of the dw_mmc will need
+> these settings, but how they are implemented can vastly vary.
+>
+> This patch enables the setting for the SDR and/or DDR settings through the
+> common clock framework.
+>
+> Depends on the patch "mmc: dw_mmc: Enable the hold reg for certain speed modes",
+> that is already reading the "samsung,dw-mshc-sdr-timing" and
+> "samsung,dw-mshc-ddr-timing" bindings, this patch saves those values into a
+> u32 bitmask that can be passed to the clock framework to use.
+>
+> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+> ---
+> v6: Add this patch
+> v5: none
+> v4: none
+> v3: none
+> v2: none
+> ---
+>   drivers/mmc/host/dw_mmc.c  |   23 +++++++++++++++++++++++
+>   include/linux/mmc/dw_mmc.h |    6 ++++++
+>   2 files changed, 29 insertions(+)
+>
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 480dafe..1fb5cff 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -2431,6 +2431,8 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
+>   	if ((sdr_timing[1] == 0) || (ddr_timing[1] == 0))
+>   		pdata->cclk_in_drv = 0;
+>
+> +	pdata->sdr_timing = (sdr_timing[1] | (sdr_timing[0] << 4));
+> +	pdata->ddr_timing = (ddr_timing[1] | (ddr_timing[0] << 4));
+>   	return pdata;
 >   }
-> - Nishanth's comments to v9 mostly addressed, except for the CLK_OF_DECLARE
->   tweak which I would actually want some feedback upon, basically the problem
->   is I need to return status from the clk init functions so I can see if
->   -EAGAIN is passed, in which case init will be retried later, maybe some of
->   this can be made generic, like converting all the CLK_OF_DECLARE type
->   functions to return status
-> 
-> Testing done:
-> - omap3-beagle : boot + suspend/resume
-> - omap3-beagle-xm : boot (thanks to Nishanth)
-> - omap4-panda-es : boot + suspend/resume
+>
+> @@ -2478,6 +2480,27 @@ int dw_mci_probe(struct dw_mci *host)
+>   		dev_dbg(host->dev, "ciu clock not available\n");
+>   		host->bus_hz = host->pdata->bus_hz;
+>   	} else {
+> +		/* If the CIU clk is available, we check for SDR and DDR
+> +		 * timing phase shift settings. But not all platforms
+> +		 * may have populated these settings, the driver will not fail
+> +		 * if these settings are not specified.
+> +		 */
+> +		if (host->pdata->sdr_timing) {
+> +			host->sdr_clk = devm_clk_get(host->dev, "sdr_mmc_clk");
+> +			if (IS_ERR(host->sdr_clk))
+> +				dev_dbg(host->dev, "sdr_mmc clock not available\n");
+> +			else
+> +				clk_set_rate(host->sdr_clk, host->pdata->sdr_timing);
+> +		}
+> +
+> +		if (host->pdata->ddr_timing) {
+> +			host->ddr_clk = devm_clk_get(host->dev, "ddr_mmc_clk");
+> +			if (IS_ERR(host->ddr_clk))
+> +				dev_dbg(host->dev, "ddr_mmc clock not available\n");
+> +			else
+> +				clk_set_rate(host->ddr_clk, host->pdata->ddr_timing);
+> +		}
+> +
 
-A quick note in testing: trace_clk_div_ck ends up as an orphan clock on
-my Panda ES.
+Just curious, does pdata->sdr_timing and pdata->ddr_timing are fixed, 
+fixed as each controller, or different with different board.
+In case they are fixed, or fixed in each controller, and only required 
+to be set in probe only once, maybe they can be hide in clk_mmc_ops.prepare
+And the clock can be used as ciu_clock, or parent of ciu_clock, which is 
+called in dw_mmc.c, maybe these code can be ignored.
 
-Regards,
-Mike
 
-> - omap5-uevm : boot
-> - dra7-evm : boot
-> - am335x-bone : boot
-> 
-> Separate branches available at https://github.com/t-kristo/linux-pm.git
-> 
-> - full: 3.13-rc1-dt-clks-v10 (should be merged last, contains everything)
-> - clk driver only: 3.13-rc1-dt-clks-v10-for-mike
-> - DT data only: 3.13-rc1-dt-clks-v10-for-benoit
-> 
-> -Tero
-> 
+
+>   		ret = clk_prepare_enable(host->ciu_clk);
+>   		if (ret) {
+>   			dev_err(host->dev, "failed to enable ciu clock\n");
+> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+> index 2b5b8bf..ad90ad1 100644
+> --- a/include/linux/mmc/dw_mmc.h
+> +++ b/include/linux/mmc/dw_mmc.h
+> @@ -83,6 +83,8 @@ struct mmc_data;
+>    * @priv: Implementation defined private data.
+>    * @biu_clk: Pointer to bus interface unit clock instance.
+>    * @ciu_clk: Pointer to card interface unit clock instance.
+> + * @sdr_clk: Pointer to the SDR clock instance.
+> + * @ddr_clk: Pointer to the DDR clock instance.
+>    * @slot: Slots sharing this MMC controller.
+>    * @fifo_depth: depth of FIFO.
+>    * @data_shift: log2 of FIFO item size.
+> @@ -170,6 +172,8 @@ struct dw_mci {
+>   	void			*priv;
+>   	struct clk		*biu_clk;
+>   	struct clk		*ciu_clk;
+> +	struct clk		*sdr_clk;
+> +	struct clk		*ddr_clk;
+>   	struct dw_mci_slot	*slot[MAX_MCI_SLOTS];
+>
+>   	/* FIFO push and pull */
+> @@ -241,6 +245,8 @@ struct dw_mci_board {
+>   	u32 caps2;	/* More capabilities */
+>   	u32 pm_caps;	/* PM capabilities */
+>   	u32 cclk_in_drv;	/*cclk_in_drv phase shift */
+> +	u32 sdr_timing;	/* Single data rate timing setting. */
+> +	u32 ddr_timing;	/* Double data rate timing setting. */
+
+Are they fixed or not?
+
+Thanks
+Zhangfei
