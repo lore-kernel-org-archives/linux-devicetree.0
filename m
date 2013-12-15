@@ -1,178 +1,60 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v10 1/2] [media] exynos5-is: Adds DT binding documentation
-Date: Sun, 15 Dec 2013 12:46:54 +0100
-Message-ID: <52AD96AE.4090205@gmail.com>
-References: <1386911563-26236-1-git-send-email-arun.kk@samsung.com> <1386911563-26236-2-git-send-email-arun.kk@samsung.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 2/6] This patch converts the davinci gpio driver to
+	use irqdomain support.
+Date: Sun, 15 Dec 2013 18:06:01 +0530
+Message-ID: <52ADA231.4080603@ti.com>
+References: <1385057731-4348-1-git-send-email-prabhakar.csengg@gmail.com>
+	<1385057731-4348-3-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1386911563-26236-2-git-send-email-arun.kk@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>, mark.rutland@arm.com
-Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, shaik.ameer@samsung.com, arunkk.samsung@gmail.com
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1385057731-4348-3-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/13/2013 06:12 AM, Arun Kumar K wrote:
-> From: Shaik Ameer Basha<shaik.ameer@samsung.com>
->
-> The patch adds the DT binding doc for exynos5 SoC camera
-> subsystem.
->
-> Signed-off-by: Shaik Ameer Basha<shaik.ameer@samsung.com>
-> Signed-off-by: Arun Kumar K<arun.kk@samsung.com>
-> ---
->   .../bindings/media/exynos5250-camera.txt           |  136 ++++++++++++++++++++
->   1 file changed, 136 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/media/exynos5250-camera.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/exynos5250-camera.txt b/Documentation/devicetree/bindings/media/exynos5250-camera.txt
-> new file mode 100644
-> index 0000000..0c36bc4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/exynos5250-camera.txt
-> @@ -0,0 +1,136 @@
-> +Samsung EXYNOS5 SoC Camera Subsystem
-> +------------------------------------
-> +
-> +The Exynos5 SoC Camera subsystem comprises of multiple sub-devices
-> +represented by separate device tree nodes. Currently this includes: FIMC-LITE,
-> +MIPI CSIS and FIMC-IS.
-> +
-> +The sub-device nodes are referenced using phandles in the common 'camera' node
-> +which also includes common properties of the whole subsystem not really
-> +specific to any single sub-device, like common camera port pins or the common
-> +camera bus clocks.
-> +
-> +Common 'camera' node
-> +--------------------
-> +
-> +Required properties:
-> +
-> +- compatible		: must be "samsung,exynos5250-fimc"
-> +- clocks		: list of phandles and clock specifiers, corresponding
-> +			  to entries in the clock-names property
-> +- clock-names		: must contain "sclk_bayer" entry
-> +- samsung,csis		: list of phandles to the mipi-csis device nodes
-> +- samsung,fimc-lite	: list of phandles to the fimc-lite device nodes
-> +- samsung,fimc-is	: phandle to the fimc-is device node
-> +
-> +The pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt must be used
-> +to define a required pinctrl state named "default".
-> +
-> +'parallel-ports' node
-> +---------------------
-> +
-> +This node should contain child 'port' nodes specifying active parallel video
-> +input ports. It includes camera A, camera B and RGB bay inputs.
-> +'reg' property in the port nodes specifies the input type:
-> + 1 - parallel camport A
-> + 2 - parallel camport B
-> + 5 - RGB camera bay
-> +
-> +3, 4 are for MIPI CSI-2 bus and are already described in samsung-mipi-csis.txt
-> +
-> +Required properties:
-> +
-> +For describing the input type in the child nodes, the following properties
-> +have to be present in the parallel-ports node:
-> +- #address-cells: Must be 1
-> +- #size-cells: Must be 0
-> +
-> +Image sensor nodes
-> +------------------
-> +
-> +The sensor device nodes should be added to their control bus controller (e.g.
-> +I2C0) nodes and linked to a port node in the csis or the parallel-ports node,
-> +using the common video interfaces bindings, defined in video-interfaces.txt.
+On Thursday 21 November 2013 11:45 PM, Prabhakar Lad wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> [grygorii.strashko-l0cyMroinI0@public.gmane.org:
+>  - switch to use one irq-domain per  all GPIO banks
+>  - keep irq_create_mapping() call in gpio_to_irq_banked() as it
+>    simply transformed to irq_find_mapping() if IRQ mapping exist
+>    already]
+> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 
-Hi Mark,
+A proper subject line is missing. I added the following as the subject:
 
-Could you have a look again at this binding ? Perhaps we could
-get your Ack now so it can be merged through the media tree ?
+gpio: davinci: convert to use irqdomain
+
+and moved your current subject line to become the commit text.
+
+> @@ -396,6 +411,20 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>  	}
+>  	clk_prepare_enable(clk);
+>  
+> +	irq = irq_alloc_descs(-1, 0, ngpio, 0);
+> +	if (irq < 0) {
+> +		dev_err(dev, "Couldn't allocate IRQ numbers\n");
+> +		return -ENODEV;
+
+modified this to:
+
+		return irq;
+
+since your have already received a more relevant error code. With these
+modifications and Linus's ack, queuing for v3.14.
 
 Thanks,
-Sylwester
-
-> +Example:
-> +
-> +	aliases {
-> +		fimc-lite0 =&fimc_lite_0
-> +	};
-> +
-> +	/* Parallel bus IF sensor */
-> +	i2c_0: i2c@13860000 {
-> +		s5k6aa: sensor@3c {
-> +			compatible = "samsung,s5k6aafx";
-> +			reg =<0x3c>;
-> +			vddio-supply =<...>;
-> +
-> +			clock-frequency =<24000000>;
-> +			clocks =<...>;
-> +			clock-names = "mclk";
-> +
-> +			port {
-> +				s5k6aa_ep: endpoint {
-> +					remote-endpoint =<&fimc0_ep>;
-> +					bus-width =<8>;
-> +					hsync-active =<0>;
-> +					vsync-active =<1>;
-> +					pclk-sample =<1>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	/* MIPI CSI-2 bus IF sensor */
-> +	s5c73m3: sensor@1a {
-> +		compatible = "samsung,s5c73m3";
-> +		reg =<0x1a>;
-> +		vddio-supply =<...>;
-> +
-> +		clock-frequency =<24000000>;
-> +		clocks =<...>;
-> +		clock-names = "mclk";
-> +
-> +		port {
-> +			s5c73m3_1: endpoint {
-> +				data-lanes =<1 2 3 4>;
-> +				remote-endpoint =<&csis0_ep>;
-> +			};
-> +		};
-> +	};
-> +
-> +	camera {
-> +		compatible = "samsung,exynos5250-fimc";
-> +		#address-cells =<1>;
-> +		#size-cells =<1>;
-> +		status = "okay";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 =<&cam_port_a_clk_active>;
-> +
-> +		samsung,csis =<&csis_0>,<&csis_1>;
-> +		samsung,fimc-lite =<&fimc_lite_0>,<&fimc_lite_1>,<&fimc_lite_2>;
-> +		samsung,fimc-is =<&fimc_is>;
-> +
-> +		/* parallel camera ports */
-> +		parallel-ports {
-> +			#address-cells =<1>;
-> +			#size-cells =<0>;
-> +
-> +			/* camera A input */
-> +			port@1 {
-> +				reg =<1>;
-> +				camport_a_ep: endpoint {
-> +					remote-endpoint =<&s5k6aa_ep>;
-> +					bus-width =<8>;
-> +					hsync-active =<0>;
-> +					vsync-active =<1>;
-> +					pclk-sample =<1>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +MIPI-CSIS device binding is defined in samsung-mipi-csis.txt, FIMC-LITE
-> +device binding is defined in exynos-fimc-lite.txt and FIMC-IS binding
-> +is defined in exynos5-fimc-is.txt.
+Sekhar
