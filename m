@@ -1,58 +1,71 @@
-From: Alex Ling <kasimling@gmail.com>
-Subject: Re: [PATCH v2 1/1] ARM: dts: Add missing clocks for exynos4412 dwmmc
- node
-Date: Sun, 15 Dec 2013 22:14:53 +0800
-Message-ID: <CAHaF_kimHy38cL79uZDRy-OWCDs2m0TRAQyT=JaHVfWgHLz2JA@mail.gmail.com>
-References: <1386998490-19456-1-git-send-email-kasimling@gmail.com>
- <6057819.pWzq25qpVf@flatron>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6057819.pWzq25qpVf@flatron>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Alexander Shiyan <shc_work@mail.ru>
+Subject: [PATCH v2 1/2] can: mcp251x: Convert to devm-* API
+Date: Sun, 15 Dec 2013 18:16:00 +0400
+Message-ID: <1387116961-15261-1-git-send-email-shc_work@mail.ru>
+Return-path: <linux-can-owner@vger.kernel.org>
+Sender: linux-can-owner@vger.kernel.org
+To: linux-can@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Alexander Shiyan <shc_work@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for pointing out this, Tomasz. I'll use those patches instead.
+Replace existing resource handling in the driver with managed
+device resource, this ensures more consistent error values and
+simplifies error paths.
 
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+---
+ drivers/net/can/mcp251x.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-Regards,
-Alex
+diff --git a/drivers/net/can/mcp251x.c b/drivers/net/can/mcp251x.c
+index 08ac401..7a35729 100644
+--- a/drivers/net/can/mcp251x.c
++++ b/drivers/net/can/mcp251x.c
+@@ -1067,15 +1067,17 @@ static int mcp251x_can_probe(struct spi_device *spi)
+ 
+ 	/* Allocate non-DMA buffers */
+ 	if (!mcp251x_enable_dma) {
+-		priv->spi_tx_buf = kmalloc(SPI_TRANSFER_BUF_LEN, GFP_KERNEL);
++		priv->spi_tx_buf = devm_kzalloc(&spi->dev, SPI_TRANSFER_BUF_LEN,
++						GFP_KERNEL);
+ 		if (!priv->spi_tx_buf) {
+ 			ret = -ENOMEM;
+-			goto error_tx_buf;
++			goto error_probe;
+ 		}
+-		priv->spi_rx_buf = kmalloc(SPI_TRANSFER_BUF_LEN, GFP_KERNEL);
++		priv->spi_rx_buf = devm_kzalloc(&spi->dev, SPI_TRANSFER_BUF_LEN,
++						GFP_KERNEL);
+ 		if (!priv->spi_rx_buf) {
+ 			ret = -ENOMEM;
+-			goto error_rx_buf;
++			goto error_probe;
+ 		}
+ 	}
+ 
+@@ -1108,12 +1110,6 @@ static int mcp251x_can_probe(struct spi_device *spi)
+ 	return ret;
+ 
+ error_probe:
+-	if (!mcp251x_enable_dma)
+-		kfree(priv->spi_rx_buf);
+-error_rx_buf:
+-	if (!mcp251x_enable_dma)
+-		kfree(priv->spi_tx_buf);
+-error_tx_buf:
+ 	if (mcp251x_enable_dma)
+ 		dma_free_coherent(&spi->dev, PAGE_SIZE,
+ 				  priv->spi_tx_buf, priv->spi_tx_dma);
+@@ -1136,9 +1132,6 @@ static int mcp251x_can_remove(struct spi_device *spi)
+ 	if (mcp251x_enable_dma) {
+ 		dma_free_coherent(&spi->dev, PAGE_SIZE,
+ 				  priv->spi_tx_buf, priv->spi_tx_dma);
+-	} else {
+-		kfree(priv->spi_tx_buf);
+-		kfree(priv->spi_rx_buf);
+ 	}
+ 
+ 	mcp251x_power_enable(priv->power, 0);
+-- 
+1.8.3.2
 
-On Sat, Dec 14, 2013 at 9:24 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Alex,
->
-> On Saturday 14 of December 2013 13:21:30 Alex Ling wrote:
->> This patch adds "biu" and "ciu" clocks for exynos4412 dwmmc
->> node. Without this patch, dwmmc host driver will skip enabling the
->> two clocks and it will break dwmmc host function on exynos4412.
->> Tested on FriendlyARM TINY4412 board.
->>
->> Signed-off-by: Alex Ling <kasimling@gmail.com>
->> ---
->> Changes for v2:
->>    - Fix patch description as Mark Rutland suggested
->>
->>  arch/arm/boot/dts/exynos4412.dtsi |    2 ++
->>  1 file changed, 2 insertions(+)
->
-> The patch is correct, but unfortunately it's not the only thing that
-> is wrong with MSHC device tree node for Exynos4x12.
->
-> Please refer to my series fixing DW-MSHC support on Exynos4x12 (and
-> enabling it on TRATS2 board):
-> http://www.spinics.net/lists/arm-kernel/msg293652.html
->
-> Best regards,
-> Tomasz
->
