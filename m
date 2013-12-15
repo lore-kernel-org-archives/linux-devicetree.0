@@ -1,199 +1,246 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH v2 2/2] can: mcp251x: Add device tree support
-Date: Sun, 15 Dec 2013 18:16:01 +0400
-Message-ID: <1387116961-15261-2-git-send-email-shc_work@mail.ru>
-References: <1387116961-15261-1-git-send-email-shc_work@mail.ru>
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1387116961-15261-1-git-send-email-shc_work@mail.ru>
-Sender: linux-can-owner@vger.kernel.org
-To: linux-can@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Alexander Shiyan <shc_work@mail.ru>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/5] ARM: sunxi: Add driver for SD/MMC hosts
+ found on Allwinner sunxi SoCs
+Date: Sun, 15 Dec 2013 15:20:19 +0100
+Message-ID: <52ADBAA3.7060507@redhat.com>
+References: <1387058295-20641-1-git-send-email-hdegoede@redhat.com> <1387058295-20641-2-git-send-email-hdegoede@redhat.com> <20131215134415.GE3651@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBKXVW2KQKGQELUX7ZVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20131215134415.GE3651@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, =?ISO-8859-1?Q?David_Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Device Tree support to the Microchip MCP251X driver.
+Hi,
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
----
- .../bindings/net/can/microchip,mcp251x.txt         | 25 +++++++
- drivers/net/can/mcp251x.c                          | 85 +++++++++++++++++-----
- 2 files changed, 93 insertions(+), 17 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+On 12/15/2013 02:44 PM, Maxime Ripard wrote:
+> Hi Hans,
+>
+> I won't comment on the MMC driver itself, and leave Chris comment on
+> that, but still, I have a few things.
+>
+> On Sat, Dec 14, 2013 at 10:58:11PM +0100, Hans de Goede wrote:
+>> From: David Lanzend=F6rfer <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+>>
+>> This is based on the driver Allwinner ships in there Android kernel sour=
+ces.
+>>
+>> Initial porting to upstream kernels done by David Lanzend=F6rfer, additi=
+onal
+>> fixes and cleanups by Hans de Goede.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>
+> Your commit log is a bit sparse. What capabilities this controller
+> has? Is it using DMA? If so, how? What SoCs are supported/it has been
+> tested on? etc.
 
-diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
-new file mode 100644
-index 0000000..ee3723b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
-@@ -0,0 +1,25 @@
-+* Microchip MCP251X stand-alone CAN controller device tree bindings
-+
-+Required properties:
-+ - compatible: Should be one of the following:
-+   - "microchip,mcp2510" for MCP2510.
-+   - "microchip,mcp2515" for MCP2515.
-+ - reg: SPI chip select.
-+ - clocks: The clock feeding the CAN controller.
-+ - interrupt-parent: The parent interrupt controller.
-+ - interrupts: Should contain IRQ line for the CAN controller.
-+
-+Optional properties:
-+ - vdd-supply: Regulator that powers the CAN controller.
-+ - xceiver-supply: Regulator that powers the CAN transceiver.
-+
-+Example:
-+	can0: can@1 {
-+		compatible = "microchip,mcp2515";
-+		reg = <1>;
-+		clocks = <&clk24m>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <13 0x2>;
-+		vdd-supply = <&reg5v0>;
-+		xceiver-supply = <&reg5v0>;
-+	};
-diff --git a/drivers/net/can/mcp251x.c b/drivers/net/can/mcp251x.c
-index 7a35729..0091ae1 100644
---- a/drivers/net/can/mcp251x.c
-+++ b/drivers/net/can/mcp251x.c
-@@ -59,6 +59,7 @@
- #include <linux/can/dev.h>
- #include <linux/can/led.h>
- #include <linux/can/platform/mcp251x.h>
-+#include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-@@ -69,6 +70,8 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/netdevice.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/spi/spi.h>
-@@ -995,16 +998,69 @@ static const struct net_device_ops mcp251x_netdev_ops = {
- 	.ndo_start_xmit = mcp251x_hard_start_xmit,
- };
- 
-+static int mcp251x_get_frequency(struct device *dev)
-+{
-+	struct clk *clk;
-+	int freq;
-+
-+	if (!dev->of_node) {
-+		struct mcp251x_platform_data *pdata = dev_get_platdata(dev);
-+
-+		if (!pdata)
-+			return -ENODATA;
-+
-+		freq = pdata->oscillator_frequency;
-+	} else {
-+		clk = devm_clk_get(dev, NULL);
-+		if (IS_ERR(clk))
-+			return PTR_ERR(clk);
-+
-+		freq = clk_get_rate(clk);
-+	}
-+
-+	/* Sanity check */
-+	if (freq < 1000000 || freq > 25000000)
-+		return -EINVAL;
-+
-+	return freq;
-+}
-+
-+static struct of_device_id __maybe_unused mcp251x_of_match[] = {
-+	{
-+		.compatible	= "microchip,mcp2510",
-+		.data		= (void *)CAN_MCP251X_MCP2510,
-+	},
-+	{
-+		.compatible	= "microchip,mcp2515",
-+		.data		= (void *)CAN_MCP251X_MCP2515,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, mcp251x_of_match);
-+
-+static const struct spi_device_id mcp251x_id_table[] = {
-+	{
-+		.name		= "mcp2510",
-+		.driver_data	= (kernel_ulong_t)CAN_MCP251X_MCP2510,
-+	},
-+	{
-+		.name		= "mcp2515",
-+		.driver_data	= (kernel_ulong_t)CAN_MCP251X_MCP2515,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, mcp251x_id_table);
-+
- static int mcp251x_can_probe(struct spi_device *spi)
- {
-+	const struct of_device_id *of_id = of_match_device(mcp251x_of_match,
-+							   &spi->dev);
-+	int ret = -ENODEV, freq = mcp251x_get_frequency(&spi->dev);
- 	struct net_device *net;
- 	struct mcp251x_priv *priv;
--	struct mcp251x_platform_data *pdata = dev_get_platdata(&spi->dev);
--	int ret = -ENODEV;
- 
--	if (!pdata)
--		/* Platform data is required for osc freq */
--		goto error_out;
-+	if (freq < 0)
-+		return freq;
- 
- 	/* Allocate can/net device */
- 	net = alloc_candev(sizeof(struct mcp251x_priv), TX_ECHO_SKB_MAX);
-@@ -1019,10 +1075,13 @@ static int mcp251x_can_probe(struct spi_device *spi)
- 	priv = netdev_priv(net);
- 	priv->can.bittiming_const = &mcp251x_bittiming_const;
- 	priv->can.do_set_mode = mcp251x_do_set_mode;
--	priv->can.clock.freq = pdata->oscillator_frequency / 2;
-+	priv->can.clock.freq = freq / 2;
- 	priv->can.ctrlmode_supported = CAN_CTRLMODE_3_SAMPLES |
- 		CAN_CTRLMODE_LOOPBACK | CAN_CTRLMODE_LISTENONLY;
--	priv->model = spi_get_device_id(spi)->driver_data;
-+	if (of_id)
-+		priv->model = (enum mcp251x_model)of_id->data;
-+	else
-+		priv->model = spi_get_device_id(spi)->driver_data;
- 	priv->net = net;
- 
- 	priv->power = devm_regulator_get(&spi->dev, "vdd");
-@@ -1118,7 +1177,7 @@ error_power:
- 	free_candev(net);
- error_alloc:
- 	dev_err(&spi->dev, "probe failed\n");
--error_out:
-+
- 	return ret;
- }
- 
-@@ -1198,21 +1257,13 @@ static int mcp251x_can_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(mcp251x_can_pm_ops, mcp251x_can_suspend,
- 	mcp251x_can_resume);
- 
--static const struct spi_device_id mcp251x_id_table[] = {
--	{ "mcp2510",	CAN_MCP251X_MCP2510 },
--	{ "mcp2515",	CAN_MCP251X_MCP2515 },
--	{ },
--};
--
--MODULE_DEVICE_TABLE(spi, mcp251x_id_table);
--
- static struct spi_driver mcp251x_can_driver = {
- 	.driver = {
- 		.name = DEVICE_NAME,
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(mcp251x_of_match),
- 		.pm = &mcp251x_can_pm_ops,
- 	},
--
- 	.id_table = mcp251x_id_table,
- 	.probe = mcp251x_can_probe,
- 	.remove = mcp251x_can_remove,
--- 
-1.8.3.2
+David, since you'll be doing v2 I guess you'll be filling in v2. FYI
+I've tested this on sun4i-a10, sun5i-a10s sun5i-a13 and sun7i-a20.
 
+It uses dma in bus-master mode using a built-in designware idmac controller=
+,
+which is identical to the one found in the mmc-dw hosts. Note the rest of
+the host is not identical, I've looked into reusing the mmc-dw driver but
+that does not seem like a good idea (manual sending stop commands
+versus auto stop on sunxi, completely different registers, etc.).
+
+>
+> Also, you probably needs David's SoB here.
+
+The plan is for David to send v2 of this patch-set so that should take care=
+ of
+that :)
+
+>
+>> ---
+>>   drivers/mmc/host/Kconfig     |   8 +
+>>   drivers/mmc/host/Makefile    |   2 +
+>>   drivers/mmc/host/sunxi-mci.c | 908 +++++++++++++++++++++++++++++++++++=
+++++++++
+>>   drivers/mmc/host/sunxi-mci.h | 246 ++++++++++++
+>>   include/linux/clk/sunxi.h    |  22 ++
+>
+> Please add your dt bindings documentation in Documentation/devicetree/bin=
+dings
+>
+
+<snip>
+
+>> +#include "sunxi-mci.h"
+>> +
+>> +static void sunxi_mmc_init_host(struct mmc_host *mmc)
+>> +{
+>> +	u32 rval;
+>> +	struct sunxi_mmc_host *smc_host =3D mmc_priv(mmc);
+>> +
+>> +	/* reset controller */
+>> +	rval =3D mci_readl(smc_host, REG_GCTRL) | SDXC_HWReset;
+>> +	mci_writel(smc_host, REG_GCTRL, rval);
+>> +
+>> +	mci_writel(smc_host, REG_FTRGL, 0x20070008);
+
+These set tx/rx FIFO thresholds, I think 7 is one, 8 is the
+other (no idea which is which) and the 2 is magic ...
+
+>> +	mci_writel(smc_host, REG_TMOUT, 0xffffffff);
+>> +	mci_writel(smc_host, REG_IMASK, smc_host->sdio_imask);
+>> +	mci_writel(smc_host, REG_RINTR, 0xffffffff);
+
+This simple clears any interrupt flags left set by uboot
+
+>> +	mci_writel(smc_host, REG_DBGC, 0xdeb);
+
+Unknown
+
+>> +	mci_writel(smc_host, REG_FUNS, 0xceaa0000);
+
+There actually is a define for this in the .h file
+called: "SDXC_CEATAOn" no idea what that means though,
+I guess we should use the define here. David can you
+fix this in v2 ?
+
+>> +	mci_writel(smc_host, REG_DLBA, smc_host->sg_dma);
+>
+> I suppose we have no idea what these magics are all about ? :(
+
+See above, we have some idea, but not much.
+
+>
+>> +	rval =3D mci_readl(smc_host, REG_GCTRL)|SDXC_INTEnb;
+>> +	rval &=3D ~SDXC_AccessDoneDirect;
+>> +	mci_writel(smc_host, REG_GCTRL, rval);
+>> +}
+
+<snip>
+
+>> +static const struct of_device_id sunxi_mmc_of_match[] =3D {
+>> +	{ .compatible =3D "allwinner,sun4i-mmc", },
+>> +	{ .compatible =3D "allwinner,sun5i-mmc", },
+>
+> Please use sun5i-a13-mmc as your compatible.
+
+Can you explain a bit why? In essence currently we have
+2 versions of the mmc controller, those found on sun4i
+and those found on sun5i and sun7i. I thought that the
+norm was to use the oldest soc version in which a revision
+of an ip-block first appears as the compatible string ?
+
+Note I've tested this with both a13 and a10s SOCs, if we
+add a sun5i-a13-mmc we should also add a sun5i-a10s-mmc
+and a sun5i-a20-mmc, or would that then be sun7i-a20-mmc?
+
+To me just having sun5i-mmc for sun5i+ socs seems simpler.
+
+<snip>
+
+>> +	mmc->ops		=3D &sunxi_mmc_ops;
+>> +	mmc->max_blk_count	=3D 8192;
+>> +	mmc->max_blk_size	=3D 4096;
+>> +	mmc->max_segs		=3D PAGE_SIZE / sizeof(struct sunxi_idma_des);
+>> +	mmc->max_seg_size	=3D (1 << host->idma_des_size_bits);
+>> +	mmc->max_req_size	=3D mmc->max_seg_size * mmc->max_segs;
+>> +	/* 400kHz ~ 50MHz */
+>> +	mmc->f_min		=3D   400000;
+>> +	mmc->f_max		=3D 50000000;
+>
+> Hmmm, the tables earlier seem to suggest it can do much more than that.
+
+I know, but this is what the allwinner android kernels are using, actually
+in case of sdc3 they are putting 200000000 in f_max (as that is often
+used for sdio cards) but then later in set_ios they clamp the passed
+in clock to 47000000 Mhz, so I seriously doubt that 200Mhz has actually
+worked. Hence I've simply gone for a safe range for now. If someone has
+cards capable of doing 200 MHz we could certainly run various tests and
+try to improve this, but for now this seems a sane range to start with.
+
+<snip>
+
+ >> +	/* indicator pins */
+ >> +	int wp_pin;
+ >> +	int cd_pin;
+ >> +	int cd_mode;
+ >> +#define CARD_DETECT_BY_GPIO_POLL (1)	/* mmc detected by gpio check */
+ >> +#define CARD_ALWAYS_PRESENT      (2)	/* mmc always present */
+ >
+ > Just a question here, have you tested to use the external interrupts?
+ > (Is that even possible on the pins that are used as card detect?)
+ >
+
+No I've not tried that, there was code for this in the original allwinner
+driver, but no boards were actually using it.
+
+As for it being possible on the pins being used, it is possible on (most)
+port H pins and the cubie* and a20-olinuxino-micro boards are using PH pins
+for cd. Others are not.  One thing which worries me about this is debouncin=
+g,
+using polling is automatically debounced, using an external interrupt won't
+be. Ideally there would be some common code somewhere to deal with gpio
+connected buttons (which this in essence is) which does debouncing ...
+
+Again I think this is something best left as a future enhancement.
+
+<snip>
+
+>> diff --git a/include/linux/clk/sunxi.h b/include/linux/clk/sunxi.h
+>> new file mode 100644
+>> index 0000000..1ef5c89
+>> --- /dev/null
+>> +++ b/include/linux/clk/sunxi.h
+>> @@ -0,0 +1,22 @@
+>> +/*
+>> + * Copyright 2013 - Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#ifndef __LINUX_CLK_SUNXI_H_
+>> +#define __LINUX_CLK_SUNXI_H_
+>> +
+>> +#include <linux/clk.h>
+>> +
+>> +void clk_sunxi_mmc_phase_control(struct clk_hw *hw, u8 sample, u8 outpu=
+t);
+>> +
+>> +#endif
+>
+> Hmmm, I see no implementation for this function. Didn't you forget
+> a file here? (and it should probably be a separate patch anyway).
+
+The implementation is part of Emilio's clk branch, but he forgot
+to add a header for it, so I'm fixing that up here, I guess this
+should go through Emlio's tree as a separate patch.
+
+> Thanks a lot for this work,
+
+You're welcome. I think it is great to see how far along upstream sunxi
+support has come thanks to work of all involved. It is really becoming
+usable now :)
+
+Regards,
+
+Hans
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
