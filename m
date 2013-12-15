@@ -1,58 +1,106 @@
-From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
-Subject: Re: [PATCH 1/5] ARM: sunxi: Add driver for SD/MMC hosts
- found on Allwinner sunxi SoCs
-Date: Sun, 15 Dec 2013 17:33:57 +0100
-Message-ID: <1870422.7CyGeURSCU@dizzy-6.site>
-References: <1387058295-20641-1-git-send-email-hdegoede@redhat.com> <20131215134415.GE3651@lukather> <52ADBAA3.7060507@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Alex Elder <alex.elder@linaro.org>
+Subject: Re: [PATCH v2 2/3] clk: bcm281xx: add initial clock framework support
+Date: Sun, 15 Dec 2013 11:39:07 -0600
+Message-ID: <52ADE93B.3070907@linaro.org>
+References: <529F4B0F.2020801@linaro.org> <529F4B4F.4020405@linaro.org> <20131214235731.26321.53050@quantum>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4905000.Rr5rH6eoGM"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-sunxi+bncBD2JL37LXEKRB7NTW6KQKGQEXHV6RGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52ADBAA3.7060507-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131214235731.26321.53050@quantum>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 12/14/2013 05:57 PM, Mike Turquette wrote:
+> Quoting Alex Elder (2013-12-04 07:33:35)
+>> +       return true;
+>> +}
+>> +
+>> +/* A bit position must be less than the number of bits in a 32-bit
+>> register. */
+> 
+> Hi Alex,
+> 
+> The patch is corrupt at line 634 and several other places below.  Did
+> you edit it manually? I'm happy with the series after reviewing it but
+> it cannot be applied. Can you fix the issue and send me a pull request?
+> 
+> Thanks,
+> Mike
+> 
 
---nextPart4905000.Rr5rH6eoGM
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+First, yes I sent it manually (copy from the git-generated patch
+and paste into a mail message, and I'm sorry about that.  I have
+yet to set up my Linaro settings for "git-send-email" and I'll
+do that this week.
 
-Hi
-> David, since you'll be doing v2 I guess you'll be filling in v2. FYI
-> I've tested this on sun4i-a10, sun5i-a10s sun5i-a13 and sun7i-a20.
-Yeah. I'll take care of it.
-I'll work out a V2 which incorporates all the comments made on the first patch
-set you've handed in.
+I have a v3 that has been updated to apply to v3.13-rc3 (there
+is no -rc4 yet).
 
-> It uses dma in bus-master mode using a built-in designware idmac controller,
-> which is identical to the one found in the mmc-dw hosts. Note the rest of
-> the host is not identical, I've looked into reusing the mmc-dw driver but
-> that does not seem like a good idea (manual sending stop commands
-> versus auto stop on sunxi, completely different registers, etc.).
-It's already a good thing, that I know now what the command set of the IDMAC 
-controller is, since I had no idea how to configure it exactly.
+I'm not sure how this works with the series of 8 patches from Tim
+Kryger that it depends on.  But here is a pull request for the
+version (including the prerequisites) based on 3.13-rc3.  (It is
+done manually again, so there are some line wraps...)
 
-> The plan is for David to send v2 of this patch-set so that should take care
-> of that :)
-ok
---nextPart4905000.Rr5rH6eoGM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Thanks a lot for the review Mike.  I know you're a busy guy.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+					-Alex
 
-iEYEABECAAYFAlKt2f8ACgkQAeZw77btGjo3AgCeKUWJf0JbPMPiiGEyy0ul8Xts
-yCMAoKBPFPDZ+kxvsJdI0j5zBuYiWxE3
-=pRaD
------END PGP SIGNATURE-----
+The following changes since commit 374b105797c3d4f29c685f3be535c35f5689b30e:
 
---nextPart4905000.Rr5rH6eoGM--
+  Linux 3.13-rc3 (2013-12-06 09:34:04 -0800)
+
+are available in the git repository at:
+
+  ssh://git@git.linaro.org/people/alex.elder/linux.git
+review/bcm-kona-clocks-v3
+
+for you to fetch changes up to cf62c29babf6068abf91588411704566812b7900:
+
+  ARM: dts: bcm281xx: define real clocks (2013-12-13 10:40:21 -0600)
+
+----------------------------------------------------------------
+Alex Elder (3):
+      clk: bcm281xx: define kona clock binding
+      clk: bcm281xx: add initial clock framework support
+      ARM: dts: bcm281xx: define real clocks
+
+Tim Kryger (8):
+      ARM: dts: Declare clocks as fixed on bcm11351
+      ARM: dts: Specify clocks for UARTs on bcm11351
+      Documentation: dt: kona-sdhci: Add clocks property
+      ARM: dts: Specify clocks for SDHCIs on bcm11351
+      mmc: sdhci-bcm-kona: Add basic use of clocks
+      Documentation: dt: kona-timer: Add clocks property
+      clocksource: kona: Add basic use of external clock
+      ARM: dts: Specify clocks for timer on bcm11351
+
+ .../devicetree/bindings/arm/bcm/kona-timer.txt     |    7 +-
+ .../devicetree/bindings/clock/bcm-kona-clock.txt   |   93 ++
+ .../devicetree/bindings/mmc/kona-sdhci.txt         |    4 +
+ arch/arm/boot/dts/bcm11351.dtsi                    |  199 +++-
+ drivers/clk/Kconfig                                |    1 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/bcm/Kconfig                            |    8 +
+ drivers/clk/bcm/Makefile                           |    3 +
+ drivers/clk/bcm/clk-bcm281xx.c                     |  416 ++++++++
+ drivers/clk/bcm/clk-kona-setup.c                   |  769 +++++++++++++++
+ drivers/clk/bcm/clk-kona.c                         | 1033
+++++++++++++++++++++
+ drivers/clk/bcm/clk-kona.h                         |  414 ++++++++
+ drivers/clocksource/bcm_kona_timer.c               |   14 +-
+ drivers/mmc/host/sdhci-bcm-kona.c                  |   37 +-
+ include/dt-bindings/clock/bcm281xx.h               |   65 ++
+ 15 files changed, 3053 insertions(+), 11 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
+ create mode 100644 drivers/clk/bcm/Kconfig
+ create mode 100644 drivers/clk/bcm/Makefile
+ create mode 100644 drivers/clk/bcm/clk-bcm281xx.c
+ create mode 100644 drivers/clk/bcm/clk-kona-setup.c
+ create mode 100644 drivers/clk/bcm/clk-kona.c
+ create mode 100644 drivers/clk/bcm/clk-kona.h
+ create mode 100644 include/dt-bindings/clock/bcm281xx.h
+
