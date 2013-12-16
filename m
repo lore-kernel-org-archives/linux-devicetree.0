@@ -1,64 +1,65 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv3,RESEND] rtc: Add support for Intersil ISL12057 I2C RTC
- chip
-Date: Mon, 16 Dec 2013 20:17:43 +0000
-Message-ID: <20131216201743.GT3185@sirena.org.uk>
-References: <637f26e051b700ca510a0af695dfd84cf2bfd35d.1387222475.git.arno@natisbad.org>
- <20131216201424.GA6639@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="o6aug3O60clXg2rj"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131216201424.GA6639@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Arnaud Ebalard <arno@natisbad.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [RFC PATCH 00/10] ARM: at91: move aic driver to drivers/irqchips
+Date: Mon, 16 Dec 2013 21:24:11 +0100
+Message-ID: <1387225461-6201-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---o6aug3O60clXg2rj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This series is a proposal to move AIC driver to the irqchip directory.
 
-On Mon, Dec 16, 2013 at 12:14:24PM -0800, Guenter Roeck wrote:
-> On Mon, Dec 16, 2013 at 08:49:36PM +0100, Arnaud Ebalard wrote:
+It also changes the implementation design of the interrupt controller in
+several ways:
+ - make use of the generic chip framework whenever possible
+ - add support for irq muxing definition to prevent spurious interrupts
+   during system startup (see https://lkml.org/lkml/2013/3/8/175)
+ - only support dt enabled boards
 
-> > +#ifdef CONFIG_OF
-> > +static struct of_device_id isl12057_dt_match[] = {
-> > +	{ .compatible = "isl,isl12057" },
-> > +	{ },
-> > +};
-> > +#endif
 
-> Is this needed ? For i2c devices, struct i2c_device_id should be sufficient.
+Best Regards,
 
-It is required, it's bad practice to omit the vendor specifier.
-Different vendors can and do use the same prefix in their device names
-leading to collisions - for example both Wondermedia and Wolfson use wm.
-Linux happens to accept unprefixed names but that doesn't mean it's a
-good idea.
+Boris
 
---o6aug3O60clXg2rj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Boris BREZILLON (10):
+  genirq: generic chip: export irq_map_generic_chip function
+  irqchip: atmel-aic: add new atmel AIC driver
+  ARM: at91: introduce OLD_IRQ_AT91 Kconfig option
+  ARM: at91: enclose at91_aic_xx calls in
+    IS_ENABLED(CONFIG_OLD_IRQ_AT91) blocks
+  ARM: at91: make use of the new AIC driver for dt enabled boards
+  irqchip: atmel-aic: move binding doc to interrupt-controller
+    directory
+  irqchip: atmel-aic: document new dt properties and children nodes
+  ARM: at91: remove old irq material
+  ARM: at91/dt: add new AIC irq mux definitions
+  ARM: at91/dt: add new AIC irq mux definitions for sama5 SoCs
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+ .../devicetree/bindings/arm/atmel-aic.txt          |   41 -
+ .../bindings/interrupt-controller/atmel,aic.txt    |   86 ++
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |  111 ++-
+ arch/arm/boot/dts/sama5d3.dtsi                     |   40 +-
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi                |   22 +
+ arch/arm/mach-at91/Kconfig                         |   11 +
+ arch/arm/mach-at91/Kconfig.non_dt                  |    7 +
+ arch/arm/mach-at91/Makefile                        |    3 +-
+ arch/arm/mach-at91/board-dt-rm9200.c               |   13 -
+ arch/arm/mach-at91/board-dt-sam9.c                 |   14 -
+ arch/arm/mach-at91/board-dt-sama5.c                |   13 -
+ arch/arm/mach-at91/irq.c                           |  270 +-----
+ arch/arm/mach-at91/pm.c                            |   32 +-
+ arch/arm/mach-at91/setup.c                         |    3 +-
+ drivers/irqchip/Makefile                           |    1 +
+ drivers/irqchip/irq-atmel-aic.c                    |  879 ++++++++++++++++++++
+ include/linux/irq.h                                |    2 +
+ kernel/irq/generic-chip.c                          |    5 +-
+ 18 files changed, 1189 insertions(+), 364 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/atmel-aic.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+ create mode 100644 drivers/irqchip/irq-atmel-aic.c
 
-iQIcBAEBAgAGBQJSr1/kAAoJELSic+t+oim9f18P/iSapKoldTNAAy59dAezGlV6
-nov3+tFq1WeJXys84+G8B2RPSUjDjmM31nqX5FzShHpmp5jwYEDIazUNIaizN/Aj
-iuGa15cdUlhN1NPo1xFGVAcYyRDPVwKi5rB9CARvbXPYW0weH74QZsyjjH61S+k8
-EtUb/WwhQPYlYw3XJtqa+VPEKvC0CeCpE69h8d6XbscvOZlIp+8nQoEo7VeT1oPG
-E9j0XrONGfha15Zc+LeNFY7Qev6yZOXzVZWhW7UKGGFeKAZy976v0TbGYWHs30Oz
-BRe1tnq9gsU0ZH62tt9lN2coNT2DiXhYk6x4x0DMw9op2WcfJ9KAuN3YYbAlvuph
-HElMQ7GnvCC1k26deFZNBl1aSaSDBKt33PmD/wh06h6xO+aS/ZV2PLUXmJSb5XwM
-fqp3qePtx8PdBNZUzruzLdtRUvLNiWGClFLi2skwiU+zbCg7EsOyEdiE59MhxeSk
-DVSb0MEKnjA4Aq1/Bjho2Bh63dU0SUeeOBHjKsxLAcT0TWMe82LDTLiwwtjBQHDw
-mPnR99leOsd2GVnH/L05FbWkUExkMWqyjePjz8Gsqyxg8nlr5RbDZFBjFs/0LSFC
-ffcHF7qqUvOjx9FKV0TbeUudiCwftOwj7u+AMEh4JaecdRdxArojkr2jDkGN3ikG
-lxcxCxN9poMyEg1j56Xb
-=ChZK
------END PGP SIGNATURE-----
-
---o6aug3O60clXg2rj--
+-- 
+1.7.9.5
