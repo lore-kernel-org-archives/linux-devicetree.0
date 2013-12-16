@@ -1,48 +1,85 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v5] clk: si570: Add a driver for SI570 oscillators
-Date: Mon, 16 Dec 2013 09:28:22 -0800
-Message-ID: <20131216172822.GB1811@roeck-us.net>
-References: <1379806839-13762-1-git-send-email-soren.brinkmann@xilinx.com>
- <b625092b-682c-4072-85a6-9f9d7f378ec0@VA3EHSMHS043.ehs.local>
- <20131002231751.4343.81234@quantum>
- <52AC8857.8070504@roeck-us.net>
- <3bfd63dd-6bf1-4ae9-aaab-b913f9739c19@DB8EHSMHS015.ehs.local>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3bfd63dd-6bf1-4ae9-aaab-b913f9739c19@DB8EHSMHS015.ehs.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH REPOST] rtc: honor device tree /alias entries when assigning IDs
+Date: Mon, 16 Dec 2013 10:42:07 -0700
+Message-ID: <1387215727-20493-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2013 at 09:03:02AM -0800, S=F6ren Brinkmann wrote:
-> Hi Guenther, Mike,
->=20
-> On Sat, Dec 14, 2013 at 08:33:27AM -0800, Guenter Roeck wrote:
-> > On 10/02/2013 04:17 PM, Mike Turquette wrote:
-> > >Quoting S=F6ren Brinkmann (2013-10-02 10:20:38)
-> > >>Hi Mike,
-> > >>
-> > >>could you please comment on this/apply it to clk-next?
-> > >
-> > >It looks good and is in the queue. Will show up in clk-next in a f=
-ew
-> > >days.
-> > >
-> > Hi Mike,
-> >=20
-> > trying again ... what happened with this driver ? Any reason for no=
-t pushing it after all ?
->=20
-> I've been waiting for it to appear in clk-next for a while too. I jus=
-t
-> fetched the repo and it's there.
-> Thanks Guenter for following up and Mike for applying.
->=20
-Great!
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Thanks,
-Guenter
+Assign RTC device IDs based on device tree /aliases entries if present,
+falling back to the existing numbering scheme if there is no /aliases
+entry (which includes when the system isn't booted using DT), or there
+is a numbering conflict.
+
+This is useful in systems with multiple RTC devices, to ensure that the
+best RTC device is selected as /dev/rtc0, which provides the overall
+system time.
+
+For example, Tegra has an on-SoC RTC that is not battery backed,
+typically coupled with an off-SoC RTC that is battery backed. Only the
+latter is useful for populating the system time, yet the former is
+useful e.g. for wakeup timing, since the time is not lost when the
+system is sleeps.
+
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+The 3 patches in this series are all independent; they can be applied
+to their respective subsystems in any order. I'm simply posting them as
+a series to make the use-case more obvious.
+---
+ drivers/rtc/class.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
+index 02426812bebc..7989b5d030cb 100644
+--- a/drivers/rtc/class.c
++++ b/drivers/rtc/class.c
+@@ -14,6 +14,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/rtc.h>
+ #include <linux/kdev_t.h>
+ #include <linux/idr.h>
+@@ -157,12 +158,25 @@ struct rtc_device *rtc_device_register(const char *name, struct device *dev,
+ {
+ 	struct rtc_device *rtc;
+ 	struct rtc_wkalrm alrm;
+-	int id, err;
++	int of_id, id = -1, err;
++
++	if (dev->of_node) {
++		of_id = of_alias_get_id(dev->of_node, "rtc");
++		if (of_id >= 0) {
++			id = ida_simple_get(&rtc_ida, of_id, of_id + 1,
++					    GFP_KERNEL);
++			if (id < 0)
++				dev_warn(dev, "/aliases ID %d not available\n",
++					 of_id);
++		}
++	}
+ 
+-	id = ida_simple_get(&rtc_ida, 0, 0, GFP_KERNEL);
+ 	if (id < 0) {
+-		err = id;
+-		goto exit;
++		id = ida_simple_get(&rtc_ida, 0, 0, GFP_KERNEL);
++		if (id < 0) {
++			err = id;
++			goto exit;
++		}
+ 	}
+ 
+ 	rtc = kzalloc(sizeof(struct rtc_device), GFP_KERNEL);
+-- 
+1.8.1.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
