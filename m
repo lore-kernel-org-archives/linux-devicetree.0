@@ -1,119 +1,86 @@
-From: Sebastian Reichel <sre@ring0.de>
-Subject: Re: [RFCv4 06/11] misc: Introduce Nokia CMT driver
-Date: Mon, 16 Dec 2013 19:34:50 +0100
-Message-ID: <20131216183448.GA10614@earth.universe>
-References: <1387150085-23173-1-git-send-email-sre@debian.org>
- <1387150085-23173-7-git-send-email-sre@debian.org>
- <CACRpkdYjjXgE_W8gq1e6z=nGMF=r-m+o2kkvrBFrEMm3o0=RwQ@mail.gmail.com>
- <20131216121524.GA6177@earth.universe>
- <CACRpkdbx=Ye8xo4wMkyntME45xv15DeyqV32aeCAcSaa+vDpfA@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] regulator: Start using standard gpios property and
+ deprecate some custom properties
+Date: Mon, 16 Dec 2013 18:36:15 +0000
+Message-ID: <20131216183615.GK3185@sirena.org.uk>
+References: <1386965234-26461-1-git-send-email-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0FM4RQAc0jwHekq5"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbx=Ye8xo4wMkyntME45xv15DeyqV32aeCAcSaa+vDpfA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+In-Reply-To: <1386965234-26461-1-git-send-email-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---OgqxwSJOaUobr8KG
+--0FM4RQAc0jwHekq5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, Dec 13, 2013 at 12:07:14PM -0800, Tony Lindgren wrote:
+> We can start moving regulators to using the standard gpios property instead
+> of various custom GPIO related properties. The reason for doing this is that
+> at least regulator-fixed can currently cause silent bugs if "gpios" property
+> is used instead of "gpio" property.
 
-On Mon, Dec 16, 2013 at 02:31:53PM +0100, Linus Walleij wrote:
-> I am very reluctant in letting device trees specify exports of GPIOs
-> to userspace, not so much because it's Linux-specific but for
-> the fact that people are doing things in userspace that should not
-> be done in userspace.
->=20
-> Last time it was proposed I asked to the specific usecase,
-> exactly why userspace needed this handle on a physical
-> GPIO line, and why it can't use another userspace interface
-> (example: leds, keys etc.)
+If the issue is typos then I'm not convinced that for singular GPIOs
+it's going to be helpful, either way is prone to typos.  If the problem
+is error reporting then that seems like a more important thing to fix.
 
-There are a couple of lines ("cmt_apeslpx", "cmt_rst_rq", "cmt_en",
-"cmt_rst", "cmt_bsi"), which are handled by ofono to do the correct
-power sequence for the modem. The relevant ofono code is here:
+> Fix the issue by trying to use "gpios" where possible in the drivers that
+> can already use it, and if that fails, then try to use the deprecated custom
+> property for getting the GPIO.
 
-https://git.kernel.org/cgit/network/ofono/ofono.git/tree/plugins/nokia-gpio=
-=2Ec
+Please split stuff like this up per driver rather than just sending a
+jumbo patch for the subsystem, it makes it much easier to review
+especially when they're not all doing exactly the same thing.
 
-In MeeGo etc. they have a little board specific init script, which
-exports the gpio lines and setups some symlinks. IMHO at least the
-board specific stuff should be handled by the kernel, thus I added
-this code to the driver. I guess you prefer to move the power
-sequencing completly to the kernel?
+> -  - ti,dvs-gpio: GPIO specifier for external DVS pin control of LP872x devices.
+> +  - gpios: GPIO specifier for external DVS pin control of LP872x devices.
 
-> > What do you think about the following?
-> >
-> > /*
-> >  * driver, which provides generic reset notifications
-> >  */
-> > cmt_reset: reset-notifier {
-> >     compatible =3D "linux,reset-notification";
-> >
-> >     interrupts =3D <gpio>;
-> > };
->=20
-> Looks good to me.
+This is definitely a step backwards, it's changing from a named property
+which does a specific thing to a property with no useful semantics in
+the name.  That would be a step backwards for both legibility and
+extensibility, if support for any other GPIO controlled features is
+added then adding them into the sam property is going to be unpleasant
+and lead to the usability failures so typical of the older device tree
+bindings.  The the binding document says to use a name prefix, not to
+call everything just "gpios".
 
-Ok :) I will prepare something for the next patch.
+To be honest I'm also struggling to summon up the enthusiasm for the
+churn in the bindings, especially without going through and updating all
+the boards (and all the other GPIO properties in various DTs).  It seems
+like there's stuff missing in the helpers here, if we really wanted to
+force the properties to have -gpios on the end of their names then we
+should've had that being added by the helpers.
 
-> > /*
-> >  * driver, which exports the specified gpios in sysfs with the
-> >  * supplied names. The device will be named according to the
-> >  * label
-> >  */
-> > cmt_gpios: gpio-sysfs-export {
-> >     compatible =3D "linux,gpio-sysfs-export";
-> >     label =3D "nokia-cmt";
-> >
-> >     gpios =3D <A>, <B>, ...;
-> >     gpio-names =3D "A", "B", ...;
-> > };
->=20
-> Please follow the discussion on this topic:
-> http://marc.info/?l=3Dlinux-gpio&m=3D138201170431416&w=3D2
-
-Ok.
-
-> >> Why are you using a tasklet rather than a work
-> >> for this?
-> >
-> > No particular reason. I just took this over from Nokia's code.
->=20
-> Can you try to use a work instead?
-
-Yes. I will have a look at this.
-
--- Sebastian
-
---OgqxwSJOaUobr8KG
+--0FM4RQAc0jwHekq5
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBCAAGBQJSr0fIAAoJENju1/PIO/qabycP/AkF3r6cMXP4ws0yNciC4oUm
-ciIG8wl9GVsERgkw7JNDKElpQEnAwfO2WkYLnTJmy/3s12jSqAUPj+12AwB56Oqk
-8Nnnx93n8aGIe5QDu3NH9kj9Y0anhJN0hBgBz1emKZH4HXbWoZJsYRHndLTy6bgf
-YTik0VsWxChGFrcoIAVHB+LZZ0GwI+nmhmmODk2li1ZHbB3dP04ZzYlmH8ekA31l
-kjJrv+XQIwlVS+IkHFxVZbw1XTuU7q9vUFuWVj/wsDx0vL6q1WYpSwSPcH7G+/jT
-iRNE+pAUdGxkkaz9Rom5GH3S1Bj2jrRzR4XxIt3QY0uyeTIX95Yq/uDa0epq+oEu
-nJ6hUgOsDivNyAr5/9tvBk1u89AgFrmBLjJR7BpwWc1pjf7qM1jKEyp7LbnqmfjL
-9tUTdz7Y4GFT2XA38BsLzu6NNG7QY+/klTvfiqrmrNLHyyPd+VoWg03C9ZzPI6mg
-pa8KjJjiNfHwcgWuhTSW//qH2ljM5yyQHhcaJnQRmVqzlnI6jBymtUvYr2VZbIC5
-2khMxehoxPNTi7QUZAwtssSZwvrk5hRODtxJ0ImsRs4lq6NeM+ncED9pPAa+gSaB
-oOQI3Ka81yyqBvsxlSSX9gPkNV0clijbtAeQaeaPxAGEL74Zi4q2eYLLZBK4Wq9H
-gVSlG22gFY06ifNi9nqA
-=EBrD
+iQIcBAEBAgAGBQJSr0gcAAoJELSic+t+oim9VvMQAJG6H7F94orFYZc6q8xuJ0bH
+m9HBVVmK22bHlI0CurGigu1husCGGm9x+tS93k556tGy/C9I8AYUfCF0IdTAm/qj
+6kL2kHShqbkHUP1Slk+BZ86dMIHIQWdRFmu6YOissdR8hw+teUFjaMnrP3TdFbMi
+TCcS1B0Qmf5LbNw5XexysIe7lj7pd/y7DrcsKCgjhV2wolTXElklTxSIxLFLMCGr
+swUaZhI0p2BV3EwiU0EajzYlCcgNg7EywwptBZxRmyDfI4vw83CgyoYT9PD40F+m
+41UhzKwdf4ow4/EIu3vnLluV++jZ+T5mue/WIPiE3EwLXePC6Od0FNpQD64cTa/F
+QfppvpkBEJAVKXKqqa5dsnzH4Rk6BQQBPa1HPzMH7XJ05RNLnN0g6RUFa8+h3xQ2
++F7+Wtkwp2xZtIM1/SyXfEg7KPCWQq333iZj44oIW85tWZDw4lliA1fwwPU4pnUH
+fSATbuzhi8WiRGu74+20PrDjoQBGal87sp0pNIwilegRyZDdXnWrIkDEoBp8+KCI
+LAOHoFcsoD5YfXAL2rS0ewZps/ofEtG4hcu0dZYOZ/IjXArwL8NMLGQD9RSqLJ4E
+Q24Xr4Nv+JL4LjzvIYxDeVEAMd+9pwP5YTY7K31Qr+OYw/ncpAmaGoWJ1W5ih9hX
+bcc0PuWrWFpXFi4987nb
+=gL4D
 -----END PGP SIGNATURE-----
 
---OgqxwSJOaUobr8KG--
+--0FM4RQAc0jwHekq5--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
