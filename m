@@ -1,16 +1,19 @@
 From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v6 5/9] usb: gadget: s3c-hsotg: use generic
- phy_init()/phy_exit() support
-Date: Mon, 16 Dec 2013 15:30:15 -0600
-Message-ID: <20131216213015.GI12896@saruman.home>
-References: <1386953483-21631-1-git-send-email-mporter@linaro.org>
- <1386953483-21631-6-git-send-email-mporter@linaro.org>
- <20131216212001.GD12896@saruman.home> <20131216212644.GA15814@beef>
+Subject: Re: [PATCH v6 08/15] usb: phy-mxs: Add implementation of
+ nofity_suspend and notify_resume
+Date: Mon, 16 Dec 2013 15:31:08 -0600
+Message-ID: <20131216213108.GJ12896@saruman.home>
+References: <1386897825-6130-1-git-send-email-peter.chen@freescale.com>
+ <1386897825-6130-9-git-send-email-peter.chen@freescale.com>
+ <20131213043236.GH867@saruman.home>
+ <CAL411-rEJN_AkmJEooVB+45qDE8n8CGNq-ODUKMhfPyuQ5fPwA@mail.gmail.com>
+ <20131213200924.GI5292@saruman.home>
+ <20131216011204.GA14183@shlinux1.ap.freescale.net>
 Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7405644541451642166=="
+Content-Type: multipart/mixed; boundary="===============5210523834971792561=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131216212644.GA15814@beef>
+In-Reply-To: <20131216011204.GA14183@shlinux1.ap.freescale.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,90 +23,189 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Porter <mporter@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomasz Figa <t.figa@samsung.com>, Christian Daudt <bcm@fixthebug.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Kishon Vijay Abraham I <kishon@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, Felipe Balbi <balbi@ti.com>, Linaro Patches <patches@linaro.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Paul Zimmerman <paulz@synopsys.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+To: Peter Chen <peter.chen@freescale.com>
+Cc: Marek =?utf-8?B?VmHFoXV0?= <marex@denx.de>, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, rob.herring@calxeda.com, kernel@pengutronix.de, grant.likely@linaro.org, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, Peter Chen <hzpeterchen@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============7405644541451642166==
+--===============5210523834971792561==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zqjkMoGlbUJ91oFe"
+	protocol="application/pgp-signature"; boundary="NgG1H2o5aFKkgPy/"
 Content-Disposition: inline
 
---zqjkMoGlbUJ91oFe
+--NgG1H2o5aFKkgPy/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 16, 2013 at 04:26:44PM -0500, Matt Porter wrote:
-> On Mon, Dec 16, 2013 at 03:20:01PM -0600, Felipe Balbi wrote:
-> > On Fri, Dec 13, 2013 at 11:51:19AM -0500, Matt Porter wrote:
-> > > If a generic phy is present, call phy_init()/phy_exit(). This supports
-> > > generic phys that must be soft reset before power on.
+Hi,
+
+On Mon, Dec 16, 2013 at 09:12:05AM +0800, Peter Chen wrote:
+> On Fri, Dec 13, 2013 at 02:09:24PM -0600, Felipe Balbi wrote:
+> > On Fri, Dec 13, 2013 at 02:31:42PM +0800, Peter Chen wrote:
+> > > On Fri, Dec 13, 2013 at 12:32 PM, Felipe Balbi <balbi@ti.com> wrote:
+> > > > On Fri, Dec 13, 2013 at 09:23:38AM +0800, Peter Chen wrote:
+> > > >> Implementation of notify_suspend and notify_resume will be differe=
+nt
+> > > >> according to mxs_phy_data->flags.
+> > > >>
+> > > >> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> > > >> ---
+> > > >>  drivers/usb/phy/phy-mxs-usb.c |   55 ++++++++++++++++++++++++++++=
+++++++++++---
+> > > >>  1 files changed, 51 insertions(+), 4 deletions(-)
+> > > >>
+> > > >> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-m=
+xs-usb.c
+> > > >> index 0ef930a..e3df53f 100644
+> > > >> --- a/drivers/usb/phy/phy-mxs-usb.c
+> > > >> +++ b/drivers/usb/phy/phy-mxs-usb.c
+> > > >> @@ -166,8 +166,8 @@ static int mxs_phy_suspend(struct usb_phy *x, =
+int suspend)
+> > > >>  static int mxs_phy_on_connect(struct usb_phy *phy,
+> > > >>               enum usb_device_speed speed)
+> > > >>  {
+> > > >> -     dev_dbg(phy->dev, "%s speed device has connected\n",
+> > > >> -             (speed =3D=3D USB_SPEED_HIGH) ? "high" : "non-high");
+> > > >> +     dev_dbg(phy->dev, "%s device has connected\n",
+> > > >> +             (speed =3D=3D USB_SPEED_HIGH) ? "HS" : "FS/LS");
+> > > >
+> > > > unrelated.
+> > > >
+> > > >> @@ -179,8 +179,8 @@ static int mxs_phy_on_connect(struct usb_phy *=
+phy,
+> > > >>  static int mxs_phy_on_disconnect(struct usb_phy *phy,
+> > > >>               enum usb_device_speed speed)
+> > > >>  {
+> > > >> -     dev_dbg(phy->dev, "%s speed device has disconnected\n",
+> > > >> -             (speed =3D=3D USB_SPEED_HIGH) ? "high" : "non-high");
+> > > >> +     dev_dbg(phy->dev, "%s device has disconnected\n",
+> > > >> +             (speed =3D=3D USB_SPEED_HIGH) ? "HS" : "FS/LS");
+> > > >
+> > > > unrelated.
+> > > >
 > > >=20
-> > > Signed-off-by: Matt Porter <mporter@linaro.org>
-> > > Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > > ---
-> > >  drivers/usb/gadget/s3c-hsotg.c | 5 +++++
-> > >  1 file changed, 5 insertions(+)
+> > > Marek suggested using that string, I will added it at another patch.
 > > >=20
-> > > diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-=
-hsotg.c
-> > > index 7c5d8bd..e9683c2 100644
-> > > --- a/drivers/usb/gadget/s3c-hsotg.c
-> > > +++ b/drivers/usb/gadget/s3c-hsotg.c
-> > > @@ -3621,6 +3621,9 @@ static int s3c_hsotg_probe(struct platform_devi=
+> > > >> @@ -189,6 +189,48 @@ static int mxs_phy_on_disconnect(struct usb_p=
+hy *phy,
+> > > >>       return 0;
+> > > >>  }
+> > > >>
+> > > >> +static int mxs_phy_on_suspend(struct usb_phy *phy,
+> > > >> +             enum usb_device_speed speed)
+> > > >> +{
+> > > >> +     struct mxs_phy *mxs_phy =3D to_mxs_phy(phy);
+> > > >> +
+> > > >> +     dev_dbg(phy->dev, "%s device has suspended\n",
+> > > >> +             (speed =3D=3D USB_SPEED_HIGH) ? "HS" : "FS/LS");
+> > > >> +
+> > > >> +     /* delay 4ms to wait bus entering idle */
+> > > >> +     usleep_range(4000, 5000);
+> > > >> +
+> > > >> +     if (mxs_phy->data->flags & MXS_PHY_ABNORMAL_IN_SUSPEND) {
+> > > >> +             writel_relaxed(0xffffffff, phy->io_priv + HW_USBPHY_=
+PWD);
+> > > >> +             writel_relaxed(0, phy->io_priv + HW_USBPHY_PWD);
+> > > >> +     }
+> > > >> +
+> > > >> +     if (speed =3D=3D USB_SPEED_HIGH)
+> > > >> +             writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
+> > > >> +                             phy->io_priv + HW_USBPHY_CTRL_CLR);
+> > > >
+> > > > why only on HS ? So if !HS and !ABNORMAL, this is no-op.
+> > > >
+> > > >> +static int mxs_phy_on_resume(struct usb_phy *phy,
+> > > >> +             enum usb_device_speed speed)
+> > > >> +{
+> > > >> +     dev_dbg(phy->dev, "%s device has resumed\n",
+> > > >> +             (speed =3D=3D USB_SPEED_HIGH) ? "HS" : "FS/LS");
+> > > >> +
+> > > >> +     if (speed =3D=3D USB_SPEED_HIGH) {
+> > > >> +             /* Make sure the device has switched to High-Speed m=
+ode */
+> > > >> +             udelay(500);
+> > > >> +             writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
+> > > >> +                             phy->io_priv + HW_USBPHY_CTRL_SET);
+> > > >> +     }
+> > > >
+> > > > likewise, if !HS it's a no-op.
+> > > >
+> > >=20
+> > > Correct,  this operation is only needed for HS.
+> > >=20
+> > > >> @@ -235,6 +277,11 @@ static int mxs_phy_probe(struct platform_devi=
 ce *pdev)
-> > >  		goto err_supplies;
-> > >  	}
-> > > =20
-> > > +	if (hsotg->phy)
-> > > +		phy_init(hsotg->phy);
+> > > >>
+> > > >>       platform_set_drvdata(pdev, mxs_phy);
+> > > >>
+> > > >> +     if (mxs_phy->data->flags & MXS_PHY_SENDING_SOF_TOO_FAST) {
+> > > >> +             mxs_phy->phy.notify_suspend =3D mxs_phy_on_suspend;
+> > > >> +             mxs_phy->phy.notify_resume =3D mxs_phy_on_resume;
+> > > >> +     }
+> > > >
+> > > > hmm, and seems like you only need notify_* on a buggy device. Sorry
+> > > > Peter but you don't have enough arguments to make me agree with this
+> > > > (and previous) patch.
+> > > >
+> > > > You gotta find a better way to handle this using normal phy
+> > > > suspend/resume calls.
+> > > >
+> > >=20
+> > > Like I explained at previous patch, it needs to be notified during
+> > > ehci suspend/resume.
+> > > I admit it is a SoC bug, but all SoCs have bugs, hmm.
+> > > Software needs the solution to workaround it which breaks the standar=
+d USB spec.
 > >=20
-> > doesn't build. you need to include <linux/phy/phy.h>
+> > Then I think what you need is a real notification mechanism. usbcore
+> > already notifies about buses and devices being added and removed,
+> > perhaps you can convince Greg to accept suspend/resume notifications.
+> >=20
+> > With that, you can (conditionally) make this driver listen to usbcore
+> > notifications. That'll be more work, but I guess it's best in the long
+> > run as we won't need to keep on adding callbacks to the USB PHY
+> > structure just because another buggy device showed up on the market.
+> >=20
 >=20
-> It depends on https://lkml.org/lkml/2013/12/5/172 which I noted in the
-> cover letter. At this point, I don't know if Kamil's whole series will
-> make it to 3.14 so that patch may have to be taken separately. He has a
-> trivial update to make on the binding example is all for this patch.
+> Okay, I will add this notification to .set_suspend now, it can work most =
+of
+> cases except disconnect during the resume signal.
 >=20
-> I was wondering today if we might just want to separate that out now. I
-> originally had a similar patch in my series but his was posted first so
-> I rebased on that.
+> Besides notification API add, how about other patches, eg add .set_wakeup=
+ API?
+> If you think there are no big problems, I will send v7 version.
 
-I can wait another week tops. By v3.13-rc5 I'm locking my tree down, and
-only urgent bugfixes to the next branch will be accepted.
-
-cheers
+set_wakeup looks good, other phy drivers might need it.
 
 --=20
 balbi
 
---zqjkMoGlbUJ91oFe
+--NgG1H2o5aFKkgPy/
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.15 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSr3DnAAoJEIaOsuA1yqRERfgP/AnsfhlwXldiMnTsSFX4l271
-zamjyhMk/tpFzZoaLTWIF+vuj7dvjmCScP6sCHJoEkgf5hF0WB7PAUF/t9/F8EX+
-0jAq6KHGv5NZ/M3bjpGZLtNAcqKtQBu3Nn1gKtcW+VPj/Bf8koG3/+h5yCgEvKkR
-kYID+vOtn3o0aYpQic9oTW5TBUCcoLZ3DWeQ4x/VkN4zAP5jM0oq48cXg9FbpFgo
-X5KR0LcRUIACVobIDk336QYraUOg5fzQBgOWbszPV1CvaUEypreGqd2WH3kmHp68
-TRHqcm9itczhlBvz+2hVDjVbUNYJT8ThVlqlNqjaDJV7N3ZCXRoVZ/o82D6lAy2I
-r0UR7g7s5beQSEzdu1vzmZtehQjOmsGXMzFEyVlD3EM8mY4YgvOsFBI/q0yrWAhj
-7R6Tg4bVZPk4rmQ8Qi65gpgR8eXeFZw9mUME2+KQG9rUjR6iZo3yJDK9u9ZBvR9U
-afSUyKo2oTTO0RW/94rXD2PpVv+nEWpw+nTNxSgHMB7t1jKU8eWlDgxCN/Bbzh/d
-/P1ZbF0YN0r7k5PTlJXy3Sgb06VsFK+ik59lDGQ394dhaheNAkc/3S6bPFKWaAdL
-JJYUz1Z+BPeZIjxy+ijQv5m5s2xFtH4xOzTxvOv8cfAXF0XXOVpwT96v2wZmn8Xx
-deKzaaCB+fw+pCk7xHr6
-=K8VL
+iQIcBAEBAgAGBQJSr3EbAAoJEIaOsuA1yqREspoP/3bmdUGJP/FBCprI7hHyts2Y
+pupyuWAyvA6wIk9fSF0vYmDaK4hci+THUVyHaAdp+6pRf5wuhiUkDfMxay9H2pxW
+XH0LYI5IB0nF/QnIJRvDXV/Di4TVVwlNjdAyc7RIuXjupX7qwUUEf1IRdp/7/BAI
+OrvBF2F77YGgHqPiqdC1IF0e3FI5VeCl1id66TN34KKcVGtkwYut7xMZQQmgDtuO
+pfBGmmuRmKtEj1qJKmipBF6XAzg0Lol4YEhh9T065BxQwCOsHPGlzrwrB6Ch0fsZ
+VLzR4UTTwHoy415PRgd0/rQ1Lr+4qW81USuDrp4IIJIWrN0oLUIuc08Y+Azoo3S6
+cvuuOV05Y9PcX+xMRBexpklpBL2J3GmCmbFrGnP+tGh1xJ6TqAMHWfWAxPAWAcHH
+ueeVzxdqk8l4bzRa4Vx9UTAWS/kkCQlSw1MNFuF6JaHfUO0wIAMQw1o4oj2XQ9/r
+BhNkzfTZ5+3H7JRQZxqfUGbdxo92XnJnJRl5tkqO3HD/MDQ8ywIBa3aYv4cAbMmD
+Pbh3n1Vxx2s97YtPipPHoR4IOmYVBVt79OqQAjITX5z380S55HSlYnjm0bl3uOag
+Nk0TUnElbHm3zAUUSMteMhwE+3u59rVLL5W7V3I93VRgywREym/vocnSzl0J9+Yb
+5OrpzK/lfk+tcs/EmC90
+=eCMz
 -----END PGP SIGNATURE-----
 
---zqjkMoGlbUJ91oFe--
+--NgG1H2o5aFKkgPy/--
 
 
---===============7405644541451642166==
+--===============5210523834971792561==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -114,4 +216,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============7405644541451642166==--
+--===============5210523834971792561==--
