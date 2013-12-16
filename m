@@ -1,103 +1,66 @@
-From: Alex Elder <alex.elder@linaro.org>
-Subject: Re: [PATCH v2 2/3] clk: bcm281xx: add initial clock framework support
-Date: Sun, 15 Dec 2013 22:29:39 -0600
-Message-ID: <52AE81B3.4010203@linaro.org>
-References: <529F4B0F.2020801@linaro.org> <529F4B4F.4020405@linaro.org> <20131214235731.26321.53050@quantum> <52ADE93B.3070907@linaro.org> <E566434B-F630-4AD3-91EC-BD5599767F2E@linaro.org>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Mon, 16 Dec 2013 13:05:18 +0800
+Message-ID: <52AE8A0E.2050005@linaro.org>
+References: <1386987174-1788-1-git-send-email-zhangfei.gao@linaro.org> <1386987174-1788-3-git-send-email-zhangfei.gao@linaro.org> <000001cefa11$eb02f270$c108d750$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=EUC-KR
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <E566434B-F630-4AD3-91EC-BD5599767F2E@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Tim Kryger <tim.kryger@linaro.org>
-Cc: "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <000001cefa11$eb02f270$c108d750$%jun@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>, 'Chris Ball' <cjb@laptop.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'Mike Turquette' <mturquette@linaro.org>, 'Rob Herring' <robherring2@gmail.com>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Kumar Gala' <galak@codeaurora.org>, 'Haojian Zhuang' <haojian.zhuang@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, 'Zhigang Wang' <brooke.wangzhigang@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/15/2013 06:22 PM, Alex Elder wrote:
-> I think I can prepare a series that puts my changes
-> before Tim's. Unless I have trouble doing that
-> I will send that out in a few hours.
-. . .
 
+Dear Seungwon
 
-I got started on doing this but then I decided to go
-check on the status of Tim's series.  It looks like
-Christian is on the verge of taking his series in,
-and is planning to coordinate with the affected
-maintainers to do so.
+On 12/16/2013 11:50 AM, Seungwon Jeon wrote:
+> On Sat, December 14, 2013, Zhangfei Gao wrote:
 
-I'm going to assume that is going to happen quite
-soon--I hope in the next day or two.  So rather than
-muddy the waters even further, it might be best to
-just wait for Tim's series to be accepted and then
-you take mine in on top of that.
+>> +	/* SoC portion */
+>> +	dwmmc_0: dwmmc0@fcd03000 {
+>> +		compatible = "hisilicon,hi4511-dw-mshc";
+>> +		reg = <0xfcd03000 0x1000>;
+>> +		interrupts = <0 16 4>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		clocks = <&mmc_clock HI3620_SD_CIUCLK>, <&clock HI3620_DDRC_PER_CLK>;
+>> +		clock-names = "ciu", "biu";
+>> +		clock-freq-table =
+>> +		<25000000 0 50000000 25000000 50000000 100000000 0 50000000>;
+> I think it could be solved with mmc->f_min and mmc->f_max(from clock-freq-min-max property)
+> if there is no limitation per each speed mode. As seeing described table, it looks that.
 
-In any case this is a small mess that's going to
-require some coordination to get resolved.  Let
-me know if there's something else specific you
-would recommend.
+Have tried them before, but unfortunately, they are different.
 
-In the mean time, I have created a new branch that
-is based on v3.13-rc4 (and includes Tim's prerequisite
-patches).  Pull request (still wrapped my my mailer)
-is below.
+The controller can not generate clock itself, while depending on the
+outside clock generator, which may require to change clock source in
+differnt mode.
 
-Thanks.
+The value we want is set the capacibility of the clock input and the max
+clock freq where mmc works stable in that mode, which may be different
+in different mode.
 
-					-Alex
+clock-freq-min-max will set the value for set_ios.
+For example, we use 25M as clock capability when init, which can not be
+set as freq-min, and used as set_ios, where 400K should be used,
+otherwise init definitely fail.
 
-The following changes since commit 319e2e3f63c348a9b66db4667efa73178e18b17d:
+>> +static int dw_mci_k3_suspend(struct device *dev)
+>> +{
+>> +	struct dw_mci *host = dev_get_drvdata(dev);
+>> +
+>> +	if (!IS_ERR(host->ciu_clk))
+>> +		clk_disable_unprepare(host->ciu_clk);
+>> +
+>> +	return dw_mci_suspend(host);
+> If k3 needs clk_disable here, dw_mci_suspend()is expected to be called prior to clk_disable_unprepare()?
+> Of course, it's ok at present though.
+> 
 
-  Linux 3.13-rc4 (2013-12-15 12:31:33 -0800)
+Sure, it can be switched, though dw_mci_suspend does nothing related
+with clock now.
 
-are available in the git repository at:
-
-  ssh://git@git.linaro.org/people/alex.elder/linux.git
-review/bcm-kona-clocks-v4
-
-for you to fetch changes up to deebd4ea75c159697d1e43416683d6068821b431:
-
-  ARM: dts: bcm281xx: define real clocks (2013-12-15 22:23:13 -0600)
-
-----------------------------------------------------------------
-Alex Elder (3):
-      clk: bcm281xx: define kona clock binding
-      clk: bcm281xx: add initial clock framework support
-      ARM: dts: bcm281xx: define real clocks
-
-Tim Kryger (8):
-      ARM: dts: Declare clocks as fixed on bcm11351
-      ARM: dts: Specify clocks for UARTs on bcm11351
-      Documentation: dt: kona-sdhci: Add clocks property
-      ARM: dts: Specify clocks for SDHCIs on bcm11351
-      mmc: sdhci-bcm-kona: Add basic use of clocks
-      Documentation: dt: kona-timer: Add clocks property
-      clocksource: kona: Add basic use of external clock
-      ARM: dts: Specify clocks for timer on bcm11351
-
- .../devicetree/bindings/arm/bcm/kona-timer.txt     |    7 +-
- .../devicetree/bindings/clock/bcm-kona-clock.txt   |   93 ++
- .../devicetree/bindings/mmc/kona-sdhci.txt         |    4 +
- arch/arm/boot/dts/bcm11351.dtsi                    |  199 +++-
- drivers/clk/Kconfig                                |    1 +
- drivers/clk/Makefile                               |    1 +
- drivers/clk/bcm/Kconfig                            |    8 +
- drivers/clk/bcm/Makefile                           |    3 +
- drivers/clk/bcm/clk-bcm281xx.c                     |  416 ++++++++
- drivers/clk/bcm/clk-kona-setup.c                   |  769 +++++++++++++++
- drivers/clk/bcm/clk-kona.c                         | 1033
-++++++++++++++++++++
- drivers/clk/bcm/clk-kona.h                         |  414 ++++++++
- drivers/clocksource/bcm_kona_timer.c               |   14 +-
- drivers/mmc/host/sdhci-bcm-kona.c                  |   37 +-
- include/dt-bindings/clock/bcm281xx.h               |   65 ++
- 15 files changed, 3053 insertions(+), 11 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
- create mode 100644 drivers/clk/bcm/Kconfig
- create mode 100644 drivers/clk/bcm/Makefile
- create mode 100644 drivers/clk/bcm/clk-bcm281xx.c
- create mode 100644 drivers/clk/bcm/clk-kona-setup.c
- create mode 100644 drivers/clk/bcm/clk-kona.c
- create mode 100644 drivers/clk/bcm/clk-kona.h
- create mode 100644 include/dt-bindings/clock/bcm281xx.h
+Thanks
