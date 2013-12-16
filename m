@@ -1,87 +1,183 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH RFC 2/2] Documentation: arm: define DT C-states bindings
-Date: Mon, 16 Dec 2013 12:11:11 +0000
-Message-ID: <20131216121111.GB8931@e102568-lin.cambridge.arm.com>
-References: <1386001205-11978-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1386001205-11978-3-git-send-email-lorenzo.pieralisi@arm.com>
- <87lhztgqsj.fsf@iki.fi>
- <20131210132719.GC15543@e102568-lin.cambridge.arm.com>
- <87haaggy6s.fsf@iki.fi>
+From: Sebastian Reichel <sre@debian.org>
+Subject: Re: [RFCv4 06/11] misc: Introduce Nokia CMT driver
+Date: Mon, 16 Dec 2013 13:15:24 +0100
+Message-ID: <20131216121524.GA6177@earth.universe>
+References: <1387150085-23173-1-git-send-email-sre@debian.org>
+ <1387150085-23173-7-git-send-email-sre@debian.org>
+ <CACRpkdYjjXgE_W8gq1e6z=nGMF=r-m+o2kkvrBFrEMm3o0=RwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <87haaggy6s.fsf@iki.fi>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Antti Miettinen <ananaza@iki.fi>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dave P Martin <Dave.Martin@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
+In-Reply-To: <CACRpkdYjjXgE_W8gq1e6z=nGMF=r-m+o2kkvrBFrEMm3o0=RwQ@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 10, 2013 at 10:04:27PM +0000, Antti Miettinen wrote:
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
-> > I do not think we should think about how the kernel uses this data.
-> > We should strive to make DT data representative of HW C-states and
-> > that's very complex, as you mentioned (it depends at what granularity
-> > we want these bits of info).
+
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Linus,
+
+On Mon, Dec 16, 2013 at 10:48:06AM +0100, Linus Walleij wrote:
+> On Mon, Dec 16, 2013 at 12:27 AM, Sebastian Reichel <sre@debian.org> wrot=
+e:
+> > Add driver handling GPIO pins of Nokia modems. The
+> > driver provides reset notifications, so that SSI
+> > clients can subscribe to them easily.
 > >
-> > When we are happy with the bindings we can then code the kernel accordingly.
-> >
-> > Please let me know how you would like to have these bindings extended
-> > (eg adding operating points), getting feedback is the main reason why
-> > I posted them in the first place.
-> 
-> Hmm.. I'd like to challenge that a bit. I guess we are not defining DT
-> bindings just for the joy of modelling the hardware? We should care
-> whether kernel needs the data and have some idea of how the data will be
-> used.
+> > Signed-off-by: Sebastian Reichel <sre@debian.org>
+>=20
+> If the driver provides reset notifications, should it rather be
+> in drivers/reset?
+>=20
+> I'm thinking of a generic GPIO reset driver with a generic
+> notification mechanism, which seems to be what this is.
+>=20
+> I.e. it doesn't look device-specific at all, just like some
+> generic glue code that could be useful to many such
+> scenarios.
 
-I agree all I am saying is that DT bindings must not contain anything
-Linux kernel specific, ie adding parameters that are purely SW concepts
-(eg menu governor target_residency).
+I like the idea.
 
-> As you say, modelling C state details is not trivial. It might be
-> possible to construct an approximate formula for e.g. entry/exit latency
-> that takes CPU frequency, memory frequency and PMIC ramp rates as
-> input. Also, in principle we could estimate power based on clocks,
-> voltages, temperature etc. As we probably do not want to put function
-> definitions to DT, the DT would contain e.g. coefficients for functions
-> that would need to be platform neutral.
+Probably the remaining gpio exporting code can be converted into
+some generic gpio-sysfs-export driver as well.
 
-I do not think we should model anything in DT, we should define what
-a C-state entry/exit implies in HW. The kernel can model the behaviour
-depending on the parameters provided by the DT data.
+What do you think about the following?
 
-> Is this what you'd like to see? There has been some research in
-> estimating power without actually measuring it, e.g. the google
-> powertutor people have written some papers about this. The latencies
-> could be measured to some extend with instrumentation in the kernel and
-> the measurement results could be used to tune some parameters.
-> 
-> Or would you rather have tables, which specify latencies and power
-> levels and the tables would be indexed with frequencies and voltages?
+/*
+ * driver, which provides generic reset notifications
+ */
+cmt_reset: reset-notifier {
+    compatible =3D "linux,reset-notification";
 
-The latter. I did not add operating points info in v1 because I thought
-it might have been too much, but I think it is something we should
-consider for the final version.
+    interrupts =3D <gpio>;
+};
 
-> Anyway, I would really like to see the option of having the state choice
-> in the driver. One possible way to achieve this would be to allow for
-> the driver to export an optional "choose" method. If that exists the
-> governor would offload the decision to the driver.
+/*
+ * driver, which exports the specified gpios in sysfs with the
+ * supplied names. The device will be named according to the
+ * label
+ */
+cmt_gpios: gpio-sysfs-export {
+    compatible =3D "linux,gpio-sysfs-export";
+    label =3D "nokia-cmt";
 
-That's a separate discussion. CPUidle backends can already demote
-C-states depending on HW states (pending IRQs, state of caches).
-This also has loads of dependencies (what piece of code is in charge of
-making the final decision ? Kernel ? FW (ie PSCI) ?).
+    gpios =3D <A>, <B>, ...;
+    gpio-names =3D "A", "B", ...;
+};
 
-I think as I mentioned that the state choice discussion is a parallel
-track altogether. Let's define what bits of info are required in the DT
-first, with an eye on how the kernel can make use of them, then we
-can focus on changing the kernel (actually idle interfaces changes are
-already under way owing to scheduler discussions) to make best usage of
-them.
+> > +config NOKIA_CMT
+> > +       tristate "Enable CMT support"
+> > +       help
+> > +       If you say Y here, you will enable CMT support.
+> > +
+> > +       If unsure, say Y, or else you will not be able to use the CMT.
+>=20
+> None of this explains what this driver actually does and what
+> CMT means, so please rewrite this a bit to be more helpful.
+> The way it is written it could as well say "enable FOO support".
 
-Thanks,
-Lorenzo
+I probably should have reviewed this better. This is the original
+text from Nokia's driver.
 
+> > +++ b/drivers/misc/nokia-cmt.c
+> > @@ -0,0 +1,298 @@
+> > +/*
+> > + * CMT support.
+>=20
+> So CMT =3D ...?
+
+CMT =3D Cellular Modem
+
+> > +/**
+> > + * struct cmt_device - CMT device data
+> > + * @cmt_rst_ind_tasklet: Bottom half for CMT reset line events
+> > + * @cmt_rst_ind_irq: IRQ number of the CMT reset line
+> > + * @n_head: List of notifiers registered to get CMT events
+> > + * @node: Link on the list of available CMTs
+> > + * @device: Reference to the CMT platform device
+> > + */
+> > +struct cmt_device {
+> > +       struct tasklet_struct           cmt_rst_ind_tasklet;
+> > +       unsigned int                    cmt_rst_ind_irq;
+> > +       struct atomic_notifier_head     n_head;
+> > +       struct list_head                node;
+> > +       struct device                   *device;
+> > +       struct cmt_gpio                 *gpios;
+> > +       int                             gpio_amount;
+> > +};
+>=20
+> The kerneldoc and and the struct are not in sync. Look
+> this over.
+
+I will fix this in v5 (in case that its not removed completly).
+
+> > +static LIST_HEAD(cmt_list);    /* List of CMT devices */
+> (...)
+> > +struct cmt_device *cmt_get(const char *name)
+> > +{
+> > +       struct cmt_device *p, *cmt =3D ERR_PTR(-ENODEV);
+> > +
+> > +       list_for_each_entry(p, &cmt_list, node)
+> > +               if (strcmp(name, dev_name(p->device)) =3D=3D 0) {
+> > +                       cmt =3D p;
+> > +                       break;
+> > +               }
+> > +
+> > +       return cmt;
+> > +}
+> > +EXPORT_SYMBOL_GPL(cmt_get);
+>=20
+> Is this driver used on non-DT platforms, or can we skip this
+> struct device * referencing altogether?
+>
+> I would feel better if this driver looked more like
+> drivers/mfd/syscon.c
+
+Will be removed in v5.
+
+> > +static irqreturn_t cmt_rst_ind_isr(int irq, void *cmtdev)
+> > +{
+> > +       struct cmt_device *cmt =3D (struct cmt_device *)cmtdev;
+> > +
+> > +       tasklet_schedule(&cmt->cmt_rst_ind_tasklet);
+> > +
+> > +       return IRQ_HANDLED;
+> > +}
+>=20
+> Why are you using a tasklet rather than a work
+> for this?
+
+No particular reason. I just took this over from Nokia's code.
+
+-- Sebastian
+
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSru7cAAoJENju1/PIO/qa6qkP+gKKi+BUkOKDO5LwVej51IfF
+Jc8tpX1k8OpI2JgALP4uX8sQEUn/TCO4djGyPZU+GNbbZW8MLMAxrh1MIkm/zOrk
+zyHI0ifIhke4uexPgeuJ9lqobqeSzy+J0BcJkw4bWDG4XJIMBEGXzViQzVzI+8EB
+ODKKriYvqdaTTetPLq102cb7E7v/P3wqXVRTmUU6F9d7L/ACuhf/YGzvt5iel7UV
+aPJpsV7wp0XlG0+yGDVFjdhrv4rDBRhDw5a4hyz8b6VRGNBGYKGNTaWGSnCSxyEO
+D/F7WmDM3A3JR3J0+yCOtGm4D6HrQq2F0xlb6g620pa5S3VcxE9H1JHDyH/vt80Z
+/kolz7AUSbvGRdeTCRU92phThazEoWzKWQy2g5D+dN8g9rFRXO4bey8mmTrC42AF
+cl9Mw2T1aPRrRkRL8DEZo+MRukeYIOATicbf7g435of5KvwHdJBIUHHipHCR7j3I
+e9jh7gG+Hpvzjr3L5rZve60JaTif4dKOlT20HHbqjx0Sk0e3D/ugUK+bDAU153IR
+g7g+q70DEkFEhB9WDJvK4074owV+ilfXuer8xsULronfiwZPYcU1EFjGgxTkY2OZ
+VsxBASde3usnxCWISzLRWMnd+dtMiht9WN/sP5gxLHiifND5KuRrim0ESq85DuhJ
+Y1LUlolhtDdIJAnwZqjk
+=lNxa
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
