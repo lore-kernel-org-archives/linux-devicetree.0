@@ -1,53 +1,130 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] pinctrl: Make PINCTRL selectable by
- defconfig/menuconfig
-Date: Mon, 16 Dec 2013 16:18:43 -0800
-Message-ID: <20131217001842.GB3840@sonymobile.com>
-References: <1381174108-25168-1-git-send-email-syin@broadcom.com>
- <1386787041-6035-1-git-send-email-syin@broadcom.com>
- <1386787041-6035-4-git-send-email-syin@broadcom.com>
- <CACRpkdauqYNiby-ta3c_he2ovG__0e6ubmzZ8Bx1cP_OzK4=LQ@mail.gmail.com>
- <CAEPRUYpsp_FVobY_DeEQU2+rCD7q7T=p7k++XvG-22x-OWHY8Q@mail.gmail.com>
- <CACRpkdY2BExGiL6HBg7zn_szJQMnSNsxOSuo7RyrRmrz=cVe2A@mail.gmail.com>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] gpio: davinci: reuse for Keystone SoC
+Date: Mon, 16 Dec 2013 11:38:31 -0500
+Message-ID: <52AF2C87.1060700@ti.com>
+References: <1386871973-26762-1-git-send-email-grygorii.strashko@ti.com>
+	<1386871973-26762-3-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY2BExGiL6HBg7zn_szJQMnSNsxOSuo7RyrRmrz=cVe2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko St?bner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1386871973-26762-3-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 16 Dec 02:01 PST 2013, Linus Walleij wrote:
-
-> On Thu, Dec 12, 2013 at 10:35 PM, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org> wrote:
+On Thursday 12 December 2013 01:12 PM, Grygorii Strashko wrote:
+> The similar GPIO HW block is used by keystone SoCs as
+> in Davinci SoCs.
+> Hence, reuse Davinci GPIO driver for Keystone taking into
+> account that Keystone contains ARM GIC IRQ controller which
+> is implemented using IRQ Chip.
 > 
-> >  I had requested this from Sherman. The reason is so that pinctrl can
-> > be selectable through defconfig, instead of through SoC select
-> > statements. And the reason for that is so that, in the future, some of
-> > these can be switched into loadable modules (which can't be done from
-> > Kconfig). This will become necessary with the move to multiplatform -
-> > we won't be able to have everything static anymore.
+> Documentation:
+> 	http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
 > 
-> Isn't it sufficient to make the pin controller entry tristate rather
-> than bool?
+> CC: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> CC: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+> CC: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > 
-> And as mentioned elsewhere this does not at all solve the issue
-> that we still need to have all basic IRQchips and timer drivers
-> compiled into the kernel.
+> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
+>  drivers/gpio/gpio-davinci.c                        |   49 +++++++++++++++-----
+>  2 files changed, 40 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> index a2e839d..4ce9862 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> @@ -1,7 +1,7 @@
+> -Davinci GPIO controller bindings
+> +Davinci/Keystone GPIO controller bindings
+>  
+>  Required Properties:
+> -- compatible: should be "ti,dm6441-gpio"
+> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+>  
+>  - reg: Physical base address of the controller and the size of memory mapped
+>         registers.
+> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+> index 73f65ca..3e44e0c 100644
+> --- a/drivers/gpio/gpio-davinci.c
+> +++ b/drivers/gpio/gpio-davinci.c
+> @@ -413,6 +413,27 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
+>  	.xlate = irq_domain_xlate_onetwocell,
+>  };
+>  
+> +static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
+> +{
+> +	static struct irq_chip_type gpio_unbanked;
+> +
+> +	gpio_unbanked = *container_of(irq_get_chip(irq),
+> +				      struct irq_chip_type, chip);
+> +
+> +	return &gpio_unbanked.chip;
+> +};
+> +
+> +static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
+> +{
+> +	static struct irq_chip gpio_unbanked;
+> +
+> +	gpio_unbanked = *irq_get_chip(irq);
+> +	pr_err("keystone_gpio_get_irq_chip\n");
+> +	return &gpio_unbanked;
+> +};
+> +
+> +static const struct of_device_id davinci_gpio_ids[];
+> +
+>  /*
+>   * NOTE:  for suspend/resume, probably best to make a platform_device with
+>   * suspend_late/resume_resume calls hooking into results of the set_wake()
+> @@ -433,6 +454,15 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>  	struct davinci_gpio_platform_data *pdata = dev->platform_data;
+>  	struct davinci_gpio_regs __iomem *g;
+>  	struct irq_domain	*irq_domain = NULL;
+> +	const struct of_device_id *match;
+> +	struct irq_chip *irq_chip;
+> +	struct irq_chip *(*gpio_get_irq_chip)(unsigned int irq);
+> +
+> +	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
+> +	match = of_match_device(of_match_ptr(davinci_gpio_ids),
+> +				dev);
+> +	if (match)
+> +		gpio_get_irq_chip = match->data;
+and if the DT node is not populated ?
+>  
+>  	ngpio = pdata->ngpio;
+>  	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> @@ -442,7 +472,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>  	}
+>  
+>  	bank_irq = res->start;
+> -
+stray change..
 
-No matter how we build the individual pinctrl drivers we will always
-need the pinctrl framework in a multi-soc zImage; so I can't see that
-we gain anything from being able to compile PINCTRL as a module.
+>  	if (!bank_irq) {
+>  		dev_err(dev, "Invalid IRQ resource\n");
+>  		return -ENODEV;
+> @@ -484,25 +513,22 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>  	}
+>  
+>  	/*
+> -	 * AINTC can handle direct/unbanked IRQs for GPIOs, with the GPIO
+> +	 * INTC can handle direct/unbanked IRQs for GPIOs, with the GPIO
+So you want to have a generic name here. If you are changing it, change it
+across the driver in a separate patch or leave it as is...
+I don't think it matters much..
 
-I don't like compiling the individual pinctrl drivers as modules, as
-it leaves us with a waterfall of PROBE_DEFERRs.
-
-Regards,
-Bjorn
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With those comments addressed, you can add my ack.
+Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
