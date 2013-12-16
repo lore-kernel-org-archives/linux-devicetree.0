@@ -1,149 +1,139 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 00/26] OMAPDSS: DT support (Christmas edition)
-Date: Mon, 16 Dec 2013 09:24:39 +0200
-Message-ID: <52AEAAB7.7010308@ti.com>
-References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com> <1703598.NbqXAMAFOI@avalon> <52AADBE0.3030203@ti.com> <3426377.keoaFgiZkl@avalon> <52AB2C25.6000507@ti.com> <20131213172234.GD28184@atomide.com> <52AC0A18.30405@ti.com> <20131214140913.GA12324@atomide.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH 2/2] gpio: davinci: reuse for Keystone SoC
+Date: Mon, 16 Dec 2013 16:29:00 +0900
+Message-ID: <CAAVeFuJSe_BZ+cr8ZVz-etAzsUbe_taS+0EqM+pXhKhTdyuWiQ@mail.gmail.com>
+References: <1386871973-26762-1-git-send-email-grygorii.strashko@ti.com> <1386871973-26762-3-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="I3wMIHoekBSe2OexKcBjHa0s1Mj28q0mD"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131214140913.GA12324@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1386871973-26762-3-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Herring <rob.herring@calxeda.com>, prabhakar.csengg@gmail.com, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, davinci-linux-open-source@linux.davincidsp.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---I3wMIHoekBSe2OexKcBjHa0s1Mj28q0mD
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Fri, Dec 13, 2013 at 3:12 AM, Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+> The similar GPIO HW block is used by keystone SoCs as
+> in Davinci SoCs.
+> Hence, reuse Davinci GPIO driver for Keystone taking into
+> account that Keystone contains ARM GIC IRQ controller which
+> is implemented using IRQ Chip.
+>
+> Documentation:
+>         http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
+>
+> CC: Linus Walleij <linus.walleij@linaro.org>
+> CC: Sekhar Nori <nsekhar@ti.com>
+> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> CC: devicetree@vger.kernel.org
+>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
+>  drivers/gpio/gpio-davinci.c                        |   49 +++++++++++++++-----
+>  2 files changed, 40 insertions(+), 13 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> index a2e839d..4ce9862 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> @@ -1,7 +1,7 @@
+> -Davinci GPIO controller bindings
+> +Davinci/Keystone GPIO controller bindings
+>
+>  Required Properties:
+> -- compatible: should be "ti,dm6441-gpio"
+> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+>
+>  - reg: Physical base address of the controller and the size of memory mapped
+>         registers.
+> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+> index 73f65ca..3e44e0c 100644
+> --- a/drivers/gpio/gpio-davinci.c
+> +++ b/drivers/gpio/gpio-davinci.c
+> @@ -413,6 +413,27 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
+>         .xlate = irq_domain_xlate_onetwocell,
+>  };
+>
+> +static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
+> +{
+> +       static struct irq_chip_type gpio_unbanked;
+> +
+> +       gpio_unbanked = *container_of(irq_get_chip(irq),
+> +                                     struct irq_chip_type, chip);
+> +
+> +       return &gpio_unbanked.chip;
+> +};
+> +
+> +static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
+> +{
+> +       static struct irq_chip gpio_unbanked;
+> +
+> +       gpio_unbanked = *irq_get_chip(irq);
+> +       pr_err("keystone_gpio_get_irq_chip\n");
 
-On 2013-12-14 16:09, Tony Lindgren wrote:
+Do you intend this pr_err() to remain here?
 
->> Why was e30b06f4d5f000c31a7747a7e7ada78a5fd419a1 merged into -rc2? It'=
-s
->> not a fix, just a cleanup.
->=20
-> Hmm OK sorry looks like I removed some non-legacy mux framework code
-> by accident. The omap_mux_* parts clearly are dead code for omap4 as
-> it's been DT only since v3.10, but the omap4_dsi_mux_pads() is not
-> using omap_mux_* functions.
->=20
-> Yes, let's revert e30b06f4d5f0 except for the dead code parts, which
-> seems to be omap4_tpd12s015_mux_pads(), right?
+> +       return &gpio_unbanked;
+> +};
+> +
+> +static const struct of_device_id davinci_gpio_ids[];
+> +
+>  /*
+>   * NOTE:  for suspend/resume, probably best to make a platform_device with
+>   * suspend_late/resume_resume calls hooking into results of the set_wake()
+> @@ -433,6 +454,15 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>         struct davinci_gpio_platform_data *pdata = dev->platform_data;
+>         struct davinci_gpio_regs __iomem *g;
+>         struct irq_domain       *irq_domain = NULL;
+> +       const struct of_device_id *match;
+> +       struct irq_chip *irq_chip;
+> +       struct irq_chip *(*gpio_get_irq_chip)(unsigned int irq);
+> +
+> +       gpio_get_irq_chip = davinci_gpio_get_irq_chip;
+> +       match = of_match_device(of_match_ptr(davinci_gpio_ids),
+> +                               dev);
+> +       if (match)
+> +               gpio_get_irq_chip = match->data;
+>
+>         ngpio = pdata->ngpio;
+>         res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> @@ -442,7 +472,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>         }
+>
+>         bank_irq = res->start;
+> -
+>         if (!bank_irq) {
+>                 dev_err(dev, "Invalid IRQ resource\n");
+>                 return -ENODEV;
+> @@ -484,25 +513,22 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>         }
+>
+>         /*
+> -        * AINTC can handle direct/unbanked IRQs for GPIOs, with the GPIO
+> +        * INTC can handle direct/unbanked IRQs for GPIOs, with the GPIO
+>          * controller only handling trigger modes.  We currently assume no
+>          * IRQ mux conflicts; gpio_irq_type_unbanked() is only for GPIOs.
+>          */
+>         if (pdata->gpio_unbanked) {
+> -               static struct irq_chip_type gpio_unbanked;
+> -
+>                 /* pass "bank 0" GPIO IRQs to AINTC */
+>                 chips[0].chip.to_irq = gpio_to_irq_unbanked;
+>                 chips[0].gpio_irq = bank_irq;
+>                 chips[0].gpio_unbanked = pdata->gpio_unbanked;
+>                 binten = BIT(0);
+>
+> -               /* AINTC handles mask/unmask; GPIO handles triggering */
+> +               /* INTC handles mask/unmask; GPIO handles triggering */
+>                 irq = bank_irq;
+> -               gpio_unbanked = *container_of(irq_get_chip(irq),
+> -                                             struct irq_chip_type, chip);
+> -               gpio_unbanked.chip.name = "GPIO-AINTC";
+> -               gpio_unbanked.chip.irq_set_type = gpio_irq_type_unbanked;
+> +               irq_chip = gpio_get_irq_chip(irq);
+> +               irq_chip->name = "GPIO-AINTC";
 
-Yes. I tested the below patch on 4430SDP, both DSI and HDMI works.
-
- Tomi
-
-
-=46rom cc38cdb5c77c82f526ebce855711a6b4d4c51180 Mon Sep 17 00:00:00 2001
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Date: Mon, 16 Dec 2013 09:14:48 +0200
-Subject: [PATCH] Revert "ARM: OMAP2+: Remove legacy mux code for display.=
-c"
-
-Commit e30b06f4d5f000c31a7747a7e7ada78a5fd419a1 (ARM: OMAP2+: Remove
-legacy mux code for display.c) removed non-DT DSI and HDMI pinmuxing.
-However, DSI pinmuxing is still needed, and removing that caused DSI
-displays not to work.
-
-This reverts the DSI parts of the commit.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
- arch/arm/mach-omap2/display.c | 38 +++++++++++++++++++++++++++++++++++++=
-+
- 1 file changed, 38 insertions(+)
-
-diff --git a/arch/arm/mach-omap2/display.c b/arch/arm/mach-omap2/display.=
-c
-index 58347bb874a0..4cf165502b35 100644
---- a/arch/arm/mach-omap2/display.c
-+++ b/arch/arm/mach-omap2/display.c
-@@ -101,13 +101,51 @@ static const struct omap_dss_hwmod_data omap4_dss_h=
-wmod_data[] __initconst =3D {
- 	{ "dss_hdmi", "omapdss_hdmi", -1 },
- };
-=20
-+static int omap4_dsi_mux_pads(int dsi_id, unsigned lanes)
-+{
-+	u32 enable_mask, enable_shift;
-+	u32 pipd_mask, pipd_shift;
-+	u32 reg;
-+
-+	if (dsi_id =3D=3D 0) {
-+		enable_mask =3D OMAP4_DSI1_LANEENABLE_MASK;
-+		enable_shift =3D OMAP4_DSI1_LANEENABLE_SHIFT;
-+		pipd_mask =3D OMAP4_DSI1_PIPD_MASK;
-+		pipd_shift =3D OMAP4_DSI1_PIPD_SHIFT;
-+	} else if (dsi_id =3D=3D 1) {
-+		enable_mask =3D OMAP4_DSI2_LANEENABLE_MASK;
-+		enable_shift =3D OMAP4_DSI2_LANEENABLE_SHIFT;
-+		pipd_mask =3D OMAP4_DSI2_PIPD_MASK;
-+		pipd_shift =3D OMAP4_DSI2_PIPD_SHIFT;
-+	} else {
-+		return -ENODEV;
-+	}
-+
-+	reg =3D omap4_ctrl_pad_readl(OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_DSIPHY)=
-;
-+
-+	reg &=3D ~enable_mask;
-+	reg &=3D ~pipd_mask;
-+
-+	reg |=3D (lanes << enable_shift) & enable_mask;
-+	reg |=3D (lanes << pipd_shift) & pipd_mask;
-+
-+	omap4_ctrl_pad_writel(reg, OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_DSIPHY);
-+
-+	return 0;
-+}
-+
- static int omap_dsi_enable_pads(int dsi_id, unsigned lane_mask)
- {
-+	if (cpu_is_omap44xx())
-+		return omap4_dsi_mux_pads(dsi_id, lane_mask);
-+
- 	return 0;
- }
-=20
- static void omap_dsi_disable_pads(int dsi_id, unsigned lane_mask)
- {
-+	if (cpu_is_omap44xx())
-+		omap4_dsi_mux_pads(dsi_id, 0);
- }
-=20
- static int omap_dss_set_min_bus_tput(struct device *dev, unsigned long t=
-put)
---=20
-1.8.3.2
-
-
-
-
---I3wMIHoekBSe2OexKcBjHa0s1Mj28q0mD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSrqq7AAoJEPo9qoy8lh713XUP/Rc+s4DFkaAtA81SER+qiZrc
-W6/6o40Is03XwHx3nXJyrl0ChfzpLFSsxijxvyipD+K6QMtWE0EpxlTXXSjt5vWj
-eUtCP23ACMMZGA9mwBD8Zr2TnolwV4oe6L8qqtasDDb+nNnCT5naelUpcvWfJxXI
-YVyT98QsBHEyHIikBqcq8BE14DY6C6zSM2IL7TDLcK6GtHr/PxB5j1NmuKwY7lkQ
-lDIlAfbVFcHdbCF1G73D3ESiUU/6Q3kTyqsHa8S4rlesUI8MIWbY00F2yIYuKfFo
-rqHEY/5LbpwKrQI8bOTIaGh3bBf2BkQMj1PaUZyHwo+VDlLSgdljDQfx9rIhLNks
-GMjON7LbNkpqAh3Dq3dEQjvq02FV//horHLJ2wi3PgdifQcJ0PB9Mx8tk7tUXzR4
-C7ecq3NLFUn0aDrGGczM6d1S7j/1nYVAN5JMiyozh/NSyEKH4dHCmxhRpC6FpcWz
-e0b3mGbUC4kSGXycyFc5J2RqIzNXFYxJ1WNW9YEr2r2w5GAOmKfk6vC3RhsjYiQk
-Ik9w2i+Tz5GBpV/zQW2N9htcTdo/X0K5GNel0Jm1mhfarTTkxfNTdIoG0HwcKlBi
-wZO8u9f18zFDzAou01FhnnqExRsRJGFSglOXN10J09ULGiZKLyz3qE8QdIRr9L4O
-XQD7VkN5FjUsRjqZ+NyU
-=/kjL
------END PGP SIGNATURE-----
-
---I3wMIHoekBSe2OexKcBjHa0s1Mj28q0mD--
+According to the other renamings I see in this file, shouldn't the
+string also be changed to "GPIO-INTC"?
