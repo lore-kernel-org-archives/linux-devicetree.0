@@ -1,123 +1,90 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH RESEND v2 1/2] phy: core: Add an exported of_phy_get function
-Date: Mon, 16 Dec 2013 14:30:53 +0530
-Message-ID: <52AEC145.6070208@ti.com>
-References: <1386943380-28596-1-git-send-email-k.debski@samsung.com> <52AB1D75.4030207@ti.com> <008a01cef817$b24844e0$16d8cea0$%debski@samsung.com>
+From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+Subject: Re: Re: [PATCH 2/5] ARM: dts: sun4i: Add support for mmc
+Date: Mon, 16 Dec 2013 10:04:38 +0100
+Message-ID: <11015171.YHkHMOrD9M@pagira.o2s.ch>
+References: <1387058295-20641-1-git-send-email-hdegoede@redhat.com> <20131215135854.GF3651@lukather> <52ADBD41.4050104@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <008a01cef817$b24844e0$16d8cea0$%debski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kamil Debski <k.debski@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Tomasz Figa <t.figa@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, gautam.vivek@samsung.com, matt.porter@linaro.org
+Content-Type: multipart/signed; boundary="nextPart5341094.LaRy0sOPBI"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <linux-sunxi+bncBD2JL37LXEKRB3MEXOKQKGQEVI3TFDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52ADBD41.4050104-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 December 2013 08:56 PM, Kamil Debski wrote:
-> Hi Kishon,
-> 
->> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
->> Sent: Friday, December 13, 2013 3:45 PM
->>
->> Hi,
->>
->> On Friday 13 December 2013 07:32 PM, Kamil Debski wrote:
->>> Previously the of_phy_get function took a struct device * and was
->>> declared static. It was impossible to call it from another driver and
->>> thus it was impossible to get phy defined for a given node. The old
->>> function was renamed to _of_phy_get and was left for internal use.
->>> of_phy_get function was added and it was exported. The function
->>> enables to get a phy for a given device tree node.
->>>
->>> Signed-off-by: Kamil Debski <k.debski@samsung.com>
->>> ---
->>> It seems that my git send-email is playing up and sent the previous
->>> emails without from. This is a resend. Sorry for any confusion.
->>> ---
->>>  drivers/phy/phy-core.c  |   41 ++++++++++++++++++++++++++++++++-----
->> ----
->>>  include/linux/phy/phy.h |    1 +
->>>  2 files changed, 33 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c index
->>> 03cf8fb..f0dbd42 100644
->>> --- a/drivers/phy/phy-core.c
->>> +++ b/drivers/phy/phy-core.c
->>> @@ -240,8 +240,8 @@ out:
->>>  EXPORT_SYMBOL_GPL(phy_power_off);
->>>
->>>  /**
->>> - * of_phy_get() - lookup and obtain a reference to a phy by phandle
->>> - * @dev: device that requests this phy
->>> + * _of_phy_get() - lookup and obtain a reference to a phy by phandle
->>> + * @np: device_node for which to get the phy
->>>   * @index: the index of the phy
->>>   *
->>>   * Returns the phy associated with the given phandle value, @@
->>> -250,20 +250,17 @@ EXPORT_SYMBOL_GPL(phy_power_off);
->>>   * not yet loaded. This function uses of_xlate call back function
->> provided
->>>   * while registering the phy_provider to find the phy instance.
->>>   */
->>> -static struct phy *of_phy_get(struct device *dev, int index)
->>> +static struct phy *_of_phy_get(struct device_node *np, int index)
->>>  {
->>>  	int ret;
->>>  	struct phy_provider *phy_provider;
->>>  	struct phy *phy = NULL;
->>>  	struct of_phandle_args args;
->>>
->>> -	ret = of_parse_phandle_with_args(dev->of_node, "phys", "#phy-
->> cells",
->>> +	ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
->>>  		index, &args);
->>> -	if (ret) {
->>> -		dev_dbg(dev, "failed to get phy in %s node\n",
->>> -			dev->of_node->full_name);
->>> +	if (ret)
->>>  		return ERR_PTR(-ENODEV);
->>> -	}
->>>
->>>  	mutex_lock(&phy_provider_mutex);
->>>  	phy_provider = of_phy_provider_lookup(args.np); @@ -283,6 +280,32
->> @@
->>> err0:
->>>  }
->>>
->>>  /**
->>> + * of_phy_get() - lookup and obtain a reference to a phy using a
->> device_node.
->>> + * @np: device_node for which to get the phy
->>> + * @index: the index of the phy
->>
->> Would be better if the user can get the PHY by string instead of index.
-> 
-> Ok, this sounds doable. I will add of_phy_get_by_name analogous to the clk
-> framework.
 
-Nope. It was decided initially to have minimal no of APIs exported to get PHYs.
-So you can just get string as argument instead of index and leave the name of
-the API to just of_phy_get.
+--nextPart5341094.LaRy0sOPBI
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Thanks
-Kishon
+Hi
+> Note as said before I expect David to take things from here.
+I will start working on it this evening.
 
-> 
->>> + *
->>> + * Returns the phy driver, after getting a refcount to it; or
->>> + * -ENODEV if there is no such phy.  The caller is responsible for
->>> + * calling phy_put() to release that count.
->>> + */
->>> +struct phy *of_phy_get(struct device_node *np, int index) {
->>> +	struct phy *phy = NULL;
->>> +
->>> +	phy = _of_phy_get(np, index);
->>> +	if (IS_ERR(phy))
->> dev_err here?
-> 
-> dev_err requires a dev, so it is not possible with the arguments used.
-> And we do not want to add any extra parameters to keep the function call
-> analogous to other of_*_get (as for example of_clk_get).
-> 
-> Best wishes,
-> 
+> I just took what David was using. I agree picking one and staying with
+> it would be better.
+There is a reason why my working branch was called "plsdsif"
+(short for "Please don't shout at me in Finnish")
+
+> Yes and no. The pullups are enabled by uboot and the allwinner
+> sources, most of my testing has been done without them, which
+> seems to work fine. I've enabled them to be consisten with the
+> allwinner sources and u-boot.
+Ok
+
+> As for drive = <3>, we need drive = <2> for normal modes,
+> and drive = <3> for ddr mode. I simply picked <3> to keep
+> things KISS. It should not matter much in power usage, as
+> it will only make the flanks of the signal more steep. Once the
+> desired output level is reached the current will drop off. It will
+> use more current when changing the level, but for half the time,
+> so the effective power usage (current * time) is the same.
+In this case lets implement a switch which enables the pull ups for DDR
+mode and lets disable it by default in turn.
+This way we can make sure that we don't have doubled pull up,
+since this could actually mess up some circuitry.
+
+> > Ideally, I'd like this patch to be splitted into three:
+> >    - One that adds the MMC controller nodes to the DTSI
+> >    - One that adds the muxing options you need to the pinctrl node
+> >    - One that enables the controller on the boards
+> Sounds like a good job for David. Note I've a lot more boards for
+> which I would like to add mmc support or dts files in general
+> (will do so as time permits).
+Ok. I will work on it this evening.
+
+> For those boards which already have a dts I'll send mmc adding dts
+> patches to David for now so he can add the changes to the patch-set.
+Ok. I will create another branch and will incorporate your DTS files.
+
+> How do you want to deal with new boards ? Send the addition of the
+> base board to you (and CC David as he will need them in his tree too),
+> and then send a patch to add mmc to the dts to David ?
+Sounds good to me...
+ 
+> Or should I simply make it one big patch including mmc in the initial
+> commit ?
+I imagine that a messy approach. Especially if I'm supposed to refactor
+the patchset into a new one...
+
+cheers
+--nextPart5341094.LaRy0sOPBI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iEYEABECAAYFAlKuwi8ACgkQAeZw77btGjqV4gCdG0t15fd7mckR9+MnhrFAcFCl
+ZQIAn0PUy6PeynkdEsQ9WKvTElBxhCOR
+=oofX
+-----END PGP SIGNATURE-----
+
+--nextPart5341094.LaRy0sOPBI--
