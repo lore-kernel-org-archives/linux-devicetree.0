@@ -1,156 +1,90 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH v6 08/15] usb: phy-mxs: Add implementation of
- nofity_suspend and notify_resume
-Date: Mon, 16 Dec 2013 09:12:05 +0800
-Message-ID: <20131216011204.GA14183@shlinux1.ap.freescale.net>
-References: <1386897825-6130-1-git-send-email-peter.chen@freescale.com>
- <1386897825-6130-9-git-send-email-peter.chen@freescale.com>
- <20131213043236.GH867@saruman.home>
- <CAL411-rEJN_AkmJEooVB+45qDE8n8CGNq-ODUKMhfPyuQ5fPwA@mail.gmail.com>
- <20131213200924.GI5292@saruman.home>
+From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv6 1/5] mmc: dw_mmc: Add support to set the SDR and DDR
+ timing through clock framework
+Date: Sun, 15 Dec 2013 21:24:40 -0600
+Message-ID: <52AE7278.1080506@gmail.com>
+References: <1386880245-10192-1-git-send-email-dinguyen@altera.com> <1386880245-10192-2-git-send-email-dinguyen@altera.com> <52AD0E7A.50208@linaro.org> <52AD1F17.5040708@gmail.com> <52AD320A.4030502@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20131213200924.GI5292@saruman.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Marek =?utf-8?B?VmHFoXV0?= <marex@denx.de>, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, grant.likely@linaro.org, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, Peter Chen <hzpeterchen@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52AD320A.4030502-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, bzhao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 13, 2013 at 02:09:24PM -0600, Felipe Balbi wrote:
-> On Fri, Dec 13, 2013 at 02:31:42PM +0800, Peter Chen wrote:
-> > On Fri, Dec 13, 2013 at 12:32 PM, Felipe Balbi <balbi@ti.com> wrote:
-> > > On Fri, Dec 13, 2013 at 09:23:38AM +0800, Peter Chen wrote:
-> > >> Implementation of notify_suspend and notify_resume will be different
-> > >> according to mxs_phy_data->flags.
-> > >>
-> > >> Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> > >> ---
-> > >>  drivers/usb/phy/phy-mxs-usb.c |   55 ++++++++++++++++++++++++++++++++++++++---
-> > >>  1 files changed, 51 insertions(+), 4 deletions(-)
-> > >>
-> > >> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-> > >> index 0ef930a..e3df53f 100644
-> > >> --- a/drivers/usb/phy/phy-mxs-usb.c
-> > >> +++ b/drivers/usb/phy/phy-mxs-usb.c
-> > >> @@ -166,8 +166,8 @@ static int mxs_phy_suspend(struct usb_phy *x, int suspend)
-> > >>  static int mxs_phy_on_connect(struct usb_phy *phy,
-> > >>               enum usb_device_speed speed)
-> > >>  {
-> > >> -     dev_dbg(phy->dev, "%s speed device has connected\n",
-> > >> -             (speed == USB_SPEED_HIGH) ? "high" : "non-high");
-> > >> +     dev_dbg(phy->dev, "%s device has connected\n",
-> > >> +             (speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
-> > >
-> > > unrelated.
-> > >
-> > >> @@ -179,8 +179,8 @@ static int mxs_phy_on_connect(struct usb_phy *phy,
-> > >>  static int mxs_phy_on_disconnect(struct usb_phy *phy,
-> > >>               enum usb_device_speed speed)
-> > >>  {
-> > >> -     dev_dbg(phy->dev, "%s speed device has disconnected\n",
-> > >> -             (speed == USB_SPEED_HIGH) ? "high" : "non-high");
-> > >> +     dev_dbg(phy->dev, "%s device has disconnected\n",
-> > >> +             (speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
-> > >
-> > > unrelated.
-> > >
-> > 
-> > Marek suggested using that string, I will added it at another patch.
-> > 
-> > >> @@ -189,6 +189,48 @@ static int mxs_phy_on_disconnect(struct usb_phy *phy,
-> > >>       return 0;
-> > >>  }
-> > >>
-> > >> +static int mxs_phy_on_suspend(struct usb_phy *phy,
-> > >> +             enum usb_device_speed speed)
-> > >> +{
-> > >> +     struct mxs_phy *mxs_phy = to_mxs_phy(phy);
-> > >> +
-> > >> +     dev_dbg(phy->dev, "%s device has suspended\n",
-> > >> +             (speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
-> > >> +
-> > >> +     /* delay 4ms to wait bus entering idle */
-> > >> +     usleep_range(4000, 5000);
-> > >> +
-> > >> +     if (mxs_phy->data->flags & MXS_PHY_ABNORMAL_IN_SUSPEND) {
-> > >> +             writel_relaxed(0xffffffff, phy->io_priv + HW_USBPHY_PWD);
-> > >> +             writel_relaxed(0, phy->io_priv + HW_USBPHY_PWD);
-> > >> +     }
-> > >> +
-> > >> +     if (speed == USB_SPEED_HIGH)
-> > >> +             writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
-> > >> +                             phy->io_priv + HW_USBPHY_CTRL_CLR);
-> > >
-> > > why only on HS ? So if !HS and !ABNORMAL, this is no-op.
-> > >
-> > >> +static int mxs_phy_on_resume(struct usb_phy *phy,
-> > >> +             enum usb_device_speed speed)
-> > >> +{
-> > >> +     dev_dbg(phy->dev, "%s device has resumed\n",
-> > >> +             (speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
-> > >> +
-> > >> +     if (speed == USB_SPEED_HIGH) {
-> > >> +             /* Make sure the device has switched to High-Speed mode */
-> > >> +             udelay(500);
-> > >> +             writel_relaxed(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
-> > >> +                             phy->io_priv + HW_USBPHY_CTRL_SET);
-> > >> +     }
-> > >
-> > > likewise, if !HS it's a no-op.
-> > >
-> > 
-> > Correct,  this operation is only needed for HS.
-> > 
-> > >> @@ -235,6 +277,11 @@ static int mxs_phy_probe(struct platform_device *pdev)
-> > >>
-> > >>       platform_set_drvdata(pdev, mxs_phy);
-> > >>
-> > >> +     if (mxs_phy->data->flags & MXS_PHY_SENDING_SOF_TOO_FAST) {
-> > >> +             mxs_phy->phy.notify_suspend = mxs_phy_on_suspend;
-> > >> +             mxs_phy->phy.notify_resume = mxs_phy_on_resume;
-> > >> +     }
-> > >
-> > > hmm, and seems like you only need notify_* on a buggy device. Sorry
-> > > Peter but you don't have enough arguments to make me agree with this
-> > > (and previous) patch.
-> > >
-> > > You gotta find a better way to handle this using normal phy
-> > > suspend/resume calls.
-> > >
-> > 
-> > Like I explained at previous patch, it needs to be notified during
-> > ehci suspend/resume.
-> > I admit it is a SoC bug, but all SoCs have bugs, hmm.
-> > Software needs the solution to workaround it which breaks the standard USB spec.
-> 
-> Then I think what you need is a real notification mechanism. usbcore
-> already notifies about buses and devices being added and removed,
-> perhaps you can convince Greg to accept suspend/resume notifications.
-> 
-> With that, you can (conditionally) make this driver listen to usbcore
-> notifications. That'll be more work, but I guess it's best in the long
-> run as we won't need to keep on adding callbacks to the USB PHY
-> structure just because another buggy device showed up on the market.
-> 
 
-Okay, I will add this notification to .set_suspend now, it can work most of
-cases except disconnect during the resume signal.
+On 12/14/13 10:37 PM, zhangfei wrote:
+>
+>
+> On 12/15/2013 11:16 AM, Dinh Nguyen wrote:
+>> Hi Zhangfei,
+>>
+>>>> @@ -2478,6 +2480,27 @@ int dw_mci_probe(struct dw_mci *host)
+>>>>            dev_dbg(host->dev, "ciu clock not available\n");
+>>>>            host->bus_hz = host->pdata->bus_hz;
+>>>>        } else {
+>>>> +        /* If the CIU clk is available, we check for SDR and DDR
+>>>> +         * timing phase shift settings. But not all platforms
+>>>> +         * may have populated these settings, the driver will not
+>>>> fail
+>>>> +         * if these settings are not specified.
+>>>> +         */
+>>>> +        if (host->pdata->sdr_timing) {
+>>>> +            host->sdr_clk = devm_clk_get(host->dev, "sdr_mmc_clk");
+>>>> +            if (IS_ERR(host->sdr_clk))
+>>>> +                dev_dbg(host->dev, "sdr_mmc clock not available\n");
+>>>> +            else
+>>>> +                clk_set_rate(host->sdr_clk, host->pdata->sdr_timing);
+>>>> +        }
+>>>> +
+>>>> +        if (host->pdata->ddr_timing) {
+>>>> +            host->ddr_clk = devm_clk_get(host->dev, "ddr_mmc_clk");
+>>>> +            if (IS_ERR(host->ddr_clk))
+>>>> +                dev_dbg(host->dev, "ddr_mmc clock not available\n");
+>>>> +            else
+>>>> +                clk_set_rate(host->ddr_clk, host->pdata->ddr_timing);
+>>>> +        }
+>>>> +
+>>>
+>>> Just curious, does pdata->sdr_timing and pdata->ddr_timing are fixed,
+>>> fixed as each controller, or different with different board.
+>> Yes, they are fixed for each controller per SoC.
+>>> In case they are fixed, or fixed in each controller, and only required
+>>> to be set in probe only once, maybe they can be hide in
+>>> clk_mmc_ops.prepare
+>>> And the clock can be used as ciu_clock, or parent of ciu_clock, which
+>>> is called in dw_mmc.c, maybe these code can be ignored.
+>>>
+>> Please see v5 of this patch: https://patchwork.kernel.org/patch/3311121/
+>> The issue with V5 was that there is no way for the dw_mmc driver to pass
+>> the clock phase settings
+>> in the clk_mmc_ops.prepare function.
+>
+> Personally, I think v5 is simpler :)
+I agree...
+>
+> Could these fixed para be used as internal para when register.
+> Like
+> socfpga_gate_clk_init
+> rc = of_property_read_u32_array(node, "clk-gate", clk_gate, 2);
+>         compatible = "altr,socfpga-gate-clk";
+>     clocks = <&mainclk>;
+>     div-reg = <0x64 0 2>;
+>     clk-gate = <0x60 1>;
+> Could we also define mmc-ciu-clock with para clk-init.
+Hmm..this was one of Arnd's suggestion. Will this also work for you? If
+so then I think I can
+proceed down this path, as I think this should be the most direct and
+simplest.
 
-Besides notification API add, how about other patches, eg add .set_wakeup API?
-If you think there are no big problems, I will send v7 version.
+Thanks,
+Dinh
+>
+> Thanks
 
--- 
-
-Best Regards,
-Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
