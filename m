@@ -1,128 +1,50 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH 2/2] gpio: davinci: reuse for Keystone SoC
-Date: Mon, 16 Dec 2013 20:02:25 +0200
-Message-ID: <52AF4031.7000205@ti.com>
-References: <1386871973-26762-1-git-send-email-grygorii.strashko@ti.com> <1386871973-26762-3-git-send-email-grygorii.strashko@ti.com> <52AF2C87.1060700@ti.com>
+From: <dinguyen@altera.com>
+Subject: [RESEND LIST PATCHv7 0/4] socfpga: Enable SD/MMC support
+Date: Mon, 16 Dec 2013 11:04:32 -0600
+Message-ID: <1387213476-22122-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <52AF2C87.1060700@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <rob.herring@calxeda.com>, prabhakar.csengg@gmail.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinh.linux@gmail.com, arnd@arndb.de, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, mturquette@linaro.org
+Cc: zhangfei.gao@linaro.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/16/2013 06:38 PM, Santosh Shilimkar wrote:
-> On Thursday 12 December 2013 01:12 PM, Grygorii Strashko wrote:
->> The similar GPIO HW block is used by keystone SoCs as
->> in Davinci SoCs.
->> Hence, reuse Davinci GPIO driver for Keystone taking into
->> account that Keystone contains ARM GIC IRQ controller which
->> is implemented using IRQ Chip.
->>
->> Documentation:
->> 	http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
->>
->> CC: Linus Walleij <linus.walleij@linaro.org>
->> CC: Sekhar Nori <nsekhar@ti.com>
->> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> CC: devicetree@vger.kernel.org
->>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>   .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
->>   drivers/gpio/gpio-davinci.c                        |   49 +++++++++++++++-----
->>   2 files changed, 40 insertions(+), 13 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> index a2e839d..4ce9862 100644
->> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> @@ -1,7 +1,7 @@
->> -Davinci GPIO controller bindings
->> +Davinci/Keystone GPIO controller bindings
->>
->>   Required Properties:
->> -- compatible: should be "ti,dm6441-gpio"
->> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
->>
->>   - reg: Physical base address of the controller and the size of memory mapped
->>          registers.
->> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
->> index 73f65ca..3e44e0c 100644
->> --- a/drivers/gpio/gpio-davinci.c
->> +++ b/drivers/gpio/gpio-davinci.c
->> @@ -413,6 +413,27 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
->>   	.xlate = irq_domain_xlate_onetwocell,
->>   };
->>
->> +static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
->> +{
->> +	static struct irq_chip_type gpio_unbanked;
->> +
->> +	gpio_unbanked = *container_of(irq_get_chip(irq),
->> +				      struct irq_chip_type, chip);
->> +
->> +	return &gpio_unbanked.chip;
->> +};
->> +
->> +static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
->> +{
->> +	static struct irq_chip gpio_unbanked;
->> +
->> +	gpio_unbanked = *irq_get_chip(irq);
->> +	pr_err("keystone_gpio_get_irq_chip\n");
->> +	return &gpio_unbanked;
->> +};
->> +
->> +static const struct of_device_id davinci_gpio_ids[];
->> +
->>   /*
->>    * NOTE:  for suspend/resume, probably best to make a platform_device with
->>    * suspend_late/resume_resume calls hooking into results of the set_wake()
->> @@ -433,6 +454,15 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>   	struct davinci_gpio_platform_data *pdata = dev->platform_data;
->>   	struct davinci_gpio_regs __iomem *g;
->>   	struct irq_domain	*irq_domain = NULL;
->> +	const struct of_device_id *match;
->> +	struct irq_chip *irq_chip;
->> +	struct irq_chip *(*gpio_get_irq_chip)(unsigned int irq);
->> +
->> +	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
->> +	match = of_match_device(of_match_ptr(davinci_gpio_ids),
->> +				dev);
->> +	if (match)
->> +		gpio_get_irq_chip = match->data;
-> and if the DT node is not populated ?
->>
->>   	ngpio = pdata->ngpio;
->>   	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
->> @@ -442,7 +472,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>   	}
->>
->>   	bank_irq = res->start;
->> -
-> stray change..
->
->>   	if (!bank_irq) {
->>   		dev_err(dev, "Invalid IRQ resource\n");
->>   		return -ENODEV;
->> @@ -484,25 +513,22 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>   	}
->>
->>   	/*
->> -	 * AINTC can handle direct/unbanked IRQs for GPIOs, with the GPIO
->> +	 * INTC can handle direct/unbanked IRQs for GPIOs, with the GPIO
-> So you want to have a generic name here. If you are changing it, change it
-> across the driver in a separate patch or leave it as is...
-> I don't think it matters much..
+From: Dinh Nguyen <dinguyen@altera.com>
 
-Uh. Ok. I'll drop renaming.
+RESEND: Apologies, re-send with CC to all the appropriate lists.
+
+Hi,
+
+This is v7 of the patch series to enable SD/MMC on the SOCFPGA platform.
+
+V7 differences from V6:
+
+* Add a new clock binding property clk-phase. This property is used to
+  represent the 2 clock phase values that is needed for the SD/MMC driver.
+
+Thanks,
 
 
->
-> With those comments addressed, you can add my ack.
-> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->
+Dinh Nguyen (4):
+  clk: socfpga: Add a clk-phase property to the "altr,socfpga-gate-clk"
+  dts: socfpga: Add support for SD/MMC on the SOCFPGA platform
+  mmc: dw_mmc-socfpga: Remove the SOCFPGA specific platform for dw_mmc
+  ARM: socfpga_defconfig: enable SD/MMC support
+
+ .../devicetree/bindings/clock/altr_socfpga.txt     |   14 ++
+ arch/arm/boot/dts/socfpga.dtsi                     |   14 +-
+ arch/arm/boot/dts/socfpga_arria5.dtsi              |   11 ++
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi            |   11 ++
+ arch/arm/boot/dts/socfpga_vt.dts                   |   11 ++
+ arch/arm/configs/socfpga_defconfig                 |    2 +
+ drivers/clk/socfpga/clk.c                          |   37 ++++++
+ drivers/mmc/host/Kconfig                           |    8 --
+ drivers/mmc/host/dw_mmc-socfpga.c                  |  138 --------------------
+ 9 files changed, 99 insertions(+), 147 deletions(-)
+ delete mode 100644 drivers/mmc/host/dw_mmc-socfpga.c
+
+-- 
+1.7.9.5
+
 
