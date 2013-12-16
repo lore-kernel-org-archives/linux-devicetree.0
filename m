@@ -1,501 +1,363 @@
-From: Igor Grinberg <grinberg@compulab.co.il>
-Subject: Re: [PATCH] ARM: dts: Add support for sbc-3xxx with cm-t3730
-Date: Mon, 16 Dec 2013 15:55:38 +0200
-Message-ID: <52AF065A.4010205@compulab.co.il>
-References: <1386962541-18498-1-git-send-email-tony@atomide.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCHv2 01/27] ARM: OMAP: remove DSS DT hack
+Date: Mon, 16 Dec 2013 16:56:08 +0200
+Message-ID: <1387205794-32246-2-git-send-email-tomi.valkeinen@ti.com>
+References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1386962541-18498-1-git-send-email-tony@atomide.com>
+In-Reply-To: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Dmitry Lifshitz <lifshitz@compulab.co.il>
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+As a temporary solution to enable DSS for selected boards when booting
+with DT, a hack was added to board-generic.c in
+63d5fc0c2f748e20f38a0a0ec1c8494bddf5c288 (OMAP: board-generic: enable
+DSS for panda & sdp boards).
 
-On 12/13/13 21:22, Tony Lindgren wrote:
-> This adds support for CompuLab SBC-T3530, also known as cm-t3730:
-> 
-> http://compulab.co.il/products/sbcs/sbc-t3530/
-> 
-> It seems that with the sbc-3xxx mainboard is also used on
-> SBC-T3517 and SBC-T3730 with just a different CPU module:
-> 
-> http://compulab.co.il/products/sbcs/sbc-t3517/
-> http://compulab.co.il/products/sbcs/sbc-t3730/
-> 
-> So let's add a common omap3-sb-t35.dtsi and then separate SoC
-> specific omap3-sbc-t3730.dts, omap3-sbc-t3530.dts and
-> omap3-sbc-t3517.dts.
-> 
-> I've tested this with SBC-T3730 as that's the only one I have.
-> At least serial, both Ethernet controllers, MMC, and wl12xx WLAN
-> work.
-> 
-> Note that WLAN seems to be different for SBC-T3530.
+We're now adding proper DT support, so the hack can be removed.
 
-Yes, it is Marvell 8686 chipset using the libertas driver.
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ arch/arm/mach-omap2/Makefile       |   2 +-
+ arch/arm/mach-omap2/dss-common.c   | 259 -------------------------------------
+ arch/arm/mach-omap2/dss-common.h   |  13 --
+ arch/arm/mach-omap2/pdata-quirks.c |   4 -
+ 4 files changed, 1 insertion(+), 277 deletions(-)
+ delete mode 100644 arch/arm/mach-omap2/dss-common.c
+ delete mode 100644 arch/arm/mach-omap2/dss-common.h
 
-> And SBC-T3517
-> may need some changes for the EMAC Ethernet if that's used
-> instead of the smsc911x.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Igor Grinberg <grinberg@compulab.co.il>
-> Cc: Mike Rapoport <mike@compulab.co.il>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-
-Great job!
-I'm sorry I couldn't make it in time with the conversion... :-(
-
-> ---
->  arch/arm/boot/dts/Makefile            |   3 +
->  arch/arm/boot/dts/omap3-sb-t35.dtsi   | 135 ++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/omap3-sbc-t3517.dts |  18 +++++
->  arch/arm/boot/dts/omap3-sbc-t3530.dts |  18 +++++
->  arch/arm/boot/dts/omap3-sbc-t3730.dts | 130 ++++++++++++++++++++++++++++++++
->  arch/arm/mach-omap2/pdata-quirks.c    |   7 ++
->  6 files changed, 311 insertions(+)
->  create mode 100644 arch/arm/boot/dts/omap3-sb-t35.dtsi
->  create mode 100644 arch/arm/boot/dts/omap3-sbc-t3517.dts
->  create mode 100644 arch/arm/boot/dts/omap3-sbc-t3530.dts
->  create mode 100644 arch/arm/boot/dts/omap3-sbc-t3730.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index fc37bca..41370d2 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -179,6 +179,9 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
->  	omap2420-n810-wimax.dtb \
->  	omap3430-sdp.dtb \
->  	omap3-beagle.dtb \
-> +	omap3-sbc-t3530.dtb \
-> +	omap3-sbc-t3730.dtb \
-> +	omap3-sbc-t3517.dtb \
->  	omap3-devkit8000.dtb \
->  	omap3-beagle-xm.dtb \
->  	omap3-evm.dtb \
-> diff --git a/arch/arm/boot/dts/omap3-sb-t35.dtsi b/arch/arm/boot/dts/omap3-sb-t35.dtsi
-> new file mode 100644
-> index 0000000..fc676c5
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-sb-t35.dtsi
-> @@ -0,0 +1,135 @@
-> +/*
-> + * Common support for CompuLab SB-T35 used on SBC-T3530, SBC-T3517 and SBC-T3730
-> + */
-> +
-> +/ {
-> +	aliases {
-> +		ethernet0 = &smsc1;
-> +		ethernet1 = &smsc2;
-> +	};
-
-SB-T35 has only one SMSC Ethernet on-board (smsc2),
-while the first one is on the cm-t3530 and cm-t3730 modules.
-SBC-T3517 has only one _SMSC_ Ethernet and it is on the SB-T35 base board.
-cm-t3517 has EMAC Ethernet on-board instead of the SMSC.
-
-There is also another base board - CB-T3, which turns into
-EM-T3530 and EM-T3730 once you plug the cm-t3530 or cm-t3730 into CB-T3.
-
-http://compulab.co.il/products/handheld-computers/em-t3730/
-http://compulab.co.il/products/handheld-computers/em-t3530/
-
-The CB-T3 base board does not have any Ethernet controllers on it,
-so the EM-T3x systems have only one Ethernet controller - the one on the
-CPU board - SMSC.
-
-This makes it four boards:
-sb-t35 - base board has only one Ethernet controller (SMSC)
-cb-t3 - base board has no Ethernet controllers
-cm-t3530 - CPU board (plugged into sb-t35) has only one Ethernet controller (SMSC)
-cm-t3730 - CPU board (plugged into sb-t35) has only one Ethernet controller (SMSC)
-cm-t3537 - CPU board (plugged into sb-t35) has only one Ethernet controller (EMAC)
-
-The SBC-Txxx and EM-Txxx- means both boards connected (base board with CPU board).
-
-> +
-> +	cpus {
-> +		cpu@0 {
-> +			cpu0-supply = <&vcc>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		ledb {
-> +			label = "cm-t35:green";
-> +			gpios = <&gpio6 26 GPIO_ACTIVE_HIGH>;  /* gpio186 */
-> +			linux,default-trigger = "heartbeat";
-
-Although all CPU boards have the same GPIO routed to the heartbeat LED,
-this property is related to the CPU board and not to the base (mother) board.
-The same GPIO is used intensionally for s/w simplicity.
-If we are about to save code duplication, I'd like to have a common
-to CPU boards file, say omap3-cm-t3x.dtsi - that way it will better reflect
-the actual hardware.
-
-> +		};
-> +	};
-> +
-> +	vddvario: regulator-vddvario {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vddvario";
-> +		regulator-always-on;
-> +	};
-> +
-> +	vdd33a: regulator-vdd33a {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vdd33a";
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&gpmc {
-> +	ranges = <5 0 0x2c000000 0x01000000>,
-> +		 <4 0 0x2d000000 0x01000000>;
-> +
-> +	smsc1: ethernet@5,0 {
-> +		compatible = "smsc,lan9221", "smsc,lan9115";
-> +		interrupt-parent = <&gpio6>;
-> +		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-> +		reg = <5 0 0xff>;
-> +		bank-width = <2>;
-> +		gpmc,mux-add-data;
-> +		gpmc,cs-on-ns = <0>;
-> +		gpmc,cs-rd-off-ns = <186>;
-> +		gpmc,cs-wr-off-ns = <186>;
-> +		gpmc,adv-on-ns = <12>;
-> +		gpmc,adv-rd-off-ns = <48>;
-> +		gpmc,adv-wr-off-ns = <48>;
-> +		gpmc,oe-on-ns = <54>;
-> +		gpmc,oe-off-ns = <168>;
-> +		gpmc,we-on-ns = <54>;
-> +		gpmc,we-off-ns = <168>;
-> +		gpmc,rd-cycle-ns = <186>;
-> +		gpmc,wr-cycle-ns = <186>;
-> +		gpmc,access-ns = <114>;
-> +		gpmc,page-burst-access-ns = <6>;
-> +		gpmc,bus-turnaround-ns = <12>;
-> +		gpmc,cycle2cycle-delay-ns = <18>;
-> +		gpmc,wr-data-mux-bus-ns = <90>;
-> +		gpmc,wr-access-ns = <186>;
-> +		gpmc,cycle2cycle-samecsen;
-> +		gpmc,cycle2cycle-diffcsen;
-> +		vddvario-supply = <&vddvario>;
-> +		vdd33a-supply = <&vdd33a>;
-> +		reg-io-width = <4>;
-> +		smsc,save-mac-address;
-> +	};
-
-This one also should be a part of CPU board file or the common file.
-
-> +
-> +	smsc2: ethernet@4,0 {
-> +		compatible = "smsc,lan9221", "smsc,lan9115";
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
-> +		reg = <4 0 0xff>;
-> +		bank-width = <2>;
-> +		gpmc,mux-add-data;
-> +		gpmc,cs-on-ns = <0>;
-> +		gpmc,cs-rd-off-ns = <186>;
-> +		gpmc,cs-wr-off-ns = <186>;
-> +		gpmc,adv-on-ns = <12>;
-> +		gpmc,adv-rd-off-ns = <48>;
-> +		gpmc,adv-wr-off-ns = <48>;
-> +		gpmc,oe-on-ns = <54>;
-> +		gpmc,oe-off-ns = <168>;
-> +		gpmc,we-on-ns = <54>;
-> +		gpmc,we-off-ns = <168>;
-> +		gpmc,rd-cycle-ns = <186>;
-> +		gpmc,wr-cycle-ns = <186>;
-> +		gpmc,access-ns = <114>;
-> +		gpmc,page-burst-access-ns = <6>;
-> +		gpmc,bus-turnaround-ns = <12>;
-> +		gpmc,cycle2cycle-delay-ns = <18>;
-> +		gpmc,wr-data-mux-bus-ns = <90>;
-> +		gpmc,wr-access-ns = <186>;
-> +		gpmc,cycle2cycle-samecsen;
-> +		gpmc,cycle2cycle-diffcsen;
-> +		vddvario-supply = <&vddvario>;
-> +		vdd33a-supply = <&vdd33a>;
-> +		reg-io-width = <4>;
-> +		smsc,save-mac-address;
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency = <2600000>;
-> +
-> +	twl: twl@48 {
-> +		reg = <0x48>;
-> +		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-> +		interrupt-parent = <&intc>;
-> +	};
-> +};
-
-This one should be a part of the common file.
-
-> +
-> +#include "twl4030.dtsi"
-> +#include "twl4030_omap3.dtsi"
-> +
-> +&i2c3 {
-> +	clock-frequency = <400000>;
-> +};
-> +
-> +&mmc1 {
-> +	vmmc-supply = <&vmmc1>;
-> +	vmmc_aux-supply = <&vsim>;
-
-Is it essential to always provide vmmc_aux-supply property?
-In fact, the TPS65930 does not have the VSIM supply...
-It is a mistake in the upstream board file.
-I fixed this locally a while ago, but haven't submitted upstream...
-So we should either leave this property unpopulated (if we can...) or
-provide a fixed regulator to populate it.
-
-> +	bus-width = <8>;
-
-I'm not sure what this property should reflect.
-Both cm-t3530 and cm-t3730 use 4 bit MMC1 bus.
-
-> +};
-> +
-> +&twl_gpio {
-> +	ti,use-leds;
-> +};
-> diff --git a/arch/arm/boot/dts/omap3-sbc-t3517.dts b/arch/arm/boot/dts/omap3-sbc-t3517.dts
-> new file mode 100644
-> index 0000000..2df885b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-sbc-t3517.dts
-> @@ -0,0 +1,18 @@
-> +/*
-> + * Suppport for CompuLab SBC-T3517 with CM-T3517
-> + */
-> +/dts-v1/;
-> +
-> +#include "am3517.dtsi"
-> +#include "omap3-sb-t35.dtsi"
-> +
-> +
-> +/ {
-> +	model = "CompuLab SBC-T3517 with CM-T3517";
-> +	compatible = "compulab,omap3-sbc-t3517", "ti,am3517", "ti,omap3";
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x10000000>; /* 256 MB */
-
-Can we support multiple memory sizes through static DT, or
-the only way is to update this property in the bootloader?
-
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/omap3-sbc-t3530.dts b/arch/arm/boot/dts/omap3-sbc-t3530.dts
-> new file mode 100644
-> index 0000000..5156147
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-sbc-t3530.dts
-> @@ -0,0 +1,18 @@
-> +/*
-> + * Suppport for CompuLab SBC-T3530 with CM-T3530
-> + */
-> +/dts-v1/;
-> +
-> +#include "omap34xx.dtsi"
-> +#include "omap3-sb-t35.dtsi"
-> +
-> +
-> +/ {
-> +	model = "CompuLab SBC-T3530 with CM-T3530";
-> +	compatible = "compulab,omap3-sbc-t3530", "ti,omap34xx", "ti,omap3";
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x10000000>; /* 256 MB */
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/omap3-sbc-t3730.dts b/arch/arm/boot/dts/omap3-sbc-t3730.dts
-> new file mode 100644
-> index 0000000..836f742
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-sbc-t3730.dts
-> @@ -0,0 +1,130 @@
-> +/*
-> + * Suppport for CompuLab SBC-T3730 with CM-T3730
-> + */
-> +/dts-v1/;
-> +
-> +#include "omap36xx.dtsi"
-> +#include "omap3-sb-t35.dtsi"
-> +
-> +
-> +/ {
-> +	model = "CompuLab SBC-T3730 with CM-T3730";
-> +	compatible = "compulab,omap3-sbc-t3730", "ti,omap36xx", "ti,omap3";
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x10000000>; /* 256 MB */
-> +	};
-> +
-> +	wl12xx_vmmc2: wl12xx_vmmc2 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vw1271";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&wl12xx_gpio>;
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		gpio = <&gpio3 9 GPIO_ACTIVE_HIGH>;   /* gpio73 */
-> +		startup-delay-us = <20000>;
-> +		enable-active-high;
-> +	};
-> +
-> +	wl12xx_vaux2: wl12xx_vaux2 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vwl1271_vaux2";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		gpio = <&twl_gpio 2 GPIO_ACTIVE_HIGH>;
-> +		startup-delay-us = <70000>;
-> +		enable-active-high;
-> +		vin-supply = <&vaux2>;
-> +	};
-> +};
-> +
-> +&omap3_pmx_core {
-> +	mmc1_pins: pinmux_mmc1_pins {
-> +		pinctrl-single,pins = <
-> +			0x114 (PIN_OUTPUT_PULLUP | MUX_MODE0)	/* sdmmc1_clk.sdmmc1_clk */
-> +			0x116 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc1_cmd.sdmmc1_cmd */
-> +			0x118 (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc1_dat0.sdmmc1_dat0 */
-> +			0x11a (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc1_dat1.sdmmc1_dat1 */
-> +			0x11c (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc1_dat2.sdmmc1_dat2 */
-> +			0x11e (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc1_dat3.sdmmc1_dat3 */
-> +			0x120 (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc1_dat4.sdmmc1_dat4 */
-> +			0x122 (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc1_dat5.sdmmc1_dat5 */
-> +			0x124 (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc1_dat6.sdmmc1_dat6 */
-> +			0x126 (PIN_INPUT_PULLUP | MUX_MODE0) 	/* sdmmc1_dat7.sdmmc1_dat7 */
-
-The dat{4,5,6,7} pins are not used either on cm-t3530, or cm-t3730.
-
-> +		>;
-> +	};
-> +
-> +	mmc2_pins: pinmux_mmc2_pins {
-> +		pinctrl-single,pins = <
-> +			0x128 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_clk.sdmmc2_clk */
-> +			0x12a (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_cmd.sdmmc2_cmd */
-> +			0x12c (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat0.sdmmc2_dat0 */
-> +			0x12e (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat1.sdmmc2_dat1 */
-> +			0x130 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat2.sdmmc2_dat2 */
-> +			0x132 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat3.sdmmc2_dat3 */
-
-Here the following is missing:
-0x134 (PIN_OUTPUT | MUX_MODE1)	/* sdmmc2_dat4.sdmmc2_dir_dat0 */
-
-> +			0x136 (PIN_OUTPUT | MUX_MODE1)		/* sdmmc2_dat5.sdmmc2_dir_dat1 */
-> +			0x138 (PIN_OUTPUT | MUX_MODE1)		/* sdmmc2_dat6.sdmmc2_dir_cmd */
-> +			0x13a (PIN_INPUT | MUX_MODE1)		/* sdmmc2_dat7.sdmmc2_clkin */
-
-All four above pins (dat{4,5,6,7}) should be muxed only on cm-t3530.
-cm-t3730 uses the sdmmc2_dat4 (gpio136) for wl12xx irq,
-and does nor use the rest (dat{5,6,7}) at all.
-
-> +		>;
-> +	};
-> +
-> +	smsc1_pins: pinmux_smsc1_pins {
-> +		pinctrl-single,pins = <
-> +			0x88 (PIN_OUTPUT | MUX_MODE0)		/* gpmc_ncs5.gpmc_ncs5 */
-> +			0x16a (PIN_INPUT_PULLUP | MUX_MODE4)	/* uart3_cts_rctx.gpio_163 */
-> +		>;
-> +	};
-> +
-> +	smsc2_pins: pinmux_smsc2_pins {
-> +		pinctrl-single,pins = <
-> +			0x86 (PIN_OUTPUT | MUX_MODE0)		/* gpmc_ncs4.gpmc_ncs4 */
-> +			0xa2 (PIN_INPUT_PULLUP | MUX_MODE4)	/* gpmc_wait3.gpio_65 */
-> +		>;
-> +	};
-> +
-> +	uart3_pins: pinmux_uart3_pins {
-> +		pinctrl-single,pins = <
-> +			0x16e (PIN_INPUT | MUX_MODE0)		/* uart3_rx_irrx.uart3_rx_irrx */
-> +			0x170 (PIN_OUTPUT | MUX_MODE0)		/* uart3_tx_irtx.uart3_tx_irtx */
-> +		>;
-> +	};
-> +
-> +	wl12xx_gpio: pinmux_wl12xx_gpio {
-> +		pinctrl-single,pins = <
-> +			0xb2 (PIN_OUTPUT | MUX_MODE4)		/* dss_data3.gpio_73 */
-> +			0x134 (PIN_INPUT | MUX_MODE4)		/* sdmmc2_dat4.gpio_136 */
-> +		>;
-> +	};
-> +};
-> +
-> +&mmc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc1_pins>;
-> +};
-> +
-> +&mmc2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc2_pins>;
-> +	vmmc-supply = <&wl12xx_vmmc2>;
-> +	vmmc_aux-supply = <&wl12xx_vaux2>;
-> +	non-removable;
-> +	bus-width = <4>;
-> +	cap-power-off-card;
-> +};
-> +
-> +&smsc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&smsc1_pins>;
-> +};
-> +
-> +&smsc2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&smsc2_pins>;
-> +};
-> +
-> +&uart3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart3_pins>;
-> +};
-> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-> index 78c6233..1a1bfc0 100644
-> --- a/arch/arm/mach-omap2/pdata-quirks.c
-> +++ b/arch/arm/mach-omap2/pdata-quirks.c
-> @@ -93,6 +93,12 @@ static void __init hsmmc2_internal_input_clk(void)
->  	omap_ctrl_writel(reg, OMAP343X_CONTROL_DEVCONF1);
->  }
->  
-> +static void __init omap3_sbc_t3730_legacy_init(void)
-> +{
-> +	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 136);
-> +	omap_ads7846_init(1, 57, 0, NULL);
-> +}
-> +
->  static void __init omap3_igep0020_legacy_init(void)
->  {
->  	omap3_igep2_display_init_of();
-> @@ -229,6 +235,7 @@ struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
->   */
->  static struct pdata_init pdata_quirks[] __initdata = {
->  #ifdef CONFIG_ARCH_OMAP3
-> +	{ "compulab,omap3-sbc-t3730", omap3_sbc_t3730_legacy_init, },
->  	{ "nokia,omap3-n900", hsmmc2_internal_input_clk, },
->  	{ "nokia,omap3-n9", hsmmc2_internal_input_clk, },
->  	{ "nokia,omap3-n950", hsmmc2_internal_input_clk, },
-> 
-
+diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+index adcef406ff0a..e81dbf202a6d 100644
+--- a/arch/arm/mach-omap2/Makefile
++++ b/arch/arm/mach-omap2/Makefile
+@@ -296,4 +296,4 @@ endif
+ emac-$(CONFIG_TI_DAVINCI_EMAC)		:= am35xx-emac.o
+ obj-y					+= $(emac-m) $(emac-y)
+ 
+-obj-y					+= common-board-devices.o twl-common.o dss-common.o
++obj-y					+= common-board-devices.o twl-common.o
+diff --git a/arch/arm/mach-omap2/dss-common.c b/arch/arm/mach-omap2/dss-common.c
+deleted file mode 100644
+index dadccc91488c..000000000000
+--- a/arch/arm/mach-omap2/dss-common.c
++++ /dev/null
+@@ -1,259 +0,0 @@
+-/*
+- * Copyright (C) 2012 Texas Instruments, Inc..
+- * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * version 2 as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+- */
+-
+-/*
+- * NOTE: this is a transitional file to help with DT adaptation.
+- * This file will be removed when DSS supports DT.
+- */
+-
+-#include <linux/kernel.h>
+-#include <linux/gpio.h>
+-#include <linux/platform_device.h>
+-
+-#include <video/omapdss.h>
+-#include <video/omap-panel-data.h>
+-
+-#include "soc.h"
+-#include "dss-common.h"
+-#include "mux.h"
+-
+-#define HDMI_GPIO_CT_CP_HPD 60 /* HPD mode enable/disable */
+-#define HDMI_GPIO_LS_OE 41 /* Level shifter for HDMI */
+-#define HDMI_GPIO_HPD  63 /* Hotplug detect */
+-
+-#define PANDA_DVI_TFP410_POWER_DOWN_GPIO	0
+-
+-/* DVI Connector */
+-static struct connector_dvi_platform_data omap4_panda_dvi_connector_pdata = {
+-	.name                   = "dvi",
+-	.source                 = "tfp410.0",
+-	.i2c_bus_num            = 2,
+-};
+-
+-static struct platform_device omap4_panda_dvi_connector_device = {
+-	.name                   = "connector-dvi",
+-	.id                     = 0,
+-	.dev.platform_data      = &omap4_panda_dvi_connector_pdata,
+-};
+-
+-/* TFP410 DPI-to-DVI chip */
+-static struct encoder_tfp410_platform_data omap4_panda_tfp410_pdata = {
+-	.name                   = "tfp410.0",
+-	.source                 = "dpi.0",
+-	.data_lines             = 24,
+-	.power_down_gpio        = PANDA_DVI_TFP410_POWER_DOWN_GPIO,
+-};
+-
+-static struct platform_device omap4_panda_tfp410_device = {
+-	.name                   = "tfp410",
+-	.id                     = 0,
+-	.dev.platform_data      = &omap4_panda_tfp410_pdata,
+-};
+-
+-/* HDMI Connector */
+-static struct connector_hdmi_platform_data omap4_panda_hdmi_connector_pdata = {
+-	.name                   = "hdmi",
+-	.source                 = "tpd12s015.0",
+-};
+-
+-static struct platform_device omap4_panda_hdmi_connector_device = {
+-	.name                   = "connector-hdmi",
+-	.id                     = 0,
+-	.dev.platform_data      = &omap4_panda_hdmi_connector_pdata,
+-};
+-
+-/* TPD12S015 HDMI ESD protection & level shifter chip */
+-static struct encoder_tpd12s015_platform_data omap4_panda_tpd_pdata = {
+-	.name                   = "tpd12s015.0",
+-	.source                 = "hdmi.0",
+-
+-	.ct_cp_hpd_gpio = HDMI_GPIO_CT_CP_HPD,
+-	.ls_oe_gpio = HDMI_GPIO_LS_OE,
+-	.hpd_gpio = HDMI_GPIO_HPD,
+-};
+-
+-static struct platform_device omap4_panda_tpd_device = {
+-	.name                   = "tpd12s015",
+-	.id                     = 0,
+-	.dev.platform_data      = &omap4_panda_tpd_pdata,
+-};
+-
+-static struct omap_dss_board_info omap4_panda_dss_data = {
+-	.default_display_name = "dvi",
+-};
+-
+-void __init omap4_panda_display_init_of(void)
+-{
+-	omap_display_init(&omap4_panda_dss_data);
+-
+-	platform_device_register(&omap4_panda_tfp410_device);
+-	platform_device_register(&omap4_panda_dvi_connector_device);
+-
+-	platform_device_register(&omap4_panda_tpd_device);
+-	platform_device_register(&omap4_panda_hdmi_connector_device);
+-}
+-
+-
+-/* OMAP4 Blaze display data */
+-
+-#define DISPLAY_SEL_GPIO	59	/* LCD2/PicoDLP switch */
+-#define DLP_POWER_ON_GPIO	40
+-
+-static struct panel_dsicm_platform_data dsi1_panel = {
+-	.name		= "lcd",
+-	.source		= "dsi.0",
+-	.reset_gpio	= 102,
+-	.use_ext_te	= false,
+-	.ext_te_gpio	= 101,
+-	.pin_config = {
+-		.num_pins	= 6,
+-		.pins		= { 0, 1, 2, 3, 4, 5 },
+-	},
+-};
+-
+-static struct platform_device sdp4430_lcd_device = {
+-	.name                   = "panel-dsi-cm",
+-	.id                     = 0,
+-	.dev.platform_data	= &dsi1_panel,
+-};
+-
+-static struct panel_dsicm_platform_data dsi2_panel = {
+-	.name		= "lcd2",
+-	.source		= "dsi.1",
+-	.reset_gpio	= 104,
+-	.use_ext_te	= false,
+-	.ext_te_gpio	= 103,
+-	.pin_config = {
+-		.num_pins	= 6,
+-		.pins		= { 0, 1, 2, 3, 4, 5 },
+-	},
+-};
+-
+-static struct platform_device sdp4430_lcd2_device = {
+-	.name                   = "panel-dsi-cm",
+-	.id                     = 1,
+-	.dev.platform_data	= &dsi2_panel,
+-};
+-
+-/* HDMI Connector */
+-static struct connector_hdmi_platform_data sdp4430_hdmi_connector_pdata = {
+-	.name                   = "hdmi",
+-	.source                 = "tpd12s015.0",
+-};
+-
+-static struct platform_device sdp4430_hdmi_connector_device = {
+-	.name                   = "connector-hdmi",
+-	.id                     = 0,
+-	.dev.platform_data      = &sdp4430_hdmi_connector_pdata,
+-};
+-
+-/* TPD12S015 HDMI ESD protection & level shifter chip */
+-static struct encoder_tpd12s015_platform_data sdp4430_tpd_pdata = {
+-	.name                   = "tpd12s015.0",
+-	.source                 = "hdmi.0",
+-
+-	.ct_cp_hpd_gpio = HDMI_GPIO_CT_CP_HPD,
+-	.ls_oe_gpio = HDMI_GPIO_LS_OE,
+-	.hpd_gpio = HDMI_GPIO_HPD,
+-};
+-
+-static struct platform_device sdp4430_tpd_device = {
+-	.name                   = "tpd12s015",
+-	.id                     = 0,
+-	.dev.platform_data      = &sdp4430_tpd_pdata,
+-};
+-
+-
+-static struct omap_dss_board_info sdp4430_dss_data = {
+-	.default_display_name = "lcd",
+-};
+-
+-/*
+- * we select LCD2 by default (instead of Pico DLP) by setting DISPLAY_SEL_GPIO.
+- * Setting DLP_POWER_ON gpio enables the VDLP_2V5 VDLP_1V8 and VDLP_1V0 rails
+- * used by picodlp on the 4430sdp platform. Keep this gpio disabled as LCD2 is
+- * selected by default
+- */
+-void __init omap_4430sdp_display_init_of(void)
+-{
+-	int r;
+-
+-	r = gpio_request_one(DISPLAY_SEL_GPIO, GPIOF_OUT_INIT_HIGH,
+-			"display_sel");
+-	if (r)
+-		pr_err("%s: Could not get display_sel GPIO\n", __func__);
+-
+-	r = gpio_request_one(DLP_POWER_ON_GPIO, GPIOF_OUT_INIT_LOW,
+-		"DLP POWER ON");
+-	if (r)
+-		pr_err("%s: Could not get DLP POWER ON GPIO\n", __func__);
+-
+-	omap_display_init(&sdp4430_dss_data);
+-
+-	platform_device_register(&sdp4430_lcd_device);
+-	platform_device_register(&sdp4430_lcd2_device);
+-
+-	platform_device_register(&sdp4430_tpd_device);
+-	platform_device_register(&sdp4430_hdmi_connector_device);
+-}
+-
+-
+-/* OMAP3 IGEPv2 data */
+-
+-#define IGEP2_DVI_TFP410_POWER_DOWN_GPIO	170
+-
+-/* DVI Connector */
+-static struct connector_dvi_platform_data omap3_igep2_dvi_connector_pdata = {
+-	.name                   = "dvi",
+-	.source                 = "tfp410.0",
+-	.i2c_bus_num            = 2,
+-};
+-
+-static struct platform_device omap3_igep2_dvi_connector_device = {
+-	.name                   = "connector-dvi",
+-	.id                     = 0,
+-	.dev.platform_data      = &omap3_igep2_dvi_connector_pdata,
+-};
+-
+-/* TFP410 DPI-to-DVI chip */
+-static struct encoder_tfp410_platform_data omap3_igep2_tfp410_pdata = {
+-	.name                   = "tfp410.0",
+-	.source                 = "dpi.0",
+-	.data_lines             = 24,
+-	.power_down_gpio        = IGEP2_DVI_TFP410_POWER_DOWN_GPIO,
+-};
+-
+-static struct platform_device omap3_igep2_tfp410_device = {
+-	.name                   = "tfp410",
+-	.id                     = 0,
+-	.dev.platform_data      = &omap3_igep2_tfp410_pdata,
+-};
+-
+-static struct omap_dss_board_info igep2_dss_data = {
+-	.default_display_name = "dvi",
+-};
+-
+-void __init omap3_igep2_display_init_of(void)
+-{
+-	omap_display_init(&igep2_dss_data);
+-
+-	platform_device_register(&omap3_igep2_tfp410_device);
+-	platform_device_register(&omap3_igep2_dvi_connector_device);
+-}
+diff --git a/arch/arm/mach-omap2/dss-common.h b/arch/arm/mach-omap2/dss-common.h
+deleted file mode 100644
+index a9becf0d5be8..000000000000
+--- a/arch/arm/mach-omap2/dss-common.h
++++ /dev/null
+@@ -1,13 +0,0 @@
+-#ifndef __OMAP_DSS_COMMON__
+-#define __OMAP_DSS_COMMON__
+-
+-/*
+- * NOTE: this is a transitional file to help with DT adaptation.
+- * This file will be removed when DSS supports DT.
+- */
+-
+-void __init omap4_panda_display_init_of(void);
+-void __init omap_4430sdp_display_init_of(void);
+-void __init omap3_igep2_display_init_of(void);
+-
+-#endif
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index 39f020c982e8..acc72a002316 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -18,7 +18,6 @@
+ 
+ #include "common.h"
+ #include "common-board-devices.h"
+-#include "dss-common.h"
+ #include "control.h"
+ 
+ struct pdata_init {
+@@ -80,7 +79,6 @@ static void __init hsmmc2_internal_input_clk(void)
+ 
+ static void __init omap3_igep0020_legacy_init(void)
+ {
+-	omap3_igep2_display_init_of();
+ }
+ 
+ static void __init omap3_evm_legacy_init(void)
+@@ -97,14 +95,12 @@ static void __init omap3_zoom_legacy_init(void)
+ #ifdef CONFIG_ARCH_OMAP4
+ static void __init omap4_sdp_legacy_init(void)
+ {
+-	omap_4430sdp_display_init_of();
+ 	legacy_init_wl12xx(WL12XX_REFCLOCK_26,
+ 			   WL12XX_TCXOCLOCK_26, 53);
+ }
+ 
+ static void __init omap4_panda_legacy_init(void)
+ {
+-	omap4_panda_display_init_of();
+ 	legacy_init_ehci_clk("auxclk3_ck");
+ 	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 53);
+ }
 -- 
-Regards,
-Igor.
+1.8.3.2
+
