@@ -1,43 +1,128 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v5] clk: si570: Add a driver for SI570 oscillators
-Date: Mon, 16 Dec 2013 09:03:02 -0800
-Message-ID: <3bfd63dd-6bf1-4ae9-aaab-b913f9739c19@DB8EHSMHS015.ehs.local>
-References: <1379806839-13762-1-git-send-email-soren.brinkmann@xilinx.com>
- <b625092b-682c-4072-85a6-9f9d7f378ec0@VA3EHSMHS043.ehs.local>
- <20131002231751.4343.81234@quantum>
- <52AC8857.8070504@roeck-us.net>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 2/2] gpio: davinci: reuse for Keystone SoC
+Date: Mon, 16 Dec 2013 20:02:25 +0200
+Message-ID: <52AF4031.7000205@ti.com>
+References: <1386871973-26762-1-git-send-email-grygorii.strashko@ti.com> <1386871973-26762-3-git-send-email-grygorii.strashko@ti.com> <52AF2C87.1060700@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52AC8857.8070504@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <52AF2C87.1060700@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <rob.herring@calxeda.com>, prabhakar.csengg@gmail.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenther, Mike,
+On 12/16/2013 06:38 PM, Santosh Shilimkar wrote:
+> On Thursday 12 December 2013 01:12 PM, Grygorii Strashko wrote:
+>> The similar GPIO HW block is used by keystone SoCs as
+>> in Davinci SoCs.
+>> Hence, reuse Davinci GPIO driver for Keystone taking into
+>> account that Keystone contains ARM GIC IRQ controller which
+>> is implemented using IRQ Chip.
+>>
+>> Documentation:
+>> 	http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
+>>
+>> CC: Linus Walleij <linus.walleij@linaro.org>
+>> CC: Sekhar Nori <nsekhar@ti.com>
+>> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>> CC: devicetree@vger.kernel.org
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> ---
+>>   .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
+>>   drivers/gpio/gpio-davinci.c                        |   49 +++++++++++++++-----
+>>   2 files changed, 40 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>> index a2e839d..4ce9862 100644
+>> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>> @@ -1,7 +1,7 @@
+>> -Davinci GPIO controller bindings
+>> +Davinci/Keystone GPIO controller bindings
+>>
+>>   Required Properties:
+>> -- compatible: should be "ti,dm6441-gpio"
+>> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+>>
+>>   - reg: Physical base address of the controller and the size of memory mapped
+>>          registers.
+>> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+>> index 73f65ca..3e44e0c 100644
+>> --- a/drivers/gpio/gpio-davinci.c
+>> +++ b/drivers/gpio/gpio-davinci.c
+>> @@ -413,6 +413,27 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
+>>   	.xlate = irq_domain_xlate_onetwocell,
+>>   };
+>>
+>> +static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
+>> +{
+>> +	static struct irq_chip_type gpio_unbanked;
+>> +
+>> +	gpio_unbanked = *container_of(irq_get_chip(irq),
+>> +				      struct irq_chip_type, chip);
+>> +
+>> +	return &gpio_unbanked.chip;
+>> +};
+>> +
+>> +static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
+>> +{
+>> +	static struct irq_chip gpio_unbanked;
+>> +
+>> +	gpio_unbanked = *irq_get_chip(irq);
+>> +	pr_err("keystone_gpio_get_irq_chip\n");
+>> +	return &gpio_unbanked;
+>> +};
+>> +
+>> +static const struct of_device_id davinci_gpio_ids[];
+>> +
+>>   /*
+>>    * NOTE:  for suspend/resume, probably best to make a platform_device with
+>>    * suspend_late/resume_resume calls hooking into results of the set_wake()
+>> @@ -433,6 +454,15 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>>   	struct davinci_gpio_platform_data *pdata = dev->platform_data;
+>>   	struct davinci_gpio_regs __iomem *g;
+>>   	struct irq_domain	*irq_domain = NULL;
+>> +	const struct of_device_id *match;
+>> +	struct irq_chip *irq_chip;
+>> +	struct irq_chip *(*gpio_get_irq_chip)(unsigned int irq);
+>> +
+>> +	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
+>> +	match = of_match_device(of_match_ptr(davinci_gpio_ids),
+>> +				dev);
+>> +	if (match)
+>> +		gpio_get_irq_chip = match->data;
+> and if the DT node is not populated ?
+>>
+>>   	ngpio = pdata->ngpio;
+>>   	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+>> @@ -442,7 +472,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>>   	}
+>>
+>>   	bank_irq = res->start;
+>> -
+> stray change..
+>
+>>   	if (!bank_irq) {
+>>   		dev_err(dev, "Invalid IRQ resource\n");
+>>   		return -ENODEV;
+>> @@ -484,25 +513,22 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>>   	}
+>>
+>>   	/*
+>> -	 * AINTC can handle direct/unbanked IRQs for GPIOs, with the GPIO
+>> +	 * INTC can handle direct/unbanked IRQs for GPIOs, with the GPIO
+> So you want to have a generic name here. If you are changing it, change it
+> across the driver in a separate patch or leave it as is...
+> I don't think it matters much..
 
-On Sat, Dec 14, 2013 at 08:33:27AM -0800, Guenter Roeck wrote:
-> On 10/02/2013 04:17 PM, Mike Turquette wrote:
-> >Quoting S=C3=B6ren Brinkmann (2013-10-02 10:20:38)
-> >>Hi Mike,
-> >>
-> >>could you please comment on this/apply it to clk-next?
-> >
-> >It looks good and is in the queue. Will show up in clk-next in a few
-> >days.
-> >
-> Hi Mike,
->=20
-> trying again ... what happened with this driver ? Any reason for not =
-pushing it after all ?
+Uh. Ok. I'll drop renaming.
 
-I've been waiting for it to appear in clk-next for a while too. I just
-fetched the repo and it's there.
-Thanks Guenter for following up and Mike for applying.
 
-	S=C3=B6ren
-
+>
+> With those comments addressed, you can add my ack.
+> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>
 
