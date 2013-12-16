@@ -1,83 +1,60 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH REPOST] rtc: honor device tree /alias entries when assigning IDs
-Date: Mon, 16 Dec 2013 10:42:07 -0700
-Message-ID: <1387215727-20493-1-git-send-email-swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/3] dtc: Keep type information from DTS
+Date: Mon, 16 Dec 2013 11:08:33 -0700
+Message-ID: <52AF41A1.3000508@wwwdotorg.org>
+References: <1386953352-25402-1-git-send-email-t.figa@samsung.com> <1386953352-25402-2-git-send-email-t.figa@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386953352-25402-2-git-send-email-t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 12/13/2013 09:49 AM, Tomasz Figa wrote:
+> Currently dtc loses information about data types when parsing DTS,
+> because it flattens all the parsed property data into a flat stream of
+> bytes. The only saved metadata is for references to other nodes inside
+> cell arrays. This makes it impossible to do any checks on data types on
+> livetree representation.
+> 
+> This patch makes dtc store type information inside data struct by using
+> marker infrastructure. A new type of marker is introduced that holds
+> type enum as its ref member. Such markers are then inserted wherever
+> data of given type starts, so information about type of each property
+> data section is preserved.
 
-Assign RTC device IDs based on device tree /aliases entries if present,
-falling back to the existing numbering scheme if there is no /aliases
-entry (which includes when the system isn't booted using DT), or there
-is a numbering conflict.
+> diff --git a/dtc-parser.y b/dtc-parser.y
 
-This is useful in systems with multiple RTC devices, to ensure that the
-best RTC device is selected as /dev/rtc0, which provides the overall
-system time.
+>  	| propdataprefix DT_REF
+>  		{
+> -			$$ = data_add_marker($1, REF_PATH, $2);
+> +			struct data d;
+> +			d = data_add_marker($1, TYPE, (char *)TYPE_STRING);
+> +			$$ = data_add_marker(d, REF_PATH, $2);
+>  		}
 
-For example, Tegra has an on-SoC RTC that is not battery backed,
-typically coupled with an off-SoC RTC that is battery backed. Only the
-latter is useful for populating the system time, yet the former is
-useful e.g. for wakeup timing, since the time is not lost when the
-system is sleeps.
+I guess here, the lexer does give us a string that's the target of the
+reference, so this is correct. However, I wonder if semantically we
+shouldn't call this a TYPE_REFERENCE, so we can distinguish between
+references and regular strings?
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-The 3 patches in this series are all independent; they can be applied
-to their respective subsystems in any order. I'm simply posting them as
-a series to make the use-case more obvious.
----
- drivers/rtc/class.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+> diff --git a/livetree.c b/livetree.c
 
-diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
-index 02426812bebc..7989b5d030cb 100644
---- a/drivers/rtc/class.c
-+++ b/drivers/rtc/class.c
-@@ -14,6 +14,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/rtc.h>
- #include <linux/kdev_t.h>
- #include <linux/idr.h>
-@@ -157,12 +158,25 @@ struct rtc_device *rtc_device_register(const char *name, struct device *dev,
- {
- 	struct rtc_device *rtc;
- 	struct rtc_wkalrm alrm;
--	int id, err;
-+	int of_id, id = -1, err;
-+
-+	if (dev->of_node) {
-+		of_id = of_alias_get_id(dev->of_node, "rtc");
-+		if (of_id >= 0) {
-+			id = ida_simple_get(&rtc_ida, of_id, of_id + 1,
-+					    GFP_KERNEL);
-+			if (id < 0)
-+				dev_warn(dev, "/aliases ID %d not available\n",
-+					 of_id);
-+		}
-+	}
- 
--	id = ida_simple_get(&rtc_ida, 0, 0, GFP_KERNEL);
- 	if (id < 0) {
--		err = id;
--		goto exit;
-+		id = ida_simple_get(&rtc_ida, 0, 0, GFP_KERNEL);
-+		if (id < 0) {
-+			err = id;
-+			goto exit;
-+		}
- 	}
- 
- 	rtc = kzalloc(sizeof(struct rtc_device), GFP_KERNEL);
--- 
-1.8.1.5
+> @@ -530,16 +530,24 @@ cell_t get_node_phandle(struct node *root, struct node *node)
+>  	node->phandle = phandle;
+>  
+>  	if (!get_property(node, "linux,phandle")
+> -	    && (phandle_format & PHANDLE_LEGACY))
+> +	    && (phandle_format & PHANDLE_LEGACY)) {
+> +		struct data d;
+> +
+> +		d = data_add_marker(empty_data, TYPE, (char *)TYPE_ARRAY_INT32);
+
+Similarly here, can we encode as e.g. TYPE_PHANDLE or something like
+that, so we keep the semantic information?
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
