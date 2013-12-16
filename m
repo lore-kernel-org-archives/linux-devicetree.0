@@ -1,73 +1,202 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] mfd: always assign of_node in mfd_add_device()
-Date: Mon, 16 Dec 2013 08:12:42 +0000
-Message-ID: <20131216081242.GD18769@lee--X1>
-References: <1386626809-6251-1-git-send-email-swarren@wwwdotorg.org>
- <20131211092435.GC16780@lee--X1>
- <52AB5FE2.5060803@wwwdotorg.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv10 10/41] CLK: TI: add support for clockdomain binding
+Date: Mon, 16 Dec 2013 10:13:08 +0200
+Message-ID: <52AEB614.3080705@ti.com>
+References: <1385453182-24421-1-git-send-email-t-kristo@ti.com> <1385453182-24421-11-git-send-email-t-kristo@ti.com> <20131215042303.23538.19248@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52AB5FE2.5060803-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131215042303.23538.19248@quantum>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Dec 2013, Stephen Warren wrote:
+On 12/15/2013 06:23 AM, Mike Turquette wrote:
+> Quoting Tero Kristo (2013-11-26 00:05:51)
+>> Some OMAP clocks require knowledge about their parent clockdomain for
+>> book keeping purposes. This patch creates a new DT binding for TI
+>> clockdomains, which act as a collection of device clocks.
+>>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   .../devicetree/bindings/clock/ti/clockdomain.txt   |   21 ++++++
+>>   arch/arm/mach-omap2/clock.h                        |    1 -
+>>   drivers/clk/ti/Makefile                            |    3 +-
+>>   drivers/clk/ti/clockdomain.c                       |   70 ++++++++++++++++++++
+>>   include/linux/clk/ti.h                             |    3 +
+>>   5 files changed, 96 insertions(+), 2 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/ti/clockdomain.txt
+>>   create mode 100644 drivers/clk/ti/clockdomain.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/ti/clockdomain.txt b/Documentation/devicetree/bindings/clock/ti/clockdomain.txt
+>> new file mode 100644
+>> index 0000000..45e6f7c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/ti/clockdomain.txt
+>> @@ -0,0 +1,21 @@
+>> +Binding for Texas Instruments clockdomain.
+>> +
+>> +Binding status: Unstable - ABI compatibility may be broken in the future
+>> +
+>> +This binding uses the common clock binding[1]. Every clock on
+>
+> The patch looks fine to me but I think that the binding description
+> should capture the fact that you are re-using the common clock binding
+> but that this binding definition does not define any new clocks or clock
+> controllers in the way that a typical clock binding would.
+>
+> This code uses the 'clocks' property the same way that any other
+> consumer binding definition would, such as an MMC controller or UART.
+> Those bindings do not say that they are based on the common clock
+> binding AFAIK.
+>
 
-> On 12/11/2013 02:24 AM, Lee Jones wrote:
-> >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>
-> >> mfd_add_device() assigns .of_node in the device objects it creates=
- only
-> >> if the mfd_cell for the device has the .of_compatible field set an=
-d the
-> >> DT node for the top-level MFD device contains a child whose compat=
-ible
-> >> property matches the cell's .of_compatible field.
-> >>
-> >> This leaves .of_node unset in many cases. When this happens, entri=
-es in
-> >> the DT /aliases property which refer to the top-level MFD DT node =
-will
-> >> never match the MFD child devices, hence causing the requested ali=
-as not
-> >> to be honored.
-> >>
-> >> Solve this by setting each MFD child device's .of_node equal to th=
-e top-
-> >> level MFD device's .of_node field in the cases where it would othe=
-rwise
-> >> remain unset.
-> >>
-> >> The first use-case for this will be aliases for the TPS6586x's RTC
-> >> device.
-> >>
-> >> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >>  drivers/mfd/mfd-core.c | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >=20
-> > I've tentatively applied this patch, but if it starts to cause more
-> > problems than it solves we'll have to endeavour to find a different
-> > solution.
->=20
-> Thanks. I don't see this in linux-next yet though, so it's not gettin=
-g
-> much testing. Did you forget to push your branch?
+Ok, will modify the doc accordingly.
 
-Pushed now, sorry for the delay.
+-Tero
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Regards,
+> Mike
+>
+>> +TI SoC belongs to one clockdomain, but software only needs this
+>> +information for specific clocks which require their parent
+>> +clockdomain to be controlled when the clock is enabled/disabled.
+>> +
+>> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +
+>> +Required properties:
+>> +- compatible : shall be "ti,clockdomain"
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- clocks : link phandles of clocks within this domain
+>> +
+>> +Examples:
+>> +       dss_clkdm: dss_clkdm {
+>> +               compatible = "ti,clockdomain";
+>> +               clocks = <&dss1_alwon_fck_3430es2>, <&dss_ick_3430es2>;
+>> +       };
+>> diff --git a/arch/arm/mach-omap2/clock.h b/arch/arm/mach-omap2/clock.h
+>> index bc0f9fc..6bd72b5 100644
+>> --- a/arch/arm/mach-omap2/clock.h
+>> +++ b/arch/arm/mach-omap2/clock.h
+>> @@ -38,7 +38,6 @@ struct omap_clk {
+>>          }
+>>
+>>   struct clockdomain;
+>> -#define to_clk_hw_omap(_hw) container_of(_hw, struct clk_hw_omap, hw)
+>>
+>>   #define DEFINE_STRUCT_CLK(_name, _parent_array_name, _clkops_name)     \
+>>          static struct clk _name = {                             \
+>> diff --git a/drivers/clk/ti/Makefile b/drivers/clk/ti/Makefile
+>> index 7cba389..67056fb 100644
+>> --- a/drivers/clk/ti/Makefile
+>> +++ b/drivers/clk/ti/Makefile
+>> @@ -1,4 +1,5 @@
+>>   ifneq ($(CONFIG_OF),)
+>>   obj-y                                  += clk.o dpll.o autoidle.o divider.o \
+>> -                                          fixed-factor.o gate.o composite.o
+>> +                                          fixed-factor.o gate.o clockdomain.o \
+>> +                                          composite.o
+>>   endif
+>> diff --git a/drivers/clk/ti/clockdomain.c b/drivers/clk/ti/clockdomain.c
+>> new file mode 100644
+>> index 0000000..f1e0038
+>> --- /dev/null
+>> +++ b/drivers/clk/ti/clockdomain.c
+>> @@ -0,0 +1,70 @@
+>> +/*
+>> + * OMAP clockdomain support
+>> + *
+>> + * Copyright (C) 2013 Texas Instruments, Inc.
+>> + *
+>> + * Tero Kristo <t-kristo@ti.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/clk/ti.h>
+>> +
+>> +#undef pr_fmt
+>> +#define pr_fmt(fmt) "%s: " fmt, __func__
+>> +
+>> +static void __init of_ti_clockdomain_setup(struct device_node *node)
+>> +{
+>> +       struct clk *clk;
+>> +       struct clk_hw *clk_hw;
+>> +       const char *clkdm_name = node->name;
+>> +       int i;
+>> +       int num_clks;
+>> +
+>> +       num_clks = of_count_phandle_with_args(node, "clocks", "#clock-cells");
+>> +
+>> +       for (i = 0; i < num_clks; i++) {
+>> +               clk = of_clk_get(node, i);
+>> +               if (__clk_get_flags(clk) & CLK_IS_BASIC) {
+>> +                       pr_warn("can't setup clkdm for basic clk %s\n",
+>> +                               __clk_get_name(clk));
+>> +                       continue;
+>> +               }
+>> +               clk_hw = __clk_get_hw(clk);
+>> +               to_clk_hw_omap(clk_hw)->clkdm_name = clkdm_name;
+>> +               omap2_init_clk_clkdm(clk_hw);
+>> +       }
+>> +}
+>> +
+>> +static struct of_device_id ti_clkdm_match_table[] __initdata = {
+>> +       { .compatible = "ti,clockdomain" },
+>> +       { }
+>> +};
+>> +
+>> +/**
+>> + * ti_dt_clockdomains_setup - setup device tree clockdomains
+>> + *
+>> + * Initializes clockdomain nodes for a SoC. This parses through all the
+>> + * nodes with compatible = "ti,clockdomain", and add the clockdomain
+>> + * info for all the clocks listed under these. This function shall be
+>> + * called after rest of the DT clock init has completed and all
+>> + * clock nodes have been registered.
+>> + */
+>> +void __init ti_dt_clockdomains_setup(void)
+>> +{
+>> +       struct device_node *np;
+>> +       for_each_matching_node(np, ti_clkdm_match_table) {
+>> +               of_ti_clockdomain_setup(np);
+>> +       }
+>> +}
+>> diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
+>> index 872ff2a..231b071 100644
+>> --- a/include/linux/clk/ti.h
+>> +++ b/include/linux/clk/ti.h
+>> @@ -204,6 +204,8 @@ struct clk_omap_reg {
+>>          u16 index;
+>>   };
+>>
+>> +#define to_clk_hw_omap(_hw) container_of(_hw, struct clk_hw_omap, hw)
+>> +
+>>   void omap2_init_clk_hw_omap_clocks(struct clk *clk);
+>>   int omap3_noncore_dpll_enable(struct clk_hw *hw);
+>>   void omap3_noncore_dpll_disable(struct clk_hw *hw);
+>> @@ -232,6 +234,7 @@ int omap2_dflt_clk_is_enabled(struct clk_hw *hw);
+>>   void __iomem *ti_clk_get_reg_addr(struct device_node *node, int index);
+>>   void ti_dt_clocks_register(struct ti_dt_clk *oclks);
+>>   void ti_dt_clk_init_provider(struct device_node *np, int index);
+>> +void ti_dt_clockdomains_setup(void);
+>>   int of_ti_clk_autoidle_setup(struct device_node *node);
+>>   int ti_clk_add_component(struct device_node *node, struct clk_hw *hw, int type);
+>>
+>> --
+>> 1.7.9.5
+>>
+
