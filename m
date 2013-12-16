@@ -1,64 +1,40 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH 3/4] arm: dts: keystone-evm: add LEDs supports
-Date: Mon, 16 Dec 2013 18:39:39 +0200
-Message-ID: <1387211981-26045-4-git-send-email-grygorii.strashko@ti.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 2/4] ARM: keystone_defconfig: enable gpio support
+Date: Mon, 16 Dec 2013 18:39:38 +0200
+Message-ID: <1387211981-26045-3-git-send-email-grygorii.strashko@ti.com>
 References: <1387211981-26045-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1387211981-26045-1-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1387211981-26045-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Keystone EVMK2HX supports 4 debug LEDs controlled by GPIO lines as
-following (active level is high);
+Enable enable GPIO support for Keystone by setting CONFIG_GPIOLIB and
+CONFIG_GPIO_DAVINCI options in keystone_defconfig.
 
-DBG_D1 green gpio12
-DBG_D1 red   gpio13
-DBG_D1 blue  gpio14
-DBG_D1 blue  gpio15
-
-For more information see schematics:
- http://wfcache.advantech.com/www/support/TI-EVM/download/Schematics/PDF/K2H_K2EVM-HK_SCH_A102_Rev1_0.pdf
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/k2hk-evm.dts |   23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/arm/configs/keystone_defconfig |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
-index 15b3a95..07bf1e9 100644
---- a/arch/arm/boot/dts/k2hk-evm.dts
-+++ b/arch/arm/boot/dts/k2hk-evm.dts
-@@ -52,4 +52,27 @@
- 			};
- 		};
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		debug1_1 {
-+			label = "keystone:green:debug1";
-+			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>; /* 12 */
-+		};
-+
-+		debug1_2 {
-+			label = "keystone:red:debug1";
-+			gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>; /* 13 */
-+		};
-+
-+		debug2 {
-+			label = "keystone:blue:debug2";
-+			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>; /* 14 */
-+		};
-+
-+		debug3 {
-+			label = "keystone:blue:debug3";
-+			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>; /* 15 */
-+		};
-+	};
- };
+diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
+index 9943e5d..e911f7f 100644
+--- a/arch/arm/configs/keystone_defconfig
++++ b/arch/arm/configs/keystone_defconfig
+@@ -158,3 +158,6 @@ CONFIG_CRYPTO_DES=y
+ CONFIG_CRYPTO_ANSI_CPRNG=y
+ CONFIG_CRYPTO_USER_API_HASH=y
+ CONFIG_CRYPTO_USER_API_SKCIPHER=y
++CONFIG_GPIOLIB=y
++CONFIG_GPIO_SYSFS=y
++CONFIG_GPIO_DAVINCI=y
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
