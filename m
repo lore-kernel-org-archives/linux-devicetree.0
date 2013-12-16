@@ -1,81 +1,40 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv2 03/27] ARM: OMAP2+: add omapdss_init_of()
-Date: Mon, 16 Dec 2013 10:46:23 -0800
-Message-ID: <20131216184623.GC26293@atomide.com>
-References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com>
- <1387205794-32246-4-git-send-email-tomi.valkeinen@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv7 07/12] iommu/tegra: smmu: register device to iommu dynamically
+Date: Mon, 16 Dec 2013 11:46:56 -0700
+Message-ID: <52AF4AA0.60006@wwwdotorg.org>
+References: <1386835033-4701-1-git-send-email-hdoyu@nvidia.com> <1386835033-4701-8-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387205794-32246-4-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386835033-4701-8-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [131216 07:02]:
-> omapdss driver uses a omapdss platform device to pass platform specific
-> function pointers and DSS hardware version from the arch code to the
-> driver. This device is needed also when booting with DT.
+On 12/12/2013 12:57 AM, Hiroshi Doyu wrote:
+> platform_devices are registered as IOMMU'able dynamically via
+> add_device() and remove_device().
+
+That says {add,remove}_device() ...
+
+> Tegra SMMU can have multiple address spaces(AS). IOMMU'able devices
+> can belong to one of them. Multiple IOVA maps are created at boot-up,
+> which can be attached to devices later. We reserve 2 of them for
+> static assignment, AS[0] for system default, AS[1] for AHB clusters as
+> protected domain from others, where there are many traditional
+> pheripheral devices like USB, SD/MMC. They should be isolated from
+> some smart devices like host1x for system robustness. Even if smart
+> devices behaves wrongly, the traditional devices(SD/MMC, USB) wouldn't
+> be affected, and the system could continue most likely. DMA API(ARM)
+> needs ARM_DMA_USE_IOMMU to be enabled.
 > 
-> This patch adds omapdss_init_of() function, called from board-generic at
-> init time, which creates the omapdss device.
-...
+> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> v6:
+> Use smmu_iommu_{bound,unbind}_driver() instead of
+> smmu_iommu_{add,del}_device() to register devices to SMMU.
 
-> --- a/arch/arm/mach-omap2/display.c
-> +++ b/arch/arm/mach-omap2/display.c
-> @@ -23,6 +23,8 @@
->  #include <linux/clk.h>
->  #include <linux/err.h>
->  #include <linux/delay.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
->  
->  #include <video/omapdss.h>
->  #include "omap_hwmod.h"
-> @@ -514,3 +516,63 @@ int omap_dss_reset(struct omap_hwmod *oh)
->  
->  	return r;
->  }
-> +
-> +int __init omapdss_init_of(void)
-> +{
-> +	int r;
-> +	enum omapdss_version ver;
-> +
-> +	static struct omap_dss_board_info board_data = {
-> +		.dsi_enable_pads = omap_dsi_enable_pads,
-> +		.dsi_disable_pads = omap_dsi_disable_pads,
-> +		.get_context_loss_count = omap_pm_get_dev_context_loss_count,
-> +		.set_min_bus_tput = omap_dss_set_min_bus_tput,
-> +	};
-> +
-> +	ver = omap_display_get_version();
-> +
-> +	if (ver == OMAPDSS_VER_UNKNOWN) {
-> +		pr_err("DSS not supported on this SoC\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	board_data.version = ver;
-> +
-> +	omap_display_device.dev.platform_data = &board_data;
-> +
-> +	r = platform_device_register(&omap_display_device);
-> +	if (r < 0) {
-> +		pr_err("Unable to register omapdss device\n");
-> +		return r;
-> +	}
-
-You can populate the callback functions in the pdata using
-OF_DEV_AUXDATA entries in the pdata-quirks.c. That way you could
-instantiate the dev entry for omap_display_device using DT
-and deal with it in drivers/video/omap except for the pdata
-callbacks.
-
-Of course that can be done later too.
-
-Regards,
-
-Tony
+... yet that says it's been changed to {bound,unbind}_driver(). BTW,
+what was the reason for this change?
