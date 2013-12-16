@@ -1,108 +1,29 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFCv4 06/11] misc: Introduce Nokia CMT driver
-Date: Mon, 16 Dec 2013 10:48:06 +0100
-Message-ID: <CACRpkdYjjXgE_W8gq1e6z=nGMF=r-m+o2kkvrBFrEMm3o0=RwQ@mail.gmail.com>
-References: <1387150085-23173-1-git-send-email-sre@debian.org>
-	<1387150085-23173-7-git-send-email-sre@debian.org>
+Subject: Re: [PATCH v3 2/6] pinctrl: Adds slew-rate, input-enable/disable
+Date: Mon, 16 Dec 2013 10:55:32 +0100
+Message-ID: <CACRpkdb5FWvuT0ZNMwOmBJ=EGgZY3XsJ5wvcAQsLCjKHJO89mQ@mail.gmail.com>
+References: <1381174108-25168-1-git-send-email-syin@broadcom.com>
+	<1386787041-6035-1-git-send-email-syin@broadcom.com>
+	<1386787041-6035-3-git-send-email-syin@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1387150085-23173-7-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, =?ISO-8859-1?Q?Pali_Roh=E1r?= <pali.rohar@gmail.com>, =?windows-1251?B?yOLg6evuIMTo7Ojy8O7i?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1386787041-6035-3-git-send-email-syin@broadcom.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sherman Yin <syin@broadcom.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2013 at 12:27 AM, Sebastian Reichel <sre@debian.org> wrote:
+On Wed, Dec 11, 2013 at 7:37 PM, Sherman Yin <syin@broadcom.com> wrote:
 
-> Add driver handling GPIO pins of Nokia modems. The
-> driver provides reset notifications, so that SSI
-> clients can subscribe to them easily.
+> This commit adds slew-rate and input-enable/disable support for pinconf
+> -generic.
 >
-> Signed-off-by: Sebastian Reichel <sre@debian.org>
+> Signed-off-by: Sherman Yin <syin@broadcom.com>
+> ---
+> v3: added to patchset
 
-If the driver provides reset notifications, should it rather be
-in drivers/reset?
-
-I'm thinking of a generic GPIO reset driver with a generic
-notification mechanism, which seems to be what this is.
-
-I.e. it doesn't look device-specific at all, just like some
-generic glue code that could be useful to many such
-scenarios.
-
-> +config NOKIA_CMT
-> +       tristate "Enable CMT support"
-> +       help
-> +       If you say Y here, you will enable CMT support.
-> +
-> +       If unsure, say Y, or else you will not be able to use the CMT.
-
-None of this explains what this driver actually does and what
-CMT means, so please rewrite this a bit to be more helpful.
-The way it is written it could as well say "enable FOO support".
-
-> +++ b/drivers/misc/nokia-cmt.c
-> @@ -0,0 +1,298 @@
-> +/*
-> + * CMT support.
-
-So CMT = ...?
-
-> +/**
-> + * struct cmt_device - CMT device data
-> + * @cmt_rst_ind_tasklet: Bottom half for CMT reset line events
-> + * @cmt_rst_ind_irq: IRQ number of the CMT reset line
-> + * @n_head: List of notifiers registered to get CMT events
-> + * @node: Link on the list of available CMTs
-> + * @device: Reference to the CMT platform device
-> + */
-> +struct cmt_device {
-> +       struct tasklet_struct           cmt_rst_ind_tasklet;
-> +       unsigned int                    cmt_rst_ind_irq;
-> +       struct atomic_notifier_head     n_head;
-> +       struct list_head                node;
-> +       struct device                   *device;
-> +       struct cmt_gpio                 *gpios;
-> +       int                             gpio_amount;
-> +};
-
-The kerneldoc and and the struct are not in sync. Look
-this over.
-
-> +static LIST_HEAD(cmt_list);    /* List of CMT devices */
-(...)
-> +struct cmt_device *cmt_get(const char *name)
-> +{
-> +       struct cmt_device *p, *cmt = ERR_PTR(-ENODEV);
-> +
-> +       list_for_each_entry(p, &cmt_list, node)
-> +               if (strcmp(name, dev_name(p->device)) == 0) {
-> +                       cmt = p;
-> +                       break;
-> +               }
-> +
-> +       return cmt;
-> +}
-> +EXPORT_SYMBOL_GPL(cmt_get);
-
-Is this driver used on non-DT platforms, or can we skip this
-struct device * referencing altogether?
-
-I would feel better if this driver looked more like
-drivers/mfd/syscon.c
-
-> +static irqreturn_t cmt_rst_ind_isr(int irq, void *cmtdev)
-> +{
-> +       struct cmt_device *cmt = (struct cmt_device *)cmtdev;
-> +
-> +       tasklet_schedule(&cmt->cmt_rst_ind_tasklet);
-> +
-> +       return IRQ_HANDLED;
-> +}
-
-Why are you using a tasklet rather than a work
-for this?
+Patch applied.
 
 Yours,
 Linus Walleij
