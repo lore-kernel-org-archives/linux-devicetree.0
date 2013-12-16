@@ -1,53 +1,78 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] can: mcp251x: Convert to devm-* API
-Date: Mon, 16 Dec 2013 11:17:29 +0100
-Message-ID: <52AED339.8050102@pengutronix.de>
-References: <1387116961-15261-1-git-send-email-shc_work@mail.ru>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 7/8] clocksource: kona: Add basic use of external clock
+Date: Mon, 16 Dec 2013 11:34:38 +0100
+Message-ID: <52AED73E.5090507@linaro.org>
+References: <1386271244-3927-1-git-send-email-tim.kryger@linaro.org> <1386271244-3927-8-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="JjD86OReVVhpjlqWAIaVxwW8abD0XUfJ2"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1387116961-15261-1-git-send-email-shc_work@mail.ru>
-Sender: linux-can-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1386271244-3927-8-git-send-email-tim.kryger@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tim Kryger <tim.kryger@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, Axel Lin <axel.lin@ingics.com>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linaro Patches List <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---JjD86OReVVhpjlqWAIaVxwW8abD0XUfJ2
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On 12/05/2013 08:20 PM, Tim Kryger wrote:
+> When an clock is specified in the device tree, enable it and use it t=
+o
+> determine the external clock frequency.
+>
+> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> Reviewed-by: Matt Porter <matt.porter@linaro.org>
 
-On 12/15/2013 03:16 PM, Alexander Shiyan wrote:
-> Replace existing resource handling in the driver with managed
-> device resource, this ensures more consistent error values and
-> simplifies error paths.
->=20
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Lookgs good, applied to can-next.
+> ---
+>   drivers/clocksource/bcm_kona_timer.c | 14 +++++++++++---
+>   1 file changed, 11 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/clocksource/bcm_kona_timer.c b/drivers/clocksour=
+ce/bcm_kona_timer.c
+> index 0d7d8c3..8a4ab36 100644
+> --- a/drivers/clocksource/bcm_kona_timer.c
+> +++ b/drivers/clocksource/bcm_kona_timer.c
+> @@ -17,6 +17,7 @@
+>   #include <linux/jiffies.h>
+>   #include <linux/clockchips.h>
+>   #include <linux/types.h>
+> +#include <linux/clk.h>
+>
+>   #include <linux/io.h>
+>   #include <asm/mach/time.h>
+> @@ -107,11 +108,18 @@ static const struct of_device_id bcm_timer_ids[=
+] __initconst =3D {
+>   static void __init kona_timers_init(struct device_node *node)
+>   {
+>   	u32 freq;
+> +	struct clk *external_clk;
+>
+> -	if (!of_property_read_u32(node, "clock-frequency", &freq))
+> +	external_clk =3D of_clk_get_by_name(node, NULL);
+> +
+> +	if (!IS_ERR(external_clk)) {
+> +		arch_timer_rate =3D clk_get_rate(external_clk);
+> +		clk_prepare_enable(external_clk);
+> +	} else if (!of_property_read_u32(node, "clock-frequency", &freq)) {
+>   		arch_timer_rate =3D freq;
+> -	else
+> -		panic("clock-frequency not set in the .dts file");
+> +	} else {
+> +		panic("unable to determine clock-frequency");
+> +	}
+>
+>   	/* Setup IRQ numbers */
+>   	timers.tmr_irq =3D irq_of_parse_and_map(node, 0);
+>
 
-Marc
+
 --=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
 
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
---JjD86OReVVhpjlqWAIaVxwW8abD0XUfJ2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlKu0zoACgkQjTAFq1RaXHO55QCeNekH19dTkUSJ9JkQ7GyYT896
-8Z4An3Fx9oVcnnm6FOkJix3sB5PubxdX
-=Sqcj
------END PGP SIGNATURE-----
-
---JjD86OReVVhpjlqWAIaVxwW8abD0XUfJ2--
