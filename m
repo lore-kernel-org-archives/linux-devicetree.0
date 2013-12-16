@@ -1,100 +1,147 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH 1/5] ARM: sunxi: Add driver for SD/MMC
- hosts found on Allwinner sunxi SoCs
-Date: Mon, 16 Dec 2013 13:53:06 +0100
-Message-ID: <20131216125306.GK3037@lukather>
-References: <1387058295-20641-1-git-send-email-hdegoede@redhat.com>
- <1387058295-20641-2-git-send-email-hdegoede@redhat.com>
- <20131215134415.GE3651@lukather>
- <CAOMqctRspBPmNsyXye_gpfwGoZ=gMcCzEjM+hD3g+ZfQix7G6Q@mail.gmail.com>
- <20131216100551.GD3037@lukather>
- <CAOMqctTdasLxJki0xu4aq_sEgujDt3Jdu=BXy9WvQeji282_Rg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Kamil Debski <k.debski@samsung.com>
+Subject: RE: [PATCH RESEND v2 1/2] phy: core: Add an exported of_phy_get
+ function
+Date: Mon, 16 Dec 2013 13:55:34 +0100
+Message-ID: <023f01cefa5e$1cbe81c0$563b8540$%debski@samsung.com>
+References: <1386943380-28596-1-git-send-email-k.debski@samsung.com>
+ <52AB1D75.4030207@ti.com> <008a01cef817$b24844e0$16d8cea0$%debski@samsung.com>
+ <52AEC145.6070208@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+HmK7y6O+lKZIGkr"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJ7QXOKQKGQEJ34RTMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMqctTdasLxJki0xu4aq_sEgujDt3Jdu=BXy9WvQeji282_Rg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <52AEC145.6070208@ti.com>
+Content-language: pl
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Tomasz Figa <t.figa@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, gautam.vivek@samsung.com, matt.porter@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---+HmK7y6O+lKZIGkr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Dec 16, 2013 at 12:59:31PM +0100, Michal Suchanek wrote:
-> On 16 December 2013 11:05, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Sun, Dec 15, 2013 at 11:01:17PM +0100, Michal Suchanek wrote:
-> >> On 15 December 2013 14:44, Maxime Ripard
-> >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >> >> --- a/drivers/mmc/host/Kconfig
-> >> >> +++ b/drivers/mmc/host/Kconfig
-> >> >> @@ -665,3 +665,11 @@ config MMC_REALTEK_PCI
-> >> >>       help
-> >> >>         Say Y here to include driver code to support SD/MMC card in=
-terface
-> >> >>         of Realtek PCI-E card reader
-> >> >> +
-> >> >> +config MMC_SUNXI
-> >> >> +     tristate "Allwinner sunxi SD/MMC Host Controller support"
-> >> >> +     depends on ARCH_SUNXI
-> >> >> +     default y
-> >> >
-> >> > I'm not that fond of these "default y" patterns. It forces the driver
-> >> > down to every user of the multiplatform kernels. I'd suggest removing
-> >> > the default and adding the driver to the defconfigs we have.
+> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
+> Sent: Monday, December 16, 2013 10:01 AM
+> 
+> On Friday 13 December 2013 08:56 PM, Kamil Debski wrote:
+> > Hi Kishon,
+> >
+> >> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
+> >> Sent: Friday, December 13, 2013 3:45 PM
 > >>
-> >> And why would you build support for sunxi without building support for
-> >> sunxi mmc?
+> >> Hi,
+> >>
+> >> On Friday 13 December 2013 07:32 PM, Kamil Debski wrote:
+> >>> Previously the of_phy_get function took a struct device * and was
+> >>> declared static. It was impossible to call it from another driver
+> >>> and thus it was impossible to get phy defined for a given node. The
+> >>> old function was renamed to _of_phy_get and was left for internal
+> use.
+> >>> of_phy_get function was added and it was exported. The function
+> >>> enables to get a phy for a given device tree node.
+> >>>
+> >>> Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> >>> ---
+> >>> It seems that my git send-email is playing up and sent the previous
+> >>> emails without from. This is a resend. Sorry for any confusion.
+> >>> ---
+> >>>  drivers/phy/phy-core.c  |   41 ++++++++++++++++++++++++++++++++---
+> --
+> >> ----
+> >>>  include/linux/phy/phy.h |    1 +
+> >>>  2 files changed, 33 insertions(+), 9 deletions(-)
+> >>>
+> >>> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c index
+> >>> 03cf8fb..f0dbd42 100644
+> >>> --- a/drivers/phy/phy-core.c
+> >>> +++ b/drivers/phy/phy-core.c
+> >>> @@ -240,8 +240,8 @@ out:
+> >>>  EXPORT_SYMBOL_GPL(phy_power_off);
+> >>>
+> >>>  /**
+> >>> - * of_phy_get() - lookup and obtain a reference to a phy by
+> phandle
+> >>> - * @dev: device that requests this phy
+> >>> + * _of_phy_get() - lookup and obtain a reference to a phy by
+> >>> + phandle
+> >>> + * @np: device_node for which to get the phy
+> >>>   * @index: the index of the phy
+> >>>   *
+> >>>   * Returns the phy associated with the given phandle value, @@
+> >>> -250,20 +250,17 @@ EXPORT_SYMBOL_GPL(phy_power_off);
+> >>>   * not yet loaded. This function uses of_xlate call back function
+> >> provided
+> >>>   * while registering the phy_provider to find the phy instance.
+> >>>   */
+> >>> -static struct phy *of_phy_get(struct device *dev, int index)
+> >>> +static struct phy *_of_phy_get(struct device_node *np, int index)
+> >>>  {
+> >>>  	int ret;
+> >>>  	struct phy_provider *phy_provider;
+> >>>  	struct phy *phy = NULL;
+> >>>  	struct of_phandle_args args;
+> >>>
+> >>> -	ret = of_parse_phandle_with_args(dev->of_node, "phys", "#phy-
+> >> cells",
+> >>> +	ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
+> >>>  		index, &args);
+> >>> -	if (ret) {
+> >>> -		dev_dbg(dev, "failed to get phy in %s node\n",
+> >>> -			dev->of_node->full_name);
+> >>> +	if (ret)
+> >>>  		return ERR_PTR(-ENODEV);
+> >>> -	}
+> >>>
+> >>>  	mutex_lock(&phy_provider_mutex);
+> >>>  	phy_provider = of_phy_provider_lookup(args.np); @@ -283,6 +280,32
+> >> @@
+> >>> err0:
+> >>>  }
+> >>>
+> >>>  /**
+> >>> + * of_phy_get() - lookup and obtain a reference to a phy using a
+> >> device_node.
+> >>> + * @np: device_node for which to get the phy
+> >>> + * @index: the index of the phy
+> >>
+> >> Would be better if the user can get the PHY by string instead of
+> index.
 > >
-> > Because you can?
->=20
-> But does that need to be the default? And is that sane default?
->=20
+> > Ok, this sounds doable. I will add of_phy_get_by_name analogous to
+> the
+> > clk framework.
+> 
+> Nope. It was decided initially to have minimal no of APIs exported to
+> get PHYs.
+> So you can just get string as argument instead of index and leave the
+> name of the API to just of_phy_get.
+
+If you say so. I just sent a new version taking a string id instead of
+an index. I hope you find it satisfying.
+
+> Thanks
+> Kishon
+> 
 > >
-> > And where am I actually suggesting to do so?
->=20
-> Just a few lines above. You suggest it should not be built by default.
+> >>> + *
+> >>> + * Returns the phy driver, after getting a refcount to it; or
+> >>> + * -ENODEV if there is no such phy.  The caller is responsible for
+> >>> + * calling phy_put() to release that count.
+> >>> + */
+> >>> +struct phy *of_phy_get(struct device_node *np, int index) {
+> >>> +	struct phy *phy = NULL;
+> >>> +
+> >>> +	phy = _of_phy_get(np, index);
+> >>> +	if (IS_ERR(phy))
+> >> dev_err here?
+> >
+> > dev_err requires a dev, so it is not possible with the arguments used.
+> > And we do not want to add any extra parameters to keep the function
+> > call analogous to other of_*_get (as for example of_clk_get).
+> >
+> > Best wishes,
+> >
 
-No, this is not what I'm saying. I'm saying that this default should
-be enforced at the defconfig level, and not at the Kconfig level.
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---+HmK7y6O+lKZIGkr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSrveyAAoJEBx+YmzsjxAgaRwQAKKM/pzblJzmEEihsRBm918W
-X+Ntbatzaeox1JWsnYChf7YM/rgpZpeFMSe7nFQPmSSCCT0fMcarojGPEWdnVU/R
-bejwaagYRAGWXa1B2dH7asqomlCOXdVs6GcgjceH55aNdKJ0lPT/V4ez8lbE0Drd
-YggaJucXKjwOCQn2Yi6FHrm8KxjhUBfuigpaZjzBIyHV4jslkb23+ANiXdkCL5IJ
-Q3MrLGNGvPQOzRwx6fSoTpXTrZleA3CJqpBO+eueJBJP2CNwtIN1aprTFeIl1MAw
-8ibrNo03Tm52n7bmM5HVdEVjl5DYAVCWuRqPb0uHmrNha64zJjuBqR4uNUhNh/fV
-8Tlx5hJfRtil+ox7LPtgC81CiVArbu59PuiMRemX9fYAnPrxPHI2GGsmUnCl4oz/
-NdxB0Tcg05EAiFJ4VwjTbhY9fHrg9rDrqddvEpaL5GYjzFEeGtslj6Y8/GPEtKjp
-BzVchPsZN0kyZpgjGrtYUVl8DHkAMTsfuXHailR3I+9G+QYOx0vGXXaVmGaYt2dH
-MWvrH937n8uTJgl9mWfI6OsZ3171RoxDsaq9p2zrpkX2xXs/OMz7jWImaU3+cV4W
-QjhOp9qS9YESy2ZNGLs+LMIPQ+buq3Ac0SWu/unW1m+munD4yTqngFi/lXV7tp6p
-StdhQzQJCuK0RzAvUL1/
-=7Hvp
------END PGP SIGNATURE-----
-
---+HmK7y6O+lKZIGkr--
+Best wishes,
+-- 
+Kamil Debski
+Samsung R&D Institute Poland
