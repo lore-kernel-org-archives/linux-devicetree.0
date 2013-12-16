@@ -1,53 +1,118 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCHv3,RESEND] rtc: Add support for Intersil ISL12057 I2C RTC
- chip
-Date: Mon, 16 Dec 2013 13:24:13 -0800
-Message-ID: <20131216212413.GA8369@roeck-us.net>
-References: <637f26e051b700ca510a0af695dfd84cf2bfd35d.1387222475.git.arno@natisbad.org>
- <20131216201424.GA6639@roeck-us.net>
- <87r49cpkw2.fsf@natisbad.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87r49cpkw2.fsf@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: [RFC PATCH 10/10] ARM: at91/dt: add new AIC irq mux definitions for sama5 SoCs
+Date: Mon, 16 Dec 2013 22:25:40 +0100
+Message-ID: <1387229140-7642-1-git-send-email-b.brezillon@overkiz.com>
+References: <1387225461-6201-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1387225461-6201-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2013 at 10:05:01PM +0100, Arnaud Ebalard wrote:
-> Hi Guenter,
-> 
-> Thanks for the fast feedback! I have handled all your comments and
-> tested the resulting version on my RN102 w/o problems. Will send a
-> v4 in a few minutes.
-> 
-> Can you just look at first comment below?
-> 
-> Guenter Roeck <linux@roeck-us.net> writes:
-> 
-> >> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> >> ---
-> >> This is a resend - just in case the initial mail slept through - as I
-> >> got no feedback over the past week. I have also Cc'ed additional
-> >> people.
-> >> 
-> > Looks like your mailer corrupts the patch. You'll have to fix that.
-> 
-> If you wonder about the text below the SoB, this is just informational,
+Add irq line muxing definition for sama5 SoCs.
 
-I know.
+Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/sama5d3.dtsi      |   40 ++++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi |   22 +++++++++++++++++++
+ 2 files changed, 61 insertions(+), 1 deletion(-)
 
-> i.e. to avoid having it in the final commit. Can you be more specific
-> if this is not what you meant, i.e. how the patch is otherwise
-> corrupted?
-> 
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index de9fece..1e8f4b5 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -390,6 +390,44 @@
+ 				interrupt-controller;
+ 				reg = <0xfffff000 0x200>;
+ 				atmel,external-irqs = <47>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				atmel,aic-irq-mapping = <0xffffffff 0x7ffff>;
++
++				sysc_irq_mux: irq-mux@1 {
++					compatible = "atmel,aic-mux";
++					reg = <1>;
++
++					pmc_irq {
++						compatible = "atmel,aic-mux-3reg-irq";
++						atmel,aic-mux-irq-reg = <&pmc 0 0x64 0x5074b>;
++					};
++
++					rtc_irq {
++						compatible = "atmel,aic-mux-3reg-irq";
++						atmel,aic-mux-irq-reg = <&rtc 0 0x24 0x1f>;
++					};
++				};
++
++				tcb0_irq_mux: irq-mux@26 {
++					compatible = "atmel,aic-mux";
++					reg = <26>;
++
++					tc0_irq {
++						compatible = "atmel,aic-mux-3reg-irq";
++						atmel,aic-mux-irq-reg = <&tcb0 0 0x28 0xff>;
++					};
++
++					tc1_irq {
++						compatible = "atmel,aic-mux-3reg-irq";
++						atmel,aic-mux-irq-reg = <&tcb0 0 0x68 0xff>;
++					};
++
++					tc2_irq {
++						compatible = "atmel,aic-mux-3reg-irq";
++						atmel,aic-mux-irq-reg = <&tcb0 0 0xa8 0xff>;
++					};
++				};
+ 			};
+ 
+ 			pinctrl@fffff200 {
+@@ -1061,7 +1099,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			rtc@fffffeb0 {
++			rtc: rtc@fffffeb0 {
+ 				compatible = "atmel,at91rm9200-rtc";
+ 				reg = <0xfffffeb0 0x30>;
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+diff --git a/arch/arm/boot/dts/sama5d3_tcb1.dtsi b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
+index 382b044..123b153 100644
+--- a/arch/arm/boot/dts/sama5d3_tcb1.dtsi
++++ b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
+@@ -18,6 +18,28 @@
+ 
+ 	ahb {
+ 		apb {
++			aic: interrupt-controller@fffff000 {
++				tcb1_irq_mux: irq-mux@27 {
++					compatible = "atmel,aic-mux";
++					reg = <27>;
++
++					tc3_irq {
++						compatible = "atmel,aic-mux-3reg-irq";
++						atmel,aic-mux-irq-reg = <&tcb1 0 0x28 0xff>;
++					};
++
++					tc4_irq {
++						compatible = "atmel,aic-mux-3reg-irq";
++						atmel,aic-mux-irq-reg = <&tcb1 0 0x68 0xff>;
++					};
++
++					tc5_irq {
++						compatible = "atmel,aic-mux-3reg-irq";
++						atmel,aic-mux-irq-reg = <&tcb1 0 0xa8 0xff>;
++					};
++				};
++			};
++
+ 			pmc: pmc@fffffc00 {
+ 				periphck {
+ 					tcb1_clk: tcb1_clk {
+-- 
+1.7.9.5
 
-I saved the patch and tried to run it through checkpatch. Doing so, I got a lot
-of errors with "=3D" or similar, which suggests that the patch went through
-Outlook, an Exchange server, or a similar e-mail "beautifier" when it was sent.
-
-If the same happens again, I'll send you a log.
-
-Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
