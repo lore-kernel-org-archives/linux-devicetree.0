@@ -1,90 +1,167 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] regulator: Start using standard gpios property and
- deprecate some custom properties
-Date: Mon, 16 Dec 2013 13:05:13 -0800
-Message-ID: <20131216210512.GF26293@atomide.com>
-References: <1386965234-26461-1-git-send-email-tony@atomide.com>
- <20131216183615.GK3185@sirena.org.uk>
- <20131216194023.GE26293@atomide.com>
- <20131216201102.GP3185@sirena.org.uk>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv3,RESEND] rtc: Add support for Intersil ISL12057 I2C RTC chip
+Date: Mon, 16 Dec 2013 22:05:01 +0100
+Message-ID: <87r49cpkw2.fsf@natisbad.org>
+References: <637f26e051b700ca510a0af695dfd84cf2bfd35d.1387222475.git.arno@natisbad.org>
+	<20131216201424.GA6639@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131216201102.GP3185@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Mark Brown <broonie@kernel.org> [131216 12:12]:
-> On Mon, Dec 16, 2013 at 11:40:23AM -0800, Tony Lindgren wrote:
-> > * Mark Brown <broonie@kernel.org> [131216 10:37]:
-> 
-> > > If the issue is typos then I'm not convinced that for singular GPIOs
-> > > it's going to be helpful, either way is prone to typos.  If the problem
-> > > is error reporting then that seems like a more important thing to fix.
-> 
-> > Are you serious? A typo here in the binding leads to silent errors where
-> > nothing happens with the GPIO. That's just totally messed up considering
-> > we use "gpios" instead of "gpio" everywhere else. So both "gpio" and
-> > "gpios" should be parsed for sure.
-> 
-> This is the first time anyone's mentioned this so it probably isn't that
-> serious an issue and bear in mind that the patch was also handling all
-> the named GPIO specifiers too.
+Hi Guenter,
 
-I've certainly debugged this same exact issue twice already and that
-probably means that same issue has been debugged tens or hundreds
-of times by other people.
+Thanks for the fast feedback! I have handled all your comments and
+tested the resulting version on my RN102 w/o problems. Will send a
+v4 in a few minutes.
 
-For the other random named GPIO properties, I don't frankly care, that's
-really not my problem.
+Can you just look at first comment below?
 
-Personally I don't see any value for a regulator describing the names of
-the GPIOs in the binding, it's really up to the driver to make sense of
-them. Especially if there are one or more similar GPIOs. We're not
-naming interrupts either.
+Guenter Roeck <linux@roeck-us.net> writes:
 
-> In any case, the thing is that there's a difference between parsing both
-> and deprecation - deprecation implies an intention to remove the old one
-> which would just reintroduce the problem the other way around since
-> people are likely to drop or forget the plural, use old DTs and so on.
-> Adding a gpios property in parallel with plain gpio is fine and what I
-> was mostly suggesting.
+>> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+>> ---
+>> This is a resend - just in case the initial mail slept through - as I
+>> got no feedback over the past week. I have also Cc'ed additional
+>> people.
+>> 
+> Looks like your mailer corrupts the patch. You'll have to fix that.
 
-Deprecation _may_ imply that it will get removed, but not always.
-Naturally we're going to have to keep the old bindings in place since
-they were merged. I can changed that to obsoleted if that's any better.
- 
-> > > To be honest I'm also struggling to summon up the enthusiasm for the
-> > > churn in the bindings, especially without going through and updating all
-> > > the boards (and all the other GPIO properties in various DTs).  It seems
-> > > like there's stuff missing in the helpers here, if we really wanted to
-> > > force the properties to have -gpios on the end of their names then we
-> > > should've had that being added by the helpers.
-> 
-> > Sounds like exposing an infinite number of random *-gpio and *-gpios
-> > bindings is a topic for another discussion. Anyways it's already totally
-> > out of control so what do I care.
-> 
-> Exactly, I think it's way more trouble than it's worth to try to change
-> for named single element lists.  The standard property makes more sense.
+If you wonder about the text below the SoB, this is just informational,
+i.e. to avoid having it in the final commit. Can you be more specific
+if this is not what you meant, i.e. how the patch is otherwise
+corrupted?
 
-I don't think there should be any named GPIOs. If we want names, then
-the GPIO usage should be possible to group quite easily rather than create
-a new property for everything. Something like "enable-gpio" comes to mind.
- 
-> The root of the issue is that the GPIO binding originally said that
-> everything should use a single gpios property for everything but that's
-> got usability issues.  The attempt to require a -gpios suffix was a
-> later addition but it was just put into the binding with no real effort
-> to propagate it through integration with the helpers or whatever.
 
-There may still be a case for naming of some of the GPIOs, but usually
-the order of GPIOs should be enough for the driver to know the meaning
-of the GPIO.
+>> +#define ISL12057_REG_RTC_HR_PM  (1<<5) /* AM/PM bit in 12h format */
+>> +#define ISL12057_REG_RTC_HR_MIL (1<<6) /* 24h/12h format */
+>
+> Use BIT() or at least spaces around '<<'.
 
-Regards,
+Will use BIT().
 
-Tony
+
+>> +static void isl12057_rtc_regs_to_tm(struct rtc_time *tm, u8 *regs)
+>> +{
+>> +	tm->tm_sec  = bcd2bin(regs[ISL12057_REG_RTC_SC]);
+>> +	tm->tm_min  = bcd2bin(regs[ISL12057_REG_RTC_MN]);
+>
+> Extra spaces.
+
+ok.
+
+>> +static int isl12057_rtc_read_time(struct device *dev, struct rtc_time *tm)
+>> +{
+>> +	struct i2c_client *client = to_i2c_client(dev);
+>> +	struct isl12057_rtc_data *data = i2c_get_clientdata(client);
+>> +	u8 regs[ISL12057_RTC_SEC_LEN];
+>> +	int ret;
+>> +
+>> +	mutex_lock(&data->lock);
+>> +	ret = regmap_bulk_read(data->regmap, ISL12057_REG_RTC_SC, regs,
+>> +			       ISL12057_RTC_SEC_LEN);
+>> +	mutex_unlock(&data->lock);
+>> +
+>> +	if (ret) {
+>> +		dev_err(&client->dev, "%s: RTC read failed\n", __func__);
+>
+> 'dev' and '&client->dev' should be the same, so why not just use
+> 'dev' ?
+>
+> Reason for asking is that this is the major use of 'client'. To get 'data',
+> you could use 'dev_set_drvdata' and 'dev_get_drvdata'. Then you could replace
+> 	struct i2c_client *client = to_i2c_client(dev);
+> 	struct isl12057_rtc_data *data = i2c_get_clientdata(client);
+> with
+> 	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
+> everywhere.
+
+Feasible. And It also helps removing a field in my private structure.
+
+
+>> +static int isl12057_probe(struct i2c_client *client,
+>> +			  const struct i2c_device_id *id)
+>> +{
+>> +	struct device *dev = &client->dev;
+>> +	struct isl12057_rtc_data *data;
+>> +	struct rtc_device *rtc;
+>> +	struct regmap *regmap;
+>> +	int ret = 0;
+>
+> Unless I am missing something, this initialization is unnecessary.
+
+You are right.
+
+
+>> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C |
+>> +				     I2C_FUNC_SMBUS_BYTE_DATA |
+>> +				     I2C_FUNC_SMBUS_I2C_BLOCK))
+>> +		return -ENODEV;
+>> +
+>> +	regmap = devm_regmap_init_i2c(client, &isl12057_rtc_regmap_config);
+>> +	if (IS_ERR(regmap)) {
+>> +		ret = PTR_ERR(regmap);
+>> +		dev_err(&client->dev, "regmap allocation failed: %d\n", ret);
+>
+> Since you assigned dev = &client->dev above, might as well use it.
+
+Will do.
+
+
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = isl12057_i2c_validate_client(regmap);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = isl12057_check_rtc_status(dev, regmap);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>> +	if (!data)
+>> +		return -ENOMEM;
+>> +
+>> +	mutex_init(&data->lock);
+>> +	data->client = client;
+>
+> data->client does not appear to be used anywhere.
+
+Removed.
+
+
+>> +	data->regmap = regmap;
+>> +	i2c_set_clientdata(client, data);
+>> +
+>> +	rtc = devm_rtc_device_register(dev, DRV_NAME, &rtc_ops, THIS_MODULE);
+>> +	if (IS_ERR(rtc))
+>> +		return PTR_ERR(rtc);
+>> +	data->rtc = rtc;
+>
+> data->rtc does not seem to be used anywhere.
+
+Correct.
+
+
+>
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_OF
+>> +static struct of_device_id isl12057_dt_match[] = {
+>> +	{ .compatible = "isl,isl12057" },
+>> +	{ },
+>> +};
+>> +#endif
+>> +
+> Is this needed ? For i2c devices, struct i2c_device_id should be
+> sufficient.
+
+Kept that one as per Mark's comment.
+
+a+
