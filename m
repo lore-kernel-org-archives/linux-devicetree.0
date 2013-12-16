@@ -1,202 +1,123 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv10 10/41] CLK: TI: add support for clockdomain binding
-Date: Mon, 16 Dec 2013 10:13:08 +0200
-Message-ID: <52AEB614.3080705@ti.com>
-References: <1385453182-24421-1-git-send-email-t-kristo@ti.com> <1385453182-24421-11-git-send-email-t-kristo@ti.com> <20131215042303.23538.19248@quantum>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH RESEND v2 1/2] phy: core: Add an exported of_phy_get function
+Date: Mon, 16 Dec 2013 14:30:53 +0530
+Message-ID: <52AEC145.6070208@ti.com>
+References: <1386943380-28596-1-git-send-email-k.debski@samsung.com> <52AB1D75.4030207@ti.com> <008a01cef817$b24844e0$16d8cea0$%debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131215042303.23538.19248@quantum>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <008a01cef817$b24844e0$16d8cea0$%debski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kamil Debski <k.debski@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Tomasz Figa <t.figa@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, gautam.vivek@samsung.com, matt.porter@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/15/2013 06:23 AM, Mike Turquette wrote:
-> Quoting Tero Kristo (2013-11-26 00:05:51)
->> Some OMAP clocks require knowledge about their parent clockdomain for
->> book keeping purposes. This patch creates a new DT binding for TI
->> clockdomains, which act as a collection of device clocks.
+On Friday 13 December 2013 08:56 PM, Kamil Debski wrote:
+> Hi Kishon,
+> 
+>> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
+>> Sent: Friday, December 13, 2013 3:45 PM
 >>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   .../devicetree/bindings/clock/ti/clockdomain.txt   |   21 ++++++
->>   arch/arm/mach-omap2/clock.h                        |    1 -
->>   drivers/clk/ti/Makefile                            |    3 +-
->>   drivers/clk/ti/clockdomain.c                       |   70 ++++++++++++++++++++
->>   include/linux/clk/ti.h                             |    3 +
->>   5 files changed, 96 insertions(+), 2 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/clock/ti/clockdomain.txt
->>   create mode 100644 drivers/clk/ti/clockdomain.c
+>> Hi,
 >>
->> diff --git a/Documentation/devicetree/bindings/clock/ti/clockdomain.txt b/Documentation/devicetree/bindings/clock/ti/clockdomain.txt
->> new file mode 100644
->> index 0000000..45e6f7c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/ti/clockdomain.txt
->> @@ -0,0 +1,21 @@
->> +Binding for Texas Instruments clockdomain.
->> +
->> +Binding status: Unstable - ABI compatibility may be broken in the future
->> +
->> +This binding uses the common clock binding[1]. Every clock on
->
-> The patch looks fine to me but I think that the binding description
-> should capture the fact that you are re-using the common clock binding
-> but that this binding definition does not define any new clocks or clock
-> controllers in the way that a typical clock binding would.
->
-> This code uses the 'clocks' property the same way that any other
-> consumer binding definition would, such as an MMC controller or UART.
-> Those bindings do not say that they are based on the common clock
-> binding AFAIK.
->
+>> On Friday 13 December 2013 07:32 PM, Kamil Debski wrote:
+>>> Previously the of_phy_get function took a struct device * and was
+>>> declared static. It was impossible to call it from another driver and
+>>> thus it was impossible to get phy defined for a given node. The old
+>>> function was renamed to _of_phy_get and was left for internal use.
+>>> of_phy_get function was added and it was exported. The function
+>>> enables to get a phy for a given device tree node.
+>>>
+>>> Signed-off-by: Kamil Debski <k.debski@samsung.com>
+>>> ---
+>>> It seems that my git send-email is playing up and sent the previous
+>>> emails without from. This is a resend. Sorry for any confusion.
+>>> ---
+>>>  drivers/phy/phy-core.c  |   41 ++++++++++++++++++++++++++++++++-----
+>> ----
+>>>  include/linux/phy/phy.h |    1 +
+>>>  2 files changed, 33 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c index
+>>> 03cf8fb..f0dbd42 100644
+>>> --- a/drivers/phy/phy-core.c
+>>> +++ b/drivers/phy/phy-core.c
+>>> @@ -240,8 +240,8 @@ out:
+>>>  EXPORT_SYMBOL_GPL(phy_power_off);
+>>>
+>>>  /**
+>>> - * of_phy_get() - lookup and obtain a reference to a phy by phandle
+>>> - * @dev: device that requests this phy
+>>> + * _of_phy_get() - lookup and obtain a reference to a phy by phandle
+>>> + * @np: device_node for which to get the phy
+>>>   * @index: the index of the phy
+>>>   *
+>>>   * Returns the phy associated with the given phandle value, @@
+>>> -250,20 +250,17 @@ EXPORT_SYMBOL_GPL(phy_power_off);
+>>>   * not yet loaded. This function uses of_xlate call back function
+>> provided
+>>>   * while registering the phy_provider to find the phy instance.
+>>>   */
+>>> -static struct phy *of_phy_get(struct device *dev, int index)
+>>> +static struct phy *_of_phy_get(struct device_node *np, int index)
+>>>  {
+>>>  	int ret;
+>>>  	struct phy_provider *phy_provider;
+>>>  	struct phy *phy = NULL;
+>>>  	struct of_phandle_args args;
+>>>
+>>> -	ret = of_parse_phandle_with_args(dev->of_node, "phys", "#phy-
+>> cells",
+>>> +	ret = of_parse_phandle_with_args(np, "phys", "#phy-cells",
+>>>  		index, &args);
+>>> -	if (ret) {
+>>> -		dev_dbg(dev, "failed to get phy in %s node\n",
+>>> -			dev->of_node->full_name);
+>>> +	if (ret)
+>>>  		return ERR_PTR(-ENODEV);
+>>> -	}
+>>>
+>>>  	mutex_lock(&phy_provider_mutex);
+>>>  	phy_provider = of_phy_provider_lookup(args.np); @@ -283,6 +280,32
+>> @@
+>>> err0:
+>>>  }
+>>>
+>>>  /**
+>>> + * of_phy_get() - lookup and obtain a reference to a phy using a
+>> device_node.
+>>> + * @np: device_node for which to get the phy
+>>> + * @index: the index of the phy
+>>
+>> Would be better if the user can get the PHY by string instead of index.
+> 
+> Ok, this sounds doable. I will add of_phy_get_by_name analogous to the clk
+> framework.
 
-Ok, will modify the doc accordingly.
+Nope. It was decided initially to have minimal no of APIs exported to get PHYs.
+So you can just get string as argument instead of index and leave the name of
+the API to just of_phy_get.
 
--Tero
+Thanks
+Kishon
 
-> Regards,
-> Mike
->
->> +TI SoC belongs to one clockdomain, but software only needs this
->> +information for specific clocks which require their parent
->> +clockdomain to be controlled when the clock is enabled/disabled.
->> +
->> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +
->> +Required properties:
->> +- compatible : shall be "ti,clockdomain"
->> +- #clock-cells : from common clock binding; shall be set to 0.
->> +- clocks : link phandles of clocks within this domain
->> +
->> +Examples:
->> +       dss_clkdm: dss_clkdm {
->> +               compatible = "ti,clockdomain";
->> +               clocks = <&dss1_alwon_fck_3430es2>, <&dss_ick_3430es2>;
->> +       };
->> diff --git a/arch/arm/mach-omap2/clock.h b/arch/arm/mach-omap2/clock.h
->> index bc0f9fc..6bd72b5 100644
->> --- a/arch/arm/mach-omap2/clock.h
->> +++ b/arch/arm/mach-omap2/clock.h
->> @@ -38,7 +38,6 @@ struct omap_clk {
->>          }
->>
->>   struct clockdomain;
->> -#define to_clk_hw_omap(_hw) container_of(_hw, struct clk_hw_omap, hw)
->>
->>   #define DEFINE_STRUCT_CLK(_name, _parent_array_name, _clkops_name)     \
->>          static struct clk _name = {                             \
->> diff --git a/drivers/clk/ti/Makefile b/drivers/clk/ti/Makefile
->> index 7cba389..67056fb 100644
->> --- a/drivers/clk/ti/Makefile
->> +++ b/drivers/clk/ti/Makefile
->> @@ -1,4 +1,5 @@
->>   ifneq ($(CONFIG_OF),)
->>   obj-y                                  += clk.o dpll.o autoidle.o divider.o \
->> -                                          fixed-factor.o gate.o composite.o
->> +                                          fixed-factor.o gate.o clockdomain.o \
->> +                                          composite.o
->>   endif
->> diff --git a/drivers/clk/ti/clockdomain.c b/drivers/clk/ti/clockdomain.c
->> new file mode 100644
->> index 0000000..f1e0038
->> --- /dev/null
->> +++ b/drivers/clk/ti/clockdomain.c
->> @@ -0,0 +1,70 @@
->> +/*
->> + * OMAP clockdomain support
->> + *
->> + * Copyright (C) 2013 Texas Instruments, Inc.
->> + *
->> + * Tero Kristo <t-kristo@ti.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->> + * kind, whether express or implied; without even the implied warranty
->> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/slab.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/clk/ti.h>
->> +
->> +#undef pr_fmt
->> +#define pr_fmt(fmt) "%s: " fmt, __func__
->> +
->> +static void __init of_ti_clockdomain_setup(struct device_node *node)
->> +{
->> +       struct clk *clk;
->> +       struct clk_hw *clk_hw;
->> +       const char *clkdm_name = node->name;
->> +       int i;
->> +       int num_clks;
->> +
->> +       num_clks = of_count_phandle_with_args(node, "clocks", "#clock-cells");
->> +
->> +       for (i = 0; i < num_clks; i++) {
->> +               clk = of_clk_get(node, i);
->> +               if (__clk_get_flags(clk) & CLK_IS_BASIC) {
->> +                       pr_warn("can't setup clkdm for basic clk %s\n",
->> +                               __clk_get_name(clk));
->> +                       continue;
->> +               }
->> +               clk_hw = __clk_get_hw(clk);
->> +               to_clk_hw_omap(clk_hw)->clkdm_name = clkdm_name;
->> +               omap2_init_clk_clkdm(clk_hw);
->> +       }
->> +}
->> +
->> +static struct of_device_id ti_clkdm_match_table[] __initdata = {
->> +       { .compatible = "ti,clockdomain" },
->> +       { }
->> +};
->> +
->> +/**
->> + * ti_dt_clockdomains_setup - setup device tree clockdomains
->> + *
->> + * Initializes clockdomain nodes for a SoC. This parses through all the
->> + * nodes with compatible = "ti,clockdomain", and add the clockdomain
->> + * info for all the clocks listed under these. This function shall be
->> + * called after rest of the DT clock init has completed and all
->> + * clock nodes have been registered.
->> + */
->> +void __init ti_dt_clockdomains_setup(void)
->> +{
->> +       struct device_node *np;
->> +       for_each_matching_node(np, ti_clkdm_match_table) {
->> +               of_ti_clockdomain_setup(np);
->> +       }
->> +}
->> diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
->> index 872ff2a..231b071 100644
->> --- a/include/linux/clk/ti.h
->> +++ b/include/linux/clk/ti.h
->> @@ -204,6 +204,8 @@ struct clk_omap_reg {
->>          u16 index;
->>   };
->>
->> +#define to_clk_hw_omap(_hw) container_of(_hw, struct clk_hw_omap, hw)
->> +
->>   void omap2_init_clk_hw_omap_clocks(struct clk *clk);
->>   int omap3_noncore_dpll_enable(struct clk_hw *hw);
->>   void omap3_noncore_dpll_disable(struct clk_hw *hw);
->> @@ -232,6 +234,7 @@ int omap2_dflt_clk_is_enabled(struct clk_hw *hw);
->>   void __iomem *ti_clk_get_reg_addr(struct device_node *node, int index);
->>   void ti_dt_clocks_register(struct ti_dt_clk *oclks);
->>   void ti_dt_clk_init_provider(struct device_node *np, int index);
->> +void ti_dt_clockdomains_setup(void);
->>   int of_ti_clk_autoidle_setup(struct device_node *node);
->>   int ti_clk_add_component(struct device_node *node, struct clk_hw *hw, int type);
->>
->> --
->> 1.7.9.5
->>
-
+> 
+>>> + *
+>>> + * Returns the phy driver, after getting a refcount to it; or
+>>> + * -ENODEV if there is no such phy.  The caller is responsible for
+>>> + * calling phy_put() to release that count.
+>>> + */
+>>> +struct phy *of_phy_get(struct device_node *np, int index) {
+>>> +	struct phy *phy = NULL;
+>>> +
+>>> +	phy = _of_phy_get(np, index);
+>>> +	if (IS_ERR(phy))
+>> dev_err here?
+> 
+> dev_err requires a dev, so it is not possible with the arguments used.
+> And we do not want to add any extra parameters to keep the function call
+> analogous to other of_*_get (as for example of_clk_get).
+> 
+> Best wishes,
+> 
