@@ -1,156 +1,109 @@
 From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [RFC PATCH 09/10] ARM: at91/dt: add new AIC irq mux definitions
-Date: Mon, 16 Dec 2013 21:24:20 +0100
-Message-ID: <1387225461-6201-10-git-send-email-b.brezillon@overkiz.com>
+Subject: [RFC PATCH 04/10] ARM: at91: enclose at91_aic_xx calls in
+ IS_ENABLED(CONFIG_OLD_IRQ_AT91) blocks
+Date: Mon, 16 Dec 2013 21:24:15 +0100
+Message-ID: <1387225461-6201-5-git-send-email-b.brezillon@overkiz.com>
 References: <1387225461-6201-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1387225461-6201-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-doc-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Landley <rob@landley.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>
-Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <b.brezillon@overkiz.com>
 List-Id: devicetree@vger.kernel.org
 
-Add irq line muxing definition for sam9x5 SoCs.
+Enclose at91_aic_xx calls in IS_ENABLED(CONFIG_OLD_IRQ_AT91) blocks in
+order to prepare the migration to the new AIC driver.
+
+In the new AIC driver the suspend/resume functions are called by the
+generic irq framework and are no longer needed in the PM specific code.
+
+Moreover, the new AIC driver no longer exposes the at91_aic_base variable
+which is used by the at91_aic_read functions.
 
 Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
 ---
- arch/arm/boot/dts/at91sam9x5.dtsi |  111 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 109 insertions(+), 2 deletions(-)
+ arch/arm/mach-at91/pm.c    |   32 ++++++++++++++++++++------------
+ arch/arm/mach-at91/setup.c |    3 ++-
+ 2 files changed, 22 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 40267a1..619e24a 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -68,6 +68,113 @@
- 				interrupt-controller;
- 				reg = <0xfffff000 0x200>;
- 				atmel,external-irqs = <31>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				sysc_irq_mux: irq-mux@1 {
-+					compatible = "atmel,aic-mux";
-+					reg = <1>;
-+
-+					dbgu_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&dbgu 0 0xc 0xc00002e3>;
-+					};
-+
-+					pmc_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&pmc 0 0x64 0x7034b>;
-+					};
-+
-+					pmecc_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&nand0 1 0x20 0x1>;
-+					};
-+
-+					pmerrloc_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&nand0 2 0x18 0x1>;
-+					};
-+
-+					pit_irq {
-+						compatible = "atmel,aic-mux-1reg-irq";
-+						atmel,aic-mux-irq-reg = <&pit 0 0x0 0x2000000>;
-+					};
-+
-+					wdt_irq {
-+						compatible = "atmel,aic-mux-1reg-irq";
-+						atmel,aic-mux-irq-reg = <&wdt 0 0x4 0x1000>;
-+					};
-+
-+					rtc_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&rtc 0 0x24 0x1f>;
-+					};
-+				};
-+
-+				pioAB_irq_mux: irq-mux@2 {
-+					compatible = "atmel,aic-mux";
-+					reg = <2>;
-+
-+					pioA_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&pioA 0 0x44 0xffffffff>;
-+					};
-+
-+					pioB_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&pioB 0 0x44 0xffffffff>;
-+					};
-+				};
-+
-+				pioCD_irq_mux: irq-mux@3 {
-+					compatible = "atmel,aic-mux";
-+					reg = <3>;
-+
-+					pioC_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&pioC 0 0x44 0xffffffff>;
-+					};
-+
-+					pioD_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&pioD 0 0x44 0xffffffff>;
-+					};
-+				};
-+
-+				tcb_irq_mux: irq-mux@17 {
-+					compatible = "atmel,aic-mux";
-+					reg = <17>;
-+
-+					tc0_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&tcb0 0 0x28 0xff>;
-+					};
-+
-+					tc1_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&tcb0 0 0x68 0xff>;
-+					};
-+
-+					tc2_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&tcb0 0 0xa8 0xff>;
-+					};
-+
-+					tc3_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&tcb1 0 0x28 0xff>;
-+					};
-+
-+					tc4_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&tcb1 0 0x68 0xff>;
-+					};
-+
-+					tc5_irq {
-+						compatible = "atmel,aic-mux-3reg-irq";
-+						atmel,aic-mux-irq-reg = <&tcb1 0 0xa8 0xff>;
-+					};
-+				};
- 			};
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index d43b79f..1dc6ed3 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -207,16 +207,19 @@ static int at91_pm_enter(suspend_state_t state)
+ 		at91_pinctrl_gpio_suspend();
+ 	else
+ 		at91_gpio_suspend();
+-	at91_irq_suspend();
  
- 			ramc0: ramc@ffffe800 {
-@@ -750,13 +857,13 @@
- 				};
- 			};
+-	pr_debug("AT91: PM - wake mask %08x, pm state %d\n",
+-			/* remember all the always-wake irqs */
+-			(at91_pmc_read(AT91_PMC_PCSR)
+-					| (1 << AT91_ID_FIQ)
+-					| (1 << AT91_ID_SYS)
+-					| (at91_get_extern_irq()))
+-				& at91_aic_read(AT91_AIC_IMR),
+-			state);
++	if (IS_ENABLED(CONFIG_OLD_IRQ_AT91) && at91_aic_base) {
++		at91_irq_suspend();
++
++		pr_debug("AT91: PM - wake mask %08x, pm state %d\n",
++				/* remember all the always-wake irqs */
++				(at91_pmc_read(AT91_PMC_PCSR)
++						| (1 << AT91_ID_FIQ)
++						| (1 << AT91_ID_SYS)
++						| (at91_get_extern_irq()))
++					& at91_aic_read(AT91_AIC_IMR),
++				state);
++	}
  
--			watchdog@fffffe40 {
-+			wdt: watchdog@fffffe40 {
- 				compatible = "atmel,at91sam9260-wdt";
- 				reg = <0xfffffe40 0x10>;
- 				status = "disabled";
- 			};
+ 	switch (state) {
+ 		/*
+@@ -281,12 +284,17 @@ static int at91_pm_enter(suspend_state_t state)
+ 			goto error;
+ 	}
  
--			rtc@fffffeb0 {
-+			rtc: rtc@fffffeb0 {
- 				compatible = "atmel,at91sam9x5-rtc";
- 				reg = <0xfffffeb0 0x40>;
- 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+-	pr_debug("AT91: PM - wakeup %08x\n",
+-			at91_aic_read(AT91_AIC_IPR) & at91_aic_read(AT91_AIC_IMR));
++	if (IS_ENABLED(CONFIG_OLD_IRQ_AT91) && at91_aic_base)
++		pr_debug("AT91: PM - wakeup %08x\n",
++			 at91_aic_read(AT91_AIC_IPR) &
++			 at91_aic_read(AT91_AIC_IMR));
+ 
+ error:
+ 	target_state = PM_SUSPEND_ON;
+-	at91_irq_resume();
++
++	if (IS_ENABLED(CONFIG_OLD_IRQ_AT91) && at91_aic_base)
++		at91_irq_resume();
++
+ 	if (of_have_populated_dt())
+ 		at91_pinctrl_gpio_resume();
+ 	else
+diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
+index 7d3f7cc..fa98176 100644
+--- a/arch/arm/mach-at91/setup.c
++++ b/arch/arm/mach-at91/setup.c
+@@ -49,7 +49,8 @@ void __init at91_init_irq_default(void)
+ void __init at91_init_interrupts(unsigned int *priority)
+ {
+ 	/* Initialize the AIC interrupt controller */
+-	at91_aic_init(priority, at91_boot_soc.extern_irq);
++	if (IS_ENABLED(CONFIG_OLD_IRQ_AT91))
++		at91_aic_init(priority, at91_boot_soc.extern_irq);
+ 
+ 	/* Enable GPIO interrupts */
+ 	at91_gpio_irq_setup();
 -- 
 1.7.9.5
-
