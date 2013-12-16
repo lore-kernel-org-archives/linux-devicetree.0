@@ -1,58 +1,49 @@
-From: Alex Elder <alex.elder@linaro.org>
-Subject: [GIT PULL] clk: initial support  for Broadcom Kona clocks
-Date: Mon, 16 Dec 2013 09:26:29 -0600
-Message-ID: <52AF1BA5.6000902@linaro.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH 4/4] ARM: keystone_defconfig: enable LED support
+Date: Mon, 16 Dec 2013 18:39:40 +0200
+Message-ID: <1387211981-26045-5-git-send-email-grygorii.strashko@ti.com>
+References: <1387211981-26045-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1387211981-26045-1-git-send-email-grygorii.strashko@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Mike, please pull the following for 3.14.  It adds clock support
-for Broadcom SoCs having "Kona" clock control units.  Thanks.
+The Keystone GPIO functionality is ready for use, so LED support can be
+enabled in config.
 
-					-Alex
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ arch/arm/configs/keystone_defconfig |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-The following changes since commit 1459c837036a44e2dcf14a9452ed330201fb23b5:
-
-  clk: si570: Add a driver for SI570 oscillators (2013-12-14 21:01:35 -0800)
-
-are available in the git repository at:
-
-  git://git.linaro.org/landing-teams/working/broadcom/kernel.git
-pull/mturquette-kona-clocks
-
-for you to fetch changes up to 143522e704d105bd2b3cbbca6e8fb2d217866ec0:
-
-  clk: bcm281xx: add initial clock framework support (2013-12-16
-07:34:52 -0600)
-
-----------------------------------------------------------------
-Alex Elder (2):
-      clk: bcm281xx: define kona clock binding
-      clk: bcm281xx: add initial clock framework support
-
- .../devicetree/bindings/clock/bcm-kona-clock.txt   |   93 ++
- drivers/clk/Kconfig                                |    1 +
- drivers/clk/Makefile                               |    1 +
- drivers/clk/bcm/Kconfig                            |    8 +
- drivers/clk/bcm/Makefile                           |    3 +
- drivers/clk/bcm/clk-bcm281xx.c                     |  416 ++++++++
- drivers/clk/bcm/clk-kona-setup.c                   |  769 +++++++++++++++
- drivers/clk/bcm/clk-kona.c                         | 1033
-++++++++++++++++++++
- drivers/clk/bcm/clk-kona.h                         |  414 ++++++++
- include/dt-bindings/clock/bcm281xx.h               |   65 ++
- 10 files changed, 2803 insertions(+)
- create mode 100644
-Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
- create mode 100644 drivers/clk/bcm/Kconfig
- create mode 100644 drivers/clk/bcm/Makefile
- create mode 100644 drivers/clk/bcm/clk-bcm281xx.c
- create mode 100644 drivers/clk/bcm/clk-kona-setup.c
- create mode 100644 drivers/clk/bcm/clk-kona.c
- create mode 100644 drivers/clk/bcm/clk-kona.h
- create mode 100644 include/dt-bindings/clock/bcm281xx.h
+diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
+index e911f7f..fb1eb8a 100644
+--- a/arch/arm/configs/keystone_defconfig
++++ b/arch/arm/configs/keystone_defconfig
+@@ -161,3 +161,11 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=y
+ CONFIG_GPIOLIB=y
+ CONFIG_GPIO_SYSFS=y
+ CONFIG_GPIO_DAVINCI=y
++CONFIG_LEDS_CLASS=y
++CONFIG_NEW_LEDS=y
++CONFIG_LEDS_GPIO=y
++CONFIG_LEDS_TRIGGERS=y
++CONFIG_LEDS_TRIGGER_ONESHOT=y
++CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_LEDS_TRIGGER_BACKLIGHT=y
++CONFIG_LEDS_TRIGGER_GPIO=y
+-- 
+1.7.9.5
