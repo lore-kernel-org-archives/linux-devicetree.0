@@ -1,12 +1,14 @@
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
 	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: [PATCH 2/2] ARM: device trees for Energy Micro's EFM32 Cortex-M3 SoCs
-Date: Mon, 16 Dec 2013 20:11:37 +0100
-Message-ID: <1387221097-6752-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Date: Mon, 16 Dec 2013 20:12:03 +0100
+Message-ID: <1387221123-6794-1-git-send-email-u.kleine-koenig@pengutronix.de>
+References: <20131216190953.GB14866@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131216190953.GB14866-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
