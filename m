@@ -1,173 +1,62 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] regulator: Start using standard gpios property and
- deprecate some custom properties
-Date: Mon, 16 Dec 2013 15:06:22 -0800
-Message-ID: <20131216230622.GH26293@atomide.com>
-References: <1386965234-26461-1-git-send-email-tony@atomide.com>
- <20131216183615.GK3185@sirena.org.uk>
- <20131216194023.GE26293@atomide.com>
- <20131216201102.GP3185@sirena.org.uk>
- <20131216210512.GF26293@atomide.com>
- <20131216214057.GG3185@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv4] rtc: Add support for Intersil ISL12057 I2C RTC chip
+Date: Mon, 16 Dec 2013 23:23:31 +0000
+Message-ID: <20131216232331.GK3185@sirena.org.uk>
+References: <1dec5992db795b61e91e0abf910dee7fce322ccc.1387227955.git.arno@natisbad.org>
+ <20131216213706.GA8527@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/1RY4l6R+cI/ZU5B"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131216214057.GG3185-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <20131216213706.GA8527@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Arnaud Ebalard <arno@natisbad.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [131216 13:42]:
-> On Mon, Dec 16, 2013 at 01:05:13PM -0800, Tony Lindgren wrote:
-> > * Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [131216 12:12]:
-> 
-> > > This is the first time anyone's mentioned this so it probably isn't that
-> > > serious an issue and bear in mind that the patch was also handling all
-> > > the named GPIO specifiers too.
-> 
-> > I've certainly debugged this same exact issue twice already and that
-> > probably means that same issue has been debugged tens or hundreds
-> > of times by other people.
-> 
-> That surprises me to be honest, but then the fact that the convention
-> was even defined surprises me.  Like I say you're the first person to
-> mention it; I suspect you might write more DTs than most.
 
-OK a limited patch for fixed regulator appended below to deal with the
-above issue only.
- 
-> > Personally I don't see any value for a regulator describing the names of
-> > the GPIOs in the binding, it's really up to the driver to make sense of
-> > them. Especially if there are one or more similar GPIOs. We're not
-> 
-> Devices like PMICs frequently have a *lot* of possible pin functions
-> some of which can get mapped onto GPIOs (in either direction), many of
-> which are going to be fixed by system design and generally all muxed
-> onto a much smaller set of physical pins.  If you try to specify those
-> through an unnamed gpios property you end up with a very large array
-> (say 30 elements, more wouldn't be too surprising) most of which will be
-> empty.  That is not at all usable, it's error prone to write and very
-> hard to read even with the preprocessor support that only got added
-> quite recently.
+--/1RY4l6R+cI/ZU5B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That's why PMICs usually show up as GPIO controllers. And if a regulator
-needs to use those GPIOs, it should most likely just use the standard
-"gpios" property.
- 
-> > naming interrupts either.
-> 
-> There's typically a much more limited set of interrupts a device can
-> have (and many of the more optional ones end up getting expressed via
-> the GPIO binding since you also need to read the state to use them) so
-> they don't run into the issue so much.
+On Mon, Dec 16, 2013 at 01:37:06PM -0800, Guenter Roeck wrote:
 
-Hmm to me it seems that pretty much all of these should just use "gpios":
+> Here is a snippet from the saved patch:
 
-$ git grep -B2 -A1 of_get_named_gpio drivers/regulator
- 
-> > > In any case, the thing is that there's a difference between parsing both
-> > > and deprecation - deprecation implies an intention to remove the old one
-> > > which would just reintroduce the problem the other way around since
-> > > people are likely to drop or forget the plural, use old DTs and so on.
-> > > Adding a gpios property in parallel with plain gpio is fine and what I
-> > > was mostly suggesting.
-> 
-> > Deprecation _may_ imply that it will get removed, but not always.
-> > Naturally we're going to have to keep the old bindings in place since
-> > they were merged. I can changed that to obsoleted if that's any better.
-> 
-> Yes, that's better.
-> 
-> > > Exactly, I think it's way more trouble than it's worth to try to change
-> > > for named single element lists.  The standard property makes more sense.
-> 
-> > I don't think there should be any named GPIOs. If we want names, then
-> > the GPIO usage should be possible to group quite easily rather than create
-> > a new property for everything. Something like "enable-gpio" comes to mind.
-> 
-> I don't understand the difference between your suggestion and named
-> GPIOs.
+>  obj-$(CONFIG_RTC_DRV_IMXDI)    +=3D rtc-imxdi.o
+>  obj-$(CONFIG_RTC_DRV_ISL1208)  +=3D rtc-isl1208.o
+>  obj-$(CONFIG_RTC_DRV_ISL12022) +=3D rtc-isl12022.o
+> +obj-$(CONFIG_RTC_DRV_ISL12057)  +=3D rtc-isl12057.o
+>  obj-$(CONFIG_RTC_DRV_JZ4740)   +=3D rtc-jz4740.o
+>  obj-$(CONFIG_RTC_DRV_LP8788)   +=3D rtc-lp8788.o
+>  obj-$(CONFIG_RTC_DRV_LPC32XX)  +=3D rtc-lpc32xx.o
 
-What I'm trying to say is let's not let drivers invent their random
-*-gpio[s] property as those essentially creates new kernel ABIs that
-we're stuck with.
+> Something is adding those '3D' after each '=' into the patch.
 
-Instead, let's try to use standard properties where possible like
-"gpios" and "enable-gpios", "cs-gpios" and so on.
+That's quoted printable MIME encoding of the =, presumably your MUA
+doesn't do MIME (or the header went AWOL, though it's there in my copy).
 
-Regards,
+--/1RY4l6R+cI/ZU5B
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Tony
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-8< ------------------------
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Date: Thu, 12 Dec 2013 16:21:52 -0800
-Subject: [PATCH] regulator: Start using standard gpios property for fixed regulator
+iQIcBAEBAgAGBQJSr4twAAoJELSic+t+oim9gusQAJ1x++f15EA8AXsUnz9T/2Oe
+A1krKEWO2+cqk4Nv+XNRW86Tl0RP/2fTtU518g/lGsRoebBudznBY09icbtCX941
+YZGVJc6q3TPR1kLvTe+9Umf0NFddrsQjU3VWLlia3W92oi3diWjRk8FdCcbMd6MK
+Oyka5qnFzvzFCjs9YNFoZD1pDjCxzepDhttKVYZqZ1hsu4e+dgZJUHaf6YaufTrr
+Yif+VEaYp1HFIgKNvawekzOT4pl96l0aGt4ZZM771Xpc+eaXpCTF/pBBkVStwsKQ
+EoQYscwXYS7JISIJ81PE0pVsJm0pqWW197az7v+BhyLVtJ3TBRAuKtHYIUFCtQ0H
+y+9cMePiovgMjWNoGcDhwx97BKRLsSl2Ssz98NCpgPYlMFLxRVSSCgOwrfX0U7cY
+OPhwl7bLqwz7OVDTp+J+zO0LSutjX/W2+Z8FofW2jC7Gt44OgqEoWHRxmVpalU4s
+BTCyHZzzCF8KRQtYvH2WcgvMa+lscoWnuE6usv2/ne5WqfODJAPcrqxIrZXh6Iai
+BZxwhwjXGge1kButC9QSqXJubcq9y027y2jbfdoXmBzbi5jGXKhs9szlPiN/Ek+O
+2zHZCI9M7VrTHjpewGIgAaEIHaUSIgCIYlIbPvS+87eCIZDvx9gF6iQnnPCivM5b
+YS7QvdeRvjDLP8J0AGhS
+=zysD
+-----END PGP SIGNATURE-----
 
-The fixed regulator has been using a custom "gpio" property instead of
-standard "gpios" property which is confusing and can leave into silent bugs
-with typos where the GPIO value is not changed for the regulator.
-
-Fix the issue by trying to use "gpios" where possible in the drivers that
-can already use it, and if that fails, then try to use the legacy custom
-GPIO property.
-
-Note that we cannot remove the existing legacy property, and don't need
-to churn the .dts files for it. But we can start using the standard
-"gpios" property for the new entries and update the existing entries
-where suitable with other clean-up.
-
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -4,7 +4,7 @@ Required properties:
- - compatible: Must be "regulator-fixed";
- 
- Optional properties:
--- gpio: gpio to use for enable control
-+- gpios: gpio to use for enable control
- - startup-delay-us: startup time in microseconds
- - enable-active-high: Polarity of GPIO is Active high
- If this property is missing, the default assumed is Active low.
-@@ -12,6 +12,10 @@ If this property is missing, the default assumed is Active low.
-   If this property is missing then default assumption is false.
- -vin-supply: Input supply name.
- 
-+Obsoleted properties:
-+- gpio: Use the standard gpios property listed above instead of
-+  this.
-+
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
- However a fixed voltage regulator is expected to have the
-@@ -25,7 +29,7 @@ Example:
- 		regulator-name = "fixed-supply";
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
--		gpio = <&gpio1 16 0>;
-+		gpios = <&gpio1 16 0>;
- 		startup-delay-us = <70000>;
- 		enable-active-high;
- 		regulator-boot-on;
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -77,7 +77,9 @@ of_get_fixed_voltage_config(struct device *dev)
- 	if (init_data->constraints.boot_on)
- 		config->enabled_at_boot = true;
- 
--	config->gpio = of_get_named_gpio(np, "gpio", 0);
-+	config->gpio = of_get_gpio(np, 0);
-+	if (!gpio_is_valid(config->gpio))
-+		config->gpio = of_get_named_gpio(np, "gpio", 0);
- 	/*
- 	 * of_get_named_gpio() currently returns ENODEV rather than
- 	 * EPROBE_DEFER. This code attempts to be compatible with both
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--/1RY4l6R+cI/ZU5B--
