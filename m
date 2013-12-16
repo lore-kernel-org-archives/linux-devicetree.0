@@ -1,49 +1,36 @@
 From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH 4/4] ARM: keystone_defconfig: enable LED support
-Date: Mon, 16 Dec 2013 18:39:40 +0200
-Message-ID: <1387211981-26045-5-git-send-email-grygorii.strashko@ti.com>
-References: <1387211981-26045-1-git-send-email-grygorii.strashko@ti.com>
+Subject: [PATCH 0/4] ARM: keystone: enable GPIO support
+Date: Mon, 16 Dec 2013 18:39:36 +0200
+Message-ID: <1387211981-26045-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1387211981-26045-1-git-send-email-grygorii.strashko@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The Keystone GPIO functionality is ready for use, so LED support can be
-enabled in config.
+This series adds Keystone GPIO IP definition in DT and enable GPIO support in
+Keystone configuration file.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm/configs/keystone_defconfig |    8 ++++++++
- 1 file changed, 8 insertions(+)
+Also, it enables LEDs support for Keystone 2 K2H EVM as specified in board 
+schematic. For more information see:
+- http://www.advantech.com/Support/TI-EVM/EVMK2HX.aspx 
 
-diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
-index e911f7f..fb1eb8a 100644
---- a/arch/arm/configs/keystone_defconfig
-+++ b/arch/arm/configs/keystone_defconfig
-@@ -161,3 +161,11 @@ CONFIG_CRYPTO_USER_API_SKCIPHER=y
- CONFIG_GPIOLIB=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_DAVINCI=y
-+CONFIG_LEDS_CLASS=y
-+CONFIG_NEW_LEDS=y
-+CONFIG_LEDS_GPIO=y
-+CONFIG_LEDS_TRIGGERS=y
-+CONFIG_LEDS_TRIGGER_ONESHOT=y
-+CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-+CONFIG_LEDS_TRIGGER_BACKLIGHT=y
-+CONFIG_LEDS_TRIGGER_GPIO=y
+Depends on:
+[PATCH 0/2] gpio: davinci: reuse for keystone arch
+- https://lkml.org/lkml/2013/12/12/366
+
+Grygorii Strashko (4):
+  arm: dts: keystone: add GPIO device entry
+  ARM: keystone_defconfig: enable gpio support
+  arm: dts: keystone-evm: add LEDs supports
+  ARM: keystone_defconfig: enable LED support
+
+ arch/arm/boot/dts/k2hk-evm.dts      |   23 ++++++++++++++++++
+ arch/arm/boot/dts/keystone.dtsi     |   45 +++++++++++++++++++++++++++++++++++
+ arch/arm/configs/keystone_defconfig |   11 +++++++++
+ 3 files changed, 79 insertions(+)
+
 -- 
 1.7.9.5
