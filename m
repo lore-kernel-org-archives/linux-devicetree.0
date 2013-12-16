@@ -1,76 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFCv4 06/11] misc: Introduce Nokia CMT driver
-Date: Mon, 16 Dec 2013 14:31:53 +0100
-Message-ID: <CACRpkdbx=Ye8xo4wMkyntME45xv15DeyqV32aeCAcSaa+vDpfA@mail.gmail.com>
-References: <1387150085-23173-1-git-send-email-sre@debian.org>
-	<1387150085-23173-7-git-send-email-sre@debian.org>
-	<CACRpkdYjjXgE_W8gq1e6z=nGMF=r-m+o2kkvrBFrEMm3o0=RwQ@mail.gmail.com>
-	<20131216121524.GA6177@earth.universe>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 3/3] devicetree: bindings: document lsi,zevio-usb
+Date: Mon, 16 Dec 2013 07:46:47 -0600
+Message-ID: <CAL_JsqJ1HTccZ0-QLAXnWOvMYHsO_GjzKtYbbqp7_0c_H3e_NA@mail.gmail.com>
+References: <1387078509-14156-1-git-send-email-dt.tangr@gmail.com>
+	<1387078509-14156-3-git-send-email-dt.tangr@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131216121524.GA6177@earth.universe>
+In-Reply-To: <1387078509-14156-3-git-send-email-dt.tangr@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, =?ISO-8859-1?Q?Pali_Roh=E1r?= <pali.rohar@gmail.com>, =?windows-1251?B?yOLg6evuIMTo7Ojy8O7i?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+To: dt.tangr@gmail.com
+Cc: Linux USB List <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2013 at 1:15 PM, Sebastian Reichel <sre@debian.org> wrote:
-> On Mon, Dec 16, 2013 at 10:48:06AM +0100, Linus Walleij wrote:
-
->> I.e. it doesn't look device-specific at all, just like some
->> generic glue code that could be useful to many such
->> scenarios.
+On Sat, Dec 14, 2013 at 9:35 PM,  <dt.tangr@gmail.com> wrote:
+> From: Daniel Tang <dt.tangr@gmail.com>
 >
-> I like the idea.
 >
-> Probably the remaining gpio exporting code can be converted into
-> some generic gpio-sysfs-export driver as well.
+> Signed-off-by: Daniel Tang <dt.tangr@gmail.com>
 
-I am very reluctant in letting device trees specify exports of GPIOs
-to userspace, not so much because it's Linux-specific but for
-the fact that people are doing things in userspace that should not
-be done in userspace.
+A few minor things below. Otherwise:
 
-Last time it was proposed I asked to the specific usecase,
-exactly why userspace needed this handle on a physical
-GPIO line, and why it can't use another userspace interface
-(example: leds, keys etc.)
+Acked-by: Rob Herring <rob.herring@calxeda.com>
 
-> What do you think about the following?
+> ---
+>  .../devicetree/bindings/usb/ci-hdrc-zevio.txt         |   17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
 >
-> /*
->  * driver, which provides generic reset notifications
->  */
-> cmt_reset: reset-notifier {
->     compatible = "linux,reset-notification";
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
+> new file mode 100644
+> index 0000000..1a005eb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-zevio.txt
+> @@ -0,0 +1,17 @@
+> +* LSI Zevio USB OTG Controller
+> +
+> +Required properties:
+> +- compatible: Should be "lsi,zevio-usb"
+> +- reg: Should contain registers location and length
+> +- interrupts: Should contain controller interrupt
+> +
+> +Recommended properies:
+
+To be consistent, should be "optional" rather than recommended.
+
+s/properies/properties/
+
+> +- vbus-supply: regulator for vbus
+> +
+> +Examples:
+> +               usb0: usb@B0000000 {
+> +                       reg = <0xB0000000 0x1000>;
+
+lower case hex is preferred.
+
+> +                       compatible = "lsi,zevio-usb";
+> +                       interrupts = <8>;
+> +                       vbus-supply = <&vbus_reg>;
+> +               };
+> --
+> 1.7.10.4
 >
->     interrupts = <gpio>;
-> };
-
-Looks good to me.
-
-> /*
->  * driver, which exports the specified gpios in sysfs with the
->  * supplied names. The device will be named according to the
->  * label
->  */
-> cmt_gpios: gpio-sysfs-export {
->     compatible = "linux,gpio-sysfs-export";
->     label = "nokia-cmt";
->
->     gpios = <A>, <B>, ...;
->     gpio-names = "A", "B", ...;
-> };
-
-Please follow the discussion on this topic:
-http://marc.info/?l=linux-gpio&m=138201170431416&w=2
-
->> Why are you using a tasklet rather than a work
->> for this?
->
-> No particular reason. I just took this over from Nokia's code.
-
-Can you try to use a work instead?
-
-Yours,
-Linus Walleij
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
