@@ -1,100 +1,48 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCHv6+ 01/13] of: introduce
-	of_property_for_earch_phandle_with_args()
-Date: Mon, 16 Dec 2013 10:14:43 -0700
-Message-ID: <52AF3503.3010302@wwwdotorg.org>
-References: <20131211.153338.2186623380643957232.hdoyu@nvidia.com><20131212113417.BDCD0C40637@trevor.secretlab.ca><20131212.141404.684884000513445038.hdoyu@nvidia.com>
-	<20131214.175115.1251935659998248370.hdoyu@nvidia.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v5] clk: si570: Add a driver for SI570 oscillators
+Date: Mon, 16 Dec 2013 09:28:22 -0800
+Message-ID: <20131216172822.GB1811@roeck-us.net>
+References: <1379806839-13762-1-git-send-email-soren.brinkmann@xilinx.com>
+ <b625092b-682c-4072-85a6-9f9d7f378ec0@VA3EHSMHS043.ehs.local>
+ <20131002231751.4343.81234@quantum>
+ <52AC8857.8070504@roeck-us.net>
+ <3bfd63dd-6bf1-4ae9-aaab-b913f9739c19@DB8EHSMHS015.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20131214.175115.1251935659998248370.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3bfd63dd-6bf1-4ae9-aaab-b913f9739c19@DB8EHSMHS015.ehs.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/14/2013 08:51 AM, Hiroshi Doyu wrote:
-> Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote @ Thu, 12 Dec 2013 14:14:04 +0200 (EET):
-> 
->>>> From 8f7c0404aa68f0e8dbe0babc240590f6528ecc1f Mon Sep 17 00:00:00 2001
->>>> From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>> Date: Fri, 15 Nov 2013 10:52:53 +0200
->>>> Subject: [PATCH] of: introduce of_property_for_each_phandle_with_args()
->>>>
->>>> Iterating over a property containing a list of phandles with arguments
->>>> is a common operation for device drivers. This patch adds a new
->>>> of_property_for_each_phandle_with_args() macro to make the iteration
->>>> simpler.
->>>>
->>>> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>> Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ....
->>>> ---
->>>>  drivers/of/base.c  | 46 ++++++++++++++++++++++++++++++++++++++++++++++
->>>>  include/linux/of.h | 32 ++++++++++++++++++++++++++++++++
->>>>  2 files changed, 78 insertions(+)
->>>>
->>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
->>>> index f807d0e..cd4ab05 100644
->>>> --- a/drivers/of/base.c
->>>> +++ b/drivers/of/base.c
->>>> @@ -1201,6 +1201,52 @@ void of_print_phandle_args(const char *msg, const struct of_phandle_args *args)
->>>>       printk("\n");
->>>>  }
->>>>
->>>> +const __be32 *of_phandle_iter_next(const char *cells_name, int cell_count,
->>>> +                                const __be32 *cur, const __be32 *end,
->>>> +                                struct of_phandle_args *out_args)
->>>
->>> Having to pass in cells_name, cell_count, cur and end each time seems a
->>> little odd. Can a state structure be used instead?
->>>
->>> struct of_phandle_iter_state {
->>>         const char *cells_name;
->>>         int cells_count;
->>>         const __be32 *cur;
->>>         const __be32 *end;
->>>         struct of_phandle_args out_args;
->>> }
->>>
->>> Make the caller provide one of those and fill it in with the init
->>> function.
->>
->> I rewrote this a few times and so now I have a few version of this
->> implementations :-) The above proposal is similar to the version v6+++
->> mentioned in the above patch note:
->>
->>>> v6+++:
->>>> Introduced a new struct "of_phandle_iter" to keep the state when
->>>> iterating over the list.
->>
->> which is:
->>
->>   [RFC][PATCHv6+++ 01/13] of: introduce of_property_for_earch_phandle_with_args()
->>     http://lists.linuxfoundation.org/pipermail/iommu/2013-November/007087.html
->>
->> Stephen seemed to prefer the version without state struct. I like the
->> idea to not pass the same arguments repeatly. Instead, wrapping them
->> in a struct with state may look better.
->>
->> So if Stephen agrees, I'll rewrite the version with state struct
->> again.
-> 
-> Stephen, let me know what you think.
+On Mon, Dec 16, 2013 at 09:03:02AM -0800, S=F6ren Brinkmann wrote:
+> Hi Guenther, Mike,
+>=20
+> On Sat, Dec 14, 2013 at 08:33:27AM -0800, Guenter Roeck wrote:
+> > On 10/02/2013 04:17 PM, Mike Turquette wrote:
+> > >Quoting S=F6ren Brinkmann (2013-10-02 10:20:38)
+> > >>Hi Mike,
+> > >>
+> > >>could you please comment on this/apply it to clk-next?
+> > >
+> > >It looks good and is in the queue. Will show up in clk-next in a f=
+ew
+> > >days.
+> > >
+> > Hi Mike,
+> >=20
+> > trying again ... what happened with this driver ? Any reason for no=
+t pushing it after all ?
+>=20
+> I've been waiting for it to appear in clk-next for a while too. I jus=
+t
+> fetched the repo and it's there.
+> Thanks Guenter for following up and Mike for applying.
+>=20
+Great!
 
-It's hard to follow there have been so many revisions. As long as the
-result is reasonable, I'll be OK with it. IIRC, I objected to using a
-state structure for values that weren't needed by both functions, but if
-both functions need the values, that's fine. I suppose even if they
-don't both need the values, putting them in a state structure is OK too
-if it means the patch gets finished!
+Thanks,
+Guenter
