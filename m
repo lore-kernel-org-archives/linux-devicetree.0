@@ -1,133 +1,416 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCHv2 03/27] ARM: OMAP2+: add omapdss_init_of()
-Date: Mon, 16 Dec 2013 16:56:10 +0200
-Message-ID: <1387205794-32246-4-git-send-email-tomi.valkeinen@ti.com>
-References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com>
+From: Alex Elder <alex.elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 3/3] ARM: dts: bcm281xx: define real clocks
+Date: Mon, 16 Dec 2013 09:25:54 -0600
+Message-ID: <52AF1B82.10806@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-omapdss driver uses a omapdss platform device to pass platform specific
-function pointers and DSS hardware version from the arch code to the
-driver. This device is needed also when booting with DT.
+Replace the "fake" clocks defined in the "bcm11351.dtsi" device tree
+file with real definitions backed by the new BCM281xx clock driver.
 
-This patch adds omapdss_init_of() function, called from board-generic at
-init time, which creates the omapdss device.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/mach-omap2/board-generic.c |  2 ++
- arch/arm/mach-omap2/common.h        |  2 ++
- arch/arm/mach-omap2/display.c       | 62 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 66 insertions(+)
+v3: - update "bsc[1-3]" definitions, which are queued for v3.14
+v2: - got rid of the "not_selected" clock definition
 
-diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-index 8d972ff18c56..842e4f21ab09 100644
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -36,6 +36,8 @@ static struct of_device_id omap_dt_match_table[] __initdata = {
- static void __init omap_generic_init(void)
- {
- 	pdata_quirks_init(omap_dt_match_table);
+ arch/arm/boot/dts/bcm11351.dtsi |  248
+++++++++++++++++++++++++++-------------
+ 1 file changed, 168 insertions(+), 80 deletions(-)
+
+diff --git a/arch/arm/boot/dts/bcm11351.dtsi
+b/arch/arm/boot/dts/bcm11351.dtsi
+index 4bfd7e3..e1f8c0a 100644
+--- a/arch/arm/boot/dts/bcm11351.dtsi
++++ b/arch/arm/boot/dts/bcm11351.dtsi
+@@ -14,6 +14,8 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+
++#include "dt-bindings/clock/bcm281xx.h"
 +
-+	omapdss_init_of();
- }
- 
- #ifdef CONFIG_SOC_OMAP2420
-diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
-index e30ef6797c63..04a4d360dd20 100644
---- a/arch/arm/mach-omap2/common.h
-+++ b/arch/arm/mach-omap2/common.h
-@@ -307,5 +307,7 @@ extern int omap_dss_reset(struct omap_hwmod *);
- /* SoC specific clock initializer */
- extern int (*omap_clk_init)(void);
- 
-+int __init omapdss_init_of(void);
+ #include "skeleton.dtsi"
+
+ / {
+@@ -43,7 +45,7 @@
+ 		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
+ 		status = "disabled";
+ 		reg = <0x3e000000 0x1000>;
+-		clocks = <&uartb_clk>;
++		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB>;
+ 		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+ 		reg-shift = <2>;
+ 		reg-io-width = <4>;
+@@ -53,7 +55,7 @@
+ 		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
+ 		status = "disabled";
+ 		reg = <0x3e001000 0x1000>;
+-		clocks = <&uartb2_clk>;
++		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB2>;
+ 		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
+ 		reg-shift = <2>;
+ 		reg-io-width = <4>;
+@@ -63,7 +65,7 @@
+ 		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
+ 		status = "disabled";
+ 		reg = <0x3e002000 0x1000>;
+-		clocks = <&uartb3_clk>;
++		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB3>;
+ 		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+ 		reg-shift = <2>;
+ 		reg-io-width = <4>;
+@@ -73,7 +75,7 @@
+ 		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
+ 		status = "disabled";
+ 		reg = <0x3e003000 0x1000>;
+-		clocks = <&uartb4_clk>;
++		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB4>;
+ 		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+ 		reg-shift = <2>;
+ 		reg-io-width = <4>;
+@@ -95,7 +97,7 @@
+ 		compatible = "brcm,kona-timer";
+ 		reg = <0x35006000 0x1000>;
+ 		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&hub_timer_clk>;
++		clocks = <&aon_ccu BCM281XX_AON_CCU_HUB_TIMER>;
+ 	};
+
+ 	gpio: gpio@35003000 {
+@@ -118,7 +120,7 @@
+ 		compatible = "brcm,kona-sdhci";
+ 		reg = <0x3f180000 0x10000>;
+ 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&sdio1_clk>;
++		clocks = <&master_ccu BCM281XX_MASTER_CCU_SDIO1>;
+ 		status = "disabled";
+ 	};
+
+@@ -126,7 +128,7 @@
+ 		compatible = "brcm,kona-sdhci";
+ 		reg = <0x3f190000 0x10000>;
+ 		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&sdio2_clk>;
++		clocks = <&master_ccu BCM281XX_MASTER_CCU_SDIO2>;
+ 		status = "disabled";
+ 	};
+
+@@ -134,7 +136,7 @@
+ 		compatible = "brcm,kona-sdhci";
+ 		reg = <0x3f1a0000 0x10000>;
+ 		interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&sdio3_clk>;
++		clocks = <&master_ccu BCM281XX_MASTER_CCU_SDIO3>;
+ 		status = "disabled";
+ 	};
+
+@@ -142,7 +144,7 @@
+ 		compatible = "brcm,kona-sdhci";
+ 		reg = <0x3f1b0000 0x10000>;
+ 		interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&sdio4_clk>;
++		clocks = <&master_ccu BCM281XX_MASTER_CCU_SDIO4>;
+ 		status = "disabled";
+ 	};
+
+@@ -152,7 +154,7 @@
+ 		interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		clocks = <&bsc1_clk>;
++		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_BSC1>;
+ 		status = "disabled";
+ 	};
+
+@@ -162,7 +164,7 @@
+ 		interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		clocks = <&bsc2_clk>;
++		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_BSC2>;
+ 		status = "disabled";
+ 	};
+
+@@ -172,7 +174,7 @@
+ 		interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		clocks = <&bsc3_clk>;
++		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_BSC3>;
+ 		status = "disabled";
+ 	};
+
+@@ -182,99 +184,125 @@
+ 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		clocks = <&pmu_bsc_clk>;
++		clocks = <&aon_ccu BCM281XX_AON_CCU_PMU_BSC>;
+ 		status = "disabled";
+ 	};
+
+ 	clocks {
+-		bsc1_clk: bsc1 {
+-			compatible = "fixed-clock";
+-			clock-frequency = <13000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
- #endif /* __ASSEMBLER__ */
- #endif /* __ARCH_ARM_MACH_OMAP2PLUS_COMMON_H */
-diff --git a/arch/arm/mach-omap2/display.c b/arch/arm/mach-omap2/display.c
-index 58347bb874a0..197f431ae279 100644
---- a/arch/arm/mach-omap2/display.c
-+++ b/arch/arm/mach-omap2/display.c
-@@ -23,6 +23,8 @@
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/delay.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
- 
- #include <video/omapdss.h>
- #include "omap_hwmod.h"
-@@ -514,3 +516,63 @@ int omap_dss_reset(struct omap_hwmod *oh)
- 
- 	return r;
- }
++		root_ccu: root_ccu {
++			compatible = "brcm,bcm11351-root-ccu";
++			reg = <0x35001000 0x0f00>;
++			#clock-cells = <1>;
++			clock-output-names = "frac_1m";
++		};
 +
-+int __init omapdss_init_of(void)
-+{
-+	int r;
-+	enum omapdss_version ver;
++		hub_ccu: hub_ccu {
++			compatible = "brcm,bcm11351-hub-ccu";
++			reg = <0x34000000 0x0f00>;
++			#clock-cells = <1>;
++			clock-output-names = "tmon_1m";
++		};
 +
-+	static struct omap_dss_board_info board_data = {
-+		.dsi_enable_pads = omap_dsi_enable_pads,
-+		.dsi_disable_pads = omap_dsi_disable_pads,
-+		.get_context_loss_count = omap_pm_get_dev_context_loss_count,
-+		.set_min_bus_tput = omap_dss_set_min_bus_tput,
-+	};
++		aon_ccu: aon_ccu {
++			compatible = "brcm,bcm11351-aon-ccu";
++			reg = <0x35002000 0x0f00>;
++			#clock-cells = <1>;
++			clock-output-names = "hub_timer",
++					     "pmu_bsc",
++					     "pmu_bsc_var";
++		};
 +
-+	ver = omap_display_get_version();
++		master_ccu: master_ccu {
++			compatible = "brcm,bcm11351-master-ccu";
++			reg = <0x3f001000 0x0f00>;
++			#clock-cells = <1>;
++			clock-output-names = "sdio1",
++					     "sdio2",
++					     "sdio3",
++					     "sdio4",
++					     "usb_ic",
++					     "hsic2_48m",
++					     "hsic2_12m";
++		};
 +
-+	if (ver == OMAPDSS_VER_UNKNOWN) {
-+		pr_err("DSS not supported on this SoC\n");
-+		return -ENODEV;
-+	}
++		slave_ccu: slave_ccu {
++			compatible = "brcm,bcm11351-slave-ccu";
++			reg = <0x3e011000 0x0f00>;
++			#clock-cells = <1>;
++			clock-output-names = "uartb",
++					     "uartb2",
++					     "uartb3",
++					     "uartb4",
++					     "ssp0",
++					     "ssp2",
++					     "bsc1",
++					     "bsc2",
++					     "bsc3",
++					     "pwm";
++		};
 +
-+	board_data.version = ver;
++		ref_1m_clk: ref_1m {
+ 			#clock-cells = <0>;
+-		};
+-
+-		bsc2_clk: bsc2 {
+-			compatible = "fixed-clock";
+-			clock-frequency = <13000000>;
+-			#clock-cells = <0>;
+-		};
+-
+-		bsc3_clk: bsc3 {
+-			compatible = "fixed-clock";
+-			clock-frequency = <13000000>;
+-			#clock-cells = <0>;
+-		};
+-
+-		pmu_bsc_clk: pmu_bsc {
+-			compatible = "fixed-clock";
+-			clock-frequency = <13000000>;
+-			#clock-cells = <0>;
+-		};
+-
+-		hub_timer_clk: hub_timer {
+-			compatible = "fixed-clock";
+-			clock-frequency = <32768>;
+-			#clock-cells = <0>;
+-		};
+-
+-		pwm_clk: pwm {
+-			compatible = "fixed-clock";
+-			clock-frequency = <26000000>;
+-			#clock-cells = <0>;
+-		};
+-
+-		sdio1_clk: sdio1 {
+-			compatible = "fixed-clock";
+-			clock-frequency = <48000000>;
+-			#clock-cells = <0>;
+-		};
+-
+-		sdio2_clk: sdio2 {
+-			compatible = "fixed-clock";
+-			clock-frequency = <48000000>;
+-			#clock-cells = <0>;
+-		};
+-
+-		sdio3_clk: sdio3 {
+-			compatible = "fixed-clock";
+-			clock-frequency = <48000000>;
+-			#clock-cells = <0>;
+-		};
+-
+-		sdio4_clk: sdio4 {
+-			compatible = "fixed-clock";
+-			clock-frequency = <48000000>;
+-			#clock-cells = <0>;
+-		};
+-
+-		tmon_1m_clk: tmon_1m {
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <1000000>;
++		};
 +
-+	omap_display_device.dev.platform_data = &board_data;
++		ref_32k_clk: ref_32k {
+ 			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <32768>;
+ 		};
+
+-		uartb_clk: uartb {
++		bbl_32k_clk: bbl_32k {
++			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+-			clock-frequency = <13000000>;
++			clock-frequency = <32768>;
++		};
 +
-+	r = platform_device_register(&omap_display_device);
-+	if (r < 0) {
-+		pr_err("Unable to register omapdss device\n");
-+		return r;
-+	}
++		ref_13m_clk: ref_13m {
+ 			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <13000000>;
+ 		};
+
+-		uartb2_clk: uartb2 {
++		var_13m_clk: var_13m {
++			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <13000000>;
++		};
 +
-+	/* create DRM device */
-+	r = omap_init_drm();
-+	if (r < 0) {
-+		pr_err("Unable to register omapdrm device\n");
-+		return r;
-+	}
++		dft_19_5m_clk: dft_19_5m {
+ 			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <19500000>;
+ 		};
+
+-		uartb3_clk: uartb3 {
++		ref_crystal_clk: ref_crystal {
++			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+-			clock-frequency = <13000000>;
++			clock-frequency = <26000000>;
++		};
 +
-+	/* create vrfb device */
-+	r = omap_init_vrfb();
-+	if (r < 0) {
-+		pr_err("Unable to register omapvrfb device\n");
-+		return r;
-+	}
++		ref_cx40_clk: ref_cx40 {
+ 			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <40000000>;
+ 		};
+
+-		uartb4_clk: uartb4 {
++		ref_52m_clk: ref_52m {
++			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+-			clock-frequency = <13000000>;
++			clock-frequency = <52000000>;
++		};
 +
-+	/* create FB device */
-+	r = omap_init_fb();
-+	if (r < 0) {
-+		pr_err("Unable to register omapfb device\n");
-+		return r;
-+	}
++		var_52m_clk: var_52m {
+ 			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <52000000>;
+ 		};
+
+ 		usb_otg_ahb_clk: usb_otg_ahb {
+@@ -282,5 +310,65 @@
+ 			clock-frequency = <52000000>;
+ 			#clock-cells = <0>;
+ 		};
 +
-+	/* create V4L2 display device */
-+	r = omap_init_vout();
-+	if (r < 0) {
-+		pr_err("Unable to register omap_vout device\n");
-+		return r;
-+	}
++		ref_96m_clk: ref_96m {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <96000000>;
++		};
 +
-+	return 0;
-+}
++		var_96m_clk: var_96m {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <96000000>;
++		};
++
++		ref_104m_clk: ref_104m {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <104000000>;
++		};
++
++		var_104m_clk: var_104m {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <104000000>;
++		};
++
++		ref_156m_clk: ref_156m {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <156000000>;
++		};
++
++		var_156m_clk: var_156m {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <156000000>;
++		};
++
++		ref_208m_clk: ref_208m {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <208000000>;
++		};
++
++		var_208m_clk: var_208m {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <208000000>;
++		};
++
++		ref_312m_clk: ref_312m {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <312000000>;
++		};
++
++		var_312m_clk: var_312m {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <312000000>;
++		};
+ 	};
+ };
 -- 
-1.8.3.2
+1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
