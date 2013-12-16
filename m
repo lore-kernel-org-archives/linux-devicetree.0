@@ -1,125 +1,111 @@
-From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 5/9] usb: s3c-hsotg: Use the new Exynos USB phy driver
- with the generic phy framework
-Date: Mon, 16 Dec 2013 16:40:12 -0500
-Message-ID: <20131216214012.GB15814@beef>
-References: <1386246579-25141-1-git-send-email-k.debski@samsung.com>
- <1386246579-25141-6-git-send-email-k.debski@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] regulator: Start using standard gpios property and
+ deprecate some custom properties
+Date: Mon, 16 Dec 2013 21:40:57 +0000
+Message-ID: <20131216214057.GG3185@sirena.org.uk>
+References: <1386965234-26461-1-git-send-email-tony@atomide.com>
+ <20131216183615.GK3185@sirena.org.uk>
+ <20131216194023.GE26293@atomide.com>
+ <20131216201102.GP3185@sirena.org.uk>
+ <20131216210512.GF26293@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+GiWpZ/vZzfY9+ZQ"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1386246579-25141-6-git-send-email-k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20131216210512.GF26293-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 01:29:35PM +0100, Kamil Debski wrote:
-> Change the used phy driver to the new Exynos USB phy driver that uses the
-> generic phy framework.
-> 
-> Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/samsung-hsotg.txt      |    4 ++++
->  drivers/usb/gadget/s3c-hsotg.c                     |   11 ++++++-----
->  2 files changed, 10 insertions(+), 5 deletions(-)
 
-Kamil,
+--+GiWpZ/vZzfY9+ZQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Can we separate this patch out of this series? My bcm281xx series is
-ready to go except for this dependency. Felipe has noted that there's
-only a week until he locks his tree down for 3.14 [1]. I'm willing to
-update this versus the comment Kishon made on fixing the example if
-you don't have time before then. Let me know.
+On Mon, Dec 16, 2013 at 01:05:13PM -0800, Tony Lindgren wrote:
+> * Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [131216 12:12]:
 
-[1] https://lkml.org/lkml/2013/12/16/555
+> > This is the first time anyone's mentioned this so it probably isn't that
+> > serious an issue and bear in mind that the patch was also handling all
+> > the named GPIO specifiers too.
 
-Thanks,
-Matt
+> I've certainly debugged this same exact issue twice already and that
+> probably means that same issue has been debugged tens or hundreds
+> of times by other people.
 
-> diff --git a/Documentation/devicetree/bindings/usb/samsung-hsotg.txt b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
-> index b83d428..9340d06 100644
-> --- a/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
-> +++ b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
-> @@ -24,6 +24,8 @@ Required properties:
->      - first entry: must be "otg"
->  - vusb_d-supply: phandle to voltage regulator of digital section,
->  - vusb_a-supply: phandle to voltage regulator of analog section.
-> +- phys: from general PHY binding: phandle to the PHY device
-> +- phy-names: from general PHY binding: should be "usb2-phy"
->  
->  Example
->  -----
-> @@ -36,5 +38,7 @@ Example
->  		clock-names = "otg";
->  		vusb_d-supply = <&vusb_reg>;
->  		vusb_a-supply = <&vusbdac_reg>;
-> +		phys = <&usb2phy 0>;
-> +		phy-names = "device";
->  	};
->  
-> diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-> index eccb147..db096fd 100644
-> --- a/drivers/usb/gadget/s3c-hsotg.c
-> +++ b/drivers/usb/gadget/s3c-hsotg.c
-> @@ -31,6 +31,7 @@
->  #include <linux/regulator/consumer.h>
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
->  
->  #include <linux/usb/ch9.h>
->  #include <linux/usb/gadget.h>
-> @@ -162,7 +163,7 @@ struct s3c_hsotg_ep {
->  struct s3c_hsotg {
->  	struct device		 *dev;
->  	struct usb_gadget_driver *driver;
-> -	struct usb_phy		*phy;
-> +	struct phy		 *phy;
->  	struct s3c_hsotg_plat	 *plat;
->  
->  	spinlock_t              lock;
-> @@ -2905,7 +2906,7 @@ static void s3c_hsotg_phy_enable(struct s3c_hsotg *hsotg)
->  	dev_dbg(hsotg->dev, "pdev 0x%p\n", pdev);
->  
->  	if (hsotg->phy)
-> -		usb_phy_init(hsotg->phy);
-> +		phy_power_on(hsotg->phy);
->  	else if (hsotg->plat->phy_init)
->  		hsotg->plat->phy_init(pdev, hsotg->plat->phy_type);
->  }
-> @@ -2922,7 +2923,7 @@ static void s3c_hsotg_phy_disable(struct s3c_hsotg *hsotg)
->  	struct platform_device *pdev = to_platform_device(hsotg->dev);
->  
->  	if (hsotg->phy)
-> -		usb_phy_shutdown(hsotg->phy);
-> +		phy_power_off(hsotg->phy);
->  	else if (hsotg->plat->phy_exit)
->  		hsotg->plat->phy_exit(pdev, hsotg->plat->phy_type);
->  }
-> @@ -3529,7 +3530,7 @@ static void s3c_hsotg_delete_debug(struct s3c_hsotg *hsotg)
->  static int s3c_hsotg_probe(struct platform_device *pdev)
->  {
->  	struct s3c_hsotg_plat *plat = dev_get_platdata(&pdev->dev);
-> -	struct usb_phy *phy;
-> +	struct phy *phy;
->  	struct device *dev = &pdev->dev;
->  	struct s3c_hsotg_ep *eps;
->  	struct s3c_hsotg *hsotg;
-> @@ -3544,7 +3545,7 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  	}
->  
-> -	phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-> +	phy = devm_phy_get(&pdev->dev, "usb2-phy");
->  	if (IS_ERR(phy)) {
->  		/* Fallback for pdata */
->  		plat = dev_get_platdata(&pdev->dev);
-> -- 
-> 1.7.9.5
-> 
+That surprises me to be honest, but then the fact that the convention
+was even defined surprises me.  Like I say you're the first person to
+mention it; I suspect you might write more DTs than most.
+
+> Personally I don't see any value for a regulator describing the names of
+> the GPIOs in the binding, it's really up to the driver to make sense of
+> them. Especially if there are one or more similar GPIOs. We're not
+
+Devices like PMICs frequently have a *lot* of possible pin functions
+some of which can get mapped onto GPIOs (in either direction), many of
+which are going to be fixed by system design and generally all muxed
+onto a much smaller set of physical pins.  If you try to specify those
+through an unnamed gpios property you end up with a very large array
+(say 30 elements, more wouldn't be too surprising) most of which will be
+empty.  That is not at all usable, it's error prone to write and very
+hard to read even with the preprocessor support that only got added
+quite recently.
+
+> naming interrupts either.
+
+There's typically a much more limited set of interrupts a device can
+have (and many of the more optional ones end up getting expressed via
+the GPIO binding since you also need to read the state to use them) so
+they don't run into the issue so much.
+
+> > In any case, the thing is that there's a difference between parsing both
+> > and deprecation - deprecation implies an intention to remove the old one
+> > which would just reintroduce the problem the other way around since
+> > people are likely to drop or forget the plural, use old DTs and so on.
+> > Adding a gpios property in parallel with plain gpio is fine and what I
+> > was mostly suggesting.
+
+> Deprecation _may_ imply that it will get removed, but not always.
+> Naturally we're going to have to keep the old bindings in place since
+> they were merged. I can changed that to obsoleted if that's any better.
+
+Yes, that's better.
+
+> > Exactly, I think it's way more trouble than it's worth to try to change
+> > for named single element lists.  The standard property makes more sense.
+
+> I don't think there should be any named GPIOs. If we want names, then
+> the GPIO usage should be possible to group quite easily rather than create
+> a new property for everything. Something like "enable-gpio" comes to mind.
+
+I don't understand the difference between your suggestion and named
+GPIOs.
+
+--+GiWpZ/vZzfY9+ZQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSr3NlAAoJELSic+t+oim9iDYP/i+jDxlPFZvahRT3hl1G5ZRR
+zneNmRGVvQ+GVHW2ZclI5s0eLPSNv0lKKl97n4QHRsIzvAGcSspBCg/WYda1gdp6
+Eaje6FL9McpglsU0lkOY/3SpGzPJPsdMWilqPn7E+dywv7HwClus8ugPSS9i7Hpz
+itpodSiHNUSrWYWSneTvZZOBWBXRoLrX2EkIS137plmz4EmZ7vKXI3uwigzPi3QO
+OohJW4573SE1RvKHQ1oSyKGR7fpVOJFnFLwAYxvD8yxkMbHyQx4zlH1gWA4nShkl
+L7I35AtJiVErlmvCBzpXFqWBLoduKh0xna8e473tg+3E9jqBuaqCsR/xVTnhblnC
+m/xbzlHQdDIDHyqtY5+go5dvlMyHKk2bQsKJLnLolo6NJ795Lc7j7uU0vCzW+Fa6
+bv44Z5NHPc4371fyoCodLRJAkaYrIMYhH29YLfjmgsyBo9v0kIeC9YseRgR56Ach
+/X/8IT5lM1Yz6FlPCGTldXJLQZh3wSXAU9/PwMs41Lq9L1yWnP/qkLVATXMLVmfA
+ibmLpMijrd2AmW9PLpwR0NMpmNnM3NStljUAd5s7/dpPbx5yLzkiS9+nP3i23PI9
+dnF9K06KV2kGTZFE+Dk+4mNveE191u1iyPMpCfy6KBFUcpV/1S56VejPayBXyJQZ
+aB9SjJuUPjVCX/tdHl98
+=Xy8L
+-----END PGP SIGNATURE-----
+
+--+GiWpZ/vZzfY9+ZQ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
