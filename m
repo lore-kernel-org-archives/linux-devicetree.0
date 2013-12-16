@@ -1,138 +1,100 @@
-From: <dinguyen@altera.com>
-Subject: [RESEND LIST PATCHv7 2/4] dts: socfpga: Add support for SD/MMC on the SOCFPGA platform
-Date: Mon, 16 Dec 2013 11:04:34 -0600
-Message-ID: <1387213476-22122-3-git-send-email-dinguyen@altera.com>
-References: <1387213476-22122-1-git-send-email-dinguyen@altera.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv6+ 01/13] of: introduce
+	of_property_for_earch_phandle_with_args()
+Date: Mon, 16 Dec 2013 10:14:43 -0700
+Message-ID: <52AF3503.3010302@wwwdotorg.org>
+References: <20131211.153338.2186623380643957232.hdoyu@nvidia.com><20131212113417.BDCD0C40637@trevor.secretlab.ca><20131212.141404.684884000513445038.hdoyu@nvidia.com>
+	<20131214.175115.1251935659998248370.hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1387213476-22122-1-git-send-email-dinguyen@altera.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dinh.linux@gmail.com, arnd@arndb.de, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, mturquette@linaro.org
-Cc: zhangfei.gao@linaro.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@altera.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20131214.175115.1251935659998248370.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@altera.com>
+On 12/14/2013 08:51 AM, Hiroshi Doyu wrote:
+> Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote @ Thu, 12 Dec 2013 14:14:04 +0200 (EET):
+> 
+>>>> From 8f7c0404aa68f0e8dbe0babc240590f6528ecc1f Mon Sep 17 00:00:00 2001
+>>>> From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>> Date: Fri, 15 Nov 2013 10:52:53 +0200
+>>>> Subject: [PATCH] of: introduce of_property_for_each_phandle_with_args()
+>>>>
+>>>> Iterating over a property containing a list of phandles with arguments
+>>>> is a common operation for device drivers. This patch adds a new
+>>>> of_property_for_each_phandle_with_args() macro to make the iteration
+>>>> simpler.
+>>>>
+>>>> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>> Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ....
+>>>> ---
+>>>>  drivers/of/base.c  | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+>>>>  include/linux/of.h | 32 ++++++++++++++++++++++++++++++++
+>>>>  2 files changed, 78 insertions(+)
+>>>>
+>>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>>>> index f807d0e..cd4ab05 100644
+>>>> --- a/drivers/of/base.c
+>>>> +++ b/drivers/of/base.c
+>>>> @@ -1201,6 +1201,52 @@ void of_print_phandle_args(const char *msg, const struct of_phandle_args *args)
+>>>>       printk("\n");
+>>>>  }
+>>>>
+>>>> +const __be32 *of_phandle_iter_next(const char *cells_name, int cell_count,
+>>>> +                                const __be32 *cur, const __be32 *end,
+>>>> +                                struct of_phandle_args *out_args)
+>>>
+>>> Having to pass in cells_name, cell_count, cur and end each time seems a
+>>> little odd. Can a state structure be used instead?
+>>>
+>>> struct of_phandle_iter_state {
+>>>         const char *cells_name;
+>>>         int cells_count;
+>>>         const __be32 *cur;
+>>>         const __be32 *end;
+>>>         struct of_phandle_args out_args;
+>>> }
+>>>
+>>> Make the caller provide one of those and fill it in with the init
+>>> function.
+>>
+>> I rewrote this a few times and so now I have a few version of this
+>> implementations :-) The above proposal is similar to the version v6+++
+>> mentioned in the above patch note:
+>>
+>>>> v6+++:
+>>>> Introduced a new struct "of_phandle_iter" to keep the state when
+>>>> iterating over the list.
+>>
+>> which is:
+>>
+>>   [RFC][PATCHv6+++ 01/13] of: introduce of_property_for_earch_phandle_with_args()
+>>     http://lists.linuxfoundation.org/pipermail/iommu/2013-November/007087.html
+>>
+>> Stephen seemed to prefer the version without state struct. I like the
+>> idea to not pass the same arguments repeatly. Instead, wrapping them
+>> in a struct with state may look better.
+>>
+>> So if Stephen agrees, I'll rewrite the version with state struct
+>> again.
+> 
+> Stephen, let me know what you think.
 
-Use the "snps,dw-mshc" binding to enable the dw_mmc driver.
-Add the "syscon" binding to the "altr,sys-mgr" node. The clock
-driver can use the syscon driver to toggle the register for the SD/MMC
-clock phase shift settings.
-
-Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
----
-v7: Use the standard "snps,dw-mshc" binding. Remove "altr,socfpga-sdmmc-sdr-clk".
-v6: Add documentation for "altr,socfpga-sdmmc-sdr-clk". Add "syscon" to the
-sysmgr binding.
-v5: Use the "snps,dw-mshc" binding
-v4: Re-use "rockchip,rk2928-dw-mshc" binding
-v3: none
-v2: none
----
- arch/arm/boot/dts/socfpga.dtsi          |   13 ++++++++++++-
- arch/arm/boot/dts/socfpga_arria5.dtsi   |   11 +++++++++++
- arch/arm/boot/dts/socfpga_cyclone5.dtsi |   11 +++++++++++
- arch/arm/boot/dts/socfpga_vt.dts        |   11 +++++++++++
- 4 files changed, 45 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 616d9ee..3b1c0fc 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -470,6 +470,17 @@
- 			cache-level = <2>;
- 		};
- 
-+		mmc: dwmmc0@ff704000 {
-+			compatible = "snps,dw-mshc";
-+			reg = <0xff704000 0x1000>;
-+			interrupts = <0 139 4>;
-+			fifo-depth = <0x400>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
-+			clock-names = "biu", "ciu";
-+		};
-+
- 		/* Local timer */
- 		timer@fffec600 {
- 			compatible = "arm,cortex-a9-twd-timer";
-@@ -524,7 +535,7 @@
- 		};
- 
- 		sysmgr@ffd08000 {
--				compatible = "altr,sys-mgr";
-+				compatible = "altr,sys-mgr", "syscon";
- 				reg = <0xffd08000 0x4000>;
- 			};
- 	};
-diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
-index a85b404..6c87b70 100644
---- a/arch/arm/boot/dts/socfpga_arria5.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
-@@ -27,6 +27,17 @@
- 			};
- 		};
- 
-+		dwmmc0@ff704000 {
-+			num-slots = <1>;
-+			supports-highspeed;
-+			broken-cd;
-+
-+			slot@0 {
-+				reg = <0>;
-+				bus-width = <4>;
-+			};
-+		};
-+
- 		serial0@ffc02000 {
- 			clock-frequency = <100000000>;
- 		};
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-index a8716f6..ca41b0e 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-+++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-@@ -28,6 +28,17 @@
- 			};
- 		};
- 
-+		dwmmc0@ff704000 {
-+			num-slots = <1>;
-+			supports-highspeed;
-+			broken-cd;
-+
-+			slot@0 {
-+				reg = <0>;
-+				bus-width = <4>;
-+			};
-+		};
-+
- 		ethernet@ff702000 {
- 			phy-mode = "rgmii";
- 			phy-addr = <0xffffffff>; /* probe for phy addr */
-diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
-index d1ec0ca..222313f 100644
---- a/arch/arm/boot/dts/socfpga_vt.dts
-+++ b/arch/arm/boot/dts/socfpga_vt.dts
-@@ -41,6 +41,17 @@
- 			};
- 		};
- 
-+		dwmmc0@ff704000 {
-+			num-slots = <1>;
-+			supports-highspeed;
-+			broken-cd;
-+
-+			slot@0 {
-+				reg = <0>;
-+				bus-width = <4>;
-+			};
-+		};
-+
- 		ethernet@ff700000 {
- 			phy-mode = "gmii";
- 			status = "okay";
--- 
-1.7.9.5
-
-
+It's hard to follow there have been so many revisions. As long as the
+result is reasonable, I'll be OK with it. IIRC, I objected to using a
+state structure for values that weren't needed by both functions, but if
+both functions need the values, that's fine. I suppose even if they
+don't both need the values, putting them in a state structure is OK too
+if it means the patch gets finished!
