@@ -1,43 +1,27 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCHv6 2/5] clk: socfpga: Add a clock type for the SD/MMC driver
-Date: Tue, 17 Dec 2013 10:17:26 +0800
-Message-ID: <CAGb2v67dud7XQSOy4eABX3SZX9pRkm366dodke5-AzdcGuje5A@mail.gmail.com>
-References: <1386880245-10192-1-git-send-email-dinguyen@altera.com>
- <1386880245-10192-3-git-send-email-dinguyen@altera.com> <201312142233.27143.arnd@arndb.de>
- <52AD1185.6090501@linaro.org> <20131215045116.23538.4@quantum> <52AF68DB.7090105@elopez.com.ar>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl: add spdif support for sabreauto
+Date: Tue, 17 Dec 2013 11:03:09 +0800
+Message-ID: <20131217030307.GE6691@S2101-09.ap.freescale.net>
+References: <1387190268-8041-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <52AF68DB.7090105@elopez.com.ar>
-Sender: linux-mmc-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
-Cc: Mike Turquette <mturquette@linaro.org>, zhangfei <zhangfei.gao@linaro.org>, Arnd Bergmann <arnd@arndb.de>, dinguyen@altera.com, mark.rutland@arm.com, devicetree <devicetree@vger.kernel.org>, dinh.linux@gmail.com, heiko@sntech.de, pawel.moll@arm.com, bzhao@marvell.com, tgih.jun@samsung.com, Peter De Schrijver <pdeschrijver@nvidia.com>, linux-mmc@vger.kernel.org, dianders@chromium.org, Rob Herring <rob.herring@calxeda.com>, jh80.chung@samsung.com, alim.akhtar@samsung.com, cjb@laptop.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, ian.campbell@citrix.com, Hans de Goede <hdegoede@redhat.com>, =?ISO-8859-1?Q?David_Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1387190268-8041-1-git-send-email-Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Dec 16, 2013 at 06:37:48PM +0800, Nicolin Chen wrote:
+> This patch adds spdif support for imx6qdl-sabreauto by inserting the cpu dai
+> node with pinctrl group and its ASoC dai link node.
+> 
+> Signed-off-by: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-On Tue, Dec 17, 2013 at 4:55 AM, Emilio L=F3pez <emilio@elopez.com.ar> =
-wrote:
-> I also saw a similar requirement from the gmac people (on cc too), wh=
-o
-> needed to set the phy type (or something like that) on one of the clo=
-ck
+Applied, thanks.
 
-The GMAC clock register controls the tx clock source (a mux) and the
-interface type, which is most likely a gate to control the direction
-of the tx clock.
-
-So I modeled it as a composite clock source for now.
-I'm open to other options.
-
-> registers; so I'm thinking maybe a generic "tune something" approach =
-that
-> lets users configure some clock-dependent, arbitrary aspect of the cl=
-ock is
-> the way forward. Otherwise, we're going to end up bloating the clock
-> framework with a lot of callback pointers that are going to be used i=
-n one
-> or two clocks out of potentially hundreds on the whole system.
-
-ChenYu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
