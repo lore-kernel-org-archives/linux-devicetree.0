@@ -1,98 +1,42 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/4] Phy: DT binding documentation for Marvell MVEBU SATA
- phy.
-Date: Tue, 17 Dec 2013 21:27:16 +0100
-Message-ID: <20131217202716.GA2071@lunn.ch>
-References: <1387311713-1926-1-git-send-email-andrew@lunn.ch>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH 0/4] ARM: keystone: enable GPIO support
+Date: Tue, 17 Dec 2013 15:50:40 -0500
+Message-ID: <52B0B920.1000001@ti.com>
+References: <1387211981-26045-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387311713-1926-1-git-send-email-andrew@lunn.ch>
-Sender: linux-ide-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Jason Cooper <jason@lakedaemon.net>, kishon@ti.com, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1387211981-26045-1-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Folks
-
-Sorry, forgot the --subject. This is version 3 of the patchset.
-
-       Andrew
-
-
-On Tue, Dec 17, 2013 at 09:21:49PM +0100, Andrew Lunn wrote:
-> Describe the binding for the Marvell MVEBU SATA phy. This driver
-> can be used at least with Kirkwood, Dove and maybe others.
-> Additionally, update the SATA binding with the properties to link
-> to the phy nodes.
+On Monday 16 December 2013 11:39 AM, Grygorii Strashko wrote:
+> This series adds Keystone GPIO IP definition in DT and enable GPIO support in
+> Keystone configuration file.
 > 
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-> ---
-> v1->v2:
-> Correct #phy-cells
-> Correct number after @ to match first reg address.
-> Rename to phy-mvebu.txt
+> Also, it enables LEDs support for Keystone 2 K2H EVM as specified in board 
+> schematic. For more information see:
+> - http://www.advantech.com/Support/TI-EVM/EVMK2HX.aspx 
 > 
-> v2->v3:
-> Renamed to mvebu-phy.txt
-> Use "port0", "port1" instead of "0", "1"
-> ---
->  Documentation/devicetree/bindings/ata/marvell.txt  |  6 ++++++
->  .../devicetree/bindings/phy/mvebu-phy.txt          | 22 ++++++++++++++++++++++
->  2 files changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/mvebu-phy.txt
+> Depends on:
+> [PATCH 0/2] gpio: davinci: reuse for keystone arch
+> - https://lkml.org/lkml/2013/12/12/366
 > 
-> diff --git a/Documentation/devicetree/bindings/ata/marvell.txt b/Documentation/devicetree/bindings/ata/marvell.txt
-> index b5cdd20cde9c..4c5447f1068d 100644
-> --- a/Documentation/devicetree/bindings/ata/marvell.txt
-> +++ b/Documentation/devicetree/bindings/ata/marvell.txt
-> @@ -6,11 +6,17 @@ Required Properties:
->  - interrupts    : Interrupt controller is using
->  - nr-ports      : Number of SATA ports in use.
->  
-> +Optional Properties:
-> +- phys		: List of phandles to sata phys
-> +- phy-names	: Should be "port0", "port1", etc, one per phandle
-> +
->  Example:
->  
->  	sata@80000 {
->  		compatible = "marvell,orion-sata";
->  		reg = <0x80000 0x5000>;
->  		interrupts = <21>;
-> +		phys = <&sata_phy0>, <&sata_phy1>;
-> +		phy-names = "port0", "port1";
->  		nr-ports = <2>;
->  	}
-> diff --git a/Documentation/devicetree/bindings/phy/mvebu-phy.txt b/Documentation/devicetree/bindings/phy/mvebu-phy.txt
-> new file mode 100644
-> index 000000000000..6cb3364aeafb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/mvebu-phy.txt
-> @@ -0,0 +1,22 @@
-> +* Marvell MVEBU SATA PHY
-> +
-> +Power control for the SATA phy found on Marvell MVEBU SoCs.
-> +
-> +This document extends the binding described in phy-bindings.txt
-> +
-> +Required properties :
-> +
-> + - reg		   : Offset and length of the register set for the SATA device
-> + - compatible	   : Should be "marvell,mvebu-sata-phy"
-> + - clocks	   : phandle of clock and specifier that supplies the device
-> + - clock-names	   : Should be "sata"
-> +
-> +Example:
-> +		sata-phy@84000 {
-> +			compatible = "marvell,mvebu-sata-phy";
-> +			reg = <0x84000 0x0334>;
-> +			clocks = <&gate_clk 15>;
-> +			clock-names = "sata";
-> +			#phy-cells = <0>;
-> +			status = "ok";
-> +		};
-> -- 
-> 1.8.5.1
+> Grygorii Strashko (4):
+>   arm: dts: keystone: add GPIO device entry
+>   ARM: keystone_defconfig: enable gpio support
+>   arm: dts: keystone-evm: add LEDs supports
+>   ARM: keystone_defconfig: enable LED support
 > 
+Patch subjects should be consistent. I will fix
+them while applying it on my tree. Will wait
+for the GPIO driver support patches state
+before applying the subject series.
+
+Thanks for the patches.
+
+Regards,
+Santosh
