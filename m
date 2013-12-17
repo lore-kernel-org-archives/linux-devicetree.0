@@ -1,64 +1,80 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv7 1/4] pwm: Add Freescale FTM PWM driver support
-Date: Tue, 17 Dec 2013 13:00:10 +0100
-Message-ID: <5295539.cCkPY1PpyC@flatron>
-References: <1386925027-16288-1-git-send-email-Li.Xiubo@freescale.com> <20131217111020.GF13823@ulmo.nvidia.com> <20131217115136.GT4360@n2100.arm.linux.org.uk>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 7/9] mtd: nand: davinci: adjust DT properties to MTD
+ generic
+Date: Tue, 17 Dec 2013 14:19:12 +0200
+Message-ID: <52B04140.1060709@ti.com>
+References: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com> <1386264358-9738-8-git-send-email-ivan.khoronzhuk@ti.com> <20131217085027.GK12034@norris-Latitude-E6410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131217115136.GT4360@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Xiubo Li <Li.Xiubo@freescale.com>, mark.rutland@arm.com, s.hauer@pengutronix.de, galak@codeaurora.org, swarren@wwwdotorg.org, t.figa@samsung.com, grant.likely@linaro.org, matt.porter@linaro.org, rob@landley.net, ian.campbell@citrix.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Alison Wang <b18965@freescale.com>, Jingchang Lu <b35083@freescale.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131217085027.GK12034@norris-Latitude-E6410>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 17 of December 2013 11:51:36 Russell King - ARM Linux wrote:
-> On Tue, Dec 17, 2013 at 12:10:22PM +0100, Thierry Reding wrote:
-> > On Fri, Dec 13, 2013 at 04:57:04PM +0800, Xiubo Li wrote:
-> > > +static inline u32 fsl_pwm_readl(struct fsl_pwm_chip *fpc,
-> > > +		const void __iomem *addr)
-> > > +{
-> > > +	u32 val;
-> > > +
-> > > +	val = __raw_readl(addr);
-> > > +
-> > > +	if (likely(fpc->big_endian))
-> > 
-> > The likely() probably isn't very useful in this case. But if you want to
-> > keep it, it should at least be reversed, since little-endian is actually
-> > the default (you have to specify the big-endian property to activate the
-> > big endian mode).
-> > 
-> > > +		val = be32_to_cpu(val);
-> > > +	else
-> > > +		val = le32_to_cpu(val);
+On 12/17/2013 10:50 AM, Brian Norris wrote:
+> On Thu, Dec 05, 2013 at 07:25:55PM +0200, Ivan Khoronzhuk wrote:
+>> --- a/drivers/mtd/nand/davinci_nand.c
+>> +++ b/drivers/mtd/nand/davinci_nand.c
+>> @@ -558,6 +557,8 @@ static struct davinci_nand_pdata
+>>   			"ti,davinci-mask-chipsel", &prop))
+>>   			pdata->mask_chipsel = prop;
+>>   		if (!of_property_read_string(pdev->dev.of_node,
+>> +			"nand-ecc-mode", &mode) ||
 > 
-> This will also cause sparse errors, because when sparse is enabled, these
-> expect __le32 or __be32 arguments, not u32.
-
-My question is why can't you just create two sets of accessors, one big
-endian and one little endian, add two function pointers to your
-fsl_pwm_chip struct and let the driver set the to correct accessors in
-probe?
-
-This would eliminate the problem with types Russell mentioned and IMHO
-make the code cleaner.
-
-Best regards,
-Tomasz
-
+> Is it possible to use the of_get_nand_ecc_mode() helper? It's
+> unfortunate that davinci_nand had to use custom bindings in the first
+> place, making this more difficult... So I can take this patch as-is.
 > 
-> > > +	rmb();
-> > 
-> > I'd prefer the rmb() to follow the __raw_readl() immediately to make the
-> > relationship more explicit.
+
+Yes, I will do nothing for that
+
+>> +		    !of_property_read_string(pdev->dev.of_node,
+>>   			"ti,davinci-ecc-mode", &mode)) {
+>>   			if (!strncmp("none", mode, 4))
+>>   				pdata->ecc_mode = NAND_ECC_NONE;
+>> @@ -570,11 +571,15 @@ static struct davinci_nand_pdata
+>>   			"ti,davinci-ecc-bits", &prop))
+>>   			pdata->ecc_bits = prop;
+>>   		if (!of_property_read_u32(pdev->dev.of_node,
+>> +			"nand-bus-width", &prop) ||
 > 
-> A better question to ask is: why is this barrier here?  What memory
-> ordering operations is it trying to serialise?
+> Similar story here, with of_get_nand_bus_width().
+> 
 
-I'd also add a question why __raw accessors are used here.
+It seems for bus width I can replace it on:
 
-Best regards,
-Tomasz
+prop = of_get_nand_bus_width(pdev->dev.of_node);
+if ( 0 < prop || !of_property_read_u32(pdev->dev.of_node,
+	     "ti,davinci-nand-buswidth", &prop))
+     if (prop == 16)
+	     pdata->options |= NAND_BUSWIDTH_16;
 
+
+>> +		    !of_property_read_u32(pdev->dev.of_node,
+>>   			"ti,davinci-nand-buswidth", &prop))
+>>   			if (prop == 16)
+>>   				pdata->options |= NAND_BUSWIDTH_16;
+>> -		if (of_find_property(pdev->dev.of_node,
+>> -			"ti,davinci-nand-use-bbt", &len))
+>> +		if (of_property_read_bool(pdev->dev.of_node,
+>> +			"nand-on-flash-bbt") ||
+>> +		    of_property_read_bool(pdev->dev.of_node,
+>> +			"ti,davinci-nand-use-bbt"))
+>>   			pdata->bbt_options = NAND_BBT_USE_FLASH;
+>>   	}
+>>   
+> 
+> Brian
+> 
+
+
+-- 
+Regards,
+Ivan Khoronzhuk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
