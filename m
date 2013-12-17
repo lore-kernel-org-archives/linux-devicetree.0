@@ -1,45 +1,50 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv2 01/27] ARM: OMAP: remove DSS DT hack
-Date: Tue, 17 Dec 2013 07:30:02 -0800
-Message-ID: <20131217153001.GN12324@atomide.com>
-References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com>
- <1387205794-32246-2-git-send-email-tomi.valkeinen@ti.com>
- <20131216184157.GA26293@atomide.com>
- <52AFF31C.6010100@ti.com>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: device trees for Energy Micro's EFM32 Cortex-M3
+ SoCs
+Date: Tue, 17 Dec 2013 16:31:38 +0100
+Message-ID: <20131217153136.GA5564@netboy>
+References: <20131216190953.GB14866@pengutronix.de>
+ <1387221123-6794-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20131217113750.GB5307@netboy>
+ <20131217131730.GI14866@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52AFF31C.6010100@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20131217131730.GI14866-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [131216 22:47]:
-> On 2013-12-16 20:41, Tony Lindgren wrote:
-> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [131216 06:59]:
-> >> As a temporary solution to enable DSS for selected boards when booting
-> >> with DT, a hack was added to board-generic.c in
-> >> 63d5fc0c2f748e20f38a0a0ec1c8494bddf5c288 (OMAP: board-generic: enable
-> >> DSS for panda & sdp boards).
-> >>
-> >> We're now adding proper DT support, so the hack can be removed.
-> > 
-> > I guess this patch should be merged later on after we have the DT support
-> > working?
-> 
-> I'll move this patch also to the end of the series.
-> 
-> "Merged later" sounds like you mean this could be merged in a separate
-> series. I think this and the other removal can be in this series, they
-> just need to be at the end.
+On Tue, Dec 17, 2013 at 02:17:30PM +0100, Uwe Kleine-K=F6nig wrote:
+> On Tue, Dec 17, 2013 at 12:37:51PM +0100, Richard Cochran wrote:
+> > On Mon, Dec 16, 2013 at 08:12:03PM +0100, Uwe Kleine-K=F6nig wrote:
+> >=20
+> > > +		cmu: cmu@400c8000 {
+> > > +			compatible =3D "efm32gg,cmu";
+> >=20
+> > I was able to run this on the EFM32LG without problems.  Are you su=
+re
+> > this CMU node is specific to the GG, or can it be shared?
+> I remember me being grumpy because I found some differences between t=
+he
+> GG and some other efm32 device. After looking again I cannot find the
+> problem. Maybe the LG is compatible but some other is not.
 
-Well yeah let's keep those separate still as at least Russell needed
-some more time with the legacy booting. The point we can drop the
-legacy booting for omap3 may still need to wait a bit, maybe even
-until v3.15 to keep things working.
+It looked like to me that the only differences are flash and ram
+sizes, and presence or absence of peripherals, but I don't know all of
+the many EM parts that well, just these two.
+=20
+> Can I assume your feedback as Tested-by:?
 
-Regards,
+Yes, by all means, please do.
 
-Tony
+Thanks,
+Richard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
