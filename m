@@ -1,46 +1,61 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 6/6] ARM: davinci: da850 evm: add GPIO pinumux entries
- DT node
-Date: Tue, 17 Dec 2013 11:20:07 +0100
-Message-ID: <CACRpkdZQ9Q1SxXZ4FPpTN_swUBCyZd8CzNzVzEm87vjYZsQ2+Q@mail.gmail.com>
-References: <1385057731-4348-1-git-send-email-prabhakar.csengg@gmail.com>
-	<1385057731-4348-7-git-send-email-prabhakar.csengg@gmail.com>
-	<52ADAB0E.4020800@ti.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH v3 1/9] mtd: nand: davinci: fix driver registration
+Date: Tue, 17 Dec 2013 12:21:12 +0200
+Message-ID: <52B02598.5060004@ti.com>
+References: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1386264358-9738-2-git-send-email-ivan.khoronzhuk@ti.com>
+ <20131217092449.GL12034@norris-Latitude-E6410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <52ADAB0E.4020800@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20131217092449.GL12034@norris-Latitude-E6410>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, linux-mtd@lists.infradead.org, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 15, 2013 at 2:13 PM, Sekhar Nori <nsekhar@ti.com> wrote:
-> On Thursday 21 November 2013 11:45 PM, Prabhakar Lad wrote:
->> From: KV Sujith <sujithkv@ti.com>
+On 12/17/2013 11:24 AM, Brian Norris wrote:
+> On Thu, Dec 05, 2013 at 07:25:49PM +0200, Ivan Khoronzhuk wrote:
+>> --- a/drivers/mtd/nand/davinci_nand.c
+>> +++ b/drivers/mtd/nand/davinci_nand.c
+>> @@ -877,6 +877,7 @@ static int __exit nand_davinci_remove(struct platform_device *pdev)
+>>   }
+>>   
+>>   static struct platform_driver nand_davinci_driver = {
+>> +	.probe		= nand_davinci_probe,
+>>   	.remove		= __exit_p(nand_davinci_remove),
+> 
+> I believe you need to drop the __exit_p() here. And now that you're
+> using module_platform_driver(), you need to drop the __init and __exit
+> from the probe() and remove() routines, to avoid section mismatch
+> warnings.
+> 
+>>   	.driver		= {
+>>   		.name	= "davinci_nand",
+> 
+> So on second thought, please resubmit the series with the requested
+> changes.
+> 
+> Thanks,
+> Brian
+> 
 
->> +
->> +                     gpio_pins: pinmux_gpio_pins {
->> +                             pinctrl-single,bits = <
->> +                                     /* GPIO2_4 GPIO2_6 */
->> +                                     0x18 0x00008080 0x0000f0f0
->> +                                     /* GPIO2_8 GPIO2_15 */
->> +                                     0x14 0x80000008 0xf000000f
->> +                                     /* GPIO3_12 GPIO3_13 */
->> +                                     0x1C 0x00008800 0x0000ff00
->> +                                     /* GPIO4_0 GPIO4_1 */
->> +                                     0x28 0x88000000 0xff000000
->> +                                     /* GPIO6_9 GPIO6_10 GPIO6_13 */
->> +                                     0x34 0x08800800 0x0ff00f00
->> +                             >;
->> +                     };
->>               };
->
-> Shouldn't these pinmux entries be part of actual device
-> node which needs them to be muxed this way?
+Thanks, Brian.
+Do you want me to drop it in stand alone patch or in this one?
 
-The usual way to do it is to set up as states for the device,
-or as a hog (on the pin controller itself).
+-- 
+Regards,
+Ivan Khoronzhuk
 
-Yours,
-Linus Walleij
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
