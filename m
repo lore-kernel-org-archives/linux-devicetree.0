@@ -1,47 +1,55 @@
-From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 03/21] ARM: dts: fix pxa27x-gpio interrupts
-Date: Tue, 17 Dec 2013 23:37:33 +0400
-Message-ID: <1387309071-22382-4-git-send-email-ynvich@gmail.com>
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: [PATCH v3 02/21] ARM: dts: pxa2xx fix compatible strings
+Date: Tue, 17 Dec 2013 23:37:32 +0400
+Message-ID: <1387309071-22382-3-git-send-email-ynvich@gmail.com>
 References: <1386901645-28895-1-git-send-email-ynvich@gmail.com>
  <1387309071-22382-1-git-send-email-ynvich@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387309071-22382-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1387309071-22382-1-git-send-email-ynvich@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Sergei Ianovich <ynvich@gmail.com>, Daniel Mack <zonque@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-CC: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
+CC: Daniel Mack <zonque@gmail.com>
+CC: Arnd Bergmann <arnd@arndb.de>
 ---
    v2..v3
    v1..v2
    * no changes
 
- arch/arm/boot/dts/pxa27x.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/pxa2xx.dtsi | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index d7c5d72..44df554 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -10,5 +10,11 @@
- 			marvell,intc-priority;
- 			marvell,intc-nr-irqs = <34>;
- 		};
-+
-+		gpio: gpio@40e00000 {
-+			compatible = "intel,pxa27x-gpio";
-+			interrupts = <8>, <9>, <10>;
-+			interrupt-names = "gpio0", "gpio1", "gpio_mux";
-+		};
+diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
+index a5e90f0..3419f87 100644
+--- a/arch/arm/boot/dts/pxa2xx.dtsi
++++ b/arch/arm/boot/dts/pxa2xx.dtsi
+@@ -18,7 +18,6 @@
+ 		serial1 = &btuart;
+ 		serial2 = &stuart;
+ 		serial3 = &hwuart;
+-		i2c0 = &pwri2c;
+ 		i2c1 = &pxai2c1;
  	};
- };
+ 
+@@ -113,14 +112,14 @@
+ 		};
+ 
+ 		usb0: ohci@4c000000 {
+-			compatible = "mrvl,pxa-ohci";
++			compatible = "marvell,pxa-ohci";
+ 			reg = <0x4c000000 0x10000>;
+ 			interrupts = <3>;
+ 			status = "disabled";
+ 		};
+ 
+ 		mmc0: mmc@41100000 {
+-			compatible = "mrvl,pxa-mmc";
++			compatible = "marvell,pxa-mmc";
+ 			reg = <0x41100000 0x1000>;
+ 			interrupts = <23>;
+ 			status = "disabled";
 -- 
 1.8.4.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
