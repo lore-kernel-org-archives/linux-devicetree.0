@@ -1,87 +1,63 @@
-From: delicious quinoa <delicious.quinoa@gmail.com>
-Subject: Re: [PATCH v9] gpio: add a driver for Synopsys DesignWare APB GPIO
-Date: Tue, 17 Dec 2013 11:50:09 -0600
-Message-ID: <CANk1AXQqXT7evrGkLEam8SP=bXRCdrnke+Q+HbWeTMP5MPFubw@mail.gmail.com>
-References: <1386364179-28650-1-git-send-email-delicious.quinoa@gmail.com>
-	<CANk1AXS=CADN53aO5KVN3UorddJ0wZ2PTqwo2XmeRuxYe_DoLg@mail.gmail.com>
-	<20131212090838.GD25478@pengutronix.de>
+From: Ivajlo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Subject: Re: Re: [RFCv4 06/11] misc: Introduce Nokia CMT driver
+Date: Tue, 17 Dec 2013 19:58:56 +0200
+Message-ID: <52B090E0.5040006@gmail.com>
+References: <1387150085-23173-1-git-send-email-sre@debian.org> <1387150085-23173-7-git-send-email-sre@debian.org> <CACRpkdYjjXgE_W8gq1e6z=nGMF=r-m+o2kkvrBFrEMm3o0=RwQ@mail.gmail.com> <20131216121524.GA6177@earth.universe> <CACRpkdbx=Ye8xo4wMkyntME45xv15DeyqV32aeCAcSaa+vDpfA@mail.gmail.com> <20131216183448.GA10614@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131212090838.GD25478@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@stericsson.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131216183448.GA10614@earth.universe>
+Sender: linux-omap-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?UTF-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, =?UTF-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>, =?UTF-8?B?0JjQstCw0Lk=?= =?UTF-8?B?0LvQviDQlNC40LzQuNGC0YDQvtCy?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 12, 2013 at 3:08 AM, Steffen Trumtrar
-<s.trumtrar@pengutronix.de> wrote:
-> Sorry for chiming in late. I tested your driver on the Sockit and the GPIOs
-> work fine (basically just tested the 4 HPS LEDS that are on this board).
+
+On 16.12.2013 20:34, Sebastian Reichel wrote:
+> Hi,
 >
-> With the interrupt support I had a little trouble though:
-> The Sockit has an ADXL345 on the i2c bus with a gpio as interrupt line.
+> On Mon, Dec 16, 2013 at 02:31:53PM +0100, Linus Walleij wrote:
+>> I am very reluctant in letting device trees specify exports of GPIOs
+>> to userspace, not so much because it's Linux-specific but for
+>> the fact that people are doing things in userspace that should not
+>> be done in userspace.
+>>
+>> Last time it was proposed I asked to the specific usecase,
+>> exactly why userspace needed this handle on a physical
+>> GPIO line, and why it can't use another userspace interface
+>> (example: leds, keys etc.)
+> There are a couple of lines ("cmt_apeslpx", "cmt_rst_rq", "cmt_en",
+> "cmt_rst", "cmt_bsi"), which are handled by ofono to do the correct
+> power sequence for the modem. The relevant ofono code is here:
 >
-> First: When you use "interrupt-parent", you have to specify the gpio node,
-> rather than the gpio-bank that has the interrupt-controller property. Is
-> that expected? I'm not really sure if that is normal behavior...
-
-I think it can work several ways.  In my device tree, the gic is one
-level up in the device tree above the gpio.  So I don't have to
-specify interrupt-controller in the gpio node or in the bank.
-
+> https://git.kernel.org/cgit/network/ofono/ofono.git/tree/plugins/nokia-gpio.c
 >
-> Second: The interrupt is registered as "GIC 37", which is a real interrupt on
-> the Socfpga. I would expect it to be marked as "GPIO 2xx" (or something in that
-> range). The interrupt from the gpiochip itself isn't registered at all ?!
+> In MeeGo etc. they have a little board specific init script, which
+> exports the gpio lines and setups some symlinks. IMHO at least the
+> board specific stuff should be handled by the kernel, thus I added
+> this code to the driver. I guess you prefer to move the power
+> sequencing completly to the kernel?
 
-The bindings documentation is an example.  You will need to adjust the
-device tree bindings values to suit your board.  For example, on my
-socfpga cyclone5 board, I needed:
+Don't forget there is not only ofono, but rtcom-call-ui and all the 
+telephony stack in Maemo 5 :). However, power sequencing and control is 
+specific not only to the modem model, but to the firmware version the 
+modem is running as well (afaik). IMO you can't simply move the modem 
+power/reset/sleep control to the kernel and hope for the best, I am not 
+sure there is enough documentation (if any) for this to be done 
+reliably, esp on n900 with its BB5 modem. The point is that those gpios 
+are used not only for the initial power-up, but for control of the modem 
+state and reset (if needed) during normal usage. The APE reset line is 
+an example of stuff that can't be moved to the kernel without providing 
+some interface/feedback to/from the userspace IMO - what if she is 
+dialing 112 at the moment the modem decides it is too hot and wants a 
+device reset (or whatever reason there could be for a modem to request a 
+device reset)? The same goes for the APE sleep request line 
+(cmt_apeslpx) - based on what should the kernel decide whether to put 
+the modem in sleep?
 
-        gpio0: gpio@ff708000 {
-                compatible = "snps,dw-apb-gpio";
-                reg = <0xff708000 0x1000>;
-                #address-cells = <1>;
-                #size-cells = <0>;
+Sure, exporting gpios to userspace might not be the best way to achieve 
+the required functionality, but every way could be argued if it is the 
+best. And for sure labeling a modem "LED" won't make it such.
 
-                port0a: gpio-controller@0 {
-                        compatible = "snps,dw-apb-gpio-port";
-                        gpio-controller;
-                        #gpio-cells = <2>;
-                        snps,nr-gpios = <29>;
-                        reg = <0>;
-                        interrupt-controller;
-                        interrupts = <0 164 4>;
-                        #interrupt-cells = <2>;
-                        clocks = <&per_base_clk>;
-                        };
-                };
-
-(so on for gpio1 and gpio2)
-
->
-> Third: The interrupt didn't work. But that might also be my failure. I guess/hope
-> you tested interrupts successfully?!
-
-Yes, tested and working for me, including the interrupts.
-
->
-> (Fourth: small typo in the documentation example: "snps,nr-gpio" instead of "snps,nr-gpios")
-
-Yes, should be the plural form.
-
-Thanks for testing!
-
-Alan
-
->
-> Regards,
-> Steffen
->
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Regards,
+Ivo
