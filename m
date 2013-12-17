@@ -1,62 +1,117 @@
-From: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt: Update I2C trivial devices list
-Date: Tue, 17 Dec 2013 11:47:19 -0500
-Message-ID: <87a9fztofc.fsf@gmail.com>
-References: <1387239151-19226-1-git-send-email-bgamari.foss@gmail.com> <52B07870.6070809@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52B07870.6070809-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: [PATCH V2] dt: bindings: submitting patches and ABI documents
+Date: Tue, 17 Dec 2013 16:59:40 +0000
+Message-ID: <1387299580-9100-1-git-send-email-jason@lakedaemon.net>
+References: <1383759120-21571-1-git-send-email-jason@lakedaemon.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1383759120-21571-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+---
+Changes from RFC:
+ - incorporated Grant's language
+ - split patches/ABI into two documents
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+ Documentation/devicetree/bindings/ABI.txt          | 39 ++++++++++++++++++++++
+ .../devicetree/bindings/submitting-patches.txt     | 35 +++++++++++++++++++
+ 2 files changed, 74 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ABI.txt
+ create mode 100644 Documentation/devicetree/bindings/submitting-patches.txt
 
-> On 12/16/2013 05:12 PM, Ben Gamari wrote:
->
->> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
->
->>  This is a list of trivial i2c devices that have simple device tree
->>  bindings, consisting only of a compatible field, an address and
->> -possibly an interrupt line.
->> +possibly an interrupt line. The compatible field is used to lookup the
->> +modalias of the driver which will handle the device. The compatible
->> +string may begin with a manufacturer prefix (separated from the
->> +modalias by a comma) which will be stripped off during lookup.
->
-> This part of the patch described Linux-specific behaviour, whereas DT
-> bindings should be OS-agnostic.
->
-I see your point but it would be nice to have language like this
-somewhere. One of the biggest challenges in diving in to writing a
-devicetree is figuring out details like this.
+diff --git a/Documentation/devicetree/bindings/ABI.txt b/Documentation/devicetree/bindings/ABI.txt
+new file mode 100644
+index 000000000000..d25f8d379680
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ABI.txt
+@@ -0,0 +1,39 @@
++
++  Devicetree (DT) ABI
++
++I. Regarding stable bindings/ABI, we quote from the 2013 ARM mini-summit
++   summary document:
++
++     "That still leaves the question of, what does a stable binding look
++     like?  Certainly a stable binding means that a newer kernel will not
++     break on an older device tree, but that doesn't mean the binding is
++     frozen for all time. Grant said there are ways to change bindings that
++     don't result in breakage. For instance, if a new property is added,
++     then default to the previous behaviour if it is missing. If a binding
++     truly needs an incompatible change, then change the compatible string
++     at the same time.  The driver can bind against both the old and the
++     new. These guidelines aren't new, but they desperately need to be
++     documented."
++
++II.  General binding rules
++
++  1) Maintainers, don't let perfect be the enemy of good.  Don't hold up a
++     binding because it isn't perfect.
++
++  2) Use specific compatible strings so that if we need to add a feature (DMA)
++     in the future, we can create a new compatible string.  See I.
++
++  3) Bindings can be augmented, but the driver shouldn't break when given
++     the old binding. ie. add additional properties, but don't change the
++     meaning of an existing property. For drivers, default to the original
++     behaviour when a newly added property is missing.
++
++  4) Don't submit bindings for staging or unstable.  That will be decided by
++     the devicetree maintainers *after* discussion on the mailinglist.
++
++III. Notes
++
++  1) This document is intended as a general familiarization with the process as
++     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
++     devicetree maintainers overrules this document.  In that situation, a patch
++     updating this document would be appreciated.
+diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
+new file mode 100644
+index 000000000000..5672cb46681d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/submitting-patches.txt
+@@ -0,0 +1,35 @@
++
++  Submitting devicetree (DT) binding patches
++
++I. For patch submitters
++
++  0) Normal patch submission rules from Documentation/SubmittingPatches
++     applies.
++
++  1) The Documentation/ portion of the patch should be a separate patch.
++
++  2) Submit the entire series to the devicetree mailinglist at
++
++       devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++
++II. For kernel maintainers
++
++  1) If you aren't comfortable reviewing a given binding, reply to it and ask
++     the devicetree maintainers for guidance.  This will help them prioritize
++     which ones to review and which ones are ok to let go.
++
++  2) For driver (not subsystem) bindings: If you are comfortable with the
++     binding, and it hasn't received an Acked-by from the devicetree
++     maintainers after a few weeks, go ahead and take it.
++
++  3) For a series going though multiple trees, the binding patch should be
++     kept with the driver using the binding.
++
++III. Notes
++
++  0) Please see ...bindings/ABI.txt for details regarding devicetree ABI.
++
++  1) This document is intended as a general familiarization with the process as
++     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
++     devicetree maintainers overrules this document.  In that situation, a patch
++     updating this document would be appreciated.
+-- 
+1.8.5.1
 
-> BTW, you didn't CC the DT binding maintainers.
->
-Very true. Fixed.
-
-Cheers,
-
-- Ben
-
---=-=-=
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQEcBAEBAgAGBQJSsIAXAAoJEErkyLZmeNiDl4AH/RSSkiNYwaZLG+zZEixmYXT4
-T53NPBK72eQxSiilfETc2TJT8RbCHlLWckIwttrUkIIYlknbfOxVQrdZg9vMxu4K
-cM2zX//wQ4AQkO4b9jsgQ0y98YUFTBOZRFmefMogg28DB8VMGNB+qxlT5nFcwPdx
-XIYIqjrnO6yWOEgmZ2ZI4NP8PAz9njNTT2vdNYhGYet6jBztOgpoMEPvjNPz6K9a
-vb68ptYk2EmtHrZAk2jE4MFQalMO/g1m5Hd/pscc1Y7KBHDZYtBgqwsFo1GnTOCj
-G5iYt4JUQIOaNKzyJ0xgHydg2VUAsdX0dP6GYfN6k0a+HEymKSlCHdIl6FaoafE=
-=SdHL
------END PGP SIGNATURE-----
---=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
