@@ -1,69 +1,75 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCHv2 01/27] ARM: OMAP: remove DSS DT hack
-Date: Tue, 17 Dec 2013 08:45:48 +0200
-Message-ID: <52AFF31C.6010100@ti.com>
-References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com> <1387205794-32246-2-git-send-email-tomi.valkeinen@ti.com> <20131216184157.GA26293@atomide.com>
+From: Archit Taneja <archit@ti.com>
+Subject: Re: [PATCHv2 08/27] OMAPDSS: add of helpers
+Date: Tue, 17 Dec 2013 12:30:21 +0530
+Message-ID: <52AFF685.6010209@ti.com>
+References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com> <1387205794-32246-9-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="L7tc5BHMFuONgTjmDO199RGA3ssmT0f0c"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131216184157.GA26293@atomide.com>
+In-Reply-To: <1387205794-32246-9-git-send-email-tomi.valkeinen@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---L7tc5BHMFuONgTjmDO199RGA3ssmT0f0c
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On 2013-12-16 20:41, Tony Lindgren wrote:
-> * Tomi Valkeinen <tomi.valkeinen@ti.com> [131216 06:59]:
->> As a temporary solution to enable DSS for selected boards when booting=
+On Monday 16 December 2013 08:26 PM, Tomi Valkeinen wrote:
+> Add helpers to get ports and endpoints from DT data.
+>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> ---
+>   drivers/video/omap2/dss/Makefile |   2 +-
+>   drivers/video/omap2/dss/dss-of.c | 162 +++++++++++++++++++++++++++++++++++++++
+>   include/video/omapdss.h          |  14 ++++
+>   3 files changed, 177 insertions(+), 1 deletion(-)
+>   create mode 100644 drivers/video/omap2/dss/dss-of.c
+>
+> diff --git a/drivers/video/omap2/dss/Makefile b/drivers/video/omap2/dss/Makefile
+> index d3aa91bdd6a8..8aec8bda27cc 100644
+> --- a/drivers/video/omap2/dss/Makefile
+> +++ b/drivers/video/omap2/dss/Makefile
+> @@ -1,7 +1,7 @@
+>   obj-$(CONFIG_OMAP2_DSS) += omapdss.o
+>   # Core DSS files
+>   omapdss-y := core.o dss.o dss_features.o dispc.o dispc_coefs.o display.o \
+> -	output.o
+> +	output.o dss-of.o
+>   # DSS compat layer files
+>   omapdss-y += manager.o manager-sysfs.o overlay.o overlay-sysfs.o apply.o \
+>   	dispc-compat.o display-sysfs.o
+> diff --git a/drivers/video/omap2/dss/dss-of.c b/drivers/video/omap2/dss/dss-of.c
+> new file mode 100644
+> index 000000000000..59213cf2ffa2
+> --- /dev/null
+> +++ b/drivers/video/omap2/dss/dss-of.c
+> @@ -0,0 +1,162 @@
+> +/*
+> + * Copyright (C) 2013 Texas Instruments
+> + * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published by
+> + * the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/seq_file.h>
+> +
+> +#include <video/omapdss.h>
+> +
+> +#include "dss.h"
+> +#include "dss_features.h"
 
->> with DT, a hack was added to board-generic.c in
->> 63d5fc0c2f748e20f38a0a0ec1c8494bddf5c288 (OMAP: board-generic: enable
->> DSS for panda & sdp boards).
->>
->> We're now adding proper DT support, so the hack can be removed.
->=20
-> I guess this patch should be merged later on after we have the DT suppo=
-rt
-> working?
+Minor nitpick. The above 2 headers aren't needed.
 
-I'll move this patch also to the end of the series.
+Archit
 
-"Merged later" sounds like you mean this could be merged in a separate
-series. I think this and the other removal can be in this series, they
-just need to be at the end.
-
- Tomi
-
-
-
---L7tc5BHMFuONgTjmDO199RGA3ssmT0f0c
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSr/McAAoJEPo9qoy8lh71SyYQAIWE90zT9o1FErOK/zLFdxhP
-cIIGy5B7zR6ec+D4KTAqNU7qwx/ZtVGr0LoRZz4wA1D05SoKC0Www48Ds01bKDPs
-Q/T3rVCRkFfPbWwGUBJp3xnftIU6gkFr7PsKRSfRRMW+sFYX8zA9EQHHMVEMhfpG
-qIUkMuJilgJ6e4UAOmKYPLkkwqwe7lEaggyxp5r7LJg6NZ3b3q3E8987SCfV5MH8
-u1LLL35sorg596cBJL72z+l8OG9caeY21fCy64wN+QDD539yiHYkQBwzaAXTfrkG
-O2U0b7IKg9jbrX+GLKWE9BffkVMKlXulRqu2Ux9pzTC/kNsVhHdZC0CPIHiCJ+SW
-gsezirnD5v7cEWDb50PX13bBEJqnaVENzMpksobV5Eyge2WQMr4Ajx9PDgSfyI74
-MKRsu9KSRj8LrzJ/Qw+z2KDSqf0NmLM48PHrGRBV9Am7ZS24LZb3J9AdGMtwsqwL
-GzsasN85O2n/9/AKPl0HIbbP3OdDdhalEUJiDVAnk/IM7/qix0HWtdi+s2BYEGSW
-mOMXpjWj9y0NAl0CXwI/7DDC7km9jjlLoFmphiHXAERolz2CSReWMmBkDkfCfa0G
-D2hE3GqyZxrii90oeCHjcHPVq8UN5qBV3AyjRu06Azie5suOdqpJ/N2m/ewi0Mwk
-l/HRigoG2GeqxjvFLsrl
-=qZpj
------END PGP SIGNATURE-----
-
---L7tc5BHMFuONgTjmDO199RGA3ssmT0f0c--
