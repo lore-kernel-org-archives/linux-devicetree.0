@@ -1,48 +1,71 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCHv7 1/4] pwm: Add Freescale FTM PWM driver support
-Date: Tue, 17 Dec 2013 12:58:32 +0000
-Message-ID: <20131217125832.GU4360@n2100.arm.linux.org.uk>
-References: <1386925027-16288-1-git-send-email-Li.Xiubo@freescale.com> <1386925027-16288-2-git-send-email-Li.Xiubo@freescale.com> <20131217111020.GF13823@ulmo.nvidia.com> <20131217115136.GT4360@n2100.arm.linux.org.uk> <20131217122431.GA17210@ulmo.nvidia.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH v4 0/9] Reuse davinci-nand driver for Keystone arch
+Date: Tue, 17 Dec 2013 14:59:06 +0200
+Message-ID: <1387285155-19182-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131217122431.GA17210@ulmo.nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Xiubo Li <Li.Xiubo@freescale.com>, mark.rutland@arm.com, s.hauer@pengutronix.de, galak@codeaurora.org, swarren@wwwdotorg.org, t.figa@samsung.com, grant.likely@linaro.org, matt.porter@linaro.org, rob@landley.net, tomasz.figa@gmail.com, ian.campbell@citrix.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Alison Wang <b18965@freescale.com>, Jingchang Lu <b35083@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2013 at 01:24:33PM +0100, Thierry Reding wrote:
-> On Tue, Dec 17, 2013 at 11:51:36AM +0000, Russell King - ARM Linux wrote:
-> > Same comments here - what memory operations is the wmb() trying to
-> > serialise?  Does this PWM driver somehow end up doing DMA?
-> 
-> Not that I can see. But if my understanding is correct, not using the
-> barriers would allow the compiler and CPU to reorder accesses, and by
-> that cause the register accesses to potentially happen in the wrong
-> order.
+This series contains fixes and updates of Davinci nand driver in
+order to reuse it for Keystone platform.
 
-The compiler won't reorder them, but the CPU may if it meets certain
-criteria.  The architecture guarantees that accesses to device memory
-within a (minimum of) 1KB block will be ordered.
+v3..v4:
+- mtd: nand: davinci: fix driver registration
+	dropped __init/__exit/__exit_p as module_platform_driver() is used
+- mtd: nand: davinci: adjust DT properties to MTD generic
+	used of_get_nand_bus_width() helper
+- mtd: nand: davinci: don't request AEMIF address range
+	added comment at code change
 
-The ARM ARM is slightly ambiguous in how this is applied - in one
-place it says that "Accesses must arrive at any particular memory-mapped
-peripheral or block of memory in program order" and another part it
-says "The size of a memory mapped peripheral, or a block of memory,
-is IMPLEMENTATION DEFINED, but is not smaller than 1KByte.  Note
-This implies that the maximum memory-mapped peripheral size for which
-the architecture guarantees order for all implementations is 1KB."  See
-page A3-148.
+v2..v3:
+- mtd: nand: davinci: don't set timings if AEMIF is used
+	dropped, it would be replaced by alone patch
+	ARM: davinci: aemif: get rid of davinci-nand driver dependency on aemif
 
-What this means (to me at least) is that on any SoC, the architecture
-guarantees that accesses _within_ a 1KB device memory block will always
-be ordered, but two accesses outside of a 1KB block _to the same device_
-is implementation defined whether it is ordered or not.
+v1..v2
+The series is combination of two following series:
+- Davinci nand driver fixes and updates:
+https://lkml.org/lkml/2013/11/20/271
+- Reuse davinci-nand driver for Keystone arch
+https://lkml.org/lkml/2013/11/20/315
 
-The interesting point here though is that the "note" contradicts the
-first definition if you have (eg) AMBA Primecell peripherals which are
-generally 4KB in size, since if the architecture only guarantees 1KB,
-then accesses _may_ _not_ arrive at one primecell in program order.
-Hence, the note is a direct contradiction of the first definition.
+- mtd: nand: davinci: extend description of bindings
+	clarified changeset description
+
+- mtd: nand: davinci: reuse driver for Keystone arch
+	removed "ti,keystone-nand" compatible from driver
+
+Ivan Khoronzhuk (9):
+  mtd: nand: davinci: fix driver registration
+  mtd: nand: davinci: return ENOMEM if memory allocation is failed
+  mtd: nand: davinci: check required ti,davinci-chipselect property
+  mtd: nand: davinci: simplify error handling
+  mtd: nand: davinci: move bindings under mtd
+  mtd: nand: davinci: extend description of bindings
+  mtd: nand: davinci: adjust DT properties to MTD generic
+  mtd: nand: davinci: reuse driver for Keystone arch
+  mtd: nand: davinci: don't request AEMIF address range
+
+ .../devicetree/bindings/arm/davinci/nand.txt       |   46 ----------
+ .../devicetree/bindings/mtd/davinci-nand.txt       |   94 ++++++++++++++++++++
+ drivers/mtd/nand/Kconfig                           |    6 +-
+ drivers/mtd/nand/davinci_nand.c                    |   89 +++++++++---------
+ 4 files changed, 146 insertions(+), 89 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
+ create mode 100644 Documentation/devicetree/bindings/mtd/davinci-nand.txt
+
+-- 
+1.7.9.5
