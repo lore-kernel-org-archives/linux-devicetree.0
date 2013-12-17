@@ -1,39 +1,39 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v3 1/9] mtd: nand: davinci: fix driver registration
-Date: Tue, 17 Dec 2013 01:24:49 -0800
-Message-ID: <20131217092449.GL12034@norris-Latitude-E6410>
-References: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1386264358-9738-2-git-send-email-ivan.khoronzhuk@ti.com>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCHv10 12/41] CLK: TI: add omap4 clock init file
+Date: Tue, 17 Dec 2013 09:30:17 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1312170923440.14039@utopia.booyaka.com>
+References: <1385453182-24421-1-git-send-email-t-kristo@ti.com> <1385453182-24421-13-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1386264358-9738-2-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, dwmw2@infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1385453182-24421-13-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 07:25:49PM +0200, Ivan Khoronzhuk wrote:
-> --- a/drivers/mtd/nand/davinci_nand.c
-> +++ b/drivers/mtd/nand/davinci_nand.c
-> @@ -877,6 +877,7 @@ static int __exit nand_davinci_remove(struct platform_device *pdev)
->  }
->  
->  static struct platform_driver nand_davinci_driver = {
-> +	.probe		= nand_davinci_probe,
->  	.remove		= __exit_p(nand_davinci_remove),
+On Tue, 26 Nov 2013, Tero Kristo wrote:
 
-I believe you need to drop the __exit_p() here. And now that you're
-using module_platform_driver(), you need to drop the __init and __exit
-from the probe() and remove() routines, to avoid section mismatch
-warnings.
+> clk-44xx.c now contains the clock init functionality for omap4, including
+> DT clock registration and adding of static clkdev entries.
 
->  	.driver		= {
->  		.name	= "davinci_nand",
+...
 
-So on second thought, please resubmit the series with the requested
-changes.
+> diff --git a/drivers/clk/ti/clk-44xx.c b/drivers/clk/ti/clk-44xx.c
+> new file mode 100644
+> index 0000000..3e2090b
+> --- /dev/null
+> +++ b/drivers/clk/ti/clk-44xx.c
+> @@ -0,0 +1,328 @@
+> +/*
+> + * OMAP4 Clock data
+> + *
+> + * Copyright (C) 2009-2012 Texas Instruments, Inc.
+> + * Copyright (C) 2009-2010 Nokia Corporation
+> + *
+> + * Paul Walmsley (paul@pwsan.com)
 
-Thanks,
-Brian
+Please remove my name and E-mail address from this file.
+
+
+- Paul
