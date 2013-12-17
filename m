@@ -1,44 +1,31 @@
-From: Kamil Debski <k.debski@samsung.com>
-Subject: RE: [PATCH v4 3/9] phy: Add new Exynos USB PHY driver
-Date: Tue, 17 Dec 2013 14:26:37 +0100
-Message-ID: <02d201cefb2b$9e04e710$da0eb530$%debski@samsung.com>
-References: <1386246579-25141-1-git-send-email-k.debski@samsung.com>
- <1386246579-25141-4-git-send-email-k.debski@samsung.com>
- <006a01cef551$7fb4e240$7f1ea6c0$%tikhomirov@samsung.com>
+From: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
+Subject: Re: [PATCH V2 2/2] cpufreq: imx6q: correct VDDSOC/PU voltage
+ scaling when cpufreq is changed
+Date: Tue, 17 Dec 2013 13:27:13 +0000
+Message-ID: <4E25F2ED-7CAE-495E-838D-1527184F2159@freescale.com>
+References: <1387318102-11070-1-git-send-email-b20788@freescale.com>
+ <1387318102-11070-2-git-send-email-b20788@freescale.com>,<20131217132312.GB3185@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <006a01cef551$7fb4e240$7f1ea6c0$%tikhomirov@samsung.com>
-Content-language: pl
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Anton Tikhomirov' <av.tikhomirov@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kyungmin.park@samsung.com, kishon@ti.com, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <20131217132312.GB3185@sirena.org.uk>
+Content-Language: zh-CN
+Sender: cpufreq-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anton,
-
-> From: Anton Tikhomirov [mailto:av.tikhomirov@samsung.com]
-> Sent: Tuesday, December 10, 2013 3:43 AM
-> 
-> Hi Kamil,
-> 
-> Same USB2.0 PHY may be used by several HCDs, for example EHCI and OHCI.
-> Consider the situation, when EHCI stops using the PHY and calls
-> power_off, then OHCI becomes non-operational. In other words, PHY
-> power_on and power_off calls must be balanced.
-> 
-> Shall we handle it in your driver? (usage count?)
-
-Please look in the drivers/phy/phy-core.c file. Usage count is handled
-there - see phy_power_on and phy_power_off functions. I understand that
-after both EHCI and OHCI power on the phy, the usage count is 2. So
-powering off one of them (EHCI for instance) the usage count is still
-1, so the OHCI should still work properly.
-
-[snip]
-
-Best wishes,
--- 
-Kamil Debski
-Samsung R&D Institute Poland
+DQoNClNlbnQgZnJvbSBBbnNvbidzIGlQaG9uZQ0KDQo+INTaIDIwMTPE6jEy1MIxN8jVo6wyMToy
+M6OsIk1hcmsgQnJvd24iIDxicm9vbmllQGtlcm5lbC5vcmc+INC0tcCjug0KPiANCj4+IE9uIFR1
+ZSwgRGVjIDE3LCAyMDEzIGF0IDA1OjA4OjIyUE0gLTA1MDAsIEFuc29uIEh1YW5nIHdyb3RlOg0K
+Pj4gDQo+PiAgICBpZiAobmV3X2ZyZXEgPiBvbGRfZnJlcSkgew0KPj4gKyAgICAgICAgaWYgKHJl
+Z3VsYXRvcl9pc19lbmFibGVkKHB1X3JlZykpIHsNCj4+ICsgICAgICAgICAgICByZXQgPSByZWd1
+bGF0b3Jfc2V0X3ZvbHRhZ2VfdG9sKHB1X3JlZywgaW14Nl9zb2Nfdm9sdFtpbmRleF0sIDApOw0K
+PiANCj4gQXMgSSBwb2ludGVkIG91dCB3aGlsZSByZXZpZXdpbmcgdGhlIHJlZ3VsYXRvciBkcml2
+ZXIgdGhpcyBpcyByYWN5LA0KPiBub3RoaW5nIHN0b3BzIHRoZSByZWd1bGF0b3Igc3RhdGUgYmVp
+bmcgY2hhbmdlZCBhZnRlciB5b3UgcmVhZCBpdCBhbmQgaWYNCj4geW91IHNraXAgc2V0dGluZyB0
+aGUgdm9sdGFnZSB0aGVuIHdoZW4gc29tZXRoaW5nIGNvbWVzIGFsb25nIGFuZCBlbmFibGVzDQo+
+IHRoZSByZWd1bGF0b3IgbGF0ZXIgaXQgd2lsbCBiZSBlbmFibGVkIHdpdGggYSBwb3NzaWJseSBp
+bmNvcnJlY3QNCj4gdm9sdGFnZS4NCg0KeWVzLCB5b3UgYXJlIGNvcnJlY3QsIEkgd2lsbCByZW1v
+dmUgdGhpcyBQVSBzdGF0dXMgY2hlY2sgaW4gVjMgcGF0Y2guDQoNCkFuc29u
