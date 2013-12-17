@@ -1,61 +1,78 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [RESEND LIST PATCHv7 1/4] clk: socfpga: Add a clk-phase property
- to the "altr,socfpga-gate-clk"
-Date: Tue, 17 Dec 2013 22:47:06 +0800
-Message-ID: <52B063EA.4000800@linaro.org>
-References: <1387213476-22122-1-git-send-email-dinguyen@altera.com> <1387213476-22122-2-git-send-email-dinguyen@altera.com> <52B00167.4010903@linaro.org> <52B0554F.1080509@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/5] regulator: s5m8767: Add symbols for hard-coded
+ DVS_RAMP register
+Date: Tue, 17 Dec 2013 14:58:46 +0000
+Message-ID: <20131217145846.GA32283@lee--X1>
+References: <1387286601-21646-1-git-send-email-k.kozlowski@samsung.com>
+ <1387286601-21646-2-git-send-email-k.kozlowski@samsung.com>
+ <20131217135153.GI19810@lee--X1>
+ <1387289193.13191.9.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <52B0554F.1080509@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dinh Nguyen <dinh.linux@gmail.com>, dinguyen@altera.com, arnd@arndb.de, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, mturquette@linaro.org
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1387289193.13191.9.camel@AMDC1943>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Thomas Abraham <thomas.abraham@linaro.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 17 Dec 2013, Krzysztof Kozlowski wrote:
 
+> On Tue, 2013-12-17 at 13:51 +0000, Lee Jones wrote:
+> > > Add symbols for hard-coded values of BUCK_RAMP field in DVS_RAMP
+> > > register. This simplifies a little the code as register update is=
+ called
+> > > only once.
+> > >=20
+> > > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > > Cc: Kyungmin Park <kyungmin.park@samsung.com>
+> > > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > ---
+> > >  drivers/regulator/s5m8767.c         |   22 ++++++++++-----------=
+-
+> > >  include/linux/mfd/samsung/s5m8767.h |   15 +++++++++++++++
+> > >  2 files changed, 25 insertions(+), 12 deletions(-)
+> >=20
+> > <snip>
+> >=20
+> > > diff --git a/include/linux/mfd/samsung/s5m8767.h b/include/linux/=
+mfd/samsung/s5m8767.h
+> > > index 9198377ee859..2ab0b0f03641 100644
+> > > --- a/include/linux/mfd/samsung/s5m8767.h
+> > > +++ b/include/linux/mfd/samsung/s5m8767.h
+> > > @@ -186,4 +186,19 @@ enum s5m8767_regulators {
+> > >  #define S5M8767_ENCTRL_SHIFT		6
+> > >  #define S5M8767_ENCTRL_MASK		(0x3 << S5M8767_ENCTRL_SHIFT)
+> > > =20
+> > > +/*
+> > > + * Values for BUCK_RAMP field in DVS_RAMP register, matching raw=
+ values
+> > > + * in mV/us.
+> > > + */
+> > > +enum s5m8767_dvs_buck_ramp_values {
+> > > +	S5M8767_DVS_BUCK_RAMP_5		=3D 0x4,
+> > > +	S5M8767_DVS_BUCK_RAMP_10	=3D 0x9,
+> > > +	S5M8767_DVS_BUCK_RAMP_12_5	=3D 0xb,
+> > > +	S5M8767_DVS_BUCK_RAMP_25	=3D 0xd,
+> > > +	S5M8767_DVS_BUCK_RAMP_50	=3D 0xe,
+> > > +	S5M8767_DVS_BUCK_RAMP_100	=3D 0xf,
+> > > +};
+> >=20
+> > Why do these have to be enums?
+>=20
+> There is no special need. I chose enum because it is a kind of
+> enumeration of all valid values for BUCK_RAMP field (valid according =
+to
+> datasheet). If you prefer #define then I'll change it.
 
-On 12/17/2013 09:44 PM, Dinh Nguyen wrote:
-> Hi Zhangfei,
->
-> On 12/17/13 1:46 AM, zhangfei wrote:
->>
->>
->> On 12/17/2013 01:04 AM, dinguyen@altera.com wrote:
->>> From: Dinh Nguyen <dinguyen@altera.com>
->>
->>> +static int socfpga_clk_prepare(struct clk_hw *hwclk)
->>> +{
->>> +    struct socfpga_clk *socfpgaclk = to_socfpga_clk(hwclk);
->>> +    struct regmap *sys_mgr_base_addr;
->>> +    u32 hs_timing;
->>> +
->>> +    if (socfpgaclk->clk_phase[0] || socfpgaclk->clk_phase[1]) {
->>> +        sys_mgr_base_addr =
->>> syscon_regmap_lookup_by_compatible("altr,sys-mgr");
->>> +        if (IS_ERR(sys_mgr_base_addr)) {
->>> +            pr_err("%s: failed to find altr,sys-mgr regmap!\n",
->>> __func__);
->>> +            return -EINVAL;
->>> +        }
->>> +        hs_timing = SYSMGR_SDMMC_CTRL_SET(socfpgaclk->clk_phase[0],
->>> +                        socfpgaclk->clk_phase[1]);
->>> +        regmap_write(sys_mgr_base_addr, SYSMGR_SDMMCGRP_CTRL_OFFSET,
->>> +                        hs_timing);
->>> +    }
->>> +    return 0;
->>> +}
->>
->> So reusing gate-clk here and check the node of "altr,sys-mgr".
->> I think it is good and simple.
->> Also can define new clock combined with node "altr,sys-mgr" with
->> parent of sdmmc_clk.
->>
->> Thanks for the update, it is fine to me.
-> Thanks, can I get an Ack from you for this version?
->
+I'm not fussed enough to make you resubmit.
 
-Sure, if it is helpful.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Thanks
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
