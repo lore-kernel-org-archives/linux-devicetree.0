@@ -1,65 +1,53 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 1/5] regulator: s5m8767: Add symbols for hard-coded
- DVS_RAMP register
-Date: Tue, 17 Dec 2013 15:06:33 +0100
-Message-ID: <1387289193.13191.9.camel@AMDC1943>
-References: <1387286601-21646-1-git-send-email-k.kozlowski@samsung.com>
- <1387286601-21646-2-git-send-email-k.kozlowski@samsung.com>
- <20131217135153.GI19810@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <20131217135153.GI19810@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Thomas Abraham <thomas.abraham@linaro.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/2] clk: add clk accuracy support
+Date: Tue, 17 Dec 2013 15:36:21 +0100
+Message-ID: <1387290983-6236-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2013-12-17 at 13:51 +0000, Lee Jones wrote:
-> > Add symbols for hard-coded values of BUCK_RAMP field in DVS_RAMP
-> > register. This simplifies a little the code as register update is called
-> > only once.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > Cc: Kyungmin Park <kyungmin.park@samsung.com>
-> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> > ---
-> >  drivers/regulator/s5m8767.c         |   22 ++++++++++------------
-> >  include/linux/mfd/samsung/s5m8767.h |   15 +++++++++++++++
-> >  2 files changed, 25 insertions(+), 12 deletions(-)
-> 
-> <snip>
-> 
-> > diff --git a/include/linux/mfd/samsung/s5m8767.h b/include/linux/mfd/samsung/s5m8767.h
-> > index 9198377ee859..2ab0b0f03641 100644
-> > --- a/include/linux/mfd/samsung/s5m8767.h
-> > +++ b/include/linux/mfd/samsung/s5m8767.h
-> > @@ -186,4 +186,19 @@ enum s5m8767_regulators {
-> >  #define S5M8767_ENCTRL_SHIFT		6
-> >  #define S5M8767_ENCTRL_MASK		(0x3 << S5M8767_ENCTRL_SHIFT)
-> >  
-> > +/*
-> > + * Values for BUCK_RAMP field in DVS_RAMP register, matching raw values
-> > + * in mV/us.
-> > + */
-> > +enum s5m8767_dvs_buck_ramp_values {
-> > +	S5M8767_DVS_BUCK_RAMP_5		= 0x4,
-> > +	S5M8767_DVS_BUCK_RAMP_10	= 0x9,
-> > +	S5M8767_DVS_BUCK_RAMP_12_5	= 0xb,
-> > +	S5M8767_DVS_BUCK_RAMP_25	= 0xd,
-> > +	S5M8767_DVS_BUCK_RAMP_50	= 0xe,
-> > +	S5M8767_DVS_BUCK_RAMP_100	= 0xf,
-> > +};
-> 
-> Why do these have to be enums?
+Hello,
 
-There is no special need. I chose enum because it is a kind of
-enumeration of all valid values for BUCK_RAMP field (valid according to
-datasheet). If you prefer #define then I'll change it.
+This patch series adds support for clock accuracy retrieval in the common clk
+framework.
 
+Best Regards,
 
-Best regards,
-Krzysztof
+Boris
 
+Changes since v2:
+ - fix __clk_recalc_accuracies function comment
+ - modify __clk_get_accuracy to return the current clock accuracy even when the
+   clock is orphan
+ - only recalculate clock accuracy when reparent succeed
 
+Changes since v1:
+ - remove HAVE_CLK_GET_ACCURACY option and enable clk accuracy support only
+   when using the CCF
+ - export __clk_get_accuracy (might be used by clk-providers)
+ - fix documentation (s/recalc_rate/recalc_accuracy/)
+ - move fixed_accuracy field addition (struct clk_fixed_rate) from the 1st
+   patch to the 2nd patch of this series
+
+Boris BREZILLON (2):
+  clk: add clk accuracy retrieval support
+  clk: add accuracy support for fixed clock
+
+ Documentation/clk.txt                              |    4 +
+ .../devicetree/bindings/clock/fixed-clock.txt      |    3 +
+ drivers/clk/clk-fixed-rate.c                       |   43 ++++++--
+ drivers/clk/clk.c                                  |  103 ++++++++++++++++++--
+ include/linux/clk-private.h                        |    1 +
+ include/linux/clk-provider.h                       |   15 +++
+ include/linux/clk.h                                |   17 ++++
+ 7 files changed, 173 insertions(+), 13 deletions(-)
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
