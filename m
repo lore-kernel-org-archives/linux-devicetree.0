@@ -1,108 +1,69 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [RESEND LIST PATCHv7 1/4] clk: socfpga: Add a clk-phase property
- to the "altr, socfpga-gate-clk"
-Date: Tue, 17 Dec 2013 15:55:57 -0800
-Message-ID: <20131217235557.23538.22672@quantum>
-References: <1387213476-22122-1-git-send-email-dinguyen@altera.com>
- <1387213476-22122-2-git-send-email-dinguyen@altera.com>
- <52B00167.4010903@linaro.org> <52B0554F.1080509@gmail.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v5 2/2] ARM: mach-moxart: add MOXA ART SoC device tree
+ files
+Date: Tue, 17 Dec 2013 15:57:16 -0800
+Message-ID: <532508e4-1b5f-46ba-9519-7a3e019e251b@CH1EHSMHS014.ehs.local>
+References: <1387294714-12872-1-git-send-email-jonas.jensen@gmail.com>
+ <1387294714-12872-3-git-send-email-jonas.jensen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52B0554F.1080509@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dinh Nguyen <dinh.linux@gmail.com>, zhangfei <zhangfei.gao@linaro.org>, dinguyen@altera.com, arnd@arndb.de, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com
-Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1387294714-12872-3-git-send-email-jonas.jensen@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonas Jensen <jonas.jensen@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, arm@kernel.org, linux@arm.linux.org.uk, arnd@arndb.de, olof@lixom.net, peter.crosthwaite@xilinx.com, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
-Quoting Dinh Nguyen (2013-12-17 05:44:47)
-> Hi Zhangfei,
-> 
-> On 12/17/13 1:46 AM, zhangfei wrote:
-> >
-> >
-> > On 12/17/2013 01:04 AM, dinguyen@altera.com wrote:
-> >> From: Dinh Nguyen <dinguyen@altera.com>
-> >
-> >> +static int socfpga_clk_prepare(struct clk_hw *hwclk)
-> >> +{
-> >> +    struct socfpga_clk *socfpgaclk = to_socfpga_clk(hwclk);
-> >> +    struct regmap *sys_mgr_base_addr;
-> >> +    u32 hs_timing;
-> >> +
-> >> +    if (socfpgaclk->clk_phase[0] || socfpgaclk->clk_phase[1]) {
-> >> +        sys_mgr_base_addr =
-> >> syscon_regmap_lookup_by_compatible("altr,sys-mgr");
-> >> +        if (IS_ERR(sys_mgr_base_addr)) {
-> >> +            pr_err("%s: failed to find altr,sys-mgr regmap!\n",
-> >> __func__);
-> >> +            return -EINVAL;
-> >> +        }
-> >> +        hs_timing = SYSMGR_SDMMC_CTRL_SET(socfpgaclk->clk_phase[0],
-> >> +                        socfpgaclk->clk_phase[1]);
-> >> +        regmap_write(sys_mgr_base_addr, SYSMGR_SDMMCGRP_CTRL_OFFSET,
-> >> +                        hs_timing);
-> >> +    }
-> >> +    return 0;
-> >> +}
-> >
-> > So reusing gate-clk here and check the node of "altr,sys-mgr".
-> > I think it is good and simple.
-> > Also can define new clock combined with node "altr,sys-mgr" with
-> > parent of sdmmc_clk.
-> >
-> > Thanks for the update, it is fine to me.
-> Thanks, can I get an Ack from you for this version?
+Hi Jonas,
 
-Dinh,
+On Tue, Dec 17, 2013 at 04:38:34PM +0100, Jonas Jensen wrote:
+> Add a generic (dtsi) include file for MOXA ART SoCs.
+>=20
+> Also add a file for UC-7112-LX.
+>=20
+> Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/moxart.txt |  12 ++
+>  arch/arm/boot/dts/Makefile                       |   1 +
+>  arch/arm/boot/dts/moxart-uc7112lx.dts            |  93 +++++++++++++
+>  arch/arm/boot/dts/moxart.dtsi                    | 167 +++++++++++++=
+++++++++++
+>  4 files changed, 273 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/moxart.txt
+>  create mode 100644 arch/arm/boot/dts/moxart-uc7112lx.dts
+>  create mode 100644 arch/arm/boot/dts/moxart.dtsi
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/moxart.txt b/Docum=
+entation/devicetree/bindings/arm/moxart.txt
+> new file mode 100644
+> index 0000000..11087ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/moxart.txt
+> @@ -0,0 +1,12 @@
+> +MOXA ART device tree bindings
+> +
+> +Boards with the MOXA ART SoC shall have the following properties:
+> +
+> +Required root node property:
+> +
+> +compatible =3D "moxa,moxart";
+> +
+> +Boards:
+> +
+> +- UC-7112-LX: embedded computer
+> +  compatible =3D "moxa,moxart-uc-7112-lx", "moxa,moxart"
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index c55a22d..ae3d7db 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -319,6 +319,7 @@ dtb-$(CONFIG_ARCH_VT8500) +=3D vt8500-bv07.dtb \
+>  dtb-$(CONFIG_ARCH_ZYNQ) +=3D zynq-zc702.dtb \
+>  	zynq-zc706.dtb \
+>  	zynq-zed.dtb
+> +dtb-$(CONFIG_ARCH_MOXART) +=3D moxart-uc7112lx.dtb
+I think these targets are sorted alphabetically. You should insert the
+MOXART target at the appropriate location a little further up.
 
-Will you be spinning another version of this patch? If not I can go
-ahead and take this into clk-next.
-
-Regards,
-Mike
-
-> 
-> Thanks,
-> Dinh
-> >
-> >> +
-> >>   static struct clk_ops gateclk_ops = {
-> >> +    .prepare = socfpga_clk_prepare,
-> >>       .recalc_rate = socfpga_clk_recalc_rate,
-> >>       .get_parent = socfpga_clk_get_parent,
-> >>       .set_parent = socfpga_clk_set_parent,
-> >> @@ -254,6 +283,7 @@ static void __init socfpga_gate_clk_init(struct
-> >> device_node *node,
-> >>   {
-> >>       u32 clk_gate[2];
-> >>       u32 div_reg[3];
-> >> +    u32 clk_phase[2];
-> >>       u32 fixed_div;
-> >>       struct clk *clk;
-> >>       struct socfpga_clk *socfpga_clk;
-> >> @@ -294,6 +324,12 @@ static void __init socfpga_gate_clk_init(struct
-> >> device_node *node,
-> >>           socfpga_clk->div_reg = 0;
-> >>       }
-> >>
-> >> +    rc = of_property_read_u32_array(node, "clk-phase", clk_phase, 2);
-> >> +    if (!rc) {
-> >> +        socfpga_clk->clk_phase[0] = clk_phase[0];
-> >> +        socfpga_clk->clk_phase[1] = clk_phase[1];
-> >> +    }
-> >> +
-> >>       of_property_read_string(node, "clock-output-names", &clk_name);
-> >>
-> >>       init.name = clk_name;
-> >>
-> 
+	S=C3=B6ren
