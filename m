@@ -1,31 +1,43 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] dt: Update I2C trivial devices list
-Date: Tue, 17 Dec 2013 09:14:40 -0700
-Message-ID: <52B07870.6070809@wwwdotorg.org>
-References: <1387239151-19226-1-git-send-email-bgamari.foss@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387239151-19226-1-git-send-email-bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH] iio: at91: document ADC clock properties
+Date: Tue, 17 Dec 2013 17:16:13 +0100
+Message-ID: <1387296973-7779-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>, Jonathan Cameron <jic23@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/16/2013 05:12 PM, Ben Gamari wrote:
+Document the clock properties required by the at91 ADC driver.
 
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+---
+ .../devicetree/bindings/arm/atmel-adc.txt          |    5 +++++
+ 1 file changed, 5 insertions(+)
 
->  This is a list of trivial i2c devices that have simple device tree
->  bindings, consisting only of a compatible field, an address and
-> -possibly an interrupt line.
-> +possibly an interrupt line. The compatible field is used to lookup the
-> +modalias of the driver which will handle the device. The compatible
-> +string may begin with a manufacturer prefix (separated from the
-> +modalias by a comma) which will be stripped off during lookup.
+diff --git a/Documentation/devicetree/bindings/arm/atmel-adc.txt b/Documentation/devicetree/bindings/arm/atmel-adc.txt
+index d106146..9a1175b 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-adc.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-adc.txt
+@@ -5,6 +5,9 @@ Required properties:
+     <chip> can be "at91sam9260", "at91sam9g45" or "at91sam9x5"
+   - reg: Should contain ADC registers location and length
+   - interrupts: Should contain the IRQ line for the ADC
++  - clock-names: tuple listing input clock names.
++	Required elements: "adc_clk", "adc_op_clk".
++  - clocks: phandles to input clocks.
+   - atmel,adc-channels-used: Bitmask of the channels muxed and enable for this
+     device
+   - atmel,adc-startup-time: Startup Time of the ADC in microseconds as
+@@ -44,6 +47,8 @@ adc0: adc@fffb0000 {
+ 	compatible = "atmel,at91sam9260-adc";
+ 	reg = <0xfffb0000 0x100>;
+ 	interrupts = <20 4>;
++	clocks = <&adc_clk>, <&adc_op_clk>;
++	clock-names = "adc_clk", "adc_op_clk";
+ 	atmel,adc-channel-base = <0x30>;
+ 	atmel,adc-channels-used = <0xff>;
+ 	atmel,adc-drdy-mask = <0x10000>;
+-- 
+1.7.9.5
 
-This part of the patch described Linux-specific behaviour, whereas DT
-bindings should be OS-agnostic.
-
-BTW, you didn't CC the DT binding maintainers.
