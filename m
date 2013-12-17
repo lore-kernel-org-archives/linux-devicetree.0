@@ -1,90 +1,53 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH 1/4] arm: dts: keystone: add GPIO device entry
-Date: Mon, 16 Dec 2013 18:39:37 +0200
-Message-ID: <1387211981-26045-2-git-send-email-grygorii.strashko@ti.com>
-References: <1387211981-26045-1-git-send-email-grygorii.strashko@ti.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [PATCH v3 3/6] pinctrl: Make PINCTRL selectable by
+ defconfig/menuconfig
+Date: Mon, 16 Dec 2013 16:18:43 -0800
+Message-ID: <20131217001842.GB3840@sonymobile.com>
+References: <1381174108-25168-1-git-send-email-syin@broadcom.com>
+ <1386787041-6035-1-git-send-email-syin@broadcom.com>
+ <1386787041-6035-4-git-send-email-syin@broadcom.com>
+ <CACRpkdauqYNiby-ta3c_he2ovG__0e6ubmzZ8Bx1cP_OzK4=LQ@mail.gmail.com>
+ <CAEPRUYpsp_FVobY_DeEQU2+rCD7q7T=p7k++XvG-22x-OWHY8Q@mail.gmail.com>
+ <CACRpkdY2BExGiL6HBg7zn_szJQMnSNsxOSuo7RyrRmrz=cVe2A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1387211981-26045-1-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY2BExGiL6HBg7zn_szJQMnSNsxOSuo7RyrRmrz=cVe2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko St?bner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Keystone GPIO IP device definitions in DT which supports
-up to 32 GPIO lines and each GPIO line can be configured as separate
-interrupt source (so called "unbanked" IRQ).
+On Mon 16 Dec 02:01 PST 2013, Linus Walleij wrote:
 
-For more information see:
- http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
+> On Thu, Dec 12, 2013 at 10:35 PM, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org> wrote:
+> 
+> >  I had requested this from Sherman. The reason is so that pinctrl can
+> > be selectable through defconfig, instead of through SoC select
+> > statements. And the reason for that is so that, in the future, some of
+> > these can be switched into loadable modules (which can't be done from
+> > Kconfig). This will become necessary with the move to multiplatform -
+> > we won't be able to have everything static anymore.
+> 
+> Isn't it sufficient to make the pin controller entry tristate rather
+> than bool?
+> 
+> And as mentioned elsewhere this does not at all solve the issue
+> that we still need to have all basic IRQchips and timer drivers
+> compiled into the kernel.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm/boot/dts/keystone.dtsi |   45 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+No matter how we build the individual pinctrl drivers we will always
+need the pinctrl framework in a multi-soc zImage; so I can't see that
+we gain anything from being able to compile PINCTRL as a module.
 
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index f6d6d9e..6e93bf5 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -7,6 +7,7 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/gpio/gpio.h>
- 
- #include "skeleton.dtsi"
- 
-@@ -181,5 +182,49 @@
- 			interrupts = <GIC_SPI 300 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&clkspi>;
- 		};
-+
-+		gpio0: gpio@260bf00 {
-+				compatible = "ti,keystone-gpio";
-+				reg = <0x0260bf00 0x100>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				/* HW Interrupts mapped to GPIO pins */
-+				interrupts = <GIC_SPI 120 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 121 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 122 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 123 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 124 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 125 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 126 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 127 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 128 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 129 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 130 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 131 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 132 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 133 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 134 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 135 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 136 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 137 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 138 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 139 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 140 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 141 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 142 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 143 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 144 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 145 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 146 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 147 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 148 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 149 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 150 IRQ_TYPE_EDGE_RISING
-+							  GIC_SPI 151 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkgpio>;
-+				clock-names = "gpio";
-+				ti,ngpio = <32>;
-+				ti,davinci-gpio-unbanked = <32>;
-+		};
- 	};
- };
--- 
-1.7.9.5
+I don't like compiling the individual pinctrl drivers as modules, as
+it leaves us with a waterfall of PROBE_DEFERRs.
+
+Regards,
+Bjorn
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
