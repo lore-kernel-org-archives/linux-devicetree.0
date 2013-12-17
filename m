@@ -1,80 +1,76 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 0/4] OMAPDSS: DT support for N900 panel
-Date: Tue, 17 Dec 2013 09:37:35 +0200
-Message-ID: <52AFFF3F.7020807@ti.com>
-References: <1386958650-2404-1-git-send-email-sre@debian.org>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [RESEND LIST PATCHv7 1/4] clk: socfpga: Add a clk-phase property
+ to the "altr,socfpga-gate-clk"
+Date: Tue, 17 Dec 2013 15:46:47 +0800
+Message-ID: <52B00167.4010903@linaro.org>
+References: <1387213476-22122-1-git-send-email-dinguyen@altera.com> <1387213476-22122-2-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="cPvjumn88P4BSuaTdf5t7fRvvCQLTusJB"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1386958650-2404-1-git-send-email-sre@debian.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1387213476-22122-2-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinguyen@altera.com, dinh.linux@gmail.com, arnd@arndb.de, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, mturquette@linaro.org
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---cPvjumn88P4BSuaTdf5t7fRvvCQLTusJB
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On 2013-12-13 20:17, Sebastian Reichel wrote:
-> Hi,
->=20
-> This patchset adds DT support for the N900 panel. The patchset is based=
- on
-> Tomi's work/dss-dt-2 branch [0]. I suggest to send the DT changes throu=
-gh
-> Benoits queue, since I have more N900 DT changes for 3.14. Also the pat=
-ch
-> editing the rx51 boardcode can be dropped, since the file is removed in=
- 3.14.
-> I included those two with this patchset, since they are needed to test =
-the
-> other two patches.
->=20
-> I did not include a documentation for the DT API, since the omapdss
-> documentation is still missing.
->=20
-> I have successfully tested this on the N900.
->=20
-> [0] https://git.kernel.org/cgit/linux/kernel/git/tomba/linux.git/log/?h=
-=3Dwork/dss-dt-2
-
-I added N900 display DT support on top of my v2 series, including
-pinmuxing. Can you check if it looks right and works?
-
-git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss-dt=
 
 
- Tomi
+On 12/17/2013 01:04 AM, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
 
+> +static int socfpga_clk_prepare(struct clk_hw *hwclk)
+> +{
+> +	struct socfpga_clk *socfpgaclk = to_socfpga_clk(hwclk);
+> +	struct regmap *sys_mgr_base_addr;
+> +	u32 hs_timing;
+> +
+> +	if (socfpgaclk->clk_phase[0] || socfpgaclk->clk_phase[1]) {
+> +		sys_mgr_base_addr = syscon_regmap_lookup_by_compatible("altr,sys-mgr");
+> +		if (IS_ERR(sys_mgr_base_addr)) {
+> +			pr_err("%s: failed to find altr,sys-mgr regmap!\n", __func__);
+> +			return -EINVAL;
+> +		}
+> +		hs_timing = SYSMGR_SDMMC_CTRL_SET(socfpgaclk->clk_phase[0],
+> +						socfpgaclk->clk_phase[1]);
+> +		regmap_write(sys_mgr_base_addr, SYSMGR_SDMMCGRP_CTRL_OFFSET,
+> +						hs_timing);
+> +	}
+> +	return 0;
+> +}
 
+So reusing gate-clk here and check the node of "altr,sys-mgr".
+I think it is good and simple.
+Also can define new clock combined with node "altr,sys-mgr" with parent 
+of sdmmc_clk.
 
---cPvjumn88P4BSuaTdf5t7fRvvCQLTusJB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Thanks for the update, it is fine to me.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSr/8/AAoJEPo9qoy8lh71kXgP/jN78DPvtXCN38e2AwGJjbRm
-8oDmodWlC8iGqb63om4UmugzQuPR6JzR2DIfSzTljbQn17zsIg21dztqP9xOmoF4
-dpndTSrL22yT7bRHjijWNiX79LyvDARKim8vRrzsKyxi2K2St9bLi8NPZF7gD9nZ
-hagtEDJAmpMRzbyKpibY62lfbJVALK9ZSIIXMgw+wjI4oJBAPBIorg7ak2UYNZDO
-QBHeRLuIXXXTbqvwFGNr1P3FQ305lmbcCKJpsPGCXwCXMPSD2kOLHqbhzdDqnQZt
-1+0nQx5sOcunXBYCzMXWt6SIiwJ/aAuTY4S8FSzZCzjVbgdLFCTx+5LSwwqUFcHi
-Oz9qSR4THgtSC1JRmSofqgF8Cpg5BT8qkXdCgKyjKC5tEzPxrSbe5cU4XZUC4ECY
-ild32Lqw0YPVGDy4HhNJCao7t4RlYjPBBPpxRvYBklODuxQz6XOcvVDoyj/3vnr+
-PwP3q474O+dbyyNPqFMb9QhYv589r4Do4TWgobepCMPBsPqDLgooi9u+w2/4yQCC
-vs1xd6MO0mOMON0bkx9kElvZxEStT+1Hq6VO6mPTV55niUxlRGSFlfmtaKGuKGLL
-APYkWpYWJOqMDywlNJQKiKh58zsOMaoaltFh3pCOjLxlRCI9nC2iB/GBCxVHFqoL
-1y/itl5K+/0FlbDmmPlR
-=hjfG
------END PGP SIGNATURE-----
-
---cPvjumn88P4BSuaTdf5t7fRvvCQLTusJB--
+> +
+>   static struct clk_ops gateclk_ops = {
+> +	.prepare = socfpga_clk_prepare,
+>   	.recalc_rate = socfpga_clk_recalc_rate,
+>   	.get_parent = socfpga_clk_get_parent,
+>   	.set_parent = socfpga_clk_set_parent,
+> @@ -254,6 +283,7 @@ static void __init socfpga_gate_clk_init(struct device_node *node,
+>   {
+>   	u32 clk_gate[2];
+>   	u32 div_reg[3];
+> +	u32 clk_phase[2];
+>   	u32 fixed_div;
+>   	struct clk *clk;
+>   	struct socfpga_clk *socfpga_clk;
+> @@ -294,6 +324,12 @@ static void __init socfpga_gate_clk_init(struct device_node *node,
+>   		socfpga_clk->div_reg = 0;
+>   	}
+>
+> +	rc = of_property_read_u32_array(node, "clk-phase", clk_phase, 2);
+> +	if (!rc) {
+> +		socfpga_clk->clk_phase[0] = clk_phase[0];
+> +		socfpga_clk->clk_phase[1] = clk_phase[1];
+> +	}
+> +
+>   	of_property_read_string(node, "clock-output-names", &clk_name);
+>
+>   	init.name = clk_name;
+>
