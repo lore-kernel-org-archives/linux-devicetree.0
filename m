@@ -1,356 +1,233 @@
 From: Sergei Ianovich <ynvich@gmail.com>
-Subject: [PATCH v3 11/21] ARM: pxa: support ICP DAS LP-8x4x FPGA irq
-Date: Tue, 17 Dec 2013 23:37:41 +0400
-Message-ID: <1387309071-22382-12-git-send-email-ynvich@gmail.com>
+Subject: [PATCH v3 09/21] rtc: support DS1302 RTC on ICP DAS LP-8x4x
+Date: Tue, 17 Dec 2013 23:37:39 +0400
+Message-ID: <1387309071-22382-10-git-send-email-ynvich@gmail.com>
 References: <1386901645-28895-1-git-send-email-ynvich@gmail.com>
  <1387309071-22382-1-git-send-email-ynvich@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1387309071-22382-1-git-send-email-ynvich@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Sergei Ianovich <ynvich@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Cc: Sergei Ianovich <ynvich@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Alessandro Zummo <a.zummo@towertech.it>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, rtc-linux@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-ICP DAS LP-8x4x contains FPGA chip. The chip functions as a interrupt
-source providing 16 additional interrupts among other things. The
-interrupt lines are muxed to a GPIO pin. GPIO pins are in turn muxed
-to a CPU interrupt line.
-
-Until pxa is completely converted to device tree, it is impossible
-to use IRQCHIP_DECLARE() and the irqdomain needs to added manually.
-
 Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
-CC: Arnd Bergmann <arnd@arndb.de>
-CC: Linus Walleij <linus.walleij@linaro.org>
 ---
    v2..v3
-   * no changes (except number 09/16 -> 10/21)
+   * use usleep_range instead of custom nsleep
+   * number change (07/16 -> 09/21)
 
    v0..v2
-   * extract irqchip and move to drivers/irqchip/
    * use device tree
    * use devm helpers where possible
 
- .../bindings/interrupt-controller/irq-lp8x4x.txt   |  49 +++++
- arch/arm/boot/dts/pxa27x-lp8x4x.dts                |  10 +
- drivers/irqchip/Kconfig                            |   5 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-lp8x4x.c                       | 205 +++++++++++++++++++++
- 5 files changed, 270 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/irq-lp8x4x.txt
- create mode 100644 drivers/irqchip/irq-lp8x4x.c
+ .../devicetree/bindings/rtc/rtc-ds1302.txt         |  14 +++
+ arch/arm/boot/dts/pxa27x-lp8x4x.dts                |  13 +++
+ arch/arm/configs/lp8x4x_defconfig                  |   1 +
+ drivers/rtc/Kconfig                                |   2 +-
+ drivers/rtc/rtc-ds1302.c                           | 100 ++++++++++++++++++++-
+ 5 files changed, 127 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/irq-lp8x4x.txt b/Documentation/devicetree/bindings/interrupt-controller/irq-lp8x4x.txt
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
 new file mode 100644
-index 0000000..c8940d2
+index 0000000..876297c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/irq-lp8x4x.txt
-@@ -0,0 +1,49 @@
-+ICP DAS LP-8x4x FPGA Interrupt Controller
++++ b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
+@@ -0,0 +1,14 @@
++* Dallas Semiconductor DS-1302 RTC
 +
-+ICP DAS LP-8x4x contains FPGA chip. The chip functions as a interrupt
-+source providing 16 additional interrupts among other things.
++Simple device which could be used to store date/time between reboots.
 +
 +Required properties:
-+- compatible : should be "icpdas,irq-lp8x4x"
++- compatible : Should be "ds,rtc-ds1302"
++- reg : Should be address and size of IO memory region
 +
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
++Examples:
 +
-+- interrupt-controller : identifies the node as an interrupt controller
-+
-+- #interrupt-cells : should be 1
-+
-+- interrupts : should provide interrupt
-+
-+- interrupt-parent : should provide a link to interrupt controller either
-+		     explicitly and implicitly from a parent node
-+
-+Example:
-+
-+	fpga: fpga@17000006 {
-+		compatible = "icpdas,irq-lp8x4x";
-+		reg = <0x17000006 0x16>;
-+		interrupt-parent = <&gpio>;
-+		interrupts = <3 IRQ_TYPE_EDGE_RISING>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		status = "okay";
-+	};
-+
-+	uart@17009050 {
-+		compatible = "icpdas,uart-lp8x4x";
-+		reg = <0x17009050 0x10
-+		       0x17009030 0x02>;
-+		interrupt-parent = <&fpga>;
-+		interrupts = <13>;
-+		status = "okay";
-+	};
-+
-+	uart@17009060 {
-+		compatible = "icpdas,uart-lp8x4x";
-+		reg = <0x17009060 0x10
-+		       0x17009032 0x02>;
-+		interrupt-parent = <&fpga>;
-+		interrupts = <14>;
-+		status = "okay";
-+	};
++rtc@40900000 {
++	compatible = "ds,rtc-ds1302";
++	reg = <0x1700901c 0x1>;
++};
 diff --git a/arch/arm/boot/dts/pxa27x-lp8x4x.dts b/arch/arm/boot/dts/pxa27x-lp8x4x.dts
-index 07856e0..78dfd2e 100644
+index 6a780fe..872c386 100644
 --- a/arch/arm/boot/dts/pxa27x-lp8x4x.dts
 +++ b/arch/arm/boot/dts/pxa27x-lp8x4x.dts
-@@ -167,6 +167,16 @@
- 				reg = <0xa000 0x1000
- 				       0x901e 0x1>;
+@@ -149,5 +149,18 @@
+ 				status = "okay";
  			};
+ 		};
 +
-+			fpgairq: irq@9006 {
-+				compatible = "icpdas,irq-lp8x4x";
-+				reg = <0x9006 0x16>;
-+				interrupt-parent = <&gpio>;
-+				interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
-+				#interrupt-cells = <1>;
-+				interrupt-controller;
++		fpga@5 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 5 0x3000000 0x10000>;
++
++			rtc@901c {
++				compatible = "ds,rtc-ds1302";
++				reg = <0x901c 0x1>;
 +				status = "okay";
 +			};
- 		};
++		};
  	};
  };
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 3792a1a..7e22729 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -35,6 +35,11 @@ config IMGPDC_IRQ
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN
+diff --git a/arch/arm/configs/lp8x4x_defconfig b/arch/arm/configs/lp8x4x_defconfig
+index 9f1efb6..d60e37a 100644
+--- a/arch/arm/configs/lp8x4x_defconfig
++++ b/arch/arm/configs/lp8x4x_defconfig
+@@ -141,6 +141,7 @@ CONFIG_LEDS_GPIO=y
+ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+ CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_DS1302=y
+ CONFIG_RTC_DRV_PXA=m
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_EXT2_FS=m
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 0077302..501055f 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -676,7 +676,7 @@ config RTC_DRV_DS1286
  
-+config LP8X4X_IRQ
-+	bool
-+	depends on OF
-+	select IRQ_DOMAIN
+ config RTC_DRV_DS1302
+ 	tristate "Dallas DS1302"
+-	depends on SH_SECUREEDGE5410
++	depends on SH_SECUREEDGE5410 || (ARCH_PXA && HIGH_RES_TIMERS)
+ 	help
+ 	  If you say yes here you get support for the Dallas DS1302 RTC chips.
+ 
+diff --git a/drivers/rtc/rtc-ds1302.c b/drivers/rtc/rtc-ds1302.c
+index 07e8d79..24a75d8 100644
+--- a/drivers/rtc/rtc-ds1302.c
++++ b/drivers/rtc/rtc-ds1302.c
+@@ -50,7 +50,7 @@
+ #define ds1302_set_tx()
+ #define ds1302_set_rx()
+ 
+-static inline int ds1302_hw_init(void)
++static inline int ds1302_hw_init(struct platform_device *pdev)
+ {
+ 	return 0;
+ }
+@@ -86,6 +86,101 @@ static inline int ds1302_rxbit(void)
+ 	return !!(get_dp() & RTC_IODATA);
+ }
+ 
++#elif defined(CONFIG_ARCH_PXA) && defined(CONFIG_HIGH_RES_TIMERS)
 +
- config ORION_IRQCHIP
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index c60b901..8a28927 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -22,3 +22,4 @@ obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
- obj-$(CONFIG_VERSATILE_FPGA_IRQ)	+= irq-versatile-fpga.o
- obj-$(CONFIG_ARCH_VT8500)		+= irq-vt8500.o
- obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
-+obj-$(CONFIG_LP8X4X_IRQ)		+= irq-lp8x4x.o
-diff --git a/drivers/irqchip/irq-lp8x4x.c b/drivers/irqchip/irq-lp8x4x.c
-new file mode 100644
-index 0000000..5d44880b
---- /dev/null
-+++ b/drivers/irqchip/irq-lp8x4x.c
-@@ -0,0 +1,205 @@
-+/*
-+ *  linux/drivers/irqchip/irq-lp8x4x.c
-+ *
-+ *  Support for ICP DAS LP-8x4x FPGA irq
-+ *  Copyright (C) 2013 Sergei Ianovich <ynvich@gmail.com>
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License version 2 as
-+ *  published by the Free Software Foundation or any later version.
-+ */
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/irqchip/chained_irq.h>
++#include <linux/delay.h>
 +#include <linux/of.h>
-+#include <linux/platform_device.h>
 +
-+#define EOI			0x00000000
-+#define INSINT			0x00000002
-+#define ENSYSINT		0x00000004
-+#define PRIMINT			0x00000006
-+#define SECOINT			0x00000008
-+#define ENRISEINT		0x0000000A
-+#define CLRRISEINT		0x0000000C
-+#define ENHILVINT		0x0000000E
-+#define CLRHILVINT		0x00000010
-+#define ENFALLINT		0x00000012
-+#define CLRFALLINT		0x00000014
-+#define LP8X4X_IRQ_MEM_SIZE	0x00000016
++#define	RTC_CE		0x01
++#define	RTC_CLK		0x02
++#define	RTC_nWE		0x04
++#define	RTC_IODATA	0x08
 +
-+static unsigned char irq_sys_enabled;
-+static unsigned char irq_high_enabled;
-+static void *base;
-+static int irq_base;
-+static int num_irq = 16;
++static unsigned long ds1302_state;
 +
-+static void lp8x4x_mask_irq(struct irq_data *d)
++static void *mem;
++
++static inline int ds1302_hw_init(struct platform_device *pdev)
 +{
-+	unsigned mask;
-+	int irq = d->irq - irq_base;
++	struct resource *r;
 +
-+	if (irq < 0 || irq > 15) {
-+		pr_err("lp8x4x: wrong irq handler for irq %i\n", d->irq);
-+		return;
-+	}
-+
-+	if (irq < 8) {
-+		irq_high_enabled &= ~(1 << irq);
-+
-+		mask = ioread8(base + ENHILVINT);
-+		mask &= ~(1 << irq);
-+		iowrite8(mask, base + ENHILVINT);
-+	} else {
-+		irq -= 8;
-+		irq_sys_enabled &= ~(1 << irq);
-+
-+		mask = ioread8(base + ENSYSINT);
-+		mask &= ~(1 << irq);
-+		iowrite8(mask, base + ENSYSINT);
-+	}
-+}
-+
-+static void lp8x4x_unmask_irq(struct irq_data *d)
-+{
-+	unsigned mask;
-+	int irq = d->irq - irq_base;
-+
-+	if (irq < 0 || irq > 15) {
-+		pr_err("wrong irq handler for irq %i\n", d->irq);
-+		return;
-+	}
-+
-+	if (irq < 8) {
-+		irq_high_enabled |= 1 << irq;
-+		mask = ioread8(base + CLRHILVINT);
-+		mask |= 1 << irq;
-+		iowrite8(mask, base + CLRHILVINT);
-+
-+		mask = ioread8(base + ENHILVINT);
-+		mask |= 1 << irq;
-+		iowrite8(mask, base + ENHILVINT);
-+	} else {
-+		irq -= 8;
-+		irq_sys_enabled |= 1 << irq;
-+
-+		mask = ioread8(base + SECOINT);
-+		mask |= 1 << irq;
-+		iowrite8(mask, base + SECOINT);
-+
-+		mask = ioread8(base + ENSYSINT);
-+		mask |= 1 << irq;
-+		iowrite8(mask, base + ENSYSINT);
-+	}
-+}
-+
-+static struct irq_chip lp8x4x_irq_chip = {
-+	.name			= "FPGA",
-+	.irq_ack		= lp8x4x_mask_irq,
-+	.irq_mask		= lp8x4x_mask_irq,
-+	.irq_mask_ack		= lp8x4x_mask_irq,
-+	.irq_unmask		= lp8x4x_unmask_irq,
-+};
-+
-+static void lp8x4x_irq_handler(unsigned int irq, struct irq_desc *desc)
-+{
-+	int loop, n;
-+	unsigned long mask;
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+
-+	chained_irq_enter(chip, desc);
-+
-+	do {
-+		loop = 0;
-+		mask = ioread8(base + CLRHILVINT) & 0xff;
-+		mask |= (ioread8(base + SECOINT) & 0x1f) << 8;
-+		mask |= (ioread8(base + PRIMINT) & 0xe0) << 8;
-+		mask &= (irq_high_enabled | (irq_sys_enabled << 8));
-+		for_each_set_bit(n, &mask, BITS_PER_LONG) {
-+			loop = 1;
-+
-+			generic_handle_irq(irq_base + n);
-+		}
-+	} while (loop);
-+
-+	iowrite8(0, base + EOI);
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static int lp8x4x_irq_domain_map(struct irq_domain *d, unsigned int irq,
-+				 irq_hw_number_t hw)
-+{
-+	irq_set_chip_and_handler(irq, &lp8x4x_irq_chip,
-+				 handle_level_irq);
-+	set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
-+	return 0;
-+}
-+
-+const struct irq_domain_ops lp8x4x_irq_domain_ops = {
-+	.map	= lp8x4x_irq_domain_map,
-+	.xlate	= irq_domain_xlate_onecell,
-+};
-+
-+static struct of_device_id lp8x4x_irq_dt_ids[] = {
-+	{ .compatible = "icpdas,irq-lp8x4x", },
-+	{}
-+};
-+
-+static int lp8x4x_irq_probe(struct platform_device *pdev)
-+{
-+	struct resource *rm, *ri;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct irq_domain *domain;
-+
-+	rm = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	ri = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	if (!rm || !ri || resource_size(rm) < LP8X4X_IRQ_MEM_SIZE)
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!r)
 +		return -ENODEV;
 +
-+	base = devm_ioremap_resource(&pdev->dev, rm);
-+	if (!base) {
-+		dev_err(&pdev->dev, "Failed to ioremap %p\n", base);
++	mem = devm_ioremap_resource(&pdev->dev, r);
++	if (!mem)
 +		return -EFAULT;
-+	}
-+
-+	irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
-+	if (irq_base < 0) {
-+		dev_err(&pdev->dev, "Failed to allocate IRQ numbers\n");
-+		return irq_base;
-+	}
-+
-+	domain = irq_domain_add_legacy(np, num_irq, irq_base, 0,
-+				       &lp8x4x_irq_domain_ops, NULL);
-+	if (!domain) {
-+		dev_err(&pdev->dev, "Failed to add IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	iowrite8(0, base + CLRRISEINT);
-+	iowrite8(0, base + ENRISEINT);
-+	iowrite8(0, base + CLRFALLINT);
-+	iowrite8(0, base + ENFALLINT);
-+	iowrite8(0, base + CLRHILVINT);
-+	iowrite8(0, base + ENHILVINT);
-+	iowrite8(0, base + ENSYSINT);
-+	iowrite8(0, base + SECOINT);
-+
-+	irq_set_chained_handler(ri->start, lp8x4x_irq_handler);
 +
 +	return 0;
 +}
 +
-+static struct platform_driver lp8x4x_irq_driver = {
-+	.probe		= lp8x4x_irq_probe,
-+	.driver		= {
-+		.name	= "irq-lp8x4x",
-+		.of_match_table = lp8x4x_irq_dt_ids,
-+	},
++static inline void ds1302_reset(void)
++{
++	ds1302_state = 0;
++	iowrite8(ds1302_state, mem);
++	usleep_range(4, 5);
++}
++
++static inline void ds1302_clock(void)
++{
++	usleep_range(1, 2);
++	ds1302_state |= RTC_CLK;
++	iowrite8(ds1302_state, mem);
++	usleep_range(1, 2);
++	ds1302_state &= ~RTC_CLK;
++	iowrite8(ds1302_state, mem);
++}
++
++static inline void ds1302_start(void)
++{
++	ds1302_state &= ~RTC_CLK;
++	ds1302_state |= RTC_CE;
++	iowrite8(ds1302_state, mem);
++	usleep_range(3, 4);
++}
++
++static inline void ds1302_stop(void)
++{
++	ds1302_state &= ~RTC_CE;
++	iowrite8(ds1302_state, mem);
++}
++
++static inline void ds1302_set_tx(void)
++{
++	ds1302_state &= ~RTC_nWE;
++	iowrite8(ds1302_state, mem);
++}
++
++static inline void ds1302_set_rx(void)
++{
++	ds1302_state |= RTC_nWE;
++	iowrite8(ds1302_state, mem);
++}
++
++static inline void ds1302_txbit(int bit)
++{
++	if (bit)
++		ds1302_state |= RTC_IODATA;
++	else
++		ds1302_state &= ~RTC_IODATA;
++	iowrite8(ds1302_state, mem);
++}
++
++static inline int ds1302_rxbit(void)
++{
++	return ioread8(mem) & 0x1;
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id ds1302_dt_ids[] = {
++	{ .compatible = "ds,rtc-ds1302" },
++	{ }
 +};
 +
-+static int __init lp8x4x_irq_init(void)
-+{
-+	return platform_driver_register(&lp8x4x_irq_driver);
-+}
-+postcore_initcall(lp8x4x_irq_init);
++MODULE_DEVICE_TABLE(of, ds1302_dt_ids);
++#endif
++
+ #else
+ #error "Add support for your platform"
+ #endif
+@@ -216,7 +311,7 @@ static int __init ds1302_rtc_probe(struct platform_device *pdev)
+ {
+ 	struct rtc_device *rtc;
+ 
+-	if (ds1302_hw_init()) {
++	if (ds1302_hw_init(pdev)) {
+ 		dev_err(&pdev->dev, "Failed to init communication channel");
+ 		return -EINVAL;
+ 	}
+@@ -245,6 +340,7 @@ static struct platform_driver ds1302_platform_driver = {
+ 	.driver		= {
+ 		.name	= DRV_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(ds1302_dt_ids),
+ 	},
+ };
+ 
 -- 
 1.8.4.2
