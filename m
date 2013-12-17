@@ -1,80 +1,105 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 7/9] mtd: nand: davinci: adjust DT properties to MTD
- generic
-Date: Tue, 17 Dec 2013 14:19:12 +0200
-Message-ID: <52B04140.1060709@ti.com>
-References: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com> <1386264358-9738-8-git-send-email-ivan.khoronzhuk@ti.com> <20131217085027.GK12034@norris-Latitude-E6410>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCHv7 1/4] pwm: Add Freescale FTM PWM driver support
+Date: Tue, 17 Dec 2013 13:24:33 +0100
+Message-ID: <20131217122431.GA17210@ulmo.nvidia.com>
+References: <1386925027-16288-1-git-send-email-Li.Xiubo@freescale.com>
+ <1386925027-16288-2-git-send-email-Li.Xiubo@freescale.com>
+ <20131217111020.GF13823@ulmo.nvidia.com>
+ <20131217115136.GT4360@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131217085027.GK12034@norris-Latitude-E6410>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131217115136.GT4360@n2100.arm.linux.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Xiubo Li <Li.Xiubo@freescale.com>, mark.rutland@arm.com, s.hauer@pengutronix.de, galak@codeaurora.org, swarren@wwwdotorg.org, t.figa@samsung.com, grant.likely@linaro.org, matt.porter@linaro.org, rob@landley.net, tomasz.figa@gmail.com, ian.campbell@citrix.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Alison Wang <b18965@freescale.com>, Jingchang Lu <b35083@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/17/2013 10:50 AM, Brian Norris wrote:
-> On Thu, Dec 05, 2013 at 07:25:55PM +0200, Ivan Khoronzhuk wrote:
->> --- a/drivers/mtd/nand/davinci_nand.c
->> +++ b/drivers/mtd/nand/davinci_nand.c
->> @@ -558,6 +557,8 @@ static struct davinci_nand_pdata
->>   			"ti,davinci-mask-chipsel", &prop))
->>   			pdata->mask_chipsel = prop;
->>   		if (!of_property_read_string(pdev->dev.of_node,
->> +			"nand-ecc-mode", &mode) ||
-> 
-> Is it possible to use the of_get_nand_ecc_mode() helper? It's
-> unfortunate that davinci_nand had to use custom bindings in the first
-> place, making this more difficult... So I can take this patch as-is.
-> 
 
-Yes, I will do nothing for that
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +		    !of_property_read_string(pdev->dev.of_node,
->>   			"ti,davinci-ecc-mode", &mode)) {
->>   			if (!strncmp("none", mode, 4))
->>   				pdata->ecc_mode = NAND_ECC_NONE;
->> @@ -570,11 +571,15 @@ static struct davinci_nand_pdata
->>   			"ti,davinci-ecc-bits", &prop))
->>   			pdata->ecc_bits = prop;
->>   		if (!of_property_read_u32(pdev->dev.of_node,
->> +			"nand-bus-width", &prop) ||
-> 
-> Similar story here, with of_get_nand_bus_width().
-> 
+On Tue, Dec 17, 2013 at 11:51:36AM +0000, Russell King - ARM Linux wrote:
+> On Tue, Dec 17, 2013 at 12:10:22PM +0100, Thierry Reding wrote:
+> > On Fri, Dec 13, 2013 at 04:57:04PM +0800, Xiubo Li wrote:
+> > > +static inline u32 fsl_pwm_readl(struct fsl_pwm_chip *fpc,
+> > > +		const void __iomem *addr)
+> > > +{
+> > > +	u32 val;
+> > > +
+> > > +	val =3D __raw_readl(addr);
+> > > +
+> > > +	if (likely(fpc->big_endian))
+> >=20
+> > The likely() probably isn't very useful in this case. But if you want to
+> > keep it, it should at least be reversed, since little-endian is actually
+> > the default (you have to specify the big-endian property to activate the
+> > big endian mode).
+> >=20
+> > > +		val =3D be32_to_cpu(val);
+> > > +	else
+> > > +		val =3D le32_to_cpu(val);
+>=20
+> This will also cause sparse errors, because when sparse is enabled, these
+> expect __le32 or __be32 arguments, not u32.
+>=20
+> > > +	rmb();
+> >=20
+> > I'd prefer the rmb() to follow the __raw_readl() immediately to make the
+> > relationship more explicit.
+>=20
+> A better question to ask is: why is this barrier here?  What memory
+> ordering operations is it trying to serialise?
 
-It seems for bus width I can replace it on:
+I suppose that this was done so that the accesses would essentially
+remain the same as those performed by readl() and writel().
 
-prop = of_get_nand_bus_width(pdev->dev.of_node);
-if ( 0 < prop || !of_property_read_u32(pdev->dev.of_node,
-	     "ti,davinci-nand-buswidth", &prop))
-     if (prop == 16)
-	     pdata->options |= NAND_BUSWIDTH_16;
+> > > +static inline void fsl_pwm_writel(struct fsl_pwm_chip *fpc,
+> > > +		u32 val, void __iomem *addr)
+> > > +{
+> > > +	wmb();
+> > > +	if (likely(fpc->big_endian))
+> > > +		val =3D cpu_to_be32(val);
+> > > +	else
+> > > +		val =3D cpu_to_le32(val);
+> > > +
+> > > +	__raw_writel(val, addr);
+> >=20
+> > Same here. wmb() should precede __raw_writel() immediately.
+>=20
+> Same comments here - what memory operations is the wmb() trying to
+> serialise?  Does this PWM driver somehow end up doing DMA?
 
+Not that I can see. But if my understanding is correct, not using the
+barriers would allow the compiler and CPU to reorder accesses, and by
+that cause the register accesses to potentially happen in the wrong
+order.
 
->> +		    !of_property_read_u32(pdev->dev.of_node,
->>   			"ti,davinci-nand-buswidth", &prop))
->>   			if (prop == 16)
->>   				pdata->options |= NAND_BUSWIDTH_16;
->> -		if (of_find_property(pdev->dev.of_node,
->> -			"ti,davinci-nand-use-bbt", &len))
->> +		if (of_property_read_bool(pdev->dev.of_node,
->> +			"nand-on-flash-bbt") ||
->> +		    of_property_read_bool(pdev->dev.of_node,
->> +			"ti,davinci-nand-use-bbt"))
->>   			pdata->bbt_options = NAND_BBT_USE_FLASH;
->>   	}
->>   
-> 
-> Brian
-> 
+Thierry
 
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature
 
--- 
-Regards,
-Ivan Khoronzhuk
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSsEJ/AAoJEN0jrNd/PrOh6QEQAJb58rcRQgVI2UQHM6qCZSBy
+bByBcbU1zixwi6nwpaTt8rUtw9RaqNEf847ri0nn0my2o99dG7TSJN77eEEN8gAL
+A/4nftKABUEtKHnu2aWiqPn/8rpLbp9m/p6KCgbc/X+6grlk9jPYa3uIQS1nKzSh
++20bMgMHsgH/Isuy5wTQyC/uUzEcHakpQXB2y1KyzjAJ8KjwYBx+g8UWr4Tfv76t
+sP5oQ0QOe65lQIMrTVygnq40gV3OBVIPG47UHUOu24TSP8pBZyTGcQaawLwaWaRU
+XQdfLqPzqOhChA2fb+vKOdFugYeS9BCrPiIb1OtkS2pIuz4FxUx1QWR5t97YiL+K
+PV29hLTmJSOTQPFa7k0zBOs7YfFO/uhSGhxJ0TNGji+F9P6IIpQ4O5qNz7WazZZO
+Jg9evXMvntpF9/GhecUK5U+l6RqEui4L/fu51oGS9VtCLQciKDP7hKkljayeR3wO
+rYTE43MnICdJNcDbh5XxPDVLutUzs+PGcYCcv/8tzeoNglwY5yyvf1I1F4tw3zVq
+azqjBxnlikEgINFr66ifbkQ2693x+GrIIXUs1sLLLSspCMYzSuQrxVuP06YM5N9O
+eZV3B1EmAJNrP/6Z9KCmxFxR6nvWohIYSld3PG+8c1dWlEaAKJuuX8LflZmyFV5c
+qxlvXDnfWDg3wTt7E8V2
+=nk4r
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
