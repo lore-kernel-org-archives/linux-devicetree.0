@@ -1,121 +1,360 @@
-From: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>
-Subject: Re: Re: [RFCv4 06/11] misc: Introduce Nokia CMT driver
-Date: Wed, 18 Dec 2013 00:25:27 +0100
-Message-ID: <20131217232525.GA12152@earth.universe>
-References: <1387150085-23173-1-git-send-email-sre@debian.org>
- <1387150085-23173-7-git-send-email-sre@debian.org>
- <CACRpkdYjjXgE_W8gq1e6z=nGMF=r-m+o2kkvrBFrEMm3o0=RwQ@mail.gmail.com>
- <20131216121524.GA6177@earth.universe>
- <CACRpkdbx=Ye8xo4wMkyntME45xv15DeyqV32aeCAcSaa+vDpfA@mail.gmail.com>
- <20131216183448.GA10614@earth.universe>
- <52B090E0.5040006@gmail.com>
+From: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
+Subject: Re: [PATCH v5 2/2] ARM: mach-moxart: add MOXA ART SoC device tree files
+Date: Wed, 18 Dec 2013 09:29:18 +1000
+Message-ID: <CAEgOgz7kqU-Z6cQk8kiMBiNs=9coOVq-6it1eKEiN62wKXcsZg@mail.gmail.com>
+References: <1387294714-12872-1-git-send-email-jonas.jensen@gmail.com>
+	<1387294714-12872-3-git-send-email-jonas.jensen@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52B090E0.5040006-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivajlo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon-uiMcrn6V0Vs@public.gmane.org>, Joni Lapilainen <joni.lapilainen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, pavel@ucw.c
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1387294714-12872-3-git-send-email-jonas.jensen@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonas Jensen <jonas.jensen@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "arm@kernel.org" <arm@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Soren Brinkmann <soren.brinkmann@xilinx.com>, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Dec 18, 2013 at 1:38 AM, Jonas Jensen <jonas.jensen@gmail.com> wrote:
+> Add a generic (dtsi) include file for MOXA ART SoCs.
+>
+> Also add a file for UC-7112-LX.
+>
+> Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/moxart.txt |  12 ++
+>  arch/arm/boot/dts/Makefile                       |   1 +
+>  arch/arm/boot/dts/moxart-uc7112lx.dts            |  93 +++++++++++++
+>  arch/arm/boot/dts/moxart.dtsi                    | 167 +++++++++++++++++++++++
+>  4 files changed, 273 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/moxart.txt
+>  create mode 100644 arch/arm/boot/dts/moxart-uc7112lx.dts
+>  create mode 100644 arch/arm/boot/dts/moxart.dtsi
+>
+> diff --git a/Documentation/devicetree/bindings/arm/moxart.txt b/Documentation/devicetree/bindings/arm/moxart.txt
+> new file mode 100644
+> index 0000000..11087ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/moxart.txt
+> @@ -0,0 +1,12 @@
+> +MOXA ART device tree bindings
+> +
+> +Boards with the MOXA ART SoC shall have the following properties:
+> +
+> +Required root node property:
+> +
+> +compatible = "moxa,moxart";
+> +
+> +Boards:
+> +
+> +- UC-7112-LX: embedded computer
+> +  compatible = "moxa,moxart-uc-7112-lx", "moxa,moxart"
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index c55a22d..ae3d7db 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -319,6 +319,7 @@ dtb-$(CONFIG_ARCH_VT8500) += vt8500-bv07.dtb \
+>  dtb-$(CONFIG_ARCH_ZYNQ) += zynq-zc702.dtb \
+>         zynq-zc706.dtb \
+>         zynq-zed.dtb
+> +dtb-$(CONFIG_ARCH_MOXART) += moxart-uc7112lx.dtb
+>
+>  targets += dtbs
+>  targets += $(dtb-y)
+> diff --git a/arch/arm/boot/dts/moxart-uc7112lx.dts b/arch/arm/boot/dts/moxart-uc7112lx.dts
+> new file mode 100644
+> index 0000000..0e037c1
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/moxart-uc7112lx.dts
+> @@ -0,0 +1,93 @@
+> +/* moxart-uc7112lx.dts - Device Tree file for MOXA UC-7112-LX
+> + *
+> + * Copyright (C) 2013 Jonas Jensen <jonas.jensen@gmail.com>
+> + *
+> + * Licensed under GPLv2 or later.
+> + */
+> +
+> +/dts-v1/;
+> +/include/ "moxart.dtsi"
+> +
+> +/ {
+> +       model = "MOXA UC-7112-LX";
+> +       compatible = "moxa,moxart-uc-7112-lx", "moxa,moxart";
+> +
+> +       memory {
+> +               device_type = "memory";
+> +               reg = <0x0 0x2000000>;
+> +       };
+> +
+> +       flash@80000000,0 {
+> +               compatible = "numonyx,js28f128", "cfi-flash";
+> +               reg = <0x80000000 0x1000000>;
+> +               bank-width = <2>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               partition@0 {
+> +                       label = "bootloader";
+> +                       reg = <0x0 0x40000>;
+> +               };
+> +               partition@40000 {
+> +                       label = "linux kernel";
+> +                       reg = <0x40000 0x1C0000>;
+> +               };
+> +               partition@200000 {
+> +                       label = "root filesystem";
+> +                       reg = <0x200000 0x800000>;
+> +               };
+> +               partition@a00000 {
+> +                       label = "user filesystem";
+> +                       reg = <0xa00000 0x600000>;
+> +               };
+> +       };
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +               user-led {
+> +                       label = "ready-led";
+> +                       gpios = <&gpio 27 0x1>;
+> +                       default-state = "on";
+> +                       linux,default-trigger = "default-on";
+> +               };
+> +       };
+> +
+> +       gpio_keys_polled {
+> +               compatible = "gpio-keys-polled";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               poll-interval = <500>;
+> +               button@25 {
+> +                       label = "GPIO Reset";
+> +                       linux,code = <116>;
+> +                       gpios = <&gpio 25 1>;
+> +               };
+> +       };
+> +
+> +       chosen {
+> +               bootargs = "console=ttyS0,115200n8 earlyprintk root=/dev/mmcblk0p1 rw rootwait";
+> +       };
+> +};
+> +
+> +&sdhci {
+> +       status = "okay";
+> +};
+> +
+> +&mdio0 {
+> +       status = "okay";
+> +};
+> +
+> +&mdio1 {
+> +       status = "okay";
+> +};
+> +
+> +&mac0 {
+> +       status = "okay";
+> +};
+> +
+> +&mac1 {
+> +       status = "okay";
+> +};
+> +
+> +&uart0 {
+> +       status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/moxart.dtsi b/arch/arm/boot/dts/moxart.dtsi
+> new file mode 100644
+> index 0000000..76114e0
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/moxart.dtsi
+> @@ -0,0 +1,167 @@
+> +/* moxart.dtsi - Device Tree Include file for MOXA ART family SoC
+> + *
+> + * Copyright (C) 2013 Jonas Jensen <jonas.jensen@gmail.com>
+> + *
+> + * Licensed under GPLv2 or later.
+> + */
+> +
+> +/include/ "skeleton.dtsi"
+> +
+> +/ {
+> +       compatible = "moxa,moxart";
+> +       model = "MOXART";
+> +       interrupt-parent = <&intc>;
+> +
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "faraday,fa526";
+> +                       reg = <0>;
+> +               };
+> +       };
+> +
+> +       clocks {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               ref12: ref12M {
+> +                       compatible = "fixed-clock";
+> +                       #clock-cells = <0>;
+> +                       clock-frequency = <12000000>;
 
---J2SCkAp4GZ/dPZZf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Crystal board level?
 
-On Tue, Dec 17, 2013 at 07:58:56PM +0200, Ivajlo Dimitrov wrote:
-> >On Mon, Dec 16, 2013 at 02:31:53PM +0100, Linus Walleij wrote:
-> >>I am very reluctant in letting device trees specify exports of GPIOs
-> >>to userspace, not so much because it's Linux-specific but for
-> >>the fact that people are doing things in userspace that should not
-> >>be done in userspace.
-> >>
-> >>Last time it was proposed I asked to the specific usecase,
-> >>exactly why userspace needed this handle on a physical
-> >>GPIO line, and why it can't use another userspace interface
-> >>(example: leds, keys etc.)
-> >There are a couple of lines ("cmt_apeslpx", "cmt_rst_rq", "cmt_en",
-> >"cmt_rst", "cmt_bsi"), which are handled by ofono to do the correct
-> >power sequence for the modem. The relevant ofono code is here:
-> >
-> >https://git.kernel.org/cgit/network/ofono/ofono.git/tree/plugins/nokia-g=
-pio.c
-> >
-> >In MeeGo etc. they have a little board specific init script, which
-> >exports the gpio lines and setups some symlinks. IMHO at least the
-> >board specific stuff should be handled by the kernel, thus I added
-> >this code to the driver. I guess you prefer to move the power
-> >sequencing completly to the kernel?
->=20
-> Don't forget there is not only ofono, but rtcom-call-ui and all the
-> telephony stack in Maemo 5 :). However, power sequencing and control
-> is specific not only to the modem model, but to the firmware version
-> the modem is running as well (afaik). IMO you can't simply move the
-> modem power/reset/sleep control to the kernel and hope for the best,
-> I am not sure there is enough documentation (if any) for this to be
-> done reliably, esp on n900 with its BB5 modem. The point is that
-> those gpios are used not only for the initial power-up, but for
-> control of the modem state and reset (if needed) during normal
-> usage. The APE reset line is an example of stuff that can't be moved
-> to the kernel without providing some interface/feedback to/from the
-> userspace IMO - what if she is dialing 112 at the moment the modem
-> decides it is too hot and wants a device reset (or whatever reason
-> there could be for a modem to request a device reset)? The same goes
-> for the APE sleep request line (cmt_apeslpx) - based on what should
-> the kernel decide whether to put the modem in sleep?
->=20
-> Sure, exporting gpios to userspace might not be the best way to
-> achieve the required functionality, but every way could be argued if
-> it is the best. And for sure labeling a modem "LED" won't make it
-> such.
+> +               };
+> +       };
+> +
+> +       soc {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               reg = <0x90000000 0x10000000>;
+> +               ranges;
+> +
+> +               intc: interrupt-controller@98800000 {
+> +                       compatible = "moxa,moxart-ic";
+> +                       reg = <0x98800000 0x38>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       interrupt-mask = <0x00080000>;
+> +               };
+> +
+> +               clk_pll: clk_pll@98100000 {
+> +                       compatible = "moxa,moxart-pll-clock";
+> +                       #clock-cells = <0>;
+> +                       reg = <0x98100000 0x34>;
+> +                       clocks = <&ref12>;
+> +               };
+> +
+> +               clk_apb: clk_apb@98100000 {
+> +                       compatible = "moxa,moxart-apb-clock";
+> +                       #clock-cells = <0>;
+> +                       reg = <0x98100000 0x34>;
+> +                       clocks = <&clk_pll>;
+> +               };
+> +
+> +               timer: timer@98400000 {
+> +                       compatible = "moxa,moxart-timer";
+> +                       reg = <0x98400000 0x42>;
+> +                       interrupts = <19 1>;
+> +                       clocks = <&clk_apb>;
+> +               };
+> +
+> +               gpio: gpio@98700000 {
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       compatible = "moxa,moxart-gpio";
+> +                       reg = <0x98700000 0xC>;
+> +               };
+> +
+> +               rtc: rtc {
+> +                       compatible = "moxa,moxart-rtc";
+> +                       gpio-rtc-sclk = <&gpio 5 0>;
+> +                       gpio-rtc-data = <&gpio 6 0>;
+> +                       gpio-rtc-reset = <&gpio 7 0>;
+> +               };
+> +
+> +               dma: dma@90500000 {
+> +                       compatible = "moxa,moxart-dma";
+> +                       reg = <0x90500080 0x40>;
+> +                       interrupts = <24 0>;
+> +                       #dma-cells = <1>;
+> +               };
+> +
+> +               watchdog: watchdog@98500000 {
+> +                       compatible = "moxa,moxart-watchdog";
+> +                       reg = <0x98500000 0x10>;
+> +                       clocks = <&clk_apb>;
+> +               };
+> +
+> +               sdhci: sdhci@98e00000 {
+> +                       compatible = "moxa,moxart-sdhci";
+> +                       reg = <0x98e00000 0x5C>;
+> +                       interrupts = <5 0>;
+> +                       clocks = <&clk_apb>;
+> +                       dmas =  <&dma 5>,
+> +                               <&dma 5>;
+> +                       dma-names = "tx", "rx";
+> +                       status = "disabled";
+> +               };
+> +
+> +               mdio0: mdio@90900090 {
+> +                       compatible = "moxa,moxart-mdio";
+> +                       reg = <0x90900090 0x8>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +
+> +                       ethphy0: ethernet-phy@1 {
+> +                               device_type = "ethernet-phy";
+> +                               compatible = "moxa,moxart-rtl8201cp", "ethernet-phy-ieee802.3-c22";
+> +                               reg = <1>;
+> +                       };
+> +               };
+> +
+> +               mdio1: mdio@92000090 {
+> +                       compatible = "moxa,moxart-mdio";
+> +                       reg = <0x92000090 0x8>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +
+> +                       ethphy1: ethernet-phy@1 {
+> +                               device_type = "ethernet-phy";
+> +                               compatible = "moxa,moxart-rtl8201cp", "ethernet-phy-ieee802.3-c22";
+> +                               reg = <1>;
+> +                       };
 
-Yes, but as far as I know the kernel design rules are not bended for
-nonfree userspace components. Using the nonfree Maemo stuff should
-be supported by disabling the CMT driver and exporting the pins from
-userspace using some board specific init script (=3D> this is how its
-done until now).
+Are the phys board or SoC level?
 
-I had a look at both ofono's and freesmartphone.org's implementation
-for the GPIO handling and both implementations are very similar. I
-think it should be possible to move the state machine described in
-[0] into the kernel and provide a simple sysfs/uevent interface.
+> +               };
+> +
+> +               mac0: mac@90900000 {
+> +                       compatible = "moxa,moxart-mac";
+> +                       reg = <0x90900000 0x90>;
+> +                       interrupts = <25 0>;
+> +                       phy-handle = <&ethphy0>;
+> +                       phy-mode = "mii";
 
-I was thinking of something like /sys/devices/platform/nokia-cmt/state,
-which accepts "enable", "disable" and "reset" as input and outputs the
-current state.
+If the IP supports multiple PHYs of different external connection
+schemes then the phy connectivity should got back to board level. If
+not:
 
-[0] https://git.kernel.org/cgit/network/ofono/ofono.git/tree/plugins/nokia-=
-gpio.c
+Reviewed-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
 
--- Sebastian
+I don't know much about arm/mach- and Kconfig, so I'll sit out the
+review of  P1.
 
---J2SCkAp4GZ/dPZZf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Regards,
+Peter
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSsN1lAAoJENju1/PIO/qaZ3QP/0z/Bio3vzPk2PMFF6Bedo21
-t8CZM9lZvlVDKRoNy/54cN8wtImBYpT0n3x3888Ph8//ITjq9U7RywIbtLsY2gnq
-jeVoGpXpoFel+dsHRL9MULww+K1lxZ7O4mHZ4Rxd4Kzmm4bptTmmPtTliIy9RnVF
-NcZizYKJgasMAiIlOMXJgVbJA/9iGWAiOXyW5j4g0sXpJXURznRNtuZ3A+Z+hdMW
-qKYDhL9hFSiDr40BXiVoBc/NH2fhNCqoxJAwxDVBDNbL+IR1Y3XO+vUfJdjx6PF/
-A/68ryI5d85S1FJnPmE7wCW8ii78nu8pgS2aqz6MonJkci2cu/PDRtqyAg/ZbM/U
-XTt0gDZ5DkhhxH+dnvBgLI995JialKx3uzK5SR9cRKXRqiNXs0veBHI9Gq80suTg
-WkvvTbTmAxRV2SN914vHbjy1IJAo3ZrwkpgJmUQk+AA9QPYSJkAjVUWd0sFRsS5U
-P86sxG3y4Qib8Vo029u1enAP9hIOgOGJYal8LTQDj7GqrSo3LeX3Dd658VrGtI8F
-rBhrmfleQisZ/VanWZiSg4ajxV+rLwllxLGAL9U/ccJOOkuLyzRrTsv+FEV3Qz06
-BnLF1T8N6WMgCdfz4v1UwKguIhzBv8J9iAaFuVL2+rNVCKgPBfCfyUMMSD+gTnEv
-aVgnqXZ+A8DAGtvKQQ+i
-=X1qW
------END PGP SIGNATURE-----
-
---J2SCkAp4GZ/dPZZf--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +                       status = "disabled";
+> +               };
+> +
+> +               mac1: mac@92000000 {
+> +                       compatible = "moxa,moxart-mac";
+> +                       reg = <0x92000000 0x90>;
+> +                       interrupts = <27 0>;
+> +                       phy-handle = <&ethphy1>;
+> +                       phy-mode = "mii";
+> +                       status = "disabled";
+> +               };
+> +
+> +               uart0: uart@98200000 {
+> +                       compatible = "ns16550a";
+> +                       reg = <0x98200000 0x20>;
+> +                       interrupts = <31 8>;
+> +                       reg-shift = <2>;
+> +                       reg-io-width = <4>;
+> +                       clock-frequency = <14745600>;
+> +                       status = "disabled";
+> +               };
+> +       };
+> +};
+> --
+> 1.8.2.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
