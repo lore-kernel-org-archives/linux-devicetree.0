@@ -1,43 +1,110 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH 0/2] Add support for SolidRun's IMX6 board
-Date: Tue, 17 Dec 2013 19:41:30 +0000
-Message-ID: <20131217194130.GA4360@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v7 0/9] USB Device Controller support for BCM281xx
+Date: Tue, 17 Dec 2013 14:42:27 -0500
+Message-ID: <1387309356-17195-1-git-send-email-mporter@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-So, this patch series adds support for SolidRun's new platform which
-is similar in size to a well known board named after a type of fruit.
-These two patches add the basic support for the platform, without HDMI.
+Changes since v6:
+	- Drop dependency on the Exynos generic phy conversion series
+	- Bring back original patch that converts s3c-hsotg to use the
+	  generic phy layer with a fall back to the old usb style phy
+	  support.
 
-Having discussed the timing of this with Rabeeh, I have his blessing to
-post this now.
+Changes since v5:
+	- tweak s3c-hsotg Kconfig help message to be more generic
 
-The platform is made up from two boards:
-- A microsom board, which is re-used in the Cubox-I.  This board comes
-  in a couple of different configurations:
-  - AR8035 gigabit ethernet phy fitted
-  - AR8030 fast ethernet phy fitted
-  In order to support these two configurations, I have split the Ethernet
-  support from the rest of the microsom.  When the AR8030 versions are
-  available and known, I'll add the imx6qdl-microsom-ar8030.dtsi file.
-- The base board.
+Changes since v4:
+	- phy_set/get_bus_width now use an int for bus_width
 
-Not many changes are required to the code - the only requirement is the
-need to add AR8035 ethernet phy configuration support to the IMX6Q code.
+Changes since v3:
+	- Rebased on 3.13-rc3
+	- Move struct phy bus_width attribute back into struct phy_attrs
+	- Fix build issue on !GENERIC_PHY
+	- Update dwc2 binding to reflect optional phy properties
+	- Rename bcm-kona-phy.txt binding to bcm-phy.txt
+	- Reorder bcm kona phy includes and use bitops
+	- phy-names changed to "usb2-phy" to match updated s3c-hsotg
+	  generic phy-ification series
 
- arch/arm/boot/dts/Makefile                     |    1 +
- arch/arm/boot/dts/imx6dl-hummingboard.dts      |   90 ++++++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi |   58 +++++++++++++++
- arch/arm/boot/dts/imx6qdl-microsom.dtsi        |   80 +++++++++++++++++++++
- arch/arm/configs/imx_v6_v7_defconfig           |    4 +
- arch/arm/mach-imx/mach-imx6q.c                 |   35 +++++++++
- 6 files changed, 268 insertions(+), 0 deletions(-)
+Changes since v2:
+	- Rebased on 3.13-rc1
+	- Fix braces in phy_get_bus_width()/phy_set_bus_width()
+	- Drop generic phy conversion to use the same support from
+	  the Exynos generic phy conversion series
+	- Modify dts support to match the "device" phy name required
+	  in the v3 Exynos generic phy conversion
+	- Add s3c-hsotg phy_init/phy_exit support
+	- Fix typo on reg property in kona phy binding
+	- Replace phy driver reg struct with offset defines
+	- Move phy soft reset to phy driver init
+	- Fix dts node names to match ePAPR conventions
+
+Changes since v1:
+	- Convert USB phy driver to generic phy subsystem
+	- Add phy bus width apis
+	- Drop dwc2 phy bus width DT property in favor of querying the
+	  phy provider for bus width
+	- Add generic phy/clock properties to dwc2 DT binding
+	- Add generic phy subsystem support to s3c-hsotg with the
+	  existing usb phy and pdata phy methods as a fallback
+	- Split bindings out to separate patches to match the latest
+	  DT binding review guidelines
+
+This series adds USB Device Controller support for the Broadcom
+BCM281xx family of parts. BCM281xx contains a DWC2 OTG block and
+s3c-hsotg is used to support UDC operation.
+
+Part 1 adds phy bus width support to the generic phy subsystem
+
+Parts 2-6 allows s3c-hsotg to build on non-Samsung platforms, supports
+the dwc2 binding, adds generic phy layer support, and supports fetching
+phy bus width using the generic phy layer.
+
+Parts 7-8 add a generic phy binding and driver for the BCM Kona USB PHY.
+
+Part 9 adds the DT nodes to enable UDC support on both BCM281xx boards
+in the kernel.
+
+This series depends on:
+	- "Update Kona drivers to use clocks" v4 series
+	  https://lkml.org/lkml/2013/12/5/508
+	  (relevant portion now queued for 3.14)
+
+
+Matt Porter (9):
+  phy: add phy_get_bus_width()/phy_set_bus_width() calls
+  staging: dwc2: update DT binding to add generic clock/phy properties
+  usb: gadget: s3c-hsotg: enable build for other platforms
+  usb: gadget: s3c-hsotg: add snps,dwc2 compatible string
+  usb: gadget: s3c-hsotg: enable generic phy support
+  usb: gadget: s3c-hsotg: get phy bus width from phy subsystem
+  phy: add Broadcom Kona USB2 PHY DT binding
+  phy: add Broadcom Kona USB2 PHY driver
+  ARM: dts: add usb udc support to bcm281xx
+
+ Documentation/devicetree/bindings/phy/bcm-phy.txt  |  15 ++
+ Documentation/devicetree/bindings/staging/dwc2.txt |  12 ++
+ arch/arm/boot/dts/bcm11351-brt.dts                 |   6 +
+ arch/arm/boot/dts/bcm11351.dtsi                    |  18 +++
+ arch/arm/boot/dts/bcm28155-ap.dts                  |   8 ++
+ drivers/phy/Kconfig                                |   6 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-kona-usb2.c                    | 158 +++++++++++++++++++++
+ drivers/usb/gadget/Kconfig                         |   7 +-
+ drivers/usb/gadget/s3c-hsotg.c                     |  72 +++++++---
+ drivers/usb/gadget/s3c-hsotg.h                     |   1 +
+ include/linux/phy/phy.h                            |  28 ++++
+ 12 files changed, 309 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/bcm-phy.txt
+ create mode 100644 drivers/phy/phy-bcm-kona-usb2.c
+
+-- 
+1.8.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
