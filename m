@@ -1,61 +1,67 @@
-From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH v3 1/9] mtd: nand: davinci: fix driver registration
-Date: Tue, 17 Dec 2013 12:21:12 +0200
-Message-ID: <52B02598.5060004@ti.com>
-References: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1386264358-9738-2-git-send-email-ivan.khoronzhuk@ti.com>
- <20131217092449.GL12034@norris-Latitude-E6410>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 0/2] PWM: pwm-atmel: add PWM controller driver
+Date: Tue, 17 Dec 2013 11:30:35 +0100
+Message-ID: <20131217103034.GE13823@ulmo.nvidia.com>
+References: <1386916910-24832-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20131217092449.GL12034@norris-Latitude-E6410>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, linux-mtd@lists.infradead.org, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wtjvnLv0o8UUzur2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1386916910-24832-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/17/2013 11:24 AM, Brian Norris wrote:
-> On Thu, Dec 05, 2013 at 07:25:49PM +0200, Ivan Khoronzhuk wrote:
->> --- a/drivers/mtd/nand/davinci_nand.c
->> +++ b/drivers/mtd/nand/davinci_nand.c
->> @@ -877,6 +877,7 @@ static int __exit nand_davinci_remove(struct platform_device *pdev)
->>   }
->>   
->>   static struct platform_driver nand_davinci_driver = {
->> +	.probe		= nand_davinci_probe,
->>   	.remove		= __exit_p(nand_davinci_remove),
-> 
-> I believe you need to drop the __exit_p() here. And now that you're
-> using module_platform_driver(), you need to drop the __init and __exit
-> from the probe() and remove() routines, to avoid section mismatch
-> warnings.
-> 
->>   	.driver		= {
->>   		.name	= "davinci_nand",
-> 
-> So on second thought, please resubmit the series with the requested
-> changes.
-> 
-> Thanks,
-> Brian
-> 
 
-Thanks, Brian.
-Do you want me to drop it in stand alone patch or in this one?
+--wtjvnLv0o8UUzur2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Regards,
-Ivan Khoronzhuk
+On Fri, Dec 13, 2013 at 02:41:48PM +0800, Bo Shen wrote:
+> This patch series add Atmel PWM controller driver support.
+>=20
+> Changes in v9:
+>   - Address the comments from Thierry Reding
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Hi,
+
+I've pushed a slightly modified version of this series. There were a few
+minor whitespace/coding style issues, but perhaps more importantly I've
+modified the period change check to be done earlier and in a more
+generic way.
+
+Can you please check that the version I've pushed to the for-next branch
+still works for you?
+
+Thanks,
+Thierry
+
+--wtjvnLv0o8UUzur2
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSsCfKAAoJEN0jrNd/PrOhG9MP/ihQHK+8vSqMribQsG+twIHx
+AmBDXlduTre+JjWc90sZiJTBkjtTLBl5M71+qKnPZJvwY82quif5vnrHLmnzDL5e
+C/Gip0s6DZfXooxRpWLcOXnA0feR0aYOfCTtw9xuiNu/qnGw1motHmtrPZZBrT5s
+ja39O/yfTzQAoMdjoHji1hXvZ5mo69d5dyAkOVRBE167Mhgz0tpvo3sc5WT/1ElL
+PXvoA0t83REgzfgQMM1HNitJKbPCvDh4FdWNrHFMNz4r5v3cIYN8cgEKtuXUEEiP
+N8STQ57DwBdcPV9Aa4rCWnnIen5vCOYO91e9zUFS/iqKLFPlqXzYxgA/tVzGkZIP
+MxchVUD/dkcwyaFra1qXrSzRka4Rrl1muaBujkO+2YlPjcfOeaLv4sHPhmrEKYNm
+CC0Yl8RHdKxi4sxpoXsqzRqqhvi4j8XaAq+aZsEU1UA3cWr+pHfximbAwzVi9ucK
+tLkjBXrVr659pKC1utKP3YmxPDC0nLc4uIu2U7qxb0xuQ/J1R1xYLxbwRheqODVC
+xRpfdDe1fBmPjcHoL1izg5FcILZYfPL2CK9uyuhM0Qghnuf0mRagx5O1XPz9Qh/h
+R1T4fsECqyqVhoHIiQMX+zURyR2otZN8qOeVyCE8tedUkPQMsCTSuD0CbXQ6CEfa
+HodEXgKsNNLSRVczC3+V
+=LhKU
+-----END PGP SIGNATURE-----
+
+--wtjvnLv0o8UUzur2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
