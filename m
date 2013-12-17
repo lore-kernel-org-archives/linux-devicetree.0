@@ -1,61 +1,39 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 7/9] mtd: nand: davinci: adjust DT properties to MTD
- generic
-Date: Tue, 17 Dec 2013 00:50:27 -0800
-Message-ID: <20131217085027.GK12034@norris-Latitude-E6410>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v3 1/9] mtd: nand: davinci: fix driver registration
+Date: Tue, 17 Dec 2013 01:24:49 -0800
+Message-ID: <20131217092449.GL12034@norris-Latitude-E6410>
 References: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1386264358-9738-8-git-send-email-ivan.khoronzhuk@ti.com>
+ <1386264358-9738-2-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1386264358-9738-8-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+In-Reply-To: <1386264358-9738-2-git-send-email-ivan.khoronzhuk@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2013 at 07:25:55PM +0200, Ivan Khoronzhuk wrote:
+On Thu, Dec 05, 2013 at 07:25:49PM +0200, Ivan Khoronzhuk wrote:
 > --- a/drivers/mtd/nand/davinci_nand.c
 > +++ b/drivers/mtd/nand/davinci_nand.c
-> @@ -558,6 +557,8 @@ static struct davinci_nand_pdata
->  			"ti,davinci-mask-chipsel", &prop))
->  			pdata->mask_chipsel = prop;
->  		if (!of_property_read_string(pdev->dev.of_node,
-> +			"nand-ecc-mode", &mode) ||
-
-Is it possible to use the of_get_nand_ecc_mode() helper? It's
-unfortunate that davinci_nand had to use custom bindings in the first
-place, making this more difficult... So I can take this patch as-is.
-
-> +		    !of_property_read_string(pdev->dev.of_node,
->  			"ti,davinci-ecc-mode", &mode)) {
->  			if (!strncmp("none", mode, 4))
->  				pdata->ecc_mode = NAND_ECC_NONE;
-> @@ -570,11 +571,15 @@ static struct davinci_nand_pdata
->  			"ti,davinci-ecc-bits", &prop))
->  			pdata->ecc_bits = prop;
->  		if (!of_property_read_u32(pdev->dev.of_node,
-> +			"nand-bus-width", &prop) ||
-
-Similar story here, with of_get_nand_bus_width().
-
-> +		    !of_property_read_u32(pdev->dev.of_node,
->  			"ti,davinci-nand-buswidth", &prop))
->  			if (prop == 16)
->  				pdata->options |= NAND_BUSWIDTH_16;
-> -		if (of_find_property(pdev->dev.of_node,
-> -			"ti,davinci-nand-use-bbt", &len))
-> +		if (of_property_read_bool(pdev->dev.of_node,
-> +			"nand-on-flash-bbt") ||
-> +		    of_property_read_bool(pdev->dev.of_node,
-> +			"ti,davinci-nand-use-bbt"))
->  			pdata->bbt_options = NAND_BBT_USE_FLASH;
->  	}
+> @@ -877,6 +877,7 @@ static int __exit nand_davinci_remove(struct platform_device *pdev)
+>  }
 >  
+>  static struct platform_driver nand_davinci_driver = {
+> +	.probe		= nand_davinci_probe,
+>  	.remove		= __exit_p(nand_davinci_remove),
 
+I believe you need to drop the __exit_p() here. And now that you're
+using module_platform_driver(), you need to drop the __init and __exit
+from the probe() and remove() routines, to avoid section mismatch
+warnings.
+
+>  	.driver		= {
+>  		.name	= "davinci_nand",
+
+So on second thought, please resubmit the series with the requested
+changes.
+
+Thanks,
 Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
