@@ -1,37 +1,164 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv7 1/4] pwm: Add Freescale FTM PWM driver support
-Date: Tue, 17 Dec 2013 14:08:17 +0100
-Message-ID: <2074242.bGmqYDKUOT@flatron>
-References: <1386925027-16288-1-git-send-email-Li.Xiubo@freescale.com> <1500339.E8bGm7xZUi@flatron> <20131217130435.GV4360@n2100.arm.linux.org.uk>
+From: 'Matt Porter' <mporter@linaro.org>
+Subject: Re: [PATCH v4 5/9] usb: s3c-hsotg: Use the new Exynos USB phy driver
+ with the generic phy framework
+Date: Tue, 17 Dec 2013 08:13:55 -0500
+Message-ID: <20131217131355.GC15814@beef>
+References: <1386246579-25141-1-git-send-email-k.debski@samsung.com>
+ <1386246579-25141-6-git-send-email-k.debski@samsung.com>
+ <20131216214012.GB15814@beef>
+ <02bb01cefb0c$3ad4d890$b07e89b0$%debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131217130435.GV4360@n2100.arm.linux.org.uk>
+Content-Disposition: inline
+In-Reply-To: <02bb01cefb0c$3ad4d890$b07e89b0$%debski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Xiubo Li <Li.Xiubo@freescale.com>, mark.rutland@arm.com, s.hauer@pengutronix.de, galak@codeaurora.org, swarren@wwwdotorg.org, t.figa@samsung.com, grant.likely@linaro.org, matt.porter@linaro.org, rob@landley.net, ian.campbell@citrix.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Alison Wang <b18965@freescale.com>, Jingchang Lu <b35083@freescale.com>
+To: Kamil Debski <k.debski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, kishon@ti.com, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, 'Felipe Balbi' <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 17 of December 2013 13:04:35 Russell King - ARM Linux wrote:
-> On Tue, Dec 17, 2013 at 01:54:35PM +0100, Tomasz Figa wrote:
-> > On Tuesday 17 of December 2013 13:45:06 Thierry Reding wrote:
-> > > I fail to see how that would eliminate the problem with the types. That
-> > > said I don't actually see sparse complaining about any type mismatches.
-> > > That's probably because the various macros implicitly cast to u32.
+On Tue, Dec 17, 2013 at 10:41:56AM +0100, Kamil Debski wrote:
+> Hi Matt,
+> 
+> I am afraid it is not possible. This patch cannot go in without the 
+> new  phy driver. It would break Exynos USB functionality. This
+> is because it changes s3c-hsotg to use the new phy driver.
+
+To clarify, I'm proposing that I would bring back the original patch
+from my earlier postings on the bcm281xx series that preserves the old
+style usb phy support as a fallback along with the pdata path.
+
+> I am working on an updated patch series addressing all the comments.
+> time permitting I want to post an alternative version - integrating
+> as much as possible in a single file. This way it would be possible
+> to have a hands-on comparison of the two approaches we were
+> discussing with Kishon. 
+> 
+> I estimate that I post it this week.
+
+Ok, thanks. In the meantime I'll update my original version of this
+patch in case your work can't be taken in this window.
+
+-Matt
+
+> > -----Original Message-----
+> > From: Matt Porter [mailto:mporter@linaro.org]
+> > Sent: Monday, December 16, 2013 10:40 PM
+> > To: Kamil Debski
+> > Cc: linux-kernel@vger.kernel.org; linux-samsung-soc@vger.kernel.org;
+> > linux-usb@vger.kernel.org; devicetree@vger.kernel.org;
+> > kyungmin.park@samsung.com; kishon@ti.com; t.figa@samsung.com;
+> > s.nawrocki@samsung.com; m.szyprowski@samsung.com;
+> > gautam.vivek@samsung.com; mat.krawczuk@gmail.com;
+> > yulgon.kim@samsung.com; p.paneri@samsung.com; av.tikhomirov@samsung.com;
+> > jg1.han@samsung.com; galak@codeaurora.org; Felipe Balbi
+> > Subject: Re: [PATCH v4 5/9] usb: s3c-hsotg: Use the new Exynos USB phy
+> > driver with the generic phy framework
 > > 
-> > Well, in BE variant you would read the register using __raw_readl() into
-> > a __be32 and then get an u32 from be32_to_cpu() and return it. Similarly
-> > for writes
+> > On Thu, Dec 05, 2013 at 01:29:35PM +0100, Kamil Debski wrote:
+> > > Change the used phy driver to the new Exynos USB phy driver that uses
+> > > the generic phy framework.
+> > >
+> > > Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> > > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> > > ---
+> > >  .../devicetree/bindings/usb/samsung-hsotg.txt      |    4 ++++
+> > >  drivers/usb/gadget/s3c-hsotg.c                     |   11 ++++++----
+> > -
+> > >  2 files changed, 10 insertions(+), 5 deletions(-)
+> > 
+> > Kamil,
+> > 
+> > Can we separate this patch out of this series? My bcm281xx series is
+> > ready to go except for this dependency. Felipe has noted that there's
+> > only a week until he locks his tree down for 3.14 [1]. I'm willing to
+> > update this versus the comment Kishon made on fixing the example if you
+> > don't have time before then. Let me know.
+> > 
+> > [1] https://lkml.org/lkml/2013/12/16/555
+> > 
+> > Thanks,
+> > Matt
+> > 
+> > > diff --git a/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
+> > > b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
+> > > index b83d428..9340d06 100644
+> > > --- a/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
+> > > +++ b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
+> > > @@ -24,6 +24,8 @@ Required properties:
+> > >      - first entry: must be "otg"
+> > >  - vusb_d-supply: phandle to voltage regulator of digital section,
+> > >  - vusb_a-supply: phandle to voltage regulator of analog section.
+> > > +- phys: from general PHY binding: phandle to the PHY device
+> > > +- phy-names: from general PHY binding: should be "usb2-phy"
+> > >
+> > >  Example
+> > >  -----
+> > > @@ -36,5 +38,7 @@ Example
+> > >  		clock-names = "otg";
+> > >  		vusb_d-supply = <&vusb_reg>;
+> > >  		vusb_a-supply = <&vusbdac_reg>;
+> > > +		phys = <&usb2phy 0>;
+> > > +		phy-names = "device";
+> > >  	};
+> > >
+> > > diff --git a/drivers/usb/gadget/s3c-hsotg.c
+> > > b/drivers/usb/gadget/s3c-hsotg.c index eccb147..db096fd 100644
+> > > --- a/drivers/usb/gadget/s3c-hsotg.c
+> > > +++ b/drivers/usb/gadget/s3c-hsotg.c
+> > > @@ -31,6 +31,7 @@
+> > >  #include <linux/regulator/consumer.h>  #include <linux/of.h>
+> > > #include <linux/of_platform.h>
+> > > +#include <linux/phy/phy.h>
+> > >
+> > >  #include <linux/usb/ch9.h>
+> > >  #include <linux/usb/gadget.h>
+> > > @@ -162,7 +163,7 @@ struct s3c_hsotg_ep {  struct s3c_hsotg {
+> > >  	struct device		 *dev;
+> > >  	struct usb_gadget_driver *driver;
+> > > -	struct usb_phy		*phy;
+> > > +	struct phy		 *phy;
+> > >  	struct s3c_hsotg_plat	 *plat;
+> > >
+> > >  	spinlock_t              lock;
+> > > @@ -2905,7 +2906,7 @@ static void s3c_hsotg_phy_enable(struct
+> > s3c_hsotg *hsotg)
+> > >  	dev_dbg(hsotg->dev, "pdev 0x%p\n", pdev);
+> > >
+> > >  	if (hsotg->phy)
+> > > -		usb_phy_init(hsotg->phy);
+> > > +		phy_power_on(hsotg->phy);
+> > >  	else if (hsotg->plat->phy_init)
+> > >  		hsotg->plat->phy_init(pdev, hsotg->plat->phy_type);  } @@ -
+> > 2922,7
+> > > +2923,7 @@ static void s3c_hsotg_phy_disable(struct s3c_hsotg *hsotg)
+> > >  	struct platform_device *pdev = to_platform_device(hsotg->dev);
+> > >
+> > >  	if (hsotg->phy)
+> > > -		usb_phy_shutdown(hsotg->phy);
+> > > +		phy_power_off(hsotg->phy);
+> > >  	else if (hsotg->plat->phy_exit)
+> > >  		hsotg->plat->phy_exit(pdev, hsotg->plat->phy_type);  } @@ -
+> > 3529,7
+> > > +3530,7 @@ static void s3c_hsotg_delete_debug(struct s3c_hsotg *hsotg)
+> > > static int s3c_hsotg_probe(struct platform_device *pdev)  {
+> > >  	struct s3c_hsotg_plat *plat = dev_get_platdata(&pdev->dev);
+> > > -	struct usb_phy *phy;
+> > > +	struct phy *phy;
+> > >  	struct device *dev = &pdev->dev;
+> > >  	struct s3c_hsotg_ep *eps;
+> > >  	struct s3c_hsotg *hsotg;
+> > > @@ -3544,7 +3545,7 @@ static int s3c_hsotg_probe(struct
+> > platform_device *pdev)
+> > >  		return -ENOMEM;
+> > >  	}
+> > >
+> > > -	phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+> > > +	phy = devm_phy_get(&pdev->dev, "usb2-phy");
+> > >  	if (IS_ERR(phy)) {
+> > >  		/* Fallback for pdata */
+> > >  		plat = dev_get_platdata(&pdev->dev);
+> > > --
+> > > 1.7.9.5
+> > >
 > 
-> __raw_readl() returns a u32, so you'll get a warning trying to assign a
-> u32 to a __be32.
-> 
-> We do have ioread32() and ioread32be() which do the appropriate conversion,
-> as well as the write versions too.  They both include the barrier if you're
-> overly concerned about that.
-
-Nice. I wasn't aware of their existence. Thanks.
-
-Best regards,
-Tomasz
