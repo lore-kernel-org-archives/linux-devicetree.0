@@ -1,97 +1,98 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 0/4] OMAPDSS: DT support for N900 panel
-Date: Tue, 17 Dec 2013 19:29:34 +0200
-Message-ID: <52B089FE.8060704@ti.com>
-References: <1386958650-2404-1-git-send-email-sre@debian.org> <52AFFF3F.7020807@ti.com> <20131217171412.GA10442@earth.universe>
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-NmTC/0ZBporQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] of/irq: Fix device_node refcount in of_irq_parse_raw()
+Date: Tue, 17 Dec 2013 18:32:53 +0100
+Message-ID: <1387301573-30502-1-git-send-email-clg@fr.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="Bh6pCofcFJJB0av4FPixioC8uiUNvw94A"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131217171412.GA10442@earth.universe>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-NmTC/0ZBporQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Bh6pCofcFJJB0av4FPixioC8uiUNvw94A
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Commit 2361613206e6, "of/irq: Refactor interrupt-map parsing" changed
+the refcount on the device_node causing an error in of_node_put():
 
-On 2013-12-17 19:14, Sebastian Reichel wrote:
-> On Tue, Dec 17, 2013 at 09:37:35AM +0200, Tomi Valkeinen wrote:
->> Hi,
->>
->> On 2013-12-13 20:17, Sebastian Reichel wrote:
->>> Hi,
->>>
->>> This patchset adds DT support for the N900 panel. The patchset is bas=
-ed on
->>> Tomi's work/dss-dt-2 branch [0]. I suggest to send the DT changes thr=
-ough
->>> Benoits queue, since I have more N900 DT changes for 3.14. Also the p=
-atch
->>> editing the rx51 boardcode can be dropped, since the file is removed =
-in 3.14.
->>> I included those two with this patchset, since they are needed to tes=
-t the
->>> other two patches.
->>>
->>> I did not include a documentation for the DT API, since the omapdss
->>> documentation is still missing.
->>>
->>> I have successfully tested this on the N900.
->>>
->>> [0] https://git.kernel.org/cgit/linux/kernel/git/tomba/linux.git/log/=
-?h=3Dwork/dss-dt-2
->>
->> I added N900 display DT support on top of my v2 series, including
->> pinmuxing. Can you check if it looks right and works?
->>
->> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss=
--dt
->=20
-> I just tried it and it does not work. On a first look the pinmuxing
-> looks fishy: 0x0d4 is muxed two times.
+ERROR: Bad of_node_put() on /pci@800000020000000
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.13.0-rc3-dirty #2
+Call Trace:
+[c00000003e403500] [c0000000000144fc] .show_stack+0x7c/0x1f0 (unreliabl=
+e)
+[c00000003e4035d0] [c00000000070f250] .dump_stack+0x88/0xb4
+[c00000003e403650] [c0000000005e8768] .of_node_release+0xd8/0xf0
+[c00000003e4036e0] [c0000000005eeafc] .of_irq_parse_one+0x10c/0x280
+[c00000003e4037a0] [c0000000005efd4c] .of_irq_parse_pci+0x3c/0x1d0
+[c00000003e403840] [c000000000038240] .pcibios_setup_device+0xa0/0x2e0
+[c00000003e403910] [c0000000000398f0] .pcibios_setup_bus_devices+0x60/0=
+xd0
+[c00000003e403990] [c00000000003b3a4] .__of_scan_bus+0x1a4/0x2b0
+[c00000003e403a80] [c00000000003a62c] .pcibios_scan_phb+0x30c/0x410
+[c00000003e403b60] [c0000000009fe430] .pcibios_init+0x7c/0xd4
 
-Hmm, so it is.
+This patch adjusts the refcount in the walk of the interrupt tree.
+When a match is found, there is no need to increase the refcount=20
+on 'out_irq->np' as 'newpar' is already holding a ref. The refcount
+balance between 'ipar' and 'newpar' is maintained in the skiplevel:
+goto label.
 
-I'm not really familiar with SDI, I just muxed all the SDI pins, except
-datapair3. I previously thought that there's only the data and clock
-pairs for SDI, but the TRM revealed more sdi pins, so I included them.
-It is well possible that these can be removed:
+This patch also removes the usage of the device_node variable 'old'=20
+which seems useless after the latest changes.
 
-0x0d0 (PIN_OUTPUT | MUX_MODE1)   /* dss_data18.sdi_vsync */
-0x0d2 (PIN_OUTPUT | MUX_MODE1)   /* dss_data19.sdi_hsync */
-0x0d4 (PIN_OUTPUT | MUX_MODE1)   /* dss_data20.sdi_den */
-0x0d6 (PIN_OUTPUT | MUX_MODE1)   /* dss_data21.sdi_stp */
+Signed-off-by: C=C3=A9dric Le Goater <clg-NmTC/0ZBporQT0dZR+AlfA@public.gmane.org>
+---
 
- Tomi
+This patch was tested on powerpc, pseries and powernv. This is a=20
+new area for me so I might have missed a path. Please take a look.
 
+We could now introduce an helper routine to look for #address-cells in
+of_irq_parse_raw(). This can be the subject of another patch.
 
+Thanks,
 
---Bh6pCofcFJJB0av4FPixioC8uiUNvw94A
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+C.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+ drivers/of/irq.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-iQIcBAEBAgAGBQJSsIn+AAoJEPo9qoy8lh71gRIP/ilZa3kvjMRwvZVCjnl31LTK
-5qvuRkanVmqiJAgg/n5a6xJTlxTsdHSzIkCnEVRT0ysA73H2WvIMEmnbKo0/FpxN
-pkeVQAZNI2R6Ux34PZYchdaO0Q0CoCvLoAMfpsWqCxNCmcsP9uOEeav9jSHW5iCN
-JzrosykFJkPTyvWF5fjwkKhCkvkxrrJ114TvznhgS3kzsxhDXPe4JMsqqXxSJ339
-IateGPkcbNsAYi0X6YQcPjYek7QofLICLuUP3Jbs76xHM5erFBNqJI5cRoZCEiaV
-v4stQk2o6reIMsR91g2BMwdk7LX+waV4TCAV2cGCacXaCzZ83XabGV6cYnZ/MFO0
-EmzdSx4kcAVeii5kynx9SCGpXWzjcjcOLmjrrNAmzTkVzT1yROMhmXm4ak/W9BV4
-/RMcfC/hw1Ym+ftPfbGPbeCXF6uXeZOxmHia1zYryYgQX6ASpx/5sxBzvq7PsXIA
-h1xRq3kPgUlXkajU7WNugMsM8fmlt0TXlAepHkVsX72rLHYOLYU+AUcsIvDzdfB+
-zo7e5Jztag9t6oJvTwCa4meXaI/hh2iTpLLmjY5rxvOUEqgA40AkGKw3j5es8vIJ
-+30HNI5ens1oxcufFhyI+D9NzBg542x2UOFBmrtFLLUynryYjRVLRbyKEl78s8ZA
-pphs53nV3J5DEZLIt4Lk
-=FiLu
------END PGP SIGNATURE-----
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 786b0b47fae4..27212402c532 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -165,7 +165,6 @@ int of_irq_parse_raw(const __be32 *addr, struct of_=
+phandle_args *out_irq)
+ 		if (of_get_property(ipar, "interrupt-controller", NULL) !=3D
+ 				NULL) {
+ 			pr_debug(" -> got it !\n");
+-			of_node_put(old);
+ 			return 0;
+ 		}
+=20
+@@ -250,8 +249,7 @@ int of_irq_parse_raw(const __be32 *addr, struct of_=
+phandle_args *out_irq)
+ 		 * Successfully parsed an interrrupt-map translation; copy new
+ 		 * interrupt specifier into the out_irq structure
+ 		 */
+-		of_node_put(out_irq->np);
+-		out_irq->np =3D of_node_get(newpar);
++		out_irq->np =3D newpar;
+=20
+ 		match_array =3D imap - newaddrsize - newintsize;
+ 		for (i =3D 0; i < newintsize; i++)
+@@ -268,7 +266,6 @@ int of_irq_parse_raw(const __be32 *addr, struct of_=
+phandle_args *out_irq)
+ 	}
+  fail:
+ 	of_node_put(ipar);
+-	of_node_put(out_irq->np);
+ 	of_node_put(newpar);
+=20
+ 	return -EINVAL;
+--=20
+1.7.10.4
 
---Bh6pCofcFJJB0av4FPixioC8uiUNvw94A--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
