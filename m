@@ -1,148 +1,238 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v7 5/9] usb: gadget: s3c-hsotg: enable generic phy support
-Date: Tue, 17 Dec 2013 14:42:32 -0500
-Message-ID: <1387309356-17195-6-git-send-email-mporter@linaro.org>
-References: <1387309356-17195-1-git-send-email-mporter@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1387309356-17195-1-git-send-email-mporter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Dinh Nguyen <dinh.linux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] ARM: dts: Add basic devices for AM3517-craneboard
+Date: Tue, 17 Dec 2013 13:45:12 -0600
+Message-ID: <52B0A9C8.7070201@ti.com>
+References: <1386626150-23504-1-git-send-email-nm@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1386626150-23504-1-git-send-email-nm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds support for the generic PHY subsystem. Generic PHY
-support is probed and then the driver falls back to checking
-for an old style USB PHY and pdata if not found.
+On 12/09/2013 03:55 PM, Nishanth Menon wrote:
+> Craneboard is a hardware development platform based on the Sitara
+> AM3517 ARM Cortex - A8 microprocessor device - see [1] for more
+> details. Add basic devices for craneboard as replacement for the board
+> file scheduled for removal as part of device tree conversion
+> 
+> [1] http://craneboard.org
+> 
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
 
-Signed-off-by: Matt Porter <mporter@linaro.org>
----
- drivers/usb/gadget/s3c-hsotg.c | 55 ++++++++++++++++++++++++++++++------------
- 1 file changed, 39 insertions(+), 16 deletions(-)
+gentle ping.. had'nt seen a response on this patch. Could we queue
+this up for v3.14-rc1?
 
-diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-index cbfbf41..8f9bcdb 100644
---- a/drivers/usb/gadget/s3c-hsotg.c
-+++ b/drivers/usb/gadget/s3c-hsotg.c
-@@ -30,6 +30,8 @@
- #include <linux/clk.h>
- #include <linux/regulator/consumer.h>
- #include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+#include <linux/usb/phy.h>
- 
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
-@@ -138,6 +140,7 @@ struct s3c_hsotg_ep {
-  * @dev: The parent device supplied to the probe function
-  * @driver: USB gadget driver
-  * @phy: The otg phy transceiver structure for phy control.
-+ * @uphy: The otg phy transceiver structure for old USB phy control.
-  * @plat: The platform specific configuration data. This can be removed once
-  * all SoCs support usb transceiver.
-  * @regs: The memory area mapped for accessing registers.
-@@ -159,7 +162,8 @@ struct s3c_hsotg_ep {
- struct s3c_hsotg {
- 	struct device		 *dev;
- 	struct usb_gadget_driver *driver;
--	struct usb_phy		*phy;
-+	struct phy		 *phy;
-+	struct usb_phy		 *uphy;
- 	struct s3c_hsotg_plat	 *plat;
- 
- 	spinlock_t              lock;
-@@ -2901,8 +2905,11 @@ static void s3c_hsotg_phy_enable(struct s3c_hsotg *hsotg)
- 
- 	dev_dbg(hsotg->dev, "pdev 0x%p\n", pdev);
- 
--	if (hsotg->phy)
--		usb_phy_init(hsotg->phy);
-+	if (hsotg->phy) {
-+		phy_init(hsotg->phy);
-+		phy_power_on(hsotg->phy);
-+	} else if (hsotg->uphy)
-+		usb_phy_init(hsotg->uphy);
- 	else if (hsotg->plat->phy_init)
- 		hsotg->plat->phy_init(pdev, hsotg->plat->phy_type);
- }
-@@ -2918,8 +2925,11 @@ static void s3c_hsotg_phy_disable(struct s3c_hsotg *hsotg)
- {
- 	struct platform_device *pdev = to_platform_device(hsotg->dev);
- 
--	if (hsotg->phy)
--		usb_phy_shutdown(hsotg->phy);
-+	if (hsotg->phy) {
-+		phy_power_off(hsotg->phy);
-+		phy_exit(hsotg->phy);
-+	} else if (hsotg->uphy)
-+		usb_phy_shutdown(hsotg->uphy);
- 	else if (hsotg->plat->phy_exit)
- 		hsotg->plat->phy_exit(pdev, hsotg->plat->phy_type);
- }
-@@ -3526,7 +3536,8 @@ static void s3c_hsotg_delete_debug(struct s3c_hsotg *hsotg)
- static int s3c_hsotg_probe(struct platform_device *pdev)
- {
- 	struct s3c_hsotg_plat *plat = dev_get_platdata(&pdev->dev);
--	struct usb_phy *phy;
-+	struct phy *phy;
-+	struct usb_phy *uphy;
- 	struct device *dev = &pdev->dev;
- 	struct s3c_hsotg_ep *eps;
- 	struct s3c_hsotg *hsotg;
-@@ -3541,19 +3552,26 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
--	phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-+	/*
-+	 * Attempt to find a generic PHY, then look for an old style
-+	 * USB PHY, finally fall back to pdata
-+	 */
-+	phy = devm_phy_get(&pdev->dev, "usb2-phy");
- 	if (IS_ERR(phy)) {
--		/* Fallback for pdata */
--		plat = dev_get_platdata(&pdev->dev);
--		if (!plat) {
--			dev_err(&pdev->dev, "no platform data or transceiver defined\n");
--			return -EPROBE_DEFER;
--		} else {
-+		uphy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-+		if (IS_ERR(uphy)) {
-+			/* Fallback for pdata */
-+			plat = dev_get_platdata(&pdev->dev);
-+			if (!plat) {
-+				dev_err(&pdev->dev,
-+				"no platform data or transceiver defined\n");
-+				return -EPROBE_DEFER;
-+			}
- 			hsotg->plat = plat;
--		}
--	} else {
-+		} else
-+			hsotg->uphy = uphy;
-+	} else
- 		hsotg->phy = phy;
--	}
- 
- 	hsotg->dev = dev;
- 
-@@ -3620,6 +3638,9 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
- 		goto err_supplies;
- 	}
- 
-+	if (hsotg->phy)
-+		phy_init(hsotg->phy);
-+
- 	/* usb phy enable */
- 	s3c_hsotg_phy_enable(hsotg);
- 
-@@ -3713,6 +3734,8 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
- 	}
- 
- 	s3c_hsotg_phy_disable(hsotg);
-+	if (hsotg->phy)
-+		phy_exit(hsotg->phy);
- 	clk_disable_unprepare(hsotg->clk);
- 
- 	return 0;
+> Based on:
+> git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git
+> branch: omap-for-v3.14/omap3-board-removal 736e812 ARM: OMAP2+: Remove unused platform init code and headers
+> 
+> Bootlog: http://pastebin.mozilla.org/3744412
+> 
+>  arch/arm/boot/dts/Makefile              |    1 +
+>  arch/arm/boot/dts/am3517-craneboard.dts |  174 +++++++++++++++++++++++++++++++
+>  2 files changed, 175 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/am3517-craneboard.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index fc37bca..ad155fc 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -205,6 +205,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+>  	am335x-boneblack.dtb \
+>  	am335x-nano.dtb \
+>  	am335x-base0033.dtb \
+> +	am3517-craneboard.dtb \
+>  	am3517-evm.dtb \
+>  	am3517_mt_ventoux.dtb \
+>  	am43x-epos-evm.dtb \
+> diff --git a/arch/arm/boot/dts/am3517-craneboard.dts b/arch/arm/boot/dts/am3517-craneboard.dts
+> new file mode 100644
+> index 0000000..2d40b3f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am3517-craneboard.dts
+> @@ -0,0 +1,174 @@
+> +/*
+> + * See craneboard.org for more details
+> + *
+> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +/dts-v1/;
+> +
+> +#include "am3517.dtsi"
+> +
+> +/ {
+> +	model = "TI AM3517 CraneBoard (TMDSEVM3517)";
+> +	compatible = "ti,am3517-craneboard", "ti,am3517", "ti,omap3";
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x80000000 0x10000000>;	/* 256 MB */
+> +	};
+> +
+> +	vbat: fixedregulator@0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vbat";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-boot-on;
+> +	};
+> +};
+> +
+> +&davinci_emac {
+> +	status = "okay";
+> +};
+> +
+> +&davinci_mdio {
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <2600000>;
+> +
+> +	tps: tps@2d {
+> +		reg = <0x2d>;
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	clock-frequency = <400000>;
+> +	/* goes to expansion connector */
+> +	status = "disabled";
+> +};
+> +
+> +&i2c3 {
+> +	clock-frequency = <400000>;
+> +	/* goes to expansion connector */
+> +	status = "disabled";
+> +};
+> +
+> +&mmc1 {
+> +	vmmc-supply = <&vdd2_reg>;
+> +	bus-width = <8>;
+> +};
+> +
+> +&mmc2 {
+> +	/* goes to expansion connector */
+> +	status = "disabled";
+> +};
+> +
+> +&mmc3 {
+> +	/* goes to expansion connector */
+> +	status = "disabled";
+> +};
+> +
+> +#include "tps65910.dtsi"
+> +
+> +&omap3_pmx_core {
+> +	tps_pins: pinmux_tps_pins {
+> +		pinctrl-single,pins = <
+> +			0x1b0 (PIN_INPUT_PULLUP | MUX_MODE0) /* sys_nirq.sys_nirq */
+> +		>;
+> +	};
+> +};
+> +
+> +&tps {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&tps_pins>;
+> +
+> +	interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+> +	interrupt-parent = <&intc>;
+> +
+> +	ti,en-ck32k-xtal;
+> +
+> +	vcc1-supply = <&vbat>;
+> +	vcc2-supply = <&vbat>;
+> +	vcc3-supply = <&vbat>;
+> +	vcc4-supply = <&vbat>;
+> +	vcc5-supply = <&vbat>;
+> +	vcc6-supply = <&vbat>;
+> +	vcc7-supply = <&vbat>;
+> +	vccio-supply = <&vbat>;
+> +
+> +	regulators {
+> +		vrtc_reg: regulator@0 {
+> +			regulator-always-on;
+> +		};
+> +
+> +		vio_reg: regulator@1 {
+> +			regulator-always-on;
+> +		};
+> +
+> +		/*
+> +		 * Unused:
+> +		 * VDIG1=2.7V,300mA max
+> +		 * VDIG2=1.8V,300mA max
+> +		 */
+> +
+> +		vpll_reg: regulator@7 {
+> +			/* VDDS_DPLL_1V8 */
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		vaux1_reg: regulator@9 {
+> +			/* VDDS_SRAM_1V8 */
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		vaux2_reg: regulator@10 {
+> +			/* VDDA1P8V_USBPHY */
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		/* VAUX33 unused */
+> +
+> +		vdac_reg: regulator@8 {
+> +			/* VDDA_DAC_1V8 */
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		vmmc_reg: regulator@12 {
+> +			/* VDDA3P3V_USBPHY */
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		vdd1_reg: regulator@2 {
+> +			/* VDD_CORE */
+> +			regulator-name = "vdd_core";
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +		};
+> +
+> +		vdd2_reg: regulator@3 {
+> +			/* VDDSHV_3V3 */
+> +			regulator-name = "vdd_shv";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		/* VDD3 unused */
+> +	};
+> +};
+> 
+
+
 -- 
-1.8.4
+Regards,
+Nishanth Menon
