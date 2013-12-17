@@ -1,124 +1,80 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: [PATCH 7/7] ARM: OMAP2+: Remove platform-specific omap-iommu
-Date: Tue, 17 Dec 2013 13:53:38 +0100
-Message-ID: <1387284818-28739-8-git-send-email-florian.vaussard@epfl.ch>
-References: <1387284818-28739-1-git-send-email-florian.vaussard@epfl.ch>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1387284818-28739-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>, Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Florian Vaussard <florian.vaussard@epfl.ch>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCHv7 1/4] pwm: Add Freescale FTM PWM driver support
+Date: Tue, 17 Dec 2013 13:54:35 +0100
+Message-ID: <1500339.E8bGm7xZUi@flatron>
+References: <1386925027-16288-1-git-send-email-Li.Xiubo@freescale.com> <5295539.cCkPY1PpyC@flatron> <20131217124505.GB17210@ulmo.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131217124505.GB17210@ulmo.nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Xiubo Li <Li.Xiubo@freescale.com>, mark.rutland@arm.com, s.hauer@pengutronix.de, galak@codeaurora.org, swarren@wwwdotorg.org, t.figa@samsung.com, grant.likely@linaro.org, matt.porter@linaro.org, rob@landley.net, ian.campbell@citrix.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Alison Wang <b18965@freescale.com>, Jingchang Lu <b35083@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-With full DT boot, the platform specific part of the OMAP iommu
-is not useful anymore.
+On Tuesday 17 of December 2013 13:45:06 Thierry Reding wrote:
+> On Tue, Dec 17, 2013 at 01:00:10PM +0100, Tomasz Figa wrote:
+> > On Tuesday 17 of December 2013 11:51:36 Russell King - ARM Linux wrote:
+> > > On Tue, Dec 17, 2013 at 12:10:22PM +0100, Thierry Reding wrote:
+> > > > On Fri, Dec 13, 2013 at 04:57:04PM +0800, Xiubo Li wrote:
+> > > > > +static inline u32 fsl_pwm_readl(struct fsl_pwm_chip *fpc,
+> > > > > +		const void __iomem *addr)
+> > > > > +{
+> > > > > +	u32 val;
+> > > > > +
+> > > > > +	val = __raw_readl(addr);
+> > > > > +
+> > > > > +	if (likely(fpc->big_endian))
+> > > > 
+> > > > The likely() probably isn't very useful in this case. But if you want to
+> > > > keep it, it should at least be reversed, since little-endian is actually
+> > > > the default (you have to specify the big-endian property to activate the
+> > > > big endian mode).
+> > > > 
+> > > > > +		val = be32_to_cpu(val);
+> > > > > +	else
+> > > > > +		val = le32_to_cpu(val);
+> > > 
+> > > This will also cause sparse errors, because when sparse is enabled, these
+> > > expect __le32 or __be32 arguments, not u32.
+> > 
+> > My question is why can't you just create two sets of accessors, one big
+> > endian and one little endian, add two function pointers to your
+> > fsl_pwm_chip struct and let the driver set the to correct accessors in
+> > probe?
+> 
+> I guess that would be one possibility.
+> 
+> > This would eliminate the problem with types Russell mentioned and IMHO
+> > make the code cleaner.
+> 
+> I fail to see how that would eliminate the problem with the types. That
+> said I don't actually see sparse complaining about any type mismatches.
+> That's probably because the various macros implicitly cast to u32.
 
-Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
----
- arch/arm/mach-omap2/Makefile     |  3 --
- arch/arm/mach-omap2/omap-iommu.c | 79 ----------------------------------------
- 2 files changed, 82 deletions(-)
- delete mode 100644 arch/arm/mach-omap2/omap-iommu.c
+Well, in BE variant you would read the register using __raw_readl() into
+a __be32 and then get an u32 from be32_to_cpu() and return it. Similarly
+for writes
 
-diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
-index 35be79f..4e01b61 100644
---- a/arch/arm/mach-omap2/Makefile
-+++ b/arch/arm/mach-omap2/Makefile
-@@ -219,9 +219,6 @@ obj-$(CONFIG_SOC_DRA7XX)		+= omap_hwmod_7xx_data.o
- obj-$(CONFIG_OMAP3_EMU)			+= emu.o
- obj-$(CONFIG_HW_PERF_EVENTS)		+= pmu.o
- 
--iommu-$(CONFIG_OMAP_IOMMU)		:= omap-iommu.o
--obj-y					+= $(iommu-m) $(iommu-y)
--
- ifneq ($(CONFIG_TIDSPBRIDGE),)
- obj-y					+= dsp.o
- endif
-diff --git a/arch/arm/mach-omap2/omap-iommu.c b/arch/arm/mach-omap2/omap-iommu.c
-deleted file mode 100644
-index f1fab56..0000000
---- a/arch/arm/mach-omap2/omap-iommu.c
-+++ /dev/null
-@@ -1,79 +0,0 @@
--/*
-- * omap iommu: omap device registration
-- *
-- * Copyright (C) 2008-2009 Nokia Corporation
-- *
-- * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
--
--#include <linux/of.h>
--#include <linux/module.h>
--#include <linux/platform_device.h>
--#include <linux/err.h>
--#include <linux/slab.h>
--
--#include <linux/platform_data/iommu-omap.h>
--#include "soc.h"
--#include "omap_hwmod.h"
--#include "omap_device.h"
--
--static int __init omap_iommu_dev_init(struct omap_hwmod *oh, void *unused)
--{
--	struct platform_device *pdev;
--	struct iommu_platform_data *pdata;
--	struct omap_mmu_dev_attr *a = (struct omap_mmu_dev_attr *)oh->dev_attr;
--	static int i;
--
--	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
--	if (!pdata)
--		return -ENOMEM;
--
--	pdata->name = oh->name;
--	pdata->nr_tlb_entries = a->nr_tlb_entries;
--	pdata->da_start = a->da_start;
--	pdata->da_end = a->da_end;
--
--	if (oh->rst_lines_cnt == 1) {
--		pdata->reset_name = oh->rst_lines->name;
--		pdata->assert_reset = omap_device_assert_hardreset;
--		pdata->deassert_reset = omap_device_deassert_hardreset;
--	}
--
--	pdev = omap_device_build("omap-iommu", i, oh, pdata, sizeof(*pdata));
--
--	kfree(pdata);
--
--	if (IS_ERR(pdev)) {
--		pr_err("%s: device build err: %ld\n", __func__, PTR_ERR(pdev));
--		return PTR_ERR(pdev);
--	}
--
--	i++;
--
--	return 0;
--}
--
--static int __init omap_iommu_init(void)
--{
--	/* If dtb is there, the devices will be created dynamically */
--	if (of_have_populated_dt())
--		return -ENODEV;
--
--	return omap_hwmod_for_each_by_class("mmu", omap_iommu_dev_init, NULL);
--}
--/* must be ready before omap3isp is probed */
--omap_subsys_initcall(omap_iommu_init);
--
--static void __exit omap_iommu_exit(void)
--{
--	/* Do nothing */
--}
--module_exit(omap_iommu_exit);
--
--MODULE_AUTHOR("Hiroshi DOYU");
--MODULE_DESCRIPTION("omap iommu: omap device registration");
--MODULE_LICENSE("GPL v2");
--- 
-1.8.1.2
+In LE variant, readl()/writel() could be used directly.
+
+> 
+> > > > > +	rmb();
+> > > > 
+> > > > I'd prefer the rmb() to follow the __raw_readl() immediately to make the
+> > > > relationship more explicit.
+> > > 
+> > > A better question to ask is: why is this barrier here?  What memory
+> > > ordering operations is it trying to serialise?
+> > 
+> > I'd also add a question why __raw accessors are used here.
+> 
+> Because both readl() and writel() explicitly perform little endian
+> accesses.
+
+Right. Thanks for pointing this out.
+
+Best regards,
+Tomasz
 
