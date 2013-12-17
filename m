@@ -1,117 +1,84 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH V2] dt: bindings: submitting patches and ABI documents
-Date: Tue, 17 Dec 2013 16:59:40 +0000
-Message-ID: <1387299580-9100-1-git-send-email-jason@lakedaemon.net>
-References: <1383759120-21571-1-git-send-email-jason@lakedaemon.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1383759120-21571-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sebastian Reichel <sre@debian.org>
+Subject: Re: [PATCH 0/4] OMAPDSS: DT support for N900 panel
+Date: Tue, 17 Dec 2013 18:14:14 +0100
+Message-ID: <20131217171412.GA10442@earth.universe>
+References: <1386958650-2404-1-git-send-email-sre@debian.org>
+ <52AFFF3F.7020807@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52AFFF3F.7020807@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
-Changes from RFC:
- - incorporated Grant's language
- - split patches/ABI into two documents
 
- Documentation/devicetree/bindings/ABI.txt          | 39 ++++++++++++++++++++++
- .../devicetree/bindings/submitting-patches.txt     | 35 +++++++++++++++++++
- 2 files changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ABI.txt
- create mode 100644 Documentation/devicetree/bindings/submitting-patches.txt
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/ABI.txt b/Documentation/devicetree/bindings/ABI.txt
-new file mode 100644
-index 000000000000..d25f8d379680
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ABI.txt
-@@ -0,0 +1,39 @@
-+
-+  Devicetree (DT) ABI
-+
-+I. Regarding stable bindings/ABI, we quote from the 2013 ARM mini-summit
-+   summary document:
-+
-+     "That still leaves the question of, what does a stable binding look
-+     like?  Certainly a stable binding means that a newer kernel will not
-+     break on an older device tree, but that doesn't mean the binding is
-+     frozen for all time. Grant said there are ways to change bindings that
-+     don't result in breakage. For instance, if a new property is added,
-+     then default to the previous behaviour if it is missing. If a binding
-+     truly needs an incompatible change, then change the compatible string
-+     at the same time.  The driver can bind against both the old and the
-+     new. These guidelines aren't new, but they desperately need to be
-+     documented."
-+
-+II.  General binding rules
-+
-+  1) Maintainers, don't let perfect be the enemy of good.  Don't hold up a
-+     binding because it isn't perfect.
-+
-+  2) Use specific compatible strings so that if we need to add a feature (DMA)
-+     in the future, we can create a new compatible string.  See I.
-+
-+  3) Bindings can be augmented, but the driver shouldn't break when given
-+     the old binding. ie. add additional properties, but don't change the
-+     meaning of an existing property. For drivers, default to the original
-+     behaviour when a newly added property is missing.
-+
-+  4) Don't submit bindings for staging or unstable.  That will be decided by
-+     the devicetree maintainers *after* discussion on the mailinglist.
-+
-+III. Notes
-+
-+  1) This document is intended as a general familiarization with the process as
-+     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
-+     devicetree maintainers overrules this document.  In that situation, a patch
-+     updating this document would be appreciated.
-diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
-new file mode 100644
-index 000000000000..5672cb46681d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/submitting-patches.txt
-@@ -0,0 +1,35 @@
-+
-+  Submitting devicetree (DT) binding patches
-+
-+I. For patch submitters
-+
-+  0) Normal patch submission rules from Documentation/SubmittingPatches
-+     applies.
-+
-+  1) The Documentation/ portion of the patch should be a separate patch.
-+
-+  2) Submit the entire series to the devicetree mailinglist at
-+
-+       devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+
-+II. For kernel maintainers
-+
-+  1) If you aren't comfortable reviewing a given binding, reply to it and ask
-+     the devicetree maintainers for guidance.  This will help them prioritize
-+     which ones to review and which ones are ok to let go.
-+
-+  2) For driver (not subsystem) bindings: If you are comfortable with the
-+     binding, and it hasn't received an Acked-by from the devicetree
-+     maintainers after a few weeks, go ahead and take it.
-+
-+  3) For a series going though multiple trees, the binding patch should be
-+     kept with the driver using the binding.
-+
-+III. Notes
-+
-+  0) Please see ...bindings/ABI.txt for details regarding devicetree ABI.
-+
-+  1) This document is intended as a general familiarization with the process as
-+     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
-+     devicetree maintainers overrules this document.  In that situation, a patch
-+     updating this document would be appreciated.
--- 
-1.8.5.1
+On Tue, Dec 17, 2013 at 09:37:35AM +0200, Tomi Valkeinen wrote:
+> Hi,
+>=20
+> On 2013-12-13 20:17, Sebastian Reichel wrote:
+> > Hi,
+> >=20
+> > This patchset adds DT support for the N900 panel. The patchset is based=
+ on
+> > Tomi's work/dss-dt-2 branch [0]. I suggest to send the DT changes throu=
+gh
+> > Benoits queue, since I have more N900 DT changes for 3.14. Also the pat=
+ch
+> > editing the rx51 boardcode can be dropped, since the file is removed in=
+ 3.14.
+> > I included those two with this patchset, since they are needed to test =
+the
+> > other two patches.
+> >=20
+> > I did not include a documentation for the DT API, since the omapdss
+> > documentation is still missing.
+> >=20
+> > I have successfully tested this on the N900.
+> >=20
+> > [0] https://git.kernel.org/cgit/linux/kernel/git/tomba/linux.git/log/?h=
+=3Dwork/dss-dt-2
+>=20
+> I added N900 display DT support on top of my v2 series, including
+> pinmuxing. Can you check if it looks right and works?
+>=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss-dt
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I just tried it and it does not work. On a first look the pinmuxing
+looks fishy: 0x0d4 is muxed two times.
+
+I will have a more detailed look into this later.
+
+-- Sebastian
+
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSsIZkAAoJENju1/PIO/qa/LYP/iyrGFxaTaZwmkcavWq+J9U/
+TMBJwwXy1z5GYqE1egJ5/3f21tzfjlLuCKiEtZteNdv7U45urBGLdX+434iox0br
+LcNgiXo8GSfnmbYio/GDSgceOyoGefCHo2/HubNp/jfwM6MeUkFj6yVq60m+8Wwr
+GgYvX6zZIcxSiCI3/0oBMozHfHQhf+rmqgpQT0966pXpx/K/Q2kVgadpQm5S65h4
+UcYLG4R/s6hLDBRqGVbHRCiotuCxGlQ04hodgjpzf9zLeX05RKOdRLy7Mjzz5KA1
+cpRwBt7t0zLvtzrjY06PwZGVPbu66SpECmNw6C5s69S8taOOuW4Bdl5luqdMpL92
+itjJGuHRvtBMLa7fdgyY/ptL7oRey5ulzmwyxOZh00mYxEREKZWwnI3Kh3qnwm11
+FDLJBGq3/XBXTCYhBC5ikAJrtR/Ms6c/Z1/t6vqL5lJgo5rOTazX9KP6mCgFciGU
+tEXlghXJqg0TFdHXE4vf4IcNPtDVWsqgh8ly2Pw1UPfaXFk9oMX28tvfSwNjaSth
+SJvrHP4b3kyRb1r2e4ChJGHOVAuSJ+QgNdP0OrHaEoJ9ABreNsBAW3K8L5q0ikIj
+zVnGOA8NFSEc22IIIaNkMLDUlZEmsCLc4UHDKjYifMn8/cL0M9QilKMDPdsEwpFt
+fSuyYgCj0efJpT/v3MW2
+=jmf4
+-----END PGP SIGNATURE-----
+
+--IS0zKkzwUGydFO0o--
