@@ -1,98 +1,84 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH 1/5] regulator: s5m8767: Add symbols for hard-coded DVS_RAMP
- register
-Date: Tue, 17 Dec 2013 14:23:17 +0100
-Message-ID: <1387286601-21646-2-git-send-email-k.kozlowski@samsung.com>
-References: <1387286601-21646-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1387286601-21646-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Thomas Abraham <thomas.abraham@linaro.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 2/2] cpufreq: imx6q: correct VDDSOC/PU voltage scaling
+ when cpufreq is changed
+Date: Tue, 17 Dec 2013 13:23:12 +0000
+Message-ID: <20131217132312.GB3185@sirena.org.uk>
+References: <1387318102-11070-1-git-send-email-b20788@freescale.com>
+ <1387318102-11070-2-git-send-email-b20788@freescale.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0050612042845383957=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1387318102-11070-2-git-send-email-b20788@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <b20788@freescale.com>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, viresh.kumar@linaro.org, rjw@rjwysocki.net, cpufreq@vger.kernel.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add symbols for hard-coded values of BUCK_RAMP field in DVS_RAMP
-register. This simplifies a little the code as register update is called
-only once.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/regulator/s5m8767.c         |   22 ++++++++++------------
- include/linux/mfd/samsung/s5m8767.h |   15 +++++++++++++++
- 2 files changed, 25 insertions(+), 12 deletions(-)
+--===============0050612042845383957==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uf7EosKxohYIlF4L"
+Content-Disposition: inline
 
-diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-index 397917611ecd..10b4b6a5b08e 100644
---- a/drivers/regulator/s5m8767.c
-+++ b/drivers/regulator/s5m8767.c
-@@ -881,31 +881,29 @@ static int s5m8767_pmic_probe(struct platform_device *pdev)
- 
- 	if (s5m8767->buck2_ramp || s5m8767->buck3_ramp
- 		|| s5m8767->buck4_ramp) {
-+		unsigned int val;
- 		switch (s5m8767->ramp_delay) {
- 		case 5:
--			sec_reg_update(s5m8767->iodev, S5M8767_REG_DVSRAMP,
--					0x40, 0xf0);
-+			val = S5M8767_DVS_BUCK_RAMP_5;
- 			break;
- 		case 10:
--			sec_reg_update(s5m8767->iodev, S5M8767_REG_DVSRAMP,
--					0x90, 0xf0);
-+			val = S5M8767_DVS_BUCK_RAMP_10;
- 			break;
- 		case 25:
--			sec_reg_update(s5m8767->iodev, S5M8767_REG_DVSRAMP,
--					0xd0, 0xf0);
-+			val = S5M8767_DVS_BUCK_RAMP_25;
- 			break;
- 		case 50:
--			sec_reg_update(s5m8767->iodev, S5M8767_REG_DVSRAMP,
--					0xe0, 0xf0);
-+			val = S5M8767_DVS_BUCK_RAMP_50;
- 			break;
- 		case 100:
--			sec_reg_update(s5m8767->iodev, S5M8767_REG_DVSRAMP,
--					0xf0, 0xf0);
-+			val = S5M8767_DVS_BUCK_RAMP_100;
- 			break;
- 		default:
--			sec_reg_update(s5m8767->iodev, S5M8767_REG_DVSRAMP,
--					0x90, 0xf0);
-+			val = S5M8767_DVS_BUCK_RAMP_10;
- 		}
-+		sec_reg_update(s5m8767->iodev, S5M8767_REG_DVSRAMP,
-+					val << S5M8767_DVS_BUCK_RAMP_SHIFT,
-+					S5M8767_DVS_BUCK_RAMP_MASK);
- 	}
- 
- 	for (i = 0; i < pdata->num_regulators; i++) {
-diff --git a/include/linux/mfd/samsung/s5m8767.h b/include/linux/mfd/samsung/s5m8767.h
-index 9198377ee859..2ab0b0f03641 100644
---- a/include/linux/mfd/samsung/s5m8767.h
-+++ b/include/linux/mfd/samsung/s5m8767.h
-@@ -186,4 +186,19 @@ enum s5m8767_regulators {
- #define S5M8767_ENCTRL_SHIFT		6
- #define S5M8767_ENCTRL_MASK		(0x3 << S5M8767_ENCTRL_SHIFT)
- 
-+/*
-+ * Values for BUCK_RAMP field in DVS_RAMP register, matching raw values
-+ * in mV/us.
-+ */
-+enum s5m8767_dvs_buck_ramp_values {
-+	S5M8767_DVS_BUCK_RAMP_5		= 0x4,
-+	S5M8767_DVS_BUCK_RAMP_10	= 0x9,
-+	S5M8767_DVS_BUCK_RAMP_12_5	= 0xb,
-+	S5M8767_DVS_BUCK_RAMP_25	= 0xd,
-+	S5M8767_DVS_BUCK_RAMP_50	= 0xe,
-+	S5M8767_DVS_BUCK_RAMP_100	= 0xf,
-+};
-+#define S5M8767_DVS_BUCK_RAMP_SHIFT	4
-+#define S5M8767_DVS_BUCK_RAMP_MASK	(0xf << S5M8767_DVS_BUCK_RAMP_SHIFT)
-+
- #endif /* __LINUX_MFD_S5M8767_H */
--- 
-1.7.9.5
 
+--uf7EosKxohYIlF4L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Dec 17, 2013 at 05:08:22PM -0500, Anson Huang wrote:
+
+>  	if (new_freq > old_freq) {
+> +		if (regulator_is_enabled(pu_reg)) {
+> +			ret = regulator_set_voltage_tol(pu_reg, imx6_soc_volt[index], 0);
+
+As I pointed out while reviewing the regulator driver this is racy,
+nothing stops the regulator state being changed after you read it and if
+you skip setting the voltage then when something comes along and enables
+the regulator later it will be enabled with a possibly incorrect
+voltage.
+
+--uf7EosKxohYIlF4L
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSsFA9AAoJELSic+t+oim9GAAP/2mwH2GL+qJP70GPgSbNubmL
+TCOHbPjC0tlbpk0DtxYM0If5pSzR7i0aQNWYrC7arkBGfRFFZJRUUjd3SADN2xy0
+TWWQJ8rlb0jyE3YBAIJI5JUKdM/zgBD6ovwTXPYrfwbnjXAQQOjnsW6rCg2RtnJI
+hZ0+sQdZoAj//GntFRGJErUxv2QU2JsN+OcuQGIl4wKnpTv89ExTxN0PPJmPnmxy
+y4jJOuWRrls2z8eksmYmlyPCMkdQGYhEJv7nUrYiPrRtGNkGZo6jGfc8v9fIKoIU
+bARF+6DfW6J/q94N0aVwSFgCKkkHw3qj49brSzwOAj4kIg+cw6cWaJbegaje0PWZ
+FPU7wQn6LzTT76NkTLI85jAJel1d9hM9sc3aywI8pQJQgmyw9WvEVj9Am6aCOypY
+3DXOaYh6l5LteZjJ7K7HN9Ju1EGhM3mc5Gi4fvJ324L/ftSnCSIcWqp+cITW63bh
+M7Jdf99PFMSPBY2lWFXssjO07s4OvODhQcsA3ADtp/wUseZQQVIAD6+9ptek12nb
+ZN1t04TQog9AgGbbtK7Ul19y6jDlrQXgvpzyexzmgtTKMWNlh2ew+r0hQj5TPkOt
+cmophcXvtPe9Dp3PQ+TJPADFE9cdh8avjmWxpiAAkiBEGvy28t2qUGKgjYM7Px/S
+Pe+RisjCp7sihTw/sqS6
+=ctb0
+-----END PGP SIGNATURE-----
+
+--uf7EosKxohYIlF4L--
+
+
+--===============0050612042845383957==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0050612042845383957==--
