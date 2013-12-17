@@ -1,56 +1,60 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH v4 9/9] mtd: nand: davinci: don't request AEMIF address range
-Date: Tue, 17 Dec 2013 15:38:31 +0200
-Message-ID: <1387287511-19975-1-git-send-email-ivan.khoronzhuk@ti.com>
-References: <1387285155-19182-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/5] ARM: sunxi: Add driver for SD/MMC hosts found on
+ Allwinner sunxi SoCs
+Date: Tue, 17 Dec 2013 13:43:19 +0000
+Message-ID: <20131217134319.GC3185@sirena.org.uk>
+References: <1387058295-20641-1-git-send-email-hdegoede@redhat.com>
+ <1387058295-20641-2-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1387285155-19182-1-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, dwmw2@infradead.org, computersforpeace@gmail.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AE3cR03RMyqqQrte"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1387058295-20641-2-git-send-email-hdegoede@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Chris Ball <cjb@laptop.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-sunxi@googlegroups.com, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The TI AEMIF driver registers are used to setup timings for each chip
-select. The same registers range is used to setup NAND settings.
-The AEMIF and NAND drivers not use the same registers in this range.
 
-In case with TI AEMIF driver, the memory address range is requested
-already by AEMIF, so we cannot request it twice, just ioremap.
+--AE3cR03RMyqqQrte
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Taras Kondratiuk <taras@ti.com>
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
----
- drivers/mtd/nand/davinci_nand.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+On Sat, Dec 14, 2013 at 10:58:11PM +0100, Hans de Goede wrote:
 
-diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
-index 8a61a40..0104d26 100644
---- a/drivers/mtd/nand/davinci_nand.c
-+++ b/drivers/mtd/nand/davinci_nand.c
-@@ -637,9 +637,17 @@ static int nand_davinci_probe(struct platform_device *pdev)
- 	if (IS_ERR(vaddr))
- 		return PTR_ERR(vaddr);
- 
--	base = devm_ioremap_resource(&pdev->dev, res2);
--	if (IS_ERR(base))
--		return PTR_ERR(base);
-+	/*
-+	 * This registers range is used to setup NAND settings. In case with
-+	 * TI AEMIF driver, the same memory address range is requested already
-+	 * by AEMIF, so we cannot request it twice, just ioremap.
-+	 * The AEMIF and NAND drivers not use the same registers in this range.
-+	 */
-+	base = devm_ioremap(&pdev->dev, res2->start, resource_size(res2));
-+	if (!base) {
-+		dev_err(&pdev->dev, "ioremap failed for resource %pR\n", res2);
-+		return -EADDRNOTAVAIL;
-+	}
- 
- 	info->dev		= &pdev->dev;
- 	info->base		= base;
--- 
-1.7.9.5
+> +config MMC_SUNXI
+> +	tristate "Allwinner sunxi SD/MMC Host Controller support"
+> +	depends on ARCH_SUNXI
+
+This should be ARCH_SUNXI || COMPILE_TEST to increase build coverage
+especially for people doing subsystem or kernel global work.
+
+> +	default y
+
+As others pointed out this shouldn't be here, consider multiplatform
+kernels.
+
+--AE3cR03RMyqqQrte
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSsFT0AAoJELSic+t+oim9zREQAJPU7/wIWH3IrbxKlTg1Yja6
+v9pIjdQIsrCx9Syt3g+dYzuqAdsD/iC1J+oin2Gwjy0EprgWZBOxa6QebBx+pcIx
+5IAo7vrDBtRYneLYxu8wP4ykFW1TBhNrhh2JR44f28rWhy+rBhCn6FrtC3ZhH1Fg
+7AzLB71n6NVKJT7EsSXJsOmrVQJcjLSvl8m6y3bMcNCx55Q3GU5BE5SmUs0TZGuS
+ik6/7E8CVmuWq+AHwtbpH6iexyqk46M7f1vs7OHavOm5ONPK60P+z7vn7uoGh6Qp
+xnhikgooGBg9heM7mbBBafXzCVIouJCHS0TBNyqVxmIaZiEcfkMiO/6cUqRYvZK3
+O1p7aE4fV11iEyL85v47SY7GL9kGpU3yin2nZMbpKWwr51qEQQa2x1sPMYqs1VyP
+gmLfXyZzvrpe8RXdaoL7SlVJu3eZq6Z2cwen/hZ2+h70FB9IKjD6bhfLegzsIhOR
+vMVBmT+kQlBvdGqh2/jOA5F9C8+cx0TW7V+3JrFJVaUjHxmSjaOA9M27zSKltDZ8
+ODn/p7m1XfplnQuQuPwMADY/b/RSTRn1RhE/RgkDjzHSawJz6551B6A3BrD8xNsf
+7SitnWR4z+j9SLtORjOp84W8IPceYMMXOcN+C9fe4t15v1mAAxpsZy4d08DZbEab
+U7BZRiUgpSiaRPs+sjLe
+=9wdG
+-----END PGP SIGNATURE-----
+
+--AE3cR03RMyqqQrte--
