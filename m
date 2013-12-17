@@ -1,71 +1,31 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH v4 0/9] Reuse davinci-nand driver for Keystone arch
-Date: Tue, 17 Dec 2013 14:59:06 +0200
-Message-ID: <1387285155-19182-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCHv7 1/4] pwm: Add Freescale FTM PWM driver support
+Date: Tue, 17 Dec 2013 13:04:35 +0000
+Message-ID: <20131217130435.GV4360@n2100.arm.linux.org.uk>
+References: <1386925027-16288-1-git-send-email-Li.Xiubo@freescale.com> <5295539.cCkPY1PpyC@flatron> <20131217124505.GB17210@ulmo.nvidia.com> <1500339.E8bGm7xZUi@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1500339.E8bGm7xZUi@flatron>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Xiubo Li <Li.Xiubo@freescale.com>, mark.rutland@arm.com, s.hauer@pengutronix.de, galak@codeaurora.org, swarren@wwwdotorg.org, t.figa@samsung.com, grant.likely@linaro.org, matt.porter@linaro.org, rob@landley.net, ian.campbell@citrix.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Alison Wang <b18965@freescale.com>, Jingchang Lu <b35083@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-This series contains fixes and updates of Davinci nand driver in
-order to reuse it for Keystone platform.
+On Tue, Dec 17, 2013 at 01:54:35PM +0100, Tomasz Figa wrote:
+> On Tuesday 17 of December 2013 13:45:06 Thierry Reding wrote:
+> > I fail to see how that would eliminate the problem with the types. That
+> > said I don't actually see sparse complaining about any type mismatches.
+> > That's probably because the various macros implicitly cast to u32.
+> 
+> Well, in BE variant you would read the register using __raw_readl() into
+> a __be32 and then get an u32 from be32_to_cpu() and return it. Similarly
+> for writes
 
-v3..v4:
-- mtd: nand: davinci: fix driver registration
-	dropped __init/__exit/__exit_p as module_platform_driver() is used
-- mtd: nand: davinci: adjust DT properties to MTD generic
-	used of_get_nand_bus_width() helper
-- mtd: nand: davinci: don't request AEMIF address range
-	added comment at code change
+__raw_readl() returns a u32, so you'll get a warning trying to assign a
+u32 to a __be32.
 
-v2..v3:
-- mtd: nand: davinci: don't set timings if AEMIF is used
-	dropped, it would be replaced by alone patch
-	ARM: davinci: aemif: get rid of davinci-nand driver dependency on aemif
-
-v1..v2
-The series is combination of two following series:
-- Davinci nand driver fixes and updates:
-https://lkml.org/lkml/2013/11/20/271
-- Reuse davinci-nand driver for Keystone arch
-https://lkml.org/lkml/2013/11/20/315
-
-- mtd: nand: davinci: extend description of bindings
-	clarified changeset description
-
-- mtd: nand: davinci: reuse driver for Keystone arch
-	removed "ti,keystone-nand" compatible from driver
-
-Ivan Khoronzhuk (9):
-  mtd: nand: davinci: fix driver registration
-  mtd: nand: davinci: return ENOMEM if memory allocation is failed
-  mtd: nand: davinci: check required ti,davinci-chipselect property
-  mtd: nand: davinci: simplify error handling
-  mtd: nand: davinci: move bindings under mtd
-  mtd: nand: davinci: extend description of bindings
-  mtd: nand: davinci: adjust DT properties to MTD generic
-  mtd: nand: davinci: reuse driver for Keystone arch
-  mtd: nand: davinci: don't request AEMIF address range
-
- .../devicetree/bindings/arm/davinci/nand.txt       |   46 ----------
- .../devicetree/bindings/mtd/davinci-nand.txt       |   94 ++++++++++++++++++++
- drivers/mtd/nand/Kconfig                           |    6 +-
- drivers/mtd/nand/davinci_nand.c                    |   89 +++++++++---------
- 4 files changed, 146 insertions(+), 89 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
- create mode 100644 Documentation/devicetree/bindings/mtd/davinci-nand.txt
-
--- 
-1.7.9.5
+We do have ioread32() and ioread32be() which do the appropriate conversion,
+as well as the write versions too.  They both include the barrier if you're
+overly concerned about that.
