@@ -1,87 +1,80 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH 3/5] mfd: sec: Remove sec_reg* regmap helpers
-Date: Tue, 17 Dec 2013 14:23:19 +0100
-Message-ID: <1387286601-21646-4-git-send-email-k.kozlowski@samsung.com>
-References: <1387286601-21646-1-git-send-email-k.kozlowski@samsung.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCHv7 1/4] pwm: Add Freescale FTM PWM driver support
+Date: Tue, 17 Dec 2013 14:22:48 +0100
+Message-ID: <20131217132247.GB2329@ulmo.nvidia.com>
+References: <1386925027-16288-1-git-send-email-Li.Xiubo@freescale.com>
+ <5295539.cCkPY1PpyC@flatron>
+ <20131217124505.GB17210@ulmo.nvidia.com>
+ <1500339.E8bGm7xZUi@flatron>
+ <20131217130435.GV4360@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vGgW1X5XWziG23Ko"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1387286601-21646-1-git-send-email-k.kozlowski@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20131217130435.GV4360@n2100.arm.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Thomas Abraham <thomas.abraham@linaro.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Xiubo Li <Li.Xiubo@freescale.com>, mark.rutland@arm.com, s.hauer@pengutronix.de, galak@codeaurora.org, swarren@wwwdotorg.org, t.figa@samsung.com, grant.likely@linaro.org, matt.porter@linaro.org, rob@landley.net, ian.campbell@citrix.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Alison Wang <b18965@freescale.com>, Jingchang Lu <b35083@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove sec_reg* helpers as they are not used anymore. These helpers were
-error-prone as they mixed u8 with unsigned int and they changed order of
-some of parameters (val and mask in sec_reg_update()).
 
-Also the helpers didn't give any way of useful abstraction as they just
-called corresponding regmap function.
+--vGgW1X5XWziG23Ko
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/mfd/sec-core.c           |   30 ------------------------------
- include/linux/mfd/samsung/core.h |    6 ------
- 2 files changed, 36 deletions(-)
+On Tue, Dec 17, 2013 at 01:04:35PM +0000, Russell King - ARM Linux wrote:
+> On Tue, Dec 17, 2013 at 01:54:35PM +0100, Tomasz Figa wrote:
+> > On Tuesday 17 of December 2013 13:45:06 Thierry Reding wrote:
+> > > I fail to see how that would eliminate the problem with the types. Th=
+at
+> > > said I don't actually see sparse complaining about any type mismatche=
+s.
+> > > That's probably because the various macros implicitly cast to u32.
+> >=20
+> > Well, in BE variant you would read the register using __raw_readl() into
+> > a __be32 and then get an u32 from be32_to_cpu() and return it. Similarly
+> > for writes
+>=20
+> __raw_readl() returns a u32, so you'll get a warning trying to assign a
+> u32 to a __be32.
 
-diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-core.c
-index 83f31e2e5754..ab4c77b01f9f 100644
---- a/drivers/mfd/sec-core.c
-+++ b/drivers/mfd/sec-core.c
-@@ -79,36 +79,6 @@ static struct of_device_id sec_dt_match[] = {
- };
- #endif
- 
--int sec_reg_read(struct sec_pmic_dev *sec_pmic, u8 reg, void *dest)
--{
--	return regmap_read(sec_pmic->regmap_pmic, reg, dest);
--}
--EXPORT_SYMBOL_GPL(sec_reg_read);
--
--int sec_bulk_read(struct sec_pmic_dev *sec_pmic, u8 reg, int count, u8 *buf)
--{
--	return regmap_bulk_read(sec_pmic->regmap_pmic, reg, buf, count);
--}
--EXPORT_SYMBOL_GPL(sec_bulk_read);
--
--int sec_reg_write(struct sec_pmic_dev *sec_pmic, u8 reg, u8 value)
--{
--	return regmap_write(sec_pmic->regmap_pmic, reg, value);
--}
--EXPORT_SYMBOL_GPL(sec_reg_write);
--
--int sec_bulk_write(struct sec_pmic_dev *sec_pmic, u8 reg, int count, u8 *buf)
--{
--	return regmap_raw_write(sec_pmic->regmap_pmic, reg, buf, count);
--}
--EXPORT_SYMBOL_GPL(sec_bulk_write);
--
--int sec_reg_update(struct sec_pmic_dev *sec_pmic, u8 reg, u8 val, u8 mask)
--{
--	return regmap_update_bits(sec_pmic->regmap_pmic, reg, mask, val);
--}
--EXPORT_SYMBOL_GPL(sec_reg_update);
--
- static bool s2mps11_volatile(struct device *dev, unsigned int reg)
- {
- 	switch (reg) {
-diff --git a/include/linux/mfd/samsung/core.h b/include/linux/mfd/samsung/core.h
-index cab2dd279076..41c9bde410c5 100644
---- a/include/linux/mfd/samsung/core.h
-+++ b/include/linux/mfd/samsung/core.h
-@@ -59,12 +59,6 @@ int sec_irq_init(struct sec_pmic_dev *sec_pmic);
- void sec_irq_exit(struct sec_pmic_dev *sec_pmic);
- int sec_irq_resume(struct sec_pmic_dev *sec_pmic);
- 
--extern int sec_reg_read(struct sec_pmic_dev *sec_pmic, u8 reg, void *dest);
--extern int sec_bulk_read(struct sec_pmic_dev *sec_pmic, u8 reg, int count, u8 *buf);
--extern int sec_reg_write(struct sec_pmic_dev *sec_pmic, u8 reg, u8 value);
--extern int sec_bulk_write(struct sec_pmic_dev *sec_pmic, u8 reg, int count, u8 *buf);
--extern int sec_reg_update(struct sec_pmic_dev *sec_pmic, u8 reg, u8 val, u8 mask);
--
- struct sec_platform_data {
- 	struct sec_regulator_data	*regulators;
- 	struct sec_opmode_data		*opmode;
--- 
-1.7.9.5
+If sparse doesn't complain about the original code here, does that mean
+we have a bug that should be fixed?
+
+> We do have ioread32() and ioread32be() which do the appropriate conversio=
+n,
+> as well as the write versions too.  They both include the barrier if you'=
+re
+> overly concerned about that.
+
+A few years ago GregKH commented in response to a patch that ioread*()
+weren't supposed to be used for memory-mapped only devices. The original
+purpose apparently was to allow drivers to work with both I/O and
+memory-mapped devices.
+
+Thierry
+
+--vGgW1X5XWziG23Ko
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSsFAnAAoJEN0jrNd/PrOhFHAP/18QBTQBzsFYKMuPA3mxwEFc
+9WMVB4Bs7HPvm1y7kvESmbxcKIZX/CIqwJUgr0Z1pEnu19Bfe98/whOzg0VdLfUU
+H2K3d2u2OtZzfEY/0U+HDxQXXefbCJ39it2xaYZvKkwhP3oNzB3wXzAMUtdOAoWn
+2/abpdleVg9a1lo6/A8SJyaBTEXsDWdOHkEUcQeO/tB6XXF+Ab1OrYJWAJm66lzG
+zAy47pcuC3sU4/RmIEeIGzRlNbZcB9NUbOHYZvhygnE1Gw8IpgOnGGUQdI7BJ8NO
+eb01ZubOZfi2KHN4+UM3G5uWg+HJoji5b8h02h6VXYJvyI5NO7Jo5oXK1W/w+uGG
+zeEKJmkk6XDNQy6stDx94jbKt9BAoZ4fwNqEPbQ1Tgqn9Ac2mTedgtfeY3hARxHq
+IzcYfKFjqvFXI1zLzLS7MwPO3Kadjrp5c706KO9nBJsz2T7LIKQ/eGNSKDRZYAWX
+u8L/6VaFYapqDMwpKMYjwvCQdXy/l1qrWRUsbEF74+lYrsnVCYTdx7wPKr9YNkl8
+yFHbDtJm2ESw0l5TNtBuAkIX6GwrzxUs6G4sj5AOPnvMjpIEP0NhZV7B9EwhEMIE
+isRKwJkkYX/M6q1XcVHj/AVZkyqNZwKq1I/ThbySlz8T5AuavmSwiRF7JIYYjZx1
+djaIzF+fbk/kUVBGa4y7
+=1O70
+-----END PGP SIGNATURE-----
+
+--vGgW1X5XWziG23Ko--
