@@ -1,90 +1,46 @@
-From: Anson Huang <b20788@freescale.com>
-Subject: [PATCH V2 1/2] ARM: imx: add vddsoc/pu setpoint info into dts
-Date: Tue, 17 Dec 2013 17:08:21 -0500
-Message-ID: <1387318102-11070-1-git-send-email-b20788@freescale.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 6/6] ARM: davinci: da850 evm: add GPIO pinumux entries
+ DT node
+Date: Tue, 17 Dec 2013 11:20:07 +0100
+Message-ID: <CACRpkdZQ9Q1SxXZ4FPpTN_swUBCyZd8CzNzVzEm87vjYZsQ2+Q@mail.gmail.com>
+References: <1385057731-4348-1-git-send-email-prabhakar.csengg@gmail.com>
+	<1385057731-4348-7-git-send-email-prabhakar.csengg@gmail.com>
+	<52ADAB0E.4020800@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <cpufreq-owner@vger.kernel.org>
-Sender: cpufreq-owner@vger.kernel.org
-To: shawn.guo@linaro.org, rjw@rjwysocki.net, viresh.kumar@linaro.org
-Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <52ADAB0E.4020800@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-i.MX6Q needs to update vddarm, vddsoc/pu regulators when cpu freq
-is changed, each setpoint has different voltage, so we need to
-pass vddarm, vddsoc/pu's freq-voltage info from dts together.
+On Sun, Dec 15, 2013 at 2:13 PM, Sekhar Nori <nsekhar@ti.com> wrote:
+> On Thursday 21 November 2013 11:45 PM, Prabhakar Lad wrote:
+>> From: KV Sujith <sujithkv@ti.com>
 
-Signed-off-by: Anson Huang <b20788@freescale.com>
----
- .../devicetree/bindings/cpufreq/cpufreq-imx6.txt   |   39 ++++++++++++++++++++
- arch/arm/boot/dts/imx6q.dtsi                       |    7 ++++
- 2 files changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
+>> +
+>> +                     gpio_pins: pinmux_gpio_pins {
+>> +                             pinctrl-single,bits = <
+>> +                                     /* GPIO2_4 GPIO2_6 */
+>> +                                     0x18 0x00008080 0x0000f0f0
+>> +                                     /* GPIO2_8 GPIO2_15 */
+>> +                                     0x14 0x80000008 0xf000000f
+>> +                                     /* GPIO3_12 GPIO3_13 */
+>> +                                     0x1C 0x00008800 0x0000ff00
+>> +                                     /* GPIO4_0 GPIO4_1 */
+>> +                                     0x28 0x88000000 0xff000000
+>> +                                     /* GPIO6_9 GPIO6_10 GPIO6_13 */
+>> +                                     0x34 0x08800800 0x0ff00f00
+>> +                             >;
+>> +                     };
+>>               };
+>
+> Shouldn't these pinmux entries be part of actual device
+> node which needs them to be muxed this way?
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
-new file mode 100644
-index 0000000..0c71dbf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
-@@ -0,0 +1,39 @@
-+i.MX6 cpufreq driver
-+-------------------
-+
-+i.MX6 SoC cpufreq driver for CPU frequency scaling.
-+
-+Optional properties:
-+-fsl,soc-operating-points: Specify vddsoc/pu voltage settings that must
-+ go with cpu0's operating-points.
-+
-+Examples:
-+
-+	cpu@0 {
-+		compatible = "arm,cortex-a9";
-+		device_type = "cpu";
-+		reg = <0>;
-+		next-level-cache = <&L2>;
-+		operating-points = <
-+			/* kHz    uV */
-+			1200000 1275000
-+			996000  1250000
-+			792000  1150000
-+			396000  975000
-+		>;
-+		fsl,soc-operating-points = <
-+			/* ARM kHz  SOC-PU uV */
-+			1200000 1275000
-+			996000	1250000
-+			792000	1175000
-+			396000	1175000
-+		>;
-+		clock-latency = <61036>; /* two CLK32 periods */
-+		clocks = <&clks 104>, <&clks 6>, <&clks 16>,
-+			 <&clks 17>, <&clks 170>;
-+		clock-names = "arm", "pll2_pfd2_396m", "step",
-+			      "pll1_sw", "pll1_sys";
-+		arm-supply = <&reg_arm>;
-+		pu-supply = <&reg_pu>;
-+		soc-supply = <&reg_soc>;
-+	};
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index e7e8332..021e0cb 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -30,6 +30,13 @@
- 				792000  1150000
- 				396000  975000
- 			>;
-+			fsl,soc-operating-points = <
-+				/* ARM kHz  SOC-PU uV */
-+				1200000 1275000
-+				996000	1250000
-+				792000	1175000
-+				396000	1175000
-+			>;
- 			clock-latency = <61036>; /* two CLK32 periods */
- 			clocks = <&clks 104>, <&clks 6>, <&clks 16>,
- 				 <&clks 17>, <&clks 170>;
--- 
-1.7.9.5
+The usual way to do it is to set up as states for the device,
+or as a hog (on the pin controller itself).
 
-
+Yours,
+Linus Walleij
