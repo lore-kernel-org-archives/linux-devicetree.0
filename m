@@ -1,53 +1,61 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH] spi/atmel: document clock properties
-Date: Tue, 17 Dec 2013 12:01:34 +0100
-Message-ID: <1387278095-5118-1-git-send-email-b.brezillon@overkiz.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] can: mcp251x: Convert to devm-* API
+Date: Tue, 17 Dec 2013 12:08:44 +0100
+Message-ID: <52B030BC.80002@pengutronix.de>
+References: <1387116961-15261-1-git-send-email-shc_work@mail.ru> <52AED339.8050102@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Landley <rob@landley.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="nqAavlCJoCmJPoGtx3FkNqlxLlNum45qH"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <52AED339.8050102@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the clock properties required by the spi-atmel driver.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--nqAavlCJoCmJPoGtx3FkNqlxLlNum45qH
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
----
- .../devicetree/bindings/spi/spi_atmel.txt          |    5 +++++
- 1 file changed, 5 insertions(+)
+On 12/16/2013 11:17 AM, Marc Kleine-Budde wrote:
+> On 12/15/2013 03:16 PM, Alexander Shiyan wrote:
+>> Replace existing resource handling in the driver with managed
+>> device resource, this ensures more consistent error values and
+>> simplifies error paths.
+>>
+>> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+>=20
+> Lookgs good, applied to can-next.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi_atmel.txt b/Documentation/devicetree/bindings/spi/spi_atmel.txt
-index 07e04cd..4f8184d 100644
---- a/Documentation/devicetree/bindings/spi/spi_atmel.txt
-+++ b/Documentation/devicetree/bindings/spi/spi_atmel.txt
-@@ -5,6 +5,9 @@ Required properties:
- - reg: Address and length of the register set for the device
- - interrupts: Should contain spi interrupt
- - cs-gpios: chipselects
-+- clock-names: tuple listing input clock names.
-+	Required elements: "spi_clk"
-+- clocks: phandles to input clocks.
- 
- Example:
- 
-@@ -14,6 +17,8 @@ spi1: spi@fffcc000 {
- 	interrupts = <13 4 5>;
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-+	clocks = <&spi1_clk>;
-+	clock-names = "spi_clk";
- 	cs-gpios = <&pioB 3 0>;
- 	status = "okay";
- 
--- 
-1.7.9.5
+I have included this patch in the current pull request to David Miller's
+net-next. Patch 2/2 is postponed, as discussed yesterday.
+
+If you need a tree to base your patch on, feel free to use:
+
+    git://gitorious.org/linux-can/linux-can-next.git for-davem
+
+Marc
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--nqAavlCJoCmJPoGtx3FkNqlxLlNum45qH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlKwMLwACgkQjTAFq1RaXHMe5ACgkJc9/+nukfsTy2grVcrZoGub
+pv0An0+DZwzz8zpGAqEYIBHidL1+NbRJ
+=22a0
+-----END PGP SIGNATURE-----
+
+--nqAavlCJoCmJPoGtx3FkNqlxLlNum45qH--
