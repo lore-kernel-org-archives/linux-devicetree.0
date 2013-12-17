@@ -1,40 +1,52 @@
 From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH] i2c: at91: document clock properties
-Date: Tue, 17 Dec 2013 16:54:04 +0100
-Message-ID: <1387295644-7382-1-git-send-email-b.brezillon@overkiz.com>
+Subject: [PATCH] tty/serial: at91: document clock properties
+Date: Tue, 17 Dec 2013 17:02:01 +0100
+Message-ID: <1387296121-7558-1-git-send-email-b.brezillon@overkiz.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: Rob Landley <rob@landley.net>, Ludovic Desroches <ludovic.desroches@atmel.com>, Wolfram Sang <wsa@the-dreams.de>, Nicolas Ferre <nicolas.ferre@atmel.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>
+To: Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.cz>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>
 List-Id: devicetree@vger.kernel.org
 
 Document the clock properties required by the at91 i2c bus driver.
 
 Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
 ---
- Documentation/devicetree/bindings/i2c/i2c-at91.txt |    2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/serial/atmel-usart.txt     |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-index b689a0d..4fade84 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-@@ -9,6 +9,7 @@ Required properties :
- - interrupts: interrupt number to the cpu.
- - #address-cells = <1>;
- - #size-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+index 2191dcb..9c5d19a 100644
+--- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
++++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+@@ -6,6 +6,9 @@ Required properties:
+   additional mode or an USART new feature.
+ - reg: Should contain registers location and length
+ - interrupts: Should contain interrupt
++- clock-names: tuple listing input clock names.
++	Required elements: "usart"
 +- clocks: phandles to input clocks.
  
  Optional properties:
- - Child nodes conforming to i2c bus binding
-@@ -21,6 +22,7 @@ i2c0: i2c@fff84000 {
- 	interrupts = <12 4 6>;
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-+	clocks = <&twi0_clk>;
- 
- 	24c512@50 {
- 		compatible = "24c512";
+ - atmel,use-dma-rx: use of PDC or DMA for receiving data
+@@ -26,6 +29,8 @@ Example:
+ 		compatible = "atmel,at91sam9260-usart";
+ 		reg = <0xfff8c000 0x4000>;
+ 		interrupts = <7>;
++		clocks = <&usart0_clk>;
++		clock-names = "usart";
+ 		atmel,use-dma-rx;
+ 		atmel,use-dma-tx;
+ 	};
+@@ -35,6 +40,8 @@ Example:
+ 		compatible = "atmel,at91sam9260-usart";
+ 		reg = <0xf001c000 0x100>;
+ 		interrupts = <12 4 5>;
++		clocks = <&usart0_clk>;
++		clock-names = "usart";
+ 		atmel,use-dma-rx;
+ 		atmel,use-dma-tx;
+ 		dmas = <&dma0 2 0x3>,
 -- 
 1.7.9.5
 
