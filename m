@@ -1,55 +1,97 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/5] regulator: s5m8767: Do not use sec_reg* regmap
- helpers
-Date: Tue, 17 Dec 2013 15:03:28 +0000
-Message-ID: <20131217150328.GB32283@lee--X1>
-References: <1387286601-21646-1-git-send-email-k.kozlowski@samsung.com>
- <1387286601-21646-3-git-send-email-k.kozlowski@samsung.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCHv2 23/27] OMAPDSS: connector-dvi: Add DT support
+Date: Tue, 17 Dec 2013 16:15:09 +0100
+Message-ID: <1651476.iaILztiDEi@avalon>
+References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com> <20131217070551.GR24559@pengutronix.de> <52AFFA2E.5050702@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387286601-21646-3-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Thomas Abraham <thomas.abraham@linaro.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: multipart/signed; boundary="nextPart1731693.kbOFvpTmyz"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52AFFA2E.5050702@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Dec 2013, Krzysztof Kozlowski wrote:
 
-> Replace calls to sec_reg* helpers with direct usage of regmap API. Th=
-e
-> sec_reg* helpers are error-prone as they mix u8 with unsigned int and
-> order of some of parameters (val and mask in sec_reg_update()).
->=20
-> Also the helpers do not give any way of useful abstraction as they ju=
-st
-> call corresponding regmap function.
->=20
-> This patch replaces:
->  - sec_reg_read() with regmap_read(),
->  - sec_reg_write() with regmap_write(),
->  - sec_reg_update() with regmap_update_bits().
->=20
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Cc: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  drivers/regulator/s5m8767.c |   71 +++++++++++++++++++++++++--------=
-----------
->  1 file changed, 41 insertions(+), 30 deletions(-)
->=20
+--nextPart1731693.kbOFvpTmyz
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Mark,
+Hi Tomi,
 
-As this is heavily reliant on the previous patch, feel free to
-take it through the Regulator tree.
+On Tuesday 17 December 2013 09:15:58 Tomi Valkeinen wrote:
+> On 2013-12-17 09:05, Sascha Hauer wrote:
+> > On Mon, Dec 16, 2013 at 04:56:30PM +0200, Tomi Valkeinen wrote:
+> >> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> >> ---
+> >> 
+> >>  drivers/video/omap2/displays-new/connector-dvi.c | 43 ++++++++++++++++++
+> >>  1 file changed, 43 insertions(+)
+> >> 
+> >> diff --git a/drivers/video/omap2/displays-new/connector-dvi.c
+> >> b/drivers/video/omap2/displays-new/connector-dvi.c index
+> >> b6c50904038e..d1204b1c5182 100644
+> >> 
+> >> +static const struct of_device_id dvic_of_match[] = {
+> >> +	{ .compatible = "dvi-connector", },
+> > 
+> > Either the driver is too specific or the binding is too generic, but
+> > having such a generic name for an omap specific driver seems wrong. Same
+> > for panel-dpi, svideo-connector, composite-video-connector and
+> > hdmi-connector,
+>
+> Hmm. Good point. I was thinking that the driver is only used on OMAP, but of
+> course that's not true, the driver is there for all platforms if the kernel
+> just happens to be compiled with the driver.
+> 
+> And it's not just about those drivers you mention. The same issue is there
+> for, say, "ti,tpd12s015". I have an omapdss specific driver for that, but if
+> some other platform uses the same chip, they'll have a driver for it also...
+> 
+> Sigh. I wonder how this should be handled... The only solution that comes to
+> my mind is to have all the compatible strings as "ti,...". But that's not
+> correct, as they are not TI components, but some are generic ones and some
+> from another vendor.
+> 
+> And even "ti,..." is not good, as there are other TI SoCs with other display
+> drivers. So I'd need to prepend the compatible strings with "omapdss,...",
+> making the hardware components driver specific.
+> 
+> The long term plan is to make the drivers generic (or implement the same
+> driver for common display framework). But for now I need to have future
+> proof DT bindings with omapdss specific drivers...
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+I'll refrain from mentioning that the problem has been identified more than a 
+year ago. Oh, wait, I've metioned it, sorry :-D
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+We really want to make drivers generic enough to be shared by multiple display 
+controllers. I would vote for making the DT bindings generic now already, 
+which would be enough to buy some time to fix the problem properly. If we 
+start prepending driver-specific prefixes such as "omapdss," to compatible 
+string we'll just make the mess even larger and reduce the incentive to fix 
+it. It would be the worst decision we could make.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--nextPart1731693.kbOFvpTmyz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAABAgAGBQJSsGp9AAoJEIkPb2GL7hl1SDcIAJdKUYEX1g7EKvaI4BD05rsl
+pttWKQc3mhjSwFKpmwp67kc3AiHeNZNJ6mkQuUGuxwYD2R7ci8cCUq1EwomDGWAH
+EayjugLuJHvrooV+OPEI4ueCpCGEtNCOwbMWh7NM9ee18Xp7zvDNKAHoZSrUYZ4V
+puJnPqWThy1g63WLabzhgICbBTHgn3zaEx8/woKdQW/XtafTxKiEnluwPgFfkGJ8
+PTExnNMtjoZCnG0pykDh/mpF21SADdIGn/wgPYEq05kZ/Z3nOm96FP2uXB5w18Rn
+WL7uNnEIOl8gVLs+w2Oq2YpUrh2laakWYvgxJQfvecHKToqocVl4MsbjPQN3i1U=
+=FbPT
+-----END PGP SIGNATURE-----
+
+--nextPart1731693.kbOFvpTmyz--
+
