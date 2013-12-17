@@ -1,44 +1,43 @@
-From: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] dt: Update I2C trivial devices list
-Date: Mon, 16 Dec 2013 19:12:31 -0500
-Message-ID: <1387239151-19226-1-git-send-email-bgamari.foss@gmail.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCHv6 2/5] clk: socfpga: Add a clock type for the SD/MMC driver
+Date: Tue, 17 Dec 2013 10:17:26 +0800
+Message-ID: <CAGb2v67dud7XQSOy4eABX3SZX9pRkm366dodke5-AzdcGuje5A@mail.gmail.com>
+References: <1386880245-10192-1-git-send-email-dinguyen@altera.com>
+ <1386880245-10192-3-git-send-email-dinguyen@altera.com> <201312142233.27143.arnd@arndb.de>
+ <52AD1185.6090501@linaro.org> <20131215045116.23538.4@quantum> <52AF68DB.7090105@elopez.com.ar>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <52AF68DB.7090105@elopez.com.ar>
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
+Cc: Mike Turquette <mturquette@linaro.org>, zhangfei <zhangfei.gao@linaro.org>, Arnd Bergmann <arnd@arndb.de>, dinguyen@altera.com, mark.rutland@arm.com, devicetree <devicetree@vger.kernel.org>, dinh.linux@gmail.com, heiko@sntech.de, pawel.moll@arm.com, bzhao@marvell.com, tgih.jun@samsung.com, Peter De Schrijver <pdeschrijver@nvidia.com>, linux-mmc@vger.kernel.org, dianders@chromium.org, Rob Herring <rob.herring@calxeda.com>, jh80.chung@samsung.com, alim.akhtar@samsung.com, cjb@laptop.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, ian.campbell@citrix.com, Hans de Goede <hdegoede@redhat.com>, =?ISO-8859-1?Q?David_Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>
 List-Id: devicetree@vger.kernel.org
 
----
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index b1cb341..0e68085 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -1,6 +1,9 @@
- This is a list of trivial i2c devices that have simple device tree
- bindings, consisting only of a compatible field, an address and
--possibly an interrupt line.
-+possibly an interrupt line. The compatible field is used to lookup the
-+modalias of the driver which will handle the device. The compatible
-+string may begin with a manufacturer prefix (separated from the
-+modalias by a comma) which will be stripped off during lookup.
- 
- If a device needs more specific bindings, such as properties to
- describe some aspect of it, there needs to be a specific binding
-@@ -9,10 +12,10 @@ document for it just like any other devices.
- 
- Compatible		Vendor / Chip
- ==========		=============
-+ad,adt7411		I2C Digital 8-channel 10-bit ADC and temperature sensor
- ad,ad7414		SMBus/I2C Digital Temperature Sensor in 6-Pin SOT with SMBus Alert and Over Temperature Pin
- ad,adm9240		ADM9240:  Complete System Hardware Monitor for uProcessor-Based Systems
--adi,adt7461		+/-1C TDM Extended Temp Range I.C
--adt7461			+/-1C TDM Extended Temp Range I.C
-+adi,adt7461		+/-1C SMBus digital thermometer
- at,24c08		i2c serial eeprom  (24cxx)
- atmel,24c02		i2c serial eeprom  (24cxx)
- atmel,at97sc3204t	i2c trusted platform module (TPM)
--- 
-1.8.3.2
+On Tue, Dec 17, 2013 at 4:55 AM, Emilio L=F3pez <emilio@elopez.com.ar> =
+wrote:
+> I also saw a similar requirement from the gmac people (on cc too), wh=
+o
+> needed to set the phy type (or something like that) on one of the clo=
+ck
+
+The GMAC clock register controls the tx clock source (a mux) and the
+interface type, which is most likely a gate to control the direction
+of the tx clock.
+
+So I modeled it as a composite clock source for now.
+I'm open to other options.
+
+> registers; so I'm thinking maybe a generic "tune something" approach =
+that
+> lets users configure some clock-dependent, arbitrary aspect of the cl=
+ock is
+> the way forward. Otherwise, we're going to end up bloating the clock
+> framework with a lot of callback pointers that are going to be used i=
+n one
+> or two clocks out of potentially hundreds on the whole system.
+
+ChenYu
