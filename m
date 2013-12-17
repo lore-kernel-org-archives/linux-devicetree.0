@@ -1,67 +1,80 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 0/2] PWM: pwm-atmel: add PWM controller driver
-Date: Tue, 17 Dec 2013 11:30:35 +0100
-Message-ID: <20131217103034.GE13823@ulmo.nvidia.com>
-References: <1386916910-24832-1-git-send-email-voice.shen@atmel.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH v3 9/9] mtd: nand: davinci: don't request AEMIF address
+ range
+Date: Tue, 17 Dec 2013 12:33:28 +0200
+Message-ID: <52B02878.8090703@ti.com>
+References: <1386264358-9738-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1386264358-9738-10-git-send-email-ivan.khoronzhuk@ti.com>
+ <20131217084238.GJ12034@norris-Latitude-E6410>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wtjvnLv0o8UUzur2"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386916910-24832-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20131217084238.GJ12034@norris-Latitude-E6410>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, linux-mtd@lists.infradead.org, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 12/17/2013 10:42 AM, Brian Norris wrote:
+> On Thu, Dec 05, 2013 at 07:25:57PM +0200, Ivan Khoronzhuk wrote:
+>> The TI AEMIF driver registers are used to setup timings for each chip
+>> select. The same registers range is used to setup NAND settings.
+>> The AEMIF and NAND drivers not use the same registers in this range.
+>>
+>> In case with TI AEMIF driver, the memory address range is requested
+>> already by AEMIF, so we cannot request it twice, just ioremap.
+>>
+>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>> Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> Reviewed-by: Taras Kondratiuk <taras@ti.com>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>> ---
+>>   drivers/mtd/nand/davinci_nand.c |    8 +++++---
+>>   1 file changed, 5 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+>> index f7b21b8..0cd4dbc 100644
+>> --- a/drivers/mtd/nand/davinci_nand.c
+>> +++ b/drivers/mtd/nand/davinci_nand.c
+>> @@ -636,9 +636,11 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+>>   	if (IS_ERR(vaddr))
+>>   		return PTR_ERR(vaddr);
+>>
+>> -	base = devm_ioremap_resource(&pdev->dev, res2);
+>> -	if (IS_ERR(base))
+>> -		return PTR_ERR(base);
+>> +	base = devm_ioremap(&pdev->dev, res2->start, resource_size(res2));
+>
+> Since it's important that we don't re-introduce the "request resource"
+> boilerplate later, can you add a comment describing the situation?
+>
+>> +	if (!base) {
+>> +		dev_err(&pdev->dev, "ioremap failed for resource %pR\n", res2);
+>> +		return -EADDRNOTAVAIL;
+>> +	}
+>>
+>>   	info->dev		= &pdev->dev;
+>>   	info->base		= base;
+>
+> Thanks,
+> Brian
+>
 
---wtjvnLv0o8UUzur2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, I'll add the comment.
 
-On Fri, Dec 13, 2013 at 02:41:48PM +0800, Bo Shen wrote:
-> This patch series add Atmel PWM controller driver support.
->=20
-> Changes in v9:
->   - Address the comments from Thierry Reding
+-- 
+Regards,
+Ivan Khoronzhuk
 
-Hi,
-
-I've pushed a slightly modified version of this series. There were a few
-minor whitespace/coding style issues, but perhaps more importantly I've
-modified the period change check to be done earlier and in a more
-generic way.
-
-Can you please check that the version I've pushed to the for-next branch
-still works for you?
-
-Thanks,
-Thierry
-
---wtjvnLv0o8UUzur2
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSsCfKAAoJEN0jrNd/PrOhG9MP/ihQHK+8vSqMribQsG+twIHx
-AmBDXlduTre+JjWc90sZiJTBkjtTLBl5M71+qKnPZJvwY82quif5vnrHLmnzDL5e
-C/Gip0s6DZfXooxRpWLcOXnA0feR0aYOfCTtw9xuiNu/qnGw1motHmtrPZZBrT5s
-ja39O/yfTzQAoMdjoHji1hXvZ5mo69d5dyAkOVRBE167Mhgz0tpvo3sc5WT/1ElL
-PXvoA0t83REgzfgQMM1HNitJKbPCvDh4FdWNrHFMNz4r5v3cIYN8cgEKtuXUEEiP
-N8STQ57DwBdcPV9Aa4rCWnnIen5vCOYO91e9zUFS/iqKLFPlqXzYxgA/tVzGkZIP
-MxchVUD/dkcwyaFra1qXrSzRka4Rrl1muaBujkO+2YlPjcfOeaLv4sHPhmrEKYNm
-CC0Yl8RHdKxi4sxpoXsqzRqqhvi4j8XaAq+aZsEU1UA3cWr+pHfximbAwzVi9ucK
-tLkjBXrVr659pKC1utKP3YmxPDC0nLc4uIu2U7qxb0xuQ/J1R1xYLxbwRheqODVC
-xRpfdDe1fBmPjcHoL1izg5FcILZYfPL2CK9uyuhM0Qghnuf0mRagx5O1XPz9Qh/h
-R1T4fsECqyqVhoHIiQMX+zURyR2otZN8qOeVyCE8tedUkPQMsCTSuD0CbXQ6CEfa
-HodEXgKsNNLSRVczC3+V
-=LhKU
------END PGP SIGNATURE-----
-
---wtjvnLv0o8UUzur2--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
