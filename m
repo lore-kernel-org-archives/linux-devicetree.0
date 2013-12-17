@@ -1,208 +1,351 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: [PATCH v3 17/21] misc: support for serial slots in LP-8x4x
-Date: Tue, 17 Dec 2013 23:37:47 +0400
-Message-ID: <1387309071-22382-18-git-send-email-ynvich@gmail.com>
-References: <1386901645-28895-1-git-send-email-ynvich@gmail.com>
- <1387309071-22382-1-git-send-email-ynvich@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1387309071-22382-1-git-send-email-ynvich@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Sergei Ianovich <ynvich@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH 1/2] ARM: imx: initial SolidRun HummingBoard support
+Date: Tue, 17 Dec 2013 19:42:27 +0000
+Message-ID: <E1Vt0XD-0007Bq-OM@rmk-PC.arm.linux.org.uk>
+References: <20131217194130.GA4360@n2100.arm.linux.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131217194130.GA4360-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Serial modules (I-870xxW series) implement DCON protocol which
-allows one-master-many-slaves configuration over RS-485. When
-these modules are installed into the device, they could be
-accessed using the 2nd PXA built-in UART port (/dev/ttyS1).
-However, it seems that addresses are not processed by the modules.
-So the parallel bus needs to select which slot is connected.
+Add support for the SolidRun HummingBoard.  This commit adds support for
+the following interfaces on this board:
 
-Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
+- Consumer Ir receiver
+- S/PDIF output
+- Both USB interfaces
+- Gigabit Ethernet using AR8035
+- UART port
+
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 ---
-   v2..v3
-   * no changes (except number 12/16 -> 17/21)
+ arch/arm/boot/dts/Makefile                     |    1 +
+ arch/arm/boot/dts/imx6dl-hummingboard.dts      |   90 ++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi |   58 +++++++++++++++
+ arch/arm/boot/dts/imx6qdl-microsom.dtsi        |   80 +++++++++++++++++++++
+ arch/arm/mach-imx/mach-imx6q.c                 |   35 +++++++++
+ 5 files changed, 264 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6dl-hummingboard.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qdl-microsom.dtsi
 
-   v0..v2
-   * use device tree
-   * use devm helpers where possible
-
- .../devicetree/bindings/misc/lp8x4x-bus.txt        |  2 +
- Documentation/misc-devices/lp8x4x_bus.txt          | 15 +++++-
- arch/arm/boot/dts/pxa27x-lp8x4x.dts                |  1 +
- drivers/misc/lp8x4x_bus.c                          | 63 ++++++++++++++++++++++
- 4 files changed, 80 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt b/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt
-index b0fb145..24a8c62 100644
---- a/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt
-+++ b/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt
-@@ -8,6 +8,7 @@ Required properties:
- - reg: physical base addresses and region lengths of
-        * the rotary switch
-        * the 8bit DIP switch
-+       * the serial slot select register
-        * the slot count register
- 
- - eeprom-gpios : should point to active-low write enable GPIO
-@@ -18,6 +19,7 @@ Example:
- 		compatible = "icpdas,backplane-lp8x4x";
- 		reg = <0x0 0x2
- 		       0x9002 0x2
-+		       0x9004 0x2
- 		       0x9046 0x2>;
- 		eeprom-gpios = <&gpio 4 0>;
- 	};
-diff --git a/Documentation/misc-devices/lp8x4x_bus.txt b/Documentation/misc-devices/lp8x4x_bus.txt
-index 78ea0a89..7b86797 100644
---- a/Documentation/misc-devices/lp8x4x_bus.txt
-+++ b/Documentation/misc-devices/lp8x4x_bus.txt
-@@ -19,13 +19,26 @@ LP-8x4x is an ARM-based industrial computer with a custom parallel bus to
- connect expansion modules with digital input/output, analog input/output,
- serial, CAN and other types of ports.
- 
--The bus is implemented by a FPGA.
-+The bus is implemented by a FPGA. There are two major groups of expansion
-+modules: serial and parallel.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d57c1a65b24f..875af333c6dc 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -136,6 +136,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
+ 	imx53-mba53.dtb \
+ 	imx53-qsb.dtb \
+ 	imx53-smd.dtb \
++	imx6dl-hummingboard.dtb \
+ 	imx6dl-sabreauto.dtb \
+ 	imx6dl-sabresd.dtb \
+ 	imx6dl-wandboard.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-hummingboard.dts b/arch/arm/boot/dts/imx6dl-hummingboard.dts
+new file mode 100644
+index 000000000000..6184b0366926
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-hummingboard.dts
+@@ -0,0 +1,90 @@
++/*
++ * Copyright (C) 2013 Russell King
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License version 2.
++ */
++/dts-v1/;
 +
-+Serial modules (I-870xxW series) implement DCON protocol which allows one-
-+master-many-slaves configuration over RS-485. When these modules are installed
-+into the device, they could be accessed using the 2nd PXA built-in UART port
-+(/dev/ttyS1). However, it seems that addresses are not processed by
-+the modules. So the parallel bus needs to select which slot is connected.
- 
- SYSFS
- -----
- 
- /sys/bus/icpdas/devices/backplane:
- 
-+active_slot
-+	RW - connects the select slot for serial communications. If there
-+	     is a parallel module in the selected slot, it simply ignores
-+	     incoming packets. So it is safe to activate any available
-+	     slot.
++#include "imx6dl.dtsi"
++#include "imx6qdl-microsom.dtsi"
++#include "imx6qdl-microsom-ar8035.dtsi"
 +
- dip
- 	RO - shows status of LP-8x4x 8bit DIP switch
- 
-diff --git a/arch/arm/boot/dts/pxa27x-lp8x4x.dts b/arch/arm/boot/dts/pxa27x-lp8x4x.dts
-index 52f0036..a6adf45 100644
---- a/arch/arm/boot/dts/pxa27x-lp8x4x.dts
-+++ b/arch/arm/boot/dts/pxa27x-lp8x4x.dts
-@@ -207,6 +207,7 @@
- 				compatible = "icpdas,backplane-lp8x4x";
- 				reg = <0x0 0x2
- 				       0x9002 0x2
-+				       0x9004 0x2
- 				       0x9046 0x2>;
- 				eeprom-gpios = <&gpio 4 0>;
- 			};
-diff --git a/drivers/misc/lp8x4x_bus.c b/drivers/misc/lp8x4x_bus.c
-index 567fe078..e805640 100644
---- a/drivers/misc/lp8x4x_bus.c
-+++ b/drivers/misc/lp8x4x_bus.c
-@@ -29,6 +29,8 @@ struct lp8x4x_master {
- 	void			*rotary_addr;
- 	void			*dip_addr;
- 	struct gpio_desc        *eeprom_nWE;
-+	unsigned int		active_slot;
-+	void			*switch_addr;
- 	struct device		dev;
- };
- 
-@@ -47,6 +49,9 @@ static void lp8x4x_master_release(struct device *dev)
- 	struct lp8x4x_master *m = container_of(dev, struct lp8x4x_master, dev);
- 	WARN_ON(!dev);
- 
-+	/* Disable serial communications */
-+	iowrite8(0xff, m->switch_addr);
++/ {
++	model = "SolidRun HummingBoard DL/Solo";
++	compatible = "solidrun,hummingboard", "fsl,imx6dl";
 +
- 	kfree(m);
++	ir_recv: ir-receiver {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpio1 2 1>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_hummingboard_gpio1_2>;
++	};
++
++	codec: spdif-transmitter {
++		compatible = "linux,spdif-dit";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_hummingboard_spdif>;
++	};
++
++	sound-spdif {
++		compatible = "fsl,imx-audio-spdif";
++		model = "imx-spdif";
++		/* IMX6 doesn't implement this yet */
++		spdif-controller = <&spdif>;
++		spdif-out;
++	};
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1_1>;
++
++	/*
++	 * Not fitted on Carrier-1 board... yet
++	status = "okay";
++
++	rtc: pcf8523@68 {
++		compatible = "nxp,pcf8523";
++		reg = <0x68>;
++	};
++	 */
++};
++
++&iomuxc {
++	hummingboard {
++		pinctrl_hummingboard_gpio1_2: hummingboard-gpio1_2 {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x80000000
++			>;
++		};
++
++		pinctrl_hummingboard_spdif: hummingboard-spdif {
++			fsl,pins = <MX6QDL_PAD_GPIO_17__SPDIF_OUT 0x1b0b0>;
++		};
++
++		pinctrl_hummingboard_usdhc2: hummingboard-usdhc2 {
++			fsl,pins = <
++				MX6QDL_PAD_SD2_CMD__SD2_CMD    0x17059
++				MX6QDL_PAD_SD2_CLK__SD2_CLK    0x10059
++				MX6QDL_PAD_SD2_DAT0__SD2_DATA0 0x17059
++				MX6QDL_PAD_SD2_DAT1__SD2_DATA1 0x17059
++				MX6QDL_PAD_SD2_DAT2__SD2_DATA2 0x17059
++				MX6QDL_PAD_SD2_DAT3__SD2_DATA3 0x13059
++				MX6QDL_PAD_GPIO_4__SD2_CD_B    0x1f071
++			>;
++		};
++	};
++};
++
++&spdif {
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hummingboard_usdhc2>;
++	vmmc-supply = <&reg_3p3v>;
++	fsl,cd-controller;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi b/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
+new file mode 100644
+index 000000000000..c1be487dfc62
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
+@@ -0,0 +1,58 @@
++/*
++ * Copyright 2013 Russell King
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License version 2.
++ *
++ * This describes the hookup for an AR8035 to the IMX6 on the Cubox-i
++ * MicroSOM.
++ *
++ * FIXME: we need to configure PLL_ENET to produce 25MHz, but there
++ * doesn't seem to be a way to do that yet from DT.  (Writing 0x2000
++ * to 0x020c80e0 phys will do this.)
++ */
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_microsom_enet_ar8035>;
++	phy-mode = "rgmii";
++	phy-reset-duration = <2>;
++	phy-reset-gpios = <&gpio4 15 0>;
++	status = "okay";
++};
++
++&iomuxc {
++	enet {
++		pinctrl_microsom_enet_ar8035: microsom-enet-ar8035 {
++			fsl,pins = <
++				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
++				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++				/* AR8035 reset */
++				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x130b0
++				/* AR8035 interrupt */
++				MX6QDL_PAD_DI0_PIN2__GPIO4_IO18		0x80000000
++				/* GPIO16 -> AR8035 25MHz */
++				MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0xc0000000
++				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x80000000
++				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
++				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
++				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
++				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
++				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
++				/* AR8035 CLK_25M --> ENET_REF_CLK (V22) */
++				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x0a0b1
++				/* AR8035 pin strapping: IO voltage: pull up */
++				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
++				/* AR8035 pin strapping: PHYADDR#0: pull down */
++				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x130b0
++				/* AR8035 pin strapping: PHYADDR#1: pull down */
++				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x130b0
++				/* AR8035 pin strapping: MODE#1: pull up */
++				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
++				/* AR8035 pin strapping: MODE#3: pull up */
++				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
++				/* AR8035 pin strapping: MODE#0: pull down */
++				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x130b0
++			>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-microsom.dtsi b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
+new file mode 100644
+index 000000000000..8aa31a842236
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
+@@ -0,0 +1,80 @@
++/*
++ * Copyright 2013 Russell King
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License version 2.
++ */
++/ {
++	regulators {
++		compatible = "simple-bus";
++
++		reg_3p3v: 3p3v {
++			compatible = "regulator-fixed";
++			regulator-name = "3P3V";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++
++		reg_usb_h1_vbus: usb_h1_vbus {
++			compatible = "regulator-fixed";
++			regulator-name = "usb_h1_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&gpio1 0 0>;
++			enable-active-high;
++		};
++
++		reg_usb_otg_vbus: usb_otg_vbus {
++			compatible = "regulator-fixed";
++			regulator-name = "usb_otg_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&gpio3 22 0>;
++			enable-active-high;
++		};
++	};
++};
++
++&can1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_microsom_flexcan1>;
++	status = "okay";
++};
++
++&iomuxc {
++	microsom {
++		pinctrl_microsom_flexcan1: microsom-flexcan1 {
++			fsl,pins = <
++				MX6QDL_PAD_SD3_CLK__FLEXCAN1_RX 0x80000000
++				MX6QDL_PAD_SD3_CMD__FLEXCAN1_TX 0x80000000
++			>;
++		};
++
++		pinctrl_microsom_usbotg: microsom-usbotg {
++			/*
++			 * Similar to pinctrl_usbotg_2, but we want it
++			 * pulled down for a fixed host connection.
++			 */
++			fsl,pins = <MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x13059>;
++		};
++	};
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1_1>;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_microsom_usbotg>;
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
++	status = "okay";
++};
+diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+index d0cfb225ec9a..cb6fa3d61243 100644
+--- a/arch/arm/mach-imx/mach-imx6q.c
++++ b/arch/arm/mach-imx/mach-imx6q.c
+@@ -103,6 +103,39 @@ static int ar8031_phy_fixup(struct phy_device *dev)
+ 
+ #define PHY_ID_AR8031	0x004dd074
+ 
++static int ar8035_phy_fixup(struct phy_device *dev)
++{
++	u16 val;
++
++	/* Ar803x phy SmartEEE feature cause link status generates glitch,
++	 * which cause ethernet link down/up issue, so disable SmartEEE
++	 */
++	phy_write(dev, 0xd, 0x3);
++	phy_write(dev, 0xe, 0x805d);
++	phy_write(dev, 0xd, 0x4003);
++
++	val = phy_read(dev, 0xe);
++	phy_write(dev, 0xe, val & ~(1 << 8));
++
++	/*
++	 * Enable 125MHz clock from CLK_25M on the AR8031.  This
++	 * is fed in to the IMX6 on the ENET_REF_CLK (V22) pad.
++	 * Also, introduce a tx clock delay.
++	 *
++	 * This is the same as is the AR8031 fixup.
++	 */
++	ar8031_phy_fixup(dev);
++
++	/*check phy power*/
++	val = phy_read(dev, 0x0);
++	if (val & BMCR_PDOWN)
++		phy_write(dev, 0x0, val & ~BMCR_PDOWN);
++
++	return 0;
++}
++
++#define PHY_ID_AR8035 0x004dd072
++
+ static void __init imx6q_enet_phy_init(void)
+ {
+ 	if (IS_BUILTIN(CONFIG_PHYLIB)) {
+@@ -112,6 +145,8 @@ static void __init imx6q_enet_phy_init(void)
+ 				ksz9031rn_phy_fixup);
+ 		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffff,
+ 				ar8031_phy_fixup);
++		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
++				ar8035_phy_fixup);
+ 	}
  }
  
-@@ -114,11 +119,52 @@ static ssize_t dip_show(struct device *dev,
- 
- static DEVICE_ATTR_RO(dip);
- 
-+static ssize_t active_slot_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct lp8x4x_master *m = container_of(dev, struct lp8x4x_master, dev);
-+
-+	return sprintf(buf, "%u\n", m->active_slot);
-+}
-+
-+static ssize_t active_slot_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct lp8x4x_master *m = container_of(dev, struct lp8x4x_master, dev);
-+	unsigned int active_slot = 0;
-+	int err;
-+
-+	if (!buf)
-+		return count;
-+	if (0 == count)
-+		return count;
-+
-+	err = kstrtouint(buf, 10, &active_slot);
-+	if (err != 0 || active_slot > m->slot_count) {
-+		dev_err(dev, "slot number is out of range 1..%u\n",
-+				m->slot_count);
-+		return count;
-+	}
-+
-+	if (!active_slot) {
-+		m->active_slot = 0;
-+		iowrite8(0xff, m->switch_addr);
-+		return count;
-+	}
-+
-+	m->active_slot = active_slot;
-+	iowrite8((1 << (m->active_slot - 1)) ^ 0xff, m->switch_addr);
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(active_slot);
-+
- static struct attribute *master_dev_attrs[] = {
- 	&dev_attr_slot_count.attr,
- 	&dev_attr_rotary.attr,
- 	&dev_attr_eeprom_write_enable.attr,
- 	&dev_attr_dip.attr,
-+	&dev_attr_active_slot.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(master_dev);
-@@ -181,6 +227,20 @@ static int __init lp8x4x_bus_probe(struct platform_device *pdev)
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, r++);
- 	if (!res) {
-+		dev_err(&pdev->dev, "Failed to get slot switch address\n");
-+		err = -ENODEV;
-+		goto err_free;
-+	}
-+
-+	m->switch_addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(m->switch_addr)) {
-+		dev_err(&pdev->dev, "Failed to ioremap switch address\n");
-+		err = PTR_ERR(m->switch_addr);
-+		goto err_free;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, r++);
-+	if (!res) {
- 		dev_err(&pdev->dev, "could not get slot count address\n");
- 		err = -ENODEV;
- 		goto err_free;
-@@ -223,6 +283,9 @@ static int __init lp8x4x_bus_probe(struct platform_device *pdev)
- 
- 	dev_info(&pdev->dev, "found bus with up to %u slots\n", m->slot_count);
- 
-+	/* Disable serial communications until explicitly enabled */
-+	iowrite8(0xff, m->switch_addr);
-+
- 	err = bus_register(&lp8x4x_bus_type);
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "failed to register bus type\n");
 -- 
-1.8.4.2
+1.7.4.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
