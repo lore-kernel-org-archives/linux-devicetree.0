@@ -1,90 +1,41 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [RESEND] [PATCH] ARM: dts: exynos5: add pwm DT nodes to Exynos5250
- and Exynos5420
-Date: Thu, 19 Dec 2013 02:40:11 +0900
-Message-ID: <52B1DDFB.4030104@samsung.com>
-References: <1381383731-4359-1-git-send-email-l.krishna@samsung.com> <CAK9yfHyB=Uqjg1HhMx6BXSihDmwRpmpkeLrm2YgDj2Yyo4ySuA@mail.gmail.com> <CAL1wa8e0e1NwrntEPTnm8=_bSXj3k=Gk+jenphYPEAh8tXKwiA@mail.gmail.com> <086801cedf9b$cef3c450$6cdb4cf0$@org> <CAL1wa8dsNkDj1pPUgrEB+7T378Gh=-AFXAn8CAe90y8aCZ9vHA@mail.gmail.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: Re: [PATCH 0/3] Add more device nodes for am43x gp evm.
+Date: Wed, 18 Dec 2013 23:13:08 +0530
+Message-ID: <52B1DEAC.4000509@ti.com>
+References: <1385537479-6959-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAL1wa8dsNkDj1pPUgrEB+7T378Gh=-AFXAn8CAe90y8aCZ9vHA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, abrestic@chromium.org, olofj@chromium.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1385537479-6959-1-git-send-email-sourav.poddar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sourav Poddar <sourav.poddar@ti.com>, bcousson@baylibre.com
+Cc: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, tony@atomide.com, balbi@ti.com, linux-omap@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/13 20:35, Leela Krishna Amudala wrote:
-> Hi Kukjin,
+Benoit,
+On Wednesday 27 November 2013 01:01 PM, Sourav Poddar wrote:
+> The patch series adds support for enabling gpio, pwm backlight and
+> matrix gpio keys on am43x-gp-evm.
 >
-> Even though you said it is applied, I didn't see this patch in any of
-> your trees.
-> Can you kindly look into this patch and take necessary action..?
+> Done on top of 3.13-rc1 + tero clock series(1) + Afzal's basic gp support(2).
 >
-Applied, thanks.
-Kukjin
-
-> Best Wishes,
-> Leela Krishna.
+> [1]: https://patchwork.kernel.org/patch/3009541/
+> [2]: https://patchwork.kernel.org/patch/3171761/
 >
-> On Tue, Nov 12, 2013 at 8:39 PM, Kukjin Kim<kgene@kernel.org>  wrote:
->> Leela Krishna Amudala wrote:
->>>
->>> Hi Sachin,
->>>
->>> On Thu, Oct 10, 2013 at 11:18 AM, Sachin Kamat<sachin.kamat@linaro.org>
->>> wrote:
->>>> Hi Leela,
->>>>
->>>> On 10 October 2013 11:12, Leela Krishna Amudala<l.krishna@samsung.com>
->>> wrote:
->>>>> Add the device-tree binding for the PWM controller to Exynos5250 and
->>> Exynos5420
->>>>>
->>>>> Signed-off-by: Andrew Bresticker<abrestic@chromium.org>
->>>>> Signed-off-by: Olof Johansson<olofj@chromium.org>
->>>>> Signed-off-by: Leela Krishna Amudala<l.krishna@samsung.com>
->>>>> ---
->>>>>   arch/arm/boot/dts/exynos5250.dtsi |    9 +++++++++
->>>>>   arch/arm/boot/dts/exynos5420.dtsi |    9 +++++++++
->>>>>   2 files changed, 18 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
->>> b/arch/arm/boot/dts/exynos5250.dtsi
->>>>> index 864ae90..99abc72 100644
->>>>> --- a/arch/arm/boot/dts/exynos5250.dtsi
->>>>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->>>>> @@ -521,6 +521,15 @@
->>>>>                  };
->>>>>          };
->>>>>
->>>>> +       pwm: pwm@12dd0000 {
->>>>> +               compatible = "samsung,exynos4210-pwm";
->>>>> +               reg =<0x12dd0000 0x100>;
->>>>> +               samsung,pwm-outputs =<0>,<1>,<2>,<3>;
->>>>> +               #pwm-cells =<3>;
->>>>> +               clocks =<&clock 311>;
->>>>> +               clock-names = "timers";
->>>>> +       };
->>>>> +
->>>>>          amba {
->>>>>                  #address-cells =<1>;
->>>>>                  #size-cells =<1>;
->>>>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
->>> b/arch/arm/boot/dts/exynos5420.dtsi
->>>>> index d537cd7..80afc8b 100644
->>>>> --- a/arch/arm/boot/dts/exynos5420.dtsi
->>>>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->>>>> @@ -206,6 +206,15 @@
->>>>>                  clock-names = "uart", "clk_uart_baud0";
->>>>>          };
->>>>>
->>>>> +       pwm: pwm@12dd0000 {
->>>>> +               compatible = "samsung,exynos4210-pwm";
->>>>> +               reg =<0x12dd0000 0x100>;
->>>>> +               samsung,pwm-outputs =<0>,<1>,<2>,<3>;
->>>>> +               #pwm-cells =<3>;
->>>>> +               clocks =<&clock 279>;
->>>>> +               clock-names = "timers";
->>>>> +       };
->>>>> +
+> Tested on am43x-gp-evm.
+>
+> There is a some bug while using regulators through backlight
+> driver on 3.13-rc1. So, tested pwm part with this patch[3].
+>
+> [3]: http://www.spinics.net/lists/arm-kernel/msg288215.html
+>
+> Sourav Poddar (3):
+>    arm: dts: am437x-gp-evm: Enable gpio.
+>    ARM: dts: am43x-gp-evm: Add matrix gpio keys.
+>    ARM: dts: am437x-gp-evm: Add pwm backlight support.
+>
+>   arch/arm/boot/dts/am437x-gp-evm.dts |   53 +++++++++++++++++++++++++++++++++++
+>   1 files changed, 53 insertions(+), 0 deletions(-)
+>
+Ping on this?
