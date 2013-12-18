@@ -1,45 +1,59 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 0/2] ARM: mach-moxart: add MOXA ART SoC support
-Date: Wed, 18 Dec 2013 09:26:10 -0800
-Message-ID: <0e3d482f-0b7c-4654-bb75-d6aa3e209fd7@CH1EHSMHS008.ehs.local>
-References: <1387371526-15309-1-git-send-email-jonas.jensen@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/5] mfd: sec: Remove sec_reg* regmap helpers
+Date: Wed, 18 Dec 2013 17:25:53 +0000
+Message-ID: <20131218172553.GA31886@sirena.org.uk>
+References: <1387286601-21646-1-git-send-email-k.kozlowski@samsung.com>
+ <1387286601-21646-4-git-send-email-k.kozlowski@samsung.com>
+ <20131218133625.GT28455@sirena.org.uk>
+ <1387375431.1433.2.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1387371526-15309-1-git-send-email-jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+In-Reply-To: <1387375431.1433.2.camel@AMDC1943>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Thomas Abraham <thomas.abraham@linaro.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonas,
 
-On Wed, Dec 18, 2013 at 01:58:44PM +0100, Jonas Jensen wrote:
-> Thanks for the replies!
->=20
-> This should tick the boxes on feedback except for one detail
-> on the fixed rate clock:
->=20
-> Moving fixed-clock "ref12" from .dtsi to .dts proved problematic
-> for other clocks, this is why ref12 is still in SoC.
->=20
-> My assertion is that "fixed-clock" clocks are probed later when
-> placed in .dts (see diff and boot log below).
-> of_clk_get() from clk_pll in .dtsi fails, i.e. fixed-clock ref12
-> is not added as a provider in time before clk_pll loads.
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I haven't looked into the details, but is of_clk_get_parent_name() an
-alternative? That function does purely rely on DT data to obtain a name
-of a clock which may enable to register your PLL? Then probing oder
-wouldn't matter anymore.
+On Wed, Dec 18, 2013 at 03:03:51PM +0100, Krzysztof Kozlowski wrote:
+> On Wed, 2013-12-18 at 13:36 +0000, Mark Brown wrote:
 
-	S=C3=B6ren
+> > This doesn't apply against the regulator tree.  Can you please check
+> > what's going on here, I guess there may need to be some merge with MFD?
 
+> I think you need to rebase on current Linus' (at least 3.13-rc4) to get
+> this patch:
+> "mfd/rtc: s5m: fix register updating by adding regmap for RTC" (3e1e4a5f3a3)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, that's it - applied now, thanks.
+
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSsdqeAAoJELSic+t+oim9P04P/3OVJqBoINrcJdhGXGI9nffy
+svdDDAFfug7OtCZX5e4zV/miEE1mJtJr0SRYd9y7JI8V1LVCwEUHFDvyDYe9a6lu
+VJw09AWGylFadbmVY1FsHSaTWB3lIqtBP2qLvVC9FwxUyTpZgSoYJfQALqe3NK1q
+yGfRKbQZ8VITpfvOwObGnaO1OfHggfx5wUjqTvoj9Tq7MuLoltxkeI/onVO6Kvlv
+UZnKxHaUjyC5rwHuak54BCzI2/mE5b6C7Vy1hHBgZHxdIIdgN3ftdC8fn+r9mNUE
+PTVFI1zDcbMvxnB8WwwKjk8wHQAgv34j6v/bcRYp2AAHq/S43pXWV0v/+CS6Sj9l
+D0f66DK5tHwrOV0nVWvWMI1fqyredHKwVCKQMa+doJHBCQCUw6a8EZK9maHtgtjB
+D3Tq5bICiXJx2+zthKcliO+Ip+eNoWNFapPQJJlcg1GGHhb4ZXAg4c/ipViScQxX
+6UC3X4ma9uKBrczayFBw18uv4clnnXf8GdKr8VarKkouWw2c32NtuNniQ8HC6xh8
+MIEMmpmfhj+6tIpJoT4z7hUyUyNDmpMdkLGE8VrPEMUZDVdqnJeoBPli/h8feFP/
+FhhUC8Cl9hlIuvDqVKZpApPwJsqqcMtz9TNrupq+45SYJ2hIcPYs4H0gJfJAb2sC
+nwRgFLMcEGBS2wa9Oacg
+=D1kD
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
