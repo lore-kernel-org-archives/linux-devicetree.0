@@ -1,116 +1,109 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH V2 1/2] ARM: imx: add vddsoc/pu setpoint info into dts
-Date: Wed, 18 Dec 2013 15:05:39 +0800
-Message-ID: <20131218070538.GE6691@S2101-09.ap.freescale.net>
-References: <1387318102-11070-1-git-send-email-b20788@freescale.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCHv2 01/27] ARM: OMAP: remove DSS DT hack
+Date: Wed, 18 Dec 2013 09:12:46 +0200
+Message-ID: <52B14AEE.8090807@ti.com>
+References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com> <1387205794-32246-2-git-send-email-tomi.valkeinen@ti.com> <20131216184157.GA26293@atomide.com> <52AFF31C.6010100@ti.com> <20131217153001.GN12324@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387318102-11070-1-git-send-email-b20788@freescale.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anson Huang <b20788@freescale.com>
-Cc: rjw@rjwysocki.net, viresh.kumar@linaro.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="pgoHnlmr06EIN3mLq6CsetL7moAIbSWjd"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131217153001.GN12324@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2013 at 05:08:21PM -0500, Anson Huang wrote:
-> i.MX6Q needs to update vddarm, vddsoc/pu regulators when cpu freq
-> is changed, each setpoint has different voltage, so we need to
-> pass vddarm, vddsoc/pu's freq-voltage info from dts together.
-> 
-> Signed-off-by: Anson Huang <b20788@freescale.com>
-> ---
->  .../devicetree/bindings/cpufreq/cpufreq-imx6.txt   |   39 ++++++++++++++++++++
+--pgoHnlmr06EIN3mLq6CsetL7moAIbSWjd
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-The binding doc changes should generally be part of driver changes or a
-separate patch, but never be part of dts patch.
+On 2013-12-17 17:30, Tony Lindgren wrote:
+> * Tomi Valkeinen <tomi.valkeinen@ti.com> [131216 22:47]:
+>> On 2013-12-16 20:41, Tony Lindgren wrote:
+>>> * Tomi Valkeinen <tomi.valkeinen@ti.com> [131216 06:59]:
+>>>> As a temporary solution to enable DSS for selected boards when booti=
+ng
+>>>> with DT, a hack was added to board-generic.c in
+>>>> 63d5fc0c2f748e20f38a0a0ec1c8494bddf5c288 (OMAP: board-generic: enabl=
+e
+>>>> DSS for panda & sdp boards).
+>>>>
+>>>> We're now adding proper DT support, so the hack can be removed.
+>>>
+>>> I guess this patch should be merged later on after we have the DT sup=
+port
+>>> working?
+>>
+>> I'll move this patch also to the end of the series.
+>>
+>> "Merged later" sounds like you mean this could be merged in a separate=
 
->  arch/arm/boot/dts/imx6q.dtsi                       |    7 ++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
-> new file mode 100644
-> index 0000000..0c71dbf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
-> @@ -0,0 +1,39 @@
-> +i.MX6 cpufreq driver
-> +-------------------
-> +
-> +i.MX6 SoC cpufreq driver for CPU frequency scaling.
-> +
+>> series. I think this and the other removal can be in this series, they=
 
-I think you need to either copy the text from cpufreq-cpu0.txt or refer
-to it for some necessary info such as where the properties should be
-defined, what required properties should be defined, and what properties
-are optional etc.
+>> just need to be at the end.
+>=20
+> Well yeah let's keep those separate still as at least Russell needed
+> some more time with the legacy booting. The point we can drop the
+> legacy booting for omap3 may still need to wait a bit, maybe even
+> until v3.15 to keep things working.
 
-> +Optional properties:
-> +-fsl,soc-operating-points: Specify vddsoc/pu voltage settings that must
-> + go with cpu0's operating-points.
-> +
-> +Examples:
-> +
-> +	cpu@0 {
-> +		compatible = "arm,cortex-a9";
-> +		device_type = "cpu";
-> +		reg = <0>;
-> +		next-level-cache = <&L2>;
+They can't be separate. Once I add DT support for a board, I have to
+remove the legacy support for that board. This patch removes legacy
+support for the boards that are converted in the series.
 
-Above properties are not related to cpufreq driver, maybe we can save
-them.
+If I don't remove the legacy support, both DT and legacy side will be
+ran, and both create the DSS devices...
 
-> +		operating-points = <
-> +			/* kHz    uV */
-> +			1200000 1275000
-> +			996000  1250000
-> +			792000  1150000
-> +			396000  975000
-> +		>;
-> +		fsl,soc-operating-points = <
-> +			/* ARM kHz  SOC-PU uV */
-> +			1200000 1275000
-> +			996000	1250000
-> +			792000	1175000
-> +			396000	1175000
-> +		>;
-> +		clock-latency = <61036>; /* two CLK32 periods */
-> +		clocks = <&clks 104>, <&clks 6>, <&clks 16>,
-> +			 <&clks 17>, <&clks 170>;
-> +		clock-names = "arm", "pll2_pfd2_396m", "step",
-> +			      "pll1_sw", "pll1_sys";
-> +		arm-supply = <&reg_arm>;
-> +		pu-supply = <&reg_pu>;
-> +		soc-supply = <&reg_soc>;
+But, it's true that this patch removes the whole file, as all the boards
+currently there are converted. But if new boards are added to the DSS
+quirks, then I can't remove the file. So I'll change this patch to only
+remove the parts for the converted boards, not the whole file.
 
-Any properties in the example that are required for a successful driver
-probe should be documented in 'Required properties', and others are in
-'Optional properties'.
+But but... If I understand right, the plan is to remove all omap3 board
+files for the next merge window. I'm not totally familiar with the
+quirks system, but how should this be handled:
 
-Shawn
+omap3.dtsi will contain the SoC's DSS nodes. This means that DSS devices
+are created via DT code. But if the display (i.e. panels) for a
+particular omap3 board has not been converted to DT, we should still use
+the legacy DSS initialization. But the DSS is already initialized via DT.=
 
-> +	};
-> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-> index e7e8332..021e0cb 100644
-> --- a/arch/arm/boot/dts/imx6q.dtsi
-> +++ b/arch/arm/boot/dts/imx6q.dtsi
-> @@ -30,6 +30,13 @@
->  				792000  1150000
->  				396000  975000
->  			>;
-> +			fsl,soc-operating-points = <
-> +				/* ARM kHz  SOC-PU uV */
-> +				1200000 1275000
-> +				996000	1250000
-> +				792000	1175000
-> +				396000	1175000
-> +			>;
->  			clock-latency = <61036>; /* two CLK32 periods */
->  			clocks = <&clks 104>, <&clks 6>, <&clks 16>,
->  				 <&clks 17>, <&clks 170>;
-> -- 
-> 1.7.9.5
-> 
-> 
 
+I guess I can set the status for all the DSS nodes to "disabled" in
+omap3.dtsi, and that should prevent DT code from creating the DSS
+devices. Then, each omap3-board.dts that has been converted to DSS DT,
+can override those to "enabled".
+
+That way the DT code should not create DSS devices by default, and the
+quirks system would probably work fine.
+
+ Tomi
+
+
+
+--pgoHnlmr06EIN3mLq6CsetL7moAIbSWjd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJSsUryAAoJEPo9qoy8lh71ZsAQAIXIpRSWzygR+RLNV0EXcH2v
+brJP4w7oD6EjTMJMcQHVa2+6sjIEPy8/UMIUl9XXTLyEuDnW+FXNbHZSerSBbGav
+tAEXA47NgkrTERIzNo5w9S3jSLWW2Xx1x3jT1BOKf3ZBXuL4k+iJOFoMsOHDPa5q
+kHuc7YOAnPjZ3aUqpnD8P+oiubau3neSSIvjcssYrz21iLEvWlq+YBH3X98YWhIW
+OM41bcl5Ru8E3z4vHTntYDPsE3pHWhgkr9I7sHMYKI5BdaqawJLlVEM5uqIAQWZR
+Hdq8GM7LHBFH7DTh0RbSSsU7KNCFcNsjAOd6qfuAG5OKot9w712C+a+RPb3dpIx/
+6qRaMgOV/SR33uVXzSivO87geQtXrpuOyMx0exA39TCn0K5zL6UpmkyFgTgrTBR2
+F3ek9ToI1tSt+1sawQT0GxMwRtxJVGIDq1y9bY34FL1l2tF5pv742RVCaUOFbUBR
+sRPt3gDLciq6Onvj+0Z0C83+nBO9N+6NYG56PImCBQcIr0k+WP0T5nDFvRzaeY93
+qe2zyXP8HvUVjWOdFKEvn4GrfynnxYxMHQv05WZWlk8la7nhzbfjgK4RA5ejJ3AD
+UX+yaQhWUWMHEQrhYWGhUuH5x+xR2eDK1Nt8tMh3B5FHteLW7Z73vDlnaFhKVkrb
+F6aHzY7fZ+VYbdWHI41M
+=vl37
+-----END PGP SIGNATURE-----
+
+--pgoHnlmr06EIN3mLq6CsetL7moAIbSWjd--
