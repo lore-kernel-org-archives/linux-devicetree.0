@@ -1,129 +1,181 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: Re: [PATCH v3 6/7] Documentation: add the binding file for Quadspi
- driver
-Date: Wed, 18 Dec 2013 16:30:29 +0100
-Message-ID: <20131218153029.GF8064@book.gsilab.sittig.org>
-References: <1387184330-14448-1-git-send-email-b32955@freescale.com>
- <1387184330-14448-7-git-send-email-b32955@freescale.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v11 3/4] thermal: samsung: Add TMU support for Exynos5420
+ SoCs
+Date: Wed, 18 Dec 2013 16:50:17 +0100
+Message-ID: <1498725.3K8LHaD3Qd@amdc1227>
+References: <1378268629-2886-3-git-send-email-ch.naveen@samsung.com>
+ <1386657745-21602-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387184330-14448-7-git-send-email-b32955@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Huang Shijie <b32955@freescale.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, angus.clark@st.com, lee.jones@linaro.org, marex@denx.de, pekon@ti.com, sourav.poddar@ti.com, broonie@linaro.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, b44548@freescale.com, b18965@freescale.com, shawn.guo@linaro.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1386657745-21602-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-[ adding Cc: to devicetree; make sure to keep 'binding' in the
-  subject line upon re-submission, such that reviewers can tell
-  whether you introduce a new binding, or just use an existing
-  binding and implement it in a dts/dtsi file ]
+Hi Naveen,
 
-On Mon, Dec 16, 2013 at 16:58 +0800, Huang Shijie wrote:
-> 
-> This patch adds the binding file for Freescale Quadspi driver.
-> 
-> Signed-off-by: Huang Shijie <b32955@freescale.com>
-> ---
->  .../devicetree/bindings/mtd/fsl-quadspi.txt        |   31 ++++++++++++++++++++
->  1 files changed, 31 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> new file mode 100644
-> index 0000000..3475cfa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> @@ -0,0 +1,31 @@
-> +* Freescale Quad Serial Peripheral Interface(QuadSPI)
-> +
-> +Required properties:
-> +- compatible : Should be "fsl,vf610-qspi"
-> +- reg : Offset and length of the register set for the device
-> +- interrupts : Should contain the interrupt for the device
-> +- clocks : The clocks needed by the QuadSPI controller
-> +- clock-names : the name of the clocks
-> +- fsl,nor-num : Contains the number of SPI NOR chips connected to
-> +                the controller.
-> +- fsl,nor-size : the size of each SPI NOR.
-> +- fsl,max-frequency : the frequency at which the SPI NOR works.
+On Tuesday 10 of December 2013 12:12:25 Naveen Krishna Chatradhi wrote:
+> Exynos5420 has 5 TMU channels, the TRIMINFO register is
+> misplaced for TMU channels 2, 3 and 4
+> TRIMINFO at 0x1006c000 contains data for TMU channel 3
+> TRIMINFO at 0x100a0000 contains data for TMU channel 4
+> TRIMINFO at 0x10068000 contains data for TMU channel 2
+[snip]
+> diff --git a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> index a1aa602..a3e78c0 100644
+> --- a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> @@ -6,6 +6,9 @@
+>  	       "samsung,exynos4412-tmu"
+>  	       "samsung,exynos4210-tmu"
+>  	       "samsung,exynos5250-tmu"
+> +	       "samsung,exynos5420-tmu" for TMU channel 0, 1 on Exynos5420
+> +	       "samsung,exynos5420-tmu-ext-triminfo" for TMU channels 2, 3 and 4
+> +			Exynos5420 (Must pass triminfo base and triminfo clock)
 
-Those "fsl,*" properties somehow feel strange.  I comment on
-details below the example since this should even better show why
-I feel so.
+Exact clock names must be specified in description of clock-names property.
 
+>  	       "samsung,exynos5440-tmu"
+>  - interrupt-parent : The phandle for the interrupt controller
+>  - reg : Address range of the thermal registers. For soc's which has multiple
+> @@ -13,6 +16,16 @@
+>  	interrupt related then 2 set of register has to supplied. First set
+>  	belongs	to register set of TMU instance and second set belongs to
+>  	registers shared with the TMU instance.
 > +
-> +Example:
+> +  NOTE: On Exynos5420, the TRIMINFO register is misplaced for TMU
+> +	channels 2, 3 and 4
+> +	Use "samsung,exynos5420-tmu-ext-triminfo" in cases, there is a misplaced
+> +	register, also provide clock to access that base.
 > +
-> +qspi0: quadspi@40044000 {
-> +	compatible = "fsl,vf610-qspi";
-> +	reg = <0x40044000 0x1000>;
-> +	interrupts = <0 24 0x04>;
-> +	clocks = <&clks VF610_CLK_QSPI0_EN>,
-> +		<&clks VF610_CLK_QSPI0>;
-> +	clock-names = "qspi_en", "qspi";
-> +	fsl,nor-num = <1>;
-> +	fsl,nor-size = <0x1000000>;
-> +	fsl,max-frequency = <66000000>;
-> +	status = "okay";
+> +	TRIMINFO at 0x1006c000 contains data for TMU channel 3
+> +	TRIMINFO at 0x100a0000 contains data for TMU channel 4
+> +	TRIMINFO at 0x10068000 contains data for TMU channel 2
 > +
-> +	flash0: s25fl128s@0 {
-> +		....
+>  - interrupts : Should contain interrupt for thermal system
+>  - clocks : The main clock for TMU device
+>  - clock-names : Thermal system clock name
+> @@ -43,6 +56,31 @@ Example 2):
+>  		clock-names = "tmu_apbif";
+>  	};
+>  
+> +Example 3): (In case of Exynos5420 "with misplaced TRIMINFO register")
+> +	tmu_cpu2: tmu@10068000 {
+> +		compatible = "samsung,exynos5420-tmu-ext-triminfo";
+> +		reg = <0x10068000 0x100>, <0x1006c000 0x4>;
+> +		interrupts = <0 184 0>;
+> +		clocks = <&clock 318>, <&clock 318>;
+> +		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
+
+Here you have "tmu_triminfo_apbif" clock, but in the driver you call
+clk_get() with "tmu_apbif_triminfo".
+
 > +	};
-> +};
+> +
+[snip]
+>  
+> +	data->clk_sec = devm_clk_get(&pdev->dev, "tmu_apbif_triminfo");
 
+Here you try to get "tmu_apbif_triminfo" clock, but in binding
+documentation you have "tmu_triminfo_apbif" in example.
 
-The number of chips connected to the controller should reflect in
-the child nodes of the SPI NOR controller, and need not get
-specified in redundant ways and with potential for errors when
-they can get determined at runtime.
+> +	if (IS_ERR(data->clk_sec)) {
+> +		if (data->soc == SOC_ARCH_EXYNOS5420_TRIMINFO) {
+> +			dev_err(&pdev->dev, "Failed to get triminfo clock\n");
+> +			return PTR_ERR(data->clk_sec);
+> +		}
+> +	} else {
+> +		ret = clk_prepare(data->clk_sec);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Failed to get clock\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	ret = clk_prepare(data->clk);
+> -	if (ret)
+> -		return ret;
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to get clock\n");
+> +		goto err_clk_sec;
+> +	}
+>  
+>  	if (pdata->type == SOC_ARCH_EXYNOS4210 ||
+>  	    pdata->type == SOC_ARCH_EXYNOS4412 ||
+>  	    pdata->type == SOC_ARCH_EXYNOS5250 ||
+> +	    pdata->type == SOC_ARCH_EXYNOS5420_TRIMINFO ||
 
-The capacity of the flash chip as well as the maximum frequency
-which the flash chip operates at should be features of the flash
-chip (in combination with the board), i.e. of the child node and
-not the controller.  SPI slaves already have a documented
-property for the purpose of limiting transfer rates when they are
-lower than the controller's i.e. busses capabilities.  Can't tell
-from the top of my head whether there is a property for the
-maximum frequency which a controller should use across the whole
-bus.  In any case, either the property needs to get moved, or the
-description should get updated to say "the max frequency at which
-the controller will send data" or something.
+Don't you also need SOC_ARCH_EXYNOS5420 here?
 
-The capacity of the flash chip should be a consequence of either
-having gathered CFI information (if available) or having
-identified the chip by its JEDEC ID and looked up its features in
-an internal database.  Users should not need to specify the
-capacity of the flash chip in the device tree.
+>  	    pdata->type == SOC_ARCH_EXYNOS5440)
+>  		data->soc = pdata->type;
+>  	else {
+> @@ -703,6 +742,9 @@ static int exynos_tmu_probe(struct platform_device *pdev)
+>  	return 0;
+>  err_clk:
+>  	clk_unprepare(data->clk);
+> +err_clk_sec:
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_unprepare(data->clk_sec);
+>  	return ret;
+>  }
+>  
+> @@ -715,6 +757,8 @@ static int exynos_tmu_remove(struct platform_device *pdev)
+>  	exynos_unregister_thermal(data->reg_conf);
+>  
+>  	clk_unprepare(data->clk);
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_unprepare(data->clk_sec);
+>  
+>  	if (!IS_ERR(data->regulator))
+>  		regulator_disable(data->regulator);
+> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
+> index 0d6b32f..60cce28 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.h
+> +++ b/drivers/thermal/samsung/exynos_tmu.h
+> @@ -43,6 +43,7 @@ enum soc_type {
+>  	SOC_ARCH_EXYNOS4210 = 1,
+>  	SOC_ARCH_EXYNOS4412,
+>  	SOC_ARCH_EXYNOS5250,
+> +	SOC_ARCH_EXYNOS5420_TRIMINFO,
 
+Here as well.
 
-If the 'fsl,nor-size' property remains (which I doubt at the
-moment), you cannot describe "the size of each" chip in one
-single-cell spec.  So the documentation should get extended to
-reflect multi-chip setups.  But I'd rather assume that the
-property is not needed at all.
+>  	SOC_ARCH_EXYNOS5440,
+>  };
+>  
+[snip]
+> +#define EXYNOS5420_TMU_DATA \
+> +	__EXYNOS5420_TMU_DATA \
+> +	.type = SOC_ARCH_EXYNOS5250, \
+> +	.features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD | \
+> +			TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
+> +			TMU_SUPPORT_EMUL_TIME)
+> +
+> +#define EXYNOS5420_TMU_DATA_SHARED \
+> +	__EXYNOS5420_TMU_DATA \
+> +	.type = SOC_ARCH_EXYNOS5420_TRIMINFO, \
+> +	.features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD | \
+> +			TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
+> +			TMU_SUPPORT_EMUL_TIME | TMU_SUPPORT_ADDRESS_MULTIPLE)
+> +
+> +struct exynos_tmu_init_data const exynos5420_default_tmu_data = {
+> +	.tmu_data = {
+> +		{ EXYNOS5420_TMU_DATA },
+> +		{ EXYNOS5420_TMU_DATA },
+> +		{ EXYNOS5420_TMU_DATA_SHARED },
+> +		{ EXYNOS5420_TMU_DATA_SHARED },
+> +		{ EXYNOS5420_TMU_DATA_SHARED },
 
-You can omit the 'status = "okay"' line since that is the default
-already in the absence of the keyword.  This property is most
-useful to declare yet not enable by default components in .dtsi
-files and to do enable them in individual board files if
-applicable.  This aspect need not be shown in the binding example
-of a QSPI controller.
+Shouldn't this be inferred from compatible string?
 
-I'd suggest to use symbolic names for the flags in the last
-interrupt specifier cell, as you do for clock items.
+If I understand this code correctly, you can now always use
+EXYNOS5420_TMU_DATA for 5420-tmu compatible string and
+EXYNOS5420_TMU_DATA_SHARED for 5420-tmu-ext-triminfo.
 
-And while I'm in nitpick mode :) let me say that I dislike the
-blanking around the colons in the properties discussion, but I'm
-as well aware that these are "inspired by" the early OF/DT
-documents.  There may be as many expectations about formatting of
-a document as there are readers/consumers.
+Best regards,
+Tomasz
 
-
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
