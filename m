@@ -1,100 +1,71 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCH 0/4] OMAPDSS: DT support for N900 panel
-Date: Wed, 18 Dec 2013 22:55:37 +0100
-Message-ID: <20131218215536.GA23674@earth.universe>
-References: <1386958650-2404-1-git-send-email-sre@debian.org>
- <52AFFF3F.7020807@ti.com>
- <20131217171412.GA10442@earth.universe>
- <52B089FE.8060704@ti.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 3/9] clocksource/cadence_ttc: Store timer frequency
+ in driver data
+Date: Wed, 18 Dec 2013 22:58:26 +0100
+Message-ID: <52B21A82.7050608@linaro.org>
+References: <1385514296-26702-1-git-send-email-soren.brinkmann@xilinx.com> <1385514296-26702-4-git-send-email-soren.brinkmann@xilinx.com> <5cff3201-db97-4061-a686-bf79ac17d4fe@CO1EHSMHS006.ehs.local> <52B1B6FF.7000400@linaro.org> <ce29829b-3727-46ba-8c46-54273ce04745@DB8EHSMHS003.ehs.local>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52B089FE.8060704@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ce29829b-3727-46ba-8c46-54273ce04745@DB8EHSMHS003.ehs.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 12/18/2013 05:47 PM, S=C3=B6ren Brinkmann wrote:
+> Hi Daniel,
+>
+> On Wed, Dec 18, 2013 at 03:53:51PM +0100, Daniel Lezcano wrote:
+>> On 12/17/2013 08:21 PM, S=C3=B6ren Brinkmann wrote:
+>>> Hi Daniel,
+>>>
+>>> On Tue, Nov 26, 2013 at 05:04:50PM -0800, Soren Brinkmann wrote:
+>>>> It is not allowed to call clk_get_rate() from interrupt context. T=
+o
+>>>> avoid such calls the timer input frequency is stored in the driver=
+'s
+>>>> data struct which makes it accessible to the driver in any context=
+=2E
+>>>>
+>>>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+>>>> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>>
+>>> I doubt that we'll resolve all issues with this series before the
+>>> holidays or even the next merge window. Could you take this patch i=
+nto
+>>> your tree for 3.14? It is not directly related to the cpufreq work =
+and
+>>> fixes an actual issue that triggers a kernel WARN under some condit=
+ion
+>>> (I missed preserving the details and the trace). That would take th=
+e
+>>> easy stuff out of the way and we can focus on the more controversia=
+l
+>>> changes.
+>>
+>> You are asking to take it for 3.14 but shouldn't it go as a 3.13 fix=
+ ?
+>
+> That's also an option. As I remember, the patch fixes a kernel WARN. =
+The
+> system still seemed operational though. Up to you whether this is
+> considered severe enough for the 3.13 series. I'm happy either way.
 
---+QahgC5+KEYLbs62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I was not able to reproduce the WARN with my board.
 
-On Tue, Dec 17, 2013 at 07:29:34PM +0200, Tomi Valkeinen wrote:
-> >> I added N900 display DT support on top of my v2 series, including
-> >> pinmuxing. Can you check if it looks right and works?
-> >>
-> >> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss=
--dt
-> >=20
-> > I just tried it and it does not work. On a first look the pinmuxing
-> > looks fishy: 0x0d4 is muxed two times.
->=20
-> Hmm, so it is.
->=20
-> I'm not really familiar with SDI, I just muxed all the SDI pins, except
-> datapair3. I previously thought that there's only the data and clock
-> pairs for SDI, but the TRM revealed more sdi pins, so I included them.
-> It is well possible that these can be removed:
->=20
-> 0x0d0 (PIN_OUTPUT | MUX_MODE1)   /* dss_data18.sdi_vsync */
-> 0x0d2 (PIN_OUTPUT | MUX_MODE1)   /* dss_data19.sdi_hsync */
-> 0x0d4 (PIN_OUTPUT | MUX_MODE1)   /* dss_data20.sdi_den */
-> 0x0d6 (PIN_OUTPUT | MUX_MODE1)   /* dss_data21.sdi_stp */
+Please, could you give the WARN or give the procedure to reproduce it ?
 
-Just removing the dss_data20.sdi_den pin was enough to get a working displa=
-y. I
-don't know if the other pins are needed, because the display pins are alrea=
-dy
-muxed correctly by the bootloader.
+Thanks
+   -- Daniel
 
--- Sebastian
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n90=
-0.dts
-index 39e5e50..33f29ac 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -163,7 +163,7 @@
-=20
-                        0x0d0 (PIN_OUTPUT | MUX_MODE1)   /* dss_data18.sdi_=
-vsync */
-                        0x0d2 (PIN_OUTPUT | MUX_MODE1)   /* dss_data19.sdi_=
-hsync */
--                       0x0d4 (PIN_OUTPUT | MUX_MODE1)   /* dss_data20.sdi_=
-den */
-+                       //0x0d4 (PIN_OUTPUT | MUX_MODE1)   /* dss_data20.sd=
-i_den */
-                        0x0d6 (PIN_OUTPUT | MUX_MODE1)   /* dss_data21.sdi_=
-stp */
-                        0x0d8 (PIN_OUTPUT | MUX_MODE1)   /* dss_data22.sdi_=
-clkp */
-                        0x0da (PIN_OUTPUT | MUX_MODE1)   /* dss_data23.sdi_=
-clkn */
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
 
---+QahgC5+KEYLbs62
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSshnXAAoJENju1/PIO/qaGLcQAJSHbXZGr154ETfkOy7NXugx
-GrZrxqVMqlvPuYI+N4tOry2n0LkJpZFqi0Yyjdle+2rPheP7Tkfm8RWO/aioQMjY
-1PDvgHCEfRuuV9o91ZsN6IuPwW0sO3aBjjHmiMO1u6xGFyxwgi/774Yp67j72UjW
-cY7/P0w/jAis1XLV5y34Fas6YZIqeOtiRKpF5++iosozh3xWpWLMj/1N+oR9TrA8
-hcGgpnhCPWsWCWl9U6GzRqNUS+FNDE8+WVJFsKR6Q5BOvRBmbo9SFWQjZA2Lnj2F
-s71m7cdaSCq/Ers3BxV1TjiRHYHYTAGHz7u2egWDCXAFqkER9wUeA6k4TdfbZv1g
-d+DH+i7j32H+jraRPq3ILwAk0KY6OuPjrwPC5HRACiAOevJXJbq1ItT2t5qOed9Q
-0wIPeWoTaQiH8fId6HIsI0fd++wir9as51L6QiFzFddMqcif3KANLlFYdFo6H8MP
-GQZP6LW5XpErNQ4IGHO/gO1FnQhEdwEEn6qz4BwG8cEhUwes2JHKtZCT9KbRw1hu
-zHaO/mLPuhQ1vkIV3mJKb4CIA+JMG3F9p31jewZYqrR02Fhc3thWoCgNtyqO/yd0
-77Py4n9QVdYvHulOP1Mtxewe2no37PTF3DAqPGp68nMHaITCOCBhHdcbUM7olNyH
-p/rnWVxCge68nlJMumBC
-=W9Qm
------END PGP SIGNATURE-----
-
---+QahgC5+KEYLbs62--
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
