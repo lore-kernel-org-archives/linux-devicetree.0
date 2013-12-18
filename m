@@ -1,70 +1,129 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv2 01/27] ARM: OMAP: remove DSS DT hack
-Date: Wed, 18 Dec 2013 09:33:15 -0800
-Message-ID: <20131218173315.GE27438@atomide.com>
-References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com>
- <1387205794-32246-2-git-send-email-tomi.valkeinen@ti.com>
- <20131216184157.GA26293@atomide.com>
- <52AFF31C.6010100@ti.com>
- <20131217153001.GN12324@atomide.com>
- <52B14AEE.8090807@ti.com>
- <52B17729.3040807@ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH] ARM: dts: Add SPI nodes to the exynos5420 device tree
+ file
+Date: Thu, 19 Dec 2013 02:37:07 +0900
+Message-ID: <52B1DD43.9020401@samsung.com>
+References: <1377856637-7595-1-git-send-email-l.krishna@samsung.com> <086701cedf98$ab9d9f60$02d8de20$@org> <CAL1wa8cP_nrHxdF-abpL-M-arb5SdVCAmgqipVAgZEGzXpbrDw@mail.gmail.com> <CAL1wa8c+pLd1bG9te7KLXrbANiu8mdH1qzaEd-T6A=01+1-ZBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52B17729.3040807@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL1wa8c+pLd1bG9te7KLXrbANiu8mdH1qzaEd-T6A=01+1-ZBg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Leela Krishna Amudala <l.krishna@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, abrestic@chromium.org, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [131218 02:22]:
-> On 2013-12-18 09:12, Tomi Valkeinen wrote:
-> 
-> >> Well yeah let's keep those separate still as at least Russell needed
-> >> some more time with the legacy booting. The point we can drop the
-> >> legacy booting for omap3 may still need to wait a bit, maybe even
-> >> until v3.15 to keep things working.
-> > 
-> > They can't be separate. Once I add DT support for a board, I have to
-> > remove the legacy support for that board. This patch removes legacy
-> > support for the boards that are converted in the series.
-> > 
-> > If I don't remove the legacy support, both DT and legacy side will be
-> > ran, and both create the DSS devices...
-> > 
-> > But, it's true that this patch removes the whole file, as all the boards
-> > currently there are converted. But if new boards are added to the DSS
-> > quirks, then I can't remove the file. So I'll change this patch to only
-> > remove the parts for the converted boards, not the whole file.
-> > 
-> > But but... If I understand right, the plan is to remove all omap3 board
-> > files for the next merge window. I'm not totally familiar with the
-> > quirks system, but how should this be handled:
-> > 
-> > omap3.dtsi will contain the SoC's DSS nodes. This means that DSS devices
-> > are created via DT code. But if the display (i.e. panels) for a
-> > particular omap3 board has not been converted to DT, we should still use
-> > the legacy DSS initialization. But the DSS is already initialized via DT.
-> > 
-> > I guess I can set the status for all the DSS nodes to "disabled" in
-> > omap3.dtsi, and that should prevent DT code from creating the DSS
-> > devices. Then, each omap3-board.dts that has been converted to DSS DT,
-> > can override those to "enabled".
-> > 
-> > That way the DT code should not create DSS devices by default, and the
-> > quirks system would probably work fine.
-> 
-> I changed the DSS DT nodes to be disabled by default, and I think this
-> works nicely. It's actually better this way in any case, as we can leave
-> blocks like DSI out for boards that don't need it.
-> 
-> Also, I now remove the quirks only for the boards that are converted to
-> DT, not the whole dss-common.c file. So I think we can now add new
-> boards to dss-common.c, if and when there are ones that cannot be
-> converted to use DSS DT yet.
+On 12/12/13 20:34, Leela Krishna Amudala wrote:
+> Hi Kukjin,
+>
+> Can you kindly look into this patch and take necessary action..?
+>
+> Best Wishes,
+> Leela Krishna.
+>
+> On Tue, Nov 12, 2013 at 9:02 PM, Leela Krishna Amudala
+> <l.krishna@samsung.com>  wrote:
+>> Hi Kukjin,
+>>
+>> Thanks for reviewing the patch.
+>>
+>> On Tue, Nov 12, 2013 at 4:46 PM, Kukjin Kim<kgene@kernel.org>  wrote:
+>>> Leela Krishna Amudala  wrote:
+>>>>
+>>>> Add SPI device tree nodes to Exynos5420 SoC
+>>>>
+>>>> Signed-off-by: Doug Anderson<dianders@chromium.org>
+>>>> Signed-off-by: Leela Krishna Amudala<l.krishna@samsung.com>
+>>>> Reviewed-by: Andrew Bresticker<abrestic@chromium.org>
+>>>> ---
+>>>> Note: This patch is rebased on Kgene's for-next branch and is dependent on
+>>>> [V3] ARM: dts: Add DMA controller node info on Exynos5420.
+>>>> https://patchwork.kernel.org/patch/2851790/
+>>>>
+>>>>   arch/arm/boot/dts/exynos5420.dtsi |   51
+>>>> +++++++++++++++++++++++++++++++++++++
+>>>>   1 file changed, 51 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
+>>>> b/arch/arm/boot/dts/exynos5420.dtsi
+>>>> index 15465f8..8d9e980 100644
+>>>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>>>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>>>> @@ -27,6 +27,9 @@
+>>>>                pinctrl2 =&pinctrl_2;
+>>>>                pinctrl3 =&pinctrl_3;
+>>>>                pinctrl4 =&pinctrl_4;
+>>>> +             spi0 =&spi_0;
+>>>> +             spi1 =&spi_1;
+>>>> +             spi2 =&spi_2;
+>>>>        };
+>>>>
+>>>>        cpus {
+>>>> @@ -238,6 +241,54 @@
+>>>>                };
+>>>>        };
+>>>>
+>>>> +     spi_0: spi@12d20000 {
+>>>> +             compatible = "samsung,exynos4210-spi";
+>>>> +             reg =<0x12d20000 0x100>;
+>>>> +             interrupts =<0 66 0>;
+>>>> +             dmas =<&pdma0 5
+>>>> +&pdma0 4>;
+>>>> +             dma-names = "tx", "rx";
+>>>> +             #address-cells =<1>;
+>>>> +             #size-cells =<0>;
+>>>> +             pinctrl-names = "default";
+>>>> +             pinctrl-0 =<&spi0_bus>;
+>>>> +             clocks =<&clock 271>,<&clock 135>;
+>>>> +             clock-names = "spi", "spi_busclk0";
+>>>> +             status = "disabled";
+>>>> +     };
+>>>> +
+>>>> +     spi_1: spi@12d30000 {
+>>>> +             compatible = "samsung,exynos4210-spi";
+>>>> +             reg =<0x12d30000 0x100>;
+>>>> +             interrupts =<0 67 0>;
+>>>> +             dmas =<&pdma1 5
+>>>> +&pdma1 4>;
+>>>> +             dma-names = "tx", "rx";
+>>>> +             #address-cells =<1>;
+>>>> +             #size-cells =<0>;
+>>>> +             pinctrl-names = "default";
+>>>> +             pinctrl-0 =<&spi1_bus>;
+>>>> +             clocks =<&clock 272>,<&clock 136>;
+>>>> +             clock-names = "spi", "spi_busclk0";
+>>>> +             status = "disabled";
+>>>> +     };
+>>>> +
+>>>> +     spi_2: spi@12d40000 {
+>>>> +             compatible = "samsung,exynos4210-spi";
+>>>> +             reg =<0x12d40000 0x100>;
+>>>> +             interrupts =<0 68 0>;
+>>>> +             dmas =<&pdma0 7
+>>>> +&pdma0 6>;
+>>>> +             dma-names = "tx", "rx";
+>>>> +             #address-cells =<1>;
+>>>> +             #size-cells =<0>;
+>>>> +             pinctrl-names = "default";
+>>>> +             pinctrl-0 =<&spi2_bus>;
+>>>> +             clocks =<&clock 273>,<&clock 137>;
+>>>> +             clock-names = "spi", "spi_busclk0";
+>>>> +             status = "disabled";
+>>>> +     };
+>>>> +
+>>>>        serial@12C00000 {
+>>>>                clocks =<&clock 257>,<&clock 128>;
+>>>>                clock-names = "uart", "clk_uart_baud0";
+>>>> --
+>>>> 1.7.10.4
+>>>
+>>> Leela, do you still want to keep the status 'disabled' for SPIs?
+>>>
+>>
+>> Yes, the SPI client nodes will make status = "okay" in board file.
+>>
+OK, applied.
 
-OK
-
-Tony
+Thanks,
+Kukjin
