@@ -1,24 +1,36 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] of: Update qcom vendor prefix description
-Date: Wed, 18 Dec 2013 15:50:33 -0800
-Message-ID: <CAOesGMjt9d_JkoyJbJuByiO8AUDWb79hCLhw9DKfS_C8WPhooQ@mail.gmail.com>
-References: <1387410076-22283-1-git-send-email-galak@codeaurora.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 01/21 resend] serial: rewrite pxa2xx-uart to use
+ 8250_core
+Date: Wed, 18 Dec 2013 15:55:11 -0800
+Message-ID: <20131218235511.GD14527@kroah.com>
+References: <1386901645-28895-1-git-send-email-ynvich@gmail.com>
+ <1387309071-22382-1-git-send-email-ynvich@gmail.com>
+ <1387309071-22382-2-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1387410076-22283-1-git-send-email-galak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1387309071-22382-2-git-send-email-ynvich@gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Sergei Ianovich <ynvich@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, James Cameron <quozl@laptop.org>, Zhou Zhu <zzhu3@marvell.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2013 at 3:41 PM, Kumar Gala <galak@codeaurora.org> wrote:
-> Update vendor description to be the full name of the corporate entity that
-> produces the SoCs associated with this prefix.
->
-> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+On Tue, Dec 17, 2013 at 11:37:31PM +0400, Sergei Ianovich wrote:
+> pxa2xx-uart was a separate uart platform driver. It was declaring
+> the same device names and numbers as 8250 driver. As a result,
+> it was impossible to use 8250 driver on PXA SoCs.
+> 
+> Upon closer examination pxa2xx-uart turned out to be a clone of
+> 8250_core driver.
+> 
+> Workaround for Erratum #19 according to Marvel(R) PXA270M Processor
+> Specification Update (April 19, 2010) is dropped. 8250_core reads
+> from FIFO immediately after checking DR bit in LSR.
+> 
+> Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Reviewed-by: James Cameron <quozl@laptop.org>
+> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Acked-by: Olof Johansson <olof@lixom.net>
-
-
--Olof
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
