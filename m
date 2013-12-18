@@ -1,51 +1,75 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v3 6/6] ARM: dts: exynos4: Add missing unit-address of
- sysreg node
-Date: Thu, 19 Dec 2013 03:23:52 +0900
-Message-ID: <52B1E838.4030304@samsung.com>
-References: <1386864738-19829-1-git-send-email-t.figa@samsung.com> <1386864738-19829-7-git-send-email-t.figa@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv3 1/7] ALSA: Add SAI SoC Digital Audio Interface driver.
+Date: Wed, 18 Dec 2013 18:27:31 +0000
+Message-ID: <20131218182731.GE31886@sirena.org.uk>
+References: <1387250684-23406-1-git-send-email-Li.Xiubo@freescale.com>
+ <1387250684-23406-2-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1386864738-19829-7-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@wwwdotorg.org>, Kukjin Kim <kgene.kim@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="imjhCm/Pyz7Rq5F2"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1387250684-23406-2-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: lgirdwood@gmail.com, timur@tabi.org, perex@perex.cz, r64188@freescale.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux@arm.linux.org.uk, tiwai@suse.de, grant.likely@linaro.org, fabio.estevam@freescale.com, LW@KARO-electronics.de, oskar@scara.com, shawn.guo@linaro.org, b42378@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/13/13 01:12, Tomasz Figa wrote:
-> The node contains reg property, so unit-address suffix should be present
-> in its name.
->
-> Signed-off-by: Tomasz Figa<t.figa@samsung.com>
-> Acked-by: Kyungmin Park<kyungmin.park@samsung.com>
-> Reviewed-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
-> ---
->   arch/arm/boot/dts/exynos4.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-> index 4fed2ad..ee173fe 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
-> @@ -99,7 +99,7 @@
->   		reg =<0x10440000 0x1000>;
->   	};
->
-> -	sys_reg: sysreg {
-> +	sys_reg: sysreg@10010000 {
->   		compatible = "samsung,exynos4-sysreg", "syscon";
->   		reg =<0x10010000 0x400>;
->   	};
 
-Tomasz, I already Sachin's patch for similar changing of sys_reg 
-property with your reviewed tag.
+--imjhCm/Pyz7Rq5F2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-ARM: dts: Fix sysreg node name in exynos4.dtsi
+On Tue, Dec 17, 2013 at 11:24:38AM +0800, Xiubo Li wrote:
 
-I've applied whole this series except this one.
-If any problems, please kindly let me know.
+> This adds Freescale SAI ASoC Audio support.
+> This implementation is only compatible with device tree definition.
 
-Thanks,
-Kukjin
+This is mostly good, there are two small issues below but I've applied it
+since they don't really affect the driver as a whole.  Please send
+followup patches to fix the issues below.
+
+> +static int fsl_sai_dai_probe(struct snd_soc_dai *cpu_dai)
+> +{
+> +	struct fsl_sai *sai = dev_get_drvdata(cpu_dai->dev);
+> +
+> +	cpu_dai->playback_dma_data = &sai->dma_params_tx;
+> +	cpu_dai->capture_dma_data = &sai->dma_params_rx;
+
+You should use snd_soc_dai_init_dma_data() for this.
+
+> +static int fsl_sai_dai_remove(struct snd_soc_dai *cpu_dai)
+> +{
+> +	cpu_dai->playback_dma_data = NULL;
+> +	cpu_dai->capture_dma_data = NULL;
+> +
+> +	snd_soc_dai_set_drvdata(cpu_dai, NULL);
+> +
+> +	return 0;
+> +}
+
+This is all unneeded and this function should be removed entirely.
+
+--imjhCm/Pyz7Rq5F2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSsekQAAoJELSic+t+oim9g84P/RSFPoCuxEBr1z4cGdl7J/F3
+aB2NYBFswtsNsQF9zAx2FSIottzgmzW+nsPZ3a+0C8/NF4KNpEJRLhutqu5gVlcd
+d9WIkLggoyTKDef1w4AFv1FDP2Mhax2CUnMCcQluizxQjRYZ6JNprZg7F5HoLv/U
+oNIQ5IrN81c4fBLTinDklI1yhtFz2WjQFdUYuzXOHDBWRTEwZrYKtwahbGHS5jxV
+OURlNw3rxU9Xxsk4mhj24LE6wmp3SJVhfNoawPKt6fR4z8PEPRUCpH/9Cqjwxfzz
+tMmW30oAGyVLsXQmNX/H4fpUhw6dBxzw91y0qMXoD6oG9Td12Ymt8GtOL7FUl7xi
+Ki7JyTBLa2DXw3rrBMSfPB6QRGoKL2m1DaSeh+5RX1R+yYOhHtcgGjh17ja/QPzd
+Z33OyFY4wrgLPVzgtiE3cs63wy02l3eJFLKkXJKYmeYkp08U6gB1JZhwIq1Gbqe2
++q2TjMUYXvPE26Bt+0X7GZfFrmqL5ld4RRhTWNDyH++4uE2niUu3PHp85OMfZn8s
+yyjca23F/oNuqas6PCr+3vetcyCoI06MElHRwGX3oUPsX63GmdjQzbdfCwxSM6Ux
+G4LBY7InBNSb3zTMH69LuiENSu/uwf85dy9B3VT9FmK03dZbS52p/5ByW1vGg24G
+VbXZtwZ7Fb4OLks7Zjzj
+=Rc6B
+-----END PGP SIGNATURE-----
+
+--imjhCm/Pyz7Rq5F2--
