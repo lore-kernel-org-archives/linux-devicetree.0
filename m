@@ -1,42 +1,42 @@
 From: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 06/08] ARM: hi3xxx: add hotplug support
-Date: Tue, 17 Dec 2013 16:40:12 -0800
-Message-ID: <87sitrm1oz.fsf@linaro.org>
+Subject: Re: [PATCH v12 08/08] ARM: hi3xxx: select GPIO in Kconfig
+Date: Tue, 17 Dec 2013 16:44:13 -0800
+Message-ID: <87mwjzm1ia.fsf@linaro.org>
 References: <1386748497-11290-1-git-send-email-haojian.zhuang@gmail.com>
-	<1386748497-11290-7-git-send-email-haojian.zhuang@gmail.com>
+	<1386748497-11290-9-git-send-email-haojian.zhuang@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386748497-11290-7-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-	(Haojian Zhuang's message of "Wed, 11 Dec 2013 15:54:55 +0800")
+In-Reply-To: <1386748497-11290-9-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+	(Haojian Zhuang's message of "Wed, 11 Dec 2013 15:54:57 +0800")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
 
-> From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Select GPIO in hi3xxx Kconfig.
 >
-> Enable hotplug support on hi3xxx platform
+> Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/mach-hi3xxx/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> How to test:
-> cat proc/interrupts
-> echo 0 > /sys/devices/system/cpu/cpuX/online
-> cat proc/interrupts
-> echo 1 > /sys/devices/system/cpu/cpuX/online
->
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Tested-by: Zhang Mingjun <zhang.mingjun-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> diff --git a/arch/arm/mach-hi3xxx/Kconfig b/arch/arm/mach-hi3xxx/Kconfig
+> index 4007ecf..018ad67 100644
+> --- a/arch/arm/mach-hi3xxx/Kconfig
+> +++ b/arch/arm/mach-hi3xxx/Kconfig
+> @@ -3,6 +3,7 @@ config ARCH_HI3xxx
+>  	select ARM_AMBA
+>  	select ARM_GIC
+>  	select ARM_TIMER_SP804
+> +	select ARCH_WANT_OPTIONAL_GPIOLIB
+>  	select CACHE_L2X0
+>  	select CLKSRC_OF
+>  	select GENERIC_CLOCKEVENTS
 
-ugh, more checkpatch errors:
-
-ERROR: do not initialise statics to 0 or NULL
-#120: FILE: arch/arm/mach-hi3xxx/hotplug.c:65:
-+static void __iomem *ctrl_base = NULL;
-
-Fixed this one too, but any more and the flames might start to appear.
+No need for this to be a separate patch, I've folded it into patch 1.
 
 Kevin
 --
