@@ -1,197 +1,67 @@
-From: Anson Huang <b20788@freescale.com>
-Subject: [PATCH V3 2/2] cpufreq: imx6q: correct VDDSOC/PU voltage scaling when cpufreq is changed
-Date: Wed, 18 Dec 2013 16:26:50 -0500
-Message-ID: <1387402010-31749-2-git-send-email-b20788@freescale.com>
-References: <1387402010-31749-1-git-send-email-b20788@freescale.com>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv7 1/4] pwm: Add Freescale FTM PWM driver support
+Date: Wed, 18 Dec 2013 09:43:51 +0000
+Message-ID: <2e498771546543f18329d2c2e69a6e35@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1386925027-16288-1-git-send-email-Li.Xiubo@freescale.com>
+ <5295539.cCkPY1PpyC@flatron> <20131217124505.GB17210@ulmo.nvidia.com>
+ <1500339.E8bGm7xZUi@flatron> <20131217130435.GV4360@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <1387402010-31749-1-git-send-email-b20788@freescale.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: shawn.guo@linaro.org, rjw@rjwysocki.net, viresh.kumar@linaro.org
-Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131217130435.GV4360@n2100.arm.linux.org.uk>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "galak@codeaurora.org" <galak@codeaurora.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "matt.porter@linaro.org" <matt.porter@linaro.org>, "rob@landley.net" <rob@landley.net>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel>
 List-Id: devicetree@vger.kernel.org
 
-on i.MX6Q, cpu freq change need to follow below flows:
 
-1. each setpoint has different VDDARM, VDDSOC/PU voltage, get the setpoint
-   table from dts;
-2. when cpu freq is scaling up, need to increase VDDSOC/PU voltage before
-   VDDARM, if VDDPU is off, no need to change it;
-3. when cpu freq is scaling down, need to decrease VDDARM voltage before
-   VDDSOC/PU, if VDDPU is off, no need to change it;
+> On Tue, Dec 17, 2013 at 01:54:35PM +0100, Tomasz Figa wrote:
+> > On Tuesday 17 of December 2013 13:45:06 Thierry Reding wrote:
+> > > I fail to see how that would eliminate the problem with the types.
+> > > That said I don't actually see sparse complaining about any type
+> mismatches.
+> > > That's probably because the various macros implicitly cast to u32.
+> >
+> > Well, in BE variant you would read the register using __raw_readl()
+> > into a __be32 and then get an u32 from be32_to_cpu() and return it.
+> > Similarly for writes
+> 
+> __raw_readl() returns a u32, so you'll get a warning trying to assign a
+> u32 to a __be32.
+> 
 
-normally dts will pass vddsoc/pu freq/volt info to kernel, if not, will
-use fixed value for vddsoc/pu voltage setting.
+If all are ok about this method.
+How about the following:
 
-Signed-off-by: Anson Huang <b20788@freescale.com>
----
- drivers/cpufreq/imx6q-cpufreq.c |  106 ++++++++++++++++++++++++++++-----------
- 1 file changed, 77 insertions(+), 29 deletions(-)
++static inline u32 fsl_pwm_readl(struct fsl_pwm_chip *fpc,
++                               const void __iomem *addr)
++{
++       u32 val;
++
++       val = __raw_readl(addr);
++
++       if (likely(fpc->big_endian))
++               val = be32_to_cpu((__force __be32)val);
++       else
++               val = le32_to_cpu((__force __le32)val);
++       rmb();
++
++       return val;
++}
++
++static inline void fsl_pwm_writel(struct fsl_pwm_chip *fpc,
++                               u32 val, void __iomem *addr)
++{
++       wmb();
++       if (likely(fpc->big_endian))
++               val = (__force u32)cpu_to_be32(val);
++       else
++               val = (__force u32)cpu_to_le32(val);
++
++       __raw_writel(val, addr);
++}
 
-diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
-index 4b3f18e..c29198f 100644
---- a/drivers/cpufreq/imx6q-cpufreq.c
-+++ b/drivers/cpufreq/imx6q-cpufreq.c
-@@ -35,6 +35,9 @@ static struct device *cpu_dev;
- static struct cpufreq_frequency_table *freq_table;
- static unsigned int transition_latency;
- 
-+static u32 *imx6_soc_volt;
-+static u32 soc_opp_count;
-+
- static unsigned int imx6q_get_speed(unsigned int cpu)
- {
- 	return clk_get_rate(arm_clk) / 1000;
-@@ -69,23 +72,22 @@ static int imx6q_set_target(struct cpufreq_policy *policy, unsigned int index)
- 
- 	/* scaling up?  scale voltage before frequency */
- 	if (new_freq > old_freq) {
-+		ret = regulator_set_voltage_tol(pu_reg, imx6_soc_volt[index], 0);
-+		if (ret) {
-+			dev_err(cpu_dev, "failed to scale vddpu up: %d\n", ret);
-+			return ret;
-+		}
-+		ret = regulator_set_voltage_tol(soc_reg, imx6_soc_volt[index], 0);
-+		if (ret) {
-+			dev_err(cpu_dev, "failed to scale vddsoc up: %d\n", ret);
-+			return ret;
-+		}
- 		ret = regulator_set_voltage_tol(arm_reg, volt, 0);
- 		if (ret) {
- 			dev_err(cpu_dev,
- 				"failed to scale vddarm up: %d\n", ret);
- 			return ret;
- 		}
--
--		/*
--		 * Need to increase vddpu and vddsoc for safety
--		 * if we are about to run at 1.2 GHz.
--		 */
--		if (new_freq == FREQ_1P2_GHZ / 1000) {
--			regulator_set_voltage_tol(pu_reg,
--					PU_SOC_VOLTAGE_HIGH, 0);
--			regulator_set_voltage_tol(soc_reg,
--					PU_SOC_VOLTAGE_HIGH, 0);
--		}
- 	}
- 
- 	/*
-@@ -120,12 +122,15 @@ static int imx6q_set_target(struct cpufreq_policy *policy, unsigned int index)
- 				 "failed to scale vddarm down: %d\n", ret);
- 			ret = 0;
- 		}
--
--		if (old_freq == FREQ_1P2_GHZ / 1000) {
--			regulator_set_voltage_tol(pu_reg,
--					PU_SOC_VOLTAGE_NORMAL, 0);
--			regulator_set_voltage_tol(soc_reg,
--					PU_SOC_VOLTAGE_NORMAL, 0);
-+		ret = regulator_set_voltage_tol(soc_reg, imx6_soc_volt[index], 0);
-+		if (ret) {
-+			dev_warn(cpu_dev, "failed to scale vddsoc down: %d\n", ret);
-+			ret = 0;
-+		}
-+		ret = regulator_set_voltage_tol(pu_reg, imx6_soc_volt[index], 0);
-+		if (ret) {
-+			dev_warn(cpu_dev, "failed to scale vddpu down: %d\n", ret);
-+			ret = 0;
- 		}
- 	}
- 
-@@ -153,6 +158,9 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
- 	struct dev_pm_opp *opp;
- 	unsigned long min_volt, max_volt;
- 	int num, ret;
-+	const struct property *prop;
-+	const __be32 *val;
-+	u32 nr, i, j;
- 
- 	cpu_dev = get_cpu_device(0);
- 	if (!cpu_dev) {
-@@ -201,10 +209,62 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
- 		goto put_node;
- 	}
- 
-+	/* Make imx6_soc_volt array's size same as arm opp number */
-+	imx6_soc_volt = devm_kzalloc(cpu_dev, sizeof(*imx6_soc_volt) * num, GFP_KERNEL);
-+	if (imx6_soc_volt == NULL) {
-+		ret = -ENOMEM;
-+		goto free_freq_table;
-+	}
-+
-+	prop = of_find_property(np, "fsl,soc-operating-points", NULL);
-+	if (!prop || !prop->value)
-+		goto soc_opp_out;
-+
-+	/*
-+	 * Each OPP is a set of tuples consisting of frequency and
-+	 * voltage like <freq-kHz vol-uV>.
-+	 */
-+	nr = prop->length / sizeof(u32);
-+	if (nr % 2 || (nr / 2) < num)
-+		goto soc_opp_out;
-+
-+	for (j = 0; j < num; j++) {
-+		val = prop->value;
-+		for (i = 0; i < nr / 2; i++) {
-+			unsigned long freq = be32_to_cpup(val++);
-+			unsigned long volt = be32_to_cpup(val++);
-+			if (freq_table[j].frequency == freq) {
-+				imx6_soc_volt[soc_opp_count++] = volt;
-+				break;
-+			}
-+		}
-+	}
-+
-+soc_opp_out:
-+	/* use fixed soc opp volt if no valid soc opp info found in dtb */
-+	if (soc_opp_count != num) {
-+		dev_warn(cpu_dev, "can NOT find valid fsl,soc-operating-points property in dtb, use default value!\n");
-+		for (j = 0; j < num; j++)
-+			imx6_soc_volt[j] = PU_SOC_VOLTAGE_NORMAL;
-+		if (freq_table[num - 1].frequency * 1000 == FREQ_1P2_GHZ)
-+			imx6_soc_volt[num - 1] = PU_SOC_VOLTAGE_HIGH;
-+	}
-+
- 	if (of_property_read_u32(np, "clock-latency", &transition_latency))
- 		transition_latency = CPUFREQ_ETERNAL;
- 
- 	/*
-+	 * Calculate the ramp time for max voltage change in the
-+	 * VDDSOC and VDDPU regulators.
-+	 */
-+	ret = regulator_set_voltage_time(soc_reg, imx6_soc_volt[0], imx6_soc_volt[num - 1]);
-+	if (ret > 0)
-+		transition_latency += ret * 1000;
-+	ret = regulator_set_voltage_time(pu_reg, imx6_soc_volt[0], imx6_soc_volt[num - 1]);
-+	if (ret > 0)
-+		transition_latency += ret * 1000;
-+
-+	/*
- 	 * OPP is maintained in order of increasing frequency, and
- 	 * freq_table initialised from OPP is therefore sorted in the
- 	 * same order.
-@@ -221,18 +281,6 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
- 	if (ret > 0)
- 		transition_latency += ret * 1000;
- 
--	/* Count vddpu and vddsoc latency in for 1.2 GHz support */
--	if (freq_table[num].frequency == FREQ_1P2_GHZ / 1000) {
--		ret = regulator_set_voltage_time(pu_reg, PU_SOC_VOLTAGE_NORMAL,
--						 PU_SOC_VOLTAGE_HIGH);
--		if (ret > 0)
--			transition_latency += ret * 1000;
--		ret = regulator_set_voltage_time(soc_reg, PU_SOC_VOLTAGE_NORMAL,
--						 PU_SOC_VOLTAGE_HIGH);
--		if (ret > 0)
--			transition_latency += ret * 1000;
--	}
--
- 	ret = cpufreq_register_driver(&imx6q_cpufreq_driver);
- 	if (ret) {
- 		dev_err(cpu_dev, "failed register driver: %d\n", ret);
--- 
-1.7.9.5
-
-
+Best Regards,
+Xiubo
