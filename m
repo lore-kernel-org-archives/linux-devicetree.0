@@ -1,67 +1,100 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: RE: [PATCHv7 1/4] pwm: Add Freescale FTM PWM driver support
-Date: Wed, 18 Dec 2013 09:43:51 +0000
-Message-ID: <2e498771546543f18329d2c2e69a6e35@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1386925027-16288-1-git-send-email-Li.Xiubo@freescale.com>
- <5295539.cCkPY1PpyC@flatron> <20131217124505.GB17210@ulmo.nvidia.com>
- <1500339.E8bGm7xZUi@flatron> <20131217130435.GV4360@n2100.arm.linux.org.uk>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCHv2 01/27] ARM: OMAP: remove DSS DT hack
+Date: Wed, 18 Dec 2013 12:21:29 +0200
+Message-ID: <52B17729.3040807@ti.com>
+References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com> <1387205794-32246-2-git-send-email-tomi.valkeinen@ti.com> <20131216184157.GA26293@atomide.com> <52AFF31C.6010100@ti.com> <20131217153001.GN12324@atomide.com> <52B14AEE.8090807@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131217130435.GV4360@n2100.arm.linux.org.uk>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "galak@codeaurora.org" <galak@codeaurora.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "matt.porter@linaro.org" <matt.porter@linaro.org>, "rob@landley.net" <rob@landley.net>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="KKO7gh8DnXFB67fN53B17JuaIku77kBLG"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52B14AEE.8090807@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+--KKO7gh8DnXFB67fN53B17JuaIku77kBLG
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> On Tue, Dec 17, 2013 at 01:54:35PM +0100, Tomasz Figa wrote:
-> > On Tuesday 17 of December 2013 13:45:06 Thierry Reding wrote:
-> > > I fail to see how that would eliminate the problem with the types.
-> > > That said I don't actually see sparse complaining about any type
-> mismatches.
-> > > That's probably because the various macros implicitly cast to u32.
-> >
-> > Well, in BE variant you would read the register using __raw_readl()
-> > into a __be32 and then get an u32 from be32_to_cpu() and return it.
-> > Similarly for writes
-> 
-> __raw_readl() returns a u32, so you'll get a warning trying to assign a
-> u32 to a __be32.
-> 
+On 2013-12-18 09:12, Tomi Valkeinen wrote:
 
-If all are ok about this method.
-How about the following:
+>> Well yeah let's keep those separate still as at least Russell needed
+>> some more time with the legacy booting. The point we can drop the
+>> legacy booting for omap3 may still need to wait a bit, maybe even
+>> until v3.15 to keep things working.
+>=20
+> They can't be separate. Once I add DT support for a board, I have to
+> remove the legacy support for that board. This patch removes legacy
+> support for the boards that are converted in the series.
+>=20
+> If I don't remove the legacy support, both DT and legacy side will be
+> ran, and both create the DSS devices...
+>=20
+> But, it's true that this patch removes the whole file, as all the board=
+s
+> currently there are converted. But if new boards are added to the DSS
+> quirks, then I can't remove the file. So I'll change this patch to only=
 
-+static inline u32 fsl_pwm_readl(struct fsl_pwm_chip *fpc,
-+                               const void __iomem *addr)
-+{
-+       u32 val;
-+
-+       val = __raw_readl(addr);
-+
-+       if (likely(fpc->big_endian))
-+               val = be32_to_cpu((__force __be32)val);
-+       else
-+               val = le32_to_cpu((__force __le32)val);
-+       rmb();
-+
-+       return val;
-+}
-+
-+static inline void fsl_pwm_writel(struct fsl_pwm_chip *fpc,
-+                               u32 val, void __iomem *addr)
-+{
-+       wmb();
-+       if (likely(fpc->big_endian))
-+               val = (__force u32)cpu_to_be32(val);
-+       else
-+               val = (__force u32)cpu_to_le32(val);
-+
-+       __raw_writel(val, addr);
-+}
+> remove the parts for the converted boards, not the whole file.
+>=20
+> But but... If I understand right, the plan is to remove all omap3 board=
 
-Best Regards,
-Xiubo
+> files for the next merge window. I'm not totally familiar with the
+> quirks system, but how should this be handled:
+>=20
+> omap3.dtsi will contain the SoC's DSS nodes. This means that DSS device=
+s
+> are created via DT code. But if the display (i.e. panels) for a
+> particular omap3 board has not been converted to DT, we should still us=
+e
+> the legacy DSS initialization. But the DSS is already initialized via D=
+T.
+>=20
+> I guess I can set the status for all the DSS nodes to "disabled" in
+> omap3.dtsi, and that should prevent DT code from creating the DSS
+> devices. Then, each omap3-board.dts that has been converted to DSS DT,
+> can override those to "enabled".
+>=20
+> That way the DT code should not create DSS devices by default, and the
+> quirks system would probably work fine.
+
+I changed the DSS DT nodes to be disabled by default, and I think this
+works nicely. It's actually better this way in any case, as we can leave
+blocks like DSI out for boards that don't need it.
+
+Also, I now remove the quirks only for the boards that are converted to
+DT, not the whole dss-common.c file. So I think we can now add new
+boards to dss-common.c, if and when there are ones that cannot be
+converted to use DSS DT yet.
+
+ Tomi
+
+
+
+--KKO7gh8DnXFB67fN53B17JuaIku77kBLG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJSsXcpAAoJEPo9qoy8lh71lUAP/2E6zlvatT9Wa2QJzH3EeqCO
+sOpoLqIbdT09oOsSBtn6HsE5M7xmewoBobmgr+t1S/cLeODrPVRHCnx9lTEUJEPZ
+TKQZalYVF+G8B0QSFGFmqWdFsbxo+wudcv/TFE8XVrSrQiqAwkLh0lCyph+KqvFy
+u8rwOui6IPCLsT2ecqxshXE7FbYuyW1kYnUzNb4KRWw9hN2740I18KavlM6qzu83
+6L+DeftRIufhRvD3Hhu+TCLfaqbNGB1dpasP90AGPgrkzh3hUL0aM8ZqbjA4ePlQ
+UkGuviFVNcnPjJZvogF83WAt8tXepEEklnNOrKxSKzS6m3AfbUO8cnQWgG0mdHzZ
+YBDv4/Svq7RdpzSfk0XAZ0PWOM6jRq2A74IdG/8x9ySxNSAutB4YIGS8VHwrxKsJ
+bL9FlJ6ZUSn3wSnGcVw1M8YF/Xve6GVAhFlstkaIkUnck6+d34Di7W9NYUlG/GAl
+F0pGE3UsHQJrbK1xcr0rMW0AK+zKmbGmMami20A4/7HL5SP5jwXQADyGI99ugVgK
+Ut2r/40asIO+ge4kQWJ3lP/inHOuYuuHrbszd4VNXjmYyeV7kYd5Rbqz6SH7wax7
+YijHAwEcFsrIy3zBJhqtecX9azh2xKiKuCQugkJnrcz5oOqfbG1CjMPAQZWbYiGD
+tFIy6MLwdgVVGa5zAA8i
+=bBnQ
+-----END PGP SIGNATURE-----
+
+--KKO7gh8DnXFB67fN53B17JuaIku77kBLG--
