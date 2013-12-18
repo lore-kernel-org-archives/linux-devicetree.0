@@ -1,63 +1,51 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: Re: [PATCH 0/3] Add more device nodes for am43x gp evm.
-Date: Wed, 18 Dec 2013 23:45:03 +0530
-Message-ID: <52B1E627.20409@ti.com>
-References: <1385537479-6959-1-git-send-email-sourav.poddar@ti.com> <52B1DEAC.4000509@ti.com> <52B1E00D.30403@baylibre.com>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: Re: [PATCH v3 6/7] Documentation: add the binding file for Quadspi
+ driver
+Date: Wed, 18 Dec 2013 19:21:12 +0100
+Message-ID: <20131218182112.GK8064@book.gsilab.sittig.org>
+References: <1387184330-14448-1-git-send-email-b32955@freescale.com>
+ <1387184330-14448-7-git-send-email-b32955@freescale.com>
+ <20131218153029.GF8064@book.gsilab.sittig.org>
+ <20131218160355.GA1145@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52B1E00D.30403@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, tony@atomide.com, balbi@ti.com, linux-omap@vger.kernel.org, nsekhar@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131218160355.GA1145@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Huang Shijie <shijie8@gmail.com>
+Cc: Huang Shijie <b32955@freescale.com>, dwmw2@infradead.org, computersforpeace@gmail.com, angus.clark@st.com, lee.jones@linaro.org, marex@denx.de, pekon@ti.com, sourav.poddar@ti.com, broonie@linaro.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, b44548@freescale.com, b18965@freescale.com, shawn.guo@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 18 December 2013 11:19 PM, Benoit Cousson wrote:
-> Hi Sourav,
->
-> On 18/12/2013 18:43, Sourav Poddar wrote:
->> Benoit,
->> On Wednesday 27 November 2013 01:01 PM, Sourav Poddar wrote:
->>> The patch series adds support for enabling gpio, pwm backlight and
->>> matrix gpio keys on am43x-gp-evm.
->>>
->>> Done on top of 3.13-rc1 + tero clock series(1) + Afzal's basic gp
->>> support(2).
->>>
->>> [1]: https://patchwork.kernel.org/patch/3009541/
->>> [2]: https://patchwork.kernel.org/patch/3171761/
->>>
->>> Tested on am43x-gp-evm.
->>>
->>> There is a some bug while using regulators through backlight
->>> driver on 3.13-rc1. So, tested pwm part with this patch[3].
->>>
->>> [3]: http://www.spinics.net/lists/arm-kernel/msg288215.html
->>>
->>> Sourav Poddar (3):
->>>    arm: dts: am437x-gp-evm: Enable gpio.
->>>    ARM: dts: am43x-gp-evm: Add matrix gpio keys.
->>>    ARM: dts: am437x-gp-evm: Add pwm backlight support.
->>>
->>>   arch/arm/boot/dts/am437x-gp-evm.dts |   53
->>> +++++++++++++++++++++++++++++++++++
->>>   1 files changed, 53 insertions(+), 0 deletions(-)
->>>
->> Ping on this?
->
-> The series looks good, but you should rebase it on top of for_3.14/dts 
-> that is based on the big cleanup branch Tony has done.
-> I cannot apply it right now.
->
-Ok. I will rebase it and send you the series, As you can see there is 
-one dependency on afzal  basic support patch, as mentioned in
-the cover letter. If you are ok with that patch, it has to go first. So, 
-if you wish I can work with afzal and send you this
-series and afzal patch together.
+On Thu, Dec 19, 2013 at 00:03 +0800, Huang Shijie wrote:
+> 
+> On Wed, Dec 18, 2013 at 04:30:29PM +0100, Gerhard Sittig wrote:
+> > > +++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+> > > [ ... ]
+> > > +Example:
+> > > +
+> > > +qspi0: quadspi@40044000 {
+> > > +	compatible = "fsl,vf610-qspi";
+> > > +	reg = <0x40044000 0x1000>;
+> > > +	interrupts = <0 24 0x04>;
+> > > [ ... ]
+> > > +};
+> > 
+> > [ ... ]
+> > I'd suggest to use symbolic names for the flags in the last
+> > interrupt specifier cell, as you do for clock items.
+> I will use the symbolic name if it has.
+> But if it not have a symbolic name, i have to keep it as it is now.
 
-> Thanks,
-> Benoit
->
->
+To avoid potential confusion:  I meant symbolic names for the
+_flags_ of the interrupt specifier (i.e. trigger type and
+polarity).  The <dt-bindings/interrupt-controller/irq.h> file has
+IRQ_TYPE_LEVEL_HIGH with value 4 for you.
 
+
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
