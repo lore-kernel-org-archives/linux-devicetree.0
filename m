@@ -1,199 +1,107 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 1/9] Input: pixcir_i2c_ts: Add device tree support
-Date: Wed, 18 Dec 2013 14:51:12 +0530
-Message-ID: <1387358480-8313-2-git-send-email-rogerq@ti.com>
-References: <1387358480-8313-1-git-send-email-rogerq@ti.com>
+From: Anson Huang <b20788@freescale.com>
+Subject: [PATCH V3 1/2] ARM: imx: add vddsoc/pu setpoint info into dts
+Date: Wed, 18 Dec 2013 16:26:49 -0500
+Message-ID: <1387402010-31749-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1387358480-8313-1-git-send-email-rogerq@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: rydberg@euromail.se, jcbian@pixcir.com.cn, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Return-path: <cpufreq-owner@vger.kernel.org>
+Sender: cpufreq-owner@vger.kernel.org
+To: shawn.guo@linaro.org, rjw@rjwysocki.net, viresh.kumar@linaro.org
+Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Provide device tree support and binding information.
-Change platform data parameters from x/y_max to x/y_size..
+i.MX6Q needs to update vddarm, vddsoc/pu regulators when cpu freq
+is changed, each setpoint has different voltage, so we need to
+pass vddarm, vddsoc/pu's freq-voltage info from dts together.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
+Signed-off-by: Anson Huang <b20788@freescale.com>
 ---
- .../bindings/input/touchscreen/pixcir_i2c_ts.txt   | 26 ++++++++
- drivers/input/touchscreen/pixcir_i2c_ts.c          | 77 ++++++++++++++++++++--
- include/linux/input/pixcir_ts.h                    |  5 +-
- 3 files changed, 101 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+ .../devicetree/bindings/cpufreq/cpufreq-imx6.txt   |   56 ++++++++++++++++++++
+ arch/arm/boot/dts/imx6q.dtsi                       |    7 +++
+ 2 files changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
 new file mode 100644
-index 0000000..c0b0b270
+index 0000000..cf1c5f7
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
-@@ -0,0 +1,26 @@
-+* Pixcir I2C touchscreen controllers
++++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
+@@ -0,0 +1,56 @@
++i.MX6 cpufreq driver
++-------------------
++
++i.MX6 SoC cpufreq driver for CPU frequency scaling.
++
++This binding doc defines properties that must be put in the /cpus/cpu@0 node,
++please refer to Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
++for detail.
 +
 +Required properties:
-+- compatible: must be "pixcir,pixcir_ts"
-+- reg: I2C address of the chip
-+- interrupts: interrupt to which the chip is connected
-+- attb-gpio: GPIO connected to the ATTB line of the chip
-+- x-size: horizontal resolution of touchscreen
-+- y-size: vertical resolution of touchscreen
++- operating-points: Refer to Documentation/devicetree/bindings/power/opp.txt
++  for details.
++- clocks: Specify clocks that need to be used when cpu frequency is scaled,
++  refer to Documentation/devicetree/bindings/clock/clock-bindings.txt for
++  details.
++- clock-names: List of clock input name strings sorted in the same order as the
++  clocks property, refer to Documentation/devicetree/bindings/clock/clock-bindings.txt
++  for details.
++- xxx-supply: Input voltage supply regulator, refer to
++  Documentation/devicetree/bindings/regulator/regulator.txt for details.
++  arm-supply: vddarm input.
++  pu-supply: vddpu input.
++  soc-supply: vddsoc input.
 +
-+Example:
++Optional properties:
++- fsl,soc-operating-points: Specify vddsoc/pu voltage settings that must
++  go with cpu0's operating-points.
++- clock-latency: Specify the possible maximum transition latency for clock,
++  in unit of nanoseconds.
 +
-+	i2c@00000000 {
-+		/* ... */
++Examples:
 +
-+		pixcir_ts@5c {
-+			compatible = "pixcir,pixcir_ts";
-+			reg = <0x5c>;
-+			interrupts = <2 0>;
-+			attb-gpio = <&gpf 2 0 2>;
-+			x-size = <800>;
-+			y-size = <600>;
-+		};
-+
-+		/* ... */
++	cpu@0 {
++		operating-points = <
++			/* kHz    uV */
++			1200000 1275000
++			996000  1250000
++			792000  1150000
++			396000  975000
++		>;
++		fsl,soc-operating-points = <
++			/* ARM kHz  SOC-PU uV */
++			1200000 1275000
++			996000	1250000
++			792000	1175000
++			396000	1175000
++		>;
++		clock-latency = <61036>; /* two CLK32 periods */
++		clocks = <&clks 104>, <&clks 6>, <&clks 16>,
++			 <&clks 17>, <&clks 170>;
++		clock-names = "arm", "pll2_pfd2_396m", "step",
++			      "pll1_sw", "pll1_sys";
++		arm-supply = <&reg_arm>;
++		pu-supply = <&reg_pu>;
++		soc-supply = <&reg_soc>;
 +	};
-diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-index 6cc6b36..3a447c9 100644
---- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-@@ -24,6 +24,10 @@
- #include <linux/i2c.h>
- #include <linux/input.h>
- #include <linux/input/pixcir_ts.h>
-+#include <linux/gpio.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_device.h>
- 
- struct pixcir_i2c_ts_data {
- 	struct i2c_client *client;
-@@ -125,15 +129,65 @@ static int pixcir_i2c_ts_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(pixcir_dev_pm_ops,
- 			 pixcir_i2c_ts_suspend, pixcir_i2c_ts_resume);
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id pixcir_of_match[];
-+
-+static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
-+{
-+	struct pixcir_ts_platform_data *pdata;
-+	struct device_node *np = dev->of_node;
-+	const struct of_device_id *match;
-+
-+	match = of_match_device(of_match_ptr(pixcir_of_match), dev);
-+	if (!match)
-+		return ERR_PTR(-EINVAL);
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pdata->gpio_attb = of_get_named_gpio(np, "attb-gpio", 0);
-+	if (!gpio_is_valid(pdata->gpio_attb))
-+		dev_err(dev, "Failed to get ATTB GPIO\n");
-+
-+	if (of_property_read_u32(np, "x-size", &pdata->x_size)) {
-+		dev_err(dev, "Failed to get x-size property\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (of_property_read_u32(np, "y-size", &pdata->y_size)) {
-+		dev_err(dev, "Failed to get y-size property\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	dev_dbg(dev, "%s: x %d, y %d, gpio %d\n", __func__,
-+				pdata->x_size, pdata->y_size, pdata->gpio_attb);
-+
-+	return pdata;
-+}
-+#else
-+static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 					 const struct i2c_device_id *id)
- {
- 	const struct pixcir_ts_platform_data *pdata = client->dev.platform_data;
-+	struct device *dev = &client->dev;
-+	struct device_node *np = dev->of_node;
- 	struct pixcir_i2c_ts_data *tsdata;
- 	struct input_dev *input;
- 	int error;
- 
--	if (!pdata) {
-+	if (np) {
-+		pdata = pixcir_parse_dt(dev);
-+		if (IS_ERR(pdata))
-+			return PTR_ERR(pdata);
-+
-+	} else if (!pdata) {
- 		dev_err(&client->dev, "platform data not defined\n");
- 		return -EINVAL;
- 	}
-@@ -157,10 +211,14 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 	__set_bit(EV_KEY, input->evbit);
- 	__set_bit(EV_ABS, input->evbit);
- 	__set_bit(BTN_TOUCH, input->keybit);
--	input_set_abs_params(input, ABS_X, 0, pdata->x_max, 0, 0);
--	input_set_abs_params(input, ABS_Y, 0, pdata->y_max, 0, 0);
--	input_set_abs_params(input, ABS_MT_POSITION_X, 0, pdata->x_max, 0, 0);
--	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, pdata->y_max, 0, 0);
-+	input_set_abs_params(input, ABS_X,
-+					0, pdata->x_size - 1, 0, 0);
-+	input_set_abs_params(input, ABS_Y,
-+					0, pdata->y_size - 1, 0, 0);
-+	input_set_abs_params(input, ABS_MT_POSITION_X,
-+					0, pdata->x_size - 1, 0, 0);
-+	input_set_abs_params(input, ABS_MT_POSITION_Y,
-+					0, pdata->y_size - 1, 0, 0);
- 
- 	input_set_drvdata(input, tsdata);
- 
-@@ -211,11 +269,20 @@ static const struct i2c_device_id pixcir_i2c_ts_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, pixcir_i2c_ts_id);
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id pixcir_of_match[] = {
-+	{ .compatible = "pixcir,pixcir_ts", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pixcir_of_match);
-+#endif
-+
- static struct i2c_driver pixcir_i2c_ts_driver = {
- 	.driver = {
- 		.owner	= THIS_MODULE,
- 		.name	= "pixcir_ts",
- 		.pm	= &pixcir_dev_pm_ops,
-+		.of_match_table = of_match_ptr(pixcir_of_match),
- 	},
- 	.probe		= pixcir_i2c_ts_probe,
- 	.remove		= pixcir_i2c_ts_remove,
-diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
-index 7163d91..b34ff7e 100644
---- a/include/linux/input/pixcir_ts.h
-+++ b/include/linux/input/pixcir_ts.h
-@@ -3,8 +3,9 @@
- 
- struct pixcir_ts_platform_data {
- 	int (*attb_read_val)(void);
--	int x_max;
--	int y_max;
-+	unsigned int x_size;	/* X axis resolution */
-+	unsigned int y_size;	/* Y axis resolution */
-+	int gpio_attb;		/* GPIO connected to ATTB line */
- };
- 
- #endif
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index e7e8332..021e0cb 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -30,6 +30,13 @@
+ 				792000  1150000
+ 				396000  975000
+ 			>;
++			fsl,soc-operating-points = <
++				/* ARM kHz  SOC-PU uV */
++				1200000 1275000
++				996000	1250000
++				792000	1175000
++				396000	1175000
++			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clks 104>, <&clks 6>, <&clks 16>,
+ 				 <&clks 17>, <&clks 170>;
 -- 
-1.8.3.2
+1.7.9.5
+
 
