@@ -1,36 +1,47 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V3 1/2] ARM: imx: add vddsoc/pu setpoint info into dts
-Date: Wed, 18 Dec 2013 09:08:12 -0200
-Message-ID: <CAOMZO5DCGOkUtWmEok-uEFsUpGLF+93Vhm9XFs02yH9Z+eV0uQ@mail.gmail.com>
-References: <1387402010-31749-1-git-send-email-b20788@freescale.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH v4 0/9] Reuse davinci-nand driver for Keystone arch
+Date: Wed, 18 Dec 2013 13:09:25 +0200
+Message-ID: <52B18265.5090404@ti.com>
+References: <1387285155-19182-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <20131218071457.GB5551@norris-Latitude-E6410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <1387402010-31749-1-git-send-email-b20788@freescale.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Anson Huang <b20788@freescale.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, rjw@rjwysocki.net, Viresh Kumar <viresh.kumar@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131218071457.GB5551@norris-Latitude-E6410>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, grygorii.strashko@ti.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, linux-mtd@lists.infradead.org, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+On 12/18/2013 09:14 AM, Brian Norris wrote:
+> On Tue, Dec 17, 2013 at 02:59:06PM +0200, Ivan Khoronzhuk wrote:
+>> This series contains fixes and updates of Davinci nand driver in
+>> order to reuse it for Keystone platform.
+>>
+>> v3..v4:
+>> - mtd: nand: davinci: fix driver registration
+>> 	dropped __init/__exit/__exit_p as module_platform_driver() is used
+>> - mtd: nand: davinci: adjust DT properties to MTD generic
+>> 	used of_get_nand_bus_width() helper
+>> - mtd: nand: davinci: don't request AEMIF address range
+>> 	added comment at code change
+>
+> Pushed the series to l2-mtd.git. Thanks!
+>
+> Brian
+>
 
-On Wed, Dec 18, 2013 at 7:26 PM, Anson Huang <b20788@freescale.com> wrote:
+Thanks
 
-> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
-> +  arm-supply: vddarm input.
-> +  pu-supply: vddpu input.
-> +  soc-supply: vddsoc input.
-
-I found these messages confusing, as someone may think that you are
-referring to the VDD_ARM_IN/VDD_ARM23_IN and VDD_SOC_IN, which are
-really inputs.
-
-What about doing this instead?
-
-arm-supply: VDDARM LDO output
-pu-supply:  VDDPU LDO output
-soc-supply: VDDSOC LDO output
-
+-- 
 Regards,
-
-Fabio Estevam
+Ivan Khoronzhuk
