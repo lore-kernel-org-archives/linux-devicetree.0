@@ -1,71 +1,117 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv3 5/7] ASoC: fsl: Add SGTL5000 based audio machine driver.
-Date: Wed, 18 Dec 2013 18:37:43 +0000
-Message-ID: <20131218183743.GG31886@sirena.org.uk>
-References: <1387250684-23406-1-git-send-email-Li.Xiubo@freescale.com>
- <1387250684-23406-6-git-send-email-Li.Xiubo@freescale.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: commit e38c0a1f breaks powerpc boards with uli1575 chip
+Date: Wed, 18 Dec 2013 12:40:21 -0600
+Message-ID: <52B1EC15.5070606@gmail.com>
+References: <201312171135.38576@blacky.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lHGcFxmlz1yfXmOs"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387250684-23406-6-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: lgirdwood@gmail.com, timur@tabi.org, perex@perex.cz, r64188@freescale.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux@arm.linux.org.uk, tiwai@suse.de, grant.likely@linaro.org, fabio.estevam@freescale.com, LW@KARO-electronics.de, oskar@scara.com, shawn.guo@linaro.org, b42378@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201312171135.38576@blacky.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@kernel.crashing.org>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexey Lugovskoy <lugovskoy@dev.rtsoft.ru>, Dmitry Krivoschekov <dkrivoschokov@dev.rtsoft.ru>
 List-Id: devicetree@vger.kernel.org
 
+[fixed DT maillist address]
 
---lHGcFxmlz1yfXmOs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 12/17/2013 01:35 AM, Nikita Yushchenko wrote:
+> Hi
+> 
+> While trying to make freescale p2020ds and  mpc8572ds boards working with mainline kernel, I faced that commit 
+> e38c0a1f (Handle #address-cells > 2 specially) breaks things with these boards.
 
-On Tue, Dec 17, 2013 at 11:24:42AM +0800, Xiubo Li wrote:
+Good to see this broke in v3.7 and is just now found...
 
-> This is the SGTL5000 codec based audio driver supported with both
-> playback and capture dai link implemention.
+> 
+> Both these boards have uli1575 chip.
+> Corresponding part in device tree is something like
+> 
+>                 uli1575@0 {
+>                         reg = <0x0 0x0 0x0 0x0 0x0>;
+>                         #size-cells = <2>;
+>                         #address-cells = <3>;
+>                         ranges = <0x2000000 0x0 0x80000000
+>                                   0x2000000 0x0 0x80000000
+>                                   0x0 0x20000000
+> 
+>                                   0x1000000 0x0 0x0
+>                                   0x1000000 0x0 0x0
+>                                   0x0 0x10000>;
+>                         isa@1e {
+> ...
+> 
+> I.e. it has #address-cells = <3>
+> 
+> 
+> With commit e38c0a1f reverted, devices under uli1575 are registered correctly, e.g. for rtc
+> 
+> OF: ** translation for device /pcie@ffe09000/pcie@0/uli1575@0/isa@1e/rtc@70 **
+> OF: bus is isa (na=2, ns=1) on /pcie@ffe09000/pcie@0/uli1575@0/isa@1e
+> OF: translating address: 00000001 00000070
+> OF: parent bus is default (na=3, ns=2) on /pcie@ffe09000/pcie@0/uli1575@0
+> OF: walking ranges...
+> OF: ISA map, cp=0, s=1000, da=70
+> OF: parent translation for: 01000000 00000000 00000000
+> OF: with offset: 70
+> OF: one level translation: 00000000 00000000 00000070
+> OF: parent bus is pci (na=3, ns=2) on /pcie@ffe09000/pcie@0
+> OF: walking ranges...
+> OF: default map, cp=a0000000, s=20000000, da=70
+> OF: default map, cp=0, s=10000, da=70
+> OF: parent translation for: 01000000 00000000 00000000
+> OF: with offset: 70
+> OF: one level translation: 01000000 00000000 00000070
+> OF: parent bus is pci (na=3, ns=2) on /pcie@ffe09000
+> OF: walking ranges...
+> OF: PCI map, cp=0, s=10000, da=70
+> OF: parent translation for: 01000000 00000000 00000000
+> OF: with offset: 70
+> OF: one level translation: 01000000 00000000 00000070
+> OF: parent bus is default (na=2, ns=2) on /
+> OF: walking ranges...
+> OF: PCI map, cp=0, s=10000, da=70
+> OF: parent translation for: 00000000 ffc10000
+> OF: with offset: 70
+> OF: one level translation: 00000000 ffc10070
+> OF: reached root node
+> 
+> With commit e38c0a1f in place, address translation fails:
+> 
+> OF: ** translation for device /pcie@ffe09000/pcie@0/uli1575@0/isa@1e/rtc@70 **
+> OF: bus is isa (na=2, ns=1) on /pcie@ffe09000/pcie@0/uli1575@0/isa@1e
+> OF: translating address: 00000001 00000070
+> OF: parent bus is default (na=3, ns=2) on /pcie@ffe09000/pcie@0/uli1575@0
+> OF: walking ranges...
+> OF: ISA map, cp=0, s=1000, da=70
+> OF: parent translation for: 01000000 00000000 00000000
+> OF: with offset: 70
+> OF: one level translation: 00000000 00000000 00000070
+> OF: parent bus is pci (na=3, ns=2) on /pcie@ffe09000/pcie@0
+> OF: walking ranges...
+> OF: default map, cp=a0000000, s=20000000, da=70
+> OF: default map, cp=0, s=10000, da=70
+> OF: not found !
+> 
+> Either e38c0a1f should be reverted, or uli1575 (and perhaps other similar devices) have to be described in device 
+> trees differently.
 
-> This implementation is only compatible with device tree definition.
+Reverting would break Tegra PCIe, but you should not have to change the
+DT either. So we need a solution.
 
-It looks like these cards should be supportable using the generic simple
-card bindings that Morimoto-san implemented, you can see these in -next
-as "ASoC: simple-card: add Device Tree support".  Can you check to see
-if that's the case?  If it is you'll still need Kconfig to enable
-building the SoC and CODEC drivers.
-=20
-> +menuconfig SND_FSL_SOC
-> +	tristate "SoC Audio for Freescale VF610 CPUs"
-> +	help
-> +	  Say Y or M if you want to add support for codecs attached to
-> +	  the VF610 CPUs.
-> +
-> +	  This will enable Freeacale SAI and SGTL5000 codec, and an extra
-> +	  TWR-AUDIO-SGTL sub-board is needed for SGTL5000.
+Is this something like this sufficient to fix it?
 
-This should select the dmaengine helpers (and should really have been
-split out as part of the first patch).
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 4b9317b..378aebd 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -74,7 +74,7 @@ static u64 of_bus_default_map(__be32 *addr, const
+__be32 *range,
+         * mapping doesn't specify a physical address. Rather, the address
+         * specifies an identifier that must match exactly.
+         */
+-       if (na > 2 && memcmp(range, addr, na * 4) != 0)
++       if (na > 2 && memcmp(range, addr, (na - 2) * 4) != 0)
+                return OF_BAD_ADDR;
 
---lHGcFxmlz1yfXmOs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSsetzAAoJELSic+t+oim9cO4P/jg9yDHoYxa8Ua0LQThK0258
-o4E8uD798kNnlP43iOfu1L4RPemIoDTrRG3+y10hfOy8kZLHuevIhh/aohoGCJQc
-6yME+8z76rEtwO1qszQBFQSmZRCyhNp2X6RxuzQy9a5GVJ5gqA5etE+BCVYSTKeZ
-iKjE3CmVPjJusTFR8QnGFrTorFppl4sYAQoyXDCU5cWgbGp219mzvKlXBlMFDQ3d
-XI5Mh+qGPlagbvpCVku0JMWanwleWWyG0F2xehGW/hBhs+enzQLzSDiyigX5yjDh
-Nmih+WFK6gegEhqdTNocf0g1KQvVkop5LQdZM4GB0E953LYxurOgMFgAPX4Jpw2H
-2vSgxpI/kl1mOxBR9o9vnPEIAAkPuXo27cizJNCxuAjydXN6WwIUM8N3w+jFYLRZ
-whDio6RPSzGxPv9+3UqyQ/A5+t74+GffUsd/tOQaHIvR3NefJ92JngKYD0ecEEzi
-AAeYso9bkf1yErw1f6zJO/cU9T1WDajLBk2WuI8LZTAcPYWKHhlpAkj9veEfoCgU
-Asvjx+r8ETwqXfcBnxAKj5O131L/US5+u4KzT8n13glVjmKPwhxbhgzlKPJZEKfw
-kUzn9Rm5BQQ1whZa1b+r2+rU1pd7ps+SycYafGSDkfNYgh4QGMQ+3zoggQwYiEcp
-E8ZhAt8Q5Dy1MxiepDGY
-=dJju
------END PGP SIGNATURE-----
-
---lHGcFxmlz1yfXmOs--
+        if (da < cp || da >= (cp + s))
