@@ -1,53 +1,64 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv3 4/7] Documentation: Add device tree bindings for
- Freescale SAI.
-Date: Wed, 18 Dec 2013 18:31:06 +0000
-Message-ID: <20131218183106.GF31886@sirena.org.uk>
-References: <1387250684-23406-1-git-send-email-Li.Xiubo@freescale.com>
- <1387250684-23406-5-git-send-email-Li.Xiubo@freescale.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v3 6/6] ARM: dts: exynos4: Add missing unit-address of
+ sysreg node
+Date: Wed, 18 Dec 2013 19:36:14 +0100
+Message-ID: <CA+Ln22Eia=m7EgifE+szALwfzKntsKJOizoCZereV4GWQhBonw@mail.gmail.com>
+References: <1386864738-19829-1-git-send-email-t.figa@samsung.com>
+	<1386864738-19829-7-git-send-email-t.figa@samsung.com>
+	<52B1E838.4030304@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="l+goss899txtYvYf"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387250684-23406-5-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: lgirdwood@gmail.com, timur@tabi.org, perex@perex.cz, r64188@freescale.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux@arm.linux.org.uk, tiwai@suse.de, grant.likely@linaro.org, fabio.estevam@freescale.com, LW@KARO-electronics.de, oskar@scara.com, shawn.guo@linaro.org, b42378@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <52B1E838.4030304@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Kukjin,
 
---l+goss899txtYvYf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+2013/12/18 Kukjin Kim <kgene.kim@samsung.com>:
+> On 12/13/13 01:12, Tomasz Figa wrote:
+>>
+>> The node contains reg property, so unit-address suffix should be present
+>> in its name.
+>>
+>> Signed-off-by: Tomasz Figa<t.figa@samsung.com>
+>> Acked-by: Kyungmin Park<kyungmin.park@samsung.com>
+>> Reviewed-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos4.dtsi | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4.dtsi
+>> b/arch/arm/boot/dts/exynos4.dtsi
+>> index 4fed2ad..ee173fe 100644
+>> --- a/arch/arm/boot/dts/exynos4.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4.dtsi
+>> @@ -99,7 +99,7 @@
+>>                 reg =<0x10440000 0x1000>;
+>>         };
+>>
+>> -       sys_reg: sysreg {
+>> +       sys_reg: sysreg@10010000 {
+>>                 compatible = "samsung,exynos4-sysreg", "syscon";
+>>                 reg =<0x10010000 0x400>;
+>>         };
+>
+>
+> Tomasz, I already Sachin's patch for similar changing of sys_reg property
+> with your reviewed tag.
+>
+> ARM: dts: Fix sysreg node name in exynos4.dtsi
+>
+> I've applied whole this series except this one.
+> If any problems, please kindly let me know.
 
-On Tue, Dec 17, 2013 at 11:24:41AM +0800, Xiubo Li wrote:
+Oh, I checked if this isn't already fixed when posting this series and
+I couldn't
+find any related patch. I guess it was posted quite a while ago.
 
-> +	      big-endian_regs;
-> +	      big-endian_data;
+Anyway, it's fine for me, thanks.
 
-I've applied this and fixed these two typos, thanks.
-
---l+goss899txtYvYf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSsennAAoJELSic+t+oim99IQP/3BNIkRro1y+W29acaoe8U8t
-L62vvE1U6htu+XEcy/2mQJt86bwG7oz1Mh7/ApE/0zZ41nBq8hLOiFDol4rzW/kk
-AOSasrmEtHxfmjxSOHirsnM8katw29nWEJAN04ZzbHyiZfrPanpi9RrG+0gaEPAC
-GGuFKkK9bs+Q5S7MUlKOm4ENWXUvDHmEtaE6tPGCD2TJ7PgUCdrlI5xdhuEPUzbJ
-/o9AIHbeog7N61blhui+tn1HkZzPxnqRpByWSFIAb+PUEpP7doXzT52V57RN5D9z
-13LLZh1CH9pcrldZ3ext2+LuHbwIUV4QE//nXvDko3TZWew/ZA05nnMkvxeFHGPe
-NUJ5e/NqXGcCcTZjM9TBV+lcSEgVcm+t8LajLQFbm+l2CNin59CMUlIvHj1jYJbw
-NM8yPHeuTXTxIs0gWfU/N5jpRF60YJkngX5JEvj4kHFuIe5wXu2x3+aPSes91C8x
-YBiGHyZubdGYjr4t3uFbjIjRUR3NROCYXu19uSGIQHWo0lIEIevXjq8l3qw0udbb
-DuxvlQRYKbxP5/RtrmYWc7PitdoKRzKwXW+EULHALTAmwrAL8grKpuS4Xy36dteH
-5WHRWhSUzDs0VrpqRWQuI1Iy9MGUATwwY5tifOiamje74ec/as/Crm9Qymtpguzk
-S1N2v02gyvbuOVYqn5yI
-=NasZ
------END PGP SIGNATURE-----
-
---l+goss899txtYvYf--
+Best regards,
+Tomasz
