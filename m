@@ -1,85 +1,90 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv5,RESEND] rtc: Add support for Intersil ISL12057 I2C RTC chip
-Date: Wed, 18 Dec 2013 20:34:33 +0100
-Message-ID: <87eh5a7y2e.fsf@natisbad.org>
-References: <28bfd1b8cd4725a70fb713a8b6503e7f5db13d71.1387305663.git.arno@natisbad.org>
-	<20131218122419.GM28455@sirena.org.uk>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH 1/2] ARM: dts: Fix status property of mmc nodes for snow
+ board
+Date: Thu, 19 Dec 2013 04:35:33 +0900
+Message-ID: <52B1F905.1060206@samsung.com>
+References: <1386571118-17793-1-git-send-email-yuvaraj.cd@samsung.com>	<CAD=FV=WqgGPZaEz46JLJAPymLA5Wzehgre2Z7X4AFAWN9L_Lvg@mail.gmail.com>	<52A62E7A.1010006@samsung.com> <CAOesGMha3i+k+aBSivJopRxoi1rxAaF+ktU4KG9vfTf54A8f8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131218122419.GM28455@sirena.org.uk> (Mark Brown's message of
-	"Wed, 18 Dec 2013 12:24:19 +0000")
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMha3i+k+aBSivJopRxoi1rxAaF+ktU4KG9vfTf54A8f8Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Sonny Rao <sonnyrao@chromium.org>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Mark Brown <broonie@kernel.org> writes:
-
-> On Tue, Dec 17, 2013 at 08:07:28PM +0100, Arnaud Ebalard wrote:
->> 
->> Intersil ISL12057 is an I2C RTC chip also supporting two alarms. This
->> patch only adds support for basic RTC functionalities (i.e. getting and
->> setting time). Tests have been performed on NETGEAR ReadyNAS 102 w/
->> startup/shutdown scripts, hwclock, ntpdate and openntpd.
+On 12/19/13 03:38, Olof Johansson wrote:
+> On Mon, Dec 9, 2013 at 12:56 PM, Kukjin Kim<kgene.kim@samsung.com>  wrote:
+>> On 12/10/13 01:16, Doug Anderson wrote:
+>>>
+>>> Yuvaraj,
+>>>
+>>> On Sun, Dec 8, 2013 at 10:38 PM, Yuvaraj Kumar C D<yuvaraj.cd@gmail.com>
+>>> wrote:
+>>>>
+>>>> Commit 0c3de788 ("ARM: dts: change status property of dwmmc nodes
+>>>> for exynos5250") missed out handling the exynos5250 snow dts file.
+>>>>
+>>>> Signed-off-by : Abhilash Kesavan<a.kesavan@samsung.com>
+>>>>
+>>>> Signed-off-by: Yuvaraj Kumar C D<yuvaraj.cd@samsung.com>
+>>>> ---
+>>>>    arch/arm/boot/dts/cros5250-common.dtsi |    4 ----
+>>>>    arch/arm/boot/dts/exynos5250-snow.dts  |    9 +++++++++
+>>>>    2 files changed, 9 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/cros5250-common.dtsi
+>>>> b/arch/arm/boot/dts/cros5250-common.dtsi
+>>>> index 6470536..1ceb62e 100644
+>>>> --- a/arch/arm/boot/dts/cros5250-common.dtsi
+>>>> +++ b/arch/arm/boot/dts/cros5250-common.dtsi
+>>>> @@ -247,10 +247,6 @@
+>>>>                   };
+>>>>           };
+>>>>
+>>>> -       mmc@12210000 {
+>>>> -               status = "disabled";
+>>>> -       };
+>>>> -
+>>>>           mmc@12220000 {
+>>>>                   num-slots =<1>;
+>>>>                   supports-highspeed;
+>>>> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts
+>>>> b/arch/arm/boot/dts/exynos5250-snow.dts
+>>>> index a9395c4..67484d1 100644
+>>>> --- a/arch/arm/boot/dts/exynos5250-snow.dts
+>>>> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
+>>>> @@ -171,11 +171,20 @@
+>>>>                   };
+>>>>           };
+>>>>
+>>>> +       mmc@12200000 {
+>>>> +               status = "okay";
+>>>> +       };
+>>>> +
+>>>> +       mmc@12220000 {
+>>>> +               status = "okay";
+>>>> +       };
+>>>> +
+>>>
+>>>
+>>> I probably would have put the 12200000 and 12220000 ones in
+>>> cros5250-common since that's where all of the other stuff relating to
+>>> those ports is.  Some of it may need to be moved around once we get
+>>> the HP Chromebook 11 (exynos5250-spring) in place, but until then it
+>>> seems best to keep it all together.
+>>>
+>>> -Doug
+>>
+>>
+>> OK, sounds better, I don't know well about the HP Chromebook though ;-)
 >
-> Reviewed-by: Mark Brown <broonie@linaro.org>
-
-Thanks, Mark!
-
->> +static int isl12057_rtc_proc(struct device *dev, struct seq_file *seq)
->> +{
->> +	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
->> +	int reg, ret;
->> +
->> +	mutex_lock(&data->lock);
->> +
->> +	/* Status register */
->> +	ret = regmap_read(data->regmap, ISL12057_REG_SR, &reg);
->> +	if (ret) {
->> +		dev_err(dev, "%s: reading SR failed\n", __func__);
->> +		goto out;
->> +	}
->> +
->> +	seq_printf(seq, "status_reg\t:%s%s%s (0x%.2x)\n",
->> +		   (reg & ISL12057_REG_SR_OSF) ? " OSF" : "",
->> +		   (reg & ISL12057_REG_SR_A1F) ? " A1F" : "",
->> +		   (reg & ISL12057_REG_SR_A2F) ? " A2F" : "", reg);
->> +
->> +	/* Control register */
->> +	ret = regmap_read(data->regmap, ISL12057_REG_INT, &reg);
->> +	if (ret) {
->> +		dev_err(dev, "%s: reading INT failed\n", __func__);
->> +		goto out;
->> +	}
->> +
->> +	seq_printf(seq, "control_reg\t:%s%s%s%s%s%s (0x%.2x)\n",
->> +		   (reg & ISL12057_REG_INT_A1IE) ?  " A1IE"  : "",
->> +		   (reg & ISL12057_REG_INT_A2IE) ?  " A2IE"  : "",
->> +		   (reg & ISL12057_REG_INT_INTCN) ? " INTCN" : "",
->> +		   (reg & ISL12057_REG_INT_RS1) ?   " RS1"   : "",
->> +		   (reg & ISL12057_REG_INT_RS2) ?   " RS2"   : "",
->> +		   (reg & ISL12057_REG_INT_EOSC) ?  " EOSC"  : "", reg);
->> +
->> + out:
->> +	mutex_unlock(&data->lock);
+> This broke linux-next on snow ever since the original patch went in.
+> Please squash the above into the original patch or at the very least
+> apply it as soon as possible.
 >
-> I'm not sure the lock is achieving anything any more - the only time it
-> actualy protects more than one operation is the above but since the
-> status register is volatile anyway it might change between it being read
-> and the control register being read.
+Oops, OK. I've applied this separately just now.
 
-Well, I guess the lock will be more useful when alarm code will be added
-back, even if it does not hurt above. Now, regarding protection of
-regmap_bulk_write/read() calls in set/read time helpers, I also
-protected those because I thought it was good practice in general to
-serialize concurrent accesses to both the regmap structure and the
-device *in the driver*. But looking at the internals of regmap functions
-in more details, I guess I could have relied on those (they acquire an
-internal lock before action).
-
-Cheers,
-
-a+
+Thanks,
+Kukjin
