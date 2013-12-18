@@ -1,53 +1,81 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH V2 1/2] ARM: imx: add vddsoc/pu setpoint info into dts
-Date: Wed, 18 Dec 2013 16:24:48 +0800
-Message-ID: <20131218082445.GJ6691@S2101-09.ap.freescale.net>
-References: <1387318102-11070-1-git-send-email-b20788@freescale.com>
- <20131218070538.GE6691@S2101-09.ap.freescale.net>
- <20131218201742.GB20579@ubuntu>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 5/5] i2c: riic: add driver
+Date: Wed, 18 Dec 2013 09:42:22 +0100
+Message-ID: <CAMuHMdV0X6ZUN4YOnCHOGGFTtMWJ5s1D1fOene04KzbMg+nWFQ@mail.gmail.com>
+References: <1387316678-10174-1-git-send-email-wsa@the-dreams.de>
+	<1387316678-10174-6-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131218201742.GB20579@ubuntu>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anson Huang <b20788@freescale.com>
-Cc: rjw@rjwysocki.net, viresh.kumar@linaro.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1387316678-10174-6-git-send-email-wsa@the-dreams.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Linux-sh list <linux-sh@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2013 at 03:17:42PM -0500, Anson Huang wrote:
-> > > +		operating-points = <
-> > > +			/* kHz    uV */
-> > > +			1200000 1275000
-> > > +			996000  1250000
-> > > +			792000  1150000
-> > > +			396000  975000
-> > > +		>;
-> > > +		fsl,soc-operating-points = <
-> > > +			/* ARM kHz  SOC-PU uV */
-> > > +			1200000 1275000
-> > > +			996000	1250000
-> > > +			792000	1175000
-> > > +			396000	1175000
-> > > +		>;
-> > > +		clock-latency = <61036>; /* two CLK32 periods */
-> > > +		clocks = <&clks 104>, <&clks 6>, <&clks 16>,
-> > > +			 <&clks 17>, <&clks 170>;
-> > > +		clock-names = "arm", "pll2_pfd2_396m", "step",
-> > > +			      "pll1_sw", "pll1_sys";
-> > > +		arm-supply = <&reg_arm>;
-> > > +		pu-supply = <&reg_pu>;
-> > > +		soc-supply = <&reg_soc>;
-> > 
-> > Any properties in the example that are required for a successful driver
-> > probe should be documented in 'Required properties', and others are in
-> > 'Optional properties'.
-> 
-> I will not list so many properties as example as long as I describe this
-> preoperties should be included in cpu@0's node?
+CC devicetree@vger.kernel.org for the bindings part.
 
-The example is good.  But you also need to document properties clocks,
-clock-names, arm-supply etc.
+On Tue, Dec 17, 2013 at 10:44 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> From: Wolfram Sang <wsa@sang-engineering.com>
+>
+> Tested with a r7s72100 genmai board acessing an eeprom.
+>
+> Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-riic.txt |  29 ++
+>  drivers/i2c/busses/Kconfig                         |  10 +
+>  drivers/i2c/busses/Makefile                        |   1 +
+>  drivers/i2c/busses/i2c-riic.c                      | 426 +++++++++++++++++++++
+>  4 files changed, 466 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-riic.txt
+>  create mode 100644 drivers/i2c/busses/i2c-riic.c
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-riic.txt b/Documentation/devicetree/bindings/i2c/i2c-riic.txt
+> new file mode 100644
+> index 0000000..900d129
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-riic.txt
+> @@ -0,0 +1,29 @@
+> +Device tree configuration for i2c-ocores
 
-Shawn
+(e.g.) ... for Renesas RIIC SPI
 
+> +
+> +Required properties:
+> +- compatible      : "renesas,riic-<soctype>". "renesas,riic-rz" as fallback
+> +- reg             : address start and address range size of device
+> +- interrupts      : 8 interrupts (TEI, RI, TI, SPI, STI, NAKI, ALI, TMOI)
+> +- clock-frequency : frequency of bus clock in Hz
+> +- #address-cells  : should be <1>
+> +- #size-cells     : should be <0>
+> +
+> +Pinctrl properties might be needed, too. See there.
+> +
+> +Example:
+> +
+> +       i2c0: i2c@fcfee000 {
+> +               compatible = "renesas,riic-r7s72100", "renesas,riic-rz";
+> +               reg = <0xfcfee000 0x44>;
+> +               interrupts = <0 157 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <0 158 IRQ_TYPE_EDGE_RISING>,
+> +                            <0 159 IRQ_TYPE_EDGE_RISING>,
+> +                            <0 160 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <0 161 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <0 162 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <0 163 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <0 164 IRQ_TYPE_LEVEL_HIGH>;
+> +               clock-frequency = <100000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
