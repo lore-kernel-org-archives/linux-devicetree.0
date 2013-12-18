@@ -1,194 +1,152 @@
-From: Igor Grinberg <grinberg@compulab.co.il>
-Subject: Re: [PATCH] ARM: dts: Add support for sbc-3xxx with cm-t3730
-Date: Wed, 18 Dec 2013 10:45:00 +0200
-Message-ID: <52B1608C.3010709@compulab.co.il>
-References: <1386962541-18498-1-git-send-email-tony@atomide.com> <52AF065A.4010205@compulab.co.il> <20131216191754.GD26293@atomide.com> <52AFF9D0.5080400@compulab.co.il> <20131217193134.GB27438@atomide.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 2/2] gpio: davinci: reuse for Keystone SoC
+Date: Wed, 18 Dec 2013 12:07:52 +0200
+Message-ID: <1387361272-20861-3-git-send-email-grygorii.strashko@ti.com>
+References: <1387361272-20861-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131217193134.GB27438@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Dmitry Lifshitz <lifshitz@compulab.co.il>, Nikita Kiryanov <nikita@compulab.co.il>
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1387361272-20861-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/17/13 21:31, Tony Lindgren wrote:
-> * Igor Grinberg <grinberg@compulab.co.il> [131216 23:16]:
->> On 12/16/13 21:17, Tony Lindgren wrote:
->>> * Igor Grinberg <grinberg@compulab.co.il> [131216 05:57]:
->>>> On 12/13/13 21:22, Tony Lindgren wrote:
+The similar GPIO HW block is used by keystone SoCs as
+in Davinci SoCs.
+Hence, reuse Davinci GPIO driver for Keystone taking into
+account that Keystone contains ARM GIC IRQ controller which
+is implemented using IRQ Chip.
 
-[...]
+Documentation:
+	http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
 
->  
->> I think we can drop the different memory sizes and
->> let boot loader adjust the blob. This will make the list shorter:
->> omap3-cm-t3x.dtsi	- common to cm-t3x cpu boards
->> omap3-cm-t3x30.dtsi	- common to cm-t3730 and cm-t3530
->> omap3-cm-t3730.dtsi	- cm-t3730 specific
->> omap3-cm-t3530.dtsi	- cm-t3530 specific
->> omap3-cm-t3517.dtsi	- cm-t3517 specific
->> omap3-sb-t35.dtsi	- sb-t35 specific
->> omap3-cb-t3.dtsi	- cb-t3 specific
->> omap3-sbc-t3730.dts	- sb-t35 with cm-t3730 and default memory size
->> omap3-sbc-t3530.dts	- sb-t35 with cm-t3530 and default memory size
->> omap3-sbc-t3517.dts	- sb-t35 with cm-t3517 and default memory size
->> omap3-em-t3730.dts	- cb-t3 with cm-t3730 and default memory size
->> omap3-em-t3530.dts	- cb-t3 with cm-t3530 and default memory size
->>
->> So what do you think?
->  
-> Makes sense to me. I've updated the patch below to use the following:
-> 
-> omap3-cm-t3x30.dtsi	- common to cm-t3730 and cm-t3530
-> omap3-cm-t3730.dts	- cm-t3730 specific, should work on it's own too, not a .dtsi
-> omap3-sb-t35.dtsi	- sb-t35 specific
-> omap3-sbc-t3730.dts	- sb-t35 with cm-t3730 and default memory size
-> 
-> So the only changes compared to your naming are to not use .dtsi
-> extension for omap3-cm-t3730.dts, and I did not add omap3-cm-t3x.dtsi
-> as I don't know the details.
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-Ok.
+Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
+ drivers/gpio/gpio-davinci.c                        |   46 ++++++++++++++++----
+ 2 files changed, 40 insertions(+), 10 deletions(-)
 
-> 
-> It's probably best that you guys take over this patch from here and
-> add omap3-cm-t3x30.dtsi if needed.
-
-Ok.
-
-> 
-> I got the basic stuff working for what I need right now for my router
-> to work, which is MMC, both Ethernet controllers and wl12xx. So I'm
-> not going to tweak this patch further. Of course having the battery
-> charging working would be nice for a router to have a backup battery :)
-> 
-> There are still some issues I've noticed:
-> 
-> 1. Removing and reinserting the wl12xx modules seems to kill the
->    WLAN
-> 
-> 2. Ethernet interfaces only come up if there's a cable connected
-
-I see. Ok then, we'll try to figure those things out.
-
-[...]
-
->>>>> +	mmc2_pins: pinmux_mmc2_pins {
->>>>> +		pinctrl-single,pins = <
->>>>> +			0x128 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_clk.sdmmc2_clk */
->>>>> +			0x12a (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_cmd.sdmmc2_cmd */
->>>>> +			0x12c (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat0.sdmmc2_dat0 */
->>>>> +			0x12e (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat1.sdmmc2_dat1 */
->>>>> +			0x130 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat2.sdmmc2_dat2 */
->>>>> +			0x132 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc2_dat3.sdmmc2_dat3 */
->>>>
->>>> Here the following is missing:
->>>> 0x134 (PIN_OUTPUT | MUX_MODE1)	/* sdmmc2_dat4.sdmmc2_dir_dat0 */
->>>
->>> That seems to be used for the wl12xx GPIO, so it's listed at
->>> wl12xx_gpio below.
->>
->> Yes, but only on cm-t3730 (and actually starting from revision 1.2),
->> not cm-t3530...
-> 
-> Sounds like that needs another set of .dts files, or patching in the
-> bootloader. 
-
-Yep, IMO, .dts will be better, as I think pinmux is something
-the kernel should be aware of...
-
-[...]
-
-> 8< ----------------------------------
-> From: Tony Lindgren <tony@atomide.com>
-> Date: Tue, 10 Dec 2013 15:03:34 -0800
-> Subject: [PATCH] ARM: dts: Add support for sbc-3xxx with cm-t3730
-> 
-> This adds support for CompuLab SBC-T3530, also known as cm-t3730:
-> 
-> http://compulab.co.il/products/sbcs/sbc-t3530/
-> 
-> It seems that with the sbc-3xxx mainboard is also used on
-> SBC-T3517 and SBC-T3730 with just a different CPU module:
-> 
-> http://compulab.co.il/products/sbcs/sbc-t3517/
-> http://compulab.co.il/products/sbcs/sbc-t3730/
-> 
-> So let's add a common omap3-sb-t35.dtsi and then separate SoC
-> specific omap3-sbc-t3730.dts, omap3-sbc-t3530.dts and
-> omap3-sbc-t3517.dts.
-> 
-> I've tested this with SBC-T3730 as that's the only one I have.
-> At least serial, both Ethernet controllers, MMC, and wl12xx WLAN
-> work.
-> 
-> Note that WLAN seems to be different for SBC-T3530. And SBC-T3517
-> may need some changes for the EMAC Ethernet if that's used
-> instead of the smsc911x.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Igor Grinberg <grinberg@compulab.co.il>
-> Cc: Mike Rapoport <mike@compulab.co.il>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-
-Acked-by: Igor Grinberg <grinberg@compulab.co.il>
-
-This one looks great!
-Really minor comments below (we can fix those later)
-
-[...]
-
-> diff --git a/arch/arm/boot/dts/omap3-cm-t3730.dts b/arch/arm/boot/dts/omap3-cm-t3730.dts
-> new file mode 100644
-> index 0000000..80cf668
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-cm-t3730.dts
-
-[...]
-
-> +&mmc1 {
-> +	vmmc-supply = <&vmmc1>;
-> +	vmmc_aux-supply = <&vsim>;
-
-vsim is not present in TPS65930...
-can be just left empty or set to a fixed voltage regulator.
-
-> +	bus-width = <4>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc1_pins>;
-> +};
-
-[...]
-
-> diff --git a/arch/arm/boot/dts/omap3-cm-t3x30.dtsi b/arch/arm/boot/dts/omap3-cm-t3x30.dtsi
-> new file mode 100644
-> index 0000000..bf1b72c
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-cm-t3x30.dtsi
-
-[...]
-
-> +&i2c1 {
-> +	clock-frequency = <2600000>;
-
-There is also an EEPROM on this bus, although we still don't
-have it registered in the dts, but it can be registered from
-userspace and is also accessible using i2c-tools.
-This should be 400KHz max for the EEPROM to work.
-
-> +
-> +	twl: twl@48 {
-> +		reg = <0x48>;
-> +		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-> +		interrupt-parent = <&intc>;
-> +	};
-> +};
-
-[...]
-
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+index a2e839d..4ce9862 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+@@ -1,7 +1,7 @@
+-Davinci GPIO controller bindings
++Davinci/Keystone GPIO controller bindings
+ 
+ Required Properties:
+-- compatible: should be "ti,dm6441-gpio"
++- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+ 
+ - reg: Physical base address of the controller and the size of memory mapped
+        registers.
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index 1b33806..38741cc 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -413,6 +413,26 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
+ 	.xlate = irq_domain_xlate_onetwocell,
+ };
+ 
++static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
++{
++	static struct irq_chip_type gpio_unbanked;
++
++	gpio_unbanked = *container_of(irq_get_chip(irq),
++				      struct irq_chip_type, chip);
++
++	return &gpio_unbanked.chip;
++};
++
++static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
++{
++	static struct irq_chip gpio_unbanked;
++
++	gpio_unbanked = *irq_get_chip(irq);
++	return &gpio_unbanked;
++};
++
++static const struct of_device_id davinci_gpio_ids[];
++
+ /*
+  * NOTE:  for suspend/resume, probably best to make a platform_device with
+  * suspend_late/resume_resume calls hooking into results of the set_wake()
+@@ -433,6 +453,18 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 	struct davinci_gpio_platform_data *pdata = dev->platform_data;
+ 	struct davinci_gpio_regs __iomem *g;
+ 	struct irq_domain	*irq_domain = NULL;
++	const struct of_device_id *match;
++	struct irq_chip *irq_chip;
++	struct irq_chip *(*gpio_get_irq_chip)(unsigned int irq);
++
++	/*
++	 * Use davinci_gpio_get_irq_chip by default to handle non DT cases
++	 */
++	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
++	match = of_match_device(of_match_ptr(davinci_gpio_ids),
++				dev);
++	if (match)
++		gpio_get_irq_chip = match->data;
+ 
+ 	ngpio = pdata->ngpio;
+ 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+@@ -489,8 +521,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 	 * IRQ mux conflicts; gpio_irq_type_unbanked() is only for GPIOs.
+ 	 */
+ 	if (pdata->gpio_unbanked) {
+-		static struct irq_chip_type gpio_unbanked;
+-
+ 		/* pass "bank 0" GPIO IRQs to AINTC */
+ 		chips[0].chip.to_irq = gpio_to_irq_unbanked;
+ 		chips[0].gpio_irq = bank_irq;
+@@ -499,10 +529,9 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 
+ 		/* AINTC handles mask/unmask; GPIO handles triggering */
+ 		irq = bank_irq;
+-		gpio_unbanked = *container_of(irq_get_chip(irq),
+-					      struct irq_chip_type, chip);
+-		gpio_unbanked.chip.name = "GPIO-AINTC";
+-		gpio_unbanked.chip.irq_set_type = gpio_irq_type_unbanked;
++		irq_chip = gpio_get_irq_chip(irq);
++		irq_chip->name = "GPIO-AINTC";
++		irq_chip->irq_set_type = gpio_irq_type_unbanked;
+ 
+ 		/* default trigger: both edges */
+ 		g = gpio2regs(0);
+@@ -511,7 +540,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 
+ 		/* set the direct IRQs up to use that irqchip */
+ 		for (gpio = 0; gpio < pdata->gpio_unbanked; gpio++, irq++) {
+-			irq_set_chip(irq, &gpio_unbanked.chip);
++			irq_set_chip(irq, irq_chip);
+ 			irq_set_handler_data(irq, &chips[gpio / 32]);
+ 			irq_set_status_flags(irq, IRQ_TYPE_EDGE_BOTH);
+ 		}
+@@ -554,7 +583,8 @@ done:
+ 
+ #if IS_ENABLED(CONFIG_OF)
+ static const struct of_device_id davinci_gpio_ids[] = {
+-	{ .compatible = "ti,dm6441-gpio", },
++	{ .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
++	{ .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
 -- 
-Regards,
-Igor.
+1.7.9.5
