@@ -1,95 +1,69 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 1/1] ARM: dts: Add PMIC support to arndale-octa
-Date: Wed, 18 Dec 2013 10:37:50 +0530
-Message-ID: <CAK9yfHzQeXQtPXXZ5tU1PFmXbf7XCkC-+tOA4usV8E5STkpVsw@mail.gmail.com>
-References: <1386656958-28292-1-git-send-email-sachin.kamat@linaro.org>
-	<20131210185416.GH11468@sirena.org.uk>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH v3 0/3] regulator: act8865: add PMIC driver
+Date: Wed, 18 Dec 2013 13:14:48 +0800
+Message-ID: <1387343691-18985-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20131210185416.GH11468@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: broonie@kernel.org
+Cc: lgirdwood@gmail.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, linux-doc@vger.kernel.org, vpalatin@chromium.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, wenyou.yang@atmel.com
 List-Id: devicetree@vger.kernel.org
 
 Hi Mark,
 
-Sorry for the late reply as I was sick and still recovering.
+Thanks a lot for your direction.
 
-On 11 December 2013 00:24, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Dec 10, 2013 at 11:59:18AM +0530, Sachin Kamat wrote:
->
->> Added PMIC node to Arndale-Octa board.
->
-> Is there a bootloader posted for this anywhere yet?
+According to your advice, I prepared this version.
 
-One version available here from Insignal:
-git://git.insignal.co.kr/insignal/arndale_octa-jb_mr1.1/u-boot
+The patch set is to add act8865 PMIC driver.
+
+The active-semi act8865 is designed as a PMIC for Atmel sama5d3x and at91sam9 series.
+Its datasheet is available at: http://www.active-semi.com/sheets/ACT8865_Datasheet.pdf.
+
+The patches is based on the branch: for-next of git respository, 
+	git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
+and [PATCH] regulator: read low power states configuration from device tree from Vincent Palatin
+	https://patchwork.kernel.org/patch/2833667/
+
+Thanks.
+
+Best Regards,
+Wenyou Yang
+
+v3 changelog:
+ 1./ Add map_voltage() operation which missed.
+ 2./ Remove regulator_unregister statement which no need.
+ 3./ Remvoe memset statement.
+ 4./ Change the device tree regulator-name with the supply name in the schematic.
+ 5./ List all theregulator name in the binding doc.
+
+v2 changelog:
+ 1./ Using regmap for register I/O instead of i2c function directly.
+ 2./ Using the helpers provided by the core.
+ 3./ Remove noisy logging.
+ 4./ Using the latest regulator register API.
+ 5./ Using module_i2c_driver helper macro replace module_init and module_exit.
+ 6./ Remove the vsel-state-low dt property which is not used now.
 
 
->
->> +                     regulators {
->> +                             ldo1_reg: LDO1 {
->> +                                     regulator-name = "vdd_ldo1";
->
-> So, there is a label on the schematic for PVDD_LDO1 but it's not
-> entirely obvious why that's there as throughout the rest of the
-> schematic it's got the rather more constructive name PVDD_ALIVE_1V0.
-> We should really be using the more readable versions of the names
-> in the DT since the whole point in overriding the driver default
-> names is to make it easier to associate the kernel diagnostics with
-> the schematic, what the DT is doing here serves no purpose.
->
-> The same comment applies to all the LDO supplies.
+Wenyou Yang (3):
+  regulator: act8865: add PMIC act8865 driver
+  regulator: act8865: add device tree binding doc
+  ARM: dts: sama5d3xcm: add the regulator device node
 
-I will update with the appropriate labels.
-
->
->> +                             buck2_reg: BUCK2 {
->> +                                     regulator-name = "vdd_arm";
->> +                                     regulator-min-microvolt = <800000>;
->> +                                     regulator-max-microvolt = <1500000>;
->> +                                     regulator-always-on;
->> +                                     regulator-boot-on;
->> +                             };
->
-> Why are you specifying boot-on?  It doesn't seem terribly plausible that
-> the cores won't be powered on boot, or that we can't tell what the state
-> is by reading the registers.
->
-> Same for all the DCDCs.
-
-Yes. Right. Will remove them.
-
->
->> +                             buck7_reg: BUCK7 {
->> +                                     regulator-name = "vdd_1.0v_ldo";
->> +                                     regulator-min-microvolt = <800000>;
->> +                                     regulator-max-microvolt = <1500000>;
->> +                                     regulator-always-on;
->> +                                     regulator-boot-on;
->> +                             };
->
-> This doesn't correspond to the schematic which says that BUCK7 is
-> supplying VIN_LLDO_1V4 (the input for some of the LDOs).  The voltage
-> range specified there doesn't seem terribly sensible either, are you
-> sure you haven't just got the underlying voltage range for the DCDC?
-> I can't see why you'd want to raise the voltage over 1.4V (that's rather
-> defeating the point) and while it'd be nice to have the core be able to
-> vary supply to track the headroom needed by the LDOs none of the LDOs
-> were configured with variable voltage so even if we implemented that
-> it'd never be used.
-
-That was definitely a mistake. It should be 1.4V Will fix it.
-
->
-> Similar issues apply to the other bucks being used to drop the battery
-> voltage for LDO supplies.
-
-Will check and update others appropriately. Thanks for your review and
-pointing out the errors.
+ .../bindings/regulator/act8865-regulator.txt       |   58 +++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ arch/arm/boot/dts/sama5d3xcm.dtsi                  |   46 +++
+ drivers/regulator/Kconfig                          |    8 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/act8865-regulator.c              |  381 ++++++++++++++++++++
+ include/linux/regulator/act8865.h                  |   53 +++
+ 7 files changed, 548 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+ create mode 100644 drivers/regulator/act8865-regulator.c
+ create mode 100644 include/linux/regulator/act8865.h
 
 -- 
-With warm regards,
-Sachin
+1.7.9.5
+
