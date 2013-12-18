@@ -1,51 +1,53 @@
-From: Anton Tikhomirov <av.tikhomirov@samsung.com>
-Subject: RE: [PATCH v4 3/9] phy: Add new Exynos USB PHY driver
-Date: Wed, 18 Dec 2013 09:54:33 +0900
-Message-ID: <001701cefb8b$b78a8ea0$269fabe0$%tikhomirov@samsung.com>
-References: <1386246579-25141-1-git-send-email-k.debski@samsung.com>
- <1386246579-25141-4-git-send-email-k.debski@samsung.com>
- <006a01cef551$7fb4e240$7f1ea6c0$%tikhomirov@samsung.com>
- <02d201cefb2b$9e04e710$da0eb530$%debski@samsung.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH v9 0/2] PWM: pwm-atmel: add PWM controller driver
+Date: Wed, 18 Dec 2013 09:21:12 +0800
+Message-ID: <52B0F888.2000905@atmel.com>
+References: <1386916910-24832-1-git-send-email-voice.shen@atmel.com>
+ <20131217103034.GE13823@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <02d201cefb2b$9e04e710$da0eb530$%debski@samsung.com>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Kamil Debski' <k.debski@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kyungmin.park@samsung.com, kishon@ti.com, 'Tomasz Figa' <t.figa@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Marek Szyprowski' <m.szyprowski@samsung.com>, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131217103034.GE13823@ulmo.nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, galak@codeaurora.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kamil,
+Hi Thierry,
 
-> Hi Anton,
-> 
-> > From: Anton Tikhomirov [mailto:av.tikhomirov@samsung.com]
-> > Sent: Tuesday, December 10, 2013 3:43 AM
-> >
-> > Hi Kamil,
-> >
-> > Same USB2.0 PHY may be used by several HCDs, for example EHCI and
-> OHCI.
-> > Consider the situation, when EHCI stops using the PHY and calls
-> > power_off, then OHCI becomes non-operational. In other words, PHY
-> > power_on and power_off calls must be balanced.
-> >
-> > Shall we handle it in your driver? (usage count?)
-> 
-> Please look in the drivers/phy/phy-core.c file. Usage count is handled
-> there - see phy_power_on and phy_power_off functions. I understand that
-> after both EHCI and OHCI power on the phy, the usage count is 2. So
-> powering off one of them (EHCI for instance) the usage count is still
-> 1, so the OHCI should still work properly.
+On 12/17/2013 06:30 PM, Thierry Reding wrote:
+> On Fri, Dec 13, 2013 at 02:41:48PM +0800, Bo Shen wrote:
+>> This patch series add Atmel PWM controller driver support.
+>>
+>> Changes in v9:
+>>    - Address the comments from Thierry Reding
+>
+> Hi,
+>
+> I've pushed a slightly modified version of this series. There were a few
+> minor whitespace/coding style issues, but perhaps more importantly I've
+> modified the period change check to be done earlier and in a more
+> generic way.
 
-Oops, sorry, missed that.
+Thanks for your work.
 
-> 
-> [snip]
-> 
-> Best wishes,
-> --
-> Kamil Debski
-> Samsung R&D Institute Poland
+> Can you please check that the version I've pushed to the for-next branch
+> still works for you?
+
+Tested OK with pwm leds and pwm backlight.
+Thanks again.
+
+> Thanks,
+> Thierry
+
+Best Regards,
+Bo Shen
