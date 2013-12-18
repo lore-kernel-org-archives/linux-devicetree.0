@@ -1,33 +1,239 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 3/5] mfd: sec: Remove sec_reg* regmap helpers
-Date: Wed, 18 Dec 2013 15:03:51 +0100
-Message-ID: <1387375431.1433.2.camel@AMDC1943>
-References: <1387286601-21646-1-git-send-email-k.kozlowski@samsung.com>
- <1387286601-21646-4-git-send-email-k.kozlowski@samsung.com>
- <20131218133625.GT28455@sirena.org.uk>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/9] Input: pixcir_i2c_ts: Add device tree support
+Date: Wed, 18 Dec 2013 06:09:18 -0800
+Message-ID: <20131218140918.GA28504@core.coreip.homeip.net>
+References: <1387358480-8313-1-git-send-email-rogerq@ti.com>
+ <1387358480-8313-2-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <20131218133625.GT28455@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Thomas Abraham <thomas.abraham@linaro.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1387358480-8313-2-git-send-email-rogerq@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: rydberg@euromail.se, jcbian@pixcir.com.cn, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-12-18 at 13:36 +0000, Mark Brown wrote:
-> On Tue, Dec 17, 2013 at 02:23:19PM +0100, Krzysztof Kozlowski wrote:
-> > Remove sec_reg* helpers as they are not used anymore. These helpers were
-> > error-prone as they mixed u8 with unsigned int and they changed order of
-> > some of parameters (val and mask in sec_reg_update()).
+Hi Roger,
+
+On Wed, Dec 18, 2013 at 02:51:12PM +0530, Roger Quadros wrote:
+> Provide device tree support and binding information.
+> Change platform data parameters from x/y_max to x/y_size..
+
+I'd rather keep them as they were.
+
 > 
-> This doesn't apply against the regulator tree.  Can you please check
-> what's going on here, I guess there may need to be some merge with MFD?
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
+> ---
+>  .../bindings/input/touchscreen/pixcir_i2c_ts.txt   | 26 ++++++++
+>  drivers/input/touchscreen/pixcir_i2c_ts.c          | 77 ++++++++++++++++++++--
+>  include/linux/input/pixcir_ts.h                    |  5 +-
+>  3 files changed, 101 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+> new file mode 100644
+> index 0000000..c0b0b270
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+> @@ -0,0 +1,26 @@
+> +* Pixcir I2C touchscreen controllers
+> +
+> +Required properties:
+> +- compatible: must be "pixcir,pixcir_ts"
+> +- reg: I2C address of the chip
+> +- interrupts: interrupt to which the chip is connected
+> +- attb-gpio: GPIO connected to the ATTB line of the chip
+> +- x-size: horizontal resolution of touchscreen
+> +- y-size: vertical resolution of touchscreen
+> +
+> +Example:
+> +
+> +	i2c@00000000 {
+> +		/* ... */
+> +
+> +		pixcir_ts@5c {
+> +			compatible = "pixcir,pixcir_ts";
+> +			reg = <0x5c>;
+> +			interrupts = <2 0>;
+> +			attb-gpio = <&gpf 2 0 2>;
+> +			x-size = <800>;
+> +			y-size = <600>;
+> +		};
+> +
+> +		/* ... */
+> +	};
+> diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+> index 6cc6b36..3a447c9 100644
+> --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
+> +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+> @@ -24,6 +24,10 @@
+>  #include <linux/i2c.h>
+>  #include <linux/input.h>
+>  #include <linux/input/pixcir_ts.h>
+> +#include <linux/gpio.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_device.h>
+>  
+>  struct pixcir_i2c_ts_data {
+>  	struct i2c_client *client;
+> @@ -125,15 +129,65 @@ static int pixcir_i2c_ts_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(pixcir_dev_pm_ops,
+>  			 pixcir_i2c_ts_suspend, pixcir_i2c_ts_resume);
+>  
+> +#if defined(CONFIG_OF)
 
-I think you need to rebase on current Linus' (at least 3.13-rc4) to get
-this patch:
-"mfd/rtc: s5m: fix register updating by adding regmap for RTC" (3e1e4a5f3a3)
+#ifdef is preferred for simple conditions.
 
-Best regards,
-Krzysztof
+> +static const struct of_device_id pixcir_of_match[];
+> +
+> +static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
+> +{
+> +	struct pixcir_ts_platform_data *pdata;
+> +	struct device_node *np = dev->of_node;
+> +	const struct of_device_id *match;
+> +
+> +	match = of_match_device(of_match_ptr(pixcir_of_match), dev);
+> +	if (!match)
+> +		return ERR_PTR(-EINVAL);
 
+Why do you need an explicit match here?
+
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	pdata->gpio_attb = of_get_named_gpio(np, "attb-gpio", 0);
+> +	if (!gpio_is_valid(pdata->gpio_attb))
+> +		dev_err(dev, "Failed to get ATTB GPIO\n");
+> +
+> +	if (of_property_read_u32(np, "x-size", &pdata->x_size)) {
+> +		dev_err(dev, "Failed to get x-size property\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	if (of_property_read_u32(np, "y-size", &pdata->y_size)) {
+> +		dev_err(dev, "Failed to get y-size property\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	dev_dbg(dev, "%s: x %d, y %d, gpio %d\n", __func__,
+> +				pdata->x_size, pdata->y_size, pdata->gpio_attb);
+> +
+> +	return pdata;
+> +}
+> +#else
+> +static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
+> +{
+> +	return NULL;
+
+This should be
+
+	return ERR_PTR(-EINVAL);
+
+since you test it with IS_ERR() later.
+
+> +}
+> +#endif
+> +
+>  static int pixcir_i2c_ts_probe(struct i2c_client *client,
+>  					 const struct i2c_device_id *id)
+>  {
+>  	const struct pixcir_ts_platform_data *pdata = client->dev.platform_data;
+> +	struct device *dev = &client->dev;
+> +	struct device_node *np = dev->of_node;
+>  	struct pixcir_i2c_ts_data *tsdata;
+>  	struct input_dev *input;
+>  	int error;
+>  
+> -	if (!pdata) {
+> +	if (np) {
+> +		pdata = pixcir_parse_dt(dev);
+> +		if (IS_ERR(pdata))
+> +			return PTR_ERR(pdata);
+
+We should be favoring kernel-provided platform data if it is pesent even
+if there is dt-data available. This way user can override firmware,m if
+needed.
+
+> +
+> +	} else if (!pdata) {
+>  		dev_err(&client->dev, "platform data not defined\n");
+>  		return -EINVAL;
+>  	}
+> @@ -157,10 +211,14 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+>  	__set_bit(EV_KEY, input->evbit);
+>  	__set_bit(EV_ABS, input->evbit);
+>  	__set_bit(BTN_TOUCH, input->keybit);
+> -	input_set_abs_params(input, ABS_X, 0, pdata->x_max, 0, 0);
+> -	input_set_abs_params(input, ABS_Y, 0, pdata->y_max, 0, 0);
+> -	input_set_abs_params(input, ABS_MT_POSITION_X, 0, pdata->x_max, 0, 0);
+> -	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, pdata->y_max, 0, 0);
+> +	input_set_abs_params(input, ABS_X,
+> +					0, pdata->x_size - 1, 0, 0);
+> +	input_set_abs_params(input, ABS_Y,
+> +					0, pdata->y_size - 1, 0, 0);
+> +	input_set_abs_params(input, ABS_MT_POSITION_X,
+> +					0, pdata->x_size - 1, 0, 0);
+> +	input_set_abs_params(input, ABS_MT_POSITION_Y,
+> +					0, pdata->y_size - 1, 0, 0);
+>  
+>  	input_set_drvdata(input, tsdata);
+>  
+> @@ -211,11 +269,20 @@ static const struct i2c_device_id pixcir_i2c_ts_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, pixcir_i2c_ts_id);
+>  
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id pixcir_of_match[] = {
+> +	{ .compatible = "pixcir,pixcir_ts", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pixcir_of_match);
+> +#endif
+
+#ifdef is preferred for simple conditions.
+
+> +
+>  static struct i2c_driver pixcir_i2c_ts_driver = {
+>  	.driver = {
+>  		.owner	= THIS_MODULE,
+>  		.name	= "pixcir_ts",
+>  		.pm	= &pixcir_dev_pm_ops,
+> +		.of_match_table = of_match_ptr(pixcir_of_match),
+>  	},
+>  	.probe		= pixcir_i2c_ts_probe,
+>  	.remove		= pixcir_i2c_ts_remove,
+> diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
+> index 7163d91..b34ff7e 100644
+> --- a/include/linux/input/pixcir_ts.h
+> +++ b/include/linux/input/pixcir_ts.h
+> @@ -3,8 +3,9 @@
+>  
+>  struct pixcir_ts_platform_data {
+>  	int (*attb_read_val)(void);
+> -	int x_max;
+> -	int y_max;
+> +	unsigned int x_size;	/* X axis resolution */
+> +	unsigned int y_size;	/* Y axis resolution */
+> +	int gpio_attb;		/* GPIO connected to ATTB line */
+>  };
+
+OK, it looks like the series were split awkwardly: you are defining data
+that is used by follow-up patches and its purpose is unclear when
+reviewing patch-by-patch. I'd recommend rearranging so that DT support
+patch is the very last in the series.
+
+>  
+>  #endif
+> -- 
+> 1.8.3.2
+> 
+
+Thanks.
+
+-- 
+Dmitry
