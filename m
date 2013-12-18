@@ -1,115 +1,97 @@
-From: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 6/7] Documentation: add the binding file for Quadspi
- driver
-Date: Thu, 19 Dec 2013 00:03:59 +0800
-Message-ID: <20131218160355.GA1145@gmail.com>
-References: <1387184330-14448-1-git-send-email-b32955@freescale.com>
- <1387184330-14448-7-git-send-email-b32955@freescale.com>
- <20131218153029.GF8064@book.gsilab.sittig.org>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 8/9] phy: add Broadcom Kona USB2 PHY driver
+Date: Wed, 18 Dec 2013 10:25:54 -0600
+Message-ID: <20131218162554.GF4970@saruman.home>
+References: <1387309356-17195-1-git-send-email-mporter@linaro.org>
+ <1387309356-17195-9-git-send-email-mporter@linaro.org>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Wtrm9ATX0sn6fFKv"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131218153029.GF8064-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, angus.clark-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, sourav.poddar-l0cyMroinI0@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1387309356-17195-9-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2013 at 04:30:29PM +0100, Gerhard Sittig wrote:
-> > +++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> > @@ -0,0 +1,31 @@
-> > +* Freescale Quad Serial Peripheral Interface(QuadSPI)
-> > +
-> > +Required properties:
-> > +- compatible : Should be "fsl,vf610-qspi"
-> > +- reg : Offset and length of the register set for the device
-> > +- interrupts : Should contain the interrupt for the device
-> > +- clocks : The clocks needed by the QuadSPI controller
-> > +- clock-names : the name of the clocks
-> > +- fsl,nor-num : Contains the number of SPI NOR chips connected to
-> > +                the controller.
-> > +- fsl,nor-size : the size of each SPI NOR.
-> > +- fsl,max-frequency : the frequency at which the SPI NOR works.
-> 
-> Those "fsl,*" properties somehow feel strange.  I comment on
-> details below the example since this should even better show why
-> I feel so.
-> 
-> > +
-> > +Example:
-> > +
-> > +qspi0: quadspi@40044000 {
-> > +	compatible = "fsl,vf610-qspi";
-> > +	reg = <0x40044000 0x1000>;
-> > +	interrupts = <0 24 0x04>;
-> > +	clocks = <&clks VF610_CLK_QSPI0_EN>,
-> > +		<&clks VF610_CLK_QSPI0>;
-> > +	clock-names = "qspi_en", "qspi";
-> > +	fsl,nor-num = <1>;
-> > +	fsl,nor-size = <0x1000000>;
-> > +	fsl,max-frequency = <66000000>;
-> > +	status = "okay";
-> > +
-> > +	flash0: s25fl128s@0 {
-> > +		....
-> > +	};
-> > +};
-> 
-> 
-> The number of chips connected to the controller should reflect in
-> the child nodes of the SPI NOR controller, and need not get
-> specified in redundant ways and with potential for errors when
-> they can get determined at runtime.
-thanks. I have already removed this property in the next version.
+--Wtrm9ATX0sn6fFKv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Dec 17, 2013 at 02:42:35PM -0500, Matt Porter wrote:
+> Add a driver for the internal Broadcom Kona USB 2.0 PHY found
+> on the BCM281xx family of SoCs.
+>=20
+> Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> 
-> The capacity of the flash chip as well as the maximum frequency
-> which the flash chip operates at should be features of the flash
-> chip (in combination with the board), i.e. of the child node and
-agree.
-thanks.
+Kishon, are you ok with this driver ?
 
-> not the controller.  SPI slaves already have a documented
-> property for the purpose of limiting transfer rates when they are
-> lower than the controller's i.e. busses capabilities.  Can't tell
-> from the top of my head whether there is a property for the
-> maximum frequency which a controller should use across the whole
-> bus.  In any case, either the property needs to get moved, or the
-> description should get updated to say "the max frequency at which
-> the controller will send data" or something.
-> 
-> The capacity of the flash chip should be a consequence of either
-> having gathered CFI information (if available) or having
-> identified the chip by its JEDEC ID and looked up its features in
-> an internal database.  Users should not need to specify the
-> capacity of the flash chip in the device tree.
+> +static int bcm_kona_usb2_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct bcm_kona_usb *phy;
+> +	struct resource *res;
+> +	struct phy *gphy;
+> +	struct phy_provider *phy_provider;
+> +
+> +	phy =3D devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> +	if (!phy)
+> +		return -ENOMEM;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	phy->regs =3D devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(phy->regs))
+> +		return PTR_ERR(phy->regs);
+> +
+> +	platform_set_drvdata(pdev, phy);
+> +
+> +	phy_provider =3D devm_of_phy_provider_register(dev,
+> +			of_phy_simple_xlate);
+> +	if (IS_ERR(phy_provider))
+> +		return PTR_ERR(phy_provider);
+> +
+> +	gphy =3D devm_phy_create(dev, &ops, NULL);
+> +	if (IS_ERR(gphy))
+> +		return PTR_ERR(gphy);
+> +
+> +	/* The Kona PHY supports an 8-bit wide UTMI interface */
+> +	phy_set_bus_width(gphy, 8);
+> +
+> +	phy_set_drvdata(gphy, phy);
 
-I will remove it in the next version.
+I think this set_drvdata() should be done before registering the
+provider, no ?
 
-> 
-> 
-> If the 'fsl,nor-size' property remains (which I doubt at the
-> moment), you cannot describe "the size of each" chip in one
-> single-cell spec.  So the documentation should get extended to
-> reflect multi-chip setups.  But I'd rather assume that the
-> property is not needed at all.
-> 
-> You can omit the 'status = "okay"' line since that is the default
-> already in the absence of the keyword.  This property is most
-> useful to declare yet not enable by default components in .dtsi
-> files and to do enable them in individual board files if
-> applicable.  This aspect need not be shown in the binding example
-> of a QSPI controller.
-> 
-> I'd suggest to use symbolic names for the flags in the last
-> interrupt specifier cell, as you do for clock items.
-I will use the symbolic name if it has.
-But if it not have a symbolic name, i have to keep it as it is now.
+--=20
+balbi
 
-Thanks
-Huang Shijie
+--Wtrm9ATX0sn6fFKv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSscySAAoJEIaOsuA1yqREK1sP/AtELOQS47cAHu1WkxAIyW4N
+k9gSqKh5l7yhAx/ynetfmV/F24ytX+ibr3kLsAYtyZxDn4JB9HZY+AeyCvLLbJwB
++QrCX++fHLodN4cpx88Q+vXMZtaUlWIFbw2N2wBDi4i/urKwx5e8MWX47S3AkxLm
+kI4q1Qnsuls34zOTKQUSSyUACYjAboQntHTa3qLlvAODapBRTAn3vpf1Z/7ze3Mx
+u+l/1Mj9CXMA70CfrYX4BCZico/anrM/ZhGflfuwmB+vEuhDv62FvuqC3g6aPnNw
+jnsglam6KTCKyKrQIwqLbGSSE/49PDuO02sZPKnpOe+D4lUiSyMK6uW8zn+KH4h5
+A6n2Ru0PHRNTpTsCIKG3AkCfujDyxeLbiCb0NZuyG3U/tNJDWLDlbcsicgzIGQEG
+fJrQnWwL6z4+8EaLbhXKcWIFSS8J7HbTkwtdGlCaoCZHBo0WNTNcpcBGs26l22iS
+xIb2JznDgEt6wz4HakXqmsP8q4Dg52jvUGqzmV3ziF94Oulr2lTLqZkFnJkzqBct
+fABDRSXehWlXoxMjEwUuBReOIlj4ZTzuTT2ZFQkWiFc42I5HmPywKSNMizzElkQ5
+LpOqQjU/ZSf+YcfcLH0ams9nBfe7XIycr6ReV51gRlbr9VvcrjjFLOkPftfSjpPt
+jNDa8rNjZnF9Af/Jnnur
+=Ay/j
+-----END PGP SIGNATURE-----
+
+--Wtrm9ATX0sn6fFKv--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
