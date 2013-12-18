@@ -1,53 +1,358 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 3/3] ARM: dts: sama5d3xcm: add the regulator device
- node
-Date: Wed, 18 Dec 2013 11:32:16 +0000
-Message-ID: <20131218113216.GK28455@sirena.org.uk>
-References: <1387343691-18985-1-git-send-email-wenyou.yang@atmel.com>
- <1387344301-19843-1-git-send-email-wenyou.yang@atmel.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: davinci: aemif: get rid of davinci-nand driver
+ dependency on aemif
+Date: Wed, 18 Dec 2013 13:51:32 +0200
+Message-ID: <52B18C44.2000305@ti.com>
+References: <1386267092-18615-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JufFrlwGZkm8bk/F"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387344301-19843-1-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: lgirdwood@gmail.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, linux-doc@vger.kernel.org, vpalatin@chromium.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1386267092-18615-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nsekhar-l0cyMroinI0@public.gmane.org
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 12/05/2013 08:11 PM, Ivan Khoronzhuk wrote:
+> The problem that the set timings code contains the call of Davinci
+> platform function davinci_aemif_setup_timing() which is not
+> accessible if kernel is built for another platform like Keystone.
+> 
+> The Keysone platform is going to use TI AEMIF driver.
+> If TI AEMIF is used we don't need to set timings and bus width.
+> It is done by AEMIF driver.
+> 
+> To get rid of davinci-nand driver dependency on aemif platform code
+> we moved aemif code to davinci platform.
+> 
+> The platform AEMIF code (aemif.c) has to be removed once Davinci
+> will be converted to DT and use ti-aemif.c driver.
+> 
+> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+> ---
+> v3..v2:
+> - rebased on following patch series:
+> 	[PATCH v3 0/9] Reuse davinci-nand driver for Keystone arch
+> 	http://www.spinics.net/lists/arm-kernel/msg291723.html
+> - removed AEMIF setup from next boards:
+> 	 arch/arm/mach-davinci/board-dm355-evm.c
+> 	 arch/arm/mach-davinci/board-dm355-leopard.c
+> 	 arch/arm/mach-davinci/board-dm365-evm.c
+> 	 arch/arm/mach-davinci/board-neuros-osd2.c
+> 	 arch/arm/mach-davinci/devices-tnetv107x.c
+> - removed repeated clk_get() from davinci_aemif_setup_timing()
+> 
+> v2..v1:
+> - enabled AEMIF clock
+> - removed EXPORT_SYMBOL(davinci_aemif_setup)
+> - renamed ugly name davinci_ntosd2_nandflash_device
+> CC:
+> Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+> 
+>   arch/arm/mach-davinci/aemif.c                   |  106 ++++++++++++++++++++---
+>   arch/arm/mach-davinci/board-da830-evm.c         |    3 +
+>   arch/arm/mach-davinci/board-da850-evm.c         |    3 +
+>   arch/arm/mach-davinci/board-dm644x-evm.c        |    5 ++
+>   arch/arm/mach-davinci/board-dm646x-evm.c        |    3 +
+>   arch/arm/mach-davinci/board-mityomapl138.c      |    3 +
+>   drivers/mtd/nand/davinci_nand.c                 |   22 -----
+>   include/linux/platform_data/mtd-davinci-aemif.h |    5 +-
+>   8 files changed, 115 insertions(+), 35 deletions(-)
+> 
+> diff --git a/arch/arm/mach-davinci/aemif.c b/arch/arm/mach-davinci/aemif.c
+> index f091a90..7adfb7e 100644
+> --- a/arch/arm/mach-davinci/aemif.c
+> +++ b/arch/arm/mach-davinci/aemif.c
+> @@ -16,6 +16,7 @@
+>   #include <linux/time.h>
+>   
+>   #include <linux/platform_data/mtd-davinci-aemif.h>
+> +#include <linux/platform_data/mtd-davinci.h>
+>   
+>   /* Timing value configuration */
+>   
+> @@ -43,6 +44,17 @@
+>   				WSTROBE(WSTROBE_MAX) | \
+>   				WSETUP(WSETUP_MAX))
+>   
+> +static inline unsigned int davinci_aemif_readl(void __iomem *base, int offset)
+> +{
+> +	return readl_relaxed(base + offset);
+> +}
+> +
+> +static inline void davinci_aemif_writel(void __iomem *base,
+> +					int offset, unsigned long value)
+> +{
+> +	writel_relaxed(value, base + offset);
+> +}
+> +
+>   /*
+>    * aemif_calc_rate - calculate timing data.
+>    * @wanted: The cycle time needed in nanoseconds.
+> @@ -76,6 +88,7 @@ static int aemif_calc_rate(int wanted, unsigned long clk, int max)
+>    * @t: timing values to be progammed
+>    * @base: The virtual base address of the AEMIF interface
+>    * @cs: chip-select to program the timing values for
+> + * @clkrate: the AEMIF clkrate
+>    *
+>    * This function programs the given timing values (in real clock) into the
+>    * AEMIF registers taking the AEMIF clock into account.
+> @@ -86,24 +99,17 @@ static int aemif_calc_rate(int wanted, unsigned long clk, int max)
+>    *
+>    * Returns 0 on success, else negative errno.
+>    */
+> -int davinci_aemif_setup_timing(struct davinci_aemif_timing *t,
+> -					void __iomem *base, unsigned cs)
+> +static int davinci_aemif_setup_timing(struct davinci_aemif_timing *t,
+> +					void __iomem *base, unsigned cs,
+> +					unsigned long clkrate)
+>   {
+>   	unsigned set, val;
+>   	int ta, rhold, rstrobe, rsetup, whold, wstrobe, wsetup;
+>   	unsigned offset = A1CR_OFFSET + cs * 4;
+> -	struct clk *aemif_clk;
+> -	unsigned long clkrate;
+>   
+>   	if (!t)
+>   		return 0;	/* Nothing to do */
+>   
+> -	aemif_clk = clk_get(NULL, "aemif");
+> -	if (IS_ERR(aemif_clk))
+> -		return PTR_ERR(aemif_clk);
+> -
+> -	clkrate = clk_get_rate(aemif_clk);
+> -
+>   	clkrate /= 1000;	/* turn clock into kHz for ease of use */
+>   
+>   	ta	= aemif_calc_rate(t->ta, clkrate, TA_MAX);
+> @@ -130,4 +136,82 @@ int davinci_aemif_setup_timing(struct davinci_aemif_timing *t,
+>   
+>   	return 0;
+>   }
+> -EXPORT_SYMBOL(davinci_aemif_setup_timing);
+> +
+> +/**
+> + * davinci_aemif_setup - setup AEMIF interface by davinci_nand_pdata
+> + * @pdev - link to platform device to setup settings for
+> + *
+> + * This function does not use any locking while programming the AEMIF
+> + * because it is expected that there is only one user of a given
+> + * chip-select.
+> + *
+> + * Returns 0 on success, else negative errno.
+> + */
+> +int davinci_aemif_setup(struct platform_device *pdev)
+> +{
+> +	struct davinci_nand_pdata *pdata = dev_get_platdata(&pdev->dev);
+> +	uint32_t val;
+> +	unsigned long clkrate;
+> +	struct resource	*res;
+> +	void __iomem *base;
+> +	struct clk* clk;
+> +	int ret = 0;
+> +
+> +	clk = clk_get(&pdev->dev, "aemif");
+> +	if (IS_ERR(clk)) {
+> +		ret = PTR_ERR(clk);
+> +		dev_dbg(&pdev->dev, "unable to get AEMIF clock, err %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(clk);
+> +	if (ret < 0) {
+> +		dev_dbg(&pdev->dev, "unable to enable AEMIF clock, err %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "cannot get IORESOURCE_MEM\n");
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	base = ioremap(res->start, resource_size(res));
+> +	if (!base) {
+> +		dev_err(&pdev->dev, "ioremap failed for resource %pR\n", res);
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	/*
+> +	 * Setup Async configuration register in case we did not boot
+> +	 * from NAND and so bootloader did not bother to set it up.
+> +	 */
+> +	val = davinci_aemif_readl(base, A1CR_OFFSET + pdev->id * 4);
+> +	/*
+> +	 * Extended Wait is not valid and Select Strobe mode is not
+> +	 * used
+> +	 */
+> +	val &= ~(ACR_ASIZE_MASK | ACR_EW_MASK | ACR_SS_MASK);
+> +	if (pdata->options & NAND_BUSWIDTH_16)
+> +		val |= 0x1;
+> +
+> +	davinci_aemif_writel(base, A1CR_OFFSET + pdev->id * 4, val);
+> +
+> +	clkrate = clk_get_rate(clk);
+> +
+> +	if (pdata->timing)
+> +		ret = davinci_aemif_setup_timing(pdata->timing, base, pdev->id,
+> +						 clkrate);
+> +
+> +	if (ret < 0)
+> +		dev_dbg(&pdev->dev, "NAND timing values setup fail\n");
+> +
+> +	iounmap(base);
+> +err:
+> +	clk_disable_unprepare(clk);
+> +	clk_put(clk);
+> +	return ret;
+> +}
+> diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+> index d1f45af..5623131 100644
+> --- a/arch/arm/mach-davinci/board-da830-evm.c
+> +++ b/arch/arm/mach-davinci/board-da830-evm.c
+> @@ -419,6 +419,9 @@ static inline void da830_evm_init_nand(int mux_mode)
+>   	if (ret)
+>   		pr_warning("da830_evm_init: NAND device not registered.\n");
+>   
+> +	if (davinci_aemif_setup(&da830_evm_nand_device))
+> +		pr_warn("%s: Cannot configure AEMIF.\n", __func__);
+> +
+>   	gpio_direction_output(mux_mode, 1);
+>   }
+>   #else
+> diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+> index e0af0ec..234c5bb 100644
+> --- a/arch/arm/mach-davinci/board-da850-evm.c
+> +++ b/arch/arm/mach-davinci/board-da850-evm.c
+> @@ -358,6 +358,9 @@ static inline void da850_evm_setup_nor_nand(void)
+>   
+>   		platform_add_devices(da850_evm_devices,
+>   					ARRAY_SIZE(da850_evm_devices));
+> +
+> +		if (davinci_aemif_setup(&da850_evm_nandflash_device))
+> +			pr_warn("%s: Cannot configure AEMIF.\n", __func__);
+>   	}
+>   }
+>   
+> diff --git a/arch/arm/mach-davinci/board-dm644x-evm.c b/arch/arm/mach-davinci/board-dm644x-evm.c
+> index 987605b7..5602957 100644
+> --- a/arch/arm/mach-davinci/board-dm644x-evm.c
+> +++ b/arch/arm/mach-davinci/board-dm644x-evm.c
+> @@ -778,6 +778,11 @@ static __init void davinci_evm_init(void)
+>   		/* only one device will be jumpered and detected */
+>   		if (HAS_NAND) {
+>   			platform_device_register(&davinci_evm_nandflash_device);
+> +
+> +			if (davinci_aemif_setup(&davinci_evm_nandflash_device))
+> +				pr_warn("%s: Cannot configure AEMIF.\n",
+> +					__func__);
+> +
+>   			evm_leds[7].default_trigger = "nand-disk";
+>   			if (HAS_NOR)
+>   				pr_warning("WARNING: both NAND and NOR flash "
+> diff --git a/arch/arm/mach-davinci/board-dm646x-evm.c b/arch/arm/mach-davinci/board-dm646x-evm.c
+> index 13d0801..ae129bc 100644
+> --- a/arch/arm/mach-davinci/board-dm646x-evm.c
+> +++ b/arch/arm/mach-davinci/board-dm646x-evm.c
+> @@ -805,6 +805,9 @@ static __init void evm_init(void)
+>   
+>   	platform_device_register(&davinci_nand_device);
+>   
+> +	if (davinci_aemif_setup(&davinci_nand_device))
+> +		pr_warn("%s: Cannot configure AEMIF.\n", __func__);
+> +
+>   	dm646x_init_edma(dm646x_edma_rsv);
+>   
+>   	if (HAS_ATA)
+> diff --git a/arch/arm/mach-davinci/board-mityomapl138.c b/arch/arm/mach-davinci/board-mityomapl138.c
+> index 7aa105b..98a66ff 100644
+> --- a/arch/arm/mach-davinci/board-mityomapl138.c
+> +++ b/arch/arm/mach-davinci/board-mityomapl138.c
+> @@ -432,6 +432,9 @@ static void __init mityomapl138_setup_nand(void)
+>   {
+>   	platform_add_devices(mityomapl138_devices,
+>   				 ARRAY_SIZE(mityomapl138_devices));
+> +
+> +	if (davinci_aemif_setup(&mityomapl138_nandflash_device))
+> +		pr_warn("%s: Cannot configure AEMIF.\n", __func__);
+>   }
+>   
+>   static const short mityomap_mii_pins[] = {
+> diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+> index 0cd4dbc..4463b0e 100644
+> --- a/drivers/mtd/nand/davinci_nand.c
+> +++ b/drivers/mtd/nand/davinci_nand.c
+> @@ -741,28 +741,6 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+>   		goto err_clk_enable;
+>   	}
+>   
+> -	/*
+> -	 * Setup Async configuration register in case we did not boot from
+> -	 * NAND and so bootloader did not bother to set it up.
+> -	 */
+> -	val = davinci_nand_readl(info, A1CR_OFFSET + info->core_chipsel * 4);
+> -
+> -	/* Extended Wait is not valid and Select Strobe mode is not used */
+> -	val &= ~(ACR_ASIZE_MASK | ACR_EW_MASK | ACR_SS_MASK);
+> -	if (info->chip.options & NAND_BUSWIDTH_16)
+> -		val |= 0x1;
+> -
+> -	davinci_nand_writel(info, A1CR_OFFSET + info->core_chipsel * 4, val);
+> -
+> -	ret = 0;
+> -	if (info->timing)
+> -		ret = davinci_aemif_setup_timing(info->timing, info->base,
+> -							info->core_chipsel);
+> -	if (ret < 0) {
+> -		dev_dbg(&pdev->dev, "NAND timing values setup fail\n");
+> -		goto err;
+> -	}
+> -
+>   	spin_lock_irq(&davinci_nand_lock);
+>   
+>   	/* put CSxNAND into NAND mode */
+> diff --git a/include/linux/platform_data/mtd-davinci-aemif.h b/include/linux/platform_data/mtd-davinci-aemif.h
+> index 05b2934..97948ac 100644
+> --- a/include/linux/platform_data/mtd-davinci-aemif.h
+> +++ b/include/linux/platform_data/mtd-davinci-aemif.h
+> @@ -10,6 +10,8 @@
+>   #ifndef _MACH_DAVINCI_AEMIF_H
+>   #define _MACH_DAVINCI_AEMIF_H
+>   
+> +#include <linux/platform_device.h>
+> +
+>   #define NRCSR_OFFSET		0x00
+>   #define AWCCR_OFFSET		0x04
+>   #define A1CR_OFFSET		0x10
+> @@ -31,6 +33,5 @@ struct davinci_aemif_timing {
+>   	u8	ta;
+>   };
+>   
+> -int davinci_aemif_setup_timing(struct davinci_aemif_timing *t,
+> -					void __iomem *base, unsigned cs);
+> +int davinci_aemif_setup(struct platform_device *pdev);
+>   #endif
+> 
 
---JufFrlwGZkm8bk/F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi, Sekhar
 
-On Wed, Dec 18, 2013 at 01:25:01PM +0800, Wenyou Yang wrote:
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+This patch is based on "Reuse davinci-nand driver for Keystone arch" series.
+The series has passed review at https://lkml.org/lkml/2013/12/17/241
+and can be found at http://git.infradead.org/l2-mtd.git
 
-Reviwed-by: Mark Brown <broonie@linaro.org>
+This patch can be still applied on top of the series without conflicts. 
 
-I can't see the bindings changing.
+Can you please pick up the $subject patch if you are OK with it?
 
---JufFrlwGZkm8bk/F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSsYe9AAoJELSic+t+oim9Y9YP/Au+tWyXF5np/X9KnHbTRmIs
-XZceKxXOvhtlGh3aiwcXB3NAarJHIccJyD2qEAgWWLBWEq/8T0GbuId4Ou5uloLV
-RkUBlrcur02FbozQ4GZPV5hKDRwpBJgEE74O4YLV3LCn+73HErd6mbBCKXqiRnZQ
-AA3EYzQ7PrHcF9KXxAwhX78KEdzvxAevD1La19T39UbS3uXnzgOtBh+lNb58rS/e
-eEH2+SIMBe/lrDkTH6hozeN+KKYeFvppDmRV0gXpRDqqIumdSxUDZqqMT1OBGY5z
-89XAq24bFDOIBrRVvMUqyGk3v1MT3/yozxjICRM/vzkCmLs6LDOer81XhTLdarIG
-YLAZ8C7uaRrMdMnLmDwjLiEfSAzIDPd7MZmOza9QRG5uzu1mSeR/NyuB57fYvuC2
-skh9ecy95OiGW91pa1C/8ThKCOH3qcp+mPs+pcrnT9oHkOJJygPo03XoLU7ou1J0
-3txogkPcA39aXSEr9I2qvyl88dJtTnugYpfTEQ0TmR2Bb8wI0cL09DoIsETiRDw1
-DYvLQvNM3cZSUOsJydkytIlc6x4jCooiGdO2HJf66dX6zswoYeUiIFL/OlJuRS9z
-etXwwIYfJlrneVA2TRXqheIIFw3V7IKH6DNWF4NjTUSS1It1qq0bjwOpopCBj0Ls
-U2LJspSBz4vySorZ2fOc
-=YG/I
------END PGP SIGNATURE-----
-
---JufFrlwGZkm8bk/F--
+-- 
+Regards,
+Ivan Khoronzhuk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
