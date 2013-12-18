@@ -1,99 +1,95 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [RESEND LIST PATCHv7 1/4] clk: socfpga: Add a clk-phase property
- to the "altr, socfpga-gate-clk"
-Date: Tue, 17 Dec 2013 22:06:03 -0600
-Message-ID: <52B11F2B.5000507@gmail.com>
-References: <1387213476-22122-1-git-send-email-dinguyen@altera.com> <1387213476-22122-2-git-send-email-dinguyen@altera.com> <52B00167.4010903@linaro.org> <52B0554F.1080509@gmail.com> <20131217235557.23538.22672@quantum>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 1/1] ARM: dts: Add PMIC support to arndale-octa
+Date: Wed, 18 Dec 2013 10:37:50 +0530
+Message-ID: <CAK9yfHzQeXQtPXXZ5tU1PFmXbf7XCkC-+tOA4usV8E5STkpVsw@mail.gmail.com>
+References: <1386656958-28292-1-git-send-email-sachin.kamat@linaro.org>
+	<20131210185416.GH11468@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20131217235557.23538.22672@quantum>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, zhangfei <zhangfei.gao@linaro.org>, dinguyen@altera.com, arnd@arndb.de, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20131210185416.GH11468@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+Hi Mark,
 
-On 12/17/13 5:55 PM, Mike Turquette wrote:
-> Quoting Dinh Nguyen (2013-12-17 05:44:47)
->> Hi Zhangfei,
->>
->> On 12/17/13 1:46 AM, zhangfei wrote:
->>>
->>> On 12/17/2013 01:04 AM, dinguyen@altera.com wrote:
->>>> From: Dinh Nguyen <dinguyen@altera.com>
->>>> +static int socfpga_clk_prepare(struct clk_hw *hwclk)
->>>> +{
->>>> +    struct socfpga_clk *socfpgaclk = to_socfpga_clk(hwclk);
->>>> +    struct regmap *sys_mgr_base_addr;
->>>> +    u32 hs_timing;
->>>> +
->>>> +    if (socfpgaclk->clk_phase[0] || socfpgaclk->clk_phase[1]) {
->>>> +        sys_mgr_base_addr =
->>>> syscon_regmap_lookup_by_compatible("altr,sys-mgr");
->>>> +        if (IS_ERR(sys_mgr_base_addr)) {
->>>> +            pr_err("%s: failed to find altr,sys-mgr regmap!\n",
->>>> __func__);
->>>> +            return -EINVAL;
->>>> +        }
->>>> +        hs_timing = SYSMGR_SDMMC_CTRL_SET(socfpgaclk->clk_phase[0],
->>>> +                        socfpgaclk->clk_phase[1]);
->>>> +        regmap_write(sys_mgr_base_addr, SYSMGR_SDMMCGRP_CTRL_OFFSET,
->>>> +                        hs_timing);
->>>> +    }
->>>> +    return 0;
->>>> +}
->>> So reusing gate-clk here and check the node of "altr,sys-mgr".
->>> I think it is good and simple.
->>> Also can define new clock combined with node "altr,sys-mgr" with
->>> parent of sdmmc_clk.
->>>
->>> Thanks for the update, it is fine to me.
->> Thanks, can I get an Ack from you for this version?
-> Dinh,
->
-> Will you be spinning another version of this patch? If not I can go
-> ahead and take this into clk-next.
-If you are OK with the patch, then yes, can you please apply it to clk-next?
+Sorry for the late reply as I was sick and still recovering.
 
-Thanks,
-Dinh
+On 11 December 2013 00:24, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Dec 10, 2013 at 11:59:18AM +0530, Sachin Kamat wrote:
 >
-> Regards,
-> Mike
+>> Added PMIC node to Arndale-Octa board.
 >
->> Thanks,
->> Dinh
->>>> +
->>>>   static struct clk_ops gateclk_ops = {
->>>> +    .prepare = socfpga_clk_prepare,
->>>>       .recalc_rate = socfpga_clk_recalc_rate,
->>>>       .get_parent = socfpga_clk_get_parent,
->>>>       .set_parent = socfpga_clk_set_parent,
->>>> @@ -254,6 +283,7 @@ static void __init socfpga_gate_clk_init(struct
->>>> device_node *node,
->>>>   {
->>>>       u32 clk_gate[2];
->>>>       u32 div_reg[3];
->>>> +    u32 clk_phase[2];
->>>>       u32 fixed_div;
->>>>       struct clk *clk;
->>>>       struct socfpga_clk *socfpga_clk;
->>>> @@ -294,6 +324,12 @@ static void __init socfpga_gate_clk_init(struct
->>>> device_node *node,
->>>>           socfpga_clk->div_reg = 0;
->>>>       }
->>>>
->>>> +    rc = of_property_read_u32_array(node, "clk-phase", clk_phase, 2);
->>>> +    if (!rc) {
->>>> +        socfpga_clk->clk_phase[0] = clk_phase[0];
->>>> +        socfpga_clk->clk_phase[1] = clk_phase[1];
->>>> +    }
->>>> +
->>>>       of_property_read_string(node, "clock-output-names", &clk_name);
->>>>
->>>>       init.name = clk_name;
->>>>
+> Is there a bootloader posted for this anywhere yet?
 
+One version available here from Insignal:
+git://git.insignal.co.kr/insignal/arndale_octa-jb_mr1.1/u-boot
+
+
+>
+>> +                     regulators {
+>> +                             ldo1_reg: LDO1 {
+>> +                                     regulator-name = "vdd_ldo1";
+>
+> So, there is a label on the schematic for PVDD_LDO1 but it's not
+> entirely obvious why that's there as throughout the rest of the
+> schematic it's got the rather more constructive name PVDD_ALIVE_1V0.
+> We should really be using the more readable versions of the names
+> in the DT since the whole point in overriding the driver default
+> names is to make it easier to associate the kernel diagnostics with
+> the schematic, what the DT is doing here serves no purpose.
+>
+> The same comment applies to all the LDO supplies.
+
+I will update with the appropriate labels.
+
+>
+>> +                             buck2_reg: BUCK2 {
+>> +                                     regulator-name = "vdd_arm";
+>> +                                     regulator-min-microvolt = <800000>;
+>> +                                     regulator-max-microvolt = <1500000>;
+>> +                                     regulator-always-on;
+>> +                                     regulator-boot-on;
+>> +                             };
+>
+> Why are you specifying boot-on?  It doesn't seem terribly plausible that
+> the cores won't be powered on boot, or that we can't tell what the state
+> is by reading the registers.
+>
+> Same for all the DCDCs.
+
+Yes. Right. Will remove them.
+
+>
+>> +                             buck7_reg: BUCK7 {
+>> +                                     regulator-name = "vdd_1.0v_ldo";
+>> +                                     regulator-min-microvolt = <800000>;
+>> +                                     regulator-max-microvolt = <1500000>;
+>> +                                     regulator-always-on;
+>> +                                     regulator-boot-on;
+>> +                             };
+>
+> This doesn't correspond to the schematic which says that BUCK7 is
+> supplying VIN_LLDO_1V4 (the input for some of the LDOs).  The voltage
+> range specified there doesn't seem terribly sensible either, are you
+> sure you haven't just got the underlying voltage range for the DCDC?
+> I can't see why you'd want to raise the voltage over 1.4V (that's rather
+> defeating the point) and while it'd be nice to have the core be able to
+> vary supply to track the headroom needed by the LDOs none of the LDOs
+> were configured with variable voltage so even if we implemented that
+> it'd never be used.
+
+That was definitely a mistake. It should be 1.4V Will fix it.
+
+>
+> Similar issues apply to the other bucks being used to drop the battery
+> voltage for LDO supplies.
+
+Will check and update others appropriately. Thanks for your review and
+pointing out the errors.
+
+-- 
+With warm regards,
+Sachin
