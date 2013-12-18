@@ -1,54 +1,42 @@
-From: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 07/08] ARM: dts: enable clock binding on Hi3620
-Date: Tue, 17 Dec 2013 16:20:07 -0800
-Message-ID: <878uvjnh6w.fsf@linaro.org>
-References: <1386748497-11290-1-git-send-email-haojian.zhuang@gmail.com>
-	<1386748497-11290-8-git-send-email-haojian.zhuang@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 00/26] OMAPDSS: DT support (Christmas edition)
+Date: Tue, 17 Dec 2013 16:30:56 -0800
+Message-ID: <20131218003055.GC27438@atomide.com>
+References: <1386160133-24026-1-git-send-email-tomi.valkeinen@ti.com>
+ <1703598.NbqXAMAFOI@avalon>
+ <52AADBE0.3030203@ti.com>
+ <3426377.keoaFgiZkl@avalon>
+ <52AB2C25.6000507@ti.com>
+ <20131213172234.GD28184@atomide.com>
+ <52AC0A18.30405@ti.com>
+ <20131214140913.GA12324@atomide.com>
+ <52AEAAB7.7010308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386748497-11290-8-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-	(Haojian Zhuang's message of "Wed, 11 Dec 2013 15:54:56 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Turquette, Mike" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52AEAAB7.7010308@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [131215 23:26]:
+> On 2013-12-14 16:09, Tony Lindgren wrote:
+> 
+> >> Why was e30b06f4d5f000c31a7747a7e7ada78a5fd419a1 merged into -rc2? It's
+> >> not a fix, just a cleanup.
+> > 
+> > Hmm OK sorry looks like I removed some non-legacy mux framework code
+> > by accident. The omap_mux_* parts clearly are dead code for omap4 as
+> > it's been DT only since v3.10, but the omap4_dsi_mux_pads() is not
+> > using omap_mux_* functions.
+> > 
+> > Yes, let's revert e30b06f4d5f0 except for the dead code parts, which
+> > seems to be omap4_tpd12s015_mux_pads(), right?
+> 
+> Yes. I tested the below patch on 4430SDP, both DSI and HDMI works.
 
-> Enable clock binding for Hi3620 common clock driver.
->
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/hi3620.dtsi | 79 ++++++++++++++++++++++++-------------------
->  arch/arm/boot/dts/hi4511.dts  |  3 +-
->  2 files changed, 46 insertions(+), 36 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/hi3620.dtsi b/arch/arm/boot/dts/hi3620.dtsi
-> index e311937..ab1116d 100644
-> --- a/arch/arm/boot/dts/hi3620.dtsi
-> +++ b/arch/arm/boot/dts/hi3620.dtsi
-> @@ -11,7 +11,8 @@
->   * publishhed by the Free Software Foundation.
->   */
->  
-> -/include/ "skeleton.dtsi"
-> +#include "skeleton.dtsi"
-> +#include <dt-bindings/clock/hi3620-clock.h>
+OK thanks applying for the -rc cycle.
 
-This file doesn't exist in this series, so fails to build.  This appears
-to depend on the clock series that Mike has merged into his clk-next
-branch, so I tested the build with clk-next and it works.
-
-In the future, please be sure to mention external dependencies like
-this.  Maintainers don't like to be surprised by this kind of thing.
-
-I'll just merge this as is now, but builds for hi3xxx_defconfig will be
-broken until everything hits -next.
-
-Kevin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
