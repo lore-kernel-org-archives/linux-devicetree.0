@@ -1,78 +1,52 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH 0/3] Add more device nodes for am43x gp evm.
-Date: Wed, 18 Dec 2013 19:51:24 +0100
-Message-ID: <52B1EEAC.2010109@baylibre.com>
-References: <1385537479-6959-1-git-send-email-sourav.poddar@ti.com> <52B1DEAC.4000509@ti.com> <52B1E00D.30403@baylibre.com> <52B1E627.20409@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7 2/3] regulator: max14577: Add regulator driver for
+ Maxim 14577
+Date: Wed, 18 Dec 2013 19:23:44 +0000
+Message-ID: <20131218192344.GO31886@sirena.org.uk>
+References: <1386329534-14186-1-git-send-email-k.kozlowski@samsung.com>
+ <1386329534-14186-3-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52B1E627.20409@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, tony@atomide.com, balbi@ti.com, linux-omap@vger.kernel.org, nsekhar@ti.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XMHqbYJb993HXwLR"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1386329534-14186-3-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/12/2013 19:15, Sourav Poddar wrote:
-> On Wednesday 18 December 2013 11:19 PM, Benoit Cousson wrote:
->> Hi Sourav,
->>
->> On 18/12/2013 18:43, Sourav Poddar wrote:
->>> Benoit,
->>> On Wednesday 27 November 2013 01:01 PM, Sourav Poddar wrote:
->>>> The patch series adds support for enabling gpio, pwm backlight and
->>>> matrix gpio keys on am43x-gp-evm.
->>>>
->>>> Done on top of 3.13-rc1 + tero clock series(1) + Afzal's basic gp
->>>> support(2).
->>>>
->>>> [1]: https://patchwork.kernel.org/patch/3009541/
->>>> [2]: https://patchwork.kernel.org/patch/3171761/
->>>>
->>>> Tested on am43x-gp-evm.
->>>>
->>>> There is a some bug while using regulators through backlight
->>>> driver on 3.13-rc1. So, tested pwm part with this patch[3].
->>>>
->>>> [3]: http://www.spinics.net/lists/arm-kernel/msg288215.html
->>>>
->>>> Sourav Poddar (3):
->>>>    arm: dts: am437x-gp-evm: Enable gpio.
->>>>    ARM: dts: am43x-gp-evm: Add matrix gpio keys.
->>>>    ARM: dts: am437x-gp-evm: Add pwm backlight support.
->>>>
->>>>   arch/arm/boot/dts/am437x-gp-evm.dts |   53
->>>> +++++++++++++++++++++++++++++++++++
->>>>   1 files changed, 53 insertions(+), 0 deletions(-)
->>>>
->>> Ping on this?
->>
->> The series looks good, but you should rebase it on top of for_3.14/d=
-ts
->> that is based on the big cleanup branch Tony has done.
->> I cannot apply it right now.
->>
-> Ok. I will rebase it and send you the series, As you can see there is
-> one dependency on afzal  basic support patch, as mentioned in
-> the cover letter. If you are ok with that patch, it has to go first. =
-So,
-> if you wish I can work with afzal and send you this
-> series and afzal patch together.
 
-Yes, go ahead and repost the whole series with the depency.
+--XMHqbYJb993HXwLR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-BTW, could you do that as well with your other series?
+On Fri, Dec 06, 2013 at 12:32:13PM +0100, Krzysztof Kozlowski wrote:
+> MAX14577 chip is a multi-function device which includes MUIC,
+> charger and voltage regulator. The driver is located in drivers/mfd.
 
-Thanks,
-Benoit
---=20
-Beno=EEt Cousson
-BayLibre
-Embedded Linux Technology Lab
-www.baylibre.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks.
+
+--XMHqbYJb993HXwLR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSsfY9AAoJELSic+t+oim9adQP/3blzLFS3925w6BUWS8dfhaQ
+/Ym06Wtc5JBMLr7h07XJsMVer/Yj4kWi1Il6KA8gzjY3kxAhMYlZhoX8gacxj1BW
+cu+I8rePvCzvTV5haOZDJkH24LBCggbfdzwV7LRqfyJUkWVDC5561j+L/W/v9Vm7
+zBU/IRsLkPRBzcunhOBRI+zia08pc9m48nQPxGyRG4Tj0mU+4bCLW/9CI9pKVTA3
+a3+h+hoyVmHNo1N5ktJeVe/dEWC+JL3ZWALaLj5t9NO9MV9hV4JJ9a+fNqmte0dB
+Yt2PBFl+JR24xMTcHpusQZ8UXLlN2AdQIGaqgWUOAzzwmL3a64h94huTQeDhWo/t
+I0vlLPwZ5LyiAlWPXnDEDyWTiUrKdTGE5qMcwRBr29CSxVBcHy3X8LAHEmQvZPs7
+LPwLkVSjS9S0XnAAWpbU5FzzRRysASQ7RgMjMupTIvbvwMvWAAbVpItOef7hWdX5
+JlAugExgkCmclWQx4A5anaj+S5GvP6Oc3nvpZ1IirnsY4956+7Wsc30fkE9j9+GU
+77UZ9yeX6rDogQ8ulusPdSs4OeOzX3EmT8JdxftyuxlDxHQKCxKWvoDNnN3ST4B3
+0ZQAYTJRPOvQBdRIHZbxLv4yQp3XF1onSsWpOG4IVhodQbHkXCrf5H2pT4qgve2X
+EsjAtGJ3bFox2S++FaNa
+=JFJ5
+-----END PGP SIGNATURE-----
+
+--XMHqbYJb993HXwLR--
