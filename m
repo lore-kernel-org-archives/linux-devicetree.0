@@ -1,69 +1,48 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v5 2/2] ARM: mach-moxart: add MOXA ART SoC device tree
- files
-Date: Tue, 17 Dec 2013 15:57:16 -0800
-Message-ID: <532508e4-1b5f-46ba-9519-7a3e019e251b@CH1EHSMHS014.ehs.local>
-References: <1387294714-12872-1-git-send-email-jonas.jensen@gmail.com>
- <1387294714-12872-3-git-send-email-jonas.jensen@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v5] clk: si570: Add a driver for SI570 oscillators
+Date: Tue, 17 Dec 2013 16:04:48 -0800
+Message-ID: <20131218000448.GA9857@roeck-us.net>
+References: <1379806839-13762-1-git-send-email-soren.brinkmann@xilinx.com>
+ <b625092b-682c-4072-85a6-9f9d7f378ec0@VA3EHSMHS043.ehs.local>
+ <20131002231751.4343.81234@quantum>
+ <52AC8857.8070504@roeck-us.net>
+ <20131217234340.23538.9631@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1387294714-12872-3-git-send-email-jonas.jensen@gmail.com>
+In-Reply-To: <20131217234340.23538.9631@quantum>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Jensen <jonas.jensen@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, arm@kernel.org, linux@arm.linux.org.uk, arnd@arndb.de, olof@lixom.net, peter.crosthwaite@xilinx.com, linux@roeck-us.net
+To: Mike Turquette <mturquette@linaro.org>
+Cc: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonas,
+On Tue, Dec 17, 2013 at 03:43:40PM -0800, Mike Turquette wrote:
+> Quoting Guenter Roeck (2013-12-14 08:33:27)
+> > On 10/02/2013 04:17 PM, Mike Turquette wrote:
+> > > Quoting S=F6ren Brinkmann (2013-10-02 10:20:38)
+> > >> Hi Mike,
+> > >>
+> > >> could you please comment on this/apply it to clk-next?
+> > >
+> > > It looks good and is in the queue. Will show up in clk-next in a =
+few
+> > > days.
+> > >
+> > Hi Mike,
+> >=20
+> > trying again ... what happened with this driver ? Any reason for no=
+t pushing it after all ?
+>=20
+> This got reverted with several other patches right before 3.12 droppe=
+d.
+> Unfortunately clk-next broke linux-next two days before 3.12 came out
+> and I had to revert to a known good state, excluding this driver.
+>=20
+> I've added it back to clk-next now towards 3.13. Sorry for the
+> inconvenience.
+>=20
+No problem. Thanks a lot for the update.
 
-On Tue, Dec 17, 2013 at 04:38:34PM +0100, Jonas Jensen wrote:
-> Add a generic (dtsi) include file for MOXA ART SoCs.
->=20
-> Also add a file for UC-7112-LX.
->=20
-> Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/moxart.txt |  12 ++
->  arch/arm/boot/dts/Makefile                       |   1 +
->  arch/arm/boot/dts/moxart-uc7112lx.dts            |  93 +++++++++++++
->  arch/arm/boot/dts/moxart.dtsi                    | 167 +++++++++++++=
-++++++++++
->  4 files changed, 273 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/moxart.txt
->  create mode 100644 arch/arm/boot/dts/moxart-uc7112lx.dts
->  create mode 100644 arch/arm/boot/dts/moxart.dtsi
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/moxart.txt b/Docum=
-entation/devicetree/bindings/arm/moxart.txt
-> new file mode 100644
-> index 0000000..11087ed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/moxart.txt
-> @@ -0,0 +1,12 @@
-> +MOXA ART device tree bindings
-> +
-> +Boards with the MOXA ART SoC shall have the following properties:
-> +
-> +Required root node property:
-> +
-> +compatible =3D "moxa,moxart";
-> +
-> +Boards:
-> +
-> +- UC-7112-LX: embedded computer
-> +  compatible =3D "moxa,moxart-uc-7112-lx", "moxa,moxart"
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index c55a22d..ae3d7db 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -319,6 +319,7 @@ dtb-$(CONFIG_ARCH_VT8500) +=3D vt8500-bv07.dtb \
->  dtb-$(CONFIG_ARCH_ZYNQ) +=3D zynq-zc702.dtb \
->  	zynq-zc706.dtb \
->  	zynq-zed.dtb
-> +dtb-$(CONFIG_ARCH_MOXART) +=3D moxart-uc7112lx.dtb
-I think these targets are sorted alphabetically. You should insert the
-MOXART target at the appropriate location a little further up.
-
-	S=C3=B6ren
+Guenter
