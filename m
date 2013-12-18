@@ -1,69 +1,99 @@
 From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH v3 0/3] regulator: act8865: add PMIC driver
-Date: Wed, 18 Dec 2013 13:14:48 +0800
-Message-ID: <1387343691-18985-1-git-send-email-wenyou.yang@atmel.com>
+Subject: [PATCH v3 2/3] regulator: act8865: add device tree binding doc
+Date: Wed, 18 Dec 2013 13:14:50 +0800
+Message-ID: <1387343691-18985-3-git-send-email-wenyou.yang@atmel.com>
+References: <1387343691-18985-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1387343691-18985-1-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: broonie@kernel.org
 Cc: lgirdwood@gmail.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, linux-doc@vger.kernel.org, vpalatin@chromium.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, wenyou.yang@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-Thanks a lot for your direction.
-
-According to your advice, I prepared this version.
-
-The patch set is to add act8865 PMIC driver.
-
-The active-semi act8865 is designed as a PMIC for Atmel sama5d3x and at91sam9 series.
-Its datasheet is available at: http://www.active-semi.com/sheets/ACT8865_Datasheet.pdf.
-
-The patches is based on the branch: for-next of git respository, 
-	git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
-and [PATCH] regulator: read low power states configuration from device tree from Vincent Palatin
-	https://patchwork.kernel.org/patch/2833667/
-
-Thanks.
-
-Best Regards,
-Wenyou Yang
-
-v3 changelog:
- 1./ Add map_voltage() operation which missed.
- 2./ Remove regulator_unregister statement which no need.
- 3./ Remvoe memset statement.
- 4./ Change the device tree regulator-name with the supply name in the schematic.
- 5./ List all theregulator name in the binding doc.
-
-v2 changelog:
- 1./ Using regmap for register I/O instead of i2c function directly.
- 2./ Using the helpers provided by the core.
- 3./ Remove noisy logging.
- 4./ Using the latest regulator register API.
- 5./ Using module_i2c_driver helper macro replace module_init and module_exit.
- 6./ Remove the vsel-state-low dt property which is not used now.
-
-
-Wenyou Yang (3):
-  regulator: act8865: add PMIC act8865 driver
-  regulator: act8865: add device tree binding doc
-  ARM: dts: sama5d3xcm: add the regulator device node
-
- .../bindings/regulator/act8865-regulator.txt       |   58 +++
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+---
+ .../bindings/regulator/act8865-regulator.txt       |   58 ++++++++++++++++++++
  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- arch/arm/boot/dts/sama5d3xcm.dtsi                  |   46 +++
- drivers/regulator/Kconfig                          |    8 +
- drivers/regulator/Makefile                         |    1 +
- drivers/regulator/act8865-regulator.c              |  381 ++++++++++++++++++++
- include/linux/regulator/act8865.h                  |   53 +++
- 7 files changed, 548 insertions(+)
+ 2 files changed, 59 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/regulator/act8865-regulator.txt
- create mode 100644 drivers/regulator/act8865-regulator.c
- create mode 100644 include/linux/regulator/act8865.h
 
+diff --git a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+new file mode 100644
+index 0000000..bcea8ab
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+@@ -0,0 +1,58 @@
++ACT8865 regulator
++-------------------
++
++Required properties:
++- compatible: "active-semi,act8865"
++- reg: I2C slave address
++
++The valid names for regulators are:
++	DCDC_REG1, DCDC_REG2, DCDC_REG3, LDO_REG1, LDO_REG2, LDO_REG3, LDO_REG4.
++
++Example:
++--------
++
++		i2c1: i2c@f0018000 {
++			pmic: act8865@5b {
++				compatible = "active-semi,act8865";
++				reg = <0x5b>;
++				status = "disabled";
++
++				regulators {
++					vcc_1v8_reg: DCDC_REG1 {
++						regulator-name = "VCC_1V8";
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <1800000>;
++						regulator-always-on;
++					};
++
++					vcc_1v2_reg: DCDC_REG2 {
++						regulator-name = "VCC_1V2";
++						regulator-min-microvolt = <1100000>;
++						regulator-max-microvolt = <1300000>;
++						regulator-suspend-mem-microvolt = <1150000>;
++						regulator-suspend-standby-microvolt = <1150000>;
++						regulator-always-on;
++					};
++
++					vcc_3v3_reg: DCDC_REG3 {
++						regulator-name = "VCC_3V3";
++						regulator-min-microvolt = <3300000>;
++						regulator-max-microvolt = <3300000>;
++						regulator-always-on;
++					};
++
++					vddfuse_reg: LDO_REG1 {
++						regulator-name = "VDDANA";
++						regulator-min-microvolt = <3300000>;
++						regulator-max-microvolt = <3300000>;
++						regulator-always-on;
++					};
++
++					vddana_reg: LDO_REG2 {
++						regulator-name = "FUSE_2V5";
++						regulator-min-microvolt = <2500000>;
++						regulator-max-microvolt = <2500000>;
++					};
++				};
++			};
++		};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index edbb8d8..519421f 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -3,6 +3,7 @@ Device tree binding vendor prefix registry.  Keep list in alphabetical order.
+ This isn't an exhaustive list, but you should add new prefixes to it before
+ using them to avoid name-space collisions.
+ 
++active-semi	Active-Semi International Inc
+ ad	Avionic Design GmbH
+ adi	Analog Devices, Inc.
+ aeroflexgaisler	Aeroflex Gaisler AB
 -- 
 1.7.9.5
-
