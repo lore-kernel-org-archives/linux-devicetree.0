@@ -1,79 +1,124 @@
 From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCHv2 01/27] ARM: OMAP: remove DSS DT hack
-Date: Wed, 18 Dec 2013 12:21:29 +0200
-Message-ID: <52B17729.3040807@ti.com>
-References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com> <1387205794-32246-2-git-send-email-tomi.valkeinen@ti.com> <20131216184157.GA26293@atomide.com> <52AFF31C.6010100@ti.com> <20131217153001.GN12324@atomide.com> <52B14AEE.8090807@ti.com>
+Subject: Re: [PATCHv2 23/27] OMAPDSS: connector-dvi: Add DT support
+Date: Wed, 18 Dec 2013 12:41:03 +0200
+Message-ID: <52B17BBF.8090003@ti.com>
+References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com> <20131217070551.GR24559@pengutronix.de> <52AFFA2E.5050702@ti.com> <1651476.iaILztiDEi@avalon>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
 	protocol="application/pgp-signature";
-	boundary="KKO7gh8DnXFB67fN53B17JuaIku77kBLG"
+	boundary="E1POrgl6eIEwBmCWDUfpnTvwVSU7CM6Jh"
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52B14AEE.8090807@ti.com>
+In-Reply-To: <1651476.iaILztiDEi@avalon>
 Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
---KKO7gh8DnXFB67fN53B17JuaIku77kBLG
+--E1POrgl6eIEwBmCWDUfpnTvwVSU7CM6Jh
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On 2013-12-18 09:12, Tomi Valkeinen wrote:
+On 2013-12-17 17:15, Laurent Pinchart wrote:
 
->> Well yeah let's keep those separate still as at least Russell needed
->> some more time with the legacy booting. The point we can drop the
->> legacy booting for omap3 may still need to wait a bit, maybe even
->> until v3.15 to keep things working.
->=20
-> They can't be separate. Once I add DT support for a board, I have to
-> remove the legacy support for that board. This patch removes legacy
-> support for the boards that are converted in the series.
->=20
-> If I don't remove the legacy support, both DT and legacy side will be
-> ran, and both create the DSS devices...
->=20
-> But, it's true that this patch removes the whole file, as all the board=
-s
-> currently there are converted. But if new boards are added to the DSS
-> quirks, then I can't remove the file. So I'll change this patch to only=
-
-> remove the parts for the converted boards, not the whole file.
->=20
-> But but... If I understand right, the plan is to remove all omap3 board=
-
-> files for the next merge window. I'm not totally familiar with the
-> quirks system, but how should this be handled:
->=20
-> omap3.dtsi will contain the SoC's DSS nodes. This means that DSS device=
-s
-> are created via DT code. But if the display (i.e. panels) for a
-> particular omap3 board has not been converted to DT, we should still us=
+>>> Either the driver is too specific or the binding is too generic, but
+>>> having such a generic name for an omap specific driver seems wrong. S=
+ame
+>>> for panel-dpi, svideo-connector, composite-video-connector and
+>>> hdmi-connector,
+>>
+>> Hmm. Good point. I was thinking that the driver is only used on OMAP, =
+but of
+>> course that's not true, the driver is there for all platforms if the k=
+ernel
+>> just happens to be compiled with the driver.
+>>
+>> And it's not just about those drivers you mention. The same issue is t=
+here
+>> for, say, "ti,tpd12s015". I have an omapdss specific driver for that, =
+but if
+>> some other platform uses the same chip, they'll have a driver for it a=
+lso...
+>>
+>> Sigh. I wonder how this should be handled... The only solution that co=
+mes to
+>> my mind is to have all the compatible strings as "ti,...". But that's =
+not
+>> correct, as they are not TI components, but some are generic ones and =
+some
+>> from another vendor.
+>>
+>> And even "ti,..." is not good, as there are other TI SoCs with other d=
+isplay
+>> drivers. So I'd need to prepend the compatible strings with "omapdss,.=
+=2E.",
+>> making the hardware components driver specific.
+>>
+>> The long term plan is to make the drivers generic (or implement the sa=
+me
+>> driver for common display framework). But for now I need to have futur=
 e
-> the legacy DSS initialization. But the DSS is already initialized via D=
-T.
+>> proof DT bindings with omapdss specific drivers...
 >=20
-> I guess I can set the status for all the DSS nodes to "disabled" in
-> omap3.dtsi, and that should prevent DT code from creating the DSS
-> devices. Then, each omap3-board.dts that has been converted to DSS DT,
-> can override those to "enabled".
+> I'll refrain from mentioning that the problem has been identified more =
+than a=20
+> year ago. Oh, wait, I've metioned it, sorry :-D
 >=20
-> That way the DT code should not create DSS devices by default, and the
-> quirks system would probably work fine.
+> We really want to make drivers generic enough to be shared by multiple =
+display=20
+> controllers. I would vote for making the DT bindings generic now alread=
+y,=20
+> which would be enough to buy some time to fix the problem properly. If =
+we=20
+> start prepending driver-specific prefixes such as "omapdss," to compati=
+ble=20
+> string we'll just make the mess even larger and reduce the incentive to=
+ fix=20
+> it. It would be the worst decision we could make.
 
-I changed the DSS DT nodes to be disabled by default, and I think this
-works nicely. It's actually better this way in any case, as we can leave
-blocks like DSI out for boards that don't need it.
+Well... I think there are no good options here. I see the following optio=
+ns:
 
-Also, I now remove the quirks only for the boards that are converted to
-DT, not the whole dss-common.c file. So I think we can now add new
-boards to dss-common.c, if and when there are ones that cannot be
-converted to use DSS DT yet.
+1. Add "omapdss," or similar to compat strings in DT, and the same for
+the drivers. This solves the issue, but then we'll have bad DT data,
+although I see similar method already being used in some places. When we
+have common drivers, we can remove the "omapdss," strings from DT, but
+we still need to keep them in the drivers to have backward compatibility.=
+
+
+2. Keep the compat strings generic in DT. This way we'll have correct DT
+data, but if anyone happens to create a new driver with the same compat
+string, things will break. omapdss can only be compiled for a kernel
+with OMAP and ARM support, so it narrows the problematic drivers a bit.
+
+3. Have correct DT data, but at init time, in omap arch code, go through
+the DT data and change the compat strings for the display nodes to
+include "omapdss,". This way the drivers would only work for omap
+platforms. Like a combination of 1. and 2. I'm not sure if the DT-code
+allows this at the moment, though.
+
+We could also now select option 2., and go for 3. later if someone else
+creates a driver with the same compat string.
+
+While I'm obviously not very impartial here, I do think that using
+generic bindings for omapdss is not the worst possible case, as:
+
+I'm very much dedicated to get CDF merged at some point, and I already
+have been working on it for each revision.
+
+I also think that even if the omap panel drivers are currently omap
+specific, they are not very much so. I have been changing them over the
+years to be more and more generic, and I have used them as a base for
+CDF panel drivers. If some platform specific driver may have a generic
+compat string, omap panel drivers are not the worst option.
+
+I will look at the option 3., hopefully that will be possible and
+everybody will be happy. Any other ideas appreciated.
 
  Tomi
 
 
 
---KKO7gh8DnXFB67fN53B17JuaIku77kBLG
+--E1POrgl6eIEwBmCWDUfpnTvwVSU7CM6Jh
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -82,19 +127,19 @@ Content-Disposition: attachment; filename="signature.asc"
 Version: GnuPG v1.4.14 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJSsXcpAAoJEPo9qoy8lh71lUAP/2E6zlvatT9Wa2QJzH3EeqCO
-sOpoLqIbdT09oOsSBtn6HsE5M7xmewoBobmgr+t1S/cLeODrPVRHCnx9lTEUJEPZ
-TKQZalYVF+G8B0QSFGFmqWdFsbxo+wudcv/TFE8XVrSrQiqAwkLh0lCyph+KqvFy
-u8rwOui6IPCLsT2ecqxshXE7FbYuyW1kYnUzNb4KRWw9hN2740I18KavlM6qzu83
-6L+DeftRIufhRvD3Hhu+TCLfaqbNGB1dpasP90AGPgrkzh3hUL0aM8ZqbjA4ePlQ
-UkGuviFVNcnPjJZvogF83WAt8tXepEEklnNOrKxSKzS6m3AfbUO8cnQWgG0mdHzZ
-YBDv4/Svq7RdpzSfk0XAZ0PWOM6jRq2A74IdG/8x9ySxNSAutB4YIGS8VHwrxKsJ
-bL9FlJ6ZUSn3wSnGcVw1M8YF/Xve6GVAhFlstkaIkUnck6+d34Di7W9NYUlG/GAl
-F0pGE3UsHQJrbK1xcr0rMW0AK+zKmbGmMami20A4/7HL5SP5jwXQADyGI99ugVgK
-Ut2r/40asIO+ge4kQWJ3lP/inHOuYuuHrbszd4VNXjmYyeV7kYd5Rbqz6SH7wax7
-YijHAwEcFsrIy3zBJhqtecX9azh2xKiKuCQugkJnrcz5oOqfbG1CjMPAQZWbYiGD
-tFIy6MLwdgVVGa5zAA8i
-=bBnQ
+iQIcBAEBAgAGBQJSsXu/AAoJEPo9qoy8lh71pJ4QAInERha/H3nPcuf8/ClZ+jd3
+zLK9MSjTDG6Tr9LY3l8OiB2zh9ThdYjz7V4VWU6uxyE4gkof9WToECwWscbC2wSA
+DsS/aNBPU4Fa3immVdXSewe1Cy9OMirjpTt+HbHvCujm45U0887i11Fso3UVHcSs
+iCCHol72f1OHBtMrzQ8/PyTCgEG4isoyXyQlkGILftZNM/FZReCRDboO9dH9cp1m
+esAWI9uo3KYSES0bUvMQOaiialAD2F9mThgExk+USMhVaW9qT0vI88iqUROvxEYp
+koc4l5ri0iYiJPMP9Sxg36oXYfZpC6iRtbCLPFHddba5DeODgrRneFk9Bsa1N8/M
+sLqWLg+KshNUJs3hvHey2KM97GyDDKA+rij8TtTirg+pKrLlQMa+9f2k+2OEphSM
+0n12D53t8w29zYEAUrlKz7LxtdKPASrHjq0IhYNQNgLPbdcBgrjPJ0B0NAYcBhmN
+Yx16QXQTmcze3W6EsvYMRwQ7oJXNCJRmObz6qR5deGrNBm45fAD4bWAvxxundUL2
+fPzUYDCd8+6XEgjZKnA+C2nQ1nPe+5KuIYqnF2UvASdy/l1Ns2Ge54xVzogCg1fg
+0kkUDFJgPyMQAKjhmn86W9ac8zBXMPP5eXUUSJzZa682OIg+JVlIgHb4wsiiBy+h
+tDYZfrPCPr8Tu1GB5Dgg
+=YI1Q
 -----END PGP SIGNATURE-----
 
---KKO7gh8DnXFB67fN53B17JuaIku77kBLG--
+--E1POrgl6eIEwBmCWDUfpnTvwVSU7CM6Jh--
