@@ -1,53 +1,70 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [PATCH v9 0/2] PWM: pwm-atmel: add PWM controller driver
-Date: Wed, 18 Dec 2013 09:21:12 +0800
-Message-ID: <52B0F888.2000905@atmel.com>
-References: <1386916910-24832-1-git-send-email-voice.shen@atmel.com>
- <20131217103034.GE13823@ulmo.nvidia.com>
+From: Eric Brower <ebrower-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] ARM: tegra: modify Tegra30 USB2 default phy_type to UTMI
+Date: Tue, 17 Dec 2013 17:52:44 -0800
+Message-ID: <1387331565-3994-1-git-send-email-ebrower@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131217103034.GE13823@ulmo.nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, galak@codeaurora.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Brower <ebrower-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Modify Tegra30 default USB2 phy_type to UTMI; this matches
+power-on-reset defaults and is expected to be the common case.
 
-On 12/17/2013 06:30 PM, Thierry Reding wrote:
-> On Fri, Dec 13, 2013 at 02:41:48PM +0800, Bo Shen wrote:
->> This patch series add Atmel PWM controller driver support.
->>
->> Changes in v9:
->>    - Address the comments from Thierry Reding
->
-> Hi,
->
-> I've pushed a slightly modified version of this series. There were a few
-> minor whitespace/coding style issues, but perhaps more importantly I've
-> modified the period change check to be done earlier and in a more
-> generic way.
+The current implementation is likely an incorrect
+carry-over from Tegra20, where USB2 does default to ULPI.
 
-Thanks for your work.
+Signed-off-by: Eric Brower <ebrower-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+No upstream Tegra30 dts files reference USB2, so this should be a
+safe change; anyone using an out-of-tree dts with USB2, sparsely
+populated from the Tegra30 dtsi, may have an issue.
 
-> Can you please check that the version I've pushed to the for-next branch
-> still works for you?
+ arch/arm/boot/dts/tegra30.dtsi | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-Tested OK with pwm leds and pwm backlight.
-Thanks again.
-
-> Thanks,
-> Thierry
-
-Best Regards,
-Bo Shen
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index 2bd55cf..bedd379 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -669,7 +669,7 @@
+ 		compatible = "nvidia,tegra30-ehci", "usb-ehci";
+ 		reg = <0x7d004000 0x4000>;
+ 		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+-		phy_type = "ulpi";
++		phy_type = "utmi";
+ 		clocks = <&tegra_car TEGRA30_CLK_USB2>;
+ 		nvidia,phy = <&phy2>;
+ 		status = "disabled";
+@@ -677,12 +677,23 @@
+ 
+ 	phy2: usb-phy@7d004000 {
+ 		compatible = "nvidia,tegra30-usb-phy";
+-		reg = <0x7d004000 0x4000>;
+-		phy_type = "ulpi";
++		reg = <0x7d004000 0x4000 0x7d004000 0x4000>;
++		phy_type = "utmi";
+ 		clocks = <&tegra_car TEGRA30_CLK_USB2>,
+ 			 <&tegra_car TEGRA30_CLK_PLL_U>,
+-			 <&tegra_car TEGRA30_CLK_CDEV2>;
+-		clock-names = "reg", "pll_u", "ulpi-link";
++			 <&tegra_car TEGRA30_CLK_USBD>;
++		clock-names = "reg", "pll_u", "utmi-pads";
++		nvidia,hssync-start-delay = <9>;
++		nvidia,idle-wait-delay = <17>;
++		nvidia,elastic-limit = <16>;
++		nvidia,term-range-adj = <6>;
++		nvidia,xcvr-setup = <51>;
++		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-lsfslew = <2>;
++		nvidia,xcvr-lsrslew = <2>;
++		nvidia,xcvr-hsslew = <32>;
++		nvidia,hssquelch-level = <2>;
++		nvidia,hsdiscon-level = <5>;
+ 		status = "disabled";
+ 	};
+ 
+-- 
+1.8.1.5
