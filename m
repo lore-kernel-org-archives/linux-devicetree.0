@@ -1,141 +1,115 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 1/2] ARM: dts: Enable RTC node in exynos4.dtsi file
-Date: Wed, 18 Dec 2013 16:55:05 +0100
-Message-ID: <10362116.E9jFDHDWMM@amdc1227>
-References: <1382438215-13215-1-git-send-email-sachin.kamat@linaro.org>
- <2781292.vINFB8v7mM@flatron>
- <CAK9yfHwgCkFZV7pE3t2pu7xYnvCD8DErgZTJPyDVQcE+s57pvA@mail.gmail.com>
+From: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 6/7] Documentation: add the binding file for Quadspi
+ driver
+Date: Thu, 19 Dec 2013 00:03:59 +0800
+Message-ID: <20131218160355.GA1145@gmail.com>
+References: <1387184330-14448-1-git-send-email-b32955@freescale.com>
+ <1387184330-14448-7-git-send-email-b32955@freescale.com>
+ <20131218153029.GF8064@book.gsilab.sittig.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAK9yfHwgCkFZV7pE3t2pu7xYnvCD8DErgZTJPyDVQcE+s57pvA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131218153029.GF8064-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, angus.clark-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, sourav.poddar-l0cyMroinI0@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 10 of December 2013 14:37:13 Sachin Kamat wrote:
-> On 13 November 2013 17:51, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> > On Wednesday 13 of November 2013 12:52:05 Bartlomiej Zolnierkiewicz wrote:
-> >
-> > [+ DT maintainers]
-> >
-> >>
-> >> Hi,
-> >>
-> >> On Wednesday, November 13, 2013 11:27:03 AM Sylwester Nawrocki wrote:
-> >> > On 13/11/13 09:08, Tomasz Figa wrote:
-> >> > >> As was discussed earlier too, status field of DT node is not supposed
-> >> > >> > to be used for
-> >> > >> > keeping an IP enabled or disabled. That should be done via the kernel
-> >> > >> > config. The DT status
-> >> > >> > is mostly to indicate the hardware status of the IP on the SoC/board.
-> >> > >> > If the node fully defines the hardware,
-> >> > >> > then it should be kept enabled by default unless such enabling causes
-> >> > >> > some issues with other IPs due to
-> >> > >> > pin sharing conflicts, etc. In the above case the node completely
-> >> > >> > defines the hardware and hence there is no
-> >> > >> > reason to keep it disabled.
-> >> > >
-> >> > > That's correct. (Unless I'm missing some board specific dependency of RTC.
-> >> > > If so, please correct me.)
-> >
-> > Well, I was missing one indeed. RTC requires an external 32.768KHz clock,
-> > which must be provided by an oscillator or any other clock source on the
-> > board. However...
-> >
-> >> >
-> >> > I don't really like this argument. Why not allow the firmware to decide
-> >> > which devices are relevant and should be handled by the kernel ?
-> >> > And since we are aiming at single kernel config, if I understand things
-> >> > correctly, I can't see anything else than dts that could hold the machine
-> >> > *configuration*.
-> >> >
-> >> > So let's not make all stuff enabled by default, that's not something we
-> >> > want on those mobile device SoCs. We should not be making fine system
-> >> > tuning more difficult than necessary.
-> >> >
-> >> > I'm with Kukjin on this matter and would prefer patches like the $subject
-> >> > patch not be merged.
-> >>
-> >> I generally agree with Sylwester and Kukjin that devices should not be
-> >> enabled by default in dtsi files.  However in a particular case of RTC
-> >> support there should be an exception from the generic rule and RTC
-> >> should be enabled for all EXYNOS boards (we have RTC driver config
-> >> option already enabled in our exynos_defconfig and we are also already
-> >> enabling RTC device explicitly in EXYNOS5250 dtsi file).
-> >
-> > I believe the rule is clear and we already went through enough discussion
-> > about this. To clarify again:
-> >
-> > Device Tree should not restrict possible use cases of particular hardware
-> > that are allowed by particular integration of such hardware on particular
-> > board. This means that if there are no technical reasons to mark such
-> > hardware as disabled on particular board, this should not be done. Let
-> > me show you this on several examples:
-> >
-> > 1. SoC X has an MMC controller, which needs N pins of the SoC to be
-> > routed to an MMC slot. Our board X1 does _not_ have necessary traces on
-> > its PCB. In this case the MMC controller must be marked as disabled.
-> >
-> > 2. SoC X has an MMC controller, which needs N pins of the SoC to be
-> > routed to an MMC slot. Our board X2 _does_ have necessary traces on its
-> > PCB, so when user inserts an MMC card into the slot he expects that the
-> > system detects it. In this case the MMC controller must _not_ be marked
-> > as disabled.
-> >
-> > 3. SoC X has a built-in 2D graphics accelerator. It does not have any
-> > output pads nor any requirements with respect to the board - it's purely
-> > a mem-to-mem device. A user might want to run a rootfs that uses it to
-> > accelerate his applications, so this device must _not_ be marked as
-> > disabled.
-> >
-> > 4. SoC X has a image processing block, consisting of two functions:
-> >  - a camera interface, that requires SoC pads to be connected to a camera
-> >    sensor,
-> >  - general-purpose image scaler and format converter, that can operate
-> >    either on input of camera interface or on images stored in memory.
-> > This case is more interesting. Even if board does not have a physical
-> > camera interface, the binding should be designed in a way that allows
-> > enabling only the memory-to-memory scaler. Then such IP must be marked
-> > okay regardless of board support, because the camera interface will be
-> > used only if relevant board-specific properties are provided.
-> >
-> > To sum up, I would not interpret the "disabled" value of "status" property
-> > as the opposite of "enabled", but rather as "disabled" in "disabled
-> > person".
-> >
-> > Anyway, I'd like to get a confirmation (or denial) from other Device Tree
-> > maintainers and if what I've written above is correct, maybe we should
-> > put this somewhere in kernel documentation.
+On Wed, Dec 18, 2013 at 04:30:29PM +0100, Gerhard Sittig wrote:
+> > +++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+> > @@ -0,0 +1,31 @@
+> > +* Freescale Quad Serial Peripheral Interface(QuadSPI)
+> > +
+> > +Required properties:
+> > +- compatible : Should be "fsl,vf610-qspi"
+> > +- reg : Offset and length of the register set for the device
+> > +- interrupts : Should contain the interrupt for the device
+> > +- clocks : The clocks needed by the QuadSPI controller
+> > +- clock-names : the name of the clocks
+> > +- fsl,nor-num : Contains the number of SPI NOR chips connected to
+> > +                the controller.
+> > +- fsl,nor-size : the size of each SPI NOR.
+> > +- fsl,max-frequency : the frequency at which the SPI NOR works.
 > 
-> Ping..
+> Those "fsl,*" properties somehow feel strange.  I comment on
+> details below the example since this should even better show why
+> I feel so.
 > 
-> In the absence of kernel documentation formulating the guidelines for
-> enabling/disabling
-> of IP (nodes), the current code should be the reference for someone
-> doing this for a given
-> platform. However, the current code (Exynos DT files) itself is not
-> consistent one way or the
-> other w.r.t to the above points. For e.g. commit 73784475febf ("ARM:
-> dts: Update the "status"
-> property of RTC DT node for Exynos5250 SoC") does the exact same thing
-> done by this patch.
-> Similarly in exynos5420.dtsi. I am sure there are other similar
-> examples as well. I think there should be
-> one consistent guideline, atleast for accepting patches of this nature
-> (for this platform).
+> > +
+> > +Example:
+> > +
+> > +qspi0: quadspi@40044000 {
+> > +	compatible = "fsl,vf610-qspi";
+> > +	reg = <0x40044000 0x1000>;
+> > +	interrupts = <0 24 0x04>;
+> > +	clocks = <&clks VF610_CLK_QSPI0_EN>,
+> > +		<&clks VF610_CLK_QSPI0>;
+> > +	clock-names = "qspi_en", "qspi";
+> > +	fsl,nor-num = <1>;
+> > +	fsl,nor-size = <0x1000000>;
+> > +	fsl,max-frequency = <66000000>;
+> > +	status = "okay";
+> > +
+> > +	flash0: s25fl128s@0 {
+> > +		....
+> > +	};
+> > +};
+> 
+> 
+> The number of chips connected to the controller should reflect in
+> the child nodes of the SPI NOR controller, and need not get
+> specified in redundant ways and with potential for errors when
+> they can get determined at runtime.
+thanks. I have already removed this property in the next version.
 
-Yes, there should be a document somewhere describing such guidelines.
-I believe it's already being written by some people, though.
-(Mark, Stephen?)
 
-For this patch alone and earlier patches doing the same, we missed the
-fact that some boards might not have RTC xtal, so RTC shouldn't really be
-enabled by default. This isn't really anything that can't be changed
-later, though, and I believe we should make this consistent for all Exynos
-SoC dtsi files.
+> 
+> The capacity of the flash chip as well as the maximum frequency
+> which the flash chip operates at should be features of the flash
+> chip (in combination with the board), i.e. of the child node and
+agree.
+thanks.
 
-Best regards,
-Tomasz
+> not the controller.  SPI slaves already have a documented
+> property for the purpose of limiting transfer rates when they are
+> lower than the controller's i.e. busses capabilities.  Can't tell
+> from the top of my head whether there is a property for the
+> maximum frequency which a controller should use across the whole
+> bus.  In any case, either the property needs to get moved, or the
+> description should get updated to say "the max frequency at which
+> the controller will send data" or something.
+> 
+> The capacity of the flash chip should be a consequence of either
+> having gathered CFI information (if available) or having
+> identified the chip by its JEDEC ID and looked up its features in
+> an internal database.  Users should not need to specify the
+> capacity of the flash chip in the device tree.
+
+I will remove it in the next version.
+
+> 
+> 
+> If the 'fsl,nor-size' property remains (which I doubt at the
+> moment), you cannot describe "the size of each" chip in one
+> single-cell spec.  So the documentation should get extended to
+> reflect multi-chip setups.  But I'd rather assume that the
+> property is not needed at all.
+> 
+> You can omit the 'status = "okay"' line since that is the default
+> already in the absence of the keyword.  This property is most
+> useful to declare yet not enable by default components in .dtsi
+> files and to do enable them in individual board files if
+> applicable.  This aspect need not be shown in the binding example
+> of a QSPI controller.
+> 
+> I'd suggest to use symbolic names for the flags in the last
+> interrupt specifier cell, as you do for clock items.
+I will use the symbolic name if it has.
+But if it not have a symbolic name, i have to keep it as it is now.
+
+Thanks
+Huang Shijie
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
