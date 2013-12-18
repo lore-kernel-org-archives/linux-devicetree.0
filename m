@@ -1,59 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/5] mfd: sec: Remove sec_reg* regmap helpers
-Date: Wed, 18 Dec 2013 17:25:53 +0000
-Message-ID: <20131218172553.GA31886@sirena.org.uk>
-References: <1387286601-21646-1-git-send-email-k.kozlowski@samsung.com>
- <1387286601-21646-4-git-send-email-k.kozlowski@samsung.com>
- <20131218133625.GT28455@sirena.org.uk>
- <1387375431.1433.2.camel@AMDC1943>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv2 01/27] ARM: OMAP: remove DSS DT hack
+Date: Wed, 18 Dec 2013 09:32:31 -0800
+Message-ID: <20131218173230.GD27438@atomide.com>
+References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com>
+ <1387205794-32246-2-git-send-email-tomi.valkeinen@ti.com>
+ <20131216184157.GA26293@atomide.com>
+ <52AFF31C.6010100@ti.com>
+ <20131217153001.GN12324@atomide.com>
+ <52B14AEE.8090807@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1387375431.1433.2.camel@AMDC1943>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Thomas Abraham <thomas.abraham@linaro.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <52B14AEE.8090807@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [131217 23:14]:
+> On 2013-12-17 17:30, Tony Lindgren wrote:
+> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [131216 22:47]:
+> >> On 2013-12-16 20:41, Tony Lindgren wrote:
+> >>> * Tomi Valkeinen <tomi.valkeinen@ti.com> [131216 06:59]:
+> >>>> As a temporary solution to enable DSS for selected boards when booting
+> >>>> with DT, a hack was added to board-generic.c in
+> >>>> 63d5fc0c2f748e20f38a0a0ec1c8494bddf5c288 (OMAP: board-generic: enable
+> >>>> DSS for panda & sdp boards).
+> >>>>
+> >>>> We're now adding proper DT support, so the hack can be removed.
+> >>>
+> >>> I guess this patch should be merged later on after we have the DT support
+> >>> working?
+> >>
+> >> I'll move this patch also to the end of the series.
+> >>
+> >> "Merged later" sounds like you mean this could be merged in a separate
+> >> series. I think this and the other removal can be in this series, they
+> >> just need to be at the end.
+> > 
+> > Well yeah let's keep those separate still as at least Russell needed
+> > some more time with the legacy booting. The point we can drop the
+> > legacy booting for omap3 may still need to wait a bit, maybe even
+> > until v3.15 to keep things working.
+> 
+> They can't be separate. Once I add DT support for a board, I have to
+> remove the legacy support for that board. This patch removes legacy
+> support for the boards that are converted in the series.
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Oh OK yeah makes sense. I was worried about the legacy board-*.c files..
+ 
+> If I don't remove the legacy support, both DT and legacy side will be
+> ran, and both create the DSS devices...
+> 
+> But, it's true that this patch removes the whole file, as all the boards
+> currently there are converted. But if new boards are added to the DSS
+> quirks, then I can't remove the file. So I'll change this patch to only
+> remove the parts for the converted boards, not the whole file.
 
-On Wed, Dec 18, 2013 at 03:03:51PM +0100, Krzysztof Kozlowski wrote:
-> On Wed, 2013-12-18 at 13:36 +0000, Mark Brown wrote:
+OK
+ 
+> But but... If I understand right, the plan is to remove all omap3 board
+> files for the next merge window. I'm not totally familiar with the
+> quirks system, but how should this be handled:
+> 
+> omap3.dtsi will contain the SoC's DSS nodes. This means that DSS devices
+> are created via DT code. But if the display (i.e. panels) for a
+> particular omap3 board has not been converted to DT, we should still use
+> the legacy DSS initialization. But the DSS is already initialized via DT.
+> 
+> I guess I can set the status for all the DSS nodes to "disabled" in
+> omap3.dtsi, and that should prevent DT code from creating the DSS
+> devices. Then, each omap3-board.dts that has been converted to DSS DT,
+> can override those to "enabled".
+> 
+> That way the DT code should not create DSS devices by default, and the
+> quirks system would probably work fine.
 
-> > This doesn't apply against the regulator tree.  Can you please check
-> > what's going on here, I guess there may need to be some merge with MFD?
+No need for DSS related quirks for the DT boot case. I was concerned about
+the legacy board-*.c case.
 
-> I think you need to rebase on current Linus' (at least 3.13-rc4) to get
-> this patch:
-> "mfd/rtc: s5m: fix register updating by adding regmap for RTC" (3e1e4a5f3a3)
-
-Yes, that's it - applied now, thanks.
-
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSsdqeAAoJELSic+t+oim9P04P/3OVJqBoINrcJdhGXGI9nffy
-svdDDAFfug7OtCZX5e4zV/miEE1mJtJr0SRYd9y7JI8V1LVCwEUHFDvyDYe9a6lu
-VJw09AWGylFadbmVY1FsHSaTWB3lIqtBP2qLvVC9FwxUyTpZgSoYJfQALqe3NK1q
-yGfRKbQZ8VITpfvOwObGnaO1OfHggfx5wUjqTvoj9Tq7MuLoltxkeI/onVO6Kvlv
-UZnKxHaUjyC5rwHuak54BCzI2/mE5b6C7Vy1hHBgZHxdIIdgN3ftdC8fn+r9mNUE
-PTVFI1zDcbMvxnB8WwwKjk8wHQAgv34j6v/bcRYp2AAHq/S43pXWV0v/+CS6Sj9l
-D0f66DK5tHwrOV0nVWvWMI1fqyredHKwVCKQMa+doJHBCQCUw6a8EZK9maHtgtjB
-D3Tq5bICiXJx2+zthKcliO+Ip+eNoWNFapPQJJlcg1GGHhb4ZXAg4c/ipViScQxX
-6UC3X4ma9uKBrczayFBw18uv4clnnXf8GdKr8VarKkouWw2c32NtuNniQ8HC6xh8
-MIEMmpmfhj+6tIpJoT4z7hUyUyNDmpMdkLGE8VrPEMUZDVdqnJeoBPli/h8feFP/
-FhhUC8Cl9hlIuvDqVKZpApPwJsqqcMtz9TNrupq+45SYJ2hIcPYs4H0gJfJAb2sC
-nwRgFLMcEGBS2wa9Oacg
-=D1kD
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
+Tony
