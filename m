@@ -1,124 +1,78 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH] ARM: dts: Add missing GPIO entries for sd_bus in
-Date: Wed, 18 Dec 2013 19:43:06 +0100
-Message-ID: <CA+Ln22F9nA-NECJjmnPqw6x1rWzJW0Mff4_1z+7XLCBv0JGNvg@mail.gmail.com>
-References: <1382700168-12527-1-git-send-email-sachin.kamat@linaro.org>
-	<085901cedf91$4b24d4c0$e16e7e40$@org>
-	<CAL1wa8fnu-xUu3SZ+e1SMB0ci5n8wenDgbr4L9TGS+NH8qpS2w@mail.gmail.com>
-	<CAK9yfHyRu3WSkQOZKYMgsaWKcvVfNySptQhd91kX2eAdd-A+2Q@mail.gmail.com>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [PATCH 0/3] Add more device nodes for am43x gp evm.
+Date: Wed, 18 Dec 2013 19:51:24 +0100
+Message-ID: <52B1EEAC.2010109@baylibre.com>
+References: <1385537479-6959-1-git-send-email-sourav.poddar@ti.com> <52B1DEAC.4000509@ti.com> <52B1E00D.30403@baylibre.com> <52B1E627.20409@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAK9yfHyRu3WSkQOZKYMgsaWKcvVfNySptQhd91kX2eAdd-A+2Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: Leela Krishna Amudala <leelakrishna.a@gmail.com>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Tushar Behera <tushar.behera@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52B1E627.20409@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sourav Poddar <sourav.poddar@ti.com>
+Cc: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, tony@atomide.com, balbi@ti.com, linux-omap@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sachin,
-
-2013/11/13 Sachin Kamat <sachin.kamat@linaro.org>:
-> Hi Leela,
->
-> Thanks for the detailed explanation.
->
-> On 12 November 2013 17:20, Leela Krishna Amudala
-> <leelakrishna.a@gmail.com> wrote:
->> Hi Sachin,
+On 18/12/2013 19:15, Sourav Poddar wrote:
+> On Wednesday 18 December 2013 11:19 PM, Benoit Cousson wrote:
+>> Hi Sourav,
 >>
->> On Tue, Nov 12, 2013 at 3:53 PM, Kukjin Kim <kgene@kernel.org> wrote:
->>> Sachin Kamat wrote:
+>> On 18/12/2013 18:43, Sourav Poddar wrote:
+>>> Benoit,
+>>> On Wednesday 27 November 2013 01:01 PM, Sourav Poddar wrote:
+>>>> The patch series adds support for enabling gpio, pwm backlight and
+>>>> matrix gpio keys on am43x-gp-evm.
 >>>>
->>>
->>> Following is more clear?
->>>
->>> "ARM: dts: Add missing GPIO entries for sd_bus_width4 in exynos5420-pinctrl"
->>>
->>>> Adds missing GPIO entries for sd_bus nodes in exynos5420-pinctrl.
+>>>> Done on top of 3.13-rc1 + tero clock series(1) + Afzal's basic gp
+>>>> support(2).
 >>>>
+>>>> [1]: https://patchwork.kernel.org/patch/3009541/
+>>>> [2]: https://patchwork.kernel.org/patch/3171761/
+>>>>
+>>>> Tested on am43x-gp-evm.
+>>>>
+>>>> There is a some bug while using regulators through backlight
+>>>> driver on 3.13-rc1. So, tested pwm part with this patch[3].
+>>>>
+>>>> [3]: http://www.spinics.net/lists/arm-kernel/msg288215.html
+>>>>
+>>>> Sourav Poddar (3):
+>>>>    arm: dts: am437x-gp-evm: Enable gpio.
+>>>>    ARM: dts: am43x-gp-evm: Add matrix gpio keys.
+>>>>    ARM: dts: am437x-gp-evm: Add pwm backlight support.
+>>>>
+>>>>   arch/arm/boot/dts/am437x-gp-evm.dts |   53
+>>>> +++++++++++++++++++++++++++++++++++
+>>>>   1 files changed, 53 insertions(+), 0 deletions(-)
+>>>>
+>>> Ping on this?
 >>
->> This is not a missing stuff, I did this purposefully.
->> Myself and Doug anderson discussed on this and the objective of doing this is to
->> eliminate the gpio pin configuration multiple times.
+>> The series looks good, but you should rebase it on top of for_3.14/d=
+ts
+>> that is based on the big cleanup branch Tony has done.
+>> I cannot apply it right now.
 >>
->> Please see the below explanation
->>
->> The current code in main line kernel shows like
->>                sd0_bus1: sd0-bus-width1 {
->>                        samsung,pins = "gpc0-3";
->>                  };
->>
->>                sd0_bus4: sd0-bus-width4 {
->>                        samsung,pins = "gpc0-4", "gpc0-5", "gpc0-6";
->>                };
->>
->>                sd0_bus8: sd0-bus-width8 {
->>                        samsung,pins = "gpc3-0", "gpc3-1", "gpc3-2", "gpc3-3";
->>                };
->>
->> and lets mmc wants to use 8 bit width then node should be like below
->>
->> dwmmc0@12200000 {
->>                 [snip]
->>                 pinctrl-names = "default";
->>                 pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
->>
->> Here it will configure all the 8 pins ("gpc0-3", "gpc0-4", "gpc0-5",
->> "gpc0-6", "gpc3-0", "gpc3-1", "gpc3-2", "gpc3-3")
->>
->>                 slot@0 {
->>                         reg = <0>;
->>                         bus-width = <8>;
->>                 };
->>         };
->>
->> Similarly for using 1 bit width the property value should be like below
->>                pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1>;
->>
->> and if other mmc wants to use 4 bit width the property value should be
->> like below
->>                pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4>;
->>
->> But with the changes you made and if one mmc wants to use 1 bit width
->> and other wants to use 4 bit width
->> the pin "gpc0-3" will be configured twice which is wrong.
->
-> I think this is the case with current code too.
->
-> From your above example, for 2 slots:
-> For 1 bit width: pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1>;
-> "gpc0-3"
->
-> For 4 bit width: pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4>;
-> "gpc0-3", "gpc0-4", "gpc0-5", "gpc0-6"
+> Ok. I will rebase it and send you the series, As you can see there is
+> one dependency on afzal  basic support patch, as mentioned in
+> the cover letter. If you are ok with that patch, it has to go first. =
+So,
+> if you wish I can work with afzal and send you this
+> series and afzal patch together.
 
-No, this way you will have gpc0-3 in two groups - sd0_bus1 and sd0_bus4,
-which probably won't even work as the pinctrl subsystem probably doesn't
-allow claiming one pin twice.
+Yes, go ahead and repost the whole series with the depency.
 
->
->
->> So, I strongly feel it is better to change the existing mmc node
->> instead of changing the "sd0_bus" entries
->
-> I think this is already taken care of in the mmc nodes.
-> For slot with bus-width of 8,
-> pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
->
-> Similarly for slot with bus width of 4,
-> pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+BTW, could you do that as well with your other series?
 
-This is inconsistent:
-- for 1-bit bus you would have to specify just sdX_bus1,
-- for 4-bit just sdX_bus4, but
-- for 8-bit you need to specify both sdX_bus4 and sdX_bus8.
-
-The change Leela mentioned was about making this consistent,
-so you need to always specify all possible working widths on
-given board.
-
-Other Exynos SoCs should be changed to use the same
-convention as well.
-
-Best regards,
-Tomasz
+Thanks,
+Benoit
+--=20
+Beno=EEt Cousson
+BayLibre
+Embedded Linux Technology Lab
+www.baylibre.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
