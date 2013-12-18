@@ -1,40 +1,99 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: davinci: aemif: get rid of davinci-nand driver
- dependency on aemif
-Date: Wed, 18 Dec 2013 17:43:14 +0530
-Message-ID: <52B1915A.7060309@ti.com>
-References: <1386267092-18615-1-git-send-email-ivan.khoronzhuk@ti.com> <52B18C44.2000305@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv5,RESEND] rtc: Add support for Intersil ISL12057 I2C RTC
+ chip
+Date: Wed, 18 Dec 2013 12:24:19 +0000
+Message-ID: <20131218122419.GM28455@sirena.org.uk>
+References: <28bfd1b8cd4725a70fb713a8b6503e7f5db13d71.1387305663.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52B18C44.2000305-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "ivan.khoronzhuk" <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AO40I52Xc3kOyr3I"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <28bfd1b8cd4725a70fb713a8b6503e7f5db13d71.1387305663.git.arno@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 18 December 2013 05:21 PM, ivan.khoronzhuk wrote:
-> Hi, Sekhar
-> 
-> This patch is based on "Reuse davinci-nand driver for Keystone arch" series.
-> The series has passed review at https://lkml.org/lkml/2013/12/17/241
-> and can be found at http://git.infradead.org/l2-mtd.git
-> 
-> This patch can be still applied on top of the series without conflicts. 
-> 
-> Can you please pick up the $subject patch if you are OK with it?
 
-I have no problems with the patch and can pick it too, but need ack from
-MTD maintainer (David) as it touches drivers/mtd/ too.
+--AO40I52Xc3kOyr3I
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-David,
+On Tue, Dec 17, 2013 at 08:07:28PM +0100, Arnaud Ebalard wrote:
+>=20
+> Intersil ISL12057 is an I2C RTC chip also supporting two alarms. This
+> patch only adds support for basic RTC functionalities (i.e. getting and
+> setting time). Tests have been performed on NETGEAR ReadyNAS 102 w/
+> startup/shutdown scripts, hwclock, ntpdate and openntpd.
 
-If you do not have the patch, we can resend it.
+Reviewed-by: Mark Brown <broonie@linaro.org>
 
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+but
+
+> +static int isl12057_rtc_proc(struct device *dev, struct seq_file *seq)
+> +{
+> +	struct isl12057_rtc_data *data =3D dev_get_drvdata(dev);
+> +	int reg, ret;
+> +
+> +	mutex_lock(&data->lock);
+> +
+> +	/* Status register */
+> +	ret =3D regmap_read(data->regmap, ISL12057_REG_SR, &reg);
+> +	if (ret) {
+> +		dev_err(dev, "%s: reading SR failed\n", __func__);
+> +		goto out;
+> +	}
+> +
+> +	seq_printf(seq, "status_reg\t:%s%s%s (0x%.2x)\n",
+> +		   (reg & ISL12057_REG_SR_OSF) ? " OSF" : "",
+> +		   (reg & ISL12057_REG_SR_A1F) ? " A1F" : "",
+> +		   (reg & ISL12057_REG_SR_A2F) ? " A2F" : "", reg);
+> +
+> +	/* Control register */
+> +	ret =3D regmap_read(data->regmap, ISL12057_REG_INT, &reg);
+> +	if (ret) {
+> +		dev_err(dev, "%s: reading INT failed\n", __func__);
+> +		goto out;
+> +	}
+> +
+> +	seq_printf(seq, "control_reg\t:%s%s%s%s%s%s (0x%.2x)\n",
+> +		   (reg & ISL12057_REG_INT_A1IE) ?  " A1IE"  : "",
+> +		   (reg & ISL12057_REG_INT_A2IE) ?  " A2IE"  : "",
+> +		   (reg & ISL12057_REG_INT_INTCN) ? " INTCN" : "",
+> +		   (reg & ISL12057_REG_INT_RS1) ?   " RS1"   : "",
+> +		   (reg & ISL12057_REG_INT_RS2) ?   " RS2"   : "",
+> +		   (reg & ISL12057_REG_INT_EOSC) ?  " EOSC"  : "", reg);
+> +
+> + out:
+> +	mutex_unlock(&data->lock);
+
+I'm not sure the lock is achieving anything any more - the only time it
+actualy protects more than one operation is the above but since the
+status register is volatile anyway it might change between it being read
+and the control register being read.
+
+--AO40I52Xc3kOyr3I
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSsZPwAAoJELSic+t+oim9bDkP/iqsa5KN05NE/ckTL4BWUmn7
+DNiiCO3RntHVG+fewhmzyUJCYYAqsXesCz+sMM9gA51/uk/KOW/ZJNEVOiNiFcjr
+SOI4pSs2u+Zfhmgn6Ue32I5L2ybyt1vKkP3G01A0HC7/pJZzheGpZrUPvi8XVNwd
+Z0DNjjsUPzF7LmThOdwGA4Tu/vfiFs0QD7yPWXGQNATPUdcwN64pajuINCYuWfEM
+uLF9ZiKbsMPIWf+XjkgP89XEH5X+BYFQQpdIizc4Zkng2QxqetkgdE9NhM8GH/qF
+ann0FC62umhaUiVRuUBKynUSO61xo2umG3vwK9MJ98nLFDorEydt6uOqMv1WEu8Q
+lKPCeF6ErqPp465LrenZxcFEotmdDoZSWbhikLXa/S75Exex1z8CbziBqzDe1oPP
+vtrVXVRNYAopadZIkl78dhJr/mrZu9kYi1VwhUSYGcpe9uvA86j6RdHRSYNysie8
+rVIYM23JIXb5KaP6tqAdqN2VUtR2xkBzbjvRx0MVAOpqG31BUii7hQFvPrdGHtzg
+Vu0N1M0xV1TRoIJWS4PzV3cnEiP3svK9o7FSf6uKJ1Xq700zttlriRgASlB7lGEU
+NiQXEbx2fmr7R0kMed5p4D/8tcJfd616ko9GXwgxZ6aJZuurRLD2wTlZvr/t8NN0
+PN/3F+ejj9JCk8TyTdgk
+=UxOl
+-----END PGP SIGNATURE-----
+
+--AO40I52Xc3kOyr3I--
