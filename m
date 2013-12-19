@@ -1,89 +1,87 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH V2] rtc: honor device tree /alias entries when assigning IDs
-Date: Thu, 19 Dec 2013 11:06:49 -0700
-Message-ID: <1387476409-7908-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [RFC PATCH] gpio: add GPIO hogging mechanism
+Date: Thu, 19 Dec 2013 12:22:27 -0600
+Message-ID: <20131219182227.GB4536@saruman.home>
+References: <1387463671-1164-1-git-send-email-b.brezillon@overkiz.com>
+ <1387463671-1164-2-git-send-email-b.brezillon@overkiz.com>
+ <20131219164109.GB27409@kroah.com>
+ <20131219164737.GA4536@saruman.home>
+ <52B32A70.1080700@overkiz.com>
+Reply-To: <balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52B32A70.1080700@overkiz.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: boris brezillon <b.brezillon@overkiz.com>
+Cc: balbi@ti.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Ben Gamari <bgamari.foss@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Pekon Gupta <pekon@ti.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+--+g7M9IMkV8truYOl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Assign RTC device IDs based on device tree /aliases entries if present,
-falling back to the existing numbering scheme if there is no /aliases
-entry (which includes when the system isn't booted using DT), or there
-is a numbering conflict.
+On Thu, Dec 19, 2013 at 06:18:40PM +0100, boris brezillon wrote:
+> Hello Felipe,
+>=20
+> On 19/12/2013 17:47, Felipe Balbi wrote:
+> >On Thu, Dec 19, 2013 at 08:41:09AM -0800, Greg Kroah-Hartman wrote:
+> >>On Thu, Dec 19, 2013 at 03:34:31PM +0100, Boris BREZILLON wrote:
+> >>>GPIO hogging is a way to request and configure specific GPIO without
+> >>>explicitly requesting it in the device driver.
+> >>>
+> >>>The request and configuration procedure is handled in the core device
+> >>>driver code before the driver probe function is called.
+> >>>
+> >>>It allows specific GPIOs to be configured without any driver specific =
+code.
+> >>>
+> >>>Particularly usefull when a external device is connected to a bus and =
+the
+> >>>bus connections depends on an external switch controlled by a GPIO pin.
+> >for external switches, you probably need a pinctrl-gpio driver.
+> >
+> Do you mean using pinctrl pinconf to configure the PIN as output-high or
+> output-low ?
+>=20
+> This was my first proposal
+> (see https://www.mail-archive.com/devicetree@vger.kernel.org/msg05829.htm=
+l).
 
-This is useful in systems with multiple RTC devices, to ensure that the
-best RTC device is selected as /dev/rtc0, which provides the overall
-system time.
+that's quite a weird argument from Linus W, considering you _do_ have a
+discrete mux on the board.
 
-For example, Tegra has an on-SoC RTC that is not battery backed,
-typically coupled with an off-SoC RTC that is battery backed. Only the
-latter is useful for populating the system time, yet the former is
-useful e.g. for wakeup timing, since the time is not lost when the
-system is sleeps.
+We have quite a few of such "crazy" scenarios here at TI and we were
+going to send a pinctrl-gpio driver. If that's not acceptable, then I
+suppose there is no way to boot from NAND on a board where NAND signals
+go through a discrete mux where the select signal is a GPIO pin.
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-v2: Explicitly check for both dev->of_node and dev->parent->of_node.
-    This covers the MFD case, without the MFD core having to set
-    child MFD devices' of_node pointer to the same node as the top-
-    level MFD device, which causes problems such as:
-    http://www.spinics.net/lists/arm-kernel/msg295854.html
----
- drivers/rtc/class.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+--=20
+balbi
 
-diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
-index 02426812bebc..589351ef75d0 100644
---- a/drivers/rtc/class.c
-+++ b/drivers/rtc/class.c
-@@ -14,6 +14,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/rtc.h>
- #include <linux/kdev_t.h>
- #include <linux/idr.h>
-@@ -157,12 +158,27 @@ struct rtc_device *rtc_device_register(const char *name, struct device *dev,
- {
- 	struct rtc_device *rtc;
- 	struct rtc_wkalrm alrm;
--	int id, err;
-+	int of_id = -1, id = -1, err;
-+
-+	if (dev->of_node)
-+		of_id = of_alias_get_id(dev->of_node, "rtc");
-+	else if (dev->parent && dev->parent->of_node)
-+		of_id = of_alias_get_id(dev->parent->of_node, "rtc");
-+
-+	if (of_id >= 0) {
-+		id = ida_simple_get(&rtc_ida, of_id, of_id + 1,
-+				    GFP_KERNEL);
-+		if (id < 0)
-+			dev_warn(dev, "/aliases ID %d not available\n",
-+				    of_id);
-+	}
- 
--	id = ida_simple_get(&rtc_ida, 0, 0, GFP_KERNEL);
- 	if (id < 0) {
--		err = id;
--		goto exit;
-+		id = ida_simple_get(&rtc_ida, 0, 0, GFP_KERNEL);
-+		if (id < 0) {
-+			err = id;
-+			goto exit;
-+		}
- 	}
- 
- 	rtc = kzalloc(sizeof(struct rtc_device), GFP_KERNEL);
--- 
-1.8.1.5
+--+g7M9IMkV8truYOl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSszljAAoJEIaOsuA1yqREtgsP/1WvRak84V4bEBUj0U5HHlIx
+NS8+0pCNsRInkUB0lE9RlmxUoy5wUG93Ya54d3B1mwpi5ELxO9ypj+vjL4zZhfdG
+f3/ltNclqcZvIHViUkEIWZNTPHEMR7EyEeJIzeDIUsDxwoYOvmecIpF0ESLixgXc
+Ae2EWQ6w39nJRvLsRT8WnzCewvQ/Q2P88jAN87QWAcnw3p4cuxdMMirhe0ShXn80
+MLW4oOPvhIYQpsrjqEa4eKzInXaUvmqXoRUB7hXpLB1vwxUpxfjiMo3XJg0kvzqC
+beMefSJUfIZiLov9ZMprGCuOynlH65hNaaTLPcI9bT+0IIlsWZKvZdBZM5sMLTbN
+68Auywnds/ulskm8pOXzN09SpQB4Z1x6BnsCJpoemelPT9B04f4bCUU0ws0KwmeM
+oA0PeYmvKCfx5KPezxpXLoMTvnzVYF5YKBwdTHS1/Dq0XlaIOzGf+yuH0B3kulYw
+G6xfbbpu59rcAdEGkg/nYEvSJh9C78BZeVMbgtFsatcu/iom9FD8w3X6t24IA21E
+s8Ffitm92Z78MA7Gdn4O32nT8ssg2SKcNHnhqyNuBPK+kCZ+Hkn73UIuQp8oHxPh
+mFYXznNa3bqKnlDAwCQQo3ohBuvqsl069YI9qBY7a9CS9Q8v/B6Dp3y49ZMKAnMf
+m1U7f8WuqmtkRbBiQTb5
+=Ly0q
+-----END PGP SIGNATURE-----
+
+--+g7M9IMkV8truYOl--
