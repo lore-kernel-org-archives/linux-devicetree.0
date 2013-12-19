@@ -1,101 +1,107 @@
-From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V2] ARM: dts: imx6qdl-sabresd: Add power key support
-Date: Thu, 19 Dec 2013 16:07:24 -0500
-Message-ID: <1387487244-2749-1-git-send-email-b20788@freescale.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH V2 2/2] thermal: imx: add necessary clk operation
+Date: Thu, 19 Dec 2013 17:11:09 +0800
+Message-ID: <20131219091107.GF6691@S2101-09.ap.freescale.net>
+References: <1387486402-30777-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1387486402-30777-1-git-send-email-b20788@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <b20788@freescale.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, eduardo.valentin@ti.com, kernel@pengutronix.de, rui.zhang@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for imx6qdl-sabresd board's power
-key, the key is named "SW1" on board, press it can wake up
-system from suspend.
+On Thu, Dec 19, 2013 at 03:53:22PM -0500, Anson Huang wrote:
+> Thermal sensor needs pll3_usb_otg when measuring temperature,
+> otherwise the temperature read will be incorrect, so need to
+> enable this clk before sensor working, for alarm function,
+> as hardware will take measurement periodically, so we should
+> keep this clk always on once alarm function is enabled.
+> 
+> Signed-off-by: Anson Huang <b20788@freescale.com>
+> ---
+>  .../devicetree/bindings/thermal/imx-thermal.txt    |    2 ++
+>  drivers/thermal/imx_thermal.c                      |   18 ++++++++++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> index 541c25e..e518c6e 100644
+> --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> @@ -7,6 +7,7 @@ Required properties:
+>  - fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
+>    calibration data, e.g. OCOTP on imx6q.  The details about calibration data
+>    can be found in SoC Reference Manual.
+> +- clocks : thermal sensor's clock source.
 
-Add a new pinctrl entry for gpio keys and move all gpio
-keys pin to this entry.
+This should be listed in 'Optional properties:' now.
 
-Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi |   26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+Shawn
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-index e75e11b..b545895 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -10,6 +10,7 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
- 
-+#include <dt-bindings/input/input.h>
- / {
- 	memory {
- 		reg = <0x10000000 0x40000000>;
-@@ -46,19 +47,28 @@
- 
- 	gpio-keys {
- 		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_keys>;
-+
-+		power {
-+			label = "Power Button";
-+			gpios = <&gpio3 29 0>;
-+			gpio-key,wakeup;
-+			linux,code = <KEY_POWER>;
-+		};
- 
- 		volume-up {
- 			label = "Volume Up";
- 			gpios = <&gpio1 4 0>;
- 			gpio-key,wakeup;
--			linux,code = <115>; /* KEY_VOLUMEUP */
-+			linux,code = <KEY_VOLUMEUP>;
- 		};
- 
- 		volume-down {
- 			label = "Volume Down";
- 			gpios = <&gpio1 5 0>;
- 			gpio-key,wakeup;
--			linux,code = <114>; /* KEY_VOLUMEDOWN */
-+			linux,code = <KEY_VOLUMEDOWN>;
- 		};
- 	};
- 
-@@ -171,8 +181,6 @@
- 	hog {
- 		pinctrl_hog: hoggrp {
- 			fsl,pins = <
--				MX6QDL_PAD_GPIO_4__GPIO1_IO04   0x80000000
--				MX6QDL_PAD_GPIO_5__GPIO1_IO05   0x80000000
- 				MX6QDL_PAD_NANDF_D0__GPIO2_IO00 0x80000000
- 				MX6QDL_PAD_NANDF_D1__GPIO2_IO01 0x80000000
- 				MX6QDL_PAD_NANDF_D2__GPIO2_IO02 0x80000000
-@@ -185,6 +193,16 @@
- 			>;
- 		};
- 	};
-+
-+	gpio-keys {
-+		pinctrl_gpio_keys: gpio_keysgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_D29__GPIO3_IO29 0x80000000
-+				MX6QDL_PAD_GPIO_4__GPIO1_IO04   0x80000000
-+				MX6QDL_PAD_GPIO_5__GPIO1_IO05   0x80000000
-+			>;
-+		};
-+	};
- };
- 
- &ldb {
--- 
-1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  
+>  Example:
+>  
+> @@ -14,4 +15,5 @@ tempmon {
+>  	compatible = "fsl,imx6q-tempmon";
+>  	fsl,tempmon = <&anatop>;
+>  	fsl,tempmon-data = <&ocotp>;
+> +	clocks = <&clks 172>;
+>  };
+> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+> index 1d6c801..c2b8173 100644
+> --- a/drivers/thermal/imx_thermal.c
+> +++ b/drivers/thermal/imx_thermal.c
+> @@ -7,6 +7,7 @@
+>   *
+>   */
+>  
+> +#include <linux/clk.h>
+>  #include <linux/cpu_cooling.h>
+>  #include <linux/cpufreq.h>
+>  #include <linux/delay.h>
+> @@ -73,6 +74,7 @@ struct imx_thermal_data {
+>  	unsigned long last_temp;
+>  	bool irq_enabled;
+>  	int irq;
+> +	struct clk *thermal_clk;
+>  };
+>  
+>  static void imx_set_alarm_temp(struct imx_thermal_data *data,
+> @@ -457,6 +459,22 @@ static int imx_thermal_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	data->thermal_clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(data->thermal_clk)) {
+> +		dev_warn(&pdev->dev, "failed to get thermal clk!\n");
+> +	} else {
+> +		/*
+> +		 * Thermal sensor needs clk on to get correct value, normally
+> +		 * we should enable its clk before taking measurement and disable
+> +		 * clk after measurement is done, but if alarm function is enabled,
+> +		 * hardware will auto measure the temperature periodically, so we
+> +		 * need to keep the clk always on for alarm function.
+> +		 */
+> +		ret = clk_prepare_enable(data->thermal_clk);
+> +		if (ret)
+> +			dev_warn(&pdev->dev, "failed to enable thermal clk: %d\n", ret);
+> +	}
+> +
+>  	/* Enable measurements at ~ 10 Hz */
+>  	regmap_write(map, TEMPSENSE1 + REG_CLR, TEMPSENSE1_MEASURE_FREQ);
+>  	measure_freq = DIV_ROUND_UP(32768, 10); /* 10 Hz */
+> -- 
+> 1.7.9.5
+> 
+> 
