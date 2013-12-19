@@ -1,39 +1,64 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: Add support for sbc-3xxx with cm-t3730
-Date: Thu, 19 Dec 2013 10:35:02 -0800
-Message-ID: <20131219183502.GT27438@atomide.com>
-References: <1386962541-18498-1-git-send-email-tony@atomide.com>
- <52AF065A.4010205@compulab.co.il>
- <20131216191754.GD26293@atomide.com>
- <52AFF9D0.5080400@compulab.co.il>
- <20131217193134.GB27438@atomide.com>
- <52B1608C.3010709@compulab.co.il>
- <20131218211641.GI27438@atomide.com>
- <52B2A3E0.8040405@compulab.co.il>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH] MAINTAINERS: Update Rob Herring's email address
+Date: Thu, 19 Dec 2013 12:53:45 -0600
+Message-ID: <1387479225-927-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52B2A3E0.8040405@compulab.co.il>
-Sender: linux-omap-owner@vger.kernel.org
-To: Igor Grinberg <grinberg@compulab.co.il>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Dmitry Lifshitz <lifshitz@compulab.co.il>, Nikita Kiryanov <nikita@compulab.co.il>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh@kernel.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-* Igor Grinberg <grinberg@compulab.co.il> [131218 23:46]:
-> On 12/18/13 23:16, Tony Lindgren wrote:
-> 
-> [...]
-> 
-> > 
-> > I've kept your Ack as the changes were minor. If no other
-> > comments, I will apply this into omap-for-v3.14/dt probably
-> > on Thursday.
-> 
-> Looks great! Thanks!
+From: Rob Herring <rob.herring@calxeda.com>
 
-Thanks for your comments, I've pushed it out to omap-for-v3.14/dt now.
+My Calxeda email address is going away.
 
-Regards,
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ MAINTAINERS | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Tony
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7243336..f6387b5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -783,7 +783,7 @@ F:	arch/arm/boot/dts/sama*.dts
+ F:	arch/arm/boot/dts/sama*.dtsi
+ 
+ ARM/CALXEDA HIGHBANK ARCHITECTURE
+-M:	Rob Herring <rob.herring@calxeda.com>
++M:	Rob Herring <robh@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	arch/arm/mach-highbank/
+@@ -6223,7 +6223,7 @@ F:	drivers/i2c/busses/i2c-ocores.c
+ 
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ M:	Grant Likely <grant.likely@linaro.org>
+-M:	Rob Herring <rob.herring@calxeda.com>
++M:	Rob Herring <robh+dt@kernel.org>
+ L:	devicetree@vger.kernel.org
+ W:	http://fdt.secretlab.ca
+ T:	git git://git.secretlab.ca/git/linux-2.6.git
+@@ -6235,7 +6235,7 @@ K:	of_get_property
+ K:	of_match_table
+ 
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+-M:	Rob Herring <rob.herring@calxeda.com>
++M:	Rob Herring <robh+dt@kernel.org>
+ M:	Pawel Moll <pawel.moll@arm.com>
+ M:	Mark Rutland <mark.rutland@arm.com>
+ M:	Ian Campbell <ijc+devicetree@hellion.org.uk>
+-- 
+1.8.3.2
