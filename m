@@ -1,49 +1,67 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: at91/dt: add clock properties to sama5d3 crypto
- devs
-Date: Thu, 19 Dec 2013 17:47:40 +0100
-Message-ID: <52B3232C.3000400@atmel.com>
-References: <1387465875-4548-1-git-send-email-b.brezillon@overkiz.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [RFC PATCH] gpio: add GPIO hogging mechanism
+Date: Thu, 19 Dec 2013 10:47:37 -0600
+Message-ID: <20131219164737.GA4536@saruman.home>
+References: <1387463671-1164-1-git-send-email-b.brezillon@overkiz.com>
+ <1387463671-1164-2-git-send-email-b.brezillon@overkiz.com>
+ <20131219164109.GB27409@kroah.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387465875-4548-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131219164109.GB27409@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Ben Gamari <bgamari.foss@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/12/2013 16:11, Boris BREZILLON :
-> Hello,
-> 
-> This series adds missing clock properties in sama5d3 crypto devices nodes.
+--pf9I7BMVVzbSWLtt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fine, thanks Boris. On the whole series:
+On Thu, Dec 19, 2013 at 08:41:09AM -0800, Greg Kroah-Hartman wrote:
+> On Thu, Dec 19, 2013 at 03:34:31PM +0100, Boris BREZILLON wrote:
+> > GPIO hogging is a way to request and configure specific GPIO without
+> > explicitly requesting it in the device driver.
+> >=20
+> > The request and configuration procedure is handled in the core device
+> > driver code before the driver probe function is called.
+> >=20
+> > It allows specific GPIOs to be configured without any driver specific c=
+ode.
+> >=20
+> > Particularly usefull when a external device is connected to a bus and t=
+he
+> > bus connections depends on an external switch controlled by a GPIO pin.
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+for external switches, you probably need a pinctrl-gpio driver.
 
-and integrated in the at91-3.14-dt2 branch.
+--=20
+balbi
 
-Bye,
+--pf9I7BMVVzbSWLtt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> Best Regards,
-> 
-> Boris
-> 
-> Boris BREZILLON (3):
->   ARM: at91/dt: add clk properties to sama5d3 SHA device node
->   ARM: at91/dt: add clk properties to sama5d3 AES device node
->   ARM: at91/dt: add clk properties to sama5d3 TDES device node
-> 
->  arch/arm/boot/dts/sama5d3.dtsi |    6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
 
+iQIcBAEBAgAGBQJSsyMpAAoJEIaOsuA1yqRExS0P/1wtnAocUCNJISCVJ/DqjF11
+XAoRoOiM5Y3izG33kbnZE1vSArFuJYd4UCDXQywbn8ljAJQ/5Kx2lQKYTHOhRMLN
+fF1ciDv4NfuvKK/e2wGK3v4GJg7MaUqCmwl3wutdUa3+o0n/kL06ncz3Ny41ft5p
+Wassj3JY4loqBEH9rX8pCxbPmhZJHn6rqB3S4yvUHFopf08YvSKKpb38xUtY1vUu
+24gvUQayeenSHF3uPN1hEkICaezSAsjhOkGT2vlfG+BayQd6ltiSfTj1KysoI7xe
+cedIz4LrEaOuOIDBUUqlAPYKlF+yDZLgE1oRJ0jjgKzJYQJPXjI0tFN29LlBbElA
+U14GoStm/JqbeLUc1tIxjG3vren1A5IJqvii7CAuINHAF3HRz4otXWe52W6iAk6u
+UWYRzn7jU3OEWHw4BYNhO7IK0y2YEEuTYDnxBPXFp8VyHj24pQ8eCyfoLFuYckSt
+A4KV1oTP3PtBZsiFvQLwRt1Qkg/6vt5PvxBGfpHFYkvd79EKohE5WJZzNo9w2t3Z
+s9P2hDv2SSEbpfjVfCHfq6yP0gXVJa2/celzvWBc5s7vk+6KQgyjyvhLHHehJ2a/
+s08hwz7OXQEy0U4XoE8UzZUPq8pkc9I7sk4EankaYr1FQpSs45oC94I9v70TOLog
+D8zleZv0y4JnD/xLu9KV
+=7IMU
+-----END PGP SIGNATURE-----
 
--- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--pf9I7BMVVzbSWLtt--
