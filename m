@@ -1,59 +1,52 @@
-From: boris brezillon <b.brezillon@overkiz.com>
-Subject: Re: [PATCH v3 1/2] clk: add clk accuracy retrieval support
-Date: Thu, 19 Dec 2013 20:41:23 +0100
-Message-ID: <52B34BE3.7000208@overkiz.com>
-References: <1387290983-6236-1-git-send-email-b.brezillon@overkiz.com> <1387290983-6236-2-git-send-email-b.brezillon@overkiz.com> <20131219060431.18119.64699@quantum> <52B2B42F.9010202@overkiz.com> <20131219193633.18119.57678@quantum>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 3/4] SATA: MV: Add support for the optional PHYs
+Date: Thu, 19 Dec 2013 14:42:37 -0500
+Message-ID: <20131219194237.GC22725@htj.dyndns.org>
+References: <1387311713-1926-1-git-send-email-andrew@lunn.ch>
+ <1387311713-1926-3-git-send-email-andrew@lunn.ch>
+ <52B140F2.8070900@ti.com>
+ <20131218121313.GC4324@htj.dyndns.org>
+ <20131219191027.GI4143@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131219193633.18119.57678@quantum>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaQ==?= =?UTF-8?B?Zw==?= <u.kleine-koenig@pengutronix.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131219191027.GI4143@lunn.ch>
+Sender: linux-ide-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 19/12/2013 20:36, Mike Turquette a =C3=A9crit :
-> Quoting boris brezillon (2013-12-19 00:54:07)
->> Hello Mike,
->>
->> On 19/12/2013 07:04, Mike Turquette wrote:
->>> Quoting Boris BREZILLON (2013-12-17 06:36:22)
->>>> +unsigned long __clk_get_accuracy(struct clk *clk)
->>>> +{
->>>> +       unsigned long ret;
->>>> +
->>>> +       if (!clk)
->>>> +               return 0;
->>>> +
->>>> +       return clk->accuracy;
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(__clk_get_accuracy);
->>> Any reason for exporting this?
->> This might be used by clk drivers to choose the most accurate clk
->> among its parent clks (within the determinate_rate callback).
->>
->> And as some clk drivers might be compiled as modules we need
->> to export the symbol (__clk_get_name helper function is exported
->> too).
-> Does your driver need this or is this just following the existing
-> __clk_get_rate / clk_get_rate model?
+Hello,
 
-No, I don't need this for my driver, at least for the moment.
+On Thu, Dec 19, 2013 at 08:10:27PM +0100, Andrew Lunn wrote:
+> > Shouldn't it distinguish between failures and at least produce
+> > warning?  ie. phy not available and phy init failed due to memory
+> > pressure or whatnot shouldn't be handled the same.
+> 
+> Phy not available is not an error, since not all variants of the SATA
+                          ^
+			 always
 
-Do you want me to drop this EXPORT_SYMBOL ?
->
-> Regards,
-> Mike
->
->> Best Regards,
->>
->> Boris
->>> Regards,
->>> Mike
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> IP block have the ability to control the phy. I can however add a
+> warning for real errors.
+
+Yes, please.
+
+> > > > @@ -4132,6 +4148,8 @@ err:
+> > > >  			clk_disable_unprepare(hpriv->port_clks[port]);
+> > > >  			clk_put(hpriv->port_clks[port]);
+> > > >  		}
+> > > > +		if (!IS_ERR(hpriv->port_phys[port]))
+> > > > +			phy_power_off(hpriv->port_phys[port]);
+> > 
+> > And I'd much prefer the array holds either NULL or valid pointer.
+> 
+> I was trying to keep the code similar to the clk handling. However now
+> that it is diverging more and more from how clk is handled, i can add
+> yet more divergence and overwrite the error with a NULL.
+
+Thanks.
+
+-- 
+tejun
