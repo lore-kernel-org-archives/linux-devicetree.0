@@ -1,87 +1,79 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH v12 4/4] ARM: dts: Exynos5420: Add device nodes for TMU blocks
-Date: Thu, 19 Dec 2013 11:37:02 +0530
-Message-ID: <1387433222-7893-1-git-send-email-ch.naveen@samsung.com>
-References: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: Add power key support
+Date: Thu, 19 Dec 2013 14:08:21 +0800
+Message-ID: <20131219060820.GW6691@S2101-09.ap.freescale.net>
+References: <1387473934-10188-1-git-send-email-b20788@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1387473934-10188-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Exynos5420 SoC has per core thermal management unit.
-5 TMU channels 4 for CPUs and 5th for GPU.
+On Thu, Dec 19, 2013 at 12:25:34PM -0500, Anson Huang wrote:
+> This patch adds support for imx6qdl-sabresd board's power
+> key, the key is named "SW1" on board, press it can wake up
+> system from suspend.
+> 
+> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi |    8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> index e75e11b..85e3487 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> @@ -47,6 +47,13 @@
+>  	gpio-keys {
+>  		compatible = "gpio-keys";
+>  
+> +		power {
+> +			label = "Power Button";
+> +			gpios = <&gpio3 29 0>;
+> +			linux,code = <116>; /* KEY_POWER */
 
-This patch adds the device tree nodes to the DT device list.
+The patch looks good.  But I want to ask for more.
 
-Nodes carry the misplaced second base address and the second
-clock to access the misplaced base address.
+ - Move linux,code to the bottom, so that it follows the order used in
+   volume-up and volume-down.
 
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
----
-Changes since v11:
-  changed the secondary clock name to "tmu_triminfo_apbif"
-from "tmu_apbif_triminfo"
+ - Replace magic number 116 with macro KEY_POWER defined in
+   include/dt-bindings/input/input.h, as well as the numbers in
+   volume-up and volume-down.
 
-Changes since previous version:
-1. used lables instead of comment lines
-2. pass the same clock as trimfo_apbif clock for TMU channel 2
+ - Create a pinctrl entry in gpio-keys node, and move the following out
+   from pinctrl_hog into there.
 
- arch/arm/boot/dts/exynos5420.dtsi |   40 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+	MX6QDL_PAD_EIM_D29__GPIO3_IO29
+	MX6QDL_PAD_GPIO_4__GPIO1_IO04
+	MX6QDL_PAD_GPIO_5__GPIO1_IO05
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index b1fa334..c62cde6 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -402,4 +402,44 @@
- 		clock-names = "gscl";
- 		samsung,power-domain = <&gsc_pd>;
- 	};
-+
-+	tmu_cpu0:tmu@10060000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x10060000 0x100>;
-+		interrupts = <0 65 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	tmu_cpu1:tmu@10064000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x10064000 0x100>;
-+		interrupts = <0 183 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	tmu_cpu2:tmu@10068000 {
-+		compatible = "samsung,exynos5420-tmu-ext-triminfo";
-+		reg = <0x10068000 0x100>, <0x1006c000 0x4>;
-+		interrupts = <0 184 0>;
-+		clocks = <&clock 318>, <&clock 318>;
-+		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
-+	};
-+
-+	tmu_cpu3:tmu@1006c000 {
-+		compatible = "samsung,exynos5420-tmu-ext-triminfo";
-+		reg = <0x1006c000 0x100>, <0x100a0000 0x4>;
-+		interrupts = <0 185 0>;
-+		clocks = <&clock 318>, <&clock 319>;
-+		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
-+	};
-+
-+	tmu_gpu:tmu@100a0000 {
-+		compatible = "samsung,exynos5420-tmu-ext-triminfo";
-+		reg = <0x100a0000 0x100>, <0x10068000 0x4>;
-+		interrupts = <0 215 0>;
-+		clocks = <&clock 319>, <&clock 318>;
-+		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
-+	};
- };
--- 
-1.7.10.4
+Shawn
 
+> +			gpio-key,wakeup;
+> +		};
+> +
+>  		volume-up {
+>  			label = "Volume Up";
+>  			gpios = <&gpio1 4 0>;
+> @@ -182,6 +189,7 @@
+>  				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x80000000
+>  				MX6QDL_PAD_EIM_D22__GPIO3_IO22  0x80000000
+>  				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25 0x80000000
+> +				MX6QDL_PAD_EIM_D29__GPIO3_IO29 0x80000000
+>  			>;
+>  		};
+>  	};
+> -- 
+> 1.7.9.5
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
