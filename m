@@ -1,126 +1,86 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 4/4] drm: exynos: hdmi: Add dt support for hdmiphy settings
-Date: Thu, 19 Dec 2013 14:19:56 +0100
-Message-ID: <9657044.3cgrCkZ0Il@amdc1227>
-References: <1387455148-22999-1-git-send-email-s.shirish@samsung.com>
- <1387455148-22999-5-git-send-email-s.shirish@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] regulator: Start using standard gpios property and
+ deprecate some custom properties
+Date: Thu, 19 Dec 2013 13:26:02 +0000
+Message-ID: <20131219132602.GB31886@sirena.org.uk>
+References: <1386965234-26461-1-git-send-email-tony@atomide.com>
+ <20131216183615.GK3185@sirena.org.uk>
+ <20131216194023.GE26293@atomide.com>
+ <20131216201102.GP3185@sirena.org.uk>
+ <20131216210512.GF26293@atomide.com>
+ <20131216214057.GG3185@sirena.org.uk>
+ <20131216230622.GH26293@atomide.com>
+ <20131216233737.GL3185@sirena.org.uk>
+ <20131217153727.GI26293@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1387455148-22999-5-git-send-email-s.shirish@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shirish S <s.shirish@samsung.com>
-Cc: dri-devel@lists.freedesktop.org, inki.dae@samsung.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, s.nawrocki@samsung.com, shirish@chromium.org, linux-samsung-soc@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="q1SX3yAxAkj1z+aD"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131217153727.GI26293@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 19 of December 2013 17:42:28 Shirish S wrote:
-> This patch adds dt support to hdmiphy config settings
-> as it is board specific and depends on the signal pattern
-> of board.
-> 
-> Signed-off-by: Shirish S <s.shirish@samsung.com>
-> ---
->  .../devicetree/bindings/video/exynos_hdmi.txt      |   34 ++++++++
->  drivers/gpu/drm/exynos/exynos_hdmi.c               |   89 ++++++++++++++++----
->  2 files changed, 105 insertions(+), 18 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> index 323983b..0766e6e 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> @@ -13,6 +13,31 @@ Required properties:
->  	b) pin number within the gpio controller.
->  	c) optional flags and pull up/down.
->  
-> +Optional-but-recommended properties:
-> +- hdmiphy-configs: following information about the hdmiphy config settings.
-> +	a) "config<N>: config<N>" specifies the phy configuration settings,
 
-Why do you need this "config<N>: " part? (This is called "label" in DT
-terminology by the way and can be used to reference the node from
-properties of other nodes, by so called "phandle".)
+--q1SX3yAxAkj1z+aD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +		where 'N' denotes the number of configuration, since every
-> +		pixel clock can have its unique configuration.
-> +		"samsung,pixel-clock" specifies the pixel clock
-> +		"samsung,de-emphasis-level" provides fine control of TMDS data
-> +		 pre emphasis, below shown is example for
-> +		data de-emphasis register at address 0x145D0040.
-> +			hdmiphy@38[16] for bits[3:0] permitted values are in
-> +			the range of 760 mVdiff to 1400 mVdiff at 20mVdiff
-> +			increments for every LSB
-> +			hdmiphy@38[16] for bits[7:4] permitted values are in
-> +			the range of 0dB to -7.45dB at increments of -0.45dB
-> +			for every LSB.
-> +		"samsung,clock-level" provides fine control of TMDS data
-> +		amplitude for each channel,
-> +		for example if 0x145D005C is the address of clock level
-> +		register then,
-> +			hdmiphy@38[23] for bits [1:0] permitted values are in
-> +			the range of 0 mVdiff & 60 mVdiff for each channel at
-> +			increments 20 mVdiff of amplitude levels for every LSB,
-> +			hdmiphy@38[23] for bits [7:3] permitted values are in
-> +			the range of 790 and 1430 mV at 20mV increments for
-> +			every LSB.
->  Example:
->  
->  	hdmi {
-> @@ -20,4 +45,13 @@ Example:
->  		reg = <0x14530000 0x100000>;
->  		interrupts = <0 95 0>;
->  		hpd-gpio = <&gpx3 7 1>;
-> +		hdmiphy-configs {
-> +			config0: config0 {
-> +				samsung,pixel-clock = <25200000>;
-> +				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
+On Tue, Dec 17, 2013 at 07:37:27AM -0800, Tony Lindgren wrote:
+> * Mark Brown <broonie@kernel.org> [131216 15:39]:
 
-nit: Two spaces before "/bits/".
+> > No, that's a different thing - the PMIC will typically be able to use
+> > some pins as GPIOs so most expose a GPIO controller.  The functions that
+> > are an issue here are things like voltage selection, voltage transition
+> > completion status, sleep mode, enable control or whatever that may need
+> > to be tied to the SoC for interaction (usually not just limited to the
 
-> +				samsung,clock-level =  /bits/ 8 < 0x66>;
+> OK. Maybe the best way to deal with that is to have the driver specific
+> regmap (gpiomap? :) configuration describe that? And then the driver
+> GPIO configuration is picked up just based on the compatible flags and
+> the gpios property?
 
-nit: Two spaces before "/bits/" and incorrect space after "<".
+Possibly.  I'd need to see the resulting code and DTs - I'm not 100%
+visualising what's meant here.
 
-Generally the list of configurations should look like below:
+> > Oh, OK.  Yes, standardisation of the names has benefits though for some
+> > of the features (especially voltage selection) the implementation gets
+> > rather chip specific and there are also advantages in having the DT
+> > binding correspond to the chip documentation.
 
-	phy-configs {
-		#address-cells = <1>;
-		#size-cells = <0>;
+> > Things that really are very standard probably ought to be being done by
+> > the core anyway (like we've done with all the factoring out of standard
+> > voltage map and regmap operations).
 
-		config@0 {
-			reg = <0>;
-			/* other properties... */
-		};
+> Agreed. And a lot of that can be configured automatically based on the
+> compatible property.
 
-		config@1 {
-			reg = <1>;
-			/* other properties... */
-		};
+Hopefully not even the compatible property - we ought to just be able to
+pick standard names for some of the standard functions and just support
+them without any effort from drivers at all.
 
-		/* ... */
-	};
+--q1SX3yAxAkj1z+aD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-This is how bus-like structures should be represented in device tree.
-Also, since this is HDMI node, maybe it's enough to call the node simply
-phy-configs. Please rework the patches to use this correct representation.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-> +
-> +			/* ... */
-> +		}
->  	};
-[snip]
-> +	for_each_child_of_node(phy_conf, cfg_np) {
-> +		if (of_property_read_u32(cfg_np, "samsung,pixel-clock",
-> +							&pixel_clock))
-> +			continue;
-> +
-> +		for (i = 0; i < ARRAY_SIZE(hdata->nr_confs); i++) {
-> +			if (hdata->confs[i].pixel_clock == pixel_clock)
+iQIcBAEBAgAGBQJSsvPnAAoJELSic+t+oim9gW4P/1AZnbfJrlUS8g5KxFswDbyL
+BlPnRzO6SvKAkuLh9sHA/J9SGAyXFu8PJghFa/Hd9UXrKaKhlfh1Km2FcyJaKRb1
+5j7uMj42CoZUDu5kElyIsWi5tyWRcCvD7u1BioGH+bgFRrwI9w9XHuWeJmlasqBb
+63aAKj/BP1NtzIlYLPyhKl35Yl+/iqxdCigZX8Ph3WsBjxz7Aks0PBmwlnAKX5+q
+wf9u2u7Ych3Nt5c6x3BB4aFrJV20Wtu3uqgtP39FWQfYKfe+5T6X3cuCaoaOPlaX
+sGjGgFKRAi9gvNvF2BFhpoZUzC0VhBok2K2MYAQfplMqEBhtPkKJBfh0SwZrUou+
+50XJxkPFugRXV+EZy8da5RY/fChUmEU10a8ztM9OEgJKJ8ed7vn+SX5tQJLUD+ZU
+iQNI/QDvP3K2gVCa0JKOnL49UuYAsqZ5wCJmHss02a8mtyuzMDLfNeIb7Ji5yPOE
+7DeHHM7whyIZuOrBpYnkNDWfdS+ze+Ggmbs73FYdtrTt9UU+CkdP864b39ejZcYT
+3ys4MG67es+K9XsnIR0a2k4jo/o5Qmj+S1H9gaYTecwMwPFb7fCfIXwuLavbQdu8
+s+lx/EZTBnboNU6MDiTU6QLdZP0LAoFpzwQRY54a9bQWUYsuewDLUEqIL8rzzLMr
+ViDMav4jJc8OdgozlCxS
+=D/M/
+-----END PGP SIGNATURE-----
 
-Can you have more than one config with the same pixel clock?
-
-Even if not, the code could be made more readable if the code
-below is moved outside the if and continue keyword is used instead.
-
-Best regards,
-Tomasz
+--q1SX3yAxAkj1z+aD--
