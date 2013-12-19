@@ -1,109 +1,48 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCH 0/4] OMAPDSS: DT support for N900 panel
-Date: Thu, 19 Dec 2013 01:51:52 +0100
-Message-ID: <20131219005151.GA27928@earth.universe>
-References: <1386958650-2404-1-git-send-email-sre@debian.org>
- <52AFFF3F.7020807@ti.com>
- <20131217171412.GA10442@earth.universe>
- <52B089FE.8060704@ti.com>
- <20131218215536.GA23674@earth.universe>
+From: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
+Subject: RE: [PATCH V3 1/2] ARM: imx: add vddsoc/pu setpoint info into dts
+Date: Thu, 19 Dec 2013 02:13:21 +0000
+Message-ID: <112fab48e08c43749c0797328b1f1ee1@DM2PR03MB317.namprd03.prod.outlook.com>
+References: <1387402010-31749-1-git-send-email-b20788@freescale.com>,<CAOMZO5DCGOkUtWmEok-uEFsUpGLF+93Vhm9XFs02yH9Z+eV0uQ@mail.gmail.com>
+ <ADD49D66-30FE-4D87-88D6-F8AE07376F3F@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131218215536.GA23674@earth.universe>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <ADD49D66-30FE-4D87-88D6-F8AE07376F3F@freescale.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---6c2NcOVqGQ03X4Wi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Dec 18, 2013 at 10:55:37PM +0100, Sebastian Reichel wrote:
-> On Tue, Dec 17, 2013 at 07:29:34PM +0200, Tomi Valkeinen wrote:
-> > >> I added N900 display DT support on top of my v2 series, including
-> > >> pinmuxing. Can you check if it looks right and works?
-> > >>
-> > >> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/d=
-ss-dt
-> > >=20
-> > > I just tried it and it does not work. On a first look the pinmuxing
-> > > looks fishy: 0x0d4 is muxed two times.
-> >=20
-> > Hmm, so it is.
-> >=20
-> > I'm not really familiar with SDI, I just muxed all the SDI pins, except
-> > datapair3. I previously thought that there's only the data and clock
-> > pairs for SDI, but the TRM revealed more sdi pins, so I included them.
-> > It is well possible that these can be removed:
-> >=20
-> > 0x0d0 (PIN_OUTPUT | MUX_MODE1)   /* dss_data18.sdi_vsync */
-> > 0x0d2 (PIN_OUTPUT | MUX_MODE1)   /* dss_data19.sdi_hsync */
-> > 0x0d4 (PIN_OUTPUT | MUX_MODE1)   /* dss_data20.sdi_den */
-> > 0x0d6 (PIN_OUTPUT | MUX_MODE1)   /* dss_data21.sdi_stp */
->=20
-> Just removing the dss_data20.sdi_den pin was enough to get a working disp=
-lay. I
-> don't know if the other pins are needed, because the display pins are alr=
-eady
-> muxed correctly by the bootloader.
-
-I just had a look in the leaked n900 schematics. According to it the
-following pins are connected to the display:
-
-DSS_DATA20 (E28)     GPIO 90         LCD_RST
-DSS_DATA10 (AD28)    SDI_DAT1N       CDP 0
-DSS_DATA11 (AD27)    SDI_DAT1P       CDP 1
-DSS_DATA12 (AB28)    SDI_DAT2N       CDP 2
-DSS_DATA13 (AB27)    SDI_DAT2P       CDP 3
-DSS_DATA14 (AA28)    SDI_DAT3N       CDP 4
-DSS_DATA15 (AA27)    SDI_DAT3P       CDP 5
-DSS_DATA22 (AC27)    SDI_CLKP        CDP 6
-DSS_DATA23 (AC28)    SDI_CLKN        CDP 7
-
-I also noticed that dss_data19.sdi_hsync is used as gpio 89 for the
-N900's proximity sensor. Thus I suggest the following SDI pin muxing:
-
-	dss_sdi_pins: pinmux_dss_sdi_pins {
-		pinctrl-single,pins =3D <
-			0x0c0 (PIN_OUTPUT | MUX_MODE1)   /* dss_data10.sdi_dat1n */
-			0x0c2 (PIN_OUTPUT | MUX_MODE1)   /* dss_data11.sdi_dat1p */
-			0x0c4 (PIN_OUTPUT | MUX_MODE1)   /* dss_data12.sdi_dat2n */
-			0x0c6 (PIN_OUTPUT | MUX_MODE1)   /* dss_data13.sdi_dat2p */
-			0x0c8 (PIN_OUTPUT | MUX_MODE1)   /* dss_data14.sdi_dat3n */
-			0x0ca (PIN_OUTPUT | MUX_MODE1)   /* dss_data15.sdi_dat3p */
-
-			0x0d8 (PIN_OUTPUT | MUX_MODE1)   /* dss_data22.sdi_clkp */
-			0x0da (PIN_OUTPUT | MUX_MODE1)   /* dss_data23.sdi_clkn */
-		>;
-	};
-
--- Sebastian
-
---6c2NcOVqGQ03X4Wi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSskMnAAoJENju1/PIO/qa8KkP/1H+MvRaRnJ5HMUMrHV2VEEB
-CG34CHu5wUNCbqGRsUup11j/BqRJOTDRGAZp7Qu13KRp7gN7ZcmlI52TF/UlC35N
-KKJWkaVSLA4I8y5q/1VwZlUIsD8sBVahDIzcBzZSd7T4LzpEGD8U+5mvXpwiB324
-5CjSw10nJ6zS/5yJhya/VWILbhf4mSOBQsBONhMiiPoJUtEk4RHyDDG8ljI2xf9n
-cyfaVlcPf/ftaZ0wXeozzdq3EVGmngMc698ZQmWxjnb9NklguJUQJVYpDQClTy5X
-wVah3flyqG2d/32dLJJLGyIiaIqvEcVIXidWGqayHUtC208pNVHDVbSuyeVo0LAg
-3iF5P99E2SwdnC9BOFQoo2KGppskv97MN7qXkp/MMM8DGYgi+gWj8jX8/LmVlZUd
-T8CBS08AekLsf4UQr9lqh8INLWCRYoLwtsXqZ1OVjySshVayQJgoYWR+XVweuX52
-LDGxBgHVG3SwxhFJxHZu2CkCVcM66xrQHDNynL+evXr614f6mZdzL8+qzmj0S6Dz
-Cbrp+HGy9Hg1u37Rn8am73i3UsBgln/no49ggqC/3ntuLTZYu82xscrcWENs/7fd
-3YrtlPZO4kqSvPJOgYecDk+Fpr5nbXuy5wcFVF1/IHn3yPMfG6mKWPQWH7k4lyZV
-sP8Jdpc4jzFgnb0LsIxY
-=JEsS
------END PGP SIGNATURE-----
-
---6c2NcOVqGQ03X4Wi--
+DQpCZXN0IFJlZ2FyZHMuDQpBbnNvbiBodWFuZyDpu4Tli4fmiY0NCsKgDQpGcmVlc2NhbGUgU2Vt
+aWNvbmR1Y3RvciBTaGFuZ2hhaQ0K5LiK5rW35rWm5Lic5paw5Yy65Lqu5pmv6LevMTky5Y+3QeW6
+pzLmpbwNCjIwMTIwMw0KVGVsOjAyMS0yODkzNzA1OA0KDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQ0KPkZyb206IEh1YW5nIFlvbmdjYWktQjIwNzg4DQo+U2VudDogV2VkbmVzZGF5LCBE
+ZWNlbWJlciAxOCwgMjAxMyA4OjAxIFBNDQo+VG86IEZhYmlvIEVzdGV2YW0NCj5DYzogSHVhbmcg
+WW9uZ2NhaS1CMjA3ODg7IFNoYXduIEd1bzsgcmp3QHJqd3lzb2NraS5uZXQ7IFZpcmVzaCBLdW1h
+cjsNCj5kZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnOw0KPmNwdWZyZXFAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wbUB2Z2VyLmtl
+cm5lbC5vcmcNCj5TdWJqZWN0OiBSZTogW1BBVENIIFYzIDEvMl0gQVJNOiBpbXg6IGFkZCB2ZGRz
+b2MvcHUgc2V0cG9pbnQgaW5mbyBpbnRvIGR0cw0KPg0KPg0KPg0KPlNlbnQgZnJvbSBBbnNvbidz
+IGlQaG9uZQ0KPg0KPj4g5ZyoIDIwMTPlubQxMuaciDE45pel77yMMTk6MDjvvIwiRmFiaW8gRXN0
+ZXZhbSIgPGZlc3RldmFtQGdtYWlsLmNvbT4g5YaZ6YGT77yaDQo+Pg0KPj4gSGkgQW5zb24sDQo+
+Pg0KPj4+IE9uIFdlZCwgRGVjIDE4LCAyMDEzIGF0IDc6MjYgUE0sIEFuc29uIEh1YW5nIDxiMjA3
+ODhAZnJlZXNjYWxlLmNvbT4gd3JvdGU6DQo+Pj4NCj4+PiArICBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL3JlZ3VsYXRvci50eHQgZm9yIGRldGFpbHMuDQo+Pj4g
+KyAgYXJtLXN1cHBseTogdmRkYXJtIGlucHV0Lg0KPj4+ICsgIHB1LXN1cHBseTogdmRkcHUgaW5w
+dXQuDQo+Pj4gKyAgc29jLXN1cHBseTogdmRkc29jIGlucHV0Lg0KPj4NCj4+IEkgZm91bmQgdGhl
+c2UgbWVzc2FnZXMgY29uZnVzaW5nLCBhcyBzb21lb25lIG1heSB0aGluayB0aGF0IHlvdSBhcmUN
+Cj4+IHJlZmVycmluZyB0byB0aGUgVkREX0FSTV9JTi9WRERfQVJNMjNfSU4gYW5kIFZERF9TT0Nf
+SU4sIHdoaWNoIGFyZQ0KPj4gcmVhbGx5IGlucHV0cy4NCj4+DQo+PiBXaGF0IGFib3V0IGRvaW5n
+IHRoaXMgaW5zdGVhZD8NCj4+DQo+PiBhcm0tc3VwcGx5OiBWRERBUk0gTERPIG91dHB1dA0KPj4g
+cHUtc3VwcGx5OiAgVkREUFUgTERPIG91dHB1dA0KPj4gc29jLXN1cHBseTogVkREU09DIExETyBv
+dXRwdXQNCj4NCj5JIHRoaW5rIHRoZXkgc2hvdWxkIGtub3cgdGhlc2UgcmVndWxhdG9ycyBtZWFu
+IHRoZSBhcm0sIHNvYy9wdSdzIHJlYWwgd29ya2luZw0KPnZvbHRhZ2UsIGFzIHlvdSBrbm93LCBv
+dXIgaS5NWDYgYWxzbyBzdXBwb3J0IExETyBieXBhc3MgbW9kZSwgdGhlbiB0aGVzZQ0KPnJlZ3Vs
+YXRvcnMgY2FuIGJlIFZERFhYWF9JTi4gdGhhdCBpcyB3aHkgSSB1c2UgdmRkeHh4IGlucHV0LCBu
+b3QgdmRkeHh4IExETw0KPmlucHV0LlRoYW5rcyENCg0KQWZ0ZXIgcmUtY29uc2lkZXJhdGlvbiwg
+SSB0aGluayBiZWxvdyBzaG91bGQgYmUgYmV0dGVyOg0KYXJtLXN1cHBseTogcmVndWxhdG9yIG5v
+ZGUgc3VwcGx5aW5nIGFybS4NCnB1LXN1cHBseTogcmVndWxhdG9yIG5vZGUgc3VwcGx5aW5nIHB1
+Lg0Kc29jLXN1cHBseTogcmVndWxhdG9yIG5vZGUgc3VwcGx5aW5nIHNvYy4NCg0KQW5zb24gDQoN
+Cg0KPj4NCj4+IFJlZ2FyZHMsDQo+Pg0KPj4gRmFiaW8gRXN0ZXZhbQ0KPj4NCj4+DQo=
