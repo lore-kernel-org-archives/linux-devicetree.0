@@ -1,136 +1,126 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH V3 2/2] thermal: imx: add necessary clk operation
-Date: Thu, 19 Dec 2013 09:12:57 -0400
-Message-ID: <52B2F0D9.2020704@ti.com>
-References: <1387487791-3259-1-git-send-email-b20788@freescale.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 4/4] drm: exynos: hdmi: Add dt support for hdmiphy settings
+Date: Thu, 19 Dec 2013 14:19:56 +0100
+Message-ID: <9657044.3cgrCkZ0Il@amdc1227>
+References: <1387455148-22999-1-git-send-email-s.shirish@samsung.com>
+ <1387455148-22999-5-git-send-email-s.shirish@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="rUBDlWxtxjpE5tkeKGR6TbLdxaEgTrPI1"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1387487791-3259-1-git-send-email-b20788@freescale.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anson Huang <b20788@freescale.com>
-Cc: shawn.guo@linaro.org, kernel@pengutronix.de, rui.zhang@intel.com, eduardo.valentin@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1387455148-22999-5-git-send-email-s.shirish@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shirish S <s.shirish@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, inki.dae@samsung.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, s.nawrocki@samsung.com, shirish@chromium.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---rUBDlWxtxjpE5tkeKGR6TbLdxaEgTrPI1
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 19-12-2013 17:16, Anson Huang wrote:
-> Thermal sensor needs pll3_usb_otg when measuring temperature,
-> otherwise the temperature read will be incorrect, so need to
-> enable this clk before sensor working, for alarm function,
-> as hardware will take measurement periodically, so we should
-> keep this clk always on once alarm function is enabled.
->=20
-> Signed-off-by: Anson Huang <b20788@freescale.com>
+On Thursday 19 of December 2013 17:42:28 Shirish S wrote:
+> This patch adds dt support to hdmiphy config settings
+> as it is board specific and depends on the signal pattern
+> of board.
+> 
+> Signed-off-by: Shirish S <s.shirish@samsung.com>
 > ---
->  .../devicetree/bindings/thermal/imx-thermal.txt    |    4 ++++
->  drivers/thermal/imx_thermal.c                      |   18 ++++++++++++=
-++++++
->  2 files changed, 22 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt =
-b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> index 541c25e..1f0f672 100644
-> --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> @@ -8,10 +8,14 @@ Required properties:
->    calibration data, e.g. OCOTP on imx6q.  The details about calibratio=
-n data
->    can be found in SoC Reference Manual.
-> =20
-> +Optional properties:
-> +- clocks : thermal sensor's clock source.
-> +
+>  .../devicetree/bindings/video/exynos_hdmi.txt      |   34 ++++++++
+>  drivers/gpu/drm/exynos/exynos_hdmi.c               |   89 ++++++++++++++++----
+>  2 files changed, 105 insertions(+), 18 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> index 323983b..0766e6e 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> @@ -13,6 +13,31 @@ Required properties:
+>  	b) pin number within the gpio controller.
+>  	c) optional flags and pull up/down.
+>  
+> +Optional-but-recommended properties:
+> +- hdmiphy-configs: following information about the hdmiphy config settings.
+> +	a) "config<N>: config<N>" specifies the phy configuration settings,
+
+Why do you need this "config<N>: " part? (This is called "label" in DT
+terminology by the way and can be used to reference the node from
+properties of other nodes, by so called "phandle".)
+
+> +		where 'N' denotes the number of configuration, since every
+> +		pixel clock can have its unique configuration.
+> +		"samsung,pixel-clock" specifies the pixel clock
+> +		"samsung,de-emphasis-level" provides fine control of TMDS data
+> +		 pre emphasis, below shown is example for
+> +		data de-emphasis register at address 0x145D0040.
+> +			hdmiphy@38[16] for bits[3:0] permitted values are in
+> +			the range of 760 mVdiff to 1400 mVdiff at 20mVdiff
+> +			increments for every LSB
+> +			hdmiphy@38[16] for bits[7:4] permitted values are in
+> +			the range of 0dB to -7.45dB at increments of -0.45dB
+> +			for every LSB.
+> +		"samsung,clock-level" provides fine control of TMDS data
+> +		amplitude for each channel,
+> +		for example if 0x145D005C is the address of clock level
+> +		register then,
+> +			hdmiphy@38[23] for bits [1:0] permitted values are in
+> +			the range of 0 mVdiff & 60 mVdiff for each channel at
+> +			increments 20 mVdiff of amplitude levels for every LSB,
+> +			hdmiphy@38[23] for bits [7:3] permitted values are in
+> +			the range of 790 and 1430 mV at 20mV increments for
+> +			every LSB.
 >  Example:
-> =20
->  tempmon {
->  	compatible =3D "fsl,imx6q-tempmon";
->  	fsl,tempmon =3D <&anatop>;
->  	fsl,tempmon-data =3D <&ocotp>;
-> +	clocks =3D <&clks 172>;
->  };
-> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_therma=
-l.c
-> index 1d6c801..c2b8173 100644
-> --- a/drivers/thermal/imx_thermal.c
-> +++ b/drivers/thermal/imx_thermal.c
-> @@ -7,6 +7,7 @@
->   *
->   */
-> =20
-> +#include <linux/clk.h>
->  #include <linux/cpu_cooling.h>
->  #include <linux/cpufreq.h>
->  #include <linux/delay.h>
-> @@ -73,6 +74,7 @@ struct imx_thermal_data {
->  	unsigned long last_temp;
->  	bool irq_enabled;
->  	int irq;
-> +	struct clk *thermal_clk;
->  };
-> =20
->  static void imx_set_alarm_temp(struct imx_thermal_data *data,
-> @@ -457,6 +459,22 @@ static int imx_thermal_probe(struct platform_devic=
-e *pdev)
->  		return ret;
->  	}
-> =20
+>  
+>  	hdmi {
+> @@ -20,4 +45,13 @@ Example:
+>  		reg = <0x14530000 0x100000>;
+>  		interrupts = <0 95 0>;
+>  		hpd-gpio = <&gpx3 7 1>;
+> +		hdmiphy-configs {
+> +			config0: config0 {
+> +				samsung,pixel-clock = <25200000>;
+> +				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
 
-There are several reg writes before this point. Are you sure you won't
-need this clock for performing those operations?
+nit: Two spaces before "/bits/".
 
-> +	data->thermal_clk =3D devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(data->thermal_clk)) {
-> +		dev_warn(&pdev->dev, "failed to get thermal clk!\n");
-> +	} else {
-> +		/*
-> +		 * Thermal sensor needs clk on to get correct value, normally
-> +		 * we should enable its clk before taking measurement and disable
-> +		 * clk after measurement is done, but if alarm function is enabled,
-> +		 * hardware will auto measure the temperature periodically, so we
-> +		 * need to keep the clk always on for alarm function.
-> +		 */
-> +		ret =3D clk_prepare_enable(data->thermal_clk);
-> +		if (ret)
-> +			dev_warn(&pdev->dev, "failed to enable thermal clk: %d\n", ret);
-> +	}
+> +				samsung,clock-level =  /bits/ 8 < 0x66>;
+
+nit: Two spaces before "/bits/" and incorrect space after "<".
+
+Generally the list of configurations should look like below:
+
+	phy-configs {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		config@0 {
+			reg = <0>;
+			/* other properties... */
+		};
+
+		config@1 {
+			reg = <1>;
+			/* other properties... */
+		};
+
+		/* ... */
+	};
+
+This is how bus-like structures should be represented in device tree.
+Also, since this is HDMI node, maybe it's enough to call the node simply
+phy-configs. Please rework the patches to use this correct representation.
+
 > +
->  	/* Enable measurements at ~ 10 Hz */
->  	regmap_write(map, TEMPSENSE1 + REG_CLR, TEMPSENSE1_MEASURE_FREQ);
->  	measure_freq =3D DIV_ROUND_UP(32768, 10); /* 10 Hz */
->=20
+> +			/* ... */
+> +		}
+>  	};
+[snip]
+> +	for_each_child_of_node(phy_conf, cfg_np) {
+> +		if (of_property_read_u32(cfg_np, "samsung,pixel-clock",
+> +							&pixel_clock))
+> +			continue;
+> +
+> +		for (i = 0; i < ARRAY_SIZE(hdata->nr_confs); i++) {
+> +			if (hdata->confs[i].pixel_clock == pixel_clock)
 
-Don't you need to release the clock when .remove is called either on
-driver or device removal?
+Can you have more than one config with the same pixel clock?
 
-What about suspend / resume path? Do you want to keep this clock on when
-suspending? Is it gonna work or prevent your system to enter low power
-states?
+Even if not, the code could be made more readable if the code
+below is moved outside the if and continue keyword is used instead.
 
-
-
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
---rUBDlWxtxjpE5tkeKGR6TbLdxaEgTrPI1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlKy8OEACgkQCXcVR3XQvP1xigEAscjspMIy9C/zo+Qu1Im/CSM9
-uGzPb55dirz4C55QOd8A/RYZV4E2i5YT3i2fFmQ0h2kMk+uPl/aMdfZeZ1COdcy7
-=TTly
------END PGP SIGNATURE-----
-
---rUBDlWxtxjpE5tkeKGR6TbLdxaEgTrPI1--
+Best regards,
+Tomasz
