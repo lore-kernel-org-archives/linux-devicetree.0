@@ -1,149 +1,216 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH V2 5/5] i2c: riic: add driver
-Date: Thu, 19 Dec 2013 13:06:47 +0100
-Message-ID: <20131219120646.GA2563@katana>
-References: <1387402321-21866-1-git-send-email-wsa@the-dreams.de>
- <1387402321-21866-6-git-send-email-wsa@the-dreams.de>
- <1407973.m5fTNuo5v5@avalon>
+From: Shirish S <shirish@chromium.org>
+Subject: Re: [PATCH 4/4] drm: exynos: hdmi: Add dt support for hdmiphy settings
+Date: Thu, 19 Dec 2013 17:38:27 +0530
+Message-ID: <CAHvYUDCGuVRuUXa9prau+_1byCA_EG2Dbw7mVf8ZFy2wEsWo9A@mail.gmail.com>
+References: <1385369679-4337-1-git-send-email-s.shirish@samsung.com>
+	<1385369679-4337-6-git-send-email-s.shirish@samsung.com>
+	<1833774.8yzP7um1x8@amdc1227>
+	<CAHvYUDCCbr8G0wfyYbEiOG3ArPEywv09rCAhdhO74WRFK00pRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1407973.m5fTNuo5v5@avalon>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAHvYUDCCbr8G0wfyYbEiOG3ArPEywv09rCAhdhO74WRFK00pRg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, Shirish S <s.shirish@samsung.com>, InKi Dae <inki.dae@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dave Airlie <airlied@redhat.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
++ linux-samsung-soc mailing list.
 
---OgqxwSJOaUobr8KG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Laurent,
-
-thanks for the review!
-
-
-> > +/*
-> > + * This i2c core has a lot of interrupts, namely 8. We use their chain=
-ing
-> > as
-> > + * some kind of state machine.
->=20
-> I have mixed feelings about this. Wouldn't it be more efficient to have a=
-n=20
-> internal state machine (which you partially have already, using RIIC_INIT=
-_MSG=20
-> for instance) instead of relying on enabling/disabling interrupts ? The l=
-atter=20
-> has a larger overhead.
-
-I am not sure I get you here. I need the interrupts anyhow. For example,
-after the last byte has been written to the 1-byte-FIFO in the
-transmission_irq, I need to wait for the transmission_end_irq to ensure
-the bits are already on the wire before I mark the message completed.
-
-Polling for that condition is more overhead than just enabling the
-proper interrupt (one write to ICIER). I don't need to switch ISR since
-all the interrupts are seperate and have dedicated ISR.
-
-> > +static int riic_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], =
-int
-> > num)
-> > +{
-> > +	struct riic_dev *riic =3D i2c_get_adapdata(adap);
-> > +	int i, ret;
->=20
-> One of my favorite bikeshedding comments is to ask for unsigned int when =
-the=20
-> variable can't be negative :-)
-
-OK.
-
-> > +	/*
-> > +	 * TODO: Implement formula to calculate the timing values depending on
-> > +	 * variable parent clock rate and arbitrary bus speed
-> > +	 */
-> > +	rate =3D clk_get_rate(riic->clk);
-> > +	if (rate !=3D 33325000) {
-> > +		dev_err(&riic->adapter.dev,
-> > +			"invalid parent clk (%lu). Must be 33325000Hz\n", rate);
->=20
-> What about a "goto done;" here and below to avoid repeating the=20
-> clk_disable_unprepare() call ?
-
-Yeah, can be argued that way. I was fine with both.
-
->=20
-> > +		clk_disable_unprepare(riic->clk);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* Changing the order of accessing IICRST and ICE may break things! */
-> > +	writeb(ICCR1_IICRST | ICCR1_SOWP, riic->base + RIIC_ICCR1);
-> > +	riic_clear_set_bit(riic, 0, ICCR1_ICE, RIIC_ICCR1);
-> > +
-> > +	switch (spd) {
-> > +	case 100000:
-> > +		writeb(ICMR1_CKS(3), riic->base + RIIC_ICMR1);
-> > +		writeb(ICBRH_SP100K, riic->base + RIIC_ICBRH);
-> > +		writeb(ICBRL_SP100K, riic->base + RIIC_ICBRL);
-> > +		break;
-> > +	case 400000:
-> > +		writeb(ICMR1_CKS(1), riic->base + RIIC_ICMR1);
-> > +		writeb(ICBRH_SP400K, riic->base + RIIC_ICBRH);
-> > +		writeb(ICBRL_SP400K, riic->base + RIIC_ICBRL);
->=20
-> Couldn't you compute the ICMR1, ICBRH and ICBRL values at runtime instead=
- ?
-
-As mentioned in the TODO above, this is scheduled for an incremental
-update to this driver.
-
-> > +	of_property_read_u32(np, "clock-frequency", &bus_rate);
->=20
-> As the property is mandatory, shouldn't you check the return value of thi=
-s=20
-> function ? Another option would be to make the clock-frequency property=
-=20
-> optional and use a default value. What do the other I2C bus drivers usual=
-ly do=20
-> ?
-
-bus_rate is initialized to 0 and if read_u32 fails, it will stay this
-way. Then, the call to riic_init_hw() will fail and report the error.
-
-There is no standard behaviour (use sane default or fail) yet. It is
-somewhere on the I2C todo list :/
-
-Regards,
-
-   Wolfram
-
-
---OgqxwSJOaUobr8KG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSsuFWAAoJEBQN5MwUoCm25EkP/jVPDq/FAd09lDLR0c4MkcsN
-p6KM6xmL0ol7uywFtP4MEBaXNcCnzN7LUveD7YQbWtJx3e61TM1O0eilH7inPAgd
-biPcOGN7+wiGjley9rdA0VcV0/NMn28foAaZFQhLoRXRkz2A3/3B5ACFJj2k8kOt
-lgzCldVvSWayEi+lQKHrntItffKohMyDMxEn8/izwoXPylnMahDvt4cpb6q4e2P/
-WF8fY2wRFLBJ5Y57m+T/Wuenhkyiz3FM8fQLPvL7bSQEWHsMpqI/DTJyISC5nCuC
-R00LWxCxb1QjnGAhA45XY7BEm+T2AqC4gOXXoHblkhFVXNTE1Xkm8ooOvfNrWQ4Z
-5RRMGqcDYVk4DysEUTDHeoIiB3lNXUBnFjgKTJT6p6L7orHzsy8I8nd4xmRViQN7
-tumKfrl7Y6gSYo2ZLaze4gpfO28l8VLMdfOLuGBUUvkKcDOv6L+Vzu2ycJpBTKKf
-QyGOwsi4kYs+kTAJYGBWKZg4ZcYRN+rJZCHD/DK6fsDYgjtPELv4IER33xxJim0u
-ZJ0f5n3SvgJyXiYUqmfLlKRsE7SU/8c9JHI0nAR2GmfgVid+7qGE4o16aixwujy+
-Sii2Kra9uhLW7fQpVi/zaMCaEat9ZP79ntYzw8qcxYjlNL8oFI2ci6HuH2fxxMpX
-WIbeme590TRlWEi0EspS
-=fZoX
------END PGP SIGNATURE-----
-
---OgqxwSJOaUobr8KG--
+On Wed, Dec 4, 2013 at 10:05 AM, Shirish S <shirish@chromium.org> wrote:
+> Hi Tomasz,
+> Thanks for the reivew, please see my replies inline.
+>
+> On Fri, Nov 29, 2013 at 10:56 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+>> Hi Shirish,
+>>
+>> Please see my comments inline.
+>>
+>> On Monday 25 of November 2013 14:24:39 Shirish S wrote:
+>>> This patch adds dt support to hdmiphy config settings
+>>> as it is board specific and depends on the signal pattern
+>>> of board.
+>>>
+>>> Signed-off-by: Shirish S <s.shirish@samsung.com>
+>>> ---
+>>>  .../devicetree/bindings/video/exynos_hdmi.txt      |   31 ++++++++
+>>>  drivers/gpu/drm/exynos/exynos_hdmi.c               |   77 +++++++++++++++++++-
+>>>  2 files changed, 104 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>>> index 323983b..6eeb333 100644
+>>> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>>> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>>> @@ -13,6 +13,30 @@ Required properties:
+>>>       b) pin number within the gpio controller.
+>>>       c) optional flags and pull up/down.
+>>>
+>>> +- hdmiphy-configs: following information about the hdmiphy config settings.
+>>
+>> Is this node required or optional? If it's required, then it breaks
+>> compatibility with already existing DTBs, which is not desirable.
+>>
+> Yes its an Optional-but-recommended node, and i have mentioned the same
+> in this document in next patch set(v9).
+>>> +     a) "config<N>: config<N>" specifies the phy configuration settings,
+>>> +             where 'N' denotes the number of configuration, since every
+>>> +             pixel clock can have its unique configuration.
+>>
+>> Node names should not have any semantic meaning for parsing code. I know
+>> that there are already existing bindings which rely on presence of
+>> particularly named nodes, but that's not right and new bindings should
+>> not follow that.
+>>
+> I referred Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+> for the implementation, am not clear with what you want me to do here, however
+> the requirement seems similar as pinctrl, can u kindly suggest any
+> existing newer
+> implementations to refer.
+>> Also what do you need the label of each config node for?
+>>
+> Each label here is a different pixel clock and corresponding phy setting, and
+> it may vary from one pixel clock to other hence i need one for each config node.
+>> Generally from parsing perspective you shouldn't really care about node
+>> names. All you seem to do in the driver is iterating over all specified
+>> nodes and matching them with internal driver data using pixel clock
+>> frequency.
+>>
+> True, that is what i intended to do.I think for the requirement
+> at hand, this should be fine.
+>>> +             "pixel-clock" specifies the pixel clock
+>>
+>> Vendor-specific properties should have vendor prefix, so this one should
+>> be called "samsung,pixel-clock".
+>>
+> Agreed, updated in the next patch set(v9).
+>>> +             "conifig-de-emphasis-level" provides fine control of TMDS data
+>>
+>> Typo: s/conifig/config
+>>
+>> Also it should be called "samsung,de-emphasis-level".
+>>
+> Agreed, updated in the next patch set(v9).
+>>> +              pre emphasis, below shown is example for
+>>> +             data de-emphasis register at address 0x145D0040.
+>>> +                     hdmiphy@38[16] for bits[3:0] permitted values are in
+>>> +                     the range of 760 mVdiff to 1400 mVdiff at 20mVdiff
+>>> +                     increments for every LSB
+>>> +                     hdmiphy@38[16] for bits[7:4] permitted values are in
+>>> +                     the range of 0dB to -7.45dB at increments of -0.45dB
+>>> +                     for every LSB.
+>>> +             "config-clock-level" provides fine control of TMDS data
+>>
+>> "samsung,clock-level"
+>>
+> Agreed, updated in the next patch set(v9).
+>>> +             amplitude for each channel,
+>>> +             for example if 0x145D005C is the address of clock level
+>> [snip]
+>>> diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
+>>> index 32ce9a6..5f599e3 100644
+>>> --- a/drivers/gpu/drm/exynos/exynos_hdmi.c
+>>> +++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
+>> [snip]
+>>> +static int drm_hdmi_dt_parse_phy_conf(struct platform_device *pdev,
+>>> +                                             struct hdmi_context *hdata)
+>>> +{
+>>> +     struct device *dev = &pdev->dev;
+>>> +     struct device_node *dev_np = dev->of_node;
+>>> +     struct device_node *phy_conf, *cfg_np;
+>>> +     int i, pixel_clock = 0;
+>>> +
+>>> +     /* Initialize with default config */
+>>> +     hdata->confs = hdmiphy_v14_configs;
+>>> +     hdata->nr_confs = ARRAY_SIZE(hdmiphy_v14_configs);
+>>> +
+>>> +     phy_conf = of_find_node_by_name(dev_np, "hdmiphy-configs");
+>>
+>> of_find_node_by_name() does not do what you need here. Please refer to
+>> its implementation to learn why.
+>>
+>> What you need here is of_get_child_by_name().
+>>
+> Agreed, updated in the next patch set(v9).
+>>> +     if (phy_conf == NULL) {
+>>> +             hdata->nr_confs = ARRAY_SIZE(hdmiphy_v14_configs);
+>>> +             DRM_ERROR("Did not find hdmiphy-configs node\n");
+>>> +             return -ENODEV;
+>>> +     }
+>>> +
+>>> +     for_each_child_of_node(phy_conf, cfg_np) {
+>>> +             if (!of_find_property(cfg_np, "pixel-clock", NULL))
+>>> +                     continue;
+>>
+>> This check is not needed. You can simply check the return value of
+>> of_property_read_u32() below (as you already do anyway).
+>>
+> Agreed, updated in the next patch set(v9).
+>>> +
+>>> +             if (of_property_read_u32(cfg_np, "pixel-clock",
+>>> +                                                     &pixel_clock, 1)) {
+>>> +                             DRM_ERROR("Failed to get pixel clock\n");
+>>> +                             return -EINVAL;
+>>> +             }
+>>> +
+>>> +             for (i = 0; i < ARRAY_SIZE(hdmiphy_v14_configs); i++) {
+>>
+>> The code would be much cleaner if you simply used the loop to find the
+>> config you need and then do the rest outside of the loop.
+>>
+> As you can see below, i need to update 2 values in the phy array,
+> which are 16 and 23 indexed values,
+> for me to move this out of the for loop would need to add a 3
+> dimensional array and run this
+> for loop again. Can we consider the below to be ok for the requirement at hand?
+>>> +                     if (hdata->confs[i].pixel_clock == pixel_clock)
+>>> +                             /* Update the data de-emphasis and data level */
+>>> +                             if (of_property_read_u8_array(cfg_np,
+>>> +                                      "config-de-emphasis-level",
+>>> +                                     &hdata->confs[i].conf[16], 1)) {
+>>> +                                     DRM_ERROR("Failed to get conf\n");
+>>> +                                     return -EINVAL;
+>>> +                             }
+>>> +                             if (of_property_read_u8_array(cfg_np,
+>>> +                                      "config-de-emphasis-level",
+>>> +                                     &hdata->confs[i].conf[16], 1)) {
+>>> +                                     DRM_ERROR("Failed to get conf\n");
+>>> +                                     return -EINVAL;
+>>> +                             }
+>>
+>> Why do you parse this property twice?
+>>
+> My bad, have updated in the next patch set.
+>>> +                             /* Update the clock level diff */
+>>> +                             if (of_property_read_u8_array(cfg_np,
+>>> +                                      "config-clock-level",
+>>> +                                     &hdata->confs[i].conf[23], 1)) {
+>>> +                                     DRM_ERROR("Failed to get conf\n");
+>>> +                                     return -EINVAL;
+>>> +                             }
+>>> +             }
+>>> +     }
+>>> +     return 0;
+>>> +
+>>> +}
+>>> +
+>>>  static struct s5p_hdmi_platform_data *drm_hdmi_dt_parse_pdata
+>>>                                       (struct device *dev)
+>>>  {
+>>> @@ -2024,6 +2084,15 @@ static int hdmi_probe(struct platform_device *pdev)
+>>>               goto err_hdmiphy;
+>>>       }
+>>>
+>>> +     /* get hdmiphy confs */
+>>> +     if (hdata->type == HDMI_TYPE14) {
+>>
+>> Why is this used only for HDMI_TYPE14?
+>>
+> Have extended it to both HDMI_TYPE13 and 14.However i dont have tested
+> values for TYPE13,
+> hence this would be dummy for that version.
+>
+>> Best regards,
+>> Tomasz
+>>
+> Thanks & Regards,
+> Shirish S
