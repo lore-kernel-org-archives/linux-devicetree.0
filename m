@@ -1,55 +1,69 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH V4 2/3] ARM: imx: add vddsoc/pu setpoint info into dts
-Date: Thu, 19 Dec 2013 11:06:49 +0800
-Message-ID: <20131219030646.GQ6691@S2101-09.ap.freescale.net>
-References: <1387462609-13013-1-git-send-email-b20788@freescale.com>
- <1387462609-13013-2-git-send-email-b20788@freescale.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: imx: enable cpufreq for i.mx6dl
+Date: Thu, 19 Dec 2013 11:13:05 +0800
+Message-ID: <20131219031304.GR6691@S2101-09.ap.freescale.net>
+References: <1387465330-15667-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <cpufreq-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1387462609-13013-2-git-send-email-b20788@freescale.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Anson Huang <b20788@freescale.com>
-Cc: rjw@rjwysocki.net, viresh.kumar@linaro.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <1387465330-15667-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2013 at 09:16:48AM -0500, Anson Huang wrote:
-> i.MX6Q needs to update vddarm, vddsoc/pu regulators when cpu freq
-> is changed, each setpoint has different voltage, so we need to
-> pass vddarm, vddsoc/pu's freq-voltage info from dts together.
+On Thu, Dec 19, 2013 at 10:02:10AM -0500, Anson Huang wrote:
+> This patch adds cpufreq dts for i.mx6dl to support cpufreq driver.
 > 
-> Signed-off-by: Anson Huang <b20788@freescale.com>
+> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Applied after changing patch subject to be 'ARM: dts: imx6q: add
-vddsoc/pu setpoint info'.
+Applied, with patch subject changed to 'ARM: dts: imx6dl: enable cpufreq
+support'.
 
 Shawn
 
 > ---
->  arch/arm/boot/dts/imx6q.dtsi |    7 +++++++
->  1 file changed, 7 insertions(+)
+>  arch/arm/boot/dts/imx6dl.dtsi |   20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-> index e7e8332..021e0cb 100644
-> --- a/arch/arm/boot/dts/imx6q.dtsi
-> +++ b/arch/arm/boot/dts/imx6q.dtsi
-> @@ -30,6 +30,13 @@
->  				792000  1150000
->  				396000  975000
->  			>;
+> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+> index b2f2699..e2ec0fb 100644
+> --- a/arch/arm/boot/dts/imx6dl.dtsi
+> +++ b/arch/arm/boot/dts/imx6dl.dtsi
+> @@ -23,6 +23,26 @@
+>  			device_type = "cpu";
+>  			reg = <0>;
+>  			next-level-cache = <&L2>;
+> +			operating-points = <
+> +				/* kHz    uV */
+> +				996000  1275000
+> +				792000  1175000
+> +				396000  1075000
+> +			>;
 > +			fsl,soc-operating-points = <
 > +				/* ARM kHz  SOC-PU uV */
-> +				1200000 1275000
-> +				996000	1250000
+> +				996000	1175000
 > +				792000	1175000
 > +				396000	1175000
 > +			>;
->  			clock-latency = <61036>; /* two CLK32 periods */
->  			clocks = <&clks 104>, <&clks 6>, <&clks 16>,
->  				 <&clks 17>, <&clks 170>;
+> +			clock-latency = <61036>; /* two CLK32 periods */
+> +			clocks = <&clks 104>, <&clks 6>, <&clks 16>,
+> +				 <&clks 17>, <&clks 170>;
+> +			clock-names = "arm", "pll2_pfd2_396m", "step",
+> +				      "pll1_sw", "pll1_sys";
+> +			arm-supply = <&reg_arm>;
+> +			pu-supply = <&reg_pu>;
+> +			soc-supply = <&reg_soc>;
+>  		};
+>  
+>  		cpu@1 {
 > -- 
 > 1.7.9.5
 > 
 > 
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
