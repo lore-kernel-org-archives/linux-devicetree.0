@@ -1,42 +1,38 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v10 1/2] s5k5baf: add camera sensor driver
-Date: Thu, 19 Dec 2013 19:33:44 +0100
-Message-ID: <2100889.mqgrGv2fsV@avalon>
-References: <1386243520-17117-1-git-send-email-a.hajda@samsung.com> <1386243520-17117-2-git-send-email-a.hajda@samsung.com> <52B2FAA4.2070904@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <52B2FAA4.2070904@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] ARM: tegra: set up /aliases for RTCs on Venice2
+Date: Thu, 19 Dec 2013 11:34:34 -0700
+Message-ID: <1387478074-20731-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-On Thursday 19 December 2013 14:54:44 Sylwester Nawrocki wrote:
-> On 05/12/13 12:38, Andrzej Hajda wrote:
-> > Driver for Samsung S5K5BAF UXGA 1/5" 2M CMOS Image Sensor
-> > with embedded SoC ISP.
-> > The driver exposes the sensor as two V4L2 subdevices:
-> > - S5K5BAF-CIS - pure CMOS Image Sensor, fixed 1600x1200 format,
-> >   no controls.
-> > - S5K5BAF-ISP - Image Signal Processor, formats up to 1600x1200,
-> >   pre/post ISP cropping, downscaling via selection API, controls.
-> > 
-> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> 
-> Hi Laurent,
-> 
-> Does this driver look sane to you, at its 10'th version? :)
-> If so I could send a pull request including it this week.
+This ensures that the PMIC RTC provides the system time, rather than
+the on-SoC RTC, which is not battery-backed.
 
-Yes, it does. Sorry for the delay. Please send the pull request.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/tegra124-venice2.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
+diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
+index d6bb25c78c62..72f613913cce 100644
+--- a/arch/arm/boot/dts/tegra124-venice2.dts
++++ b/arch/arm/boot/dts/tegra124-venice2.dts
+@@ -6,6 +6,11 @@
+ 	model = "NVIDIA Tegra124 Venice2";
+ 	compatible = "nvidia,venice2", "nvidia,tegra124";
+ 
++	aliases {
++		rtc0 = "/i2c@7000d000/as3722@40";
++		rtc1 = "/rtc@7000e000";
++	};
++
+ 	memory {
+ 		reg = <0x80000000 0x80000000>;
+ 	};
 -- 
-Regards,
-
-Laurent Pinchart
+1.8.1.5
