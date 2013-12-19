@@ -1,91 +1,113 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RESEND LIST PATCHv7 1/4] clk: socfpga: Add a clk-phase property to the "altr, socfpga-gate-clk"
-Date: Thu, 19 Dec 2013 06:50:17 +0100
-Message-ID: <201312190650.17806.arnd@arndb.de>
-References: <1387213476-22122-1-git-send-email-dinguyen@altera.com> <201312182221.46506.arnd@arndb.de> <52B2703A.8090001@gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 5/9] Input: pixcir_i2c_ts: Get rid of pdata->attb_read_val()
+Date: Thu, 19 Dec 2013 11:24:35 +0530
+Message-ID: <52B28A1B.3030209@ti.com>
+References: <1387358480-8313-1-git-send-email-rogerq@ti.com> <1387358480-8313-6-git-send-email-rogerq@ti.com> <20131218142056.GF28504@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <52B2703A.8090001@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dinh Nguyen <dinh.linux@gmail.com>
-Cc: Mike Turquette <mturquette@linaro.org>, dinguyen@altera.com, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, zhangfei.gao@linaro.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131218142056.GF28504@core.coreip.homeip.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: rydberg@euromail.se, jcbian@pixcir.com.cn, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 19 December 2013, Dinh Nguyen wrote:
-> On 12/18/13 3:21 PM, Arnd Bergmann wrote:
-> > On Wednesday 18 December 2013, Mike Turquette wrote:
-> > I would definitely prefer using degrees over an arbitrary enumeration that
-> > might work on some platforms but not on others.
-> >
-> > I'm also a bit skeptical about the idea of putting the phase into the clock
-> > provider rather than the consumer, given the comments about the
-> > clk_set_phase() interface earlier. Generally we try to avoid having
-> > consumer-specific settings in a provider node (for any DT binding,
-> > not just clocks). Can't you have the same numbers in the dw-mshc
-> > node instead and let the mmc driver call clk_set_phase instead?
-> > If every clock has a fixed phase for a given piece of hardware, it
-> > could even be set automatically by making the common clk code read
-> > the clk-phase attribute at the time a driver calls clk_get.
+On 12/18/2013 07:50 PM, Dmitry Torokhov wrote:
+> On Wed, Dec 18, 2013 at 02:51:16PM +0530, Roger Quadros wrote:
+>> Get rid of the attb_read_val() platform hook. Instead,
+>> read the ATTB gpio directly from the driver.
+>>
+>> Fail if valid ATTB gpio is not provided by patform data.
 > 
-> So I think this is what you're suggesting:
-> clocks = <&sdmmc_clk 0 135>, this would specify 0 and 135 degrees phase.
+> Do you also need to define polarity?
+> 
 
-It's not what I meant in the paragraph above, but I have suggested this
-method in the past, and I think that would solve the problem very nicely
-as well, if Mike agrees. 
+In patch 3, in pixcir_start(), we explicitly configure the GPIO output
+polarity as /* LEVEL_TOUCH interrupt with active low polarity */
 
-> The clock-bindings document is stating that the integer in the clocks
-> property is
-> specifying the output number of the clock. Would this approach cause a
-> conflict and would
-> need an update to that document/approach?
+So I don't think we need to define polarity.
 
-I don't think we have to change the common binding. While it lists the
-use of the integer for multiple clock outputs, that's not necessarily
-the only possible use, and specific bindings can always override the
-generic ones in a compatible way.
+cheers,
+-roger
 
-You would certainly have to update the binding of your clock controller
-to do this, in particular because #clock-cells is now <1>. You will
-probably need to add a new "compatible" string for a clock that has
-a phase setting rather than just a gate, and document what the argument
-is for. If possible, try to model the hardware the way it actually
-is implemented. If the clock controller supports both the gate and
-the phase in the same block, then make it one clock device node, but
-if you have one block generating the clock and another one to shift the
-phase, it may be best to model that second clock in a separate node
-so you can split the driver code according to the registers, like
-
-	mmcclock-shifted {
-		compatible = "altr,socfpga-clk-shift";
-		reg = <0xabcd>;
-		clocks = <&mmcclock>;
-		#clock-cells = <1>
-	};
-
-	mshc {
-		...
-		clocks = <&/clocks/mmcclock-shifted 135>;
-		clock-names = "ciu";
-	};
-
-Coming back to what I actually tried to suggest above was 
-
-	mshc {
-		...
-		clocks = <&/clocks/mmcclock>;
-		clock-names = "ciu";
-		clock-phases = <135>;
-	};
-
-This would keep the phase setting out of the specific binding and
-move it to the generic clock binding. In Linux we could implement
-this either by making the mshc driver read the phase value and
-call clock_set_phase() on it, or the common clock code could look
-up the clock-phases property at the same time it looks up clock-names
-and clocks, and set this behind the back of the driver.
-
-	Arnd
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
+>> ---
+>>  drivers/input/touchscreen/pixcir_i2c_ts.c | 19 +++++++++++++++++--
+>>  include/linux/input/pixcir_ts.h           |  1 -
+>>  2 files changed, 17 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+>> index 3370fd9..a783d94 100644
+>> --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
+>> +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+>> @@ -91,11 +91,12 @@ static void pixcir_ts_poscheck(struct pixcir_i2c_ts_data *data)
+>>  static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
+>>  {
+>>  	struct pixcir_i2c_ts_data *tsdata = dev_id;
+>> +	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
+>>  
+>>  	while (!tsdata->exiting) {
+>>  		pixcir_ts_poscheck(tsdata);
+>>  
+>> -		if (tsdata->chip->attb_read_val())
+>> +		if (gpio_get_value(pdata->gpio_attb))
+>>  			break;
+>>  
+>>  		msleep(20);
+>> @@ -301,8 +302,10 @@ static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
+>>  		return ERR_PTR(-ENOMEM);
+>>  
+>>  	pdata->gpio_attb = of_get_named_gpio(np, "attb-gpio", 0);
+>> -	if (!gpio_is_valid(pdata->gpio_attb))
+>> +	if (!gpio_is_valid(pdata->gpio_attb)) {
+>>  		dev_err(dev, "Failed to get ATTB GPIO\n");
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>>  
+>>  	if (of_property_read_u32(np, "x-size", &pdata->x_size)) {
+>>  		dev_err(dev, "Failed to get x-size property\n");
+>> @@ -344,6 +347,11 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+>>  	} else if (!pdata) {
+>>  		dev_err(&client->dev, "platform data not defined\n");
+>>  		return -EINVAL;
+>> +	} else {
+>> +		if (!gpio_is_valid(pdata->gpio_attb)) {
+>> +			dev_err(dev, "Invalid gpio_attb in pdata\n");
+>> +			return -EINVAL;
+>> +		}
+>>  	}
+>>  
+>>  	tsdata = devm_kzalloc(dev, sizeof(*tsdata), GFP_KERNEL);
+>> @@ -380,6 +388,13 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+>>  
+>>  	input_set_drvdata(input, tsdata);
+>>  
+>> +	error = devm_gpio_request_one(dev, pdata->gpio_attb,
+>> +			GPIOF_DIR_IN, "pixcir_i2c_attb");
+>> +	if (error) {
+>> +		dev_err(dev, "Failed to request ATTB gpio\n");
+>> +		return error;
+>> +	}
+>> +
+>>  	error = devm_request_threaded_irq(dev, client->irq, NULL, pixcir_ts_isr,
+>>  				     IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+>>  				     client->name, tsdata);
+>> diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
+>> index f17c192..88ffdb50 100644
+>> --- a/include/linux/input/pixcir_ts.h
+>> +++ b/include/linux/input/pixcir_ts.h
+>> @@ -44,7 +44,6 @@ enum pixcir_int_mode {
+>>  #define PIXCIR_INT_POL_HIGH	(1UL << 2)
+>>  
+>>  struct pixcir_ts_platform_data {
+>> -	int (*attb_read_val)(void);
+>>  	unsigned int x_size;	/* X axis resolution */
+>>  	unsigned int y_size;	/* Y axis resolution */
+>>  	int gpio_attb;		/* GPIO connected to ATTB line */
+>> -- 
+>> 1.8.3.2
+>>
+> 
