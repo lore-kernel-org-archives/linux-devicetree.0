@@ -1,63 +1,49 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [RESEND LIST PATCHv7 1/4] clk: socfpga: Add a clk-phase property
- to the "altr, socfpga-gate-clk"
-Date: Wed, 18 Dec 2013 22:04:10 -0600
-Message-ID: <52B2703A.8090001@gmail.com>
-References: <1387213476-22122-1-git-send-email-dinguyen@altera.com> <1387213476-22122-2-git-send-email-dinguyen@altera.com> <20131218205636.23538.50735@quantum> <201312182221.46506.arnd@arndb.de>
+From: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+Subject: Re: commit e38c0a1f breaks powerpc boards with uli1575 chip
+Date: Thu, 19 Dec 2013 08:42:00 +0400
+Message-ID: <201312190842.02702@blacky.localdomain>
+References: <201312171135.38576@blacky.localdomain> <52B1EC15.5070606@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201312182221.46506.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>
-Cc: dinguyen@altera.com, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, zhangfei.gao@linaro.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52B1EC15.5070606@gmail.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexey Lugovskoy <lugovskoy@dev.rtsoft.ru>, Dmitry Krivoschekov <dkrivoschokov@dev.rtsoft.ru>
 List-Id: devicetree@vger.kernel.org
 
-
-On 12/18/13 3:21 PM, Arnd Bergmann wrote:
-> On Wednesday 18 December 2013, Mike Turquette wrote:
->>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->>> index f936476..616d9ee 100644
->>> --- a/arch/arm/boot/dts/socfpga.dtsi
->>> +++ b/arch/arm/boot/dts/socfpga.dtsi
->>> @@ -413,6 +413,7 @@
->>>                                                 compatible = "altr,socfpga-gate-clk";
->>>                                                 clocks = <&f2s_periph_ref_clk>, <&main_nand_sdmmc_clk>, <&per_nand_mmc_clk>;
->>>                                                 clk-gate = <0xa0 8>;
->>> +                                               clk-phase = <0 3>;
->> Looking at this again, I have a hard time understanding the values in
->> the clk-phase property. You reference some functions in the property
->> definition above, but they are not obvious to me.
->>
->> Additionally I wonder if the binding would better if the clock-phase
->> property was simply the value in degrees. E.g:
->>
->>         clk-phase = <315>;    // 315 degrees
-> I would definitely prefer using degrees over an arbitrary enumeration that
-> might work on some platforms but not on others.
+> Reverting would break Tegra PCIe, but you should not have to change the
+> DT either. So we need a solution.
 >
-> I'm also a bit skeptical about the idea of putting the phase into the clock
-> provider rather than the consumer, given the comments about the
-> clk_set_phase() interface earlier. Generally we try to avoid having
-> consumer-specific settings in a provider node (for any DT binding,
-> not just clocks). Can't you have the same numbers in the dw-mshc
-> node instead and let the mmc driver call clk_set_phase instead?
-> If every clock has a fixed phase for a given piece of hardware, it
-> could even be set automatically by making the common clk code read
-> the clk-phase attribute at the time a driver calls clk_get.
-
-So I think this is what you're suggesting:
-clocks = <&sdmmc_clk 0 135>, this would specify 0 and 135 degrees phase.
-
-The clock-bindings document is stating that the integer in the clocks
-property is
-specifying the output number of the clock. Would this approach cause a
-conflict and would
-need an update to that document/approach?
-
-Dinh
-
+> Is this something like this sufficient to fix it?
 >
-> 	Arnd
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 4b9317b..378aebd 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -74,7 +74,7 @@ static u64 of_bus_default_map(__be32 *addr, const
+> __be32 *range,
+>          * mapping doesn't specify a physical address. Rather, the
+> address * specifies an identifier that must match exactly.
+>          */
+> -       if (na > 2 && memcmp(range, addr, na * 4) != 0)
+> +       if (na > 2 && memcmp(range, addr, (na - 2) * 4) != 0)
+>                 return OF_BAD_ADDR;
+>
+>         if (da < cp || da >= (cp + s))
 
+
+No, this does not help.
+
+I've dumped the actual content of 'range' and 'addr' at the failure point 
+(i.e. ar point that returns error with e38c0a1f but passes without 
+e38c0a1f ):
+
+OF: default map, cp=0, s=10000, da=70
+range:  01 00 00 00 00 00 00 00 00 00 00 00
+ addr:  00 00 00 00 00 00 00 00 00 00 00 70
+
+Nikita
