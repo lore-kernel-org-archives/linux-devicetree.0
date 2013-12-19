@@ -1,92 +1,38 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFCv4 05/11] Documentation: DT: omap-ssi binding documentation
-Date: Thu, 19 Dec 2013 11:03:44 -0800
-Message-ID: <20131219190344.GW27438@atomide.com>
-References: <1387150085-23173-1-git-send-email-sre@debian.org>
- <1387150085-23173-6-git-send-email-sre@debian.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 3/4] SATA: MV: Add support for the optional PHYs
+Date: Thu, 19 Dec 2013 20:03:29 +0100
+Message-ID: <20131219190329.GH4143@lunn.ch>
+References: <1387311713-1926-1-git-send-email-andrew@lunn.ch>
+ <1387311713-1926-3-git-send-email-andrew@lunn.ch>
+ <52B140F2.8070900@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1387150085-23173-6-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?utf-8?Q?'Beno=C3=AEt?= Cousson' <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+In-Reply-To: <52B140F2.8070900-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre@debian.org> [131215 15:30]:
-> Create device tree binding documentation for
-> OMAP Synchronous Serial Interface (SSI) device.
+On Wed, Dec 18, 2013 at 12:00:10PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Tejun,
 > 
-> Signed-off-by: Sebastian Reichel <sre@debian.org>
-> ---
->  Documentation/devicetree/bindings/hsi/omap_ssi.txt | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hsi/omap_ssi.txt
+> On Wednesday 18 December 2013 01:51 AM, Andrew Lunn wrote:
+> > Some Marvell SoCs have a SATA PHY which can be powered off, in order
+> > to save power. Make use of the generic phy framework to control these
+> > phys.
 > 
-> diff --git a/Documentation/devicetree/bindings/hsi/omap_ssi.txt b/Documentation/devicetree/bindings/hsi/omap_ssi.txt
-> new file mode 100644
-> index 0000000..0a9efd8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hsi/omap_ssi.txt
-> @@ -0,0 +1,69 @@
-> +OMAP SSI controller bindings
-> +
-> +Required properties:
-> +- compatible:		Should include "ti,omap3-ssi".
-> +- reg-names:		Contains the values "sys" and "gdd".
+> I can queue this patch along with the other patches in this series if you don't
+> expect any merge issues.
 
-Do you need the reg-names? The order won't change so you can just
-document the order in the binding?
+Hi Kishon
 
-> +- reg:			Contains a register specifier for each entry in
-> +			reg-names.
-> +- interrupt-names:      Contains the value "gdd_mpu".
+I expect merge issues with the DT and the DT binding documentation. It
+would be best if Jason took those parts.
 
-Maybe interrupt-names are not needed either?
-
-> +- interrupts: 		Contains interrupt information for each entry in
-> +			interrupt-names.
-> +- ranges		Represents the bus address mapping between the main
-> +			controller node and the child nodes below.
-> +- #address-cells	Should be set to <1>
-> +- #size-cells		Should be set to <1>
-> +
-> +Each port is represented as a sub-node of the ti,omap3-ssi device.
-> +
-> +Required Port sub-node properties:
-> +- compatible:		Should be set to the following value
-> +                        ti,omap3-ssi-port (applicable to OMAP34xx devices)
-> +- reg-names:		Contains the values "rx" and "tx".
-
-Here too?
-
-> +- reg:			Contains a register specifier for each entry in
-> +			reg-names.
-> +- interrupt-parent	Should be a phandle for the interrupt controller
-> +- interrupt-names:	Contains the values "mpu_irq0" and "mpu_irq1".
-
-And here?
-
-> +- interrupts:		Contains interrupt information for each entry in
-> +			interrupt-names.
-> +- ti,ssi-cawake-gpio:	Defines which GPIO pin is used to signify CAWAKE
-> +			events for the port. This is an optional board-specific
-> +			property. If it's missing the port will not be
-> +			enabled.
-
-Hmm this might be just a wake-up GPIO? If so, you should be able to
-just set it up as an interrupt and do a request_irq on the pinctrl-single
-entry for it.
-
-It might even be one of the already mapped interrupt lines that the code is
-remuxing to a GPIO for idle? If so, then you can just use the new binding
-for interrupts-extended to handle the wake-up events.
-
-If you post the GPIO number for ti,ssi-cawake-gpio and the interrupt
-numbers I can check if there's a need to handle it separately as a GPIO
-pin or if it already can be automatically handled for the wake-up events.
-
-Regards,
-
-Tony
+      Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
