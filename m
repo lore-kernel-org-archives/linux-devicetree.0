@@ -1,62 +1,53 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: GPMI-NAND ECC DT binding (was: Re: [PATCH v3 22/28] mtd: nand:
- pxa3xx: Introduce multiple page I/O support)
-Date: Wed, 18 Dec 2013 23:31:38 -0800
-Message-ID: <20131219073138.GB10846@norris-Latitude-E6410>
-References: <1383656135-8627-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1383656135-8627-23-git-send-email-ezequiel.garcia@free-electrons.com>
- <20131105190432.GQ20061@ld-irv-0074.broadcom.com>
- <20131106011351.GH11759@localhost>
- <CAN8TOE_ZmcsvShKY273KQCaopJEXgtXVR1XY9pP5EKkUK+bUbA@mail.gmail.com>
- <20131106113210.GB2616@localhost>
- <20131118181009.GZ9468@ld-irv-0074.broadcom.com>
- <20131118183325.GC21975@localhost>
- <20131118185059.GB9468@ld-irv-0074.broadcom.com>
- <20131204214125.GC27149@ld-irv-0074.broadcom.com>
+From: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
+Subject: RE: [PATCH 2/3] thermal: imx: add necessary clk operation
+Date: Thu, 19 Dec 2013 07:33:20 +0000
+Message-ID: <4b50b52c774c4e99970b7c07a4edba94@DM2PR03MB317.namprd03.prod.outlook.com>
+References: <1387477045-19037-1-git-send-email-b20788@freescale.com>
+ <1387477045-19037-2-git-send-email-b20788@freescale.com>
+ <20131219065915.GB6691@S2101-09.ap.freescale.net>
+ <d067cdecda2046f5998302deed320c2a@DM2PR03MB317.namprd03.prod.outlook.com>
+ <20131219072922.GD6691@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131204214125.GC27149-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20131219072922.GD6691@S2101-09.ap.freescale.net>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "eduardo.valentin@ti.com" <eduardo.valentin@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-(Trim the CC list)
-
-Hi Huang,
-
-On Wed, Dec 04, 2013 at 01:41:25PM -0800, Brian Norris wrote:
-> I'd like to follow up on this question, since you didn't answer it, and
-> it's still relevant, since we haven't yet merged your GPMI DT binding
-> (it's queued for the next merge window):
-> 
-> On Mon, Nov 18, 2013 at 10:50:59AM -0800, Brian Norris wrote:
-> > Do you have a good reason why you needed GPMI NAND to choose the ECC
-> > configuration (a la "miminum ECC") instead of fully specifying your ECC
-> > selection in device tree? I recall most of your arguments were about
-> > using an ECC strength that leaves room for user data in OOB (e.g., with
-> > JFFS2). But you could have done the same thing by creating a proper DT
-> > property to describe the desidered ECC strength, with no real
-> > disadvantage, right?
-> 
-> I'll rephrase it: why can't/don't you define a GPMI binding for the
-> actual ECC level, like:
-> 
->   fsl,nand-ecc-strength and fsl,nand-ecc-sector
-> 
-> ?
-> 
-> Then, you could still default to the old geometry if these properties
-> aren't present, and you don't have to rely on Linux auto-detecting ECC
-> properties for non-ONFI chips.
-
-Ping? Do you have any comment here? It seems like a more precise DT
-binding could still be useful for GPMI NAND.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCkJlc3QgUmVnYXJkcy4NCkFuc29uIGh1YW5nIOm7hOWLh+aJjQ0KwqANCkZyZWVzY2FsZSBT
+ZW1pY29uZHVjdG9yIFNoYW5naGFpDQrkuIrmtbfmtabkuJzmlrDljLrkuq7mma/ot68xOTLlj7dB
+5bqnMualvA0KMjAxMjAzDQpUZWw6MDIxLTI4OTM3MDU4DQoNCg0KPi0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+RnJvbTogU2hhd24gR3VvIFttYWlsdG86c2hhd24uZ3VvQGxpbmFyby5vcmdd
+DQo+U2VudDogVGh1cnNkYXksIERlY2VtYmVyIDE5LCAyMDEzIDM6MjkgUE0NCj5UbzogSHVhbmcg
+WW9uZ2NhaS1CMjA3ODgNCj5DYzoga2VybmVsQHBlbmd1dHJvbml4LmRlOyBydWkuemhhbmdAaW50
+ZWwuY29tOyBlZHVhcmRvLnZhbGVudGluQHRpLmNvbTsNCj5kZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgbGludXgtZG9jQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPmtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBSZTog
+W1BBVENIIDIvM10gdGhlcm1hbDogaW14OiBhZGQgbmVjZXNzYXJ5IGNsayBvcGVyYXRpb24NCj4N
+Cj5PbiBUaHUsIERlYyAxOSwgMjAxMyBhdCAwNzowODoxNkFNICswMDAwLCBBbnNvbi5IdWFuZ0Bm
+cmVlc2NhbGUuY29tIHdyb3RlOg0KPj4gPk9uIFRodSwgRGVjIDE5LCAyMDEzIGF0IDAxOjE3OjI0
+UE0gLTA1MDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPj4gPj4gQEAgLTQyNyw2ICs0MjksMTMgQEAg
+c3RhdGljIGludCBpbXhfdGhlcm1hbF9wcm9iZShzdHJ1Y3QNCj4+ID4+IHBsYXRmb3JtX2Rldmlj
+ZQ0KPj4gPipwZGV2KQ0KPj4gPj4gIAkJcmV0dXJuIHJldDsNCj4+ID4+ICAJfQ0KPj4gPj4NCj4+
+ID4+ICsJZGF0YS0+dGhlcm1hbF9jbGsgPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwgTlVMTCk7
+DQo+PiA+PiArCWlmIChJU19FUlIoZGF0YS0+dGhlcm1hbF9jbGspKSB7DQo+PiA+PiArCQlyZXQg
+PSBJU19FUlIoZGF0YS0+dGhlcm1hbF9jbGspOw0KPj4gPj4gKwkJZGV2X2VycigmcGRldi0+ZGV2
+LCAiZmFpbGVkIHRvIGdldCB0aGVybWFsIGNsayFcbiIpOw0KPj4gPj4gKwkJcmV0dXJuIHJldDsN
+Cj4+ID4+ICsJfQ0KPj4gPj4gKw0KPj4gPg0KPj4gPlNvIHdoZW4gdGhlIG5ldyBrZXJuZWwgcnVu
+cyBvbiBhIGJvYXJkIHdpdGggYW4gb2xkIERUQiBpbnN0YWxsZWQsDQo+PiA+dGhlcm1hbCBkcml2
+ZXIgd2lsbCBiZSBicm9rZW4uDQo+PiA+DQo+PiBZZXMsIEkgdGhvdWdodCBhYm91dCB0aGlzIGNh
+c2UsIGJ1dCB0aGUgcHJldmlvdXMgaW1wbGVtZW50IGlzDQo+PiBpbmNvcnJlY3QsIGlmIHRoZSBQ
+TEwzIGlzIG5vdCBlbmFibGVkIGJ5IG90aGVyIGRyaXZlcnMsIHRoZXJtYWwgZHJpdmVyDQo+PiB3
+aWxsIG5vdCB3b3JrLCBzbyB0aGlzIHBhdGNoIGlzIGEgYnVnIGZpeCwgbm90IGVuaGFuY2VtZW50
+LiBTbyB3ZQ0KPj4gc3RpbGwgbmVlZCB0byBjb25zaWRlciBvbGQgZHRzIGNhc2U/DQo+DQo+VGhl
+IHRoaW5nIGlzIG1haW5saW5lIGtlcm5lbCBydW5zIG9uIG1hbnkgYm9hcmQgd2l0aCB0aGVybWFs
+IGRyaXZlciBiZWluZw0KPmZ1bmN0aW9uYWwgdG9kYXkuICBUaGF0IHNhaWQsIFBMTDMgaXMgYWxy
+ZWFkeSBlbmFibGVkIG9uIHRoZXNlIHBsYXRmb3JtcyB3aGVuDQo+dGhlcm1hbCBkcml2ZXIgaXMg
+cnVubmluZy4gIFlvdSBjYW5ub3QgZml4IGEgYnVnIGJ1dCBtZWFud2hpbGUgYnJlYWsgdGhlc2UN
+Cj51c2VycyB3aG8gdXNlIG9sZCBEVEIuDQoNCk9rYXksIGdvdCBpdCwgSSB3aWxsIHJlcGxhY2Ug
+dGhlIHJldHVybiB3aXRoIG9uZSB3YXJuaW5nIG1lc3NhZ2UgaW4gVjIuDQoNCkFuc29uIA0KDQoN
+Cj4NCj5TaGF3bg0KDQo=
