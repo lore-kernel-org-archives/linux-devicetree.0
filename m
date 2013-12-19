@@ -1,35 +1,49 @@
-From: Sherman Yin <syin@broadcom.com>
-Subject: Re: [PATCH v3 5/6] ARM: pinctrl: Add Broadcom Capri pinctrl driver
-Date: Wed, 18 Dec 2013 16:12:30 -0800
-Message-ID: <52B239EE.6010601@broadcom.com>
-References: <1381174108-25168-1-git-send-email-syin@broadcom.com> <1386787041-6035-1-git-send-email-syin@broadcom.com> <1386787041-6035-6-git-send-email-syin@broadcom.com> <CACRpkdaeZCodKv6R+4ZS3o-5u=QQuV3JidEp7uaLsN9aYG7bqA@mail.gmail.com> <20131213102252.GS11044@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131213102252.GS11044@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, =?ISO-8859-1?Q?Heiko_St=FCbn?= =?ISO-8859-1?Q?er?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] dtc: remove extra parentheses to pass clang check
+Date: Wed, 18 Dec 2013 19:24:29 -0500
+Message-ID: <1387412669-28670-1-git-send-email-vapier@gentoo.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Yunlian Jiang <yunlian-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13-12-13 02:22 AM, Mark Brown wrote:
-> On Thu, Dec 12, 2013 at 09:54:50PM +0100, Linus Walleij wrote:
->
->> This is a reimplementation of regmap for MMIO.
->> See drivers/base/regmap/regmap-mmio.c
->> Notice how regmap_update_bits() is used throughout the
->> kernel.
->
->> If you want to do this, use regmap.
->
-> Or if this is very performance sensitive (which I'd not expect for
-> pinctrl) there's a helper in review at the minute which just uses a
-> spinlock.
->
+From: Yunlian Jiang <yunlian-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Thanks Mark.  It's not expected to be performance sensitive, so I'll 
-probably go with regmap.
+When building with clang, we get warnings like:
+checks.c:623:32: error: equality comparison with extraneous parentheses
+                        [-Werror,-Wparentheses-equality]
+	if ((node->parent->addr_cells == -1))
 
-Regards,
-Sherman
+URL: http://crbug.com/230457
+Signed-off-by: Yunlian Jiang <yunlian-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+---
+ checks.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/checks.c b/checks.c
+index ee96a25..e66d55c 100644
+--- a/checks.c
++++ b/checks.c
+@@ -624,11 +624,11 @@ static void check_avoid_default_addr_size(struct check *c, struct node *dt,
+ 	if (!reg && !ranges)
+ 		return;
+ 
+-	if ((node->parent->addr_cells == -1))
++	if (node->parent->addr_cells == -1)
+ 		FAIL(c, "Relying on default #address-cells value for %s",
+ 		     node->fullpath);
+ 
+-	if ((node->parent->size_cells == -1))
++	if (node->parent->size_cells == -1)
+ 		FAIL(c, "Relying on default #size-cells value for %s",
+ 		     node->fullpath);
+ }
+-- 
+1.8.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
