@@ -1,80 +1,91 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v7 8/9] phy: add Broadcom Kona USB2 PHY driver
-Date: Thu, 19 Dec 2013 11:19:35 +0530
-Message-ID: <52B288EF.1040006@ti.com>
-References: <1387309356-17195-1-git-send-email-mporter@linaro.org>
- <1387309356-17195-9-git-send-email-mporter@linaro.org>
- <20131218162554.GF4970@saruman.home>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RESEND LIST PATCHv7 1/4] clk: socfpga: Add a clk-phase property to the "altr, socfpga-gate-clk"
+Date: Thu, 19 Dec 2013 06:50:17 +0100
+Message-ID: <201312190650.17806.arnd@arndb.de>
+References: <1387213476-22122-1-git-send-email-dinguyen@altera.com> <201312182221.46506.arnd@arndb.de> <52B2703A.8090001@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131218162554.GF4970@saruman.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@ti.com, Matt Porter <mporter@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Dinh Nguyen <dinh.linux@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomasz Figa <t.figa@samsung.com>, Christian Daudt <bcm@fixthebug.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Kyungmin Park <kyungmin.park@samsung.com>, Linaro Patches <patches@linaro.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Paul Zimmerman <paulz@synopsys.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <52B2703A.8090001@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Dinh Nguyen <dinh.linux@gmail.com>
+Cc: Mike Turquette <mturquette@linaro.org>, dinguyen@altera.com, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, zhangfei.gao@linaro.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
-
-On Wednesday 18 December 2013 09:55 PM, Felipe Balbi wrote:
-> On Tue, Dec 17, 2013 at 02:42:35PM -0500, Matt Porter wrote:
->> Add a driver for the internal Broadcom Kona USB 2.0 PHY found
->> on the BCM281xx family of SoCs.
->>
->> Signed-off-by: Matt Porter <mporter@linaro.org>
+On Thursday 19 December 2013, Dinh Nguyen wrote:
+> On 12/18/13 3:21 PM, Arnd Bergmann wrote:
+> > On Wednesday 18 December 2013, Mike Turquette wrote:
+> > I would definitely prefer using degrees over an arbitrary enumeration that
+> > might work on some platforms but not on others.
+> >
+> > I'm also a bit skeptical about the idea of putting the phase into the clock
+> > provider rather than the consumer, given the comments about the
+> > clk_set_phase() interface earlier. Generally we try to avoid having
+> > consumer-specific settings in a provider node (for any DT binding,
+> > not just clocks). Can't you have the same numbers in the dw-mshc
+> > node instead and let the mmc driver call clk_set_phase instead?
+> > If every clock has a fixed phase for a given piece of hardware, it
+> > could even be set automatically by making the common clk code read
+> > the clk-phase attribute at the time a driver calls clk_get.
 > 
-> Kishon, are you ok with this driver ?
+> So I think this is what you're suggesting:
+> clocks = <&sdmmc_clk 0 135>, this would specify 0 and 135 degrees phase.
 
-yeah. Since this patch touches phy/Kconfig (and Makefile) and there is one more
-PHY driver to be merged that also modifies Kconfig there might be conflicts. So
-thought I should be taking this patch?
-> 
->> +static int bcm_kona_usb2_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct bcm_kona_usb *phy;
->> +	struct resource *res;
->> +	struct phy *gphy;
->> +	struct phy_provider *phy_provider;
->> +
->> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
->> +	if (!phy)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	phy->regs = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(phy->regs))
->> +		return PTR_ERR(phy->regs);
->> +
->> +	platform_set_drvdata(pdev, phy);
->> +
->> +	phy_provider = devm_of_phy_provider_register(dev,
->> +			of_phy_simple_xlate);
->> +	if (IS_ERR(phy_provider))
->> +		return PTR_ERR(phy_provider);
->> +
->> +	gphy = devm_phy_create(dev, &ops, NULL);
->> +	if (IS_ERR(gphy))
->> +		return PTR_ERR(gphy);
->> +
->> +	/* The Kona PHY supports an 8-bit wide UTMI interface */
->> +	phy_set_bus_width(gphy, 8);
->> +
->> +	phy_set_drvdata(gphy, phy);
-> 
-> I think this set_drvdata() should be done before registering the
-> provider, no ?
+It's not what I meant in the paragraph above, but I have suggested this
+method in the past, and I think that would solve the problem very nicely
+as well, if Mike agrees. 
 
-hmm, right.
+> The clock-bindings document is stating that the integer in the clocks
+> property is
+> specifying the output number of the clock. Would this approach cause a
+> conflict and would
+> need an update to that document/approach?
 
-Thanks
-Kishon
+I don't think we have to change the common binding. While it lists the
+use of the integer for multiple clock outputs, that's not necessarily
+the only possible use, and specific bindings can always override the
+generic ones in a compatible way.
+
+You would certainly have to update the binding of your clock controller
+to do this, in particular because #clock-cells is now <1>. You will
+probably need to add a new "compatible" string for a clock that has
+a phase setting rather than just a gate, and document what the argument
+is for. If possible, try to model the hardware the way it actually
+is implemented. If the clock controller supports both the gate and
+the phase in the same block, then make it one clock device node, but
+if you have one block generating the clock and another one to shift the
+phase, it may be best to model that second clock in a separate node
+so you can split the driver code according to the registers, like
+
+	mmcclock-shifted {
+		compatible = "altr,socfpga-clk-shift";
+		reg = <0xabcd>;
+		clocks = <&mmcclock>;
+		#clock-cells = <1>
+	};
+
+	mshc {
+		...
+		clocks = <&/clocks/mmcclock-shifted 135>;
+		clock-names = "ciu";
+	};
+
+Coming back to what I actually tried to suggest above was 
+
+	mshc {
+		...
+		clocks = <&/clocks/mmcclock>;
+		clock-names = "ciu";
+		clock-phases = <135>;
+	};
+
+This would keep the phase setting out of the specific binding and
+move it to the generic clock binding. In Linux we could implement
+this either by making the mshc driver read the phase value and
+call clock_set_phase() on it, or the common clock code could look
+up the clock-phases property at the same time it looks up clock-names
+and clocks, and set this behind the back of the driver.
+
+	Arnd
