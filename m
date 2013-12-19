@@ -1,122 +1,149 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 5/7] clk/samsung: add support for pll2550xx
-Date: Thu, 19 Dec 2013 13:01:18 +0100
-Message-ID: <1450803.Oy1I8miDAj@amdc1227>
-References: <1386345391-23482-1-git-send-email-rahul.sharma@samsung.com>
- <1386345391-23482-6-git-send-email-rahul.sharma@samsung.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH V2 5/5] i2c: riic: add driver
+Date: Thu, 19 Dec 2013 13:06:47 +0100
+Message-ID: <20131219120646.GA2563@katana>
+References: <1387402321-21866-1-git-send-email-wsa@the-dreams.de>
+ <1387402321-21866-6-git-send-email-wsa@the-dreams.de>
+ <1407973.m5fTNuo5v5@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1386345391-23482-6-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@linaro.org, kgene.kim@samsung.com, thomas.ab@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, pankaj.dubey@samsung.com, yg1004.jang@samsung.com, arun.kk@samsung.com, r.sh.open@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1407973.m5fTNuo5v5@avalon>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pankaj, Rahul, Arun,
 
-On Friday 06 of December 2013 21:26:29 Rahul Sharma wrote:
-> From: Pankaj Dubey <pankaj.dubey@samsung.com>
-> 
-> exynos5260 use pll2520xx and it has different bitfields
-> for P,M,S values as compared to pll2550xx. Support for
-> pll2520xx is added here.
-> 
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-> ---
->  drivers/clk/samsung/clk-pll.c |  107 +++++++++++++++++++++++++++++++++++++++++
->  drivers/clk/samsung/clk-pll.h |    1 +
->  2 files changed, 108 insertions(+)
-> 
-> diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
-> index e8e8953..237a889 100644
-> --- a/drivers/clk/samsung/clk-pll.c
-> +++ b/drivers/clk/samsung/clk-pll.c
-> @@ -710,6 +710,107 @@ struct clk * __init samsung_clk_register_pll2550x(const char *name,
->  	return clk;
->  }
->  
-> +/*
-> + * PLL2550xx Clock Type
-> + */
-> +
-> +/* Maximum lock time can be 270 * PDIV cycles */
-> +#define PLL2550XX_LOCK_FACTOR (270)
-> +
-> +#define PLL2550XX_MDIV_MASK		(0x3FF)
-> +#define PLL2550XX_PDIV_MASK		(0x3F)
-> +#define PLL2550XX_SDIV_MASK		(0x7)
-> +#define PLL2550XX_LOCK_STAT_MASK	(0x1)
-> +#define PLL2550XX_MDIV_SHIFT		(9)
-> +#define PLL2550XX_PDIV_SHIFT		(3)
-> +#define PLL2550XX_SDIV_SHIFT		(0)
-> +#define PLL2550XX_LOCK_STAT_SHIFT	(21)
-> +
-> +static unsigned long samsung_pll2550xx_recalc_rate(struct clk_hw *hw,
-> +				unsigned long parent_rate)
-> +{
-> +	struct samsung_clk_pll *pll = to_clk_pll(hw);
-> +	u32 mdiv, pdiv, sdiv, pll_con;
-> +	u64 fvco = parent_rate;
-> +
-> +	pll_con = __raw_readl(pll->con_reg);
-> +	mdiv = (pll_con >> PLL2550XX_MDIV_SHIFT) & PLL2550XX_MDIV_MASK;
-> +	pdiv = (pll_con >> PLL2550XX_PDIV_SHIFT) & PLL2550XX_PDIV_MASK;
-> +	sdiv = (pll_con >> PLL2550XX_SDIV_SHIFT) & PLL2550XX_SDIV_MASK;
-> +
-> +	fvco *= mdiv;
-> +	do_div(fvco, (pdiv << sdiv));
-> +
-> +	return (unsigned long)fvco;
-> +}
-> +
-> +static inline bool samsung_pll2550xx_mp_change(u32 mdiv, u32 pdiv, u32 pll_con)
-> +{
-> +	if ((mdiv != ((pll_con >> PLL2550XX_MDIV_SHIFT) &
-> +				PLL2550XX_MDIV_MASK)) ||
-> +		(pdiv != ((pll_con >> PLL2550XX_PDIV_SHIFT) &
-> +				PLL2550XX_PDIV_MASK)))
-> +		return 1;
-> +	else
-> +		return 0;
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This doesn't look too good. Can you make this consistent with
-implementations of this helper for other PLLs, such as
-samsung_pll35xx_mp_change()?
+Hi Laurent,
 
-> +}
-> +
-> +static int samsung_pll2550xx_set_rate(struct clk_hw *hw, unsigned long drate,
-> +					unsigned long prate)
-> +{
-> +	struct samsung_clk_pll *pll = to_clk_pll(hw);
-> +	const struct samsung_pll_rate_table *rate;
-> +	u32 tmp;
-> +
-> +	/* Get required rate settings from table */
-> +	rate = samsung_get_pll_settings(pll, drate);
-> +	if (!rate) {
-> +		pr_err("%s: Invalid rate : %lu for pll clk %s\n", __func__,
-> +			drate, __clk_get_name(hw->clk));
-> +		return -EINVAL;
-> +	}
-> +
-> +	tmp = __raw_readl(pll->con_reg);
-> +
-> +	if (!(samsung_pll2550xx_mp_change(rate->mdiv, rate->pdiv, tmp))) {
-> +		/* If only s change, change just s value only*/
-> +		tmp &= ~(PLL2550XX_SDIV_MASK << PLL2550XX_SDIV_SHIFT);
-> +		tmp |= rate->sdiv << PLL2550XX_SDIV_SHIFT;
-> +		__raw_writel(tmp, pll->con_reg);
-> +	} else {
+thanks for the review!
 
-Please make coding style of this function consistent with implementations
-of this operation for other PLLs, such as samsung_pll35xx_set_rate().
 
-Otherwise the patch looks fine.
+> > +/*
+> > + * This i2c core has a lot of interrupts, namely 8. We use their chain=
+ing
+> > as
+> > + * some kind of state machine.
+>=20
+> I have mixed feelings about this. Wouldn't it be more efficient to have a=
+n=20
+> internal state machine (which you partially have already, using RIIC_INIT=
+_MSG=20
+> for instance) instead of relying on enabling/disabling interrupts ? The l=
+atter=20
+> has a larger overhead.
 
-Best regards,
-Tomasz
+I am not sure I get you here. I need the interrupts anyhow. For example,
+after the last byte has been written to the 1-byte-FIFO in the
+transmission_irq, I need to wait for the transmission_end_irq to ensure
+the bits are already on the wire before I mark the message completed.
+
+Polling for that condition is more overhead than just enabling the
+proper interrupt (one write to ICIER). I don't need to switch ISR since
+all the interrupts are seperate and have dedicated ISR.
+
+> > +static int riic_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], =
+int
+> > num)
+> > +{
+> > +	struct riic_dev *riic =3D i2c_get_adapdata(adap);
+> > +	int i, ret;
+>=20
+> One of my favorite bikeshedding comments is to ask for unsigned int when =
+the=20
+> variable can't be negative :-)
+
+OK.
+
+> > +	/*
+> > +	 * TODO: Implement formula to calculate the timing values depending on
+> > +	 * variable parent clock rate and arbitrary bus speed
+> > +	 */
+> > +	rate =3D clk_get_rate(riic->clk);
+> > +	if (rate !=3D 33325000) {
+> > +		dev_err(&riic->adapter.dev,
+> > +			"invalid parent clk (%lu). Must be 33325000Hz\n", rate);
+>=20
+> What about a "goto done;" here and below to avoid repeating the=20
+> clk_disable_unprepare() call ?
+
+Yeah, can be argued that way. I was fine with both.
+
+>=20
+> > +		clk_disable_unprepare(riic->clk);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	/* Changing the order of accessing IICRST and ICE may break things! */
+> > +	writeb(ICCR1_IICRST | ICCR1_SOWP, riic->base + RIIC_ICCR1);
+> > +	riic_clear_set_bit(riic, 0, ICCR1_ICE, RIIC_ICCR1);
+> > +
+> > +	switch (spd) {
+> > +	case 100000:
+> > +		writeb(ICMR1_CKS(3), riic->base + RIIC_ICMR1);
+> > +		writeb(ICBRH_SP100K, riic->base + RIIC_ICBRH);
+> > +		writeb(ICBRL_SP100K, riic->base + RIIC_ICBRL);
+> > +		break;
+> > +	case 400000:
+> > +		writeb(ICMR1_CKS(1), riic->base + RIIC_ICMR1);
+> > +		writeb(ICBRH_SP400K, riic->base + RIIC_ICBRH);
+> > +		writeb(ICBRL_SP400K, riic->base + RIIC_ICBRL);
+>=20
+> Couldn't you compute the ICMR1, ICBRH and ICBRL values at runtime instead=
+ ?
+
+As mentioned in the TODO above, this is scheduled for an incremental
+update to this driver.
+
+> > +	of_property_read_u32(np, "clock-frequency", &bus_rate);
+>=20
+> As the property is mandatory, shouldn't you check the return value of thi=
+s=20
+> function ? Another option would be to make the clock-frequency property=
+=20
+> optional and use a default value. What do the other I2C bus drivers usual=
+ly do=20
+> ?
+
+bus_rate is initialized to 0 and if read_u32 fails, it will stay this
+way. Then, the call to riic_init_hw() will fail and report the error.
+
+There is no standard behaviour (use sane default or fail) yet. It is
+somewhere on the I2C todo list :/
+
+Regards,
+
+   Wolfram
+
+
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSsuFWAAoJEBQN5MwUoCm25EkP/jVPDq/FAd09lDLR0c4MkcsN
+p6KM6xmL0ol7uywFtP4MEBaXNcCnzN7LUveD7YQbWtJx3e61TM1O0eilH7inPAgd
+biPcOGN7+wiGjley9rdA0VcV0/NMn28foAaZFQhLoRXRkz2A3/3B5ACFJj2k8kOt
+lgzCldVvSWayEi+lQKHrntItffKohMyDMxEn8/izwoXPylnMahDvt4cpb6q4e2P/
+WF8fY2wRFLBJ5Y57m+T/Wuenhkyiz3FM8fQLPvL7bSQEWHsMpqI/DTJyISC5nCuC
+R00LWxCxb1QjnGAhA45XY7BEm+T2AqC4gOXXoHblkhFVXNTE1Xkm8ooOvfNrWQ4Z
+5RRMGqcDYVk4DysEUTDHeoIiB3lNXUBnFjgKTJT6p6L7orHzsy8I8nd4xmRViQN7
+tumKfrl7Y6gSYo2ZLaze4gpfO28l8VLMdfOLuGBUUvkKcDOv6L+Vzu2ycJpBTKKf
+QyGOwsi4kYs+kTAJYGBWKZg4ZcYRN+rJZCHD/DK6fsDYgjtPELv4IER33xxJim0u
+ZJ0f5n3SvgJyXiYUqmfLlKRsE7SU/8c9JHI0nAR2GmfgVid+7qGE4o16aixwujy+
+Sii2Kra9uhLW7fQpVi/zaMCaEat9ZP79ntYzw8qcxYjlNL8oFI2ci6HuH2fxxMpX
+WIbeme590TRlWEi0EspS
+=fZoX
+-----END PGP SIGNATURE-----
+
+--OgqxwSJOaUobr8KG--
