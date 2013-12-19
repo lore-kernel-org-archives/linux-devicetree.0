@@ -1,69 +1,75 @@
 From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v8 3/9] usb: gadget: s3c-hsotg: enable build for other
- platforms
-Date: Thu, 19 Dec 2013 09:23:04 -0500
-Message-ID: <1387462990-12039-4-git-send-email-mporter@linaro.org>
-References: <1387462990-12039-1-git-send-email-mporter@linaro.org>
+Subject: Re: [PATCH v7 8/9] phy: add Broadcom Kona USB2 PHY driver
+Date: Thu, 19 Dec 2013 09:25:36 -0500
+Message-ID: <20131219142536.GG15814@beef>
+References: <1387309356-17195-1-git-send-email-mporter@linaro.org>
+ <1387309356-17195-9-git-send-email-mporter@linaro.org>
+ <20131218162554.GF4970@saruman.home>
+ <52B288EF.1040006@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1387462990-12039-1-git-send-email-mporter@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Dinh Nguyen <dinh.linux@gmail.com>, Linaro Patches <patches@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Russell King <linux@arm.linux.org.uk>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52B288EF.1040006@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: balbi@ti.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>, Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Dinh Nguyen <dinh.linux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove unused Samsung-specific machine include and Kconfig
-dependency on S3C.
+On Thu, Dec 19, 2013 at 11:19:35AM +0530, Kishon Vijay Abraham I wrote:
+> Hi Felipe,
+> 
+> On Wednesday 18 December 2013 09:55 PM, Felipe Balbi wrote:
+> > On Tue, Dec 17, 2013 at 02:42:35PM -0500, Matt Porter wrote:
+> >> Add a driver for the internal Broadcom Kona USB 2.0 PHY found
+> >> on the BCM281xx family of SoCs.
+> >>
+> >> Signed-off-by: Matt Porter <mporter@linaro.org>
+> > 
+> > Kishon, are you ok with this driver ?
+> 
+> yeah. Since this patch touches phy/Kconfig (and Makefile) and there is one more
+> PHY driver to be merged that also modifies Kconfig there might be conflicts. So
+> thought I should be taking this patch?
+> > 
+> >> +static int bcm_kona_usb2_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct device *dev = &pdev->dev;
+> >> +	struct bcm_kona_usb *phy;
+> >> +	struct resource *res;
+> >> +	struct phy *gphy;
+> >> +	struct phy_provider *phy_provider;
+> >> +
+> >> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> >> +	if (!phy)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >> +	phy->regs = devm_ioremap_resource(&pdev->dev, res);
+> >> +	if (IS_ERR(phy->regs))
+> >> +		return PTR_ERR(phy->regs);
+> >> +
+> >> +	platform_set_drvdata(pdev, phy);
+> >> +
+> >> +	phy_provider = devm_of_phy_provider_register(dev,
+> >> +			of_phy_simple_xlate);
+> >> +	if (IS_ERR(phy_provider))
+> >> +		return PTR_ERR(phy_provider);
+> >> +
+> >> +	gphy = devm_phy_create(dev, &ops, NULL);
+> >> +	if (IS_ERR(gphy))
+> >> +		return PTR_ERR(gphy);
+> >> +
+> >> +	/* The Kona PHY supports an 8-bit wide UTMI interface */
+> >> +	phy_set_bus_width(gphy, 8);
+> >> +
+> >> +	phy_set_drvdata(gphy, phy);
+> > 
+> > I think this set_drvdata() should be done before registering the
+> > provider, no ?
+> 
+> hmm, right.
 
-Signed-off-by: Matt Porter <mporter@linaro.org>
-Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
----
- drivers/usb/gadget/Kconfig     | 7 +++----
- drivers/usb/gadget/s3c-hsotg.c | 2 --
- 2 files changed, 3 insertions(+), 6 deletions(-)
+I sent a v8 series update that addresses this issue.
 
-diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
-index a91e642..181e760 100644
---- a/drivers/usb/gadget/Kconfig
-+++ b/drivers/usb/gadget/Kconfig
-@@ -294,11 +294,10 @@ config USB_PXA27X
- 	   gadget drivers to also be dynamically linked.
- 
- config USB_S3C_HSOTG
--	tristate "S3C HS/OtG USB Device controller"
--	depends on S3C_DEV_USB_HSOTG
-+	tristate "Designware/S3C HS/OtG USB Device controller"
- 	help
--	  The Samsung S3C64XX USB2.0 high-speed gadget controller
--	  integrated into the S3C64XX series SoC.
-+	  The Designware USB2.0 high-speed gadget controller
-+	  integrated into many SoCs.
- 
- config USB_S3C2410
- 	tristate "S3C2410 USB Device Controller"
-diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-index 9875d9c..db797f2 100644
---- a/drivers/usb/gadget/s3c-hsotg.c
-+++ b/drivers/usb/gadget/s3c-hsotg.c
-@@ -36,8 +36,6 @@
- #include <linux/usb/phy.h>
- #include <linux/platform_data/s3c-hsotg.h>
- 
--#include <mach/map.h>
--
- #include "s3c-hsotg.h"
- 
- static const char * const s3c_hsotg_supply_names[] = {
--- 
-1.8.4
+-Matt
