@@ -1,108 +1,64 @@
-From: Shirish S <s.shirish@samsung.com>
-Subject: [PATCH 3/4] ARM: exynos: dts: cros5250: Add hdmi phy settings
-Date: Thu, 19 Dec 2013 17:42:27 +0530
-Message-ID: <1387455148-22999-4-git-send-email-s.shirish@samsung.com>
-References: <1387455148-22999-1-git-send-email-s.shirish@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1387455148-22999-1-git-send-email-s.shirish@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, inki.dae@samsung.com, devicetree@vger.kernel.org, t.figa@samsung.com
-Cc: kgene.kim@samsung.com, s.nawrocki@samsung.com, shirish@chromium.org, linux-samsung-soc@vger.kernel.org, Shirish S <s.shirish@samsung.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCHv2 0/9] Add device nodes for am43x epos and gp evm.
+Date: Thu, 19 Dec 2013 18:03:32 +0530
+Message-ID: <1387456421-21379-1-git-send-email-sourav.poddar@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: bcousson@baylibre.com
+Cc: balbi@ti.com, devicetree@vger.kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, mark.rutland@arm.com, afzal@ti.com, lokeshvutla@ti.com, Sourav Poddar <sourav.poddar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch moves the hdmi phy setting to arndale dts,
-as its more of a per board configuration and also
-shall be easier for supporting future chipsets.
+The patch series adds support for enabling pwm backlight, i2c2, spi and
+matrix gpio keys on am43x-epos-evm, while adding support for pwm, gpio keys
+on gp evm.
 
-Signed-off-by: Shirish S <s.shirish@samsung.com>
----
- arch/arm/boot/dts/cros5250-common.dtsi |   74 ++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+Originally, this patches was divided into two seperate series,
+merging them into one and rebasing them on top of Benoit for_3.14/dts 
+branch so that it can be pushed at once.
 
-diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
-index dc259e8b..45c8583 100644
---- a/arch/arm/boot/dts/cros5250-common.dtsi
-+++ b/arch/arm/boot/dts/cros5250-common.dtsi
-@@ -301,6 +301,80 @@
- 
- 	hdmi {
- 		hpd-gpio = <&gpx3 7 0>;
-+		hdmiphy-configs {
-+			/*
-+			* Eye diagram test passed for:
-+			* Data de-emphasis: -0.7dB & Data Level: 880mV
-+			* i.e., 0010 0110 = 0x26
-+			* and Clock level of 515mV and diff 1030mV
-+			* i.e., 0x66
-+			*/
-+			config0: config0 {
-+				samsung,pixel-clock = <25200000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config1: config1 {
-+				samsung,pixel-clock = <27000000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config2: config2 {
-+				samsung,pixel-clock = <27027000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config3: config3 {
-+				samsung,pixel-clock = <36000000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config4: config4 {
-+				samsung,pixel-clock = <40000000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config5: config5 {
-+				samsung,pixel-clock = <65000000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config6: config6 {
-+				samsung,pixel-clock = <74176000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config7: config7 {
-+				samsung,pixel-clock = <74250000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config8: config8 {
-+				samsung,pixel-clock = <83500000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config9: config9 {
-+				samsung,pixel-clock = <106500000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config10: config10 {
-+				samsung,pixel-clock = <108000000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config11: config11 {
-+				samsung,pixel-clock = <146250000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+			config12: config12 {
-+				samsung,pixel-clock = <148500000>;
-+				samsung,de-emphasis-level =  /bits/ 8 <0x26>;
-+				samsung,clock-level =  /bits/ 8 < 0x66>;
-+			};
-+		};
- 	};
- 
- 	gpio-keys {
+
+Boot tested with Benoit for_3.14 +  tero clock series(1)
+Tested on am43x-epos-evm, m43x-gp-evm.
+
+There is a some bug while using regulators through backlight
+driver on 3.13-rc1. So, tested pwm part with this temporary patch[2].
+
+[1]: https://patchwork.kernel.org/patch/3009541/
+[2]: http://www.spinics.net/lists/arm-kernel/msg288215.html
+
+Patches are available at:
+git://gitorious.org/linux-connectivity/linux-connectivity.git for_3.14
+
+v1->v2:
+No code change, just squash two series into one
+and rebased it on benoit for_3.14/dts
+
+Darren Etheridge (1):
+  pinctrl: am43xx: dt-bindings: add MUX_MODE8
+
+Lokesh Vutla (1):
+  arm: dts: am437x-gp-evm: Add gp dts.
+
+Sourav Poddar (6):
+  arm: dts: am4372: Add pwm-cells property for ecap device.
+  arm: dts: am43x-epos-evm: Add I2C2 data.
+  arm: dts: am43x-epos-evm: Add SPI data.
+  arm: dts: am437x-gp-evm: Add pwm backlight support.
+  arm: dts: am437x-gp-evm: Enable gpio.
+  arm: dts: am43x-gp-evm: Add matrix gpio keys.
+  ARM: dts: am43x-epos-evm: Add pwm backlight support.
+
+ .../devicetree/bindings/arm/omap/omap.txt          |    3 +
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/am4372.dtsi                      |    9 ++
+ arch/arm/boot/dts/am437x-gp-evm.dts                |  100 ++++++++++++++++++++
+ arch/arm/boot/dts/am43x-epos-evm.dts               |   67 +++++++++++++
+ include/dt-bindings/pinctrl/am43xx.h               |    1 +
+ 6 files changed, 181 insertions(+)
+ create mode 100644 arch/arm/boot/dts/am437x-gp-evm.dts
+
 -- 
 1.7.9.5
+
