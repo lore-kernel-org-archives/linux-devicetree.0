@@ -1,34 +1,63 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH] pwm: atmel-pwm: clock can not unprepare after successfully register
-Date: Thu, 19 Dec 2013 11:42:22 +0800
-Message-ID: <1387424542-5864-1-git-send-email-voice.shen@atmel.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com
-Cc: nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, alexandre.belloni@free-electrons.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [RESEND LIST PATCHv7 1/4] clk: socfpga: Add a clk-phase property
+ to the "altr, socfpga-gate-clk"
+Date: Wed, 18 Dec 2013 22:04:10 -0600
+Message-ID: <52B2703A.8090001@gmail.com>
+References: <1387213476-22122-1-git-send-email-dinguyen@altera.com> <1387213476-22122-2-git-send-email-dinguyen@altera.com> <20131218205636.23538.50735@quantum> <201312182221.46506.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201312182221.46506.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>
+Cc: dinguyen@altera.com, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, zhangfei.gao@linaro.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When the PWM controller is registered successfully, the clock can not
-unprepare, so fix it.
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
----
- drivers/pwm/pwm-atmel.c |    2 ++
- 1 file changed, 2 insertions(+)
+On 12/18/13 3:21 PM, Arnd Bergmann wrote:
+> On Wednesday 18 December 2013, Mike Turquette wrote:
+>>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>>> index f936476..616d9ee 100644
+>>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>>> @@ -413,6 +413,7 @@
+>>>                                                 compatible = "altr,socfpga-gate-clk";
+>>>                                                 clocks = <&f2s_periph_ref_clk>, <&main_nand_sdmmc_clk>, <&per_nand_mmc_clk>;
+>>>                                                 clk-gate = <0xa0 8>;
+>>> +                                               clk-phase = <0 3>;
+>> Looking at this again, I have a hard time understanding the values in
+>> the clk-phase property. You reference some functions in the property
+>> definition above, but they are not obvious to me.
+>>
+>> Additionally I wonder if the binding would better if the clock-phase
+>> property was simply the value in degrees. E.g:
+>>
+>>         clk-phase = <315>;    // 315 degrees
+> I would definitely prefer using degrees over an arbitrary enumeration that
+> might work on some platforms but not on others.
+>
+> I'm also a bit skeptical about the idea of putting the phase into the clock
+> provider rather than the consumer, given the comments about the
+> clk_set_phase() interface earlier. Generally we try to avoid having
+> consumer-specific settings in a provider node (for any DT binding,
+> not just clocks). Can't you have the same numbers in the dw-mshc
+> node instead and let the mmc driver call clk_set_phase instead?
+> If every clock has a fixed phase for a given piece of hardware, it
+> could even be set automatically by making the common clk code read
+> the clk-phase attribute at the time a driver calls clk_get.
 
-diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-index 657e90a..bf4144a 100644
---- a/drivers/pwm/pwm-atmel.c
-+++ b/drivers/pwm/pwm-atmel.c
-@@ -362,6 +362,8 @@ static int atmel_pwm_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, atmel_pwm);
- 
-+	return ret;
-+
- unprepare_clk:
- 	clk_unprepare(atmel_pwm->clk);
- 	return ret;
--- 
-1.7.9.5
+So I think this is what you're suggesting:
+clocks = <&sdmmc_clk 0 135>, this would specify 0 and 135 degrees phase.
+
+The clock-bindings document is stating that the integer in the clocks
+property is
+specifying the output number of the clock. Would this approach cause a
+conflict and would
+need an update to that document/approach?
+
+Dinh
+
+>
+> 	Arnd
 
