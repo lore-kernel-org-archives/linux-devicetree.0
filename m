@@ -1,42 +1,139 @@
-From: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
-Subject: RE: [PATCH 2/3] thermal: imx: add necessary clk operation
-Date: Thu, 19 Dec 2013 07:08:16 +0000
-Message-ID: <d067cdecda2046f5998302deed320c2a@DM2PR03MB317.namprd03.prod.outlook.com>
-References: <1387477045-19037-1-git-send-email-b20788@freescale.com>
- <1387477045-19037-2-git-send-email-b20788@freescale.com>
- <20131219065915.GB6691@S2101-09.ap.freescale.net>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 0/5] Renesas R-Car Gen2 Common Clock Framework arch/
+ support
+Date: Thu, 19 Dec 2013 16:10:26 +0900
+Message-ID: <20131219071025.GF10230@verge.net.au>
+References: <1386770716-21610-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20131214021113.GA22927@verge.net.au>
+ <20131214021900.GB22927@verge.net.au>
+ <1565505.MyhvH9DDk2@avalon>
+ <20131214035054.GA24421@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131219065915.GB6691@S2101-09.ap.freescale.net>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "eduardo.valentin@ti.com" <eduardo.valentin@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131214035054.GA24421@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkJlc3QgUmVnYXJkcy4NCkFuc29uIGh1YW5nIOm7hOWLh+aJjQ0KwqANCkZyZWVzY2FsZSBT
-ZW1pY29uZHVjdG9yIFNoYW5naGFpDQrkuIrmtbfmtabkuJzmlrDljLrkuq7mma/ot68xOTLlj7dB
-5bqnMualvA0KMjAxMjAzDQpUZWw6MDIxLTI4OTM3MDU4DQoNCg0KPi0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+RnJvbTogU2hhd24gR3VvIFttYWlsdG86c2hhd24uZ3VvQGxpbmFyby5vcmdd
-DQo+U2VudDogVGh1cnNkYXksIERlY2VtYmVyIDE5LCAyMDEzIDI6NTkgUE0NCj5UbzogSHVhbmcg
-WW9uZ2NhaS1CMjA3ODgNCj5DYzoga2VybmVsQHBlbmd1dHJvbml4LmRlOyBydWkuemhhbmdAaW50
-ZWwuY29tOyBlZHVhcmRvLnZhbGVudGluQHRpLmNvbTsNCj5kZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgbGludXgtZG9jQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPmtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBSZTog
-W1BBVENIIDIvM10gdGhlcm1hbDogaW14OiBhZGQgbmVjZXNzYXJ5IGNsayBvcGVyYXRpb24NCj4N
-Cj5PbiBUaHUsIERlYyAxOSwgMjAxMyBhdCAwMToxNzoyNFBNIC0wNTAwLCBBbnNvbiBIdWFuZyB3
-cm90ZToNCj4+IEBAIC00MjcsNiArNDI5LDEzIEBAIHN0YXRpYyBpbnQgaW14X3RoZXJtYWxfcHJv
-YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPipwZGV2KQ0KPj4gIAkJcmV0dXJuIHJldDsNCj4+
-ICAJfQ0KPj4NCj4+ICsJZGF0YS0+dGhlcm1hbF9jbGsgPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRl
-diwgTlVMTCk7DQo+PiArCWlmIChJU19FUlIoZGF0YS0+dGhlcm1hbF9jbGspKSB7DQo+PiArCQly
-ZXQgPSBJU19FUlIoZGF0YS0+dGhlcm1hbF9jbGspOw0KPj4gKwkJZGV2X2VycigmcGRldi0+ZGV2
-LCAiZmFpbGVkIHRvIGdldCB0aGVybWFsIGNsayFcbiIpOw0KPj4gKwkJcmV0dXJuIHJldDsNCj4+
-ICsJfQ0KPj4gKw0KPg0KPlNvIHdoZW4gdGhlIG5ldyBrZXJuZWwgcnVucyBvbiBhIGJvYXJkIHdp
-dGggYW4gb2xkIERUQiBpbnN0YWxsZWQsIHRoZXJtYWwNCj5kcml2ZXIgd2lsbCBiZSBicm9rZW4u
-DQo+DQpZZXMsIEkgdGhvdWdodCBhYm91dCB0aGlzIGNhc2UsIGJ1dCB0aGUgcHJldmlvdXMgaW1w
-bGVtZW50IGlzIGluY29ycmVjdCwgaWYNCnRoZSBQTEwzIGlzIG5vdCBlbmFibGVkIGJ5IG90aGVy
-IGRyaXZlcnMsIHRoZXJtYWwgZHJpdmVyIHdpbGwgbm90IHdvcmssIHNvDQp0aGlzIHBhdGNoIGlz
-IGEgYnVnIGZpeCwgbm90IGVuaGFuY2VtZW50LiBTbyB3ZSBzdGlsbCBuZWVkIHRvIGNvbnNpZGVy
-IG9sZA0KZHRzIGNhc2U/IA0KDQpBbnNvbg0KDQo+U2hhd24NCg0K
+On Sat, Dec 14, 2013 at 12:50:58PM +0900, Simon Horman wrote:
+> On Sat, Dec 14, 2013 at 03:27:23AM +0100, Laurent Pinchart wrote:
+> > Hi Simon,
+> > 
+> > On Saturday 14 December 2013 11:19:01 Simon Horman wrote:
+> > > On Sat, Dec 14, 2013 at 11:11:14AM +0900, Simon Horman wrote:
+> > > > On Sat, Dec 14, 2013 at 02:41:44AM +0100, Laurent Pinchart wrote:
+> > > > > On Saturday 14 December 2013 10:26:24 Simon Horman wrote:
+> > > > > > [ CC Magnus ]
+> > > > > > 
+> > > > > > On Wed, Dec 11, 2013 at 03:05:11PM +0100, Laurent Pinchart wrote:
+> > > > > > > Hello,
+> > > > > > > 
+> > > > > > > This is a repost of the arch patches from the "[PATCH v3 0/8]
+> > > > > > > Renesas R-Car Gen2 Common Clock Framework support" patch series. The
+> > > > > > > first three patches in that series have been reposted separately in
+> > > > > > > the "[PATCH v4 0/3] Renesas R-Car Gen2 Common Clock Framework
+> > > > > > > drivers" series to get merged through Mike Turquette's tree, while
+> > > > > > > this series will go through the ARM SoC tree.
+> > > > > > > 
+> > > > > > > I've asked Mike to provide a stable branch when merging the CCF
+> > > > > > > driver patches.
+> > > > > > > 
+> > > > > > > Laurent Pinchart (5):
+> > > > > > >   ARM: shmobile: r8a7790: Add clock index macros for DT sources
+> > > > > > >   ARM: shmobile: r8a7791: Add clock index macros for DT sources
+> > > > > > >   ARM: shmobile: r8a7790: Add clocks
+> > > > > > >   ARM: shmobile: r8a7790: Reference clocks
+> > > > > > >   ARM: shmobile: r8a7791: Add clocks
+> > > > > > >  
+> > > > > > >  arch/arm/boot/dts/r8a7790.dtsi            | 328 +++++++++++++++++++
+> > > > > > >  arch/arm/boot/dts/r8a7791.dtsi            | 313 +++++++++++++++++++
+> > > > > > >  include/dt-bindings/clock/r8a7790-clock.h | 100 +++++++++
+> > > > > > >  include/dt-bindings/clock/r8a7791-clock.h | 105 ++++++++++
+> > > > > > >  4 files changed, 846 insertions(+)
+> > > > > > >  create mode 100644 include/dt-bindings/clock/r8a7790-clock.h
+> > > > > > >  create mode 100644 include/dt-bindings/clock/r8a7791-clock.h
+> > > > > > 
+> > > > > > Hi Laurent,
+> > > > > > 
+> > > > > > I would like to confirm the dependencies of this series with you.
+> > > > > > As I understand things the dependencies that were not present
+> > > > > > in renesas-devel-v3.13-rc2-20131211 are as follows.
+> > > > > > 
+> > > > > > If any of the patches below can be skipped without breaking this
+> > > > > > series or the followup series "[PATCH v4 00/16] Lager and Koelsch
+> > > > > > multiplatform support" then I am all for not treating them as
+> > > > > > dependencies at all.
+> > > > > > 
+> > > > > > 
+> > > > > > * [PATCH v4 0/3] Renesas R-Car Gen2 Common Clock Framework drivers
+> > > > > >   Status: Waiting for response from Mike Turquette
+> > > > > 
+> > > > > The dependency is correct, but the status has changed. Mike has merged
+> > > > > the patches in his tree in the clk-next-shmobile branch
+> > > > > (https://git.linaro.org/people/mike.turquette/linux.git/shortlog/refs/he
+> > > > > ads/clk-next-shmobile).
+> > > >
+> > > > Great!
+> > > > 
+> > > > > > * mmc: sh_mobile_sdhi: Convert to clk_prepare/unprepare
+> > > > > >   Status: Merged by Chris Ball. I believe we need a stable branch from
+> > > > > >   him.
+> > > > > 
+> > > > > You can drop this dependency as the koelsch reference boards lack SDHI
+> > > > > support and the lager reference board has the SDHI devices disabled.
+> > > > 
+> > > > Thanks, got it.
+> > > > 
+> > > > > > * spi: sh-msiof: Convert to clk_prepare/unprepare
+> > > > > >   spi: sh-msiof: Use devm_* managed allocators
+> > > > > >   Status: Merged by Mark Brown. I believe we need a stable branch from
+> > > > > >   him.
+> > > > > 
+> > > > > You can drop this dependency as the lager and koelsch reference boards
+> > > > > lack SPI support.
+> > > > > 
+> > > > > > * usb: gadget: r8a66597-udc: Convert to clk_prepare/unprepare
+> > > > > >   Status: In Felipe Balbi's next branch. It is stable, right?
+> > > > > 
+> > > > > Correct, but you can drop this dependency as the lager and koelsch
+> > > > > reference boards lack USB support.
+> > > > 
+> > > > Understood.
+> > > > 
+> > > > > > * clocksource: sh_tmu: Add clk_prepare/unprepare support
+> > > > > >   clocksource: sh_tmu: Release clock when sh_tmu_register() fails
+> > > > > >   clocksource: sh_mtu2: Add clk_prepare/unprepare support
+> > > > > >   clocksource: sh_mtu2: Release clock when sh_mtu2_register() fails
+> > > > > >   Status: Present in v3.13-rc3. No problem!
+> > > > > > 
+> > > > > > * clocksource: sh_cmt: Add clk_prepare/unprepare support
+> > > > > >   Status: I think I have dropped the ball here.
+> > > > > >           Regardless, I think it it needs to be accepted by Daniel
+> > > > > >           Lezcano
+> > > > > 
+> > > > > That's the only missing one. Do you plan to handle this with Daniel ?
+> > > > 
+> > > > Yes, I will ask him to pick it up ASAP. Sorry for the mess there.
+> > > 
+> > > Hi,
+> > > 
+> > > I think I may have found the reason that I dropped the ball,
+> > > which is that I was waiting for v2 of the patch but never saw it.
+> > > 
+> > > In order to stop me making a further mess of this would
+> > > you be able to re-post it to Daniel directly?
+> > 
+> > When I mentioned v2 for the clocksource patches ("Re: [PATCH 01/12] 
+> > clocksource: sh_cmt: Add clk_prepare/unprepare support", Date: 30/10/2013 
+> > 01:13) I meant v2 of the whole series. The sh_tmu and sh_mtu2 patches required 
+> > a v2, but the sh_tmu patch didn't. v1 is thus the correct one. Do I need to 
+> > resend it, or can you take it from the list ?
+> 
+> I can take it.
+
+Daniel has taken the patch and provided a branch.
+
+I will queue up this series accordingly.
