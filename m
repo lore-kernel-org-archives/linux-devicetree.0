@@ -1,69 +1,62 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: imx: enable cpufreq for i.mx6dl
-Date: Thu, 19 Dec 2013 11:13:05 +0800
-Message-ID: <20131219031304.GR6691@S2101-09.ap.freescale.net>
-References: <1387465330-15667-1-git-send-email-b20788@freescale.com>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: Re: [PATCHv3 1/7] ALSA: Add SAI SoC Digital Audio
+	Interface driver.
+Date: Thu, 19 Dec 2013 03:16:44 +0000
+Message-ID: <00b7bf44664b4d9e8a7317d73f039cef@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1387250684-23406-1-git-send-email-Li.Xiubo@freescale.com>
+ <1387250684-23406-2-git-send-email-Li.Xiubo@freescale.com>
+ <20131218182731.GE31886@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1387465330-15667-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131218182731.GE31886@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, "timur@tabi.org" <timur@tabi.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Huan Wang <Huan.Wang@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "Jason.Jin@freescale.com" <Jason.Jin@freescale.com>, "oskar@scara.com" <os>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2013 at 10:02:10AM -0500, Anson Huang wrote:
-> This patch adds cpufreq dts for i.mx6dl to support cpufreq driver.
+> On Tue, Dec 17, 2013 at 11:24:38AM +0800, Xiubo Li wrote:
 > 
-> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-Applied, with patch subject changed to 'ARM: dts: imx6dl: enable cpufreq
-support'.
-
-Shawn
-
-> ---
->  arch/arm/boot/dts/imx6dl.dtsi |   20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> > This adds Freescale SAI ASoC Audio support.
+> > This implementation is only compatible with device tree definition.
 > 
-> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-> index b2f2699..e2ec0fb 100644
-> --- a/arch/arm/boot/dts/imx6dl.dtsi
-> +++ b/arch/arm/boot/dts/imx6dl.dtsi
-> @@ -23,6 +23,26 @@
->  			device_type = "cpu";
->  			reg = <0>;
->  			next-level-cache = <&L2>;
-> +			operating-points = <
-> +				/* kHz    uV */
-> +				996000  1275000
-> +				792000  1175000
-> +				396000  1075000
-> +			>;
-> +			fsl,soc-operating-points = <
-> +				/* ARM kHz  SOC-PU uV */
-> +				996000	1175000
-> +				792000	1175000
-> +				396000	1175000
-> +			>;
-> +			clock-latency = <61036>; /* two CLK32 periods */
-> +			clocks = <&clks 104>, <&clks 6>, <&clks 16>,
-> +				 <&clks 17>, <&clks 170>;
-> +			clock-names = "arm", "pll2_pfd2_396m", "step",
-> +				      "pll1_sw", "pll1_sys";
-> +			arm-supply = <&reg_arm>;
-> +			pu-supply = <&reg_pu>;
-> +			soc-supply = <&reg_soc>;
->  		};
->  
->  		cpu@1 {
-> -- 
-> 1.7.9.5
+> This is mostly good, there are two small issues below but I've applied it
+> since they don't really affect the driver as a whole.  Please send followup
+> patches to fix the issues below.
 > 
+> > +static int fsl_sai_dai_probe(struct snd_soc_dai *cpu_dai) {
+> > +	struct fsl_sai *sai = dev_get_drvdata(cpu_dai->dev);
+> > +
+> > +	cpu_dai->playback_dma_data = &sai->dma_params_tx;
+> > +	cpu_dai->capture_dma_data = &sai->dma_params_rx;
 > 
+> You should use snd_soc_dai_init_dma_data() for this.
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, I will use it.
+ 
+> > +static int fsl_sai_dai_remove(struct snd_soc_dai *cpu_dai) {
+> > +	cpu_dai->playback_dma_data = NULL;
+> > +	cpu_dai->capture_dma_data = NULL;
+> > +
+> > +	snd_soc_dai_set_drvdata(cpu_dai, NULL);
+> > +
+> > +	return 0;
+> > +}
+> 
+> This is all unneeded and this function should be removed entirely.
+
+I will remove this and other unneeded functions like this.
+
+Best Regards,
+Xiubo
