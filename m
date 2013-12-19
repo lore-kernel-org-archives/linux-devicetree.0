@@ -1,57 +1,45 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 2/6] misc: fuse: Add efuse driver for Tegra
-Date: Thu, 19 Dec 2013 09:59:31 -0800
-Message-ID: <20131219175931.GA18004@kroah.com>
-References: <1387468474-26521-1-git-send-email-pdeschrijver@nvidia.com>
- <1387468474-26521-3-git-send-email-pdeschrijver@nvidia.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv11 00/49] ARM: TI SoC clock DT conversion
+Date: Thu, 19 Dec 2013 10:05:11 -0800
+Message-ID: <20131219180509.GO27438@atomide.com>
+References: <1387452260-23276-1-git-send-email-t-kristo@ti.com>
+ <52B30BA8.2060108@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1387468474-26521-3-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Danny Huang <dahuang-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <52B30BA8.2060108@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2013 at 05:54:30PM +0200, Peter De Schrijver wrote:
-> +int tegra_fuse_sysfs(struct device *dev, int size,
-> +		     u32 (*readl)(const unsigned int offset),
-> +		     struct tegra_sku_info *sku_info)
+* Nishanth Menon <nm@ti.com> [131219 07:08]:
+> On 12/19/2013 05:23 AM, Tero Kristo wrote:
+> [...]
+> >
+> >branch: 3.13-rc4-dt-clks-v11 : contains everything, shall me merged last
+> 
+> 
+> Tero,
+> Considering Pauls'  concerns with v10 last time, I ran
+> [1] and got a few sparse, smatch and checkpatch warnings:
+> http://pastebin.mozilla.org/3810314
+> 
+> I think we can ignore sparse spam about "__ksymtab" for the moment.
+> but stuff like:
+> +drivers/clk/ti/clk.c:88 ti_clk_retry_init() error: potential null
+> dereference 'retry'.  (kzalloc returns null)
+> 
+> the checkpatch warn that Paul stated:"extern struct of_device_id
+> __clk_of_table" still remain should be fixed IMHO.
 
-Odd function name, there's no "verb" in it to give a hint as to what it
-does.
+Yeah let's not introduce new warnings. Also noticed an issue
+with "clk: divider: add support for low level ops" on at least
+n8x0 and 2430sdp.
 
-> +{
-> +	int err;
-> +
-> +	if (fuse_size)
-> +		return -ENODEV;
-> +
-> +	fuse_bin_attr.size = size;
-> +	fuse_bin_attr.read = fuse_read;
-> +
-> +	fuse_size = size;
-> +	fuse_readl = readl;
-> +
-> +	err = device_create_bin_file(dev, &fuse_bin_attr);
-> +	if (err)
-> +		return err;
-> +
-> +	pr_info("Tegra Revision: %s SKU: %d CPU Process: %d Core Process: %d\n",
-> +		tegra_revision_name[sku_info->revision],
-> +		sku_info->sku_id, sku_info->cpu_process_id,
-> +		sku_info->core_process_id);
+Regards,
 
-Why pollute the kernel log with this type of thing?  Who really needs
-it?
-
-And if you really need it, please use dev_info() to properly identify
-the device you are referring to.
-
-Also, you forgot to document your new sysfs file that you created in
-Documentation/ABI/ :(
-
-thanks,
-
-greg k-h
+Tony
+ 
+> [1] https://github.com/nmenon/kernel_patch_verify
