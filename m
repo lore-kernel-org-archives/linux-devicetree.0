@@ -1,69 +1,136 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/2] mfd: AS3722: add dt node properties for system power
- controller
-Date: Thu, 19 Dec 2013 13:06:10 +0000
-Message-ID: <20131219130610.GI27373@lee--X1>
-References: <1387457821-12509-1-git-send-email-ldewangan@nvidia.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCH V3 2/2] thermal: imx: add necessary clk operation
+Date: Thu, 19 Dec 2013 09:12:57 -0400
+Message-ID: <52B2F0D9.2020704@ti.com>
+References: <1387487791-3259-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387457821-12509-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: anton@enomsg.org, dwmw2@infradead.org, mark.rutland@arm.com, rob@landley.net, ijc+devicetree@hellion.org.uk, swarren@nvidia.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="rUBDlWxtxjpE5tkeKGR6TbLdxaEgTrPI1"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1387487791-3259-1-git-send-email-b20788@freescale.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Anson Huang <b20788@freescale.com>
+Cc: shawn.guo@linaro.org, kernel@pengutronix.de, rui.zhang@intel.com, eduardo.valentin@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 19 Dec 2013, Laxman Dewangan wrote:
+--rUBDlWxtxjpE5tkeKGR6TbLdxaEgTrPI1
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> ams AS3722 device supports the power off by turning off its all rails=
-=2E
+On 19-12-2013 17:16, Anson Huang wrote:
+> Thermal sensor needs pll3_usb_otg when measuring temperature,
+> otherwise the temperature read will be incorrect, so need to
+> enable this clk before sensor working, for alarm function,
+> as hardware will take measurement periodically, so we should
+> keep this clk always on once alarm function is enabled.
 >=20
-> Add dt node properties to enable this functionality on this device.
->=20
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Signed-off-by: Anson Huang <b20788@freescale.com>
 > ---
->  Documentation/devicetree/bindings/mfd/as3722.txt |    9 +++++++++
->  1 file changed, 9 insertions(+)
+>  .../devicetree/bindings/thermal/imx-thermal.txt    |    4 ++++
+>  drivers/thermal/imx_thermal.c                      |   18 ++++++++++++=
+++++++
+>  2 files changed, 22 insertions(+)
 >=20
-> diff --git a/Documentation/devicetree/bindings/mfd/as3722.txt b/Docum=
-entation/devicetree/bindings/mfd/as3722.txt
-> index fc2191e..1e54937 100644
-> --- a/Documentation/devicetree/bindings/mfd/as3722.txt
-> +++ b/Documentation/devicetree/bindings/mfd/as3722.txt
-> @@ -112,6 +112,15 @@ Following are properties of regulator subnode.
->  		ams,enable-tracking: Enable tracking with SD1, only supported
->  			by LDO3.
+> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt =
+b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> index 541c25e..1f0f672 100644
+> --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> @@ -8,10 +8,14 @@ Required properties:
+>    calibration data, e.g. OCOTP on imx6q.  The details about calibratio=
+n data
+>    can be found in SoC Reference Manual.
 > =20
-> +Power-off:
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +AS3722 supports the system power off by turning off all its rail. Th=
-e power off
-> +is provided through pm power off.
-
-I think pm_power_off is a Linuxisum.
-
-> +The device node should have the following properties to enable power=
--off
-
-Why is it power-off here and power off everywhere else?
-
-> +functionality from ams AS3722:
-> +ams,system-power-controller: To enable the power off functionality t=
-hrough
-> +	device.
-
-Do what with it? "on", "<1>", something else?
-
+> +Optional properties:
+> +- clocks : thermal sensor's clock source.
+> +
 >  Example:
->  --------
->  #include <dt-bindings/mfd/as3722.h>
+> =20
+>  tempmon {
+>  	compatible =3D "fsl,imx6q-tempmon";
+>  	fsl,tempmon =3D <&anatop>;
+>  	fsl,tempmon-data =3D <&ocotp>;
+> +	clocks =3D <&clks 172>;
+>  };
+> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_therma=
+l.c
+> index 1d6c801..c2b8173 100644
+> --- a/drivers/thermal/imx_thermal.c
+> +++ b/drivers/thermal/imx_thermal.c
+> @@ -7,6 +7,7 @@
+>   *
+>   */
+> =20
+> +#include <linux/clk.h>
+>  #include <linux/cpu_cooling.h>
+>  #include <linux/cpufreq.h>
+>  #include <linux/delay.h>
+> @@ -73,6 +74,7 @@ struct imx_thermal_data {
+>  	unsigned long last_temp;
+>  	bool irq_enabled;
+>  	int irq;
+> +	struct clk *thermal_clk;
+>  };
+> =20
+>  static void imx_set_alarm_temp(struct imx_thermal_data *data,
+> @@ -457,6 +459,22 @@ static int imx_thermal_probe(struct platform_devic=
+e *pdev)
+>  		return ret;
+>  	}
+> =20
 
-Should it be represented in the example?
+There are several reg writes before this point. Are you sure you won't
+need this clock for performing those operations?
+
+> +	data->thermal_clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(data->thermal_clk)) {
+> +		dev_warn(&pdev->dev, "failed to get thermal clk!\n");
+> +	} else {
+> +		/*
+> +		 * Thermal sensor needs clk on to get correct value, normally
+> +		 * we should enable its clk before taking measurement and disable
+> +		 * clk after measurement is done, but if alarm function is enabled,
+> +		 * hardware will auto measure the temperature periodically, so we
+> +		 * need to keep the clk always on for alarm function.
+> +		 */
+> +		ret =3D clk_prepare_enable(data->thermal_clk);
+> +		if (ret)
+> +			dev_warn(&pdev->dev, "failed to enable thermal clk: %d\n", ret);
+> +	}
+> +
+>  	/* Enable measurements at ~ 10 Hz */
+>  	regmap_write(map, TEMPSENSE1 + REG_CLR, TEMPSENSE1_MEASURE_FREQ);
+>  	measure_freq =3D DIV_ROUND_UP(32768, 10); /* 10 Hz */
+>=20
+
+Don't you need to release the clock when .remove is called either on
+driver or device removal?
+
+What about suspend / resume path? Do you want to keep this clock on when
+suspending? Is it gonna work or prevent your system to enter low power
+states?
+
+
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
+
+
+--rUBDlWxtxjpE5tkeKGR6TbLdxaEgTrPI1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlKy8OEACgkQCXcVR3XQvP1xigEAscjspMIy9C/zo+Qu1Im/CSM9
+uGzPb55dirz4C55QOd8A/RYZV4E2i5YT3i2fFmQ0h2kMk+uPl/aMdfZeZ1COdcy7
+=TTly
+-----END PGP SIGNATURE-----
+
+--rUBDlWxtxjpE5tkeKGR6TbLdxaEgTrPI1--
