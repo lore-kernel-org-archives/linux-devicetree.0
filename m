@@ -1,153 +1,150 @@
-From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v8 5/9] usb: gadget: s3c-hsotg: enable generic phy support
-Date: Thu, 19 Dec 2013 09:23:06 -0500
-Message-ID: <1387462990-12039-6-git-send-email-mporter@linaro.org>
-References: <1387462990-12039-1-git-send-email-mporter@linaro.org>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387462990-12039-1-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: commit e38c0a1f breaks powerpc boards with uli1575 chip
+Date: Thu, 19 Dec 2013 15:24:02 +0100
+Message-ID: <20131219142400.GA13878@ulmo.nvidia.com>
+References: <201312171135.38576@blacky.localdomain>
+ <52B1EC15.5070606@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52B1EC15.5070606@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexey Lugovskoy <lugovskoy@dev.rtsoft.ru>, Dmitry Krivoschekov <dkrivoschokov@dev.rtsoft.ru>
 List-Id: devicetree@vger.kernel.org
 
-Adds support for the generic PHY subsystem. Generic PHY
-support is probed and then the driver falls back to checking
-for an old style USB PHY and pdata if not found.
 
-Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/usb/gadget/s3c-hsotg.c | 55 ++++++++++++++++++++++++++++++------------
- 1 file changed, 39 insertions(+), 16 deletions(-)
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-index cbfbf41..8f9bcdb 100644
---- a/drivers/usb/gadget/s3c-hsotg.c
-+++ b/drivers/usb/gadget/s3c-hsotg.c
-@@ -30,6 +30,8 @@
- #include <linux/clk.h>
- #include <linux/regulator/consumer.h>
- #include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+#include <linux/usb/phy.h>
- 
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
-@@ -138,6 +140,7 @@ struct s3c_hsotg_ep {
-  * @dev: The parent device supplied to the probe function
-  * @driver: USB gadget driver
-  * @phy: The otg phy transceiver structure for phy control.
-+ * @uphy: The otg phy transceiver structure for old USB phy control.
-  * @plat: The platform specific configuration data. This can be removed once
-  * all SoCs support usb transceiver.
-  * @regs: The memory area mapped for accessing registers.
-@@ -159,7 +162,8 @@ struct s3c_hsotg_ep {
- struct s3c_hsotg {
- 	struct device		 *dev;
- 	struct usb_gadget_driver *driver;
--	struct usb_phy		*phy;
-+	struct phy		 *phy;
-+	struct usb_phy		 *uphy;
- 	struct s3c_hsotg_plat	 *plat;
- 
- 	spinlock_t              lock;
-@@ -2901,8 +2905,11 @@ static void s3c_hsotg_phy_enable(struct s3c_hsotg *hsotg)
- 
- 	dev_dbg(hsotg->dev, "pdev 0x%p\n", pdev);
- 
--	if (hsotg->phy)
--		usb_phy_init(hsotg->phy);
-+	if (hsotg->phy) {
-+		phy_init(hsotg->phy);
-+		phy_power_on(hsotg->phy);
-+	} else if (hsotg->uphy)
-+		usb_phy_init(hsotg->uphy);
- 	else if (hsotg->plat->phy_init)
- 		hsotg->plat->phy_init(pdev, hsotg->plat->phy_type);
- }
-@@ -2918,8 +2925,11 @@ static void s3c_hsotg_phy_disable(struct s3c_hsotg *hsotg)
- {
- 	struct platform_device *pdev = to_platform_device(hsotg->dev);
- 
--	if (hsotg->phy)
--		usb_phy_shutdown(hsotg->phy);
-+	if (hsotg->phy) {
-+		phy_power_off(hsotg->phy);
-+		phy_exit(hsotg->phy);
-+	} else if (hsotg->uphy)
-+		usb_phy_shutdown(hsotg->uphy);
- 	else if (hsotg->plat->phy_exit)
- 		hsotg->plat->phy_exit(pdev, hsotg->plat->phy_type);
- }
-@@ -3526,7 +3536,8 @@ static void s3c_hsotg_delete_debug(struct s3c_hsotg *hsotg)
- static int s3c_hsotg_probe(struct platform_device *pdev)
- {
- 	struct s3c_hsotg_plat *plat = dev_get_platdata(&pdev->dev);
--	struct usb_phy *phy;
-+	struct phy *phy;
-+	struct usb_phy *uphy;
- 	struct device *dev = &pdev->dev;
- 	struct s3c_hsotg_ep *eps;
- 	struct s3c_hsotg *hsotg;
-@@ -3541,19 +3552,26 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
--	phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-+	/*
-+	 * Attempt to find a generic PHY, then look for an old style
-+	 * USB PHY, finally fall back to pdata
-+	 */
-+	phy = devm_phy_get(&pdev->dev, "usb2-phy");
- 	if (IS_ERR(phy)) {
--		/* Fallback for pdata */
--		plat = dev_get_platdata(&pdev->dev);
--		if (!plat) {
--			dev_err(&pdev->dev, "no platform data or transceiver defined\n");
--			return -EPROBE_DEFER;
--		} else {
-+		uphy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-+		if (IS_ERR(uphy)) {
-+			/* Fallback for pdata */
-+			plat = dev_get_platdata(&pdev->dev);
-+			if (!plat) {
-+				dev_err(&pdev->dev,
-+				"no platform data or transceiver defined\n");
-+				return -EPROBE_DEFER;
-+			}
- 			hsotg->plat = plat;
--		}
--	} else {
-+		} else
-+			hsotg->uphy = uphy;
-+	} else
- 		hsotg->phy = phy;
--	}
- 
- 	hsotg->dev = dev;
- 
-@@ -3620,6 +3638,9 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
- 		goto err_supplies;
- 	}
- 
-+	if (hsotg->phy)
-+		phy_init(hsotg->phy);
-+
- 	/* usb phy enable */
- 	s3c_hsotg_phy_enable(hsotg);
- 
-@@ -3713,6 +3734,8 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
- 	}
- 
- 	s3c_hsotg_phy_disable(hsotg);
-+	if (hsotg->phy)
-+		phy_exit(hsotg->phy);
- 	clk_disable_unprepare(hsotg->clk);
- 
- 	return 0;
--- 
-1.8.4
+On Wed, Dec 18, 2013 at 12:40:21PM -0600, Rob Herring wrote:
+> [fixed DT maillist address]
+>=20
+> On 12/17/2013 01:35 AM, Nikita Yushchenko wrote:
+> > Hi
+> >=20
+> > While trying to make freescale p2020ds and  mpc8572ds boards working wi=
+th mainline kernel, I faced that commit=20
+> > e38c0a1f (Handle #address-cells > 2 specially) breaks things with these=
+ boards.
+>=20
+> Good to see this broke in v3.7 and is just now found...
+>=20
+> >=20
+> > Both these boards have uli1575 chip.
+> > Corresponding part in device tree is something like
+> >=20
+> >                 uli1575@0 {
+> >                         reg =3D <0x0 0x0 0x0 0x0 0x0>;
+> >                         #size-cells =3D <2>;
+> >                         #address-cells =3D <3>;
+> >                         ranges =3D <0x2000000 0x0 0x80000000
+> >                                   0x2000000 0x0 0x80000000
+> >                                   0x0 0x20000000
+> >=20
+> >                                   0x1000000 0x0 0x0
+> >                                   0x1000000 0x0 0x0
+> >                                   0x0 0x10000>;
+> >                         isa@1e {
+> > ...
+> >=20
+> > I.e. it has #address-cells =3D <3>
+> >=20
+> >=20
+> > With commit e38c0a1f reverted, devices under uli1575 are registered cor=
+rectly, e.g. for rtc
+> >=20
+> > OF: ** translation for device /pcie@ffe09000/pcie@0/uli1575@0/isa@1e/rt=
+c@70 **
+> > OF: bus is isa (na=3D2, ns=3D1) on /pcie@ffe09000/pcie@0/uli1575@0/isa@=
+1e
+> > OF: translating address: 00000001 00000070
+> > OF: parent bus is default (na=3D3, ns=3D2) on /pcie@ffe09000/pcie@0/uli=
+1575@0
+> > OF: walking ranges...
+> > OF: ISA map, cp=3D0, s=3D1000, da=3D70
+> > OF: parent translation for: 01000000 00000000 00000000
+> > OF: with offset: 70
+> > OF: one level translation: 00000000 00000000 00000070
+> > OF: parent bus is pci (na=3D3, ns=3D2) on /pcie@ffe09000/pcie@0
+> > OF: walking ranges...
+> > OF: default map, cp=3Da0000000, s=3D20000000, da=3D70
+> > OF: default map, cp=3D0, s=3D10000, da=3D70
+> > OF: parent translation for: 01000000 00000000 00000000
+> > OF: with offset: 70
+> > OF: one level translation: 01000000 00000000 00000070
+> > OF: parent bus is pci (na=3D3, ns=3D2) on /pcie@ffe09000
+> > OF: walking ranges...
+> > OF: PCI map, cp=3D0, s=3D10000, da=3D70
+> > OF: parent translation for: 01000000 00000000 00000000
+> > OF: with offset: 70
+> > OF: one level translation: 01000000 00000000 00000070
+> > OF: parent bus is default (na=3D2, ns=3D2) on /
+> > OF: walking ranges...
+> > OF: PCI map, cp=3D0, s=3D10000, da=3D70
+> > OF: parent translation for: 00000000 ffc10000
+> > OF: with offset: 70
+> > OF: one level translation: 00000000 ffc10070
+> > OF: reached root node
+> >=20
+> > With commit e38c0a1f in place, address translation fails:
+> >=20
+> > OF: ** translation for device /pcie@ffe09000/pcie@0/uli1575@0/isa@1e/rt=
+c@70 **
+> > OF: bus is isa (na=3D2, ns=3D1) on /pcie@ffe09000/pcie@0/uli1575@0/isa@=
+1e
+> > OF: translating address: 00000001 00000070
+> > OF: parent bus is default (na=3D3, ns=3D2) on /pcie@ffe09000/pcie@0/uli=
+1575@0
+> > OF: walking ranges...
+> > OF: ISA map, cp=3D0, s=3D1000, da=3D70
+> > OF: parent translation for: 01000000 00000000 00000000
+> > OF: with offset: 70
+> > OF: one level translation: 00000000 00000000 00000070
+> > OF: parent bus is pci (na=3D3, ns=3D2) on /pcie@ffe09000/pcie@0
+> > OF: walking ranges...
+> > OF: default map, cp=3Da0000000, s=3D20000000, da=3D70
+> > OF: default map, cp=3D0, s=3D10000, da=3D70
+> > OF: not found !
+> >=20
+> > Either e38c0a1f should be reverted, or uli1575 (and perhaps other simil=
+ar devices) have to be described in device=20
+> > trees differently.
+>=20
+> Reverting would break Tegra PCIe, but you should not have to change the
+> DT either. So we need a solution.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We ended up merging a different address representation for Tegra PCIe
+and I've confirmed that reverting this commit doesn't cause any obvious
+regressions. I think all other drivers in drivers/pci/host ended up
+copying what we did on Tegra, so I wouldn't expect any other breakage
+either.
+
+Thierry
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSswGAAAoJEN0jrNd/PrOhBwgQAJDizHJfZzFT1RDzdd6TKM28
+cR658qJqY+s3bAAz8te+exfItB8iuIIfBujtJVivq2mJsmQvVKJX5TPD4YwCrPKz
+Zz7BAx0XmYCoU+e2uhLN5RlFPE25fp+vGB6Py9Ri6wmrx/s5BFJuxwfaMEmrnJRO
+WZXIDY2iXx+1/Ysp4fWIMDA6yWSaP5LHeyxW5JUEs1PbDv5lTO9cZhgNiRt3Vl1P
+0QB6xIUDJ9KFBrUEy+UVqzlYF3dc4bQyWpMsOeHXAtB1bzToFT4vWbNaWW0FpTbs
+GssNqrXRnnmH4RkJJ74CDJKiZ3d4X2mldKJqclGVsIkDKzHzc5DaFzP6sqWHSwGR
+UaTyVJaiD+vCQG3HKkBhCResU3DCIdLYPNpkCr93Amgn+0Y0zqsIpTdp8h4aRLnm
+8/HNyyJLxbfyFlmOBqymb6t2LPw9JCr/wlqCHW3Q6GwE1iwVbb6Tt3qkxQfd2elZ
+PUQNJgizYl612BWAPXSJ9+bhACBjRSqZO8ZDYwjpxq6Muf2thjsTe+xcbjQSoXVZ
+Q0IcfY6vHu8+zGSpSc95T9sfQjUksv9AO00qVjX8F2NLYiOOneA9CqHwG+M0QI1U
+XnCx/mOXzYNlWhIDwMY18Adlbo39eaqUnB6MYfzAUXweyRtOCOYM5C0oMNqkJqe/
+HAVXM6+MoRDDT+jg+OYF
+=rrN2
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
