@@ -1,75 +1,110 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: GPMI-NAND ECC DT binding (was: Re: [PATCH v3 22/28] mtd: nand:
- pxa3xx: Introduce multiple page I/O support)
-Date: Thu, 19 Dec 2013 15:39:57 +0800
-Message-ID: <20131219073955.GA15264@shlinux2.ap.freescale.net>
-References: <1383656135-8627-23-git-send-email-ezequiel.garcia@free-electrons.com>
- <20131105190432.GQ20061@ld-irv-0074.broadcom.com>
- <20131106011351.GH11759@localhost>
- <CAN8TOE_ZmcsvShKY273KQCaopJEXgtXVR1XY9pP5EKkUK+bUbA@mail.gmail.com>
- <20131106113210.GB2616@localhost>
- <20131118181009.GZ9468@ld-irv-0074.broadcom.com>
- <20131118183325.GC21975@localhost>
- <20131118185059.GB9468@ld-irv-0074.broadcom.com>
- <20131204214125.GC27149@ld-irv-0074.broadcom.com>
- <20131219073138.GB10846@norris-Latitude-E6410>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH 0/6] net: cpsw: Support for am335x chip MACIDs
+Date: Thu, 19 Dec 2013 09:19:39 +0100
+Message-ID: <20131219081939.GC23493@pengutronix.de>
+References: <1387385242-1161-1-git-send-email-mpa@pengutronix.de>
+ <52B1D4C7.6030004@ti.com>
+ <20131218170818.GR4970@saruman.home>
+ <52B1D722.3040500@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131219073138.GB10846@norris-Latitude-E6410>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <52B1D722.3040500@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: balbi@ti.com, "David S. Miller" <davem@davemloft.net>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2013 at 11:31:38PM -0800, Brian Norris wrote:
-> (Trim the CC list)
-> 
-> Hi Huang,
-> 
-> On Wed, Dec 04, 2013 at 01:41:25PM -0800, Brian Norris wrote:
-> > I'd like to follow up on this question, since you didn't answer it, and
-> > it's still relevant, since we haven't yet merged your GPMI DT binding
-> > (it's queued for the next merge window):
-> > 
-> > On Mon, Nov 18, 2013 at 10:50:59AM -0800, Brian Norris wrote:
-> > > Do you have a good reason why you needed GPMI NAND to choose the ECC
-> > > configuration (a la "miminum ECC") instead of fully specifying your ECC
-> > > selection in device tree? I recall most of your arguments were about
-> > > using an ECC strength that leaves room for user data in OOB (e.g., with
-> > > JFFS2). But you could have done the same thing by creating a proper DT
-> > > property to describe the desidered ECC strength, with no real
-> > > disadvantage, right?
-> > 
-> > I'll rephrase it: why can't/don't you define a GPMI binding for the
-> > actual ECC level, like:
-> > 
-> >   fsl,nand-ecc-strength and fsl,nand-ecc-sector
-> > 
-> > ?
-> > 
-> > Then, you could still default to the old geometry if these properties
-> > aren't present, and you don't have to rely on Linux auto-detecting ECC
-> > properties for non-ONFI chips.
-> 
-> Ping? Do you have any comment here? It seems like a more precise DT
-sorry, i did not see this email.
+Hi,
 
-> binding could still be useful for GPMI NAND.
-agree.
+On Wed, Dec 18, 2013 at 10:40:58PM +0530, Mugunthan V N wrote:
+> On Wednesday 18 December 2013 10:38 PM, Felipe Balbi wrote:
+> > On Wed, Dec 18, 2013 at 10:30:55PM +0530, Mugunthan V N wrote:
+> >> On Wednesday 18 December 2013 10:17 PM, Markus Pargmann wrote:
+> >>> Hi,
+> >>>
+> >>> This series introduces a driver to read and use the MACIDs stored in the am335x
+> >>> control module. These are read-only registers for a unique MACID. At the moment
+> >>> the MACIDs are generated randomly or they are set by the bootloader.
+> >>>
+> >>> A device node is added in am33xx dtsi and used by the cpsw slaves in the bone
+> >>> board files.
+> >>>
+> >>> Regards,
+> >>>
+> >>> Markus
+> >>>
+> >>>
+> >>> Markus Pargmann (6):
+> >>>   DT doc: net: cpsw mac-address is optional
+> >>>   net: cpsw: header, Add missing include
+> >>>   net: cpsw: Add control-module macid driver
+> >>>   net: cpsw: Use cpsw-ctrl-macid driver
+> >>>   arm: dts: am33xx, Add device node for cpsw-ctrl-macid
+> >>>   arm: dts: am335x beagle bone use processor macids
+> >>>
+> >>>  .../devicetree/bindings/net/cpsw-ctrl-macid.txt    |  31 +++++
+> >>>  Documentation/devicetree/bindings/net/cpsw.txt     |   7 +-
+> >>>  arch/arm/boot/dts/am335x-bone.dts                  |   8 ++
+> >>>  arch/arm/boot/dts/am335x-boneblack.dts             |   8 ++
+> >>>  arch/arm/boot/dts/am33xx.dtsi                      |   7 ++
+> >>>  drivers/net/ethernet/ti/Kconfig                    |   8 ++
+> >>>  drivers/net/ethernet/ti/Makefile                   |   1 +
+> >>>  drivers/net/ethernet/ti/cpsw-ctrl-macid.c          | 138 +++++++++++++++++++++
+> >>>  drivers/net/ethernet/ti/cpsw.c                     |  18 ++-
+> >>>  drivers/net/ethernet/ti/cpsw.h                     |   3 +
+> >>>  10 files changed, 224 insertions(+), 5 deletions(-)
+> >>>  create mode 100644 Documentation/devicetree/bindings/net/cpsw-ctrl-macid.txt
+> >>>  create mode 100644 drivers/net/ethernet/ti/cpsw-ctrl-macid.c
+> >>>
+> >> Mac ID is to be filled by U-Boot and this kind of approach is already
+> >> rejected in linux-omap list.
+> >>
+> >> If proper ethaddr/eth*addr is populated in U-boot environment variable
+> >> then mac-address dt property in ethernet* device nodes will be populated
+> >> before boot kernel in U-boot. So I don't think this patch series is
+> >> required.
+> > but will u-boot read MACID from control module ?
+> >
+> Yes, U-Boot will read the MACID from control module and if a customer
+> wants to have his own MACID, U-boot ENV variable ethaddr/eth1addr must
+> be updated.
 
-but i suggest add a more common DT for it. I think other drivers may also
-use it.
-We have "nand-ecc-mode" now, why not add a more generic dt such as:
-    "nand-ecc-strength" 
+I think we should not rely on any bootloader to setup the macids
+correctly.
+
+U-Boot is not the only bootloader. There are others which may not
+support cpsw or don't support devicetree or don't load the cpsw driver
+automatically when no ethernet connection is used. Most installed
+bootloaders use their local storage to load the kernel, so how can we be
+certain that the bootloader added the correct MACIDs to the devicetree?
+Why can't the kernel be bootloader independent?
 
 
+A cpsw slave defined in am33xx.dtsi:
 
-thanks
-Huang Shijie
+cpsw_emac0: slave@4a100200 {
+	/* Filled in by U-Boot */
+	mac-address = [ 00 00 00 00 00 00 ];
+};
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is not a proper hardware description, only a clear statement that
+the kernel depends on U-Boot or any other bootloader that does always
+set the mac-address the same way U-Boot does. But that DT is not usable
+in anything else than Linux and U-Boot.
+
+The TI reference manual clearly lists the MACID registers in the control
+module so we can use that to describe the source of the MACIDs in DT,
+independent of U-Boot. Any bootloader can use such a devictree and parse
+the correct location in the control module.
+
+Regards,
+
+Markus
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
