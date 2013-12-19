@@ -1,61 +1,46 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v6 5/7] ARM: dts: add pbias dt node
-Date: Thu, 19 Dec 2013 08:33:56 -0800
-Message-ID: <20131219163356.GL27438@atomide.com>
-References: <1386670577-3530-1-git-send-email-balajitk@ti.com>
- <1387456720-7202-1-git-send-email-balajitk@ti.com>
- <1387456720-7202-6-git-send-email-balajitk@ti.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH] gpio: add GPIO hogging mechanism
+Date: Thu, 19 Dec 2013 08:41:09 -0800
+Message-ID: <20131219164109.GB27409@kroah.com>
+References: <1387463671-1164-1-git-send-email-b.brezillon@overkiz.com>
+ <1387463671-1164-2-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1387456720-7202-6-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org
+In-Reply-To: <1387463671-1164-2-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon@overkiz.com>
+Cc: Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Ben Gamari <bgamari.foss@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Balaji T K <balajitk@ti.com> [131219 04:40]:
-> @@ -485,6 +503,7 @@
->  			dmas = <&sdma 61>, <&sdma 62>;
->  			dma-names = "tx", "rx";
->  			status = "disabled";
-> +			pbias-supply = <&pbias_mmc_reg>;
->  		};
->  
->  		mmc2: mmc@480b4000 {
-> diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
-> index d624345..f127901 100644
-> --- a/arch/arm/boot/dts/omap2430.dtsi
-> +++ b/arch/arm/boot/dts/omap2430.dtsi
-> @@ -29,6 +29,24 @@
->  			pinctrl-single,function-mask = <0x3f>;
->  		};
->  
-> +		omap2_scm_general: tisyscon@49002270 {
-> +			compatible = "ti,control-syscon", "syscon", "simple-bus";
-> +			reg = <0x49002270 0x240>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			pbias_regulator: pbias_regulator {
-> +				compatible = "ti,pbias-omap";
-> +				reg = <0x230 0x4>;
-> +				pbias_mmc_reg: pbias_mmc_omap3 {
-> +					regulator-name = "pbias_mmc_omap3";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <3000000>;
-> +					regulator-enable-ramp-delay = <100>;
-> +				};
-> +			};
-> +		};
-> +
->  		gpio1: gpio@4900c000 {
->  			compatible = "ti,omap2-gpio";
->  			reg = <0x4900c000 0x200>;
+On Thu, Dec 19, 2013 at 03:34:31PM +0100, Boris BREZILLON wrote:
+> GPIO hogging is a way to request and configure specific GPIO without
+> explicitly requesting it in the device driver.
+> 
+> The request and configuration procedure is handled in the core device
+> driver code before the driver probe function is called.
+> 
+> It allows specific GPIOs to be configured without any driver specific code.
+> 
+> Particularly usefull when a external device is connected to a bus and the
+> bus connections depends on an external switch controlled by a GPIO pin.
+> Or when some GPIOs have to be exported to sysfs without any userspace
+> intervention.
+> 
+> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio.txt |   47 ++++++++
+>  drivers/base/Makefile                           |    1 +
+>  drivers/base/dd.c                               |    5 +
+>  drivers/base/gpio.c                             |   59 ++++++++++
 
-Here too you may need to set up pbias_mmc_omap2430?
+I don't understand what makes GPIO's "special" enough to get included in
+the driver core like this, and called for each and every device that is
+added to the system.
 
-Regards,
+What's wrong with the generic device callbacks/notifiers we already
+have?  Why does this need to be in the driver core?  And what exactly
+are you doing all of this for in the first place?
 
-Tony
+greg k-h
