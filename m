@@ -1,30 +1,59 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/6] misc: fuse: Add efuse driver for Tegra
-Date: Thu, 19 Dec 2013 12:20:01 -0700
-Message-ID: <52B346E1.2030508@wwwdotorg.org>
-References: <1387468474-26521-1-git-send-email-pdeschrijver@nvidia.com> <1387468474-26521-3-git-send-email-pdeschrijver@nvidia.com> <20131219175931.GA18004@kroah.com>
+From: boris brezillon <b.brezillon@overkiz.com>
+Subject: Re: [PATCH v3 1/2] clk: add clk accuracy retrieval support
+Date: Thu, 19 Dec 2013 20:41:23 +0100
+Message-ID: <52B34BE3.7000208@overkiz.com>
+References: <1387290983-6236-1-git-send-email-b.brezillon@overkiz.com> <1387290983-6236-2-git-send-email-b.brezillon@overkiz.com> <20131219060431.18119.64699@quantum> <52B2B42F.9010202@overkiz.com> <20131219193633.18119.57678@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131219175931.GA18004@kroah.com>
+In-Reply-To: <20131219193633.18119.57678@quantum>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>, Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Danny Huang <dahuang@nvidia.com>, devicetree@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaQ==?= =?UTF-8?B?Zw==?= <u.kleine-koenig@pengutronix.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/19/2013 10:59 AM, Greg KH wrote:
-> On Thu, Dec 19, 2013 at 05:54:30PM +0200, Peter De Schrijver wrote:
+Le 19/12/2013 20:36, Mike Turquette a =C3=A9crit :
+> Quoting boris brezillon (2013-12-19 00:54:07)
+>> Hello Mike,
+>>
+>> On 19/12/2013 07:04, Mike Turquette wrote:
+>>> Quoting Boris BREZILLON (2013-12-17 06:36:22)
+>>>> +unsigned long __clk_get_accuracy(struct clk *clk)
+>>>> +{
+>>>> +       unsigned long ret;
+>>>> +
+>>>> +       if (!clk)
+>>>> +               return 0;
+>>>> +
+>>>> +       return clk->accuracy;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(__clk_get_accuracy);
+>>> Any reason for exporting this?
+>> This might be used by clk drivers to choose the most accurate clk
+>> among its parent clks (within the determinate_rate callback).
+>>
+>> And as some clk drivers might be compiled as modules we need
+>> to export the symbol (__clk_get_name helper function is exported
+>> too).
+> Does your driver need this or is this just following the existing
+> __clk_get_rate / clk_get_rate model?
 
->> +	pr_info("Tegra Revision: %s SKU: %d CPU Process: %d Core Process: %d\n",
->> +		tegra_revision_name[sku_info->revision],
->> +		sku_info->sku_id, sku_info->cpu_process_id,
->> +		sku_info->core_process_id);
-> 
-> Why pollute the kernel log with this type of thing?  Who really needs
-> it?
+No, I don't need this for my driver, at least for the moment.
 
-We already print this; I guess this series is just moving where that
-happens. It has proved useful to me in the past so I know which chip rev
-I'm using, but I guess if this all gets exported to sysfs somewhere else
-in this series, I could just go read those files in the future...
+Do you want me to drop this EXPORT_SYMBOL ?
+>
+> Regards,
+> Mike
+>
+>> Best Regards,
+>>
+>> Boris
+>>> Regards,
+>>> Mike
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
