@@ -1,82 +1,83 @@
-From: Sebastian Reichel <sre@ring0.de>
-Subject: Re: [PATCH 0/4] OMAPDSS: DT support for N900 panel
-Date: Thu, 19 Dec 2013 18:00:29 +0100
-Message-ID: <20131219170028.GA24230@earth.universe>
-References: <1386958650-2404-1-git-send-email-sre@debian.org>
- <52AFFF3F.7020807@ti.com>
- <20131217171412.GA10442@earth.universe>
- <52B089FE.8060704@ti.com>
- <20131218215536.GA23674@earth.universe>
- <20131219005151.GA27928@earth.universe>
- <52B2848A.80807@ti.com>
- <20131219100840.GA923@earth.universe>
- <20131219135608.GA11654@earth.universe>
- <20131219163557.GM27438@atomide.com>
+From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH] gpio: add GPIO hogging mechanism
+Date: Thu, 19 Dec 2013 18:13:04 +0100
+Message-ID: <52B32920.1030506@overkiz.com>
+References: <1387463671-1164-1-git-send-email-b.brezillon@overkiz.com> <1387463671-1164-2-git-send-email-b.brezillon@overkiz.com> <20131219164109.GB27409@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131219163557.GM27438@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131219164109.GB27409-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Greg,
 
---h31gzZEtNLTqOjlF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 19/12/2013 17:41, Greg Kroah-Hartman wrote:
+> On Thu, Dec 19, 2013 at 03:34:31PM +0100, Boris BREZILLON wrote:
+>> GPIO hogging is a way to request and configure specific GPIO without
+>> explicitly requesting it in the device driver.
+>>
+>> The request and configuration procedure is handled in the core device
+>> driver code before the driver probe function is called.
+>>
+>> It allows specific GPIOs to be configured without any driver specific code.
+>>
+>> Particularly usefull when a external device is connected to a bus and the
+>> bus connections depends on an external switch controlled by a GPIO pin.
+>> Or when some GPIOs have to be exported to sysfs without any userspace
+>> intervention.
+>>
+>> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/gpio/gpio.txt |   47 ++++++++
+>>   drivers/base/Makefile                           |    1 +
+>>   drivers/base/dd.c                               |    5 +
+>>   drivers/base/gpio.c                             |   59 ++++++++++
+> I don't understand what makes GPIO's "special" enough to get included in
+> the driver core like this, and called for each and every device that is
+> added to the system.
 
-On Thu, Dec 19, 2013 at 08:42:31AM -0800, Tony Lindgren wrote:
-> * Sebastian Reichel <sre@debian.org> [131219 05:57]:
-> > On Thu, Dec 19, 2013 at 11:08:40AM +0100, Sebastian Reichel wrote:
-> > > > Are you able to check if the bootloader muxes dat3 to SDI mode?
-> > >=20
-> > > The bootloader's source code is not available as far as i know.
-> > >=20
-> > > [...], but I get an external abort on non-linefetch.
-> > > So I can't check it :(
-> >=20
-> > Ok. This is fixed by applying [0] (Thanks for the hint, Tomi!).
-> > This is the mux configuration from the bootloader:
-> >=20
-> > [...]
-> >=20
-> > [0] https://patchwork.kernel.org/patch/3283781/
->=20
-> Do we need to update Laurent's patch with this?
 
-No, the patch is only needed to avoid the mentioned external abort
-on non-linefetch when doing "cat /sys/kernel/debug/pinctrl/.../pins".
+> What's wrong with the generic device callbacks/notifiers we already
+> have?  Why does this need to be in the driver core?  And what exactly
+> are you doing all of this for in the first place?
 
-> Or can we use it as it is and maybe you can ack it?
+Nothing's wrong with the generic device callbacks/notifiers, but in some
+cases we don't want a generic driver to handle board specificities.
 
-Sure. I will add an Ack.
+This is the case for the at91rm9200ek board (see this thread:
+https://www.mail-archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg06838.html).
 
--- Sebastian
+Since we are moving all boards to dt, we can't configure each board at
+startup, and the rm9200ek board used to set a pin to a specific value 
+(this pin
+is connected to an external switch which connects MMC signals to the MMC
+connector or SPI signals to an SPI device depending on the pin value) in 
+order
+to enable the MMC0 port or an SPI device.
 
---h31gzZEtNLTqOjlF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I first proposed to handle this using a pinctrl pinconf definition (with 
+pinctrl
+output-high config). As pinctrl are requesting pinconf before calling 
+driver probe
+function, this was absolutely transparent to the generic driver.
+But, as Linus pointed out, this pin is not really related to the SPI or 
+MMC device
+itself.
+This is why Linus suggested the GPIO hog approach.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Anyway, I'm open to any other solution that wouldn't introduce specific
+cases in arch specific code or generic drivers.
 
-iQIcBAEBCAAGBQJSsyYsAAoJENju1/PIO/qakS0P/161ZheZMNywgT8nOrS2hQ13
-MHiqnvj5rq09Fk7zSnPDI4Nq/0Nu9X/K0GftdYZ6b1WE7IUJKspetlqdBtGjzAkX
-O1W099I3bXpK5Bf5tl6EZrhmYRXkkGAXv796dW+siT+nAIu6pRpKM1mO6+7gBc93
-mLt+FUuuE5px8lCS6++ns1RKHeigSV8UqH9ly0MRyJ6NNcXikD1psRff0W8TlNfx
-2IOXIl8xsaUnON+EfkwsqaKEdP9S62RCXmjTzVlP1lLV+TyU12uxOfxawDJlO+WA
-fQkon1eA848Cz8loGBPO+UpLcfOtDWBEhax/K/2caTq4MIzegthyJJQNMpOR80e+
-5PPz/+976e/GgzjrU9jZTb164OBi5bNAmlStv78/791edQyq18KvOlmjY6G/ptGe
-pvCPJqACg93qVg8FoNUEQrQLELVJFTfDVuLVTKvicrHwj2QRmgMc72Apn2Mz1D3K
-ILkhozdZLQv3JHkMdeGd8U78GryvPU5oOAfxkAn7d77BdhM2A0WUcZ9abJiNvFWt
-5tqktPOlRqeSZQF2DrYPgFBSFhe2ACro7b7WkU/aOXtoy9hBDRDwTrLHnsNzwol2
-IzbfOiqyVOmzfXthLi1LoAo2h6aWy/DT1moivqqHobBc7PuzgxF8OV/XTpdXek/Z
-GwwF9sFEZFYWwPCTMGPH
-=n52k
------END PGP SIGNATURE-----
+Best Regards,
 
---h31gzZEtNLTqOjlF--
+Boris
+> greg k-h
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
