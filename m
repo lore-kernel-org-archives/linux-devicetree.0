@@ -1,48 +1,75 @@
-From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCHv1 3/3] ARM: mvebu: Enable ISL12057 RTC chip in ReadyNAS 2120
- .dts file
-Date: Thu, 19 Dec 2013 23:02:27 +0100
-Message-ID: <4db4d52b29b1b884503aafbe5d5bc7cac6bf4e4f.1387490258.git.arno@natisbad.org>
-References: <cover.1387490258.git.arno@natisbad.org>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCHv7] rtc: Add support for Intersil ISL12057 I2C RTC chip
+Date: Thu, 19 Dec 2013 14:07:26 -0800
+Message-ID: <20131219140726.e7d7ccf765da9b6be0ac3fa5@linux-foundation.org>
+References: <72207bc152a06638f0e0e21a6e00d4c2054a1a71.1387489507.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1387490258.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <72207bc152a06638f0e0e21a6e00d4c2054a1a71.1387489507.git.arno@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 19 Dec 2013 22:53:16 +0100 Arnaud Ebalard <arno@natisbad.org> wrote:
 
-Now that support for Intersil ISL12057 RTC chip is available
-upstream, let's enable it in NETGEAR ReadyNAS 2120 .dts file
-so that the device stop believing it's the 70's.
+> +static int isl12057_i2c_validate_chip(struct regmap *regmap)
+> +{
+> +	u8 regs[ISL12057_MEM_MAP_LEN];
+> +	u8 mask[ISL12057_MEM_MAP_LEN] = { 0x80, 0x80, 0x80, 0xf8,
+> +					  0xc0, 0x60, 0x00, 0x00,
+> +					  0x00, 0x00, 0x00, 0x00,
+> +					  0x00, 0x00, 0x60, 0x7c };
+> +	int ret, i;
+> +
+> +	ret = regmap_bulk_read(regmap, 0, regs, ISL12057_MEM_MAP_LEN);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < ISL12057_MEM_MAP_LEN; ++i) {
+> +		if (regs[i] & mask[i])	/* check if bits are cleared */
+> +			return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
 
-Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
----
- arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+When I build this for x86_64, mask[] is assembled on-stack at runtime:
 
-diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-index f048b4e..ff049ee 100644
---- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-+++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-@@ -174,6 +174,11 @@
- 				clock-frequency = <400000>;
- 				status = "okay";
- 
-+				isl12057: isl12057@68 {
-+					compatible = "isl,isl12057";
-+					reg = <0x68>;
-+				};
-+
- 				/* Controller for rear fan #1 of 3 (Protechnic
- 				 * MGT4012XB-O20, 8000RPM) near eSATA port */
- 				g762_fan1: g762@3e {
--- 
-1.8.4.4
+	leaq	-48(%rbp), %r14	#, tmp130
+	xorl	%esi, %esi	#
+	movl	$16, %ecx	#,
+	movq	%rax, %rdi	# regmap,
+	incq	.LPBX1+552(%rip)	# *.LPBX1
+	movb	$-128, -64(%rbp)	#, mask
+	movq	%r14, %rdx	# tmp130,
+	movb	$-128, -63(%rbp)	#, mask
+	movb	$-128, -62(%rbp)	#, mask
+	movb	$-8, -61(%rbp)	#, mask
+	movb	$-64, -60(%rbp)	#, mask
+	movb	$96, -59(%rbp)	#, mask
+	movb	$0, -58(%rbp)	#, mask
+	movb	$0, -57(%rbp)	#, mask
+	movb	$0, -56(%rbp)	#, mask
+	movb	$0, -55(%rbp)	#, mask
+	movb	$0, -54(%rbp)	#, mask
+	movb	$0, -53(%rbp)	#, mask
+	movb	$0, -52(%rbp)	#, mask
+	movb	$0, -51(%rbp)	#, mask
+	movb	$96, -50(%rbp)	#, mask
+	movb	$124, -49(%rbp)	#, mask
+	call	regmap_bulk_read	#
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If we make `mask' static const, that all gets done at compile time instead:
+
+	leaq	-48(%rbp), %r14	#, tmp134
+	xorl	%esi, %esi	#
+	movl	$16, %ecx	#,
+	movq	%rax, %rdi	# regmap,
+	incq	.LPBX1+552(%rip)	# *.LPBX1
+	movq	%r14, %rdx	# tmp134,
+	call	regmap_bulk_read	#
+
+much nicer.
