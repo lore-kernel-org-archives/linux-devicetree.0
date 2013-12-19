@@ -1,150 +1,69 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: commit e38c0a1f breaks powerpc boards with uli1575 chip
-Date: Thu, 19 Dec 2013 15:24:02 +0100
-Message-ID: <20131219142400.GA13878@ulmo.nvidia.com>
-References: <201312171135.38576@blacky.localdomain>
- <52B1EC15.5070606@gmail.com>
+From: Matt Porter <mporter@linaro.org>
+Subject: [PATCH v8 3/9] usb: gadget: s3c-hsotg: enable build for other
+ platforms
+Date: Thu, 19 Dec 2013 09:23:04 -0500
+Message-ID: <1387462990-12039-4-git-send-email-mporter@linaro.org>
+References: <1387462990-12039-1-git-send-email-mporter@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52B1EC15.5070606@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexey Lugovskoy <lugovskoy@dev.rtsoft.ru>, Dmitry Krivoschekov <dkrivoschokov@dev.rtsoft.ru>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1387462990-12039-1-git-send-email-mporter@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>, Paul Zimmerman <paulz@synopsys.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, Dinh Nguyen <dinh.linux@gmail.com>, Linaro Patches <patches@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Russell King <linux@arm.linux.org.uk>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Remove unused Samsung-specific machine include and Kconfig
+dependency on S3C.
 
---vtzGhvizbBRQ85DL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Matt Porter <mporter@linaro.org>
+Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+---
+ drivers/usb/gadget/Kconfig     | 7 +++----
+ drivers/usb/gadget/s3c-hsotg.c | 2 --
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-On Wed, Dec 18, 2013 at 12:40:21PM -0600, Rob Herring wrote:
-> [fixed DT maillist address]
->=20
-> On 12/17/2013 01:35 AM, Nikita Yushchenko wrote:
-> > Hi
-> >=20
-> > While trying to make freescale p2020ds and  mpc8572ds boards working wi=
-th mainline kernel, I faced that commit=20
-> > e38c0a1f (Handle #address-cells > 2 specially) breaks things with these=
- boards.
->=20
-> Good to see this broke in v3.7 and is just now found...
->=20
-> >=20
-> > Both these boards have uli1575 chip.
-> > Corresponding part in device tree is something like
-> >=20
-> >                 uli1575@0 {
-> >                         reg =3D <0x0 0x0 0x0 0x0 0x0>;
-> >                         #size-cells =3D <2>;
-> >                         #address-cells =3D <3>;
-> >                         ranges =3D <0x2000000 0x0 0x80000000
-> >                                   0x2000000 0x0 0x80000000
-> >                                   0x0 0x20000000
-> >=20
-> >                                   0x1000000 0x0 0x0
-> >                                   0x1000000 0x0 0x0
-> >                                   0x0 0x10000>;
-> >                         isa@1e {
-> > ...
-> >=20
-> > I.e. it has #address-cells =3D <3>
-> >=20
-> >=20
-> > With commit e38c0a1f reverted, devices under uli1575 are registered cor=
-rectly, e.g. for rtc
-> >=20
-> > OF: ** translation for device /pcie@ffe09000/pcie@0/uli1575@0/isa@1e/rt=
-c@70 **
-> > OF: bus is isa (na=3D2, ns=3D1) on /pcie@ffe09000/pcie@0/uli1575@0/isa@=
-1e
-> > OF: translating address: 00000001 00000070
-> > OF: parent bus is default (na=3D3, ns=3D2) on /pcie@ffe09000/pcie@0/uli=
-1575@0
-> > OF: walking ranges...
-> > OF: ISA map, cp=3D0, s=3D1000, da=3D70
-> > OF: parent translation for: 01000000 00000000 00000000
-> > OF: with offset: 70
-> > OF: one level translation: 00000000 00000000 00000070
-> > OF: parent bus is pci (na=3D3, ns=3D2) on /pcie@ffe09000/pcie@0
-> > OF: walking ranges...
-> > OF: default map, cp=3Da0000000, s=3D20000000, da=3D70
-> > OF: default map, cp=3D0, s=3D10000, da=3D70
-> > OF: parent translation for: 01000000 00000000 00000000
-> > OF: with offset: 70
-> > OF: one level translation: 01000000 00000000 00000070
-> > OF: parent bus is pci (na=3D3, ns=3D2) on /pcie@ffe09000
-> > OF: walking ranges...
-> > OF: PCI map, cp=3D0, s=3D10000, da=3D70
-> > OF: parent translation for: 01000000 00000000 00000000
-> > OF: with offset: 70
-> > OF: one level translation: 01000000 00000000 00000070
-> > OF: parent bus is default (na=3D2, ns=3D2) on /
-> > OF: walking ranges...
-> > OF: PCI map, cp=3D0, s=3D10000, da=3D70
-> > OF: parent translation for: 00000000 ffc10000
-> > OF: with offset: 70
-> > OF: one level translation: 00000000 ffc10070
-> > OF: reached root node
-> >=20
-> > With commit e38c0a1f in place, address translation fails:
-> >=20
-> > OF: ** translation for device /pcie@ffe09000/pcie@0/uli1575@0/isa@1e/rt=
-c@70 **
-> > OF: bus is isa (na=3D2, ns=3D1) on /pcie@ffe09000/pcie@0/uli1575@0/isa@=
-1e
-> > OF: translating address: 00000001 00000070
-> > OF: parent bus is default (na=3D3, ns=3D2) on /pcie@ffe09000/pcie@0/uli=
-1575@0
-> > OF: walking ranges...
-> > OF: ISA map, cp=3D0, s=3D1000, da=3D70
-> > OF: parent translation for: 01000000 00000000 00000000
-> > OF: with offset: 70
-> > OF: one level translation: 00000000 00000000 00000070
-> > OF: parent bus is pci (na=3D3, ns=3D2) on /pcie@ffe09000/pcie@0
-> > OF: walking ranges...
-> > OF: default map, cp=3Da0000000, s=3D20000000, da=3D70
-> > OF: default map, cp=3D0, s=3D10000, da=3D70
-> > OF: not found !
-> >=20
-> > Either e38c0a1f should be reverted, or uli1575 (and perhaps other simil=
-ar devices) have to be described in device=20
-> > trees differently.
->=20
-> Reverting would break Tegra PCIe, but you should not have to change the
-> DT either. So we need a solution.
-
-We ended up merging a different address representation for Tegra PCIe
-and I've confirmed that reverting this commit doesn't cause any obvious
-regressions. I think all other drivers in drivers/pci/host ended up
-copying what we did on Tegra, so I wouldn't expect any other breakage
-either.
-
-Thierry
-
---vtzGhvizbBRQ85DL
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSswGAAAoJEN0jrNd/PrOhBwgQAJDizHJfZzFT1RDzdd6TKM28
-cR658qJqY+s3bAAz8te+exfItB8iuIIfBujtJVivq2mJsmQvVKJX5TPD4YwCrPKz
-Zz7BAx0XmYCoU+e2uhLN5RlFPE25fp+vGB6Py9Ri6wmrx/s5BFJuxwfaMEmrnJRO
-WZXIDY2iXx+1/Ysp4fWIMDA6yWSaP5LHeyxW5JUEs1PbDv5lTO9cZhgNiRt3Vl1P
-0QB6xIUDJ9KFBrUEy+UVqzlYF3dc4bQyWpMsOeHXAtB1bzToFT4vWbNaWW0FpTbs
-GssNqrXRnnmH4RkJJ74CDJKiZ3d4X2mldKJqclGVsIkDKzHzc5DaFzP6sqWHSwGR
-UaTyVJaiD+vCQG3HKkBhCResU3DCIdLYPNpkCr93Amgn+0Y0zqsIpTdp8h4aRLnm
-8/HNyyJLxbfyFlmOBqymb6t2LPw9JCr/wlqCHW3Q6GwE1iwVbb6Tt3qkxQfd2elZ
-PUQNJgizYl612BWAPXSJ9+bhACBjRSqZO8ZDYwjpxq6Muf2thjsTe+xcbjQSoXVZ
-Q0IcfY6vHu8+zGSpSc95T9sfQjUksv9AO00qVjX8F2NLYiOOneA9CqHwG+M0QI1U
-XnCx/mOXzYNlWhIDwMY18Adlbo39eaqUnB6MYfzAUXweyRtOCOYM5C0oMNqkJqe/
-HAVXM6+MoRDDT+jg+OYF
-=rrN2
------END PGP SIGNATURE-----
-
---vtzGhvizbBRQ85DL--
+diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
+index a91e642..181e760 100644
+--- a/drivers/usb/gadget/Kconfig
++++ b/drivers/usb/gadget/Kconfig
+@@ -294,11 +294,10 @@ config USB_PXA27X
+ 	   gadget drivers to also be dynamically linked.
+ 
+ config USB_S3C_HSOTG
+-	tristate "S3C HS/OtG USB Device controller"
+-	depends on S3C_DEV_USB_HSOTG
++	tristate "Designware/S3C HS/OtG USB Device controller"
+ 	help
+-	  The Samsung S3C64XX USB2.0 high-speed gadget controller
+-	  integrated into the S3C64XX series SoC.
++	  The Designware USB2.0 high-speed gadget controller
++	  integrated into many SoCs.
+ 
+ config USB_S3C2410
+ 	tristate "S3C2410 USB Device Controller"
+diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
+index 9875d9c..db797f2 100644
+--- a/drivers/usb/gadget/s3c-hsotg.c
++++ b/drivers/usb/gadget/s3c-hsotg.c
+@@ -36,8 +36,6 @@
+ #include <linux/usb/phy.h>
+ #include <linux/platform_data/s3c-hsotg.h>
+ 
+-#include <mach/map.h>
+-
+ #include "s3c-hsotg.h"
+ 
+ static const char * const s3c_hsotg_supply_names[] = {
+-- 
+1.8.4
