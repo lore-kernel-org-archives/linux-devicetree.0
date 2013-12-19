@@ -1,100 +1,98 @@
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Subject: Re: [PATCH V4 3/3] cpufreq: imx6: Add device tree binding document
-Date: Thu, 19 Dec 2013 14:21:08 +0000
-Message-ID: <52B300D4.4090309@arm.com>
-References: <1387462609-13013-1-git-send-email-b20788@freescale.com> <1387462609-13013-3-git-send-email-b20788@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1387462609-13013-3-git-send-email-b20788@freescale.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anson Huang <b20788@freescale.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
-Cc: Sudeep.KarkadaNagesha@arm.com, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v8 1/9] phy: add phy_get_bus_width()/phy_set_bus_width() calls
+Date: Thu, 19 Dec 2013 09:23:02 -0500
+Message-ID: <1387462990-12039-2-git-send-email-mporter@linaro.org>
+References: <1387462990-12039-1-git-send-email-mporter@linaro.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1387462990-12039-1-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/12/13 14:16, Anson Huang wrote:
-> This device tree binding document describes the imx6 cpufreq
-> DT bindings. This document lists all required and optional properties
-> for imx6 cpufreq.
-> 
-> Signed-off-by: Anson Huang <b20788@freescale.com>
-> ---
->  .../devicetree/bindings/cpufreq/cpufreq-imx6.txt   |   56 ++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
-> new file mode 100644
-> index 0000000..a14b895
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-imx6.txt
-> @@ -0,0 +1,56 @@
-> +i.MX6 cpufreq driver
-> +-------------------
-> +
-> +i.MX6 SoC cpufreq driver for CPU frequency scaling.
-> +
-> +This binding doc defines properties that must be put in the /cpus/cpu@0 node,
-> +please refer to Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
-> +for detail.
-> +
-> +Required properties:
-> +- operating-points: Refer to Documentation/devicetree/bindings/power/opp.txt
-> +  for details.
-> +- clocks: Specify clocks that need to be used when cpu frequency is scaled,
-> +  refer to Documentation/devicetree/bindings/clock/clock-bindings.txt for
-> +  details.
-> +- clock-names: List of clock input name strings sorted in the same order as the
-> +  clocks property, refer to Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +  for details.
-> +- xxx-supply: Input voltage supply regulator, refer to
-> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
-> +  arm-supply: regulator node supplying arm.
-> +  pu-supply: regulator node supplying pu.
-> +  soc-supply: regulator node supplying soc.
-> +
-> +Optional properties:
-> +- fsl,soc-operating-points: Specify vddsoc/pu voltage settings that must
-> +  go with cpu0's operating-points.
-> +- clock-latency: Specify the possible maximum transition latency for clock,
-> +  in unit of nanoseconds.
-> +
+This adds a pair of APIs that allows the generic PHY subsystem to
+provide information on the PHY bus width. The PHY provider driver may
+use phy_set_bus_width() to set the bus width that the PHY supports.
+The controller driver may then use phy_get_bus_width() to fetch the
+PHY bus width in order to properly configure the controller.
 
-Sorry if I am missing something obvious as I have not followed the previous
-versions and corresponding comments.
+Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+---
+ include/linux/phy/phy.h | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-Should these SoC properties be part of cpu node ? If so which cpu or why cpu0 ?
-IIUC it's more a SoC properties which also influences ARM CPU OPPs. IOW other
-regulators may depend on pu/soc-supply. In that case it would be cleaner if that
-dependency is setup through regulators framework.
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 6d72269..e273e5a 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -38,6 +38,14 @@ struct phy_ops {
+ };
+ 
+ /**
++ * struct phy_attrs - represents phy attributes
++ * @bus_width: Data path width implemented by PHY
++ */
++struct phy_attrs {
++	u32			bus_width;
++};
++
++/**
+  * struct phy - represents the phy device
+  * @dev: phy device
+  * @id: id of the phy device
+@@ -46,6 +54,7 @@ struct phy_ops {
+  * @mutex: mutex to protect phy_ops
+  * @init_count: used to protect when the PHY is used by multiple consumers
+  * @power_count: used to protect when the PHY is used by multiple consumers
++ * @phy_attrs: used to specify PHY specific attributes
+  */
+ struct phy {
+ 	struct device		dev;
+@@ -55,6 +64,7 @@ struct phy {
+ 	struct mutex		mutex;
+ 	int			init_count;
+ 	int			power_count;
++	struct phy_attrs	attrs;
+ };
+ 
+ /**
+@@ -127,6 +137,14 @@ int phy_init(struct phy *phy);
+ int phy_exit(struct phy *phy);
+ int phy_power_on(struct phy *phy);
+ int phy_power_off(struct phy *phy);
++static inline int phy_get_bus_width(struct phy *phy)
++{
++	return phy->attrs.bus_width;
++}
++static inline void phy_set_bus_width(struct phy *phy, int bus_width)
++{
++	phy->attrs.bus_width = bus_width;
++}
+ struct phy *phy_get(struct device *dev, const char *string);
+ struct phy *devm_phy_get(struct device *dev, const char *string);
+ void phy_put(struct phy *phy);
+@@ -199,6 +217,16 @@ static inline int phy_power_off(struct phy *phy)
+ 	return -ENOSYS;
+ }
+ 
++static inline int phy_get_bus_width(struct phy *phy)
++{
++	return -ENOSYS;
++}
++
++static inline void phy_set_bus_width(struct phy *phy, int bus_width)
++{
++	return;
++}
++
+ static inline struct phy *phy_get(struct device *dev, const char *string)
+ {
+ 	return ERR_PTR(-ENOSYS);
+-- 
+1.8.4
 
-> +Examples:
-> +
-> +	cpu@0 {
-> +		operating-points = <
-> +			/* kHz    uV */
-> +			1200000 1275000
-> +			996000  1250000
-> +			792000  1150000
-> +			396000  975000
-> +		>;
-> +		fsl,soc-operating-points = <
-> +			/* ARM kHz  SOC-PU uV */
-> +			1200000 1275000
-> +			996000	1250000
-> +			792000	1175000
-> +			396000	1175000
-> +		>;
-> +		clock-latency = <61036>; /* two CLK32 periods */
-> +		clocks = <&clks 104>, <&clks 6>, <&clks 16>,
-> +			 <&clks 17>, <&clks 170>;
-> +		clock-names = "arm", "pll2_pfd2_396m", "step",
-> +			      "pll1_sw", "pll1_sys";
-> +		arm-supply = <&reg_arm>;
-> +		pu-supply = <&reg_pu>;
-> +		soc-supply = <&reg_soc>;
-> +	};
-> 
-
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
