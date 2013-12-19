@@ -1,87 +1,51 @@
-From: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
-Subject: Re: [PATCH V4 3/3] cpufreq: imx6: Add device tree binding document
-Date: Thu, 19 Dec 2013 15:42:28 +0000
-Message-ID: <DAA70643-C5BE-404A-93A7-0CCDDE2C3050@freescale.com>
-References: <1387462609-13013-1-git-send-email-b20788@freescale.com>
- <1387462609-13013-3-git-send-email-b20788@freescale.com>,<52B300D4.4090309@arm.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] i2c: at91: document clock properties
+Date: Thu, 19 Dec 2013 16:50:12 +0100
+Message-ID: <52B315B4.6000906@atmel.com>
+References: <1387295644-7382-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <52B300D4.4090309@arm.com>
-Content-Language: zh-CN
-Sender: linux-pm-owner@vger.kernel.org
-Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "Sudeep.KarkadaNagesha@arm.com" <Sudeep.KarkadaNagesha@arm.com>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1387295644-7382-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNClNlbnQgZnJvbSBBbnNvbidzIGlQaG9uZQ0KDQo+INTaIDIwMTPE6jEy1MIxOcjVo6wyMjoy
-MaOsIlN1ZGVlcCBLYXJrYWRhTmFnZXNoYSIgPFN1ZGVlcC5LYXJrYWRhTmFnZXNoYUBhcm0uY29t
-PiDQtLXAo7oNCj4gDQo+PiBPbiAxOS8xMi8xMyAxNDoxNiwgQW5zb24gSHVhbmcgd3JvdGU6DQo+
-PiBUaGlzIGRldmljZSB0cmVlIGJpbmRpbmcgZG9jdW1lbnQgZGVzY3JpYmVzIHRoZSBpbXg2IGNw
-dWZyZXENCj4+IERUIGJpbmRpbmdzLiBUaGlzIGRvY3VtZW50IGxpc3RzIGFsbCByZXF1aXJlZCBh
-bmQgb3B0aW9uYWwgcHJvcGVydGllcw0KPj4gZm9yIGlteDYgY3B1ZnJlcS4NCj4+IA0KPj4gU2ln
-bmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPGIyMDc4OEBmcmVlc2NhbGUuY29tPg0KPj4gLS0tDQo+
-PiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9jcHVmcmVxL2NwdWZyZXEtaW14Ni50eHQgICB8ICAg
-NTYgKysrKysrKysrKysrKysrKysrKysNCj4+IDEgZmlsZSBjaGFuZ2VkLCA1NiBpbnNlcnRpb25z
-KCspDQo+PiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2NwdWZyZXEvY3B1ZnJlcS1pbXg2LnR4dA0KPj4gDQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEvY3B1ZnJlcS1pbXg2LnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jcHVmcmVxL2NwdWZyZXEtaW14Ni50eHQN
-Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+PiBpbmRleCAwMDAwMDAwLi5hMTRiODk1DQo+PiAt
-LS0gL2Rldi9udWxsDQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-Y3B1ZnJlcS9jcHVmcmVxLWlteDYudHh0DQo+PiBAQCAtMCwwICsxLDU2IEBADQo+PiAraS5NWDYg
-Y3B1ZnJlcSBkcml2ZXINCj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tDQo+PiArDQo+PiAraS5NWDYg
-U29DIGNwdWZyZXEgZHJpdmVyIGZvciBDUFUgZnJlcXVlbmN5IHNjYWxpbmcuDQo+PiArDQo+PiAr
-VGhpcyBiaW5kaW5nIGRvYyBkZWZpbmVzIHByb3BlcnRpZXMgdGhhdCBtdXN0IGJlIHB1dCBpbiB0
-aGUgL2NwdXMvY3B1QDAgbm9kZSwNCj4+ICtwbGVhc2UgcmVmZXIgdG8gRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEvY3B1ZnJlcS1jcHUwLnR4dA0KPj4gK2ZvciBkZXRh
-aWwuDQo+PiArDQo+PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4+ICstIG9wZXJhdGluZy1wb2lu
-dHM6IFJlZmVyIHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9vcHAu
-dHh0DQo+PiArICBmb3IgZGV0YWlscy4NCj4+ICstIGNsb2NrczogU3BlY2lmeSBjbG9ja3MgdGhh
-dCBuZWVkIHRvIGJlIHVzZWQgd2hlbiBjcHUgZnJlcXVlbmN5IGlzIHNjYWxlZCwNCj4+ICsgIHJl
-ZmVyIHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5k
-aW5ncy50eHQgZm9yDQo+PiArICBkZXRhaWxzLg0KPj4gKy0gY2xvY2stbmFtZXM6IExpc3Qgb2Yg
-Y2xvY2sgaW5wdXQgbmFtZSBzdHJpbmdzIHNvcnRlZCBpbiB0aGUgc2FtZSBvcmRlciBhcyB0aGUN
-Cj4+ICsgIGNsb2NrcyBwcm9wZXJ0eSwgcmVmZXIgdG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4dA0KPj4gKyAgZm9yIGRldGFpbHMuDQo+
-PiArLSB4eHgtc3VwcGx5OiBJbnB1dCB2b2x0YWdlIHN1cHBseSByZWd1bGF0b3IsIHJlZmVyIHRv
-DQo+PiArICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL3JlZ3Vs
-YXRvci50eHQgZm9yIGRldGFpbHMuDQo+PiArICBhcm0tc3VwcGx5OiByZWd1bGF0b3Igbm9kZSBz
-dXBwbHlpbmcgYXJtLg0KPj4gKyAgcHUtc3VwcGx5OiByZWd1bGF0b3Igbm9kZSBzdXBwbHlpbmcg
-cHUuDQo+PiArICBzb2Mtc3VwcGx5OiByZWd1bGF0b3Igbm9kZSBzdXBwbHlpbmcgc29jLg0KPj4g
-Kw0KPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+PiArLSBmc2wsc29jLW9wZXJhdGluZy1wb2lu
-dHM6IFNwZWNpZnkgdmRkc29jL3B1IHZvbHRhZ2Ugc2V0dGluZ3MgdGhhdCBtdXN0DQo+PiArICBn
-byB3aXRoIGNwdTAncyBvcGVyYXRpbmctcG9pbnRzLg0KPj4gKy0gY2xvY2stbGF0ZW5jeTogU3Bl
-Y2lmeSB0aGUgcG9zc2libGUgbWF4aW11bSB0cmFuc2l0aW9uIGxhdGVuY3kgZm9yIGNsb2NrLA0K
-Pj4gKyAgaW4gdW5pdCBvZiBuYW5vc2Vjb25kcy4NCj4+ICsNCj4gDQo+IFNvcnJ5IGlmIEkgYW0g
-bWlzc2luZyBzb21ldGhpbmcgb2J2aW91cyBhcyBJIGhhdmUgbm90IGZvbGxvd2VkIHRoZSBwcmV2
-aW91cw0KPiB2ZXJzaW9ucyBhbmQgY29ycmVzcG9uZGluZyBjb21tZW50cy4NCj4gDQo+IFNob3Vs
-ZCB0aGVzZSBTb0MgcHJvcGVydGllcyBiZSBwYXJ0IG9mIGNwdSBub2RlID8gSWYgc28gd2hpY2gg
-Y3B1IG9yIHdoeSBjcHUwID8NCnllcywgdGhlc2UgcHJvcGVydGllcyBhcmUgZm9yIGNwdWZyZXEg
-ZnVuY3Rpb24sIGFzIG9uIFNNUCBzeXN0ZW0sIGFsbCBDUFVzIGFyZSBydW5uaW5nIGF0IHNhbWUg
-ZnJlcSwgY3B1ZnJlcSBpcyB0aWVkIHRvIGNwdTAsIHNvIHdlIHB1dCB0aGVtIGluIGNwdTAncyBu
-b2RlLiANCg0KDQo+IElJVUMgaXQncyBtb3JlIGEgU29DIHByb3BlcnRpZXMgd2hpY2ggYWxzbyBp
-bmZsdWVuY2VzIEFSTSBDUFUgT1BQcy4gSU9XIG90aGVyDQo+IHJlZ3VsYXRvcnMgbWF5IGRlcGVu
-ZCBvbiBwdS9zb2Mtc3VwcGx5LiBJbiB0aGF0IGNhc2UgaXQgd291bGQgYmUgY2xlYW5lciBpZiB0
-aGF0DQo+IGRlcGVuZGVuY3kgaXMgc2V0dXAgdGhyb3VnaCByZWd1bGF0b3JzIGZyYW1ld29yay4N
-Cg0KdGhlIHRydXRoIGlzIHRoYXQgYXJtIHBvd2VyIGRvbWFpbiBoYXMgbm8gbGV2ZWwgc2hpZnQg
-d2l0aCBzaWMvcHUgZG9tYWluLCBzbyB3aGVuIGFybSBkb21haW4gdm9sdGFnZSBpcyBjaGFuZ2Vk
-LCBzb2MvcHUgZG9tYWluIG5lZWQgdG8gYmUgY2hhbmdlZCB0b28sIG1vcmUgbGlrZSBtdWx0aSBP
-UFAgY29uY2VwdC4gdGhlcmUgaXMgbm8gb3RoZXIgcmVndWxhdG9ycyBkZXBlbmQgb24gc29jL3B1
-IHN1cHBseS4NCg0KYW5zb24uDQo+IA0KPj4gK0V4YW1wbGVzOg0KPj4gKw0KPj4gKyAgICBjcHVA
-MCB7DQo+PiArICAgICAgICBvcGVyYXRpbmctcG9pbnRzID0gPA0KPj4gKyAgICAgICAgICAgIC8q
-IGtIeiAgICB1ViAqLw0KPj4gKyAgICAgICAgICAgIDEyMDAwMDAgMTI3NTAwMA0KPj4gKyAgICAg
-ICAgICAgIDk5NjAwMCAgMTI1MDAwMA0KPj4gKyAgICAgICAgICAgIDc5MjAwMCAgMTE1MDAwMA0K
-Pj4gKyAgICAgICAgICAgIDM5NjAwMCAgOTc1MDAwDQo+PiArICAgICAgICA+Ow0KPj4gKyAgICAg
-ICAgZnNsLHNvYy1vcGVyYXRpbmctcG9pbnRzID0gPA0KPj4gKyAgICAgICAgICAgIC8qIEFSTSBr
-SHogIFNPQy1QVSB1ViAqLw0KPj4gKyAgICAgICAgICAgIDEyMDAwMDAgMTI3NTAwMA0KPj4gKyAg
-ICAgICAgICAgIDk5NjAwMCAgICAxMjUwMDAwDQo+PiArICAgICAgICAgICAgNzkyMDAwICAgIDEx
-NzUwMDANCj4+ICsgICAgICAgICAgICAzOTYwMDAgICAgMTE3NTAwMA0KPj4gKyAgICAgICAgPjsN
-Cj4+ICsgICAgICAgIGNsb2NrLWxhdGVuY3kgPSA8NjEwMzY+OyAvKiB0d28gQ0xLMzIgcGVyaW9k
-cyAqLw0KPj4gKyAgICAgICAgY2xvY2tzID0gPCZjbGtzIDEwND4sIDwmY2xrcyA2PiwgPCZjbGtz
-IDE2PiwNCj4+ICsgICAgICAgICAgICAgPCZjbGtzIDE3PiwgPCZjbGtzIDE3MD47DQo+PiArICAg
-ICAgICBjbG9jay1uYW1lcyA9ICJhcm0iLCAicGxsMl9wZmQyXzM5Nm0iLCAic3RlcCIsDQo+PiAr
-ICAgICAgICAgICAgICAgICAgInBsbDFfc3ciLCAicGxsMV9zeXMiOw0KPj4gKyAgICAgICAgYXJt
-LXN1cHBseSA9IDwmcmVnX2FybT47DQo+PiArICAgICAgICBwdS1zdXBwbHkgPSA8JnJlZ19wdT47
-DQo+PiArICAgICAgICBzb2Mtc3VwcGx5ID0gPCZyZWdfc29jPjsNCj4+ICsgICAgfTsNCj4gDQo+
-IA0KPiANCj4gDQo=
+On 17/12/2013 16:54, Boris BREZILLON :
+> Document the clock properties required by the at91 i2c bus driver.
+> 
+> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-at91.txt |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+> index b689a0d..4fade84 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+> @@ -9,6 +9,7 @@ Required properties :
+>  - interrupts: interrupt number to the cpu.
+>  - #address-cells = <1>;
+>  - #size-cells = <0>;
+> +- clocks: phandles to input clocks.
+>  
+>  Optional properties:
+>  - Child nodes conforming to i2c bus binding
+> @@ -21,6 +22,7 @@ i2c0: i2c@fff84000 {
+>  	interrupts = <12 4 6>;
+>  	#address-cells = <1>;
+>  	#size-cells = <0>;
+> +	clocks = <&twi0_clk>;
+>  
+>  	24c512@50 {
+>  		compatible = "24c512";
+> 
+
+
+-- 
+Nicolas Ferre
