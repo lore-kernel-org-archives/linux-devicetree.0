@@ -1,46 +1,72 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH] gpio: add GPIO hogging mechanism
-Date: Thu, 19 Dec 2013 08:41:09 -0800
-Message-ID: <20131219164109.GB27409@kroah.com>
-References: <1387463671-1164-1-git-send-email-b.brezillon@overkiz.com>
- <1387463671-1164-2-git-send-email-b.brezillon@overkiz.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/4] OMAPDSS: DT support for N900 panel
+Date: Thu, 19 Dec 2013 08:42:31 -0800
+Message-ID: <20131219163557.GM27438@atomide.com>
+References: <1386958650-2404-1-git-send-email-sre@debian.org>
+ <52AFFF3F.7020807@ti.com>
+ <20131217171412.GA10442@earth.universe>
+ <52B089FE.8060704@ti.com>
+ <20131218215536.GA23674@earth.universe>
+ <20131219005151.GA27928@earth.universe>
+ <52B2848A.80807@ti.com>
+ <20131219100840.GA923@earth.universe>
+ <20131219135608.GA11654@earth.universe>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1387463671-1164-2-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Ben Gamari <bgamari.foss@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20131219135608.GA11654@earth.universe>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2013 at 03:34:31PM +0100, Boris BREZILLON wrote:
-> GPIO hogging is a way to request and configure specific GPIO without
-> explicitly requesting it in the device driver.
+* Sebastian Reichel <sre@debian.org> [131219 05:57]:
+> On Thu, Dec 19, 2013 at 11:08:40AM +0100, Sebastian Reichel wrote:
+> > > Are you able to check if the bootloader muxes dat3 to SDI mode?
+> > 
+> > The bootloader's source code is not available as far as i know.
+> > 
+> > [...], but I get an external abort on non-linefetch.
+> > So I can't check it :(
 > 
-> The request and configuration procedure is handled in the core device
-> driver code before the driver probe function is called.
+> Ok. This is fixed by applying [0] (Thanks for the hint, Tomi!).
+> This is the mux configuration from the bootloader:
 > 
-> It allows specific GPIOs to be configured without any driver specific code.
+> ...
+> pin 96 (480020f0.0) 00000001 pinctrl-single     // sdi dat1n
+> pin 97 (480020f2.0) 00000001 pinctrl-single     // sdi dat1p
+> pin 98 (480020f4.0) 00000001 pinctrl-single     // sdi dat2n
+> pin 99 (480020f6.0) 00000001 pinctrl-single     // sdi dat2p
+> pin 100 (480020f8.0) 00000007 pinctrl-single    // sdi dat3n
+> pin 101 (480020fa.0) 00000007 pinctrl-single    // sdi dat3p
+> pin 102 (480020fc.0) 00000004 pinctrl-single 
+> pin 103 (480020fe.0) 00000004 pinctrl-single 
+> pin 104 (48002100.0) 00000004 pinctrl-single    // sdi vsync
+> pin 105 (48002102.0) 00004104 pinctrl-single    // sdi hsync
+> pin 106 (48002104.0) 00000004 pinctrl-single    // sdi den
+> pin 107 (48002106.0) 00000004 pinctrl-single    // sdi stp
+> pin 108 (48002108.0) 00000001 pinctrl-single    // sdi clkp
+> pin 109 (4800210a.0) 00000001 pinctrl-single    // sdi clkn
+> ...
 > 
-> Particularly usefull when a external device is connected to a bus and the
-> bus connections depends on an external switch controlled by a GPIO pin.
-> Or when some GPIOs have to be exported to sysfs without any userspace
-> intervention.
+> I guess the following entry should be added to the omap3-n900.dts file:
 > 
-> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio.txt |   47 ++++++++
->  drivers/base/Makefile                           |    1 +
->  drivers/base/dd.c                               |    5 +
->  drivers/base/gpio.c                             |   59 ++++++++++
+> 	dss_sdi_pins: pinmux_dss_sdi_pins {
+> 		pinctrl-single,pins = <
+> 			0x0c0 (PIN_OUTPUT | MUX_MODE1)   /* dss_data10.sdi_dat1n */
+> 			0x0c2 (PIN_OUTPUT | MUX_MODE1)   /* dss_data11.sdi_dat1p */
+> 			0x0c4 (PIN_OUTPUT | MUX_MODE1)   /* dss_data12.sdi_dat2n */
+> 			0x0c6 (PIN_OUTPUT | MUX_MODE1)   /* dss_data13.sdi_dat2p */
+> 			0x0d8 (PIN_OUTPUT | MUX_MODE1)   /* dss_data22.sdi_clkp */
+> 			0x0da (PIN_OUTPUT | MUX_MODE1)   /* dss_data23.sdi_clkn */
+> 		>;
+> 	};
+> 
+> [0] https://patchwork.kernel.org/patch/3283781/
 
-I don't understand what makes GPIO's "special" enough to get included in
-the driver core like this, and called for each and every device that is
-added to the system.
+Do we need to update Laurent's patch with this? Or can we use it as
+it is and maybe you can ack it?
 
-What's wrong with the generic device callbacks/notifiers we already
-have?  Why does this need to be in the driver core?  And what exactly
-are you doing all of this for in the first place?
+Regards,
 
-greg k-h
+Tony
