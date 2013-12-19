@@ -1,318 +1,50 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM i.MX35: Add devicetree support.
-Date: Thu, 19 Dec 2013 14:46:22 +0800
-Message-ID: <20131219064620.GY6691@S2101-09.ap.freescale.net>
-References: <1387375826-4018-1-git-send-email-s.hauer@pengutronix.de>
- <1387375826-4018-2-git-send-email-s.hauer@pengutronix.de>
+From: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
+Subject: RE: [PATCH 2/3] thermal: imx: add necessary clk operation
+Date: Thu, 19 Dec 2013 06:52:29 +0000
+Message-ID: <56958e0099194dc69d3d91a2ac8a97b2@DM2PR03MB317.namprd03.prod.outlook.com>
+References: <1387477045-19037-1-git-send-email-b20788@freescale.com>
+ <1387477045-19037-2-git-send-email-b20788@freescale.com>
+ <20131219062450.GC4148@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1387375826-4018-2-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131219062450.GC4148@tarshish>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "eduardo.valentin@ti.com" <eduardo.valentin@ti.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2013 at 03:10:25PM +0100, Sascha Hauer wrote:
-> From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->=20
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/imx35-clock.txt      | 113 +++++++++++=
-++++++++++
-
-+ devicetree list
-
-This should be simple, but let's still copy devicetree list to avoid th=
-e
-possible nag from arm-soc folks when we send this to them.
-
->  arch/arm/mach-imx/Kconfig                          |   8 ++
->  arch/arm/mach-imx/Makefile                         |   1 +
->  arch/arm/mach-imx/clk-imx35.c                      |  14 +++
->  arch/arm/mach-imx/imx35-dt.c                       |  57 +++++++++++
->  5 files changed, 193 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/imx35-clo=
-ck.txt
->  create mode 100644 arch/arm/mach-imx/imx35-dt.c
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/imx35-clock.txt =
-b/Documentation/devicetree/bindings/clock/imx35-clock.txt
-> new file mode 100644
-> index 0000000..a703564
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/imx35-clock.txt
-> @@ -0,0 +1,113 @@
-> +* Clock bindings for Freescale i.MX35
-> +
-> +Required properties:
-> +- compatible: Should be "fsl,imx35-ccm"
-> +- reg: Address and length of the register set
-> +- interrupts: Should contain CCM interrupt
-> +- #clock-cells: Should be <1>
-> +
-> +The clock consumer should specify the desired clock by having the cl=
-ock
-> +ID in its "clocks" phandle cell.  The following is a full list of i.=
-MX35
-> +clocks and IDs.
-> +
-> +	Clock			ID
-> +	---------------------------
-> +	ckih			0
-> +	mpll			1
-> +	ppll			2
-> +	mpll_075		3
-> +	arm			4
-> +	hsp			5
-> +	hsp_div			6
-> +	hsp_sel			7
-> +	ahb			8
-> +	ipg			9
-> +	arm_per_div		10
-> +	ahb_per_div		11
-> +	ipg_per			12
-> +	uart_sel		13
-> +	uart_div		14
-> +	esdhc_sel		15
-> +	esdhc1_div		16
-> +	esdhc2_div		17
-> +	esdhc3_div		18
-> +	spdif_sel		19
-> +	spdif_div_pre		20
-> +	spdif_div_post		21
-> +	ssi_sel			22
-> +	ssi1_div_pre		23
-> +	ssi1_div_post		24
-> +	ssi2_div_pre		25
-> +	ssi2_div_post		26
-> +	usb_sel			27
-> +	usb_div			28
-> +	nfc_div			29
-> +	asrc_gate		30
-> +	pata_gate		31
-> +	audmux_gate		32
-> +	can1_gate		33
-> +	can2_gate		34
-> +	cspi1_gate		35
-> +	cspi2_gate		36
-> +	ect_gate		37
-> +	edio_gate		38
-> +	emi_gate		39
-> +	epit1_gate		40
-> +	epit2_gate		41
-> +	esai_gate		42
-> +	esdhc1_gate		43
-> +	esdhc2_gate		44
-> +	esdhc3_gate		45
-> +	fec_gate		46
-> +	gpio1_gate		47
-> +	gpio2_gate		48
-> +	gpio3_gate		49
-> +	gpt_gate		50
-> +	i2c1_gate		51
-> +	i2c2_gate		52
-> +	i2c3_gate		53
-> +	iomuxc_gate		54
-> +	ipu_gate		55
-> +	kpp_gate		56
-> +	mlb_gate		57
-> +	mshc_gate		58
-> +	owire_gate		59
-> +	pwm_gate		60
-> +	rngc_gate		61
-> +	rtc_gate		62
-> +	rtic_gate		63
-> +	scc_gate		64
-> +	sdma_gate		65
-> +	spba_gate		66
-> +	spdif_gate		67
-> +	ssi1_gate		68
-> +	ssi2_gate		69
-> +	uart1_gate		70
-> +	uart2_gate		71
-> +	uart3_gate		72
-> +	usbotg_gate		73
-> +	wdog_gate		74
-> +	max_gate		75
-> +	admux_gate		76
-> +	csi_gate		77
-> +	csi_div			78
-> +	csi_sel			79
-> +	iim_gate		80
-> +	gpu2d_gate		81
-> +
-> +Examples:
-> +
-> +clks: ccm@53f80000 {
-> +	compatible =3D "fsl,imx35-ccm";
-> +	reg =3D <0x53f80000 0x4000>;
-> +	interrupts =3D <31>;
-> +	#clock-cells =3D <1>;
-> +};
-> +
-> +esdhc1: esdhc@53fb4000 {
-> +	compatible =3D "fsl,imx35-esdhc";
-> +	reg =3D <0x53fb4000 0x4000>;
-> +	interrupts =3D <7>;
-> +	clocks =3D <&clks 9>, <&clks 8>, <&clks 43>;
-> +	clock-names =3D "ipg", "ahb", "per";
-> +};
-> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-> index 29a8af6..44233c9 100644
-> --- a/arch/arm/mach-imx/Kconfig
-> +++ b/arch/arm/mach-imx/Kconfig
-> @@ -138,6 +138,7 @@ config SOC_IMX35
->  	select HAVE_EPIT
->  	select MXC_AVIC
->  	select SMP_ON_UP if SMP
-> +	select PINCTRL
-> =20
->  config SOC_IMX5
->  	bool
-> @@ -625,6 +626,13 @@ config MACH_IMX31_DT
-> =20
->  comment "MX35 platforms:"
-> =20
-> +config MACH_IMX35_DT
-> +	bool "Support i.MX35 platforms from device tree"
-> +	select SOC_IMX35
-> +	help
-> +	  Include support for Freescale i.MX35 based platforms
-> +	  using the device tree for discovery.
-> +
->  config MACH_PCM043
->  	bool "Support Phytec pcm043 (i.MX35) platforms"
->  	select IMX_HAVE_PLATFORM_FLEXCAN
-> diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
-> index 5383c58..f20a117 100644
-> --- a/arch/arm/mach-imx/Makefile
-> +++ b/arch/arm/mach-imx/Makefile
-> @@ -89,6 +89,7 @@ obj-$(CONFIG_MACH_MX35_3DS) +=3D mach-mx35_3ds.o
->  obj-$(CONFIG_MACH_EUKREA_CPUIMX35SD) +=3D mach-cpuimx35.o
->  obj-$(CONFIG_MACH_EUKREA_MBIMXSD35_BASEBOARD) +=3D eukrea_mbimxsd35-=
-baseboard.o
->  obj-$(CONFIG_MACH_VPR200) +=3D mach-vpr200.o
-> +obj-$(CONFIG_MACH_IMX35_DT) +=3D imx35-dt.o
-> =20
->  obj-$(CONFIG_HAVE_IMX_ANATOP) +=3D anatop.o
->  obj-$(CONFIG_HAVE_IMX_GPC) +=3D gpc.o
-> diff --git a/arch/arm/mach-imx/clk-imx35.c b/arch/arm/mach-imx/clk-im=
-x35.c
-> index 2193c83..a4d5e42 100644
-> --- a/arch/arm/mach-imx/clk-imx35.c
-> +++ b/arch/arm/mach-imx/clk-imx35.c
-> @@ -45,6 +45,8 @@ static struct arm_ahb_div clk_consumer[] =3D {
->  static char hsp_div_532[] =3D { 4, 8, 3, 0 };
->  static char hsp_div_400[] =3D { 3, 6, 3, 0 };
-> =20
-> +static struct clk_onecell_data clk_data;
-> +
->  static const char *std_sel[] =3D {"ppll", "arm"};
->  static const char *ipg_per_sel[] =3D {"ahb_per_div", "arm_per_div"};
-> =20
-> @@ -286,3 +288,15 @@ int __init mx35_clocks_init(void)
-> =20
->  	return 0;
->  }
-> +
-> +static int __init mx35_clocks_init_dt(struct device_node *ccm_node)
-> +{
-> +	clk_data.clks =3D clk;
-> +	clk_data.clk_num =3D ARRAY_SIZE(clk);
-> +	of_clk_add_provider(ccm_node, of_clk_src_onecell_get, &clk_data);
-> +
-> +	mx35_clocks_init();
-> +
-> +	return 0;
-> +}
-> +CLK_OF_DECLARE(imx35, "fsl,imx35-ccm", mx35_clocks_init_dt);
-> diff --git a/arch/arm/mach-imx/imx35-dt.c b/arch/arm/mach-imx/imx35-d=
-t.c
-> new file mode 100644
-> index 0000000..8073d3f
-> --- /dev/null
-> +++ b/arch/arm/mach-imx/imx35-dt.c
-> @@ -0,0 +1,57 @@
-> +/*
-> + * Copyright 2012 Steffen Trumtrar, Pengutronix
-> + *
-> + * based on imx27-dt.c
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify it under
-> + * the terms of the GNU General Public License version 2 as publishe=
-d by the
-> + * Free Software Foundation.
-> + */
-> +
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/clocksource.h>
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach/time.h>
-> +#include <asm/hardware/cache-l2x0.h>
-> +#include "common.h"
-> +#include "mx35.h"
-> +
-> +static void __init imx35_dt_init(void)
-> +{
-> +	mxc_arch_reset_init_dt();
-> +
-> +	of_platform_populate(NULL, of_default_bus_match_table,
-> +			     NULL, NULL);
-> +}
-> +
-> +static void __init imx35_irq_init(void)
-> +{
-> +	imx_init_l2cache();
-> +	mx35_init_irq();
-> +}
-> +
-> +static void __init imx35_timer_init(void)
-> +{
-> +	of_clk_init(NULL);
-> +	clocksource_of_init();
-> +}
-
-Now we can save this hook completely because of commit 4178bac (ARM:
-call of_clk_init from default time_init handler).
-
-Shawn
-
-> +
-> +static const char *imx35_dt_board_compat[] __initdata =3D {
-> +	"fsl,imx35",
-> +	NULL
-> +};
-> +
-> +DT_MACHINE_START(IMX35_DT, "Freescale i.MX35 (Device Tree Support)")
-> +	.map_io		=3D mx35_map_io,
-> +	.init_early	=3D imx35_init_early,
-> +	.init_irq	=3D imx35_irq_init,
-> +	.init_time	=3D imx35_timer_init,
-> +	.handle_irq	=3D imx35_handle_irq,
-> +	.init_machine	=3D imx35_dt_init,
-> +	.dt_compat	=3D imx35_dt_board_compat,
-> +	.restart	=3D mxc_restart,
-> +MACHINE_END
-> --=20
-> 1.8.5.1
->=20
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCkJlc3QgUmVnYXJkcy4NCkFuc29uIGh1YW5nIOm7hOWLh+aJjQ0KwqANCkZyZWVzY2FsZSBT
+ZW1pY29uZHVjdG9yIFNoYW5naGFpDQrkuIrmtbfmtabkuJzmlrDljLrkuq7mma/ot68xOTLlj7dB
+5bqnMualvA0KMjAxMjAzDQpUZWw6MDIxLTI4OTM3MDU4DQoNCg0KPi0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+RnJvbTogQmFydWNoIFNpYWNoIFttYWlsdG86YmFydWNoQHRrb3MuY28uaWxd
+DQo+U2VudDogVGh1cnNkYXksIERlY2VtYmVyIDE5LCAyMDEzIDI6MjUgUE0NCj5UbzogSHVhbmcg
+WW9uZ2NhaS1CMjA3ODgNCj5DYzogc2hhd24uZ3VvQGxpbmFyby5vcmc7IGtlcm5lbEBwZW5ndXRy
+b25peC5kZTsgcnVpLnpoYW5nQGludGVsLmNvbTsNCj5lZHVhcmRvLnZhbGVudGluQHRpLmNvbTsg
+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZzsNCj5s
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWRvY0B2Z2VyLmtlcm5l
+bC5vcmcNCj5TdWJqZWN0OiBSZTogW1BBVENIIDIvM10gdGhlcm1hbDogaW14OiBhZGQgbmVjZXNz
+YXJ5IGNsayBvcGVyYXRpb24NCj4NCj5IaSBBbnNvbiwNCj4NCj5PbiBUaHUsIERlYyAxOSwgMjAx
+MyBhdCAwMToxNzoyNFBNIC0wNTAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4+ICsJaWYgKElTX0VS
+UihkYXRhLT50aGVybWFsX2NsaykpIHsNCj4+ICsJCXJldCA9IElTX0VSUihkYXRhLT50aGVybWFs
+X2Nsayk7DQo+DQo+WW91IHByb2JhYmx5IHdoYXQgdG8gcmV0dXJuIFBUUl9FUlIgaGVyZS4NCj4N
+Cg0KWWVzLCB0aGFua3MsIHdpbGwgZml4IGl0IGluIFYyLg0KW0Fuc29uXSANCg0KDQo+YmFydWNo
+DQo+DQo+PiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZ2V0IHRoZXJtYWwgY2xr
+IVxuIik7DQo+PiArCQlyZXR1cm4gcmV0Ow0KPj4gKwl9DQo+DQo+LS0NCj4gICAgIGh0dHA6Ly9i
+YXJ1Y2guc2lhY2gubmFtZS9ibG9nLyAgICAgICAgICAgICAgICAgIH4uIC5+ICAgVGsgT3BlbiBT
+eXN0ZW1zDQo+PX0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS1vb08tLVUtLU9vby0tLS0tLS0tLS0tLXs9DQo+ICAgLSBiYXJ1Y2hAdGtvcy5jby5pbCAtIHRl
+bDogKzk3Mi4yLjY3OS41MzY0LCBodHRwOi8vd3d3LnRrb3MuY28uaWwgLQ0KPg0KDQpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
