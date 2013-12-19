@@ -1,67 +1,82 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [RFC PATCH] gpio: add GPIO hogging mechanism
-Date: Thu, 19 Dec 2013 10:47:37 -0600
-Message-ID: <20131219164737.GA4536@saruman.home>
-References: <1387463671-1164-1-git-send-email-b.brezillon@overkiz.com>
- <1387463671-1164-2-git-send-email-b.brezillon@overkiz.com>
- <20131219164109.GB27409@kroah.com>
-Reply-To: <balbi@ti.com>
+From: Sebastian Reichel <sre@ring0.de>
+Subject: Re: [PATCH 0/4] OMAPDSS: DT support for N900 panel
+Date: Thu, 19 Dec 2013 18:00:29 +0100
+Message-ID: <20131219170028.GA24230@earth.universe>
+References: <1386958650-2404-1-git-send-email-sre@debian.org>
+ <52AFFF3F.7020807@ti.com>
+ <20131217171412.GA10442@earth.universe>
+ <52B089FE.8060704@ti.com>
+ <20131218215536.GA23674@earth.universe>
+ <20131219005151.GA27928@earth.universe>
+ <52B2848A.80807@ti.com>
+ <20131219100840.GA923@earth.universe>
+ <20131219135608.GA11654@earth.universe>
+ <20131219163557.GM27438@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131219164109.GB27409@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Boris BREZILLON <b.brezillon@overkiz.com>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Ben Gamari <bgamari.foss@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20131219163557.GM27438@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---pf9I7BMVVzbSWLtt
+
+--h31gzZEtNLTqOjlF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 19, 2013 at 08:41:09AM -0800, Greg Kroah-Hartman wrote:
-> On Thu, Dec 19, 2013 at 03:34:31PM +0100, Boris BREZILLON wrote:
-> > GPIO hogging is a way to request and configure specific GPIO without
-> > explicitly requesting it in the device driver.
+On Thu, Dec 19, 2013 at 08:42:31AM -0800, Tony Lindgren wrote:
+> * Sebastian Reichel <sre@debian.org> [131219 05:57]:
+> > On Thu, Dec 19, 2013 at 11:08:40AM +0100, Sebastian Reichel wrote:
+> > > > Are you able to check if the bootloader muxes dat3 to SDI mode?
+> > >=20
+> > > The bootloader's source code is not available as far as i know.
+> > >=20
+> > > [...], but I get an external abort on non-linefetch.
+> > > So I can't check it :(
 > >=20
-> > The request and configuration procedure is handled in the core device
-> > driver code before the driver probe function is called.
+> > Ok. This is fixed by applying [0] (Thanks for the hint, Tomi!).
+> > This is the mux configuration from the bootloader:
 > >=20
-> > It allows specific GPIOs to be configured without any driver specific c=
-ode.
+> > [...]
 > >=20
-> > Particularly usefull when a external device is connected to a bus and t=
-he
-> > bus connections depends on an external switch controlled by a GPIO pin.
+> > [0] https://patchwork.kernel.org/patch/3283781/
+>=20
+> Do we need to update Laurent's patch with this?
 
-for external switches, you probably need a pinctrl-gpio driver.
+No, the patch is only needed to avoid the mentioned external abort
+on non-linefetch when doing "cat /sys/kernel/debug/pinctrl/.../pins".
 
---=20
-balbi
+> Or can we use it as it is and maybe you can ack it?
 
---pf9I7BMVVzbSWLtt
+Sure. I will add an Ack.
+
+-- Sebastian
+
+--h31gzZEtNLTqOjlF
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.15 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSsyMpAAoJEIaOsuA1yqRExS0P/1wtnAocUCNJISCVJ/DqjF11
-XAoRoOiM5Y3izG33kbnZE1vSArFuJYd4UCDXQywbn8ljAJQ/5Kx2lQKYTHOhRMLN
-fF1ciDv4NfuvKK/e2wGK3v4GJg7MaUqCmwl3wutdUa3+o0n/kL06ncz3Ny41ft5p
-Wassj3JY4loqBEH9rX8pCxbPmhZJHn6rqB3S4yvUHFopf08YvSKKpb38xUtY1vUu
-24gvUQayeenSHF3uPN1hEkICaezSAsjhOkGT2vlfG+BayQd6ltiSfTj1KysoI7xe
-cedIz4LrEaOuOIDBUUqlAPYKlF+yDZLgE1oRJ0jjgKzJYQJPXjI0tFN29LlBbElA
-U14GoStm/JqbeLUc1tIxjG3vren1A5IJqvii7CAuINHAF3HRz4otXWe52W6iAk6u
-UWYRzn7jU3OEWHw4BYNhO7IK0y2YEEuTYDnxBPXFp8VyHj24pQ8eCyfoLFuYckSt
-A4KV1oTP3PtBZsiFvQLwRt1Qkg/6vt5PvxBGfpHFYkvd79EKohE5WJZzNo9w2t3Z
-s9P2hDv2SSEbpfjVfCHfq6yP0gXVJa2/celzvWBc5s7vk+6KQgyjyvhLHHehJ2a/
-s08hwz7OXQEy0U4XoE8UzZUPq8pkc9I7sk4EankaYr1FQpSs45oC94I9v70TOLog
-D8zleZv0y4JnD/xLu9KV
-=7IMU
+iQIcBAEBCAAGBQJSsyYsAAoJENju1/PIO/qakS0P/161ZheZMNywgT8nOrS2hQ13
+MHiqnvj5rq09Fk7zSnPDI4Nq/0Nu9X/K0GftdYZ6b1WE7IUJKspetlqdBtGjzAkX
+O1W099I3bXpK5Bf5tl6EZrhmYRXkkGAXv796dW+siT+nAIu6pRpKM1mO6+7gBc93
+mLt+FUuuE5px8lCS6++ns1RKHeigSV8UqH9ly0MRyJ6NNcXikD1psRff0W8TlNfx
+2IOXIl8xsaUnON+EfkwsqaKEdP9S62RCXmjTzVlP1lLV+TyU12uxOfxawDJlO+WA
+fQkon1eA848Cz8loGBPO+UpLcfOtDWBEhax/K/2caTq4MIzegthyJJQNMpOR80e+
+5PPz/+976e/GgzjrU9jZTb164OBi5bNAmlStv78/791edQyq18KvOlmjY6G/ptGe
+pvCPJqACg93qVg8FoNUEQrQLELVJFTfDVuLVTKvicrHwj2QRmgMc72Apn2Mz1D3K
+ILkhozdZLQv3JHkMdeGd8U78GryvPU5oOAfxkAn7d77BdhM2A0WUcZ9abJiNvFWt
+5tqktPOlRqeSZQF2DrYPgFBSFhe2ACro7b7WkU/aOXtoy9hBDRDwTrLHnsNzwol2
+IzbfOiqyVOmzfXthLi1LoAo2h6aWy/DT1moivqqHobBc7PuzgxF8OV/XTpdXek/Z
+GwwF9sFEZFYWwPCTMGPH
+=n52k
 -----END PGP SIGNATURE-----
 
---pf9I7BMVVzbSWLtt--
+--h31gzZEtNLTqOjlF--
