@@ -1,45 +1,89 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv11 00/49] ARM: TI SoC clock DT conversion
-Date: Thu, 19 Dec 2013 10:05:11 -0800
-Message-ID: <20131219180509.GO27438@atomide.com>
-References: <1387452260-23276-1-git-send-email-t-kristo@ti.com>
- <52B30BA8.2060108@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52B30BA8.2060108@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH V2] rtc: honor device tree /alias entries when assigning IDs
+Date: Thu, 19 Dec 2013 11:06:49 -0700
+Message-ID: <1387476409-7908-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm@ti.com> [131219 07:08]:
-> On 12/19/2013 05:23 AM, Tero Kristo wrote:
-> [...]
-> >
-> >branch: 3.13-rc4-dt-clks-v11 : contains everything, shall me merged last
-> 
-> 
-> Tero,
-> Considering Pauls'  concerns with v10 last time, I ran
-> [1] and got a few sparse, smatch and checkpatch warnings:
-> http://pastebin.mozilla.org/3810314
-> 
-> I think we can ignore sparse spam about "__ksymtab" for the moment.
-> but stuff like:
-> +drivers/clk/ti/clk.c:88 ti_clk_retry_init() error: potential null
-> dereference 'retry'.  (kzalloc returns null)
-> 
-> the checkpatch warn that Paul stated:"extern struct of_device_id
-> __clk_of_table" still remain should be fixed IMHO.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Yeah let's not introduce new warnings. Also noticed an issue
-with "clk: divider: add support for low level ops" on at least
-n8x0 and 2430sdp.
+Assign RTC device IDs based on device tree /aliases entries if present,
+falling back to the existing numbering scheme if there is no /aliases
+entry (which includes when the system isn't booted using DT), or there
+is a numbering conflict.
 
-Regards,
+This is useful in systems with multiple RTC devices, to ensure that the
+best RTC device is selected as /dev/rtc0, which provides the overall
+system time.
 
-Tony
+For example, Tegra has an on-SoC RTC that is not battery backed,
+typically coupled with an off-SoC RTC that is battery backed. Only the
+latter is useful for populating the system time, yet the former is
+useful e.g. for wakeup timing, since the time is not lost when the
+system is sleeps.
+
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+v2: Explicitly check for both dev->of_node and dev->parent->of_node.
+    This covers the MFD case, without the MFD core having to set
+    child MFD devices' of_node pointer to the same node as the top-
+    level MFD device, which causes problems such as:
+    http://www.spinics.net/lists/arm-kernel/msg295854.html
+---
+ drivers/rtc/class.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
+index 02426812bebc..589351ef75d0 100644
+--- a/drivers/rtc/class.c
++++ b/drivers/rtc/class.c
+@@ -14,6 +14,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
-> [1] https://github.com/nmenon/kernel_patch_verify
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/rtc.h>
+ #include <linux/kdev_t.h>
+ #include <linux/idr.h>
+@@ -157,12 +158,27 @@ struct rtc_device *rtc_device_register(const char *name, struct device *dev,
+ {
+ 	struct rtc_device *rtc;
+ 	struct rtc_wkalrm alrm;
+-	int id, err;
++	int of_id = -1, id = -1, err;
++
++	if (dev->of_node)
++		of_id = of_alias_get_id(dev->of_node, "rtc");
++	else if (dev->parent && dev->parent->of_node)
++		of_id = of_alias_get_id(dev->parent->of_node, "rtc");
++
++	if (of_id >= 0) {
++		id = ida_simple_get(&rtc_ida, of_id, of_id + 1,
++				    GFP_KERNEL);
++		if (id < 0)
++			dev_warn(dev, "/aliases ID %d not available\n",
++				    of_id);
++	}
+ 
+-	id = ida_simple_get(&rtc_ida, 0, 0, GFP_KERNEL);
+ 	if (id < 0) {
+-		err = id;
+-		goto exit;
++		id = ida_simple_get(&rtc_ida, 0, 0, GFP_KERNEL);
++		if (id < 0) {
++			err = id;
++			goto exit;
++		}
+ 	}
+ 
+ 	rtc = kzalloc(sizeof(struct rtc_device), GFP_KERNEL);
+-- 
+1.8.1.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
