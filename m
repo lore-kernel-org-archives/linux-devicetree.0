@@ -1,65 +1,55 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: Re: [PATCHv3 5/7] ASoC: fsl: Add SGTL5000 based audio
- machine driver.
-Date: Thu, 19 Dec 2013 05:19:26 +0000
-Message-ID: <f9a19c59bfaf4844bbeaca1aeb91e305@DM2PR03MB509.namprd03.prod.outlook.com>
-References: <1387250684-23406-1-git-send-email-Li.Xiubo@freescale.com>
- <1387250684-23406-6-git-send-email-Li.Xiubo@freescale.com>
- <20131218183743.GG31886@sirena.org.uk>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6qdl-sabresd: Add power key support
+Date: Thu, 19 Dec 2013 12:25:34 -0500
+Message-ID: <1387473934-10188-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20131218183743.GG31886@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, "timur@tabi.org" <timur@tabi.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Huan Wang <Huan.Wang@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "Jason.Jin@freescale.com" <Jason.Jin@freescale.com>, "oskar@scara.com" <os>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> On Tue, Dec 17, 2013 at 11:24:42AM +0800, Xiubo Li wrote:
-> 
-> > This is the SGTL5000 codec based audio driver supported with both
-> > playback and capture dai link implemention.
-> 
-> > This implementation is only compatible with device tree definition.
-> 
-> It looks like these cards should be supportable using the generic simple card
-> bindings that Morimoto-san implemented, you can see these in -next as "ASoC:
-> simple-card: add Device Tree support".  Can you check to see if that's the
-> case?  If it is you'll still need Kconfig to enable building the SoC and CODEC
-> drivers.
-> 
+This patch adds support for imx6qdl-sabresd board's power
+key, the key is named "SW1" on board, press it can wake up
+system from suspend.
 
-Yes, almost, but maybe still need to do some adjust about it.
+Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-In this series of patches, the PATCH1~PATCH4 are about SAI only, and can be
-apart from VF610-twr sound driver, I will sent the SAI driver and VF610-twr
-sound driver separately. Could you apply the SAI's first if they are all fine?
+diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+index e75e11b..85e3487 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -47,6 +47,13 @@
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 
++		power {
++			label = "Power Button";
++			gpios = <&gpio3 29 0>;
++			linux,code = <116>; /* KEY_POWER */
++			gpio-key,wakeup;
++		};
++
+ 		volume-up {
+ 			label = "Volume Up";
+ 			gpios = <&gpio1 4 0>;
+@@ -182,6 +189,7 @@
+ 				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x80000000
+ 				MX6QDL_PAD_EIM_D22__GPIO3_IO22  0x80000000
+ 				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25 0x80000000
++				MX6QDL_PAD_EIM_D29__GPIO3_IO29 0x80000000
+ 			>;
+ 		};
+ 	};
+-- 
+1.7.9.5
 
-I will use the simpe-card driver for the VF610-twr later.
 
-> > +menuconfig SND_FSL_SOC
-> > +	tristate "SoC Audio for Freescale VF610 CPUs"
-> > +	help
-> > +	  Say Y or M if you want to add support for codecs attached to
-> > +	  the VF610 CPUs.
-> > +
-> > +	  This will enable Freeacale SAI and SGTL5000 codec, and an extra
-> > +	  TWR-AUDIO-SGTL sub-board is needed for SGTL5000.
-> 
-> This should select the dmaengine helpers (and should really have been split
-> out as part of the first patch).
-
-I will revise this.
-
-Best Regards,
-Xiubo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
