@@ -1,161 +1,317 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 2/2] power: reset: as3722: add power-off driver
-Date: Fri, 20 Dec 2013 18:54:00 +0530
-Message-ID: <1387545840-2844-2-git-send-email-ldewangan@nvidia.com>
-References: <1387545840-2844-1-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1387545840-2844-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: anton@enomsg.org, lee.jones@linaro.org
-Cc: dwmw2@infradead.org, mark.rutland@arm.com, rob@landley.net, ijc+devicetree@hellion.org.uk, swarren@nvidia.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+From: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 6/9] phy: Add support for S5PV210 to the Exynos USB 2.0 PHY
+ driver
+Date: Fri, 20 Dec 2013 14:24:12 +0100
+Message-ID: <1387545857-9472-7-git-send-email-k.debski@samsung.com>
+References: <1387545857-9472-1-git-send-email-k.debski@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1387545857-9472-1-git-send-email-k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ams AS3722 supports the power off functionality to turn off
-system.
+From: Mateusz Krawczuk <mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add power off driver for ams AS3722.
+Add support for the Samsung's S5PV210 SoC to the Exynos USB 2.0 PHY driver.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Tested-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
+[k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org: cleanup and commit description]
+[k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org: make changes accordingly to the mailing list
+comments]
+Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
-Changes from V1:
-- Just added tested by.
+ .../devicetree/bindings/phy/samsung-phy.txt        |    1 +
+ drivers/phy/Kconfig                                |   10 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-s5pv210-usb2.c                     |  199 ++++++++++++++++++++
+ drivers/phy/phy-samsung-usb2.c                     |    6 +
+ drivers/phy/phy-samsung-usb2.h                     |    1 +
+ 6 files changed, 218 insertions(+)
+ create mode 100644 drivers/phy/phy-s5pv210-usb2.c
 
- drivers/power/reset/Kconfig           |    6 +++
- drivers/power/reset/Makefile          |    1 +
- drivers/power/reset/as3722-poweroff.c |   96 +++++++++++++++++++++++++++++++++
- 3 files changed, 103 insertions(+)
- create mode 100644 drivers/power/reset/as3722-poweroff.c
-
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index 9b3ea53..6d452a7 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -6,6 +6,12 @@ menuconfig POWER_RESET
+diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+index 39d52cc..eb40460 100644
+--- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
++++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+@@ -26,6 +26,7 @@ Samsung S5P/EXYNOS SoC series USB PHY
  
- 	  Say Y here to enable board reset and power off
+ Required properties:
+ - compatible : should be one of the listed compatibles:
++	- "samsung,s5pv210-usb2-phy"
+ 	- "samsung,exynos4210-usb2-phy"
+ 	- "samsung,exynos4212-usb2-phy"
+ - reg : a list of registers used by phy driver
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index 8e5cce1..b2c51ce 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -61,6 +61,16 @@ config PHY_SAMSUNG_USB2
+ 	  particular SoCs has to be enabled in addition to this driver. Number
+ 	  and type of supported phys depends on the SoC.
  
-+config POWER_RESET_AS3722
-+	bool "ams AS3722 power-off driver"
-+	depends on MFD_AS3722 && POWER_RESET
++config PHY_S5PV210_USB2
++	bool "Support for S5PV210"
++	depends on PHY_SAMSUNG_USB2
++	depends on ARCH_S5PV210
 +	help
-+	  This driver supports turning off board via a ams AS3722 power-off.
++	  Enable USB PHY support for S5PV210. This option requires that Samsung
++	  USB 2.0 PHY driver is enabled and means that support for this
++	  particular SoC is compiled in the driver. In case of S5PV210 two phys
++	  are available - device and host.
 +
- config POWER_RESET_GPIO
- 	bool "GPIO power-off driver"
- 	depends on OF_GPIO && POWER_RESET
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 3e6ed88..a5b4a77 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -1,3 +1,4 @@
-+obj-$(CONFIG_POWER_RESET_AS3722) += as3722-poweroff.o
- obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
- obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
- obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
-diff --git a/drivers/power/reset/as3722-poweroff.c b/drivers/power/reset/as3722-poweroff.c
+ config PHY_EXYNOS4210_USB2
+ 	bool "Support for Exynos 4210"
+ 	depends on PHY_SAMSUNG_USB2
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index 9f4befd..fefc6c2 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -8,5 +8,6 @@ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+ obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+ obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+ obj-$(CONFIG_PHY_SAMSUNG_USB2)		+= phy-samsung-usb2.o
++obj-$(CONFIG_PHY_S5PV210_USB2)		+= phy-s5pv210-usb2.o
+ obj-$(CONFIG_PHY_EXYNOS4210_USB2)	+= phy-exynos4210-usb2.o
+ obj-$(CONFIG_PHY_EXYNOS4212_USB2)	+= phy-exynos4212-usb2.o
+diff --git a/drivers/phy/phy-s5pv210-usb2.c b/drivers/phy/phy-s5pv210-usb2.c
 new file mode 100644
-index 0000000..6849711
+index 0000000..58797a7
 --- /dev/null
-+++ b/drivers/power/reset/as3722-poweroff.c
-@@ -0,0 +1,96 @@
++++ b/drivers/phy/phy-s5pv210-usb2.c
+@@ -0,0 +1,199 @@
 +/*
-+ * Power off driver for ams AS3722 device.
++ * Samsung SoC USB 1.1/2.0 PHY driver - S5PV210 support
 + *
-+ * Copyright (c) 2013, NVIDIA CORPORATION.  All rights reserved.
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ * Authors: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 + *
-+ * Author: Laxman Dewangan <ldewangan@nvidia.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
 +
-+#include <linux/mfd/as3722.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/phy/phy.h>
++#include "phy-samsung-usb2.h"
 +
-+struct as3722_poweroff {
-+	struct device *dev;
-+	struct as3722 *as3722;
++/* Exynos USB PHY registers */
++
++/* PHY power control */
++#define S5PV210_UPHYPWR			0x0
++
++#define S5PV210_UPHYPWR_PHY0_SUSPEND	BIT(0)
++#define S5PV210_UPHYPWR_PHY0_PWR	BIT(3)
++#define S5PV210_UPHYPWR_PHY0_OTG_PWR	BIT(4)
++#define S5PV210_UPHYPWR_PHY0	( \
++	S5PV210_UPHYPWR_PHY0_SUSPEND | \
++	S5PV210_UPHYPWR_PHY0_PWR | \
++	S5PV210_UPHYPWR_PHY0_OTG_PWR)
++
++#define S5PV210_UPHYPWR_PHY1_SUSPEND	BIT(6)
++#define S5PV210_UPHYPWR_PHY1_PWR	BIT(7)
++#define S5PV210_UPHYPWR_PHY1 ( \
++	S5PV210_UPHYPWR_PHY1_SUSPEND | \
++	S5PV210_UPHYPWR_PHY1_PWR)
++
++/* PHY clock control */
++#define S5PV210_UPHYCLK			0x4
++
++#define S5PV210_UPHYCLK_PHYFSEL_MASK	(0x3 << 0)
++#define S5PV210_UPHYCLK_PHYFSEL_48MHZ	(0x0 << 0)
++#define S5PV210_UPHYCLK_PHYFSEL_24MHZ	(0x3 << 0)
++#define S5PV210_UPHYCLK_PHYFSEL_12MHZ	(0x2 << 0)
++
++#define S5PV210_UPHYCLK_PHY0_ID_PULLUP	BIT(2)
++#define S5PV210_UPHYCLK_PHY0_COMMON_ON	BIT(4)
++#define S5PV210_UPHYCLK_PHY1_COMMON_ON	BIT(7)
++
++/* PHY reset control */
++#define S5PV210_UPHYRST			0x8
++
++#define S5PV210_URSTCON_PHY0		BIT(0)
++#define S5PV210_URSTCON_OTG_HLINK	BIT(1)
++#define S5PV210_URSTCON_OTG_PHYLINK	BIT(2)
++#define S5PV210_URSTCON_PHY1_ALL	BIT(3)
++#define S5PV210_URSTCON_HOST_LINK_ALL	BIT(4)
++
++/* Isolation, configured in the power management unit */
++#define S5PV210_USB_ISOL_DEVICE_OFFSET	0x704
++#define S5PV210_USB_ISOL_DEVICE		BIT(0)
++#define S5PV210_USB_ISOL_HOST_OFFSET	0x708
++#define S5PV210_USB_ISOL_HOST		BIT(1)
++
++
++enum s5pv210_phy_id {
++	S5PV210_DEVICE,
++	S5PV210_HOST,
++	S5PV210_NUM_PHYS,
 +};
 +
-+static struct as3722_poweroff *as3722_pm_poweroff;
-+
-+static void as3722_pm_power_off(void)
++/*
++ * s5pv210_rate_to_clk() converts the supplied clock rate to the value that
++ * can be written to the phy register.
++ */
++static int s5pv210_rate_to_clk(unsigned long rate, u32 *reg)
 +{
-+	int ret;
-+
-+	if (!as3722_pm_poweroff) {
-+		pr_err("AS3722 poweroff is not initialised\n");
-+		return;
-+	}
-+
-+	ret = as3722_update_bits(as3722_pm_poweroff->as3722,
-+		AS3722_RESET_CONTROL_REG, AS3722_POWER_OFF, AS3722_POWER_OFF);
-+	if (ret < 0)
-+		dev_err(as3722_pm_poweroff->dev,
-+			"RESET_CONTROL_REG update failed, %d\n", ret);
-+}
-+
-+static int as3722_poweroff_probe(struct platform_device *pdev)
-+{
-+	struct as3722_poweroff *as3722_poweroff;
-+	struct device_node *np = pdev->dev.parent->of_node;
-+
-+	if (!np)
++	pr_info("%lu\n", rate);
++	switch (rate) {
++	case 12 * MHZ:
++		*reg = S5PV210_UPHYCLK_PHYFSEL_12MHZ;
++		break;
++	case 24 * MHZ:
++		*reg = S5PV210_UPHYCLK_PHYFSEL_24MHZ;
++		break;
++	case 48 * MHZ:
++		*reg = S5PV210_UPHYCLK_PHYFSEL_48MHZ;
++		break;
++	default:
 +		return -EINVAL;
-+
-+	if (!of_property_read_bool(np, "ams,system-power-controller"))
-+		return 0;
-+
-+	as3722_poweroff = devm_kzalloc(&pdev->dev, sizeof(*as3722_poweroff),
-+				GFP_KERNEL);
-+	if (!as3722_poweroff)
-+		return -ENOMEM;
-+
-+	as3722_poweroff->as3722 = dev_get_drvdata(pdev->dev.parent);
-+	as3722_poweroff->dev = &pdev->dev;
-+	as3722_pm_poweroff = as3722_poweroff;
-+	if (!pm_power_off)
-+		pm_power_off = as3722_pm_power_off;
-+
-+	return 0;
++	}
 +}
 +
-+static int as3722_poweroff_remove(struct platform_device *pdev)
++static void s5pv210_isol(struct samsung_usb2_phy_instance *inst, bool on)
 +{
-+	if (pm_power_off == as3722_pm_power_off)
-+		pm_power_off = NULL;
-+	as3722_pm_poweroff = NULL;
++	struct samsung_usb2_phy_driver *drv = inst->drv;
++	u32 mask;
++	u32 tmp;
++
++	if (!drv->reg_isol)
++		return;
++
++	switch (inst->cfg->id) {
++	case S5PV210_DEVICE:
++		mask = S5PV210_USB_ISOL_DEVICE;
++		break;
++	case S5PV210_HOST:
++		mask = S5PV210_USB_ISOL_HOST;
++		break;
++	default:
++		return;
++	};
++
++	regmap_update_bits(drv->reg_pmu, offset, mask, on ? 0 : mask);
++}
++
++static void s5pv210_phy_pwr(struct samsung_usb2_phy_instance *inst, bool on)
++{
++	struct samsung_usb2_phy_driver *drv = inst->drv;
++	u32 rstbits = 0;
++	u32 phypwr = 0;
++	u32 rst;
++	u32 pwr;
++
++	switch (inst->cfg->id) {
++	case S5PV210_DEVICE:
++		phypwr =	S5PV210_UPHYPWR_PHY0;
++		rstbits =	S5PV210_URSTCON_PHY0;
++		break;
++	case S5PV210_HOST:
++		phypwr =	S5PV210_UPHYPWR_PHY1;
++		rstbits =	S5PV210_URSTCON_PHY1_ALL |
++				S5PV210_URSTCON_HOST_LINK_ALL;
++		break;
++	};
++
++	if (on) {
++		writel(inst->clk, drv->reg_phy + S5PV210_UPHYCLK);
++
++		pwr = readl(drv->reg_phy + S5PV210_UPHYPWR);
++		pwr &= ~phypwr;
++		writel(pwr, drv->reg_phy + S5PV210_UPHYPWR);
++
++		rst = readl(drv->reg_phy + S5PV210_UPHYRST);
++		rst |= rstbits;
++		writel(rst, drv->reg_phy + S5PV210_UPHYRST);
++		udelay(10);
++		rst &= ~rstbits;
++		writel(rst, drv->reg_phy + S5PV210_UPHYRST);
++	} else {
++		pwr = readl(drv->reg_phy + S5PV210_UPHYPWR);
++		pwr |= phypwr;
++		writel(pwr, drv->reg_phy + S5PV210_UPHYPWR);
++	}
++}
++
++static int s5pv210_power_on(struct samsung_usb2_phy_instance *inst)
++{
++	struct samsung_usb2_phy_driver *drv = inst->drv;
++
++	s5pv210_isol(inst, 0);
++	s5pv210_phy_pwr(inst, 1);
 +
 +	return 0;
 +}
 +
-+static struct platform_driver as3722_poweroff_driver = {
-+	.driver = {
-+		.name = "as3722-power-off",
-+		.owner = THIS_MODULE,
++static int s5pv210_power_off(struct samsung_usb2_phy_instance *inst)
++{
++	struct samsung_usb2_phy_driver *drv = inst->drv;
++
++	s5pv210_phy_pwr(inst, 0);
++	s5pv210_isol(inst, 1);
++
++	return 0;
++}
++
++
++static const struct samsung_usb2_common_phy s5pv210_phys[] = {
++	{
++		.label		= "device",
++		.id		= S5PV210_DEVICE,
++		.rate_to_clk	= s5pv210_rate_to_clk,
++		.power_on	= s5pv210_power_on,
++		.power_off	= s5pv210_power_off,
 +	},
-+	.probe = as3722_poweroff_probe,
-+	.remove = as3722_poweroff_remove,
++	{
++		.label		= "host",
++		.id		= S5PV210_HOST,
++		.rate_to_clk	= s5pv210_rate_to_clk,
++		.power_on	= s5pv210_power_on,
++		.power_off	= s5pv210_power_off,
++	},
++	{},
 +};
 +
-+module_platform_driver(as3722_poweroff_driver);
++const struct samsung_usb2_phy_config s5pv210_usb2_phy_config = {
++	.cpu		= TYPE_S5PV210,
++	.num_phys	= S5PV210_NUM_PHYS,
++	.phys		= s5pv210_phys,
++};
 +
-+MODULE_DESCRIPTION("Power off driver for ams AS3722 PMIC Device");
-+MODULE_ALIAS("platform:as3722-power-off");
-+MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-+MODULE_LICENSE("GPL v2");
+diff --git a/drivers/phy/phy-samsung-usb2.c b/drivers/phy/phy-samsung-usb2.c
+index 3c09e0e..464a626 100644
+--- a/drivers/phy/phy-samsung-usb2.c
++++ b/drivers/phy/phy-samsung-usb2.c
+@@ -95,6 +95,12 @@ static struct phy *samsung_usb2_phy_xlate(struct device *dev,
+ }
+ 
+ static const struct of_device_id samsung_usb2_phy_of_match[] = {
++#ifdef CONFIG_PHY_S5PV210_USB2
++	{
++		.compatible = "samsung,s5pv210-usb2-phy",
++		.data = &s5pv210_usb2_phy_config,
++	},
++#endif
+ #ifdef CONFIG_PHY_EXYNOS4210_USB2
+ 	{
+ 		.compatible = "samsung,exynos4210-usb2-phy",
+diff --git a/drivers/phy/phy-samsung-usb2.h b/drivers/phy/phy-samsung-usb2.h
+index ab89f91..5f5b240 100644
+--- a/drivers/phy/phy-samsung-usb2.h
++++ b/drivers/phy/phy-samsung-usb2.h
+@@ -61,6 +61,7 @@ struct samsung_usb2_phy_config {
+ 	bool has_mode_switch;
+ };
+ 
++extern const struct samsung_usb2_phy_config s5pv210_usb2_phy_config;
+ extern const struct samsung_usb2_phy_config exynos4210_usb2_phy_config;
+ extern const struct samsung_usb2_phy_config exynos4212_usb2_phy_config;
+ #endif
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
