@@ -1,45 +1,125 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 3/6] pinctrl: Make PINCTRL selectable by defconfig/menuconfig
-Date: Fri, 20 Dec 2013 10:37:51 +0100
-Message-ID: <CACRpkdY-MM7OoMq_L90YRADy=oaDoV1wAOccVz90LqfRfEh=3Q@mail.gmail.com>
-References: <1381174108-25168-1-git-send-email-syin@broadcom.com>
-	<1386787041-6035-1-git-send-email-syin@broadcom.com>
-	<1386787041-6035-4-git-send-email-syin@broadcom.com>
-	<CACRpkdauqYNiby-ta3c_he2ovG__0e6ubmzZ8Bx1cP_OzK4=LQ@mail.gmail.com>
-	<CAEPRUYpsp_FVobY_DeEQU2+rCD7q7T=p7k++XvG-22x-OWHY8Q@mail.gmail.com>
-	<CACRpkdY2BExGiL6HBg7zn_szJQMnSNsxOSuo7RyrRmrz=cVe2A@mail.gmail.com>
-	<20131217001842.GB3840@sonymobile.com>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH v6 3/7] regulator: add pbias regulator support
+Date: Fri, 20 Dec 2013 15:17:59 +0530
+Message-ID: <52B4124F.8010903@ti.com>
+References: <1386670577-3530-1-git-send-email-balajitk@ti.com> <1387456720-7202-1-git-send-email-balajitk@ti.com> <1387456720-7202-4-git-send-email-balajitk@ti.com> <20131219163300.GK27438@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131217001842.GB3840@sonymobile.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Christian Daudt <bcm@fixthebug.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Heiko St?bner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Sherman Yin <syin@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20131219163300.GK27438@atomide.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2013 at 1:18 AM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
+On Thursday 19 December 2013 10:03 PM, Tony Lindgren wrote:
+> Looks good to me, just few minor comments below.
+>
+> * Balaji T K <balajitk@ti.com> [131219 04:40]:
+>> --- /dev/null
+>> +++ b/drivers/regulator/pbias-regulator.c
+>> @@ -0,0 +1,255 @@
+>> +/*
+>> + * pbias-regulator.c
+>> + *
+>> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
+>> + * Author: Balaji T K <balajitk@ti.com>
+>
+> Maybe use 2013 here instead?
 
-> No matter how we build the individual pinctrl drivers we will always
-> need the pinctrl framework in a multi-soc zImage; so I can't see that
-> we gain anything from being able to compile PINCTRL as a module.
+yes
 
-I discussed this matter with Christian on IRC and I believe we could
-basically do "select PINCTRL" on ARCH_MULTIPLATFORM as the
-vast majority of multiplatforms appear to be using this anyway, this
-would make the submenu for pin control pop up in menuconfig
-for this, and make it possible to move different subdrivers to modules
-if desired.
+>
+>> +static int pbias_regulator_enable(struct regulator_dev *rdev)
+>> +{
+>> +	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
+>> +	const struct pbias_reg_info *info = data->info;
+>> +	int ret;
+>> +
+>> +	ret = regmap_update_bits(data->syscon, data->pbias_reg,
+>> +					info->enable_mask, info->enable);
+>> +
+>> +	return ret;
+>> +}
+>
+> Do we need need to check the values after enable here? AFAIK setting
+> the PBIAS voltage change can also fail and that's probably why it has
 
-MULTIPLATFORM does not seem to be about saving footprint bytes
-on a very fine-granular level anyway, more about doing the module
-loading/unloading approach to footprint.
+failure due to mismatch in input voltage, should to be avoided and should
+be taken care in s/w by the caller before pbias regulator set voltage/enable.
 
-(That drivers such as clk, regulator, pin control, GPIO, irqchip are
-usually impossible to rmmod as their tentacles will invariably be
-in all drivers everywhere is another issue, but this approach will solve
-modular *loading* atleast.)
+> also the interrupt available.
+>
 
-Yours,
-Linus Walleij
+But interrupt was never used/tested AFAIK, there is some settling time
+before the generated interrupt status is truely valid, so pbias interrupt is not
+reliable.
+
+>> +static const struct pbias_reg_info pbias_mmc_omap3 = {
+>> +	.enable = BIT(1),
+>> +	.enable_mask = BIT(1),
+>> +	.vmode = BIT(0),
+>> +	.name = "pbias_mmc_omap3"
+>> +};
+>> +
+>> +static const struct pbias_reg_info pbias_sim_omap3 = {
+>> +	.enable = BIT(9),
+>> +	.enable_mask = BIT(9),
+>> +	.vmode = BIT(8),
+>> +	.name = "pbias_sim_omap3"
+>> +};
+>> +
+>> +static const struct pbias_reg_info pbias_mmc_omap4 = {
+>> +	.enable = BIT(26) | BIT(22),
+>> +	.enable_mask = BIT(26) | BIT(25) | BIT(22),
+>> +	.vmode = BIT(21),
+>> +	.name = "pbias_mmc_omap4"
+>> +};
+>> +
+>> +static const struct pbias_reg_info pbias_mmc_omap5 = {
+>> +	.enable = BIT(27) | BIT(26),
+>> +	.enable_mask = BIT(27) | BIT(25) | BIT(26),
+>> +	.vmode = BIT(21),
+>> +	.name = "pbias_mmc_omap5"
+>> +};
+>>
+>> +static struct of_regulator_match pbias_matches[] = {
+>> +	{ .name = "pbias_mmc_omap3", .driver_data = (void *)&pbias_mmc_omap3},
+>> +	{ .name = "pbias_sim_omap3", .driver_data = (void *)&pbias_sim_omap3},
+>> +	{ .name = "pbias_mmc_omap4", .driver_data = (void *)&pbias_mmc_omap4},
+>> +	{ .name = "pbias_mmc_omap5", .driver_data = (void *)&pbias_mmc_omap5},
+>> +};
+>
+> We probably need also pbias_mmc_omap2430 as that regiter mapping is
+> separate from omap3?
+>
+
+between omap2430 and omap3430, 3460 pbias register address are different,
+other than that enable,enable_mask and vmode are
+one and the same, so re-used "pbias_mmc_omap3" name and struct pbias_reg_info pbias_mmc_omap3
+for omap2430 too, save one entry in of_regulator_match!
+
+If separate name is needed for omap2430, I can add one for 2430,
+and reuse the "const struct pbias_reg_info pbias_mmc_omap3" of omap3
+since the bit map for enable/disable and voltage configuration will be same.
+Then pbias_matches will look like.
+
+ >> +static struct of_regulator_match pbias_matches[] = {
+ >> +	{ .name = "pbias_mmc_omap2430", .driver_data = (void *)&pbias_mmc_omap3},
+ >> +	{ .name = "pbias_mmc_omap3", .driver_data = (void *)&pbias_mmc_omap3},
+ >> +	{ .name = "pbias_sim_omap3", .driver_data = (void *)&pbias_sim_omap3},
+ >> +	{ .name = "pbias_mmc_omap4", .driver_data = (void *)&pbias_mmc_omap4},
+ >> +	{ .name = "pbias_mmc_omap5", .driver_data = (void *)&pbias_mmc_omap5},
+ >> +};
+
+Let me know if you still think that separate regulator name is needed for 2430,
+I can respin this series.
+
+> Other than that, good to see this finally happen. This should allow us to
+> get rid of most of the platform data callbacks for omap_hsmmc.c driver.
+>
+> Regards,
+>
+> Tony
+>
