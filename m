@@ -1,112 +1,71 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: [RFC 2/2] clk: implement generic DT preset clock frequency
-Date: Fri, 20 Dec 2013 22:08:47 +0000
-Message-ID: <1387577327-5007-3-git-send-email-james.hogan@imgtec.com>
-References: <1387577327-5007-1-git-send-email-james.hogan@imgtec.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1387577327-5007-1-git-send-email-james.hogan@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, James Hogan <james.hogan@imgtec.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC] ARM: omap3: Split the pinmux core device
+Date: Sat, 21 Dec 2013 00:05:38 +0100
+Message-ID: <2088462.QJuQNc7iK5@avalon>
+References: <1386177110-26424-1-git-send-email-laurent.pinchart@ideasonboard.com> <20131219171732.GB24230@earth.universe> <20131219183003.GR27438@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131219183003.GR27438@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, sakari.ailus@iki.fi
 List-Id: devicetree@vger.kernel.org
 
-Implement the clock-N-frequency clock consumer property to preset a
-clock to a particular frequency when it is requested by a driver.
+Hi Tony,
 
-This adds a new of_clk_setup_preset() which is called from the end of
-of_clk_get(). It simply looks in the consumer node for a property named
-"clock-<index>-frequency" and attempts to set the clock frequency if
-found.
+On Thursday 19 December 2013 10:30:03 Tony Lindgren wrote:
+> * Sebastian Reichel <sre@ring0.de> [131219 09:19]:
+> > On Wed, Dec 04, 2013 at 06:11:50PM +0100, Laurent Pinchart wrote:
+> > > The omap3_pmx_core pinmux device in the device tree handles the system
+> > > controller module (SCM) PADCONFS fonction. Its control registers are
+> > > split in two distinct areas, with other SCM registers in-between. Those
+> > > other registers can't thus be requested by other drivers as the memory
+> > > region gets reserved by the pinmux driver.
+> > > 
+> > > Split the omap3_pmx_core device tree node in two for the two memory
+> > > regions.
+> > > 
+> > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > ---
+> > > 
+> > >  arch/arm/boot/dts/omap3-beagle-xm.dts | 45 ++++++++++++++++++++++------
+> > >  arch/arm/boot/dts/omap3-beagle.dts    | 28 +++++++++++++++-------
+> > >  arch/arm/boot/dts/omap3-igep0020.dts  | 26 ++++++++++----------
+> > >  arch/arm/boot/dts/omap3-zoom3.dts     | 19 ++++++++++-----
+> > >  arch/arm/boot/dts/omap3.dtsi          | 13 +++++++++-
+> > >  5 files changed, 95 insertions(+), 36 deletions(-)
+> > > 
+> > > While working on the OMAP3 ISP driver I've run into a failure to request
+> > > a memory region already requested by the pinctrl-single driver. This
+> > > patch is an attempt to fix the problem. An alternative approach would be
+> > > to support multiple reg values in the pinctrl-single driver, but that
+> > > might not be much cleaner. I'm open to suggestions.
+> > 
+> > Acked-By: Sebastian Reichel <sre@debian.org>
+> > 
+> > I haven't checked the board dts files, but the change in omap3.dtsi is
+> > needed to "fix a external abort on non-linefetch" when doing
+> > 
+> > cat /sys/kernel/debug/pinctrl/.../pins
+> > 
+> > on my Nokia N900.
+> 
+> OK, that should be mentioned in the patch. Laurent, care to update the patch
+> for that?
 
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Cc: Mike Turquette <mturquette@linaro.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org
----
- drivers/clk/clk.c    | 34 ++++++++++++++++++++++++++++++++++
- drivers/clk/clkdev.c |  3 +++
- include/linux/clk.h  |  5 +++++
- 3 files changed, 42 insertions(+)
+Done.
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 2cf2ea6..3f518a2 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2252,4 +2252,38 @@ void __init of_clk_init(const struct of_device_id *matches)
- 		clk_init_cb(np);
- 	}
- }
-+
-+/**
-+ * of_clk_setup_preset() - Set up a clock from device tree when it is requested
-+ * @np:		pointer to clock consumer node
-+ * @index:	consumer index of clock that has been requested
-+ * @clk:	struct clk *
-+ *
-+ * This function is called when a clock is requested by a driver. It scans the
-+ * clock consumer node for properties which indicate defaults for how the clock
-+ * should be set up.
-+ *
-+ * Properties looked for are:
-+ * - clock-N-frequency
-+ */
-+void of_clk_setup_preset(struct device_node *np, int index, struct clk *clk)
-+{
-+	u32 rate;
-+	int ret;
-+	char prop_name[24];
-+
-+	/* look for a clock-N-frequency property */
-+	snprintf(prop_name, sizeof(prop_name),
-+		 "clock-%d-frequency", index);
-+	if (!of_property_read_u32(np, prop_name, &rate)) {
-+		/* try to set the frequency to that specified in DT */
-+		ret = clk_set_rate(clk, rate);
-+		if (ret)
-+			pr_err("Failed to preset clock %d (%s) of %s to %u Hz\n",
-+				 index, clk->name, np->full_name, rate);
-+		else
-+			pr_debug("Preset clock %d (%s) of %s to %u Hz\n",
-+				 index, clk->name, np->full_name, rate);
-+	}
-+}
- #endif
-diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-index 442a313..edcd67f 100644
---- a/drivers/clk/clkdev.c
-+++ b/drivers/clk/clkdev.c
-@@ -41,6 +41,9 @@ struct clk *of_clk_get(struct device_node *np, int index)
- 
- 	clk = of_clk_get_from_provider(&clkspec);
- 	of_node_put(clkspec.np);
-+
-+	if (!IS_ERR(clk))
-+		of_clk_setup_preset(np, index, clk);
- 	return clk;
- }
- EXPORT_SYMBOL(of_clk_get);
-diff --git a/include/linux/clk.h b/include/linux/clk.h
-index 9a6d045..3e112ea 100644
---- a/include/linux/clk.h
-+++ b/include/linux/clk.h
-@@ -368,6 +368,7 @@ struct of_phandle_args;
- struct clk *of_clk_get(struct device_node *np, int index);
- struct clk *of_clk_get_by_name(struct device_node *np, const char *name);
- struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec);
-+void of_clk_setup_preset(struct device_node *np, int index, struct clk *clk);
- #else
- static inline struct clk *of_clk_get(struct device_node *np, int index)
- {
-@@ -378,6 +379,10 @@ static inline struct clk *of_clk_get_by_name(struct device_node *np,
- {
- 	return ERR_PTR(-ENOENT);
- }
-+static inline void of_clk_setup_preset(struct device_node *np, int index,
-+				       struct clk *clk)
-+{
-+}
- #endif
- 
- #endif
+> We should also check that the register ranges match with Nishant's similar
+> patch "[PATCH] ARM: dts: omap3: split pinctrl for core into two parts".
+
+I've checked Nishanth's patch and updated mine as I had forgotten the LED pins 
+on the IGEP boards. Reviewing the two patches side by side wouldn't hurt of 
+course.
+
 -- 
-1.8.3.2
+Regards,
+
+Laurent Pinchart
+
