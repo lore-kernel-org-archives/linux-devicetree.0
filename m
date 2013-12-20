@@ -1,39 +1,38 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH RFC v2 REPOST 0/8] Beaglebone-Black HDMI
- audio
-Date: Fri, 20 Dec 2013 13:51:43 +0200
-Message-ID: <52B42F4F.8080004@ti.com>
-References: <cover.1384862950.git.jsarha@ti.com>
- <cover.1387535299.git.jsarha@ti.com> <20131220113058.GN31886@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20131220113058.GN31886@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH] thermal:samsung: fix compilation warning
+Date: Fri, 20 Dec 2013 17:42:07 +0530
+Message-ID: <1387541527-4762-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 12/20/2013 01:30 PM, Mark Brown wrote:
-> On Fri, Dec 20, 2013 at 12:36:56PM +0200, Jyri Sarha wrote:
->> Changes since the first RFC version of the patches:
->
-> Please don't bury your e-mails in the middle of old threads, that's a
-> good way of getting them missed.
->
+This patch fixes a compilation warning.
 
-I have done it for my own convenience to find the history of the patch 
-set when ever someone is commenting it. But I'll stop doing that from 
-now on.
+warning: passing argument 5 of 'thermal_zone_device_register' discards 'const'
+qualifier from pointer target type [enabled by default]
+include/linux/thermal.h:270:29: note: expected 'struct thermal_zone_device_ops *'
+but argument is of type 'const struct thermal_zone_device_ops *'
 
-Best regards,
-Jyri
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+---
+ drivers/thermal/samsung/exynos_thermal_common.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/thermal/samsung/exynos_thermal_common.c b/drivers/thermal/samsung/exynos_thermal_common.c
+index c2301da..3f5ad25 100644
+--- a/drivers/thermal/samsung/exynos_thermal_common.c
++++ b/drivers/thermal/samsung/exynos_thermal_common.c
+@@ -280,7 +280,7 @@ static int exynos_get_trend(struct thermal_zone_device *thermal,
+ 	return 0;
+ }
+ /* Operation callback functions for thermal zone */
+-static struct thermal_zone_device_ops const exynos_dev_ops = {
++static struct thermal_zone_device_ops exynos_dev_ops = {
+ 	.bind = exynos_bind,
+ 	.unbind = exynos_unbind,
+ 	.get_temp = exynos_get_temp,
+-- 
+1.7.10.4
+
