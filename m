@@ -1,101 +1,45 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v7 06/14] usb: phy-mxs: Add anatop regmap
-Date: Fri, 20 Dec 2013 15:52:02 +0800
-Message-ID: <1387525930-27313-7-git-send-email-peter.chen@freescale.com>
-References: <1387525930-27313-1-git-send-email-peter.chen@freescale.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 3/6] pinctrl: Make PINCTRL selectable by defconfig/menuconfig
+Date: Fri, 20 Dec 2013 10:37:51 +0100
+Message-ID: <CACRpkdY-MM7OoMq_L90YRADy=oaDoV1wAOccVz90LqfRfEh=3Q@mail.gmail.com>
+References: <1381174108-25168-1-git-send-email-syin@broadcom.com>
+	<1386787041-6035-1-git-send-email-syin@broadcom.com>
+	<1386787041-6035-4-git-send-email-syin@broadcom.com>
+	<CACRpkdauqYNiby-ta3c_he2ovG__0e6ubmzZ8Bx1cP_OzK4=LQ@mail.gmail.com>
+	<CAEPRUYpsp_FVobY_DeEQU2+rCD7q7T=p7k++XvG-22x-OWHY8Q@mail.gmail.com>
+	<CACRpkdY2BExGiL6HBg7zn_szJQMnSNsxOSuo7RyrRmrz=cVe2A@mail.gmail.com>
+	<20131217001842.GB3840@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387525930-27313-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131217001842.GB3840@sonymobile.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Daudt <bcm@fixthebug.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Heiko St?bner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Sherman Yin <syin@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-It is needed by imx6 SoC series, but not for imx23 and imx28.
+On Tue, Dec 17, 2013 at 1:18 AM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/usb/phy/phy-mxs-usb.c |   23 +++++++++++++++++++++--
- 1 files changed, 21 insertions(+), 2 deletions(-)
+> No matter how we build the individual pinctrl drivers we will always
+> need the pinctrl framework in a multi-soc zImage; so I can't see that
+> we gain anything from being able to compile PINCTRL as a module.
 
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 0c6f3bc..0ef930a 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -21,6 +21,8 @@
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/of_device.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
- 
- #define DRIVER_NAME "mxs_phy"
- 
-@@ -58,6 +60,9 @@
-  */
- #define MXS_PHY_SENDING_SOF_TOO_FAST		BIT(2)
- 
-+/* The SoCs who have anatop module */
-+#define MXS_PHY_HAS_ANATOP			BIT(3)
-+
- struct mxs_phy_data {
- 	unsigned int flags;
- };
-@@ -68,11 +73,13 @@ static const struct mxs_phy_data imx23_phy_data = {
- 
- static const struct mxs_phy_data imx6q_phy_data = {
- 	.flags = MXS_PHY_SENDING_SOF_TOO_FAST |
--		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-+		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS |
-+		MXS_PHY_HAS_ANATOP,
- };
- 
- static const struct mxs_phy_data imx6sl_phy_data = {
--	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-+	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS |
-+		MXS_PHY_HAS_ANATOP,
- };
- 
- static const struct of_device_id mxs_phy_dt_ids[] = {
-@@ -87,6 +94,7 @@ struct mxs_phy {
- 	struct usb_phy phy;
- 	struct clk *clk;
- 	const struct mxs_phy_data *data;
-+	struct regmap *regmap_anatop;
- };
- 
- static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
-@@ -190,6 +198,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 	int ret;
- 	const struct of_device_id *of_id =
- 			of_match_device(mxs_phy_dt_ids, &pdev->dev);
-+	struct device_node *np = pdev->dev.of_node;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
-@@ -226,6 +235,16 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, mxs_phy);
- 
-+	if (mxs_phy->data->flags & MXS_PHY_HAS_ANATOP) {
-+		mxs_phy->regmap_anatop = syscon_regmap_lookup_by_phandle
-+			(np, "fsl,anatop");
-+		if (IS_ERR(mxs_phy->regmap_anatop)) {
-+			dev_dbg(&pdev->dev,
-+				"failed to find regmap for anatop\n");
-+			return PTR_ERR(mxs_phy->regmap_anatop);
-+		}
-+	}
-+
- 	ret = usb_add_phy_dev(&mxs_phy->phy);
- 	if (ret)
- 		return ret;
--- 
-1.7.8
+I discussed this matter with Christian on IRC and I believe we could
+basically do "select PINCTRL" on ARCH_MULTIPLATFORM as the
+vast majority of multiplatforms appear to be using this anyway, this
+would make the submenu for pin control pop up in menuconfig
+for this, and make it possible to move different subdrivers to modules
+if desired.
 
+MULTIPLATFORM does not seem to be about saving footprint bytes
+on a very fine-granular level anyway, more about doing the module
+loading/unloading approach to footprint.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(That drivers such as clk, regulator, pin control, GPIO, irqchip are
+usually impossible to rmmod as their tentacles will invariably be
+in all drivers everywhere is another issue, but this approach will solve
+modular *loading* atleast.)
+
+Yours,
+Linus Walleij
