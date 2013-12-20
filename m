@@ -1,66 +1,32 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v6 3/7] regulator: add pbias regulator support
-Date: Fri, 20 Dec 2013 16:09:17 +0000
-Message-ID: <20131220160917.GY31886@sirena.org.uk>
-References: <1386670577-3530-1-git-send-email-balajitk@ti.com>
- <1387456720-7202-1-git-send-email-balajitk@ti.com>
- <1387456720-7202-4-git-send-email-balajitk@ti.com>
- <20131219163300.GK27438@atomide.com>
- <52B4124F.8010903@ti.com>
- <20131220155721.GX27438@atomide.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V2 1/2] mfd: AS3722: add dt node properties for system
+ power controller
+Date: Fri, 20 Dec 2013 09:09:46 -0700
+Message-ID: <52B46BCA.1010709@wwwdotorg.org>
+References: <1387545840-2844-1-git-send-email-ldewangan@nvidia.com> <20131220134808.GD3709@lee--X1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oUI2l+Vq7ILP1REU"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131220155721.GX27438@atomide.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Balaji T K <balajitk@ti.com>, linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131220134808.GD3709@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Laxman Dewangan <ldewangan@nvidia.com>
+Cc: anton@enomsg.org, dwmw2@infradead.org, mark.rutland@arm.com, rob@landley.net, ijc+devicetree@hellion.org.uk, swarren@nvidia.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 12/20/2013 06:48 AM, Lee Jones wrote:
+> On Fri, 20 Dec 2013, Laxman Dewangan wrote:
+> 
+>> ams AS3722 device supports the power off by turning off its all rails.
+>>
+>> Add dt node properties to enable this functionality on this device.
+>>
+>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>> Tested-by: Stephen Warren <swarren@nvidia.com>
+> 
+> I'm guessing I can use this as an Ack?
 
---oUI2l+Vq7ILP1REU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Dec 20, 2013 at 07:57:21AM -0800, Tony Lindgren wrote:
-> * Balaji T K <balajitk@ti.com> [131220 01:49]:
-
-> > But interrupt was never used/tested AFAIK, there is some settling time
-> > before the generated interrupt status is truely valid, so pbias interrupt is not
-> > reliable.
-
-> OK. Do we need the standard regulator property startup-delay-us for the
-> PBIAS regulator then? Or if it's always fixed, I guess it could be done
-> in the pbias_regulator_enable()?
-
-That delay is supposed to be the time for the startup of the supply
-rather than any detection code.  It should be set using enable_time in
-the driver if it's not system dependent - the property is there for
-cases where the delay depends on system configuration (eg, due to the
-capacitor values).
-
---oUI2l+Vq7ILP1REU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJStGuqAAoJELSic+t+oim9rfcP/2G7Jo4pNQZyK9i4LJRbOKoh
-3QoJrWRy6VXROAyXSLGBVP+TPWEMJpuSzu03PusUjFB9pxOA8ZSexgOMyjMq2Bbn
-sZwEpsqvrCG5fKAYHq80UOifv0ONxl1mWpAjvLdNqTNz+A9s3rYYS7Pz3u21J2wo
-pfyYYsXA7G1ih/cUjEODIGMWxlLjA+sRQBHbDj6fva2aAEW682uiSbkHuDvzihuD
-FEn+7Xdf/zhfUlffbrFTu2g3LuFvwQOUm0dWikLeoLFcuugSt+wKQWzyMDmDC+vC
-94yKgbLxrE/0NPBFrmHEbXtn6fc5f6X/kjgLlvSyZyaKrdnGd8tJEwJn/Qe0noNK
-57x63QbXKPdC9ylbgFOtvAkiymrmv9qHb6snnrx+MZ+lzd4WTBXYKOKevm5jE4qO
-HEsh+kY7RfOQemvWI6VgLzOTcFKiPqKWxjitfmUpXxDVwklRP2gIAfaJcTy28H7p
-/DC/58GwQ7joOoNtIXivBWNpRqCIyAMmInfHUgvBKO52X6bvqy4V89bdhUN0+u/p
-T8NztMDY4npLMGpaZaAY/JYr93wNkOdkp2//rlTcejg+9uF8eW3WpsTbH0OV00gb
-X2l6pKE6+FcLlTHP8wfYFmKmCUIWW1DnK019ZjlhAFepUhz+vwZJ83F9TshdUyfG
-du92sE/JrJ9t3Y4+fTxB
-=QDfy
------END PGP SIGNATURE-----
-
---oUI2l+Vq7ILP1REU--
+You mean for the DT binding? I'm not actually in MAINTAINERS for DT
+binding reviews any more, but this binding change is identical to that
+which appears in a bunch of other drivers, so I'd tend not to think it
+needs an ack.
