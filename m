@@ -1,113 +1,37 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: [PATCH v7 4/7] mmc: omap_hsmmc: adapt hsmmc to use pbias regulator
-Date: Fri, 20 Dec 2013 23:05:52 +0530
-Message-ID: <1387560955-6547-5-git-send-email-balajitk@ti.com>
-References: <1387560955-6547-1-git-send-email-balajitk@ti.com>
+From: Ben Hutchings <bhutchings@solarflare.com>
+Subject: Re: [PATCH 0/4] misc: xgene: Add support for APM X-Gene SoC Queue
+ Manager/Traffic Manager
+Date: Fri, 20 Dec 2013 17:46:16 +0000
+Message-ID: <1387561576.1549.5.camel@bwh-desktop.uk.level5networks.com>
+References: <1387507503-7565-1-git-send-email-rapatel@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1387560955-6547-1-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org, tony@atomide.com
-Cc: Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1387507503-7565-1-git-send-email-rapatel@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ravi Patel <rapatel@apm.com>, David Miller <davem@davemloft.net>
+Cc: arnd@arndb.de, gregkh@linuxfoundation.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-In DT case, PBAIS registers are programmed via regulator,
-use regulator APIs to control PBIAS.
+> CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, 
+> is for the sole use of the intended recipient(s) and contains information
+> that is confidential and proprietary to Applied Micro Circuits Corporation or its subsidiaries. 
+> It is to be used solely for the purpose of furthering the parties' business relationship. 
+> All unauthorized review, use, disclosure or distribution is prohibited. 
+> If you are not the intended recipient, please contact the sender by reply e-mail 
+> and destroy all copies of the original message.
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
----
- drivers/mmc/host/omap_hsmmc.c |   39 +++++++++++++++++++++++++++++++++++++++
- 1 files changed, 39 insertions(+), 0 deletions(-)
+Well this definitely has nothing to do with any business relationship
+that may exist between AMCC and Solarflare, so please don't send any
+more of these messages either directly or via netdev.
 
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 342be25..0a390f8 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -126,6 +126,10 @@
- #define OMAP_MMC_MAX_CLOCK	52000000
- #define DRIVER_NAME		"omap_hsmmc"
- 
-+#define VDD_1V8			1800000		/* 180000 uV */
-+#define VDD_3V0			3000000		/* 300000 uV */
-+#define VDD_165_195		(ffs(MMC_VDD_165_195) - 1)
-+
- /*
-  * One controller can have multiple slots, like on some omap boards using
-  * omap.c controller driver. Luckily this is not currently done on any known
-@@ -164,6 +168,8 @@ struct omap_hsmmc_host {
- 	 */
- 	struct	regulator	*vcc;
- 	struct	regulator	*vcc_aux;
-+	struct	regulator	*pbias;
-+	bool			pbias_enabled;
- 	int			pbias_disable;
- 	void	__iomem		*base;
- 	resource_size_t		mapbase;
-@@ -272,6 +278,15 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
- 	if (mmc_slot(host).before_set_reg)
- 		mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
- 
-+	if (host->pbias) {
-+		if (host->pbias_enabled == 1) {
-+			ret = regulator_disable(host->pbias);
-+			if (!ret)
-+				host->pbias_enabled = 0;
-+		}
-+		regulator_set_voltage(host->pbias, VDD_3V0, VDD_3V0);
-+	}
-+
- 	/*
- 	 * Assume Vcc regulator is used only to power the card ... OMAP
- 	 * VDDS is used to power the pins, optionally with a transceiver to
-@@ -306,9 +321,29 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
- 		}
- 	}
- 
-+	if (host->pbias) {
-+		if (vdd <= VDD_165_195)
-+			ret = regulator_set_voltage(host->pbias, VDD_1V8,
-+								VDD_1V8);
-+		else
-+			ret = regulator_set_voltage(host->pbias, VDD_3V0,
-+								VDD_3V0);
-+		if (ret < 0)
-+			goto error_set_power;
-+
-+		if (host->pbias_enabled == 0) {
-+			ret = regulator_enable(host->pbias);
-+			if (!ret) {
-+				host->pbias_enabled = 1;
-+				goto error_set_power;
-+			}
-+		}
-+	}
-+
- 	if (mmc_slot(host).after_set_reg)
- 		mmc_slot(host).after_set_reg(dev, slot, power_on, vdd);
- 
-+error_set_power:
- 	return ret;
- }
- 
-@@ -342,6 +377,9 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
- 	reg = devm_regulator_get_optional(host->dev, "vmmc_aux");
- 	host->vcc_aux = IS_ERR(reg) ? NULL : reg;
- 
-+	reg = devm_regulator_get_optional(host->dev, "pbias");
-+	host->pbias = IS_ERR(reg) ? NULL : reg;
-+
- 	/* For eMMC do not power off when not in sleep state */
- 	if (mmc_slot(host).no_regulator_off_init)
- 		return 0;
-@@ -1808,6 +1846,7 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
- 	host->base	= ioremap(host->mapbase, SZ_4K);
- 	host->power_mode = MMC_POWER_OFF;
- 	host->next_data.cookie = 1;
-+	host->pbias_enabled = 0;
- 
- 	platform_set_drvdata(pdev, host);
- 
+David, you'd better let all the netdev archives know to delete these
+messages... ;-)
+
+Ben.
+
 -- 
-1.7.5.4
-
+Ben Hutchings, Staff Engineer, Solarflare
+Not speaking for my employer; that's the marketing department's job.
+They asked us to note that Solarflare product names are trademarked.
