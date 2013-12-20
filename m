@@ -1,63 +1,353 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCHv7 06/12] ARM: tegra: create a DT header defining SWGROUP
- ID
-Date: Fri, 20 Dec 2013 10:36:07 -0700
-Message-ID: <52B48007.7050002@wwwdotorg.org>
-References: <1386835033-4701-1-git-send-email-hdoyu@nvidia.com> <1386835033-4701-7-git-send-email-hdoyu@nvidia.com> <52B1568F.1050305@gmail.com> <52B1CCF1.2040907@wwwdotorg.org> <20131220123554.GQ27787@ulmo.nvidia.com>
+From: Balaji T K <balajitk@ti.com>
+Subject: [PATCH v7 3/7] regulator: add pbias regulator support
+Date: Fri, 20 Dec 2013 23:05:51 +0530
+Message-ID: <1387560955-6547-4-git-send-email-balajitk@ti.com>
+References: <1387560955-6547-1-git-send-email-balajitk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131220123554.GQ27787-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Zhang <nvmarkzhang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1387560955-6547-1-git-send-email-balajitk@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org, tony@atomide.com
+Cc: Balaji T K <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/20/2013 05:35 AM, Thierry Reding wrote:
-> On Wed, Dec 18, 2013 at 09:27:29AM -0700, Stephen Warren wrote:
->> On 12/18/2013 01:02 AM, Mark Zhang wrote:
->>> On 12/12/2013 03:57 PM, Hiroshi Doyu wrote:
->>>> Create a header file to define the swgroup IDs used by the IOMMU(SMMU)
->>>> binding. "swgroup" is a group of H/W clients which a Tegra SoC
->>>> supports. This unique ID can be used to calculate MC_SMMU_<swgroup
->>>> name>_ASID_0 register offset and MC_<swgroup name>_HOTRESET_*_0
->>>> register bit. This will allow the same header to be used by both
->>>> device tree files, and drivers implementing this binding, which
->>>> guarantees that the two stay in sync. This also makes device trees
->>>> more readable by using names instead of magic numbers. For HOTRESET
->>>> bit shifting we need another conversion table, which will come later.
->>
->>>> diff --git a/include/dt-bindings/memory/tegra-swgroup.h b/include/dt-bindings/memory/tegra-swgroup.h
->>
->>>> +#define TEGRA_SWGROUP_MPE	11	/* 0x264 */
->>>> +#define TEGRA_SWGROUP_MSENC	SWGROUP_MPE
->>>
->>> Need to change this to:
->>>
->>> #define TEGRA_SWGROUP_MSENC	11
->>>
->>> The reason is that, this makes "TEGRA_SWGROUP_BIT" doesn't work. So if I
->>> write "TEGRA_SWGROUP_CELLS(MSENC)" in dt, that causes a dt compiling error.
->>
->> I guess it's because TEGRA_SWGROUP_BIT needs to expand its argument
->> twice, which can be done.
->>
->> That all said, just defining all the names directly to constants is
->> probably the most direct fix.
-> 
-> Erm... isn't this simply a typo, where:
-> 
-> 	#define TEGRA_SWGROUP_MSENC	SWGROUP_MPE
-> 
-> should simply be
-> 
-> 	#define TEGRA_SWGROUP_MSENC	TEGRA_SWGROUP_MPE
-> 
-> ?
-> 
-> That certainly works for me.
+pbias register controls internal power supply to sd card i/o pads
+in most OMAPs (OMAP2-5, DRA7).
+Control bits for selecting voltage level and
+enabling/disabling are in the same PBIAS register.
 
-You're right. I guess ## is defined to re-expand its result, so
-TEGRA_SWGROUP_BIT(ISP2) -> TEGRA_SWGROUP_##ISP2 -> TEGRA_SWGROUP_ISP2 ->
-TEGRA_SWGROUP_ISP -> 8.
+Signed-off-by: Balaji T K <balajitk@ti.com>
+---
+ .../bindings/regulator/pbias-regulator.txt         |   16 ++
+ drivers/regulator/Kconfig                          |    9 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/pbias-regulator.c                |  261 ++++++++++++++++++++
+ 4 files changed, 287 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/pbias-regulator.txt
+ create mode 100644 drivers/regulator/pbias-regulator.c
+
+diff --git a/Documentation/devicetree/bindings/regulator/pbias-regulator.txt b/Documentation/devicetree/bindings/regulator/pbias-regulator.txt
+new file mode 100644
+index 0000000..359d3f9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/pbias-regulator.txt
+@@ -0,0 +1,16 @@
++PBIAS internal regulator for SD card dual voltage i/o pads on OMAP SoCs.
++
++Required properties:
++- compatible:
++  - "ti,pbias-omap" for OMAP2, OMAP3, OMAP4, OMAP5, DRA7
++
++Optional properties:
++- Any optional property defined in bindings/regulator/regulator.txt
++
++Example:
++
++		pbias_regulator: pbias_regulator {
++			regulator-name = "pbias_mmc_omap4";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3000000>;
++	};
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index ce785f4..741e8fb 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -369,6 +369,15 @@ config REGULATOR_PALMAS
+ 	  on the muxing. This is handled automatically in the driver by
+ 	  reading the mux info from OTP.
+ 
++config REGULATOR_PBIAS
++	tristate "PBIAS OMAP regulator driver"
++	depends on (ARCH_OMAP || COMPILE_TEST) && MFD_SYSCON
++	help
++	 Say y here to support pbias regulator for mmc1:SD card i/o
++	 on OMAP SoCs.
++	 This driver provides support for OMAP pbias modelled
++	 regulators.
++
+ config REGULATOR_PCAP
+ 	tristate "Motorola PCAP2 regulator driver"
+ 	depends on EZX_PCAP
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 01c597e..16000fa 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -52,6 +52,7 @@ obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
+ obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
+ obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
+ obj-$(CONFIG_REGULATOR_TPS51632) += tps51632-regulator.o
++obj-$(CONFIG_REGULATOR_PBIAS) += pbias-regulator.o
+ obj-$(CONFIG_REGULATOR_PCAP) += pcap-regulator.o
+ obj-$(CONFIG_REGULATOR_PCF50633) += pcf50633-regulator.o
+ obj-$(CONFIG_REGULATOR_RC5T583)  += rc5t583-regulator.o
+diff --git a/drivers/regulator/pbias-regulator.c b/drivers/regulator/pbias-regulator.c
+new file mode 100644
+index 0000000..992ec09
+--- /dev/null
++++ b/drivers/regulator/pbias-regulator.c
+@@ -0,0 +1,261 @@
++/*
++ * pbias-regulator.c
++ *
++ * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Author: Balaji T K <balajitk@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/mfd/syscon.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++
++struct pbias_reg_info {
++	u32 enable;
++	u32 enable_mask;
++	u32 vmode;
++	unsigned int enable_time;
++	char *name;
++};
++
++struct pbias_regulator_data {
++	struct regulator_desc desc;
++	void __iomem *pbias_addr;
++	unsigned int pbias_reg;
++	struct regulator_dev *dev;
++	struct regmap *syscon;
++	const struct pbias_reg_info *info;
++	int voltage;
++};
++
++static int pbias_regulator_set_voltage(struct regulator_dev *dev,
++			int min_uV, int max_uV, unsigned *selector)
++{
++	struct pbias_regulator_data *data = rdev_get_drvdata(dev);
++	const struct pbias_reg_info *info = data->info;
++	int ret, vmode;
++
++	if (min_uV <= 1800000)
++		vmode = 0;
++	else if (min_uV > 1800000)
++		vmode = info->vmode;
++
++	ret = regmap_update_bits(data->syscon, data->pbias_reg,
++						info->vmode, vmode);
++
++	return ret;
++}
++
++static int pbias_regulator_get_voltage(struct regulator_dev *rdev)
++{
++	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
++	const struct pbias_reg_info *info = data->info;
++	int value, voltage;
++
++	regmap_read(data->syscon, data->pbias_reg, &value);
++	value &= info->vmode;
++
++	voltage = value ? 3000000 : 1800000;
++
++	return voltage;
++}
++
++static int pbias_regulator_enable(struct regulator_dev *rdev)
++{
++	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
++	const struct pbias_reg_info *info = data->info;
++	int ret;
++
++	ret = regmap_update_bits(data->syscon, data->pbias_reg,
++					info->enable_mask, info->enable);
++
++	return ret;
++}
++
++static int pbias_regulator_disable(struct regulator_dev *rdev)
++{
++	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
++	const struct pbias_reg_info *info = data->info;
++	int ret;
++
++	ret = regmap_update_bits(data->syscon, data->pbias_reg,
++						info->enable_mask, 0);
++	return ret;
++}
++
++static int pbias_regulator_is_enable(struct regulator_dev *rdev)
++{
++	struct pbias_regulator_data *data = rdev_get_drvdata(rdev);
++	const struct pbias_reg_info *info = data->info;
++	int value;
++
++	regmap_read(data->syscon, data->pbias_reg, &value);
++
++	return (value & info->enable_mask) == info->enable_mask;
++}
++
++static struct regulator_ops pbias_regulator_voltage_ops = {
++	.set_voltage	= pbias_regulator_set_voltage,
++	.get_voltage	= pbias_regulator_get_voltage,
++	.enable		= pbias_regulator_enable,
++	.disable	= pbias_regulator_disable,
++	.is_enabled	= pbias_regulator_is_enable,
++};
++
++static const struct pbias_reg_info pbias_mmc_omap2430 = {
++	.enable = BIT(1),
++	.enable_mask = BIT(1),
++	.vmode = BIT(0),
++	.enable_time = 100,
++	.name = "pbias_mmc_omap2430"
++};
++
++static const struct pbias_reg_info pbias_sim_omap3 = {
++	.enable = BIT(9),
++	.enable_mask = BIT(9),
++	.vmode = BIT(8),
++	.enable_time = 100,
++	.name = "pbias_sim_omap3"
++};
++
++static const struct pbias_reg_info pbias_mmc_omap4 = {
++	.enable = BIT(26) | BIT(22),
++	.enable_mask = BIT(26) | BIT(25) | BIT(22),
++	.vmode = BIT(21),
++	.enable_time = 10,
++	.name = "pbias_mmc_omap4"
++};
++
++static const struct pbias_reg_info pbias_mmc_omap5 = {
++	.enable = BIT(27) | BIT(26),
++	.enable_mask = BIT(27) | BIT(25) | BIT(26),
++	.vmode = BIT(21),
++	.enable_time = 100,
++	.name = "pbias_mmc_omap5"
++};
++
++static struct of_regulator_match pbias_matches[] = {
++	{ .name = "pbias_mmc_omap2430", .driver_data = (void *)&pbias_mmc_omap2430},
++	{ .name = "pbias_sim_omap3", .driver_data = (void *)&pbias_sim_omap3},
++	{ .name = "pbias_mmc_omap4", .driver_data = (void *)&pbias_mmc_omap4},
++	{ .name = "pbias_mmc_omap5", .driver_data = (void *)&pbias_mmc_omap5},
++};
++#define PBIAS_NUM_REGS	ARRAY_SIZE(pbias_matches)
++
++static const struct of_device_id pbias_of_match[] = {
++	{ .compatible = "ti,pbias-omap", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, pbias_of_match);
++
++static int pbias_regulator_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *dev_node;
++	struct pbias_regulator_data *drvdata;
++	struct resource *res;
++	struct regulator_config cfg = { };
++	struct regmap *syscon;
++	const struct pbias_reg_info *info;
++	int ret = 0;
++	int count, idx, data_idx = 0;
++
++	count = of_regulator_match(&pdev->dev, np, pbias_matches,
++						PBIAS_NUM_REGS);
++	if (count < 0)
++		return count;
++
++	drvdata = devm_kzalloc(&pdev->dev, sizeof(struct pbias_regulator_data)
++			       * count, GFP_KERNEL);
++	if (drvdata == NULL) {
++		dev_err(&pdev->dev, "Failed to allocate device data\n");
++		return -ENOMEM;
++	}
++
++	dev_node = of_get_parent(np);
++	if (!dev_node)
++		return -ENODEV;
++
++	syscon = syscon_node_to_regmap(dev_node);
++	of_node_put(dev_node);
++	if (IS_ERR(syscon))
++		return PTR_ERR(syscon);
++
++	cfg.dev = &pdev->dev;
++
++	for (idx = 0; idx < PBIAS_NUM_REGS, data_idx < count; idx++) {
++		if (!pbias_matches[idx].init_data ||
++			!pbias_matches[idx].of_node)
++			continue;
++
++		info = pbias_matches[idx].driver_data;
++		if (!info)
++			return -ENODEV;
++
++		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++		if (!res)
++			return -EINVAL;
++
++		drvdata[data_idx].pbias_reg = res->start;
++		drvdata[data_idx].syscon = syscon;
++		drvdata[data_idx].info = info;
++		drvdata[data_idx].desc.name = info->name;
++		drvdata[data_idx].desc.owner = THIS_MODULE;
++		drvdata[data_idx].desc.type = REGULATOR_VOLTAGE;
++		drvdata[data_idx].desc.ops = &pbias_regulator_voltage_ops;
++		drvdata[data_idx].desc.n_voltages = 2;
++		drvdata[data_idx].desc.enable_time = info->enable_time;
++
++		cfg.init_data = pbias_matches[idx].init_data;
++		cfg.driver_data = &drvdata[data_idx];
++		cfg.of_node = pbias_matches[idx].of_node;
++
++		drvdata[data_idx].dev = devm_regulator_register(&pdev->dev,
++					&drvdata[data_idx].desc, &cfg);
++		if (IS_ERR(drvdata[data_idx].dev)) {
++			ret = PTR_ERR(drvdata[data_idx].dev);
++			dev_err(&pdev->dev,
++				"Failed to register regulator: %d\n", ret);
++			goto err_regulator;
++		}
++		data_idx++;
++	}
++
++	platform_set_drvdata(pdev, drvdata);
++
++err_regulator:
++	return ret;
++}
++
++static struct platform_driver pbias_regulator_driver = {
++	.probe		= pbias_regulator_probe,
++	.driver		= {
++		.name		= "pbias-regulator",
++		.owner		= THIS_MODULE,
++		.of_match_table = of_match_ptr(pbias_of_match),
++	},
++};
++
++module_platform_driver(pbias_regulator_driver);
++
++MODULE_AUTHOR("Balaji T K <balajitk@ti.com>");
++MODULE_DESCRIPTION("pbias voltage regulator");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:pbias-regulator");
+-- 
+1.7.5.4
+
