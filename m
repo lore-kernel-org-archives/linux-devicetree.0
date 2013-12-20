@@ -1,15 +1,14 @@
-From: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
-Subject: RE: [PATCH V2] ARM: dts: imx6qdl-sabresd: Add power key support
-Date: Fri, 20 Dec 2013 03:00:48 +0000
-Message-ID: <276922cfe7a844c3b7f9f7c18bf86f77@BY2PR03MB315.namprd03.prod.outlook.com>
-References: <1387487244-2749-1-git-send-email-b20788@freescale.com>
- <20131220022821.GJ7172@S2101-09.ap.freescale.net>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCHv1 0/3] Enable ISL12057 RTC chip in ReadyNAS .dts files
+Date: Thu, 19 Dec 2013 22:17:20 -0500
+Message-ID: <20131220031720.GC2609@titan.lakedaemon.net>
+References: <cover.1387490258.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131220022821.GJ7172@S2101-09.ap.freescale.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <cover.1387490258.git.arno@natisbad.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,68 +18,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkJlc3QgUmVnYXJkcy4NCkFuc29uIGh1YW5nIOm7hOWLh+aJjQ0KwqANCkZyZWVzY2FsZSBT
-ZW1pY29uZHVjdG9yIFNoYW5naGFpDQrkuIrmtbfmtabkuJzmlrDljLrkuq7mma/ot68xOTLlj7dB
-5bqnMualvA0KMjAxMjAzDQpUZWw6MDIxLTI4OTM3MDU4DQoNCg0KPi0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+RnJvbTogU2hhd24gR3VvIFttYWlsdG86c2hhd24uZ3VvQGxpbmFyby5vcmdd
-DQo+U2VudDogRnJpZGF5LCBEZWNlbWJlciAyMCwgMjAxMyAxMDoyOCBBTQ0KPlRvOiBIdWFuZyBZ
-b25nY2FpLUIyMDc4OA0KPkNjOiBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj5kZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPlN1
-YmplY3Q6IFJlOiBbUEFUQ0ggVjJdIEFSTTogZHRzOiBpbXg2cWRsLXNhYnJlc2Q6IEFkZCBwb3dl
-ciBrZXkgc3VwcG9ydA0KPg0KPk9uIFRodSwgRGVjIDE5LCAyMDEzIGF0IDA0OjA3OjI0UE0gLTA1
-MDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPj4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIGlt
-eDZxZGwtc2FicmVzZCBib2FyZCdzIHBvd2VyIGtleSwgdGhlIGtleQ0KPj4gaXMgbmFtZWQgIlNX
-MSIgb24gYm9hcmQsIHByZXNzIGl0IGNhbiB3YWtlIHVwIHN5c3RlbSBmcm9tIHN1c3BlbmQuDQo+
-Pg0KPj4gQWRkIGEgbmV3IHBpbmN0cmwgZW50cnkgZm9yIGdwaW8ga2V5cyBhbmQgbW92ZSBhbGwg
-Z3BpbyBrZXlzIHBpbiB0bw0KPj4gdGhpcyBlbnRyeS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBB
-bnNvbiBIdWFuZyA8YjIwNzg4QGZyZWVzY2FsZS5jb20+DQo+DQo+VGhlcmUgYXJlIGEgY291cGxl
-IG9mIG1pbm9yIHRoaW5ncyBiZWxvdy4gIE5vdGhpbmcgbWFqb3IsIHNvIEkganVzdCBmaXhlZCB0
-aGVtDQo+dXAgYW5kIGFwcGxpZWQgdGhlIHBhdGNoLg0KPg0KPj4gLS0tDQo+PiAgYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NnFkbC1zYWJyZXNkLmR0c2kgfCAgIDI2ICsrKysrKysrKysrKysrKysrKysr
-KystLS0tDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25z
-KC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtc2FicmVz
-ZC5kdHNpDQo+PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtc2FicmVzZC5kdHNpDQo+PiBp
-bmRleCBlNzVlMTFiLi5iNTQ1ODk1IDEwMDY0NA0KPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnFkbC1zYWJyZXNkLmR0c2kNCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwt
-c2FicmVzZC5kdHNpDQo+PiBAQCAtMTAsNiArMTAsNyBAQA0KPj4gICAqIGh0dHA6Ly93d3cuZ251
-Lm9yZy9jb3B5bGVmdC9ncGwuaHRtbA0KPj4gICAqLw0KPj4NCj4+ICsjaW5jbHVkZSA8ZHQtYmlu
-ZGluZ3MvaW5wdXQvaW5wdXQuaD4NCj4NCj5IYXZlIGEgYmxhbmsgbGluZSBoZXJlLg0KPg0KPj4g
-IC8gew0KPj4gIAltZW1vcnkgew0KPj4gIAkJcmVnID0gPDB4MTAwMDAwMDAgMHg0MDAwMDAwMD47
-DQo+PiBAQCAtNDYsMTkgKzQ3LDI4IEBADQo+Pg0KPj4gIAlncGlvLWtleXMgew0KPj4gIAkJY29t
-cGF0aWJsZSA9ICJncGlvLWtleXMiOw0KPj4gKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsN
-Cj4+ICsJCXBpbmN0cmwtMCA9IDwmcGluY3RybF9ncGlvX2tleXM+Ow0KPj4gKw0KPj4gKwkJcG93
-ZXIgew0KPj4gKwkJCWxhYmVsID0gIlBvd2VyIEJ1dHRvbiI7DQo+PiArCQkJZ3Bpb3MgPSA8Jmdw
-aW8zIDI5IDA+Ow0KPj4gKwkJCWdwaW8ta2V5LHdha2V1cDsNCj4+ICsJCQlsaW51eCxjb2RlID0g
-PEtFWV9QT1dFUj47DQo+PiArCQl9Ow0KPj4NCj4+ICAJCXZvbHVtZS11cCB7DQo+PiAgCQkJbGFi
-ZWwgPSAiVm9sdW1lIFVwIjsNCj4+ICAJCQlncGlvcyA9IDwmZ3BpbzEgNCAwPjsNCj4+ICAJCQln
-cGlvLWtleSx3YWtldXA7DQo+PiAtCQkJbGludXgsY29kZSA9IDwxMTU+OyAvKiBLRVlfVk9MVU1F
-VVAgKi8NCj4+ICsJCQlsaW51eCxjb2RlID0gPEtFWV9WT0xVTUVVUD47DQo+PiAgCQl9Ow0KPj4N
-Cj4+ICAJCXZvbHVtZS1kb3duIHsNCj4+ICAJCQlsYWJlbCA9ICJWb2x1bWUgRG93biI7DQo+PiAg
-CQkJZ3Bpb3MgPSA8JmdwaW8xIDUgMD47DQo+PiAgCQkJZ3Bpby1rZXksd2FrZXVwOw0KPj4gLQkJ
-CWxpbnV4LGNvZGUgPSA8MTE0PjsgLyogS0VZX1ZPTFVNRURPV04gKi8NCj4+ICsJCQlsaW51eCxj
-b2RlID0gPEtFWV9WT0xVTUVET1dOPjsNCj4+ICAJCX07DQo+PiAgCX07DQo+Pg0KPj4gQEAgLTE3
-MSw4ICsxODEsNiBAQA0KPj4gIAlob2cgew0KPj4gIAkJcGluY3RybF9ob2c6IGhvZ2dycCB7DQo+
-PiAgCQkJZnNsLHBpbnMgPSA8DQo+PiAtCQkJCU1YNlFETF9QQURfR1BJT180X19HUElPMV9JTzA0
-ICAgMHg4MDAwMDAwMA0KPj4gLQkJCQlNWDZRRExfUEFEX0dQSU9fNV9fR1BJTzFfSU8wNSAgIDB4
-ODAwMDAwMDANCj4+ICAJCQkJTVg2UURMX1BBRF9OQU5ERl9EMF9fR1BJTzJfSU8wMCAweDgwMDAw
-MDAwDQo+PiAgCQkJCU1YNlFETF9QQURfTkFOREZfRDFfX0dQSU8yX0lPMDEgMHg4MDAwMDAwMA0K
-Pj4gIAkJCQlNWDZRRExfUEFEX05BTkRGX0QyX19HUElPMl9JTzAyIDB4ODAwMDAwMDAgQEAgLTE4
-NSw2DQo+KzE5MywxNiBAQA0KPj4gIAkJCT47DQo+PiAgCQl9Ow0KPj4gIAl9Ow0KPj4gKw0KPj4g
-KwlncGlvLWtleXMgew0KPg0KPldlIG5vdyB1c2Ugb25lIHBpbmN0cmwgY29udGFpbmVyICdpbXg2
-cWRsLXNhYnJlc2QnIGZvciBhbGwgcGluY3RybCBncm91cHMsIHNvDQo+d2UgY2FuIG1vdmUgcGlu
-Y3RybF9ncGlvX2tleXMgaW50byBhYm92ZSBhbmQgc2F2ZSB0aGlzIGdwaW8ta2V5cyBjb250YWlu
-ZXIuDQo+DQoNClVuZGVyc3Rvb2QsIHRoYW5rcywganVzdCBwdXQgdGhpcyBncm91cCBpbiB0aGUg
-aG9nIG5vZGUsIG5vIG5lZWQgdG8gYWRkIGEgbmV3IGdwaW8ta2V5cy4NCltBbnNvbl0gDQoNCg0K
-DQo+U2hhd24NCj4NCj4+ICsJCXBpbmN0cmxfZ3Bpb19rZXlzOiBncGlvX2tleXNncnAgew0KPj4g
-KwkJCWZzbCxwaW5zID0gPA0KPj4gKwkJCQlNWDZRRExfUEFEX0VJTV9EMjlfX0dQSU8zX0lPMjkg
-MHg4MDAwMDAwMA0KPj4gKwkJCQlNWDZRRExfUEFEX0dQSU9fNF9fR1BJTzFfSU8wNCAgIDB4ODAw
-MDAwMDANCj4+ICsJCQkJTVg2UURMX1BBRF9HUElPXzVfX0dQSU8xX0lPMDUgICAweDgwMDAwMDAw
-DQo+PiArCQkJPjsNCj4+ICsJCX07DQo+PiArCX07DQo+PiAgfTsNCj4+DQo+PiAgJmxkYiB7DQo+
-PiAtLQ0KPj4gMS43LjkuNQ0KPj4NCj4+DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Thu, Dec 19, 2013 at 11:01:56PM +0100, Arnaud Ebalard wrote:
+> Hi Jason,
+> 
+> Now that support for ISL12057 RTC chip is on track for in v3.14, the
+> three patches in this series simply reference the chip in NETGEAR
+> ReadyNAS 102, 104 and 2120 .dts files so that the device stop booting
+> in the 70's. 
+> 
+> Jason, can you queue those for v3.14? The patches are based on your
+> mvebu/dt branch to simplify your work.
+> 
+> Arnaud Ebalard (3):
+>   ARM: mvebu: Enable ISL12057 RTC chip in ReadyNAS 102 .dts file
+>   ARM: mvebu: Enable ISL12057 RTC chip in ReadyNAS 104 .dts file
+>   ARM: mvebu: Enable ISL12057 RTC chip in ReadyNAS 2120 .dts file
+> 
+>  arch/arm/boot/dts/armada-370-netgear-rn102.dts | 5 +++++
+>  arch/arm/boot/dts/armada-370-netgear-rn104.dts | 5 +++++
+>  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 5 +++++
+>  3 files changed, 15 insertions(+)
+
+Whole series applied to mvebu/dt
+
+thx,
+
+Jason.
