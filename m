@@ -1,45 +1,76 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: Re: [PATCHv3 4/7] Documentation: Add device tree
- bindings for Freescale SAI.
-Date: Fri, 20 Dec 2013 02:42:39 +0000
-Message-ID: <7f4a9014cd6646e7b88e96b55f1c2b75@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1387250684-23406-1-git-send-email-Li.Xiubo@freescale.com>
- <1387250684-23406-5-git-send-email-Li.Xiubo@freescale.com>
- <20131218183106.GF31886@sirena.org.uk>
+From: Ravi Patel <rapatel@apm.com>
+Subject: [PATCH 0/4] misc: xgene: Add support for APM X-Gene SoC Queue
+ Manager/Traffic Manager
+Date: Thu, 19 Dec 2013 18:44:59 -0800
+Message-ID: <1387507503-7565-1-git-send-email-rapatel@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20131218183106.GF31886@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, "timur@tabi.org" <timur@tabi.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Huan Wang <Huan.Wang@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "Jason.Jin@freescale.com" <Jason.Jin@freescale.com>, "oskar@scara.com" <os>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arnd@arndb.de, gregkh@linuxfoundation.org, davem@davemloft.net
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, patches@apm.com, linux-kernel@vger.kernel.org, jcm@redhat.com, linux-arm-kernel@lists.infradead.org, Ravi Patel <rapatel@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+This patch adds support for APM X-Gene SoC Queue Manager/Traffic Manager.
+ QMTM is required by APM X-Gene SoC Ethernet, PktDMA and Security Engine
+ subsystems. All subsystems communicate with QMTM using messages which
+ include information about the work to be performed and the location of
+ associated data buffers.
 
-> On Tue, Dec 17, 2013 at 11:24:41AM +0800, Xiubo Li wrote:
-> 
-> > +	      big-endian_regs;
-> > +	      big-endian_data;
-> 
-> I've applied this and fixed these two typos, thanks.
+Ravi Patel (4):
+  Documentation: Add documentation for APM X-Gene SoC Queue
+    Manager/Traffic Manager DTS binding
+  misc: xgene: Add base driver for APM X-Gene SoC Queue Manager/Traffic
+    Manager
+  arm64: boot: dts: Add DTS entries for APM X-Gene SoC Queue
+    Manager/Traffic Manager
+  misc: xgene: Add error handling for APM X-Gene SoC Queue
+    Manager/Traffic Manager
 
-There is something wrong with my mails these days.
+ .../devicetree/bindings/misc/apm-xgene-qmtm.txt    |   52 ++
+ MAINTAINERS                                        |    7 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   17 +
+ drivers/misc/Kconfig                               |    1 +
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/xgene/Kconfig                         |    1 +
+ drivers/misc/xgene/Makefile                        |    5 +
+ drivers/misc/xgene/qmtm/Kconfig                    |    8 +
+ drivers/misc/xgene/qmtm/Makefile                   |    7 +
+ drivers/misc/xgene/qmtm/xgene_qmtm_error.c         |  287 ++++++++
+ drivers/misc/xgene/qmtm/xgene_qmtm_main.c          |  768 ++++++++++++++++++++
+ drivers/misc/xgene/qmtm/xgene_qmtm_main.h          |  143 ++++
+ drivers/misc/xgene/qmtm/xgene_qmtm_storm.c         |  375 ++++++++++
+ drivers/misc/xgene/qmtm/xgene_qmtm_storm.h         |  144 ++++
+ include/misc/xgene/xgene_qmtm.h                    |  282 +++++++
+ 15 files changed, 2098 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/apm-xgene-qmtm.txt
+ create mode 100644 drivers/misc/xgene/Kconfig
+ create mode 100644 drivers/misc/xgene/Makefile
+ create mode 100644 drivers/misc/xgene/qmtm/Kconfig
+ create mode 100644 drivers/misc/xgene/qmtm/Makefile
+ create mode 100644 drivers/misc/xgene/qmtm/xgene_qmtm_error.c
+ create mode 100644 drivers/misc/xgene/qmtm/xgene_qmtm_main.c
+ create mode 100644 drivers/misc/xgene/qmtm/xgene_qmtm_main.h
+ create mode 100644 drivers/misc/xgene/qmtm/xgene_qmtm_storm.c
+ create mode 100644 drivers/misc/xgene/qmtm/xgene_qmtm_storm.h
+ create mode 100644 include/misc/xgene/xgene_qmtm.h
 
-I will revise this then.
+-- 
+1.7.9.5
 
-Thanks very much,
-
-
-Best Regards,
-Xiubo
+CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, 
+is for the sole use of the intended recipient(s) and contains information
+that is confidential and proprietary to Applied Micro Circuits Corporation or its subsidiaries. 
+It is to be used solely for the purpose of furthering the parties' business relationship. 
+All unauthorized review, use, disclosure or distribution is prohibited. 
+If you are not the intended recipient, please contact the sender by reply e-mail 
+and destroy all copies of the original message.
