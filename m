@@ -1,48 +1,88 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 2/4] misc: xgene: Add base driver for APM X-Gene SoC
- Queue Manager/Traffic Manager
-Date: Thu, 19 Dec 2013 20:24:26 -0800
-Message-ID: <20131220042426.GA21726@kroah.com>
-References: <1387507503-7565-1-git-send-email-rapatel@apm.com>
- <1387507503-7565-3-git-send-email-rapatel@apm.com>
- <20131220032133.GB32310@kroah.com>
- <CAN1v_PuBZHN85xTodfSZ-+H4Wdj0T8kSFUJB56KVj9xFH3--JQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAN1v_PuBZHN85xTodfSZ-+H4Wdj0T8kSFUJB56KVj9xFH3--JQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH v12 4/4] ARM: dts: Exynos5420: Add device nodes for TMU blocks
+Date: Fri, 20 Dec 2013 10:41:21 +0530
+Message-ID: <1387516281-10273-1-git-send-email-ch.naveen@samsung.com>
+References: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Exynos5420 SoC has per core thermal management unit.
+5 TMU channels 4 for CPUs and 5th for GPU.
 
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
+This patch adds the device tree nodes to the DT device list.
 
-http://daringfireball.net/2007/07/on_top
+Nodes carry the misplaced second base address and the second
+clock to access the misplaced base address.
 
-On Thu, Dec 19, 2013 at 07:41:13PM -0800, Ravi Patel wrote:
-> There is no need to talk to this driver from userspace.
-> It is a device which is used by other IO devices to communicate with each
-> other, including CPU.
-> For example, if CPU (software) wants to send a message to Ethernet HW (i.e.
-> send packet),
-> it used this driver to enqueue a message to Ethernet.
-> In other direction, if Ethernet HW receives a packet, it uses QM/TM device to
-> send message to
-> CPU (software) to process packet.
+Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+---
+Changes since v11:
+  changed the secondary clock name to "tmu_triminfo_apbif"
+from "tmu_apbif_triminfo"
 
-So it's a "bus" type of thing, right?
+Changes since previous version:
+1. used lables instead of comment lines
+2. pass the same clock as trimfo_apbif clock for TMU channel 2
+3. Fixed a coding style problem pointed by Tomasz
 
-My question of "why isn't this reflected in the driver model" still
-stands.
+ arch/arm/boot/dts/exynos5420.dtsi |   40 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-thanks,
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index b1fa334..c62cde6 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -402,4 +402,44 @@
+ 		clock-names = "gscl";
+ 		samsung,power-domain = <&gsc_pd>;
+ 	};
++
++	tmu_cpu0: tmu@10060000 {
++		compatible = "samsung,exynos5420-tmu";
++		reg = <0x10060000 0x100>;
++		interrupts = <0 65 0>;
++		clocks = <&clock 318>;
++		clock-names = "tmu_apbif";
++	};
++
++	tmu_cpu1: tmu@10064000 {
++		compatible = "samsung,exynos5420-tmu";
++		reg = <0x10064000 0x100>;
++		interrupts = <0 183 0>;
++		clocks = <&clock 318>;
++		clock-names = "tmu_apbif";
++	};
++
++	tmu_cpu2: tmu@10068000 {
++		compatible = "samsung,exynos5420-tmu-ext-triminfo";
++		reg = <0x10068000 0x100>, <0x1006c000 0x4>;
++		interrupts = <0 184 0>;
++		clocks = <&clock 318>, <&clock 318>;
++		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
++	};
++
++	tmu_cpu3: tmu@1006c000 {
++		compatible = "samsung,exynos5420-tmu-ext-triminfo";
++		reg = <0x1006c000 0x100>, <0x100a0000 0x4>;
++		interrupts = <0 185 0>;
++		clocks = <&clock 318>, <&clock 319>;
++		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
++	};
++
++	tmu_gpu: tmu@100a0000 {
++		compatible = "samsung,exynos5420-tmu-ext-triminfo";
++		reg = <0x100a0000 0x100>, <0x10068000 0x4>;
++		interrupts = <0 215 0>;
++		clocks = <&clock 319>, <&clock 318>;
++		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
++	};
+ };
+-- 
+1.7.10.4
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
