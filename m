@@ -1,88 +1,68 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH v12 4/4] ARM: dts: Exynos5420: Add device nodes for TMU blocks
-Date: Fri, 20 Dec 2013 10:41:21 +0530
-Message-ID: <1387516281-10273-1-git-send-email-ch.naveen@samsung.com>
-References: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1382004240-3282-1-git-send-email-l.krishna@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCHv11 00/49] ARM: TI SoC clock DT conversion
+Date: Fri, 20 Dec 2013 12:22:16 +0530
+Message-ID: <52B3E920.5090305@ti.com>
+References: <1387452260-23276-1-git-send-email-t-kristo@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1387452260-23276-1-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Exynos5420 SoC has per core thermal management unit.
-5 TMU channels 4 for CPUs and 5th for GPU.
+Hi Tero,
 
-This patch adds the device tree nodes to the DT device list.
+On Thursday 19 December 2013 04:53 PM, Tero Kristo wrote:
+> Hi,
+>
+> So, once again new series. I guess I should have addressed all comments
+> for v10 except the extern sharing of __clk_of_table. Based on discussion
+> with Mike, this should be fine to fix later.
+>
+> Main changes compared to v10:
+> - rebased on top of 3.13-rc4
+> - applied clk_desc support from Mike, did some cleanups and additions to that
+>    * needed for below item, clk_ll_ops
+> - added support for clk_ll_ops, and removed SoC wide clock ops
+>    * used for wrapping the IP block specific register access routines now
+> - removed need for separate init function types because of above two points,
+>    TI clocks also use the standard prototype now, no return value needed
+> - cleaned up the init retry logic for TI clocks a bit (DPLL/APLL)
+> - added clocks {} and clockdomains {} nodes under the master clock IP nodes,
+>    which are used to group clocks and domains accordingly
+> - changed compatible strings for clock master IPs from ti,clock-master to
+>    something of form ti,omap4-prm etc.
+>
+> omap3 legacy clock data is not removed with this series, this can be done
+> later (basically I want someone to test all the possible omap3 boards out
+> there with DT boot before attempting this.)
+>
+> Testing done:
+> - omap3-beagle: boot, suspend-resume (ret), suspend-resume (off)
+> - omap4-panda-es: boot, suspend-resume (ret)
+> - omap5-uevm: boot
+> - dra7-evm: boot
+> - am335x-bone: boot
 
-Nodes carry the misplaced second base address and the second
-clock to access the misplaced base address.
+I boot tested the branch '3.13-rc4-dt-clks-v11' on am43x-epos-evm
+and it boots fine after enabling am43x system type.
 
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
----
-Changes since v11:
-  changed the secondary clock name to "tmu_triminfo_apbif"
-from "tmu_apbif_triminfo"
+> Branches again available here:
+> https://github.com/t-kristo/linux-pm.git
+>
+> branch: 3.13-rc4-dt-clks-v11 : contains everything, shall me merged last
+> branch: 3.13-rc4-dt-clks-v11-for-mike : drivers/clk changes
+> branch: 3.13-rc4-dt-clks-v11-for-benoit : DT data only
+>
+> -Tero
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Changes since previous version:
-1. used lables instead of comment lines
-2. pass the same clock as trimfo_apbif clock for TMU channel 2
-3. Fixed a coding style problem pointed by Tomasz
-
- arch/arm/boot/dts/exynos5420.dtsi |   40 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index b1fa334..c62cde6 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -402,4 +402,44 @@
- 		clock-names = "gscl";
- 		samsung,power-domain = <&gsc_pd>;
- 	};
-+
-+	tmu_cpu0: tmu@10060000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x10060000 0x100>;
-+		interrupts = <0 65 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	tmu_cpu1: tmu@10064000 {
-+		compatible = "samsung,exynos5420-tmu";
-+		reg = <0x10064000 0x100>;
-+		interrupts = <0 183 0>;
-+		clocks = <&clock 318>;
-+		clock-names = "tmu_apbif";
-+	};
-+
-+	tmu_cpu2: tmu@10068000 {
-+		compatible = "samsung,exynos5420-tmu-ext-triminfo";
-+		reg = <0x10068000 0x100>, <0x1006c000 0x4>;
-+		interrupts = <0 184 0>;
-+		clocks = <&clock 318>, <&clock 318>;
-+		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
-+	};
-+
-+	tmu_cpu3: tmu@1006c000 {
-+		compatible = "samsung,exynos5420-tmu-ext-triminfo";
-+		reg = <0x1006c000 0x100>, <0x100a0000 0x4>;
-+		interrupts = <0 185 0>;
-+		clocks = <&clock 318>, <&clock 319>;
-+		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
-+	};
-+
-+	tmu_gpu: tmu@100a0000 {
-+		compatible = "samsung,exynos5420-tmu-ext-triminfo";
-+		reg = <0x100a0000 0x100>, <0x10068000 0x4>;
-+		interrupts = <0 215 0>;
-+		clocks = <&clock 319>, <&clock 318>;
-+		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
-+	};
- };
--- 
-1.7.10.4
-
+Regards,
+Keerthy
