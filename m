@@ -1,35 +1,51 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Fri, 20 Dec 2013 10:31:07 +0800
-Message-ID: <52B3ABEB.2010502@linaro.org>
-References: <1386987174-1788-3-git-send-email-zhangfei.gao@linaro.org> <1387199536-7053-1-git-send-email-zhangfei.gao@linaro.org>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: Re: [PATCHv3 5/7] ASoC: fsl: Add SGTL5000 based audio
+ machine driver.
+Date: Fri, 20 Dec 2013 02:37:46 +0000
+Message-ID: <7945c514f0a04a5a96d31ace69cea3a8@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1387250684-23406-1-git-send-email-Li.Xiubo@freescale.com>
+ <1387250684-23406-6-git-send-email-Li.Xiubo@freescale.com>
+ <20131218183743.GG31886@sirena.org.uk>
+ <f9a19c59bfaf4844bbeaca1aeb91e305@DM2PR03MB509.namprd03.prod.outlook.com>
+ <20131219102521.GS31886@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1387199536-7053-1-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhigang Wang <brooke.wangzhigang@huawei.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131219102521.GS31886@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tiwai@suse.de" <tiwai@suse.de>, "timur@tabi.org" <timur@tabi.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Huan Wang <Huan.Wang@freescale.com>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "Jason.Jin@freescale.com" <Jason.Jin@freescale.com>, "oskar@scara.com" <os>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
+> On Thu, Dec 19, 2013 at 05:19:26AM +0000, Li.Xiubo@freescale.com wrote:
+> 
+> > In this series of patches, the PATCH1~PATCH4 are about SAI only, and can be
+> > apart from VF610-twr sound driver, I will sent the SAI driver and VF610-twr
+> > sound driver separately. Could you apply the SAI's first if they are all
+> fine?
+> 
+> What are you asking me to apply here?  I already applied your first
+> patch as I said, is that not everything?
 
-On 12/16/2013 09:12 PM, Zhangfei Gao wrote:
-> Add dw_mmc-k3.c for k3v2, support sd/emmc
->
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Signed-off-by: Zhigang Wang <brooke.wangzhigang@huawei.com>
-> ---
->   .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   60 +++++++++
->   drivers/mmc/host/Kconfig                           |   10 ++
->   drivers/mmc/host/Makefile                          |    1 +
->   drivers/mmc/host/dw_mmc-k3.c                       |  134 ++++++++++++++++++++
->   4 files changed, 205 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
->   create mode 100644 drivers/mmc/host/dw_mmc-k3.c
->
+Sorry for understanding.
 
-Any comments?
+Please ignore the series of patches for v4.
 
-Thanks
+I will send the followed patch to fix that issues you have pointed.
+
+Thanks,
+
+Best Regards,
+Xiubo
