@@ -1,63 +1,52 @@
-From: Sebastian Reichel <sre@ring0.de>
-Subject: Re: [PATCHv12 00/49] ARM: TI SoC clock DT conversion
-Date: Fri, 20 Dec 2013 21:10:48 +0100
-Message-ID: <20131220201047.GA12085@earth.universe>
-References: <1387557274-22583-1-git-send-email-t-kristo@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 3/6] pinctrl: Make PINCTRL selectable by
+ defconfig/menuconfig
+Date: Fri, 20 Dec 2013 21:58:34 +0100
+Message-ID: <201312202158.34805.arnd@arndb.de>
+References: <1381174108-25168-1-git-send-email-syin@broadcom.com>
+ <20131217001842.GB3840@sonymobile.com>
+ <CACRpkdY-MM7OoMq_L90YRADy=oaDoV1wAOccVz90LqfRfEh=3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387557274-22583-1-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdY-MM7OoMq_L90YRADy=oaDoV1wAOccVz90LqfRfEh=3Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Heiko St?bner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Christian Daudt <bcm@fixthebug.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Sherman Yin <syin@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Landley <rob@landley.net>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Friday 20 December 2013, Linus Walleij wrote:
+> On Tue, Dec 17, 2013 at 1:18 AM, Bjorn Andersson
+> <bjorn.andersson@sonymobile.com> wrote:
+> 
+> > No matter how we build the individual pinctrl drivers we will always
+> > need the pinctrl framework in a multi-soc zImage; so I can't see that
+> > we gain anything from being able to compile PINCTRL as a module.
+> 
+> I discussed this matter with Christian on IRC and I believe we could
+> basically do "select PINCTRL" on ARCH_MULTIPLATFORM as the
+> vast majority of multiplatforms appear to be using this anyway, this
+> would make the submenu for pin control pop up in menuconfig
+> for this, and make it possible to move different subdrivers to modules
+> if desired.
+> 
+> MULTIPLATFORM does not seem to be about saving footprint bytes
+> on a very fine-granular level anyway, more about doing the module
+> loading/unloading approach to footprint.
 
---M9NhX3UHpAaciwkO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Let's review the list of platforms that don't select PINCTRL. There
+are some platforms that are indeed sensitive about memory footprint,
+and I promised people that converting to multiplatform won't cause
+a significant increase in kernel binary size as long as no other
+platforms are enabled.
 
-On Fri, Dec 20, 2013 at 06:34:19PM +0200, Tero Kristo wrote:
-> Hopefully final post of this series. At least this is going to be the last
-> post this year as I will be going to x-mas vacation and won't be back before
-> Jan 2nd. This time I just sent the patches that have changes in them,
-> the missing ones are exactly the same as in v11.
-
-> Testing done:
-> - omap3-beagle: boot, suspend/resume (ret), suspend/resume (off)
-> - omap4-panda-es: boot, suspend/resume (ret)
-> - omap5-uevm: boot
-> - am335x-bone: boot
-> - dra7-evm: boot
-
-Booting the 3.13-rc4-dt-clks-v12 branch on my Nokia N900 works:
-
-Tested-By: Sebastian Reichel <sre@debian.org>
-
--- Sebastian
-
---M9NhX3UHpAaciwkO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJStKRHAAoJENju1/PIO/qaq/wP/1t1Ana5LNcCXdO836HvFRFz
-iGOZ7zlOpdgo4OzEc0LFDNHn9gHIk3tlSGA40RfSB5L0sUQ/J55BgxNoeWDkGiEa
-VtYd/2xRe+n+BXd6Kq++VSAe19lnPc2UtbyMsWCeWvrHlLOsUpn/v/kE963V2TFG
-gxTUxy1jmhawNOgcPEbJt+eyt/7/ptZbj+TFTp32umYiPLP5U4mvt+xlPXXHu+Ap
-YlcIzSklUTc7LF76Jq6CQPF/S7D06n8g92U/NqHvdKaBvaFYJfpPwOJdSlF6N0th
-nDk9S44zUKnFaBZwIi7SmV9tje/MTKZC2RMa7AqWUF7QOge0lEOLcIzkn+SUMCZa
-7Frchi/fHCyBInrHSuvcJK2ZSbXmL1elxnHm8Hofhks0hFVuaD6EzNRog5KMp7W7
-RLE/OXu3mShK22TnSNtWklr+fUbDLQQajgkO1+7s3LoGcwVYxQrNswe956ZOVOky
-eBfzJCVQz9qhIJNnbxhVMgn9zSMNx05FYLK9F52O+1hB3XmYy9sVglN/3m1eKx0k
-D2SfQtCnb/jwKU4wKaPEQPVyEMCiiL+/4p6+I6zyazCTwBsf0SJAfpOl1Lvb2iCG
-3RS9VduGTX/jk6UvTeWRnmC+iZAZ/+ERpZOel0o3bCBs3JDk7RVfJHvPRPHnSo67
-8c9PNWXd5j6LMM/JJJ8t
-=Jr1B
------END PGP SIGNATURE-----
-
---M9NhX3UHpAaciwkO--
+	Arnd
