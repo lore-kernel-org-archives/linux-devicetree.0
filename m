@@ -1,79 +1,46 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH 1/3] mfd: always assign of_node in mfd_add_device()
-Date: Fri, 20 Dec 2013 14:20:31 +0000
-Message-ID: <20131220142031.GJ3709@lee--X1>
+Date: Fri, 20 Dec 2013 14:25:30 +0000
+Message-ID: <20131220142530.GK3709@lee--X1>
 References: <1386626809-6251-1-git-send-email-swarren@wwwdotorg.org>
- <20131211092435.GC16780@lee--X1>
- <52B32C05.5010204@wwwdotorg.org>
+ <20131211092435.GC16780@lee--X1> <52B32C05.5010204@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <52B32C05.5010204-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <52B32C05.5010204@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Stephen Warren <swarren@nvidia.com>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 19 Dec 2013, Stephen Warren wrote:
-
-> On 12/11/2013 02:24 AM, Lee Jones wrote:
-> >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>
-> >> mfd_add_device() assigns .of_node in the device objects it creates=
- only
-> >> if the mfd_cell for the device has the .of_compatible field set an=
-d the
-> >> DT node for the top-level MFD device contains a child whose compat=
-ible
-> >> property matches the cell's .of_compatible field.
-> >>
-> >> This leaves .of_node unset in many cases. When this happens, entri=
-es in
-> >> the DT /aliases property which refer to the top-level MFD DT node =
-will
-> >> never match the MFD child devices, hence causing the requested ali=
-as not
-> >> to be honored.
-> >>
-> >> Solve this by setting each MFD child device's .of_node equal to th=
-e top-
-> >> level MFD device's .of_node field in the cases where it would othe=
-rwise
-> >> remain unset.
-> >>
-> >> The first use-case for this will be aliases for the TPS6586x's RTC
-> >> device.
-> >>
-> >> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >>  drivers/mfd/mfd-core.c | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >=20
-> > I've tentatively applied this patch, but if it starts to cause more
-> > problems than it solves we'll have to endeavour to find a different
-> > solution.
->=20
-> OK, we've found a problem already! I guess we should drop or revert t=
-his
-> patch (do you need me to send a patch to do this?) and I'll send a
-> revised patch to the RTC core to look up aliases in a different way.
->=20
-> For the problem, see:
-> http://www.spinics.net/lists/arm-kernel/msg295627.html
-
-Ouch!
-
-No, it's okay, I'll revert it no problem.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU3RlcGhlbiwKClBsZWFzZSBsZXQgbWUga25vdyBpZiB0aGlzIGlzIHN1aXRhYmxlIGFuZCBJ
+IGNhbiBrZWVwIHlvdXIgQWNrLgoKLS0tLQoKbWZkOiBSZXZlcnQgIm1mZDogQWx3YXlzIGFzc2ln
+biBvZl9ub2RlIGluIG1mZF9hZGRfZGV2aWNlKCkiCgpUaGlzIHJldmVydHMgY29tbWl0IDY4MDQ0
+YmVlMTM3NzA5MThlMGIyOGRkNDRhYTk4Yzg4OWVjNzU1OGYuCgpXZSd2ZSBoYWQgY29uZmlybWVk
+IHJlcG9ydHMgb2YgdGhpcyBwYXRjaCBjYXVzaW5nIHVuZm9yZXNlZW4gaXNzdWVzCndpdGggZXhp
+c3RpbmcgTUZEIHVzZXJzLiBJdCBoYXMgYmVlbiBhZ3JlZWQgYnkgdGhlIG9yaWdpbmFsIGF1dGhv
+cgphbmQgbXlzZWxmIHRoYXQgcmV2ZXJzaW9uIGlzIHRoZSBiZXN0IHNvbHV0aW9uLgoKQWNrZWQt
+Ynk6IFN0ZXBoZW4gV2FycmVuIDxzd2FycmVuQG52aWRpYS5jb20+ClNpZ25lZC1vZmYtYnk6IExl
+ZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQv
+bWZkLWNvcmUuYyBiL2RyaXZlcnMvbWZkL21mZC1jb3JlLmMKaW5kZXggMzJlOGQ0Ny4uMjY3NjQ5
+MiAxMDA2NDQKLS0tIGEvZHJpdmVycy9tZmQvbWZkLWNvcmUuYworKysgYi9kcml2ZXJzL21mZC9t
+ZmQtY29yZS5jCkBAIC0xMTcsOCArMTE3LDYgQEAgc3RhdGljIGludCBtZmRfYWRkX2RldmljZShz
+dHJ1Y3QgZGV2aWNlICpwYXJlbnQsIGludCBpZCwKIAkJCX0KIAkJfQogCX0KLQlpZiAoIXBkZXYt
+PmRldi5vZl9ub2RlKQotCQlwZGV2LT5kZXYub2Zfbm9kZSA9IHBhcmVudC0+b2Zfbm9kZTsKIAog
+CWlmIChjZWxsLT5wZGF0YV9zaXplKSB7CiAJCXJldCA9IHBsYXRmb3JtX2RldmljZV9hZGRfZGF0
+YShwZGV2LAoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcg
+VGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29D
+cwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
