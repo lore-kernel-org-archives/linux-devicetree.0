@@ -1,43 +1,34 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 1/4] Phy: DT binding documentation for Marvell MVEBU
- SATA phy.
-Date: Thu, 19 Dec 2013 22:21:15 -0500
-Message-ID: <20131220032115.GD2609@titan.lakedaemon.net>
-References: <1387311713-1926-1-git-send-email-andrew@lunn.ch>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 0/4] misc: xgene: Add support for APM X-Gene SoC Queue
+ Manager/Traffic Manager
+Date: Thu, 19 Dec 2013 19:22:17 -0800
+Message-ID: <20131220032217.GC32310@kroah.com>
+References: <1387507503-7565-1-git-send-email-rapatel@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1387311713-1926-1-git-send-email-andrew@lunn.ch>
-Sender: linux-ide-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: kishon@ti.com, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, linux ARM <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1387507503-7565-1-git-send-email-rapatel-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2013 at 09:21:49PM +0100, Andrew Lunn wrote:
-> Describe the binding for the Marvell MVEBU SATA phy. This driver
-> can be used at least with Kirkwood, Dove and maybe others.
-> Additionally, update the SATA binding with the properties to link
-> to the phy nodes.
-> 
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-> ---
-> v1->v2:
-> Correct #phy-cells
-> Correct number after @ to match first reg address.
-> Rename to phy-mvebu.txt
-> 
-> v2->v3:
-> Renamed to mvebu-phy.txt
-> Use "port0", "port1" instead of "0", "1"
-> ---
->  Documentation/devicetree/bindings/ata/marvell.txt  |  6 ++++++
->  .../devicetree/bindings/phy/mvebu-phy.txt          | 22 ++++++++++++++++++++++
->  2 files changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/mvebu-phy.txt
+On Thu, Dec 19, 2013 at 06:44:59PM -0800, Ravi Patel wrote:
+> This patch adds support for APM X-Gene SoC Queue Manager/Traffic Manager.
+>  QMTM is required by APM X-Gene SoC Ethernet, PktDMA and Security Engine
+>  subsystems. All subsystems communicate with QMTM using messages which
+>  include information about the work to be performed and the location of
+>  associated data buffers.
 
-Acked-by: Jason Cooper <jason@lakedaemon.net>
+And finally, where are the drivers that are going to use these apis you
+are creating here?  Where are they going to live, and when are they
+going to be submitted?
 
-thx,
+thanks,
 
-Jason.
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
