@@ -1,230 +1,95 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH] thermal: samsung: Add TMU support for Exynos5260 SoCs
-Date: Fri, 20 Dec 2013 17:49:10 +0530
-Message-ID: <1387541950-16312-1-git-send-email-ch.naveen@samsung.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com, t.figa@samsung.com
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv7 06/12] ARM: tegra: create a DT header defining SWGROUP
+ ID
+Date: Fri, 20 Dec 2013 13:35:55 +0100
+Message-ID: <20131220123554.GQ27787@ulmo.nvidia.com>
+References: <1386835033-4701-1-git-send-email-hdoyu@nvidia.com>
+ <1386835033-4701-7-git-send-email-hdoyu@nvidia.com>
+ <52B1568F.1050305@gmail.com>
+ <52B1CCF1.2040907@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/YnR2r17TIEndSCI"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52B1CCF1.2040907-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mark Zhang <nvmarkzhang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the registers, bit fields and compatible strings
-required to support for the 5 TMU channels on Exynos5260.
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
----
-This patch goes on top of the series (Reviewed and Acked)
-https://www.mail-archive.com/devicetree@vger.kernel.org/msg08043.html
+--/YnR2r17TIEndSCI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- .../devicetree/bindings/thermal/exynos-thermal.txt |    1 +
- drivers/thermal/samsung/exynos_tmu.c               |    5 ++
- drivers/thermal/samsung/exynos_tmu.h               |    2 +
- drivers/thermal/samsung/exynos_tmu_data.c          |   92 ++++++++++++++++++++
- drivers/thermal/samsung/exynos_tmu_data.h          |   19 ++++
- 5 files changed, 119 insertions(+)
+On Wed, Dec 18, 2013 at 09:27:29AM -0700, Stephen Warren wrote:
+> On 12/18/2013 01:02 AM, Mark Zhang wrote:
+> > On 12/12/2013 03:57 PM, Hiroshi Doyu wrote:
+> >> Create a header file to define the swgroup IDs used by the IOMMU(SMMU)
+> >> binding. "swgroup" is a group of H/W clients which a Tegra SoC
+> >> supports. This unique ID can be used to calculate MC_SMMU_<swgroup
+> >> name>_ASID_0 register offset and MC_<swgroup name>_HOTRESET_*_0
+> >> register bit. This will allow the same header to be used by both
+> >> device tree files, and drivers implementing this binding, which
+> >> guarantees that the two stay in sync. This also makes device trees
+> >> more readable by using names instead of magic numbers. For HOTRESET
+> >> bit shifting we need another conversion table, which will come later.
+>=20
+> >> diff --git a/include/dt-bindings/memory/tegra-swgroup.h b/include/dt-b=
+indings/memory/tegra-swgroup.h
+>=20
+> >> +#define TEGRA_SWGROUP_MPE	11	/* 0x264 */
+> >> +#define TEGRA_SWGROUP_MSENC	SWGROUP_MPE
+> >=20
+> > Need to change this to:
+> >=20
+> > #define TEGRA_SWGROUP_MSENC	11
+> >=20
+> > The reason is that, this makes "TEGRA_SWGROUP_BIT" doesn't work. So if I
+> > write "TEGRA_SWGROUP_CELLS(MSENC)" in dt, that causes a dt compiling er=
+ror.
+>=20
+> I guess it's because TEGRA_SWGROUP_BIT needs to expand its argument
+> twice, which can be done.
+>=20
+> That all said, just defining all the names directly to constants is
+> probably the most direct fix.
 
-diff --git a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
-index 79c4055..c949092 100644
---- a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
-@@ -6,6 +6,7 @@
- 	       "samsung,exynos4412-tmu"
- 	       "samsung,exynos4210-tmu"
- 	       "samsung,exynos5250-tmu"
-+	       "samsung,exynos5260-tmu"
- 	       "samsung,exynos5420-tmu" for TMU channel 0, 1 on Exynos5420
- 	       "samsung,exynos5420-tmu-ext-triminfo" for TMU channels 2, 3 and 4
- 			Exynos5420 (Must pass triminfo base and triminfo clock)
-diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-index 3246ace..557f9f3 100644
---- a/drivers/thermal/samsung/exynos_tmu.c
-+++ b/drivers/thermal/samsung/exynos_tmu.c
-@@ -512,6 +512,10 @@ static const struct of_device_id exynos_tmu_match[] = {
- 		.data = (void *)EXYNOS5250_TMU_DRV_DATA,
- 	},
- 	{
-+		.compatible = "samsung,exynos5260-tmu",
-+		.data = (void *)EXYNOS5260_TMU_DRV_DATA,
-+	},
-+	{
- 		.compatible = "samsung,exynos5420-tmu",
- 		.data = (void *)EXYNOS5420_TMU_DRV_DATA,
- 	},
-@@ -673,6 +677,7 @@ static int exynos_tmu_probe(struct platform_device *pdev)
- 	if (pdata->type == SOC_ARCH_EXYNOS4210 ||
- 	    pdata->type == SOC_ARCH_EXYNOS4412 ||
- 	    pdata->type == SOC_ARCH_EXYNOS5250 ||
-+	    pdata->type == SOC_ARCH_EXYNOS5260 ||
- 	    pdata->type == SOC_ARCH_EXYNOS5420_TRIMINFO ||
- 	    pdata->type == SOC_ARCH_EXYNOS5440)
- 		data->soc = pdata->type;
-diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
-index 60cce28..edd08cf 100644
---- a/drivers/thermal/samsung/exynos_tmu.h
-+++ b/drivers/thermal/samsung/exynos_tmu.h
-@@ -43,6 +43,7 @@ enum soc_type {
- 	SOC_ARCH_EXYNOS4210 = 1,
- 	SOC_ARCH_EXYNOS4412,
- 	SOC_ARCH_EXYNOS5250,
-+	SOC_ARCH_EXYNOS5260,
- 	SOC_ARCH_EXYNOS5420_TRIMINFO,
- 	SOC_ARCH_EXYNOS5440,
- };
-@@ -150,6 +151,7 @@ struct exynos_tmu_registers {
- 	u32	triminfo_85_shift;
- 
- 	u32	triminfo_ctrl;
-+	u32	triminfo_ctrl1;
- 	u32	triminfo_reload_shift;
- 
- 	u32	tmu_ctrl;
-diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
-index 2670cbe..4bb0b37 100644
---- a/drivers/thermal/samsung/exynos_tmu_data.c
-+++ b/drivers/thermal/samsung/exynos_tmu_data.c
-@@ -194,6 +194,98 @@ struct exynos_tmu_init_data const exynos5250_default_tmu_data = {
- };
- #endif
- 
-+#if defined(CONFIG_SOC_EXYNOS5260)
-+static const struct exynos_tmu_registers exynos5260_tmu_registers = {
-+	.triminfo_data = EXYNOS_TMU_REG_TRIMINFO,
-+	.triminfo_25_shift = EXYNOS_TRIMINFO_25_SHIFT,
-+	.triminfo_85_shift = EXYNOS_TRIMINFO_85_SHIFT,
-+	.tmu_ctrl = EXYNOS_TMU_REG_CONTROL,
-+	.tmu_ctrl = EXYNOS_TMU_REG_CONTROL1,
-+	.buf_vref_sel_shift = EXYNOS_TMU_REF_VOLTAGE_SHIFT,
-+	.buf_vref_sel_mask = EXYNOS_TMU_REF_VOLTAGE_MASK,
-+	.therm_trip_mode_shift = EXYNOS_TMU_TRIP_MODE_SHIFT,
-+	.therm_trip_mode_mask = EXYNOS_TMU_TRIP_MODE_MASK,
-+	.therm_trip_en_shift = EXYNOS_TMU_THERM_TRIP_EN_SHIFT,
-+	.buf_slope_sel_shift = EXYNOS_TMU_BUF_SLOPE_SEL_SHIFT,
-+	.buf_slope_sel_mask = EXYNOS_TMU_BUF_SLOPE_SEL_MASK,
-+	.core_en_shift = EXYNOS_TMU_CORE_EN_SHIFT,
-+	.tmu_status = EXYNOS_TMU_REG_STATUS,
-+	.tmu_cur_temp = EXYNOS_TMU_REG_CURRENT_TEMP,
-+	.threshold_th0 = EXYNOS_THD_TEMP_RISE,
-+	.threshold_th1 = EXYNOS_THD_TEMP_FALL,
-+	.tmu_inten = EXYNOS5260_TMU_REG_INTEN,
-+	.inten_rise0_shift = EXYNOS_TMU_INTEN_RISE0_SHIFT,
-+	.inten_rise1_shift = EXYNOS_TMU_INTEN_RISE1_SHIFT,
-+	.inten_rise2_shift = EXYNOS_TMU_INTEN_RISE2_SHIFT,
-+	.inten_rise3_shift = EXYNOS_TMU_INTEN_RISE3_SHIFT,
-+	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
-+	.tmu_intstat = EXYNOS5260_TMU_REG_INTSTAT,
-+	.tmu_intclear = EXYNOS5260_TMU_REG_INTCLEAR,
-+	.intclr_fall_shift = EXYNOS5420_TMU_CLEAR_FALL_INT_SHIFT,
-+	.intclr_rise_shift = EXYNOS_TMU_RISE_INT_SHIFT,
-+	.intclr_rise_mask = EXYNOS5260_TMU_RISE_INT_MASK,
-+	.intclr_fall_mask = EXYNOS5260_TMU_FALL_INT_MASK,
-+	.emul_con = EXYNOS5260_EMUL_CON,
-+	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
-+	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
-+	.emul_time_mask = EXYNOS_EMUL_TIME_MASK,
-+};
-+
-+#define __EXYNOS5260_TMU_DATA	\
-+	.threshold_falling = 10, \
-+	.trigger_levels[0] = 85, \
-+	.trigger_levels[1] = 103, \
-+	.trigger_levels[2] = 110, \
-+	.trigger_levels[3] = 120, \
-+	.trigger_enable[0] = true, \
-+	.trigger_enable[1] = true, \
-+	.trigger_enable[2] = true, \
-+	.trigger_enable[3] = false, \
-+	.trigger_type[0] = THROTTLE_ACTIVE, \
-+	.trigger_type[1] = THROTTLE_ACTIVE, \
-+	.trigger_type[2] = SW_TRIP, \
-+	.trigger_type[3] = HW_TRIP, \
-+	.max_trigger_level = 4, \
-+	.gain = 8, \
-+	.reference_voltage = 16, \
-+	.noise_cancel_mode = 4, \
-+	.cal_type = TYPE_ONE_POINT_TRIMMING, \
-+	.efuse_value = 55, \
-+	.min_efuse_value = 40, \
-+	.max_efuse_value = 100, \
-+	.first_point_trim = 25, \
-+	.second_point_trim = 85, \
-+	.default_temp_offset = 50, \
-+	.freq_tab[0] = { \
-+		.freq_clip_max = 800 * 1000, \
-+		.temp_level = 85, \
-+	}, \
-+	.freq_tab[1] = { \
-+		.freq_clip_max = 200 * 1000, \
-+		.temp_level = 103, \
-+	}, \
-+	.freq_tab_count = 2, \
-+	.registers = &exynos5260_tmu_registers, \
-+
-+#define EXYNOS5260_TMU_DATA \
-+	__EXYNOS5260_TMU_DATA \
-+	.type = SOC_ARCH_EXYNOS5260, \
-+	.features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD | \
-+			TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
-+			TMU_SUPPORT_EMUL_TIME)
-+
-+struct exynos_tmu_init_data const exynos5260_default_tmu_data = {
-+	.tmu_data = {
-+		{ EXYNOS5260_TMU_DATA },
-+		{ EXYNOS5260_TMU_DATA },
-+		{ EXYNOS5260_TMU_DATA },
-+		{ EXYNOS5260_TMU_DATA },
-+		{ EXYNOS5260_TMU_DATA },
-+	},
-+	.tmu_count = 5,
-+};
-+#endif
-+
- #if defined(CONFIG_SOC_EXYNOS5420)
- static const struct exynos_tmu_registers exynos5420_tmu_registers = {
- 	.triminfo_data = EXYNOS_TMU_REG_TRIMINFO,
-diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
-index 41f06dc..d268981 100644
---- a/drivers/thermal/samsung/exynos_tmu_data.h
-+++ b/drivers/thermal/samsung/exynos_tmu_data.h
-@@ -87,6 +87,7 @@
- #define EXYNOS_TMU_INTEN_FALL0_SHIFT	16
- #define EXYNOS_TMU_INTEN_FALL1_SHIFT	20
- #define EXYNOS_TMU_INTEN_FALL2_SHIFT	24
-+#define EXYNOS_TMU_INTEN_FALL3_SHIFT	28
- 
- #define EXYNOS_EMUL_TIME	0x57F0
- #define EXYNOS_EMUL_TIME_MASK	0xffff
-@@ -97,6 +98,17 @@
- 
- #define EXYNOS_MAX_TRIGGER_PER_REG	4
- 
-+/* Exynos5260 specific */
-+#define EXYNOS_TMU_REG_CONTROL1			0x24
-+#define EXYNOS5260_TMU_REG_INTEN		0xC0
-+#define EXYNOS5260_TMU_REG_INTSTAT		0xC4
-+#define EXYNOS5260_TMU_REG_INTCLEAR		0xC8
-+#define EXYNOS5260_TMU_CLEAR_RISE_INT		0x1111
-+#define EXYNOS5260_TMU_CLEAR_FALL_INT		(0x1111 << 16)
-+#define EXYNOS5260_TMU_RISE_INT_MASK		0x1111
-+#define EXYNOS5260_TMU_FALL_INT_MASK		0x1111
-+#define EXYNOS5260_EMUL_CON			0x100
-+
- /* Exynos4412 specific */
- #define EXYNOS4412_MUX_ADDR_VALUE          6
- #define EXYNOS4412_MUX_ADDR_SHIFT          20
-@@ -157,6 +169,13 @@ extern struct exynos_tmu_init_data const exynos5250_default_tmu_data;
- #define EXYNOS5250_TMU_DRV_DATA (NULL)
- #endif
- 
-+#if defined(CONFIG_SOC_EXYNOS5260)
-+extern struct exynos_tmu_init_data const exynos5260_default_tmu_data;
-+#define EXYNOS5260_TMU_DRV_DATA (&exynos5260_default_tmu_data)
-+#else
-+#define EXYNOS5260_TMU_DRV_DATA (NULL)
-+#endif
-+
- #if defined(CONFIG_SOC_EXYNOS5420)
- extern struct exynos_tmu_init_data const exynos5420_default_tmu_data;
- #define EXYNOS5420_TMU_DRV_DATA (&exynos5420_default_tmu_data)
--- 
-1.7.10.4
+Erm... isn't this simply a typo, where:
 
+	#define TEGRA_SWGROUP_MSENC	SWGROUP_MPE
+
+should simply be
+
+	#define TEGRA_SWGROUP_MSENC	TEGRA_SWGROUP_MPE
+
+?
+
+That certainly works for me.
+
+Thierry
+
+--/YnR2r17TIEndSCI
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJStDmqAAoJEN0jrNd/PrOh9BIQALPILmOS+sOZHWzYK2s4I/Ge
+8hsKWaHXgXODuRBhvOX0rqtGeK0QuvLZxtHTm1dW6wAjVvV4S/0cGAEM096dpkG8
+vcCacog+nBn/WO5uC/6ZWrCGPohWw0QbcASq4X9WA45LQp2bEqdJVV2d6DB0NMWz
+8l5ZLeQQJait6hEFgGxnT3elU7g431ujpfZLjUHLJbQcLuNF+8JAIFHn0bgNT/fQ
+/TUwDPUa6ylCYihrZ1DrJWgdqqg9gJDaUsGWlVeKfHg3PLSMHWryl5MV8HLWLTyr
+Pvt+pNPKcAkKUWxhfxFyzsYysarPUAAPgwctwDHOAhzE2NhtfFv71oU58o8o9VtR
+3AyTpRB3OkcFmIbdWYSjRdnrQSoftHcSCXB88VULTcN13C1bdD1IOu7RsjvATrEn
+UE8ReuMLe1cikhZU/C6a3NZZRC2Wjd4U86zwB3mHaW+Sfg4Ju4wNpZADJjB7Xupe
+wR4wY2r4FT5c5vDhIIX6qEM7FUVv3pEgYZPp2u++70DqPz5L4gCDhPEbGvurcMlC
+4Km3bSpdCIhoNSkJ8tSnYe0Ly3MYzYss4hFrSkV6VT8GqBrSaR8qI00e3NMBkoHa
+1TsjNWwRIfG0AXDFHTW6B73KLKSSvrroSw78v1JoI8H90duaHCgRxdy/fApd64Y6
+6zzBadJliF6TBspY7sTw
+=12YX
+-----END PGP SIGNATURE-----
+
+--/YnR2r17TIEndSCI--
