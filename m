@@ -1,64 +1,53 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 4/6] ARM: DTS: tegra: add the DFLL IP block to the T114
- SoC file
-Date: Thu, 19 Dec 2013 17:05:33 -0700
-Message-ID: <52B389CD.8010004@wwwdotorg.org>
-References: <20131219122857.3226.42830.stgit@tamien> <20131219123719.3226.44864.stgit@tamien>
+From: Eric Brower <ebrower-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: tegra: modify Tegra30 USB2 default phy_type
+ to UTMI
+Date: Thu, 19 Dec 2013 18:03:21 -0800
+Message-ID: <52B3A569.7090106@nvidia.com>
+References: <1387331565-3994-1-git-send-email-ebrower@nvidia.com> <52B21079.6030201@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131219123719.3226.44864.stgit@tamien>
+In-Reply-To: <52B21079.6030201-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthew Longnecker <mlongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/19/2013 05:49 AM, Paul Walmsley wrote:
-> Add basic DT bindings for the DFLL IP block for the NVIDIA Tegra114 SoC.
+On 12/18/2013 01:15 PM, Stephen Warren wrote:
+> On 12/17/2013 06:52 PM, Eric Brower wrote:
+>> Modify Tegra30 default USB2 phy_type to UTMI; this matches
+>> power-on-reset defaults and is expected to be the common case.
+>>
+>> The current implementation is likely an incorrect
+>> carry-over from Tegra20, where USB2 does default to ULPI.
+>
+>> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+>
+>>   	phy2: usb-phy@7d004000 {
+>>   		compatible = "nvidia,tegra30-usb-phy";
+>> -		reg = <0x7d004000 0x4000>;
+>> -		phy_type = "ulpi";
+>> +		reg = <0x7d004000 0x4000 0x7d004000 0x4000>;
+>
+> Are you sure the second entry in the reg property is correct here? In
+> Tegra20, the UTMI pad registers are in the USB1 (USBD) register space
+> for both USB controllers, and I would guess the same applies for all 3
+> controllers on Tegra30, since both USB1 and USB3 on Tegra30 already
+> point this reg entry at USBD's reg space, plus you've listed USBD as the
+> clock entry for utmi-pads, rather than USB2, which would be consistent
+> with the reg value.
+>
+> Still, this patch does seem to work for me...
+>
 
-> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra114-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra114-dfll.txt
+The second entry in the reg property is indeed incorrect-- I'll send a 
+new version of the series.
 
-> +- clocks : Must contain an array of two-cell arrays, one per clock.
-> +           DFLL source clocks.  At minimum this should include the
-> +           reference clock source and the IP block's main clock
-> +           source.  Also it should contain the DFLL's I2C controller
-> +           clock source.  The format is <&clock-provider-phandle
-> +           clock-id>.
+Though each controller has UTMIP BIAS pad registers, bias pad settings 
+must be configured via USB1 only; the USB2 and USB3 BIAS pad registers 
+are a no-connect-- this explains why it works as-is (USB1 configures 
+bias pad settings), but is not correct for the dtsi.
 
-Entries in "clocks" aren't two cells, they're a phandle plus as many
-cells as the node referenced by the phandle specifies.
-
-> +
-> +- clock-names : Must contain an array of strings, one per 'clocks'
-> +                two-cell array.  The position in the array of these
-
-clock-names defines the set of entries in clocks, not the other way around.
-
-> +                strings must correspond to the position in the 'clocks'
-> +                array (see above).  The DFLL driver currently requires
-> +                the "soc", "ref", and "i2c" clock names to be populated.
-
-The standard wording used by all the Tegra clock client bindings is now:
-
-- clocks : Must contain an entry for each entry in clock-names.
-  See clock-bindings.txt for details.
-- clock-names : Must include the following entries:
-  - soc
-  - ref
-  - i2c
-
-For consistency, it'd be nice to adopt the same style here.
-
-> +Optional properties:
-> +
-> +- status : device availability -- managed by the DT integration code, not
-> +           the DFLL driver.  Should be set to "disabled" in the SoC
-> +           DTS file.
-
-That's such a core property that it's not worth documenting in every
-single binding.
-
-> +
-
-Blank line at EOF.
+Thanks for the catch!
+Eric
