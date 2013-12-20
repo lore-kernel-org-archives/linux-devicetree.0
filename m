@@ -1,85 +1,54 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v3 1/6] V4L: s5k6a3: Add DT binding documentation
-Date: Sat, 21 Dec 2013 00:17:17 +0100
-Message-ID: <52B4CFFD.40409@gmail.com>
-References: <1382033211-32329-1-git-send-email-s.nawrocki@samsung.com> <1382033211-32329-2-git-send-email-s.nawrocki@samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v7 3/7] regulator: add pbias regulator support
+Date: Fri, 20 Dec 2013 15:39:51 -0800
+Message-ID: <20131220184451.GD26054@atomide.com>
+References: <1387560955-6547-1-git-send-email-balajitk@ti.com>
+ <1387560955-6547-4-git-send-email-balajitk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1382033211-32329-2-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1387560955-6547-4-git-send-email-balajitk@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>
+Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/2013 08:06 PM, Sylwester Nawrocki wrote:
-> This patch adds binding documentation for the Samsung S5K6A3(YX)
-> raw image sensor.
->
-> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
-> Signed-off-by: Kyungmin Park<kyungmin.park@samsung.com>
+* Balaji T K <balajitk@ti.com> [131220 09:37]:
+> +static const struct pbias_reg_info pbias_mmc_omap2430 = {
+> +	.enable = BIT(1),
+> +	.enable_mask = BIT(1),
+> +	.vmode = BIT(0),
+> +	.enable_time = 100,
+> +	.name = "pbias_mmc_omap2430"
+> +};
+> +
+> +static const struct pbias_reg_info pbias_sim_omap3 = {
+> +	.enable = BIT(9),
+> +	.enable_mask = BIT(9),
+> +	.vmode = BIT(8),
+> +	.enable_time = 100,
+> +	.name = "pbias_sim_omap3"
+> +};
+> +
+> +static const struct pbias_reg_info pbias_mmc_omap4 = {
+> +	.enable = BIT(26) | BIT(22),
+> +	.enable_mask = BIT(26) | BIT(25) | BIT(22),
+> +	.vmode = BIT(21),
+> +	.enable_time = 10,
+> +	.name = "pbias_mmc_omap4"
+> +};
+> +
+> +static const struct pbias_reg_info pbias_mmc_omap5 = {
+> +	.enable = BIT(27) | BIT(26),
+> +	.enable_mask = BIT(27) | BIT(25) | BIT(26),
+> +	.vmode = BIT(21),
+> +	.enable_time = 100,
+> +	.name = "pbias_mmc_omap5"
+> +};
 
-Hi Mauro,
+Should the enable_time be 100 for omap4 like for the others?
 
-Can we merge it now without a DT binding maintainer Ack ?
-There was no comments for 2 months and I believe the Ack is not mandatory
-for this kind of standard binding and very similar binding has been already
-reviewed (for the S5K5BAF sensor).
+Other than that:
 
-I just updated slightly the clock/clock-names property description, so I
-would post patch [1] to the mailing lists before adding it to a pull 
-request.
-
-Thanks,
-Sylwester
-
-[1] 
-http://git.linuxtv.org/snawrocki/samsung.git/commitdiff/4249788ea8c9b9d9bc95cd088351e2cdda1838f6
-
-> ---
-> Changes since v2:
->   - added AF regulator supply.
-> ---
->   .../devicetree/bindings/media/samsung-s5k6a3.txt   |   32 ++++++++++++++++++++
->   1 file changed, 32 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
-> new file mode 100644
-> index 0000000..3806e77
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
-> @@ -0,0 +1,32 @@
-> +Samsung S5K6A3(YX) raw image sensor
-> +---------------------------------
-> +
-> +S5K6A3(YX) is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> +and CCI (I2C compatible) control bus.
-> +
-> +Required properties:
-> +
-> +- compatible	: "samsung,s5k6a3";
-> +- reg		: I2C slave address of the sensor;
-> +- svdda-supply	: core voltage supply;
-> +- svddio-supply	: I/O voltage supply;
-> +- afvdd-supply	: AF (actuator) voltage supply;
-> +- gpios		: specifier of a GPIO connected to the RESET pin;
-> +- clocks	: should contain the sensor's EXTCLK clock specifier,
-> +		  from common clock bindings;
-> +- clock-names	: should contain "extclk" entry;
-> +
-> +Optional properties:
-> +
-> +- clock-frequency : the frequency at which the "extclk" clock should be
-> +		    configured to operate, in Hz; if this property is not
-> +		    specified default 24 MHz value will be used.
-> +
-> +The common video interfaces bindings (see video-interfaces.txt) should be
-> +used to specify link to the image data receiver. The S5K6A3(YX) device
-> +node should contain one 'port' child node with an 'endpoint' subnode.
-> +
-> +Following properties are valid for the endpoint node:
-> +
-> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-> +  video-interfaces.txt.  The sensor supports only one data lane.
+Acked-by: Tony Lindgren <tony@atomide.com>
