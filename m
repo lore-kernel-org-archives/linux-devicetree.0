@@ -1,56 +1,63 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: [PATCH v7 1/7] mmc: omap_hsmmc: use devm_regulator API
-Date: Fri, 20 Dec 2013 23:05:49 +0530
-Message-ID: <1387560955-6547-2-git-send-email-balajitk@ti.com>
-References: <1387560955-6547-1-git-send-email-balajitk@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv7 06/12] ARM: tegra: create a DT header defining SWGROUP
+ ID
+Date: Fri, 20 Dec 2013 10:36:07 -0700
+Message-ID: <52B48007.7050002@wwwdotorg.org>
+References: <1386835033-4701-1-git-send-email-hdoyu@nvidia.com> <1386835033-4701-7-git-send-email-hdoyu@nvidia.com> <52B1568F.1050305@gmail.com> <52B1CCF1.2040907@wwwdotorg.org> <20131220123554.GQ27787@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1387560955-6547-1-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, broonie@kernel.org, tony@atomide.com
-Cc: Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131220123554.GQ27787-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Zhang <nvmarkzhang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use devm_regulator API, while at it use
-devm_regulator_get_optional for optional vmmc_aux supply
+On 12/20/2013 05:35 AM, Thierry Reding wrote:
+> On Wed, Dec 18, 2013 at 09:27:29AM -0700, Stephen Warren wrote:
+>> On 12/18/2013 01:02 AM, Mark Zhang wrote:
+>>> On 12/12/2013 03:57 PM, Hiroshi Doyu wrote:
+>>>> Create a header file to define the swgroup IDs used by the IOMMU(SMMU)
+>>>> binding. "swgroup" is a group of H/W clients which a Tegra SoC
+>>>> supports. This unique ID can be used to calculate MC_SMMU_<swgroup
+>>>> name>_ASID_0 register offset and MC_<swgroup name>_HOTRESET_*_0
+>>>> register bit. This will allow the same header to be used by both
+>>>> device tree files, and drivers implementing this binding, which
+>>>> guarantees that the two stay in sync. This also makes device trees
+>>>> more readable by using names instead of magic numbers. For HOTRESET
+>>>> bit shifting we need another conversion table, which will come later.
+>>
+>>>> diff --git a/include/dt-bindings/memory/tegra-swgroup.h b/include/dt-bindings/memory/tegra-swgroup.h
+>>
+>>>> +#define TEGRA_SWGROUP_MPE	11	/* 0x264 */
+>>>> +#define TEGRA_SWGROUP_MSENC	SWGROUP_MPE
+>>>
+>>> Need to change this to:
+>>>
+>>> #define TEGRA_SWGROUP_MSENC	11
+>>>
+>>> The reason is that, this makes "TEGRA_SWGROUP_BIT" doesn't work. So if I
+>>> write "TEGRA_SWGROUP_CELLS(MSENC)" in dt, that causes a dt compiling error.
+>>
+>> I guess it's because TEGRA_SWGROUP_BIT needs to expand its argument
+>> twice, which can be done.
+>>
+>> That all said, just defining all the names directly to constants is
+>> probably the most direct fix.
+> 
+> Erm... isn't this simply a typo, where:
+> 
+> 	#define TEGRA_SWGROUP_MSENC	SWGROUP_MPE
+> 
+> should simply be
+> 
+> 	#define TEGRA_SWGROUP_MSENC	TEGRA_SWGROUP_MPE
+> 
+> ?
+> 
+> That certainly works for me.
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
----
- drivers/mmc/host/omap_hsmmc.c |    6 ++----
- 1 files changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index dbd32ad..1eb4350 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -316,7 +316,7 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
- 	struct regulator *reg;
- 	int ocr_value = 0;
- 
--	reg = regulator_get(host->dev, "vmmc");
-+	reg = devm_regulator_get(host->dev, "vmmc");
- 	if (IS_ERR(reg)) {
- 		dev_err(host->dev, "vmmc regulator missing\n");
- 		return PTR_ERR(reg);
-@@ -336,7 +336,7 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
- 		}
- 
- 		/* Allow an aux regulator */
--		reg = regulator_get(host->dev, "vmmc_aux");
-+		reg = devm_regulator_get_optional(host->dev, "vmmc_aux");
- 		host->vcc_aux = IS_ERR(reg) ? NULL : reg;
- 
- 		/* For eMMC do not power off when not in sleep state */
-@@ -366,8 +366,6 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
- 
- static void omap_hsmmc_reg_put(struct omap_hsmmc_host *host)
- {
--	regulator_put(host->vcc);
--	regulator_put(host->vcc_aux);
- 	mmc_slot(host).set_power = NULL;
- }
- 
--- 
-1.7.5.4
-
+You're right. I guess ## is defined to re-expand its result, so
+TEGRA_SWGROUP_BIT(ISP2) -> TEGRA_SWGROUP_##ISP2 -> TEGRA_SWGROUP_ISP2 ->
+TEGRA_SWGROUP_ISP -> 8.
