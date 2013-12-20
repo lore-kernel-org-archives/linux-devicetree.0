@@ -1,180 +1,143 @@
 From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCHv11 18/49] CLK: TI: add support for clockdomain binding
-Date: Fri, 20 Dec 2013 11:46:36 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1312201134410.20802@utopia.booyaka.com>
-References: <1387452260-23276-1-git-send-email-t-kristo@ti.com> <1387452260-23276-19-git-send-email-t-kristo@ti.com>
+Subject: Re: [PATCHv11 43/49] ARM: OMAP2+: PRM: add support for initializing
+ PRCM clock modules from DT
+Date: Fri, 20 Dec 2013 11:49:52 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1312201147060.20802@utopia.booyaka.com>
+References: <1387452260-23276-1-git-send-email-t-kristo@ti.com> <1387452260-23276-44-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1387452260-23276-19-git-send-email-t-kristo@ti.com>
+In-Reply-To: <1387452260-23276-44-git-send-email-t-kristo@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, bcousson@baylibre.com
-Cc: linux-omap@vger.kernel.org, tony@atomide.com, nm@ti.com, rnayak@ti.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Thu, 19 Dec 2013, Tero Kristo wrote:
 
-> Some OMAP clocks require knowledge about their parent clockdomain for
-> book keeping purposes. This patch creates a new DT binding for TI
-> clockdomains, which act as a collection of device clocks.
+> This patch provides top level functionality for the DT clock initialization.
+> Clock tree is initialized hierarchically starting from IP modules (CM/PRM/PRCM)
+> going down towards individual clock nodes, and finally initializing
+> clockdomains once all the clocks are ready.
 
-At least on OMAP4 and 5, clockdomains can be either collections of clocks 
-or collections of IP blocks.  In other words, "clockdomain" was a horrible 
-name: it's really an "idle-domain" or something similar to that.
-Benoit might recall the details.  So you might want to add comments to 
-that effect so folks don't get the wrong idea that they are specific to 
-clocks on all OMAPs.
+So just to flag this as something we'll want to deal with later.  
+The low-level CM* drivers should be responsible for registering CM* clocks 
+and clockdomains.  Similarly the PRM* low-level drivers should only 
+register PRM* clocks and clockdomains.  But it looks to me like we can 
+rearrange this code later without any significant impact, unless you 
+foresee any issues with that?  If not, in the interests of expediency, 
+let's take that up in future patches.
 
-The clockdomain handling isn't ideal - I guess it should probably be part 
-of the low-level PRM/CM IP block drivers that are currently in 
-arch/arm/mach-omap2/* - but I think we can move it there later, unless you 
-see a problem with that.
-
-Also I guess there's no need for clockdomain compatible strings any more, 
-since those can just be registered by iterating through the "clockdomains 
-{" node children.  But I guess we can move that later too.
 
 - Paul
 
+> 
 > Signed-off-by: Tero Kristo <t-kristo@ti.com>
 > ---
->  .../devicetree/bindings/clock/ti/clockdomain.txt   |   24 +++++++
->  drivers/clk/ti/Makefile                            |    3 +-
->  drivers/clk/ti/clockdomain.c                       |   70 ++++++++++++++++++++
->  include/linux/clk/ti.h                             |    1 +
->  4 files changed, 97 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/ti/clockdomain.txt
->  create mode 100644 drivers/clk/ti/clockdomain.c
+>  arch/arm/mach-omap2/prm.h        |    1 +
+>  arch/arm/mach-omap2/prm_common.c |   66 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 67 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/ti/clockdomain.txt b/Documentation/devicetree/bindings/clock/ti/clockdomain.txt
-> new file mode 100644
-> index 0000000..cb76b3f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/ti/clockdomain.txt
-> @@ -0,0 +1,24 @@
-> +Binding for Texas Instruments clockdomain.
-> +
-> +Binding status: Unstable - ABI compatibility may be broken in the future
-> +
-> +This binding uses the common clock binding[1] in consumer role.
-> +Every clock on TI SoC belongs to one clockdomain, but software
-> +only needs this information for specific clocks which require
-> +their parent clockdomain to be controlled when the clock is
-> +enabled/disabled. This binding doesn't define a new clock
-> +binding type, it is used to group existing clock nodes under
-> +hardware hierarchy.
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible : shall be "ti,clockdomain"
-> +- #clock-cells : from common clock binding; shall be set to 0.
-> +- clocks : link phandles of clocks within this domain
-> +
-> +Examples:
-> +	dss_clkdm: dss_clkdm {
-> +		compatible = "ti,clockdomain";
-> +		clocks = <&dss1_alwon_fck_3430es2>, <&dss_ick_3430es2>;
-> +	};
-> diff --git a/drivers/clk/ti/Makefile b/drivers/clk/ti/Makefile
-> index 7cba389..67056fb 100644
-> --- a/drivers/clk/ti/Makefile
-> +++ b/drivers/clk/ti/Makefile
-> @@ -1,4 +1,5 @@
->  ifneq ($(CONFIG_OF),)
->  obj-y					+= clk.o dpll.o autoidle.o divider.o \
-> -					   fixed-factor.o gate.o composite.o
-> +					   fixed-factor.o gate.o clockdomain.o \
-> +					   composite.o
->  endif
-> diff --git a/drivers/clk/ti/clockdomain.c b/drivers/clk/ti/clockdomain.c
-> new file mode 100644
-> index 0000000..f1e0038
-> --- /dev/null
-> +++ b/drivers/clk/ti/clockdomain.c
-> @@ -0,0 +1,70 @@
-> +/*
-> + * OMAP clockdomain support
-> + *
-> + * Copyright (C) 2013 Texas Instruments, Inc.
-> + *
-> + * Tero Kristo <t-kristo@ti.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/slab.h>
+> diff --git a/arch/arm/mach-omap2/prm.h b/arch/arm/mach-omap2/prm.h
+> index ac25ae6..623db40 100644
+> --- a/arch/arm/mach-omap2/prm.h
+> +++ b/arch/arm/mach-omap2/prm.h
+> @@ -18,6 +18,7 @@
+>  # ifndef __ASSEMBLER__
+>  extern void __iomem *prm_base;
+>  extern void omap2_set_globals_prm(void __iomem *prm);
+> +int of_prcm_init(void);
+>  # endif
+>  
+>  
+> diff --git a/arch/arm/mach-omap2/prm_common.c b/arch/arm/mach-omap2/prm_common.c
+> index a2e1174..835eb7d 100644
+> --- a/arch/arm/mach-omap2/prm_common.c
+> +++ b/arch/arm/mach-omap2/prm_common.c
+> @@ -23,6 +23,10 @@
+>  #include <linux/irq.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/slab.h>
 > +#include <linux/of.h>
 > +#include <linux/of_address.h>
+> +#include <linux/clk-provider.h>
 > +#include <linux/clk/ti.h>
+>  
+>  #include "soc.h"
+>  #include "prm2xxx_3xxx.h"
+> @@ -30,6 +34,7 @@
+>  #include "prm3xxx.h"
+>  #include "prm44xx.h"
+>  #include "common.h"
+> +#include "clock.h"
+>  
+>  /*
+>   * OMAP_PRCM_MAX_NR_PENDING_REG: maximum number of PRM_IRQ*_MPU regs
+> @@ -464,3 +469,64 @@ int prm_unregister(struct prm_ll_data *pld)
+>  
+>  	return 0;
+>  }
 > +
-> +#undef pr_fmt
-> +#define pr_fmt(fmt) "%s: " fmt, __func__
-> +
-> +static void __init of_ti_clockdomain_setup(struct device_node *node)
-> +{
-> +	struct clk *clk;
-> +	struct clk_hw *clk_hw;
-> +	const char *clkdm_name = node->name;
-> +	int i;
-> +	int num_clks;
-> +
-> +	num_clks = of_count_phandle_with_args(node, "clocks", "#clock-cells");
-> +
-> +	for (i = 0; i < num_clks; i++) {
-> +		clk = of_clk_get(node, i);
-> +		if (__clk_get_flags(clk) & CLK_IS_BASIC) {
-> +			pr_warn("can't setup clkdm for basic clk %s\n",
-> +				__clk_get_name(clk));
-> +			continue;
-> +		}
-> +		clk_hw = __clk_get_hw(clk);
-> +		to_clk_hw_omap(clk_hw)->clkdm_name = clkdm_name;
-> +		omap2_init_clk_clkdm(clk_hw);
-> +	}
-> +}
-> +
-> +static struct of_device_id ti_clkdm_match_table[] __initdata = {
-> +	{ .compatible = "ti,clockdomain" },
+> +static struct of_device_id omap_prcm_dt_match_table[] = {
+> +	{ .compatible = "ti,am3-prcm" },
+> +	{ .compatible = "ti,am3-scrm" },
+> +	{ .compatible = "ti,am4-prcm" },
+> +	{ .compatible = "ti,am4-scrm" },
+> +	{ .compatible = "ti,omap3-prm" },
+> +	{ .compatible = "ti,omap3-cm" },
+> +	{ .compatible = "ti,omap3-scrm" },
+> +	{ .compatible = "ti,omap4-cm1" },
+> +	{ .compatible = "ti,omap4-prm" },
+> +	{ .compatible = "ti,omap4-cm2" },
+> +	{ .compatible = "ti,omap4-scrm" },
+> +	{ .compatible = "ti,omap5-prm" },
+> +	{ .compatible = "ti,omap5-cm-core-aon" },
+> +	{ .compatible = "ti,omap5-scrm" },
+> +	{ .compatible = "ti,omap5-cm-core" },
+> +	{ .compatible = "ti,dra7-prm" },
+> +	{ .compatible = "ti,dra7-cm-core-aon" },
+> +	{ .compatible = "ti,dra7-cm-core" },
 > +	{ }
 > +};
 > +
-> +/**
-> + * ti_dt_clockdomains_setup - setup device tree clockdomains
-> + *
-> + * Initializes clockdomain nodes for a SoC. This parses through all the
-> + * nodes with compatible = "ti,clockdomain", and add the clockdomain
-> + * info for all the clocks listed under these. This function shall be
-> + * called after rest of the DT clock init has completed and all
-> + * clock nodes have been registered.
-> + */
-> +void __init ti_dt_clockdomains_setup(void)
+> +static struct clk_hw_omap memmap_dummy_ck = {
+> +	.flags = MEMMAP_ADDRESSING,
+> +};
+> +
+> +static u32 prm_clk_readl(u32 *reg)
+> +{
+> +	return omap2_clk_readl(&memmap_dummy_ck, reg);
+> +}
+> +
+> +static void prm_clk_writel(u32 val, u32 *reg)
+> +{
+> +	omap2_clk_writel(val, &memmap_dummy_ck, reg);
+> +}
+> +
+> +static struct clk_ll_ops omap_clk_ll_ops = {
+> +	.clk_readl = prm_clk_readl,
+> +	.clk_writel = prm_clk_writel,
+> +};
+> +
+> +int __init of_prcm_init(void)
 > +{
 > +	struct device_node *np;
-> +	for_each_matching_node(np, ti_clkdm_match_table) {
-> +		of_ti_clockdomain_setup(np);
+> +	void __iomem *mem;
+> +	int memmap_index = 0;
+> +
+> +	ti_clk_ll_ops = &omap_clk_ll_ops;
+> +
+> +	for_each_matching_node(np, omap_prcm_dt_match_table) {
+> +		mem = of_iomap(np, 0);
+> +		clk_memmaps[memmap_index] = mem;
+> +		ti_dt_clk_init_provider(np, memmap_index);
+> +		memmap_index++;
 > +	}
+> +
+> +	ti_dt_clockdomains_setup();
+> +
+> +	return 0;
 > +}
-> diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
-> index a52495d..e8c1b22 100644
-> --- a/include/linux/clk/ti.h
-> +++ b/include/linux/clk/ti.h
-> @@ -238,6 +238,7 @@ int omap2_dflt_clk_is_enabled(struct clk_hw *hw);
->  void __iomem *ti_clk_get_reg_addr(struct device_node *node, int index);
->  void ti_dt_clocks_register(struct ti_dt_clk *oclks);
->  void ti_dt_clk_init_provider(struct device_node *np, int index);
-> +void ti_dt_clockdomains_setup(void);
->  void ti_clk_retry_init(struct device_node *node, struct clk_hw *hw,
->  		       ti_of_clk_init_cb_t func);
->  int of_ti_clk_autoidle_setup(struct device_node *node);
 > -- 
 > 1.7.9.5
 > 
