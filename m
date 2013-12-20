@@ -1,74 +1,140 @@
 From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v7 03/14] usb: phy-mxs: Add auto clock and power setting
-Date: Fri, 20 Dec 2013 15:51:59 +0800
-Message-ID: <1387525930-27313-4-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH v7 13/14] usb: phy-mxs: Add system suspend/resume API
+Date: Fri, 20 Dec 2013 15:52:09 +0800
+Message-ID: <1387525930-27313-14-git-send-email-peter.chen@freescale.com>
 References: <1387525930-27313-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1387525930-27313-1-git-send-email-peter.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-doc-owner@vger.kernel.org
 To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
-Cc: marex@denx.de, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, peter.chen@freescale.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The auto setting is used to open related power and clocks
-automatically after receiving wakeup signal.
-
-With this feature, the PHY's clock and power can be recovered
-correctly from low power mode, it is guaranteed by IC logic.
+We need this to keep PHY's power on or off during the system
+suspend mode. If we need to enable USB wakeup, then we
+must keep PHY's power being on during the system suspend mode.
+Otherwise, we need to keep PHY's power being off to save power.
 
 Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- drivers/usb/phy/phy-mxs-usb.c |   20 +++++++++++++++++---
- 1 files changed, 17 insertions(+), 3 deletions(-)
+ drivers/usb/phy/phy-mxs-usb.c |   59 +++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 59 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 6d49040..0c6f3bc 100644
+index d4812fc..d75670a 100644
 --- a/drivers/usb/phy/phy-mxs-usb.c
 +++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -31,6 +31,11 @@
+@@ -57,6 +57,10 @@
+ #define BM_USBPHY_DEBUG_CLKGATE			BIT(30)
  
- #define BM_USBPHY_CTRL_SFTRST			BIT(31)
- #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
-+#define BM_USBPHY_CTRL_ENAUTOSET_USBCLKS	BIT(26)
-+#define BM_USBPHY_CTRL_ENAUTOCLR_USBCLKGATE	BIT(25)
-+#define BM_USBPHY_CTRL_ENAUTOCLR_PHY_PWD	BIT(20)
-+#define BM_USBPHY_CTRL_ENAUTOCLR_CLKGATE	BIT(19)
-+#define BM_USBPHY_CTRL_ENAUTO_PWRON_PLL		BIT(18)
- #define BM_USBPHY_CTRL_ENUTMILEVEL3		BIT(15)
- #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
- #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
-@@ -96,9 +101,18 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
- 	/* Power up the PHY */
- 	writel(0, base + HW_USBPHY_PWD);
+ /* Anatop Registers */
++#define ANADIG_ANA_MISC0			0x150
++#define ANADIG_ANA_MISC0_SET			0x154
++#define ANADIG_ANA_MISC0_CLR			0x158
++
+ #define ANADIG_USB1_VBUS_DET_STAT		0x1c0
+ #define ANADIG_USB2_VBUS_DET_STAT		0x220
  
--	/* enable FS/LS device */
--	writel(BM_USBPHY_CTRL_ENUTMILEVEL2 |
--	       BM_USBPHY_CTRL_ENUTMILEVEL3,
-+	/*
-+	 * USB PHY Ctrl Setting
-+	 * - Auto clock/power on
-+	 * - Enable full/low speed support
-+	 */
-+	writel(BM_USBPHY_CTRL_ENAUTOSET_USBCLKS |
-+		BM_USBPHY_CTRL_ENAUTOCLR_USBCLKGATE |
-+		BM_USBPHY_CTRL_ENAUTOCLR_PHY_PWD |
-+		BM_USBPHY_CTRL_ENAUTOCLR_CLKGATE |
-+		BM_USBPHY_CTRL_ENAUTO_PWRON_PLL |
-+		BM_USBPHY_CTRL_ENUTMILEVEL2 |
-+		BM_USBPHY_CTRL_ENUTMILEVEL3,
- 	       base + HW_USBPHY_CTRL_SET);
+@@ -65,6 +69,9 @@
+ #define ANADIG_USB2_LOOPBACK_SET		0x244
+ #define ANADIG_USB2_LOOPBACK_CLR		0x248
  
++#define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG	BIT(12)
++#define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG_SL BIT(11)
++
+ #define BM_ANADIG_USB1_VBUS_DET_STAT_VBUS_VALID	BIT(3)
+ #define BM_ANADIG_USB2_VBUS_DET_STAT_VBUS_VALID	BIT(3)
+ 
+@@ -139,6 +146,16 @@ struct mxs_phy {
+ 	int port_id;
+ };
+ 
++static inline bool is_imx6q_phy(struct mxs_phy *mxs_phy)
++{
++	return mxs_phy->data == &imx6q_phy_data;
++}
++
++static inline bool is_imx6sl_phy(struct mxs_phy *mxs_phy)
++{
++	return mxs_phy->data == &imx6sl_phy_data;
++}
++
+ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+ {
+ 	int ret;
+@@ -244,6 +261,22 @@ static void mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool on)
+ 
+ }
+ 
++static void mxs_phy_enable_ldo_in_suspend(struct mxs_phy *mxs_phy, bool on)
++{
++	unsigned int reg = on ? ANADIG_ANA_MISC0_SET : ANADIG_ANA_MISC0_CLR;
++
++	/* If the SoCs don't have anatop, quit */
++	if (!mxs_phy->regmap_anatop)
++		return;
++
++	if (is_imx6q_phy(mxs_phy))
++		regmap_write(mxs_phy->regmap_anatop, reg,
++			BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG);
++	else if (is_imx6sl_phy(mxs_phy))
++		regmap_write(mxs_phy->regmap_anatop,
++			reg, BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG_SL);
++}
++
+ static int mxs_phy_init(struct usb_phy *phy)
+ {
+ 	struct mxs_phy *mxs_phy = to_mxs_phy(phy);
+@@ -388,6 +421,8 @@ static int mxs_phy_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	device_set_wakeup_capable(&pdev->dev, true);
++
+ 	ret = usb_add_phy_dev(&mxs_phy->phy);
+ 	if (ret)
+ 		return ret;
+@@ -404,6 +439,29 @@ static int mxs_phy_remove(struct platform_device *pdev)
  	return 0;
+ }
+ 
++static int mxs_phy_system_suspend(struct device *dev)
++{
++	struct mxs_phy *mxs_phy = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		mxs_phy_enable_ldo_in_suspend(mxs_phy, true);
++
++	return 0;
++}
++
++static int mxs_phy_system_resume(struct device *dev)
++{
++	struct mxs_phy *mxs_phy = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		mxs_phy_enable_ldo_in_suspend(mxs_phy, false);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(mxs_phy_pm, mxs_phy_system_suspend,
++		mxs_phy_system_resume);
++
+ static struct platform_driver mxs_phy_driver = {
+ 	.probe = mxs_phy_probe,
+ 	.remove = mxs_phy_remove,
+@@ -411,6 +469,7 @@ static struct platform_driver mxs_phy_driver = {
+ 		.name = DRIVER_NAME,
+ 		.owner	= THIS_MODULE,
+ 		.of_match_table = mxs_phy_dt_ids,
++		.pm = &mxs_phy_pm,
+ 	 },
+ };
+ 
 -- 
 1.7.8
+
+
