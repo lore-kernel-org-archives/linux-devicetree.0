@@ -1,51 +1,79 @@
-From: "David Laight" <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH v7 07/14] usb: phy-mxs: change description of usb device speed
-Date: Fri, 20 Dec 2013 10:40:01 -0000
-Message-ID: <AE90C24D6B3A694183C094C60CF0A2F6026B74C0@saturn3.aculab.com>
-References: <1387525930-27313-1-git-send-email-peter.chen@freescale.com> <1387525930-27313-8-git-send-email-peter.chen@freescale.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH RFC v2 REPOST 6/8] drm/tilcdc: Add I2C HDMI
+	audio config for tda998x
+Date: Fri, 20 Dec 2013 12:41:44 +0200
+Message-ID: <72b68761b5dfae5c09ba0c95541a36d9010f0b88.1387535303.git.jsarha@ti.com>
+References: <cover.1387535299.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-class: urn:content-classes:message
-In-Reply-To: <1387525930-27313-8-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>, balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <cover.1387535299.git.jsarha@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, airlied@linux.ie
+Cc: broonie@kernel.org, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-> From: Peter Chen
-> Sent: 20 December 2013 07:52
-> Change "high speed" to "HS"
-> Change "non-high speed" to "FS/LS"
-> 
-> Implementation of notify_suspend and notify_resume will be different
-> according to mxs_phy_data->flags.
-> 
-> Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> ---
->  drivers/usb/phy/phy-mxs-usb.c |    8 ++++----
->  1 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-> index 0ef930a..489096f 100644
-> --- a/drivers/usb/phy/phy-mxs-usb.c
-> +++ b/drivers/usb/phy/phy-mxs-usb.c
-> @@ -166,8 +166,8 @@ static int mxs_phy_suspend(struct usb_phy *x, int suspend)
->  static int mxs_phy_on_connect(struct usb_phy *phy,
->  		enum usb_device_speed speed)
->  {
-> -	dev_dbg(phy->dev, "%s speed device has connected\n",
-> -		(speed == USB_SPEED_HIGH) ? "high" : "non-high");
-> +	dev_dbg(phy->dev, "%s device has connected\n",
-> +		(speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
+The configuration is needed for HDMI audio. The "swap" and "mirr"
+parameters have to be correctly set in the configuration in order to
+have proper colors in the HDMI picture.
 
-Seems you are making these messages even more cryptic.
-With all the speeds that USB supports remembering what 'full'
-means is hard enough without having a cryptic acronym.
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+cc: airlied@linux.ie
+---
+ drivers/gpu/drm/tilcdc/tilcdc_slave.c |   24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-	David
-
-
-
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave.c b/drivers/gpu/drm/tilcdc/tilcdc_slave.c
+index 595068b..e43240a 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_slave.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_slave.c
+@@ -19,6 +19,7 @@
+ #include <linux/pinctrl/pinmux.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <drm/drm_encoder_slave.h>
++#include <drm/i2c/tda998x.h>
+ 
+ #include "tilcdc_drv.h"
+ 
+@@ -111,8 +112,29 @@ static const struct drm_encoder_helper_funcs slave_encoder_helper_funcs = {
+ 		.restore        = drm_i2c_encoder_restore,
+ };
+ 
++static struct tda998x_encoder_params tda998x_pdata = {
++	.swap_b = 0x3,
++	.mirr_b = 0x0,
++	.swap_a = 0x2,
++	.mirr_a = 0x0,
++	.swap_d = 0x1,
++	.mirr_d = 0x0,
++	.swap_c = 0x0,
++	.mirr_c = 0x0,
++	.swap_f = 0x5,
++	.mirr_f = 0x0,
++	.swap_e = 0x4,
++	.mirr_e = 0x0,
++	.audio_cfg = 0x3,	/* I2S mode */
++	.audio_clk_cfg = 1,	/* select clock pin */
++	.audio_frame[1] = 1,	/* channels - 1 */
++	.audio_format = AFMT_I2S,
++	.audio_sample_rate = 48000,
++};
++
+ static const struct i2c_board_info info = {
+-		I2C_BOARD_INFO("tda998x", 0x70)
++		I2C_BOARD_INFO("tda998x", 0x70),
++		.platform_data = &tda998x_pdata,
+ };
+ 
+ static struct drm_encoder *slave_encoder_create(struct drm_device *dev,
+-- 
+1.7.9.5
