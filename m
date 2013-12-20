@@ -1,25 +1,46 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/3] mfd: always assign of_node in mfd_add_device()
-Date: Fri, 20 Dec 2013 09:11:42 -0700
-Message-ID: <52B46C3E.7010201@wwwdotorg.org>
-References: <1386626809-6251-1-git-send-email-swarren@wwwdotorg.org> <20131211092435.GC16780@lee--X1> <52B32C05.5010204@wwwdotorg.org> <20131220142530.GK3709@lee--X1>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v6 3/7] regulator: add pbias regulator support
+Date: Fri, 20 Dec 2013 08:13:08 -0800
+Message-ID: <20131220161307.GB27438@atomide.com>
+References: <1386670577-3530-1-git-send-email-balajitk@ti.com>
+ <1387456720-7202-1-git-send-email-balajitk@ti.com>
+ <1387456720-7202-4-git-send-email-balajitk@ti.com>
+ <20131219163300.GK27438@atomide.com>
+ <52B4124F.8010903@ti.com>
+ <20131220155721.GX27438@atomide.com>
+ <20131220160917.GY31886@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131220142530.GK3709@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131220160917.GY31886@sirena.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Balaji T K <balajitk@ti.com>, linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/20/2013 07:25 AM, Lee Jones wrote:
-> Hi Stephen,
+* Mark Brown <broonie@kernel.org> [131220 08:10]:
+> On Fri, Dec 20, 2013 at 07:57:21AM -0800, Tony Lindgren wrote:
+> > * Balaji T K <balajitk@ti.com> [131220 01:49]:
 > 
-> Please let me know if this is suitable and I can keep your Ack.
+> > > But interrupt was never used/tested AFAIK, there is some settling time
+> > > before the generated interrupt status is truely valid, so pbias interrupt is not
+> > > reliable.
+> 
+> > OK. Do we need the standard regulator property startup-delay-us for the
+> > PBIAS regulator then? Or if it's always fixed, I guess it could be done
+> > in the pbias_regulator_enable()?
+> 
+> That delay is supposed to be the time for the startup of the supply
+> rather than any detection code.  It should be set using enable_time in
+> the driver if it's not system dependent - the property is there for
+> cases where the delay depends on system configuration (eg, due to the
+> capacitor values).
 
-Yes, that patch is good. Thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK thanks. Let's try enable_time first then as we've had a fixed value
+for years for it. If there's some difference based on the card
+capacitance etc that can be added if needed.
+
+Regards,
+
+Tony
