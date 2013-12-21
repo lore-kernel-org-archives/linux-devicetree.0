@@ -1,167 +1,37 @@
-From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 2/2] clk: add accuracy support for fixed clock
-Date: Sat, 21 Dec 2013 10:34:48 +0100
-Message-ID: <1387618488-3075-3-git-send-email-b.brezillon@overkiz.com>
-References: <1387618488-3075-1-git-send-email-b.brezillon@overkiz.com>
+From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH] ARM: dts: omap3-gta04: Add EOC irq gpio line handling.
+Date: Sat, 21 Dec 2013 16:12:23 +0100
+Message-ID: <1387638743-12278-1-git-send-email-marek@goldelico.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387618488-3075-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for accuracy retrieval on fixed clocks.
-It also adds a new dt property called 'clock-accuracy' to define the clock
-accuracy.
+BMP085 EOC (End Of Conversion) irq line is connected to
+gpio113 on gta04. Set irq properties to have driver using irq
+instead polling for EOC.
 
-This can be usefull for oscillator (RC, crystal, ...) definitions which are
-always given an accuracy characteristic.
-
-Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 ---
- .../devicetree/bindings/clock/fixed-clock.txt      |    3 ++
- drivers/clk/clk-fixed-rate.c                       |   43 +++++++++++++++++---
- include/linux/clk-provider.h                       |    4 ++
- 3 files changed, 44 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/omap3-gta04.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.txt b/Documentation/devicetree/bindings/clock/fixed-clock.txt
-index 0b1fe78..48ea0ad 100644
---- a/Documentation/devicetree/bindings/clock/fixed-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/fixed-clock.txt
-@@ -10,6 +10,8 @@ Required properties:
- - clock-frequency : frequency of clock in Hz. Should be a single cell.
- 
- Optional properties:
-+- clock-accuracy : accuracy of clock in ppb (parts per billion).
-+		   Should be a single cell.
- - gpios : From common gpio binding; gpio connection to clock enable pin.
- - clock-output-names : From common clock binding.
- 
-@@ -18,4 +20,5 @@ Example:
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <1000000000>;
-+		clock-accuracy = <100>;
+diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
+index b9b55c9..7a8e37d 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dts
++++ b/arch/arm/boot/dts/omap3-gta04.dts
+@@ -92,6 +92,8 @@
+ 	bmp085@77 {
+ 		compatible = "bosch,bmp085";
+ 		reg = <0x77>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <17 IRQ_TYPE_EDGE_RISING>;
  	};
-diff --git a/drivers/clk/clk-fixed-rate.c b/drivers/clk/clk-fixed-rate.c
-index 1ed591a..0fc56ab 100644
---- a/drivers/clk/clk-fixed-rate.c
-+++ b/drivers/clk/clk-fixed-rate.c
-@@ -34,22 +34,31 @@ static unsigned long clk_fixed_rate_recalc_rate(struct clk_hw *hw,
- 	return to_clk_fixed_rate(hw)->fixed_rate;
- }
  
-+static unsigned long clk_fixed_rate_recalc_accuracy(struct clk_hw *hw,
-+		unsigned long parent_accuracy)
-+{
-+	return to_clk_fixed_rate(hw)->fixed_accuracy;
-+}
-+
- const struct clk_ops clk_fixed_rate_ops = {
- 	.recalc_rate = clk_fixed_rate_recalc_rate,
-+	.recalc_accuracy = clk_fixed_rate_recalc_accuracy,
- };
- EXPORT_SYMBOL_GPL(clk_fixed_rate_ops);
- 
- /**
-- * clk_register_fixed_rate - register fixed-rate clock with the clock framework
-+ * clk_register_fixed_rate_with_accuracy - register fixed-rate clock with the
-+ *					   clock framework
-  * @dev: device that is registering this clock
-  * @name: name of this clock
-  * @parent_name: name of clock's parent
-  * @flags: framework-specific flags
-  * @fixed_rate: non-adjustable clock rate
-+ * @fixed_accuracy: non-adjustable clock rate
-  */
--struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
--		const char *parent_name, unsigned long flags,
--		unsigned long fixed_rate)
-+struct clk *clk_register_fixed_rate_with_accuracy(struct device *dev,
-+		const char *name, const char *parent_name, unsigned long flags,
-+		unsigned long fixed_rate, unsigned long fixed_accuracy)
- {
- 	struct clk_fixed_rate *fixed;
- 	struct clk *clk;
-@@ -70,16 +79,33 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
- 
- 	/* struct clk_fixed_rate assignments */
- 	fixed->fixed_rate = fixed_rate;
-+	fixed->fixed_accuracy = fixed_accuracy;
- 	fixed->hw.init = &init;
- 
- 	/* register the clock */
- 	clk = clk_register(dev, &fixed->hw);
--
- 	if (IS_ERR(clk))
- 		kfree(fixed);
- 
- 	return clk;
- }
-+EXPORT_SYMBOL_GPL(clk_register_fixed_rate_with_accuracy);
-+
-+/**
-+ * clk_register_fixed_rate - register fixed-rate clock with the clock framework
-+ * @dev: device that is registering this clock
-+ * @name: name of this clock
-+ * @parent_name: name of clock's parent
-+ * @flags: framework-specific flags
-+ * @fixed_rate: non-adjustable clock rate
-+ */
-+struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
-+		const char *parent_name, unsigned long flags,
-+		unsigned long fixed_rate)
-+{
-+	return clk_register_fixed_rate_with_accuracy(dev, name, parent_name,
-+						     flags, fixed_rate, 0);
-+}
- EXPORT_SYMBOL_GPL(clk_register_fixed_rate);
- 
- #ifdef CONFIG_OF
-@@ -91,13 +117,18 @@ void of_fixed_clk_setup(struct device_node *node)
- 	struct clk *clk;
- 	const char *clk_name = node->name;
- 	u32 rate;
-+	u32 accuracy = 0;
- 
- 	if (of_property_read_u32(node, "clock-frequency", &rate))
- 		return;
- 
-+	of_property_read_u32(node, "clock-accuracy", &accuracy);
-+
- 	of_property_read_string(node, "clock-output-names", &clk_name);
- 
--	clk = clk_register_fixed_rate(NULL, clk_name, NULL, CLK_IS_ROOT, rate);
-+	clk = clk_register_fixed_rate_with_accuracy(NULL, clk_name, NULL,
-+						    CLK_IS_ROOT, rate,
-+						    accuracy);
- 	if (!IS_ERR(clk))
- 		of_clk_add_provider(node, of_clk_src_simple_get, clk);
- }
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 16d182c..5429f5d 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -204,6 +204,7 @@ struct clk_hw {
- struct clk_fixed_rate {
- 	struct		clk_hw hw;
- 	unsigned long	fixed_rate;
-+	unsigned long	fixed_accuracy;
- 	u8		flags;
- };
- 
-@@ -211,6 +212,9 @@ extern const struct clk_ops clk_fixed_rate_ops;
- struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
- 		const char *parent_name, unsigned long flags,
- 		unsigned long fixed_rate);
-+struct clk *clk_register_fixed_rate_with_accuracy(struct device *dev,
-+		const char *name, const char *parent_name, unsigned long flags,
-+		unsigned long fixed_rate, unsigned long fixed_accuracy);
- 
- void of_fixed_clk_setup(struct device_node *np);
- 
+ 	/* leds */
 -- 
-1.7.9.5
+1.8.4.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
