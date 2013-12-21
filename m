@@ -1,37 +1,51 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: davinci: reuse for Keystone SoC
-Date: Sat, 21 Dec 2013 13:51:45 +0530
-Message-ID: <CA+V-a8vChjoYhtmGVkARxtX=dTrDAsbS5L1o69jN2pSg0v13xg@mail.gmail.com>
-References: <1387361272-20861-1-git-send-email-grygorii.strashko@ti.com> <1387361272-20861-3-git-send-email-grygorii.strashko@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1387361272-20861-3-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <rob.herring@calxeda.com>, dlos <davinci-linux-open-source@linux.davincidsp.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH v4 0/2] clk: add clk accuracy support
+Date: Sat, 21 Dec 2013 10:34:46 +0100
+Message-ID: <1387618488-3075-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2013 at 3:37 PM, Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
-> The similar GPIO HW block is used by keystone SoCs as
-> in Davinci SoCs.
-> Hence, reuse Davinci GPIO driver for Keystone taking into
-> account that Keystone contains ARM GIC IRQ controller which
-> is implemented using IRQ Chip.
->
-> Documentation:
->         http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Alexandre Courbot <gnurou@gmail.com>
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: devicetree@vger.kernel.org
->
-> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Hello,
 
-Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+This patch series adds support for clock accuracy retrieval in the common clk
+framework.
 
-Regards,
---Prabhakar Lad
+Best Regards,
+
+Boris
+
+Changes since v3:
+ - do not export __clk_get_accuracy symbol
+
+Changes since v2:
+ - fix __clk_recalc_accuracies function comment
+ - modify __clk_get_accuracy to return the current clock accuracy even when the
+   clock is orphan
+ - only recalculate clock accuracy when reparent succeed
+
+Changes since v1:
+ - remove HAVE_CLK_GET_ACCURACY option and enable clk accuracy support only
+   when using the CCF
+ - export __clk_get_accuracy (might be used by clk-providers)
+ - fix documentation (s/recalc_rate/recalc_accuracy/)
+ - move fixed_accuracy field addition (struct clk_fixed_rate) from the 1st
+   patch to the 2nd patch of this series
+
+Boris BREZILLON (2):
+  clk: add clk accuracy retrieval support
+  clk: add accuracy support for fixed clock
+
+ Documentation/clk.txt                              |    4 +
+ .../devicetree/bindings/clock/fixed-clock.txt      |    3 +
+ drivers/clk/clk-fixed-rate.c                       |   43 +++++++--
+ drivers/clk/clk.c                                  |  102 ++++++++++++++++++--
+ include/linux/clk-private.h                        |    1 +
+ include/linux/clk-provider.h                       |   15 +++
+ include/linux/clk.h                                |   17 ++++
+ 7 files changed, 172 insertions(+), 13 deletions(-)
+
+-- 
+1.7.9.5
