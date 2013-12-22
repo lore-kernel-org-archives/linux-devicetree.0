@@ -1,51 +1,76 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [RFCv4 06/11] misc: Introduce Nokia CMT driver
-Date: Sun, 22 Dec 2013 11:22:06 +0100
-Message-ID: <CACRpkdZpAwemVCWubVC6Fe+CNrzPo97uTzyEQt1uD4M2iutnPQ@mail.gmail.com>
-References: <1387150085-23173-1-git-send-email-sre@debian.org>
-	<1387150085-23173-7-git-send-email-sre@debian.org>
-	<CACRpkdYjjXgE_W8gq1e6z=nGMF=r-m+o2kkvrBFrEMm3o0=RwQ@mail.gmail.com>
-	<20131216121524.GA6177@earth.universe>
-	<CACRpkdbx=Ye8xo4wMkyntME45xv15DeyqV32aeCAcSaa+vDpfA@mail.gmail.com>
-	<20131216183448.GA10614@earth.universe>
-	<52B090E0.5040006@gmail.com>
-	<20131217232525.GA12152@earth.universe>
+From: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Subject: Re: [PATCH 01/11] dt: binding: add binding for ImgTec IR block
+Date: Sun, 22 Dec 2013 08:56:50 -0200
+Message-ID: <20131222085650.064e7ecd@samsung.com>
+References: <1386947579-26703-1-git-send-email-james.hogan@imgtec.com>
+ <1386947579-26703-2-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131217232525.GA12152-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivajlo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?ISO-8859-1?Q?Pali_Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?windows-1251?B?yOLg6evuIMTo7Ojy8O7i?= <freemangordon-uiMcrn6V0Vs@public.gmane.org>, Joni Lapilainen <joni.lapilainen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aar>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1386947579-26703-2-git-send-email-james.hogan@imgtec.com>
+Sender: linux-media-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org
+Cc: linux-media@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2013 at 12:25 AM, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org> wrote:
+Em Fri, 13 Dec 2013 15:12:49 +0000
+James Hogan <james.hogan@imgtec.com> escreveu:
 
-> I had a look at both ofono's and freesmartphone.org's implementation
-> for the GPIO handling and both implementations are very similar. I
-> think it should be possible to move the state machine described in
-> [0] into the kernel and provide a simple sysfs/uevent interface.
->
-> I was thinking of something like /sys/devices/platform/nokia-cmt/state,
-> which accepts "enable", "disable" and "reset" as input and outputs the
-> current state.
->
-> [0] https://git.kernel.org/cgit/network/ofono/ofono.git/tree/plugins/nokia-gpio.c
+> Add device tree binding for ImgTec Consumer Infrared block.
+> 
+> Signed-off-by: James Hogan <james.hogan@imgtec.com>
+> Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Landley <rob@landley.net>
+> Cc: linux-doc@vger.kernel.org
 
-Yes this looks like kernel code shoehorned into userspace. As it
-deals with suspending/resuming hardware for example, and that is
-something the kernel needs to coordinate and do uniformly across
-all devices (IMO).
+It looks ok for me, but we should wait for a DT maintainer ack for
+this one.
 
-A while back Arun Murthy was working on creating an embedded
-modem subsystem but the development stopped. However such a
-subsystem is a generic problem of general interest and this would be
-one of the candidates for drivers/modem I think. Sadly creating it
-may be a lot of work, I don't know exactly.
-http://marc.info/?l=linux-kernel&m=135027904405680&w=2
+Regards,
+Mauro
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  Documentation/devicetree/bindings/media/img-ir.txt | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/img-ir.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/img-ir.txt b/Documentation/devicetree/bindings/media/img-ir.txt
+> new file mode 100644
+> index 000000000000..6f623b094ea6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/img-ir.txt
+> @@ -0,0 +1,20 @@
+> +* ImgTec Infrared (IR) decoder
+> +
+> +Required properties:
+> +- compatible:		Should be "img,ir"
+> +- reg:			Physical base address of the controller and length of
+> +			memory mapped region.
+> +- interrupts:		The interrupt specifier to the cpu.
+> +
+> +Optional properties:
+> +- clocks:		Clock specifier for base clock.
+> +			Defaults to 32.768KHz if not specified.
+> +
+> +Example:
+> +
+> +	ir@02006200 {
+> +		compatible = "img,ir";
+> +		reg = <0x02006200 0x100>;
+> +		interrupts = <29 4>;
+> +		clocks = <&clk_32khz>;
+> +	};
+
+
+-- 
+
+Cheers,
+Mauro
