@@ -1,117 +1,46 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] gpio: davinci: reuse for Keystone SoC
-Date: Sun, 22 Dec 2013 21:11:03 +0530
-Message-ID: <52B7080F.7000900@ti.com>
-References: <1387361272-20861-1-git-send-email-grygorii.strashko@ti.com>
-	<1387361272-20861-3-git-send-email-grygorii.strashko@ti.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 4/4] Phy: Add DT nodes on kirkwood and Dove for the
+ SATA PHY
+Date: Sun, 22 Dec 2013 12:21:49 -0500
+Message-ID: <20131222172149.GJ2609@titan.lakedaemon.net>
+References: <1387311713-1926-1-git-send-email-andrew@lunn.ch>
+ <1387311713-1926-4-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1387361272-20861-3-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1387311713-1926-4-git-send-email-andrew@lunn.ch>
+Sender: linux-ide-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: kishon@ti.com, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 18 December 2013 03:37 PM, Grygorii Strashko wrote:
-> The similar GPIO HW block is used by keystone SoCs as
-> in Davinci SoCs.
-> Hence, reuse Davinci GPIO driver for Keystone taking into
-> account that Keystone contains ARM GIC IRQ controller which
-> is implemented using IRQ Chip.
+On Tue, Dec 17, 2013 at 09:21:52PM +0100, Andrew Lunn wrote:
+> Add nodes for the two SATA PHYs on kirkwood.
+> Add node for the one SATA PHY on Dove.
+> Add pHandles to the PHYs in the sata nodes.
 > 
-> Documentation:
-> 	http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
-> 
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> 
-> Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
 > ---
->  .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
->  drivers/gpio/gpio-davinci.c                        |   46 ++++++++++++++++----
->  2 files changed, 40 insertions(+), 10 deletions(-)
+> v1->v2:
+> sata_phy@... ->sata-phy@
+> value after '@' matching the first address in the reg.
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> index a2e839d..4ce9862 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> @@ -1,7 +1,7 @@
-> -Davinci GPIO controller bindings
-> +Davinci/Keystone GPIO controller bindings
->  
->  Required Properties:
-> -- compatible: should be "ti,dm6441-gpio"
-> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
->  
->  - reg: Physical base address of the controller and the size of memory mapped
->         registers.
-> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-> index 1b33806..38741cc 100644
-> --- a/drivers/gpio/gpio-davinci.c
-> +++ b/drivers/gpio/gpio-davinci.c
-> @@ -413,6 +413,26 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
->  	.xlate = irq_domain_xlate_onetwocell,
->  };
->  
-> +static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
-> +{
-> +	static struct irq_chip_type gpio_unbanked;
-> +
-> +	gpio_unbanked = *container_of(irq_get_chip(irq),
-> +				      struct irq_chip_type, chip);
-> +
-> +	return &gpio_unbanked.chip;
-> +};
-> +
-> +static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
-> +{
-> +	static struct irq_chip gpio_unbanked;
-> +
-> +	gpio_unbanked = *irq_get_chip(irq);
-> +	return &gpio_unbanked;
-> +};
-> +
-> +static const struct of_device_id davinci_gpio_ids[];
-> +
->  /*
->   * NOTE:  for suspend/resume, probably best to make a platform_device with
->   * suspend_late/resume_resume calls hooking into results of the set_wake()
-> @@ -433,6 +453,18 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->  	struct davinci_gpio_platform_data *pdata = dev->platform_data;
->  	struct davinci_gpio_regs __iomem *g;
->  	struct irq_domain	*irq_domain = NULL;
-> +	const struct of_device_id *match;
-> +	struct irq_chip *irq_chip;
-> +	struct irq_chip *(*gpio_get_irq_chip)(unsigned int irq);
-> +
-> +	/*
-> +	 * Use davinci_gpio_get_irq_chip by default to handle non DT cases
-> +	 */
-> +	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
-> +	match = of_match_device(of_match_ptr(davinci_gpio_ids),
-> +				dev);
-> +	if (match)
-> +		gpio_get_irq_chip = match->data;
+> v2->v3:
+> "0" -> "port0", etc.
+> kirkewood -> kirkwood
+> ---
+>  arch/arm/boot/dts/dove.dtsi          | 11 +++++++++++
+>  arch/arm/boot/dts/kirkwood-6281.dtsi |  2 ++
+>  arch/arm/boot/dts/kirkwood-6282.dtsi |  2 ++
+>  arch/arm/boot/dts/kirkwood.dtsi      | 18 ++++++++++++++++++
+>  4 files changed, 33 insertions(+)
 
-This produces a sparse warning:
+Applied to mvebu/dt with Kishon's Ack.
 
-  CHECK   drivers/gpio/gpio-davinci.c
-drivers/gpio/gpio-davinci.c:467:35: warning: incorrect type in assignment (different modifiers)
-drivers/gpio/gpio-davinci.c:467:35:    expected struct irq_chip *( *[assigned] gpio_get_irq_chip )( ... )
-drivers/gpio/gpio-davinci.c:467:35:    got void const *const data
+Please double check me, I had to shuffle dove.dtsi since I recently
+sorted the nodes under the ocp bus.
 
-Thanks,
-Sekhar
+thx,
+
+Jason.
