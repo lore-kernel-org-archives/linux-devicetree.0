@@ -1,42 +1,78 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v7 0/2] ARM: mach-moxart: add MOXA ART SoC support
-Date: Sun, 22 Dec 2013 12:01:19 -0800
-Message-ID: <20131222200119.GH9144@quad.lixom.net>
-References: <1387450064-6598-1-git-send-email-jonas.jensen@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387450064-6598-1-git-send-email-jonas.jensen@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Jensen <jonas.jensen@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, arm@kernel.org, linux@arm.linux.org.uk, arnd@arndb.de, soren.brinkmann@xilinx.com, peter.crosthwaite@xilinx.com, linux@roeck-us.net
+From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] V4L: s5k6a3: Add DT binding documentation
+Date: Sun, 22 Dec 2013 22:27:00 +0100
+Message-ID: <1387747620-24676-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2013 at 11:47:42AM +0100, Jonas Jensen wrote:
-> The reason behind why fixed rate clock "ref12" couldn't be moved from
-> .dtsi to .dts:
-> 
-> There was nothing else in "clocks { .. }", the entire block was then
-> deleted from .dtsi.
-> 
-> If a skeleton "clocks { .. }" remain in .dtsi, the node can then be
-> moved to .dts, and of_clk_get() works again.
-> 
-> Changes since v6:
-> 
-> 1. move fixed rate clock "ref12" from .dtsi to .dts
-> 2. sort new entry alphabetically in arch/arm/Kconfig
-> 3. rebase to next-20131219: arch/arm/Makefile arch/arm/Kconfig
-> 
-> Applies to next-20131219
-> 
-> Jonas Jensen (2):
->   ARM: mach-moxart: add MOXA ART SoC platform files
->   ARM: mach-moxart: add MOXA ART SoC device tree files
+This patch adds DT binding documentation for the Samsung S5K6A3(YX)
+raw image sensor.
 
-Please just send an incremental patch to fixup, I'm not going to rebuild
-branches yet again because of a third version within a few hours when I've
-already applied and dropped twice. :)
+Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+This patch adds missing documentation [1] for the "samsung,s5k6a3"
+compatible. Rob, can you please merge it through your tree if it 
+looks OK ?
 
--Olof
+Thanks,
+Sylwester
+
+[1] http://www.spinics.net/lists/devicetree/msg10693.html
+
+Changes since v3 (https://linuxtv.org/patch/20429):
+ - rephrased 'clocks' and 'clock-names' properties' description.
+---
+ .../devicetree/bindings/media/samsung-s5k6a3.txt   |   33 ++++++++++++++++++++
+ 1 files changed, 33 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
+
+diff --git a/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
+new file mode 100644
+index 0000000..cce01e8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
+@@ -0,0 +1,33 @@
++Samsung S5K6A3(YX) raw image sensor
++---------------------------------
++
++S5K6A3(YX) is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
++and CCI (I2C compatible) control bus.
++
++Required properties:
++
++- compatible	: "samsung,s5k6a3";
++- reg		: I2C slave address of the sensor;
++- svdda-supply	: core voltage supply;
++- svddio-supply	: I/O voltage supply;
++- afvdd-supply	: AF (actuator) voltage supply;
++- gpios		: specifier of a GPIO connected to the RESET pin;
++- clocks	: should contain list of phandle and clock specifier pairs
++		  according to common clock bindings for the clocks described
++		  in the clock-names property;
++- clock-names	: should contain "extclk" entry for the sensor's EXTCLK clock;
++
++Optional properties:
++
++- clock-frequency : the frequency at which the "extclk" clock should be
++		    configured to operate, in Hz; if this property is not
++		    specified default 24 MHz value will be used.
++
++The common video interfaces bindings (see video-interfaces.txt) should be
++used to specify link to the image data receiver. The S5K6A3(YX) device
++node should contain one 'port' child node with an 'endpoint' subnode.
++
++Following properties are valid for the endpoint node:
++
++- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
++  video-interfaces.txt.  The sensor supports only one data lane.
+-- 
+1.7.4.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
