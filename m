@@ -1,22 +1,21 @@
-From: Mauro Carvalho Chehab <m.chehab@samsung.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
 Subject: Re: [PATCH 01/11] dt: binding: add binding for ImgTec IR block
-Date: Sun, 22 Dec 2013 08:56:50 -0200
-Message-ID: <20131222085650.064e7ecd@samsung.com>
-References: <1386947579-26703-1-git-send-email-james.hogan@imgtec.com>
- <1386947579-26703-2-git-send-email-james.hogan@imgtec.com>
+Date: Sun, 22 Dec 2013 13:48:43 +0100
+Message-ID: <3633330.ixgGf52iFP@flatron>
+References: <1386947579-26703-1-git-send-email-james.hogan@imgtec.com> <1386947579-26703-2-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1386947579-26703-2-git-send-email-james.hogan@imgtec.com>
-Sender: linux-media-owner@vger.kernel.org
-To: James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org
-Cc: linux-media@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1386947579-26703-2-git-send-email-james.hogan@imgtec.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-media@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 13 Dec 2013 15:12:49 +0000
-James Hogan <james.hogan@imgtec.com> escreveu:
+Hi James,
 
+On Friday 13 of December 2013 15:12:49 James Hogan wrote:
 > Add device tree binding for ImgTec Consumer Infrared block.
 > 
 > Signed-off-by: James Hogan <james.hogan@imgtec.com>
@@ -30,13 +29,6 @@ James Hogan <james.hogan@imgtec.com> escreveu:
 > Cc: devicetree@vger.kernel.org
 > Cc: Rob Landley <rob@landley.net>
 > Cc: linux-doc@vger.kernel.org
-
-It looks ok for me, but we should wait for a DT maintainer ack for
-this one.
-
-Regards,
-Mauro
-
 > ---
 >  Documentation/devicetree/bindings/media/img-ir.txt | 20 ++++++++++++++++++++
 >  1 file changed, 20 insertions(+)
@@ -52,6 +44,11 @@ Mauro
 > +
 > +Required properties:
 > +- compatible:		Should be "img,ir"
+
+This compatible string isn't really very specific. Is there some IP
+revision string that could be added, to account for possible design
+changes that may require binding change?
+
 > +- reg:			Physical base address of the controller and length of
 > +			memory mapped region.
 > +- interrupts:		The interrupt specifier to the cpu.
@@ -59,18 +56,12 @@ Mauro
 > +Optional properties:
 > +- clocks:		Clock specifier for base clock.
 > +			Defaults to 32.768KHz if not specified.
-> +
-> +Example:
-> +
-> +	ir@02006200 {
-> +		compatible = "img,ir";
-> +		reg = <0x02006200 0x100>;
-> +		interrupts = <29 4>;
-> +		clocks = <&clk_32khz>;
-> +	};
 
+To make the binding less fragile and allow interoperability with non-DT
+platforms it may be better to provide also clock-names property (so you
+can use clk_get(); that's a Linux implementation detail, though, but to
+make our lives easier IMHO they should be sometimes considered too).
 
--- 
+Best regards,
+Tomasz
 
-Cheers,
-Mauro
