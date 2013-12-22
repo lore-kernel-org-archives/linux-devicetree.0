@@ -1,39 +1,68 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCHv8] rtc: Add support for Intersil ISL12057 I2C RTC chip
-Date: Sun, 22 Dec 2013 12:40:08 -0500
-Message-ID: <20131222174008.GK2609@titan.lakedaemon.net>
-References: <8f0c072f0e5207d54a9f7ab0ba51b21b849abf69.1387491810.git.arno@natisbad.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8f0c072f0e5207d54a9f7ab0ba51b21b849abf69.1387491810.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+From: Manish Badarkhe <badarkhe.manish@gmail.com>
+Subject: [PATCH] mfd: max8997: Use "IS_ENABLED(CONFIG_OF)" for DT code.
+Date: Sun, 22 Dec 2013 23:18:49 +0530
+Message-ID: <1387734529-15622-1-git-send-email-badarkhe.manish@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, badarkhe.manish@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2013 at 11:27:28PM +0100, Arnaud Ebalard wrote:
-> Intersil ISL12057 is an I2C RTC chip also supporting two alarms. This
-> patch only adds support for basic RTC functionalities (i.e. getting
-> and setting time). Tests have been performed on NETGEAR ReadyNAS 102
-> w/ startup/shutdown scripts, hwclock, ntpdate and openntpd.
-> 
-> Reviewed-by: Mark Brown <broonie@linaro.org>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> ---
-...
->  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  drivers/rtc/Kconfig                                |  11 +
->  drivers/rtc/Makefile                               |   1 +
->  drivers/rtc/rtc-isl12057.c                         | 310 +++++++++++++++++++++
->  5 files changed, 324 insertions(+)
->  create mode 100644 drivers/rtc/rtc-isl12057.c
+Instead of "#if define CONFIG_OF" use "IS_ENABLED(CONFIG_OF)"
+option for DT code to avoid if-deffery in code.
 
-Applied to mvebu/drivers.
+Signed-off-by: Manish Badarkhe <badarkhe.manish@gmail.com>
+---
+:100644 100644 791aea3... be9a8b0... M	drivers/mfd/max8997.c
+ drivers/mfd/max8997.c |   14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-thx,
-
-Jason.
+diff --git a/drivers/mfd/max8997.c b/drivers/mfd/max8997.c
+index 791aea3..be9a8b0 100644
+--- a/drivers/mfd/max8997.c
++++ b/drivers/mfd/max8997.c
+@@ -133,7 +133,6 @@ int max8997_update_reg(struct i2c_client *i2c, u8 reg, u8 val, u8 mask)
+ }
+ EXPORT_SYMBOL_GPL(max8997_update_reg);
+ 
+-#ifdef CONFIG_OF
+ /*
+  * Only the common platform data elements for max8997 are parsed here from the
+  * device tree. Other sub-modules of max8997 such as pmic, rtc and others have
+@@ -164,24 +163,15 @@ static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
+ 
+ 	return pd;
+ }
+-#else
+-static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
+-					struct device *dev)
+-{
+-	return 0;
+-}
+-#endif
+ 
+ static inline int max8997_i2c_get_driver_data(struct i2c_client *i2c,
+ 						const struct i2c_device_id *id)
+ {
+-#ifdef CONFIG_OF
+-	if (i2c->dev.of_node) {
++	if (IS_ENABLED(CONFIG_OF) && i2c->dev.of_node) {
+ 		const struct of_device_id *match;
+ 		match = of_match_node(max8997_pmic_dt_match, i2c->dev.of_node);
+ 		return (int)match->data;
+ 	}
+-#endif
+ 	return (int)id->driver_data;
+ }
+ 
+@@ -203,7 +193,7 @@ static int max8997_i2c_probe(struct i2c_client *i2c,
+ 	max8997->type = max8997_i2c_get_driver_data(i2c, id);
+ 	max8997->irq = i2c->irq;
+ 
+-	if (max8997->dev->of_node) {
++	if (IS_ENABLED(CONFIG_OF) && max8997->dev->of_node) {
+ 		pdata = max8997_i2c_parse_dt_pdata(max8997->dev);
+ 		if (IS_ERR(pdata))
+ 			return PTR_ERR(pdata);
+-- 
+1.7.10.4
