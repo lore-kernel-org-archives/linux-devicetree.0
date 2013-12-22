@@ -1,68 +1,56 @@
-From: Manish Badarkhe <badarkhe.manish@gmail.com>
-Subject: [PATCH] mfd: max8997: Use "IS_ENABLED(CONFIG_OF)" for DT code.
-Date: Sun, 22 Dec 2013 23:18:49 +0530
-Message-ID: <1387734529-15622-1-git-send-email-badarkhe.manish@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: sameo@linux.intel.com, lee.jones@linaro.org, badarkhe.manish@gmail.com
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: at91: document ADC clock properties
+Date: Sun, 22 Dec 2013 18:05:49 +0000
+Message-ID: <52B729FD.7020507@kernel.org>
+References: <1387296973-7779-1-git-send-email-b.brezillon@overkiz.com> <52B316A9.1060407@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52B316A9.1060407-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Instead of "#if define CONFIG_OF" use "IS_ENABLED(CONFIG_OF)"
-option for DT code to avoid if-deffery in code.
+On 12/19/13 15:54, Nicolas Ferre wrote:
+> On 17/12/2013 17:16, Boris BREZILLON :
+>> Document the clock properties required by the at91 ADC driver.
+>>
+>> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+> 
+> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Looks fine to me.  I'm just waiting on an ack from a device tree maintainer
+(or the 3 weeks to pass so I can pick it up anyway ;)
 
-Signed-off-by: Manish Badarkhe <badarkhe.manish@gmail.com>
----
-:100644 100644 791aea3... be9a8b0... M	drivers/mfd/max8997.c
- drivers/mfd/max8997.c |   14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/mfd/max8997.c b/drivers/mfd/max8997.c
-index 791aea3..be9a8b0 100644
---- a/drivers/mfd/max8997.c
-+++ b/drivers/mfd/max8997.c
-@@ -133,7 +133,6 @@ int max8997_update_reg(struct i2c_client *i2c, u8 reg, u8 val, u8 mask)
- }
- EXPORT_SYMBOL_GPL(max8997_update_reg);
- 
--#ifdef CONFIG_OF
- /*
-  * Only the common platform data elements for max8997 are parsed here from the
-  * device tree. Other sub-modules of max8997 such as pmic, rtc and others have
-@@ -164,24 +163,15 @@ static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
- 
- 	return pd;
- }
--#else
--static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
--					struct device *dev)
--{
--	return 0;
--}
--#endif
- 
- static inline int max8997_i2c_get_driver_data(struct i2c_client *i2c,
- 						const struct i2c_device_id *id)
- {
--#ifdef CONFIG_OF
--	if (i2c->dev.of_node) {
-+	if (IS_ENABLED(CONFIG_OF) && i2c->dev.of_node) {
- 		const struct of_device_id *match;
- 		match = of_match_node(max8997_pmic_dt_match, i2c->dev.of_node);
- 		return (int)match->data;
- 	}
--#endif
- 	return (int)id->driver_data;
- }
- 
-@@ -203,7 +193,7 @@ static int max8997_i2c_probe(struct i2c_client *i2c,
- 	max8997->type = max8997_i2c_get_driver_data(i2c, id);
- 	max8997->irq = i2c->irq;
- 
--	if (max8997->dev->of_node) {
-+	if (IS_ENABLED(CONFIG_OF) && max8997->dev->of_node) {
- 		pdata = max8997_i2c_parse_dt_pdata(max8997->dev);
- 		if (IS_ERR(pdata))
- 			return PTR_ERR(pdata);
--- 
-1.7.10.4
+> 
+>> ---
+>>  .../devicetree/bindings/arm/atmel-adc.txt          |    5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/atmel-adc.txt b/Documentation/devicetree/bindings/arm/atmel-adc.txt
+>> index d106146..9a1175b 100644
+>> --- a/Documentation/devicetree/bindings/arm/atmel-adc.txt
+>> +++ b/Documentation/devicetree/bindings/arm/atmel-adc.txt
+>> @@ -5,6 +5,9 @@ Required properties:
+>>      <chip> can be "at91sam9260", "at91sam9g45" or "at91sam9x5"
+>>    - reg: Should contain ADC registers location and length
+>>    - interrupts: Should contain the IRQ line for the ADC
+>> +  - clock-names: tuple listing input clock names.
+>> +	Required elements: "adc_clk", "adc_op_clk".
+>> +  - clocks: phandles to input clocks.
+>>    - atmel,adc-channels-used: Bitmask of the channels muxed and enable for this
+>>      device
+>>    - atmel,adc-startup-time: Startup Time of the ADC in microseconds as
+>> @@ -44,6 +47,8 @@ adc0: adc@fffb0000 {
+>>  	compatible = "atmel,at91sam9260-adc";
+>>  	reg = <0xfffb0000 0x100>;
+>>  	interrupts = <20 4>;
+>> +	clocks = <&adc_clk>, <&adc_op_clk>;
+>> +	clock-names = "adc_clk", "adc_op_clk";
+>>  	atmel,adc-channel-base = <0x30>;
+>>  	atmel,adc-channels-used = <0xff>;
+>>  	atmel,adc-drdy-mask = <0x10000>;
+>>
+> 
+> 
