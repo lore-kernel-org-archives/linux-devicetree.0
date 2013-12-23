@@ -1,76 +1,74 @@
-From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] V4L: s5k6a3: Add DT binding documentation
-Date: Sun, 22 Dec 2013 22:27:00 +0100
-Message-ID: <1387747620-24676-1-git-send-email-s.nawrocki@samsung.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v7 07/14] usb: phy-mxs: change description of usb
+ device speed
+Date: Mon, 23 Dec 2013 09:05:22 +0800
+Message-ID: <20131223010521.GA28096@shlinux1.ap.freescale.net>
+References: <1387525930-27313-1-git-send-email-peter.chen@freescale.com>
+ <1387525930-27313-8-git-send-email-peter.chen@freescale.com>
+ <AE90C24D6B3A694183C094C60CF0A2F6026B74C0@saturn3.aculab.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <AE90C24D6B3A694183C094C60CF0A2F6026B74C0-CgBM+Bx2aUAnGFn1LkZF6NBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT binding documentation for the Samsung S5K6A3(YX)
-raw image sensor.
+On Fri, Dec 20, 2013 at 10:40:01AM +0000, David Laight wrote:
+> > From: Peter Chen
+> > Sent: 20 December 2013 07:52
+> > Change "high speed" to "HS"
+> > Change "non-high speed" to "FS/LS"
+> > 
+> > Implementation of notify_suspend and notify_resume will be different
+> > according to mxs_phy_data->flags.
+> > 
+> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  drivers/usb/phy/phy-mxs-usb.c |    8 ++++----
+> >  1 files changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+> > index 0ef930a..489096f 100644
+> > --- a/drivers/usb/phy/phy-mxs-usb.c
+> > +++ b/drivers/usb/phy/phy-mxs-usb.c
+> > @@ -166,8 +166,8 @@ static int mxs_phy_suspend(struct usb_phy *x, int suspend)
+> >  static int mxs_phy_on_connect(struct usb_phy *phy,
+> >  		enum usb_device_speed speed)
+> >  {
+> > -	dev_dbg(phy->dev, "%s speed device has connected\n",
+> > -		(speed == USB_SPEED_HIGH) ? "high" : "non-high");
+> > +	dev_dbg(phy->dev, "%s device has connected\n",
+> > +		(speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
+> 
+> Seems you are making these messages even more cryptic.
+> With all the speeds that USB supports remembering what 'full'
+> means is hard enough without having a cryptic acronym.
+> 
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
-This patch adds missing documentation [1] for the "samsung,s5k6a3"
-compatible. Rob, can you please merge it through your tree if it 
-looks OK ?
+We have "phy->dev" know it is a USB device, grep usb driver,
+there are lots of similar naming:
 
-Thanks,
-Sylwester
+$: find drivers/usb/ -name *.c | xargs grep -rn "FS/LS"
 
-[1] http://www.spinics.net/lists/devicetree/msg10693.html
+drivers/usb/host/fotg210-hcd.c:2901:			/* gap is f(FS/LS transfer times) */
+drivers/usb/host/ehci-sched.c:257:	/* FS/LS bus bandwidth */
+drivers/usb/host/xhci.c:2335:	 * this check is only valid for HS/FS/LS devices.
+drivers/usb/host/fusbh200-hcd.c:2849:			/* gap is f(FS/LS transfer times) */
+drivers/usb/host/ehci-q.c:832:			/* gap is f(FS/LS transfer times) */
+drivers/usb/host/ehci-dbg.c:571:	/* Dump all the FS/LS tables */
+drivers/usb/host/ehci-dbg.c:574:				"\nTT %s port %d  FS/LS bandwidth allocation (us per frame)\n",
+drivers/usb/host/ehci-dbg.c:589:				"FS/LS budget (us per microframe)\n");
+drivers/usb/host/oxu210hp-hcd.c:1414:			/* gap is f(FS/LS transfer times) */
+	drivers/usb/gadget/fsl_udc_core.c:2101:				s = "FS/LS Serial"; break;
+drivers/usb/core/hcd-pci.c:132:		dev_dbg(&pdev->dev, "FS/LS companion for %s\n",
 
-Changes since v3 (https://linuxtv.org/patch/20429):
- - rephrased 'clocks' and 'clock-names' properties' description.
----
- .../devicetree/bindings/media/samsung-s5k6a3.txt   |   33 ++++++++++++++++++++
- 1 files changed, 33 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
-
-diff --git a/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
-new file mode 100644
-index 0000000..cce01e8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
-@@ -0,0 +1,33 @@
-+Samsung S5K6A3(YX) raw image sensor
-+---------------------------------
-+
-+S5K6A3(YX) is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-+and CCI (I2C compatible) control bus.
-+
-+Required properties:
-+
-+- compatible	: "samsung,s5k6a3";
-+- reg		: I2C slave address of the sensor;
-+- svdda-supply	: core voltage supply;
-+- svddio-supply	: I/O voltage supply;
-+- afvdd-supply	: AF (actuator) voltage supply;
-+- gpios		: specifier of a GPIO connected to the RESET pin;
-+- clocks	: should contain list of phandle and clock specifier pairs
-+		  according to common clock bindings for the clocks described
-+		  in the clock-names property;
-+- clock-names	: should contain "extclk" entry for the sensor's EXTCLK clock;
-+
-+Optional properties:
-+
-+- clock-frequency : the frequency at which the "extclk" clock should be
-+		    configured to operate, in Hz; if this property is not
-+		    specified default 24 MHz value will be used.
-+
-+The common video interfaces bindings (see video-interfaces.txt) should be
-+used to specify link to the image data receiver. The S5K6A3(YX) device
-+node should contain one 'port' child node with an 'endpoint' subnode.
-+
-+Following properties are valid for the endpoint node:
-+
-+- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-+  video-interfaces.txt.  The sensor supports only one data lane.
 -- 
-1.7.4.1
+
+Best Regards,
+Peter Chen
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
