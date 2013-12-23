@@ -1,57 +1,57 @@
-From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
-Subject: Re: Re: [PATCH 1/5] ARM: sunxi: Add driver for SD/MMC
- hosts found on Allwinner sunxi SoCs
-Date: Mon, 23 Dec 2013 11:36:29 +0100
-Message-ID: <2155426.QS1WdjUNS8@dizzy-6.site>
-References: <1387058295-20641-1-git-send-email-hdegoede@redhat.com> <1743952.noztKtcF2Y@dizzy-6.site> <52AEF060.6000405@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH 01/11] dt: binding: add binding for ImgTec IR block
+Date: Mon, 23 Dec 2013 10:41:24 +0000
+Message-ID: <52B81354.303@imgtec.com>
+References: <1386947579-26703-1-git-send-email-james.hogan@imgtec.com> <1386947579-26703-2-git-send-email-james.hogan@imgtec.com> <3633330.ixgGf52iFP@flatron>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2038696.8WcruQbqiJ"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-sunxi+bncBD2JL37LXEKRBP5E4CKQKGQE7EZBT6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52AEF060.6000405-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <3633330.ixgGf52iFP@flatron>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-media@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 22/12/13 12:48, Tomasz Figa wrote:
+>> diff --git a/Documentation/devicetree/bindings/media/img-ir.txt b/Documentation/devicetree/bindings/media/img-ir.txt
+>> new file mode 100644
+>> index 000000000000..6f623b094ea6
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/img-ir.txt
+>> @@ -0,0 +1,20 @@
+>> +* ImgTec Infrared (IR) decoder
+>> +
+>> +Required properties:
+>> +- compatible:		Should be "img,ir"
+> 
+> This compatible string isn't really very specific. Is there some IP
+> revision string that could be added, to account for possible design
+> changes that may require binding change?
 
---nextPart2038696.8WcruQbqiJ
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Yes, agreed. I'll try and find a more unambiguous name for the IP block.
 
-> I think that we're miss-communicating a bit here. What I'm trying to say
-> is that trying to extend the dw_mmc driver to support sunxi is a bad
-> idea because the sunxi hardware is quite different. And that the
-> sunxi hardware having autostop allows the existing sunxi-mci driver to
-> be much simpler then the dw-mmc driver.
+>> +- reg:			Physical base address of the controller and length of
+>> +			memory mapped region.
+>> +- interrupts:		The interrupt specifier to the cpu.
+>> +
+>> +Optional properties:
+>> +- clocks:		Clock specifier for base clock.
+>> +			Defaults to 32.768KHz if not specified.
+> 
+> To make the binding less fragile and allow interoperability with non-DT
+> platforms it may be better to provide also clock-names property (so you
+> can use clk_get(); that's a Linux implementation detail, though, but to
+> make our lives easier IMHO they should be sometimes considered too).
 
-> IOW the much simpler driver already exists and it is the sunxi-mci
-> driver.
-Ah! Ok. Now I get it.
-Well then. I'll try to incorporate all the changes within this endless thread 
-until I can get together a patchset v2 I can hand in.
-Now that the lectures have ended for this semester I won't be too tired for 
-straight thinking on daily basis and will be able to create such a patchset.
-And please excuse my contentless answers onto the last few questions
-but I really wasn't myself - so to say -  at this time (half asleep)
+Good idea. Looking at the hardware manual it actually describes 3 clock
+inputs, and although only one is needed by the driver it makes sense for
+the DT binding to be able to describe them all. I'll probably go with
+these clock-names values:
+"core": Core clock (32.867kHz)
+"sys": System side (fast) clock
+"mod": Power modulation clock
 
--david
---nextPart2038696.8WcruQbqiJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Cheers
+James
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEABECAAYFAlK4EjwACgkQAeZw77btGjoPdQCfWWpXbw8rESwsFZMRKfqWYdDi
-7gwAoIXSi+z4z0+z2NFT2A03bKFMtTDE
-=FEFn
------END PGP SIGNATURE-----
-
---nextPart2038696.8WcruQbqiJ--
