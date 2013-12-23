@@ -1,152 +1,119 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v7 00/14] Add power management support for mxs phy
-Date: Mon, 23 Dec 2013 10:58:51 -0600
-Message-ID: <20131223165851.GG28679@saruman.home>
-References: <1387525930-27313-1-git-send-email-peter.chen@freescale.com>
-Reply-To: balbi@ti.com
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5] usb: gadget: Add UDC driver for Aeroflex Gaisler
+ GRUSBDC
+Date: Mon, 23 Dec 2013 11:11:22 -0600
+Message-ID: <20131223171122.GI28679@saruman.home>
+References: <1387799858-11036-1-git-send-email-andreas@gaisler.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4814975706115222253=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1387525930-27313-1-git-send-email-peter.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: marex@denx.de, devicetree@vger.kernel.org, m.grzeschik@pengutronix.de, frank.li@freescale.com, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, rob.herring@calxeda.com, balbi@ti.com, kernel@pengutronix.de, grant.likely@linaro.org, shawn.guo@linaro.org, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+9faIjRurCDpBc7U"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1387799858-11036-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============4814975706115222253==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5vjQsMS/9MbKYGLq"
-Content-Disposition: inline
-
---5vjQsMS/9MbKYGLq
+--+9faIjRurCDpBc7U
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Fri, Dec 20, 2013 at 03:51:56PM +0800, Peter Chen wrote:
-> Hi Felipe & Shawn,
+On Mon, Dec 23, 2013 at 12:57:38PM +0100, Andreas Larsson wrote:
+> This adds an UDC driver for GRUSBDC USB Device Controller cores available=
+ in the
+> GRLIB VHDL IP core library. The driver only supports DMA mode.
 >=20
-> The serial adds power management support for MXS PHY, it includes:
->=20
-> - Add one PHY API .set_wakeup, and related API implementation at mxs phy =
-driver
-> - misc changes and bug fixes for mxs phy to support low power mode and wa=
-keup.
->=20
-> It is based on Greg's usb-next, 3.13-rc1.
+> Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
 
-I can't take all patches through my tree because it lacks acked-by's.
-But I'm afraid there are dependencies with your patches.
+You have a few Sparse Warnings:
 
-> Peter Chen (14):
->   usb: doc: phy-mxs: Add more compatible strings
+drivers/usb/gadget/gr_udc.c:1255:13: warning: incorrect type in argument 1 =
+(different address spaces)
+drivers/usb/gadget/gr_udc.c:1255:13:    expected void [noderef] <asn:2>*<no=
+ident>
+drivers/usb/gadget/gr_udc.c:1255:13:    got unsigned int *<noident>
+drivers/usb/gadget/gr_udc.c:1284:16: warning: incorrect type in argument 1 =
+(different address spaces)
+drivers/usb/gadget/gr_udc.c:1284:16:    expected void [noderef] <asn:2>*<no=
+ident>
+drivers/usb/gadget/gr_udc.c:1284:16:    got unsigned int *<noident>
+drivers/usb/gadget/gr_udc.c:1136:28: warning: context imbalance in 'gr_ep0_=
+setup' - unexpected unlock
+drivers/usb/gadget/gr_udc.c:1052:1: warning: "/*" within comment [-Wcomment]
+ /* Must be called with dev->lock held and irqs disabled
 
-ok
+Two of them I fixed below:
 
->   usb: phy-mxs: Add platform judgement code
+diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
+index ee220f3..5eb36af 100644
+--- a/drivers/usb/gadget/Kconfig
++++ b/drivers/usb/gadget/Kconfig
+@@ -218,7 +218,7 @@ config USB_FOTG210_UDC
+=20
+ config USB_GR_UDC
+        tristate "Aeroflex Gaisler GRUSBDC USB Peripheral Controller Driver"
+-       depends on OF && HAS_DMA
++       depends on HAS_DMA
+        help
+           Select this to support Aeroflex Gaisler GRUSBDC cores from the G=
+RLIB
+ 	  VHDL IP core library.
+diff --git a/drivers/usb/gadget/gr_udc.c b/drivers/usb/gadget/gr_udc.c
+index 4f99a61..9ac378a 100644
+--- a/drivers/usb/gadget/gr_udc.c
++++ b/drivers/usb/gadget/gr_udc.c
+@@ -1049,9 +1049,11 @@ static void gr_ep0out_requeue(struct gr_udc *dev)
+ /*
+  * The main function dealing with setup requests on ep0.
+  *
+-/* Must be called with dev->lock held and irqs disabled
++ * Must be called with dev->lock held and irqs disabled
+  */
+ static void gr_ep0_setup(struct gr_udc *dev, struct gr_request *req)
++	__releases(&dev->lock)
++	__acquires(&dev->lock)
+ {
+ 	union {
+ 		struct usb_ctrlrequest ctrl;
 
-ok
+The other two are seem like they would require a much larger code
+change. Why are you passing integers as arguments to IO access
+functions ? You should be passing void __iomem *.
 
->   usb: phy-mxs: Add auto clock and power setting
-
-ok
-
->   usb: doc: phy-mxs: update binding for adding anatop phandle
-
-ok
-
->   ARM: dts: imx6: add anatop phandle for usbphy
-
-misses Ack
-
->   usb: phy-mxs: Add anatop regmap
-
-depends on previous
-
->   usb: phy-mxs: change description of usb device speed
-
-ok
-
->   usb: phy-mxs: Enable IC fixes for related SoCs
-
-ok
-
->   ARM: dts: imx: add mxs phy controller id
-
-misses Ack
-
->   usb: phy-mxs: add controller id
-
-depends on previous
-
->   usb: phy: Add set_wakeup API
-
-ok
-
->   usb: phy-mxs: Add implementation of set_wakeup
-
-ok
-
->   usb: phy-mxs: Add system suspend/resume API
-
-ok
-
->   usb: phy-mxs: Add sync time after controller clear phcd
-
-ok
-
-Considering the dependencies, I think it's safer to defer this patchset
-until next merge window.
-
-cheers
+Dropping for now.
 
 --=20
 balbi
 
---5vjQsMS/9MbKYGLq
+--+9faIjRurCDpBc7U
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.15 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSuGvLAAoJEIaOsuA1yqRETGIQAIqAe+ZGq0M9jSkJANdGFX6t
-FDy3BB1FpnoYe4WRkfqHRaZPbi1/7P5Oa1DgyRAB7pfO2f/di1XqIsIjzspjt/Yc
-u/lwQv88rVhorxxuU+eFmaaH3pY/fKjQi5Bmqc3guqEV8AIlHTnnvN+g3yGqDJ9G
-Dy8+0IQuAh/xJZzxTltz6cCSHfOFP1iL5I7fY+S2e06JiwplpZJGfkMuDB5sJqgc
-oQIysrKKb5O5+Ujpf4HG8BwDkw/In+5IpllkGpuD+X1EullkLga1YNYU4FqZ4Esx
-e8IkrDA91Equcxr/YLygmd01hjBG7pC7aL+GOPLfcPOc/ynxoPM0v/5OAbQ9HoSb
-/Kl+VEsK1yIrdus1c8Z/b5mcocQpV+YoGwi8QmHtwDwQXcIYlVTTWOiAeviIaIw8
-qzi+eiKA2rI9R6hEkyDMkuFeANAJpYnrqyWD0DFy6exiYMNZI4P5aW33ea1TKvz/
-FfQohv36Mda7y3n4jE/3P6CMppzm8uTkmUGbO56dEbSOi9IEz0q2mMXnVnu/d8Pz
-V8ZHJzhaENVBMnTUhXRypA7BPH703aMx5CyGa+091AgwfGJPJ6bnpxOS02h0twRy
-9UIBpXjm51RIKfERrRV4It7EqdHQ4hfe3WBmc0GUKUXEZqKeOiTRScYgkO5aAuH3
-PPRqbmfytZomshy9n57m
-=K/yJ
+iQIcBAEBAgAGBQJSuG66AAoJEIaOsuA1yqREzAkP/RX79LASkX7c5etvKLglnjqf
+/aOAGDg75yV7K3mOsw7e747whmSuWoaBObP27lLpv/UyJiLotVGmdJa2pH45Fxo4
+Syc6+c4OW4unPMcsl2j+t3TG+8J1bqErt5o9OYeUHnR5xxG00vsIQxIieNGGfKOk
+pa67230rgRbwJgIggRAZBNMs2XsUSJgA8Vqtxa4HIll5Yc8YyfTXr61HqLJIx+UY
+Vr7tuaq3YJ8w4QKCfCCgXC3VjUA5OwFmYFcFvmBTBkRD/AzNOL1smFS/X+sSZpnM
+04aJamxScJsrUclXfEd8jFraSqUMTqC3U0vl76DsysEjso1TC57SGkuxpuY4lR2c
+c3VfVxSREBDho8tbkZSk4nWsoaTwZL7qQ88VKrU7Y9owPA0I9BGRt7DjPITLYEpp
+TDCvLkNhqAomeYM2zfSz6RijqmMB52otFPqjl9GQDw10rD6W8urxMP1DSPVBYH1J
+dLeLgkCARvQqoeGyHYBAveSm/wgbMjZW10vROv92oGomNnkA4A6Ic5DZabSI+yQ4
+TxV2GPJhlwkgOg96+lrpz0f3EZgGl9FlqXwyUWHDvJ2TWtNMk8/4G97H4UsoY+Gx
+Fr0It0+nIVWPxYXjJUztb7bpCAu7fTI9ZB7aj7aDN3ryCMAq5yQLvE7HYq5tnWFN
+4M49I1nfUVileGWDUykI
+=zMte
 -----END PGP SIGNATURE-----
 
---5vjQsMS/9MbKYGLq--
-
-
---===============4814975706115222253==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4814975706115222253==--
+--+9faIjRurCDpBc7U--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
