@@ -1,116 +1,460 @@
-From: "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/7] iommu/omap: Convert to devicetree
-Date: Mon, 23 Dec 2013 17:42:05 -0600
-Message-ID: <52B8CA4D.8000501@ti.com>
-References: <1387284818-28739-1-git-send-email-florian.vaussard@epfl.ch>
-	<1387284818-28739-4-git-send-email-florian.vaussard@epfl.ch>
-	<52B89394.5060902@ti.com> <52B8A87F.7080100@epfl.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <52B8A87F.7080100-p8DiymsW2f8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: florian.vaussard-p8DiymsW2f8@public.gmane.org, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+Subject: [PATCH V3 1/1] iio: add Capella CM32181 ambient light sensor driver.
+Date: Mon, 23 Dec 2013 15:52:34 -0800
+Message-ID: <1387842754-5323-1-git-send-email-ktsai@capellamicro.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Teddy Reed <teddy-KaFzXBG2u9Ng9hUCZPvPmw@public.gmane.org>, Kent Yoder <key-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+Add Capella Microsystem CM32181 Ambient Light Sensor IIO driver.
+This driver will convert raw data to lux value under open-air
+condition. Change the calibscale based on the cover material.
 
- >>
->> On 12/17/2013 06:53 AM, Florian Vaussard wrote:
->>> As OMAP2+ is moving to a full DT boot for 3.14, commit 7ce93f3
->>> "ARM: OMAP2+: Fix more missing data for omap3.dtsi file" adds
->>> basic DT bits. But the driver is not yet converted, so this will
->>> not work and driver will not be probed. Convert it!
->>>
->>> Apart from standard bindings, this patch uses 'dma-window' (already
->>> used by Tegra SMMU) and adds a custom 'ti,#tlb-entries' binding.
->>>
->>> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
->>> ---
->>>    .../devicetree/bindings/iommu/ti,omap-iommu.txt    | 19 ++++++++++++
->>>    arch/arm/mach-omap2/omap-iommu.c                   |  5 +++
->>>    drivers/iommu/omap-iommu.c                         | 36
->>> +++++++++++++++++++---
->>>    3 files changed, 55 insertions(+), 5 deletions(-)
->>>    create mode 100644
->>> Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
->>> b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
->>> new file mode 100644
->>> index 0000000..4e5027c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
->>> @@ -0,0 +1,19 @@
->>> +OMAP3 IOMMU used by camera subsystem
->>
->> As I mentioned in comments on your cover-letter, the current binding is
->> only limited to OMAP3 ISP, but the driver is common for all OMAP2+ SoCs.
->> This binding an update to handle all SoCs.
->>
->> To summarize the differences, OMAP2/3 has the same MMU register set for
->> all remote processor MMUs (IVA/DSP/ISP) with the only difference being
->> the number of TLBs supported (8 for ISP on OMAP2/3 and 32 for all other
->> instances on all OMAP2+ SoCs). Depending on whether the compatibility
->> property is defined for an SoC or for the processor, "ti,#tlb-entries"
->> can be retrieved directly from the match data or made as an optional
->> property, with the default value being 32.
->>
->
-> It makes sense.
->
->> OMAP4 and OMAP5 have some additional registers (MMU_FAULT_PC,
->> MMU_FAULT_STATUS, MMU_GP_REG/DSPSS_MMU_GPR) on top of the OMAP2/OMAP3
->> ones, and DRA7 a further superset of OMAP4/OMAP5. The only difference is
->> the definition of the MMU_GPR register, which is different between the
->> IPU and DSP processors, but present at the same offset, and dictates the
->> validity of the MMU_FAULT_PC and MMU_FAULT_STATUS registers. The MMU_GPR
->> register is also not defined on OMAP4430 ES1.0, but is present on all
->> other newer SoCs.
->>
->
-> Thank you for this detailed comparison ! I do not know much about
-> OMAP4 and OMAP5. In the current implementation, I was unable to find
-> references to these specificities. Is this currently supported?
+Signed-off-by: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+---
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+ drivers/iio/light/Kconfig                          |  11 +
+ drivers/iio/light/Makefile                         |   1 +
+ drivers/iio/light/cm32181.c                        | 383 +++++++++++++++++++++
+ 4 files changed, 396 insertions(+)
+ create mode 100644 drivers/iio/light/cm32181.c
 
-OMAP4 iommu devices are instantiated today in legacy form, using the 
-hwmod data. These are used by the remoteproc driver. OMAP5 data has not 
-yet been added, as there is no point in adding it in legacy form at the 
-moment.
-
->
->>> +
->>> +Required properties:
->>> +- compatible : "ti,omap3-mmu-isp"
->> My suggestion would be to use
->>      "ti,omap2-iommu" for OMAP2/OMAP3 MMUs with the optional
->> "ti,#tlb-entries" to distinguish ISP MMU.
->>      "ti,omap4-iommu" for OMAP4/OMAP5 MMUs with an additional boolean
->> property to distinguish the presence/functionality of the MMU_GPR register
->>      "ti,dra7-iommu" for DRA7 MMUs
->>
->> Mark, Tony,
->> Do you have any other recommendations given the above summary?
->>
->>> +- ti,hwmods : "mmu_isp"
->> Replace with general description
->>
->
-> You mean something like "Name of the hwmod associated to the IOMMU"?
-
-Yes.
-
-regards
-Suman
-
-[snip]
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index b1cb341..c65f71c 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -16,6 +16,7 @@ adt7461			+/-1C TDM Extended Temp Range I.C
+ at,24c08		i2c serial eeprom  (24cxx)
+ atmel,24c02		i2c serial eeprom  (24cxx)
+ atmel,at97sc3204t	i2c trusted platform module (TPM)
++capella,cm32181		CM32181: Ambient Light Sensor
+ catalyst,24c32		i2c serial eeprom
+ dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
+ dallas,ds1338		I2C RTC with 56-Byte NV RAM
+diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+index a022f27..d12b2a0 100644
+--- a/drivers/iio/light/Kconfig
++++ b/drivers/iio/light/Kconfig
+@@ -27,6 +27,17 @@ config APDS9300
+ 	 To compile this driver as a module, choose M here: the
+ 	 module will be called apds9300.
+ 
++config CM32181
++	depends on I2C
++	tristate "CM32181 driver"
++	help
++	 Say Y here if you use cm32181.
++	 This option enables ambient light sensor using
++	 Capella cm32181 device driver.
++
++	 To compile this driver as a module, choose M here:
++	 the module will be called cm32181.
++
+ config CM36651
+ 	depends on I2C
+ 	tristate "CM36651 driver"
+diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+index daa327f..60e35ac 100644
+--- a/drivers/iio/light/Makefile
++++ b/drivers/iio/light/Makefile
+@@ -5,6 +5,7 @@
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_ADJD_S311)		+= adjd_s311.o
+ obj-$(CONFIG_APDS9300)		+= apds9300.o
++obj-$(CONFIG_CM32181)		+= cm32181.o
+ obj-$(CONFIG_CM36651)		+= cm36651.o
+ obj-$(CONFIG_GP2AP020A00F)	+= gp2ap020a00f.o
+ obj-$(CONFIG_HID_SENSOR_ALS)	+= hid-sensor-als.o
+diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
+new file mode 100644
+index 0000000..c7004a8
+--- /dev/null
++++ b/drivers/iio/light/cm32181.c
+@@ -0,0 +1,383 @@
++/*
++ * Copyright (C) 2013 Capella Microsystems Inc.
++ * Author: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2, as published
++ * by the Free Software Foundation.
++ */
++
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/mutex.h>
++#include <linux/module.h>
++#include <linux/interrupt.h>
++#include <linux/regulator/consumer.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/iio/events.h>
++#include <linux/init.h>
++
++/* Registers Address */
++#define CM32181_REG_ADDR_CMD		0x00
++#define CM32181_REG_ADDR_ALS		0x04
++#define CM32181_REG_ADDR_STATUS		0x06
++#define CM32181_REG_ADDR_ID		0x07
++
++/* Number of Configurable Registers */
++#define CM32181_CONF_REG_NUM		0x01
++
++/* CMD register */
++#define CM32181_CMD_ALS_ENABLE		0x00
++#define CM32181_CMD_ALS_DISABLE		0x01
++#define CM32181_CMD_ALS_INT_EN		0x02
++
++#define CM32181_CMD_ALS_IT_SHIFT	6
++#define CM32181_CMD_ALS_IT_MASK		(0x0F << CM32181_CMD_ALS_IT_SHIFT)
++#define CM32181_CMD_ALS_IT_DEFAULT	(0x00 << CM32181_CMD_ALS_IT_SHIFT)
++
++#define CM32181_CMD_ALS_SM_SHIFT	11
++#define CM32181_CMD_ALS_SM_MASK		(0x03 << CM32181_CMD_ALS_SM_SHIFT)
++#define CM32181_CMD_ALS_SM_DEFAULT	(0x01 << CM32181_CMD_ALS_SM_SHIFT)
++
++#define CM32181_MLUX_PER_BIT		5	/* ALS_SM=01 IT=800ms */
++#define CM32181_MLUX_PER_BIT_BASE_IT	800000	/* Based on IT=800ms */
++#define	CM32181_CALIBSCALE_DEFAULT	1000
++#define CM32181_CALIBSCALE_RESOLUTION	1000
++#define MLUX_PER_LUX			1000
++
++static const u8 cm32181_reg[CM32181_CONF_REG_NUM] = {
++	CM32181_REG_ADDR_CMD,
++};
++
++static const int als_it_bits[] = {12, 8, 0, 1, 2, 3};
++static int als_it_value[] = {25000, 50000, 100000, 200000, 400000, 800000};
++
++struct cm32181_chip {
++	struct i2c_client *client;
++	struct mutex lock;
++	u16 conf_regs[CM32181_CONF_REG_NUM];
++	int calibscale;
++};
++
++/**
++ * cm32181_reg_init() - Initialize CM32181 registers
++ * @cm32181:	pointer of struct cm32181.
++ *
++ * Initialize CM32181 ambient light sensor register to default values.
++ *
++ * Return: 0 for success; otherwise for error code.
++ */
++static int cm32181_reg_init(struct cm32181_chip *cm32181)
++{
++	struct i2c_client *client = cm32181->client;
++	int i;
++	s32 ret;
++
++	ret = i2c_smbus_read_word_data(client, CM32181_REG_ADDR_ID);
++	if (ret < 0)
++		return ret;
++
++	/* check device ID */
++	if ((ret & 0xFF) != 0x81)
++		return -ENODEV;
++
++	/* Default Values */
++	cm32181->conf_regs[CM32181_REG_ADDR_CMD] = CM32181_CMD_ALS_ENABLE |
++			CM32181_CMD_ALS_IT_DEFAULT | CM32181_CMD_ALS_SM_DEFAULT;
++	cm32181->calibscale = CM32181_CALIBSCALE_DEFAULT;
++
++	/* Initialize registers*/
++	for (i = 0; i < CM32181_CONF_REG_NUM; i++) {
++		ret = i2c_smbus_write_word_data(client, cm32181_reg[i],
++			cm32181->conf_regs[i]);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++/**
++ *  cm32181_read_als_it() - Get sensor integration time (ms)
++ *  @cm32181:	pointer of struct cm32181
++ *  @val:	pointer of int to load the als_it value.
++ *
++ *  Report the current integartion time by millisecond.
++ *
++ *  Return: IIO_VAL_INT for success, otherwise -EINVAL.
++ */
++static int cm32181_read_als_it(struct cm32181_chip *cm32181, int *val)
++{
++	u16 als_it;
++	int i;
++
++	als_it = cm32181->conf_regs[CM32181_REG_ADDR_CMD];
++	als_it &= CM32181_CMD_ALS_IT_MASK;
++	als_it >>= CM32181_CMD_ALS_IT_SHIFT;
++	for (i = 0; i < sizeof(als_it_bits)/sizeof(als_it_bits[0]); i++) {
++		if (als_it == als_it_bits[i]) {
++			*val = als_it_value[i];
++			if (*val == 0)
++				return -EINVAL;
++			return IIO_VAL_INT;
++		}
++	}
++
++	return -EINVAL;
++}
++
++/**
++ * cm32181_write_als_it() - Write sensor integration time
++ * @cm32181:	pointer of struct cm32181.
++ * @val:	integration time by millisecond.
++ *
++ * Convert integration time (ms) to sensor value.
++ *
++ * Return: i2c_smbus_write_word_data command return value.
++ */
++static int cm32181_write_als_it(struct cm32181_chip *cm32181, int val)
++{
++	struct i2c_client *client = cm32181->client;
++	u16 als_it;
++	int ret, i, n;
++
++	n = sizeof(als_it_value)/sizeof(als_it_value[0]);
++	for (i = 0; i < n; i++)
++		if (val <= als_it_value[i])
++			break;
++	if (i >= n)
++		i = n - 1;
++
++	als_it = als_it_bits[i];
++	als_it <<= CM32181_CMD_ALS_IT_SHIFT;
++
++	mutex_lock(&cm32181->lock);
++	cm32181->conf_regs[CM32181_REG_ADDR_CMD] &=
++		~CM32181_CMD_ALS_IT_MASK;
++	cm32181->conf_regs[CM32181_REG_ADDR_CMD] |=
++		als_it;
++	ret = i2c_smbus_write_word_data(client, CM32181_REG_ADDR_CMD,
++			cm32181->conf_regs[CM32181_REG_ADDR_CMD]);
++	mutex_unlock(&cm32181->lock);
++
++	return ret;
++}
++
++/**
++ * cm32181_get_lux() - report current lux value
++ * @cm32181:	pointer of struct cm32181.
++ *
++ * Convert sensor raw data to lux.  It depends on integration
++ * time and claibscale variable.
++ *
++ * Return: Positive value is lux, otherwise is error code.
++ */
++static int cm32181_get_lux(struct cm32181_chip *cm32181)
++{
++	struct i2c_client *client = cm32181->client;
++	int ret;
++	int als_it;
++	unsigned long lux;
++
++	ret = cm32181_read_als_it(cm32181, &als_it);
++	if (ret < 0)
++		return -EINVAL;
++
++	lux = CM32181_MLUX_PER_BIT;
++	lux *= CM32181_MLUX_PER_BIT_BASE_IT;
++	lux /= als_it;
++
++	ret = i2c_smbus_read_word_data(client, CM32181_REG_ADDR_ALS);
++	if (ret < 0)
++		return ret;
++
++	lux *= ret;
++	lux *= cm32181->calibscale;
++	lux /= CM32181_CALIBSCALE_RESOLUTION;
++	lux /= MLUX_PER_LUX;
++
++	if (lux > 0xFFFF)
++		lux = 0xFFFF;
++
++	return (int)lux;
++}
++
++static int cm32181_read_raw(struct iio_dev *indio_dev,
++			    struct iio_chan_spec const *chan,
++			    int *val, int *val2, long mask)
++{
++	struct cm32181_chip *cm32181 = iio_priv(indio_dev);
++	int ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_PROCESSED:
++		ret = cm32181_get_lux(cm32181);
++		if (ret < 0)
++			return ret;
++		*val = ret;
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_CALIBSCALE:
++		*val = cm32181->calibscale;
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_INT_TIME:
++		ret = cm32181_read_als_it(cm32181, val);
++		return ret;
++	}
++
++	return -EINVAL;
++}
++
++static int cm32181_write_raw(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan,
++			     int val, int val2, long mask)
++{
++	struct cm32181_chip *cm32181 = iio_priv(indio_dev);
++	int ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_CALIBSCALE:
++		cm32181->calibscale = val;
++		return val;
++	case IIO_CHAN_INFO_INT_TIME:
++		ret = cm32181_write_als_it(cm32181, val);
++		return ret;
++	}
++
++	return -EINVAL;
++}
++
++/**
++ * cm32181_get_it_available() - Get available ALS IT value
++ * @dev:	pointer of struct device.
++ * @attr:	pointer of struct device_attribute.
++ * @buf:	pointer of return string buffer.
++ *
++ * Display the available integration time values by millisecond.
++ *
++ * Return: string length.
++ */
++static ssize_t cm32181_get_it_available(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	int i, n, len;
++
++	n = sizeof(als_it_value)/sizeof(als_it_value[0]);
++	for (i = 0, len = 0; i < n; i++)
++		len += sprintf(buf + len, "%d ", als_it_value[i]);
++	return len + sprintf(buf + len, "\n");
++}
++
++static const struct iio_chan_spec cm32181_channels[] = {
++	{
++		.type = IIO_LIGHT,
++		.indexed = 0,
++		.channel = 0,
++		.info_mask_separate =
++			BIT(IIO_CHAN_INFO_PROCESSED) |
++			BIT(IIO_CHAN_INFO_CALIBSCALE) |
++			BIT(IIO_CHAN_INFO_INT_TIME),
++	}
++};
++
++
++static IIO_DEVICE_ATTR(in_illuminance_integration_time_available,
++			S_IRUGO, cm32181_get_it_available, NULL, 0);
++
++static struct attribute *cm32181_attributes[] = {
++	&iio_dev_attr_in_illuminance_integration_time_available.dev_attr.attr,
++	NULL,
++};
++
++static const struct attribute_group cm32181_attribute_group = {
++	.attrs = cm32181_attributes
++};
++
++static const struct iio_info cm32181_info = {
++	.driver_module		= THIS_MODULE,
++	.read_raw		= &cm32181_read_raw,
++	.write_raw		= &cm32181_write_raw,
++	.attrs			= &cm32181_attribute_group,
++};
++
++static int cm32181_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
++{
++	struct cm32181_chip *cm32181;
++	struct iio_dev *indio_dev;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*cm32181));
++	if (!indio_dev) {
++		dev_err(&client->dev, "devm_iio_device_alloc failed\n");
++		return -ENOMEM;
++	}
++
++	cm32181 = iio_priv(indio_dev);
++	i2c_set_clientdata(client, indio_dev);
++	cm32181->client = client;
++
++	mutex_init(&cm32181->lock);
++	indio_dev->dev.parent = &client->dev;
++	indio_dev->channels = cm32181_channels;
++	indio_dev->num_channels = ARRAY_SIZE(cm32181_channels);
++	indio_dev->info = &cm32181_info;
++	indio_dev->name = id->name;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++
++	ret = cm32181_reg_init(cm32181);
++	if (ret) {
++		dev_err(&client->dev,
++			"%s: register init failed\n",
++			__func__);
++		return ret;
++	}
++
++	ret = iio_device_register(indio_dev);
++	if (ret) {
++		dev_err(&client->dev,
++			"%s: regist device failed\n",
++			__func__);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int cm32181_remove(struct i2c_client *client)
++{
++	struct iio_dev *indio_dev = i2c_get_clientdata(client);
++
++	iio_device_unregister(indio_dev);
++	return 0;
++}
++
++static const struct i2c_device_id cm32181_id[] = {
++	{ "cm32181", 0 },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(i2c, cm32181_id);
++
++static const struct of_device_id cm32181_of_match[] = {
++	{ .compatible = "capella,cm32181" },
++	{ }
++};
++
++static struct i2c_driver cm32181_driver = {
++	.driver = {
++		.name	= "cm32181",
++		.of_match_table = of_match_ptr(cm32181_of_match),
++		.owner	= THIS_MODULE,
++	},
++	.id_table       = cm32181_id,
++	.probe		= cm32181_probe,
++	.remove		= cm32181_remove,
++};
++
++module_i2c_driver(cm32181_driver);
++
++MODULE_AUTHOR("Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>");
++MODULE_DESCRIPTION("CM32181 ambient light sensor driver");
++MODULE_LICENSE("GPL");
+-- 
+1.8.3.1
