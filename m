@@ -1,76 +1,78 @@
-From: Rahul Sharma <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/7] ARM: EXYNOS: initial board support for exynos5260 SoC
-Date: Mon, 23 Dec 2013 10:09:17 +0530
-Message-ID: <CAPdUM4PfrVyz+TpEPt-0xnhrjNwp_qbk_PkBtZGu15pfNSMqkA@mail.gmail.com>
-References: <1386345391-23482-1-git-send-email-rahul.sharma@samsung.com>
-	<1386345391-23482-2-git-send-email-rahul.sharma@samsung.com>
-	<CAK9yfHzX1+Rp3DCZiJSjE7VO6+TaDW7iqUZVpgRNkjVJofWauA@mail.gmail.com>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH v4 0/3] regulator: act8865: add PMIC driver
+Date: Mon, 23 Dec 2013 13:24:28 +0800
+Message-ID: <1387776268-23036-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK9yfHzX1+Rp3DCZiJSjE7VO6+TaDW7iqUZVpgRNkjVJofWauA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, PANKAJ KUMAR DUBEY <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Young-Gun Jang <yg1004.jang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arun Kumar <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: broonie@kernel.org
+Cc: lgirdwood@gmail.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, linux-doc@vger.kernel.org, vpalatin@chromium.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, wenyou.yang@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Thanks Sachin,
+Hi Mark,
 
-On 9 December 2013 11:53, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Hi Rahul,
->
-> On 6 December 2013 21:26, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
->> This patch add basic arch side support for exynos5260 SoC.
->>
->> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Arun Kumar K <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-> Since you are posting the patch, your signed off is also required.
+Thanks a lot.
 
-Right. I will add my Sign off.
+As your suggestion, use linear rangers with a plural.
 
->
-> [snip]
->
->>  void exynos4_restart(enum reboot_mode mode, const char *cmd)
->>  {
->>         __raw_writel(0x1, S5P_SWRESET);
->> @@ -371,7 +387,8 @@ static void __init exynos4_map_io(void)
->>  static void __init exynos5_map_io(void)
->>  {
->>         iotable_init(exynos5_iodesc, ARRAY_SIZE(exynos5_iodesc));
->> -
->> +       if (soc_is_exynos5260())
->> +               iotable_init(exynos5260_iodesc, ARRAY_SIZE(exynos5260_iodesc));
->
-> Add this after 5250 to maintain numerical order.
+The patch set is to add act8865 PMIC driver.
 
-ok.
->
->>         if (soc_is_exynos5250())
->>                 iotable_init(exynos5250_iodesc, ARRAY_SIZE(exynos5250_iodesc));
->>  }
->
-> [snip]
->>
->>  #define S5P_VA_SYSRAM          S3C_ADDR(0x02400000)
->>  #define S5P_VA_SYSRAM_NS       S3C_ADDR(0x02410000)
->> +
-> Unnecessary blank line addition.
+The active-semi act8865 is designed as a PMIC for Atmel sama5d3x and at91sam9 series.
+Its datasheet is available at: http://www.active-semi.com/sheets/ACT8865_Datasheet.pdf.
 
-I will remove this.
+The patches is based on the branch: for-next of git respository, 
+	git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
+and [PATCH] regulator: read low power states configuration from device tree from Vincent Palatin
+	https://patchwork.kernel.org/patch/2833667/
 
-Regards,
-Rahul Sharma.
+Thanks.
 
->
->
-> --
-> With warm regards,
-> Sachin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Wenyou Yang
+
+v4 changelog:
+ 1./ Using linear ranges with a plural, instead of table.
+
+v3 changelog:
+ 1./ Add map_voltage() operation which missed.
+ 2./ Remove regulator_unregister statement which no need.
+ 3./ Remvoe memset statement.
+ 4./ Change the device tree regulator-name with the supply name in the schematic.
+ 5./ List all theregulator name in the binding doc.
+
+v2 changelog:
+ 1./ Using regmap for register I/O instead of i2c function directly.
+ 2./ Using the helpers provided by the core.
+ 3./ Remove noisy logging.
+ 4./ Using the latest regulator register API.
+ 5./ Using module_i2c_driver helper macro replace module_init and module_exit.
+ 6./ Remove the vsel-state-low dt property which is not used now.
+
+
+Wenyou Yang (3):
+  regulator: act8865: add PMIC act8865 driver
+  regulator: act8865: add device tree binding doc
+  ARM: dts: sama5d3xcm: add the regulator device node
+
+
+Wenyou Yang (3):
+  regulator: act8865: add PMIC act8865 driver
+  regulator: act8865: add device tree binding doc
+  ARM: dts: sama5d3xcm: add the regulator device node
+
+ .../bindings/regulator/act8865-regulator.txt       |   60 ++++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ arch/arm/boot/dts/sama5d3xcm.dtsi                  |   46 +++
+ drivers/regulator/Kconfig                          |    8 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/act8865-regulator.c              |  379 ++++++++++++++++++++
+ include/linux/regulator/act8865.h                  |   53 +++
+ 7 files changed, 548 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+ create mode 100644 drivers/regulator/act8865-regulator.c
+ create mode 100644 include/linux/regulator/act8865.h
+
+-- 
+1.7.9.5
+
