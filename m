@@ -1,7 +1,7 @@
 From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v9 9/9] ARM: dts: add usb udc support to bcm281xx
-Date: Mon, 23 Dec 2013 13:36:38 -0500
-Message-ID: <1387823798-10211-10-git-send-email-mporter@linaro.org>
+Subject: [PATCH v9 6/9] usb: gadget: s3c-hsotg: get phy bus width from phy subsystem
+Date: Mon, 23 Dec 2013 13:36:35 -0500
+Message-ID: <1387823798-10211-7-git-send-email-mporter@linaro.org>
 References: <1387823798-10211-1-git-send-email-mporter@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1387823798-10211-1-git-send-email-mporter@linaro.org>
@@ -10,77 +10,73 @@ To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Dinh Nguyen <dinh.linux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds USB OTG/PHY and clock support to BCM281xx and enables
-UDC support on the bcm11351-brt and bcm28155-ap boards.
+Adds support for querying the phy bus width from the generic phy
+subsystem. Configure UTMI bus width in GUSBCFG based on this value.
 
 Signed-off-by: Matt Porter <mporter@linaro.org>
-Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- arch/arm/boot/dts/bcm11351-brt.dts |  6 ++++++
- arch/arm/boot/dts/bcm11351.dtsi    | 18 ++++++++++++++++++
- arch/arm/boot/dts/bcm28155-ap.dts  |  8 ++++++++
- 3 files changed, 32 insertions(+)
+ drivers/usb/gadget/s3c-hsotg.c | 14 +++++++++++++-
+ drivers/usb/gadget/s3c-hsotg.h |  1 +
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/bcm11351-brt.dts b/arch/arm/boot/dts/bcm11351-brt.dts
-index 23cd16d..396b704 100644
---- a/arch/arm/boot/dts/bcm11351-brt.dts
-+++ b/arch/arm/boot/dts/bcm11351-brt.dts
-@@ -44,5 +44,11 @@
- 		status = "okay";
- 	};
+diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
+index 8f9bcdb..93ba8b6 100644
+--- a/drivers/usb/gadget/s3c-hsotg.c
++++ b/drivers/usb/gadget/s3c-hsotg.c
+@@ -146,6 +146,7 @@ struct s3c_hsotg_ep {
+  * @regs: The memory area mapped for accessing registers.
+  * @irq: The IRQ number we are using
+  * @supplies: Definition of USB power supplies
++ * @phyif: PHY interface width
+  * @dedicated_fifos: Set if the hardware has dedicated IN-EP fifos.
+  * @num_of_eps: Number of available EPs (excluding EP0)
+  * @debug_root: root directrory for debugfs.
+@@ -174,6 +175,7 @@ struct s3c_hsotg {
  
-+	usbotg: usb@3f120000 {
-+		status = "okay";
-+	};
+ 	struct regulator_bulk_data supplies[ARRAY_SIZE(s3c_hsotg_supply_names)];
  
-+	usbphy: usb-phy@3f130000 {
-+		status = "okay";
-+	};
- };
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 1246885..0fbb455 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -243,4 +243,22 @@
- 			#clock-cells = <0>;
- 		};
- 	};
++	u32			phyif;
+ 	unsigned int		dedicated_fifos:1;
+ 	unsigned char           num_of_eps;
+ 
+@@ -2279,7 +2281,7 @@ static void s3c_hsotg_core_init(struct s3c_hsotg *hsotg)
+ 	 */
+ 
+ 	/* set the PLL on, remove the HNP/SRP and set the PHY */
+-	writel(GUSBCFG_PHYIf16 | GUSBCFG_TOutCal(7) |
++	writel(hsotg->phyif | GUSBCFG_TOutCal(7) |
+ 	       (0x5 << 10), hsotg->regs + GUSBCFG);
+ 
+ 	s3c_hsotg_init_fifo(hsotg);
+@@ -3638,6 +3640,16 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
+ 		goto err_supplies;
+ 	}
+ 
++	/* Set default UTMI width */
++	hsotg->phyif = GUSBCFG_PHYIf16;
 +
-+	usbotg: usb@3f120000 {
-+		compatible = "snps,dwc2";
-+		reg = <0x3f120000 0x10000>;
-+		interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&usb_otg_ahb_clk>;
-+		clock-names = "otg";
-+		phys = <&usbphy>;
-+		phy-names = "usb2-phy";
-+		status = "disabled";
-+	};
++	/*
++	 * If using the generic PHY framework, check if the PHY bus
++	 * width is 8-bit and set the phyif appropriately.
++	 */
++	if (hsotg->phy && (phy_get_bus_width(phy) == 8))
++		hsotg->phyif = GUSBCFG_PHYIf8;
 +
-+	usbphy: usb-phy@3f130000 {
-+		compatible = "brcm,kona-usb2-phy";
-+		reg = <0x3f130000 0x28>;
-+		#phy-cells = <0>;
-+		status = "disabled";
-+	};
- };
-diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
-index 08e47c2..a3bc436 100644
---- a/arch/arm/boot/dts/bcm28155-ap.dts
-+++ b/arch/arm/boot/dts/bcm28155-ap.dts
-@@ -43,4 +43,12 @@
- 		cd-gpios = <&gpio 14 0>;
- 		status = "okay";
- 	};
-+
-+	usbotg: usb@3f120000 {
-+		status = "okay";
-+	};
-+
-+	usbphy: usb-phy@3f130000 {
-+		status = "okay";
-+	};
- };
+ 	if (hsotg->phy)
+ 		phy_init(hsotg->phy);
+ 
+diff --git a/drivers/usb/gadget/s3c-hsotg.h b/drivers/usb/gadget/s3c-hsotg.h
+index d650b12..85f549f 100644
+--- a/drivers/usb/gadget/s3c-hsotg.h
++++ b/drivers/usb/gadget/s3c-hsotg.h
+@@ -55,6 +55,7 @@
+ #define GUSBCFG_HNPCap				(1 << 9)
+ #define GUSBCFG_SRPCap				(1 << 8)
+ #define GUSBCFG_PHYIf16			(1 << 3)
++#define GUSBCFG_PHYIf8				(0 << 3)
+ #define GUSBCFG_TOutCal_MASK			(0x7 << 0)
+ #define GUSBCFG_TOutCal_SHIFT			(0)
+ #define GUSBCFG_TOutCal_LIMIT			(0x7)
 -- 
 1.8.4
