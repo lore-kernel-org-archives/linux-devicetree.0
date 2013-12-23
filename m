@@ -1,65 +1,51 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v6] usb: gadget: Add UDC driver for Aeroflex Gaisler
- GRUSBDC
-Date: Mon, 23 Dec 2013 14:40:21 -0600
-Message-ID: <20131223204021.GD15101@saruman.home>
-References: <1387830349-12241-1-git-send-email-andreas@gaisler.com>
-Reply-To: <balbi@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zbGR4y+acU1DwHSi"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387830349-12241-1-git-send-email-andreas@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: Felipe Balbi <balbi@ti.com>, Robert Baldyga <r.baldyga@samsung.com>, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, software@gaisler.com
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 0/7] Modernize pm8921 with irqdomains, regmap, DT
+Date: Mon, 23 Dec 2013 12:45:56 -0800
+Message-ID: <1387831563-13535-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---zbGR4y+acU1DwHSi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+These patches lay the groundwork for converting the pm8921 sub-devices
+to devicetree as well as simplify the API by migrating the core code
+to use the regmap API instead of the custom pm8xxx read/write wrapper.
 
-Hi,
+Changes since v1:
+ * First 3 cleanup patches dropped because they're applied upstream
+ * New regmap read/write helpers
+ * New patch for DT match table
+ * New binding document
 
-On Mon, Dec 23, 2013 at 09:25:49PM +0100, Andreas Larsson wrote:
-> @@ -216,6 +216,13 @@ config USB_FOTG210_UDC
->  	   Say "y" to link the driver statically, or "m" to build a
->  	   dynamically linked module called "fotg210_udc".
-> =20
-> +config USB_GR_UDC
-> +       tristate "Aeroflex Gaisler GRUSBDC USB Peripheral Controller Driv=
-er"
-> +       depends on OF && HAS_DMA
+Stephen Boyd (7):
+  mfd: Move pm8xxx-irq.c contents into only driver that uses it
+  mfd: pm8921: Update for genirq changes
+  mfd: pm8921: Migrate to irqdomains
+  mfd: ssbi: Add regmap read/write helpers
+  mfd: pm8921: Use ssbi regmap
+  mfd: pm8921: Add DT match table
+  devicetree: bindings: Document PM8921/8058 PMICs
 
-I applied to my testing/next branch after removing OF dependency since
-OF provides empty stubs. I checked that it builds cleanly in x86 and
-ARM.
+ .../devicetree/bindings/mfd/qcom,pm8xxx.txt        |  63 +++
+ drivers/mfd/Kconfig                                |  12 +-
+ drivers/mfd/pm8921-core.c                          | 424 ++++++++++++++++++---
+ drivers/mfd/pm8xxx-irq.c                           | 371 ------------------
+ drivers/mfd/ssbi.c                                 |  13 +
+ include/linux/mfd/pm8xxx/irq.h                     |  59 ---
+ include/linux/mfd/pm8xxx/pm8921.h                  |  30 --
+ include/linux/ssbi.h                               |   3 +
+ 8 files changed, 449 insertions(+), 526 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+ delete mode 100644 drivers/mfd/pm8xxx-irq.c
+ delete mode 100644 include/linux/mfd/pm8xxx/irq.h
+ delete mode 100644 include/linux/mfd/pm8xxx/pm8921.h
 
---=20
-balbi
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
 
---zbGR4y+acU1DwHSi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSuJ+1AAoJEIaOsuA1yqREti8P/jbbGVHE2kNhO2qkPYaJ+5MS
-D77ABMlWbcQb+C7DI5C1JBMbwSAoKNoqWssD8+QoUv09bBMYvTMhxh5qRhZScrdA
-CFM+JQCe6Gr3/nG3/z2uCpb0NntkfSE7fU91ua5y4QGke7iJ3IARsc7i94xyr0gK
-xcs6LrtRfpeWwZadheLPto9a9DoaYot1mUGdJBuaar0y/yasNebyoFRYPxGee8u+
-rIqBsx428Wz/tK3oOPERVkHChQ2LLqLM6ggMxAyEBS5PZ4mQ/7pkper/koEV595M
-uqaKzRSoIWvE7YRq8uF57fVYjqKIdyKEYc8H0u9ip/6XekFFJQhDHizmZLd3hVxo
-6V1yHmlOJsEQNPLkvc+719x7zn7z2hQPf/a1AP7K2k0HYlm0/0WluE3O0h3U7FYs
-bGO1eRF6hx7juaAtgqkPZkfWFUvOV2iVn9n2cAtWNt6K6zHRC0tQ1qpzTAHPIPNi
-Gw+2cfREarWYPt2dn2o+MHH9EuErpIiawTElXYl+gqAWunjq2WCBmjP51PbiXxTP
-sJVGDMPo0Rw26xCtjdDYaPN++wo8kI8/HE7xgqQ1H7byTRaQuVxcfBrU2n6Gw5tG
-p0NP9r+8zPnbyEXmsO9hRY3FDVAjuQU+qUfyRxwdlf+6vrS4uaN1Jtk0+mXmEk3G
-2juHacgMeW6lq/ZMgvD2
-=4RMt
------END PGP SIGNATURE-----
-
---zbGR4y+acU1DwHSi--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
