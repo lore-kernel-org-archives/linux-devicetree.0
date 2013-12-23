@@ -1,27 +1,82 @@
-From: Christian Daudt <bcm@fixthebug.org>
-Subject: Re: [PATCH v8 9/9] ARM: dts: add usb udc support to bcm281xx
-Date: Mon, 23 Dec 2013 00:16:46 -0800
-Message-ID: <CAEPRUYoaV0B8kUiLGD6cdzXkSvftY7ZB1uqh3jfRsBAvK3+JVg@mail.gmail.com>
-References: <1387462990-12039-1-git-send-email-mporter@linaro.org>
-	<1387462990-12039-10-git-send-email-mporter@linaro.org>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiA1LzVdIGxlZHM6IGxlZHMtbWMxMzc4MzogQWRkIGRl?=
+ =?UTF-8?B?dmljZXRyZWUgc3VwcG9ydA==?=
+Date: Mon, 23 Dec 2013 12:18:26 +0400
+Message-ID: <1387786706.300080155@f79.i.mail.ru>
+References: <1387600347-22673-1-git-send-email-shc_work@mail.ru>
+ <52B7ED08.7080401@epfl.ch>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1387462990-12039-10-git-send-email-mporter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@linaro.org>
-Cc: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Paul Zimmerman <paulz@synopsys.com>, Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Dinh Nguyen <dinh.linux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <52B7ED08.7080401@epfl.ch>
+Sender: linux-leds-owner@vger.kernel.org
+To: florian.vaussard@epfl.ch
+Cc: linux-leds@vger.kernel.org, =?UTF-8?B?QnJ5YW4gV3U=?= <cooloney@gmail.com>, =?UTF-8?B?UmljaGFyZCBQdXJkaWU=?= <rpurdie@rpsys.net>, devicetree@vger.kernel.org, =?UTF-8?B?UGhpbGlwcGUgUsOpdG9ybmF6?= <philippe.retornaz@epfl.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2013 at 6:23 AM, Matt Porter <mporter@linaro.org> wrote:
-> Adds USB OTG/PHY and clock support to BCM281xx and enables
-> UDC support on the bcm11351-brt and bcm28155-ap boards.
->
-> Signed-off-by: Matt Porter <mporter@linaro.org>
-> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-> Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
-
-Applied to armsoc/for-3.14/dt
-
- thanks,
-   csd
+PiBIZWxsbywKPiAKPiBPbiAxMi8yMS8yMDEzIDA1OjMyIEFNLCBBbGV4YW5kZXIgU2hpeWFuIHdy
+b3RlOgo+ID4gVGhpcyBwYXRjaCBhZGRzIGRldmljZXRyZWUgc3VwcG9ydCBmb3IgdGhlIE1DMTNY
+WFggTEVEIGRyaXZlci4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogQWxleGFuZGVyIFNoaXlhbiA8
+c2hjX3dvcmtAbWFpbC5ydT4KPiA+IC0tLQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZmQvbWMxM3h4eC50eHQgfCAgNDcgKysrKysrKysKPiA+ICBkcml2ZXJzL2xlZHMv
+bGVkcy1tYzEzNzgzLmMgICAgICAgICAgICAgICAgICAgICAgIHwgMTM0ICsrKysrKysrKysrKysr
+KysrKystLS0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDE2MiBpbnNlcnRpb25zKCspLCAxOSBkZWxl
+dGlvbnMoLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZmQvbWMxM3h4eC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWZkL21jMTN4eHgudHh0Cj4gPiBpbmRleCBhYmQ5ZTNjLi4xNDEzZjM5IDEwMDY0NAo+ID4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9tYzEzeHh4LnR4dAo+
+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9tYzEzeHh4LnR4
+dAo+ID4gQEAgLTEwLDkgKzEwLDQ0IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPiAgLSBmc2ws
+bWMxM3h4eC11c2VzLXRvdWNoIDogSW5kaWNhdGUgdGhlIHRvdWNoc2NyZWVuIGNvbnRyb2xsZXIg
+aXMgYmVpbmcgdXNlZAo+ID4gIAo+ID4gIFN1Yi1ub2RlczoKPiA+ICstIGxlZHMgOiBDb250YWlu
+IHRoZSBsZWQgbm9kZXMgYW5kIGluaXRpYWwgcmVnaXN0ZXIgdmFsdWVzIGluIHByb3BlcnR5Cj4g
+PiArICAibGVkLWNvbnRyb2wiLiBOdW1iZXIgb2YgcmVnaXN0ZXIgZGVwZW5kcyBvZiB1c2VkIElD
+LCBmb3IgTUMxMzc4MyBpcyA2LAo+ID4gKyAgZm9yIE1DMTM4OTIgaXMgNCwgZm9yIE1DMzQ3MDgg
+aXMgMS4gU2VlIGRhdGFzaGVldCBmb3IgYml0cyBkZWZpbml0aW9ucyBvZgo+ID4gKyAgdGhlc2Ug
+cmVnaXN0ZXJzLgo+ID4gKyAgLSAjYWRkcmVzcy1jZWxsczogTXVzdCBiZSAxLgo+ID4gKyAgLSAj
+c2l6ZS1jZWxsczogTXVzdCBiZSAwLgo+ID4gKyAgRWFjaCBsZWQgbm9kZSBzaG91bGQgY29udGFp
+biAicmVnIiwgd2hpY2ggdXNlZCBhcyBMRUQgSUQgKGRlc2NyaWJlZCBiZWxvdykuCj4gPiArICBP
+cHRpb25hbCBwcm9wZXJ0aWVzICJsYWJlbCIgYW5kICJsaW51eCxkZWZhdWx0LXRyaWdnZXIiIGlz
+IGRlc2NyaWJlZCBpbgo+ID4gKyAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xl
+ZHMvY29tbW9uLnR4dC4KPiA+ICAtIHJlZ3VsYXRvcnMgOiBDb250YWluIHRoZSByZWd1bGF0b3Ig
+bm9kZXMuIFRoZSByZWd1bGF0b3JzIGFyZSBib3VuZCB1c2luZwo+ID4gICAgdGhlaXIgbmFtZXMg
+YXMgbGlzdGVkIGJlbG93IHdpdGggdGhlaXIgcmVnaXN0ZXJzIGFuZCBiaXRzIGZvciBlbmFibGlu
+Zy4KPiA+ICAKPiA+ICtNQzEzNzgzIExFRCBJRHM6Cj4gPiArICAgIDAgIDogTWFpbiBkaXNwbGF5
+Cj4gPiArICAgIDEgIDogQVVYIGRpc3BsYXkKPiA+ICsgICAgMiAgOiBLZXlwYWQKPiA+ICsgICAg
+MyAgOiBSZWQgMQo+ID4gKyAgICA0ICA6IEdyZWVuIDEKPiA+ICsgICAgNSAgOiBCbHVlIDEKPiA+
+ICsgICAgNiAgOiBSZWQgMgo+ID4gKyAgICA3ICA6IEdyZWVuIDIKPiA+ICsgICAgOCAgOiBCbHVl
+IDIKPiA+ICsgICAgOSAgOiBSZWQgMwo+ID4gKyAgICAxMCA6IEdyZWVuIDMKPiA+ICsgICAgMTEg
+OiBCbHVlIDMKPiA+ICsKPiA+ICtNQzEzODkyIExFRCBJRHM6Cj4gPiArICAgIDAgIDogTWFpbiBk
+aXNwbGF5Cj4gPiArICAgIDEgIDogQVVYIGRpc3BsYXkKPiA+ICsgICAgMiAgOiBLZXlwYWQKPiA+
+ICsgICAgMyAgOiBSZWQKPiA+ICsgICAgNCAgOiBHcmVlbgo+ID4gKyAgICA1ICA6IEJsdWUKPiA+
+ICsKPiA+ICtNQzM0NzA4IExFRCBJRHM6Cj4gPiArICAgIDAgIDogQ2hhcmdlciBSZWQKPiA+ICsg
+ICAgMSAgOiBDaGFyZ2VyIEdyZWVuCj4gPiArCj4gPiAgTUMxMzc4MyByZWd1bGF0b3JzOgo+ID4g
+ICAgICBzdzFhICAgICAgOiByZWd1bGF0b3IgU1cxQSAgICAgIChyZWdpc3RlciAyNCwgYml0IDAp
+Cj4gPiAgICAgIHN3MWIgICAgICA6IHJlZ3VsYXRvciBTVzFCICAgICAgKHJlZ2lzdGVyIDI1LCBi
+aXQgMCkKPiA+IEBAIC04OSw2ICsxMjQsMTggQEAgZWNzcGlANzAwMTAwMDAgeyAvKiBFQ1NQSTEg
+Ki8KPiA+ICAJCWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW8wPjsKPiA+ICAJCWludGVycnVwdHMg
+PSA8OD47Cj4gPiAgCj4gPiArCQlsZWRzIHsKPiAKPiBjb21wYXRpYmxlIHN0cmluZz8KCk5vdCBu
+ZWVkLiBUaGlzIGlzIGEgY2hpbGQgZm9yIFBNSUMgYW5kIGl0IGlzIHByb2JlZCBmcm9tIFBNSUMg
+Y29yZS4KCi4uLgo+ID4gKyNpZmRlZiBDT05GSUdfT0YKPiA+ICtzdGF0aWMgaW50IF9faW5pdCBt
+YzEzeHh4X2xlZF9wcm9iZV9kdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gK3sK
+PiA+ICsJc3RydWN0IG1jMTN4eHhfbGVkcyAqbGVkcyA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBk
+ZXYpOwo+ID4gKwlzdHJ1Y3QgbWMxM3h4eCAqbWNkZXYgPSBsZWRzLT5tYXN0ZXI7Cj4gPiArCXN0
+cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50LCAqY2hpbGQ7Cj4gPiArCXN0cnVjdCBkZXZpY2UgKmRl
+diA9ICZwZGV2LT5kZXY7Cj4gPiArCXUzMiAqY3RybHMsIGluaXRfbGVkID0gMDsKPiA+ICsJaW50
+IGksIHJldDsKPiA+ICsKPiA+ICsJY3RybHMgPSBkZXZtX2t6YWxsb2MoZGV2LCBsZWRzLT5kZXZ0
+eXBlLT5udW1fcmVncyAqIHNpemVvZigqY3RybHMpLAo+ID4gKwkJCSAgICAgR0ZQX0tFUk5FTCk7
+Cj4gPiArCWlmICghY3RybHMpCj4gPiArCQlyZXR1cm4gLUVOT01FTTsKPiA+ICsKPiA+ICsJb2Zf
+bm9kZV9nZXQoZGV2LT5wYXJlbnQtPm9mX25vZGUpOwo+ID4gKwlwYXJlbnQgPSBvZl9maW5kX25v
+ZGVfYnlfbmFtZShkZXYtPnBhcmVudC0+b2Zfbm9kZSwgImxlZHMiKTsKPiA+ICsJaWYgKCFwYXJl
+bnQpIHsKPiA+ICsJCXJldCA9IC1FTk9EQVRBOwo+ID4gKwkJZ290byBvdXRfbm9kZV9wdXQ7Cj4g
+PiArCX0KPiA+ICsKPiA+ICsJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzJfYXJyYXkocGFyZW50
+LCAibGVkLWNvbnRyb2wiLCBjdHJscywKPiA+ICsJCQkJCSBsZWRzLT5kZXZ0eXBlLT5udW1fcmVn
+cyk7Cj4gPiArCWlmIChyZXQpCj4gPiArCQlnb3RvIG91dF9ub2RlX3B1dDsKPiA+ICsKPiA+ICsJ
+Zm9yIChpID0gMDsgaSA8IGxlZHMtPmRldnR5cGUtPm51bV9yZWdzOyBpKyspIHsKPiA+ICsJCXJl
+dCA9IG1jMTN4eHhfcmVnX3dyaXRlKG1jZGV2LCBsZWRzLT5kZXZ0eXBlLT5sZWRjdHJsX2Jhc2Ug
+KyBpLAo+ID4gKwkJCQkJY3RybHNbaV0pOwo+IAo+IENvZGUgZHVwbGljYXRlZCBmcm9tIHRoZSBy
+ZWd1bGFyIHByb2JlLgoKWWVzLiBUaGlzIHdhcyBkb25lIGJhc2VkIG9uIHRoZSBjb21tZW50cyB0
+byB0aGUgcHJldmlvdXMgdmVyc2lvbjoKaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9kZXZp
+Y2V0cmVlL21zZzE0OTMzLmh0bWwKClRoYW5rcy4KCi0tLQo=
