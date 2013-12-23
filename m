@@ -1,98 +1,96 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 0/3] Extend dtc with data type handling
-Date: Mon, 23 Dec 2013 23:08:14 +1100
-Message-ID: <20131223120814.GE12407@voom.fritz.box>
-References: <1386953352-25402-1-git-send-email-t.figa@samsung.com>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH v7 4/7] mmc: omap_hsmmc: adapt hsmmc to use pbias regulator
+Date: Mon, 23 Dec 2013 19:12:48 +0530
+Message-ID: <52B83DD8.1060402@ti.com>
+References: <1387560955-6547-1-git-send-email-balajitk@ti.com> <1387560955-6547-5-git-send-email-balajitk@ti.com> <CAOf5uw=QO9ePDxQfZYpJPd9Fa4Cud54+NL2CtkJvsF5dz3MXvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fWddYNRDgTk9wQGZ"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1386953352-25402-1-git-send-email-t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAOf5uw=QO9ePDxQfZYpJPd9Fa4Cud54+NL2CtkJvsF5dz3MXvA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Michael Trimarchi <michael@amarulasolutions.com>
+Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Benoit Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Chris Ball <cjb@laptop.org>, Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
+On Friday 20 December 2013 11:45 PM, Michael Trimarchi wrote:
+> Hi
+>
+> On Fri, Dec 20, 2013 at 6:35 PM, Balaji T K <balajitk@ti.com> wrote:
+>> In DT case, PBAIS registers are programmed via regulator,
+>> use regulator APIs to control PBIAS.
+>>
+>> Signed-off-by: Balaji T K <balajitk@ti.com>
+>> ---
+>>   drivers/mmc/host/omap_hsmmc.c |   39 +++++++++++++++++++++++++++++++++++++++
+>>   1 files changed, 39 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+>> index 342be25..0a390f8 100644
+>> --- a/drivers/mmc/host/omap_hsmmc.c
+>> +++ b/drivers/mmc/host/omap_hsmmc.c
+>> @@ -126,6 +126,10 @@
+>>   #define OMAP_MMC_MAX_CLOCK     52000000
+>>   #define DRIVER_NAME            "omap_hsmmc"
+>>
+>> +#define VDD_1V8                        1800000         /* 180000 uV */
+>> +#define VDD_3V0                        3000000         /* 300000 uV */
+>> +#define VDD_165_195            (ffs(MMC_VDD_165_195) - 1)
+>> +
+>>   /*
+>>    * One controller can have multiple slots, like on some omap boards using
+>>    * omap.c controller driver. Luckily this is not currently done on any known
+>> @@ -164,6 +168,8 @@ struct omap_hsmmc_host {
+>>           */
+>>          struct  regulator       *vcc;
+>>          struct  regulator       *vcc_aux;
+>> +       struct  regulator       *pbias;
+>> +       bool                    pbias_enabled;
+>>          int                     pbias_disable;
+>>          void    __iomem         *base;
+>>          resource_size_t         mapbase;
+>> @@ -272,6 +278,15 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
+>>          if (mmc_slot(host).before_set_reg)
+>>                  mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
+>>
+>> +       if (host->pbias) {
+>> +               if (host->pbias_enabled == 1) {
+>> +                       ret = regulator_disable(host->pbias);
+>> +                       if (!ret)
+>> +                               host->pbias_enabled = 0;
+>
+> you should return error?
+>
+>> +               }
+>> +               regulator_set_voltage(host->pbias, VDD_3V0, VDD_3V0);
+>> +       }
+>> +
+>>          /*
+>>           * Assume Vcc regulator is used only to power the card ... OMAP
+>>           * VDDS is used to power the pins, optionally with a transceiver to
+>> @@ -306,9 +321,29 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
+>>                  }
+>>          }
+>>
+>> +       if (host->pbias) {
+>> +               if (vdd <= VDD_165_195)
+>> +                       ret = regulator_set_voltage(host->pbias, VDD_1V8,
+>> +                                                               VDD_1V8);
+>> +               else
+>> +                       ret = regulator_set_voltage(host->pbias, VDD_3V0,
+>> +                                                               VDD_3V0);
+>> +               if (ret < 0)
+>> +                       goto error_set_power;
+>> +
+>> +               if (host->pbias_enabled == 0) {
+>> +                       ret = regulator_enable(host->pbias);
+>> +                       if (!ret) {
+>> +                               host->pbias_enabled = 1;
+>> +                               goto error_set_power;
+>
+> Is this an error condition? Do you need this flag?
+>
+Hi,
 
---fWddYNRDgTk9wQGZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Dec 13, 2013 at 05:49:09PM +0100, Tomasz Figa wrote:
-> This series intends to extend dtc with appropriate infrastructure
-> to handle property data types. First, dtc is modified to preserve
-> type information when parsing DTS. Then type guessing is implemented
-> for flat and fs trees where type data is not available. After that,
-> DTS generation code is modified to use only type information when
-> printing property data.
-
-Hrm.  I think this is completely backwards to the right approach.
-
-For dt checking what we want is a schema.  That can specify datatypes
-amongst other constraints, but in the end you can check the actual
-bytes of the DT against the constraints imposed by the schema,
-regardless of how those bytes are presented to the checker.
-
-By adding type information to the in-flight tree you're checking not
-the actual content of the DT, but how you've chosen to express that
-information in DTS format.
-
-More concretely, we should be able to schema-check trees in binary
-format, not just source.  With these patches that will fail if -I dtb
-makes the wrong type guesses.
-
-> Effect of this is the ability to implement checks for data types
-> of properties. Also, as a side effect, it's now possible to do
-> almost 1:1 dts <=3D> dts passes (not very useful, but shows that
-> things are working well).
->=20
-> Tomasz Figa (3):
->   dtc: Keep type information from DTS
->   dtc: Inject guessed type information in case of flat and fs trees
->   dtc: Use type information when printing tree source
->=20
->  data.c       |  62 +++++++++++++++++++++++-
->  dtc-parser.y |  47 ++++++++++++++-----
->  dtc.h        |  12 +++++
->  flattree.c   |   2 +-
->  fstree.c     |   6 ++-
->  livetree.c   |  16 +++++--
->  treesource.c | 150 +++++++++++++++++++++++++++++++++--------------------=
-------
->  7 files changed, 209 insertions(+), 86 deletions(-)
->=20
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---fWddYNRDgTk9wQGZ
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSuCeuAAoJEGw4ysog2bOSXC0P/3L51X8d1sxhE9vVcHHT8Ql6
-SeTcG8aM3c1JIXKHR/MjN3qfSUnCu4GqhlTAAuQ66H6rAiJe8DWRANry2xNUTBfB
-CSSOq9DPcNhDVsc5FuBm3tXj+mQM32flSJ6GFrzE7S+p1xEtEL9vWaIHD07b2zVe
-vtYr481kD/zjp3NQxSDdYZuKTq/6k9s7S5RWqtFXWu9cY9CUBv5wCKn5tISpFVyx
-lrZxutjTVflG3kPAVx01lUxpCP24PiJwa/cq36qnqI5CDgzQpQ4gjqwol4qj/MQA
-mwHuQUrOcDDt9eL0PNLvCRv8W77cS7jcXYVYYH9p0tRrjJs2IcFMuqCy7MwNayGQ
-AIAzbd5s3oyl1QuwhnMdkCaRlbgmSznP3TBZtG2OSBQjMYJxgCUBDNKXJjmKacZ6
-zwE8GrElcgs4kDrwZvJYBZGvvnO7yG0ZeAIlWW4EJhEZUcUcRteKYJWzcgW7a5Gt
-NGCq4KrStSpjfYkBQvPxSBSDkc7yfACSxuVl8wVLW//f5uUOLvQHt4PkmTeFy0IC
-MzlDVIYLhbOHN4LsVItDbxLKdqbWDpxYE++rJQQfeK1reJ/R1mnOkTGgN4l2GRm9
-vHBs+X+OMDZbCEtcI+uFttBcl5TVZHiVVem232G7kqtBWQJSZhqd3kWnweOxSddZ
-s7V3TVEnUvnBsIxnfj2h
-=ICpH
------END PGP SIGNATURE-----
-
---fWddYNRDgTk9wQGZ--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+pbias_enabled flag is used to balance regulator_enable/regulator_disable, otherwise
+regulator might be kept enabled base on to use count.
