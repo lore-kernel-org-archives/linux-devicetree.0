@@ -1,191 +1,325 @@
 From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Subject: Re: [PATCH] can: mcp251x: Add device tree support
-Date: Mon, 23 Dec 2013 08:14:03 +0100
-Message-ID: <52B7E2BB.3030103@epfl.ch>
-References: <1387602101-27851-1-git-send-email-shc_work@mail.ru>
+Subject: Re: [PATCH v2 5/5] leds: leds-mc13783: Add devicetree support
+Date: Mon, 23 Dec 2013 08:58:00 +0100
+Message-ID: <52B7ED08.7080401@epfl.ch>
+References: <1387600347-22673-1-git-send-email-shc_work@mail.ru>
 Reply-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387602101-27851-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
+In-Reply-To: <1387600347-22673-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?ISO-8859-1?Q?Philippe_R=E9tornaz?= <philippe.retornaz-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hello,
 
-On 12/21/2013 06:01 AM, Alexander Shiyan wrote:
-> This patch adds Device Tree support to the Microchip MCP251X driver.
+On 12/21/2013 05:32 AM, Alexander Shiyan wrote:
+> This patch adds devicetree support for the MC13XXX LED driver.
 > 
 > Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 > ---
->  .../bindings/net/can/microchip,mcp251x.txt         | 25 ++++++
->  drivers/net/can/mcp251x.c                          | 99 ++++++++++++++++------
->  2 files changed, 99 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+>  Documentation/devicetree/bindings/mfd/mc13xxx.txt |  47 ++++++++
+>  drivers/leds/leds-mc13783.c                       | 134 +++++++++++++++++++---
+>  2 files changed, 162 insertions(+), 19 deletions(-)
 > 
-
-[...]
-
+> diff --git a/Documentation/devicetree/bindings/mfd/mc13xxx.txt b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
+> index abd9e3c..1413f39 100644
+> --- a/Documentation/devicetree/bindings/mfd/mc13xxx.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
+> @@ -10,9 +10,44 @@ Optional properties:
+>  - fsl,mc13xxx-uses-touch : Indicate the touchscreen controller is being used
+>  
+>  Sub-nodes:
+> +- leds : Contain the led nodes and initial register values in property
+> +  "led-control". Number of register depends of used IC, for MC13783 is 6,
+> +  for MC13892 is 4, for MC34708 is 1. See datasheet for bits definitions of
+> +  these registers.
+> +  - #address-cells: Must be 1.
+> +  - #size-cells: Must be 0.
+> +  Each led node should contain "reg", which used as LED ID (described below).
+> +  Optional properties "label" and "linux,default-trigger" is described in
+> +  Documentation/devicetree/bindings/leds/common.txt.
+>  - regulators : Contain the regulator nodes. The regulators are bound using
+>    their names as listed below with their registers and bits for enabling.
+>  
+> +MC13783 LED IDs:
+> +    0  : Main display
+> +    1  : AUX display
+> +    2  : Keypad
+> +    3  : Red 1
+> +    4  : Green 1
+> +    5  : Blue 1
+> +    6  : Red 2
+> +    7  : Green 2
+> +    8  : Blue 2
+> +    9  : Red 3
+> +    10 : Green 3
+> +    11 : Blue 3
 > +
->  static int mcp251x_can_probe(struct spi_device *spi)
->  {
-> +	const struct of_device_id *of_id = of_match_device(mcp251x_of_match,
-> +							   &spi->dev);
-> +	struct mcp251x_platform_data *pdata = dev_get_platdata(&spi->dev);
->  	struct net_device *net;
->  	struct mcp251x_priv *priv;
-> -	struct mcp251x_platform_data *pdata = dev_get_platdata(&spi->dev);
-> -	int ret = -ENODEV;
-> +	int freq, ret = -ENODEV;
-> +	struct clk *clk;
+> +MC13892 LED IDs:
+> +    0  : Main display
+> +    1  : AUX display
+> +    2  : Keypad
+> +    3  : Red
+> +    4  : Green
+> +    5  : Blue
 > +
-> +	clk = devm_clk_get(&spi->dev, NULL);
-> +	if (IS_ERR(clk)) {
-> +		if (pdata)
-> +			freq = pdata->oscillator_frequency;
-> +		else
-> +			return PTR_ERR(clk);
-> +	} else {
-> +		freq = clk_get_rate(clk);
-> +	}
->  
-> -	if (!pdata)
-> -		/* Platform data is required for osc freq */
-> -		goto error_out;
-> +	/* Sanity check */
-> +	if (freq < 1000000 || freq > 25000000)
-> +		return -ERANGE;
-
-This sanity check is new, right? This has nothing to do with device tree
-conversion and
-should be introduced by another patch.
-
->  
->  	/* Allocate can/net device */
->  	net = alloc_candev(sizeof(struct mcp251x_priv), TX_ECHO_SKB_MAX);
-> -	if (!net) {
-> -		ret = -ENOMEM;
-> -		goto error_alloc;
-> +	if (!net)
-> +		return -ENOMEM;
+> +MC34708 LED IDs:
+> +    0  : Charger Red
+> +    1  : Charger Green
 > +
+>  MC13783 regulators:
+>      sw1a      : regulator SW1A      (register 24, bit 0)
+>      sw1b      : regulator SW1B      (register 25, bit 0)
+> @@ -89,6 +124,18 @@ ecspi@70010000 { /* ECSPI1 */
+>  		interrupt-parent = <&gpio0>;
+>  		interrupts = <8>;
+>  
+> +		leds {
 
-Why are you changing this? This is not related to DT and is not duly
-motivated.
+compatible string?
 
-> +	if (!IS_ERR(clk)) {
-> +		ret = clk_prepare_enable(clk);
-> +		if (ret)
-> +			goto out_free;
->  	}
->  
->  	net->netdev_ops = &mcp251x_netdev_ops;
-> @@ -1018,23 +1065,27 @@ static int mcp251x_can_probe(struct spi_device *spi)
->  	priv = netdev_priv(net);
->  	priv->can.bittiming_const = &mcp251x_bittiming_const;
->  	priv->can.do_set_mode = mcp251x_do_set_mode;
-> -	priv->can.clock.freq = pdata->oscillator_frequency / 2;
-> +	priv->can.clock.freq = freq / 2;
->  	priv->can.ctrlmode_supported = CAN_CTRLMODE_3_SAMPLES |
->  		CAN_CTRLMODE_LOOPBACK | CAN_CTRLMODE_LISTENONLY;
-> -	priv->model = spi_get_device_id(spi)->driver_data;
-> +	if (of_id)
-> +		priv->model = (enum mcp251x_model)of_id->data;
-> +	else
-> +		priv->model = spi_get_device_id(spi)->driver_data;
->  	priv->net = net;
-> +	priv->clk = clk;
->  
->  	priv->power = devm_regulator_get(&spi->dev, "vdd");
->  	priv->transceiver = devm_regulator_get(&spi->dev, "xceiver");
->  	if ((PTR_ERR(priv->power) == -EPROBE_DEFER) ||
->  	    (PTR_ERR(priv->transceiver) == -EPROBE_DEFER)) {
->  		ret = -EPROBE_DEFER;
-> -		goto error_power;
-> +		goto out_clk;
->  	}
->  
->  	ret = mcp251x_power_enable(priv->power, 1);
->  	if (ret)
-> -		goto error_power;
-> +		goto out_clk;
->  
->  	spi_set_drvdata(spi, priv);
->  
-> @@ -1113,11 +1164,14 @@ error_probe:
->  		dma_free_coherent(&spi->dev, PAGE_SIZE,
->  				  priv->spi_tx_buf, priv->spi_tx_dma);
->  	mcp251x_power_enable(priv->power, 0);
-> -error_power:
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			led-control = <0x000 0x000 0x0e0 0x000>;
 > +
-> +out_clk:
-> +	if (!IS_ERR(clk))
-> +		clk_disable_unprepare(clk);
+> +			sysled {
+> +				reg = <3>;
+> +				label = "system:red:live";
+> +				linux,default-trigger = "heartbeat";
+> +			};
+> +		};
 > +
-> +out_free:
->  	free_candev(net);
-> -error_alloc:
-> -	dev_err(&spi->dev, "probe failed\n");
+>  		regulators {
+>  			sw1_reg: mc13892__sw1 {
+>  				regulator-min-microvolt = <600000>;
+> diff --git a/drivers/leds/leds-mc13783.c b/drivers/leds/leds-mc13783.c
+> index 95b3dfb..d7387a9 100644
+> --- a/drivers/leds/leds-mc13783.c
+> +++ b/drivers/leds/leds-mc13783.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/init.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/leds.h>
+> +#include <linux/of.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/mfd/mc13xxx.h>
+>  
+> @@ -42,7 +43,7 @@ struct mc13xxx_leds {
+>  	struct mc13xxx			*master;
+>  	struct mc13xxx_led_devtype	*devtype;
+>  	int				num_leds;
+> -	struct mc13xxx_led		led[0];
+> +	struct mc13xxx_led		*led;
 
-Why removing this error message?
+This is not related to the DT conversion, so please roll out the change
+into another patch.
 
-> -error_out:
-> +
->  	return ret;
+>  };
+>  
+>  static unsigned int mc13xxx_max_brightness(int id)
+> @@ -120,6 +121,98 @@ static void mc13xxx_led_set(struct led_classdev *led_cdev,
+>  	schedule_work(&led->work);
 >  }
 >  
-> @@ -1135,6 +1189,9 @@ static int mcp251x_can_remove(struct spi_device *spi)
->  
->  	mcp251x_power_enable(priv->power, 0);
->  
-> +	if (!IS_ERR(priv->clk))
-> +		clk_disable_unprepare(priv->clk);
+> +#ifdef CONFIG_OF
+> +static int __init mc13xxx_led_probe_dt(struct platform_device *pdev)
+> +{
+> +	struct mc13xxx_leds *leds = platform_get_drvdata(pdev);
+> +	struct mc13xxx *mcdev = leds->master;
+> +	struct device_node *parent, *child;
+> +	struct device *dev = &pdev->dev;
+> +	u32 *ctrls, init_led = 0;
+> +	int i, ret;
 > +
->  	free_candev(net);
->  
->  	return 0;
-> @@ -1197,21 +1254,13 @@ static int mcp251x_can_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(mcp251x_can_pm_ops, mcp251x_can_suspend,
->  	mcp251x_can_resume);
->  
-> -static const struct spi_device_id mcp251x_id_table[] = {
-> -	{ "mcp2510",	CAN_MCP251X_MCP2510 },
-> -	{ "mcp2515",	CAN_MCP251X_MCP2515 },
-> -	{ },
-> -};
-> -
-> -MODULE_DEVICE_TABLE(spi, mcp251x_id_table);
-> -
->  static struct spi_driver mcp251x_can_driver = {
->  	.driver = {
->  		.name = DEVICE_NAME,
->  		.owner = THIS_MODULE,
-> +		.of_match_table = of_match_ptr(mcp251x_of_match),
->  		.pm = &mcp251x_can_pm_ops,
->  	},
-> -
+> +	ctrls = devm_kzalloc(dev, leds->devtype->num_regs * sizeof(*ctrls),
+> +			     GFP_KERNEL);
+> +	if (!ctrls)
+> +		return -ENOMEM;
+> +
+> +	of_node_get(dev->parent->of_node);
+> +	parent = of_find_node_by_name(dev->parent->of_node, "leds");
+> +	if (!parent) {
+> +		ret = -ENODATA;
+> +		goto out_node_put;
+> +	}
+> +
+> +	ret = of_property_read_u32_array(parent, "led-control", ctrls,
+> +					 leds->devtype->num_regs);
+> +	if (ret)
+> +		goto out_node_put;
+> +
+> +	for (i = 0; i < leds->devtype->num_regs; i++) {
+> +		ret = mc13xxx_reg_write(mcdev, leds->devtype->ledctrl_base + i,
+> +					ctrls[i]);
 
-Spurious change
+Code duplicated from the regular probe.
 
->  	.id_table = mcp251x_id_table,
->  	.probe = mcp251x_can_probe,
->  	.remove = mcp251x_can_remove,
+> +		if (ret)
+> +			goto out_node_put;
+> +	}
+> +
+> +	leds->led = devm_kzalloc(dev, of_get_child_count(parent) *
+> +				 sizeof(*leds->led), GFP_KERNEL);
+> +	if (!leds->led)
+> +		return -ENOMEM;
+> +
+> +	i = 0;
+> +
+> +	for_each_child_of_node(parent, child) {
+> +		u32 id;
+> +
+> +		if (of_property_read_u32(child, "reg", &id))
+> +			continue;convert to
+> +
+> +		if (id > (leds->devtype->led_max - leds->devtype->led_min)) {
+
+This is slightly changed from the original driver:
+
+if ((id > devtype->led_max) || (id < devtype->led_min)) {
+
+So if you feel that it is a bug, please provide a proper bug fix as a
+separate patch.
+
+> +			dev_warn(dev, "Invalid reg ID %i\n", id);
+> +			continue;
+> +		}
+> +
+> +		if (init_led & (1 << id)) {
+> +			dev_warn(dev, "LED %i already initialized\n", id);
+> +			continue;
+> +		}
+> +
+> +		leds->led[i].id = id + leds->devtype->led_min;
+> +		leds->led[i].leds = leds;
+> +		leds->led[i].cdev.name = of_get_property(child, "label", NULL);
+> +		leds->led[i].cdev.default_trigger =
+> +			of_get_property(child, "linux,default-trigger", NULL);
+> +		leds->led[i].cdev.flags = LED_CORE_SUSPENDRESUME;
+> +		leds->led[i].cdev.brightness_set = mc13xxx_led_set;
+> +		leds->led[i].cdev.max_brightness = mc13xxx_max_brightness(id);
+> +
+> +		INIT_WORK(&leds->led[i].work, mc13xxx_led_work);
+> +
+
+- The chunck above is just copy-pasted from the probe, so you end up
+with a _ton_ of duplicated
+code. Please do not do that.
+
+- The original probe calls mc13xxx_led_setup() here. Why are you
+removing this call?
+
+> +		if (led_classdev_register(dev, &leds->led[i].cdev)) {
+> +			dev_warn(dev, "Failed to register LED %i\n", id);
+> +			continue;
+> +		}
+> +
+> +		init_led |= 1 << id;
+> +		i++;
+> +	};
+> +
+> +	leds->num_leds = i;
+> +	ret = (i > 0) ? 0 : -ENODATA;
+> +
+> +out_node_put:
+> +	of_node_put(parent);
+> +
+> +	return ret;
+> +}
+> +#else
+> +static inline int __init mc13xxx_led_probe_dt(struct platform_device *pdev)
+> +{
+> +	return -ENOTSUPP;
+
+ENODEV usually?
+
+> +}
+> +#endif
+> +
+>  static int __init mc13xxx_led_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -128,32 +221,35 @@ static int __init mc13xxx_led_probe(struct platform_device *pdev)
+>  	struct mc13xxx_led_devtype *devtype =
+>  		(struct mc13xxx_led_devtype *)pdev->id_entry->driver_data;
+>  	struct mc13xxx_leds *leds;
+> -	int i, id, num_leds, ret = -ENODATA;
+> +	int i, id, ret = -ENODATA;
+>  	u32 init_led = 0;
+>  
+> -	if (!pdata) {
+> -		dev_err(dev, "Missing platform data\n");
+> -		return -ENODEV;
+> -	}
+> -
+> -	num_leds = pdata->num_leds;
+> -
+> -	if ((num_leds < 1) ||
+> -	    (num_leds > (devtype->led_max - devtype->led_min + 1))) {
+> -		dev_err(dev, "Invalid LED count %d\n", num_leds);
+> -		return -EINVAL;
+> -	}
+> -
+> -	leds = devm_kzalloc(dev, num_leds * sizeof(struct mc13xxx_led) +
+> -			    sizeof(struct mc13xxx_leds), GFP_KERNEL);
+> +	leds = devm_kzalloc(dev, sizeof(*leds), GFP_KERNEL);
+
+As said in my first comment, this is not related to the DT conversion.
+
+>  	if (!leds)
+>  		return -ENOMEM;
+>  
+>  	leds->devtype = devtype;
+> -	leds->num_leds = num_leds;
+>  	leds->master = mcdev;
+>  	platform_set_drvdata(pdev, leds);
+>  
+> +	if (dev->parent->of_node)
+> +		return mc13xxx_led_probe_dt(pdev);
+
+Why are you returning here? This is not a common way of doing the DT
+conversion, as you end up
+with a lot of duplicated code. Your mc13xxx_led_probe_dt() should
+populate the missing fields
+in your platform data, so that your probe logic remains untouched and
+common to both logics.
+
+> +	else if (!pdata)
+> +		return -ENODATA;
+> +
+> +	leds->num_leds = pdata->num_leds;
+> +
+> +	if ((leds->num_leds < 1) ||
+> +	    (leds->num_leds > (devtype->led_max - devtype->led_min + 1))) {
+> +		dev_err(dev, "Invalid LED count %d\n", leds->num_leds);
+> +		return -EINVAL;
+> +	}
+> +
+> +	leds->led = devm_kzalloc(dev, leds->num_leds * sizeof(*leds->led),
+> +				 GFP_KERNEL);
+> +	if (!leds->led)
+> +		return -ENOMEM;
+> +
+>  	for (i = 0; i < devtype->num_regs; i++) {
+>  		ret = mc13xxx_reg_write(mcdev, leds->devtype->ledctrl_base + i,
+>  					pdata->led_control[i]);
+> @@ -161,7 +257,7 @@ static int __init mc13xxx_led_probe(struct platform_device *pdev)
+>  			return ret;
+>  	}
+>  
+> -	for (i = 0; i < num_leds; i++) {
+> +	for (i = 0; i < leds->num_leds; i++) {
+>  		const char *name, *trig;
+>  
+>  		ret = -EINVAL;
 > 
 
-I would say that your patch could be split into several patches, as you
-introduce several
-non-DT changes:
+Where is the of_match_table?
 
-PATCH 1: use devm_clk_get()
-PATCH 2: convert to device tree
-PATCH 3: add frequency sanity check
-
-This would be more readable and easier to check.
-
-Best,
+Regards,
 
 Florian
 --
