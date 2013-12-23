@@ -1,100 +1,85 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2 7/7] devicetree: bindings: Document PM8921/8058 PMICs
-Date: Mon, 23 Dec 2013 12:46:03 -0800
-Message-ID: <1387831563-13535-8-git-send-email-sboyd@codeaurora.org>
-References: <1387831563-13535-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387831563-13535-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Subject: Re: [PATCH 0/7] Fix omap-iommu probe and convert to DT for 3.14
+Date: Mon, 23 Dec 2013 21:51:54 +0100
+Message-ID: <52B8A26A.3000905@epfl.ch>
+References: <1387284818-28739-1-git-send-email-florian.vaussard@epfl.ch>
+	<52B8866D.9060100@ti.com>
+Reply-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <52B8866D.9060100-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PM8921 and PM8058 are PMICs found paired with MSM8960 and MSM8660
-devices respectively. They contain subdevices such as keypads,
-RTC, regulators, clocks, etc.
+Hi Suman,
 
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- .../devicetree/bindings/mfd/qcom,pm8xxx.txt        | 63 ++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+On 12/23/2013 07:52 PM, Anna, Suman wrote:
+> Hi Florian,
+>
+> On 12/17/2013 06:53 AM, Florian Vaussard wrote:
+>> OMAP2+ is heading towards a full device tree boot for 3.14. Currently,
+>> the iommu used by the OMAP3 camera subsystem is not yet converted. It
+>> cannot be probed as necessary data are only passed through device tree.
+>>
+>> Patches 1 and 2 are small fixes for problems encountered while developing
+>> this series.
+>>
+>> Patches 3 to 5 add the device tree logic to omap-iommu, and complete
+>> iommu
+>> data in omap3.dtsi. Patches 6 and 7 remove unused iommu hwmod data and
+>> platform code from OMAP2+.
+>
+> This is a good starting patch series for the OMAP iommu DT conversion,
+> but it only handles OMAP3 ISP MMU. The OMAP3 ISP MMU is not the only MMU
+> handled by the OMAP iommu driver. There is also an OMAP3 IVA MMU and
+> MMUs associated with DSP and IPU in OMAP4/OMAP5. The conversion is
+> simpler just with the OMAP3 ISP MMU, as it doesn't have any reset lines
+> associated with it. But all the other MMUs would require
+> asserting/deasserting the resets (performed currently through the pdata
+> function pointers). Your patch series removes that functionality
+> completely, and if this were to go into 3.14, this has to be handled
+> through some pdata quirks until all the resets in hwmod data are
+> converted to a reset driver.
+>
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
-new file mode 100644
-index 0000000..e3fe625
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
-@@ -0,0 +1,63 @@
-+Qualcomm PM8xxx PMIC multi-function devices
-+
-+PROPERTIES
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,pm8058"
-+		    "qcom,pm8921"
-+
-+- #address-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 1
-+
-+- #size-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 0
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: specifies the interrupt that indicates a subdevice
-+		    has generated an interrupt (summary interrupt). The
-+		    format of the specifier is defined by the binding document
-+		    describing the node's interrupt parent.
-+
-+- #interrupt-cells:
-+	Usage: required
-+	Value type : <u32>
-+	Definition: must be 2. Specifies the number of cells needed to encode
-+		    an interrupt source. The 1st cell contains the interrupt
-+		    number. The 2nd cell is the trigger type and level flags
-+		    encoded as follows:
-+
-+			1 = low-to-high edge triggered
-+			2 = high-to-low edge triggered
-+			4 = active high level-sensitive
-+			8 = active low level-sensitive
-+
-+- interrupt-controller:
-+	Usage: required
-+	Value type: <empty>
-+	Definition: identifies this node as an interrupt controller
-+
-+EXAMPLE
-+
-+	pmicintc: pmic@0 {
-+		compatible = "qcom,pm8921";
-+		interrupts = <104 8>;
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pwrkey {
-+			compatible = "qcom,pm8921-pwrkey";
-+			interrupt-parent = <&pmicintc>;
-+			interrupts = <50 1>, <51 1>;
-+		};
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Indeed, this patchset currently addresses only the OMAP ISP IOMMU.
+For the OMAP3 IVA, the current implementation looks completely
+different (inside drivers/staging/tidspbridge/). And to the best of
+my knowledge, the current omap-iommu driver can handle only one
+instance. By calling
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+bus_set_iommu(&platform_bus_type, &omap_iommu_ops);
+
+the driver register the iommu on the platform bus (which is maybe
+not the best choice). This call will fill the struct iommu_ops of
+the bus_type, but if an iommu is already present, it will fail
+and return EBUSY. Thus only one iommu can be set on the same bus.
+
+But for the OMAP4 and OMAP5, I understand your concern. If a reset
+is needed for these IPs, then a solution must be found. pdata-quirks
+can be a temporary solution for 3.14. Otherwise a proper reset
+controller should be devised from the current PRM module. Even if
+I already looked at the reset core, I do not know the amount of work
+necessary for this solution. And I do not have the hardware to
+test the solution. But I can have a look after the XMAS break.
+
+> I have provided some more comments directly in the respective patches.
+>
+
+And I will answer inline. Thank you very much!
+
+Regards,
+
+Florian
