@@ -1,7 +1,7 @@
 From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v9 1/9] phy: add phy_get_bus_width()/phy_set_bus_width() calls
-Date: Mon, 23 Dec 2013 13:36:30 -0500
-Message-ID: <1387823798-10211-2-git-send-email-mporter@linaro.org>
+Subject: [PATCH v9 5/9] usb: gadget: s3c-hsotg: enable generic phy support
+Date: Mon, 23 Dec 2013 13:36:34 -0500
+Message-ID: <1387823798-10211-6-git-send-email-mporter@linaro.org>
 References: <1387823798-10211-1-git-send-email-mporter@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1387823798-10211-1-git-send-email-mporter@linaro.org>
@@ -10,84 +10,139 @@ To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Dinh Nguyen <dinh.linux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a pair of APIs that allows the generic PHY subsystem to
-provide information on the PHY bus width. The PHY provider driver may
-use phy_set_bus_width() to set the bus width that the PHY supports.
-The controller driver may then use phy_get_bus_width() to fetch the
-PHY bus width in order to properly configure the controller.
+Adds support for the generic PHY subsystem. Generic PHY
+support is probed and then the driver falls back to checking
+for an old style USB PHY and pdata if not found.
 
 Signed-off-by: Matt Porter <mporter@linaro.org>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- include/linux/phy/phy.h | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/usb/gadget/s3c-hsotg.c | 55 ++++++++++++++++++++++++++++++------------
+ 1 file changed, 39 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 6d72269..e273e5a 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -38,6 +38,14 @@ struct phy_ops {
- };
+diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
+index cbfbf41..8f9bcdb 100644
+--- a/drivers/usb/gadget/s3c-hsotg.c
++++ b/drivers/usb/gadget/s3c-hsotg.c
+@@ -30,6 +30,8 @@
+ #include <linux/clk.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/of_platform.h>
++#include <linux/phy/phy.h>
++#include <linux/usb/phy.h>
  
- /**
-+ * struct phy_attrs - represents phy attributes
-+ * @bus_width: Data path width implemented by PHY
-+ */
-+struct phy_attrs {
-+	u32			bus_width;
-+};
-+
-+/**
-  * struct phy - represents the phy device
-  * @dev: phy device
-  * @id: id of the phy device
-@@ -46,6 +54,7 @@ struct phy_ops {
-  * @mutex: mutex to protect phy_ops
-  * @init_count: used to protect when the PHY is used by multiple consumers
-  * @power_count: used to protect when the PHY is used by multiple consumers
-+ * @phy_attrs: used to specify PHY specific attributes
-  */
- struct phy {
- 	struct device		dev;
-@@ -55,6 +64,7 @@ struct phy {
- 	struct mutex		mutex;
- 	int			init_count;
- 	int			power_count;
-+	struct phy_attrs	attrs;
- };
+ #include <linux/usb/ch9.h>
+ #include <linux/usb/gadget.h>
+@@ -138,6 +140,7 @@ struct s3c_hsotg_ep {
+  * @dev: The parent device supplied to the probe function
+  * @driver: USB gadget driver
+  * @phy: The otg phy transceiver structure for phy control.
++ * @uphy: The otg phy transceiver structure for old USB phy control.
+  * @plat: The platform specific configuration data. This can be removed once
+  * all SoCs support usb transceiver.
+  * @regs: The memory area mapped for accessing registers.
+@@ -159,7 +162,8 @@ struct s3c_hsotg_ep {
+ struct s3c_hsotg {
+ 	struct device		 *dev;
+ 	struct usb_gadget_driver *driver;
+-	struct usb_phy		*phy;
++	struct phy		 *phy;
++	struct usb_phy		 *uphy;
+ 	struct s3c_hsotg_plat	 *plat;
  
- /**
-@@ -127,6 +137,14 @@ int phy_init(struct phy *phy);
- int phy_exit(struct phy *phy);
- int phy_power_on(struct phy *phy);
- int phy_power_off(struct phy *phy);
-+static inline int phy_get_bus_width(struct phy *phy)
-+{
-+	return phy->attrs.bus_width;
-+}
-+static inline void phy_set_bus_width(struct phy *phy, int bus_width)
-+{
-+	phy->attrs.bus_width = bus_width;
-+}
- struct phy *phy_get(struct device *dev, const char *string);
- struct phy *devm_phy_get(struct device *dev, const char *string);
- void phy_put(struct phy *phy);
-@@ -199,6 +217,16 @@ static inline int phy_power_off(struct phy *phy)
- 	return -ENOSYS;
+ 	spinlock_t              lock;
+@@ -2901,8 +2905,11 @@ static void s3c_hsotg_phy_enable(struct s3c_hsotg *hsotg)
+ 
+ 	dev_dbg(hsotg->dev, "pdev 0x%p\n", pdev);
+ 
+-	if (hsotg->phy)
+-		usb_phy_init(hsotg->phy);
++	if (hsotg->phy) {
++		phy_init(hsotg->phy);
++		phy_power_on(hsotg->phy);
++	} else if (hsotg->uphy)
++		usb_phy_init(hsotg->uphy);
+ 	else if (hsotg->plat->phy_init)
+ 		hsotg->plat->phy_init(pdev, hsotg->plat->phy_type);
  }
- 
-+static inline int phy_get_bus_width(struct phy *phy)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline void phy_set_bus_width(struct phy *phy, int bus_width)
-+{
-+	return;
-+}
-+
- static inline struct phy *phy_get(struct device *dev, const char *string)
+@@ -2918,8 +2925,11 @@ static void s3c_hsotg_phy_disable(struct s3c_hsotg *hsotg)
  {
- 	return ERR_PTR(-ENOSYS);
+ 	struct platform_device *pdev = to_platform_device(hsotg->dev);
+ 
+-	if (hsotg->phy)
+-		usb_phy_shutdown(hsotg->phy);
++	if (hsotg->phy) {
++		phy_power_off(hsotg->phy);
++		phy_exit(hsotg->phy);
++	} else if (hsotg->uphy)
++		usb_phy_shutdown(hsotg->uphy);
+ 	else if (hsotg->plat->phy_exit)
+ 		hsotg->plat->phy_exit(pdev, hsotg->plat->phy_type);
+ }
+@@ -3526,7 +3536,8 @@ static void s3c_hsotg_delete_debug(struct s3c_hsotg *hsotg)
+ static int s3c_hsotg_probe(struct platform_device *pdev)
+ {
+ 	struct s3c_hsotg_plat *plat = dev_get_platdata(&pdev->dev);
+-	struct usb_phy *phy;
++	struct phy *phy;
++	struct usb_phy *uphy;
+ 	struct device *dev = &pdev->dev;
+ 	struct s3c_hsotg_ep *eps;
+ 	struct s3c_hsotg *hsotg;
+@@ -3541,19 +3552,26 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
+-	phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
++	/*
++	 * Attempt to find a generic PHY, then look for an old style
++	 * USB PHY, finally fall back to pdata
++	 */
++	phy = devm_phy_get(&pdev->dev, "usb2-phy");
+ 	if (IS_ERR(phy)) {
+-		/* Fallback for pdata */
+-		plat = dev_get_platdata(&pdev->dev);
+-		if (!plat) {
+-			dev_err(&pdev->dev, "no platform data or transceiver defined\n");
+-			return -EPROBE_DEFER;
+-		} else {
++		uphy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
++		if (IS_ERR(uphy)) {
++			/* Fallback for pdata */
++			plat = dev_get_platdata(&pdev->dev);
++			if (!plat) {
++				dev_err(&pdev->dev,
++				"no platform data or transceiver defined\n");
++				return -EPROBE_DEFER;
++			}
+ 			hsotg->plat = plat;
+-		}
+-	} else {
++		} else
++			hsotg->uphy = uphy;
++	} else
+ 		hsotg->phy = phy;
+-	}
+ 
+ 	hsotg->dev = dev;
+ 
+@@ -3620,6 +3638,9 @@ static int s3c_hsotg_probe(struct platform_device *pdev)
+ 		goto err_supplies;
+ 	}
+ 
++	if (hsotg->phy)
++		phy_init(hsotg->phy);
++
+ 	/* usb phy enable */
+ 	s3c_hsotg_phy_enable(hsotg);
+ 
+@@ -3713,6 +3734,8 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
+ 	}
+ 
+ 	s3c_hsotg_phy_disable(hsotg);
++	if (hsotg->phy)
++		phy_exit(hsotg->phy);
+ 	clk_disable_unprepare(hsotg->clk);
+ 
+ 	return 0;
 -- 
 1.8.4
