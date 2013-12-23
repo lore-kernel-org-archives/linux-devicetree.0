@@ -1,109 +1,98 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2 2/2] gpio: davinci: reuse for Keystone SoC
-Date: Mon, 23 Dec 2013 15:35:56 +0200
-Message-ID: <52B83C3C.6090906@ti.com>
-References: <1387361272-20861-1-git-send-email-grygorii.strashko@ti.com> <1387361272-20861-3-git-send-email-grygorii.strashko@ti.com> <52B7080F.7000900@ti.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 0/3] Extend dtc with data type handling
+Date: Mon, 23 Dec 2013 23:08:14 +1100
+Message-ID: <20131223120814.GE12407@voom.fritz.box>
+References: <1386953352-25402-1-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52B7080F.7000900@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, prabhakar.csengg@gmail.com, davinci-linux-open-source@linux.davincidsp.com, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fWddYNRDgTk9wQGZ"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1386953352-25402-1-git-send-email-t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/22/2013 05:41 PM, Sekhar Nori wrote:
-> On Wednesday 18 December 2013 03:37 PM, Grygorii Strashko wrote:
->> The similar GPIO HW block is used by keystone SoCs as
->> in Davinci SoCs.
->> Hence, reuse Davinci GPIO driver for Keystone taking into
->> account that Keystone contains ARM GIC IRQ controller which
->> is implemented using IRQ Chip.
->>
->> Documentation:
->> 	http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
->>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Alexandre Courbot <gnurou@gmail.com>
->> Cc: Sekhar Nori <nsekhar@ti.com>
->> Cc: devicetree@vger.kernel.org
->>
->> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>   .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
->>   drivers/gpio/gpio-davinci.c                        |   46 ++++++++++++++++----
->>   2 files changed, 40 insertions(+), 10 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> index a2e839d..4ce9862 100644
->> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> @@ -1,7 +1,7 @@
->> -Davinci GPIO controller bindings
->> +Davinci/Keystone GPIO controller bindings
->>
->>   Required Properties:
->> -- compatible: should be "ti,dm6441-gpio"
->> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
->>
->>   - reg: Physical base address of the controller and the size of memory mapped
->>          registers.
->> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
->> index 1b33806..38741cc 100644
->> --- a/drivers/gpio/gpio-davinci.c
->> +++ b/drivers/gpio/gpio-davinci.c
->> @@ -413,6 +413,26 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
->>   	.xlate = irq_domain_xlate_onetwocell,
->>   };
->>
->> +static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
->> +{
->> +	static struct irq_chip_type gpio_unbanked;
->> +
->> +	gpio_unbanked = *container_of(irq_get_chip(irq),
->> +				      struct irq_chip_type, chip);
->> +
->> +	return &gpio_unbanked.chip;
->> +};
->> +
->> +static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
->> +{
->> +	static struct irq_chip gpio_unbanked;
->> +
->> +	gpio_unbanked = *irq_get_chip(irq);
->> +	return &gpio_unbanked;
->> +};
->> +
->> +static const struct of_device_id davinci_gpio_ids[];
->> +
->>   /*
->>    * NOTE:  for suspend/resume, probably best to make a platform_device with
->>    * suspend_late/resume_resume calls hooking into results of the set_wake()
->> @@ -433,6 +453,18 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>   	struct davinci_gpio_platform_data *pdata = dev->platform_data;
->>   	struct davinci_gpio_regs __iomem *g;
->>   	struct irq_domain	*irq_domain = NULL;
->> +	const struct of_device_id *match;
->> +	struct irq_chip *irq_chip;
->> +	struct irq_chip *(*gpio_get_irq_chip)(unsigned int irq);
->> +
->> +	/*
->> +	 * Use davinci_gpio_get_irq_chip by default to handle non DT cases
->> +	 */
->> +	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
->> +	match = of_match_device(of_match_ptr(davinci_gpio_ids),
->> +				dev);
->> +	if (match)
->> +		gpio_get_irq_chip = match->data;
->
-> This produces a sparse warning:
->
->    CHECK   drivers/gpio/gpio-davinci.c
-> drivers/gpio/gpio-davinci.c:467:35: warning: incorrect type in assignment (different modifiers)
-> drivers/gpio/gpio-davinci.c:467:35:    expected struct irq_chip *( *[assigned] gpio_get_irq_chip )( ... )
-> drivers/gpio/gpio-davinci.c:467:35:    got void const *const data
->
 
-I'll fix it, thanks.
+--fWddYNRDgTk9wQGZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Dec 13, 2013 at 05:49:09PM +0100, Tomasz Figa wrote:
+> This series intends to extend dtc with appropriate infrastructure
+> to handle property data types. First, dtc is modified to preserve
+> type information when parsing DTS. Then type guessing is implemented
+> for flat and fs trees where type data is not available. After that,
+> DTS generation code is modified to use only type information when
+> printing property data.
+
+Hrm.  I think this is completely backwards to the right approach.
+
+For dt checking what we want is a schema.  That can specify datatypes
+amongst other constraints, but in the end you can check the actual
+bytes of the DT against the constraints imposed by the schema,
+regardless of how those bytes are presented to the checker.
+
+By adding type information to the in-flight tree you're checking not
+the actual content of the DT, but how you've chosen to express that
+information in DTS format.
+
+More concretely, we should be able to schema-check trees in binary
+format, not just source.  With these patches that will fail if -I dtb
+makes the wrong type guesses.
+
+> Effect of this is the ability to implement checks for data types
+> of properties. Also, as a side effect, it's now possible to do
+> almost 1:1 dts <=3D> dts passes (not very useful, but shows that
+> things are working well).
+>=20
+> Tomasz Figa (3):
+>   dtc: Keep type information from DTS
+>   dtc: Inject guessed type information in case of flat and fs trees
+>   dtc: Use type information when printing tree source
+>=20
+>  data.c       |  62 +++++++++++++++++++++++-
+>  dtc-parser.y |  47 ++++++++++++++-----
+>  dtc.h        |  12 +++++
+>  flattree.c   |   2 +-
+>  fstree.c     |   6 ++-
+>  livetree.c   |  16 +++++--
+>  treesource.c | 150 +++++++++++++++++++++++++++++++++--------------------=
+------
+>  7 files changed, 209 insertions(+), 86 deletions(-)
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--fWddYNRDgTk9wQGZ
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSuCeuAAoJEGw4ysog2bOSXC0P/3L51X8d1sxhE9vVcHHT8Ql6
+SeTcG8aM3c1JIXKHR/MjN3qfSUnCu4GqhlTAAuQ66H6rAiJe8DWRANry2xNUTBfB
+CSSOq9DPcNhDVsc5FuBm3tXj+mQM32flSJ6GFrzE7S+p1xEtEL9vWaIHD07b2zVe
+vtYr481kD/zjp3NQxSDdYZuKTq/6k9s7S5RWqtFXWu9cY9CUBv5wCKn5tISpFVyx
+lrZxutjTVflG3kPAVx01lUxpCP24PiJwa/cq36qnqI5CDgzQpQ4gjqwol4qj/MQA
+mwHuQUrOcDDt9eL0PNLvCRv8W77cS7jcXYVYYH9p0tRrjJs2IcFMuqCy7MwNayGQ
+AIAzbd5s3oyl1QuwhnMdkCaRlbgmSznP3TBZtG2OSBQjMYJxgCUBDNKXJjmKacZ6
+zwE8GrElcgs4kDrwZvJYBZGvvnO7yG0ZeAIlWW4EJhEZUcUcRteKYJWzcgW7a5Gt
+NGCq4KrStSpjfYkBQvPxSBSDkc7yfACSxuVl8wVLW//f5uUOLvQHt4PkmTeFy0IC
+MzlDVIYLhbOHN4LsVItDbxLKdqbWDpxYE++rJQQfeK1reJ/R1mnOkTGgN4l2GRm9
+vHBs+X+OMDZbCEtcI+uFttBcl5TVZHiVVem232G7kqtBWQJSZhqd3kWnweOxSddZ
+s7V3TVEnUvnBsIxnfj2h
+=ICpH
+-----END PGP SIGNATURE-----
+
+--fWddYNRDgTk9wQGZ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
