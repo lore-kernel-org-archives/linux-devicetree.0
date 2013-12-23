@@ -1,83 +1,107 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCH v2 5/5] leds: leds-mc13783: Add devicetree support
-Date: Mon, 23 Dec 2013 10:10:08 +0100
-Message-ID: <52B7FDF0.9000404@epfl.ch>
-References: <1387600347-22673-1-git-send-email-shc_work@mail.ru> <1387786706.300080155@f79.i.mail.ru> <52B7F4F8.3050907@epfl.ch> <1387788147.985598723@f413.i.mail.ru>
-Reply-To: florian.vaussard@epfl.ch
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH V4] thermal: imx: add necessary clk operation
+Date: Mon, 23 Dec 2013 17:21:12 +0800
+Message-ID: <20131223092107.GQ7172@S2101-09.ap.freescale.net>
+References: <1387831763-16971-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1387788147.985598723@f413.i.mail.ru>
-Sender: linux-leds-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, =?ISO-8859-1?Q?Philippe_R=E9tornaz?= <philippe.retornaz@epfl.ch>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1387831763-16971-1-git-send-email-b20788@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Anson Huang <b20788@freescale.com>
+Cc: kernel@pengutronix.de, rui.zhang@intel.com, eduardo.valentin@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/23/2013 09:42 AM, Alexander Shiyan wrote:
->>>> On 12/21/2013 05:32 AM, Alexander Shiyan wrote:
->>>>> This patch adds devicetree support for the MC13XXX LED driver.
-> ...
->>>>> +	ret = of_property_read_u32_array(parent, "led-control", ctrls,
->>>>> +					 leds->devtype->num_regs);
->>>>> +	if (ret)
->>>>> +		goto out_node_put;
->>>>> +
->>>>> +	for (i = 0; i < leds->devtype->num_regs; i++) {
->>>>> +		ret = mc13xxx_reg_write(mcdev, leds->devtype->ledctrl_base + i,
->>>>> +					ctrls[i]);
->>>>
->>>> Code duplicated from the regular probe.
->>>
->>> Yes. This was done based on the comments to the previous version:
->>> http://www.spinics.net/lists/devicetree/msg14933.html
->>>
->>
->> From what I understand, Tomasz is suggesting exactly the same as
->> what I am saying:
->>
->> "what about making
->> mc13xxx_led_setup_of() allocate a platform data structure and fill it
->> in with data parsed from DT, so the driver would then proceed normally as
->> if the platform data were available? IMHO this should make the code much
->> simpler and more readable."
->>
->> This is not what you have done IMHO, you are cloning the probe
->> into a separate DT-only function.
+On Mon, Dec 23, 2013 at 03:49:22PM -0500, Anson Huang wrote:
+> Thermal sensor needs pll3_usb_otg when measuring temperature,
+> otherwise the temperature read will be incorrect, so need to
+> enable this clk before sensor working, for alarm function,
+> as hardware will take measurement periodically, so we should
+> keep this clk always on once alarm function is enabled.
 > 
-> I do not fully understand what you mean. When we had an universal procedure,
-> I was told to divide them into DT and non-DT. I separated it - now we have duplicate code.
-> Merge back?
+> Signed-off-by: Anson Huang <b20788@freescale.com>
+
+Acked-by: Shawn Guo <shawn.guo@linaro.org>
+
+> ---
+>  .../devicetree/bindings/thermal/imx-thermal.txt    |    4 ++++
+>  drivers/thermal/imx_thermal.c                      |   20 ++++++++++++++++++++
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> index 541c25e..1f0f672 100644
+> --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> @@ -8,10 +8,14 @@ Required properties:
+>    calibration data, e.g. OCOTP on imx6q.  The details about calibration data
+>    can be found in SoC Reference Manual.
+>  
+> +Optional properties:
+> +- clocks : thermal sensor's clock source.
+> +
+>  Example:
+>  
+>  tempmon {
+>  	compatible = "fsl,imx6q-tempmon";
+>  	fsl,tempmon = <&anatop>;
+>  	fsl,tempmon-data = <&ocotp>;
+> +	clocks = <&clks 172>;
+>  };
+> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+> index 1d6c801..cbb16f3 100644
+> --- a/drivers/thermal/imx_thermal.c
+> +++ b/drivers/thermal/imx_thermal.c
+> @@ -7,6 +7,7 @@
+>   *
+>   */
+>  
+> +#include <linux/clk.h>
+>  #include <linux/cpu_cooling.h>
+>  #include <linux/cpufreq.h>
+>  #include <linux/delay.h>
+> @@ -73,6 +74,7 @@ struct imx_thermal_data {
+>  	unsigned long last_temp;
+>  	bool irq_enabled;
+>  	int irq;
+> +	struct clk *thermal_clk;
+>  };
+>  
+>  static void imx_set_alarm_temp(struct imx_thermal_data *data,
+> @@ -457,6 +459,22 @@ static int imx_thermal_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	data->thermal_clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(data->thermal_clk)) {
+> +		dev_warn(&pdev->dev, "failed to get thermal clk!\n");
+> +	} else {
+> +		/*
+> +		 * Thermal sensor needs clk on to get correct value, normally
+> +		 * we should enable its clk before taking measurement and disable
+> +		 * clk after measurement is done, but if alarm function is enabled,
+> +		 * hardware will auto measure the temperature periodically, so we
+> +		 * need to keep the clk always on for alarm function.
+> +		 */
+> +		ret = clk_prepare_enable(data->thermal_clk);
+> +		if (ret)
+> +			dev_warn(&pdev->dev, "failed to enable thermal clk: %d\n", ret);
+> +	}
+> +
+>  	/* Enable measurements at ~ 10 Hz */
+>  	regmap_write(map, TEMPSENSE1 + REG_CLR, TEMPSENSE1_MEASURE_FREQ);
+>  	measure_freq = DIV_ROUND_UP(32768, 10); /* 10 Hz */
+> @@ -478,6 +496,8 @@ static int imx_thermal_remove(struct platform_device *pdev)
+>  
+>  	/* Disable measurements */
+>  	regmap_write(map, TEMPSENSE0 + REG_SET, TEMPSENSE0_POWER_DOWN);
+> +	if (!IS_ERR(data->thermal_clk))
+> +		clk_disable_unprepare(data->thermal_clk);
+>  
+>  	thermal_zone_device_unregister(data->tz);
+>  	cpufreq_cooling_unregister(data->cdev);
+> -- 
+> 1.7.9.5
+> 
 > 
 
-No, do in-between. Look at leds-lp5521.c for example. What you have to
-do is roughly:
-
-mc13xxx_led_probe
-{
-	struct mc13xxx_leds_platform_data *pdata = NULL;
-
-	if (devicetree)
-		mc13xxx_of_populate_pdata(pdev->dev.of_node, &pdata);
-	else
-		pdata = dev_get_platdata(&pdev->dev);
-
-	if (!pdata)
-		oops...
-
-	-> regular probe here <-
-}
-
-Your function mc13xxx_of_populate_pdata() will look for DT properties,
-and only fill the platform data. All the rest is done as usual by your probe
-function. No code is duplicated, but the DT logic is encapsulated inside its
-own function.
-
-Look at other drivers if you are not familiar with such an approach, it
-is pretty common.
-
-Regards,
-
-Florian
