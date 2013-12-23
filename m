@@ -1,46 +1,99 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiA1LzVdIGxlZHM6IGxlZHMtbWMxMzc4MzogQWRkIGRl?=
- =?UTF-8?B?dmljZXRyZWUgc3VwcG9ydA==?=
-Date: Mon, 23 Dec 2013 12:42:27 +0400
-Message-ID: <1387788147.985598723@f413.i.mail.ru>
-References: <1387600347-22673-1-git-send-email-shc_work@mail.ru>
- <1387786706.300080155@f79.i.mail.ru>
- <52B7F4F8.3050907@epfl.ch>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Anson Huang <b20788@freescale.com>
+Subject: [PATCH V4] thermal: imx: add necessary clk operation
+Date: Mon, 23 Dec 2013 15:49:22 -0500
+Message-ID: <1387831763-16971-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52B7F4F8.3050907-p8DiymsW2f8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?QnJ5YW4gV3U=?= <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmljaGFyZCBQdXJkaWU=?= <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UGhpbGlwcGUgUsOpdG9ybmF6?= <philippe.retornaz-p8DiymsW2f8@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, rui.zhang@intel.com, eduardo.valentin@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiA+PiBPbiAxMi8yMS8yMDEzIDA1OjMyIEFNLCBBbGV4YW5kZXIgU2hpeWFuIHdyb3RlOgo+ID4+
-PiBUaGlzIHBhdGNoIGFkZHMgZGV2aWNldHJlZSBzdXBwb3J0IGZvciB0aGUgTUMxM1hYWCBMRUQg
-ZHJpdmVyLgouLi4KPiA+Pj4gKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMl9hcnJheShwYXJl
-bnQsICJsZWQtY29udHJvbCIsIGN0cmxzLAo+ID4+PiArCQkJCQkgbGVkcy0+ZGV2dHlwZS0+bnVt
-X3JlZ3MpOwo+ID4+PiArCWlmIChyZXQpCj4gPj4+ICsJCWdvdG8gb3V0X25vZGVfcHV0Owo+ID4+
-PiArCj4gPj4+ICsJZm9yIChpID0gMDsgaSA8IGxlZHMtPmRldnR5cGUtPm51bV9yZWdzOyBpKysp
-IHsKPiA+Pj4gKwkJcmV0ID0gbWMxM3h4eF9yZWdfd3JpdGUobWNkZXYsIGxlZHMtPmRldnR5cGUt
-PmxlZGN0cmxfYmFzZSArIGksCj4gPj4+ICsJCQkJCWN0cmxzW2ldKTsKPiA+Pgo+ID4+IENvZGUg
-ZHVwbGljYXRlZCBmcm9tIHRoZSByZWd1bGFyIHByb2JlLgo+ID4gCj4gPiBZZXMuIFRoaXMgd2Fz
-IGRvbmUgYmFzZWQgb24gdGhlIGNvbW1lbnRzIHRvIHRoZSBwcmV2aW91cyB2ZXJzaW9uOgo+ID4g
-aHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9kZXZpY2V0cmVlL21zZzE0OTMzLmh0bWwKPiA+
-IAo+IAo+IEZyb20gd2hhdCBJIHVuZGVyc3RhbmQsIFRvbWFzeiBpcyBzdWdnZXN0aW5nIGV4YWN0
-bHkgdGhlIHNhbWUgYXMKPiB3aGF0IEkgYW0gc2F5aW5nOgo+IAo+ICJ3aGF0IGFib3V0IG1ha2lu
-Zwo+IG1jMTN4eHhfbGVkX3NldHVwX29mKCkgYWxsb2NhdGUgYSBwbGF0Zm9ybSBkYXRhIHN0cnVj
-dHVyZSBhbmQgZmlsbCBpdAo+IGluIHdpdGggZGF0YSBwYXJzZWQgZnJvbSBEVCwgc28gdGhlIGRy
-aXZlciB3b3VsZCB0aGVuIHByb2NlZWQgbm9ybWFsbHkgYXMKPiBpZiB0aGUgcGxhdGZvcm0gZGF0
-YSB3ZXJlIGF2YWlsYWJsZT8gSU1ITyB0aGlzIHNob3VsZCBtYWtlIHRoZSBjb2RlIG11Y2gKPiBz
-aW1wbGVyIGFuZCBtb3JlIHJlYWRhYmxlLiIKPiAKPiBUaGlzIGlzIG5vdCB3aGF0IHlvdSBoYXZl
-IGRvbmUgSU1ITywgeW91IGFyZSBjbG9uaW5nIHRoZSBwcm9iZQo+IGludG8gYSBzZXBhcmF0ZSBE
-VC1vbmx5IGZ1bmN0aW9uLgoKSSBkbyBub3QgZnVsbHkgdW5kZXJzdGFuZCB3aGF0IHlvdSBtZWFu
-LiBXaGVuIHdlIGhhZCBhbiB1bml2ZXJzYWwgcHJvY2VkdXJlLApJIHdhcyB0b2xkIHRvIGRpdmlk
-ZSB0aGVtIGludG8gRFQgYW5kIG5vbi1EVC4gSSBzZXBhcmF0ZWQgaXQgLSBub3cgd2UgaGF2ZSBk
-dXBsaWNhdGUgY29kZS4KTWVyZ2UgYmFjaz8KCi0tLQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thermal sensor needs pll3_usb_otg when measuring temperature,
+otherwise the temperature read will be incorrect, so need to
+enable this clk before sensor working, for alarm function,
+as hardware will take measurement periodically, so we should
+keep this clk always on once alarm function is enabled.
+
+Signed-off-by: Anson Huang <b20788@freescale.com>
+---
+ .../devicetree/bindings/thermal/imx-thermal.txt    |    4 ++++
+ drivers/thermal/imx_thermal.c                      |   20 ++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+index 541c25e..1f0f672 100644
+--- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+@@ -8,10 +8,14 @@ Required properties:
+   calibration data, e.g. OCOTP on imx6q.  The details about calibration data
+   can be found in SoC Reference Manual.
+ 
++Optional properties:
++- clocks : thermal sensor's clock source.
++
+ Example:
+ 
+ tempmon {
+ 	compatible = "fsl,imx6q-tempmon";
+ 	fsl,tempmon = <&anatop>;
+ 	fsl,tempmon-data = <&ocotp>;
++	clocks = <&clks 172>;
+ };
+diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+index 1d6c801..cbb16f3 100644
+--- a/drivers/thermal/imx_thermal.c
++++ b/drivers/thermal/imx_thermal.c
+@@ -7,6 +7,7 @@
+  *
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/cpu_cooling.h>
+ #include <linux/cpufreq.h>
+ #include <linux/delay.h>
+@@ -73,6 +74,7 @@ struct imx_thermal_data {
+ 	unsigned long last_temp;
+ 	bool irq_enabled;
+ 	int irq;
++	struct clk *thermal_clk;
+ };
+ 
+ static void imx_set_alarm_temp(struct imx_thermal_data *data,
+@@ -457,6 +459,22 @@ static int imx_thermal_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	data->thermal_clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(data->thermal_clk)) {
++		dev_warn(&pdev->dev, "failed to get thermal clk!\n");
++	} else {
++		/*
++		 * Thermal sensor needs clk on to get correct value, normally
++		 * we should enable its clk before taking measurement and disable
++		 * clk after measurement is done, but if alarm function is enabled,
++		 * hardware will auto measure the temperature periodically, so we
++		 * need to keep the clk always on for alarm function.
++		 */
++		ret = clk_prepare_enable(data->thermal_clk);
++		if (ret)
++			dev_warn(&pdev->dev, "failed to enable thermal clk: %d\n", ret);
++	}
++
+ 	/* Enable measurements at ~ 10 Hz */
+ 	regmap_write(map, TEMPSENSE1 + REG_CLR, TEMPSENSE1_MEASURE_FREQ);
+ 	measure_freq = DIV_ROUND_UP(32768, 10); /* 10 Hz */
+@@ -478,6 +496,8 @@ static int imx_thermal_remove(struct platform_device *pdev)
+ 
+ 	/* Disable measurements */
+ 	regmap_write(map, TEMPSENSE0 + REG_SET, TEMPSENSE0_POWER_DOWN);
++	if (!IS_ERR(data->thermal_clk))
++		clk_disable_unprepare(data->thermal_clk);
+ 
+ 	thermal_zone_device_unregister(data->tz);
+ 	cpufreq_cooling_unregister(data->cdev);
+-- 
+1.7.9.5
+
+
