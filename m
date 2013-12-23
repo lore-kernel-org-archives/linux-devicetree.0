@@ -1,106 +1,40 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 1/2] ARM: dts: Fix status property of mmc nodes for snow board
-Date: Mon, 23 Dec 2013 13:43:01 -0800
-Message-ID: <CAOesGMhBMh6+DJTXSDcmQWk8EAPJG1O0ZWwGJuNC_A8k6fgegw@mail.gmail.com>
-References: <1386571118-17793-1-git-send-email-yuvaraj.cd@samsung.com>
-	<CAD=FV=WqgGPZaEz46JLJAPymLA5Wzehgre2Z7X4AFAWN9L_Lvg@mail.gmail.com>
-	<52A62E7A.1010006@samsung.com>
-	<CAOesGMha3i+k+aBSivJopRxoi1rxAaF+ktU4KG9vfTf54A8f8Q@mail.gmail.com>
-	<52B1F905.1060206@samsung.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH] ARM: dts: OMAP2: fix interrupt number for rng
+Date: Mon, 23 Dec 2013 16:59:39 -0600
+Message-ID: <1387839579-58292-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <52B1F905.1060206@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Doug Anderson <dianders@chromium.org>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Sonny Rao <sonnyrao@chromium.org>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 18, 2013 at 11:35 AM, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> On 12/19/13 03:38, Olof Johansson wrote:
->>
->> On Mon, Dec 9, 2013 at 12:56 PM, Kukjin Kim<kgene.kim@samsung.com>  wrote:
->>>
->>> On 12/10/13 01:16, Doug Anderson wrote:
->>>>
->>>>
->>>> Yuvaraj,
->>>>
->>>> On Sun, Dec 8, 2013 at 10:38 PM, Yuvaraj Kumar C D<yuvaraj.cd@gmail.com>
->>>> wrote:
->>>>>
->>>>>
->>>>> Commit 0c3de788 ("ARM: dts: change status property of dwmmc nodes
->>>>> for exynos5250") missed out handling the exynos5250 snow dts file.
->>>>>
->>>>> Signed-off-by : Abhilash Kesavan<a.kesavan@samsung.com>
->>>>>
->>>>> Signed-off-by: Yuvaraj Kumar C D<yuvaraj.cd@samsung.com>
->>>>> ---
->>>>>    arch/arm/boot/dts/cros5250-common.dtsi |    4 ----
->>>>>    arch/arm/boot/dts/exynos5250-snow.dts  |    9 +++++++++
->>>>>    2 files changed, 9 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/cros5250-common.dtsi
->>>>> b/arch/arm/boot/dts/cros5250-common.dtsi
->>>>> index 6470536..1ceb62e 100644
->>>>> --- a/arch/arm/boot/dts/cros5250-common.dtsi
->>>>> +++ b/arch/arm/boot/dts/cros5250-common.dtsi
->>>>> @@ -247,10 +247,6 @@
->>>>>                   };
->>>>>           };
->>>>>
->>>>> -       mmc@12210000 {
->>>>> -               status = "disabled";
->>>>> -       };
->>>>> -
->>>>>           mmc@12220000 {
->>>>>                   num-slots =<1>;
->>>>>                   supports-highspeed;
->>>>> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts
->>>>> b/arch/arm/boot/dts/exynos5250-snow.dts
->>>>> index a9395c4..67484d1 100644
->>>>> --- a/arch/arm/boot/dts/exynos5250-snow.dts
->>>>> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
->>>>> @@ -171,11 +171,20 @@
->>>>>                   };
->>>>>           };
->>>>>
->>>>> +       mmc@12200000 {
->>>>> +               status = "okay";
->>>>> +       };
->>>>> +
->>>>> +       mmc@12220000 {
->>>>> +               status = "okay";
->>>>> +       };
->>>>> +
->>>>
->>>>
->>>>
->>>> I probably would have put the 12200000 and 12220000 ones in
->>>> cros5250-common since that's where all of the other stuff relating to
->>>> those ports is.  Some of it may need to be moved around once we get
->>>> the HP Chromebook 11 (exynos5250-spring) in place, but until then it
->>>> seems best to keep it all together.
->>>>
->>>> -Doug
->>>
->>>
->>>
->>> OK, sounds better, I don't know well about the HP Chromebook though ;-)
->>
->>
->> This broke linux-next on snow ever since the original patch went in.
->> Please squash the above into the original patch or at the very least
->> apply it as soon as possible.
->>
-> Oops, OK. I've applied this separately just now.
+The irq data for rng module defined in hwmod data previously
+missed the OMAP_INTC_START relative offset, so the interrupt
+number is probably misconfigured during the DT node addition
+adjusting for this OMAP_INTC_START. Interrupt #36 is associated
+with a watchdog timer, so fix the rng module's interrupt to the
+appropriate interrupt #52.
 
-Since you hadn't applied this to the branch you sent me, I now have an
-arm-soc for-next branch that doesn't boot on Chromebooks.
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ arch/arm/boot/dts/omap2.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I've picked up the above patch directly into arm-soc. Please drop it
-from your branch.
+diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
+index d0c5b37..5377ddf 100644
+--- a/arch/arm/boot/dts/omap2.dtsi
++++ b/arch/arm/boot/dts/omap2.dtsi
+@@ -145,7 +145,7 @@
+ 			compatible = "ti,omap2-rng";
+ 			ti,hwmods = "rng";
+ 			reg = <0x480a0000 0x50>;
+-			interrupts = <36>;
++			interrupts = <52>;
+ 		};
+ 
+ 		sham: sham@480a4000 {
+-- 
+1.8.4.3
 
-
--Olof
