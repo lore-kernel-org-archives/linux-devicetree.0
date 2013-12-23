@@ -1,112 +1,194 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v2 3/3] ARM: shmobile: kzm9d: Use common clock framework
-Date: Sun, 22 Dec 2013 22:41:03 -0800
-Message-ID: <20131223064103.22761.77246@quantum>
-References: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
- <20131008143403.c11f294c8a1701a2ab3bc5fd@ops.dti.ne.jp>
- <20131009034057.GO15065@verge.net.au>
- <CANqRtoQs+31mv0ZULOd3SGshkBkvp-kGoaVOSb10+Ncdp+WNXw@mail.gmail.com>
- <20131009065438.GA7220@verge.net.au>
- <CANqRtoSGFEjcBPDAtq3YCDbkiFCftyr8b=qniYqyMafng=zurw@mail.gmail.com>
- <20131009103915.GB17869@verge.net.au> <20131029044239.GC20432@verge.net.au>
- <20131202022549.GA12357@verge.net.au>
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Subject: Re: [PATCH] can: mcp251x: Add device tree support
+Date: Mon, 23 Dec 2013 08:14:03 +0100
+Message-ID: <52B7E2BB.3030103@epfl.ch>
+References: <1387602101-27851-1-git-send-email-shc_work@mail.ru>
+Reply-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131202022549.GA12357@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: takasi-y@ops.dti.ne.jp, SH-Linux <linux-sh@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1387602101-27851-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Simon Horman (2013-12-01 18:25:51)
-> On Tue, Oct 29, 2013 at 01:42:41PM +0900, Simon Horman wrote:
-> > On Wed, Oct 09, 2013 at 07:39:18PM +0900, Simon Horman wrote:
-> > > On Wed, Oct 09, 2013 at 04:29:56PM +0900, Magnus Damm wrote:
-> > > > Hi Simon,
-> > > > 
-> > > > On Wed, Oct 9, 2013 at 3:54 PM, Simon Horman <horms@verge.net.au> wrote:
-> > > > > On Wed, Oct 09, 2013 at 01:59:46PM +0900, Magnus Damm wrote:
-> > > > >> Hi Simon,
-> > > > >>
-> > > > >> On Wed, Oct 9, 2013 at 12:40 PM, Simon Horman <horms@verge.net.au> wrote:
-> > > > >> > On Tue, Oct 08, 2013 at 02:34:03PM +0900, takasi-y@ops.dti.ne.jp wrote:
-> > > > >> >> Use common clock framework version of clock
-> > > > >> >>  drivers/clk/shmobile/clk-emev2.c
-> > > > >> >> instead of sh-clkfwk version
-> > > > >> >>  arch/arm/mach-shmobile/clock-emev2.c
-> > > > >> >> when it is configured as a part of multi-platform.
-> > > > >> >>
-> > > > >> >> Signed-off-by: Takashi Yoshii <takasi-y@ops.dti.ne.jp>
-> > > > >> >
-> > > > >> > Thanks.
-> > > > >> >
-> > > > >> > I plan to add this patch to a new topic branch,
-> > > > >> > topic/emev2-common-clock, in the renesas tree and
-> > > > >> > queue it up from there for inclusion in mainline
-> > > > >> > if/when the first patch of this series is accepted
-> > > > >> > by Mike Turquette.
-> > > > >>
-> > > > >> Thanks for picking up patches, Simon.
-> > > > >>
-> > > > >> I think you can simply merge this patch after the following series:
-> > > > >>
-> > > > >> [PATCH 00/05] ARM: shmobile: KZM9D Multiplatform update
-> > > > >
-> > > > > This is already queued up.
-> > > > 
-> > > > Yes, I know, thanks for that. I tried to explain the dependency in the
-> > > > 00/00 cover letter but I will try to be more clear next time!
-> > > > 
-> > > > >> There are no build time dependencies on patch 1 and 2 so this patch
-> > > > >> can be merged independently. Regarding run-time operation, the
-> > > > >> multiplatform series above makes KZM9D DT reference only build for
-> > > > >> multiplatform, and in such case CCF is required.
-> > > > >>
-> > > > >> So if you want to keep KZM9D DT reference working until Mike Turquette
-> > > > >> accepts the CCF bits, then I recommend you to wait with "[PATCH 00/05]
-> > > > >> ARM: shmobile: KZM9D Multiplatform update" until all EMEV2 CCF bits
-> > > > >> have been merged.
-> > > > >>
-> > > > >> Another way is to merge "[PATCH 00/05] ARM: shmobile: KZM9D
-> > > > >> Multiplatform update" before the EMEV2 CCF bits, but if so you may as
-> > > > >> well merge this patch as well IMO. This
-> > > > >> multiplatform-update-series-merge-before-CCF plan will result in
-> > > > >> untestable KZM9D DT reference until EMEV2 CCF is merged. Either way is
-> > > > >> fine with me.
-> > > > >
-> > > > > I am mainly concerned that the bindings may change before
-> > > > > they are finally merged. And I thought it would be nice to avoid
-> > > > > having to fix up the usage of the bindings if they change.
-> > > > 
-> > > > Sure, but the code in this patch looks like it simply starts DT CCF
-> > > > probing regardless of what the bindings look like. So I don't think
-> > > > you will have to worry about actual bindings detail.
-> > > > 
-> > > > > But I'm happy to just queue-up patches 2 and 3 of this series
-> > > > > now if you prefer.
-> > > > 
-> > > > Well, I meant patch 3 only. Patch 1 and 2 are tied together by dependencies. =)
-> > > 
-> > > Thanks, I understand now.
-> > > 
-> > > I'll queue-up 3/3.
-> > 
-> > Which I did.
-> > 
-> > Then some time passed...
-> > 
-> > Mike has accepted my pull-request for patch 1 of this series
-> > and accordingly I have queued-up this patch for v3.14.
-> > It should appear in the devel branch the next time that I push it.
-> 
-> I was mistaken. It was not queued up  for v3.14.
-> And still has not been queued up.
-> 
-> I have un-queued this patch accordingly.
+Hello,
 
-I have pulled in the emev2 SMU clock support patch now.
+On 12/21/2013 06:01 AM, Alexander Shiyan wrote:
+> This patch adds Device Tree support to the Microchip MCP251X driver.
+> 
+> Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+> ---
+>  .../bindings/net/can/microchip,mcp251x.txt         | 25 ++++++
+>  drivers/net/can/mcp251x.c                          | 99 ++++++++++++++++------
+>  2 files changed, 99 insertions(+), 25 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+> 
 
-Regards,
-Mike
+[...]
+
+> +
+>  static int mcp251x_can_probe(struct spi_device *spi)
+>  {
+> +	const struct of_device_id *of_id = of_match_device(mcp251x_of_match,
+> +							   &spi->dev);
+> +	struct mcp251x_platform_data *pdata = dev_get_platdata(&spi->dev);
+>  	struct net_device *net;
+>  	struct mcp251x_priv *priv;
+> -	struct mcp251x_platform_data *pdata = dev_get_platdata(&spi->dev);
+> -	int ret = -ENODEV;
+> +	int freq, ret = -ENODEV;
+> +	struct clk *clk;
+> +
+> +	clk = devm_clk_get(&spi->dev, NULL);
+> +	if (IS_ERR(clk)) {
+> +		if (pdata)
+> +			freq = pdata->oscillator_frequency;
+> +		else
+> +			return PTR_ERR(clk);
+> +	} else {
+> +		freq = clk_get_rate(clk);
+> +	}
+>  
+> -	if (!pdata)
+> -		/* Platform data is required for osc freq */
+> -		goto error_out;
+> +	/* Sanity check */
+> +	if (freq < 1000000 || freq > 25000000)
+> +		return -ERANGE;
+
+This sanity check is new, right? This has nothing to do with device tree
+conversion and
+should be introduced by another patch.
+
+>  
+>  	/* Allocate can/net device */
+>  	net = alloc_candev(sizeof(struct mcp251x_priv), TX_ECHO_SKB_MAX);
+> -	if (!net) {
+> -		ret = -ENOMEM;
+> -		goto error_alloc;
+> +	if (!net)
+> +		return -ENOMEM;
+> +
+
+Why are you changing this? This is not related to DT and is not duly
+motivated.
+
+> +	if (!IS_ERR(clk)) {
+> +		ret = clk_prepare_enable(clk);
+> +		if (ret)
+> +			goto out_free;
+>  	}
+>  
+>  	net->netdev_ops = &mcp251x_netdev_ops;
+> @@ -1018,23 +1065,27 @@ static int mcp251x_can_probe(struct spi_device *spi)
+>  	priv = netdev_priv(net);
+>  	priv->can.bittiming_const = &mcp251x_bittiming_const;
+>  	priv->can.do_set_mode = mcp251x_do_set_mode;
+> -	priv->can.clock.freq = pdata->oscillator_frequency / 2;
+> +	priv->can.clock.freq = freq / 2;
+>  	priv->can.ctrlmode_supported = CAN_CTRLMODE_3_SAMPLES |
+>  		CAN_CTRLMODE_LOOPBACK | CAN_CTRLMODE_LISTENONLY;
+> -	priv->model = spi_get_device_id(spi)->driver_data;
+> +	if (of_id)
+> +		priv->model = (enum mcp251x_model)of_id->data;
+> +	else
+> +		priv->model = spi_get_device_id(spi)->driver_data;
+>  	priv->net = net;
+> +	priv->clk = clk;
+>  
+>  	priv->power = devm_regulator_get(&spi->dev, "vdd");
+>  	priv->transceiver = devm_regulator_get(&spi->dev, "xceiver");
+>  	if ((PTR_ERR(priv->power) == -EPROBE_DEFER) ||
+>  	    (PTR_ERR(priv->transceiver) == -EPROBE_DEFER)) {
+>  		ret = -EPROBE_DEFER;
+> -		goto error_power;
+> +		goto out_clk;
+>  	}
+>  
+>  	ret = mcp251x_power_enable(priv->power, 1);
+>  	if (ret)
+> -		goto error_power;
+> +		goto out_clk;
+>  
+>  	spi_set_drvdata(spi, priv);
+>  
+> @@ -1113,11 +1164,14 @@ error_probe:
+>  		dma_free_coherent(&spi->dev, PAGE_SIZE,
+>  				  priv->spi_tx_buf, priv->spi_tx_dma);
+>  	mcp251x_power_enable(priv->power, 0);
+> -error_power:
+> +
+> +out_clk:
+> +	if (!IS_ERR(clk))
+> +		clk_disable_unprepare(clk);
+> +
+> +out_free:
+>  	free_candev(net);
+> -error_alloc:
+> -	dev_err(&spi->dev, "probe failed\n");
+
+Why removing this error message?
+
+> -error_out:
+> +
+>  	return ret;
+>  }
+>  
+> @@ -1135,6 +1189,9 @@ static int mcp251x_can_remove(struct spi_device *spi)
+>  
+>  	mcp251x_power_enable(priv->power, 0);
+>  
+> +	if (!IS_ERR(priv->clk))
+> +		clk_disable_unprepare(priv->clk);
+> +
+>  	free_candev(net);
+>  
+>  	return 0;
+> @@ -1197,21 +1254,13 @@ static int mcp251x_can_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(mcp251x_can_pm_ops, mcp251x_can_suspend,
+>  	mcp251x_can_resume);
+>  
+> -static const struct spi_device_id mcp251x_id_table[] = {
+> -	{ "mcp2510",	CAN_MCP251X_MCP2510 },
+> -	{ "mcp2515",	CAN_MCP251X_MCP2515 },
+> -	{ },
+> -};
+> -
+> -MODULE_DEVICE_TABLE(spi, mcp251x_id_table);
+> -
+>  static struct spi_driver mcp251x_can_driver = {
+>  	.driver = {
+>  		.name = DEVICE_NAME,
+>  		.owner = THIS_MODULE,
+> +		.of_match_table = of_match_ptr(mcp251x_of_match),
+>  		.pm = &mcp251x_can_pm_ops,
+>  	},
+> -
+
+Spurious change
+
+>  	.id_table = mcp251x_id_table,
+>  	.probe = mcp251x_can_probe,
+>  	.remove = mcp251x_can_remove,
+> 
+
+I would say that your patch could be split into several patches, as you
+introduce several
+non-DT changes:
+
+PATCH 1: use devm_clk_get()
+PATCH 2: convert to device tree
+PATCH 3: add frequency sanity check
+
+This would be more readable and easier to check.
+
+Best,
+
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
