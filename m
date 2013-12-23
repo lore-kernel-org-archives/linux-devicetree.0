@@ -1,7 +1,7 @@
 From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH v9 3/9] usb: gadget: s3c-hsotg: enable build for other platforms
-Date: Mon, 23 Dec 2013 13:36:32 -0500
-Message-ID: <1387823798-10211-4-git-send-email-mporter@linaro.org>
+Subject: [PATCH v9 7/9] phy: add Broadcom Kona USB2 PHY DT binding
+Date: Mon, 23 Dec 2013 13:36:36 -0500
+Message-ID: <1387823798-10211-8-git-send-email-mporter@linaro.org>
 References: <1387823798-10211-1-git-send-email-mporter@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1387823798-10211-1-git-send-email-mporter@linaro.org>
@@ -10,49 +10,36 @@ To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Dinh Nguyen <dinh.linux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove unused Samsung-specific machine include and Kconfig
-dependency on S3C.
+Add a binding that describes the Broadcom Kona USB2 PHY found
+on the BCM281xx family of SoCs.
 
 Signed-off-by: Matt Porter <mporter@linaro.org>
-Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/usb/gadget/Kconfig     | 8 ++++----
- drivers/usb/gadget/s3c-hsotg.c | 2 --
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/phy/bcm-phy.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/bcm-phy.txt
 
-diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
-index a91e642..cf955f5 100644
---- a/drivers/usb/gadget/Kconfig
-+++ b/drivers/usb/gadget/Kconfig
-@@ -294,11 +294,11 @@ config USB_PXA27X
- 	   gadget drivers to also be dynamically linked.
- 
- config USB_S3C_HSOTG
--	tristate "S3C HS/OtG USB Device controller"
--	depends on S3C_DEV_USB_HSOTG
-+	tristate "Designware/S3C HS/OtG USB Device controller"
-+	depends on ARM
- 	help
--	  The Samsung S3C64XX USB2.0 high-speed gadget controller
--	  integrated into the S3C64XX series SoC.
-+	  The Designware USB2.0 high-speed gadget controller
-+	  integrated into many SoCs.
- 
- config USB_S3C2410
- 	tristate "S3C2410 USB Device Controller"
-diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-index 9875d9c..db797f2 100644
---- a/drivers/usb/gadget/s3c-hsotg.c
-+++ b/drivers/usb/gadget/s3c-hsotg.c
-@@ -36,8 +36,6 @@
- #include <linux/usb/phy.h>
- #include <linux/platform_data/s3c-hsotg.h>
- 
--#include <mach/map.h>
--
- #include "s3c-hsotg.h"
- 
- static const char * const s3c_hsotg_supply_names[] = {
+diff --git a/Documentation/devicetree/bindings/phy/bcm-phy.txt b/Documentation/devicetree/bindings/phy/bcm-phy.txt
+new file mode 100644
+index 0000000..3dc8b3d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/bcm-phy.txt
+@@ -0,0 +1,15 @@
++BROADCOM KONA USB2 PHY
++
++Required properties:
++ - compatible: brcm,kona-usb2-phy
++ - reg: offset and length of the PHY registers
++ - #phy-cells: must be 0
++Refer to phy/phy-bindings.txt for the generic PHY binding properties
++
++Example:
++
++	usbphy: usb-phy@3f130000 {
++		compatible = "brcm,kona-usb2-phy";
++		reg = <0x3f130000 0x28>;
++		#phy-cells = <0>;
++	};
 -- 
 1.8.4
