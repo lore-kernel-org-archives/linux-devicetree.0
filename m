@@ -1,51 +1,83 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [RFC PATCH 0/3] APM X-Gene PCIe driver
-Date: Mon, 23 Dec 2013 14:26:25 +0530
-Message-ID: <CACoXjc=bC=O=MxHxMA8kYMdEGNufXeNR+oxENsLieErTRekLNw@mail.gmail.com>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCH v2 5/5] leds: leds-mc13783: Add devicetree support
+Date: Mon, 23 Dec 2013 10:10:08 +0100
+Message-ID: <52B7FDF0.9000404@epfl.ch>
+References: <1387600347-22673-1-git-send-email-shc_work@mail.ru> <1387786706.300080155@f79.i.mail.ru> <52B7F4F8.3050907@epfl.ch> <1387788147.985598723@f413.i.mail.ru>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1387785725-24262-1-git-send-email-tinamdar@apm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>, Tanmay Inamdar <tinamdar@apm.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1387788147.985598723@f413.i.mail.ru>
+Sender: linux-leds-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-leds@vger.kernel.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, =?ISO-8859-1?Q?Philippe_R=E9tornaz?= <philippe.retornaz@epfl.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 23, 2013 at 1:32 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
-> This patch adds support for AppliedMicro X-Gene PCIe host controller. The
-> driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
-> cards.
->
-> X-Gene PCIe controller driver has depedency on the pcie arch support for
-> arm64. The arm64 pcie arch support is not yet part of mainline Linux kernel
-> and approach for arch support is under discussion with arm64 maintainers.
-> The reference patch can be found here --> https://lkml.org/lkml/2013/10/23/244
->
-> If someone wishes to test PCIe on X-Gene, arch support patch must be applied
-> before the patches in this patch set.
->
-> Tanmay Inamdar (3):
->   pci: APM X-Gene PCIe controller driver
->   arm64: dts: APM X-Gene PCIe device tree nodes
->   dt-bindings: pci: xgene pcie device tree bindings
->
->  .../devicetree/bindings/pci/xgene-pcie.txt         |   43 +
->  arch/arm64/boot/dts/apm-mustang.dts                |    4 +
->  arch/arm64/boot/dts/apm-storm.dtsi                 |  140 +++
->  drivers/pci/host/Kconfig                           |    5 +
->  drivers/pci/host/Makefile                          |    1 +
->  drivers/pci/host/pcie-xgene.c                      | 1017 ++++++++++++++++++++
->  6 files changed, 1210 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/xgene-pcie.txt
->  create mode 100644 drivers/pci/host/pcie-xgene.c
->
-> --
-> 1.7.9.5
->
-This patch set might have been delivered to limited audience
-previously because of some problem in my mail settings.
 
-My apologies for spamming.
 
--Tanmay
+On 12/23/2013 09:42 AM, Alexander Shiyan wrote:
+>>>> On 12/21/2013 05:32 AM, Alexander Shiyan wrote:
+>>>>> This patch adds devicetree support for the MC13XXX LED driver.
+> ...
+>>>>> +	ret = of_property_read_u32_array(parent, "led-control", ctrls,
+>>>>> +					 leds->devtype->num_regs);
+>>>>> +	if (ret)
+>>>>> +		goto out_node_put;
+>>>>> +
+>>>>> +	for (i = 0; i < leds->devtype->num_regs; i++) {
+>>>>> +		ret = mc13xxx_reg_write(mcdev, leds->devtype->ledctrl_base + i,
+>>>>> +					ctrls[i]);
+>>>>
+>>>> Code duplicated from the regular probe.
+>>>
+>>> Yes. This was done based on the comments to the previous version:
+>>> http://www.spinics.net/lists/devicetree/msg14933.html
+>>>
+>>
+>> From what I understand, Tomasz is suggesting exactly the same as
+>> what I am saying:
+>>
+>> "what about making
+>> mc13xxx_led_setup_of() allocate a platform data structure and fill it
+>> in with data parsed from DT, so the driver would then proceed normally as
+>> if the platform data were available? IMHO this should make the code much
+>> simpler and more readable."
+>>
+>> This is not what you have done IMHO, you are cloning the probe
+>> into a separate DT-only function.
+> 
+> I do not fully understand what you mean. When we had an universal procedure,
+> I was told to divide them into DT and non-DT. I separated it - now we have duplicate code.
+> Merge back?
+> 
+
+No, do in-between. Look at leds-lp5521.c for example. What you have to
+do is roughly:
+
+mc13xxx_led_probe
+{
+	struct mc13xxx_leds_platform_data *pdata = NULL;
+
+	if (devicetree)
+		mc13xxx_of_populate_pdata(pdev->dev.of_node, &pdata);
+	else
+		pdata = dev_get_platdata(&pdev->dev);
+
+	if (!pdata)
+		oops...
+
+	-> regular probe here <-
+}
+
+Your function mc13xxx_of_populate_pdata() will look for DT properties,
+and only fill the platform data. All the rest is done as usual by your probe
+function. No code is duplicated, but the DT logic is encapsulated inside its
+own function.
+
+Look at other drivers if you are not familiar with such an approach, it
+is pretty common.
+
+Regards,
+
+Florian
