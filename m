@@ -1,140 +1,54 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v8 11/12] usb: phy-mxs: Add system suspend/resume API
-Date: Tue, 24 Dec 2013 11:58:55 +0800
-Message-ID: <1387857536-4996-12-git-send-email-peter.chen@freescale.com>
-References: <1387857536-4996-1-git-send-email-peter.chen@freescale.com>
+From: Bert Kenward <bert.kenward-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH] of: Add MIPI DSI bus device tree bindings
+Date: Tue, 24 Dec 2013 08:31:08 +0000
+Message-ID: <F5FE6E5E9429DA44B1C6B8A1A883D1350421093F@SJEXCHMB13.corp.ad.broadcom.com>
+References: <1385998631-18515-1-git-send-email-treding@nvidia.com>
+ <1564239.XE5EGzcucS@flatron> <20131202210435.GA19644@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1387857536-4996-1-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
-Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131202210435.GA19644-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We need this to keep PHY's power on or off during the system
-suspend mode. If we need to enable USB wakeup, then we
-must keep PHY's power being on during the system suspend mode.
-Otherwise, we need to keep PHY's power being off to save power.
-
-Signed-off-by: Peter Chen <peter.chen@freescale.com>
----
- drivers/usb/phy/phy-mxs-usb.c |   59 +++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 59 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 96aac05..2722a86 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -57,6 +57,10 @@
- #define BM_USBPHY_DEBUG_CLKGATE			BIT(30)
- 
- /* Anatop Registers */
-+#define ANADIG_ANA_MISC0			0x150
-+#define ANADIG_ANA_MISC0_SET			0x154
-+#define ANADIG_ANA_MISC0_CLR			0x158
-+
- #define ANADIG_USB1_VBUS_DET_STAT		0x1c0
- #define ANADIG_USB2_VBUS_DET_STAT		0x220
- 
-@@ -65,6 +69,9 @@
- #define ANADIG_USB2_LOOPBACK_SET		0x244
- #define ANADIG_USB2_LOOPBACK_CLR		0x248
- 
-+#define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG	BIT(12)
-+#define BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG_SL BIT(11)
-+
- #define BM_ANADIG_USB1_VBUS_DET_STAT_VBUS_VALID	BIT(3)
- #define BM_ANADIG_USB2_VBUS_DET_STAT_VBUS_VALID	BIT(3)
- 
-@@ -134,6 +141,16 @@ struct mxs_phy {
- 	int port_id;
- };
- 
-+static inline bool is_imx6q_phy(struct mxs_phy *mxs_phy)
-+{
-+	return mxs_phy->data == &imx6q_phy_data;
-+}
-+
-+static inline bool is_imx6sl_phy(struct mxs_phy *mxs_phy)
-+{
-+	return mxs_phy->data == &imx6sl_phy_data;
-+}
-+
- static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
- {
- 	int ret;
-@@ -239,6 +256,22 @@ static void mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool on)
- 
- }
- 
-+static void mxs_phy_enable_ldo_in_suspend(struct mxs_phy *mxs_phy, bool on)
-+{
-+	unsigned int reg = on ? ANADIG_ANA_MISC0_SET : ANADIG_ANA_MISC0_CLR;
-+
-+	/* If the SoCs don't have anatop, quit */
-+	if (!mxs_phy->regmap_anatop)
-+		return;
-+
-+	if (is_imx6q_phy(mxs_phy))
-+		regmap_write(mxs_phy->regmap_anatop, reg,
-+			BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG);
-+	else if (is_imx6sl_phy(mxs_phy))
-+		regmap_write(mxs_phy->regmap_anatop,
-+			reg, BM_ANADIG_ANA_MISC0_STOP_MODE_CONFIG_SL);
-+}
-+
- static int mxs_phy_init(struct usb_phy *phy)
- {
- 	struct mxs_phy *mxs_phy = to_mxs_phy(phy);
-@@ -382,6 +415,8 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, mxs_phy);
- 
-+	device_set_wakeup_capable(&pdev->dev, true);
-+
- 	ret = usb_add_phy_dev(&mxs_phy->phy);
- 	if (ret)
- 		return ret;
-@@ -398,6 +433,29 @@ static int mxs_phy_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int mxs_phy_system_suspend(struct device *dev)
-+{
-+	struct mxs_phy *mxs_phy = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev))
-+		mxs_phy_enable_ldo_in_suspend(mxs_phy, true);
-+
-+	return 0;
-+}
-+
-+static int mxs_phy_system_resume(struct device *dev)
-+{
-+	struct mxs_phy *mxs_phy = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev))
-+		mxs_phy_enable_ldo_in_suspend(mxs_phy, false);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(mxs_phy_pm, mxs_phy_system_suspend,
-+		mxs_phy_system_resume);
-+
- static struct platform_driver mxs_phy_driver = {
- 	.probe = mxs_phy_probe,
- 	.remove = mxs_phy_remove,
-@@ -405,6 +463,7 @@ static struct platform_driver mxs_phy_driver = {
- 		.name = DRIVER_NAME,
- 		.owner	= THIS_MODULE,
- 		.of_match_table = mxs_phy_dt_ids,
-+		.pm = &mxs_phy_pm,
- 	 },
- };
- 
--- 
-1.7.8
-
-
+SGVsbG8uIExhdGUgdG8gdGhlIHBhcnR5Li4uDQoNCk9uIE1vbmRheSBEZWNlbWJlciAyIDIwMTMg
+YXQgMjE6MDUsIFRoaWVycnkgUmVkaW5nIHdyb3RlOg0KPiBPbiBNb24sIERlYyAwMiwgMjAxMyBh
+dCAwODo1NzoyMFBNICswMTAwLCBUb21hc3ogRmlnYSB3cm90ZToNCj4gPiBJbiBnZW5lcmFsLCB0
+aGlzIGxvb2tzIGdvb2QgdG8gbWUgYXMgYSBzdGFydGVyLCBzbyB3ZSBjb3VsZCBoYXZlIHN1cHBv
+cnQNCj4gPiBmb3IgRFNJIGJ1cyBtZXJnZWQuIElNSE8gd2Ugc2hvdWxkIGNvbnNpZGVyIGFkZGlu
+ZyBzb21lIGdlbmVyaWMgYnVzDQo+ID4gcHJvcGVydGllcyBpbiBmdXR1cmUsIHRob3VnaC4NCj4g
+DQo+IFRvIGJlIGhvbmVzdCB0aGlzIGxvb2tlZCBzb21ld2hhdCBtaW5pbWFsIHRvIG1lIHRvbyBh
+dCBmaXJzdCwgYW5kIHRoZW4gSQ0KPiB0cmllZCB0byBjb21lIHVwIHdpdGggYW55IG90aGVyIHBy
+b3BlcnRpZXMgYnV0IGNvdWxkbid0IHRoaW5rIG9mIGFueS4gT2YNCj4gY291cnNlIGFueXRoaW5n
+IHRoYXQgd2UgYWRkIGxhdGVyIG9uIGhhcyB0aGUgcG90ZW50aWFsIHRvIGJyZWFrIEFCSQ0KPiBj
+b21wYXRpYmlsaXR5Lg0KPiANCj4gQSBmZXcgb2YgdGhlIHRoaW5ncyBJIGhhZCBpbiBtaW5kIHRo
+YXQgbWlnaHQgYmUgYWRkZWQgYXMgcHJvcGVydGllcyB3ZXJlDQo+IHRoZSBudW1iZXIgb2YgbGFu
+ZXMgb3IgdGhlIHZpZGVvIGZvcm1hdC4gQnV0IHRob3NlIHdpbGwgYWxyZWFkeSBiZQ0KPiBpbXBs
+aWVkIGJ5IHRoZSBjb21wYXRpYmxlIHZhbHVlIGFuZCB0aGVyZWZvcmUgZG9uJ3QgcmVhbGx5IGJl
+bG9uZyBpbiB0aGUNCj4gRFQuDQo+IA0KPiBCdXQgaWYgYW55b25lIGNhbiB0aGluayBvZiBvdGhl
+ciBwcm9wZXJ0aWVzIHRoYXQgd291bGQgYmUgdXNlZnVsIGZvciBEU0kNCj4gaG9zdCBvciBwZXJp
+cGhlcmFscywgYnkgYWxsIG1lYW5zLCBsZXQgbWUga25vdy4NCg0KSSd2ZSBiZWVuIHdvcmtpbmcg
+dGhyb3VnaCB0aGUgRFNJIGJ1cyBwYXRjaCBzZXQgaW4gY29uanVuY3Rpb24gd2l0aCB0aGlzIG9u
+ZS4gVGhlcmUgYXJlIHR3byBwcm9wZXJ0aWVzIHRoYXQgYXJlIHByb3BlcnRpZXMgb2YgdGhlIGJv
+YXJkIHJhdGhlciB0aGFuIHRoZSBob3N0IG9yIHRoZSBjb25uZWN0ZWQgcGFuZWxzLCBzbyBjb3Vs
+ZCBmaXQgaW4gdGhlIERULiBUaGUgZmlyc3QgaXMgdGhlIG51bWJlciBvZiBsYW5lcyBjb25uZWN0
+ZWQgLSB0aGUgY29tcGF0aWJsZSBzdHJpbmcgY2FuIG9ubHkgcHJvdmlkZSB0aGUgbWF4aW11bSBu
+dW1iZXIgb2YgbGFuZXMuIEhhdmluZyBzYWlkIHRoYXQsIHRoZSBwYW5lbCB3aWxsIHNwZWNpZnkg
+aG93IG1hbnkgbGFuZXMgaXQgdXNlcyAtIGlmIHRoZXkncmUgbm90IGFsbCBjb25uZWN0ZWQgdXAg
+eW91J2xsIGhvcGVmdWxseSBoYXZlIG5vdGljZWQgZHVyaW5nIHRoZSBib2FyZCBsYXlvdXQuLi4N
+Cg0KVGhlIG90aGVyIHByb3BlcnR5ICh0aGF0IG1heSBhY3R1YWxseSBiZSB1c2VmdWwpIGlzIHRo
+ZSBtYXhpbXVtIEhTIGNsb2NrIHNwZWVkLiBUaGUgaG9zdCBhbmQgcGFuZWwgZHJpdmVycyB3aWxs
+IHNwZWNpZnkgb25lLCBhbG9uZyB3aXRoIGFuIGltcGxpY2l0IG1pbmltdW0gZnJvbSB0aGUgcGFu
+ZWwgZHJpdmVyIGZvciB0aGUgZGF0YSByYXRlIHJlcXVpcmVtZW50LiBUaGUgYm9hcmQgbWF5IGFs
+c28gaW1wb3NlIGxpbWl0cyBvbiB0aGUgY2xvY2sgc3BlZWQuIEZvciBidXJzdCBtb2RlIHZpZGVv
+IG9yIGNvbW1hbmQgbW9kZSBzb21lIGZsZXhpYmlsaXR5IGluIGJ1cyBjbG9jayBzcGVlZCBpcyBo
+ZWxwZnVsLCB3aXRoIHRoZSBhY3R1YWwgdXNlZCBjbG9jayByYXRlIGZyZXF1ZW50bHkgZGVwZW5k
+aW5nIG9uIFJGIGNvbmNlcm5zLg0KDQpCZXJ0Lg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
