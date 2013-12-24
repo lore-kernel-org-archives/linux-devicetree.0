@@ -1,55 +1,63 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 06/14] usb: phy-mxs: Add anatop regmap
-Date: Tue, 24 Dec 2013 10:05:52 +0800
-Message-ID: <20131224020550.GB1128@S2101-09.ap.freescale.net>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v7 10/14] usb: phy-mxs: add controller id
+Date: Tue, 24 Dec 2013 10:08:28 +0800
+Message-ID: <20131224020826.GC1128@S2101-09.ap.freescale.net>
 References: <1387525930-27313-1-git-send-email-peter.chen@freescale.com>
- <1387525930-27313-7-git-send-email-peter.chen@freescale.com>
- <20131224001457.GA1128@S2101-09.ap.freescale.net>
- <20131224012010.GA13518@shlinux1.ap.freescale.net>
+ <1387525930-27313-11-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131224012010.GA13518-KgLukfWpBlCctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1387525930-27313-11-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 24, 2013 at 09:20:11AM +0800, Peter Chen wrote:
-> > > @@ -226,6 +235,16 @@ static int mxs_phy_probe(struct platform_device *pdev)
-> > >  
-> > >  	platform_set_drvdata(pdev, mxs_phy);
-> > >  
-> > > +	if (mxs_phy->data->flags & MXS_PHY_HAS_ANATOP) {
-> > > +		mxs_phy->regmap_anatop = syscon_regmap_lookup_by_phandle
-> > > +			(np, "fsl,anatop");
-> > > +		if (IS_ERR(mxs_phy->regmap_anatop)) {
-> > > +			dev_dbg(&pdev->dev,
-> > > +				"failed to find regmap for anatop\n");
-> > > +			return PTR_ERR(mxs_phy->regmap_anatop);
-> > 
-> > I'm looking at the merge dependency that Felipe mentions, and just think
-> > of the DTB compatibility thing.  Does the above code mean that USB will
-> > be broken if someone runs the new kernel with an old DTB on his board?
-> > 
-> > We're entering the stage where we need to maintain the DTB compatibility
-> > in kernel.  That said, if users choose to upgrade their kernel only
-> > (running with an old DTB), it's okay we do not give them new
-> > features, but we shouldn't cause any regression/breakage for them.
-> > 
+On Fri, Dec 20, 2013 at 03:52:06PM +0800, Peter Chen wrote:
+> It is used to access un-regulator registers according to
+> different controllers.
 > 
-> Then, this patch needs to change for old imx6 DTB. I will use of_find_property 
-> like my previous version patch, do you think so?
+> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> ---
+>  drivers/usb/phy/phy-mxs-usb.c |    8 ++++++++
+>  1 files changed, 8 insertions(+), 0 deletions(-)
 > 
-> http://marc.info/?l=linux-usb&m=138361742123380&w=2
+> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+> index f28bdd8..09ece2b 100644
+> --- a/drivers/usb/phy/phy-mxs-usb.c
+> +++ b/drivers/usb/phy/phy-mxs-usb.c
+> @@ -111,6 +111,7 @@ struct mxs_phy {
+>  	struct clk *clk;
+>  	const struct mxs_phy_data *data;
+>  	struct regmap *regmap_anatop;
+> +	int port_id;
+>  };
+>  
+>  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+> @@ -237,6 +238,13 @@ static int mxs_phy_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	}
+>  
+> +	ret = of_alias_get_id(np, "usbphy");
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
+> +		return ret;
+> +	}
 
-Yes.  Basically, we need to add the new property as optional one and
-keep the driver work in the existing way if the property is absent.
+It has the same compatibility issue with an old DTB.  In case the alias
+is not found, we should keep driver work in the existing way rather than
+failing out.
 
 Shawn
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	mxs_phy->port_id = ret;
+> +
+>  	mxs_phy->phy.io_priv		= base;
+>  	mxs_phy->phy.dev		= &pdev->dev;
+>  	mxs_phy->phy.label		= DRIVER_NAME;
+> -- 
+> 1.7.8
+> 
+> 
+
