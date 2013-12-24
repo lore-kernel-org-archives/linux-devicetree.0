@@ -1,54 +1,33 @@
-From: Bert Kenward <bert.kenward-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: RE: [PATCH] of: Add MIPI DSI bus device tree bindings
-Date: Tue, 24 Dec 2013 08:31:08 +0000
-Message-ID: <F5FE6E5E9429DA44B1C6B8A1A883D1350421093F@SJEXCHMB13.corp.ad.broadcom.com>
-References: <1385998631-18515-1-git-send-email-treding@nvidia.com>
- <1564239.XE5EGzcucS@flatron> <20131202210435.GA19644@ulmo.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131202210435.GA19644-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 1/1] Documentation: mfd: Fix LDO index in s2mps11.txt
+Date: Tue, 24 Dec 2013 14:53:25 +0530
+Message-ID: <1387877005-19035-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, robh+dt@kernel.org, rob@landley.net, lee.jones@linaro.org, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8uIExhdGUgdG8gdGhlIHBhcnR5Li4uDQoNCk9uIE1vbmRheSBEZWNlbWJlciAyIDIwMTMg
-YXQgMjE6MDUsIFRoaWVycnkgUmVkaW5nIHdyb3RlOg0KPiBPbiBNb24sIERlYyAwMiwgMjAxMyBh
-dCAwODo1NzoyMFBNICswMTAwLCBUb21hc3ogRmlnYSB3cm90ZToNCj4gPiBJbiBnZW5lcmFsLCB0
-aGlzIGxvb2tzIGdvb2QgdG8gbWUgYXMgYSBzdGFydGVyLCBzbyB3ZSBjb3VsZCBoYXZlIHN1cHBv
-cnQNCj4gPiBmb3IgRFNJIGJ1cyBtZXJnZWQuIElNSE8gd2Ugc2hvdWxkIGNvbnNpZGVyIGFkZGlu
-ZyBzb21lIGdlbmVyaWMgYnVzDQo+ID4gcHJvcGVydGllcyBpbiBmdXR1cmUsIHRob3VnaC4NCj4g
-DQo+IFRvIGJlIGhvbmVzdCB0aGlzIGxvb2tlZCBzb21ld2hhdCBtaW5pbWFsIHRvIG1lIHRvbyBh
-dCBmaXJzdCwgYW5kIHRoZW4gSQ0KPiB0cmllZCB0byBjb21lIHVwIHdpdGggYW55IG90aGVyIHBy
-b3BlcnRpZXMgYnV0IGNvdWxkbid0IHRoaW5rIG9mIGFueS4gT2YNCj4gY291cnNlIGFueXRoaW5n
-IHRoYXQgd2UgYWRkIGxhdGVyIG9uIGhhcyB0aGUgcG90ZW50aWFsIHRvIGJyZWFrIEFCSQ0KPiBj
-b21wYXRpYmlsaXR5Lg0KPiANCj4gQSBmZXcgb2YgdGhlIHRoaW5ncyBJIGhhZCBpbiBtaW5kIHRo
-YXQgbWlnaHQgYmUgYWRkZWQgYXMgcHJvcGVydGllcyB3ZXJlDQo+IHRoZSBudW1iZXIgb2YgbGFu
-ZXMgb3IgdGhlIHZpZGVvIGZvcm1hdC4gQnV0IHRob3NlIHdpbGwgYWxyZWFkeSBiZQ0KPiBpbXBs
-aWVkIGJ5IHRoZSBjb21wYXRpYmxlIHZhbHVlIGFuZCB0aGVyZWZvcmUgZG9uJ3QgcmVhbGx5IGJl
-bG9uZyBpbiB0aGUNCj4gRFQuDQo+IA0KPiBCdXQgaWYgYW55b25lIGNhbiB0aGluayBvZiBvdGhl
-ciBwcm9wZXJ0aWVzIHRoYXQgd291bGQgYmUgdXNlZnVsIGZvciBEU0kNCj4gaG9zdCBvciBwZXJp
-cGhlcmFscywgYnkgYWxsIG1lYW5zLCBsZXQgbWUga25vdy4NCg0KSSd2ZSBiZWVuIHdvcmtpbmcg
-dGhyb3VnaCB0aGUgRFNJIGJ1cyBwYXRjaCBzZXQgaW4gY29uanVuY3Rpb24gd2l0aCB0aGlzIG9u
-ZS4gVGhlcmUgYXJlIHR3byBwcm9wZXJ0aWVzIHRoYXQgYXJlIHByb3BlcnRpZXMgb2YgdGhlIGJv
-YXJkIHJhdGhlciB0aGFuIHRoZSBob3N0IG9yIHRoZSBjb25uZWN0ZWQgcGFuZWxzLCBzbyBjb3Vs
-ZCBmaXQgaW4gdGhlIERULiBUaGUgZmlyc3QgaXMgdGhlIG51bWJlciBvZiBsYW5lcyBjb25uZWN0
-ZWQgLSB0aGUgY29tcGF0aWJsZSBzdHJpbmcgY2FuIG9ubHkgcHJvdmlkZSB0aGUgbWF4aW11bSBu
-dW1iZXIgb2YgbGFuZXMuIEhhdmluZyBzYWlkIHRoYXQsIHRoZSBwYW5lbCB3aWxsIHNwZWNpZnkg
-aG93IG1hbnkgbGFuZXMgaXQgdXNlcyAtIGlmIHRoZXkncmUgbm90IGFsbCBjb25uZWN0ZWQgdXAg
-eW91J2xsIGhvcGVmdWxseSBoYXZlIG5vdGljZWQgZHVyaW5nIHRoZSBib2FyZCBsYXlvdXQuLi4N
-Cg0KVGhlIG90aGVyIHByb3BlcnR5ICh0aGF0IG1heSBhY3R1YWxseSBiZSB1c2VmdWwpIGlzIHRo
-ZSBtYXhpbXVtIEhTIGNsb2NrIHNwZWVkLiBUaGUgaG9zdCBhbmQgcGFuZWwgZHJpdmVycyB3aWxs
-IHNwZWNpZnkgb25lLCBhbG9uZyB3aXRoIGFuIGltcGxpY2l0IG1pbmltdW0gZnJvbSB0aGUgcGFu
-ZWwgZHJpdmVyIGZvciB0aGUgZGF0YSByYXRlIHJlcXVpcmVtZW50LiBUaGUgYm9hcmQgbWF5IGFs
-c28gaW1wb3NlIGxpbWl0cyBvbiB0aGUgY2xvY2sgc3BlZWQuIEZvciBidXJzdCBtb2RlIHZpZGVv
-IG9yIGNvbW1hbmQgbW9kZSBzb21lIGZsZXhpYmlsaXR5IGluIGJ1cyBjbG9jayBzcGVlZCBpcyBo
-ZWxwZnVsLCB3aXRoIHRoZSBhY3R1YWwgdXNlZCBjbG9jayByYXRlIGZyZXF1ZW50bHkgZGVwZW5k
-aW5nIG9uIFJGIGNvbmNlcm5zLg0KDQpCZXJ0Lg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+LDO indices start from 1. Fix the example appropriately.
+
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+---
+ Documentation/devicetree/bindings/mfd/s2mps11.txt |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+index 78a840d7510d..15ee89c3cc7b 100644
+--- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
++++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+@@ -60,7 +60,7 @@ as per the datasheet of s2mps11.
+ 
+ 	- LDOn
+ 		  - valid values for n are 1 to 38
+-		  - Example: LDO0, LD01, LDO28
++		  - Example: LDO1, LD02, LDO28
+ 	- BUCKn
+ 		  - valid values for n are 1 to 10.
+ 		  - Example: BUCK1, BUCK2, BUCK9
+-- 
+1.7.9.5
+
