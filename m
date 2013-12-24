@@ -1,125 +1,93 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v8 02/12] usb: phy-mxs: Add platform judgement code
-Date: Tue, 24 Dec 2013 11:58:46 +0800
-Message-ID: <1387857536-4996-3-git-send-email-peter.chen@freescale.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: [PATCH v8 07/12] usb: phy-mxs: Enable IC fixes for related SoCs
+Date: Tue, 24 Dec 2013 11:58:51 +0800
+Message-ID: <1387857536-4996-8-git-send-email-peter.chen@freescale.com>
 References: <1387857536-4996-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387857536-4996-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1387857536-4996-1-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com, shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org
+Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The mxs-phy has several bugs and features at different
-versions, the driver code can get it through of_device_id.data.
+Two PHY bugs are fixed by IC logic, but these bits are not
+enabled by default, so we enable them at driver.
+The two bugs are: MXS_PHY_ABNORMAL_IN_SUSPEND and MXS_PHY_SENDING_SOF_TOO_FAST
+which are described at code.
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- drivers/usb/phy/phy-mxs-usb.c |   58 ++++++++++++++++++++++++++++++++++------
- 1 files changed, 49 insertions(+), 9 deletions(-)
+ drivers/usb/phy/phy-mxs-usb.c |   23 +++++++++++++++++++++--
+ 1 files changed, 21 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 545844b..6d49040 100644
+index c53b327..bf22970 100644
 --- a/drivers/usb/phy/phy-mxs-usb.c
 +++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2012 Freescale Semiconductor, Inc.
-+ * Copyright 2012-2013 Freescale Semiconductor, Inc.
-  * Copyright (C) 2012 Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-  * on behalf of DENX Software Engineering GmbH
-  *
-@@ -20,6 +20,7 @@
- #include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/io.h>
-+#include <linux/of_device.h>
+@@ -31,6 +31,10 @@
+ #define HW_USBPHY_CTRL_SET			0x34
+ #define HW_USBPHY_CTRL_CLR			0x38
  
- #define DRIVER_NAME "mxs_phy"
- 
-@@ -34,13 +35,55 @@
++#define HW_USBPHY_IP				0x90
++#define HW_USBPHY_IP_SET			0x94
++#define HW_USBPHY_IP_CLR			0x98
++
+ #define BM_USBPHY_CTRL_SFTRST			BIT(31)
+ #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
+ #define BM_USBPHY_CTRL_ENAUTOSET_USBCLKS	BIT(26)
+@@ -42,6 +46,8 @@
  #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
  #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
  
-+#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
++#define BM_USBPHY_IP_FIX                       (BIT(17) | BIT(18))
 +
-+/* Do disconnection between PHY and controller without vbus */
-+#define MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS	BIT(0)
-+
+ #define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
+ 
+ /* Do disconnection between PHY and controller without vbus */
+@@ -60,6 +66,14 @@
+  */
+ #define MXS_PHY_SENDING_SOF_TOO_FAST		BIT(2)
+ 
 +/*
-+ * The PHY will be in messy if there is a wakeup after putting
-+ * bus to suspend (set portsc.suspendM) but before setting PHY to low
-+ * power mode (set portsc.phcd).
++ * IC has bug fixes logic, they include
++ * MXS_PHY_ABNORMAL_IN_SUSPEND and MXS_PHY_SENDING_SOF_TOO_FAST
++ * which are described at above flags, the RTL will handle it
++ * according to different versions.
 + */
-+#define MXS_PHY_ABNORMAL_IN_SUSPEND		BIT(1)
++#define MXS_PHY_NEED_IP_FIX			BIT(3)
 +
-+/*
-+ * The SOF sends too fast after resuming, it will cause disconnection
-+ * between host and high speed device.
-+ */
-+#define MXS_PHY_SENDING_SOF_TOO_FAST		BIT(2)
-+
-+struct mxs_phy_data {
-+	unsigned int flags;
-+};
-+
-+static const struct mxs_phy_data imx23_phy_data = {
-+	.flags = MXS_PHY_ABNORMAL_IN_SUSPEND | MXS_PHY_SENDING_SOF_TOO_FAST,
-+};
-+
-+static const struct mxs_phy_data imx6q_phy_data = {
-+	.flags = MXS_PHY_SENDING_SOF_TOO_FAST |
-+		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-+};
-+
-+static const struct mxs_phy_data imx6sl_phy_data = {
-+	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-+};
-+
-+static const struct of_device_id mxs_phy_dt_ids[] = {
-+	{ .compatible = "fsl,imx6sl-usbphy", .data = &imx6sl_phy_data, },
-+	{ .compatible = "fsl,imx6q-usbphy", .data = &imx6q_phy_data, },
-+	{ .compatible = "fsl,imx23-usbphy", .data = &imx23_phy_data, },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
-+
- struct mxs_phy {
- 	struct usb_phy phy;
- 	struct clk *clk;
-+	const struct mxs_phy_data *data;
+ struct mxs_phy_data {
+ 	unsigned int flags;
+ };
+@@ -70,11 +84,13 @@ static const struct mxs_phy_data imx23_phy_data = {
+ 
+ static const struct mxs_phy_data imx6q_phy_data = {
+ 	.flags = MXS_PHY_SENDING_SOF_TOO_FAST |
+-		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
++		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS |
++		MXS_PHY_NEED_IP_FIX,
  };
  
--#define to_mxs_phy(p) container_of((p), struct mxs_phy, phy)
--
- static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
- {
- 	int ret;
-@@ -131,6 +174,8 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 	struct clk *clk;
- 	struct mxs_phy *mxs_phy;
- 	int ret;
-+	const struct of_device_id *of_id =
-+			of_match_device(mxs_phy_dt_ids, &pdev->dev);
+ static const struct mxs_phy_data imx6sl_phy_data = {
+-	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
++	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS |
++		MXS_PHY_NEED_IP_FIX,
+ };
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
-@@ -163,6 +208,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 	ATOMIC_INIT_NOTIFIER_HEAD(&mxs_phy->phy.notifier);
+ static const struct of_device_id mxs_phy_dt_ids[] = {
+@@ -118,6 +134,9 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+ 		BM_USBPHY_CTRL_ENUTMILEVEL3,
+ 	       base + HW_USBPHY_CTRL_SET);
  
- 	mxs_phy->clk = clk;
-+	mxs_phy->data = of_id->data;
- 
- 	platform_set_drvdata(pdev, mxs_phy);
- 
-@@ -182,12 +228,6 @@ static int mxs_phy_remove(struct platform_device *pdev)
++	if (mxs_phy->data->flags & MXS_PHY_NEED_IP_FIX)
++		writel(BM_USBPHY_IP_FIX, base + HW_USBPHY_IP_SET);
++
  	return 0;
  }
  
--static const struct of_device_id mxs_phy_dt_ids[] = {
--	{ .compatible = "fsl,imx23-usbphy", },
--	{ /* sentinel */ }
--};
--MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
+-- 
+1.7.8
+
+
