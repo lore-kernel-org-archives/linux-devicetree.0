@@ -1,177 +1,118 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v3 2/2] gpio: davinci: reuse for Keystone SoC
-Date: Tue, 24 Dec 2013 16:50:38 +0530
-Message-ID: <CA+V-a8tJRZ5Esn3F4J6_z7VCmGPpptgxMEyyaANbrytAF3pUMA@mail.gmail.com>
-References: <1387885284-8119-1-git-send-email-grygorii.strashko@ti.com> <1387885284-8119-3-git-send-email-grygorii.strashko@ti.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 0/3] Extend dtc with data type handling
+Date: Tue, 24 Dec 2013 22:57:16 +1100
+Message-ID: <20131224115716.GG12407@voom.fritz.box>
+References: <1386953352-25402-1-git-send-email-t.figa@samsung.com>
+ <20131223120814.GE12407@voom.fritz.box>
+ <2257946.KY9lGl9U4o@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1387885284-8119-3-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <rob.herring@calxeda.com>, dlos <davinci-linux-open-source@linux.davincidsp.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="j2AXaZ4YhVcLc+PQ"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2257946.KY9lGl9U4o@amdc1227>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grygorii,
 
-Thanks for the patch.
+--j2AXaZ4YhVcLc+PQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 24, 2013 at 5:11 PM, Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
-> The similar GPIO HW block is used by keystone SoCs as
-> in Davinci SoCs.
-> Hence, reuse Davinci GPIO driver for Keystone taking into
-> account that Keystone contains ARM GIC IRQ controller which
-> is implemented using IRQ Chip.
->
-> Documentation:
->         http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
->
-> Cc: Alexandre Courbot <gnurou@gmail.com>
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: devicetree@vger.kernel.org
->
-> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->  .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
->  drivers/gpio/gpio-davinci.c                        |   48 ++++++++++++++++----
->  2 files changed, 42 insertions(+), 10 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> index a2e839d..4ce9862 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> @@ -1,7 +1,7 @@
-> -Davinci GPIO controller bindings
-> +Davinci/Keystone GPIO controller bindings
->
->  Required Properties:
-> -- compatible: should be "ti,dm6441-gpio"
-> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+On Mon, Dec 23, 2013 at 08:00:54PM +0100, Tomasz Figa wrote:
+> On Monday 23 of December 2013 23:08:14 David Gibson wrote:
+> > On Fri, Dec 13, 2013 at 05:49:09PM +0100, Tomasz Figa wrote:
+> > > This series intends to extend dtc with appropriate infrastructure
+> > > to handle property data types. First, dtc is modified to preserve
+> > > type information when parsing DTS. Then type guessing is implemented
+> > > for flat and fs trees where type data is not available. After that,
+> > > DTS generation code is modified to use only type information when
+> > > printing property data.
+> >=20
+> > Hrm.  I think this is completely backwards to the right approach.
+> >=20
+> > For dt checking what we want is a schema.  That can specify datatypes
+> > amongst other constraints, but in the end you can check the actual
+> > bytes of the DT against the constraints imposed by the schema,
+> > regardless of how those bytes are presented to the checker.
+>=20
+> Those constraints are usually types, so you need a way to extract them
+> from source DTS.
 
-Can you make it something like this ? It isn't readable.
+You really don't.
 
-- compatible : value should be either one among the following
-    (a)  "ti,dm6441-gpio" for davinci.
-    (b)  "ti,keystone-gpio" for keystone.
+Consumers of the dt intepret it without type information, because they
+know what's supposed to be there.  Likewise if we know the schema, we
+can check whether the dt data fits it without having to have it
+annotated with type information from another source.
 
->
->  - reg: Physical base address of the controller and the size of memory mapped
->         registers.
-> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-> index 7629b4f..d0f135d 100644
-> --- a/drivers/gpio/gpio-davinci.c
-> +++ b/drivers/gpio/gpio-davinci.c
-> @@ -37,6 +37,8 @@ struct davinci_gpio_regs {
->         u32     intstat;
->  };
->
-> +typedef struct irq_chip *(*gpio_get_irq_chip_cb_t)(unsigned int irq);
-> +
->  #define BINTEN 0x8 /* GPIO Interrupt Per-Bank Enable Register */
->
->  #define chip2controller(chip)  \
-> @@ -413,6 +415,26 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
->         .xlate = irq_domain_xlate_onetwocell,
->  };
->
-> +static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
-> +{
-> +       static struct irq_chip_type gpio_unbanked;
-> +
-> +       gpio_unbanked = *container_of(irq_get_chip(irq),
-> +                                     struct irq_chip_type, chip);
-> +
-> +       return &gpio_unbanked.chip;
-> +};
-> +
-> +static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
-> +{
-> +       static struct irq_chip gpio_unbanked;
-> +
-> +       gpio_unbanked = *irq_get_chip(irq);
-> +       return &gpio_unbanked;
-> +};
-> +
-> +static const struct of_device_id davinci_gpio_ids[];
-> +
->  /*
->   * NOTE:  for suspend/resume, probably best to make a platform_device with
->   * suspend_late/resume_resume calls hooking into results of the set_wake()
-> @@ -433,6 +455,18 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->         struct davinci_gpio_platform_data *pdata = dev->platform_data;
->         struct davinci_gpio_regs __iomem *g;
->         struct irq_domain       *irq_domain = NULL;
-> +       const struct of_device_id *match;
-> +       struct irq_chip *irq_chip;
-> +       gpio_get_irq_chip_cb_t gpio_get_irq_chip;
-> +
-> +       /*
-> +        * Use davinci_gpio_get_irq_chip by default to handle non DT cases
-> +        */
-> +       gpio_get_irq_chip = davinci_gpio_get_irq_chip;
-> +       match = of_match_device(of_match_ptr(davinci_gpio_ids),
-> +                               dev);
+> > By adding type information to the in-flight tree you're checking not
+> > the actual content of the DT, but how you've chosen to express that
+> > information in DTS format.
+> >=20
+> > More concretely, we should be able to schema-check trees in binary
+> > format, not just source.  With these patches that will fail if -I dtb
+> > makes the wrong type guesses.
+>=20
+> I'm not quite sure what do you want to check in binary format, where
+> properties are just strings of bytes. All you can check is whether there
+> is enough bytes or possibly some value constraints on particular parts
+> of it, but not types.
 
-Sorry didn't notice that earlier the data structure of_match_ptr()
-protects is always compiled in.
-so of_match_ptr() is not needed.
-While you are at it you can also fix it in davinci_gpio_driver
-structure as a sperate
-patch.
+You can check that if a consumer interprets the dt bytes according to
+the schema, it will get sane data - and that's exactly what matters.
 
-Regards,
---Prabhakar Lad
+If a schema specifies a string followed by a 32-bit integer, that
+implies constraints on the bytes, and that's what matters to a dt
+consumer.  So we might expect:
+	prop =3D "abc", <0xabcdef00>;
+But:
+	prop =3D <0x61626300>, "\xab\xcd\xef";
 
-> +       if (match)
-> +               gpio_get_irq_chip = (gpio_get_irq_chip_cb_t)match->data;
->
->         ngpio = pdata->ngpio;
->         res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> @@ -489,8 +523,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->          * IRQ mux conflicts; gpio_irq_type_unbanked() is only for GPIOs.
->          */
->         if (pdata->gpio_unbanked) {
-> -               static struct irq_chip_type gpio_unbanked;
-> -
->                 /* pass "bank 0" GPIO IRQs to AINTC */
->                 chips[0].chip.to_irq = gpio_to_irq_unbanked;
->                 chips[0].gpio_irq = bank_irq;
-> @@ -499,10 +531,9 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->
->                 /* AINTC handles mask/unmask; GPIO handles triggering */
->                 irq = bank_irq;
-> -               gpio_unbanked = *container_of(irq_get_chip(irq),
-> -                                             struct irq_chip_type, chip);
-> -               gpio_unbanked.chip.name = "GPIO-AINTC";
-> -               gpio_unbanked.chip.irq_set_type = gpio_irq_type_unbanked;
-> +               irq_chip = gpio_get_irq_chip(irq);
-> +               irq_chip->name = "GPIO-AINTC";
-> +               irq_chip->irq_set_type = gpio_irq_type_unbanked;
->
->                 /* default trigger: both edges */
->                 g = gpio2regs(0);
-> @@ -511,7 +542,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->
->                 /* set the direct IRQs up to use that irqchip */
->                 for (gpio = 0; gpio < pdata->gpio_unbanked; gpio++, irq++) {
-> -                       irq_set_chip(irq, &gpio_unbanked.chip);
-> +                       irq_set_chip(irq, irq_chip);
->                         irq_set_handler_data(irq, &chips[gpio / 32]);
->                         irq_set_status_flags(irq, IRQ_TYPE_EDGE_BOTH);
->                 }
-> @@ -554,7 +585,8 @@ done:
->
->  #if IS_ENABLED(CONFIG_OF)
->  static const struct of_device_id davinci_gpio_ids[] = {
-> -       { .compatible = "ti,dm6441-gpio", },
-> +       { .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
-> +       { .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
->         { /* sentinel */ },
->  };
->  MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
-> --
-> 1.7.9.5
->
+will still be interpreted correctly by the consumer, even though the
+"type" information is wrong.
+
+However:
+	prop =3D "a\0b", <0xabcdef00>;
+
+will NOT be parsed correctly by the consumer, even though the "type"
+information is correct.
+
+> IMHO what we primarily need is source validation. Of course using schemas,
+> but that's already decided.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--j2AXaZ4YhVcLc+PQ
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJSuXacAAoJEGw4ysog2bOSaZQP/0h2OSX4Gqcfznpi8vK8DlOs
+LtDjSPzEW62vZf2Ty1TlUExtSzRY86YycvDa1vVQlrKjqeelE2TjEH+8KDYcCJcv
+BQcu2kRNSWmg7RMPV19W9uHFkhbsBxFleqLp2pR/GhPBKIFAjJff27A6722pizzK
+I/LesZddBw7evg7X7Ms1HQ/JaWdvUGPUP7Y/vFe1yV5Vu+WK7S7ZZ08Gly0BJr4J
+adlmuef+Xui94Sl2RMng7pmvZl9Vr9K+LGf4Xsic9kho0aJ5uFh5BDX6MhDaEMYs
+8PiG0ozQCGBwwHeopWrBvUP90GtEypw/zLg/90hjdKayy7YJ2t1l3m/7HN3xVLjw
+I68xzJZtQY4dXOM2zqDOQOquJCRZdMGBsOKE2zvFL8T9P6LJl74q6iPtn7/EYYkL
+Z/OUZosPh0ooO5X2uR22Ox/mAmrKxUO8lcIx/CcK3/Mtqhr3wgyvzKf+PRj7lPp8
+NMkWTVIgntcE805N5muz/VhNon5XBliZCAO/hsCdSfq7K40YFYxMX6LZmCRi0GtM
+Ya7kCiwMgiGmqP/5G0bx6F4oe97zIB6YM3aJpqarBXgr0t+hZTaZ93sfkmmXirRw
+lehrW2yJDE28GH7cakp6zt5K6lD+ZDO8oigsxWNRl8GoToJfVo1cK9xf7XC/ziaI
+FRXUCeWJBLXNdoGR+MO4
+=nHjt
+-----END PGP SIGNATURE-----
+
+--j2AXaZ4YhVcLc+PQ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
