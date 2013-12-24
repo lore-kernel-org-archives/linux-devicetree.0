@@ -1,33 +1,37 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 1/1] Documentation: mfd: Fix LDO index in s2mps11.txt
-Date: Tue, 24 Dec 2013 14:53:25 +0530
-Message-ID: <1387877005-19035-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, robh+dt@kernel.org, rob@landley.net, lee.jones@linaro.org, sachin.kamat@linaro.org
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/1] regulator: s5m8767: Update LDO index in s5m8767-regulator.txt
+Date: Tue, 24 Dec 2013 15:04:01 +0530
+Message-ID: <1387877641-6527-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-LDO indices start from 1. Fix the example appropriately.
+LDO indices start from 1. Update the example accordingly.
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/s2mps11.txt |    2 +-
+ .../bindings/regulator/s5m8767-regulator.txt       |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-index 78a840d7510d..15ee89c3cc7b 100644
---- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-+++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-@@ -60,7 +60,7 @@ as per the datasheet of s2mps11.
+diff --git a/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt b/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
+index d1660a90fc06..fc6b38f035bd 100644
+--- a/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
+@@ -83,7 +83,7 @@ as per the datasheet of s5m8767.
  
  	- LDOn
- 		  - valid values for n are 1 to 38
+ 		  - valid values for n are 1 to 28
 -		  - Example: LDO0, LD01, LDO28
 +		  - Example: LDO1, LD02, LDO28
  	- BUCKn
- 		  - valid values for n are 1 to 10.
+ 		  - valid values for n are 1 to 9.
  		  - Example: BUCK1, BUCK2, BUCK9
 -- 
 1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
