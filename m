@@ -1,61 +1,82 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCH 0/3] DT support for bq2415x
-Date: Tue, 24 Dec 2013 04:39:37 +0100
-Message-ID: <20131224033937.GB6542@earth.universe>
-References: <1385311771-447-1-git-send-email-sre@debian.org>
- <20131224022048.GC10223@lizard>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v8 00/12] Add power management support for mxs phy
+Date: Tue, 24 Dec 2013 11:58:44 +0800
+Message-ID: <1387857536-4996-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="U+BazGySraz5kW0T"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131224022048.GC10223@lizard>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anton Vorontsov <anton@enomsg.org>
-Cc: David Woodhouse <dwmw2@infradead.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, freemangordon@abv.bg, aaro.koskinen@iki.fi, pavel@ucw.cz
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Felipe & Shawn,
 
---U+BazGySraz5kW0T
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The serial adds power management support for MXS PHY, it includes:
 
-On Mon, Dec 23, 2013 at 06:20:48PM -0800, Anton Vorontsov wrote:
-> On Sun, Nov 24, 2013 at 05:49:28PM +0100, Sebastian Reichel wrote:
-> > This patchset adds DT support for the bq2415x charger, which is used in=
- the
-> > Nokia N900. The changes depend on Pali Roh=E1r's "[PATCH v2 0/3] Add su=
-pport for
-> > charging battery in Nokia RX-51" patchset [0].
->=20
-> Patches 1/3 and 2/3 applied, thanks a lot!
+- Add one PHY API .set_wakeup, and related API implementation at mxs phy driver
+- misc changes and bug fixes for mxs phy to support low power mode and wakeup.
 
-Thanks. I will try to update Patch 3 at the weekend. It should be
-added to the mainline kernel together with Patch 2 :)
+It is based on Greg's usb-next, 3.13-rc1.
 
--- Sebastian
+Changes for v8:
+- Shawn has already applied two dts patches, so delete them at
+  v8 version, http://marc.info/?l=linux-arm-kernel&m=138785188404939&w=2
+- Using of_get_property to avoid imx6 fail at probe when using old DTB [5/12]
+- Do not consider failure if alias id is not existed, it can avoid fail
+  at probe when using old DTB [8/12]
+- We don't need more changes for [8/12] change due to we use
+  "mxs_phy->port_id ==" as condition
 
---U+BazGySraz5kW0T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes for v7:
+- Fixed indentation problem at binding doc [1/14]
+- s/ganranteed/guaranteed, and add explanation for "auto setting" [3/14]
+- add static before SIMPLE_DEV_PM_OPS [13/14]
+- add one patch to change usb device description [7/14]
+- Delete the .nofity_suspend and .notify_resume due to Felipe
+  does not agree to add them as PHY API, will use other ways to implement
+  them in future.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Changes for v6:
+- Add description for IC bug fixes logic. [9/15]
+- Move is_imx6q_phy and is_imx6sl_phy from [9/15] to [14/15] 
+- %s/mxs_phy_clock_switch/mxs_phy_clock_switch_delay to reflect
+the function meaning more precise [15/15]
 
-iQIcBAEBCAAGBQJSuQH4AAoJENju1/PIO/qankcP/1uT3ZusKUFVA5gHkY4WXIi1
-SQuuIbkjcnB+VE4VOA/OK330aqrcr9fIDNqUnFEW6/xHGbfmvoWmA8+M31n2j92/
-ruqVzGkaAp/kjip+2dioQIwfsR7w78CioTUFbbD+akYzpNxiHUbWxAAy32ET9aFg
-l3NFGtoiwfeULuJK5noVv0u257CCdVpjv7Z4rKkzenpbedHhYLEKDcfWglSlhoCS
-9hh9sn05mA/+BkaTgqCNeYsn8HHlR4kiXQZCNi51lbVUaGm1lVC1+yUbDWOV4P+k
-ECBsd5057/41D2kUu1olDYYHCvqQeobiliC5ztdaD8SfZ1HSR0guwYwKqK4pRzkZ
-MDHsgWI952zYi2aVjkpXiza+y/VQotDt0UR8jvw18/Hz12n9yhep8QYttbSMmzci
-9ye7ejFFfV9CcVAG9zAK58vlXFIaMugZ2Cqczol14/wnAd/X6AQ7iwrjwZpjtFui
-VoBh8wSJrfy45vEpDr1Q1+4t88uxl1npGzZ0Iehi8aHGx+xEZTYT4wVpahod2t5R
-Powh+6Ni/VoCTz1S6WfLzEAViQP9nxluB4Sjrjg+iAijgCiJ4lJK8oK1AtWXHKcw
-WVpACIPQT2amykJuekzdZXyWmWyZ/FyxHUaQbT37mMQab+rCkD989Z6418MX2oUJ
-uYt6CscW1zEJq/Bdb3w5
-=D632
------END PGP SIGNATURE-----
+Changes for v5:
+Add Marc and Michael Grzeschik's commnets
+- typo error at [2/15]
+- sqhash patches which introducing mxs_phy_disconnect_line and
+fixed but at this function. [13/15]
+- Introducing flag MXS_PHY_NEED_IP_FIX who stands for the SoCs
+who have IC fixes. [2/15, 8/15]
+- Delete one patch for low speed connection problem at every rare
+situations due to the root cause has still not found.
 
---U+BazGySraz5kW0T--
+Peter Chen (12):
+  usb: doc: phy-mxs: Add more compatible strings
+  usb: phy-mxs: Add platform judgement code
+  usb: phy-mxs: Add auto clock and power setting
+  usb: doc: phy-mxs: update binding for adding anatop phandle
+  usb: phy-mxs: Add anatop regmap
+  usb: phy-mxs: change description of usb device speed
+  usb: phy-mxs: Enable IC fixes for related SoCs
+  usb: phy-mxs: add controller id
+  usb: phy: Add set_wakeup API
+  usb: phy-mxs: Add implementation of set_wakeup
+  usb: phy-mxs: Add system suspend/resume API
+  usb: phy-mxs: Add sync time after controller clear phcd
+
+ Documentation/devicetree/bindings/usb/mxs-phy.txt |    5 +-
+ drivers/usb/phy/phy-mxs-usb.c                     |  308 ++++++++++++++++++++-
+ include/linux/usb/phy.h                           |   16 +
+ 3 files changed, 314 insertions(+), 15 deletions(-)
+
+-- 
+1.7.8
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
