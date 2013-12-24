@@ -1,161 +1,103 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 2/2] gpio: davinci: reuse for Keystone SoC
-Date: Tue, 24 Dec 2013 13:41:24 +0200
-Message-ID: <1387885284-8119-3-git-send-email-grygorii.strashko@ti.com>
-References: <1387885284-8119-1-git-send-email-grygorii.strashko@ti.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v2] arm: dts: keystone: add gpio device entry
+Date: Tue, 24 Dec 2013 13:52:52 +0200
+Message-ID: <1387885972-8275-1-git-send-email-grygorii.strashko@ti.com>
+References: <1387211981-26045-2-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1387885284-8119-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1387211981-26045-2-git-send-email-grygorii.strashko@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The similar GPIO HW block is used by keystone SoCs as
-in Davinci SoCs.
-Hence, reuse Davinci GPIO driver for Keystone taking into
-account that Keystone contains ARM GIC IRQ controller which
-is implemented using IRQ Chip.
+This patch adds Keystone GPIO IP device definitions in DT which supports
+up to 32 GPIO lines and each GPIO line can be configured as separate
+interrupt source (so called "unbanked" IRQ).
 
-Documentation:
-	http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
+For more information see:
+ http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
 
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
- drivers/gpio/gpio-davinci.c                        |   48 ++++++++++++++++----
- 2 files changed, 42 insertions(+), 10 deletions(-)
+Hi Santosh,
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-index a2e839d..4ce9862 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-@@ -1,7 +1,7 @@
--Davinci GPIO controller bindings
-+Davinci/Keystone GPIO controller bindings
+I've changed format of "interrupts" property as discussed.
+
+ arch/arm/boot/dts/keystone.dtsi |   45 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index f6d6d9e..53eefe3 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -7,6 +7,7 @@
+  */
  
- Required Properties:
--- compatible: should be "ti,dm6441-gpio"
-+- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/gpio/gpio.h>
  
- - reg: Physical base address of the controller and the size of memory mapped
-        registers.
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 7629b4f..d0f135d 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -37,6 +37,8 @@ struct davinci_gpio_regs {
- 	u32	intstat;
+ #include "skeleton.dtsi"
+ 
+@@ -181,5 +182,49 @@
+ 			interrupts = <GIC_SPI 300 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&clkspi>;
+ 		};
++
++		gpio0: gpio@260bf00 {
++			compatible = "ti,keystone-gpio";
++			reg = <0x0260bf00 0x100>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			/* HW Interrupts mapped to GPIO pins */
++			interrupts = <GIC_SPI 120 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 121 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 122 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 123 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 124 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 125 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 126 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 127 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 128 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 129 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 130 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 131 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 132 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 133 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 134 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 135 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 136 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 137 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 138 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 139 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 140 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 141 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 142 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 143 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 144 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 145 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 146 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 147 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 148 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 149 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 150 IRQ_TYPE_EDGE_RISING>,
++					<GIC_SPI 151 IRQ_TYPE_EDGE_RISING>;
++			clocks = <&clkgpio>;
++			clock-names = "gpio";
++			ti,ngpio = <32>;
++			ti,davinci-gpio-unbanked = <32>;
++		};
+ 	};
  };
- 
-+typedef struct irq_chip *(*gpio_get_irq_chip_cb_t)(unsigned int irq);
-+
- #define BINTEN	0x8 /* GPIO Interrupt Per-Bank Enable Register */
- 
- #define chip2controller(chip)	\
-@@ -413,6 +415,26 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
- 	.xlate = irq_domain_xlate_onetwocell,
- };
- 
-+static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
-+{
-+	static struct irq_chip_type gpio_unbanked;
-+
-+	gpio_unbanked = *container_of(irq_get_chip(irq),
-+				      struct irq_chip_type, chip);
-+
-+	return &gpio_unbanked.chip;
-+};
-+
-+static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
-+{
-+	static struct irq_chip gpio_unbanked;
-+
-+	gpio_unbanked = *irq_get_chip(irq);
-+	return &gpio_unbanked;
-+};
-+
-+static const struct of_device_id davinci_gpio_ids[];
-+
- /*
-  * NOTE:  for suspend/resume, probably best to make a platform_device with
-  * suspend_late/resume_resume calls hooking into results of the set_wake()
-@@ -433,6 +455,18 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 	struct davinci_gpio_platform_data *pdata = dev->platform_data;
- 	struct davinci_gpio_regs __iomem *g;
- 	struct irq_domain	*irq_domain = NULL;
-+	const struct of_device_id *match;
-+	struct irq_chip *irq_chip;
-+	gpio_get_irq_chip_cb_t gpio_get_irq_chip;
-+
-+	/*
-+	 * Use davinci_gpio_get_irq_chip by default to handle non DT cases
-+	 */
-+	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
-+	match = of_match_device(of_match_ptr(davinci_gpio_ids),
-+				dev);
-+	if (match)
-+		gpio_get_irq_chip = (gpio_get_irq_chip_cb_t)match->data;
- 
- 	ngpio = pdata->ngpio;
- 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-@@ -489,8 +523,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 	 * IRQ mux conflicts; gpio_irq_type_unbanked() is only for GPIOs.
- 	 */
- 	if (pdata->gpio_unbanked) {
--		static struct irq_chip_type gpio_unbanked;
--
- 		/* pass "bank 0" GPIO IRQs to AINTC */
- 		chips[0].chip.to_irq = gpio_to_irq_unbanked;
- 		chips[0].gpio_irq = bank_irq;
-@@ -499,10 +531,9 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 
- 		/* AINTC handles mask/unmask; GPIO handles triggering */
- 		irq = bank_irq;
--		gpio_unbanked = *container_of(irq_get_chip(irq),
--					      struct irq_chip_type, chip);
--		gpio_unbanked.chip.name = "GPIO-AINTC";
--		gpio_unbanked.chip.irq_set_type = gpio_irq_type_unbanked;
-+		irq_chip = gpio_get_irq_chip(irq);
-+		irq_chip->name = "GPIO-AINTC";
-+		irq_chip->irq_set_type = gpio_irq_type_unbanked;
- 
- 		/* default trigger: both edges */
- 		g = gpio2regs(0);
-@@ -511,7 +542,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 
- 		/* set the direct IRQs up to use that irqchip */
- 		for (gpio = 0; gpio < pdata->gpio_unbanked; gpio++, irq++) {
--			irq_set_chip(irq, &gpio_unbanked.chip);
-+			irq_set_chip(irq, irq_chip);
- 			irq_set_handler_data(irq, &chips[gpio / 32]);
- 			irq_set_status_flags(irq, IRQ_TYPE_EDGE_BOTH);
- 		}
-@@ -554,7 +585,8 @@ done:
- 
- #if IS_ENABLED(CONFIG_OF)
- static const struct of_device_id davinci_gpio_ids[] = {
--	{ .compatible = "ti,dm6441-gpio", },
-+	{ .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
-+	{ .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
 -- 
 1.7.9.5
