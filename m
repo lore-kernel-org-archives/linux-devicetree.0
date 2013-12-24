@@ -1,30 +1,74 @@
-From: Anton Vorontsov <anton@enomsg.org>
-Subject: Re: [PATCHv2 0/2] DT support for isp1704-charger
-Date: Mon, 23 Dec 2013 18:35:16 -0800
-Message-ID: <20131224023515.GD10223@lizard>
-References: <20131114175227.GH10317@atomide.com>
- <1385859611-26532-1-git-send-email-sre@debian.org>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v7 10/14] usb: phy-mxs: add controller id
+Date: Tue, 24 Dec 2013 10:09:17 +0800
+Message-ID: <20131224020916.GC13518@shlinux1.ap.freescale.net>
+References: <1387525930-27313-1-git-send-email-peter.chen@freescale.com>
+ <1387525930-27313-11-git-send-email-peter.chen@freescale.com>
+ <20131224020826.GC1128@S2101-09.ap.freescale.net>
+ <20131224013446.GB13518@shlinux1.ap.freescale.net>
+ <20131224022516.GD1128@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1385859611-26532-1-git-send-email-sre@debian.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Tony Lindgren <tony@atomide.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+In-Reply-To: <20131224022516.GD1128@S2101-09.ap.freescale.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 01, 2013 at 02:00:09AM +0100, Sebastian Reichel wrote:
-> This is the second iteration of the isp1704 DT patches.
+On Tue, Dec 24, 2013 at 10:25:17AM +0800, Shawn Guo wrote:
+> On Tue, Dec 24, 2013 at 09:34:47AM +0800, Peter Chen wrote:
+> > On Tue, Dec 24, 2013 at 10:08:28AM +0800, Shawn Guo wrote:
+> > > On Fri, Dec 20, 2013 at 03:52:06PM +0800, Peter Chen wrote:
+> > > > It is used to access un-regulator registers according to
+> > > > different controllers.
+> > > > 
+> > > > Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> > > > ---
+> > > >  drivers/usb/phy/phy-mxs-usb.c |    8 ++++++++
+> > > >  1 files changed, 8 insertions(+), 0 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+> > > > index f28bdd8..09ece2b 100644
+> > > > --- a/drivers/usb/phy/phy-mxs-usb.c
+> > > > +++ b/drivers/usb/phy/phy-mxs-usb.c
+> > > > @@ -111,6 +111,7 @@ struct mxs_phy {
+> > > >  	struct clk *clk;
+> > > >  	const struct mxs_phy_data *data;
+> > > >  	struct regmap *regmap_anatop;
+> > > > +	int port_id;
+> > > >  };
+> > > >  
+> > > >  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+> > > > @@ -237,6 +238,13 @@ static int mxs_phy_probe(struct platform_device *pdev)
+> > > >  		return -ENOMEM;
+> > > >  	}
+> > > >  
+> > > > +	ret = of_alias_get_id(np, "usbphy");
+> > > > +	if (ret < 0) {
+> > > > +		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
+> > > > +		return ret;
+> > > > +	}
+> > > 
+> > > It has the same compatibility issue with an old DTB.  In case the alias
+> > > is not found, we should keep driver work in the existing way rather than
+> > > failing out.
+> > > 
+> > 
+> > Thanks, will change.
+> > 
+> > Do the two DTS patches are ok?
 > 
-> Changes since v1:
->  * reword the binding documentation slightly according
->    to the suggestions of Mark Rutland
->  * keep supporting the set_power callback and leave the
->    board code in its current state. This solves potential
->    merge problems. The additional code can be removed in
->    the next merge window.
+> Yes.  And with the DTS change being optional to kernel driver, the DTS
+> and driver changes can be merged independently through two trees.  So
+> I just applied those two DTS patches.
+> 
 
-Applied, thanks a lot!
+Including doc update or not?
 
-Anton
+-- 
+
+Best Regards,
+Peter Chen
+
