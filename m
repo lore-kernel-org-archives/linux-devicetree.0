@@ -1,113 +1,74 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v7 06/14] usb: phy-mxs: Add anatop regmap
-Date: Tue, 24 Dec 2013 08:15:00 +0800
-Message-ID: <20131224001457.GA1128@S2101-09.ap.freescale.net>
-References: <1387525930-27313-1-git-send-email-peter.chen@freescale.com>
- <1387525930-27313-7-git-send-email-peter.chen@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387525930-27313-7-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v2 0/9] CPU enable method based SMP/hotplug + MSM conversion
+Date: Mon, 23 Dec 2013 16:39:44 -0800
+Message-ID: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 20, 2013 at 03:52:02PM +0800, Peter Chen wrote:
-> It is needed by imx6 SoC series, but not for imx23 and imx28.
-> 
-> Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> ---
->  drivers/usb/phy/phy-mxs-usb.c |   23 +++++++++++++++++++++--
->  1 files changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-> index 0c6f3bc..0ef930a 100644
-> --- a/drivers/usb/phy/phy-mxs-usb.c
-> +++ b/drivers/usb/phy/phy-mxs-usb.c
-> @@ -21,6 +21,8 @@
->  #include <linux/err.h>
->  #include <linux/io.h>
->  #include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
->  
->  #define DRIVER_NAME "mxs_phy"
->  
-> @@ -58,6 +60,9 @@
->   */
->  #define MXS_PHY_SENDING_SOF_TOO_FAST		BIT(2)
->  
-> +/* The SoCs who have anatop module */
-> +#define MXS_PHY_HAS_ANATOP			BIT(3)
-> +
->  struct mxs_phy_data {
->  	unsigned int flags;
->  };
-> @@ -68,11 +73,13 @@ static const struct mxs_phy_data imx23_phy_data = {
->  
->  static const struct mxs_phy_data imx6q_phy_data = {
->  	.flags = MXS_PHY_SENDING_SOF_TOO_FAST |
-> -		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-> +		MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS |
-> +		MXS_PHY_HAS_ANATOP,
->  };
->  
->  static const struct mxs_phy_data imx6sl_phy_data = {
-> -	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
-> +	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS |
-> +		MXS_PHY_HAS_ANATOP,
->  };
->  
->  static const struct of_device_id mxs_phy_dt_ids[] = {
-> @@ -87,6 +94,7 @@ struct mxs_phy {
->  	struct usb_phy phy;
->  	struct clk *clk;
->  	const struct mxs_phy_data *data;
-> +	struct regmap *regmap_anatop;
->  };
->  
->  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
-> @@ -190,6 +198,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
->  	int ret;
->  	const struct of_device_id *of_id =
->  			of_match_device(mxs_phy_dt_ids, &pdev->dev);
-> +	struct device_node *np = pdev->dev.of_node;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	base = devm_ioremap_resource(&pdev->dev, res);
-> @@ -226,6 +235,16 @@ static int mxs_phy_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, mxs_phy);
->  
-> +	if (mxs_phy->data->flags & MXS_PHY_HAS_ANATOP) {
-> +		mxs_phy->regmap_anatop = syscon_regmap_lookup_by_phandle
-> +			(np, "fsl,anatop");
-> +		if (IS_ERR(mxs_phy->regmap_anatop)) {
-> +			dev_dbg(&pdev->dev,
-> +				"failed to find regmap for anatop\n");
-> +			return PTR_ERR(mxs_phy->regmap_anatop);
+This is a rework of patches sent a months back by Rohit[1].
+The goal of these patches is to add support for SMP and (basic)
+hotplug on MSM based SoCs. To get there, we add support for a
+generic way to hook in SMP/hotplug support code based on DT. To
+show how it's used, we convert the MSM8660 SMP support code over
+to the new method. After that we add support for the rest of the
+upstream MSM SoCs (note these patches are piled high on top of
+Rohit's patches to add 8074 support to MSM[2] and my follow ups[3,4],
+but this should only matter to the MSM maintainers).
 
-I'm looking at the merge dependency that Felipe mentions, and just think
-of the DTB compatibility thing.  Does the above code mean that USB will
-be broken if someone runs the new kernel with an old DTB on his board?
+This is one of the last items of code that still requires us to have
+a mach directory and a machine descriptor. We should be able to move
+the hotplug/smp code out of mach directories if this approach is
+accepted.
 
-We're entering the stage where we need to maintain the DTB compatibility
-in kernel.  That said, if users choose to upgrade their kernel only
-(running with an old DTB), it's okay we do not give them new
-features, but we shouldn't cause any regression/breakage for them.
+Changes since v1:
+ * Added pointers from cpu nodes to saw and acc nodes
+ * Squashed nr_cpus removal into reorganization patch
+ * Reworked bindings/documentation
+ * Rebased onto v3.13-rc4
 
-Shawn
+[1] https://lkml.org/lkml/2013/8/1/770
+[2] https://lkml.org/lkml/2013/10/17/520
+[3] https://lkml.org/lkml/2013/10/18/406
+[4] http://lkml.org/lkml/2013/10/28/501
+ 
 
-> +		}
-> +	}
-> +
->  	ret = usb_add_phy_dev(&mxs_phy->phy);
->  	if (ret)
->  		return ret;
-> -- 
-> 1.7.8
-> 
-> 
+Rohit Vaswani (6):
+  devicetree: bindings: Document Krait/Scorpion cpus and enable-method
+  ARM: msm: Remove pen_release usage
+  ARM: msm: Re-organize platsmp to make it extensible
+  ARM: msm: Add SMP support for KPSSv1
+  ARM: msm: Add SMP support for KPSSv2
+  ARM: dts: msm: Add nodes necessary for SMP boot
 
+Stephen Boyd (3):
+  devicetree: bindings: Document qcom,kpss-acc
+  devicetree: bindings: Document qcom,saw2 node
+  ARM: Introduce CPU_METHOD_OF_DECLARE() for cpu hotplug/smp
+
+ Documentation/devicetree/bindings/arm/cpus.txt     |  25 +-
+ .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt  |  30 ++
+ .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  35 ++
+ arch/arm/boot/dts/qcom-msm8660-surf.dts            |  24 ++
+ arch/arm/boot/dts/qcom-msm8960-cdp.dts             |  52 +++
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |  69 ++++
+ arch/arm/include/asm/smp.h                         |   9 +
+ arch/arm/kernel/devtree.c                          |  40 +++
+ arch/arm/mach-msm/Makefile                         |   2 +-
+ arch/arm/mach-msm/board-dt.c                       |  14 -
+ arch/arm/mach-msm/common.h                         |   1 -
+ arch/arm/mach-msm/headsmp.S                        |  39 ---
+ arch/arm/mach-msm/hotplug.c                        |  31 +-
+ arch/arm/mach-msm/platsmp.c                        | 371 ++++++++++++++++-----
+ arch/arm/mach-msm/scm-boot.h                       |   8 +-
+ include/asm-generic/vmlinux.lds.h                  |  10 +
+ 16 files changed, 595 insertions(+), 165 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+ delete mode 100644 arch/arm/mach-msm/headsmp.S
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
