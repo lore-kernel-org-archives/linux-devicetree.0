@@ -1,72 +1,222 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 2/9] devicetree: bindings: Document qcom,kpss-acc
-Date: Mon, 23 Dec 2013 16:39:46 -0800
-Message-ID: <1387845593-10050-3-git-send-email-sboyd@codeaurora.org>
+Subject: [PATCH v2 9/9] ARM: dts: msm: Add nodes necessary for SMP boot
+Date: Mon, 23 Dec 2013 16:39:53 -0800
+Message-ID: <1387845593-10050-10-git-send-email-sboyd@codeaurora.org>
 References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, David Brown <davidb@codeaurora.org>
+Cc: Rohit Vaswani <rvaswani@codeaurora.org>, David Brown <davidb@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-The kpss acc binding describes the clock, reset, and power domain
-controller for a Krait CPU.
+From: Rohit Vaswani <rvaswani@codeaurora.org>
 
-Cc: <devicetree@vger.kernel.org>
+Add the necessary nodes to support SMP on MSM8660, MSM8960, and
+MSM8974/APQ8074. While we're here also add in the error
+interrupts for the Krait cache error detection.
+
+Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
+[sboyd: Split into separate patch, add error interrupts]
 Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt  | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
+ arch/arm/boot/dts/qcom-msm8660-surf.dts | 24 ++++++++++++
+ arch/arm/boot/dts/qcom-msm8960-cdp.dts  | 52 +++++++++++++++++++++++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi     | 69 +++++++++++++++++++++++++++++++++
+ 3 files changed, 145 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
-new file mode 100644
-index 0000000..1333db9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
-@@ -0,0 +1,30 @@
-+Krait Processor Sub-system (KPSS) Application Clock Controller (ACC)
+diff --git a/arch/arm/boot/dts/qcom-msm8660-surf.dts b/arch/arm/boot/dts/qcom-msm8660-surf.dts
+index 20cb9ad..c72325e 100644
+--- a/arch/arm/boot/dts/qcom-msm8660-surf.dts
++++ b/arch/arm/boot/dts/qcom-msm8660-surf.dts
+@@ -9,6 +9,30 @@
+ 	compatible = "qcom,msm8660-surf", "qcom,msm8660";
+ 	interrupt-parent = <&intc>;
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "qcom,scorpion";
++		enable-method = "qcom,gcc-msm8660";
 +
-+The KPSS ACC provides clock, power domain, and reset control to a Krait CPU.
-+There is one ACC register region per CPU within the KPSS remapped region as
-+well as an alias register region that remaps accesses to the ACC associated
-+with the CPU accessing the region.
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++			next-level-cache = <&L2>;
++		};
 +
-+PROPERTIES
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++			next-level-cache = <&L2>;
++		};
 +
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: should be one of:
-+			"qcom,kpss-acc-v1"
-+			"qcom,kpss-acc-v2"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: the first element specifies the base address and size of
-+		    the register region. An optional second element specifies
-+		    the base address and size of the alias register region.
-+
-+Example:
-+
-+	clock-controller@2088000 {
-+		compatible = "qcom,kpss-acc-v2";
-+		reg = <0x02088000 0x1000>,
-+		      <0x02008000 0x1000>;
++		L2: l2-cache {
++			compatible = "cache";
++			cache-level = <2>;
++		};
 +	};
++
+ 	intc: interrupt-controller@2080000 {
+ 		compatible = "qcom,msm-8660-qgic";
+ 		interrupt-controller;
+diff --git a/arch/arm/boot/dts/qcom-msm8960-cdp.dts b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
+index d5b1318..bb20f94 100644
+--- a/arch/arm/boot/dts/qcom-msm8960-cdp.dts
++++ b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
+@@ -9,6 +9,36 @@
+ 	compatible = "qcom,msm8960-cdp", "qcom,msm8960";
+ 	interrupt-parent = <&intc>;
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interrupts = <1 14 0x304>;
++		compatible = "qcom,krait";
++		enable-method = "qcom,kpss-acc-v1";
++
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc0>;
++			qcom,saw = <&saw0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc1>;
++			qcom,saw = <&saw1>;
++		};
++
++		L2: l2-cache {
++			compatible = "cache";
++			cache-level = <2>;
++			interrupts = <0 2 0x4>;
++		};
++	};
++
+ 	intc: interrupt-controller@2000000 {
+ 		compatible = "qcom,msm-qgic2";
+ 		interrupt-controller;
+@@ -53,6 +83,28 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
++	acc0: clock-controller@2088000 {
++		compatible = "qcom,kpss-acc-v1";
++		reg = <0x02088000 0x1000>, <0x02008000 0x1000>;
++	};
++
++	acc1: clock-controller@2098000 {
++		compatible = "qcom,kpss-acc-v1";
++		reg = <0x02098000 0x1000>, <0x02008000 0x1000>;
++	};
++
++	saw0: regulator@2089000 {
++		compatible = "qcom,saw2";
++		reg = <0x02089000 0x1000>, <0x02009000 0x1000>;
++		regulator;
++	};
++
++	saw1: regulator@2099000 {
++		compatible = "qcom,saw2";
++		reg = <0x02099000 0x1000>, <0x02009000 0x1000>;
++		regulator;
++	};
++
+ 	serial@16440000 {
+ 		compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+ 		reg = <0x16440000 0x1000>,
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 9fa57d7..22555f6 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -9,6 +9,49 @@
+ 	compatible = "qcom,msm8974";
+ 	interrupt-parent = <&intc>;
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interrupts = <1 9 0xf04>;
++		compatible = "qcom,krait";
++		enable-method = "qcom,kpss-acc-v2";
++
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc1>;
++		};
++
++		cpu@2 {
++			device_type = "cpu";
++			reg = <2>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc2>;
++		};
++
++		cpu@3 {
++			device_type = "cpu";
++			reg = <3>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc3>;
++		};
++
++		L2: l2-cache {
++			compatible = "cache";
++			cache-level = <2>;
++			interrupts = <0 2 0x4>;
++			qcom,saw = <&saw_l2>;
++		};
++	};
++
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupts = <1 2 0xf08>,
+@@ -91,6 +134,32 @@
+ 			};
+ 		};
+ 
++		saw_l2: regulator@f9012000 {
++			compatible = "qcom,saw2";
++			reg = <0xf9012000 0x1000>;
++			regulator;
++		};
++
++		acc0: clock-controller@f9088000 {
++			compatible = "qcom,kpss-acc-v2";
++			reg = <0xf9088000 0x1000>, <0xf9008000 0x1000>;
++		};
++
++		acc1: clock-controller@f9098000 {
++			compatible = "qcom,kpss-acc-v2";
++			reg = <0xf9098000 0x1000>, <0xf9008000 0x1000>;
++		};
++
++		acc2: clock-controller@f90a8000 {
++			compatible = "qcom,kpss-acc-v2";
++			reg = <0xf90a8000 0x1000>, <0xf9008000 0x1000>;
++		};
++
++		acc3: clock-controller@f90b8000 {
++			compatible = "qcom,kpss-acc-v2";
++			reg = <0xf90b8000 0x1000>, <0xf9008000 0x1000>;
++		};
++
+ 		restart@fc4ab000 {
+ 			compatible = "qcom,pshold";
+ 			reg = <0xfc4ab000 0x4>;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
