@@ -1,7 +1,7 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 9/9] ARM: dts: msm: Add nodes necessary for SMP boot
-Date: Mon, 23 Dec 2013 16:39:53 -0800
-Message-ID: <1387845593-10050-10-git-send-email-sboyd@codeaurora.org>
+Subject: [PATCH v2 6/9] ARM: msm: Re-organize platsmp to make it extensible
+Date: Mon, 23 Dec 2013 16:39:50 -0800
+Message-ID: <1387845593-10050-7-git-send-email-sboyd@codeaurora.org>
 References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
@@ -12,211 +12,243 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rohit Vaswani <rvaswani@codeaurora.org>
 
-Add the necessary nodes to support SMP on MSM8660, MSM8960, and
-MSM8974/APQ8074. While we're here also add in the error
-interrupts for the Krait cache error detection.
+This makes it easy to add SMP support for new devices by keying
+on a device node for the release sequence. We add the
+enable-method property for the cpus property to specify that we
+want to use the gcc-msm8660 release sequence (which is going to
+look for the global clock controller device node to map some
+Scorpion specific power and control registers). We also remove
+the nr_cpus detection code as that is done generically in the DT
+CPU detection code.
 
 Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
-[sboyd: Split into separate patch, add error interrupts]
+[sboyd: Port to CPU_METHOD_OF_DECLARE]
 Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- arch/arm/boot/dts/qcom-msm8660-surf.dts | 24 ++++++++++++
- arch/arm/boot/dts/qcom-msm8960-cdp.dts  | 52 +++++++++++++++++++++++++
- arch/arm/boot/dts/qcom-msm8974.dtsi     | 69 +++++++++++++++++++++++++++++++++
- 3 files changed, 145 insertions(+)
+ arch/arm/mach-msm/board-dt.c |  14 ------
+ arch/arm/mach-msm/common.h   |   1 -
+ arch/arm/mach-msm/platsmp.c  | 117 ++++++++++++++++++++++++-------------------
+ 3 files changed, 65 insertions(+), 67 deletions(-)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8660-surf.dts b/arch/arm/boot/dts/qcom-msm8660-surf.dts
-index 20cb9ad..c72325e 100644
---- a/arch/arm/boot/dts/qcom-msm8660-surf.dts
-+++ b/arch/arm/boot/dts/qcom-msm8660-surf.dts
-@@ -9,6 +9,30 @@
- 	compatible = "qcom,msm8660-surf", "qcom,msm8660";
- 	interrupt-parent = <&intc>;
+diff --git a/arch/arm/mach-msm/board-dt.c b/arch/arm/mach-msm/board-dt.c
+index 1f11d93..1e3af2b 100644
+--- a/arch/arm/mach-msm/board-dt.c
++++ b/arch/arm/mach-msm/board-dt.c
+@@ -11,31 +11,17 @@
+  */
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "qcom,scorpion";
-+		enable-method = "qcom,gcc-msm8660";
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			reg = <0>;
-+			next-level-cache = <&L2>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			reg = <1>;
-+			next-level-cache = <&L2>;
-+		};
-+
-+		L2: l2-cache {
-+			compatible = "cache";
-+			cache-level = <2>;
-+		};
-+	};
-+
- 	intc: interrupt-controller@2080000 {
- 		compatible = "qcom,msm-8660-qgic";
- 		interrupt-controller;
-diff --git a/arch/arm/boot/dts/qcom-msm8960-cdp.dts b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
-index d5b1318..bb20f94 100644
---- a/arch/arm/boot/dts/qcom-msm8960-cdp.dts
-+++ b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
-@@ -9,6 +9,36 @@
- 	compatible = "qcom,msm8960-cdp", "qcom,msm8960";
- 	interrupt-parent = <&intc>;
+ #include <linux/init.h>
+-#include <linux/of.h>
+-#include <linux/of_platform.h>
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <1 14 0x304>;
-+		compatible = "qcom,krait";
-+		enable-method = "qcom,kpss-acc-v1";
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			reg = <0>;
-+			next-level-cache = <&L2>;
-+			qcom,acc = <&acc0>;
-+			qcom,saw = <&saw0>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			reg = <1>;
-+			next-level-cache = <&L2>;
-+			qcom,acc = <&acc1>;
-+			qcom,saw = <&saw1>;
-+		};
-+
-+		L2: l2-cache {
-+			compatible = "cache";
-+			cache-level = <2>;
-+			interrupts = <0 2 0x4>;
-+		};
-+	};
-+
- 	intc: interrupt-controller@2000000 {
- 		compatible = "qcom,msm-qgic2";
- 		interrupt-controller;
-@@ -53,6 +83,28 @@
- 		#reset-cells = <1>;
- 	};
+ #include <asm/mach/arch.h>
+-#include <asm/mach/map.h>
+-
+-#include "common.h"
  
-+	acc0: clock-controller@2088000 {
-+		compatible = "qcom,kpss-acc-v1";
-+		reg = <0x02088000 0x1000>, <0x02008000 0x1000>;
-+	};
-+
-+	acc1: clock-controller@2098000 {
-+		compatible = "qcom,kpss-acc-v1";
-+		reg = <0x02098000 0x1000>, <0x02008000 0x1000>;
-+	};
-+
-+	saw0: regulator@2089000 {
-+		compatible = "qcom,saw2";
-+		reg = <0x02089000 0x1000>, <0x02009000 0x1000>;
-+		regulator;
-+	};
-+
-+	saw1: regulator@2099000 {
-+		compatible = "qcom,saw2";
-+		reg = <0x02099000 0x1000>, <0x02009000 0x1000>;
-+		regulator;
-+	};
-+
- 	serial@16440000 {
- 		compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
- 		reg = <0x16440000 0x1000>,
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 9fa57d7..22555f6 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -9,6 +9,49 @@
- 	compatible = "qcom,msm8974";
- 	interrupt-parent = <&intc>;
+ static const char * const msm_dt_match[] __initconst = {
+ 	"qcom,msm8660-fluid",
+ 	"qcom,msm8660-surf",
+ 	"qcom,msm8960-cdp",
+-	NULL
+-};
+-
+-static const char * const apq8074_dt_match[] __initconst = {
+ 	"qcom,apq8074-dragonboard",
+ 	NULL
+ };
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <1 9 0xf04>;
-+		compatible = "qcom,krait";
-+		enable-method = "qcom,kpss-acc-v2";
+ DT_MACHINE_START(MSM_DT, "Qualcomm MSM (Flattened Device Tree)")
+-	.smp = smp_ops(msm_smp_ops),
+ 	.dt_compat = msm_dt_match,
+ MACHINE_END
+-
+-DT_MACHINE_START(APQ_DT, "Qualcomm MSM (Flattened Device Tree)")
+-	.dt_compat = apq8074_dt_match,
+-MACHINE_END
+diff --git a/arch/arm/mach-msm/common.h b/arch/arm/mach-msm/common.h
+index 33c7725..1513f2c 100644
+--- a/arch/arm/mach-msm/common.h
++++ b/arch/arm/mach-msm/common.h
+@@ -23,7 +23,6 @@ extern void msm_map_qsd8x50_io(void);
+ extern void __iomem *__msm_ioremap_caller(phys_addr_t phys_addr, size_t size,
+ 					  unsigned int mtype, void *caller);
+ 
+-extern struct smp_operations msm_smp_ops;
+ extern void msm_cpu_die(unsigned int cpu);
+ 
+ struct msm_mmc_platform_data;
+diff --git a/arch/arm/mach-msm/platsmp.c b/arch/arm/mach-msm/platsmp.c
+index 5b481db..11c6239 100644
+--- a/arch/arm/mach-msm/platsmp.c
++++ b/arch/arm/mach-msm/platsmp.c
+@@ -13,6 +13,8 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/jiffies.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/smp.h>
+ #include <linux/io.h>
+ 
+@@ -24,20 +26,14 @@
+ #include "scm-boot.h"
+ #include "common.h"
+ 
+-#define VDD_SC1_ARRAY_CLAMP_GFS_CTL 0x15A0
+-#define SCSS_CPU1CORE_RESET 0xD80
+-#define SCSS_DBG_STATUS_CORE_PWRDUP 0xE64
++#define VDD_SC1_ARRAY_CLAMP_GFS_CTL	0x35a0
++#define SCSS_CPU1CORE_RESET		0x2d80
++#define SCSS_DBG_STATUS_CORE_PWRDUP	0x2e64
+ 
+ extern void secondary_startup(void);
+ 
+ static DEFINE_SPINLOCK(boot_lock);
+ 
+-static inline int get_core_count(void)
+-{
+-	/* 1 + the PART[1:0] field of MIDR */
+-	return ((read_cpuid_id() >> 4) & 3) + 1;
+-}
+-
+ static void msm_secondary_init(unsigned int cpu)
+ {
+ 	/*
+@@ -47,33 +43,41 @@ static void msm_secondary_init(unsigned int cpu)
+ 	spin_unlock(&boot_lock);
+ }
+ 
+-static void prepare_cold_cpu(unsigned int cpu)
++static int scss_release_secondary(unsigned int cpu)
+ {
+-	int ret;
+-	ret = scm_set_boot_addr(virt_to_phys(secondary_startup),
+-				SCM_FLAG_COLDBOOT_CPU1);
+-	if (ret == 0) {
+-		void __iomem *sc1_base_ptr;
+-		sc1_base_ptr = ioremap_nocache(0x00902000, SZ_4K*2);
+-		if (sc1_base_ptr) {
+-			writel(0, sc1_base_ptr + VDD_SC1_ARRAY_CLAMP_GFS_CTL);
+-			writel(0, sc1_base_ptr + SCSS_CPU1CORE_RESET);
+-			writel(3, sc1_base_ptr + SCSS_DBG_STATUS_CORE_PWRDUP);
+-			iounmap(sc1_base_ptr);
+-		}
+-	} else
+-		printk(KERN_DEBUG "Failed to set secondary core boot "
+-				  "address\n");
++	struct device_node *node;
++	void __iomem *base;
 +
-+		cpu@0 {
-+			device_type = "cpu";
-+			reg = <0>;
-+			next-level-cache = <&L2>;
-+			qcom,acc = <&acc0>;
-+		};
++	node = of_find_compatible_node(NULL, NULL, "qcom,gcc-msm8660");
++	if (!node) {
++		pr_err("%s: can't find node\n", __func__);
++		return -ENXIO;
++	}
 +
-+		cpu@1 {
-+			device_type = "cpu";
-+			reg = <1>;
-+			next-level-cache = <&L2>;
-+			qcom,acc = <&acc1>;
-+		};
++	base = of_iomap(node, 0);
++	of_node_put(node);
++	if (!base)
++		return -ENOMEM;
 +
-+		cpu@2 {
-+			device_type = "cpu";
-+			reg = <2>;
-+			next-level-cache = <&L2>;
-+			qcom,acc = <&acc2>;
-+		};
++	writel_relaxed(0, base + VDD_SC1_ARRAY_CLAMP_GFS_CTL);
++	writel_relaxed(0, base + SCSS_CPU1CORE_RESET);
++	writel_relaxed(3, base + SCSS_DBG_STATUS_CORE_PWRDUP);
++	mb();
++	iounmap(base);
 +
-+		cpu@3 {
-+			device_type = "cpu";
-+			reg = <3>;
-+			next-level-cache = <&L2>;
-+			qcom,acc = <&acc3>;
-+		};
++	return 0;
+ }
+ 
+-static int msm_boot_secondary(unsigned int cpu, struct task_struct *idle)
++static DEFINE_PER_CPU(int, cold_boot_done);
 +
-+		L2: l2-cache {
-+			compatible = "cache";
-+			cache-level = <2>;
-+			interrupts = <0 2 0x4>;
-+			qcom,saw = <&saw_l2>;
-+		};
++static int msm_boot_secondary(unsigned int cpu, int (*func)(unsigned int))
+ {
+-	static int cold_boot_done;
++	int ret = 0;
+ 
+-	/* Only need to bring cpu out of reset this way once */
+-	if (cold_boot_done == false) {
+-		prepare_cold_cpu(cpu);
+-		cold_boot_done = true;
++	if (!per_cpu(cold_boot_done, cpu)) {
++		ret = func(cpu);
++		if (!ret)
++			per_cpu(cold_boot_done, cpu) = true;
+ 	}
+ 
+ 	/*
+@@ -95,39 +99,48 @@ static int msm_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ 	 */
+ 	spin_unlock(&boot_lock);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+-/*
+- * Initialise the CPU possible map early - this describes the CPUs
+- * which may be present or become present in the system. The msm8x60
+- * does not support the ARM SCU, so just set the possible cpu mask to
+- * NR_CPUS.
+- */
+-static void __init msm_smp_init_cpus(void)
++static int msm8660_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ {
+-	unsigned int i, ncores = get_core_count();
+-
+-	if (ncores > nr_cpu_ids) {
+-		pr_warn("SMP: %u cores greater than maximum (%u), clipping\n",
+-			ncores, nr_cpu_ids);
+-		ncores = nr_cpu_ids;
+-	}
+-
+-	for (i = 0; i < ncores; i++)
+-		set_cpu_possible(i, true);
++	return msm_boot_secondary(cpu, scss_release_secondary);
+ }
+ 
+ static void __init msm_smp_prepare_cpus(unsigned int max_cpus)
+ {
++	int cpu, map;
++	unsigned int flags = 0;
++	static const int cold_boot_flags[] = {
++		0,
++		SCM_FLAG_COLDBOOT_CPU1,
 +	};
 +
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupts = <1 2 0xf08>,
-@@ -91,6 +134,32 @@
- 			};
- 		};
++	for_each_present_cpu(cpu) {
++		map = cpu_logical_map(cpu);
++		if (WARN_ON(map >= ARRAY_SIZE(cold_boot_flags))) {
++			set_cpu_present(cpu, false);
++			continue;
++		}
++		flags |= cold_boot_flags[map];
++	}
++
++	if (scm_set_boot_addr(virt_to_phys(secondary_startup), flags)) {
++		for_each_present_cpu(cpu) {
++			if (cpu == smp_processor_id())
++				continue;
++			set_cpu_present(cpu, false);
++		}
++		pr_warn("Failed to set CPU boot address, disabling SMP\n");
++	}
+ }
  
-+		saw_l2: regulator@f9012000 {
-+			compatible = "qcom,saw2";
-+			reg = <0xf9012000 0x1000>;
-+			regulator;
-+		};
-+
-+		acc0: clock-controller@f9088000 {
-+			compatible = "qcom,kpss-acc-v2";
-+			reg = <0xf9088000 0x1000>, <0xf9008000 0x1000>;
-+		};
-+
-+		acc1: clock-controller@f9098000 {
-+			compatible = "qcom,kpss-acc-v2";
-+			reg = <0xf9098000 0x1000>, <0xf9008000 0x1000>;
-+		};
-+
-+		acc2: clock-controller@f90a8000 {
-+			compatible = "qcom,kpss-acc-v2";
-+			reg = <0xf90a8000 0x1000>, <0xf9008000 0x1000>;
-+		};
-+
-+		acc3: clock-controller@f90b8000 {
-+			compatible = "qcom,kpss-acc-v2";
-+			reg = <0xf90b8000 0x1000>, <0xf9008000 0x1000>;
-+		};
-+
- 		restart@fc4ab000 {
- 			compatible = "qcom,pshold";
- 			reg = <0xfc4ab000 0x4>;
+-struct smp_operations msm_smp_ops __initdata = {
+-	.smp_init_cpus		= msm_smp_init_cpus,
++static struct smp_operations msm_smp_8660_ops __initdata = {
+ 	.smp_prepare_cpus	= msm_smp_prepare_cpus,
+ 	.smp_secondary_init	= msm_secondary_init,
+-	.smp_boot_secondary	= msm_boot_secondary,
++	.smp_boot_secondary	= msm8660_boot_secondary,
+ #ifdef CONFIG_HOTPLUG_CPU
+ 	.cpu_die		= msm_cpu_die,
+ #endif
+ };
++CPU_METHOD_OF_DECLARE(msm_smp, "qcom,gcc-msm8660", &msm_smp_8660_ops);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
