@@ -1,74 +1,36 @@
-From: Peter Chen <peter.chen@freescale.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v7 10/14] usb: phy-mxs: add controller id
-Date: Tue, 24 Dec 2013 10:09:17 +0800
-Message-ID: <20131224020916.GC13518@shlinux1.ap.freescale.net>
+Date: Tue, 24 Dec 2013 10:54:36 +0800
+Message-ID: <20131224025433.GE1128@S2101-09.ap.freescale.net>
 References: <1387525930-27313-1-git-send-email-peter.chen@freescale.com>
  <1387525930-27313-11-git-send-email-peter.chen@freescale.com>
  <20131224020826.GC1128@S2101-09.ap.freescale.net>
  <20131224013446.GB13518@shlinux1.ap.freescale.net>
  <20131224022516.GD1128@S2101-09.ap.freescale.net>
+ <20131224020916.GC13518@shlinux1.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131224022516.GD1128@S2101-09.ap.freescale.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+In-Reply-To: <20131224020916.GC13518-KgLukfWpBlCctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 24, 2013 at 10:25:17AM +0800, Shawn Guo wrote:
-> On Tue, Dec 24, 2013 at 09:34:47AM +0800, Peter Chen wrote:
-> > On Tue, Dec 24, 2013 at 10:08:28AM +0800, Shawn Guo wrote:
-> > > On Fri, Dec 20, 2013 at 03:52:06PM +0800, Peter Chen wrote:
-> > > > It is used to access un-regulator registers according to
-> > > > different controllers.
-> > > > 
-> > > > Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> > > > ---
-> > > >  drivers/usb/phy/phy-mxs-usb.c |    8 ++++++++
-> > > >  1 files changed, 8 insertions(+), 0 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-> > > > index f28bdd8..09ece2b 100644
-> > > > --- a/drivers/usb/phy/phy-mxs-usb.c
-> > > > +++ b/drivers/usb/phy/phy-mxs-usb.c
-> > > > @@ -111,6 +111,7 @@ struct mxs_phy {
-> > > >  	struct clk *clk;
-> > > >  	const struct mxs_phy_data *data;
-> > > >  	struct regmap *regmap_anatop;
-> > > > +	int port_id;
-> > > >  };
-> > > >  
-> > > >  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
-> > > > @@ -237,6 +238,13 @@ static int mxs_phy_probe(struct platform_device *pdev)
-> > > >  		return -ENOMEM;
-> > > >  	}
-> > > >  
-> > > > +	ret = of_alias_get_id(np, "usbphy");
-> > > > +	if (ret < 0) {
-> > > > +		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
-> > > > +		return ret;
-> > > > +	}
-> > > 
-> > > It has the same compatibility issue with an old DTB.  In case the alias
-> > > is not found, we should keep driver work in the existing way rather than
-> > > failing out.
-> > > 
+On Tue, Dec 24, 2013 at 10:09:17AM +0800, Peter Chen wrote:
+> > Yes.  And with the DTS change being optional to kernel driver, the DTS
+> > and driver changes can be merged independently through two trees.  So
+> > I just applied those two DTS patches.
 > > 
-> > Thanks, will change.
-> > 
-> > Do the two DTS patches are ok?
 > 
-> Yes.  And with the DTS change being optional to kernel driver, the DTS
-> and driver changes can be merged independently through two trees.  So
-> I just applied those two DTS patches.
-> 
+> Including doc update or not?
 
-Including doc update or not?
+No.  The binding should go with driver changes.
 
--- 
+Shawn
 
-Best Regards,
-Peter Chen
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
