@@ -1,164 +1,129 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 4/9] ARM: Introduce CPU_METHOD_OF_DECLARE() for cpu hotplug/smp
-Date: Mon, 23 Dec 2013 16:39:48 -0800
-Message-ID: <1387845593-10050-5-git-send-email-sboyd@codeaurora.org>
-References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>
+Subject: [PATCH v4 00/15] Add support for MSM's mmio clock/reset controller
+Date: Mon, 23 Dec 2013 17:12:24 -0800
+Message-ID: <1387847559-18330-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Saravana Kannan <skannan@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The goal of multi-platform kernels is to remove the need for mach
-directories and machine descriptors. To further that goal,
-introduce CPU_METHOD_OF_DECLARE() to allow cpu hotplug/smp
-support to be separated from the machine descriptors.
-Implementers should specify an enable-method property in their
-cpus node and then implement a matching set of smp_ops in their
-hotplug/smp code, wiring it up with the CPU_METHOD_OF_DECLARE()
-macro. When the kernel is compiled we'll collect all the
-enable-method smp_ops into one section for use at boot.
+The first breaks a reset-controller include ordering requirement. I hope it can
+go through the clock tree.
 
-At boot time we'll look for an enable-method in each cpu node and
-try to match that against all known CPU enable methods in the
-kernel. If there are no enable-methods in the cpu nodes we
-fallback to the cpus node and try to use any enable-method found
-there. If that doesn't work we fall back to the old way of using
-the machine descriptor.
+The next 3 patches are generic clock framework patches. They add support for
+regmap and for setting the rate and the parent at the same time based on
+patches from James Hogan's remuxing set_rate series.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- arch/arm/include/asm/smp.h        |  9 +++++++++
- arch/arm/kernel/devtree.c         | 40 +++++++++++++++++++++++++++++++++++++++
- include/asm-generic/vmlinux.lds.h | 10 ++++++++++
- 3 files changed, 59 insertions(+)
+After that we add MSM clock hardware support and SoC specific drivers. The DT
+node additions will be sent through the MSM maintainers once these patches are
+accepted.
 
-diff --git a/arch/arm/include/asm/smp.h b/arch/arm/include/asm/smp.h
-index 22a3b9b..772435b 100644
---- a/arch/arm/include/asm/smp.h
-+++ b/arch/arm/include/asm/smp.h
-@@ -114,6 +114,15 @@ struct smp_operations {
- #endif
- };
- 
-+struct of_cpu_method {
-+	const char *method;
-+	struct smp_operations *ops;
-+};
-+
-+#define CPU_METHOD_OF_DECLARE(name, _method, _ops)			\
-+	static const struct of_cpu_method __cpu_method_of_table_##name	\
-+		__used __section(__cpu_method_of_table)			\
-+		= { .method = _method, .ops = _ops }
- /*
-  * set platform specific SMP operations
-  */
-diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-index 739c3df..91cc3f8 100644
---- a/arch/arm/kernel/devtree.c
-+++ b/arch/arm/kernel/devtree.c
-@@ -18,6 +18,7 @@
- #include <linux/of_fdt.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-+#include <linux/smp.h>
- 
- #include <asm/cputype.h>
- #include <asm/setup.h>
-@@ -63,6 +64,34 @@ void __init arm_dt_memblock_reserve(void)
- 	}
- }
- 
-+#ifdef CONFIG_SMP
-+extern struct of_cpu_method __cpu_method_of_table_begin[];
-+extern struct of_cpu_method __cpu_method_of_table_end[];
-+
-+static int __init set_smp_ops_by_method(struct device_node *node)
-+{
-+	const char *method;
-+	struct of_cpu_method *m = __cpu_method_of_table_begin;
-+
-+	if (of_property_read_string(node, "enable-method", &method))
-+		return 0;
-+
-+	for (; m < __cpu_method_of_table_end; m++)
-+		if (!strcmp(m->method, method)) {
-+			smp_set_ops(m->ops);
-+			return 1;
-+		}
-+
-+	return 0;
-+}
-+#else
-+static inline int set_smp_ops_by_method(struct device_node *node)
-+{
-+	return 1;
-+}
-+#endif
-+
-+
- /*
-  * arm_dt_init_cpu_maps - Function retrieves cpu nodes from the device tree
-  * and builds the cpu logical map array containing MPIDR values related to
-@@ -79,6 +108,7 @@ void __init arm_dt_init_cpu_maps(void)
- 	 * read as 0.
- 	 */
- 	struct device_node *cpu, *cpus;
-+	int found_method = 0;
- 	u32 i, j, cpuidx = 1;
- 	u32 mpidr = is_smp() ? read_cpuid_mpidr() & MPIDR_HWID_BITMASK : 0;
- 
-@@ -150,8 +180,18 @@ void __init arm_dt_init_cpu_maps(void)
- 		}
- 
- 		tmp_map[i] = hwid;
-+
-+		if (!found_method)
-+			found_method = set_smp_ops_by_method(cpu);
- 	}
- 
-+	/*
-+	 * Fallback to an enable-method in the cpus node if nothing found in
-+	 * a cpu node.
-+	 */
-+	if (!found_method)
-+		set_smp_ops_by_method(cpus);
-+
- 	if (!bootcpu_valid) {
- 		pr_warn("DT missing boot CPU MPIDR[23:0], fall back to default cpu_logical_map\n");
- 		return;
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index bc2121f..bd02ca7 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -167,6 +167,15 @@
- #define CLK_OF_TABLES()
- #endif
- 
-+#ifdef CONFIG_SMP
-+#define CPU_METHOD_OF_TABLES() . = ALIGN(8);				    \
-+			   VMLINUX_SYMBOL(__cpu_method_of_table_begin) = .; \
-+			   *(__cpu_method_of_table)			    \
-+			   VMLINUX_SYMBOL(__cpu_method_of_table_end) = .;
-+#else
-+#define CPU_METHOD_OF_TABLES()
-+#endif
-+
- #define KERNEL_DTB()							\
- 	STRUCT_ALIGN();							\
- 	VMLINUX_SYMBOL(__dtb_start) = .;				\
-@@ -491,6 +500,7 @@
- 	MEM_DISCARD(init.rodata)					\
- 	CLK_OF_TABLES()							\
- 	CLKSRC_OF_TABLES()						\
-+	CPU_METHOD_OF_TABLES()						\
- 	KERNEL_DTB()							\
- 	IRQCHIP_OF_MATCH_TABLE()
- 
+Changes since v3:
+ * Moved binding include to clock/
+ * New patch for 8660 GCC driver
+ * Renamed directory to qcom to match vendor prefix
+ * Added some missing clocks in 8974 GCC driver
+ * New patch for 8974 MMCC driver
+
+Changes since v2:
+
+ * Completed 8960 and 8974 GCC data & dt-bindings
+ * Added support for reset controllers
+ * Squashed some bugs in 8974 gcc clocks
+ * New patch to fix clk NULL pointer deref
+ * New patch to fix #include requirement for reset-controller.h
+
+Changes since v1:
+
+ * Rewrote binding to use #clock-cells=1
+ * Reworked library components (pll, rcg, branch) to use regmap
+ * Dropped common clock framework patches that did DT parsing
+ * New patches for regmap support in common clock framework
+
+Stephen Boyd (15):
+  reset: Silence warning in reset-controller.h
+  clk: Allow drivers to pass in a regmap
+  clk: Add regmap core helpers for enable/disable/is_enabled
+  clk: Add set_rate_and_parent() op
+  clk: qcom: Add support for phase locked loops (PLLs)
+  clk: qcom: Add support for root clock generators (RCGs)
+  clk: qcom: Add support for branches/gate clocks
+  clk: qcom: Add reset controller support
+  clk: qcom: Add support for MSM8960's global clock controller (GCC)
+  clk: qcom: Add support for MSM8960's multimedia clock controller
+    (MMCC)
+  clk: qcom: Add support for MSM8974's global clock controller (GCC)
+  clk: qcom: Add support for MSM8974's multimedia clock controller
+    (MMCC)
+  clk: qcom: Add support for MSM8660's global clock controller (GCC)
+  devicetree: bindings: Document qcom,gcc
+  devicetree: bindings: Document qcom,mmcc
+
+ Documentation/clk.txt                              |    3 +
+ .../devicetree/bindings/clock/qcom,gcc.txt         |   21 +
+ .../devicetree/bindings/clock/qcom,mmcc.txt        |   21 +
+ drivers/clk/Kconfig                                |    2 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk.c                                  |  156 +-
+ drivers/clk/qcom/Kconfig                           |   47 +
+ drivers/clk/qcom/Makefile                          |   13 +
+ drivers/clk/qcom/clk-branch.c                      |  159 ++
+ drivers/clk/qcom/clk-branch.h                      |   53 +
+ drivers/clk/qcom/clk-pll.c                         |  222 ++
+ drivers/clk/qcom/clk-pll.h                         |   65 +
+ drivers/clk/qcom/clk-rcg.c                         |  517 ++++
+ drivers/clk/qcom/clk-rcg.h                         |  157 +
+ drivers/clk/qcom/clk-rcg2.c                        |  291 ++
+ drivers/clk/qcom/gcc-msm8660.c                     | 2818 ++++++++++++++++++
+ drivers/clk/qcom/gcc-msm8960.c                     | 2992 ++++++++++++++++++++
+ drivers/clk/qcom/gcc-msm8974.c                     | 2693 ++++++++++++++++++
+ drivers/clk/qcom/mmcc-msm8960.c                    | 2320 +++++++++++++++
+ drivers/clk/qcom/mmcc-msm8974.c                    | 2624 +++++++++++++++++
+ drivers/clk/qcom/reset.c                           |   63 +
+ drivers/clk/qcom/reset.h                           |   37 +
+ include/dt-bindings/clock/qcom,gcc-msm8660.h       |  276 ++
+ include/dt-bindings/clock/qcom,gcc-msm8960.h       |  313 ++
+ include/dt-bindings/clock/qcom,gcc-msm8974.h       |  320 +++
+ include/dt-bindings/clock/qcom,mmcc-msm8960.h      |  137 +
+ include/dt-bindings/clock/qcom,mmcc-msm8974.h      |  161 ++
+ include/dt-bindings/reset/qcom,gcc-msm8660.h       |  134 +
+ include/dt-bindings/reset/qcom,gcc-msm8960.h       |  118 +
+ include/dt-bindings/reset/qcom,gcc-msm8974.h       |   96 +
+ include/dt-bindings/reset/qcom,mmcc-msm8960.h      |   93 +
+ include/dt-bindings/reset/qcom,mmcc-msm8974.h      |   62 +
+ include/linux/clk-provider.h                       |   35 +
+ include/linux/reset-controller.h                   |    1 +
+ 34 files changed, 17002 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+ create mode 100644 drivers/clk/qcom/Kconfig
+ create mode 100644 drivers/clk/qcom/Makefile
+ create mode 100644 drivers/clk/qcom/clk-branch.c
+ create mode 100644 drivers/clk/qcom/clk-branch.h
+ create mode 100644 drivers/clk/qcom/clk-pll.c
+ create mode 100644 drivers/clk/qcom/clk-pll.h
+ create mode 100644 drivers/clk/qcom/clk-rcg.c
+ create mode 100644 drivers/clk/qcom/clk-rcg.h
+ create mode 100644 drivers/clk/qcom/clk-rcg2.c
+ create mode 100644 drivers/clk/qcom/gcc-msm8660.c
+ create mode 100644 drivers/clk/qcom/gcc-msm8960.c
+ create mode 100644 drivers/clk/qcom/gcc-msm8974.c
+ create mode 100644 drivers/clk/qcom/mmcc-msm8960.c
+ create mode 100644 drivers/clk/qcom/mmcc-msm8974.c
+ create mode 100644 drivers/clk/qcom/reset.c
+ create mode 100644 drivers/clk/qcom/reset.h
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8660.h
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8960.h
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8974.h
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8960.h
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8974.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8660.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8960.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8974.h
+ create mode 100644 include/dt-bindings/reset/qcom,mmcc-msm8960.h
+ create mode 100644 include/dt-bindings/reset/qcom,mmcc-msm8974.h
+
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
