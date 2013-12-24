@@ -1,7 +1,7 @@
 From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFC v6 1/5] dma: mpc512x: reorder mpc8308 specific instructions
-Date: Tue, 24 Dec 2013 16:06:25 +0400
-Message-ID: <1387886789-20249-2-git-send-email-a13xp0p0v88@gmail.com>
+Subject: [PATCH RFC v6 3/5] dma: of: Add common xlate function for matching by channel id
+Date: Tue, 24 Dec 2013 16:06:27 +0400
+Message-ID: <1387886789-20249-4-git-send-email-a13xp0p0v88@gmail.com>
 References: <1387886789-20249-1-git-send-email-a13xp0p0v88@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1387886789-20249-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -9,92 +9,88 @@ Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Concentrate the specific code for MPC8308 in the 'if' branch
-and handle MPC512x in the 'else' branch.
-This modification only reorders instructions but doesn't change behaviour.
+This patch adds a new common OF dma xlate callback function which will match a
+channel by it's id. The binding expects one integer argument which it will use to
+lookup the channel by the id.
+
+Unlike of_dma_simple_xlate this function is able to handle a system with
+multiple DMA controllers. When registering the of dma provider with
+of_dma_controller_register a pointer to the dma_device struct which is
+associated with the dt node needs to passed as the data parameter.
+New function will use this pointer to match only channels which belong to the
+specified DMA controller.
 
 Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/dma/mpc512x_dma.c | 42 +++++++++++++++++++++++++-----------------
- 1 file changed, 25 insertions(+), 17 deletions(-)
+ drivers/dma/of-dma.c   | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/of_dma.h |  4 ++++
+ 2 files changed, 39 insertions(+)
 
-diff --git a/drivers/dma/mpc512x_dma.c b/drivers/dma/mpc512x_dma.c
-index 448750d..2ce248b 100644
---- a/drivers/dma/mpc512x_dma.c
-+++ b/drivers/dma/mpc512x_dma.c
-@@ -52,9 +52,17 @@
- #define MPC_DMA_DESCRIPTORS	64
- 
- /* Macro definitions */
--#define MPC_DMA_CHANNELS	64
- #define MPC_DMA_TCD_OFFSET	0x1000
- 
-+/*
-+ * Maximum channel counts for individual hardware variants
-+ * and the maximum channel count over all supported controllers,
-+ * used for data structure size
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index 0b88dd3..03a375e 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -215,3 +215,38 @@ struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+ 			&dma_spec->args[0]);
+ }
+ EXPORT_SYMBOL_GPL(of_dma_simple_xlate);
++
++/**
++ * of_dma_xlate_by_chan_id - Translate dt property to DMA channel by channel id
++ * @dma_spec:	pointer to DMA specifier as found in the device tree
++ * @of_dma:	pointer to DMA controller data
++ *
++ * This function can be used as the of xlate callback for DMA driver which wants
++ * to match the channel based on the channel id. When using this xlate function
++ * the #dma-cells propety of the DMA controller dt node needs to be set to 1.
++ * The data parameter of of_dma_controller_register must be a pointer to the
++ * dma_device struct the function should match upon.
++ *
++ * Returns pointer to appropriate dma channel on success or NULL on error.
 + */
-+#define MPC8308_DMACHAN_MAX	16
-+#define MPC512x_DMACHAN_MAX	64
-+#define MPC_DMA_CHANNELS	64
++struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
++					 struct of_dma *ofdma)
++{
++	struct dma_device *dev = ofdma->of_dma_data;
++	struct dma_chan *chan, *candidate = NULL;
 +
- /* Arbitration mode of group and channel */
- #define MPC_DMA_DMACR_EDCG	(1 << 31)
- #define MPC_DMA_DMACR_ERGA	(1 << 3)
-@@ -710,10 +718,10 @@ static int mpc_dma_probe(struct platform_device *op)
- 
- 	dma = &mdma->dma;
- 	dma->dev = dev;
--	if (!mdma->is_mpc8308)
--		dma->chancnt = MPC_DMA_CHANNELS;
-+	if (mdma->is_mpc8308)
-+		dma->chancnt = MPC8308_DMACHAN_MAX;
- 	else
--		dma->chancnt = 16; /* MPC8308 DMA has only 16 channels */
-+		dma->chancnt = MPC512x_DMACHAN_MAX;
- 	dma->device_alloc_chan_resources = mpc_dma_alloc_chan_resources;
- 	dma->device_free_chan_resources = mpc_dma_free_chan_resources;
- 	dma->device_issue_pending = mpc_dma_issue_pending;
-@@ -747,7 +755,19 @@ static int mpc_dma_probe(struct platform_device *op)
- 	 * - Round-robin group arbitration,
- 	 * - Round-robin channel arbitration.
- 	 */
--	if (!mdma->is_mpc8308) {
-+	if (mdma->is_mpc8308) {
-+		/* MPC8308 has 16 channels and lacks some registers */
-+		out_be32(&mdma->regs->dmacr, MPC_DMA_DMACR_ERCA);
++	if (!dev || dma_spec->args_count != 1)
++		return NULL;
 +
-+		/* enable snooping */
-+		out_be32(&mdma->regs->dmagpor, MPC_DMA_DMAGPOR_SNOOP_ENABLE);
-+		/* Disable error interrupts */
-+		out_be32(&mdma->regs->dmaeeil, 0);
++	list_for_each_entry(chan, &dev->channels, device_node)
++		if (chan->chan_id == dma_spec->args[0]) {
++			candidate = chan;
++			break;
++		}
 +
-+		/* Clear interrupts status */
-+		out_be32(&mdma->regs->dmaintl, 0xFFFF);
-+		out_be32(&mdma->regs->dmaerrl, 0xFFFF);
-+	} else {
- 		out_be32(&mdma->regs->dmacr, MPC_DMA_DMACR_EDCG |
- 					MPC_DMA_DMACR_ERGA | MPC_DMA_DMACR_ERCA);
++	if (!candidate)
++		return NULL;
++
++	return dma_get_slave_channel(candidate);
++}
++EXPORT_SYMBOL_GPL(of_dma_xlate_by_chan_id);
+diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+index ae36298..56bc026 100644
+--- a/include/linux/of_dma.h
++++ b/include/linux/of_dma.h
+@@ -41,6 +41,8 @@ extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+ 						     const char *name);
+ extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+ 		struct of_dma *ofdma);
++extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
++		struct of_dma *ofdma);
+ #else
+ static inline int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+@@ -66,6 +68,8 @@ static inline struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_s
+ 	return NULL;
+ }
  
-@@ -768,18 +788,6 @@ static int mpc_dma_probe(struct platform_device *op)
- 		/* Route interrupts to IPIC */
- 		out_be32(&mdma->regs->dmaihsa, 0);
- 		out_be32(&mdma->regs->dmailsa, 0);
--	} else {
--		/* MPC8308 has 16 channels and lacks some registers */
--		out_be32(&mdma->regs->dmacr, MPC_DMA_DMACR_ERCA);
--
--		/* enable snooping */
--		out_be32(&mdma->regs->dmagpor, MPC_DMA_DMAGPOR_SNOOP_ENABLE);
--		/* Disable error interrupts */
--		out_be32(&mdma->regs->dmaeeil, 0);
--
--		/* Clear interrupts status */
--		out_be32(&mdma->regs->dmaintl, 0xFFFF);
--		out_be32(&mdma->regs->dmaerrl, 0xFFFF);
- 	}
++#define of_dma_xlate_by_chan_id NULL
++
+ #endif
  
- 	/* Register DMA engine */
+ #endif /* __LINUX_OF_DMA_H */
 -- 
 1.8.4.2
 
