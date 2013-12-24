@@ -1,7 +1,7 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 7/9] ARM: msm: Add SMP support for KPSSv1
-Date: Mon, 23 Dec 2013 16:39:51 -0800
-Message-ID: <1387845593-10050-8-git-send-email-sboyd@codeaurora.org>
+Subject: [PATCH v2 8/9] ARM: msm: Add SMP support for KPSSv2
+Date: Mon, 23 Dec 2013 16:39:52 -0800
+Message-ID: <1387845593-10050-9-git-send-email-sboyd@codeaurora.org>
 References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
@@ -13,47 +13,46 @@ List-Id: devicetree@vger.kernel.org
 From: Rohit Vaswani <rvaswani@codeaurora.org>
 
 Implement support for the Krait CPU release sequence when the
-CPUs are part of the first version of the krait processor
+CPUs are part of the second version of the Krait processor
 subsystem.
 
 Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
 Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- arch/arm/mach-msm/platsmp.c  | 106 +++++++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-msm/scm-boot.h |   8 ++--
- 2 files changed, 111 insertions(+), 3 deletions(-)
+ arch/arm/mach-msm/platsmp.c | 123 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 123 insertions(+)
 
 diff --git a/arch/arm/mach-msm/platsmp.c b/arch/arm/mach-msm/platsmp.c
-index 11c6239..4b13cd8 100644
+index 4b13cd8..f07ad9d 100644
 --- a/arch/arm/mach-msm/platsmp.c
 +++ b/arch/arm/mach-msm/platsmp.c
-@@ -30,6 +30,16 @@
- #define SCSS_CPU1CORE_RESET		0x2d80
- #define SCSS_DBG_STATUS_CORE_PWRDUP	0x2e64
+@@ -38,7 +38,15 @@
+ #define L2DT_SLP		BIT(3)
+ #define CLAMP			BIT(0)
  
-+#define APCS_CPU_PWR_CTL	0x04
-+#define PLL_CLAMP		BIT(8)
-+#define CORE_PWRD_UP		BIT(7)
-+#define COREPOR_RST		BIT(5)
-+#define CORE_RST		BIT(4)
-+#define L2DT_SLP		BIT(3)
-+#define CLAMP			BIT(0)
++#define APC_PWR_GATE_CTL	0x14
++#define BHS_CNT_SHIFT		24
++#define LDO_PWR_DWN_SHIFT	16
++#define LDO_BYP_SHIFT		8
++#define BHS_SEG_SHIFT		1
++#define BHS_EN			BIT(0)
 +
-+#define APCS_SAW2_VCTL		0x14
-+
+ #define APCS_SAW2_VCTL		0x14
++#define APCS_SAW2_2_VCTL	0x1c
+ 
  extern void secondary_startup(void);
  
- static DEFINE_SPINLOCK(boot_lock);
-@@ -68,6 +78,85 @@ static int scss_release_secondary(unsigned int cpu)
- 	return 0;
+@@ -157,6 +165,106 @@ out_acc:
+ 	return ret;
  }
  
-+static int kpssv1_release_secondary(unsigned int cpu)
++static int kpssv2_release_secondary(unsigned int cpu)
 +{
-+	int ret = 0;
-+	void __iomem *reg, *saw_reg;
-+	struct device_node *cpu_node, *acc_node, *saw_node;
-+	u32 val;
++	void __iomem *reg;
++	struct device_node *cpu_node, *l2_node, *acc_node, *saw_node;
++	void __iomem *l2_saw_base;
++	unsigned reg_val;
++	int ret;
 +
 +	cpu_node = of_get_cpu_node(cpu, NULL);
 +	if (!cpu_node)
@@ -65,7 +64,13 @@ index 11c6239..4b13cd8 100644
 +		goto out_acc;
 +	}
 +
-+	saw_node = of_parse_phandle(cpu_node, "qcom,saw", 0);
++	l2_node = of_parse_phandle(cpu_node, "next-level-cache", 0);
++	if (!l2_node) {
++		ret = -ENODEV;
++		goto out_l2;
++	}
++
++	saw_node = of_parse_phandle(l2_node, "qcom,saw", 0);
 +	if (!saw_node) {
 +		ret = -ENODEV;
 +		goto out_saw;
@@ -74,116 +79,102 @@ index 11c6239..4b13cd8 100644
 +	reg = of_iomap(acc_node, 0);
 +	if (!reg) {
 +		ret = -ENOMEM;
-+		goto out_acc_map;
++		goto out_map;
 +	}
 +
-+	saw_reg = of_iomap(saw_node, 0);
-+	if (!saw_reg) {
++	l2_saw_base = of_iomap(saw_node, 0);
++	if (!l2_saw_base) {
 +		ret = -ENOMEM;
 +		goto out_saw_map;
 +	}
 +
-+	/* Turn on CPU rail */
-+	writel_relaxed(0xA4, saw_reg + APCS_SAW2_VCTL);
++	/* Turn on the BHS, turn off LDO Bypass and power down LDO */
++	reg_val = (64 << BHS_CNT_SHIFT) | (0x3f << LDO_PWR_DWN_SHIFT) | BHS_EN;
++	writel_relaxed(reg_val, reg + APC_PWR_GATE_CTL);
 +	mb();
-+	udelay(512);
++	/* wait for the BHS to settle */
++	udelay(1);
 +
-+	/* Krait bring-up sequence */
-+	val = PLL_CLAMP | L2DT_SLP | CLAMP;
-+	writel_relaxed(val, reg + APCS_CPU_PWR_CTL);
-+	val &= ~L2DT_SLP;
-+	writel_relaxed(val, reg + APCS_CPU_PWR_CTL);
++	/* Turn on BHS segments */
++	reg_val |= 0x3f << BHS_SEG_SHIFT;
++	writel_relaxed(reg_val, reg + APC_PWR_GATE_CTL);
 +	mb();
-+	ndelay(300);
++	 /* wait for the BHS to settle */
++	udelay(1);
 +
-+	val |= COREPOR_RST;
-+	writel_relaxed(val, reg + APCS_CPU_PWR_CTL);
++	/* Finally turn on the bypass so that BHS supplies power */
++	reg_val |= 0x3f << LDO_BYP_SHIFT;
++	writel_relaxed(reg_val, reg + APC_PWR_GATE_CTL);
++
++	/* enable max phases */
++	writel_relaxed(0x10003, l2_saw_base + APCS_SAW2_2_VCTL);
++	mb();
++	udelay(50);
++
++	reg_val = COREPOR_RST | CLAMP;
++	writel_relaxed(reg_val, reg + APCS_CPU_PWR_CTL);
 +	mb();
 +	udelay(2);
 +
-+	val &= ~CLAMP;
-+	writel_relaxed(val, reg + APCS_CPU_PWR_CTL);
++	reg_val &= ~CLAMP;
++	writel_relaxed(reg_val, reg + APCS_CPU_PWR_CTL);
 +	mb();
 +	udelay(2);
 +
-+	val &= ~COREPOR_RST;
-+	writel_relaxed(val, reg + APCS_CPU_PWR_CTL);
-+	mb();
-+	udelay(100);
-+
-+	val |= CORE_PWRD_UP;
-+	writel_relaxed(val, reg + APCS_CPU_PWR_CTL);
++	reg_val &= ~COREPOR_RST;
++	writel_relaxed(reg_val, reg + APCS_CPU_PWR_CTL);
 +	mb();
 +
-+	iounmap(saw_reg);
++	reg_val |= CORE_PWRD_UP;
++	writel_relaxed(reg_val, reg + APCS_CPU_PWR_CTL);
++	mb();
++
++	ret = 0;
++
++	iounmap(l2_saw_base);
 +out_saw_map:
 +	iounmap(reg);
-+out_acc_map:
++out_map:
 +	of_node_put(saw_node);
 +out_saw:
++	of_node_put(l2_node);
++out_l2:
 +	of_node_put(acc_node);
 +out_acc:
 +	of_node_put(cpu_node);
++
 +	return ret;
 +}
 +
  static DEFINE_PER_CPU(int, cold_boot_done);
  
  static int msm_boot_secondary(unsigned int cpu, int (*func)(unsigned int))
-@@ -107,6 +196,11 @@ static int msm8660_boot_secondary(unsigned int cpu, struct task_struct *idle)
- 	return msm_boot_secondary(cpu, scss_release_secondary);
+@@ -201,6 +309,11 @@ static int kpssv1_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ 	return msm_boot_secondary(cpu, kpssv1_release_secondary);
  }
  
-+static int kpssv1_boot_secondary(unsigned int cpu, struct task_struct *idle)
++static int kpssv2_boot_secondary(unsigned int cpu, struct task_struct *idle)
 +{
-+	return msm_boot_secondary(cpu, kpssv1_release_secondary);
++	return msm_boot_secondary(cpu, kpssv2_release_secondary);
 +}
 +
  static void __init msm_smp_prepare_cpus(unsigned int max_cpus)
  {
  	int cpu, map;
-@@ -114,6 +208,8 @@ static void __init msm_smp_prepare_cpus(unsigned int max_cpus)
- 	static const int cold_boot_flags[] = {
- 		0,
- 		SCM_FLAG_COLDBOOT_CPU1,
-+		SCM_FLAG_COLDBOOT_CPU2,
-+		SCM_FLAG_COLDBOOT_CPU3,
- 	};
- 
- 	for_each_present_cpu(cpu) {
-@@ -144,3 +240,13 @@ static struct smp_operations msm_smp_8660_ops __initdata = {
+@@ -250,3 +363,13 @@ static struct smp_operations msm_smp_kpssv1_ops __initdata = {
  #endif
  };
- CPU_METHOD_OF_DECLARE(msm_smp, "qcom,gcc-msm8660", &msm_smp_8660_ops);
+ CPU_METHOD_OF_DECLARE(msm_smp_kpssv1, "qcom,kpss-acc-v1", &msm_smp_kpssv1_ops);
 +
-+static struct smp_operations msm_smp_kpssv1_ops __initdata = {
++static struct smp_operations msm_smp_kpssv2_ops __initdata = {
 +	.smp_prepare_cpus	= msm_smp_prepare_cpus,
 +	.smp_secondary_init	= msm_secondary_init,
-+	.smp_boot_secondary	= kpssv1_boot_secondary,
++	.smp_boot_secondary	= kpssv2_boot_secondary,
 +#ifdef CONFIG_HOTPLUG_CPU
 +	.cpu_die		= msm_cpu_die,
 +#endif
 +};
-+CPU_METHOD_OF_DECLARE(msm_smp_kpssv1, "qcom,kpss-acc-v1", &msm_smp_kpssv1_ops);
-diff --git a/arch/arm/mach-msm/scm-boot.h b/arch/arm/mach-msm/scm-boot.h
-index 7be32ff..6aabb24 100644
---- a/arch/arm/mach-msm/scm-boot.h
-+++ b/arch/arm/mach-msm/scm-boot.h
-@@ -13,9 +13,11 @@
- #define __MACH_SCM_BOOT_H
- 
- #define SCM_BOOT_ADDR			0x1
--#define SCM_FLAG_COLDBOOT_CPU1		0x1
--#define SCM_FLAG_WARMBOOT_CPU1		0x2
--#define SCM_FLAG_WARMBOOT_CPU0		0x4
-+#define SCM_FLAG_COLDBOOT_CPU1		0x01
-+#define SCM_FLAG_COLDBOOT_CPU2		0x08
-+#define SCM_FLAG_COLDBOOT_CPU3		0x20
-+#define SCM_FLAG_WARMBOOT_CPU0		0x04
-+#define SCM_FLAG_WARMBOOT_CPU1		0x02
- 
- int scm_set_boot_addr(phys_addr_t addr, int flags);
- 
++CPU_METHOD_OF_DECLARE(msm_smp_kpssv2, "qcom,kpss-acc-v2", &msm_smp_kpssv2_ops);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
