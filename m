@@ -1,147 +1,94 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 1/2] ARM: dts: Fix status property of mmc nodes for snow
- board
-Date: Tue, 24 Dec 2013 12:12:27 +0900
-Message-ID: <1b0b01cf0055$f9d15720$ed740560$@samsung.com>
-References: <1386571118-17793-1-git-send-email-yuvaraj.cd@samsung.com>
- <CAD=FV=WqgGPZaEz46JLJAPymLA5Wzehgre2Z7X4AFAWN9L_Lvg@mail.gmail.com>
- <52A62E7A.1010006@samsung.com>
- <CAOesGMha3i+k+aBSivJopRxoi1rxAaF+ktU4KG9vfTf54A8f8Q@mail.gmail.com>
- <52B1F905.1060206@samsung.com>
- <CAOesGMhBMh6+DJTXSDcmQWk8EAPJG1O0ZWwGJuNC_A8k6fgegw@mail.gmail.com>
- <1af501cf0047$3362ba60$9a282f20$@samsung.com>
- <CAOesGMhuvTBUBwg64eRXz0Dpzp8MNMdncCt-ipQXjixGKFONoQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
+ extensions for GMAC in Allwinner A20 SoC's
+Date: Tue, 24 Dec 2013 11:27:45 +0800
+Message-ID: <CAGb2v64Q1PSMw_nULBHMR5eOC44hWBPewchxE_4sO+4XN8_sDA@mail.gmail.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org>
+ <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A52C.50605@st.com>
+ <CAGb2v67WiCaMpJEzA_X6o7uOu6i3w3FCEz7=N5HY0amQb01SZA@mail.gmail.com>
+ <52A72C6D.60100@st.com> <CAGb2v64qQvqJSicA6MTAxeh1sGjWY=Pk=vDq=9J3pTQW+wkXrA@mail.gmail.com>
+ <52A87A74.8040807@st.com> <20131212090415.GQ3651@lukather>
+ <CAGb2v655_83b76PTmgkDmNGCADWwTjTwW13sOgM5HFmCVkeu=w@mail.gmail.com> <20131213103822.GX3651@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAOesGMhuvTBUBwg64eRXz0Dpzp8MNMdncCt-ipQXjixGKFONoQ@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Olof Johansson' <olof@lixom.net>
-Cc: 'Doug Anderson' <dianders@chromium.org>, 'Yuvaraj Kumar C D' <yuvaraj.cd@gmail.com>, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, 'Rob Herring' <rob.herring@calxeda.com>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Stephen Warren' <swarren@wwwdotorg.org>, 'Ian Campbell' <ian.campbell@citrix.com>, devicetree@vger.kernel.org, 'Abhilash Kesavan' <a.kesavan@samsung.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Alim Akhtar' <alim.akhtar@samsung.com>, 'Sonny Rao' <sonnyrao@chromium.org>, 'Yuvaraj Kumar C D' <yuvaraj.cd@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBR764OKQKGQEOW7RDKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20131213103822.GX3651@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Olof Johansson wrote:
-> 
-> On Mon, Dec 23, 2013 at 5:26 PM, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> > Olof Johansson wrote:
-> >>
-> >> On Wed, Dec 18, 2013 at 11:35 AM, Kukjin Kim <kgene.kim@samsung.com>
-> > wrote:
-> >> > On 12/19/13 03:38, Olof Johansson wrote:
-> >> >>
-> >> >> On Mon, Dec 9, 2013 at 12:56 PM, Kukjin Kim<kgene.kim@samsung.com>
-> >> wrote:
-> >> >>>
-> >> >>> On 12/10/13 01:16, Doug Anderson wrote:
-> >> >>>>
-> >> >>>>
-> >> >>>> Yuvaraj,
-> >> >>>>
-> >> >>>> On Sun, Dec 8, 2013 at 10:38 PM, Yuvaraj Kumar C
-> >> D<yuvaraj.cd@gmail.com>
-> >> >>>> wrote:
-> >> >>>>>
-> >> >>>>>
-> >> >>>>> Commit 0c3de788 ("ARM: dts: change status property of dwmmc nodes
-> >> >>>>> for exynos5250") missed out handling the exynos5250 snow dts
-file.
-> >> >>>>>
-> >> >>>>> Signed-off-by : Abhilash Kesavan<a.kesavan@samsung.com>
-> >> >>>>>
-> >> >>>>> Signed-off-by: Yuvaraj Kumar C D<yuvaraj.cd@samsung.com>
-> >> >>>>> ---
-> >> >>>>>    arch/arm/boot/dts/cros5250-common.dtsi |    4 ----
-> >> >>>>>    arch/arm/boot/dts/exynos5250-snow.dts  |    9 +++++++++
-> >> >>>>>    2 files changed, 9 insertions(+), 4 deletions(-)
-> >> >>>>>
-> >> >>>>> diff --git a/arch/arm/boot/dts/cros5250-common.dtsi
-> >> >>>>> b/arch/arm/boot/dts/cros5250-common.dtsi
-> >> >>>>> index 6470536..1ceb62e 100644
-> >> >>>>> --- a/arch/arm/boot/dts/cros5250-common.dtsi
-> >> >>>>> +++ b/arch/arm/boot/dts/cros5250-common.dtsi
-> >> >>>>> @@ -247,10 +247,6 @@
-> >> >>>>>                   };
-> >> >>>>>           };
-> >> >>>>>
-> >> >>>>> -       mmc@12210000 {
-> >> >>>>> -               status = "disabled";
-> >> >>>>> -       };
-> >> >>>>> -
-> >> >>>>>           mmc@12220000 {
-> >> >>>>>                   num-slots =<1>;
-> >> >>>>>                   supports-highspeed;
-> >> >>>>> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts
-> >> >>>>> b/arch/arm/boot/dts/exynos5250-snow.dts
-> >> >>>>> index a9395c4..67484d1 100644
-> >> >>>>> --- a/arch/arm/boot/dts/exynos5250-snow.dts
-> >> >>>>> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
-> >> >>>>> @@ -171,11 +171,20 @@
-> >> >>>>>                   };
-> >> >>>>>           };
-> >> >>>>>
-> >> >>>>> +       mmc@12200000 {
-> >> >>>>> +               status = "okay";
-> >> >>>>> +       };
-> >> >>>>> +
-> >> >>>>> +       mmc@12220000 {
-> >> >>>>> +               status = "okay";
-> >> >>>>> +       };
-> >> >>>>> +
-> >> >>>>
-> >> >>>>
-> >> >>>>
-> >> >>>> I probably would have put the 12200000 and 12220000 ones in
-> >> >>>> cros5250-common since that's where all of the other stuff relating
-> to
-> >> >>>> those ports is.  Some of it may need to be moved around once we
-> get
-> >> >>>> the HP Chromebook 11 (exynos5250-spring) in place, but until then
-> it
-> >> >>>> seems best to keep it all together.
-> >> >>>>
-> >> >>>> -Doug
-> >> >>>
-> >> >>>
-> >> >>>
-> >> >>> OK, sounds better, I don't know well about the HP Chromebook though
-> > ;-)
-> >> >>
-> >> >>
-> >> >> This broke linux-next on snow ever since the original patch went in.
-> >> >> Please squash the above into the original patch or at the very least
-> >> >> apply it as soon as possible.
-> >> >>
-> >> > Oops, OK. I've applied this separately just now.
-> >>
-> >> Since you hadn't applied this to the branch you sent me, I now have an
-> >> arm-soc for-next branch that doesn't boot on Chromebooks.
-> >>
-> > Because 1st pull request already has been sent out to arm-soc when I
-> picked
-> > this into samsung tree after your inform. So I couldn't.
-> 
-> Ah. A comment on the old pull request to give us a heads up would have
-> been useful.
-> 
-You're right. OK, I will.
+Hi,
 
-> >> I've picked up the above patch directly into arm-soc. Please drop it
-> >> from your branch.
-> >>
-> > You mean, I need to re-sort out my 2nd pull-request already sent out?
-> IMHO,
-> > would be better to us if you could pull my 2nd pull-request and drop
-> your
-> > picking up...
-> 
-> Ok, I'll look at doing that. It's unfortunate that it's broken across
-> a wider set of changes though, if we ever need to bisect across it for
-> some reason.
-> 
-Agreed, I will look at my branch with more attention.
+On Fri, Dec 13, 2013 at 6:38 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Thu, Dec 12, 2013 at 06:31:43PM +0800, Chen-Yu Tsai wrote:
+>> Hi,
+>>
+>> On Thu, Dec 12, 2013 at 5:04 PM, Maxime Ripard
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > Hi,
+>> >
+>> > On Wed, Dec 11, 2013 at 02:45:08PM +0000, srinivas kandagatla wrote:
+>> >> >>> 1. .tx_coe
+>> >> >>>    This is not exported in the DT bindings.
+>> >> >>>    Looking at stmmac code, not setting this seems to disable all
+>> >> >>>    checksum offloading.
+>> >> >>
+>> >> >> Why cant this go via DT as well?
+>> >> >
+>> >> > If you and Giuseppe are OK with this, why not?
+>> >> Am Ok with it.
+>> >
+>> > Please note that I'm opposed to this until someone explain why putting
+>> > it in the DT is relevant (and not just convenient).
+>>
+>> Checksum offloading is an optional feature[1], implemented starting
+>> from version 3.20a. It is not tied to a specific IP version. As such,
+>> using a "snps,dwmac-<version>" compatible isn't a good fit here.
+>
+> No, but we're not in such case. Since we have a compatible of our own,
+> we can derive it from that. Putting a property in the DT would only be
+> redundant.
+>
+>> stmmac does auto-detection for optional features on MAC version > 3.50a.
+>> This is what Srinivas was referring to.
+>>
+>> Unfortunately, our MAC is < 3.50a. No auto-detection. We could add a
+>> "snps,dwmac-tx-coe" compatible for this, or the seperate DT property.
+>>
+>> The other way would be to pass the flags in the initial .data with the
+>> SoC specific compatible. Other SoCs with the same feature won't be
+>> able to reuse the same compatible though.
+>
+> Which is already pretty much the case, since we have to deal with
+> Allwinner specific code and features.
+>
+> A new compatible is cheap to maintain, a new property is not.
 
-Thanks a lot.
+Srinivas,
 
-- Kukjin
+Let's keep platform data as of_data, so SoC compatibles can pass
+hardware feature flags for cores that don't support auto-detection.
+
+We can adjust the callbacks as you suggested, and I added a .free
+to complement .setup. Driver private data and platform data are
+off limits to the callbacks. My version of the callbacks:
+
+        void (*fix_mac_speed)(void *priv, unsigned int speed);
+        void (*bus_setup)(void __iomem *ioaddr);
+        void *(*setup)(struct platform_device *pdev);
+        void (*free)(struct platform_device *pdev, void *priv);
+        int (*init)(struct platform_device *pdev, void *priv);
+        void (*exit)(struct platform_device *pdev, void *priv);
+
+
+Cheers,
+
+ChenYu
