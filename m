@@ -1,94 +1,82 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
- extensions for GMAC in Allwinner A20 SoC's
-Date: Tue, 24 Dec 2013 11:27:45 +0800
-Message-ID: <CAGb2v64Q1PSMw_nULBHMR5eOC44hWBPewchxE_4sO+4XN8_sDA@mail.gmail.com>
-References: <1386350983-13281-1-git-send-email-wens@csie.org>
- <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A52C.50605@st.com>
- <CAGb2v67WiCaMpJEzA_X6o7uOu6i3w3FCEz7=N5HY0amQb01SZA@mail.gmail.com>
- <52A72C6D.60100@st.com> <CAGb2v64qQvqJSicA6MTAxeh1sGjWY=Pk=vDq=9J3pTQW+wkXrA@mail.gmail.com>
- <52A87A74.8040807@st.com> <20131212090415.GQ3651@lukather>
- <CAGb2v655_83b76PTmgkDmNGCADWwTjTwW13sOgM5HFmCVkeu=w@mail.gmail.com> <20131213103822.GX3651@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sebastian Reichel <sre@debian.org>
+Subject: Re: [PATCH 1/3] power_supply: add power_supply_get_by_phandle
+Date: Tue, 24 Dec 2013 04:37:30 +0100
+Message-ID: <20131224033729.GA6542@earth.universe>
+References: <1385311771-447-1-git-send-email-sre@debian.org>
+ <1385311771-447-2-git-send-email-sre@debian.org>
+ <20131224022035.GA25939@lizard>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBR764OKQKGQEOW7RDKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20131213103822.GX3651@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131224022035.GA25939@lizard>
+Sender: linux-omap-owner@vger.kernel.org
+To: Anton Vorontsov <anton@enomsg.org>
+Cc: David Woodhouse <dwmw2@infradead.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, freemangordon@abv.bg, aaro.koskinen@iki.fi, pavel@ucw.cz
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Fri, Dec 13, 2013 at 6:38 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Thu, Dec 12, 2013 at 06:31:43PM +0800, Chen-Yu Tsai wrote:
->> Hi,
->>
->> On Thu, Dec 12, 2013 at 5:04 PM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > Hi,
->> >
->> > On Wed, Dec 11, 2013 at 02:45:08PM +0000, srinivas kandagatla wrote:
->> >> >>> 1. .tx_coe
->> >> >>>    This is not exported in the DT bindings.
->> >> >>>    Looking at stmmac code, not setting this seems to disable all
->> >> >>>    checksum offloading.
->> >> >>
->> >> >> Why cant this go via DT as well?
->> >> >
->> >> > If you and Giuseppe are OK with this, why not?
->> >> Am Ok with it.
->> >
->> > Please note that I'm opposed to this until someone explain why putting
->> > it in the DT is relevant (and not just convenient).
->>
->> Checksum offloading is an optional feature[1], implemented starting
->> from version 3.20a. It is not tied to a specific IP version. As such,
->> using a "snps,dwmac-<version>" compatible isn't a good fit here.
->
-> No, but we're not in such case. Since we have a compatible of our own,
-> we can derive it from that. Putting a property in the DT would only be
-> redundant.
->
->> stmmac does auto-detection for optional features on MAC version > 3.50a.
->> This is what Srinivas was referring to.
->>
->> Unfortunately, our MAC is < 3.50a. No auto-detection. We could add a
->> "snps,dwmac-tx-coe" compatible for this, or the seperate DT property.
->>
->> The other way would be to pass the flags in the initial .data with the
->> SoC specific compatible. Other SoCs with the same feature won't be
->> able to reuse the same compatible though.
->
-> Which is already pretty much the case, since we have to deal with
-> Allwinner specific code and features.
->
-> A new compatible is cheap to maintain, a new property is not.
+--/9DWx/yDrRhgMJTb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Srinivas,
+On Mon, Dec 23, 2013 at 06:20:36PM -0800, Anton Vorontsov wrote:
+> On Sun, Nov 24, 2013 at 05:49:29PM +0100, Sebastian Reichel wrote:
+> > Add method to get power supply by device tree phandle.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sre@debian.org>
+> > ---
+> >  drivers/power/power_supply_core.c | 24 ++++++++++++++++++++++++
+> >  include/linux/power_supply.h      |  2 ++
+> >  2 files changed, 26 insertions(+)
+> >=20
+> > diff --git a/drivers/power/power_supply_core.c b/drivers/power/power_su=
+pply_core.c
+> > index 08bce22..99e4b41 100644
+> > --- a/drivers/power/power_supply_core.c
+> > +++ b/drivers/power/power_supply_core.c
+> > @@ -340,6 +340,30 @@ struct power_supply *power_supply_get_by_name(cons=
+t char *name)
+> ...
+> > +
+> > +	dev =3D class_find_device(power_supply_class, NULL, power_supply_np,
+> > +						power_supply_match_device_node);
+> > +
+> > +	of_node_put(power_supply_np);
+> > +
+> > +	return dev ? dev_get_drvdata(dev) : NULL;
+> > +}
+> > +EXPORT_SYMBOL_GPL(power_supply_get_by_phandle);
+>=20
+> The code had no !CONFIG_OF protection so I had to make the following
+> changes to this patch:
 
-Let's keep platform data as of_data, so SoC compatibles can pass
-hardware feature flags for cores that don't support auto-detection.
+Right. Thanks for queuing.
 
-We can adjust the callbacks as you suggested, and I added a .free
-to complement .setup. Driver private data and platform data are
-off limits to the callbacks. My version of the callbacks:
+-- Sebastian
 
-        void (*fix_mac_speed)(void *priv, unsigned int speed);
-        void (*bus_setup)(void __iomem *ioaddr);
-        void *(*setup)(struct platform_device *pdev);
-        void (*free)(struct platform_device *pdev, void *priv);
-        int (*init)(struct platform_device *pdev, void *priv);
-        void (*exit)(struct platform_device *pdev, void *priv);
+--/9DWx/yDrRhgMJTb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
 
-Cheers,
+iQIcBAEBCAAGBQJSuQF5AAoJENju1/PIO/qaqEIP/1mx9Ouf+SlbTb+JU6qTNQhj
+2xp1MODlz16YgAijWzPQUvlCa/+k60VCesd0UWUx2k/uMtk7dHgQb6TBN8t72iva
+YsvgxKNznHIcTiUEUm/SvFxc8m9dXZ0wOQyO0t7a4pSCbaRTdH0w1a2gYJ7hgrpy
+4bWI1HEc8Uxnbo/ZyAYvZGcibM60MO+7ZvrEYXnndsFsEoVVePTmQUTrKJgGK08L
+veyjHAuO8vY8qqySc43U+PQi0SvKNgJsnruuh++Pkv6QS6777hx72aPyIU15OeUP
+hK+q9jsUgQXTQlO598tRo67JhPXSXZ/MlbtW0PUJ4VrjBRKzVxhQB/O0w2my2t7L
+7/XVQy3cKyxa5qLyNomQX3QCp4oPXxuAiQTQzE62rrHAZ6swQnvEncHp6KGgTWra
+v6G1TLujXOpx22KHLGDPgKey6V0jZv/9PSAJV7Tv0/r9PI09EnhkPjUbAykwb7cQ
+ALiFJfWvIDJn1ZMP2WaiT6l6EFBcYrgMLsaDseKp80uKPF4EyGI1T5Otovsx38is
+SHqzcxBclC97/YsLvhARg32Dn9trDYWHC0AuuA7fffy04673MjR1FntD92wBotWr
+2Ur7N8+GrZ2LXq2+44N94PkOXX1saxYAheFYV6F2aYj0hRwEQhRqNI6Cp1MsOKt0
+U64yaHxCoW9xq6/8TGrj
+=ACM0
+-----END PGP SIGNATURE-----
 
-ChenYu
+--/9DWx/yDrRhgMJTb--
