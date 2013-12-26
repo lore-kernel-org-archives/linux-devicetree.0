@@ -1,116 +1,121 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v4 4/4] Phy: Add DT nodes on kirkwood and Dove for the SATA PHY
-Date: Thu, 26 Dec 2013 18:25:42 +0100
-Message-ID: <1388078742-6726-5-git-send-email-andrew@lunn.ch>
-References: <20131219194237.GC22725@htj.dyndns.org>
- <1388078742-6726-1-git-send-email-andrew@lunn.ch>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1388078742-6726-1-git-send-email-andrew@lunn.ch>
-Sender: linux-ide-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, kishon@ti.com, tj@kernel.org
-Cc: devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, Andrew Lunn <andrew@lunn.ch>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH V5 0/4] DRIVERS: IRQCHIP: Add support for crossbar IP
+Date: Thu, 26 Dec 2013 12:44:54 -0500
+Message-ID: <52BC6B16.80507@ti.com>
+References: <1386066445-28245-1-git-send-email-r.sricharan@ti.com>
+ <52B168A5.4010202@ti.com> <52BBB614.5010707@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52BBB614.5010707@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sricharan R <r.sricharan@ti.com>, tony@atomide.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, nm@ti.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, marc.zyngier@arm.com, linus.walleij@linaro.org, rnayak@ti.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, bcousson@baylibre.com, galak@codeaurora.org, grant.likely@linaro.org, tglx@linutronix.de, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for the two SATA PHYs on kirkwood.
-Add node for the one SATA PHY on Dove.
-Add pHandles to the PHYs in the sata nodes.
+Sricharan,
 
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
----
-v1->v2:
-sata_phy@... ->sata-phy@
-value after '@' matching the first address in the reg.
+On Wednesday 25 December 2013 11:52 PM, Sricharan R wrote:
+> Hi Thomas,
+> On Wednesday 18 December 2013 02:49 PM, Sricharan R wrote:
+>> Hi Thomas,
+>>
+>> On Tuesday 03 December 2013 03:57 PM, Sricharan R wrote:
+>>> Some socs have a large number of interrupts requests to service
+>>> the needs of its many peripherals and subsystems. All of the interrupt
+>>> requests lines from the subsystems are not needed at the same
+>>> time, so they have to be muxed to the controllers appropriately.
+>>> In such places a interrupt controllers are preceded by an
+>>> IRQ CROSSBAR that provides flexibility in muxing the device interrupt
+>>> requests to the controller inputs.
+>>>
+>>> This series models the peripheral interrupts that can be routed through
+>>> the crossbar to the GIC as 'routable-irqs'. The routable irqs are added
+>>> in a separate linear domain inside the GIC. The registered routable domain's
+>>> callback are invoked as a part of the GIC's callback, which in turn should
+>>> allocate a free irq line and configure the IP accordingly. So every peripheral
+>>> in the dts files mentions the fixed crossbar number as its interrupt. A free
+>>> gic line for that gets allocated and configured when the peripheral interrupts
+>>> are mapped.
+>>>
+>>> The minimal crossbar driver to track and allocate free GIC lines and configure the
+>>> crossbar is added here, along with the DT bindings.
+>>>
+>>> V5:
+>>>    Addressed a comment from Mark Rutland <mark.rutland@arm.com>,
+>>>    updated tags and rebased on 3.13-rc2
+>>>
+>>> V4:
+>>>    Addressed a couple of comments and split the DTS file updates in to
+>>>    a separate series.
+>>>
+>>> V3:
+>>>    Addressed few more comments from Thomas Gleixner <tglx@linutronix.de>
+>>>
+>>>    Rebased patches 3,4,5,7 which updates the DTS file on top of below branch
+>>> 	   git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git
+>>> 	   for_3.13/dts
+>>>
+>>>    Rebased patches 1,2,6 on top of 3.12 mainline
+>>>    Updated Commit tags
+>>>
+>>> V2:
+>>>    Addressed Thomas Gleixner <tglx@linutronix.de> comments and
+>>>    Kumar Gala <galak@codeaurora.org>
+>>>
+>>>    Split updating the DRA7.dtsi file for adding the routable-irqs
+>>>
+>>> Previous discussions that led to this is at
+>>> 	https://lkml.org/lkml/2013/9/18/540
+>>>
+>>> The V1,V2,V3,V4 post of these patches is at
+>>>       [V1]  https://lkml.org/lkml/2013/9/30/283
+>>>       [V2]  http://www.spinics.net/lists/linux-omap/msg99540.html
+>>>       [V3]  http://www.kernelhub.org/?msg=356470&p=2
+>>>       [V4]  http://www.spinics.net/lists/linux-doc/msg16726.html
+>>>
+>>> Sricharan R (4):
+>>>   DRIVERS: IRQCHIP: IRQ-GIC: Add support for routable irqs
+>>>   DRIVERS: IRQCHIP: CROSSBAR: Add support for Crossbar IP
+>>>   ARM: OMAP4+: Correct Wakeup-gen code to use physical irq number
+>>>   ARM: DRA: Enable Crossbar IP support for DRA7XX
+>>>
+>>>  Documentation/devicetree/bindings/arm/gic.txt      |    6 +
+>>>  .../devicetree/bindings/arm/omap/crossbar.txt      |   27 +++
+>>>  arch/arm/mach-omap2/Kconfig                        |    1 +
+>>>  arch/arm/mach-omap2/omap-wakeupgen.c               |    4 +-
+>>>  arch/arm/mach-omap2/omap4-common.c                 |    2 +
+>>>  drivers/irqchip/Kconfig                            |    8 +
+>>>  drivers/irqchip/Makefile                           |    1 +
+>>>  drivers/irqchip/irq-crossbar.c                     |  208 ++++++++++++++++++++
+>>>  drivers/irqchip/irq-gic.c                          |   81 +++++++-
+>>>  include/linux/irqchip/arm-gic.h                    |    7 +-
+>>>  include/linux/irqchip/irq-crossbar.h               |   11 ++
+>>>  11 files changed, 343 insertions(+), 13 deletions(-)
+>>>  create mode 100644 Documentation/devicetree/bindings/arm/omap/crossbar.txt
+>>>  create mode 100644 drivers/irqchip/irq-crossbar.c
+>>>  create mode 100644 include/linux/irqchip/irq-crossbar.h
+>>>
+>>
+>> I have addressed all the comments on this series, can this be merged now ?
+>>
+>   Ping..
+> 
+Thomas has already given his reviewed-by tag so the patches can be
+taken via arm-soc tree considering OMAP and GIC changes. Can you
+create a branch with all these patches applied and send it
+to Tony ?
 
-v2->v3:
-"0" -> "port0", etc.
-kirkewood -> kirkwood
----
- arch/arm/boot/dts/dove.dtsi          |   11 +++++++++++
- arch/arm/boot/dts/kirkwood-6281.dtsi |    2 ++
- arch/arm/boot/dts/kirkwood-6282.dtsi |    2 ++
- arch/arm/boot/dts/kirkwood.dtsi      |   18 ++++++++++++++++++
- 4 files changed, 33 insertions(+)
+Tony, Will you able to pull this and send it up to arm-soc ?
 
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 113a8bc..198d036 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -490,10 +490,21 @@
- 				reg = <0xa0000 0x2400>;
- 				interrupts = <62>;
- 				clocks = <&gate_clk 3>;
-+				phys = <&sata_phy0>;
-+				phy-names = "port0";
- 				nr-ports = <1>;
- 				status = "disabled";
- 			};
- 
-+			sata_phy0: sata-phy@a2000 {
-+				compatible = "marvell,mvebu-sata-phy";
-+				reg = <0xa2000 0x0334>;
-+				clocks = <&gate_clk 3>;
-+				clock-names = "sata";
-+				#phy-cells = <0>;
-+				status = "ok";
-+			};
-+
- 			rtc: real-time-clock@d8500 {
- 				compatible = "marvell,orion-rtc";
- 				reg = <0xd8500 0x20>;
-diff --git a/arch/arm/boot/dts/kirkwood-6281.dtsi b/arch/arm/boot/dts/kirkwood-6281.dtsi
-index 650ef30..18400e7 100644
---- a/arch/arm/boot/dts/kirkwood-6281.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-6281.dtsi
-@@ -89,6 +89,8 @@
- 			interrupts = <21>;
- 			clocks = <&gate_clk 14>, <&gate_clk 15>;
- 			clock-names = "0", "1";
-+			phys = <&sata_phy0>, <&sata_phy1>;
-+			phy-names = "port0", "port1";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/kirkwood-6282.dtsi b/arch/arm/boot/dts/kirkwood-6282.dtsi
-index 3933a33..69c622b 100644
---- a/arch/arm/boot/dts/kirkwood-6282.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-6282.dtsi
-@@ -117,6 +117,8 @@
- 			interrupts = <21>;
- 			clocks = <&gate_clk 14>, <&gate_clk 15>;
- 			clock-names = "0", "1";
-+			phys = <&sata_phy0>, <&sata_phy1>;
-+			phy-names = "port0", "port1";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-index 8b73c80..ee06951 100644
---- a/arch/arm/boot/dts/kirkwood.dtsi
-+++ b/arch/arm/boot/dts/kirkwood.dtsi
-@@ -282,5 +282,23 @@
- 				/* set phy-handle property in board file */
- 			};
- 		};
-+
-+		sata_phy0: sata-phy@82000 {
-+			compatible = "marvell,mvebu-sata-phy";
-+			reg = <0x82000 0x0334>;
-+			clocks = <&gate_clk 14>;
-+			clock-names = "sata";
-+			#phy-cells = <0>;
-+			status = "ok";
-+		};
-+
-+		sata_phy1: sata-phy@84000 {
-+			compatible = "marvell,mvebu-sata-phy";
-+			reg = <0x84000 0x0334>;
-+			clocks = <&gate_clk 15>;
-+			clock-names = "sata";
-+			#phy-cells = <0>;
-+			status = "ok";
-+		};
- 	};
- };
--- 
-1.7.10.4
-
+Regards,
+Santosh
