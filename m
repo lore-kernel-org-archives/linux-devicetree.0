@@ -1,72 +1,67 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH V5 2/4] DRIVERS: IRQCHIP: CROSSBAR: Add support for
- Crossbar IP
-Date: Thu, 26 Dec 2013 14:01:06 -0600
-Message-ID: <20131226200106.GA30559@saruman.home>
-References: <1386066445-28245-1-git-send-email-r.sricharan@ti.com>
- <1386066445-28245-3-git-send-email-r.sricharan@ti.com>
-Reply-To: <balbi@ti.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [GIT PULL] clk: initial support  for Broadcom Kona clocks
+Date: Thu, 26 Dec 2013 14:50:59 -0800
+Message-ID: <20131226225059.28468.61907@quantum>
+References: <52AF1BA5.6000902@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1386066445-28245-3-git-send-email-r.sricharan@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, robherring2@gmail.com, tglx@linutronix.de, galak@codeaurora.org, rob.herring@calxeda.com, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52AF1BA5.6000902@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alex Elder <alex.elder@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Quoting Alex Elder (2013-12-16 07:26:29)
+> Mike, please pull the following for 3.14.  It adds clock support
+> for Broadcom SoCs having "Kona" clock control units.  Thanks.
 
-Hi,
+Pulled into clk-next.
 
-On Tue, Dec 03, 2013 at 03:57:23PM +0530, Sricharan R wrote:
-> +static const struct of_device_id crossbar_match[] __initconst =3D {
-> +	{ .compatible =3D "ti,irq-crossbar" },
-> +	{}
-> +};
-> +
-> +int irqcrossbar_init(void)
-> +{
-> +	struct device_node *np;
-> +	np =3D of_find_matching_node(NULL, crossbar_match);
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	crossbar_of_init(np);
-> +	return 0;
-> +}
+Thanks!
+Mike
 
-instead, please use IRQCHIP_DECLARE() then you won't need to expose this
-symbol to be used by arch/arm/ code.
-
---=20
-balbi
-
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSvIsCAAoJEIaOsuA1yqREoGEP/3GFpG5Hsh/dUlQEidzogeXz
-b8m1nmUnGOP/FsXE2oEXpnDnh/yGL37Kp84guIpHawKwXKqHvuUC1IZQrwRZngQC
-LahlYvUMoITTPonPNpIUcXwRQekknhYRrbRvxt8i8aj9bAkYGI5AdS2bY/MqEB/8
-0TuwXNFJSzbDzat+c1uWNFJs+EwRyuiWHa+VsQ1mOTH1E8gaPxD6yNUKpomDDqB+
-5O8piuEmadf8sS0bF1ER4IYDe+5ZNUn08wO+Brt9WmDYbvB3LvCwhR8K/qYYgPad
-IZaMgSKkdudYJkgrMqoU1t6tuk63dWJAdUPZ+mGhaJsqakP+cod2N3M2PZxPI6PC
-IQY4mory1E8dYwOEGvT6MvZARcqK3Bz/hCu2/eYYdaakGL8rcqLxSITgFWnHG8jT
-IotmQadDKH3vwGRgYIOY7loAvglecmBtszJ8HnILJ1vLm9e5mMiNhxYUDg7j3CbW
-1DOomKcjcpJ5D4fX6XgOzIJZ9qhVik4ypGOC3+hugaQBfOHNZvfPlITktvln7SO2
-1uCFGCXj1BmY8NOTRVdhINWZ0U1lLaya08N59cjOC9/SedtwIl5wvNf07+CjASoa
-2AmJCmm5QbF6hJ5YmrOBckF+pKaNRUghbY8O0FVSq+GGhTitQWeCIHk/Qoj4XtFC
-FKHJWls6EbMxszX6SjWo
-=CY58
------END PGP SIGNATURE-----
-
---45Z9DzgjV8m4Oswq--
+> 
+>                                         -Alex
+> 
+> The following changes since commit 1459c837036a44e2dcf14a9452ed330201fb23b5:
+> 
+>   clk: si570: Add a driver for SI570 oscillators (2013-12-14 21:01:35 -0800)
+> 
+> are available in the git repository at:
+> 
+>   git://git.linaro.org/landing-teams/working/broadcom/kernel.git
+> pull/mturquette-kona-clocks
+> 
+> for you to fetch changes up to 143522e704d105bd2b3cbbca6e8fb2d217866ec0:
+> 
+>   clk: bcm281xx: add initial clock framework support (2013-12-16
+> 07:34:52 -0600)
+> 
+> ----------------------------------------------------------------
+> Alex Elder (2):
+>       clk: bcm281xx: define kona clock binding
+>       clk: bcm281xx: add initial clock framework support
+> 
+>  .../devicetree/bindings/clock/bcm-kona-clock.txt   |   93 ++
+>  drivers/clk/Kconfig                                |    1 +
+>  drivers/clk/Makefile                               |    1 +
+>  drivers/clk/bcm/Kconfig                            |    8 +
+>  drivers/clk/bcm/Makefile                           |    3 +
+>  drivers/clk/bcm/clk-bcm281xx.c                     |  416 ++++++++
+>  drivers/clk/bcm/clk-kona-setup.c                   |  769 +++++++++++++++
+>  drivers/clk/bcm/clk-kona.c                         | 1033
+> ++++++++++++++++++++
+>  drivers/clk/bcm/clk-kona.h                         |  414 ++++++++
+>  include/dt-bindings/clock/bcm281xx.h               |   65 ++
+>  10 files changed, 2803 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
+>  create mode 100644 drivers/clk/bcm/Kconfig
+>  create mode 100644 drivers/clk/bcm/Makefile
+>  create mode 100644 drivers/clk/bcm/clk-bcm281xx.c
+>  create mode 100644 drivers/clk/bcm/clk-kona-setup.c
+>  create mode 100644 drivers/clk/bcm/clk-kona.c
+>  create mode 100644 drivers/clk/bcm/clk-kona.h
+>  create mode 100644 include/dt-bindings/clock/bcm281xx.h
