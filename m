@@ -1,50 +1,53 @@
-From: Wim Van Sebroeck <wim@iguana.be>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH v5 0/5] Update Davinci watchdog driver
-Date: Thu, 26 Dec 2013 19:17:25 +0100
-Message-ID: <20131226181725.GL10136@spo001.leaseweb.com>
-References: <1386185970-14488-1-git-send-email-ivan.khoronzhuk@ti.com> <52A5EF6B.6060700@ti.com> <52ACAED4.7000305@ti.com> <52BC6D76.7000400@ti.com>
+Date: Thu, 26 Dec 2013 13:20:56 -0500
+Message-ID: <52BC7388.3040302@ti.com>
+References: <1386185970-14488-1-git-send-email-ivan.khoronzhuk@ti.com> <52A5EF6B.6060700@ti.com> <52ACAED4.7000305@ti.com> <52BC6D76.7000400@ti.com> <20131226181725.GL10136@spo001.leaseweb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52BC6D76.7000400@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, nsekhar@ti.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, grygorii.strashko@ti.com, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131226181725.GL10136-1F/o1hAF34+bEvaWgpTR7kEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Santosh,
-
-> >> On Wednesday 04 December 2013 02:39 PM, Ivan Khoronzhuk wrote:
-> >>> These patches are intended to update Davinci watchdog to use WDT core
-> >>> and reuse driver for keystone arch, because Keystone uses the similar
-> >>> IP like Davinci.
-> >>>
-> >>
-> >> [..]
-> >>
-> >>> v4..v5:
-> >>> - watchdog: davinci: change driver to use WDT core
-> >>> 	switched off CONFIG_WATCHDOG_NOWAYOUT option
-> >>>
-> >> Can you please apply the series to your watchdog tree ?
-> >> Do let me know if you want us to prepare a git branch
-> >> to pull from.
-> >>
-> > ping..
-> > 
-> I haven't heard anything on this yet from you Wim.
+On Thursday 26 December 2013 01:17 PM, Wim Van Sebroeck wrote:
+> Hi Santosh,
 > 
-> Guenter,
-> I have seen you actively reviewing the $subject patch series.
-> Will you be able to pick the series up for 3.14 merge window
-> considering almost no response from Wim so far on it ?
+>>>> On Wednesday 04 December 2013 02:39 PM, Ivan Khoronzhuk wrote:
+>>>>> These patches are intended to update Davinci watchdog to use WDT core
+>>>>> and reuse driver for keystone arch, because Keystone uses the similar
+>>>>> IP like Davinci.
+>>>>>
+>>>>
+>>>> [..]
+>>>>
+>>>>> v4..v5:
+>>>>> - watchdog: davinci: change driver to use WDT core
+>>>>> 	switched off CONFIG_WATCHDOG_NOWAYOUT option
+>>>>>
+>>>> Can you please apply the series to your watchdog tree ?
+>>>> Do let me know if you want us to prepare a git branch
+>>>> to pull from.
+>>>>
+>>> ping..
+>>>
+>> I haven't heard anything on this yet from you Wim.
+>>
+>> Guenter,
+>> I have seen you actively reviewing the $subject patch series.
+>> Will you be able to pick the series up for 3.14 merge window
+>> considering almost no response from Wim so far on it ?
+> 
+> I have review the patches and they will go in my tree tomorrow.
 
-I have review the patches and they will go in my tree tomorrow.
-I'm first finished the 2 new drivers. Then the davinci patches will go in
-and then the s3c2410 patches and then I will review the w836* patches.
-After that I will look at the mpc8xxx patches, the at91 patches, the remove
-debug from pcwd_usb and whatever is still in my mailbox.
+Thanks Wim.
 
-Kind regards,
-Wim.
+Regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
