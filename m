@@ -1,14 +1,14 @@
 From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v5 0/5] Update Davinci watchdog driver
-Date: Thu, 26 Dec 2013 12:55:02 -0500
-Message-ID: <52BC6D76.7000400@ti.com>
-References: <1386185970-14488-1-git-send-email-ivan.khoronzhuk@ti.com>
- <52A5EF6B.6060700@ti.com> <52ACAED4.7000305@ti.com>
+Subject: Re: [PATCH v2] arm: dts: keystone: add gpio device entry
+Date: Thu, 26 Dec 2013 12:56:25 -0500
+Message-ID: <52BC6DC9.9030001@ti.com>
+References: <1387211981-26045-2-git-send-email-grygorii.strashko@ti.com>
+ <1387885972-8275-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52ACAED4.7000305@ti.com>
+In-Reply-To: <1387885972-8275-1-git-send-email-grygorii.strashko@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,40 +18,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: wim@iguana.be, Guenter Roeck <linux@roeck-us.net>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
+To: "Strashko, Grygorii" <grygorii.strashko@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 14 December 2013 02:17 PM, Santosh Shilimkar wrote:
-> Wim,
+On Tuesday 24 December 2013 06:52 AM, Strashko, Grygorii wrote:
+> This patch adds Keystone GPIO IP device definitions in DT which supports
+> up to 32 GPIO lines and each GPIO line can be configured as separate
+> interrupt source (so called "unbanked" IRQ).
 > 
-> On Monday 09 December 2013 11:27 AM, Santosh Shilimkar wrote:
->> Wim,
->>
->> On Wednesday 04 December 2013 02:39 PM, Ivan Khoronzhuk wrote:
->>> These patches are intended to update Davinci watchdog to use WDT core
->>> and reuse driver for keystone arch, because Keystone uses the similar
->>> IP like Davinci.
->>>
->>
->> [..]
->>
->>> v4..v5:
->>> - watchdog: davinci: change driver to use WDT core
->>> 	switched off CONFIG_WATCHDOG_NOWAYOUT option
->>>
->> Can you please apply the series to your watchdog tree ?
->> Do let me know if you want us to prepare a git branch
->> to pull from.
->>
-> ping..
+> For more information see:
+>  http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
 > 
-I haven't heard anything on this yet from you Wim.
-
-Guenter,
-I have seen you actively reviewing the $subject patch series.
-Will you be able to pick the series up for 3.14 merge window
-considering almost no response from Wim so far on it ?
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+> Hi Santosh,
+> 
+> I've changed format of "interrupts" property as discussed.
+> 
+Thanks. This version looks better now. Will take this in my
+queue.
 
 Regards,
 Santosh
