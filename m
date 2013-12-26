@@ -1,241 +1,61 @@
-From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 9/9] dts: Add usb2phy to Exynos 5250
-Date: Thu, 26 Dec 2013 16:02:09 +0530
-Message-ID: <CAFp+6iH9AGP9J5regd7Z5XM8kP=PiFhvqxrV9qRf7rzmBSu9uQ@mail.gmail.com>
-References: <1387545857-9472-1-git-send-email-k.debski@samsung.com>
-	<1387545857-9472-10-git-send-email-k.debski@samsung.com>
+From: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH v3] ARM: davinci: aemif: get rid of davinci-nand driver
+ dependency on aemif
+Date: Thu, 26 Dec 2013 14:06:16 +0200
+Message-ID: <52BC1BB8.2070007@ti.com>
+References: <1386267092-18615-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <52B18C44.2000305@ti.com> <52B1915A.7060309@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387545857-9472-10-git-send-email-k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kishon <kishon-l0cyMroinI0@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mateusz Krawczuk <mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <52B1915A.7060309@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>, Sekhar Nori <nsekhar@ti.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kamil,
+On 12/18/2013 02:13 PM, Sekhar Nori wrote:
+> On Wednesday 18 December 2013 05:21 PM, ivan.khoronzhuk wrote:
+>> Hi, Sekhar
+>>
+>> This patch is based on "Reuse davinci-nand driver for Keystone arch" series.
+>> The series has passed review at https://lkml.org/lkml/2013/12/17/241
+>> and can be found at http://git.infradead.org/l2-mtd.git
+>>
+>> This patch can be still applied on top of the series without conflicts.
+>>
+>> Can you please pick up the $subject patch if you are OK with it?
+>
+> I have no problems with the patch and can pick it too, but need ack from
+> MTD maintainer (David) as it touches drivers/mtd/ too.
+>
+> David,
+>
+> If you do not have the patch, we can resend it.
+>
+> Thanks,
+> Sekhar
+>
 
+Hi Brian,
 
-On Fri, Dec 20, 2013 at 6:54 PM, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Add support to PHY of USB2 of the Exynos 5250 SoC.
->
-> Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/exynos5250.dtsi |   33 ++++++++++++-------
->  drivers/phy/phy-exynos5250-usb2.c |   64 +++++++++++++++++++++++++++++++++----
->  2 files changed, 78 insertions(+), 19 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 2f264ad..922e0ed 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -163,6 +163,11 @@
->                 interrupts = <0 47 0>;
->         };
->
-> +       sys_syscon: syscon@10040000 {
-> +               compatible = "samsung,exynos5250-sys", "syscon";
-> +               reg = <0x10050000 0x5000>;
-> +       };
-> +
->         pmu_syscon: syscon@10040000 {
->                 compatible = "samsung,exynos5250-pmu", "syscon";
->                 reg = <0x10040000 0x5000>;
-> @@ -505,6 +510,14 @@
->
->                 clocks = <&clock 285>;
->                 clock-names = "usbhost";
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               port@0 {
-> +                       reg = <0>;
-> +                       phys = <&usb2_phy 1>;
-> +                       phy-names = "host";
-> +                       status = "ok";
-> +               };
->         };
->
->         usb@12120000 {
-> @@ -516,19 +529,15 @@
->                 clock-names = "usbhost";
->         };
->
-> -       usb2_phy: usbphy@12130000 {
-> -               compatible = "samsung,exynos5250-usb2phy";
-> +       usb2_phy: phy@12130000 {
-> +               compatible = "samsung,exynos5250-usb2-phy";
->                 reg = <0x12130000 0x100>;
-> -               clocks = <&clock 1>, <&clock 285>;
-> -               clock-names = "ext_xtal", "usbhost";
-> -               #address-cells = <1>;
-> -               #size-cells = <1>;
-> -               ranges;
-> -
-> -               usbphy-sys {
-> -                       reg = <0x10040704 0x8>,
-> -                             <0x10050230 0x4>;
-> -               };
-> +               clocks = <&clock 285>, <&clock 1>, <&clock 1>, <&clock 1>,
-> +                                                               <&clock 1>;
-> +               clock-names = "phy", "device", "host", "hsic0", "hsic1";
-> +               #phy-cells = <1>;
-> +               samsung,sysreg-phandle = <&sys_syscon>;
-> +               samsung,pmureg-phandle = <&pmu_syscon>;
->         };
->
->         amba {
-> diff --git a/drivers/phy/phy-exynos5250-usb2.c b/drivers/phy/phy-exynos5250-usb2.c
-> index b9b3b98..337bf82 100644
-> --- a/drivers/phy/phy-exynos5250-usb2.c
-> +++ b/drivers/phy/phy-exynos5250-usb2.c
+Do you agree if this patch will go through Davinci tree?
 
-Separate patches for dt and driver ?
-I think you wanted to move these changes to :
-[PATCH v5 7/9] phy: Add Exynos 5250 support to the Exynos USB 2.0 PHY driver
-
-> @@ -58,7 +58,13 @@
->  #define EXYNOS_5250_HOSTPHYCTRL2                       0x20
-
-Shouldn't we leave the naming as EXYNOS_5250_HSICPHYCTRL2 instead of
-EXYNOS_5250_HOSTPHYCTRL2 ? That will go in sync with the user-manual too.
-and similar for EXYNOS_5250_HOSTPHYCTRL1 and below bit definitions too ?
-
->
->  #define EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_MASK                (0x3 << 23)
-> +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_DEFAULT     (0x2 << 23)
->  #define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_MASK                (0x7f << 16)
-> +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_12          (0x24 << 16)
-> +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_15          (0x1c << 16)
-> +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_16          (0x1a << 16)
-> +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_19_2                (0x15 << 16)
-> +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_20          (0x14 << 16)
->  #define EXYNOS_5250_HOSTPHYCTRLX_SIDDQ                 BIT(6)
->  #define EXYNOS_5250_HOSTPHYCTRLX_FORCESLEEP            BIT(5)
->  #define EXYNOS_5250_HOSTPHYCTRLX_FORCESUSPEND          BIT(4)
-> @@ -191,13 +197,14 @@ static void exynos5250_isol(struct samsung_usb2_phy_instance *inst, bool on)
->         regmap_update_bits(drv->reg_pmu, offset, mask, on ? 0 : mask);
->  }
->
-> -static void exynos5250_phy_pwr(struct samsung_usb2_phy_instance *inst, bool on)
-> +static int exynos5250_power_on(struct samsung_usb2_phy_instance *inst)
-
-void ? we really don't have much to return in this function.
-
->  {
->         struct samsung_usb2_phy_driver *drv = inst->drv;
->         u32 ctrl0;
->         u32 otg;
->         u32 ehci;
->         u32 ohci;
-> +       u32 hsic;
->
->         switch (inst->cfg->id) {
->         case EXYNOS5250_DEVICE:
-> @@ -234,6 +241,8 @@ static void exynos5250_phy_pwr(struct samsung_usb2_phy_instance *inst, bool on)
->
->                 break;
->         case EXYNOS5250_HOST:
-> +       case EXYNOS5250_HSIC0:
-> +       case EXYNOS5250_HSIC1:
->                 /* Host registers configuration */
->                 ctrl0 = readl(drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL0);
->                 /* The clock */
-> @@ -279,6 +288,18 @@ static void exynos5250_phy_pwr(struct samsung_usb2_phy_instance *inst, bool on)
->                         EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG |
->                         EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET);
->
-> +               /* HSIC phy configuration */
-> +               hsic = (EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_12 |
-> +                               EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_DEFAULT |
-> +                               EXYNOS_5250_HOSTPHYCTRLX_PHYSWRST);
-> +               writel(hsic, drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL1);
-> +               writel(hsic, drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL2);
-> +               udelay(10);
-> +               hsic &= ~EXYNOS_5250_HOSTPHYCTRLX_PHYSWRST;
-> +               writel(hsic, drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL1);
-> +               writel(hsic, drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL2);
-> +               udelay(80);
-> +
->                 /* Enable EHCI DMA burst */
->                 ehci = readl(drv->reg_phy + EXYNOS_5250_HOSTEHCICTRL);
->                 ehci |= EXYNOS_5250_HOSTEHCICTRL_ENAINCRXALIGN |
-> @@ -295,12 +316,7 @@ static void exynos5250_phy_pwr(struct samsung_usb2_phy_instance *inst, bool on)
->
->                 break;
->         }
-> -}
-> -
-> -static int exynos5250_power_on(struct samsung_usb2_phy_instance *inst)
-> -{
->         inst->enabled = 1;
-> -       exynos5250_phy_pwr(inst, 1);
->         exynos5250_isol(inst, 0);
->
->         return 0;
-> @@ -308,9 +324,43 @@ static int exynos5250_power_on(struct samsung_usb2_phy_instance *inst)
->
->  static int exynos5250_power_off(struct samsung_usb2_phy_instance *inst)
-
-ditto
-
->  {
-> +       struct samsung_usb2_phy_driver *drv = inst->drv;
-> +       u32 ctrl0;
-> +       u32 otg;
-> +       u32 hsic;
-> +
->         inst->enabled = 0;
->         exynos5250_isol(inst, 1);
-> -       exynos5250_phy_pwr(inst, 0);
-> +
-> +       switch (inst->cfg->id) {
-> +       case EXYNOS5250_DEVICE:
-> +               otg = readl(drv->reg_phy + EXYNOS_5250_USBOTGSYS);
-> +               otg |= (EXYNOS_5250_USBOTGSYS_FORCE_SUSPEND |
-> +                       EXYNOS_5250_USBOTGSYS_SIDDQ_UOTG |
-> +                       EXYNOS_5250_USBOTGSYS_FORCE_SLEEP);
-> +               writel(otg, drv->reg_phy + EXYNOS_5250_USBOTGSYS);
-> +               break;
-> +       case EXYNOS5250_HOST:
-> +               ctrl0 = readl(drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL0);
-> +               ctrl0 |= (EXYNOS_5250_HOSTPHYCTRL0_SIDDQ |
-> +                               EXYNOS_5250_HOSTPHYCTRL0_FORCESUSPEND |
-> +                               EXYNOS_5250_HOSTPHYCTRL0_FORCESLEEP |
-> +                               EXYNOS_5250_HOSTPHYCTRL0_PHYSWRST |
-> +                               EXYNOS_5250_HOSTPHYCTRL0_PHYSWRSTALL);
-> +               writel(ctrl0, drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL0);
-> +               break;
-> +       case EXYNOS5250_HSIC0:
-> +       case EXYNOS5250_HSIC1:
-> +               hsic = (EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_12 |
-> +                               EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_DEFAULT |
-> +                               EXYNOS_5250_HOSTPHYCTRLX_SIDDQ |
-> +                               EXYNOS_5250_HOSTPHYCTRLX_FORCESLEEP |
-> +                               EXYNOS_5250_HOSTPHYCTRLX_FORCESUSPEND
-> +                               );
-> +               writel(hsic, drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL1);
-> +               writel(hsic, drv->reg_phy + EXYNOS_5250_HOSTPHYCTRL2);
-> +               break;
-> +       }
->
->         return 0;
->  }
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
+This is the last one we need to reuse Davinci Nand driver for Keystone.
 
 -- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Ivan Khoronzhuk
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
