@@ -1,62 +1,86 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] of: introduces helper to manage optional property
-Date: Thu, 26 Dec 2013 15:38:51 +0100
-Message-ID: <20131226143851.GL8064@book.gsilab.sittig.org>
-References: <1388035115-893-1-git-send-email-Li.Xiubo@freescale.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v8 11/12] usb: phy-mxs: Add system suspend/resume API
+Date: Thu, 26 Dec 2013 10:25:20 -0600
+Message-ID: <20131226162520.GC3937@saruman.home>
+References: <1387857536-4996-1-git-send-email-peter.chen@freescale.com>
+ <1387857536-4996-12-git-send-email-peter.chen@freescale.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="B4IIlcmfBL/1gGOG"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1388035115-893-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1387857536-4996-12-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 26, 2013 at 13:18 +0800, Xiubo Li wrote:
-> 
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -601,6 +601,23 @@ static inline int of_property_read_u32(const struct device_node *np,
->  	return of_property_read_u32_array(np, propname, out_value, 1);
+--B4IIlcmfBL/1gGOG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Dec 24, 2013 at 11:58:55AM +0800, Peter Chen wrote:
+> @@ -398,6 +433,29 @@ static int mxs_phy_remove(struct platform_device *pd=
+ev)
+>  	return 0;
 >  }
->  
-> +/**
-> + * of_property_optional - Find one optional property
-> + * @np:		device node from which the property to be searched.
-> + * @propname:	name of the optional property to be searched for.
-> + *
-> + * Get to know whether one optional property is present or not in a
-> + * device node.
-> + * Returns true if the property is present, false otherwise.
-> + */
-> +static inline bool of_property_optional(const struct device_node *np,
-> +					 const char *propname)
+> =20
+> +static int mxs_phy_system_suspend(struct device *dev)
 > +{
-> +	struct property *prop = of_find_property(np, propname, NULL);
+> +	struct mxs_phy *mxs_phy =3D dev_get_drvdata(dev);
 > +
-> +	return prop ? true : false;
+> +	if (device_may_wakeup(dev))
+> +		mxs_phy_enable_ldo_in_suspend(mxs_phy, true);
+> +
+> +	return 0;
 > +}
 > +
+> +static int mxs_phy_system_resume(struct device *dev)
+> +{
+> +	struct mxs_phy *mxs_phy =3D dev_get_drvdata(dev);
+> +
+> +	if (device_may_wakeup(dev))
+> +		mxs_phy_enable_ldo_in_suspend(mxs_phy, false);
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(mxs_phy_pm, mxs_phy_system_suspend,
+> +		mxs_phy_system_resume);
 
-Exactly how is this different from of_property_read_bool()?
-AFAICS it's identical!  You may be trying to solve the wrong
-problem.
+this will give "Defined but not used" warnings when !PM_SLEEP.
 
-And I'm afraid that the routine's name you picked is even more
-confusing.  The call site ("if (of_property_optional() ...") will
-no longer reflect that it's evaluating a boolean condition.
-Being an optional property and being boolean are two completely
-different things.
+--=20
+balbi
 
+--B4IIlcmfBL/1gGOG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSvFhwAAoJEIaOsuA1yqREwa4P/R+UIyExE1jRe1Ndjj4Nk+FX
+RF5xscO4XVaSISkEX6h25qWpHePuSVcB9DAl6CBX+jWSkhRzYVn4OwYEEQt1fdgZ
+tVPji1wunkQKnVoz9t2uRXfOBpwaaxwQVfeSh2B0Cr57Kyr3EUkhkXpaPtp0sihX
+nWk6OSlPIpJiGwzAUx1DWKapNwq0c57PmrXsUWMyU94wecsuwKXNEt2jUeCJumPt
+ESSD8G0asXshFhGKP1Drxu4juTDSWgMNDCTCa3towDBC591Q4X6FssMpkp39oHfE
+KlAT3Gk9WWdqIZemP0eDWnDERQPZ6aGkq59bSj3ZDQs1889fZlKPXsWzllGzsVp9
+eHaw0GqRCnNyKX7DkLF0U4TwE7rwHOxQXuIM+zNDb7z1TedCZioq4mqRoKds849M
+sGki6RjCdHSb2EkCiWyLO8BJp1Uh9k24ZCzJgHTfCBKpY2f15PrgFCBWDuVJQZPA
+4lj9i+ZTFjybP0Wzce08umjTi4pG1FBpxPEdt95ohGlo1zEGKmU5gTKYhbSwn3Bd
+pOGs49tTzSfJDJWCTmXvxOHvTjTanZS0SfKZkQMRsZpOVTZeEjo4XIQeueyodRyv
+puDn/VC76jf+n03RU7SV960OnhLkT+vlHfiva1IchcM9qQ3QJNWRuuiqggHQfzFG
+68u7sCxkb7nax8d5nNwc
+=o2od
+-----END PGP SIGNATURE-----
+
+--B4IIlcmfBL/1gGOG--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
