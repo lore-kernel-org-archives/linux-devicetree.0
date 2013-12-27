@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2 6/8] [RFC] Documentation: dt: Add Renesas RSPI/QSPI bindings
-Date: Fri, 27 Dec 2013 21:16:00 +0100
-Message-ID: <1388175362-17132-7-git-send-email-geert@linux-m68k.org>
+Subject: [PATCH v2 7/8] [RFC] ARM: shmobile: r7s72100 dtsi: Add RSPI nodes
+Date: Fri, 27 Dec 2013 21:16:01 +0100
+Message-ID: <1388175362-17132-8-git-send-email-geert@linux-m68k.org>
 References: <1388175362-17132-1-git-send-email-geert@linux-m68k.org>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1388175362-17132-1-git-send-email-geert@linux-m68k.org>
@@ -15,40 +15,31 @@ From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 Cc: devicetree@vger.kernel.org
 ---
-v2:
-  - Clarify RSPI/QSPI
-  - Add interrupt-parent
-  - s/should/must/ for #address-cells and #size-cells
+v2: No changes
 
- Documentation/devicetree/bindings/spi/spi-rspi.txt |   31 ++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-rspi.txt
+ arch/arm/boot/dts/r7s72100.dtsi |   65 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-new file mode 100644
-index 000000000000..504db8917927
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-@@ -0,0 +1,31 @@
-+Device tree configuration for Renesas RSPI/QSPI driver
-+
-+Required properties:
-+- compatible       : For Renesas Serial Peripheral Interface:
-+                     "renesas,rspi-<soctype>", "renesas,rspi-rz" as fallback.
-+		     For Quad Serial Peripheral Interface:
-+		     "renesas,qspi-<soctype>", "renesas,qspi-rcar" as fallback.
-+- reg              : address start and address range size of device
-+- interrupts       : 3 interrupts for RSPI (SPEI, SPRI, SPTI),
-+		     1 interrupt for QSPI
-+- interrupt-parent : the phandle for the interrupt controller that
-+		     services interrupts for this device.
-+- num-cs	   : Number of chip selects
-+- #address-cells   : must be <1>
-+- #size-cells      : must be <0>
-+
-+Pinctrl properties might be needed, too. See there.
-+
-+Example:
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index ff0bd6be454f..42e9b423476c 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -34,6 +34,11 @@
+ 		gpio10 = &port10;
+ 		gpio11 = &port11;
+ 		gpio12 = &jtagport0;
++		spi0 = &spi0;
++		spi1 = &spi1;
++		spi2 = &spi2;
++		spi3 = &spi3;
++		spi4 = &spi4;
+ 	};
+ 
+ 	cpus {
+@@ -289,4 +294,64 @@
+ 		clock-frequency = <100000>;
+ 		status = "disabled";
+ 	};
 +
 +	spi0: spi@e800c800 {
 +		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
@@ -56,11 +47,60 @@ index 000000000000..504db8917927
 +		interrupts = <0 238 IRQ_TYPE_LEVEL_HIGH>,
 +			     <0 239 IRQ_TYPE_LEVEL_HIGH>,
 +			     <0 240 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-parent = <&gic>;
 +		num-cs = <1>;
 +		#address-cells = <1>;
 +		#size-cells = <0>;
++		status = "disabled";
 +	};
++
++	spi1: spi@e800d000 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800d000 0x24>;
++		interrupts = <0 241 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 242 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 243 IRQ_TYPE_LEVEL_HIGH>;
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi2: spi@e800d800 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800d800 0x24>;
++		interrupts = <0 244 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 245 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 246 IRQ_TYPE_LEVEL_HIGH>;
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi3: spi@e800e000 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800e000 0x24>;
++		interrupts = <0 247 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 248 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 249 IRQ_TYPE_LEVEL_HIGH>;
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi4: spi@e800e800 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800e800 0x24>;
++		interrupts = <0 250 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 251 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 252 IRQ_TYPE_LEVEL_HIGH>;
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
+ };
 -- 
 1.7.9.5
 
