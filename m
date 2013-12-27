@@ -1,67 +1,58 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [GIT PULL] clk: initial support  for Broadcom Kona clocks
-Date: Thu, 26 Dec 2013 14:50:59 -0800
-Message-ID: <20131226225059.28468.61907@quantum>
-References: <52AF1BA5.6000902@linaro.org>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v8 11/12] usb: phy-mxs: Add system suspend/resume API
+Date: Fri, 27 Dec 2013 09:48:21 +0800
+Message-ID: <20131227014820.GB6214@shlinux1.ap.freescale.net>
+References: <1387857536-4996-1-git-send-email-peter.chen@freescale.com>
+ <1387857536-4996-12-git-send-email-peter.chen@freescale.com>
+ <20131226162520.GC3937@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52AF1BA5.6000902@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Elder <alex.elder@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131226162520.GC3937@saruman.home>
+Sender: linux-doc-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: shawn.guo@linaro.org, rob.herring@calxeda.com, grant.likely@linaro.org, alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Alex Elder (2013-12-16 07:26:29)
-> Mike, please pull the following for 3.14.  It adds clock support
-> for Broadcom SoCs having "Kona" clock control units.  Thanks.
+On Thu, Dec 26, 2013 at 10:25:20AM -0600, Felipe Balbi wrote:
+> Hi,
+> 
+> On Tue, Dec 24, 2013 at 11:58:55AM +0800, Peter Chen wrote:
+> > @@ -398,6 +433,29 @@ static int mxs_phy_remove(struct platform_device *pdev)
+> >  	return 0;
+> >  }
+> >  
+> > +static int mxs_phy_system_suspend(struct device *dev)
+> > +{
+> > +	struct mxs_phy *mxs_phy = dev_get_drvdata(dev);
+> > +
+> > +	if (device_may_wakeup(dev))
+> > +		mxs_phy_enable_ldo_in_suspend(mxs_phy, true);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int mxs_phy_system_resume(struct device *dev)
+> > +{
+> > +	struct mxs_phy *mxs_phy = dev_get_drvdata(dev);
+> > +
+> > +	if (device_may_wakeup(dev))
+> > +		mxs_phy_enable_ldo_in_suspend(mxs_phy, false);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static SIMPLE_DEV_PM_OPS(mxs_phy_pm, mxs_phy_system_suspend,
+> > +		mxs_phy_system_resume);
+> 
+> this will give "Defined but not used" warnings when !PM_SLEEP.
+> 
 
-Pulled into clk-next.
+Oh, sorry, will change.
 
-Thanks!
-Mike
+-- 
 
-> 
->                                         -Alex
-> 
-> The following changes since commit 1459c837036a44e2dcf14a9452ed330201fb23b5:
-> 
->   clk: si570: Add a driver for SI570 oscillators (2013-12-14 21:01:35 -0800)
-> 
-> are available in the git repository at:
-> 
->   git://git.linaro.org/landing-teams/working/broadcom/kernel.git
-> pull/mturquette-kona-clocks
-> 
-> for you to fetch changes up to 143522e704d105bd2b3cbbca6e8fb2d217866ec0:
-> 
->   clk: bcm281xx: add initial clock framework support (2013-12-16
-> 07:34:52 -0600)
-> 
-> ----------------------------------------------------------------
-> Alex Elder (2):
->       clk: bcm281xx: define kona clock binding
->       clk: bcm281xx: add initial clock framework support
-> 
->  .../devicetree/bindings/clock/bcm-kona-clock.txt   |   93 ++
->  drivers/clk/Kconfig                                |    1 +
->  drivers/clk/Makefile                               |    1 +
->  drivers/clk/bcm/Kconfig                            |    8 +
->  drivers/clk/bcm/Makefile                           |    3 +
->  drivers/clk/bcm/clk-bcm281xx.c                     |  416 ++++++++
->  drivers/clk/bcm/clk-kona-setup.c                   |  769 +++++++++++++++
->  drivers/clk/bcm/clk-kona.c                         | 1033
-> ++++++++++++++++++++
->  drivers/clk/bcm/clk-kona.h                         |  414 ++++++++
->  include/dt-bindings/clock/bcm281xx.h               |   65 ++
->  10 files changed, 2803 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
->  create mode 100644 drivers/clk/bcm/Kconfig
->  create mode 100644 drivers/clk/bcm/Makefile
->  create mode 100644 drivers/clk/bcm/clk-bcm281xx.c
->  create mode 100644 drivers/clk/bcm/clk-kona-setup.c
->  create mode 100644 drivers/clk/bcm/clk-kona.c
->  create mode 100644 drivers/clk/bcm/clk-kona.h
->  create mode 100644 include/dt-bindings/clock/bcm281xx.h
+Best Regards,
+Peter Chen
+
