@@ -1,70 +1,34 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2 8/8] [RFC] ARM: shmobile: genmai reference: Add RSPI nodes
-Date: Fri, 27 Dec 2013 21:16:02 +0100
-Message-ID: <1388175362-17132-9-git-send-email-geert@linux-m68k.org>
-References: <1388175362-17132-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1388175362-17132-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, devicetree@vger.kernel.org
+From: OZONE FINANCIAL HOUSE <jvietri-Ee+0m2wX10fNQoyDCgyGBg@public.gmane.org>
+Subject: LOAN OFFER
+Date: Fri, 27 Dec 2013 18:38:38 -0430 (VET)
+Message-ID: <30210453.8281388185718492.JavaMail.root@mail.mij.gov.ve>
+Reply-To: OZONE FINANCIAL HOUSE <ozonefinancial-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 
-Add pinctrl and SPI devices for RSPI on Genmai.
 
-On this board, only rspi4 is in use. Its bus contains a single device
-(a wm8978 audio codec), for which no bindings are defined yet.
+Good Day,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
-Cc: devicetree@vger.kernel.org
----
-v2: Use generic "codec" instead of specific "wm8978" node name.
+We are private investor and we give out Guarantee Business Loans,Automobile Purchase Loans,House Purchase Loans and other Personal Loans E.T.C  maximum with 4% .contact us: ozonefinancial-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 
- arch/arm/boot/dts/r7s72100-genmai-reference.dts |   18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r7s72100-genmai-reference.dts b/arch/arm/boot/dts/r7s72100-genmai-reference.dts
-index 367af5c133e0..c2cc4bd5a470 100644
---- a/arch/arm/boot/dts/r7s72100-genmai-reference.dts
-+++ b/arch/arm/boot/dts/r7s72100-genmai-reference.dts
-@@ -43,7 +43,7 @@
- };
- 
- &pfc {
--	pinctrl-0 = <&scif2_pins &ethernet_pins>;
-+	pinctrl-0 = <&scif2_pins &ethernet_pins &rspi4_pins>;
- 	pinctrl-names = "default";
- 
- 	scif2_pins: serial2 {
-@@ -73,6 +73,12 @@
- 				 "ethernet_int_p1_15";
- 		renesas,function = "ethernet";
- 	};
-+
-+	rspi4_pins: spi4 {
-+		renesas,groups = "rspi4_rspck_p4_0", "rspi4_ssl0_p4_1",
-+				 "rspi4_mosi_p4_2", "rspi4_miso_p4_3";
-+		renesas,function = "rspi4";
-+	};
- };
- 
- &i2c2 {
-@@ -85,3 +91,13 @@
- 		pagesize = <64>;
- 	};
- };
-+
-+&spi4 {
-+	status = "okay";
-+
-+	codec: codec@0 {
-+		compatible = "wlf,wm8978";
-+		reg = <0>;
-+		spi-max-frequency = <5000000>;
-+	};
-+};
--- 
-1.7.9.5
+Just fill this little form Below
+Name:
+Loan Amount:
+Expected Repayment Duration:
+Phone no:
 
+Email : ozonefinancial-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+Regards
+Wilson John
+Supervising Director
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
