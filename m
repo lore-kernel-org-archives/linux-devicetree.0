@@ -1,59 +1,66 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 6/6] [RFC] arm: shmobile: genmai reference: Add RSPI nodes
-Date: Fri, 27 Dec 2013 20:08:18 +0100
-Message-ID: <CAMuHMdVH4PyhxR3JLLPX9a3fKaEgdpQpd2aa4YKL6DUD8+Pw2Q@mail.gmail.com>
-References: <1387886210-3634-1-git-send-email-geert+renesas@linux-m68k.org>
-	<1387886210-3634-7-git-send-email-geert+renesas@linux-m68k.org>
-	<2198668.ESbmzZvna4@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH v2 6/8] [RFC] Documentation: dt: Add Renesas RSPI/QSPI bindings
+Date: Fri, 27 Dec 2013 21:16:00 +0100
+Message-ID: <1388175362-17132-7-git-send-email-geert@linux-m68k.org>
+References: <1388175362-17132-1-git-send-email-geert@linux-m68k.org>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2198668.ESbmzZvna4@avalon>
+In-Reply-To: <1388175362-17132-1-git-send-email-geert@linux-m68k.org>
 Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@linux-m68k.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-spi@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: linux-sh@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 27, 2013 at 5:20 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Tuesday 24 December 2013 12:56:50 Geert Uytterhoeven wrote:
->> Add pinctrl and SPI devices for RSPI on Genmai.
->>
->> On this board, only rspi4 is in use. It's bus contains a single device
->> (a wm8978 audio codec), for which no bindings are defined yet.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
->> Cc: devicetree@vger.kernel.org
->> ---
->>  arch/arm/boot/dts/r7s72100-genmai-reference.dts |   18 +++++++++++++++++-
->>  1 file changed, 17 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/r7s72100-genmai-reference.dts
->> b/arch/arm/boot/dts/r7s72100-genmai-reference.dts index
->> 114510f8bf09..6d99630627e4 100644
->> --- a/arch/arm/boot/dts/r7s72100-genmai-reference.dts
->> +++ b/arch/arm/boot/dts/r7s72100-genmai-reference.dts
->> @@ -43,7 +43,7 @@
->>  };
->>
->>  &pfc {
->> -     pinctrl-0 = <&scif2_pins &ethernet_pins>;
->> +     pinctrl-0 = <&scif2_pins &ethernet_pins &rspi4_pins>;
->
-> You should add pinctrl-0 and pinctrl-names properties to the spi4 node
-> instead. Device nodes should reference their pinctrl configuration directly,
-> scif2 and ethernet are exceptions as DT bindings for those devices are not in
-> mainline yet.
+From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 
-I put it there because the actual driver doesn't use DT yet. Is that OK?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+Cc: devicetree@vger.kernel.org
+---
+v2:
+  - Clarify RSPI/QSPI
+  - Add interrupt-parent
+  - s/should/must/ for #address-cells and #size-cells
 
-Gr{oetje,eeting}s,
+ Documentation/devicetree/bindings/spi/spi-rspi.txt |   31 ++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-rspi.txt
 
-                        Geert
+diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+new file mode 100644
+index 000000000000..504db8917927
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+@@ -0,0 +1,31 @@
++Device tree configuration for Renesas RSPI/QSPI driver
++
++Required properties:
++- compatible       : For Renesas Serial Peripheral Interface:
++                     "renesas,rspi-<soctype>", "renesas,rspi-rz" as fallback.
++		     For Quad Serial Peripheral Interface:
++		     "renesas,qspi-<soctype>", "renesas,qspi-rcar" as fallback.
++- reg              : address start and address range size of device
++- interrupts       : 3 interrupts for RSPI (SPEI, SPRI, SPTI),
++		     1 interrupt for QSPI
++- interrupt-parent : the phandle for the interrupt controller that
++		     services interrupts for this device.
++- num-cs	   : Number of chip selects
++- #address-cells   : must be <1>
++- #size-cells      : must be <0>
++
++Pinctrl properties might be needed, too. See there.
++
++Example:
++
++	spi0: spi@e800c800 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800c800 0x24>;
++		interrupts = <0 238 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 239 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 240 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-parent = <&gic>;
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
+-- 
+1.7.9.5
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
