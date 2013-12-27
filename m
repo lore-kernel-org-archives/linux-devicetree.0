@@ -1,57 +1,92 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH RFCv1 5/6] ARM: mvebu: update Armada 370/XP DT to use
- new coherency compatible string
-Date: Fri, 27 Dec 2013 12:59:08 -0500
-Message-ID: <20131227175908.GB19878@titan.lakedaemon.net>
-References: <1388067146-18111-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1388067146-18111-6-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 4/6] [RFC] Documentation: dt: Add Renesas RSPI/QSPI bindings
+Date: Fri, 27 Dec 2013 20:01:53 +0100
+Message-ID: <CAMuHMdXrPamASqFz8eCVxE0WKT=cdkrzxjDDT84m_AHT+1nmEA@mail.gmail.com>
+References: <1387886210-3634-1-git-send-email-geert+renesas@linux-m68k.org>
+	<1387886210-3634-5-git-send-email-geert+renesas@linux-m68k.org>
+	<2590710.91Xybr4TsD@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1388067146-18111-6-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2590710.91Xybr4TsD@avalon>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-All,
+Hi Laurent,
 
-Including the MLs.
+On Fri, Dec 27, 2013 at 5:18 PM, Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+> On Tuesday 24 December 2013 12:56:48 Geert Uytterhoeven wrote:
+>> +++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+>> @@ -0,0 +1,27 @@
+>> +Device tree configuration for Renesas RSPI/QSPI driver
+>> +
+>> +Required properties:
+>> +- compatible      : "renesas,rspi-<soctype>". "renesas,rspi-rz" as
+>> fallback,
+>> +                    or
+>> +                    "renesas,qspi-<soctype>", "renesas,qspi-rcar" as
+>> fallback.
+>
+> I think you need to be a bit more verbose here and explain when to use rspi
+> and when to use qspi. I'm also wondering where we need the -rz and -rcar
 
-On Thu, Dec 26, 2013 at 03:12:25PM +0100, Thomas Petazzoni wrote:
-> Update the common Armada 370 and Armada XP Device Tree files to use
-> the new compatible string for the coherency fabric.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/armada-370-xp.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-> index 7f10f62..c32f522 100644
-> --- a/arch/arm/boot/dts/armada-370-xp.dtsi
-> +++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-> @@ -117,7 +117,7 @@
->  			};
->  
->  			coherency-fabric@20200 {
-> -				compatible = "marvell,coherency-fabric";
-> +				compatible = "marvell,armada-370-coherency-fabric";
+OK.
 
-Not needed, see my reply to 1/6.
+> suffixes for the generic compatible strings.
 
-thx,
+The rationale behind this is that RSPI DT would apply to RSPI on RZ/A1H.
+The spi-rspi driver also supports legacy SH7757, which may not move to
+DT anytime soon.
+For symmetry, I did the same thing for QSPI, which applies to QSPI
+on R-Car H2 and M2 (upon second look, it should be "renesas,qspi-rcar-gen2",
+as E1/M1/H1 have HSPI).
 
-Jason.
+Does this makes sense? Or do you still prefer plain "renesas,rspi" and
+"renesas,qspi", and perhaps "renesas,rspi-sh" if we ever get DT there?
 
->  				reg = <0x20200 0xb0>, <0x21010 0x1c>;
->  			};
->  
-> -- 
-> 1.8.3.2
-> 
+>> +- reg             : address start and address range size of device
+>> +- interrupts      : 3 interrupts for RSPI (SPEI, SPRI, SPTI),
+>> +                    1 interrupt for QSPI
+>> +- num-cs       : Number of chip selects
+>> +- #address-cells  : should be <1>
+>> +- #size-cells     : should be <0>
+>
+> I would say "must" instead of "should".
+
+OK.
+
+>> +Example:
+>> +
+>> +     spi0: spi@e800c800 {
+>> +             compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
+>> +             reg = <0xe800c800 0x24>;
+>> +             interrupts = <0 238 IRQ_TYPE_LEVEL_HIGH>,
+>> +                          <0 239 IRQ_TYPE_LEVEL_HIGH>,
+>> +                          <0 240 IRQ_TYPE_LEVEL_HIGH>;
+>
+> You're missing the interrupt-parent property.
+
+OK.
+
+But we don't need it in the spi node in the actual .dts, as we already have
+"interrupt-parent = <&gic>;" in the enclosing node, right?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
