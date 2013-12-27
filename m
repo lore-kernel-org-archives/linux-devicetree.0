@@ -1,228 +1,105 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [v2] input: Add new driver for GPIO beeper
-Date: Fri, 27 Dec 2013 04:33:51 +0100
-Message-ID: <20131227033351.GA8515@lunn.ch>
-References: <1385373787-15668-1-git-send-email-shc_work@mail.ru>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Fri, 27 Dec 2013 14:13:22 +0800
+Message-ID: <52BD1A82.7090101@linaro.org>
+References: <1386987174-1788-3-git-send-email-zhangfei.gao@linaro.org> <1387199536-7053-1-git-send-email-zhangfei.gao@linaro.org> <52BBB1B0.8040907@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1385373787-15668-1-git-send-email-shc_work@mail.ru>
-Sender: linux-input-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <52BBB1B0.8040907@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhigang Wang <brooke.wangzhigang@huawei.com>, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 25, 2013 at 02:03:07PM +0400, Alexander Shiyan wrote:
-> This patch adds a new driver for the beeper controlled via GPIO pin.
-> The driver does not depend on the architecture and is positioned as
-> a replacement for the specific drivers that are used for this function.
-> 
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Dear Jaehoon
 
-Hi Alexander
+Thanks for the reviewing.
 
-I just tried this driver out on a board port i will soon be
-contributing. Works for me. Please add a
+On 12/26/2013 12:33 PM, Jaehoon Chung wrote:
 
-Tested-by: Andrew Lunn <andrew@lunn.ch>
+>> +config MMC_DW_K3
+>> +	tristate "K3 specific extensions for Synopsys DW Memory Card Interface"
+>> +	depends on MMC_DW
+>> +	select MMC_DW_PLTFM
+>> +	select MMC_DW_IDMAC
+>
+> Only use the IDMAC?
 
-Has the Input maintainer picked it up for the next merge window?
+IDMAC has to be set here since we found the controller have some issue 
+in non-dma mode.
+
+
+>> +static unsigned long k3_dwmmc_caps[4] = {
+>> +	MMC_CAP_4_BIT_DATA | MMC_CAP_SD_HIGHSPEED,
+>> +	MMC_CAP_8_BIT_DATA | MMC_CAP_MMC_HIGHSPEED,
+>> +	0,
+>> +	0,
+>> +};
+>
+> If supports-highspeed is defined at dt-file,
+> then MMC_CAP_SD_HIGHSEEPD and MMC_CAP_MMC_HIGHSPEED should set in dw-mmc.c
+
+Yes, good catch, they can be removed.
+
+>
+>> +
+>> +static const struct dw_mci_drv_data k3_drv_data = {
+>> +	.caps			= k3_dwmmc_caps,
+>> +	.set_ios		= dw_mci_k3_set_ios,
+>> +	.parse_dt		= dw_mci_k3_parse_dt,
+>> +};
+>> +
+>> +static const struct of_device_id dw_mci_k3_match[] = {
+>> +	{ .compatible = "hisilicon,hi4511-dw-mshc", .data = &k3_drv_data, },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, dw_mci_k3_match);
+>> +
+>> +static int dw_mci_k3_probe(struct platform_device *pdev)
+>> +{
+>> +	const struct dw_mci_drv_data *drv_data;
+>> +	const struct of_device_id *match;
+>> +
+>> +	match = of_match_node(dw_mci_k3_match, pdev->dev.of_node);
+>> +	drv_data = match->data;
+>> +
+>> +	return dw_mci_pltfm_register(pdev, drv_data);
+>> +}
+>> +
+>> +static int dw_mci_k3_suspend(struct device *dev)
+>> +{
+>> +	struct dw_mci *host = dev_get_drvdata(dev);
+>> +	int ret = 0;
+>> +
+>> +	ret = dw_mci_suspend(host);
+>> +	if (!ret)
+>> +		clk_disable_unprepare(host->ciu_clk);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int dw_mci_k3_resume(struct device *dev)
+>> +{
+>> +	struct dw_mci *host = dev_get_drvdata(dev);
+>> +	int ret = 0;
+>> +
+>> +	ret = clk_prepare_enable(host->ciu_clk);
+>> +	if (ret) {
+>> +		dev_err(host->dev, "failed to enable ciu clock\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	return dw_mci_resume(host);
+>> +}
+>
+> Clock control need in suspend/resume? ciu-clk is used into dw-mmc.c.
+
+The ciu-clk is required here not only for power, but also clk prepare 
+have to be triggered in the resume operation as well as init process, 
+otherwise sd register access will fail. Some tuning registers accessing 
+have been abstracted to clock.
 
 Thanks
-	Andrew
 
-> 
-> ---
-> .../devicetree/bindings/input/gpio-beeper.txt      |  13 +++
->  drivers/input/misc/Kconfig                         |   9 ++
->  drivers/input/misc/Makefile                        |   1 +
->  drivers/input/misc/gpio-beeper.c                   | 127 +++++++++++++++++++++
->  4 files changed, 150 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/gpio-beeper.txt
->  create mode 100644 drivers/input/misc/gpio-beeper.c
-> 
-> diff --git a/Documentation/devicetree/bindings/input/gpio-beeper.txt b/Documentation/devicetree/bindings/input/gpio-beeper.txt
-> new file mode 100644
-> index 0000000..a5086e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/gpio-beeper.txt
-> @@ -0,0 +1,13 @@
-> +* GPIO beeper device tree bindings
-> +
-> +Register a beeper connected to GPIO pin.
-> +
-> +Required properties:
-> +- compatible:	Should be "gpio-beeper".
-> +- gpios:	From common gpio binding; gpio connection to beeper enable pin.
-> +
-> +Example:
-> +	beeper: beeper {
-> +		compatible = "gpio-beeper";
-> +		gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
-> +	};
-> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> index 5f4967d..4ffc397 100644
-> --- a/drivers/input/misc/Kconfig
-> +++ b/drivers/input/misc/Kconfig
-> @@ -222,6 +222,15 @@ config INPUT_GP2A
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called gp2ap002a00f.
->  
-> +config INPUT_GPIO_BEEPER
-> +	tristate "Generic GPIO Beeper support"
-> +	depends on OF_GPIO
-> +	help
-> +	  Say Y here if you have a beeper connected to a GPIO pin.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called gpio-beeper.
-> +
->  config INPUT_GPIO_TILT_POLLED
->  	tristate "Polled GPIO tilt switch"
->  	depends on GPIOLIB
-> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-> index 0ebfb6d..cda71fc 100644
-> --- a/drivers/input/misc/Makefile
-> +++ b/drivers/input/misc/Makefile
-> @@ -27,6 +27,7 @@ obj-$(CONFIG_INPUT_DA9052_ONKEY)	+= da9052_onkey.o
->  obj-$(CONFIG_INPUT_DA9055_ONKEY)	+= da9055_onkey.o
->  obj-$(CONFIG_INPUT_DM355EVM)		+= dm355evm_keys.o
->  obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
-> +obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
->  obj-$(CONFIG_INPUT_GPIO_TILT_POLLED)	+= gpio_tilt_polled.o
->  obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
->  obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
-> diff --git a/drivers/input/misc/gpio-beeper.c b/drivers/input/misc/gpio-beeper.c
-> new file mode 100644
-> index 0000000..cc81e6e
-> --- /dev/null
-> +++ b/drivers/input/misc/gpio-beeper.c
-> @@ -0,0 +1,127 @@
-> +/*
-> + *  Generic GPIO beeper driver
-> + *
-> + *  Copyright (C) 2013 Alexander Shiyan <shc_work@mail.ru>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/workqueue.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define BEEPER_MODNAME		"gpio-beeper"
-> +
-> +struct gpio_beeper {
-> +	struct work_struct	work;
-> +	int			gpio;
-> +	bool			active_low;
-> +	bool			beeping;
-> +};
-> +
-> +static void gpio_beeper_toggle(struct gpio_beeper *beep, bool on)
-> +{
-> +	gpio_set_value_cansleep(beep->gpio, on ^ beep->active_low);
-> +}
-> +
-> +static void gpio_beeper_work(struct work_struct *work)
-> +{
-> +	struct gpio_beeper *beep = container_of(work, struct gpio_beeper, work);
-> +
-> +	gpio_beeper_toggle(beep, beep->beeping);
-> +}
-> +
-> +static int gpio_beeper_event(struct input_dev *dev, unsigned int type,
-> +			     unsigned int code, int value)
-> +{
-> +	struct gpio_beeper *beep = input_get_drvdata(dev);
-> +
-> +	if (type != EV_SND || code != SND_BELL)
-> +		return -ENOTSUPP;
-> +
-> +	if (value < 0)
-> +		return -EINVAL;
-> +
-> +	beep->beeping = value;
-> +	/* Schedule work to actually turn the beeper on or off */
-> +	schedule_work(&beep->work);
-> +
-> +	return 0;
-> +}
-> +
-> +static void gpio_beeper_close(struct input_dev *input)
-> +{
-> +	struct gpio_beeper *beep = input_get_drvdata(input);
-> +
-> +	cancel_work_sync(&beep->work);
-> +	gpio_beeper_toggle(beep, false);
-> +}
-> +
-> +static int gpio_beeper_probe(struct platform_device *pdev)
-> +{
-> +	struct gpio_beeper *beep;
-> +	enum of_gpio_flags flags;
-> +	struct input_dev *input;
-> +	unsigned long gflags;
-> +	int err;
-> +
-> +	beep = devm_kzalloc(&pdev->dev, sizeof(*beep), GFP_KERNEL);
-> +	if (!beep)
-> +		return -ENOMEM;
-> +
-> +	beep->gpio = of_get_gpio_flags(pdev->dev.of_node, 0, &flags);
-> +	if (!gpio_is_valid(beep->gpio))
-> +		return beep->gpio;
-> +
-> +	input = devm_input_allocate_device(&pdev->dev);
-> +	if (!input)
-> +		return -ENOMEM;
-> +
-> +	INIT_WORK(&beep->work, gpio_beeper_work);
-> +
-> +	input->name		= pdev->name;
-> +	input->id.bustype	= BUS_HOST;
-> +	input->id.vendor	= 0x0001;
-> +	input->id.product	= 0x0001;
-> +	input->id.version	= 0x0100;
-> +	input->close		= gpio_beeper_close;
-> +	input->event		= gpio_beeper_event;
-> +
-> +	input_set_capability(input, EV_SND, SND_BELL);
-> +
-> +	beep->active_low = flags & OF_GPIO_ACTIVE_LOW;
-> +	gflags = beep->active_low ? GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW;
-> +
-> +	err = devm_gpio_request_one(&pdev->dev, beep->gpio, gflags, pdev->name);
-> +	if (err)
-> +		return err;
-> +
-> +	input_set_drvdata(input, beep);
-> +
-> +	return input_register_device(input);
-> +}
-> +
-> +static struct of_device_id gpio_beeper_of_match[] = {
-> +	{ .compatible = BEEPER_MODNAME, },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, gpio_beeper_of_match);
-> +
-> +static struct platform_driver gpio_beeper_platform_driver = {
-> +	.driver	= {
-> +		.name		= BEEPER_MODNAME,
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table	= gpio_beeper_of_match,
-> +	},
-> +	.probe	= gpio_beeper_probe,
-> +};
-> +module_platform_driver(gpio_beeper_platform_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Alexander Shiyan <shc_work@mail.ru>");
-> +MODULE_DESCRIPTION("Generic GPIO beeper driver");
