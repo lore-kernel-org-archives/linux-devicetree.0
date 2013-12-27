@@ -1,14 +1,15 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH RFCv1 2/6] ARM: mvebu: add a coherency_available() call
-Date: Fri, 27 Dec 2013 12:57:49 -0500
-Message-ID: <20131227175749.GZ19878@titan.lakedaemon.net>
+Subject: Re: [PATCH RFCv1 5/6] ARM: mvebu: update Armada 370/XP DT to use
+ new coherency compatible string
+Date: Fri, 27 Dec 2013 12:59:08 -0500
+Message-ID: <20131227175908.GB19878@titan.lakedaemon.net>
 References: <1388067146-18111-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1388067146-18111-3-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1388067146-18111-6-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1388067146-18111-3-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1388067146-18111-6-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
@@ -18,109 +19,35 @@ All,
 
 Including the MLs.
 
-On Thu, Dec 26, 2013 at 03:12:22PM +0100, Thomas Petazzoni wrote:
-> This commit extends the coherency fabric code to provide a
-> coherency_available()function that the SoC code can call to be told
-> whether coherency support is available or not. On Armada 370/XP,
-> coherency support is available as soon as the relevant DT node is
-> present. On some upcoming SoCs, the DT node needs to be present *and*
-> the system running with CONFIG_SMP enabled.
+On Thu, Dec 26, 2013 at 03:12:25PM +0100, Thomas Petazzoni wrote:
+> Update the common Armada 370 and Armada XP Device Tree files to use
+> the new compatible string for the coherency fabric.
 > 
 > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  arch/arm/mach-mvebu/coherency.c | 30 +++++++++++++++++++++++-------
->  arch/arm/mach-mvebu/coherency.h |  1 +
->  2 files changed, 24 insertions(+), 7 deletions(-)
+>  arch/arm/boot/dts/armada-370-xp.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/mach-mvebu/coherency.c b/arch/arm/mach-mvebu/coherency.c
-> index a8209ae..70db4e9 100644
-> --- a/arch/arm/mach-mvebu/coherency.c
-> +++ b/arch/arm/mach-mvebu/coherency.c
-> @@ -38,6 +38,7 @@ static void __iomem *coherency_cpu_base;
->  #define IO_SYNC_BARRIER_CTL_OFFSET		   0x0
+> diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+> index 7f10f62..c32f522 100644
+> --- a/arch/arm/boot/dts/armada-370-xp.dtsi
+> +++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+> @@ -117,7 +117,7 @@
+>  			};
 >  
->  enum {
-> +	COHERENCY_FABRIC_TYPE_NONE,
->  	COHERENCY_FABRIC_TYPE_ARMADA_370_XP,
->  };
->  
-> @@ -149,7 +150,7 @@ static void __init armada_370_coherency_init(struct device_node *np)
->  	set_cpu_coherent(cpu_logical_map(smp_processor_id()), 0);
->  }
->  
-> -int __init coherency_init(void)
-> +static int coherency_type(void)
->  {
->  	struct device_node *np;
->  
-> @@ -160,27 +161,42 @@ int __init coherency_init(void)
->  		int type;
->  
->  		type = (int) match->data;
-> +
->  		pr_info("Initializing Coherency fabric\n");
+>  			coherency-fabric@20200 {
+> -				compatible = "marvell,coherency-fabric";
+> +				compatible = "marvell,armada-370-coherency-fabric";
 
-This seems to no longer be true at this point.  Perhaps once moved to
-the correct location, it could report the type of coherency fabric?
+Not needed, see my reply to 1/6.
 
 thx,
 
 Jason.
 
+>  				reg = <0x20200 0xb0>, <0x21010 0x1c>;
+>  			};
 >  
-> +		/* Armada 370/XP coherency works in both UP and SMP */
->  		if (type == COHERENCY_FABRIC_TYPE_ARMADA_370_XP)
-> -			armada_370_coherency_init(np);
-> +			return type;
->  
->  		of_node_put(np);
->  	}
->  
-> -	return 0;
-> +	return COHERENCY_FABRIC_TYPE_NONE;
->  }
->  
-> -static int __init coherency_late_init(void)
-> +int coherency_available(void)
->  {
-> +	return coherency_type() != COHERENCY_FABRIC_TYPE_NONE;
-> +}
-> +
-> +int __init coherency_init(void)
-> +{
-> +	int type = coherency_type();
->  	struct device_node *np;
->  
->  	np = of_find_matching_node(NULL, of_coherency_table);
-> -	if (np) {
-> +
-> +	if (type == COHERENCY_FABRIC_TYPE_ARMADA_370_XP)
-> +		armada_370_coherency_init(np);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __init coherency_late_init(void)
-> +{
-> +	if (coherency_available())
->  		bus_register_notifier(&platform_bus_type,
->  				      &mvebu_hwcc_platform_nb);
-> -		of_node_put(np);
-> -	}
->  	return 0;
->  }
->  
-> diff --git a/arch/arm/mach-mvebu/coherency.h b/arch/arm/mach-mvebu/coherency.h
-> index df33ad8..2a05b6e 100644
-> --- a/arch/arm/mach-mvebu/coherency.h
-> +++ b/arch/arm/mach-mvebu/coherency.h
-> @@ -16,5 +16,6 @@
->  
->  int set_cpu_coherent(int cpu_id, int smp_group_id);
->  int coherency_init(void);
-> +int coherency_available(void);
->  
->  #endif	/* __MACH_370_XP_COHERENCY_H */
 > -- 
 > 1.8.3.2
 > 
