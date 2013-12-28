@@ -1,67 +1,65 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 6/6] [RFC] arm: shmobile: genmai reference: Add RSPI nodes
-Date: Sat, 28 Dec 2013 12:48:27 +0100
-Message-ID: <1503028.o7PtQzEmGv@avalon>
-References: <1387886210-3634-1-git-send-email-geert+renesas@linux-m68k.org> <2198668.ESbmzZvna4@avalon> <CAMuHMdVH4PyhxR3JLLPX9a3fKaEgdpQpd2aa4YKL6DUD8+Pw2Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdVH4PyhxR3JLLPX9a3fKaEgdpQpd2aa4YKL6DUD8+Pw2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v6 0/3] mmc: dw_mmc: add dw_mmc-k3
+Date: Sat, 28 Dec 2013 22:34:52 +0800
+Message-ID: <1388241295-20051-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+v6:
+0002:
+Jaehoon pointed HIGHSPEED cap can be omitted if supports-highspeed is defined.
+Seungwon mentioned clk operation should be called after suspend.
+Remove k3_dwmmc_caps
 
-On Friday 27 December 2013 20:08:18 Geert Uytterhoeven wrote:
-> On Fri, Dec 27, 2013 at 5:20 PM, Laurent Pinchart wrote:
-> > On Tuesday 24 December 2013 12:56:50 Geert Uytterhoeven wrote:
-> >> Add pinctrl and SPI devices for RSPI on Genmai.
-> >> 
-> >> On this board, only rspi4 is in use. It's bus contains a single device
-> >> (a wm8978 audio codec), for which no bindings are defined yet.
-> >> 
-> >> Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> ---
-> >> 
-> >>  arch/arm/boot/dts/r7s72100-genmai-reference.dts |   18 ++++++++++++++++-
-> >>  1 file changed, 17 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/arch/arm/boot/dts/r7s72100-genmai-reference.dts
-> >> b/arch/arm/boot/dts/r7s72100-genmai-reference.dts index
-> >> 114510f8bf09..6d99630627e4 100644
-> >> --- a/arch/arm/boot/dts/r7s72100-genmai-reference.dts
-> >> +++ b/arch/arm/boot/dts/r7s72100-genmai-reference.dts
-> >> @@ -43,7 +43,7 @@
-> >>  };
-> >>  
-> >>  &pfc {
-> >> -     pinctrl-0 = <&scif2_pins &ethernet_pins>;
-> >> +     pinctrl-0 = <&scif2_pins &ethernet_pins &rspi4_pins>;
-> > 
-> > You should add pinctrl-0 and pinctrl-names properties to the spi4 node
-> > instead. Device nodes should reference their pinctrl configuration
-> > directly, scif2 and ethernet are exceptions as DT bindings for those
-> > devices are not in mainline yet.
-> 
-> I put it there because the actual driver doesn't use DT yet. Is that OK?
+V5:
+0002:
+Follow advice from Arnd, 
+Update dt descirption and use of_property_for_each_u32 to get table number.
 
-I had missed that. That's fine, but shouldn't you then delay patch 5/6 until 
-the driver gets DT support ?
+v4:
+Follow Arnd's suggestion abstracting specific tuning to clock,
+also because new version ip use different method and not use same tuning registers.
 
-You've already sent a DT bindings proposal (thanks for that !), wouldn't it 
-make sense to implement support in the driver before this patch ? We're pretty 
-close to that from what I can see.
+0001 acked by Jaehoon
+
+v3:
+0001: 
+Put set/clear_bit DW_MMC_CARD_PRESENT in dw_mci_get_cd, 
+Since dw_mci_request will check DW_MMC_CARD_PRESENT before sending cmd
+
+0002:
+Follow suggestion from Chris, Kumar and Seungwon
+Sync to latest mmc-next, which is 3.12-rc2
+Remove enum dw_mci_k3_type etc
+
+v2:
+Follow Jaehoon's suggestion
+Use slot-gpio.c handle cd pin
+Move table out to dts
+other suggestion
+
+
+Zhangfei Gao (3):
+  mmc: dw_mmc: use slot-gpio to handle cd pin
+  mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+  clk: hisilicon: add hi3620_mmc_clks
+
+ .../bindings/arm/hisilicon/hisilicon.txt           |   14 ++
+ .../devicetree/bindings/clock/hi3620-clock.txt     |    1 +
+ .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   60 +++++
+ drivers/clk/hisilicon/clk-hi3620.c                 |  262 ++++++++++++++++++++
+ drivers/mmc/host/Kconfig                           |   10 +
+ drivers/mmc/host/Makefile                          |    1 +
+ drivers/mmc/host/dw_mmc-k3.c                       |  126 ++++++++++
+ drivers/mmc/host/dw_mmc.c                          |   48 +++-
+ include/dt-bindings/clock/hi3620-clock.h           |    5 +
+ 9 files changed, 514 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+ create mode 100644 drivers/mmc/host/dw_mmc-k3.c
 
 -- 
-Regards,
+1.7.9.5
 
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
