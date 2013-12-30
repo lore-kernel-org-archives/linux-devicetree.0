@@ -1,298 +1,238 @@
-From: Kamil Debski <k.debski@samsung.com>
-Subject: RE: [PATCH v2 9/9] dts: Add usb2phy to Exynos 5250
-Date: Mon, 30 Dec 2013 16:18:39 +0100
-Message-ID: <028701cf0572$6c180d80$44482880$%debski@samsung.com>
-References: <1387545857-9472-1-git-send-email-k.debski@samsung.com>
- <1387545857-9472-10-git-send-email-k.debski@samsung.com>
- <CAFp+6iH9AGP9J5regd7Z5XM8kP=PiFhvqxrV9qRf7rzmBSu9uQ@mail.gmail.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Tue, 31 Dec 2013 01:19:48 +0800
+Message-ID: <52C1AB34.3010402@linaro.org>
+References: <1388241295-20051-1-git-send-email-zhangfei.gao@linaro.org>	<1388241295-20051-3-git-send-email-zhangfei.gao@linaro.org>	<201312292205.02135.arnd@arndb.de>	<52C0B662.4070608@samsung.com> <CAMj5Bkif9pQHVdA71QccamVQkfgTheUNzowW6AyTwC3dy5XF+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAFp+6iH9AGP9J5regd7Z5XM8kP=PiFhvqxrV9qRf7rzmBSu9uQ@mail.gmail.com>
-Content-language: pl
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Vivek Gautam' <gautamvivek1987@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Linux USB Mailing List' <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'kishon' <kishon@ti.com>, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Mateusz Krawczuk' <mat.krawczuk@gmail.com>, yulgon.kim@samsung.com, 'Praveen Paneri' <p.paneri@samsung.com>, av.tikhomirov@samsung.com, 'Jingoo Han' <jg1.han@samsung.com>, 'Kumar Gala' <galak@codeaurora.org>, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, 'Alan Stern' <stern@rowland.harvard.edu>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAMj5Bkif9pQHVdA71QccamVQkfgTheUNzowW6AyTwC3dy5XF+g@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, patches@linaro.org, Seungwon Jeon <tgih.jun@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, cpgs@samsung.com, Kumar Gala <galak@codeaurora.org>, Chris Ball <cjb@laptop.org>, Zhigang Wang <brooke.wangzhigang@huawei.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-> From: Vivek Gautam [mailto:gautamvivek1987@gmail.com]
-> Sent: Thursday, December 26, 2013 11:32 AM
-> 
-> Hi Kamil,
-> 
-> 
-> On Fri, Dec 20, 2013 at 6:54 PM, Kamil Debski <k.debski@samsung.com>
-> wrote:
-> > Add support to PHY of USB2 of the Exynos 5250 SoC.
-> >
-> > Signed-off-by: Kamil Debski <k.debski@samsung.com>
-> > ---
-> >  arch/arm/boot/dts/exynos5250.dtsi |   33 ++++++++++++-------
-> >  drivers/phy/phy-exynos5250-usb2.c |   64
-> +++++++++++++++++++++++++++++++++----
-> >  2 files changed, 78 insertions(+), 19 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi
-> > b/arch/arm/boot/dts/exynos5250.dtsi
-> > index 2f264ad..922e0ed 100644
-> > --- a/arch/arm/boot/dts/exynos5250.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> > @@ -163,6 +163,11 @@
-> >                 interrupts = <0 47 0>;
-> >         };
-> >
-> > +       sys_syscon: syscon@10040000 {
-> > +               compatible = "samsung,exynos5250-sys", "syscon";
-> > +               reg = <0x10050000 0x5000>;
-> > +       };
-> > +
-> >         pmu_syscon: syscon@10040000 {
-> >                 compatible = "samsung,exynos5250-pmu", "syscon";
-> >                 reg = <0x10040000 0x5000>; @@ -505,6 +510,14 @@
-> >
-> >                 clocks = <&clock 285>;
-> >                 clock-names = "usbhost";
-> > +               #address-cells = <1>;
-> > +               #size-cells = <0>;
-> > +               port@0 {
-> > +                       reg = <0>;
-> > +                       phys = <&usb2_phy 1>;
-> > +                       phy-names = "host";
-> > +                       status = "ok";
-> > +               };
-> >         };
-> >
-> >         usb@12120000 {
-> > @@ -516,19 +529,15 @@
-> >                 clock-names = "usbhost";
-> >         };
-> >
-> > -       usb2_phy: usbphy@12130000 {
-> > -               compatible = "samsung,exynos5250-usb2phy";
-> > +       usb2_phy: phy@12130000 {
-> > +               compatible = "samsung,exynos5250-usb2-phy";
-> >                 reg = <0x12130000 0x100>;
-> > -               clocks = <&clock 1>, <&clock 285>;
-> > -               clock-names = "ext_xtal", "usbhost";
-> > -               #address-cells = <1>;
-> > -               #size-cells = <1>;
-> > -               ranges;
-> > -
-> > -               usbphy-sys {
-> > -                       reg = <0x10040704 0x8>,
-> > -                             <0x10050230 0x4>;
-> > -               };
-> > +               clocks = <&clock 285>, <&clock 1>, <&clock 1>,
-> <&clock 1>,
-> > +
-> <&clock 1>;
-> > +               clock-names = "phy", "device", "host", "hsic0",
-> "hsic1";
-> > +               #phy-cells = <1>;
-> > +               samsung,sysreg-phandle = <&sys_syscon>;
-> > +               samsung,pmureg-phandle = <&pmu_syscon>;
-> >         };
-> >
-> >         amba {
-> > diff --git a/drivers/phy/phy-exynos5250-usb2.c
-> > b/drivers/phy/phy-exynos5250-usb2.c
-> > index b9b3b98..337bf82 100644
-> > --- a/drivers/phy/phy-exynos5250-usb2.c
-> > +++ b/drivers/phy/phy-exynos5250-usb2.c
-> 
-> Separate patches for dt and driver ?
-> I think you wanted to move these changes to :
-> [PATCH v5 7/9] phy: Add Exynos 5250 support to the Exynos USB 2.0 PHY
-> driver
 
-Good point. I am planning to reorganise this patchset to prevent breaking
-git bisect. I wanted to wait for more comments to this version, so I could
-address any issues that may be reported.
+On 12/30/2013 10:32 AM, Zhangfei Gao wrote:
+> On Mon, Dec 30, 2013 at 7:55 AM, Jaehoon Chung <jh80.chung@samsung.co=
+m> wrote:
+>> On 12/30/2013 06:05 AM, Arnd Bergmann wrote:
+>>> On Saturday 28 December 2013, Zhangfei Gao wrote:
+>>>> Add dw_mmc-k3.c for k3v2, support sd/emmc
+>>>>
+>>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>>>> Signed-off-by: Zhigang Wang <brooke.wangzhigang@huawei.com>
+>>>> ---
+>>>>   .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   60 ++++++=
+++++
+>>>>   drivers/mmc/host/Kconfig                           |   10 ++
+>>>>   drivers/mmc/host/Makefile                          |    1 +
+>>>>   drivers/mmc/host/dw_mmc-k3.c                       |  126 ++++++=
+++++++++++++++
+>>>>   4 files changed, 197 insertions(+)
+>>>>   create mode 100644 Documentation/devicetree/bindings/mmc/k3-dw-m=
+shc.txt
+>>>>   create mode 100644 drivers/mmc/host/dw_mmc-k3.c
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt =
+b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>>>> new file mode 100644
+>>>> index 000000000000..d7e2d7f159bb
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>>>> @@ -0,0 +1,60 @@
+>>>> +* Hisilicon specific extensions to the Synopsys Designware Mobile
+>>>> +  Storage Host Controller
+>>>> +
+>>>> +Read synopsys-dw-mshc.txt for more details
+>>>> +
+>>>> +The Synopsys designware mobile storage host controller is used to=
+ interface
+>>>> +a SoC with storage medium such as eMMC or SD/MMC cards. This file=
+ documents
+>>>> +differences between the core Synopsys dw mshc controller properti=
+es described
+>>>> +by synopsys-dw-mshc.txt and the properties used by the Hisilicon =
+specific
+>>>> +extensions to the Synopsys Designware Mobile Storage Host Control=
+ler.
+>>>> +
+>>>> +Required Properties:
+>>>> +
+>>>> +* compatible: should be one of the following.
+>>>> +  - "hisilicon,hi4511-dw-mshc": for controllers with hi4511 speci=
+fic extentions.
+>>>
+>>> I wonder if this is actually a different variant of the mshc hardwa=
+re, or just
+>>> wired up in a different way. Do you know details?
+>>>
+>>> Since the only difference in the binding is the presence of the "cl=
+ock-freq-table"
+>>> property, we could also make this property generic for the mshc dri=
+ver and use
+>>> it if present but fall back to the normal behavior when it is absen=
+t.
+>
+> There are still other differences and limitations besides "clock-freq=
+-table".
+> The controller seems less intelligent than other Synopsys mmc control=
+ler.
+> The tuning process like HS200 is not intelligent, as a result, some
+> local registers are added to help this.
+>
+>>>
+>>>> +* clock-freq-table: should be the frequency (in Hz) array of the =
+ciu clock
+>>>> +    in each supported mode.
+>>>> +    0. CIU clock rate in Hz for DS mode
+>>>> +    1. CIU clock rate in Hz for MMC HS mode
+>>>> +    2. CIU clock rate in Hz for SD HS mode
+>>>> +    3. CIU clock rate in Hz for SDR12 mode
+>>>> +    4. CIU clock rate in Hz for SDR25 mode
+>>>> +    5. CIU clock rate in Hz for SDR50 mode
+>>>> +    6. CIU clock rate in Hz for SDR104 mode
+>>>> +    7. CIU clock rate in Hz for DDR50 mode
+>>>> +    8. CIU clock rate in Hz for HS200 mode
+>>>
+>>> This looks god now.
+>>>
+>>>> +static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios=
+ *ios)
+>>>> +{
+>>>> +    struct dw_mci_k3_priv_data *priv =3D host->priv;
+>>>> +    u32 rate =3D priv->clk_table[ios->timing];
+>>>> +    int ret;
+>>>
+>>> I think this should have some range checking to see if the mode tha=
+t is
+>>> being set had a clock frequency set in the DT.
+>
+> The range safety should be ensured by the clk_table array, MAX_NUMS=3D=
+10.
+>>>
+>>>> +
+>>>> +    ret =3D clk_set_rate(host->ciu_clk, rate);
+>>>> +    if (ret)
+>>>> +            dev_warn(host->dev, "failed to set clock rate %uHz\n"=
+, rate);
+>>>> +
+>>>> +    host->bus_hz =3D clk_get_rate(host->ciu_clk);
+>>>> +}
+>>>
+>>> Why do you call clk_get_rate() here, shouldn't it always be the sam=
+e
+>>> rate that you have just set?
+>
+> It is more accurate to use clk_get_rate here.
+> For example, if switch to ios->clock as you suggested before, 52M wil=
+l
+> be set for mmc, while 50M is supported.
+> However, it can simply use rate set currently.
+>
+>>>
+>>>> +static int dw_mci_k3_parse_dt(struct dw_mci *host)
+>>>> +{
+>>>> +    struct dw_mci_k3_priv_data *priv;
+>>>> +    struct device_node *node =3D host->dev->of_node;
+>>>> +    struct property *prop;
+>>>> +    const __be32 *cur;
+>>>> +    u32 val, num =3D 0;
+>>>> +
+>>>> +    priv =3D devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
+>>>> +    if (!priv) {
+>>>> +            dev_err(host->dev, "mem alloc failed for private data=
+\n");
+>>>> +            return -ENOMEM;
+>>>> +    }
+>>>> +    host->priv =3D priv;
+>>>> +
+>>>> +    of_property_for_each_u32(node, "clock-freq-table", prop, cur,=
+ val) {
+>>>> +            if (num >=3D MAX_NUMS)
+>>>> +                    break;
+>>>> +            priv->clk_table[num++] =3D val;
+>>>> +    }
+>>>> +    return 0;
+>>>> +}
+>>>
+>>> If we make this property part of the generic binding, this function=
+ could
+>>> also get moved to the main dw_mci driver.
+>
+> This may be not general.
+> The controller does not generate the clock itself, and set rate to th=
+e
+> outside clock source, which may be different according to the working
+> mode.
+>
+>>>
+>>>> +static int dw_mci_k3_suspend(struct device *dev)
+>>>> +{
+>>>> +    struct dw_mci *host =3D dev_get_drvdata(dev);
+>>>> +    int ret =3D 0;
+>>>> +
+>>>> +    ret =3D dw_mci_suspend(host);
+>>>
+>>> You should never initialize local variables when they are set later=
+ in the
+>>> function (the ret =3D 0 part above). For more complex functions, th=
+is prevents
+>>> gcc from warning you about accidentally uninitialized uses.
 
-> 
-> > @@ -58,7 +58,13 @@
-> >  #define EXYNOS_5250_HOSTPHYCTRL2                       0x20
-> 
-> Shouldn't we leave the naming as EXYNOS_5250_HSICPHYCTRL2 instead of
-> EXYNOS_5250_HOSTPHYCTRL2 ? That will go in sync with the user-manual
-> too.
-> and similar for EXYNOS_5250_HOSTPHYCTRL1 and below bit definitions too
-> ?
+I am sorry I may fall into the dead end, but still quite not understand=
+=20
+this rule.
+I alwayes thought it would be a good habit to init local variables befo=
+re.
+Do you mean it should NOT init local variable as much as possible and=20
+only init on demand, like solving the gcc warning.
+Why not init the them at start in case random value cause unpredicted e=
+rror?
 
-Thank you for pointing this out.
-
-> >
-> >  #define EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_MASK                (0x3
-> << 23)
-> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_DEFAULT     (0x2 << 23)
-> >  #define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_MASK                (0x7f
-> << 16)
-> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_12          (0x24 << 16)
-> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_15          (0x1c << 16)
-> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_16          (0x1a << 16)
-> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_19_2                (0x15
-> << 16)
-> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_20          (0x14 << 16)
-> >  #define EXYNOS_5250_HOSTPHYCTRLX_SIDDQ                 BIT(6)
-> >  #define EXYNOS_5250_HOSTPHYCTRLX_FORCESLEEP            BIT(5)
-> >  #define EXYNOS_5250_HOSTPHYCTRLX_FORCESUSPEND          BIT(4)
-> > @@ -191,13 +197,14 @@ static void exynos5250_isol(struct
-> samsung_usb2_phy_instance *inst, bool on)
-> >         regmap_update_bits(drv->reg_pmu, offset, mask, on ? 0 :
-> mask);
-> > }
-> >
-> > -static void exynos5250_phy_pwr(struct samsung_usb2_phy_instance
-> > *inst, bool on)
-> > +static int exynos5250_power_on(struct samsung_usb2_phy_instance
-> > +*inst)
-> 
-> void ? we really don't have much to return in this function.
-
-Initially the idea was to enable the return of an error code. However,
-I see that for all currently supported SoCs the ops always returns 0.
-So I will consider switching to void.
-
-> 
-> >  {
-> >         struct samsung_usb2_phy_driver *drv = inst->drv;
-> >         u32 ctrl0;
-> >         u32 otg;
-> >         u32 ehci;
-> >         u32 ohci;
-> > +       u32 hsic;
-> >
-> >         switch (inst->cfg->id) {
-> >         case EXYNOS5250_DEVICE:
-> > @@ -234,6 +241,8 @@ static void exynos5250_phy_pwr(struct
-> > samsung_usb2_phy_instance *inst, bool on)
-> >
-> >                 break;
-> >         case EXYNOS5250_HOST:
-> > +       case EXYNOS5250_HSIC0:
-> > +       case EXYNOS5250_HSIC1:
-> >                 /* Host registers configuration */
-> >                 ctrl0 = readl(drv->reg_phy +
-> EXYNOS_5250_HOSTPHYCTRL0);
-> >                 /* The clock */
-> > @@ -279,6 +288,18 @@ static void exynos5250_phy_pwr(struct
-> samsung_usb2_phy_instance *inst, bool on)
-> >                         EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG |
-> >                         EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET);
-> >
-> > +               /* HSIC phy configuration */
-> > +               hsic = (EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_12 |
-> > +
-> EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_DEFAULT |
-> > +                               EXYNOS_5250_HOSTPHYCTRLX_PHYSWRST);
-> > +               writel(hsic, drv->reg_phy +
-> EXYNOS_5250_HOSTPHYCTRL1);
-> > +               writel(hsic, drv->reg_phy +
-> EXYNOS_5250_HOSTPHYCTRL2);
-> > +               udelay(10);
-> > +               hsic &= ~EXYNOS_5250_HOSTPHYCTRLX_PHYSWRST;
-> > +               writel(hsic, drv->reg_phy +
-> EXYNOS_5250_HOSTPHYCTRL1);
-> > +               writel(hsic, drv->reg_phy +
-> EXYNOS_5250_HOSTPHYCTRL2);
-> > +               udelay(80);
-> > +
-> >                 /* Enable EHCI DMA burst */
-> >                 ehci = readl(drv->reg_phy +
-> EXYNOS_5250_HOSTEHCICTRL);
-> >                 ehci |= EXYNOS_5250_HOSTEHCICTRL_ENAINCRXALIGN | @@
-> > -295,12 +316,7 @@ static void exynos5250_phy_pwr(struct
-> > samsung_usb2_phy_instance *inst, bool on)
-> >
-> >                 break;
-> >         }
-> > -}
-> > -
-> > -static int exynos5250_power_on(struct samsung_usb2_phy_instance
-> > *inst) -{
-> >         inst->enabled = 1;
-> > -       exynos5250_phy_pwr(inst, 1);
-> >         exynos5250_isol(inst, 0);
-> >
-> >         return 0;
-> > @@ -308,9 +324,43 @@ static int exynos5250_power_on(struct
-> > samsung_usb2_phy_instance *inst)
-> >
-> >  static int exynos5250_power_off(struct samsung_usb2_phy_instance
-> > *inst)
-> 
-> ditto
-> 
-> >  {
-> > +       struct samsung_usb2_phy_driver *drv = inst->drv;
-> > +       u32 ctrl0;
-> > +       u32 otg;
-> > +       u32 hsic;
-> > +
-> >         inst->enabled = 0;
-> >         exynos5250_isol(inst, 1);
-> > -       exynos5250_phy_pwr(inst, 0);
-> > +
-> > +       switch (inst->cfg->id) {
-> > +       case EXYNOS5250_DEVICE:
-> > +               otg = readl(drv->reg_phy + EXYNOS_5250_USBOTGSYS);
-> > +               otg |= (EXYNOS_5250_USBOTGSYS_FORCE_SUSPEND |
-> > +                       EXYNOS_5250_USBOTGSYS_SIDDQ_UOTG |
-> > +                       EXYNOS_5250_USBOTGSYS_FORCE_SLEEP);
-> > +               writel(otg, drv->reg_phy + EXYNOS_5250_USBOTGSYS);
-> > +               break;
-> > +       case EXYNOS5250_HOST:
-> > +               ctrl0 = readl(drv->reg_phy +
-> EXYNOS_5250_HOSTPHYCTRL0);
-> > +               ctrl0 |= (EXYNOS_5250_HOSTPHYCTRL0_SIDDQ |
-> > +                               EXYNOS_5250_HOSTPHYCTRL0_FORCESUSPEND
-> |
-> > +                               EXYNOS_5250_HOSTPHYCTRL0_FORCESLEEP |
-> > +                               EXYNOS_5250_HOSTPHYCTRL0_PHYSWRST |
-> > +
-> EXYNOS_5250_HOSTPHYCTRL0_PHYSWRSTALL);
-> > +               writel(ctrl0, drv->reg_phy +
-> EXYNOS_5250_HOSTPHYCTRL0);
-> > +               break;
-> > +       case EXYNOS5250_HSIC0:
-> > +       case EXYNOS5250_HSIC1:
-> > +               hsic = (EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_12 |
-> > +
-> EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_DEFAULT |
-> > +                               EXYNOS_5250_HOSTPHYCTRLX_SIDDQ |
-> > +                               EXYNOS_5250_HOSTPHYCTRLX_FORCESLEEP |
-> > +                               EXYNOS_5250_HOSTPHYCTRLX_FORCESUSPEND
-> > +                               );
-> > +               writel(hsic, drv->reg_phy +
-> EXYNOS_5250_HOSTPHYCTRL1);
-> > +               writel(hsic, drv->reg_phy +
-> EXYNOS_5250_HOSTPHYCTRL2);
-> > +               break;
-> > +       }
-> >
-> >         return 0;
-> >  }
-> > --
-> > 1.7.9.5
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe
-> > linux-samsung-soc" in the body of a message to
-> > majordomo@vger.kernel.org More majordomo info at
-> > http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
-> --
-> Best Regards
-> Vivek Gautam
-> Samsung R&D Institute, Bangalore
-> India
-
-Best wishes,
--- 
-Kamil Debski
-Samsung R&D Institute Poland
+>
+> Frankly speaking, I didn't know this rule at all.
+> Often see the warning before like =93Variable to be used not initiali=
+zed=94,
+> so preferred to init the local variable as much as possible.
+> Looks like it is wrong.
+>
+>>>
+>>>> +    if (!ret)
+>>>> +            clk_disable_unprepare(host->ciu_clk);
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>>
+>>> The suspend/resume code also looks very generic. Can't we make thes=
+e the
+>>> default for dw-mci? If you do both, you won't even need a k3 specif=
+ic driver.
+>>> I think in general we should try hard to add code like this to the =
+common
+>>> driver when there is a chance that it can be shared with other plat=
+forms.
+>>
+>> Dw-mmc has the LOW_POWER mode feature at CLKENA register,
+>> this feature is running like clock-gating.
+>> So i have known it didn't control clock enable/disable in dw-mmc.c.
+>
+> It is added here since we have to set special register when resume
+> back, which has been abstracted to ciu_clk prepare operation.
+>
+>>
+>> Best Regards,
+>> Jaehoon Chung
+>>
+>>>
+>>>        Arnd
+>>>
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
