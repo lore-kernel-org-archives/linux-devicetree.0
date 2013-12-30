@@ -1,53 +1,72 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v2 0/8] clk: max77686: Clock provider implementation fixes
-Date: Mon, 30 Dec 2013 18:41:11 +0100
-Message-ID: <3255941.gbDAOmmA0C@amdc1227>
-References: <1386864441-19561-1-git-send-email-t.figa@samsung.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v4 0/6] Krait L1/L2 EDAC driver
+Date: Mon, 30 Dec 2013 12:14:11 -0800
+Message-ID: <1388434457-4194-1-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1386864441-19561-1-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mike Turquette <mturquette@linaro.org>, Lee Jones <lee.jones@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-edac@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Stepan Moskovchenko <stepanm@codeaurora.org>, Doug Thompson <dougthompson@xmission.com>, David Brown <davidb@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 12 of December 2013 17:07:13 Tomasz Figa wrote:
-> This series intends to improve clock provider impementation of max77686
-> PMIC driver. First two patches are simple fixes of current implementation
-> to allow correct control of provided clocks. Further patches refactor
-> the driver to make the code cleaner and prepare for further patches. Then
-> last two patches add registration of OF clock provider and adjust device
-> tree nodes of boards containing max77686 chip to contain properties
-> required by clock provider.
-> 
-> Tested on Exynos4412-based Trats2 board, with additional patches adding
-> driver being a consumer of one of max77686 clocks.
-> 
-> Changes since v1:
->  - rebased on top of current clk-next (no functional changes)
-> 
-> Tomasz Figa (8):
->   clk: max77686: Correct callback used for checking clock status
->   clk: max77686: Provide .recalc_rate() operation
->   clk: max77686: Refactor successful exit of probe function
->   clk: max77686: Make max77686_clk_register() return struct clk *
->   clk: max77686: Fix clean-up in error and remove paths
->   clk: max77686: Refactor driver data handling
->   clk: max77686: Register OF clock provider
->   ARM: dts: Add clock provider specific properties to max77686 node
-> 
->  .../devicetree/bindings/clock/maxim,max77686.txt   | 38 +++++++++
->  Documentation/devicetree/bindings/mfd/max77686.txt |  3 +
->  arch/arm/boot/dts/cros5250-common.dtsi             |  1 +
->  arch/arm/boot/dts/exynos4412-odroidx.dts           |  1 +
->  arch/arm/boot/dts/exynos4412-trats2.dts            |  1 +
->  drivers/clk/clk-max77686.c                         | 97 +++++++++++++---------
->  6 files changed, 104 insertions(+), 37 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/maxim,max77686.txt
+This patchset adds support for the Krait L1/L2 cache error detection
+hardware. The first patch fixes a generic framework bug. The next
+two patches lay the groundwork for this driver to be added by 
+exporting percpu irq functions as well as adding the Krait l2 indirection
+register code. The next two patches add the driver and the binding and 
+the final patch hooks it all up by adding the device tree node.
 
-Ping.
+I'm not sure which tree this is supposed to go through. Ideally we could
+send the first 3 plus the 5th one through an edac tree. The final dts changes
+could go through arm-soc via davidb's tree and the Documentation patch could
+go through the devicetree tree.
 
-Best regards,
-Tomasz
+Changes since v3:
+ * Fixed l1_irq handler to properly dereference dev_id
+
+Changes since v2:
+ * Picked up acks
+ * s/an/a/ in DT binding
+
+Changes since v1:
+ * Moved binding into cpus node
+ * Picked up acks on first two patches
+ * Commented krait l2 accessor functions
+
+Stephen Boyd (6):
+  edac: Don't try to cancel workqueue when it's never setup
+  genirq: export percpu irq functions for module usage
+  ARM: Add Krait L2 accessor functions
+  devicetree: bindings: Document Krait L1/L2 EDAC
+  edac: Add support for Krait CPU cache error detection
+  ARM: dts: msm: Add Krait CPU/L2 nodes
+
+ Documentation/devicetree/bindings/arm/cpus.txt |  72 +++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi            |  41 +++
+ arch/arm/common/Kconfig                        |   3 +
+ arch/arm/common/Makefile                       |   1 +
+ arch/arm/common/krait-l2-accessors.c           |  58 +++++
+ arch/arm/include/asm/krait-l2-accessors.h      |  20 ++
+ drivers/edac/Kconfig                           |   8 +
+ drivers/edac/Makefile                          |   2 +
+ drivers/edac/edac_device.c                     |   3 +
+ drivers/edac/krait_edac.c                      | 346 +++++++++++++++++++++++++
+ kernel/irq/manage.c                            |   2 +
+ 11 files changed, 556 insertions(+)
+ create mode 100644 arch/arm/common/krait-l2-accessors.c
+ create mode 100644 arch/arm/include/asm/krait-l2-accessors.h
+ create mode 100644 drivers/edac/krait_edac.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
