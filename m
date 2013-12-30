@@ -1,108 +1,298 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 4/6] [RFC] Documentation: dt: Add Renesas RSPI/QSPI bindings
-Date: Mon, 30 Dec 2013 16:18:43 +0100
-Message-ID: <3193607.9r7LL0m5xX@avalon>
-References: <1387886210-3634-1-git-send-email-geert+renesas@linux-m68k.org> <2582506.8vb3LhHISh@avalon> <CAMuHMdUnf77Z1u=d8zFZk0vQtGJ9QhhCk6KVJsVKS-iMFSMUKw@mail.gmail.com>
+From: Kamil Debski <k.debski@samsung.com>
+Subject: RE: [PATCH v2 9/9] dts: Add usb2phy to Exynos 5250
+Date: Mon, 30 Dec 2013 16:18:39 +0100
+Message-ID: <028701cf0572$6c180d80$44482880$%debski@samsung.com>
+References: <1387545857-9472-1-git-send-email-k.debski@samsung.com>
+ <1387545857-9472-10-git-send-email-k.debski@samsung.com>
+ <CAFp+6iH9AGP9J5regd7Z5XM8kP=PiFhvqxrV9qRf7rzmBSu9uQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUnf77Z1u=d8zFZk0vQtGJ9QhhCk6KVJsVKS-iMFSMUKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAFp+6iH9AGP9J5regd7Z5XM8kP=PiFhvqxrV9qRf7rzmBSu9uQ@mail.gmail.com>
+Content-language: pl
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Vivek Gautam' <gautamvivek1987@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Linux USB Mailing List' <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'kishon' <kishon@ti.com>, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Mateusz Krawczuk' <mat.krawczuk@gmail.com>, yulgon.kim@samsung.com, 'Praveen Paneri' <p.paneri@samsung.com>, av.tikhomirov@samsung.com, 'Jingoo Han' <jg1.han@samsung.com>, 'Kumar Gala' <galak@codeaurora.org>, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, 'Alan Stern' <stern@rowland.harvard.edu>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi,
 
-On Monday 30 December 2013 10:37:24 Geert Uytterhoeven wrote:
-> On Mon, Dec 30, 2013 at 12:22 AM, Laurent Pinchart wrote:
-> > On Friday 27 December 2013 20:01:53 Geert Uytterhoeven wrote:
-> >> On Fri, Dec 27, 2013 at 5:18 PM, Laurent Pinchart wrote:
-> >> > On Tuesday 24 December 2013 12:56:48 Geert Uytterhoeven wrote:
-> >> >> +++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-> >> >> @@ -0,0 +1,27 @@
-> >> >> +Device tree configuration for Renesas RSPI/QSPI driver
-> >> >> +
-> >> >> +Required properties:
-> >> >> +- compatible      : "renesas,rspi-<soctype>". "renesas,rspi-rz" as
-> >> >> fallback,
-> >> >> +                    or
-> >> >> +                    "renesas,qspi-<soctype>", "renesas,qspi-rcar" as
-> >> >> fallback.
-> >> > 
-> >> > I think you need to be a bit more verbose here and explain when to use
-> >> > rspi and when to use qspi. I'm also wondering where we need the -rz and
-> >> > -
-> >> > rcar
-> >> 
-> >> OK.
-> >> 
-> >> > suffixes for the generic compatible strings.
-> >> 
-> >> The rationale behind this is that RSPI DT would apply to RSPI on RZ/A1H.
-> >> The spi-rspi driver also supports legacy SH7757, which may not move to
-> >> DT anytime soon.
-> >> For symmetry, I did the same thing for QSPI, which applies to QSPI
-> >> on R-Car H2 and M2 (upon second look, it should be
-> >> "renesas,qspi-rcar-gen2", as E1/M1/H1 have HSPI).
-> >> 
-> >> Does this makes sense? Or do you still prefer plain "renesas,rspi" and
-> >> "renesas,qspi", and perhaps "renesas,rspi-sh" if we ever get DT there?
-> > 
-> > The compatible strings should define what the device is compatible with.
-> > They should start with the most specific compability and end with the
-> > less specific one. In this case we definitely want to list the
-> > SoC-specific compatible string first, even if we don't need it, as
-> > experience with Renesas SoC shows that subtle differences between
-> > different versions of the same IP core can be discovered later. If all
-> > RSPI cores are similar enough to be supported by a single driver
-> > configuration, then I believe "renesas,rspi" would be a proper second
-> > compatible string. If the RSPI cores in the SH and RZ chips are
-> > incompatible then we need two different strings. The same is true for
-> > QSPI.
-> > 
-> > A quick look at the driver shows that RSPI is supported without caring
-> > whether the SoC is an SH or ARM, so I believe "renesas,rspi" should do.
-> > The question
->
-> There are subtle register differences between RSPI on SH7757 and RZ/A1H,
-> cfr. what rspi_parse_platform_data() does when no platform_data is
-> passed[*]. RSPI on RZ/A1H seems to be an evolutionary step from RSPI on SH
-> towards QSPI on RCar Gen2 (but without Dual/Quad).
+> From: Vivek Gautam [mailto:gautamvivek1987@gmail.com]
+> Sent: Thursday, December 26, 2013 11:32 AM
 > 
-> [*] setup-sh7757.c doesn't pass platform data, although the rspi driver and
-> its platform data has support for DMA on SH7757, which is not used by
-> setup-sh7757.c nor any other in-tree platform.
-
-The only important difference I can see (beside the hardcoded 16-bit width 
-which could be selected as the default) is that the SSH7757 RSPI has no SPL 
-bits in SPDCR. I don't have access tot he SH7757 datasheet, could you please 
-confirm that ?
-
-> > in my opinion is whether we want to use
-> > 
-> > compatible = "renesas,rspi-r7s72100", "renesas,rspi";
-> > 
-> > or
-> > 
-> > compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz", "renesas,rspi";
+> Hi Kamil,
 > 
-> So we end up with:
 > 
-> compatible = "renesas,sh7757", "renesas,rspi-sh" (SH legacy)
-> compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz" (Genmai)
-> compatible = "renesas,rspi-r8a7790", "renesas,qspi" (Lager)
-> compatible = "renesas,rspi-r8a7791", "renesas,qspi" (Koelsch)
+> On Fri, Dec 20, 2013 at 6:54 PM, Kamil Debski <k.debski@samsung.com>
+> wrote:
+> > Add support to PHY of USB2 of the Exynos 5250 SoC.
+> >
+> > Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> > ---
+> >  arch/arm/boot/dts/exynos5250.dtsi |   33 ++++++++++++-------
+> >  drivers/phy/phy-exynos5250-usb2.c |   64
+> +++++++++++++++++++++++++++++++++----
+> >  2 files changed, 78 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> > b/arch/arm/boot/dts/exynos5250.dtsi
+> > index 2f264ad..922e0ed 100644
+> > --- a/arch/arm/boot/dts/exynos5250.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> > @@ -163,6 +163,11 @@
+> >                 interrupts = <0 47 0>;
+> >         };
+> >
+> > +       sys_syscon: syscon@10040000 {
+> > +               compatible = "samsung,exynos5250-sys", "syscon";
+> > +               reg = <0x10050000 0x5000>;
+> > +       };
+> > +
+> >         pmu_syscon: syscon@10040000 {
+> >                 compatible = "samsung,exynos5250-pmu", "syscon";
+> >                 reg = <0x10040000 0x5000>; @@ -505,6 +510,14 @@
+> >
+> >                 clocks = <&clock 285>;
+> >                 clock-names = "usbhost";
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +               port@0 {
+> > +                       reg = <0>;
+> > +                       phys = <&usb2_phy 1>;
+> > +                       phy-names = "host";
+> > +                       status = "ok";
+> > +               };
+> >         };
+> >
+> >         usb@12120000 {
+> > @@ -516,19 +529,15 @@
+> >                 clock-names = "usbhost";
+> >         };
+> >
+> > -       usb2_phy: usbphy@12130000 {
+> > -               compatible = "samsung,exynos5250-usb2phy";
+> > +       usb2_phy: phy@12130000 {
+> > +               compatible = "samsung,exynos5250-usb2-phy";
+> >                 reg = <0x12130000 0x100>;
+> > -               clocks = <&clock 1>, <&clock 285>;
+> > -               clock-names = "ext_xtal", "usbhost";
+> > -               #address-cells = <1>;
+> > -               #size-cells = <1>;
+> > -               ranges;
+> > -
+> > -               usbphy-sys {
+> > -                       reg = <0x10040704 0x8>,
+> > -                             <0x10050230 0x4>;
+> > -               };
+> > +               clocks = <&clock 285>, <&clock 1>, <&clock 1>,
+> <&clock 1>,
+> > +
+> <&clock 1>;
+> > +               clock-names = "phy", "device", "host", "hsic0",
+> "hsic1";
+> > +               #phy-cells = <1>;
+> > +               samsung,sysreg-phandle = <&sys_syscon>;
+> > +               samsung,pmureg-phandle = <&pmu_syscon>;
+> >         };
+> >
+> >         amba {
+> > diff --git a/drivers/phy/phy-exynos5250-usb2.c
+> > b/drivers/phy/phy-exynos5250-usb2.c
+> > index b9b3b98..337bf82 100644
+> > --- a/drivers/phy/phy-exynos5250-usb2.c
+> > +++ b/drivers/phy/phy-exynos5250-usb2.c
+> 
+> Separate patches for dt and driver ?
+> I think you wanted to move these changes to :
+> [PATCH v5 7/9] phy: Add Exynos 5250 support to the Exynos USB 2.0 PHY
+> driver
 
-Don't you mean "renesas,qspi-r8a7790" and "renesas,qspi-r8a7791" ?
+Good point. I am planning to reorganise this patchset to prevent breaking
+git bisect. I wanted to wait for more comments to this version, so I could
+address any issues that may be reported.
 
+> 
+> > @@ -58,7 +58,13 @@
+> >  #define EXYNOS_5250_HOSTPHYCTRL2                       0x20
+> 
+> Shouldn't we leave the naming as EXYNOS_5250_HSICPHYCTRL2 instead of
+> EXYNOS_5250_HOSTPHYCTRL2 ? That will go in sync with the user-manual
+> too.
+> and similar for EXYNOS_5250_HOSTPHYCTRL1 and below bit definitions too
+> ?
+
+Thank you for pointing this out.
+
+> >
+> >  #define EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_MASK                (0x3
+> << 23)
+> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_DEFAULT     (0x2 << 23)
+> >  #define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_MASK                (0x7f
+> << 16)
+> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_12          (0x24 << 16)
+> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_15          (0x1c << 16)
+> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_16          (0x1a << 16)
+> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_19_2                (0x15
+> << 16)
+> > +#define EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_20          (0x14 << 16)
+> >  #define EXYNOS_5250_HOSTPHYCTRLX_SIDDQ                 BIT(6)
+> >  #define EXYNOS_5250_HOSTPHYCTRLX_FORCESLEEP            BIT(5)
+> >  #define EXYNOS_5250_HOSTPHYCTRLX_FORCESUSPEND          BIT(4)
+> > @@ -191,13 +197,14 @@ static void exynos5250_isol(struct
+> samsung_usb2_phy_instance *inst, bool on)
+> >         regmap_update_bits(drv->reg_pmu, offset, mask, on ? 0 :
+> mask);
+> > }
+> >
+> > -static void exynos5250_phy_pwr(struct samsung_usb2_phy_instance
+> > *inst, bool on)
+> > +static int exynos5250_power_on(struct samsung_usb2_phy_instance
+> > +*inst)
+> 
+> void ? we really don't have much to return in this function.
+
+Initially the idea was to enable the return of an error code. However,
+I see that for all currently supported SoCs the ops always returns 0.
+So I will consider switching to void.
+
+> 
+> >  {
+> >         struct samsung_usb2_phy_driver *drv = inst->drv;
+> >         u32 ctrl0;
+> >         u32 otg;
+> >         u32 ehci;
+> >         u32 ohci;
+> > +       u32 hsic;
+> >
+> >         switch (inst->cfg->id) {
+> >         case EXYNOS5250_DEVICE:
+> > @@ -234,6 +241,8 @@ static void exynos5250_phy_pwr(struct
+> > samsung_usb2_phy_instance *inst, bool on)
+> >
+> >                 break;
+> >         case EXYNOS5250_HOST:
+> > +       case EXYNOS5250_HSIC0:
+> > +       case EXYNOS5250_HSIC1:
+> >                 /* Host registers configuration */
+> >                 ctrl0 = readl(drv->reg_phy +
+> EXYNOS_5250_HOSTPHYCTRL0);
+> >                 /* The clock */
+> > @@ -279,6 +288,18 @@ static void exynos5250_phy_pwr(struct
+> samsung_usb2_phy_instance *inst, bool on)
+> >                         EXYNOS_5250_USBOTGSYS_LINK_SW_RST_UOTG |
+> >                         EXYNOS_5250_USBOTGSYS_PHYLINK_SW_RESET);
+> >
+> > +               /* HSIC phy configuration */
+> > +               hsic = (EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_12 |
+> > +
+> EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_DEFAULT |
+> > +                               EXYNOS_5250_HOSTPHYCTRLX_PHYSWRST);
+> > +               writel(hsic, drv->reg_phy +
+> EXYNOS_5250_HOSTPHYCTRL1);
+> > +               writel(hsic, drv->reg_phy +
+> EXYNOS_5250_HOSTPHYCTRL2);
+> > +               udelay(10);
+> > +               hsic &= ~EXYNOS_5250_HOSTPHYCTRLX_PHYSWRST;
+> > +               writel(hsic, drv->reg_phy +
+> EXYNOS_5250_HOSTPHYCTRL1);
+> > +               writel(hsic, drv->reg_phy +
+> EXYNOS_5250_HOSTPHYCTRL2);
+> > +               udelay(80);
+> > +
+> >                 /* Enable EHCI DMA burst */
+> >                 ehci = readl(drv->reg_phy +
+> EXYNOS_5250_HOSTEHCICTRL);
+> >                 ehci |= EXYNOS_5250_HOSTEHCICTRL_ENAINCRXALIGN | @@
+> > -295,12 +316,7 @@ static void exynos5250_phy_pwr(struct
+> > samsung_usb2_phy_instance *inst, bool on)
+> >
+> >                 break;
+> >         }
+> > -}
+> > -
+> > -static int exynos5250_power_on(struct samsung_usb2_phy_instance
+> > *inst) -{
+> >         inst->enabled = 1;
+> > -       exynos5250_phy_pwr(inst, 1);
+> >         exynos5250_isol(inst, 0);
+> >
+> >         return 0;
+> > @@ -308,9 +324,43 @@ static int exynos5250_power_on(struct
+> > samsung_usb2_phy_instance *inst)
+> >
+> >  static int exynos5250_power_off(struct samsung_usb2_phy_instance
+> > *inst)
+> 
+> ditto
+> 
+> >  {
+> > +       struct samsung_usb2_phy_driver *drv = inst->drv;
+> > +       u32 ctrl0;
+> > +       u32 otg;
+> > +       u32 hsic;
+> > +
+> >         inst->enabled = 0;
+> >         exynos5250_isol(inst, 1);
+> > -       exynos5250_phy_pwr(inst, 0);
+> > +
+> > +       switch (inst->cfg->id) {
+> > +       case EXYNOS5250_DEVICE:
+> > +               otg = readl(drv->reg_phy + EXYNOS_5250_USBOTGSYS);
+> > +               otg |= (EXYNOS_5250_USBOTGSYS_FORCE_SUSPEND |
+> > +                       EXYNOS_5250_USBOTGSYS_SIDDQ_UOTG |
+> > +                       EXYNOS_5250_USBOTGSYS_FORCE_SLEEP);
+> > +               writel(otg, drv->reg_phy + EXYNOS_5250_USBOTGSYS);
+> > +               break;
+> > +       case EXYNOS5250_HOST:
+> > +               ctrl0 = readl(drv->reg_phy +
+> EXYNOS_5250_HOSTPHYCTRL0);
+> > +               ctrl0 |= (EXYNOS_5250_HOSTPHYCTRL0_SIDDQ |
+> > +                               EXYNOS_5250_HOSTPHYCTRL0_FORCESUSPEND
+> |
+> > +                               EXYNOS_5250_HOSTPHYCTRL0_FORCESLEEP |
+> > +                               EXYNOS_5250_HOSTPHYCTRL0_PHYSWRST |
+> > +
+> EXYNOS_5250_HOSTPHYCTRL0_PHYSWRSTALL);
+> > +               writel(ctrl0, drv->reg_phy +
+> EXYNOS_5250_HOSTPHYCTRL0);
+> > +               break;
+> > +       case EXYNOS5250_HSIC0:
+> > +       case EXYNOS5250_HSIC1:
+> > +               hsic = (EXYNOS_5250_HOSTPHYCTRLX_REFCLKDIV_12 |
+> > +
+> EXYNOS_5250_HOSTPHYCTRLX_REFCLKSEL_DEFAULT |
+> > +                               EXYNOS_5250_HOSTPHYCTRLX_SIDDQ |
+> > +                               EXYNOS_5250_HOSTPHYCTRLX_FORCESLEEP |
+> > +                               EXYNOS_5250_HOSTPHYCTRLX_FORCESUSPEND
+> > +                               );
+> > +               writel(hsic, drv->reg_phy +
+> EXYNOS_5250_HOSTPHYCTRL1);
+> > +               writel(hsic, drv->reg_phy +
+> EXYNOS_5250_HOSTPHYCTRL2);
+> > +               break;
+> > +       }
+> >
+> >         return 0;
+> >  }
+> > --
+> > 1.7.9.5
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe
+> > linux-samsung-soc" in the body of a message to
+> > majordomo@vger.kernel.org More majordomo info at
+> > http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
+> --
+> Best Regards
+> Vivek Gautam
+> Samsung R&D Institute, Bangalore
+> India
+
+Best wishes,
 -- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kamil Debski
+Samsung R&D Institute Poland
