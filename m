@@ -1,44 +1,64 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv7 05/12] iommu/core: add ops->{bound,unbind}_driver()
-Date: Mon, 30 Dec 2013 14:45:23 +0100
-Message-ID: <20131230134522.GB2799@8bytes.org>
-References: <1386835033-4701-1-git-send-email-hdoyu@nvidia.com>
-	<1386835033-4701-6-git-send-email-hdoyu@nvidia.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 6/8] [RFC] Documentation: dt: Add Renesas RSPI/QSPI
+ bindings
+Date: Mon, 30 Dec 2013 13:50:58 +0000
+Message-ID: <20131230135058.GD31886@sirena.org.uk>
+References: <1388175362-17132-1-git-send-email-geert@linux-m68k.org>
+ <1388175362-17132-7-git-send-email-geert@linux-m68k.org>
+ <20131230125845.GX31886@sirena.org.uk>
+ <CAMuHMdXYH6KmH3ZstAvhqUpqXWEbg6sjdUTDRZUrUthdPg-6aQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tfudkhBUqbdcU4Ca"
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1386835033-4701-6-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <CAMuHMdXYH6KmH3ZstAvhqUpqXWEbg6sjdUTDRZUrUthdPg-6aQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-spi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 12, 2013 at 09:57:06AM +0200, Hiroshi Doyu wrote:
-> ops->{bound,unbind}_driver() functions are called at
-> BUS_NOTIFY_{BOUND,UNBIND}_DRIVER respectively.
-> 
-> This is necessary to control the device population order. IOMMU master
-> devices depend on an IOMMU device instanciation. IOMMU master devices
-> can be registered to an IOMMU only after it's successfully
-> populated. This IOMMU registration is done via
-> ops->bound_driver(). Currently this population can be deferred if
-> depending IOMMU device hasn't yet been populated in driver core. This
-> cannot be done via ops->add_device() since after add_device() device's
-> population/instanciation can be still deferred via probe().
 
-How about doing dependency checking in the add/remove_device callbacks
-instead? When a device is about to be initialized where the IOMMU is not
-set up yet, just setup the IOMMU first before initializing the device?
+--tfudkhBUqbdcU4Ca
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Mon, Dec 30, 2013 at 02:43:53PM +0100, Geert Uytterhoeven wrote:
+> On Mon, Dec 30, 2013 at 1:58 PM, Mark Brown <broonie@kernel.org> wrote:
+> > On Fri, Dec 27, 2013 at 09:16:00PM +0100, Geert Uytterhoeven wrote:
 
-	Joerg
+> >> +- num-cs        : Number of chip selects
+
+> > Why is this variable and how does this map onto hardware?
+
+> It's my understanding that legacy RSPi on SH7757 has 2 chip selects,
+> while other RSPI implementations have 1 chip select.
+
+So this should be documented in the binding document in a way that
+allows someone reading the document and looking at the datasheet to
+figure out how to pick the value (for example, refer to how the chip
+selects are controlled in the hardware).
+
+--tfudkhBUqbdcU4Ca
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSwXo/AAoJELSic+t+oim9U74QAJ4yFd/D46wdueLLu8rZBOB3
+JKajbFJwM7NOUwUTI9XJzNZe0ec6Z8YICx1gUqZ8PicW22Rqz89c5VaVx0jwoQrj
+e10zzjLsuLdmxppabFZU+7vFvp6M2CP1ETGY8t+Q4ZJa6KQg/aThC84BwoEo2rmA
+9iKbtw1EbANxTDcwGw25IGYpy+8YwBTGxpS2bGXP8+ziK+xP5oN/YDj6lvPJPoR6
++jB2j+BUj1QHkQq4VBZHoPIiohBAOz0zNDP2VJCsTjCFzWobQ9O4tQfKBUFpE+xW
+vZjQqva8LcnU/eJ2zJGZxFmeihRDK2RiJ0S2G5v+OF1cJR2ErinbNBPkVGos98Sb
+H9zQ+gvPU0A9bnabvoMSm4l6OLZHO8hAPzjlNVcbBwJOrtjvcIzqeZ8CuVtroZRn
+D25XZmG7yEKfJGdH6TcAN7D16tMvvwghjd7wCrsiTG9m+qUW1E50Sff9d09kEY37
+zADeD47Nucjr6xszRXW74Uac8MoGrYznJkwllOE28oWJxBHVP/kQhXhQJ0F48LN5
+8VT7JENjIzvzN6EwBa75LVaiQ1nyOa7mIi+sSm3EumMiOHtw3jc2rtlWhgJrIFZX
+eKWVJTPcE+MUWzki8xnCTAl8X+Z0O7j4VQolN4UM184mf7oyNArRw4Od00N8FI2S
+/HZO+d+Hh0gy4eXahDXd
+=Kcqt
+-----END PGP SIGNATURE-----
+
+--tfudkhBUqbdcU4Ca--
