@@ -1,118 +1,102 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH V3 2/2] ARM: dts: Enable ahci sata and sata phy
-Date: Mon, 30 Dec 2013 12:29:00 +0530
-Message-ID: <52C119B4.1010002@ti.com>
-References: <1386669911-17319-1-git-send-email-yuvaraj.cd@samsung.com> <1386669911-17319-3-git-send-email-yuvaraj.cd@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 4/6] [RFC] Documentation: dt: Add Renesas RSPI/QSPI bindings
+Date: Mon, 30 Dec 2013 10:37:24 +0100
+Message-ID: <CAMuHMdUnf77Z1u=d8zFZk0vQtGJ9QhhCk6KVJsVKS-iMFSMUKw@mail.gmail.com>
+References: <1387886210-3634-1-git-send-email-geert+renesas@linux-m68k.org>
+	<2590710.91Xybr4TsD@avalon>
+	<CAMuHMdXrPamASqFz8eCVxE0WKT=cdkrzxjDDT84m_AHT+1nmEA@mail.gmail.com>
+	<2582506.8vb3LhHISh@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1386669911-17319-3-git-send-email-yuvaraj.cd@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Cc: kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, swarren@wwwdotorg.org, mark.rutland@arm.com, sachin.kamat@linaro.org, b.zolnierkie@samsung.com, jg1.han@samsung.com, t.figa@samsung.com, christoffer.dall@linaro.org, joshi@samsung.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <2582506.8vb3LhHISh@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@linux-m68k.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-spi@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Laurent,
 
-On Tuesday 10 December 2013 03:35 PM, Yuvaraj Kumar C D wrote:
-> This patch adds dt entry for ahci sata controller and its
-> corresponding phy controller.phy node has been added w.r.t
-> new generic phy framework.
->
-> Changes since V2:
-> 	1.Used syscon interface to PMU handling.
-> 	2.Changed "sata-phy-i2c" to "exynos-sataphy-i2c".
->
-> Changes since V1:
-> 	1.Minor changes to node name convention.
-> 	2.Updated binding document.
+Thanks for your comments!
 
-Change history should be moved after '---'.
+On Mon, Dec 30, 2013 at 12:22 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Friday 27 December 2013 20:01:53 Geert Uytterhoeven wrote:
+>> On Fri, Dec 27, 2013 at 5:18 PM, Laurent Pinchart wrote:
+>> > On Tuesday 24 December 2013 12:56:48 Geert Uytterhoeven wrote:
+>> >> +++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+>> >> @@ -0,0 +1,27 @@
+>> >> +Device tree configuration for Renesas RSPI/QSPI driver
+>> >> +
+>> >> +Required properties:
+>> >> +- compatible      : "renesas,rspi-<soctype>". "renesas,rspi-rz" as
+>> >> fallback,
+>> >> +                    or
+>> >> +                    "renesas,qspi-<soctype>", "renesas,qspi-rcar" as
+>> >> fallback.
+>> >
+>> > I think you need to be a bit more verbose here and explain when to use
+>> > rspi and when to use qspi. I'm also wondering where we need the -rz and -
+>> > rcar
+>>
+>> OK.
+>>
+>> > suffixes for the generic compatible strings.
+>>
+>> The rationale behind this is that RSPI DT would apply to RSPI on RZ/A1H.
+>> The spi-rspi driver also supports legacy SH7757, which may not move to
+>> DT anytime soon.
+>> For symmetry, I did the same thing for QSPI, which applies to QSPI
+>> on R-Car H2 and M2 (upon second look, it should be "renesas,qspi-rcar-gen2",
+>> as E1/M1/H1 have HSPI).
+>>
+>> Does this makes sense? Or do you still prefer plain "renesas,rspi" and
+>> "renesas,qspi", and perhaps "renesas,rspi-sh" if we ever get DT there?
 >
-> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
-> ---
->   .../devicetree/bindings/ata/exynos-sata-phy.txt    |   19 ++++++++++++++-----
->   .../devicetree/bindings/ata/exynos-sata.txt        |   17 ++++++++++++-----
->   .../devicetree/bindings/ata/exynos_sataphy_i2c.txt |   12 ++++++++++++
->   arch/arm/boot/dts/exynos5250-arndale.dts           |    9 ++++++++-
->   arch/arm/boot/dts/exynos5250-smdk5250.dts          |    8 ++------
->   arch/arm/boot/dts/exynos5250.dtsi                  |   16 ++++++++++++----
->   6 files changed, 60 insertions(+), 21 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/ata/exynos_sataphy_i2c.txt
+> The compatible strings should define what the device is compatible with. They
+> should start with the most specific compability and end with the less specific
+> one. In this case we definitely want to list the SoC-specific compatible
+> string first, even if we don't need it, as experience with Renesas SoC shows
+> that subtle differences between different versions of the same IP core can be
+> discovered later. If all RSPI cores are similar enough to be supported by a
+> single driver configuration, then I believe "renesas,rspi" would be a proper
+> second compatible string. If the RSPI cores in the SH and RZ chips are
+> incompatible then we need two different strings. The same is true for QSPI.
 >
-> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-> index 37824fa..a679e17 100644
-> --- a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-> +++ b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
+> A quick look at the driver shows that RSPI is supported without caring whether
+> the SoC is an SH or ARM, so I believe "renesas,rspi" should do. The question
 
-IMO this documentation should be in 
-Documentation/devicetree/bindings/phy and you could also use the 
-existing exynos file.
-> @@ -4,11 +4,20 @@ SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
->   Each SATA PHY controller should have its own node.
+There are subtle register differences between RSPI on SH7757 and RZ/A1H,
+cfr. what rspi_parse_platform_data() does when no platform_data is passed[*].
+RSPI on RZ/A1H seems to be an evolutionary step from RSPI on SH towards
+QSPI on RCar Gen2 (but without Dual/Quad).
+
+[*] setup-sh7757.c doesn't pass platform data, although the rspi driver and its
+    platform data has     support for DMA on SH7757, which is not used by
+    setup-sh7757.c nor any other in-tree platform.
+
+> in my opinion is whether we want to use
 >
->   Required properties:
-> -- compatible        : compatible list, contains "samsung,exynos5-sata-phy"
-> +- compatible        : compatible list, contains "samsung,exynos5250-sata-phy"
->   - reg               : <registers mapping>
+> compatible = "renesas,rspi-r7s72100", "renesas,rspi";
 >
->   Example:
-> -        sata@ffe07000 {
-> -                compatible = "samsung,exynos5-sata-phy";
-> -                reg = <0xffe07000 0x1000>;
-> -        };
-> +	sata_phy: sata-phy@12170000 {
-> +		compatible = "samsung,exynos5250-sata-phy";
-> +		reg = <0x12170000 0x1ff>;
-> +		clocks = <&clock 287>;
-> +		clock-names = "sata_phyctrl";
-> +		#phy-cells = <0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +		sataphy-pmu {
-> +			reg = <0x10040724 0x4>;
-> +			};
-
-alignment problem..
-> +	};
-> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> index 0849f10..918bff8 100644
-> --- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> +++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> @@ -8,10 +8,17 @@ Required properties:
->   - interrupts        : <interrupt mapping for SATA IRQ>
->   - reg               : <registers mapping>
->   - samsung,sata-freq : <frequency in MHz>
-> +- phys              : as mentioned in phy-bindings.txt
-> +- phy-names         : as mentioned in phy-bindings.txt
-
-here too.. match it with existing properties..
+> or
 >
->   Example:
-> -        sata@ffe08000 {
-> -                compatible = "samsung,exynos5-sata";
-> -                reg = <0xffe08000 0x1000>;
-> -                interrupts = <115>;
-> -        };
-> +	sata@122f0000 {
-> +		compatible = "snps,dwc-ahci";
-> +		samsung,sata-freq = <66>;
-> +		reg = <0x122f0000 0x1ff>;
-> +		interrupts = <0 115 0>;
-> +		clocks = <&clock 277>, <&clock 143>;
-> +		clock-names = "sata", "sclk_sata";
-> +		phys = <&sata_phy>;
-> +		phy-names = "sata-phy";
-> +	};
-> diff --git a/Documentation/devicetree/bindings/ata/exynos_sataphy_i2c.txt b/Documentation/devicetree/bindings/ata/exynos_sataphy_i2c.txt
-> new file mode 100644
-> index 0000000..deabba9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ata/exynos_sataphy_i2c.txt
+> compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz", "renesas,rspi";
 
-This should also be in /bindings/phy..
+So we end up with:
 
-Cheers
-Kishon
+compatible = "renesas,sh7757", "renesas,rspi-sh" (SH legacy)
+compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz" (Genmai)
+compatible = "renesas,rspi-r8a7790", "renesas,qspi" (Lager)
+compatible = "renesas,rspi-r8a7791", "renesas,qspi" (Koelsch)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
