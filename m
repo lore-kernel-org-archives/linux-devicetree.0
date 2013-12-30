@@ -1,120 +1,44 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v4 4/6] devicetree: bindings: Document Krait L1/L2 EDAC
-Date: Mon, 30 Dec 2013 12:14:15 -0800
-Message-ID: <1388434457-4194-5-git-send-email-sboyd@codeaurora.org>
-References: <1388434457-4194-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1388434457-4194-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Mon, 30 Dec 2013 21:27:41 +0100
+Message-ID: <201312302127.41690.arnd@arndb.de>
+References: <1388241295-20051-1-git-send-email-zhangfei.gao@linaro.org> <CAMj5Bkif9pQHVdA71QccamVQkfgTheUNzowW6AyTwC3dy5XF+g@mail.gmail.com> <52C1AB34.3010402@linaro.org>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <52C1AB34.3010402@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: zhangfei <zhangfei.gao@linaro.org>
+Cc: Zhangfei Gao <zhangfei.gao@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, patches@linaro.org, Seungwon Jeon <tgih.jun@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, cpgs@samsung.com, Kumar Gala <galak@codeaurora.org>, Chris Ball <cjb@laptop.org>, Zhigang Wang <brooke.wangzhigang@huawei.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The Krait L1/L2 error reporting device is made up of two
-interrupts, one per-CPU interrupt for the L1 caches and one
-interrupt for the L2 cache.
+On Monday 30 December 2013, zhangfei wrote:
+> >>>> +static int dw_mci_k3_suspend(struct device *dev)
+> >>>> +{
+> >>>> +    struct dw_mci *host = dev_get_drvdata(dev);
+> >>>> +    int ret = 0;
+> >>>> +
+> >>>> +    ret = dw_mci_suspend(host);
+> >>>
+> >>> You should never initialize local variables when they are set later in the
+> >>> function (the ret = 0 part above). For more complex functions, this prevents
+> >>> gcc from warning you about accidentally uninitialized uses.
+> 
+> I am sorry I may fall into the dead end, but still quite not understand 
+> this rule.
+> I alwayes thought it would be a good habit to init local variables before.
+> Do you mean it should NOT init local variable as much as possible and 
+> only init on demand, like solving the gcc warning.
+> Why not init the them at start in case random value cause unpredicted error?
 
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/cpus.txt | 72 ++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+The gcc warnings are 100% correct, we can use them as a tool to write better
+code. If you write code that has no warnings with a modern compiler, you will
+never use random values, but if you always initialize the local variables,
+you can end up accidentally using '0' where you shouldn't have.
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 9130435..54de94b 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -191,6 +191,35 @@ nodes to be present and contain the properties described below.
- 			  property identifying a 64-bit zero-initialised
- 			  memory location.
- 
-+	- interrupts
-+		Usage: required for cpus with compatible string "qcom,krait".
-+		Value type: <prop-encoded-array>
-+		Definition: L1/CPU error interrupt
-+
-+	- next-level-cache
-+		Usage: optional
-+		Value type: <phandle>
-+		Definition: phandle pointing to the next level cache
-+
-+- cache node
-+
-+	Description: Describes a cache in an ARM based system
-+
-+	- compatible
-+		Usage: required
-+		Value type: <string>
-+		Definition: shall contain at least "cache"
-+
-+	- cache-level
-+		Usage: required
-+		Value type: <u32>
-+		Definition: level in the cache heirachy
-+
-+	- interrupts
-+		Usage: required for cpus with compatible string "qcom,krait"
-+		Value type: <prop-encoded-array>
-+		Definition: the L2 error interrupt
-+
- Example 1 (dual-cluster big.LITTLE system 32-bit):
- 
- 	cpus {
-@@ -382,3 +411,46 @@ cpus {
- 		cpu-release-addr = <0 0x20000000>;
- 	};
- };
-+
-+
-+Example 5 (Krait 32-bit system):
-+
-+cpus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	interrupts = <1 9 0xf04>;
-+
-+	cpu@0 {
-+		device_type = "cpu";
-+		compatible = "qcom,krait";
-+		reg = <0>;
-+		next-level-cache = <&L2>;
-+	};
-+
-+	cpu@1 {
-+		device_type = "cpu";
-+		compatible = "qcom,krait";
-+		reg = <1>;
-+		next-level-cache = <&L2>;
-+	};
-+
-+	cpu@2 {
-+		device_type = "cpu";
-+		compatible = "qcom,krait";
-+		reg = <2>;
-+		next-level-cache = <&L2>;
-+	};
-+
-+	cpu@3 {
-+		device_type = "cpu";
-+		compatible = "qcom,krait";
-+		reg = <3>;
-+		next-level-cache = <&L2>;
-+	};
-+
-+	L2: l2-cache {
-+		compatible = "cache";
-+		cache-level = <2>;
-+		interrupts = <0 2 0x4>;
-+	};
-+};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+See http://rusty.ozlabs.org/?p=232 for an excellent article on the topic
+by former Linaro assignee Rusty Russell.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
