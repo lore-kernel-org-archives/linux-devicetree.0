@@ -1,66 +1,65 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 6/8] [RFC] Documentation: dt: Add Renesas RSPI/QSPI
- bindings
-Date: Mon, 30 Dec 2013 12:58:45 +0000
-Message-ID: <20131230125845.GX31886@sirena.org.uk>
-References: <1388175362-17132-1-git-send-email-geert@linux-m68k.org>
- <1388175362-17132-7-git-send-email-geert@linux-m68k.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+1tcKVLXPU0QafK6"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1388175362-17132-7-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
+Subject: [PATCH V4 0/2] Exynos5250 SATA Support
+Date: Mon, 30 Dec 2013 18:37:01 +0530
+Message-ID: <1388408823-4963-1-git-send-email-yuvaraj.cd@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: kishon@ti.com, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: mark.rutland@arm.com, jg1.han@samsung.com, b.zolnierkie@samsung.com, joshi@samsung.com, t.figa@samsung.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, grant.likely@linaro.org, christoffer.dall@linaro.org, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch series enable the SATA support on Exynos5250 based boards.
+It incorporates the generic phy framework to deal with sata phy.
 
---+1tcKVLXPU0QafK6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch depends on the below patches
+	[1]. drivers: phy: add generic PHY framework
+		by Kishon Vijay Abraham I<kishon@ti.com>
+	[2]. ata: ahci_platform: Manage SATA PHY
+		by Roger Quadros <rogerq@ti.com>
+	[3].ARM: dts: Add pmu sysreg node to exynos5250 and
+		exynos5420 dtsi files
+		by Leela Krishna Amudala <l.krishna@samsung.com>
+	[4]. i2c: s3c2410 : Add polling mode support
+		by Vasanth Ananthan <vasanth.a@samsung.com>
 
-On Fri, Dec 27, 2013 at 09:16:00PM +0100, Geert Uytterhoeven wrote:
-> From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Changes from V3:
+	1.Moved the devicetree binding documentation
+	from /bindings/ata/ to bindings/phy/ .
+	2.Moved devm_phy_create call before to 
+	the devm_phy_provider_register. 
 
-You've not CCed any maintainers on any of this stuff so I'm assuming you
-don't want any review or the patches applying.  You should in general
-always CC maintainers, things that only go to the list can easily be
-missed.  However I did take a brief look...
+Changes from V2:
+	1.Removed of_match_table
+	2.Moved to syscon interface for PMU handling.
 
-> +- num-cs	   : Number of chip selects
+Changes from V1:
+	1. Dropped the patch 
+	ahci: exynos: add ahci sata support on Exynos platform
 
-Why is this variable and how does this map onto hardware?
+	2.Adapt to latest generic PHY framework available in 
+	git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git next
 
---+1tcKVLXPU0QafK6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Yuvaraj Kumar C D (2):
+  Phy: Exynos: Add Exynos5250 sata phy driver
+  ARM: dts: Enable ahci sata and sata phy
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+ .../devicetree/bindings/ata/exynos-sata-phy.txt    |   14 --
+ .../devicetree/bindings/ata/exynos-sata.txt        |   25 ++-
+ .../devicetree/bindings/phy/samsung-phy.txt        |   40 ++++
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   11 +
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    8 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |   16 +-
+ drivers/phy/Kconfig                                |   11 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/exynos5250_phy_i2c.c                   |   44 ++++
+ drivers/phy/sata_phy_exynos5250.c                  |  220 ++++++++++++++++++++
+ drivers/phy/sata_phy_exynos5250.h                  |   35 ++++
+ 11 files changed, 392 insertions(+), 33 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
+ create mode 100644 drivers/phy/exynos5250_phy_i2c.c
+ create mode 100644 drivers/phy/sata_phy_exynos5250.c
+ create mode 100644 drivers/phy/sata_phy_exynos5250.h
 
-iQIcBAEBAgAGBQJSwW4CAAoJELSic+t+oim9ZPQP/2nd3HMmCR2psp65DPPYxhdy
-dEKLTndZvFcSAN5OxpykTfNUW4s+cEplfYE9qSvD6mJx7XlKhFDvtbbS7/kTyxWn
-n09MH+URO0Tphydi0kXznvQhAj2WYndoYOeWIo3F+xNcrmqy3ejAra5/qQzHxSS+
-2Un6Sn0hNejpR5coQgtiy155VZhYMjGWmUpaKxK8OWRR7uhwrJ5uEBi5VkymWNoy
-iETHs5SWfIIrw525J0zI6HBbiYS3dlrcnc4AmIqgGSnZumEq9vfLI+XjlobNt6lN
-f9FhxJFqt+R3fo+uFno0+Rh4IiZOVxLOOEZCexJ35sjGfcPHLXXotD/1ujqGEUZi
-CBFjWUmDOet0xq1MFH3n84Gbg3T5eUSVaFPusCkMK6o3Kr6MPx7Hyis89nfqSO1J
-GriHQoxzs5c0VdeIkN5yuTuUq29KSfyeZAfV748/lOW7L1Z0Y/w3o/ZaQ3uOjZrC
-vi7d5AQViWoxdpxeHW25Gik0QdfEhUF2VW+ERdXSooIgKHbO2ggGA4rvmJMujXZz
-tOCTA19CffOvyYuSxH2mu+ifkokJFTy4ve0JmwijbJPcNjurCr6SlqU89jX4GZ83
-SEp4pMJ+QO6QPR3ruHTcyFfAKXfI/kUgp8xFIqwGOuYAaX8aZmryefrctlDXrOGE
-pYb/UsveOosAG9Io7Kg8
-=W25w
------END PGP SIGNATURE-----
+-- 
+1.7.9.5
 
---+1tcKVLXPU0QafK6--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
