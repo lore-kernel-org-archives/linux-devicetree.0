@@ -1,401 +1,323 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: [PATCH V4 1/2] Phy: Exynos: Add Exynos5250 sata phy driver
-Date: Mon, 30 Dec 2013 18:37:02 +0530
-Message-ID: <1388408823-4963-2-git-send-email-yuvaraj.cd@samsung.com>
-References: <1388408823-4963-1-git-send-email-yuvaraj.cd@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1388408823-4963-1-git-send-email-yuvaraj.cd@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: kishon@ti.com, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: mark.rutland@arm.com, jg1.han@samsung.com, b.zolnierkie@samsung.com, joshi@samsung.com, t.figa@samsung.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, grant.likely@linaro.org, christoffer.dall@linaro.org, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Girish K S <ks.giri@samsung.com>, Vasanth Ananthan <vasanth.a@samsung.com>
+From: Kamil Debski <k.debski@samsung.com>
+Subject: RE: [PATCH v5 4/9] usb: ehci-s5p: Change to use phy provided by the
+ generic phy framework
+Date: Mon, 30 Dec 2013 14:43:02 +0100
+Message-ID: <028601cf0565$10b496a0$321dc3e0$%debski@samsung.com>
+References: <1387545857-9472-1-git-send-email-k.debski@samsung.com>
+ <1387545857-9472-5-git-send-email-k.debski@samsung.com>
+ <CAFp+6iHd12a8Aqg2BjixzokohPEuYsK9gPu+fkQ1u3-5uw2L=g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAFp+6iHd12a8Aqg2BjixzokohPEuYsK9gPu+fkQ1u3-5uw2L=g@mail.gmail.com>
+Content-language: pl
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Vivek Gautam' <gautamvivek1987@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Linux USB Mailing List' <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'kishon' <kishon@ti.com>, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Mateusz Krawczuk' <mat.krawczuk@gmail.com>, yulgon.kim@samsung.com, 'Praveen Paneri' <p.paneri@samsung.com>, av.tikhomirov@samsung.com, 'Jingoo Han' <jg1.han@samsung.com>, 'Kumar Gala' <galak@codeaurora.org>, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, 'Alan Stern' <stern@rowland.harvard.edu>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the sata phy driver for Exynos5250.Exynos5250 sata
-phy comprises of CMU and TRSV blocks which are of I2C register Map.
-So this patch also adds a i2c client driver, which is used configure
-the CMU and TRSV block of exynos5250 SATA PHY.
+Hi Vivek,
 
-This patch incorporates the generic phy framework to deal with sata
-phy.
+> From: Vivek Gautam [mailto:gautamvivek1987@gmail.com]
+> Sent: Thursday, December 26, 2013 11:14 AM
+> 
+> Hi Kamil,
+> 
+> 
+> On Fri, Dec 20, 2013 at 6:54 PM, Kamil Debski <k.debski@samsung.com>
+> wrote:
+> > Change the phy provider used from the old one using the USB phy
+> > framework to a new one using the Generic phy framework.
+> >
+> > Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> 
+> Commit title:
+> s/ehci-s5p/ehci-exynos
 
-This patch depends on the below patches
-	[1].drivers: phy: add generic PHY framework
-		by Kishon Vijay Abraham I<kishon@ti.com>
-	[2].ata: ahci_platform: Manage SATA PHY
-		by Roger Quadros <rogerq@ti.com>
+Thank you for spotting this.
 
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
-Signed-off-by: Girish K S <ks.giri@samsung.com>
-Signed-off-by: Vasanth Ananthan <vasanth.a@samsung.com>
----
-Changes from V3:
-	1.Moved devm_phy_create before to devm_phy_provider_register.
+> 
+> > ---
+> >  Documentation/devicetree/bindings/usb/usb-ehci.txt |   35 +++++++
+> >  drivers/usb/host/ehci-exynos.c                     |   97
+> +++++++++++++-------
+> >  2 files changed, 98 insertions(+), 34 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> > b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> > index fa18612..413f7cd 100644
+> > --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> > +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> > @@ -14,6 +14,10 @@ If controller implementation operates with big
+> > endian descriptors,  If both big endian registers and descriptors are
+> > used by the controller  implementation, "big-endian" property can be
+> > specified instead of having  both "big-endian-regs" and "big-endian-
+> desc".
+> > +  - port: if in the SoC there are EHCI phys, they should be listed
+> here.
+> > +One phy per port. Each port should have its reg entry with a
+> > +consecutive number. Also it should contain phys and phy-names
+> entries
+> > +specifying the phy used by the port.
+> >
+> >  Example (Sequoia 440EPx):
+> >      ehci@e0000300 {
+> > @@ -23,3 +27,34 @@ Example (Sequoia 440EPx):
+> >            reg = <0 e0000300 90 0 e0000390 70>;
+> >            big-endian;
+> >     };
+> > +
+> > +Example (Exynos 4212):
+> > +    ehci@12580000 {
+> > +        compatible = "samsung,exynos4210-ehci";
+> > +        reg = <0x12580000 0x20000>;
+> > +        interrupts = <0 70 0>;
+> > +        clocks = <&clock 304>, <&clock 305>;
+> > +        clock-names = "usbhost", "otg";
+> > +        status = "disabled";
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +        port@0 {
+> > +            reg = <0>;
+> > +            phys = <&usb2phy 1>;
+> > +            phy-names = "host";
+> > +            status = "disabled";
+> > +        };
+> > +        port@1 {
+> > +            reg = <1>;
+> > +            phys = <&usb2phy 2>;
+> > +            phy-names = "hsic0";
+> > +            status = "disabled";
+> > +        };
+> > +        port@2 {
+> > +            reg = <2>;
+> > +            phys = <&usb2phy 3>;
+> > +            phy-names = "hsic1";
+> > +            status = "disabled";
+> > +        };
+> > +    };
+> 
+> Should we place above documentation in
+> "Documentation/devicetree/bindings/usb/exynos-usb.txt" ?
+> or is it something that i am missing. 
 
-Changes from V2:
-	1.Removed of_match_table
-	2.Moved to syscon interface for PMU handling.
+Indeed, this should go to exynos-usb.txt instead of usb-ehci.txt.
+Thanks!
 
-Changes from V1:
-	1.Adapted to latest version of Generic PHY framework
-	2.Removed exynos_sata_i2c_remove function.
+> > +
+> > diff --git a/drivers/usb/host/ehci-exynos.c
+> > b/drivers/usb/host/ehci-exynos.c index d1d8c47..7c35501 100644
+> > --- a/drivers/usb/host/ehci-exynos.c
+> > +++ b/drivers/usb/host/ehci-exynos.c
+> > @@ -19,12 +19,12 @@
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> >  #include <linux/of_gpio.h>
+> > +#include <linux/phy/phy.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/usb/phy.h>
+> >  #include <linux/usb/samsung_usb_phy.h>  #include <linux/usb.h>
+> > #include <linux/usb/hcd.h> -#include <linux/usb/otg.h>
+> >
+> >  #include "ehci.h"
+> >
+> > @@ -42,10 +42,10 @@
+> >  static const char hcd_name[] = "ehci-exynos";  static struct
+> > hc_driver __read_mostly exynos_ehci_hc_driver;
+> >
+> > +#define PHY_NUMBER 3
+> >  struct exynos_ehci_hcd {
+> >         struct clk *clk;
+> > -       struct usb_phy *phy;
+> > -       struct usb_otg *otg;
+> > +       struct phy *phy[PHY_NUMBER];
+> >  };
+> >
+> >  #define to_exynos_ehci(hcd) (struct exynos_ehci_hcd
+> > *)(hcd_to_ehci(hcd)->priv) @@ -69,13 +69,43 @@ static void
+> exynos_setup_vbus_gpio(struct platform_device *pdev)
+> >                 dev_err(dev, "can't request ehci vbus gpio %d",
+> gpio);
+> > }
+> >
+> > +static int exynos_phys_on(struct phy *p[]) {
+> > +       int i;
+> > +       int ret = 0;
+> > +
+> > +       for (i = 0; ret == 0 && i < PHY_NUMBER; i++)
+> > +               if (p[i])
+> > +                       ret = phy_power_on(p[i]);
+> > +       if (ret)
+> > +               for (i--; i > 0; i--)
+> > +                       if (p[i])
+> > +                               phy_power_off(p[i]);
+> 
+> So we are turning off, say, port0 phy in case port1 phy power_on fails;
+> can't we still leave a usb2.0 phy(a normal host phy) 'on' in case the
+> HSIC phy fails ?
 
+Currently all phys are can be either switched on or off. So if powering on
+one phy fails (and exynos_phy_on returns an error code), I would expect
+that no phy is switched on. I think that doing otherwise could leave
+the phys in strange state - some phys are on, some are off and the power_on
+call returned an error.
 
- drivers/phy/Kconfig               |   11 ++
- drivers/phy/Makefile              |    1 +
- drivers/phy/exynos5250_phy_i2c.c  |   44 ++++++++
- drivers/phy/sata_phy_exynos5250.c |  220 +++++++++++++++++++++++++++++++++++++
- drivers/phy/sata_phy_exynos5250.h |   35 ++++++
- 5 files changed, 311 insertions(+)
- create mode 100644 drivers/phy/exynos5250_phy_i2c.c
- create mode 100644 drivers/phy/sata_phy_exynos5250.c
- create mode 100644 drivers/phy/sata_phy_exynos5250.h
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +static int exynos_phys_off(struct phy *p[]) {
+> > +       int i;
+> > +       int ret = 0;
+> > +
+> > +       for (i = 0; ret == 0 && i < PHY_NUMBER; i++)
+> > +               if (p[i])
+> > +                       ret = phy_power_off(p[i]);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> >  static int exynos_ehci_probe(struct platform_device *pdev)  {
+> >         struct exynos_ehci_hcd *exynos_ehci;
+> >         struct usb_hcd *hcd;
+> >         struct ehci_hcd *ehci;
+> >         struct resource *res;
+> > -       struct usb_phy *phy;
+> > +       struct phy *phy;
+> > +       struct device_node *child;
+> > +       int phy_number;
+> >         int irq;
+> >         int err;
+> >
+> > @@ -102,14 +132,26 @@ static int exynos_ehci_probe(struct
+> platform_device *pdev)
+> >                                         "samsung,exynos5440-ehci"))
+> >                 goto skip_phy;
+> >
+> > -       phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
+> > -       if (IS_ERR(phy)) {
+> > -               usb_put_hcd(hcd);
+> > -               dev_warn(&pdev->dev, "no platform data or transceiver
+> defined\n");
+> > -               return -EPROBE_DEFER;
+> > -       } else {
+> > -               exynos_ehci->phy = phy;
+> > -               exynos_ehci->otg = phy->otg;
+> > +       for_each_available_child_of_node(pdev->dev.of_node, child) {
+> > +               err = of_property_read_u32(child, "reg",
+> &phy_number);
+> > +               if (err) {
+> > +                       dev_err(&pdev->dev, "Failed to parse device
+> tree\n");
+> > +                       of_node_put(child);
+> > +                       return err;
+> > +               }
+> > +               if (phy_number >= PHY_NUMBER) {
+> > +                       dev_err(&pdev->dev, "Failed to parse device
+> tree - number out of range\n");
+> > +                       of_node_put(child);
+> > +                       return -EINVAL;
+> > +               }
+> > +               phy = devm_of_phy_get(&pdev->dev, child, 0);
+> > +               of_node_put(child);
+> > +               if (IS_ERR(phy)) {
+> > +                       dev_err(&pdev->dev, "Failed to get phy number
+> %d",
+> > +
+> phy_number);
+> > +                       return PTR_ERR(phy);
+> > +               }
+> > +               exynos_ehci->phy[phy_number] = phy;
+> >         }
+> >
+> >  skip_phy:
+> > @@ -149,11 +191,11 @@ skip_phy:
+> >                 goto fail_io;
+> >         }
+> >
+> > -       if (exynos_ehci->otg)
+> > -               exynos_ehci->otg->set_host(exynos_ehci->otg, &hcd-
+> >self);
+> > -
+> > -       if (exynos_ehci->phy)
+> > -               usb_phy_init(exynos_ehci->phy);
+> > +       err = exynos_phys_on(exynos_ehci->phy);
+> > +       if (err) {
+> > +               dev_err(&pdev->dev, "Failed to enabled phys\n");
+> > +               goto fail_io;
+> > +       }
+> >
+> >         ehci = hcd_to_ehci(hcd);
+> >         ehci->caps = hcd->regs;
+> > @@ -173,8 +215,7 @@ skip_phy:
+> >         return 0;
+> >
+> >  fail_add_hcd:
+> > -       if (exynos_ehci->phy)
+> > -               usb_phy_shutdown(exynos_ehci->phy);
+> > +       exynos_phys_off(exynos_ehci->phy);
+> >  fail_io:
+> >         clk_disable_unprepare(exynos_ehci->clk);
+> >  fail_clk:
+> > @@ -189,11 +230,7 @@ static int exynos_ehci_remove(struct
+> > platform_device *pdev)
+> >
+> >         usb_remove_hcd(hcd);
+> >
+> > -       if (exynos_ehci->otg)
+> > -               exynos_ehci->otg->set_host(exynos_ehci->otg, &hcd-
+> >self);
+> > -
+> > -       if (exynos_ehci->phy)
+> > -               usb_phy_shutdown(exynos_ehci->phy);
+> > +       exynos_phys_off(exynos_ehci->phy);
+> >
+> >         clk_disable_unprepare(exynos_ehci->clk);
+> >
+> > @@ -213,11 +250,7 @@ static int exynos_ehci_suspend(struct device
+> > *dev)
+> >
+> >         rc = ehci_suspend(hcd, do_wakeup);
+> >
+> > -       if (exynos_ehci->otg)
+> > -               exynos_ehci->otg->set_host(exynos_ehci->otg, &hcd-
+> >self);
+> > -
+> > -       if (exynos_ehci->phy)
+> > -               usb_phy_shutdown(exynos_ehci->phy);
+> > +       exynos_phys_off(exynos_ehci->phy);
+> >
+> >         clk_disable_unprepare(exynos_ehci->clk);
+> >
+> > @@ -231,11 +264,7 @@ static int exynos_ehci_resume(struct device
+> *dev)
+> >
+> >         clk_prepare_enable(exynos_ehci->clk);
+> >
+> > -       if (exynos_ehci->otg)
+> > -               exynos_ehci->otg->set_host(exynos_ehci->otg, &hcd-
+> >self);
+> > -
+> > -       if (exynos_ehci->phy)
+> > -               usb_phy_init(exynos_ehci->phy);
+> > +       exynos_phys_on(exynos_ehci->phy);
+> >
+> >         /* DMA burst Enable */
+> >         writel(EHCI_INSNREG00_ENABLE_DMA_BURST,
+> > EHCI_INSNREG00(hcd->regs));
+> > --
+> 
+> Rest all looks good. :-)
+> I tested this patch along with other patches in the series on smdk5250.
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index d0611b8..6ea124d 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -57,4 +57,15 @@ config PHY_EXYNOS_DP_VIDEO
- 	help
- 	  Support for Display Port PHY found on Samsung EXYNOS SoCs.
- 
-+config EXYNOS5250_SATA_PHY
-+	tristate "Exynos5250 Sata SerDes/PHY driver"
-+	depends on SOC_EXYNOS5250
-+	select GENERIC_PHY
-+	select MFD_SYSCON if ARCH_EXYNOS5
-+	help
-+	  Enable this to support SATA SerDes/Phy found on Samsung's
-+	  Exynos5250 based SoCs.This SerDes/Phy supports SATA 1.5 Gb/s,
-+	  SATA 3.0 Gb/s, SATA 6.0 Gb/s speeds.It supports one SATA host
-+	  port to accept one SATA device.
-+
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 4e4adc9..b73eb73 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -8,3 +8,4 @@ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
- obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
- obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
- obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
-+obj-$(CONFIG_EXYNOS5250_SATA_PHY)	+= sata_phy_exynos5250.o exynos5250_phy_i2c.o
-diff --git a/drivers/phy/exynos5250_phy_i2c.c b/drivers/phy/exynos5250_phy_i2c.c
-new file mode 100644
-index 0000000..c0c1150
---- /dev/null
-+++ b/drivers/phy/exynos5250_phy_i2c.c
-@@ -0,0 +1,44 @@
-+/*
-+ * Copyright (C) 2013 Samsung Electronics Co.Ltd
-+ * Author:
-+ *	Yuvaraj C D <yuvaraj.cd@samsung.com>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ *
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include "sata_phy_exynos5250.h"
-+
-+static int exynos_sata_i2c_probe(struct i2c_client *client,
-+		const struct i2c_device_id *i2c_id)
-+{
-+	int ret = 0;
-+	ret = sataphy_attach_i2c_client(client);
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_info(&client->adapter->dev,
-+		"attached %s into sataphy i2c adapter successfully\n",
-+		client->name);
-+
-+	return ret;
-+}
-+
-+static const struct i2c_device_id sataphy_i2c_device_match[] = {
-+	{ "exynos-sataphy-i2c", 0 },
-+};
-+
-+struct i2c_driver sataphy_i2c_driver = {
-+	.probe		= exynos_sata_i2c_probe,
-+	.id_table	= sataphy_i2c_device_match,
-+	.driver   = {
-+		.name = "exynos-sataphy-i2c",
-+		.owner = THIS_MODULE,
-+		},
-+};
-diff --git a/drivers/phy/sata_phy_exynos5250.c b/drivers/phy/sata_phy_exynos5250.c
-new file mode 100644
-index 0000000..0765863
---- /dev/null
-+++ b/drivers/phy/sata_phy_exynos5250.c
-@@ -0,0 +1,220 @@
-+/*
-+ * Samsung SATA SerDes(PHY) driver
-+ *
-+ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-+ * Authors: Girish K S <ks.giri@samsung.com>
-+ *         Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/spinlock.h>
-+#include <linux/mfd/syscon.h>
-+#include "sata_phy_exynos5250.h"
-+
-+static struct i2c_client *phy_i2c_client;
-+
-+struct exynos_sata_phy {
-+	struct phy *phy;
-+	struct clk *phyclk;
-+	void __iomem *regs;
-+	void __iomem *pmureg;
-+};
-+
-+static bool wait_for_reg_status(void __iomem *base, u32 reg, u32 checkbit,
-+				u32 status)
-+{
-+	unsigned long timeout = jiffies + usecs_to_jiffies(1000);
-+	while (time_before(jiffies, timeout)) {
-+		if ((readl(base + reg) & checkbit) == status)
-+			return true;
-+	}
-+	return false;
-+}
-+
-+int sataphy_attach_i2c_client(struct i2c_client *sata_phy)
-+{
-+	if (!sata_phy)
-+		return -EPROBE_DEFER;
-+	else
-+		phy_i2c_client = sata_phy;
-+
-+	return 0;
-+}
-+
-+static int exynos_sata_phy_power_on(struct phy *phy)
-+{
-+	struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
-+
-+	if (sata_phy->pmureg)
-+		regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
-+			EXYNOS5_SATAPHY_PMU_ENABLE, EXYNOS_SATA_PHY_EN);
-+
-+	return 0;
-+}
-+
-+static int exynos_sata_phy_power_off(struct phy *phy)
-+{
-+	struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
-+
-+	if (sata_phy->pmureg)
-+		regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
-+			EXYNOS5_SATAPHY_PMU_ENABLE, ~EXYNOS_SATA_PHY_EN);
-+
-+	return 0;
-+}
-+
-+static int exynos_sata_phy_init(struct phy *phy)
-+{
-+	u32 val = 0;
-+	int ret = 0;
-+	u8 buf[] = { 0x3A, 0x0B };
-+	struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
-+
-+	if (sata_phy->pmureg)
-+		regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
-+			EXYNOS5_SATAPHY_PMU_ENABLE, EXYNOS_SATA_PHY_EN);
-+
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-+	val |= 0xFF;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-+	val |= LINK_RESET;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-+	val |= RESET_CMN_RST_N;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-+	val &= ~PHCTRLM_REF_RATE;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-+
-+	/* High speed enable for Gen3 */
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-+	val |= PHCTRLM_HIGH_SPEED;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-+
-+	val |= CTRL0_P0_PHY_CALIBRATED_SEL | CTRL0_P0_PHY_CALIBRATED;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_CTRL0);
-+
-+	writel(0x2, sata_phy->regs + EXYNOS5_SATA_MODE0);
-+
-+	ret = i2c_master_send(phy_i2c_client, buf, sizeof(buf));
-+	if (ret < 0)
-+		return -ENXIO;
-+
-+	/* release cmu reset */
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-+	val &= ~RESET_CMN_RST_N;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-+	val |= RESET_CMN_RST_N;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+
-+	return (wait_for_reg_status(sata_phy->regs, EXYNOS5_SATA_PHSATA_STATM,
-+		PHSTATM_PLL_LOCKED, 1)) ? 0 : -EINVAL;
-+
-+}
-+
-+static struct phy_ops exynos_sata_phy_ops = {
-+	.init		= exynos_sata_phy_init,
-+	.power_on	= exynos_sata_phy_power_on,
-+	.power_off	= exynos_sata_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int exynos_sata_phy_probe(struct platform_device *pdev)
-+{
-+	struct exynos_sata_phy *sata;
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	struct phy_provider *phy_provider;
-+	int ret = 0;
-+
-+	sata = devm_kzalloc(dev, sizeof(*sata), GFP_KERNEL);
-+	if (!sata)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+
-+	sata->regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(sata->regs))
-+		return PTR_ERR(sata->regs);
-+
-+	sata->pmureg = syscon_regmap_lookup_by_phandle(dev->of_node,
-+					"samsung,syscon-phandle");
-+	if (!sata->pmureg) {
-+		dev_err(dev, "syscon regmap lookup failed.\n");
-+		return PTR_ERR(sata->pmureg);
-+	}
-+	dev_set_drvdata(dev, sata);
-+
-+	if (i2c_add_driver(&sataphy_i2c_driver)) {
-+		dev_err(dev, "failed to register sataphy i2c driver\n");
-+		return -ENOENT;
-+	}
-+
-+	sata->phyclk = devm_clk_get(dev, "sata_phyctrl");
-+	if (IS_ERR(sata->phyclk)) {
-+		dev_err(dev, "failed to get clk for PHY\n");
-+		return PTR_ERR(sata->phyclk);
-+	}
-+
-+	ret = clk_prepare_enable(sata->phyclk);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable source clk\n");
-+		return ret;
-+	}
-+
-+	sata->phy = devm_phy_create(dev, &exynos_sata_phy_ops, NULL);
-+	if (IS_ERR(sata->phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(sata->phy);
-+	}
-+
-+	phy_provider = devm_of_phy_provider_register(dev,
-+					of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider))
-+		return PTR_ERR(phy_provider);
-+
-+	phy_set_drvdata(sata->phy, sata);
-+	return 0;
-+}
-+
-+static const struct of_device_id exynos_sata_phy_of_match[] = {
-+	{ .compatible = "samsung,exynos5250-sata-phy" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, exynos_sata_phy_of_match);
-+
-+static struct platform_driver exynos_sata_phy_driver = {
-+	.probe	= exynos_sata_phy_probe,
-+	.driver = {
-+		.of_match_table	= exynos_sata_phy_of_match,
-+		.name  = "samsung,sata-phy",
-+		.owner = THIS_MODULE,
-+	}
-+};
-+module_platform_driver(exynos_sata_phy_driver);
-+
-+MODULE_DESCRIPTION("Samsung SerDes PHY driver");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("ks.giri <ks.giri@samsung.com>");
-+MODULE_AUTHOR("Yuvaraj C D <yuvaraj.cd@samsung.com>");
-diff --git a/drivers/phy/sata_phy_exynos5250.h b/drivers/phy/sata_phy_exynos5250.h
-new file mode 100644
-index 0000000..3e2089d
---- /dev/null
-+++ b/drivers/phy/sata_phy_exynos5250.h
-@@ -0,0 +1,35 @@
-+/*
-+ *
-+ * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-+ * Author:
-+ *	Yuvaraj Kumar C D<yuvaraj.cd@samsung.com>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+#define EXYNOS5_SATA_RESET		0x4
-+#define EXYNOS5_SATA_MODE0		0x10
-+#define EXYNOS5_SATA_CTRL0		0x14
-+#define EXYNOS5_SATA_STAT0		0x18
-+#define EXYNOS5_SATA_PHSATA_CTRLM	0xE0
-+#define EXYNOS5_SATA_PHSATA_CTRL0	0xE4
-+#define EXYNOS5_SATA_PHSATA_STATM	0xF0
-+#define EXYNOS5_SATA_PHSTAT0		0xF4
-+
-+#define RESET_CMN_RST_N			(1 << 1)
-+#define LINK_RESET			0xF0000
-+#define CTRL0_P0_PHY_CALIBRATED_SEL	(1 << 9)
-+#define CTRL0_P0_PHY_CALIBRATED		(1 << 8)
-+#define PHCTRLM_REF_RATE		(1 << 1)
-+#define PHCTRLM_HIGH_SPEED		(1 << 0)
-+#define PHSTATM_PLL_LOCKED		(1 << 0)
-+#define SATA_PHY_CON_RESET		(LINK_RESET | 3F)
-+#define EXYNOS_SATA_PHY_EN		(1 << 0)
-+#define SATAPHY_CONTROL_OFFSET		0x0724
-+#define EXYNOS5_SATAPHY_PMU_ENABLE	(1 << 0)
-+
-+int sataphy_attach_i2c_client(struct i2c_client *sata_phy);
-+extern struct i2c_driver sataphy_i2c_driver;
+Thank you :)
+
+> Tested-by: Vivek Gautam <gautam.vivek@samsung.com>
+> 
+
+Best wishes,
 -- 
-1.7.9.5
-
+Kamil Debski
+Samsung R&D Institute Poland
