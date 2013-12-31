@@ -1,87 +1,55 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when
- populating interrupts
-Date: Mon, 30 Dec 2013 22:10:09 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1312302209200.8869@utopia.booyaka.com>
-References: <20131123004334.GJ10023@atomide.com> <20131123005509.GJ16735@
- n2100.arm.linux.org.uk> <20131123010850.GN10023@atomide.com> <
- 20131123011515.GO10023@atomide.com> <20131123015034.GP10023@atomide.com>
- <20131124212757.7D224C402A3@trevor.secretlab.ca>
- <alpine.DEB.2.02.1312100331460.32309@utopia.booyaka.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Tue, 31 Dec 2013 12:43:57 +0800
+Message-ID: <52C24B8D.1030205@linaro.org>
+References: <1388241295-20051-1-git-send-email-zhangfei.gao@linaro.org> <CAMj5Bkif9pQHVdA71QccamVQkfgTheUNzowW6AyTwC3dy5XF+g@mail.gmail.com> <52C1AB34.3010402@linaro.org> <201312302127.41690.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.DEB.2.02.1312100331460.32309@utopia.booyaka.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201312302127.41690.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Zhangfei Gao <zhangfei.gao@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, patches@linaro.org, Seungwon Jeon <tgih.jun@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, cpgs@samsung.com, Kumar Gala <galak@codeaurora.org>, Chris Ball <cjb@laptop.org>, Zhigang Wang <brooke.wangzhigang@huawei.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant, Rob,
+Dear Arnd,
 
-On Tue, 10 Dec 2013, Paul Walmsley wrote:
+On 12/31/2013 04:27 AM, Arnd Bergmann wrote:
+> On Monday 30 December 2013, zhangfei wrote:
+>>>>>> +static int dw_mci_k3_suspend(struct device *dev)
+>>>>>> +{
+>>>>>> +    struct dw_mci *host = dev_get_drvdata(dev);
+>>>>>> +    int ret = 0;
+>>>>>> +
+>>>>>> +    ret = dw_mci_suspend(host);
+>>>>>
+>>>>> You should never initialize local variables when they are set later in the
+>>>>> function (the ret = 0 part above). For more complex functions, this prevents
+>>>>> gcc from warning you about accidentally uninitialized uses.
+>>
+>> I am sorry I may fall into the dead end, but still quite not understand
+>> this rule.
+>> I alwayes thought it would be a good habit to init local variables before.
+>> Do you mean it should NOT init local variable as much as possible and
+>> only init on demand, like solving the gcc warning.
+>> Why not init the them at start in case random value cause unpredicted error?
+>
+> The gcc warnings are 100% correct, we can use them as a tool to write better
+> code. If you write code that has no warnings with a modern compiler, you will
+> never use random values, but if you always initialize the local variables,
+> you can end up accidentally using '0' where you shouldn't have.
+>
+> See http://rusty.ozlabs.org/?p=232 for an excellent article on the topic
+> by former Linaro assignee Rusty Russell.
+>
 
-> On Sun, 24 Nov 2013, Grant Likely wrote:
-> 
-> > On Fri, 22 Nov 2013 17:50:35 -0800, Tony Lindgren <tony@atomide.com> wrote:
-> > > * Tony Lindgren <tony@atomide.com> [131122 17:16]:
-> > > > * Tony Lindgren <tony@atomide.com> [131122 17:09]:
-> > > > > * Russell King - ARM Linux <linux@arm.linux.org.uk> [131122 16:56]:
-> > > > > > On Fri, Nov 22, 2013 at 04:43:35PM -0800, Tony Lindgren wrote:
-> > > > > > > +		/* See of_device_resource_notify for populating interrupts */
-> > > > > > > +		for (i = 0; i < num_irq; i++, res++) {
-> > > > > > > +			res->flags = IORESOURCE_IRQ;
-> > > > > > > +			res->start = -EPROBE_DEFER;
-> > > > > > > +			res->end = -EPROBE_DEFER;
-> > > > > > 
-> > > > > > NAK.  Definitely a bad idea to start introducing magic values other into
-> > > > > > resources.  Please don't do this.
-> > > > > 
-> > > > > Do you have any better ideas on how to sort out this issue then?
-> > > > 
-> > > > I guess we could allocate all the resources lazily here, I'll take a look
-> > > > at that.
-> > > 
-> > > Here's a version that allocates the resources lazily with the notifier.
-> > > Seems to boot, need to play with it a bit more though to make sure we're
-> > > not overwriting resources for any legacy devices.
-> > 
-> > Blurg. Using a notifier really feels like we don't have a good handle on
-> > a reasonable solution yet. Basically it means we're hooking into the
-> > driver core without /looking/ like we're hooking into the driver core. I
-> > don't think this is any better, but I don't have a better suggestion at
-> > the moment.   :-(
-> 
-> Unfortunately this patch, or something that accomplishes the same results, 
-> is somewhat high-priority for us on OMAP.  OMAP37xx got prematurely 
-> converted to DT booting, and now dynamic power management is broken:
-> 
->     http://marc.info/?l=linux-arm-kernel&m=138658294830408&w=2
-> 
-> Tony writes that this patch is one of the two patches needed to get things 
-> working again:
-> 
->     http://marc.info/?l=linux-arm-kernel&m=138660942506846&w=2
-> 
-> Is it possible to get this patch, or something similar, merged for 
-> v3.13-rc?
-> 
-> Once something like PM is broken, it's pretty easy for other broken 
-> patches to make it into the tree, since it becomes very difficult to test 
-> without turning into a maintainer denial-of-service attack.
+Excellent, this is what I am looking for.
+Thanks for the patience.
+I may need some time and gradually change the habit to diminish the hurt 
+memory caused by uninitialized vector.
+Will update and take care latter.
 
-Ping.  Could you please provide some guidance here about what you'd need 
-to get this solved for v3.13-rc?
+By the way, are you fine with the other comments' explanation.
 
-
-
-- Paul
+Thanks
