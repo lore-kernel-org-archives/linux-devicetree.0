@@ -1,261 +1,84 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V4 2/2] ARM: dts: Enable ahci sata and sata phy
-Date: Tue, 31 Dec 2013 16:44:08 +0100
-Message-ID: <40868257.6Tm1252hrx@amdc1032>
-References: <1388408823-4963-1-git-send-email-yuvaraj.cd@samsung.com>
- <1388408823-4963-3-git-send-email-yuvaraj.cd@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when
+ populating interrupts
+Date: Tue, 31 Dec 2013 10:33:58 -0600
+Message-ID: <CAL_Jsq+X5G94DUn-zFKQkhEy91cdjCyeciny+kDjr=V6EiBHfQ@mail.gmail.com>
+References: <20131123004334.GJ10023@atomide.com>
+	<20131123010850.GN10023@atomide.com>
+	<20131123015034.GP10023@atomide.com>
+	<20131124212757.7D224C402A3@trevor.secretlab.ca>
+	<alpine.DEB.2.02.1312100331460.32309@utopia.booyaka.com>
+	<alpine.DEB.2.02.1312302209200.8869@utopia.booyaka.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1388408823-4963-3-git-send-email-yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1312302209200.8869-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuvaraj Kumar C D <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: kishon-l0cyMroinI0@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Dec 30, 2013 at 4:10 PM, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Grant, Rob,
+>
+> On Tue, 10 Dec 2013, Paul Walmsley wrote:
+>
+>> On Sun, 24 Nov 2013, Grant Likely wrote:
+>>
+>> > On Fri, 22 Nov 2013 17:50:35 -0800, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+>> > > * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [131122 17:16]:
+>> > > > * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [131122 17:09]:
+>> > > > > * Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> [131122 16:56]:
+>> > > > > > On Fri, Nov 22, 2013 at 04:43:35PM -0800, Tony Lindgren wrote:
+>> > > > > > > +         /* See of_device_resource_notify for populating interrupts */
+>> > > > > > > +         for (i = 0; i < num_irq; i++, res++) {
+>> > > > > > > +                 res->flags = IORESOURCE_IRQ;
+>> > > > > > > +                 res->start = -EPROBE_DEFER;
+>> > > > > > > +                 res->end = -EPROBE_DEFER;
+>> > > > > >
+>> > > > > > NAK.  Definitely a bad idea to start introducing magic values other into
+>> > > > > > resources.  Please don't do this.
+>> > > > >
+>> > > > > Do you have any better ideas on how to sort out this issue then?
+>> > > >
+>> > > > I guess we could allocate all the resources lazily here, I'll take a look
+>> > > > at that.
+>> > >
+>> > > Here's a version that allocates the resources lazily with the notifier.
+>> > > Seems to boot, need to play with it a bit more though to make sure we're
+>> > > not overwriting resources for any legacy devices.
+>> >
+>> > Blurg. Using a notifier really feels like we don't have a good handle on
+>> > a reasonable solution yet. Basically it means we're hooking into the
+>> > driver core without /looking/ like we're hooking into the driver core. I
+>> > don't think this is any better, but I don't have a better suggestion at
+>> > the moment.   :-(
+>>
+>> Unfortunately this patch, or something that accomplishes the same results,
+>> is somewhat high-priority for us on OMAP.  OMAP37xx got prematurely
+>> converted to DT booting, and now dynamic power management is broken:
+>>
+>>     http://marc.info/?l=linux-arm-kernel&m=138658294830408&w=2
+>>
+>> Tony writes that this patch is one of the two patches needed to get things
+>> working again:
+>>
+>>     http://marc.info/?l=linux-arm-kernel&m=138660942506846&w=2
+>>
+>> Is it possible to get this patch, or something similar, merged for
+>> v3.13-rc?
+>>
+>> Once something like PM is broken, it's pretty easy for other broken
+>> patches to make it into the tree, since it becomes very difficult to test
+>> without turning into a maintainer denial-of-service attack.
+>
+> Ping.  Could you please provide some guidance here about what you'd need
+> to get this solved for v3.13-rc?
 
-[ added linux-ide ML to Cc: ]
+I agree with doing the platform_get_irq modification and feel free to
+add my ack. I'm going to be offline for the next week.
 
-On Monday, December 30, 2013 06:37:03 PM Yuvaraj Kumar C D wrote:
-> This patch adds dt entry for ahci sata controller and its
-> corresponding phy controller.phy node has been added w.r.t
-> new generic phy framework.
-> 
-> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
-> 
-> Changes since V3:
-> 	1.Moved the binding info to the /bindings/phy/
-> 
-> Changes since V2:
-> 	1.Used syscon interface to PMU handling.
-> 	2.Changed "sata-phy-i2c" to "exynos-sataphy-i2c".
-> 
-> Changes since V1:
-> 	1.Minor changes to node name convention.
-> 	2.Updated binding document.
-> 
->  .../devicetree/bindings/ata/exynos-sata-phy.txt    |   14 -------
->  .../devicetree/bindings/ata/exynos-sata.txt        |   25 +++++++-----
->  .../devicetree/bindings/phy/samsung-phy.txt        |   40 ++++++++++++++++++++
->  arch/arm/boot/dts/exynos5250-arndale.dts           |   11 ++++++
->  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    8 +---
->  arch/arm/boot/dts/exynos5250.dtsi                  |   16 ++++++--
->  6 files changed, 81 insertions(+), 33 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-> deleted file mode 100644
-> index 37824fa..0000000
-> --- a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-> +++ /dev/null
-> @@ -1,14 +0,0 @@
-> -* Samsung SATA PHY Controller
-> -
-> -SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
-> -Each SATA PHY controller should have its own node.
-> -
-> -Required properties:
-> -- compatible        : compatible list, contains "samsung,exynos5-sata-phy"
-> -- reg               : <registers mapping>
-> -
-> -Example:
-> -        sata@ffe07000 {
-> -                compatible = "samsung,exynos5-sata-phy";
-> -                reg = <0xffe07000 0x1000>;
-> -        };
-> diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> index 0849f10..b2adb1f 100644
-> --- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> +++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-> @@ -4,14 +4,21 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
->  Each SATA controller should have its own node.
->  
->  Required properties:
-> -- compatible        : compatible list, contains "samsung,exynos5-sata"
-> -- interrupts        : <interrupt mapping for SATA IRQ>
-> -- reg               : <registers mapping>
-> -- samsung,sata-freq : <frequency in MHz>
-> +- compatible		: compatible list, contains "samsung,exynos5-sata"
-> +- interrupts		: <interrupt mapping for SATA IRQ>
-> +- reg			: <registers mapping>
-> +- samsung,sata-freq	: <frequency in MHz>
-> +- phys			: as mentioned in phy-bindings.txt
-> +- phy-names		: as mentioned in phy-bindings.txt
->  
->  Example:
-> -        sata@ffe08000 {
-> -                compatible = "samsung,exynos5-sata";
-> -                reg = <0xffe08000 0x1000>;
-> -                interrupts = <115>;
-> -        };
-> +	sata@122f0000 {
-> +		compatible = "snps,dwc-ahci";
-> +		samsung,sata-freq = <66>;
-> +		reg = <0x122f0000 0x1ff>;
-> +		interrupts = <0 115 0>;
-> +		clocks = <&clock 277>, <&clock 143>;
-> +		clock-names = "sata", "sclk_sata";
-> +		phys = <&sata_phy>;
-> +		phy-names = "sata-phy";
-> +	};
-> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> index c0fccaa..876fe9b 100644
-> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> @@ -20,3 +20,43 @@ Required properties:
->  - compatible : should be "samsung,exynos5250-dp-video-phy";
->  - reg : offset and length of the Display Port PHY register set;
->  - #phy-cells : from the generic PHY bindings, must be 0;
-> +
-> +Samsung SATA PHY Controller
-> +---------------------------
-> +
-> +SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
-> +Each SATA PHY controller should have its own node.
-> +
-> +Required properties:
-> +- compatible        : compatible list, contains "samsung,exynos5250-sata-phy"
-> +- reg : offset and length of the SATA PHY register set;
-> +- #phy-cells : from the generic phy bindings;
-> +
-> +Example:
-> +	sata_phy: sata-phy@12170000 {
-> +		compatible = "samsung,exynos5250-sata-phy";
-> +		reg = <0x12170000 0x1ff>;
-> +		clocks = <&clock 287>;
-> +		clock-names = "sata_phyctrl";
-> +		#phy-cells = <0>;
-
-This example needs to be updated as the code below evolved to be just:
-
-samsung,syscon-phandle = <&pmu_syscon>;
-
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +		sataphy-pmu {
-> +			reg = <0x10040724 0x4>;
-> +		};
-
-Otherwise the patch looks good.
-
-> +	};
-> +
-> +Device-Tree bindings for sataphy i2c client driver
-> +--------------------------------------------------
-> +
-> +Required properties:
-> +compatible: Should be "samsung,exynos-sataphy-i2c"
-> +- reg: I2C address of the sataphy i2c device.
-> +
-> +Example:
-> +
-> +	sata-phy@38 {
-> +		compatible = "samsung,exynos-sataphy-i2c";
-> +		reg = <0x38>;
-> +	};
-> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-> index b42e658..25fe5a3 100644
-> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
-> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-> @@ -370,6 +370,17 @@
->  		};
->  	};
->  
-> +	i2c@121D0000 {
-> +		samsung,i2c-sda-delay = <100>;
-> +		samsung,i2c-max-bus-freq = <40000>;
-> +		samsung,i2c-slave-addr = <0x38>;
-> +
-> +		sata-phy@38 {
-> +			compatible = "samsung,exynos-sataphy-i2c";
-> +			reg = <0x38>;
-> +		};
-> +	};
-> +
->  	mmc_0: mmc@12200000 {
->  		status = "okay";
->  		num-slots = <1>;
-> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> index 3e69837..9e449e6 100644
-> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> @@ -96,16 +96,12 @@
->  		samsung,i2c-slave-addr = <0x38>;
->  		status = "okay";
->  
-> -		sata-phy {
-> -			compatible = "samsung,sata-phy";
-> +		sata-phy@38 {
-> +			compatible = "samsung,exynos-sataphy-i2c";
->  			reg = <0x38>;
->  		};
->  	};
->  
-> -	sata@122F0000 {
-> -		samsung,sata-freq = <66>;
-> -	};
-> -
->  	i2c@12C80000 {
->  		samsung,i2c-sda-delay = <100>;
->  		samsung,i2c-max-bus-freq = <66000>;
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index dbb4a47..626a7d1 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -46,6 +46,7 @@
->  		i2c6 = &i2c_6;
->  		i2c7 = &i2c_7;
->  		i2c8 = &i2c_8;
-> +		i2c9 = &i2c_9;
->  		pinctrl0 = &pinctrl_0;
->  		pinctrl1 = &pinctrl_1;
->  		pinctrl2 = &pinctrl_2;
-> @@ -231,16 +232,23 @@
->  	};
->  
->  	sata@122F0000 {
-> -		compatible = "samsung,exynos5-sata-ahci";
-> +		compatible = "snps,dwc-ahci";
-> +		samsung,sata-freq = <66>;
->  		reg = <0x122F0000 0x1ff>;
->  		interrupts = <0 115 0>;
->  		clocks = <&clock 277>, <&clock 143>;
->  		clock-names = "sata", "sclk_sata";
-> +		phys = <&sata_phy>;
-> +		phy-names = "sata-phy";
->  	};
->  
-> -	sata-phy@12170000 {
-> -		compatible = "samsung,exynos5-sata-phy";
-> +	sata_phy: sata-phy@12170000 {
-> +		compatible = "samsung,exynos5250-sata-phy";
->  		reg = <0x12170000 0x1ff>;
-> +		clocks = <&clock 287>;
-> +		clock-names = "sata_phyctrl";
-> +		#phy-cells = <0>;
-> +		samsung,syscon-phandle = <&pmu_syscon>;
->  	};
->  
->  	i2c_0: i2c@12C60000 {
-> @@ -358,7 +366,7 @@
->  		status = "disabled";
->  	};
->  
-> -	i2c@121D0000 {
-> +	i2c_9: i2c@121D0000 {
->                  compatible = "samsung,exynos5-sata-phy-i2c";
->                  reg = <0x121D0000 0x100>;
->                  #address-cells = <1>;
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
