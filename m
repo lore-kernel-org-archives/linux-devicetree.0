@@ -1,55 +1,142 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Tue, 31 Dec 2013 12:43:57 +0800
-Message-ID: <52C24B8D.1030205@linaro.org>
-References: <1388241295-20051-1-git-send-email-zhangfei.gao@linaro.org> <CAMj5Bkif9pQHVdA71QccamVQkfgTheUNzowW6AyTwC3dy5XF+g@mail.gmail.com> <52C1AB34.3010402@linaro.org> <201312302127.41690.arnd@arndb.de>
+From: Wei Ni <wni@nvidia.com>
+Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
+Date: Tue, 31 Dec 2013 18:17:12 +0800
+Message-ID: <52C299A8.4010108@nvidia.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
+ <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201312302127.41690.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Zhangfei Gao <zhangfei.gao@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, patches@linaro.org, Seungwon Jeon <tgih.jun@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, cpgs@samsung.com, Kumar Gala <galak@codeaurora.org>, Chris Ball <cjb@laptop.org>, Zhigang Wang <brooke.wangzhigang@huawei.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com
+Cc: wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Arnd,
-
-On 12/31/2013 04:27 AM, Arnd Bergmann wrote:
-> On Monday 30 December 2013, zhangfei wrote:
->>>>>> +static int dw_mci_k3_suspend(struct device *dev)
->>>>>> +{
->>>>>> +    struct dw_mci *host = dev_get_drvdata(dev);
->>>>>> +    int ret = 0;
->>>>>> +
->>>>>> +    ret = dw_mci_suspend(host);
->>>>>
->>>>> You should never initialize local variables when they are set later in the
->>>>> function (the ret = 0 part above). For more complex functions, this prevents
->>>>> gcc from warning you about accidentally uninitialized uses.
->>
->> I am sorry I may fall into the dead end, but still quite not understand
->> this rule.
->> I alwayes thought it would be a good habit to init local variables before.
->> Do you mean it should NOT init local variable as much as possible and
->> only init on demand, like solving the gcc warning.
->> Why not init the them at start in case random value cause unpredicted error?
+On 11/13/2013 03:46 AM, Eduardo Valentin wrote:
+> This patch introduces a device tree bindings for
+> describing the hardware thermal behavior and limits.
+> Also a parser to read and interpret the data and feed
+> it in the thermal framework is presented.
 >
-> The gcc warnings are 100% correct, we can use them as a tool to write better
-> code. If you write code that has no warnings with a modern compiler, you will
-> never use random values, but if you always initialize the local variables,
-> you can end up accidentally using '0' where you shouldn't have.
+> This patch introduces a thermal data parser for device
+> tree. The parsed data is used to build thermal zones
+> and thermal binding parameters. The output data
+> can then be used to deploy thermal policies.
 >
-> See http://rusty.ozlabs.org/?p=232 for an excellent article on the topic
-> by former Linaro assignee Rusty Russell.
+> This patch adds also documentation regarding this
+> API and how to define tree nodes to use
+> this infrastructure.
+>
+> Note that, in order to be able to have control
+> on the sensor registration on the DT thermal zone,
+> it was required to allow changing the thermal zone
+> .get_temp callback. For this reason, this patch
+> also removes the 'const' modifier from the .ops
+> field of thermal zone devices.
+>
+> ...
+> +
+> +static int of_thermal_get_trend(struct thermal_zone_device *tz, int trip,
+> +				enum thermal_trend *trend)
+> +{
+> +	struct __thermal_zone *data = tz->devdata;
+> +	long dev_trend;
+> +	int r;
+> +
+> +	if (!data->get_trend)
+> +		return -EINVAL;
+> +
+> +	r = data->get_trend(data->sensor_data, &dev_trend);
+I think the ->get_trend should be defined as:
+.get_trend(*dev, int, *long)
+so that the "trip" can be passed into it, otherwise the "trip" can't be
+used.
+And the dev_trend should be returned as THERMAL_TREND_XXX directly.
+because the THERM_TREND_xx is more than three states.
+
+The code may be something like:
+r = data->get_trend(data->sensor_data, trip, &dev_trend);
+if (r)
+    return r;
+*trend = dev_trend;
+return 0;
+> +	if (r)
+> +		return r;
+> +
+> +	/* TODO: These intervals might have some thresholds, but in core code */
+> +	if (dev_trend > 0)
+> +		*trend = THERMAL_TREND_RAISING;
+> +	else if (dev_trend < 0)
+> +		*trend = THERMAL_TREND_DROPPING;
+> +	else
+> +		*trend = THERMAL_TREND_STABLE;
+> +
+> +	return 0;
+> +}
+> +
+> .....
+> +
+> +/***   sensor API   ***/
+> +
+> +static struct thermal_zone_device *
+> +thermal_zone_of_add_sensor(struct device_node *zone,
+> +			   struct device_node *sensor, void *data,
+> +			   int (*get_temp)(void *, long *),
+> +			   int (*get_trend)(void *, long *))
+> +{
+> +	struct thermal_zone_device *tzd;
+> +	struct __thermal_zone *tz;
+> +
+> +	tzd = thermal_zone_get_zone_by_name(zone->name);
+I think we could get the thermal zone by node,
+something like:
+thermal_zone_get_zone_by_node(zone);
+so that it can get unique zone.
+
+I think we can add a member "struct device_node *np" in the
+thermal_zone_device,
+and set it after you call thermal_zone_device_register successfully.
+Then add following codes:
+thermal_zone_get_zone_by_node(struct device_node *node)
+{
+        struct thermal_zone_device *pos = NULL, *ref = ERR_PTR(-ENODEV);
+        bool found = false;
+
+        if (!node)
+                return ERR_PTR(-EINVAL);
+
+        mutex_lock(&thermal_list_lock);
+        list_for_each_entry(pos, &thermal_tz_list, node)
+                if (node == pos->np) {
+                        ref = pos;
+                        found = true;
+                        break;
+                }
+        mutex_unlock(&thermal_list_lock);
+
+        return ref;
+}
+
+Thanks.
+Wei.
+> +	if (IS_ERR(tzd))
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	tz = tzd->devdata;
+> +
+> +	mutex_lock(&tzd->lock);
+> +	tz->get_temp = get_temp;
+> +	tz->get_trend = get_trend;
+> +	tz->sensor_data = data;
+> +
+> +	tzd->ops->get_temp = of_thermal_get_temp;
+> +	tzd->ops->get_trend = of_thermal_get_trend;
+> +	mutex_unlock(&tzd->lock);
+> +
+> +	return tzd;
+> +}
+> +
 >
 
-Excellent, this is what I am looking for.
-Thanks for the patience.
-I may need some time and gradually change the habit to diminish the hurt 
-memory caused by uninitialized vector.
-Will update and take care latter.
-
-By the way, are you fine with the other comments' explanation.
-
-Thanks
