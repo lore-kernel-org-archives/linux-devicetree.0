@@ -1,97 +1,60 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC v2 REPOST 2/8] ASoC: davinci-evm: Add
- named clock reference to DT bindings
-Date: Tue, 31 Dec 2013 13:16:17 +0000
-Message-ID: <20131231131617.GZ31886@sirena.org.uk>
-References: <cover.1387535299.git.jsarha@ti.com>
- <c1ae738c9b6cd9f2e595eed1f4981378ded46925.1387535302.git.jsarha@ti.com>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Tue, 31 Dec 2013 14:20:03 +0100
+Message-ID: <20131231132003.GR8064@book.gsilab.sittig.org>
+References: <1388241295-20051-1-git-send-email-zhangfei.gao@linaro.org>
+ <1388241295-20051-3-git-send-email-zhangfei.gao@linaro.org>
+ <201312292205.02135.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1451494275712135355=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <c1ae738c9b6cd9f2e595eed1f4981378ded46925.1387535302.git.jsarha@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201312292205.02135.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhigang Wang <brooke.wangzhigang@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Dec 29, 2013 at 22:05 +0100, Arnd Bergmann wrote:
+> 
+> On Saturday 28 December 2013, Zhangfei Gao wrote:
+> 
+> > +static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+> > +{
+> > +	struct dw_mci_k3_priv_data *priv = host->priv;
+> > +	u32 rate = priv->clk_table[ios->timing];
+> > +	int ret;
+> 
+> [ ... ]
+> 
+> > +
+> > +	ret = clk_set_rate(host->ciu_clk, rate);
+> > +	if (ret)
+> > +		dev_warn(host->dev, "failed to set clock rate %uHz\n", rate);
+> > +
+> > +	host->bus_hz = clk_get_rate(host->ciu_clk);
+> > +}
+> 
+> Why do you call clk_get_rate() here, shouldn't it always be the same
+> rate that you have just set?
 
---===============1451494275712135355==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J8ZfMsDg90ddfAv1"
-Content-Disposition: inline
+Not necessarily.  What you pass to clk_set_rate() is the
+rate/frequency that you _want_, while what you get from
+clk_get_rate() is the rate you _got_ taking the specific input
+clock rate and the available sets of multipliers/dividers into
+consideration.  Both values should be similar (roughly the same),
+but they need not be identical.  The order of the difference
+depends on the granularity of the hardware dividers or whether
+PLLs are used.
 
-
---J8ZfMsDg90ddfAv1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Dec 20, 2013 at 12:38:27PM +0200, Jyri Sarha wrote:
-
-> +static int evm_startup(struct snd_pcm_substream *substream)
-> +{
-> +	struct snd_soc_pcm_runtime *rtd =3D substream->private_data;
-> +	struct snd_soc_card *soc_card =3D rtd->codec->card;
-> +	struct clk *mclk =3D ((struct snd_soc_card_drvdata_davinci *)
-> +			    snd_soc_card_get_drvdata(soc_card))->mclk;
-
-Why do you need to cast away void?  Ths indicates something is going
-wrong here though I can't see what.
-
-> +	mclk =3D of_clk_get_by_name(np, "ti,codec-clock");
-> +	if (PTR_ERR(mclk) =3D=3D -EPROBE_DEFER) {
-> +		return -EPROBE_DEFER;
-> +	} else if (IS_ERR(mclk)) {
-> +		dev_dbg(&pdev->dev, "Codec clock not found.\n");
-> +		mclk =3D NULL;
-> +	}
-
-The driver will unconditionally enable and disable the clock which I'd
-not expect to work well if we got an error, I'd expect either NULL checks=
-=20
-on use or a fixed clock to be registered from code in the case where
-we're using the old binding.
-
-I'd also expect to see devm_clk_get() used here, with the standard
-clock-names based lookup from DT.
-
---J8ZfMsDg90ddfAv1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSwsOeAAoJELSic+t+oim9TvYP/2lw1WlGV/oGkMjoMdVkMFbo
-ZafydcLIL6kzYNuC3K3rTb4ZF+EXPnYOJYArw+tqpSs5mglhAzYYL9hjNum0G/Ol
-D8HyxixvzSovodizKvsnBjg65izmJxeIG0YEGhS4fuYReecltZjveuBiPS8prRdi
-L16vmhLbavyFHIPMXjay0pGu5d/DSgnyq+r9gd7fOnBmUL/LV05fgWyHhql0Q/sG
-87lnSjKzxcEtjHiBRF3SnGNNieOoLMGy9/YtivRJqajkxyEeJX9AB7dga1hN+dHh
-f97HIn16m3ZOv8Zv3GE0fbbV5xuLTzy38VUU74nh3J7XgtQj4SH4O900VA2ZWVZT
-+q18wi3UKvoc2bmEFt5Z7Gd7gFUUYI+a2k4ZiKo3UuHctTtN8c/gATEtenqxQtLH
-3UQW8HGmfkht0tmpae1KIPa0tPN4q4RiG9IfNRu7tKX2aVzJPmbreGzSR8nChUhI
-O5KXARuiGpJgFpaLYIuzEhW/WL52Vx5iVjaMOo0xAS0+D9z7qE3WWdMsa+f0GnZ+
-ddAlU/9vm36lie1s0e37P1+4agChSVyBwu7hBR+sC3X5AvMYAGt9fzuff4kvTwbr
-jkU+aq6Q0bkZcaHEveU1sdrRfrfQxy8DWTfN8MLoSOo3robOxsf4cgZkBraZr70d
-wzQ+4PeGJdn0rPF6kI17
-=hA/O
------END PGP SIGNATURE-----
-
---J8ZfMsDg90ddfAv1--
-
---===============1451494275712135355==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+So, re-fetching the resulting rate after setting up a desired
+rate actually better reflects the status-quo for diagnostics or
+for subsequent processing.
 
 
---===============1451494275712135355==--
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
