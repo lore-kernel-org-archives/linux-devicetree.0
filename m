@@ -1,90 +1,492 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH 1/3] dt-bindings: add documentation for s3c2412 clock
- controller
-Date: Wed, 01 Jan 2014 14:43:51 +0100
-Message-ID: <2534889.0SLxa0arj9@phil>
-References: <1418190.fUL06mDNi6@phil>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RFC PATCH 1/3] arm: mvebu: add new dts file for old variant
+ of Openblocks AX3-4
+Date: Wed, 1 Jan 2014 16:41:16 -0500
+Message-ID: <20140101214116.GY19878@titan.lakedaemon.net>
+References: <1388508293-9141-1-git-send-email-gregory.clement@free-electrons.com>
+ <1388508293-9141-2-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1418190.fUL06mDNi6@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, t.figa@samsung.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1388508293-9141-2-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Describe the clock controller of the s3c2412.
+Gregory,
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- .../bindings/clock/samsung,s3c2412-clock.txt       |   51 ++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt
+Sorry, but we seem to have a fundamental mis-understanding here.  First,
+whatever we end up deciding for the compatible strings needs to be
+documented.  Which seems to have not made it into this series.
 
-diff --git a/Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt b/Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt
-new file mode 100644
-index 0000000..dfc25fe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt
-@@ -0,0 +1,50 @@
-+* Samsung S3C2412 Clock Controller
-+
-+The S3C2412 clock controller generates and supplies clock to various controllers
-+within the SoC. The clock binding described here is applicable to the s3c2412
-+and s3c2413 SoCs in the s3c24x family.
-+
-+Required Properties:
-+
-+- compatible: should be "samsung,s3c2412-clock"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. Some of the clocks are available only
-+on a particular SoC.
-+
-+All available clocks are defined as preprocessor macros in
-+dt-bindings/clock/samsung,s3c2412-clock.h header and can be used in device
-+tree sources.
-+
-+External clocks:
-+
-+There are several clocks that are generated outside the SoC. It is expected
-+that they are defined using standard clock bindings with following
-+clock-output-names:
-+ - "xti" - crystal input - required,
-+ - "ext" - external clock source - optional,
-+
-+Example: Clock controller node:
-+
-+	clocks: clock-controller@4c000000 {
-+		compatible = "samsung,s3c2412-clock";
-+		reg = <0x4c000000 0x20>;
-+		#clock-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller (refer to the standard clock bindings for information about
-+  "clocks" and "clock-names" properties):
-+
-+	serial@50004000 {
-+		compatible = "samsung,s3c2412-uart";
-+		reg = <0x50004000 0x4000>;
-+		interrupts = <1 23 3 4>, <1 23 4 4>;
-+		clock-names = "uart", "clk_uart_baud2", "clk_uart_baud3";
-+		clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>,
-+			 <&clocks SCLK_UART>;
-+		status = "disabled";
-+	};
--- 
-1.7.10.4
+Second, I'm having trouble explaining this (in my head), so I'm adding
+the DT ml so hopefully someone there can chime in.
+
+AFAICT, the marvell,mv78230-i2c compatible string, added in v3.12, refers
+to the IP block on the A0 revision of the SoC.  Since we have set that,
+we've discovered that the A0 revision has an errata where offloading
+doesn't work.  The B0 revision of the SoC has fixed offloading for i2c.
+
+In my mind, this means that we should create a fix for the driver to
+disable offloading unless it can determine it's running B0 or newer.
+This is easy once we nail down the compatible strings.
+
+The second thing we need to do is update the binding documentation so
+that the devicetree can describe the hardware accurately.  I think we
+should keep 'marvell,mv78230-i2c' as it is (the driver fix mentioned
+above will disable offloading), and add a new compatible
+string, 'marvell,mv78230-b0-i2c'.  The driver can then be updated to
+enable offloading when it sees this compatible string, or it can
+determine the SoC revision itself (via mach code).
+
+Third, we need to be able to differentiate between the two shipped
+AX3-4 boards by openblocks.  I think this should follow the same pattern
+we decide for the i2c compatible string.  So, if we go with my proposal,
+we would have plathome,openblocks-ax3-4 and
+plathome,openblocks-ax3-4-b0.
+
+Basically, I'm really uneasy about dropping marvell,mv78230-i2c and
+essentially re-defining it to marvell,mv78230-a0-i2c.  It feels like
+it's breaking backwards compatibility.  But I'm having trouble clearly
+describing how Gregory's proposed change exactly does break backwards
+compatibility.  Can a DT maintainer explain it more clearly than I?
+
+thx,
+
+Jason.
+
+PS- Well, this ended up being a toppost.  Oops.  Sorry.
+
+On Tue, Dec 31, 2013 at 05:44:51PM +0100, Gregory CLEMENT wrote:
+> The first variants of Openblocks AX3-4 used the revision A0 of the
+> Armada XP SoCs. These early variants have issues related to the i2c
+> controller which prevent to use the offload mechanism and lead to a
+> kernel hang during boot.
+> 
+> The new dts file uses the compatible string marvell,mv78230-a0-i2c for
+> the i2c controller, thanks to this the driver disable the offload
+> mechanism and the kernel no more hangs on these boards.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../arm/boot/dts/armada-xp-a0-openblocks-ax3-4.dts |  40 +++++
+>  .../dts/armada-xp-common-openblocks-ax3-4.dtsi     | 177 +++++++++++++++++++++
+>  arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts   | 164 +------------------
+>  3 files changed, 218 insertions(+), 163 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/armada-xp-a0-openblocks-ax3-4.dts
+>  create mode 100644 arch/arm/boot/dts/armada-xp-common-openblocks-ax3-4.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/armada-xp-a0-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-a0-openblocks-ax3-4.dts
+> new file mode 100644
+> index 000000000000..b3ea65255c19
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-xp-a0-openblocks-ax3-4.dts
+> @@ -0,0 +1,40 @@
+> +/*
+> + * Device Tree file for OpenBlocks AX3-4 board with A0 SoC
+> + *
+> + * Copyright (C) 2012 Marvell
+> + *
+> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +/dts-v1/;
+> +#include "armada-xp-common-openblocks-ax3-4.dtsi"
+> +
+> +/ {
+> +	model = "PlatHome OpenBlocks AX3-4 board (A0 SoC)";
+> +	compatible = "plathome,openblocks-ax3-4", "marvell,armadaxp-mv78260", "marvell,armadaxp", "marvell,armada-370-xp";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200 earlyprintk";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0 0x00000000 0 0xC0000000>; /* 3 GB */
+> +	};
+> +
+> +	soc {
+> +
+> +		internal-regs {
+> +			i2c@11000 {
+> +				compatible = "marvell,mv78230-a0-i2c", "marvell,mv64xxx-i2c";
+> +			};
+> +			i2c@11100 {
+> +				compatible = "marvell,mv78230-a0-i2c", "marvell,mv64xxx-i2c";
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/armada-xp-common-openblocks-ax3-4.dtsi b/arch/arm/boot/dts/armada-xp-common-openblocks-ax3-4.dtsi
+> new file mode 100644
+> index 000000000000..0d452b07baf5
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-xp-common-openblocks-ax3-4.dtsi
+> @@ -0,0 +1,177 @@
+> +/*
+> + * Device Tree file for OpenBlocks AX3-4 board
+> + *
+> + * Copyright (C) 2012 Marvell
+> + *
+> + * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include "armada-xp-mv78260.dtsi"
+> +
+> +/ {
+> +	soc {
+> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
+> +			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+> +			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x8000000>;
+> +
+> +		devbus-bootcs {
+> +			status = "okay";
+> +
+> +			/* Device Bus parameters are required */
+> +
+> +			/* Read parameters */
+> +			devbus,bus-width    = <8>;
+> +			devbus,turn-off-ps  = <60000>;
+> +			devbus,badr-skew-ps = <0>;
+> +			devbus,acc-first-ps = <124000>;
+> +			devbus,acc-next-ps  = <248000>;
+> +			devbus,rd-setup-ps  = <0>;
+> +			devbus,rd-hold-ps   = <0>;
+> +
+> +			/* Write parameters */
+> +			devbus,sync-enable = <0>;
+> +			devbus,wr-high-ps  = <60000>;
+> +			devbus,wr-low-ps   = <60000>;
+> +			devbus,ale-wr-ps   = <60000>;
+> +
+> +			/* NOR 128 MiB */
+> +			nor@0 {
+> +				compatible = "cfi-flash";
+> +				reg = <0 0x8000000>;
+> +				bank-width = <2>;
+> +			};
+> +		};
+> +
+> +		pcie-controller {
+> +			status = "okay";
+> +			/* Internal mini-PCIe connector */
+> +			pcie@1,0 {
+> +				/* Port 0, Lane 0 */
+> +				status = "okay";
+> +			};
+> +		};
+> +
+> +		internal-regs {
+> +			serial@12000 {
+> +				clock-frequency = <250000000>;
+> +				status = "okay";
+> +			};
+> +			serial@12100 {
+> +				clock-frequency = <250000000>;
+> +				status = "okay";
+> +			};
+> +			pinctrl {
+> +				led_pins: led-pins-0 {
+> +					marvell,pins = "mpp49", "mpp51", "mpp53";
+> +					marvell,function = "gpio";
+> +				};
+> +			};
+> +			leds {
+> +				compatible = "gpio-leds";
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&led_pins>;
+> +
+> +				red_led {
+> +					label = "red_led";
+> +					gpios = <&gpio1 17 1>;
+> +					default-state = "off";
+> +				};
+> +
+> +				yellow_led {
+> +					label = "yellow_led";
+> +					gpios = <&gpio1 19 1>;
+> +					default-state = "off";
+> +				};
+> +
+> +				green_led {
+> +					label = "green_led";
+> +					gpios = <&gpio1 21 1>;
+> +					default-state = "off";
+> +					linux,default-trigger = "heartbeat";
+> +				};
+> +			};
+> +
+> +			gpio_keys {
+> +				compatible = "gpio-keys";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				button@1 {
+> +					label = "Init Button";
+> +					linux,code = <116>;
+> +					gpios = <&gpio1 28 0>;
+> +				};
+> +			};
+> +
+> +			mdio {
+> +				phy0: ethernet-phy@0 {
+> +					reg = <0>;
+> +				};
+> +
+> +				phy1: ethernet-phy@1 {
+> +					reg = <1>;
+> +				};
+> +
+> +				phy2: ethernet-phy@2 {
+> +					reg = <2>;
+> +				};
+> +
+> +				phy3: ethernet-phy@3 {
+> +					reg = <3>;
+> +				};
+> +			};
+> +
+> +			ethernet@70000 {
+> +				status = "okay";
+> +				phy = <&phy0>;
+> +				phy-mode = "sgmii";
+> +			};
+> +			ethernet@74000 {
+> +				status = "okay";
+> +				phy = <&phy1>;
+> +				phy-mode = "sgmii";
+> +			};
+> +			ethernet@30000 {
+> +				status = "okay";
+> +				phy = <&phy2>;
+> +				phy-mode = "sgmii";
+> +			};
+> +			ethernet@34000 {
+> +				status = "okay";
+> +				phy = <&phy3>;
+> +				phy-mode = "sgmii";
+> +			};
+> +			i2c@11000 {
+> +				status = "okay";
+> +				clock-frequency = <400000>;
+> +			};
+> +			i2c@11100 {
+> +				status = "okay";
+> +				clock-frequency = <400000>;
+> +
+> +				s35390a: s35390a@30 {
+> +					compatible = "s35390a";
+> +					reg = <0x30>;
+> +				};
+> +			};
+> +			sata@a0000 {
+> +				nr-ports = <2>;
+> +				status = "okay";
+> +			};
+> +
+> +			/* Front side USB 0 */
+> +			usb@50000 {
+> +				status = "okay";
+> +			};
+> +
+> +			/* Front side USB 1 */
+> +			usb@51000 {
+> +				status = "okay";
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+> index 5695afcc04bf..1983de77c3ff 100644
+> --- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+> +++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+> @@ -11,7 +11,7 @@
+>   */
+>  
+>  /dts-v1/;
+> -#include "armada-xp-mv78260.dtsi"
+> +#include "armada-xp-common-openblocks-ax3-4.dtsi"
+>  
+>  / {
+>  	model = "PlatHome OpenBlocks AX3-4 board";
+> @@ -25,166 +25,4 @@
+>  		device_type = "memory";
+>  		reg = <0 0x00000000 0 0xC0000000>; /* 3 GB */
+>  	};
+> -
+> -	soc {
+> -		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
+> -			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+> -			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x8000000>;
+> -
+> -		devbus-bootcs {
+> -			status = "okay";
+> -
+> -			/* Device Bus parameters are required */
+> -
+> -			/* Read parameters */
+> -			devbus,bus-width    = <8>;
+> -			devbus,turn-off-ps  = <60000>;
+> -			devbus,badr-skew-ps = <0>;
+> -			devbus,acc-first-ps = <124000>;
+> -			devbus,acc-next-ps  = <248000>;
+> -			devbus,rd-setup-ps  = <0>;
+> -			devbus,rd-hold-ps   = <0>;
+> -
+> -			/* Write parameters */
+> -			devbus,sync-enable = <0>;
+> -			devbus,wr-high-ps  = <60000>;
+> -			devbus,wr-low-ps   = <60000>;
+> -			devbus,ale-wr-ps   = <60000>;
+> -
+> -			/* NOR 128 MiB */
+> -			nor@0 {
+> -				compatible = "cfi-flash";
+> -				reg = <0 0x8000000>;
+> -				bank-width = <2>;
+> -			};
+> -		};
+> -
+> -		pcie-controller {
+> -			status = "okay";
+> -			/* Internal mini-PCIe connector */
+> -			pcie@1,0 {
+> -				/* Port 0, Lane 0 */
+> -				status = "okay";
+> -			};
+> -		};
+> -
+> -		internal-regs {
+> -			serial@12000 {
+> -				clock-frequency = <250000000>;
+> -				status = "okay";
+> -			};
+> -			serial@12100 {
+> -				clock-frequency = <250000000>;
+> -				status = "okay";
+> -			};
+> -			pinctrl {
+> -				led_pins: led-pins-0 {
+> -					marvell,pins = "mpp49", "mpp51", "mpp53";
+> -					marvell,function = "gpio";
+> -				};
+> -			};
+> -			leds {
+> -				compatible = "gpio-leds";
+> -				pinctrl-names = "default";
+> -				pinctrl-0 = <&led_pins>;
+> -
+> -				red_led {
+> -					label = "red_led";
+> -					gpios = <&gpio1 17 1>;
+> -					default-state = "off";
+> -				};
+> -
+> -				yellow_led {
+> -					label = "yellow_led";
+> -					gpios = <&gpio1 19 1>;
+> -					default-state = "off";
+> -				};
+> -
+> -				green_led {
+> -					label = "green_led";
+> -					gpios = <&gpio1 21 1>;
+> -					default-state = "off";
+> -					linux,default-trigger = "heartbeat";
+> -				};
+> -			};
+> -
+> -			gpio_keys {
+> -				compatible = "gpio-keys";
+> -				#address-cells = <1>;
+> -				#size-cells = <0>;
+> -
+> -				button@1 {
+> -					label = "Init Button";
+> -					linux,code = <116>;
+> -					gpios = <&gpio1 28 0>;
+> -				};
+> -			};
+> -
+> -			mdio {
+> -				phy0: ethernet-phy@0 {
+> -					reg = <0>;
+> -				};
+> -
+> -				phy1: ethernet-phy@1 {
+> -					reg = <1>;
+> -				};
+> -
+> -				phy2: ethernet-phy@2 {
+> -					reg = <2>;
+> -				};
+> -
+> -				phy3: ethernet-phy@3 {
+> -					reg = <3>;
+> -				};
+> -			};
+> -
+> -			ethernet@70000 {
+> -				status = "okay";
+> -				phy = <&phy0>;
+> -				phy-mode = "sgmii";
+> -			};
+> -			ethernet@74000 {
+> -				status = "okay";
+> -				phy = <&phy1>;
+> -				phy-mode = "sgmii";
+> -			};
+> -			ethernet@30000 {
+> -				status = "okay";
+> -				phy = <&phy2>;
+> -				phy-mode = "sgmii";
+> -			};
+> -			ethernet@34000 {
+> -				status = "okay";
+> -				phy = <&phy3>;
+> -				phy-mode = "sgmii";
+> -			};
+> -			i2c@11000 {
+> -				status = "okay";
+> -				clock-frequency = <400000>;
+> -			};
+> -			i2c@11100 {
+> -				status = "okay";
+> -				clock-frequency = <400000>;
+> -
+> -				s35390a: s35390a@30 {
+> -					compatible = "s35390a";
+> -					reg = <0x30>;
+> -				};
+> -			};
+> -			sata@a0000 {
+> -				nr-ports = <2>;
+> -				status = "okay";
+> -			};
+> -
+> -			/* Front side USB 0 */
+> -			usb@50000 {
+> -				status = "okay";
+> -			};
+> -
+> -			/* Front side USB 1 */
+> -			usb@51000 {
+> -				status = "okay";
+> -			};
+> -		};
+> -	};
+>  };
+> -- 
+> 1.8.1.2
+> 
