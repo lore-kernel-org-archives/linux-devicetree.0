@@ -1,38 +1,90 @@
-From: Jonathan <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 1/1] iio: add Capella CM32181 ambient light sensor
- driver.
-Date: Wed, 01 Jan 2014 12:05:54 +0000
-Message-ID: <52C404A2.9030106@kernel.org>
-References: <1387850035-4030-1-git-send-email-ktsai@capellamicro.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: [PATCH 1/3] dt-bindings: add documentation for s3c2412 clock
+ controller
+Date: Wed, 01 Jan 2014 14:43:51 +0100
+Message-ID: <2534889.0SLxa0arj9@phil>
+References: <1418190.fUL06mDNi6@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387850035-4030-1-git-send-email-ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Teddy Reed <teddy-KaFzXBG2u9Ng9hUCZPvPmw@public.gmane.org>, Kent Yoder <key-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1418190.fUL06mDNi6@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, t.figa@samsung.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Describe the clock controller of the s3c2412.
 
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ .../bindings/clock/samsung,s3c2412-clock.txt       |   51 ++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt
 
-On 24/12/13 01:53, Kevin Tsai wrote:
-> Add Capella Microsystem CM32181 Ambient Light Sensor IIO driver.
-> This driver will convert raw data to lux value under open-air
-> condition. Change the calibscale based on the cover material.
->
-> Signed-off-by: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-> ---
-Hi Kevin,
-
-It is good practice to list here (nothing from here goes in final commit
-message) any changes since the previous version.  This just makes it clear
-whether you have responded to all review comments, particularly when there
-are multiple people reviewing the patch.
-
-
-Other than that, I'm happy with this and have applied it to the togreg 
-branch of iio.git - initially pushed out as testing for build tests.
-
-Note I made one tiny white space change (dropped a blank line where 
-there were two...
+diff --git a/Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt b/Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt
+new file mode 100644
+index 0000000..dfc25fe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt
+@@ -0,0 +1,50 @@
++* Samsung S3C2412 Clock Controller
++
++The S3C2412 clock controller generates and supplies clock to various controllers
++within the SoC. The clock binding described here is applicable to the s3c2412
++and s3c2413 SoCs in the s3c24x family.
++
++Required Properties:
++
++- compatible: should be "samsung,s3c2412-clock"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- #clock-cells: should be 1.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. Some of the clocks are available only
++on a particular SoC.
++
++All available clocks are defined as preprocessor macros in
++dt-bindings/clock/samsung,s3c2412-clock.h header and can be used in device
++tree sources.
++
++External clocks:
++
++There are several clocks that are generated outside the SoC. It is expected
++that they are defined using standard clock bindings with following
++clock-output-names:
++ - "xti" - crystal input - required,
++ - "ext" - external clock source - optional,
++
++Example: Clock controller node:
++
++	clocks: clock-controller@4c000000 {
++		compatible = "samsung,s3c2412-clock";
++		reg = <0x4c000000 0x20>;
++		#clock-cells = <1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller (refer to the standard clock bindings for information about
++  "clocks" and "clock-names" properties):
++
++	serial@50004000 {
++		compatible = "samsung,s3c2412-uart";
++		reg = <0x50004000 0x4000>;
++		interrupts = <1 23 3 4>, <1 23 4 4>;
++		clock-names = "uart", "clk_uart_baud2", "clk_uart_baud3";
++		clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>,
++			 <&clocks SCLK_UART>;
++		status = "disabled";
++	};
+-- 
+1.7.10.4
