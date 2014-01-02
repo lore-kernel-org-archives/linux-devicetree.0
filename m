@@ -1,82 +1,68 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH] ASoC: generic: add generic compound card
- with DT support
-Date: Thu, 2 Jan 2014 13:10:45 +0000
-Message-ID: <20140102131045.GZ31886@sirena.org.uk>
-References: <20131231113138.102044cf@armhf>
- <52C466E1.3030302@metafoo.de>
- <20140101210814.31e3f3a9@armhf>
- <52C4766B.8080000@metafoo.de>
- <20140102102647.6efec89d@armhf>
- <20140102111056.GT31886@sirena.org.uk>
- <20140102124331.2bcfc172@armhf>
- <20140102115618.GW31886@sirena.org.uk>
- <20140102134437.1e39da55@armhf>
+From: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: Re: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
+ extensions for GMAC in Allwinner A20 SoC's
+Date: Thu, 2 Jan 2014 13:11:06 +0000
+Message-ID: <52C5656A.4060402@st.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org> <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A52C.50605@st.com> <CAGb2v67WiCaMpJEzA_X6o7uOu6i3w3FCEz7=N5HY0amQb01SZA@mail.gmail.com> <52A72C6D.60100@st.com> <CAGb2v64qQvqJSicA6MTAxeh1sGjWY=Pk=vDq=9J3pTQW+wkXrA@mail.gmail.com> <52A87A74.8040807@st.com> <20131212090415.GQ3651@lukather> <CAGb2v655_83b76PTmgkDmNGCADWwTjTwW13sOgM5HFmCVkeu=w@mail.gmail.com> <20131213103822.GX3651@lukather> <CAGb2v64Q1PSMw_nULBHMR5eOC44hWBPewchxE_4sO+4XN8_sDA@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OhJ1ewkhZtPPLZD8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140102134437.1e39da55@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCWP54GV3EBRBVWNSWLAKGQEF2SF6QY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v64Q1PSMw_nULBHMR5eOC44hWBPewchxE_4sO+4XN8_sDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Chen,
 
---OhJ1ewkhZtPPLZD8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 24/12/13 03:27, Chen-Yu Tsai wrote:
+> Srinivas,
+> 
+> Let's keep platform data as of_data, so SoC compatibles can pass
+> hardware feature flags for cores that don't support auto-detection.
 
-On Thu, Jan 02, 2014 at 01:44:37PM +0100, Jean-Francois Moine wrote:
+I understand your concern here, But making platform_data as of_data
+would just open a wide door for other hacky stuff too. So other glue
+drivers would just use this interface instead, ignoring standard
+interfaces. Also there would be issues on who takes the priority if the
+parameters are specified in multiple places.
 
-> I still don't understand. There is already such cases in the Cubox:
-> the S/PDIF output from the kirkwood audio controller is connected to
-> both the HDMI transmitter and the S/PDIF TOSLINK. So, in the audio
-> controller, the port @1 defines the S/PDIF DAI and the endpoints @0 and
-> @1 point to the remote DAIs, creating 2 snd DAI links:
 
-> 	port@1 {
-> 		audio_hdmi_spdif: endpoint@0 {
-> 			remote-endpoint = <&hdmi_spdif_audio>;
-> 		};
-> 		audio_spdif: endpoint@1 {
-> 			remote-endpoint = <&spdif_audio>;
-> 		};
-> 	};
+Can't this field/s be one of the variable in the struct stmmac_of_data
+rather than reusing platform data?
 
-Oh, so the endpoints are virtual and that's supposed to be three things
-wired together rather than a single device with multiple links?  That's
-really not very clear from reading the above and seems cumbersome -
-every device will want to explicitly identify every other device on the
-link and any configuration is going to either need to be replicated on
-every device or we'll need to check lots of places for the configuation.
-It seems like this will be hard to work with.
+> 
+> We can adjust the callbacks as you suggested, and I added a .free
+> to complement .setup. Driver private data and platform data are
+> off limits to the callbacks. My version of the callbacks:
+> 
+>         void (*fix_mac_speed)(void *priv, unsigned int speed);
+>         void (*bus_setup)(void __iomem *ioaddr);
 
---OhJ1ewkhZtPPLZD8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+In reply to your question in last email:
+bus_setup this is something very specific to ST which configures the bus
+parameters of AMBA-to-STBUS converter. This register falls inside the
+memory map of stmmac.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+>         void *(*setup)(struct platform_device *pdev);
+>         void (*free)(struct platform_device *pdev, void *priv);
+>         int (*init)(struct platform_device *pdev, void *priv);
+>         void (*exit)(struct platform_device *pdev, void *priv);
+> 
 
-iQIcBAEBAgAGBQJSxWVSAAoJELSic+t+oim9OFQP/3QBJt6410x0lbgRbMIr8sjm
-yJVrBKFItdvIAqZkYxJJKRFMhN2PFfiJ3Y++rgebkpu5UkM0940p78EPjVnRaOSh
-4WaSFE3eDWO2bJlR/NQVCe79R+4HHPNwoq5Y9tlbpK9SFhYqVc+o7YfwC/ZUKxdM
-csre8jtSo//1gLcRnKGvNj+8QRwH5X8qp9EMyaOhN+eVuEjwsKzJQE94cpsb5hUW
-I2lvPLJQDea3tnEacpKhirSjXFB6eDbg/TRkmUA1oC8bs14Ni9sC27Z+fxwdr+pA
-XxWFpL9Ian4VB4UBOWgvvpuORSkUJd/1ZyQEWFScd4bU52K/otZgEvI9UgyppK55
-xs5cv48d1Z3wc8h+hVZn+OImsDv6N+3DSNSjS6NOq9et9/JVU3xMKRxEK+wb5sUa
-ocq86lwca/IpATTiEqSrQn59XGhTVgdI/FvtNHthWm3PaELtbzYH7AwxJiFI+eD6
-B251rzySM+GfNR7YJUGPVcOAWHSRcXAFBdIGD6fjxg2lGi/pyJr5FpVpfJCq8r8h
-i2eHyDlWL8k7ZBqB1VYn6ie99tHBJngdwlOncNErEc0LS9RX/eRbKj5DWVwa+1I2
-a/vGUO974FOP9lhw7e6SeQSP3nUnDEMJ66gDPiaSJFBF0GcCvSwQOj5UH2jo6zGx
-u93TYtDZ8lEKiJeqaU+D
-=Lt4g
------END PGP SIGNATURE-----
+The callbacks to Ok to me, unless Peppe has more comments on this.
 
---OhJ1ewkhZtPPLZD8--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+srini
+
+
+> 
+> Cheers,
+> 
+> ChenYu
