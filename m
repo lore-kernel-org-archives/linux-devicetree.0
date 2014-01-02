@@ -1,84 +1,338 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH] ASoC: generic: add generic compound card
- with DT support
-Date: Thu, 2 Jan 2014 18:35:53 +0000
-Message-ID: <20140102183553.GG31886@sirena.org.uk>
-References: <52C466E1.3030302@metafoo.de>
- <20140101210814.31e3f3a9@armhf>
- <52C4766B.8080000@metafoo.de>
- <20140102102647.6efec89d@armhf>
- <20140102111056.GT31886@sirena.org.uk>
- <20140102124331.2bcfc172@armhf>
- <20140102115618.GW31886@sirena.org.uk>
- <20140102134437.1e39da55@armhf>
- <20140102131045.GZ31886@sirena.org.uk>
- <20140102185055.76eb576e@armhf>
+From: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Subject: Re: [PATCH v3 4/6] exynos4-is: Add clock provider for the external
+ clocks
+Date: Thu, 02 Jan 2014 17:58:56 -0200
+Message-ID: <20140102175856.36f57ffb@samsung.com>
+References: <1382033211-32329-1-git-send-email-s.nawrocki@samsung.com>
+ <1382033211-32329-5-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rrTeYcb7ueXzDtg5"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140102185055.76eb576e@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1382033211-32329-5-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-media@vger.kernel.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Em Thu, 17 Oct 2013 20:06:49 +0200
+Sylwester Nawrocki <s.nawrocki@samsung.com> escreveu:
 
---rrTeYcb7ueXzDtg5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> This patch adds clock provider to expose the sclk_cam0/1 clocks
+> for external image sensor devices.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+> Changes since v2:
+>  - use 'camera' DT node drirectly as clock provider node, rather than
+>   creating additional clock-controller child node.
+> ---
+>  .../devicetree/bindings/media/samsung-fimc.txt     |   15 ++-
+>  drivers/media/platform/exynos4-is/media-dev.c      |  108 ++++++++++++++++++++
+>  drivers/media/platform/exynos4-is/media-dev.h      |   18 +++-
+>  3 files changed, 137 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+> index 96312f6..968e065 100644
+> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
+> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+> @@ -32,6 +32,15 @@ way around.
+>  
+>  The 'camera' node must include at least one 'fimc' child node.
+>  
+> +Optional properties:
+> +
+> +- #clock-cells: from the common clock bindings (../clock/clock-bindings.txt),
+> +  must be 1. A clock provider is associated with the camera node and it should
+> +  be referenced by external sensors that use clocks provided by the SoC on
+> +  CAM_*_CLKOUT pins. The second cell of the clock specifier is a clock's index.
+> +  The indexes are 0, 1 for CAM_A_CLKOUT, CAM_B_CLKOUT clocks respectively.
+> +
+> +
+>  'fimc' device nodes
+>  -------------------
+>  
+> @@ -114,7 +123,7 @@ Example:
+>  			vddio-supply = <...>;
+>  
+>  			clock-frequency = <24000000>;
+> -			clocks = <...>;
+> +			clocks = <&camera 1>;
+>  			clock-names = "mclk";
+>  
+>  			port {
+> @@ -135,7 +144,7 @@ Example:
+>  			vddio-supply = <...>;
+>  
+>  			clock-frequency = <24000000>;
+> -			clocks = <...>;
+> +			clocks = <&camera 0>;
+>  			clock-names = "mclk";
+>  
+>  			port {
+> @@ -151,8 +160,8 @@ Example:
+>  		compatible = "samsung,fimc", "simple-bus";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> +		#clock-cells = <1>;
+>  		status = "okay";
+> -
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&cam_port_a_clk_active>;
 
-On Thu, Jan 02, 2014 at 06:50:55PM +0100, Jean-Francois Moine wrote:
+I didn't see the above on the patch series you sent me on your git pull
+request. Where is it?
 
-> No, the 'endpoint' <=> 'remote-endpoint' is a point to point relation.
-> Even if the sources and sinks are not explicitly defined, the way
-> the stream flows is easy to find: the main source is always in the
-> 'audio-controller' node
+>  
+> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+> index a835112..d78e3da 100644
+> --- a/drivers/media/platform/exynos4-is/media-dev.c
+> +++ b/drivers/media/platform/exynos4-is/media-dev.c
+> @@ -11,6 +11,8 @@
+>   */
+>  
+>  #include <linux/bug.h>
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+>  #include <linux/device.h>
+>  #include <linux/errno.h>
+>  #include <linux/i2c.h>
+> @@ -1437,6 +1439,101 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static int cam_clk_prepare(struct clk_hw *hw)
+> +{
+> +	struct cam_clk *camclk = to_cam_clk(hw);
+> +	int ret;
+> +
+> +	if (camclk->fmd->pmf == NULL)
+> +		return -ENODEV;
+> +
+> +	ret = pm_runtime_get_sync(camclk->fmd->pmf);
+> +	return ret < 0 ? ret : 0;
+> +}
+> +
+> +static void cam_clk_unprepare(struct clk_hw *hw)
+> +{
+> +	struct cam_clk *camclk = to_cam_clk(hw);
+> +
+> +	if (camclk->fmd->pmf == NULL)
+> +		return;
+> +
+> +	pm_runtime_put_sync(camclk->fmd->pmf);
+> +}
+> +
+> +static const struct clk_ops cam_clk_ops = {
+> +	.prepare = cam_clk_prepare,
+> +	.unprepare = cam_clk_unprepare,
+> +};
+> +
+> +static const char *cam_clk_p_names[] = { "sclk_cam0", "sclk_cam1" };
+> +
+> +static void fimc_md_unregister_clk_provider(struct fimc_md *fmd)
+> +{
+> +	struct cam_clk_provider *cp = &fmd->clk_provider;
+> +	unsigned int i;
+> +
+> +	if (cp->of_node)
+> +		of_clk_del_provider(cp->of_node);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cp->clks); i++)
+> +		if (!IS_ERR(cp->clks[i]))
+> +			clk_unregister(cp->clks[i]);
 
-But the links in question aren't point to point links and may be
-bidirectional...
+Huh? Why to initialize an array with an error code??? Does it make sense to
+have one of the clocks with an error and the others ok, and to store the
+error code? The code below doesn't seem to allow that.
 
-> Usually, the devices don't have to know to which other device they are
-> connected, and, yes, the reverse pointer sink to source is not useful.
+Just initialize cp->clks with zero and test it with:
 
-This may be the case for the systems you've looked at but other designs
-are quite common.
+	if (cp->clks[i])
+		clk_unregister(cp->clks[i]);
 
-> But the way (link) the audio stream comes from may be important to
-> know. This is the case for the HDMI CODEC which must tell the HDMI
-> transmitter from which hardware port(s) ('reg') it may get the audio
-> stream. That's why, the HDMI encoder has two endpoints in its audio
-> port, each endpoint being a different CODEC DAI.
+That makes it easier to understand and review.
 
-Obviously if there are multiple DAIs on a device then it needs to be
-possible to represent them separately but that seems orthogonal to the
-rest of the discussion (and resolved already)?
+> +}
+> +
+> +static int fimc_md_register_clk_provider(struct fimc_md *fmd)
+> +{
+> +	struct cam_clk_provider *cp = &fmd->clk_provider;
+> +	struct device *dev = &fmd->pdev->dev;
+> +	int i, ret;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cp->clks); i++)
+> +		cp->clks[i] = ERR_PTR(-EINVAL);
 
---rrTeYcb7ueXzDtg5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+That looks weird for me, due to several reasons:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+1) ARRAY_SIZE(cp->clks) is equal to FIMC_MAX_CAMCLKS. Why are you using
+different syntaxes on the first loop and on the next one? Just to loose
+more time from reviewers to double check what number is bigger?
 
-iQIcBAEBAgAGBQJSxbGGAAoJELSic+t+oim9ON0P+gNywqD27n9koJRU7uqcOyLP
-AsSKs29GSD0iVzSZ+bovw90olKw1uQK5sfufL7697Wb7iB8LGuNnoNBenbCGKNBl
-llUWgZYHFB7FHO47DkKBKXGCPrhCfoVG+C/DKyAicS83onoHt098TUMhU+gt0dWH
-d696KKLrDXBpypk39kG7C53eHBNYrX2ZgAFOBKiMEJVezGvQVFzQ4HmOddqFcDd2
-sNyuA1YEDgqIICeOCyhmyze45WWfX/0kCL4uWGI8rBUwfEtjExmxdWueX5loKaYX
-o4bx56BwJSecQm3N7F8d1v07OK8qj5zfCSjT1GPFvol5vW9DfywviYJx/GZJlGot
-c8E4Og50pJXGyEW/+MvV++/YlWrCPRI1ciEFCBRoWuzX56GGh1mMGelAL403Zl8/
-+YSxniTRf60CLptoQmw3l3Kw71viaOrh8zw1anawYV0VnGwncDMxJf2oEMZ2jXXK
-Vrq2CY3ndmL7ku50v1sJh4oVbaXKSdbO985vfHqMdR2Qs41kHPX8oDhgjkXpcOZ9
-pbIJQlQFbzy7FzU9/+EVsSOuxvdtDKt2bg+BBlnesg3ABbFVGStPS/fNoGVf8geX
-Ch6V1RWM3pvH8FoB8R7LYYP6nc5oipWWkxWS4KkSSvrlQw/AruEEm5Vsvky6kq6q
-T/byhsoSHiE2JBZr52eY
-=O2JJ
------END PGP SIGNATURE-----
+2) Why don't you just do:
 
---rrTeYcb7ueXzDtg5--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	memset(cp->clks, ARRAY_SIZE(cp->clks), 0).
+
+or initialize struct fimc_md with kzalloc()?
+
+> +
+> +	for (i = 0; i < FIMC_MAX_CAMCLKS; i++) {
+> +		struct cam_clk *camclk = &cp->camclk[i];
+> +		struct clk_init_data init;
+> +		char clk_name[16];
+> +		struct clk *clk;
+> +
+> +		snprintf(clk_name, sizeof(clk_name), "cam_clkout%d", i);
+> +
+> +		init.name = clk_name;
+> +		init.ops = &cam_clk_ops;
+> +		init.flags = CLK_SET_RATE_PARENT;
+> +		init.parent_names = &cam_clk_p_names[i];
+> +		init.num_parents = 1;
+> +		camclk->hw.init = &init;
+> +		camclk->fmd = fmd;
+> +
+> +		clk = clk_register(dev, &camclk->hw);
+> +		if (IS_ERR(clk)) {
+> +			dev_err(dev, "failed to register clock: %s (%ld)\n",
+> +						clk_name, PTR_ERR(clk));
+> +			ret = PTR_ERR(clk);
+> +			goto err;
+> +		}
+> +		cp->clks[i] = clk;
+> +	}
+> +
+> +	cp->clk_data.clks = cp->clks;
+> +	cp->clk_data.clk_num = i;
+> +	cp->of_node = dev->of_node;
+> +
+> +	ret = of_clk_add_provider(dev->of_node, of_clk_src_onecell_get,
+> +				  &cp->clk_data);
+> +	if (!ret)
+> +		return 0;
+> +err:
+> +	fimc_md_unregister_clk_provider(fmd);
+> +	return ret;
+> +}
+> +#else
+> +#define fimc_md_register_clk_provider(fmd) (0)
+> +#define fimc_md_unregister_clk_provider(fmd) (0)
+> +#endif
+> +
+>  static int fimc_md_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -1464,16 +1561,24 @@ static int fimc_md_probe(struct platform_device *pdev)
+>  
+>  	fmd->use_isp = fimc_md_is_isp_available(dev->of_node);
+>  
+> +	ret = fimc_md_register_clk_provider(fmd);
+> +	if (ret < 0) {
+> +		v4l2_err(v4l2_dev, "clock provider registration failed\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = v4l2_device_register(dev, &fmd->v4l2_dev);
+>  	if (ret < 0) {
+>  		v4l2_err(v4l2_dev, "Failed to register v4l2_device: %d\n", ret);
+>  		return ret;
+>  	}
+> +
+>  	ret = media_device_register(&fmd->media_dev);
+>  	if (ret < 0) {
+>  		v4l2_err(v4l2_dev, "Failed to register media device: %d\n", ret);
+>  		goto err_md;
+>  	}
+> +
+>  	ret = fimc_md_get_clocks(fmd);
+>  	if (ret)
+>  		goto err_clk;
+> @@ -1507,6 +1612,7 @@ static int fimc_md_probe(struct platform_device *pdev)
+>  	ret = fimc_md_create_links(fmd);
+>  	if (ret)
+>  		goto err_unlock;
+> +
+>  	ret = v4l2_device_register_subdev_nodes(&fmd->v4l2_dev);
+>  	if (ret)
+>  		goto err_unlock;
+> @@ -1527,6 +1633,7 @@ err_clk:
+>  	media_device_unregister(&fmd->media_dev);
+>  err_md:
+>  	v4l2_device_unregister(&fmd->v4l2_dev);
+> +	fimc_md_unregister_clk_provider(fmd);
+>  	return ret;
+>  }
+>  
+> @@ -1537,6 +1644,7 @@ static int fimc_md_remove(struct platform_device *pdev)
+>  	if (!fmd)
+>  		return 0;
+>  
+> +	fimc_md_unregister_clk_provider(fmd);
+>  	v4l2_device_unregister(&fmd->v4l2_dev);
+>  	device_remove_file(&pdev->dev, &dev_attr_subdev_conf_mode);
+>  	fimc_md_unregister_entities(fmd);
+> diff --git a/drivers/media/platform/exynos4-is/media-dev.h b/drivers/media/platform/exynos4-is/media-dev.h
+> index 62599fd..240ca71 100644
+> --- a/drivers/media/platform/exynos4-is/media-dev.h
+> +++ b/drivers/media/platform/exynos4-is/media-dev.h
+> @@ -10,6 +10,7 @@
+>  #define FIMC_MDEVICE_H_
+>  
+>  #include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/mutex.h>
+>  #include <linux/of.h>
+> @@ -89,6 +90,12 @@ struct fimc_sensor_info {
+>  	struct fimc_dev *host;
+>  };
+>  
+> +struct cam_clk {
+> +	struct clk_hw hw;
+> +	struct fimc_md *fmd;
+> +};
+> +#define to_cam_clk(_hw) container_of(_hw, struct cam_clk, hw)
+> +
+>  /**
+>   * struct fimc_md - fimc media device information
+>   * @csis: MIPI CSIS subdevs data
+> @@ -105,6 +112,7 @@ struct fimc_sensor_info {
+>   * @pinctrl: camera port pinctrl handle
+>   * @state_default: pinctrl default state handle
+>   * @state_idle: pinctrl idle state handle
+> + * @cam_clk_provider: CAMCLK clock provider structure
+>   * @user_subdev_api: true if subdevs are not configured by the host driver
+>   * @slock: spinlock protecting @sensor array
+>   */
+> @@ -122,13 +130,21 @@ struct fimc_md {
+>  	struct media_device media_dev;
+>  	struct v4l2_device v4l2_dev;
+>  	struct platform_device *pdev;
+> +
+>  	struct fimc_pinctrl {
+>  		struct pinctrl *pinctrl;
+>  		struct pinctrl_state *state_default;
+>  		struct pinctrl_state *state_idle;
+>  	} pinctl;
+> -	bool user_subdev_api;
+>  
+> +	struct cam_clk_provider {
+> +		struct clk *clks[FIMC_MAX_CAMCLKS];
+> +		struct clk_onecell_data clk_data;
+> +		struct device_node *of_node;
+> +		struct cam_clk camclk[FIMC_MAX_CAMCLKS];
+> +	} clk_provider;
+> +
+> +	bool user_subdev_api;
+>  	spinlock_t slock;
+>  	struct list_head pipelines;
+>  };
+
+
+-- 
+
+Cheers,
+Mauro
