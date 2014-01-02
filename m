@@ -1,55 +1,52 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Thu, 02 Jan 2014 10:19:26 +0800
-Message-ID: <52C4CCAE.6070001@linaro.org>
-References: <1388241295-20051-1-git-send-email-zhangfei.gao@linaro.org> <1388241295-20051-3-git-send-email-zhangfei.gao@linaro.org> <201312292205.02135.arnd@arndb.de> <20131231132003.GR8064@book.gsilab.sittig.org>
+From: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] thermal:samsung: fix compilation warning
+Date: Thu, 02 Jan 2014 10:27:37 +0800
+Message-ID: <1388629657.3739.69.camel@rzhang1-mobl4>
+References: <1387541527-4762-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20131231132003.GR8064@book.gsilab.sittig.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Chris Ball <cjb@laptop.org>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhigang Wang <brooke.wangzhigang@huawei.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1387541527-4762-1-git-send-email-ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eduardo.valentin-l0cyMroinI0@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 2013-12-20 at 17:42 +0530, Naveen Krishna Chatradhi wrote:
+> This patch fixes a compilation warning.
+> 
+> warning: passing argument 5 of 'thermal_zone_device_register' discards 'const'
+> qualifier from pointer target type [enabled by default]
+> include/linux/thermal.h:270:29: note: expected 'struct thermal_zone_device_ops *'
+> but argument is of type 'const struct thermal_zone_device_ops *'
+> 
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+applied.
+
+thanks,
+rui
+> ---
+>  drivers/thermal/samsung/exynos_thermal_common.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/samsung/exynos_thermal_common.c b/drivers/thermal/samsung/exynos_thermal_common.c
+> index c2301da..3f5ad25 100644
+> --- a/drivers/thermal/samsung/exynos_thermal_common.c
+> +++ b/drivers/thermal/samsung/exynos_thermal_common.c
+> @@ -280,7 +280,7 @@ static int exynos_get_trend(struct thermal_zone_device *thermal,
+>  	return 0;
+>  }
+>  /* Operation callback functions for thermal zone */
+> -static struct thermal_zone_device_ops const exynos_dev_ops = {
+> +static struct thermal_zone_device_ops exynos_dev_ops = {
+>  	.bind = exynos_bind,
+>  	.unbind = exynos_unbind,
+>  	.get_temp = exynos_get_temp,
 
 
-On 12/31/2013 09:20 PM, Gerhard Sittig wrote:
-> On Sun, Dec 29, 2013 at 22:05 +0100, Arnd Bergmann wrote:
->>
->> On Saturday 28 December 2013, Zhangfei Gao wrote:
->>
->>> +static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
->>> +{
->>> +	struct dw_mci_k3_priv_data *priv = host->priv;
->>> +	u32 rate = priv->clk_table[ios->timing];
->>> +	int ret;
->>
->> [ ... ]
->>
->>> +
->>> +	ret = clk_set_rate(host->ciu_clk, rate);
->>> +	if (ret)
->>> +		dev_warn(host->dev, "failed to set clock rate %uHz\n", rate);
->>> +
->>> +	host->bus_hz = clk_get_rate(host->ciu_clk);
->>> +}
->>
->> Why do you call clk_get_rate() here, shouldn't it always be the same
->> rate that you have just set?
->
-> Not necessarily.  What you pass to clk_set_rate() is the
-> rate/frequency that you _want_, while what you get from
-> clk_get_rate() is the rate you _got_ taking the specific input
-> clock rate and the available sets of multipliers/dividers into
-> consideration.  Both values should be similar (roughly the same),
-> but they need not be identical.  The order of the difference
-> depends on the granularity of the hardware dividers or whether
-> PLLs are used.
->
-> So, re-fetching the resulting rate after setting up a desired
-> rate actually better reflects the status-quo for diagnostics or
-> for subsequent processing.
-
-Thanks Gerhard for the professional explanation.
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
