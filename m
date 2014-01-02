@@ -1,70 +1,70 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH] ASoC: generic: add generic compound card
- with DT support
-Date: Thu, 2 Jan 2014 11:56:18 +0000
-Message-ID: <20140102115618.GW31886@sirena.org.uk>
-References: <20131231113138.102044cf@armhf>
- <52C466E1.3030302@metafoo.de>
- <20140101210814.31e3f3a9@armhf>
- <52C4766B.8080000@metafoo.de>
- <20140102102647.6efec89d@armhf>
- <20140102111056.GT31886@sirena.org.uk>
- <20140102124331.2bcfc172@armhf>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 1/4] input: Add new sun4i-lradc-keys drivers
+Date: Thu, 02 Jan 2014 12:59:28 +0100
+Message-ID: <1700375.GaI3zFl6RI@phil>
+References: <1388604610-20380-1-git-send-email-hdegoede@redhat.com> <20140101205603.GA1141@core.coreip.homeip.net> <52C5336B.9010903@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YYdWNcbn0Z2BHBmW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140102124331.2bcfc172@armhf>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <52C5336B.9010903@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-sunxi@googlegroups.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
+Hi Hans, Dmitry,
 
---YYdWNcbn0Z2BHBmW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Am Donnerstag, 2. Januar 2014, 10:37:47 schrieb Hans de Goede:
+> Hi,
+> 
+> On 01/01/2014 09:56 PM, Dmitry Torokhov wrote:
+> > Hi Hans,
+> > 
+> > On Wed, Jan 01, 2014 at 08:30:07PM +0100, Hans de Goede wrote:
+> >> +Required properties:
+> >> + - compatible: "allwinner,sun4i-lradc-keys"
+> >> + - reg: mmio address range of the chip
+> >> + - interrupts: interrupt to which the chip is connected
+> >> + - allwinner,chan0-step: step in mV between keys must be 150 or 200
+> >> + - allwinner,chan0-keycodes: array of include/uapi/linux/input.h KEY_
+> >> codes> 
+> > I think this should be "linux,chan0-keycodes".
+> 
+> Right, because the codes are Linux specific, will fix in v2.
 
-On Thu, Jan 02, 2014 at 12:43:31PM +0100, Jean-Francois Moine wrote:
-> Mark Brown <broonie@kernel.org> wrote:
+but the property with its "chan0-" thingy would be allwinner-specific if I'm 
+not mistaken.
 
-> > I think we want an explicit object in the card representing the DAIs.
-> > This will both be useful for making it easy to find the configuration
-> > for the link and will be more extensible for the cases where multiple
-> > devices are connected, you can't just assume there's just two.
+Also, instead of inventing yet another vendor-specific property, why not re-use 
+a button binding similar to gpio-keys like:
 
-> I don't see the problem: the 'port' is the DAI. The associated
-> endpoints give the DAI links and the routing information.
+       lradc: lradc@01c22800 {
+               compatible = "allwinner,sun4i-lradc-keys";
+               reg = <0x01c22800 0x100>;
+               interrupts = <31>;
+               allwinner,chan0-step = <200>;
 
-> As the DT definition has been done for video, some properties may be
-> added at will for audio.
+		#address-cells = <1>;
+		#size-cells = <0>;
 
-> What kind of object were you thinking of?
+		button@0 {
+			reg = <0>; /* your channel index from above */
+			linux,code = <115>; /* already used as dt-property */
+		};
 
-Like I say multiple devices on the same link - if you're just listing a
-single remote device there can't be more than one.
+		button@1 {
+			reg = <1>;
+			linux,code = <114>;
+		};
 
---YYdWNcbn0Z2BHBmW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+...
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+       };
 
-iQIcBAEBAgAGBQJSxVPfAAoJELSic+t+oim9XDoP/RnDe4d0oID/uL+K2ANKtwxj
-EkN4CLzODsli33xTcZiqW9MrHHOi9ai88eU21OjCcXW2Tht4ylj1S5VH4gXp4VM1
-lCTPtHBHQRzwV37bekrYX1VCbtYKe7cXwr44XXtHc/uRctR1NJ4HSLgXGQArJGth
-rpVRwVLdnZUc7WTVvZZO+cFbmaNOVVyuzlvgVOGpEPvLS1lPNMbJLdZJ30PBdYQT
-A6SsR0w4635gvw3EYClede7oNySScNJSQ+CMqPUJ80l+kRe8mGibMWqNsZyh7n6B
-ov76Ur3HqIxSMrHKuxMMCP/7BGxcWAUmvVDONk2XQ1LwnYgdB5ayc/y61eESl/ul
-vK57L/5ucJ8D8fWZIgoplfd/mujQij5XxIZPxhz+2Oc9lhNfOXAH7g9dK6hr9M+S
-mwlvZWAayQ2Y5vXfRCUwkWUT6bTDVBAOYiu9tFKUNQfOruPSvX2ZTFSZWINPp7Sl
-CFuFbkVR9I1INhzBZMx8qXB3cvdfDHGbe8U4Rp8OJjjjB0CG/4nkZ2LI3RSOQ6Cl
-Ms24j8bss7oU/xnwSf9XjUX1p8+veN8nwnq66hDyyl0dBZrHByPKCbMUzOQWLwIR
-Zm1WBPtma2Td57k6pscF2Qqj2xF3g60v6zEbQ98t/FF3ehejCRBS2L47VgOJ3BDC
-JnFVnQ884dMnjQD5oInm
-=BkPE
------END PGP SIGNATURE-----
+But I may be on the wrong track here, so I've included the devicetree-people 
+for help, which I guess should've been included from the beginning.
 
---YYdWNcbn0Z2BHBmW--
+
+Heiko
+
