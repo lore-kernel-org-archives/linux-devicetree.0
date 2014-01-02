@@ -1,204 +1,129 @@
-From: Yuvaraj Cd <yuvaraj.lkml@gmail.com>
-Subject: Re: [PATCH V2] i2c: s3c2410 : Add polling mode support
-Date: Thu, 2 Jan 2014 10:31:38 +0530
-Message-ID: <CA+NduCA=GJyCKWazOoMj5=CedVHhLjrgQLkVr_A09XUHeA3Hkw@mail.gmail.com>
-References: <1384168820-2986-1-git-send-email-yuvaraj.cd@samsung.com>
-	<CAKuRcOK3gJiPr3PC2-Vf6w0xeQEuEw6N2c7d0sYZYLuesJC_kQ@mail.gmail.com>
-	<CAKuRcOJojN46P2SfGfOQatbFWYuhV9DB6Y7tHNtZXgRzNcB+cA@mail.gmail.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH] thermal: exynos: handle gate clock for misplaced
+ TRIMINFO register
+Date: Thu, 02 Jan 2014 14:07:00 +0800
+Message-ID: <1388642820.3739.80.camel@rzhang1-mobl4>
+References: <1383828154-428-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAKuRcOJojN46P2SfGfOQatbFWYuhV9DB6Y7tHNtZXgRzNcB+cA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
-Cc: wsa@the-dreams.de, ben-linux@fluff.org, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "ks.giri@samsung.com" <ks.giri@samsung.com>, aditya.ps@samsung.com, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vasanth Ananthan <vasanthananthan@gmail.com>, Vasanth Ananthan <vasanth.a@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1383828154-428-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Ping..
+On Thu, 2013-11-07 at 18:12 +0530, Naveen Krishna Chatradhi wrote:
+> On Exynos5420 the TMU(4) for GPU has a seperate clock enable bit from
+> the other TMU channels(0 ~ 3). Hence, accessing TRIMINFO for base_second
+> should be acompanied by enabling the respective clock.
+> 
+> This patch which allow for a "clk_sec" clock to be specified in the
+> device-tree which will be ungated when accessing the TRIMINFO register.
+> 
+> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
 
-On Fri, Dec 13, 2013 at 2:51 PM, Yuvaraj Kumar <yuvaraj.cd@gmail.com> wrote:
-> Dear Wolfram,
->  Can you take this into your tree?
->
-> On Fri, Nov 22, 2013 at 11:32 AM, Yuvaraj Kumar <yuvaraj.cd@gmail.com> wrote:
->> Any comments on this patch?
->>
->> On Mon, Nov 11, 2013 at 4:50 PM, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com> wrote:
->>> From: Vasanth Ananthan <vasanthananthan@gmail.com>
->>>
->>> This patch adds polling mode support for i2c-s3c2410 driver.The
->>> SATA PHY controller's CMU and TRSV block's are of I2C register
->>> map in exynos5250.These blocks can be configured using i2c.
->>>
->>> But i2c controller instance on which these block's sits lacks an
->>> interrupt line.Also the current i2c-s3c2410 driver is only interrupt
->>> driven, thus a polling mode support is required in the driver for
->>> supporting this controller. This patch adds this support to the driver.
->>>
->>> Changes from V1:
->>>         1.Changed the is_ack() to have even period b/w polls and
->>>           used usleep_range() instead of udelay().
->>>
->>> Signed-off-by: Vasanth Ananthan <vasanth.a@samsung.com>
->>> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
->>> ---
->>>  .../devicetree/bindings/i2c/i2c-s3c2410.txt        |    2 +
->>>  drivers/i2c/busses/i2c-s3c2410.c                   |   66 +++++++++++++++++---
->>>  2 files changed, 58 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt b/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
->>> index 296eb45..278de8e 100644
->>> --- a/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
->>> +++ b/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
->>> @@ -10,6 +10,8 @@ Required properties:
->>>            inside HDMIPHY block found on several samsung SoCs
->>>        (d) "samsung, exynos5440-i2c", for s3c2440-like i2c used
->>>            on EXYNOS5440 which does not need GPIO configuration.
->>> +      (e) "samsung, exynos5-sata-phy-i2c", for s3c2440-like i2c used as
->>> +          a host to SATA PHY controller on an internal bus.
->>>    - reg: physical base address of the controller and length of memory mapped
->>>      region.
->>>    - interrupts: interrupt number to the cpu.
->>> diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
->>> index 3747b9b..08ed126 100644
->>> --- a/drivers/i2c/busses/i2c-s3c2410.c
->>> +++ b/drivers/i2c/busses/i2c-s3c2410.c
->>> @@ -85,6 +85,7 @@
->>>  #define QUIRK_S3C2440          (1 << 0)
->>>  #define QUIRK_HDMIPHY          (1 << 1)
->>>  #define QUIRK_NO_GPIO          (1 << 2)
->>> +#define QUIRK_POLL             (1 << 3)
->>>
->>>  /* Max time to wait for bus to become idle after a xfer (in us) */
->>>  #define S3C2410_IDLE_TIMEOUT   5000
->>> @@ -141,6 +142,8 @@ static struct platform_device_id s3c24xx_driver_ids[] = {
->>>  };
->>>  MODULE_DEVICE_TABLE(platform, s3c24xx_driver_ids);
->>>
->>> +static int i2c_s3c_irq_nextbyte(struct s3c24xx_i2c *i2c, unsigned long iicstat);
->>> +
->>>  #ifdef CONFIG_OF
->>>  static const struct of_device_id s3c24xx_i2c_match[] = {
->>>         { .compatible = "samsung,s3c2410-i2c", .data = (void *)0 },
->>> @@ -149,6 +152,8 @@ static const struct of_device_id s3c24xx_i2c_match[] = {
->>>           .data = (void *)(QUIRK_S3C2440 | QUIRK_HDMIPHY | QUIRK_NO_GPIO) },
->>>         { .compatible = "samsung,exynos5440-i2c",
->>>           .data = (void *)(QUIRK_S3C2440 | QUIRK_NO_GPIO) },
->>> +       { .compatible = "samsung,exynos5-sata-phy-i2c",
->>> +         .data = (void *)(QUIRK_S3C2440 | QUIRK_POLL | QUIRK_NO_GPIO) },
->>>         {},
->>>  };
->>>  MODULE_DEVICE_TABLE(of, s3c24xx_i2c_match);
->>> @@ -187,7 +192,8 @@ static inline void s3c24xx_i2c_master_complete(struct s3c24xx_i2c *i2c, int ret)
->>>         if (ret)
->>>                 i2c->msg_idx = ret;
->>>
->>> -       wake_up(&i2c->wait);
->>> +       if (!(i2c->quirks & QUIRK_POLL))
->>> +               wake_up(&i2c->wait);
->>>  }
->>>
->>>  static inline void s3c24xx_i2c_disable_ack(struct s3c24xx_i2c *i2c)
->>> @@ -224,6 +230,22 @@ static inline void s3c24xx_i2c_enable_irq(struct s3c24xx_i2c *i2c)
->>>         writel(tmp | S3C2410_IICCON_IRQEN, i2c->regs + S3C2410_IICCON);
->>>  }
->>>
->>> +static bool is_ack(struct s3c24xx_i2c *i2c)
->>> +{
->>> +       int tries;
->>> +
->>> +       for (tries = 50; tries; --tries) {
->>> +               if (readl(i2c->regs + S3C2410_IICCON)
->>> +                       & S3C2410_IICCON_IRQPEND) {
->>> +                       if (!(readl(i2c->regs + S3C2410_IICSTAT)
->>> +                               & S3C2410_IICSTAT_LASTBIT))
->>> +                               return true;
->>> +               }
->>> +               usleep_range(1000, 2000);
->>> +       }
->>> +       dev_err(i2c->dev, "ack was not recieved\n");
->>> +       return false;
->>> +}
->>>
->>>  /* s3c24xx_i2c_message_start
->>>   *
->>> @@ -268,6 +290,16 @@ static void s3c24xx_i2c_message_start(struct s3c24xx_i2c *i2c,
->>>
->>>         stat |= S3C2410_IICSTAT_START;
->>>         writel(stat, i2c->regs + S3C2410_IICSTAT);
->>> +
->>> +       if (i2c->quirks & QUIRK_POLL) {
->>> +               while ((i2c->msg_num != 0) && is_ack(i2c)) {
->>> +                       i2c_s3c_irq_nextbyte(i2c, stat);
->>> +                       stat = readl(i2c->regs + S3C2410_IICSTAT);
->>> +
->>> +                       if (stat & S3C2410_IICSTAT_ARBITR)
->>> +                               dev_err(i2c->dev, "deal with arbitration loss\n");
->>> +               }
->>> +       }
->>>  }
->>>
->>>  static inline void s3c24xx_i2c_stop(struct s3c24xx_i2c *i2c, int ret)
->>> @@ -675,6 +707,15 @@ static int s3c24xx_i2c_doxfer(struct s3c24xx_i2c *i2c,
->>>         s3c24xx_i2c_enable_irq(i2c);
->>>         s3c24xx_i2c_message_start(i2c, msgs);
->>>
->>> +       if (i2c->quirks & QUIRK_POLL) {
->>> +               ret = i2c->msg_idx;
->>> +
->>> +               if (ret != num)
->>> +                       dev_dbg(i2c->dev, "incomplete xfer (%d)\n", ret);
->>> +
->>> +               goto out;
->>> +       }
->>> +
->>>         timeout = wait_event_timeout(i2c->wait, i2c->msg_num == 0, HZ * 5);
->>>
->>>         ret = i2c->msg_idx;
->>> @@ -820,6 +861,9 @@ static int s3c24xx_i2c_clockrate(struct s3c24xx_i2c *i2c, unsigned int *got)
->>>         if (div1 == 512)
->>>                 iiccon |= S3C2410_IICCON_TXDIV_512;
->>>
->>> +       if (i2c->quirks & QUIRK_POLL)
->>> +               iiccon |= S3C2410_IICCON_SCALE(2);
->>> +
->>>         writel(iiccon, i2c->regs + S3C2410_IICCON);
->>>
->>>         if (i2c->quirks & QUIRK_S3C2440) {
->>> @@ -1117,18 +1161,20 @@ static int s3c24xx_i2c_probe(struct platform_device *pdev)
->>>          * ensure no current IRQs pending
->>>          */
->>>
->>> -       i2c->irq = ret = platform_get_irq(pdev, 0);
->>> -       if (ret <= 0) {
->>> -               dev_err(&pdev->dev, "cannot find IRQ\n");
->>> -               return ret;
->>> -       }
->>> +       if (!(i2c->quirks & QUIRK_POLL)) {
->>> +               i2c->irq = ret = platform_get_irq(pdev, 0);
->>> +               if (ret <= 0) {
->>> +                       dev_err(&pdev->dev, "cannot find IRQ\n");
->>> +                       return ret;
->>> +               }
->>>
->>>         ret = devm_request_irq(&pdev->dev, i2c->irq, s3c24xx_i2c_irq, 0,
->>> -                              dev_name(&pdev->dev), i2c);
->>> +                               dev_name(&pdev->dev), i2c);
->>>
->>> -       if (ret != 0) {
->>> -               dev_err(&pdev->dev, "cannot claim IRQ %d\n", i2c->irq);
->>> -               return ret;
->>> +               if (ret != 0) {
->>> +                       dev_err(&pdev->dev, "cannot claim IRQ %d\n", i2c->irq);
->>> +                       return ret;
->>> +               }
->>>         }
->>>
->>>         ret = s3c24xx_i2c_register_cpufreq(i2c);
->>> --
->>> 1.7.9.5
->>>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Eduardo,
+
+what do you think of this patch?
+
+thanks,
+rui
+> ---
+>  drivers/thermal/samsung/exynos_tmu.c |   24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+> index b54825a..33edd1a 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.c
+> +++ b/drivers/thermal/samsung/exynos_tmu.c
+> @@ -47,6 +47,7 @@
+>   * @irq_work: pointer to the irq work structure.
+>   * @lock: lock to implement synchronization.
+>   * @clk: pointer to the clock structure.
+> + * @clk_sec: pointer to the clock structure for accessing the base_second.
+>   * @temp_error1: fused value of the first point trim.
+>   * @temp_error2: fused value of the second point trim.
+>   * @regulator: pointer to the TMU regulator structure.
+> @@ -61,7 +62,7 @@ struct exynos_tmu_data {
+>  	enum soc_type soc;
+>  	struct work_struct irq_work;
+>  	struct mutex lock;
+> -	struct clk *clk;
+> +	struct clk *clk, *clk_sec;
+>  	u8 temp_error1, temp_error2;
+>  	struct regulator *regulator;
+>  	struct thermal_sensor_conf *reg_conf;
+> @@ -152,6 +153,8 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
+>  
+>  	mutex_lock(&data->lock);
+>  	clk_enable(data->clk);
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_enable(data->clk_sec);
+>  
+>  	if (TMU_SUPPORTS(pdata, READY_STATUS)) {
+>  		status = readb(data->base + reg->tmu_status);
+> @@ -306,6 +309,8 @@ skip_calib_data:
+>  out:
+>  	clk_disable(data->clk);
+>  	mutex_unlock(&data->lock);
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_disable(data->clk_sec);
+>  
+>  	return ret;
+>  }
+> @@ -457,12 +462,16 @@ static void exynos_tmu_work(struct work_struct *work)
+>  	const struct exynos_tmu_registers *reg = pdata->registers;
+>  	unsigned int val_irq, val_type;
+>  
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_enable(data->clk_sec);
+>  	/* Find which sensor generated this interrupt */
+>  	if (reg->tmu_irqstatus) {
+>  		val_type = readl(data->base_second + reg->tmu_irqstatus);
+>  		if (!((val_type >> data->id) & 0x1))
+>  			goto out;
+>  	}
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_disable(data->clk_sec);
+>  
+>  	exynos_report_trigger(data->reg_conf);
+>  	mutex_lock(&data->lock);
+> @@ -641,6 +650,15 @@ static int exynos_tmu_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	data->clk_sec = devm_clk_get(&pdev->dev, "tmu_apbif_sec");
+> +	if (!IS_ERR(data->clk_sec)) {
+> +		ret = clk_prepare(data->clk_sec);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Failed to get clock\n");
+> +			return  PTR_ERR(data->clk_sec);
+> +		}
+> +	}
+> +
+>  	if (pdata->type == SOC_ARCH_EXYNOS4210 ||
+>  	    pdata->type == SOC_ARCH_EXYNOS4412 ||
+>  	    pdata->type == SOC_ARCH_EXYNOS5250 ||
+> @@ -713,6 +731,8 @@ static int exynos_tmu_probe(struct platform_device *pdev)
+>  	return 0;
+>  err_clk:
+>  	clk_unprepare(data->clk);
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_unprepare(data->clk_sec);
+>  	return ret;
+>  }
+>  
+> @@ -725,6 +745,8 @@ static int exynos_tmu_remove(struct platform_device *pdev)
+>  	exynos_unregister_thermal(data->reg_conf);
+>  
+>  	clk_unprepare(data->clk);
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_unprepare(data->clk_sec);
+>  
+>  	if (!IS_ERR(data->regulator))
+>  		regulator_disable(data->regulator);
+
+
