@@ -1,38 +1,75 @@
-From: Matthew Longnecker <mlongnecker@nvidia.com>
-Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
-Date: Thu, 2 Jan 2014 09:50:06 -0800
-Message-ID: <52C5A6CE.5060904@nvidia.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com> <52C4D612.2090808@nvidia.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH] ASoC: generic: add generic compound card
+ with DT support
+Date: Thu, 2 Jan 2014 18:50:55 +0100
+Message-ID: <20140102185055.76eb576e@armhf>
+References: <20131231113138.102044cf@armhf> <52C466E1.3030302@metafoo.de>
+ <20140101210814.31e3f3a9@armhf> <52C4766B.8080000@metafoo.de>
+ <20140102102647.6efec89d@armhf>
+ <20140102111056.GT31886@sirena.org.uk>
+ <20140102124331.2bcfc172@armhf>
+ <20140102115618.GW31886@sirena.org.uk>
+ <20140102134437.1e39da55@armhf>
+ <20140102131045.GZ31886@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <52C4D612.2090808@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Wei Ni <wni@nvidia.com>, Eduardo Valentin <eduardo.valentin@ti.com>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com
-Cc: grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20140102131045.GZ31886@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-> I think the platform driver may set governor for the thermal zone,
-> so how about to add a property named as "governor",
-> and parse it to tzp->governor_name,
-> something like:
->                  ret = of_property_read_string(child, "governor", &str);
->                  if (ret == 0)
->                          if (strlen(str) < THERMAL_NAME_LENGTH)
->                                  strcpy(tzp->governor_name, str);
->
-> Thanks.
-> Wei.
-
-DT is supposed to describe the hardware, right? The governor isn't 
-hardware -- it's a software control policy. On the other hand, that 
-control policy must be tuned according to the behaviors of the platform 
-hardware otherwise the system will be unstable.
-
-Is it appropriate to be naming the governor in DT? If so, is it equally 
-appropriate to describe any governor-specific parameters in DT (even 
-though they are pure software constructs)?
-
--Matt
+T24gVGh1LCAyIEphbiAyMDE0IDEzOjEwOjQ1ICswMDAwCk1hcmsgQnJvd24gPGJyb29uaWVAa2Vy
+bmVsLm9yZz4gd3JvdGU6Cgo+IE9uIFRodSwgSmFuIDAyLCAyMDE0IGF0IDAxOjQ0OjM3UE0gKzAx
+MDAsIEplYW4tRnJhbmNvaXMgTW9pbmUgd3JvdGU6Cj4gCj4gPiBJIHN0aWxsIGRvbid0IHVuZGVy
+c3RhbmQuIFRoZXJlIGlzIGFscmVhZHkgc3VjaCBjYXNlcyBpbiB0aGUgQ3Vib3g6Cj4gPiB0aGUg
+Uy9QRElGIG91dHB1dCBmcm9tIHRoZSBraXJrd29vZCBhdWRpbyBjb250cm9sbGVyIGlzIGNvbm5l
+Y3RlZCB0bwo+ID4gYm90aCB0aGUgSERNSSB0cmFuc21pdHRlciBhbmQgdGhlIFMvUERJRiBUT1NM
+SU5LLiBTbywgaW4gdGhlIGF1ZGlvCj4gPiBjb250cm9sbGVyLCB0aGUgcG9ydCBAMSBkZWZpbmVz
+IHRoZSBTL1BESUYgREFJIGFuZCB0aGUgZW5kcG9pbnRzIEAwIGFuZAo+ID4gQDEgcG9pbnQgdG8g
+dGhlIHJlbW90ZSBEQUlzLCBjcmVhdGluZyAyIHNuZCBEQUkgbGlua3M6Cj4gCj4gPiAJcG9ydEAx
+IHsKPiA+IAkJYXVkaW9faGRtaV9zcGRpZjogZW5kcG9pbnRAMCB7Cj4gPiAJCQlyZW1vdGUtZW5k
+cG9pbnQgPSA8JmhkbWlfc3BkaWZfYXVkaW8+Owo+ID4gCQl9Owo+ID4gCQlhdWRpb19zcGRpZjog
+ZW5kcG9pbnRAMSB7Cj4gPiAJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnNwZGlmX2F1ZGlvPjsKPiA+
+IAkJfTsKPiA+IAl9Owo+IAo+IE9oLCBzbyB0aGUgZW5kcG9pbnRzIGFyZSB2aXJ0dWFsIGFuZCB0
+aGF0J3Mgc3VwcG9zZWQgdG8gYmUgdGhyZWUgdGhpbmdzCj4gd2lyZWQgdG9nZXRoZXIgcmF0aGVy
+IHRoYW4gYSBzaW5nbGUgZGV2aWNlIHdpdGggbXVsdGlwbGUgbGlua3M/ICBUaGF0J3MKPiByZWFs
+bHkgbm90IHZlcnkgY2xlYXIgZnJvbSByZWFkaW5nIHRoZSBhYm92ZSBhbmQgc2VlbXMgY3VtYmVy
+c29tZSAtCj4gZXZlcnkgZGV2aWNlIHdpbGwgd2FudCB0byBleHBsaWNpdGx5IGlkZW50aWZ5IGV2
+ZXJ5IG90aGVyIGRldmljZSBvbiB0aGUKPiBsaW5rIGFuZCBhbnkgY29uZmlndXJhdGlvbiBpcyBn
+b2luZyB0byBlaXRoZXIgbmVlZCB0byBiZSByZXBsaWNhdGVkIG9uCj4gZXZlcnkgZGV2aWNlIG9y
+IHdlJ2xsIG5lZWQgdG8gY2hlY2sgbG90cyBvZiBwbGFjZXMgZm9yIHRoZSBjb25maWd1YXRpb24u
+Cj4gSXQgc2VlbXMgbGlrZSB0aGlzIHdpbGwgYmUgaGFyZCB0byB3b3JrIHdpdGguCgpObywgdGhl
+ICdlbmRwb2ludCcgPD0+ICdyZW1vdGUtZW5kcG9pbnQnIGlzIGEgcG9pbnQgdG8gcG9pbnQgcmVs
+YXRpb24uCkV2ZW4gaWYgdGhlIHNvdXJjZXMgYW5kIHNpbmtzIGFyZSBub3QgZXhwbGljaXRseSBk
+ZWZpbmVkLCB0aGUgd2F5CnRoZSBzdHJlYW0gZmxvd3MgaXMgZWFzeSB0byBmaW5kOiB0aGUgbWFp
+biBzb3VyY2UgaXMgYWx3YXlzIGluIHRoZQonYXVkaW8tY29udHJvbGxlcicgbm9kZQoKCXNvdW5k
+IHsKCQljb21wYXRpYmxlID0gIm1lZGlhLWF1ZGlvIjsKCQlhdWRpby1jb250cm9sbGVyID0gPCZh
+dWRpbzE+OwoJfTsKCmFuZCwgdGhlbiwgdGhlIGNvbnRyb2xsZXIgcG9ydHMgYXJlIHNvdXJjZXMg
+KENQVSBEQUlzKSBhbmQgdGhlCmFzc29jaWF0ZWQgcmVtb3RlIHBvcnRzIGFyZSBzaW5rcyAoQ09E
+RUMgREFJcykuCgpXaXRoIG1hbnkgbGV2ZWxzLCBvbmNlIHRoZSByZW1vdGUgKHNpbmspIHBvcnRz
+IGFyZSBpZGVudGlmaWVkLCBpbiB0aGUKZGV2aWNlcyB3aGVyZSBzdWNoIHNpbmtzIGV4aXN0LCB0
+aGUgcmVtYWluaW5nIHBvcnRzIGFyZSBzb3VyY2VzLgoKVXN1YWxseSwgdGhlIGRldmljZXMgZG9u
+J3QgaGF2ZSB0byBrbm93IHRvIHdoaWNoIG90aGVyIGRldmljZSB0aGV5IGFyZQpjb25uZWN0ZWQs
+IGFuZCwgeWVzLCB0aGUgcmV2ZXJzZSBwb2ludGVyIHNpbmsgdG8gc291cmNlIGlzIG5vdCB1c2Vm
+dWwuCgpCdXQgdGhlIHdheSAobGluaykgdGhlIGF1ZGlvIHN0cmVhbSBjb21lcyBmcm9tIG1heSBi
+ZSBpbXBvcnRhbnQgdG8Ka25vdy4gVGhpcyBpcyB0aGUgY2FzZSBmb3IgdGhlIEhETUkgQ09ERUMg
+d2hpY2ggbXVzdCB0ZWxsIHRoZSBIRE1JCnRyYW5zbWl0dGVyIGZyb20gd2hpY2ggaGFyZHdhcmUg
+cG9ydChzKSAoJ3JlZycpIGl0IG1heSBnZXQgdGhlIGF1ZGlvCnN0cmVhbS4gVGhhdCdzIHdoeSwg
+dGhlIEhETUkgZW5jb2RlciBoYXMgdHdvIGVuZHBvaW50cyBpbiBpdHMgYXVkaW8KcG9ydCwgZWFj
+aCBlbmRwb2ludCBiZWluZyBhIGRpZmZlcmVudCBDT0RFQyBEQUkuCgotLSAKS2VuIGFyIGMnaGVu
+dGHDsQl8CSAgICAgICoqIEJyZWl6aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9t
+b2luZWpmLmZyZWUuZnIvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9y
+ZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1k
+ZXZlbAo=
