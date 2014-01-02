@@ -1,201 +1,106 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [RFC PATCH 2/3] arm64: dts: APM X-Gene PCIe device tree nodes
-Date: Thu, 2 Jan 2014 13:56:51 -0800
-Message-ID: <CACoXjcnPvgDX3s8OywLHP6Tu2OrpNzM1Phx+s3RLmKDgu3t8gA@mail.gmail.com>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com>
-	<1387785725-24262-3-git-send-email-tinamdar@apm.com>
-	<20131223174634.GD25089@obsidianresearch.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/4] input: Add new sun4i-lradc-keys drivers
+Date: Thu, 02 Jan 2014 23:36:33 +0100
+Message-ID: <52C5E9F1.9010700@redhat.com>
+References: <1388604610-20380-1-git-send-email-hdegoede@redhat.com> <20140101205603.GA1141@core.coreip.homeip.net> <52C5336B.9010903@redhat.com> <1700375.GaI3zFl6RI@phil> <52C56D79.1060506@redhat.com> <20140102202022.GK3144@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131223174634.GD25089@obsidianresearch.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Masters <jcm@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBBWUS6LAKGQES6B2WBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140102202022.GK3144@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 23, 2013 at 9:46 AM, Jason Gunthorpe
-<jgunthorpe@obsidianresearch.com> wrote:
-> On Mon, Dec 23, 2013 at 01:32:03PM +0530, Tanmay Inamdar wrote:
->> This patch adds the device tree nodes for APM X-Gene PCIe controller and
->> PCIe clock interface. Since X-Gene SOC supports maximum 5 ports, 5 dts nodes
->> are added.
+Hi,
+
+On 01/02/2014 09:20 PM, Maxime Ripard wrote:
+> On Thu, Jan 02, 2014 at 02:45:29PM +0100, Hans de Goede wrote:
+>>> Also, instead of inventing yet another vendor-specific property, why not re-use
+>>> a button binding similar to gpio-keys like:
+>>>
+>>>         lradc: lradc@01c22800 {
+>>>                 compatible = "allwinner,sun4i-lradc-keys";
+>>>                 reg = <0x01c22800 0x100>;
+>>>                 interrupts = <31>;
+>>>                 allwinner,chan0-step = <200>;
+>>>
+>>> 		#address-cells = <1>;
+>>> 		#size-cells = <0>;
+>>>
+>>> 		button@0 {
+>>> 			reg = <0>; /* your channel index from above */
+>>> 			linux,code = <115>; /* already used as dt-property */
+>>> 		};
+>>>
+>>> 		button@1 {
+>>> 			reg = <1>;
+>>> 			linux,code = <114>;
+>>> 		};
+>>
+>> Ugh no. Having a vendor specific property which is KISS certainly
+>> beats this, both wrt ease of writing dts files as well as wrt the
+>> dts parsing code in the driver.
 >
-> Can you include an lspci dump for PCI DT bindings please? It is
-> impossible to review otherwise..
+> I'd agree with Heiko here. This is pretty much the same construct
+> that's already in use in other input drivers, like gpio-keys.
+
+In the gpio case there is a 1 on 1 relation between a single hw
+entity (the gpio-pin) and a single keycode. Here there is 1 hw entity
+which maps to an array of key-codes, certainly using an array rather
+then a much more complicated construct is the correct data-structure
+to represent this.
+
 >
+> This is also something that can really easily be made generic, since
+> this is something that is rather common.
+>
+> Speaking of which. I believe this should actually come in two
+> different drivers:
+>    - The ADC driver itself, using IIO
+>    - A generic button handler driver on top of IIO.
+ >
+ > The fact that on most board this adc is used for buttons doesn't make
+ > any difference, it's actually a hardware designer choice, we should
+ > support that choice, but we should also be able to use it just as an
+ > ADC.
 
-On the X-Gene evaluation platform, there is only one PCIe port
-enabled. Here is the 'lspci' dump
+No, this is not a generic adc, as mentioned in the commit msg, this
+adc is specifically designed to be used this way.
 
-# lspci -vvv
-00:00.0 Class 0604: Device 19aa:e008 (rev 04)
-        Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
-ParErr+ Stepping- SERR+ FastB2B- DisINTx-
-        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-        Latency: 0, Cache Line Size: 64 bytes
-        Region 0: Memory at <ignored> (64-bit, prefetchable)
-        Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
-        I/O behind bridge: 0000f000-00000fff
-        Memory behind bridge: 00c00000-00cfffff
-        Prefetchable memory behind bridge: 0000000000000000-0000000000bfffff
-        Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort-
-<TAbort- <MAbort- <SERR- <PERR-
-        BridgeCtl: Parity+ SERR- NoISA- VGA- MAbort- >Reset- FastB2B-
-                PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-        Capabilities: [40] Express (v2) Root Port (Slot+), MSI 00
-                DevCap: MaxPayload 16384 bytes, PhantFunc 1, Latency
-L0s <1us, L1 unlimited
-                        ExtTag- RBE+ FLReset-
-                DevCtl: Report errors: Correctable- Non-Fatal- Fatal-
-Unsupported-
-                        RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-                        MaxPayload 128 bytes, MaxReadReq 512 bytes
-                DevSta: CorrErr+ UncorrErr- FatalErr- UnsuppReq-
-AuxPwr- TransPend+
-                LnkCap: Port #0, Speed 8GT/s, Width x8, ASPM L0s L1,
-Latency L0 unlimited, L1 unlimited
-                        ClockPM- Surprise+ LLActRep+ BwNot+
-                LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- Retrain- CommClk-
-                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-                LnkSta: Speed 8GT/s, Width x8, TrErr- Train- SlotClk+
-DLActive+ BWMgmt- ABWMgmt-
-                SltCap: AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd-
-HotPlug- Surprise-
-                        Slot #1, PowerLimit 10.000W; Interlock- NoCompl-
-                SltCtl: Enable: AttnBtn- PwrFlt- MRL- PresDet-
-CmdCplt- HPIrq- LinkChg-
-                        Control: AttnInd Off, PwrInd Off, Power- Interlock-
-                SltSta: Status: AttnBtn- PowerFlt- MRL- CmdCplt-
-PresDet- Interlock-
-                        Changed: MRL- PresDet- LinkState+
-                RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal-
-PMEIntEna- CRSVisible-
-                RootCap: CRSVisible-
-                RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-                DevCap2: Completion Timeout: Not Supported,
-TimeoutDis+, LTR-, OBFF Not Supported ARIFwd-
-                DevCtl2: Completion Timeout: 50us to 50ms,
-TimeoutDis-, LTR-, OBFF Disabled ARIFwd-
-                LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
-                         Transmit Margin: Normal Operating Range,
-EnterModifiedCompliance- ComplianceSOS-
-                         Compliance De-emphasis: -6dB
-                LnkSta2: Current De-emphasis Level: -6dB,
-EqualizationComplete+, EqualizationPhase1+
-                         EqualizationPhase2+, EqualizationPhase3+,
-LinkEqualizationRequest-
-        Capabilities: [80] Power Management version 3
-                Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA
-PME(D0-,D1-,D2-,D3hot-,D3cold-)
-                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-        Capabilities: [100 v1] Advanced Error Reporting
-                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-                UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-                UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt-
-UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-                CESta:  RxErr+ BadTLP+ BadDLLP+ Rollover- Timeout+ NonFatalErr-
-                CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- NonFatalErr+
-                AERCap: First Error Pointer: 00, GenCap+ CGenEn- ChkCap+ ChkEn-
-        Capabilities: [180 v1] #19
-        Capabilities: [150 v1] Vendor Specific Information: ID=0001
-Rev=1 Len=010 <?>
+The adc won't start sampling data, and won't generate any interrupts
+until a button is pressed. That is until the input voltage drops below
+2/3 of Vref, this is checked through a built-in analog comparator, which
+hooks into the control logic.
 
-01:00.0 Class 0200: Device 15b3:1003
-        Subsystem: Device 15b3:0049
-        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
-ParErr+ Stepping- SERR+ FastB2B- DisINTx-
-        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-        Latency: 0, Cache Line Size: 64 bytes
-        Interrupt: pin A routed to IRQ 226
-        Region 0: Memory at e000c00000 (64-bit, non-prefetchable) [size=1M]
-        Region 2: Memory at e000000000 (64-bit, prefetchable) [size=8M]
-        Expansion ROM at e000800000 [size=1M]
-        Capabilities: [40] Power Management version 3
-                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
-PME(D0-,D1-,D2-,D3hot-,D3cold-)
-                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-        Capabilities: [48] Vital Product Data
-                Product Name: CX312A - ConnectX-3 SFP+
-                Read-only fields:
-                        [PN] Part number: MCX312A-XCBT
-                        [EC] Engineering changes: A5
-                        [SN] Serial number: MT1338X00578
-                        [V0] Vendor specific: PCIe Gen3 x8
-                        [RV] Reserved: checksum good, 0 byte(s) reserved
-                Read/write fields:
-                        [V1] Vendor specific: N/A
-                        [YA] Asset tag: N/A
-                        [RW] Read-write area: 105 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 253 byte(s) free
-                        [RW] Read-write area: 252 byte(s) free
-                End
-        Capabilities: [9c] MSI-X: Enable- Count=128 Masked-
-                Vector table: BAR=0 offset=0007c000
-                PBA: BAR=0 offset=0007d000
-        Capabilities: [60] Express (v2) Endpoint, MSI 00
-                DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
-<64ns, L1 unlimited
-                        ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+
-                DevCtl: Report errors: Correctable- Non-Fatal- Fatal-
-Unsupported-
-                        RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-                        MaxPayload 128 bytes, MaxReadReq 512 bytes
-                DevSta: CorrErr- UncorrErr- FatalErr- UnsuppReq-
-AuxPwr- TransPend-
-                LnkCap: Port #8, Speed 8GT/s, Width x8, ASPM L0s,
-Latency L0 unlimited, L1 unlimited
-                        ClockPM- Surprise- LLActRep- BwNot-
-                LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- Retrain- CommClk-
-                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-                LnkSta: Speed 8GT/s, Width x8, TrErr- Train- SlotClk+
-DLActive- BWMgmt- ABWMgmt-
-                DevCap2: Completion Timeout: Range ABCD, TimeoutDis+,
-LTR-, OBFF Not Supported
-                DevCtl2: Completion Timeout: 50us to 50ms,
-TimeoutDis-, LTR-, OBFF Disabled
-                LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
-                         Transmit Margin: Normal Operating Range,
-EnterModifiedCompliance- ComplianceSOS-
-                         Compliance De-emphasis: -6dB
-                LnkSta2: Current De-emphasis Level: -6dB,
-EqualizationComplete-, EqualizationPhase1-
-                         EqualizationPhase2-, EqualizationPhase3-,
-LinkEqualizationRequest-
-        Capabilities: [100 v1] Alternative Routing-ID Interpretation (ARI)
-                ARICap: MFVC- ACS-, Next Function: 0
-                ARICtl: MFVC- ACS-, Function Group: 0
-        Capabilities: [148 v1] Device Serial Number f4-52-14-03-00-0b-dc-90
-        Capabilities: [154 v2] Advanced Error Reporting
-                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-                UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-                UESvrt: DLP+ SDES- TLP- FCP+ CmpltTO- CmpltAbrt-
-UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-                CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- NonFatalErr-
-                CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- NonFatalErr+
-                AERCap: First Error Pointer: 00, GenCap- CGenEn- ChkCap- ChkEn-
-        Capabilities: [18c v1] #19
-        Kernel driver in use: mlx4_core
+It has button down and button up interrupts, and can detect long
+presses (unused) and generate a second type of down interrupt for those.
 
+This really is an input device, which happens to use an adc.
 
-> Regards,
-> Jason
+> Carlo Caione already started to work on an IIO driver for the LRADC:
+> https://github.com/carlocaione/linux/tree/sunxi-lradc
+> maybe you can take over his work.
+
+That won't work because the adc won't sample if the input gets above
+2/3 of Vref. There may be some other mode which does not do that, but
+that is not clearly documented.
+
+Even if an IIO driver turns out to be doable, I strongly believe that
+having a separate input driver for this is best, since this device
+was designed to be used as such. Building input on top of IIO would
+mean polling the adc, while with my driver it actually generates
+button down / up interrupts without any polling being involved.
+
+And no boards I know of are using this as a generic analog input,
+where as many boards are using it as designed.
+
+Regards,
+
+Hans
