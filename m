@@ -1,24 +1,73 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH] ARM: dts: add clock provider for mshc in Exynos4412
-Date: Thu, 02 Jan 2014 17:48:28 +0100
-Message-ID: <27795108.u6MRg8vUSW@amdc1227>
-References: <1388679706-29265-1-git-send-email-tobetter@gmail.com>
+From: Matthew Longnecker <mlongnecker@nvidia.com>
+Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
+Date: Thu, 2 Jan 2014 09:35:00 -0800
+Message-ID: <52C5A344.2060908@nvidia.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1388679706-29265-1-git-send-email-tobetter@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Dongjin Kim <tobetter@gmail.com>
-Cc: Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com
+Cc: wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dongjin,
+Eduardo,
 
-On Friday 03 of January 2014 01:21:46 Dongjin Kim wrote:
-> Add clock lookup information for mshc in Exynos4412.
+For the most part, this binding is really well thought out. It makes a 
+lot of sense to me (as someone who has been working with thermal 
+management in Linux/Android-based mobile devices for a few years).
 
-Thanks for the patch. However this is already fixed in linux-next.
+However, I have one substantive criticism.
 
-Best regards,
-Tomasz
+On 11/12/2013 11:46 AM, Eduardo Valentin wrote:
+> +* Thermal zone nodes
+> +
+> +The thermal zone node is the node containing all the required info
+> +for describing a thermal zone, including its cooling device bindings. The
+> +thermal zone node must contain, apart from its own properties, one sub-node
+> +containing trip nodes and one sub-node containing all the zone cooling maps.
+> +
+> +Required properties:
+...
+> +- thermal-sensors:	A list of thermal sensor phandles and sensor specifier
+> +  Type: list of 	used while monitoring the thermal zone.
+> +  phandles + sensor
+> +  specifier
+...
+> +Optional property:
+> +- coefficients:		An array of integers (one signed cell) containing
+> +  Type: array		coefficients to compose a linear relation between
+> +  Elem size: one cell	the sensors listed in the thermal-sensors property.
+> +  Elem type: signed	Coefficients defaults to 1, in case this property
+> +			is not specified. A simple linear polynomial is used:
+> +			Z = c0 * x0 + c1 + x1 + ... + c(n-1) * x(n-1) + cn.
+> +
+> +			The coefficients are ordered and they match with sensors
+> +			by means of sensor ID. Additional coefficients are
+> +			interpreted as constant offset.
+
+
+"coefficients" is a problematic way of describing the relationship 
+between temperatures at various sensors and temperature at some other 
+location. It would make sense if heat flowed infinitely quickly. 
+However, in practice thermal capacitance means that we need to take into 
+account the _history_ of temperature at sensors in order to predict heat 
+coupled into a distant point.
+
+For example, assuming that handset enclosure starts at ~25C, the CPU 
+could burst to 100C for many minutes before the handset enclosure 
+reaches ~40C. However, at steady-state, the CPU might only be able to 
+sustain 65C without pushing the enclosure above 40C.
+
+I wouldn't be complaining except that you're proposing this as a DT 
+definition. In this case, the binding you've proposed is poor 
+abstraction of the hardware.
+
+thanks,
+Matt Longnecker
+
+p.s. I apologize for chiming in without having read the entire history 
+of the patch set. Engineers on my team will be trying this out for Tegra 
+within the next few weeks.
