@@ -1,289 +1,141 @@
-From: Jingchang Lu <b35083@freescale.com>
-Subject: [PATCHv8 1/2] ARM: dts: vf610: Add eDMA node
-Date: Thu, 2 Jan 2014 14:52:23 +0800
-Message-ID: <1388645544-5596-2-git-send-email-b35083@freescale.com>
-References: <1388645544-5596-1-git-send-email-b35083@freescale.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [alsa-devel] [PATCH] ASoC: generic: add generic compound card
+ with DT support
+Date: Thu, 2 Jan 2014 10:26:47 +0100
+Message-ID: <20140102102647.6efec89d@armhf>
+References: <20131231113138.102044cf@armhf>
+	<52C466E1.3030302@metafoo.de>
+	<20140101210814.31e3f3a9@armhf>
+	<52C4766B.8080000@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1388645544-5596-1-git-send-email-b35083@freescale.com>
+In-Reply-To: <52C4766B.8080000@metafoo.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com
-Cc: dan.j.williams@intel.com, shawn.guo@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jingchang Lu <b35083@freescale.com>
+To: Lars-Peter Clausen <lars@metafoo.de>, Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jingchang Lu <b35083@freescale.com>
----
- changes in v8:
- describe dmamux info in edma node to avoid confusion.
- change eDMA requst source macro definitions.
+On Wed, 01 Jan 2014 21:11:23 +0100
+Lars-Peter Clausen <lars@metafoo.de> wrote:
 
- changes in v7:
- fix dmamux2 and dmamux3 register number.
+> On 01/01/2014 09:08 PM, Jean-Francois Moine wrote:
+> > On Wed, 01 Jan 2014 20:05:05 +0100
+> > Lars-Peter Clausen <lars@metafoo.de> wrote:
+> >=20
+> >> As Mark also said, this binding definitely leaks way too much inte=
+rnals of
+> >> the current ASoC implementation. In my opinion the way forward for=
+ ASoC is
+> >> to stop to distinguish between different types of components. This=
+ is on one
+> >> hand CODECS and CPU-DAIs and on the other hand also front-end and =
+beck-end
+> >> DAIs. The first steps in this direction have already been take by =
+the start
+> >> of the component-fication, but its still a long way to go. Exposin=
+g those
+> >> concepts via the devicetree will only make it harder to get rid of=
+ them
+> >> later. The bindings for a compound card should essentially describ=
+e which
+> >> components are involved and how the fabric between and around them=
+ looks
+> >> like. If the type of the component is needed in the ASoC implement=
+ation it
+> >> should be possible to auto-discover it. Also I think we want to al=
+ign the
+> >> devicetree bindings with what the media people have been doing[1].
+> >=20
+> > (you forgot the [1] reference)
+>=20
+> http://lxr.free-electrons.com/source/Documentation/devicetree/binding=
+s/media/video-interfaces.txt
 
- no changes in v2 ~ v6.
+I see the idea. So here is a proposal of DT for the Cubox (audio + vide=
+o)
+which should work without too many difficulties.
 
- arch/arm/boot/dts/vf610.dtsi         |  31 ++++++
- include/dt-bindings/dma/vf610-edma.h | 195 +++++++++++++++++++++++++++++++++++
- 2 files changed, 226 insertions(+)
- create mode 100644 include/dt-bindings/dma/vf610-edma.h
+/* video / audio transmitter */
 
-diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-index ef8a0ee..9f433b4 100644
---- a/arch/arm/boot/dts/vf610.dtsi
-+++ b/arch/arm/boot/dts/vf610.dtsi
-@@ -10,6 +10,7 @@
- #include "skeleton.dtsi"
- #include "vf610-pingrp.h"
- #include <dt-bindings/clock/vf610-clock.h>
-+#include <dt-bindings/dma/vf610-edma.h>
- 
- / {
- 	aliases {
-@@ -87,6 +88,21 @@
- 				arm,tag-latency = <2 2 2>;
- 			};
- 
-+			edma0: dma-controller@40018000 {
-+				#dma-cells = <2>;
-+				compatible = "fsl,vf610-edma";
-+				reg = <0x40018000 0x2000>,
-+					<0x40024000 0x1000>,
-+					<0x40025000 0x1000>;
-+				interrupts = <0 8 0x04>,
-+						<0 9 0x04>;
-+				interrupt-names = "edma-tx", "edma-err";
-+				dma-channels = <32>;
-+				clocks = <&clks VF610_CLK_DMAMUX0>,
-+					<&clks VF610_CLK_DMAMUX1>;
-+				clock-names = "dmamux0", "dmamux1";
-+			};
-+
- 			uart0: serial@40027000 {
- 				compatible = "fsl,vf610-lpuart";
- 				reg = <0x40027000 0x1000>;
-@@ -262,6 +278,21 @@
- 			reg = <0x40080000 0x80000>;
- 			ranges;
- 
-+			edma1: dma-controller@40098000 {
-+				#dma-cells = <2>;
-+				compatible = "fsl,vf610-edma";
-+				reg = <0x40098000 0x2000>,
-+					<0x400a1000 0x1000>,
-+					<0x400a2000 0x1000>;
-+				interrupts = <0 10 0x04>,
-+						<0 11 0x04>;
-+				interrupt-names = "edma-tx", "edma-err";
-+				dma-channels = <32>;
-+				clocks = <&clks VF610_CLK_DMAMUX2>,
-+					<&clks VF610_CLK_DMAMUX3>;
-+				clock-names = "dmamux0", "dmamux1";
-+			};
-+
- 			uart4: serial@400a9000 {
- 				compatible = "fsl,vf610-lpuart";
- 				reg = <0x400a9000 0x1000>;
-diff --git a/include/dt-bindings/dma/vf610-edma.h b/include/dt-bindings/dma/vf610-edma.h
-new file mode 100644
-index 0000000..2c04142
---- /dev/null
-+++ b/include/dt-bindings/dma/vf610-edma.h
-@@ -0,0 +1,195 @@
-+/*
-+ * Copyright 2013-2014 Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ *
-+ */
-+
-+#ifndef __DT_BINDINGS_VF610_EDMA_H__
-+#define __DT_BINDINGS_VF610_EDMA_H__
-+
-+#define VF610_EDMA_DMAMUX0		0
-+#define VF610_EDMA_DMAMUX1		1
-+
-+/* eDMA0 DMAMUX0 group reqeust source(slot) number */
-+#define VF610_EDMA0_MUX0_UART0_RX	2
-+#define VF610_EDMA0_MUX0_UART0_TX	3
-+#define VF610_EDMA0_MUX0_UART1_RX	4
-+#define VF610_EDMA0_MUX0_UART1_TX	5
-+#define VF610_EDMA0_MUX0_UART2_RX	6
-+#define VF610_EDMA0_MUX0_UART2_TX	7
-+#define VF610_EDMA0_MUX0_UART3_RX	8
-+#define VF610_EDMA0_MUX0_UART3_TX	9
-+#define VF610_EDMA0_MUX0_DSPI0_RX	12
-+#define VF610_EDMA0_MUX0_DSPI0_TX	13
-+#define VF610_EDMA0_MUX0_DSPI1_RX	14
-+#define VF610_EDMA0_MUX0_DSPI1_TX	15
-+#define VF610_EDMA0_MUX0_SAI0_RX	16
-+#define VF610_EDMA0_MUX0_SAI0_TX	17
-+#define VF610_EDMA0_MUX0_SAI1_RX	18
-+#define VF610_EDMA0_MUX0_SAI1_TX	19
-+#define VF610_EDMA0_MUX0_SAI2_RX	20
-+#define VF610_EDMA0_MUX0_SAI2_TX	21
-+#define VF610_EDMA0_MUX0_PDB		22
-+#define VF610_EDMA0_MUX0_FTM0_CH0	24
-+#define VF610_EDMA0_MUX0_FTM0_CH1	25
-+#define VF610_EDMA0_MUX0_FTM0_CH2	26
-+#define VF610_EDMA0_MUX0_FTM0_CH3	27
-+#define VF610_EDMA0_MUX0_FTM0_CH4	28
-+#define VF610_EDMA0_MUX0_FTM0_CH5	29
-+#define VF610_EDMA0_MUX0_FTM0_CH6	30
-+#define VF610_EDMA0_MUX0_FTM0_CH7	31
-+#define VF610_EDMA0_MUX0_FTM1_CH0	32
-+#define VF610_EDMA0_MUX0_FTM1_CH1	33
-+#define VF610_EDMA0_MUX0_ADC0		34
-+#define VF610_EDMA0_MUX0_QUADSPI0	36
-+#define VF610_EDMA0_MUX0_GPIOA		38
-+#define VF610_EDMA0_MUX0_GPIOB		39
-+#define VF610_EDMA0_MUX0_GPIOC		40
-+#define VF610_EDMA0_MUX0_GPIOD		41
-+#define VF610_EDMA0_MUX0_GPIOE		42
-+#define VF610_EDMA0_MUX0_RLE_RX		45
-+#define VF610_EDMA0_MUX0_RLE_TX		46
-+#define VF610_EDMA0_MUX0_SPDIF_RX	47
-+#define VF610_EDMA0_MUX0_SPDIF_TX	48
-+#define VF610_EDMA0_MUX0_I2C0_RX	50
-+#define VF610_EDMA0_MUX0_I2C0_TX	51
-+#define VF610_EDMA0_MUX0_I2C1_RX	52
-+#define VF610_EDMA0_MUX0_I2C1_TX	53
-+
-+/* eDMA DMAMUX1 group request source(slot) number */
-+#define VF610_EDMA0_MUX1_UART4_RX	2
-+#define VF610_EDMA0_MUX1_UART4_TX	3
-+#define VF610_EDMA0_MUX1_UART5_RX	4
-+#define VF610_EDMA0_MUX1_UART5_TX	5
-+#define VF610_EDMA0_MUX1_SAI3_RX	8
-+#define VF610_EDMA0_MUX1_SAI3_TX	9
-+#define VF610_EDMA0_MUX1_DSPI2_RX	10
-+#define VF610_EDMA0_MUX1_DSPI2_TX	11
-+#define VF610_EDMA0_MUX1_DSPI3_RX	12
-+#define VF610_EDMA0_MUX1_DSPI3_TX	13
-+#define VF610_EDMA0_MUX1_FTM2_CH0	16
-+#define VF610_EDMA0_MUX1_FTM2_CH1	17
-+#define VF610_EDMA0_MUX1_FTM3_CH0	18
-+#define VF610_EDMA0_MUX1_FTM3_CH1	19
-+#define VF610_EDMA0_MUX1_FTM3_CH2	20
-+#define VF610_EDMA0_MUX1_FTM3_CH3	21
-+#define VF610_EDMA0_MUX1_FTM3_CH4	22
-+#define VF610_EDMA0_MUX1_FTM3_CH5	24
-+#define VF610_EDMA0_MUX1_FTM3_CH6	25
-+#define VF610_EDMA0_MUX1_FTM3_CH7	26
-+#define VF610_EDMA0_MUX1_QUADSPI1	27
-+#define VF610_EDMA0_MUX1_DAC0		32
-+#define VF610_EDMA0_MUX1_DAC1		33
-+#define VF610_EDMA0_MUX1_ESAI_BIFIFO_TX	34
-+#define VF610_EDMA0_MUX1_ESAI_BIFIFO_RX	35
-+#define VF610_EDMA0_MUX1_I2C2_RX	36
-+#define VF610_EDMA0_MUX1_I2C2_TX	37
-+#define VF610_EDMA0_MUX1_I2C3_RX	38
-+#define VF610_EDMA0_MUX1_I2C3_TX	39
-+#define VF610_EDMA0_MUX1_ASRC0_TX	40
-+#define VF610_EDMA0_MUX1_ASRC0_RX	41
-+#define VF610_EDMA0_MUX1_ASRC1_TX	42
-+#define VF610_EDMA0_MUX1_ASRC1_RX	43
-+#define VF610_EDMA0_MUX1_TIMER0		44
-+#define VF610_EDMA0_MUX1_TIMER1		45
-+#define VF610_EDMA0_MUX1_TIMER2		46
-+#define VF610_EDMA0_MUX1_TIMER3		47
-+#define VF610_EDMA0_MUX1_TIMER4		48
-+#define VF610_EDMA0_MUX1_TIMER5		49
-+#define VF610_EDMA0_MUX1_TIMER6		50
-+#define VF610_EDMA0_MUX1_TIMER7		51
-+
-+/* eDMA1 DMAMUX0 request source(slot) number */
-+#define VF610_EDMA1_MUX0_UART4_RX	2
-+#define VF610_EDMA1_MUX0_UART4_TX	3
-+#define VF610_EDMA1_MUX0_UART5_RX	4
-+#define VF610_EDMA1_MUX0_UART5_TX	5
-+#define VF610_EDMA1_MUX0_SAI3_RX	8
-+#define VF610_EDMA1_MUX0_SAI3_TX	9
-+#define VF610_EDMA1_MUX0_DSPI2_RX	10
-+#define VF610_EDMA1_MUX0_DSPI2_TX	11
-+#define VF610_EDMA1_MUX0_DSPI3_RX	12
-+#define VF610_EDMA1_MUX0_DSPI3_TX	13
-+#define VF610_EDMA1_MUX0_FTM2_CH0	16
-+#define VF610_EDMA1_MUX0_FTM2_CH1	17
-+#define VF610_EDMA1_MUX0_FTM3_CH0	18
-+#define VF610_EDMA1_MUX0_FTM3_CH1	19
-+#define VF610_EDMA1_MUX0_FTM3_CH2	20
-+#define VF610_EDMA1_MUX0_FTM3_CH3	21
-+#define VF610_EDMA1_MUX0_FTM3_CH4	22
-+#define VF610_EDMA1_MUX0_FTM3_CH5	24
-+#define VF610_EDMA1_MUX0_FTM3_CH6	25
-+#define VF610_EDMA1_MUX0_FTM3_CH7	26
-+#define VF610_EDMA1_MUX0_QUADSPI1	27
-+#define VF610_EDMA1_MUX0_DAC0		32
-+#define VF610_EDMA1_MUX0_DAC1		33
-+#define VF610_EDMA1_MUX0_ESAI_BIFIFO_TX	34
-+#define VF610_EDMA1_MUX0_ESAI_BIFIFO_RX	35
-+#define VF610_EDMA1_MUX0_I2C2_RX	36
-+#define VF610_EDMA1_MUX0_I2C2_TX	37
-+#define VF610_EDMA1_MUX0_I2C3_RX	38
-+#define VF610_EDMA1_MUX0_I2C3_TX	39
-+#define VF610_EDMA1_MUX0_ASRC0_TX	40
-+#define VF610_EDMA1_MUX0_ASRC0_RX	41
-+#define VF610_EDMA1_MUX0_ASRC1_TX	42
-+#define VF610_EDMA1_MUX0_ASRC1_RX	43
-+#define VF610_EDMA1_MUX0_TIMER0		44
-+#define VF610_EDMA1_MUX0_TIMER1		45
-+#define VF610_EDMA1_MUX0_TIMER2		46
-+#define VF610_EDMA1_MUX0_TIMER3		47
-+#define VF610_EDMA1_MUX0_TIMER4		48
-+#define VF610_EDMA1_MUX0_TIMER5		49
-+#define VF610_EDMA1_MUX0_TIMER6		50
-+#define VF610_EDMA1_MUX0_TIMER7		51
-+
-+/* eDMA1 DMAMUX1 group reqeust source(slot) number */
-+#define VF610_EDMA1_MUX1_UART0_RX	2
-+#define VF610_EDMA1_MUX1_UART0_TX	3
-+#define VF610_EDMA1_MUX1_UART1_RX	4
-+#define VF610_EDMA1_MUX1_UART1_TX	5
-+#define VF610_EDMA1_MUX1_UART2_RX	6
-+#define VF610_EDMA1_MUX1_UART2_TX	7
-+#define VF610_EDMA1_MUX1_UART3_RX	8
-+#define VF610_EDMA1_MUX1_UART3_TX	9
-+#define VF610_EDMA1_MUX1_DSPI0_RX	12
-+#define VF610_EDMA1_MUX1_DSPI0_TX	13
-+#define VF610_EDMA1_MUX1_DSPI1_RX	14
-+#define VF610_EDMA1_MUX1_DSPI1_TX	15
-+#define VF610_EDMA1_MUX1_SAI0_RX	16
-+#define VF610_EDMA1_MUX1_SAI0_TX	17
-+#define VF610_EDMA1_MUX1_SAI1_RX	18
-+#define VF610_EDMA1_MUX1_SAI1_TX	19
-+#define VF610_EDMA1_MUX1_SAI2_RX	20
-+#define VF610_EDMA1_MUX1_SAI2_TX	21
-+#define VF610_EDMA1_MUX1_PDB		22
-+#define VF610_EDMA1_MUX1_FTM0_CH0	24
-+#define VF610_EDMA1_MUX1_FTM0_CH1	25
-+#define VF610_EDMA1_MUX1_FTM0_CH2	26
-+#define VF610_EDMA1_MUX1_FTM0_CH3	27
-+#define VF610_EDMA1_MUX1_FTM0_CH4	28
-+#define VF610_EDMA1_MUX1_FTM0_CH5	29
-+#define VF610_EDMA1_MUX1_FTM0_CH6	30
-+#define VF610_EDMA1_MUX1_FTM0_CH7	31
-+#define VF610_EDMA1_MUX1_FTM1_CH0	32
-+#define VF610_EDMA1_MUX1_FTM1_CH1	33
-+#define VF610_EDMA1_MUX1_ADC0		34
-+#define VF610_EDMA1_MUX1_QUADSPI0	36
-+#define VF610_EDMA1_MUX1_GPIOA		38
-+#define VF610_EDMA1_MUX1_GPIOB		39
-+#define VF610_EDMA1_MUX1_GPIOC		40
-+#define VF610_EDMA1_MUX1_GPIOD		41
-+#define VF610_EDMA1_MUX1_GPIOE		42
-+#define VF610_EDMA1_MUX1_RLE_RX		45
-+#define VF610_EDMA1_MUX1_RLE_TX		46
-+#define VF610_EDMA1_MUX1_SPDIF_RX	47
-+#define VF610_EDMA1_MUX1_SPDIF_TX	48
-+#define VF610_EDMA1_MUX1_I2C0_RX	50
-+#define VF610_EDMA1_MUX1_I2C0_TX	51
-+#define VF610_EDMA1_MUX1_I2C1_RX	52
-+#define VF610_EDMA1_MUX1_I2C1_TX	53
-+
-+#endif
--- 
-1.8.0
+	tda998x: hdmi-encoder {
+		compatible =3D "nxp,tda998x";
+		...
+
+		/* video */
+		port@0 {
+			tda998x_0: endpoint {
+				reg =3D <0x230145>;
+				remote-endpoint =3D <&lcd0_0>;
+			};
+		};
+
+		/* audio */
+		port@1 {
+			hdmi_i2s_audio: endpoint@0 {
+				reg =3D <0x03>;
+				remote-endpoint =3D <&audio_hdmi_i2s>;
+			};
+			hdmi_spdif_audio: endpoint@1 {
+				reg =3D <0x04>;
+				remote-endpoint =3D <&audio_hdmi_spdif>;
+			};
+		};
+	};
+
+	toslink: spdif {
+		compatible =3D "linux,spdif-dit";
+		port {
+			spdif_audio: endpoint {
+				remote-endpoint =3D <&audio_spdif>;
+			};
+		};
+	};
+
+/* video */
+
+	lcd0: video-controller {
+		compatible =3D "marvell,dove-lcd";
+		...
+		port {
+			lcd0_0: endpoint {
+				remote-endpoint =3D <&tda998x_0>;
+			};
+		};
+	};
+
+	video {
+		compatible =3D "media-video";
+		video-controller =3D <&lcd0>;
+	};
+
+/* audio */
+
+	audio1: audio-controller {
+		compatible =3D "marvell,dove-audio";
+		...
+		port@0 {
+			audio_hdmi_i2s: endpoint {
+				remote-endpoint =3D <&hdmi_i2s_audio>;
+			};
+		};
+
+		port@1 {
+			audio_hdmi_spdif: endpoint@0 {
+				remote-endpoint =3D <&hdmi_spdif_audio>;
+			};
+			audio_spdif: endpoint@1 {
+				remote-endpoint =3D <&spdif_audio>;
+			};
+		};
+	};
+
+	sound {
+		compatible =3D "media-audio";
+		audio-controller =3D <&audio1>;
+	};
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
