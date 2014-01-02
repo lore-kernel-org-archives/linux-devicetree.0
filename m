@@ -1,70 +1,174 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 1/4] input: Add new sun4i-lradc-keys drivers
-Date: Thu, 02 Jan 2014 12:59:28 +0100
-Message-ID: <1700375.GaI3zFl6RI@phil>
-References: <1388604610-20380-1-git-send-email-hdegoede@redhat.com> <20140101205603.GA1141@core.coreip.homeip.net> <52C5336B.9010903@redhat.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 11/21] ARM: pxa: support ICP DAS LP-8x4x FPGA irq
+Date: Thu, 2 Jan 2014 13:32:49 +0100
+Message-ID: <CACRpkdaY7xpoeeUqBBqUS2swe6Y5gKt67VYNvNRrsbFhyU=ATw@mail.gmail.com>
+References: <1386901645-28895-1-git-send-email-ynvich@gmail.com>
+	<1387309071-22382-1-git-send-email-ynvich@gmail.com>
+	<1387309071-22382-12-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <52C5336B.9010903@redhat.com>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-sunxi@googlegroups.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1387309071-22382-12-git-send-email-ynvich@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sergei Ianovich <ynvich@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans, Dmitry,
+On Tue, Dec 17, 2013 at 8:37 PM, Sergei Ianovich <ynvich@gmail.com> wrote:
 
-Am Donnerstag, 2. Januar 2014, 10:37:47 schrieb Hans de Goede:
-> Hi,
-> 
-> On 01/01/2014 09:56 PM, Dmitry Torokhov wrote:
-> > Hi Hans,
-> > 
-> > On Wed, Jan 01, 2014 at 08:30:07PM +0100, Hans de Goede wrote:
-> >> +Required properties:
-> >> + - compatible: "allwinner,sun4i-lradc-keys"
-> >> + - reg: mmio address range of the chip
-> >> + - interrupts: interrupt to which the chip is connected
-> >> + - allwinner,chan0-step: step in mV between keys must be 150 or 200
-> >> + - allwinner,chan0-keycodes: array of include/uapi/linux/input.h KEY_
-> >> codes> 
-> > I think this should be "linux,chan0-keycodes".
-> 
-> Right, because the codes are Linux specific, will fix in v2.
+> ICP DAS LP-8x4x contains FPGA chip. The chip functions as a interrupt
+> source providing 16 additional interrupts among other things. The
+> interrupt lines are muxed to a GPIO pin. GPIO pins are in turn muxed
+> to a CPU interrupt line.
+>
+> Until pxa is completely converted to device tree, it is impossible
+> to use IRQCHIP_DECLARE() and the irqdomain needs to added manually.
+>
+> Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
+> CC: Arnd Bergmann <arnd@arndb.de>
+> CC: Linus Walleij <linus.walleij@linaro.org>
 
-but the property with its "chan0-" thingy would be allwinner-specific if I'm 
-not mistaken.
+(...)
+> +++ b/drivers/irqchip/irq-lp8x4x.c
 
-Also, instead of inventing yet another vendor-specific property, why not re-use 
-a button binding similar to gpio-keys like:
+Usually combined GPIO+IRQ controllers are put into drivers/gpio but
+this is a bit special as it seems to handle also non-GPIO-related IRQs
+so let's get some input on this.
 
-       lradc: lradc@01c22800 {
-               compatible = "allwinner,sun4i-lradc-keys";
-               reg = <0x01c22800 0x100>;
-               interrupts = <31>;
-               allwinner,chan0-step = <200>;
+> +static unsigned char irq_sys_enabled;
+> +static unsigned char irq_high_enabled;
+> +static void *base;
+> +static int irq_base;
+> +static int num_irq = 16;
 
-		#address-cells = <1>;
-		#size-cells = <0>;
+Please use the state container design pattern and get rid of these
+global variables.
 
-		button@0 {
-			reg = <0>; /* your channel index from above */
-			linux,code = <115>; /* already used as dt-property */
-		};
+This documentation patch describes this pattern and has been
+merged for v3.14, so please read this:
+http://marc.info/?l=linux-kernel&m=138615980524966&w=2
 
-		button@1 {
-			reg = <1>;
-			linux,code = <114>;
-		};
+> +static void lp8x4x_mask_irq(struct irq_data *d)
+> +{
+> +       unsigned mask;
+> +       int irq = d->irq - irq_base;
 
-...
+Don't calculate hardware IRQ numbers from offsets. Use
+irqdomain, which is done for exactly this purpose.
 
-       };
+> +       if (irq < 8) {
+> +               irq_high_enabled &= ~(1 << irq);
 
-But I may be on the wrong track here, so I've included the devicetree-people 
-for help, which I guess should've been included from the beginning.
+I usually use the BIT() macro for this, like:
 
+#include <linux/bitops.h>
 
-Heiko
+irq_high_enabled &= ~BIT(irq);
 
+> +static struct irq_chip lp8x4x_irq_chip = {
+> +       .name                   = "FPGA",
+> +       .irq_ack                = lp8x4x_mask_irq,
+> +       .irq_mask               = lp8x4x_mask_irq,
+> +       .irq_mask_ack           = lp8x4x_mask_irq,
+> +       .irq_unmask             = lp8x4x_unmask_irq,
+> +};
+
+After you have added your state container you will have
+a handle to your struct gpio_chip in the cookie passed to
+as irqdata.
+
+Then you need to mark the GPIO lines used for IRQs by
+doing something similar to this patch in your startup()
+and shutdown() callbacks:
+http://marc.info/?l=linux-gpio&m=138547223832167&w=2
+
+> +static void lp8x4x_irq_handler(unsigned int irq, struct irq_desc *desc)
+> +{> +static void lp8x4x_unmask_irq(struct irq_data *d)
+> +{
+> +       unsigned mask;
+> +       int irq = d->irq - irq_base;
+
+Use the irqdomain.
+
+> +       int loop, n;
+> +       unsigned long mask;
+> +       struct irq_chip *chip = irq_desc_get_chip(desc);
+> +
+> +       chained_irq_enter(chip, desc);
+> +
+> +       do {
+> +               loop = 0;
+> +               mask = ioread8(base + CLRHILVINT) & 0xff;
+> +               mask |= (ioread8(base + SECOINT) & 0x1f) << 8;
+> +               mask |= (ioread8(base + PRIMINT) & 0xe0) << 8;
+
+#define these magic constants so we know what they mean.
+0x1f, 0xe0...
+
+> +               mask &= (irq_high_enabled | (irq_sys_enabled << 8));
+> +               for_each_set_bit(n, &mask, BITS_PER_LONG) {
+> +                       loop = 1;
+> +
+> +                       generic_handle_irq(irq_base + n);
+> +               }
+> +       } while (loop);
+
+If you're going to do it like this then have "loop" be a bool variable.
+
+However I don't quite like this construction, an eternal for() loop
+with a break; statement works too, but try to just use the mask and
+get rid of the "loop" helper variable.
+
+> +       iowrite8(0, base + EOI);
+
+This looks dangerous, what are you doing here?
+
+> +static int lp8x4x_irq_probe(struct platform_device *pdev)
+> +{
+> +       struct resource *rm, *ri;
+
+Explain these names. Usually we call them "res" or something
+simple like this.
+
+> +       irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
+> +       if (irq_base < 0) {
+> +               dev_err(&pdev->dev, "Failed to allocate IRQ numbers\n");
+> +               return irq_base;
+> +       }
+
+Instead of doing this, create the descriptors by calling
+irq_create_mapping() on all the hardware lines after adding
+the irq domain.
+
+> +       domain = irq_domain_add_legacy(np, num_irq, irq_base, 0,
+> +                                      &lp8x4x_irq_domain_ops, NULL);
+> +       if (!domain) {
+> +               dev_err(&pdev->dev, "Failed to add IRQ domain\n");
+> +               return -ENOMEM;
+> +       }
+
+Why are you using a legacy irqdomain? You're not dependent
+on any specific base so use a linear domain.
+
+> +       iowrite8(0, base + CLRRISEINT);
+> +       iowrite8(0, base + ENRISEINT);
+> +       iowrite8(0, base + CLRFALLINT);
+> +       iowrite8(0, base + ENFALLINT);
+> +       iowrite8(0, base + CLRHILVINT);
+> +       iowrite8(0, base + ENHILVINT);
+> +       iowrite8(0, base + ENSYSINT);
+> +       iowrite8(0, base + SECOINT);
+
+Add a comment explaining what you're doing here.
+
+> +static int __init lp8x4x_irq_init(void)
+> +{
+> +       return platform_driver_register(&lp8x4x_irq_driver);
+> +}
+> +postcore_initcall(lp8x4x_irq_init);
+
+Do you *have* to do it this early? I guess if it's used for
+the UARTs then yes, but make a case for it...
+
+Yours,
+Linus Walleij
