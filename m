@@ -1,174 +1,76 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 11/21] ARM: pxa: support ICP DAS LP-8x4x FPGA irq
-Date: Thu, 2 Jan 2014 13:32:49 +0100
-Message-ID: <CACRpkdaY7xpoeeUqBBqUS2swe6Y5gKt67VYNvNRrsbFhyU=ATw@mail.gmail.com>
-References: <1386901645-28895-1-git-send-email-ynvich@gmail.com>
-	<1387309071-22382-1-git-send-email-ynvich@gmail.com>
-	<1387309071-22382-12-git-send-email-ynvich@gmail.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [alsa-devel] [PATCH] ASoC: generic: add generic compound card
+ with DT support
+Date: Thu, 2 Jan 2014 13:44:37 +0100
+Message-ID: <20140102134437.1e39da55@armhf>
+References: <20131231113138.102044cf@armhf>
+	<52C466E1.3030302@metafoo.de>
+	<20140101210814.31e3f3a9@armhf>
+	<52C4766B.8080000@metafoo.de>
+	<20140102102647.6efec89d@armhf>
+	<20140102111056.GT31886@sirena.org.uk>
+	<20140102124331.2bcfc172@armhf>
+	<20140102115618.GW31886@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1387309071-22382-12-git-send-email-ynvich@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140102115618.GW31886@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2013 at 8:37 PM, Sergei Ianovich <ynvich@gmail.com> wrote:
+On Thu, 2 Jan 2014 11:56:18 +0000
+Mark Brown <broonie@kernel.org> wrote:
 
-> ICP DAS LP-8x4x contains FPGA chip. The chip functions as a interrupt
-> source providing 16 additional interrupts among other things. The
-> interrupt lines are muxed to a GPIO pin. GPIO pins are in turn muxed
-> to a CPU interrupt line.
->
-> Until pxa is completely converted to device tree, it is impossible
-> to use IRQCHIP_DECLARE() and the irqdomain needs to added manually.
->
-> Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
-> CC: Arnd Bergmann <arnd@arndb.de>
-> CC: Linus Walleij <linus.walleij@linaro.org>
+> On Thu, Jan 02, 2014 at 12:43:31PM +0100, Jean-Francois Moine wrote:
+> > Mark Brown <broonie@kernel.org> wrote:
+>=20
+> > > I think we want an explicit object in the card representing the D=
+AIs.
+> > > This will both be useful for making it easy to find the configura=
+tion
+> > > for the link and will be more extensible for the cases where mult=
+iple
+> > > devices are connected, you can't just assume there's just two.
+>=20
+> > I don't see the problem: the 'port' is the DAI. The associated
+> > endpoints give the DAI links and the routing information.
+>=20
+> > As the DT definition has been done for video, some properties may b=
+e
+> > added at will for audio.
+>=20
+> > What kind of object were you thinking of?
+>=20
+> Like I say multiple devices on the same link - if you're just listing=
+ a
+> single remote device there can't be more than one.
 
-(...)
-> +++ b/drivers/irqchip/irq-lp8x4x.c
+I still don't understand. There is already such cases in the Cubox:
+the S/PDIF output from the kirkwood audio controller is connected to
+both the HDMI transmitter and the S/PDIF TOSLINK. So, in the audio
+controller, the port @1 defines the S/PDIF DAI and the endpoints @0 and
+@1 point to the remote DAIs, creating 2 snd DAI links:
 
-Usually combined GPIO+IRQ controllers are put into drivers/gpio but
-this is a bit special as it seems to handle also non-GPIO-related IRQs
-so let's get some input on this.
+	port@1 {
+		audio_hdmi_spdif: endpoint@0 {
+			remote-endpoint =3D <&hdmi_spdif_audio>;
+		};
+		audio_spdif: endpoint@1 {
+			remote-endpoint =3D <&spdif_audio>;
+		};
+	};
 
-> +static unsigned char irq_sys_enabled;
-> +static unsigned char irq_high_enabled;
-> +static void *base;
-> +static int irq_base;
-> +static int num_irq = 16;
+in the snd card:
 
-Please use the state container design pattern and get rid of these
-global variables.
+	- DAI link 1 =3D 'audio controller spdif out' <=3D> 'hdmi spdif'
+	- DAI link 2 =3D 'audio controller spdif out' <=3D> 'spdif'
 
-This documentation patch describes this pattern and has been
-merged for v3.14, so please read this:
-http://marc.info/?l=linux-kernel&m=138615980524966&w=2
+If I am wrong, may you give us an example for which such a DT would not
+work?
 
-> +static void lp8x4x_mask_irq(struct irq_data *d)
-> +{
-> +       unsigned mask;
-> +       int irq = d->irq - irq_base;
-
-Don't calculate hardware IRQ numbers from offsets. Use
-irqdomain, which is done for exactly this purpose.
-
-> +       if (irq < 8) {
-> +               irq_high_enabled &= ~(1 << irq);
-
-I usually use the BIT() macro for this, like:
-
-#include <linux/bitops.h>
-
-irq_high_enabled &= ~BIT(irq);
-
-> +static struct irq_chip lp8x4x_irq_chip = {
-> +       .name                   = "FPGA",
-> +       .irq_ack                = lp8x4x_mask_irq,
-> +       .irq_mask               = lp8x4x_mask_irq,
-> +       .irq_mask_ack           = lp8x4x_mask_irq,
-> +       .irq_unmask             = lp8x4x_unmask_irq,
-> +};
-
-After you have added your state container you will have
-a handle to your struct gpio_chip in the cookie passed to
-as irqdata.
-
-Then you need to mark the GPIO lines used for IRQs by
-doing something similar to this patch in your startup()
-and shutdown() callbacks:
-http://marc.info/?l=linux-gpio&m=138547223832167&w=2
-
-> +static void lp8x4x_irq_handler(unsigned int irq, struct irq_desc *desc)
-> +{> +static void lp8x4x_unmask_irq(struct irq_data *d)
-> +{
-> +       unsigned mask;
-> +       int irq = d->irq - irq_base;
-
-Use the irqdomain.
-
-> +       int loop, n;
-> +       unsigned long mask;
-> +       struct irq_chip *chip = irq_desc_get_chip(desc);
-> +
-> +       chained_irq_enter(chip, desc);
-> +
-> +       do {
-> +               loop = 0;
-> +               mask = ioread8(base + CLRHILVINT) & 0xff;
-> +               mask |= (ioread8(base + SECOINT) & 0x1f) << 8;
-> +               mask |= (ioread8(base + PRIMINT) & 0xe0) << 8;
-
-#define these magic constants so we know what they mean.
-0x1f, 0xe0...
-
-> +               mask &= (irq_high_enabled | (irq_sys_enabled << 8));
-> +               for_each_set_bit(n, &mask, BITS_PER_LONG) {
-> +                       loop = 1;
-> +
-> +                       generic_handle_irq(irq_base + n);
-> +               }
-> +       } while (loop);
-
-If you're going to do it like this then have "loop" be a bool variable.
-
-However I don't quite like this construction, an eternal for() loop
-with a break; statement works too, but try to just use the mask and
-get rid of the "loop" helper variable.
-
-> +       iowrite8(0, base + EOI);
-
-This looks dangerous, what are you doing here?
-
-> +static int lp8x4x_irq_probe(struct platform_device *pdev)
-> +{
-> +       struct resource *rm, *ri;
-
-Explain these names. Usually we call them "res" or something
-simple like this.
-
-> +       irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
-> +       if (irq_base < 0) {
-> +               dev_err(&pdev->dev, "Failed to allocate IRQ numbers\n");
-> +               return irq_base;
-> +       }
-
-Instead of doing this, create the descriptors by calling
-irq_create_mapping() on all the hardware lines after adding
-the irq domain.
-
-> +       domain = irq_domain_add_legacy(np, num_irq, irq_base, 0,
-> +                                      &lp8x4x_irq_domain_ops, NULL);
-> +       if (!domain) {
-> +               dev_err(&pdev->dev, "Failed to add IRQ domain\n");
-> +               return -ENOMEM;
-> +       }
-
-Why are you using a legacy irqdomain? You're not dependent
-on any specific base so use a linear domain.
-
-> +       iowrite8(0, base + CLRRISEINT);
-> +       iowrite8(0, base + ENRISEINT);
-> +       iowrite8(0, base + CLRFALLINT);
-> +       iowrite8(0, base + ENFALLINT);
-> +       iowrite8(0, base + CLRHILVINT);
-> +       iowrite8(0, base + ENHILVINT);
-> +       iowrite8(0, base + ENSYSINT);
-> +       iowrite8(0, base + SECOINT);
-
-Add a comment explaining what you're doing here.
-
-> +static int __init lp8x4x_irq_init(void)
-> +{
-> +       return platform_driver_register(&lp8x4x_irq_driver);
-> +}
-> +postcore_initcall(lp8x4x_irq_init);
-
-Do you *have* to do it this early? I guess if it's used for
-the UARTs then yes, but make a case for it...
-
-Yours,
-Linus Walleij
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
