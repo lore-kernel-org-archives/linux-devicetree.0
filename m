@@ -1,33 +1,526 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v2 0/8] clk: max77686: Clock provider implementation fixes
-Date: Thu, 02 Jan 2014 16:22:12 +0100
-Message-ID: <2890647.PEOApIOYyP@amdc1227>
-References: <1386864441-19561-1-git-send-email-t.figa@samsung.com>
- <20131231194215.12054.39705@quantum>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH 1/3] arm: mvebu: add new dts file for old variant
+ of Openblocks AX3-4
+Date: Thu, 02 Jan 2014 17:17:41 +0100
+Message-ID: <52C59125.9050407@free-electrons.com>
+References: <1388508293-9141-1-git-send-email-gregory.clement@free-electrons.com> <1388508293-9141-2-git-send-email-gregory.clement@free-electrons.com> <20140101214116.GY19878@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20131231194215.12054.39705@quantum>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140101214116.GY19878-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 31 of December 2013 11:42:15 Mike Turquette wrote:
-> Quoting Tomasz Figa (2013-12-12 08:07:13)
-> > This series intends to improve clock provider impementation of max77686
-> > PMIC driver. First two patches are simple fixes of current implementation
-> > to allow correct control of provided clocks. Further patches refactor
-> > the driver to make the code cleaner and prepare for further patches. Then
-> > last two patches add registration of OF clock provider and adjust device
-> > tree nodes of boards containing max77686 chip to contain properties
-> > required by clock provider.
+Hi Jason,
+
+I have just send a new series which I hope will supersede this one.
+However I will answer on some points:
+
+On 01/01/2014 22:41, Jason Cooper wrote:
+> Gregory,
 > 
-> Acked-by: Mike Turquette <mturquette@linaro.org>
+> Sorry, but we seem to have a fundamental mis-understanding here.  First,
+> whatever we end up deciding for the compatible strings needs to be
+> documented.  Which seems to have not made it into this series.
+> 
+> Second, I'm having trouble explaining this (in my head), so I'm adding
+> the DT ml so hopefully someone there can chime in.
+> 
+> AFAICT, the marvell,mv78230-i2c compatible string, added in v3.12, refers
+> to the IP block on the A0 revision of the SoC.  Since we have set that,
 
-Hmm... Shouldn't this series go through the clk tree directly? If not, who
-should be taking it?
+Actually in v3.12 the marvell,mv78230-i2c refer to the B0 revision as I
+only worked on it on board using this revision. That's why I proposed
+to introduced the marvell,mv78230-a0-i2c compatible string. My concerns was
+to not break the existing behavior.
 
-Best regards,
-Tomasz
+Currently with the marvell,mv78230-i2c compatible string the kernel use
+offload on B0 version and hang on A0 version.
+
+If we introduce the marvell,mv78230-a0-i2c compatible string, then the new
+kernel with the same dtb will have the same behavior. People using the A0
+version are aware that there is a problem (the kernel hang) so they will
+be willing to switch to marvell,mv78230-a0-i2c and to change their dtb.
+
+If we introduce the marvell,mv78230-b0-i2c compatible string, then the new
+kernel with the same dtb will have different behavior. People using the A0
+will have a booting kernel, but I fear that people using B0 revision won't
+be aware of the regression.
+
+Gregory
+
+
+> we've discovered that the A0 revision has an errata where offloading
+> doesn't work.  The B0 revision of the SoC has fixed offloading for i2c.
+> 
+> In my mind, this means that we should create a fix for the driver to
+> disable offloading unless it can determine it's running B0 or newer.
+> This is easy once we nail down the compatible strings.
+> 
+> The second thing we need to do is update the binding documentation so
+> that the devicetree can describe the hardware accurately.  I think we
+> should keep 'marvell,mv78230-i2c' as it is (the driver fix mentioned
+> above will disable offloading), and add a new compatible
+> string, 'marvell,mv78230-b0-i2c'.  The driver can then be updated to
+> enable offloading when it sees this compatible string, or it can
+> determine the SoC revision itself (via mach code).
+> 
+> Third, we need to be able to differentiate between the two shipped
+> AX3-4 boards by openblocks.  I think this should follow the same pattern
+> we decide for the i2c compatible string.  So, if we go with my proposal,
+> we would have plathome,openblocks-ax3-4 and
+> plathome,openblocks-ax3-4-b0.
+> 
+> Basically, I'm really uneasy about dropping marvell,mv78230-i2c and
+> essentially re-defining it to marvell,mv78230-a0-i2c.  It feels like
+> it's breaking backwards compatibility.  But I'm having trouble clearly
+> describing how Gregory's proposed change exactly does break backwards
+> compatibility.  Can a DT maintainer explain it more clearly than I?
+> 
+> thx,
+> 
+> Jason.
+> 
+> PS- Well, this ended up being a toppost.  Oops.  Sorry.
+> 
+> On Tue, Dec 31, 2013 at 05:44:51PM +0100, Gregory CLEMENT wrote:
+>> The first variants of Openblocks AX3-4 used the revision A0 of the
+>> Armada XP SoCs. These early variants have issues related to the i2c
+>> controller which prevent to use the offload mechanism and lead to a
+>> kernel hang during boot.
+>>
+>> The new dts file uses the compatible string marvell,mv78230-a0-i2c for
+>> the i2c controller, thanks to this the driver disable the offload
+>> mechanism and the kernel no more hangs on these boards.
+>>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  .../arm/boot/dts/armada-xp-a0-openblocks-ax3-4.dts |  40 +++++
+>>  .../dts/armada-xp-common-openblocks-ax3-4.dtsi     | 177 +++++++++++++++++++++
+>>  arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts   | 164 +------------------
+>>  3 files changed, 218 insertions(+), 163 deletions(-)
+>>  create mode 100644 arch/arm/boot/dts/armada-xp-a0-openblocks-ax3-4.dts
+>>  create mode 100644 arch/arm/boot/dts/armada-xp-common-openblocks-ax3-4.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/armada-xp-a0-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-a0-openblocks-ax3-4.dts
+>> new file mode 100644
+>> index 000000000000..b3ea65255c19
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/armada-xp-a0-openblocks-ax3-4.dts
+>> @@ -0,0 +1,40 @@
+>> +/*
+>> + * Device Tree file for OpenBlocks AX3-4 board with A0 SoC
+>> + *
+>> + * Copyright (C) 2012 Marvell
+>> + *
+>> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2.  This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "armada-xp-common-openblocks-ax3-4.dtsi"
+>> +
+>> +/ {
+>> +	model = "PlatHome OpenBlocks AX3-4 board (A0 SoC)";
+>> +	compatible = "plathome,openblocks-ax3-4", "marvell,armadaxp-mv78260", "marvell,armadaxp", "marvell,armada-370-xp";
+>> +
+>> +	chosen {
+>> +		bootargs = "console=ttyS0,115200 earlyprintk";
+>> +	};
+>> +
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg = <0 0x00000000 0 0xC0000000>; /* 3 GB */
+>> +	};
+>> +
+>> +	soc {
+>> +
+>> +		internal-regs {
+>> +			i2c@11000 {
+>> +				compatible = "marvell,mv78230-a0-i2c", "marvell,mv64xxx-i2c";
+>> +			};
+>> +			i2c@11100 {
+>> +				compatible = "marvell,mv78230-a0-i2c", "marvell,mv64xxx-i2c";
+>> +			};
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/arch/arm/boot/dts/armada-xp-common-openblocks-ax3-4.dtsi b/arch/arm/boot/dts/armada-xp-common-openblocks-ax3-4.dtsi
+>> new file mode 100644
+>> index 000000000000..0d452b07baf5
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/armada-xp-common-openblocks-ax3-4.dtsi
+>> @@ -0,0 +1,177 @@
+>> +/*
+>> + * Device Tree file for OpenBlocks AX3-4 board
+>> + *
+>> + * Copyright (C) 2012 Marvell
+>> + *
+>> + * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2.  This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>> + */
+>> +
+>> +#include "armada-xp-mv78260.dtsi"
+>> +
+>> +/ {
+>> +	soc {
+>> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
+>> +			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+>> +			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x8000000>;
+>> +
+>> +		devbus-bootcs {
+>> +			status = "okay";
+>> +
+>> +			/* Device Bus parameters are required */
+>> +
+>> +			/* Read parameters */
+>> +			devbus,bus-width    = <8>;
+>> +			devbus,turn-off-ps  = <60000>;
+>> +			devbus,badr-skew-ps = <0>;
+>> +			devbus,acc-first-ps = <124000>;
+>> +			devbus,acc-next-ps  = <248000>;
+>> +			devbus,rd-setup-ps  = <0>;
+>> +			devbus,rd-hold-ps   = <0>;
+>> +
+>> +			/* Write parameters */
+>> +			devbus,sync-enable = <0>;
+>> +			devbus,wr-high-ps  = <60000>;
+>> +			devbus,wr-low-ps   = <60000>;
+>> +			devbus,ale-wr-ps   = <60000>;
+>> +
+>> +			/* NOR 128 MiB */
+>> +			nor@0 {
+>> +				compatible = "cfi-flash";
+>> +				reg = <0 0x8000000>;
+>> +				bank-width = <2>;
+>> +			};
+>> +		};
+>> +
+>> +		pcie-controller {
+>> +			status = "okay";
+>> +			/* Internal mini-PCIe connector */
+>> +			pcie@1,0 {
+>> +				/* Port 0, Lane 0 */
+>> +				status = "okay";
+>> +			};
+>> +		};
+>> +
+>> +		internal-regs {
+>> +			serial@12000 {
+>> +				clock-frequency = <250000000>;
+>> +				status = "okay";
+>> +			};
+>> +			serial@12100 {
+>> +				clock-frequency = <250000000>;
+>> +				status = "okay";
+>> +			};
+>> +			pinctrl {
+>> +				led_pins: led-pins-0 {
+>> +					marvell,pins = "mpp49", "mpp51", "mpp53";
+>> +					marvell,function = "gpio";
+>> +				};
+>> +			};
+>> +			leds {
+>> +				compatible = "gpio-leds";
+>> +				pinctrl-names = "default";
+>> +				pinctrl-0 = <&led_pins>;
+>> +
+>> +				red_led {
+>> +					label = "red_led";
+>> +					gpios = <&gpio1 17 1>;
+>> +					default-state = "off";
+>> +				};
+>> +
+>> +				yellow_led {
+>> +					label = "yellow_led";
+>> +					gpios = <&gpio1 19 1>;
+>> +					default-state = "off";
+>> +				};
+>> +
+>> +				green_led {
+>> +					label = "green_led";
+>> +					gpios = <&gpio1 21 1>;
+>> +					default-state = "off";
+>> +					linux,default-trigger = "heartbeat";
+>> +				};
+>> +			};
+>> +
+>> +			gpio_keys {
+>> +				compatible = "gpio-keys";
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +
+>> +				button@1 {
+>> +					label = "Init Button";
+>> +					linux,code = <116>;
+>> +					gpios = <&gpio1 28 0>;
+>> +				};
+>> +			};
+>> +
+>> +			mdio {
+>> +				phy0: ethernet-phy@0 {
+>> +					reg = <0>;
+>> +				};
+>> +
+>> +				phy1: ethernet-phy@1 {
+>> +					reg = <1>;
+>> +				};
+>> +
+>> +				phy2: ethernet-phy@2 {
+>> +					reg = <2>;
+>> +				};
+>> +
+>> +				phy3: ethernet-phy@3 {
+>> +					reg = <3>;
+>> +				};
+>> +			};
+>> +
+>> +			ethernet@70000 {
+>> +				status = "okay";
+>> +				phy = <&phy0>;
+>> +				phy-mode = "sgmii";
+>> +			};
+>> +			ethernet@74000 {
+>> +				status = "okay";
+>> +				phy = <&phy1>;
+>> +				phy-mode = "sgmii";
+>> +			};
+>> +			ethernet@30000 {
+>> +				status = "okay";
+>> +				phy = <&phy2>;
+>> +				phy-mode = "sgmii";
+>> +			};
+>> +			ethernet@34000 {
+>> +				status = "okay";
+>> +				phy = <&phy3>;
+>> +				phy-mode = "sgmii";
+>> +			};
+>> +			i2c@11000 {
+>> +				status = "okay";
+>> +				clock-frequency = <400000>;
+>> +			};
+>> +			i2c@11100 {
+>> +				status = "okay";
+>> +				clock-frequency = <400000>;
+>> +
+>> +				s35390a: s35390a@30 {
+>> +					compatible = "s35390a";
+>> +					reg = <0x30>;
+>> +				};
+>> +			};
+>> +			sata@a0000 {
+>> +				nr-ports = <2>;
+>> +				status = "okay";
+>> +			};
+>> +
+>> +			/* Front side USB 0 */
+>> +			usb@50000 {
+>> +				status = "okay";
+>> +			};
+>> +
+>> +			/* Front side USB 1 */
+>> +			usb@51000 {
+>> +				status = "okay";
+>> +			};
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+>> index 5695afcc04bf..1983de77c3ff 100644
+>> --- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+>> +++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+>> @@ -11,7 +11,7 @@
+>>   */
+>>  
+>>  /dts-v1/;
+>> -#include "armada-xp-mv78260.dtsi"
+>> +#include "armada-xp-common-openblocks-ax3-4.dtsi"
+>>  
+>>  / {
+>>  	model = "PlatHome OpenBlocks AX3-4 board";
+>> @@ -25,166 +25,4 @@
+>>  		device_type = "memory";
+>>  		reg = <0 0x00000000 0 0xC0000000>; /* 3 GB */
+>>  	};
+>> -
+>> -	soc {
+>> -		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
+>> -			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+>> -			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x8000000>;
+>> -
+>> -		devbus-bootcs {
+>> -			status = "okay";
+>> -
+>> -			/* Device Bus parameters are required */
+>> -
+>> -			/* Read parameters */
+>> -			devbus,bus-width    = <8>;
+>> -			devbus,turn-off-ps  = <60000>;
+>> -			devbus,badr-skew-ps = <0>;
+>> -			devbus,acc-first-ps = <124000>;
+>> -			devbus,acc-next-ps  = <248000>;
+>> -			devbus,rd-setup-ps  = <0>;
+>> -			devbus,rd-hold-ps   = <0>;
+>> -
+>> -			/* Write parameters */
+>> -			devbus,sync-enable = <0>;
+>> -			devbus,wr-high-ps  = <60000>;
+>> -			devbus,wr-low-ps   = <60000>;
+>> -			devbus,ale-wr-ps   = <60000>;
+>> -
+>> -			/* NOR 128 MiB */
+>> -			nor@0 {
+>> -				compatible = "cfi-flash";
+>> -				reg = <0 0x8000000>;
+>> -				bank-width = <2>;
+>> -			};
+>> -		};
+>> -
+>> -		pcie-controller {
+>> -			status = "okay";
+>> -			/* Internal mini-PCIe connector */
+>> -			pcie@1,0 {
+>> -				/* Port 0, Lane 0 */
+>> -				status = "okay";
+>> -			};
+>> -		};
+>> -
+>> -		internal-regs {
+>> -			serial@12000 {
+>> -				clock-frequency = <250000000>;
+>> -				status = "okay";
+>> -			};
+>> -			serial@12100 {
+>> -				clock-frequency = <250000000>;
+>> -				status = "okay";
+>> -			};
+>> -			pinctrl {
+>> -				led_pins: led-pins-0 {
+>> -					marvell,pins = "mpp49", "mpp51", "mpp53";
+>> -					marvell,function = "gpio";
+>> -				};
+>> -			};
+>> -			leds {
+>> -				compatible = "gpio-leds";
+>> -				pinctrl-names = "default";
+>> -				pinctrl-0 = <&led_pins>;
+>> -
+>> -				red_led {
+>> -					label = "red_led";
+>> -					gpios = <&gpio1 17 1>;
+>> -					default-state = "off";
+>> -				};
+>> -
+>> -				yellow_led {
+>> -					label = "yellow_led";
+>> -					gpios = <&gpio1 19 1>;
+>> -					default-state = "off";
+>> -				};
+>> -
+>> -				green_led {
+>> -					label = "green_led";
+>> -					gpios = <&gpio1 21 1>;
+>> -					default-state = "off";
+>> -					linux,default-trigger = "heartbeat";
+>> -				};
+>> -			};
+>> -
+>> -			gpio_keys {
+>> -				compatible = "gpio-keys";
+>> -				#address-cells = <1>;
+>> -				#size-cells = <0>;
+>> -
+>> -				button@1 {
+>> -					label = "Init Button";
+>> -					linux,code = <116>;
+>> -					gpios = <&gpio1 28 0>;
+>> -				};
+>> -			};
+>> -
+>> -			mdio {
+>> -				phy0: ethernet-phy@0 {
+>> -					reg = <0>;
+>> -				};
+>> -
+>> -				phy1: ethernet-phy@1 {
+>> -					reg = <1>;
+>> -				};
+>> -
+>> -				phy2: ethernet-phy@2 {
+>> -					reg = <2>;
+>> -				};
+>> -
+>> -				phy3: ethernet-phy@3 {
+>> -					reg = <3>;
+>> -				};
+>> -			};
+>> -
+>> -			ethernet@70000 {
+>> -				status = "okay";
+>> -				phy = <&phy0>;
+>> -				phy-mode = "sgmii";
+>> -			};
+>> -			ethernet@74000 {
+>> -				status = "okay";
+>> -				phy = <&phy1>;
+>> -				phy-mode = "sgmii";
+>> -			};
+>> -			ethernet@30000 {
+>> -				status = "okay";
+>> -				phy = <&phy2>;
+>> -				phy-mode = "sgmii";
+>> -			};
+>> -			ethernet@34000 {
+>> -				status = "okay";
+>> -				phy = <&phy3>;
+>> -				phy-mode = "sgmii";
+>> -			};
+>> -			i2c@11000 {
+>> -				status = "okay";
+>> -				clock-frequency = <400000>;
+>> -			};
+>> -			i2c@11100 {
+>> -				status = "okay";
+>> -				clock-frequency = <400000>;
+>> -
+>> -				s35390a: s35390a@30 {
+>> -					compatible = "s35390a";
+>> -					reg = <0x30>;
+>> -				};
+>> -			};
+>> -			sata@a0000 {
+>> -				nr-ports = <2>;
+>> -				status = "okay";
+>> -			};
+>> -
+>> -			/* Front side USB 0 */
+>> -			usb@50000 {
+>> -				status = "okay";
+>> -			};
+>> -
+>> -			/* Front side USB 1 */
+>> -			usb@51000 {
+>> -				status = "okay";
+>> -			};
+>> -		};
+>> -	};
+>>  };
+>> -- 
+>> 1.8.1.2
+>>
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
