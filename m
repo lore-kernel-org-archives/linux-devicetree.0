@@ -1,48 +1,71 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: commit e38c0a1f breaks powerpc boards with uli1575 chip
-Date: Thu, 2 Jan 2014 18:04:17 -0600
-Message-ID: <1388707457.11795.32.camel@snotra.buserror.net>
-References: <201312171135.38576@blacky.localdomain>
-	 <52B1EC15.5070606@gmail.com> <201312190842.02702@blacky.localdomain>
-	 <1388373200.4373.25.camel@pasglop>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] input: Add new sun4i-lradc-keys drivers
+Date: Thu, 2 Jan 2014 12:38:31 -0800
+Message-ID: <20140102203831.GA3239@core.coreip.homeip.net>
+References: <1388604610-20380-1-git-send-email-hdegoede@redhat.com>
+ <20140101205603.GA1141@core.coreip.homeip.net>
+ <52C5336B.9010903@redhat.com>
+ <1700375.GaI3zFl6RI@phil>
+ <52C56D79.1060506@redhat.com>
+ <20140102202022.GK3144@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1388373200.4373.25.camel@pasglop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Dmitry Krivoschekov <dkrivoschokov@dev.rtsoft.ru>, Alexey Lugovskoy <lugovskoy@dev.rtsoft.ru>, Thierry Reding <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDP6N55ZUYDRBYX6S6LAKGQEI4ZGZYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140102202022.GK3144@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-12-30 at 14:13 +1100, Benjamin Herrenschmidt wrote:
-> On Thu, 2013-12-19 at 08:42 +0400, Nikita Yushchenko wrote:
-> > No, this does not help.
+On Thu, Jan 02, 2014 at 09:20:22PM +0100, Maxime Ripard wrote:
+> On Thu, Jan 02, 2014 at 02:45:29PM +0100, Hans de Goede wrote:
+> > >Also, instead of inventing yet another vendor-specific property, why not re-use
+> > >a button binding similar to gpio-keys like:
+> > >
+> > >        lradc: lradc@01c22800 {
+> > >                compatible = "allwinner,sun4i-lradc-keys";
+> > >                reg = <0x01c22800 0x100>;
+> > >                interrupts = <31>;
+> > >                allwinner,chan0-step = <200>;
+> > >
+> > >		#address-cells = <1>;
+> > >		#size-cells = <0>;
+> > >
+> > >		button@0 {
+> > >			reg = <0>; /* your channel index from above */
+> > >			linux,code = <115>; /* already used as dt-property */
+> > >		};
+> > >
+> > >		button@1 {
+> > >			reg = <1>;
+> > >			linux,code = <114>;
+> > >		};
 > > 
-> > I've dumped the actual content of 'range' and 'addr' at the failure
-> > point 
-> > (i.e. ar point that returns error with e38c0a1f but passes without 
-> > e38c0a1f ):
-> > 
-> > OF: default map, cp=0, s=10000, da=70
-> > range:  01 00 00 00 00 00 00 00 00 00 00 00
-> >  addr:  00 00 00 00 00 00 00 00 00 00 00 70
+> > Ugh no. Having a vendor specific property which is KISS certainly
+> > beats this, both wrt ease of writing dts files as well as wrt the
+> > dts parsing code in the driver.
 > 
-> Something that has a #address-cells larger than 2, or more generally,
-> an address field that contains more than a single number, must have
-> a specific translation backend, like we have for PCI.
+> I'd agree with Heiko here. This is pretty much the same construct
+> that's already in use in other input drivers, like gpio-keys.
 > 
-> This is a bit annoying but originates from the original OFW stuff on
-> which this stuff is based where the bus node would provide the methods
-> for translation.
+> This is also something that can really easily be made generic, since
+> this is something that is rather common.
 
-I can maybe see that for PCI which has a special encoding, but why is it
-always needed?  E.g. if Freescale localbus had a 64-bit offset instead
-of 32-bit, the child nodes would have 3 address cells, but
-straightforward use of ranges would bring it down to 2 for the final
-physical address.  Existing localbus nodes already have "an address
-field that contains more than a single number"; it's just a simple
-enough encoding that it works to treat it as if it were a single large
-number.
+Except that button definition from gpio-keys does not use 'reg' property
+but rather gpio. I'd rather we did not cram non-applicable attributes
+into that definition just to make it "reusable" like that.
 
--Scott
+I'd be OK with having similar (but not claiming to be the same) mappings
+though.
+
+Thanks.
+
+-- 
+Dmitry
