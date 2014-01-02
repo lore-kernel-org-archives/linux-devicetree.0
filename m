@@ -1,55 +1,60 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH V3] i2c: riic: add driver
-Date: Thu, 2 Jan 2014 16:00:57 +0100
-Message-ID: <20140102150057.GA3914@katana>
-References: <1387562930-14645-1-git-send-email-wsa@the-dreams.de>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH V4 1/6] clk: exynos-audss: convert to platform device
+Date: Thu, 02 Jan 2014 16:20:49 +0100
+Message-ID: <1592382.OOUUI06mrc@amdc1227>
+References: <1380046016-5811-1-git-send-email-abrestic@chromium.org>
+ <20131127184145.16819.44300@quantum> <529BBB9E.40300@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387562930-14645-1-git-send-email-wsa@the-dreams.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-i2c@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <529BBB9E.40300@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>, Doug Anderson <dianders@chromium.org>, Padma Venkat <padma.kvr@gmail.com>, Tushar Behera <tushar.behera@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Sachin Kamat <sachin.kamat@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>, Padmavathi Venna <padma.v@samsung.com>, Jiri Kosina <jkosina@suse.cz>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger
 List-Id: devicetree@vger.kernel.org
 
+Hi Kukjin, Mike,
 
---8t9RHnE3ZwKMSgU+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Monday 02 of December 2013 07:43:42 Kukjin Kim wrote:
+> On 11/28/13 03:41, Mike Turquette wrote:
+> > Quoting Padma Venkat (2013-11-25 22:29:44)
+> >> Hi Mike and Kukjin,
+> >>
+> >> On Tue, Oct 8, 2013 at 10:23 PM, Andrew Bresticker
+> >> <abrestic@chromium.org>  wrote:
+> >>> Hi Mike and Kukjin,
+> >>>
+> >>> Any decisions regarding this patchset?  I believe all comments have
+> >>> been addressed.
+> >>>
+> >>> Thanks,
+> >>> Andrew
+> >>
+> >> Any decisions on this patchset. These can be applied directly on
+> >> linux-samsung tree.
+> >
+> > For all of the clk parts:
+> >
+> > Acked-by: Mike Turquette<mturquette@linaro.org>
+> >
+> > I'm happy to take them in as part of a pull request.
+> >
+> OK, Mike, I will take this series into samsung tree and let me send a 
+> pull request for your clk tree to avoid useless merge conflicts.
 
-On Fri, Dec 20, 2013 at 07:08:50PM +0100, Wolfram Sang wrote:
-> From: Wolfram Sang <wsa@sang-engineering.com>
->=20
-> Tested with a r7s72100 genmai board acessing an eeprom.
->=20
-> Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
+Hmm, I can't find this series in any tree, so I guess it has been lost
+in action.
 
-Applied to for-next, thanks!
+Should I take it through samsung-clk tree with your acks?
 
-
---8t9RHnE3ZwKMSgU+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSxX8pAAoJEBQN5MwUoCm2L0IQAKAdPlVjM2JVXb3Ev6V4JFNb
-rzVeMpQSuDPDG7XC85YkR+V+xx22mv1d2DaX6UK9TUK1JfAd69Ff26uLBW/R6ISf
-UkMt/sBBd5rkAhusH/j95pKUDOBt9L8qr+Sd440K82sqLoZi49hKDH4qOjkzpqCp
-kdv1sNduUB+ASNzAPZLsCuC4hTu6wXQmx4/S5hiGHod1dUPR6fkzLlgfQthcJd/c
-SytHY3cPivLE21uM/M9u9++xzpMGlKLlULGd/8FCQ9R4gDtQURPTtbS/eXgJCCuv
-pxz35v1VzVClAUNor/Si8xBzani3FwGgjpaPf1MY35o5PIt7mPn89CS+0V1GcTfW
-dtKSeU2Q4wpVDnHJva1OHKA1iUu4NjGlszRciT0XFOhMbSHdxC3TZeji99oCNBoh
-35SF2UvE93WJFO0F8vedb8lf2zVyZeStx4+DA/HdulcIWQGH8G8xGeooeU/GKlTA
-2gqE6vT7vBfbiNPZaT5fE+6l3OsUzMIJKOazU4BcbCHTe2v97SJchMlSijx9Ttij
-w5uQrma0awevpAkZN8LohIeBlZJBluS5N/vHasW5eydvk0VIdalJK1nPkH5x+mfv
-iHza2x6EBfayPUozLvlrPtijkYftVvpfuyhBkgfkDe6PO/WUMgE40qAW48eJP8Vw
-5DHWp1aJwXSC9fzw2OmB
-=Ah9n
------END PGP SIGNATURE-----
-
---8t9RHnE3ZwKMSgU+--
+Best regards,
+Tomasz
