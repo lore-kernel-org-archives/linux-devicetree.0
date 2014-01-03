@@ -1,51 +1,42 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [PATCH 08/10] Die on failed /incbin/ seeks
-Date: Sat,  4 Jan 2014 00:24:41 +1100
-Message-ID: <1388755483-27008-9-git-send-email-david@gibson.dropbear.id.au>
-References: <1388755483-27008-1-git-send-email-david@gibson.dropbear.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1388755483-27008-1-git-send-email-david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 4/4] arm64: Add APM X-Gene SoC SATA host controller DTS entries
+Date: Fri, 3 Jan 2014 16:33:17 +0100
+Message-ID: <201401031633.18110.arnd@arndb.de>
+References: <1388708539-333-1-git-send-email-lho@apm.com> <1388708539-333-4-git-send-email-lho@apm.com> <1388708539-333-5-git-send-email-lho@apm.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1388708539-333-5-git-send-email-lho@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: olof@lixom.net, tj@kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Failing to open an input file, with /include/ or /incbin/ is treated as
-immediately fatal inside srcfile_relative_open().  However, failint to
-seek() to the requested offset in an /incbin/ is not.  This is a bit oddly
-inconsistent, and leaves us with a strange case that's awkward to deal with
-down the line.
+On Friday 03 January 2014, Loc Ho wrote:
+> +                       sata23clk: sata23clk@1f22c000 {
+> +                               compatible = "apm,xgene-device-clock";
+> +                               #clock-cells = <1>;
+> +                               clocks = <&socplldiv2 0>;
+> +                               clock-names = "sata23clk";
 
-So, get rid of it and have failed seeks on an /incbin/ be immediately
-fatal.
+> +                       };
+> +
+> +                       sata45clk: sata45clk@1f23c000 {
+> +                               compatible = "apm,xgene-device-clock";
+> +                               #clock-cells = <1>;
+> +                               clocks = <&socplldiv2 0>;
+> +                               clock-names = "sata45clk";
 
-Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
----
- dtc-parser.y | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Something is wrong here: You have two devices with the same "compatible"
+string but using different "clock-names" strings. The binding document
+lists this as an optional property with the description  "shall be
+the name of the device clock. If missing, use the device name", which
+doesn't seem to make any sense.
 
-diff --git a/dtc-parser.y b/dtc-parser.y
-index efe81dd..bed857e 100644
---- a/dtc-parser.y
-+++ b/dtc-parser.y
-@@ -226,10 +226,9 @@ propdata:
- 
- 			if ($6 != 0)
- 				if (fseek(f, $6, SEEK_SET) != 0)
--					print_error("Couldn't seek to offset %llu in \"%s\": %s",
--						     (unsigned long long)$6,
--						     $4.val,
--						     strerror(errno));
-+					die("Couldn't seek to offset %llu in \"%s\": %s",
-+					    (unsigned long long)$6, $4.val,
-+					    strerror(errno));
- 
- 			d = data_copy_file(f, $8);
- 
--- 
-1.8.4.2
+Please fix the binding and the existing users of this, and don't introduce
+any more broken instances. Since each device clock is documented to
+have only one parent anyway, please just make it an anonymous clock.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
