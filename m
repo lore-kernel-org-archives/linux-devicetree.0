@@ -1,75 +1,109 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH V2] i2c: s3c2410 : Add polling mode support
-Date: Fri, 3 Jan 2014 17:10:12 +0100
-Message-ID: <20140103161012.GH7132@katana>
-References: <1384168820-2986-1-git-send-email-yuvaraj.cd@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/4] input: Add new sun4i-lradc-keys drivers
+Date: Fri, 3 Jan 2014 18:15:59 +0100
+Message-ID: <20140103171559.GM3144@lukather>
+References: <1388604610-20380-1-git-send-email-hdegoede@redhat.com>
+ <20140101205603.GA1141@core.coreip.homeip.net>
+ <52C5336B.9010903@redhat.com>
+ <1700375.GaI3zFl6RI@phil>
+ <52C56D79.1060506@redhat.com>
+ <20140102202022.GK3144@lukather>
+ <20140102203831.GA3239@core.coreip.homeip.net>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LiQwW4YX+w4axhAx"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="wRcdkz6hei1hwa3U"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBR7CTOLAKGQEOJY6CBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1384168820-2986-1-git-send-email-yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuvaraj Kumar C D <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, aditya.ps-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vasanth Ananthan <vasanthananthan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vasanth Ananthan <vasanth.a-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20140102203831.GA3239-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---LiQwW4YX+w4axhAx
+--wRcdkz6hei1hwa3U
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Mon, Nov 11, 2013 at 04:50:20PM +0530, Yuvaraj Kumar C D wrote:
-> From: Vasanth Ananthan <vasanthananthan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Thu, Jan 02, 2014 at 12:38:31PM -0800, Dmitry Torokhov wrote:
+> On Thu, Jan 02, 2014 at 09:20:22PM +0100, Maxime Ripard wrote:
+> > On Thu, Jan 02, 2014 at 02:45:29PM +0100, Hans de Goede wrote:
+> > > >Also, instead of inventing yet another vendor-specific property, why=
+ not re-use
+> > > >a button binding similar to gpio-keys like:
+> > > >
+> > > >        lradc: lradc@01c22800 {
+> > > >                compatible =3D "allwinner,sun4i-lradc-keys";
+> > > >                reg =3D <0x01c22800 0x100>;
+> > > >                interrupts =3D <31>;
+> > > >                allwinner,chan0-step =3D <200>;
+> > > >
+> > > >		#address-cells =3D <1>;
+> > > >		#size-cells =3D <0>;
+> > > >
+> > > >		button@0 {
+> > > >			reg =3D <0>; /* your channel index from above */
+> > > >			linux,code =3D <115>; /* already used as dt-property */
+> > > >		};
+> > > >
+> > > >		button@1 {
+> > > >			reg =3D <1>;
+> > > >			linux,code =3D <114>;
+> > > >		};
+> > >=20
+> > > Ugh no. Having a vendor specific property which is KISS certainly
+> > > beats this, both wrt ease of writing dts files as well as wrt the
+> > > dts parsing code in the driver.
+> >=20
+> > I'd agree with Heiko here. This is pretty much the same construct
+> > that's already in use in other input drivers, like gpio-keys.
+> >=20
+> > This is also something that can really easily be made generic, since
+> > this is something that is rather common.
 >=20
-> This patch adds polling mode support for i2c-s3c2410 driver.The
-> SATA PHY controller's CMU and TRSV block's are of I2C register
-> map in exynos5250.These blocks can be configured using i2c.
+> Except that button definition from gpio-keys does not use 'reg' property
+> but rather gpio. I'd rather we did not cram non-applicable attributes
+> into that definition just to make it "reusable" like that.
 >=20
-> But i2c controller instance on which these block's sits lacks an
-> interrupt line.Also the current i2c-s3c2410 driver is only interrupt
-> driven, thus a polling mode support is required in the driver for
-> supporting this controller. This patch adds this support to the driver.
->=20
-> Changes from V1:
-> 	1.Changed the is_ack() to have even period b/w polls and
-> 	  used usleep_range() instead of udelay().
+> I'd be OK with having similar (but not claiming to be the same) mappings
+> though.
 
-Mileages vary, but I'd like to see revision changes after the "---".
+Yes, this is what I was meaning. Sorry if it was not clear enough.
 
->  	ret =3D devm_request_irq(&pdev->dev, i2c->irq, s3c24xx_i2c_irq, 0,
-> -			       dev_name(&pdev->dev), i2c);
-> +				dev_name(&pdev->dev), i2c);
+Maxime
 
-Unrelated change.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Rest looks good, so I'll fix up the things for you and apply to
-for-next, thanks!
-
-
---LiQwW4YX+w4axhAx
+--wRcdkz6hei1hwa3U
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSxuDjAAoJEBQN5MwUoCm2SLUP/1Q8BcJlMMfSyfORTR+34WlF
-507zNPJcyrNobOULiYp5Y6Ud5cgjEOsQOJwOdX4TAYAhMX4Ydpqp7Y8+YHZ4lEQu
-61U3qSanrUpqdyOSt8gk5ZkFO7M5jqXkMNf1SMFdGZG0cuCNC/05uMk9NB0ImyDN
-3JzuBuDBImzKUbvhQonsYtGKonZYX01jYJ5MH3UWpCrBHjD67XahH5Ut94roRMjm
-spjUG67V6cV6QNcqGfmPdQn0FdSfIoBW2JLXMfyI9SLYetiZ3mG0YsQ4qR58CEqg
-Cc4ABFhQhvOe1qfL7OMyafjgBaMIjH9DJ0fssHgV8xyPhQpjhl9Ew1dcTs7/6TqI
-a30RLhUX91VvmOPy7mMSv4UTT2ev6den1KdcJdMdCbVyn27i8nxFOweemQi0LFIF
-mReAByF1SfQQs5ViFDxQt2+nr2LChYBS9HWTXFbOrCzGawW3M54tf6y5IR73hIfI
-lkNztNi1CdtLp+fQyf/XJMG/qr+xgexs4EJq+TL9t8gsiWep8nnR4Jjt6Yo7f6Hc
-KwDArTbRsv1Hk5p9GbrV4oswN80gQLPpSLOlk6wsL1c5Yf8WhUaqTSvJuLpVMLnK
-x0rXM8d4cByBfnrAa1/0t8amj5X4DuFpeaFtlMO4QblmC25s4n48U2cPj7lNLPmZ
-KDwu6qzlN0AKXvwp3OKc
-=rOkk
+iQIcBAEBAgAGBQJSxvBPAAoJEBx+YmzsjxAgq4kQAKsIIt8iHTRqb88kolOF9ilq
+EzCeG0+z+JZgr3PDKzOmaoa4e4lRa+j9KG/TMCku5I+WHxX37Lp/2C2/omVK8Epu
+m3/1YoFJLekW6pAzHMhsLB6oPxoML4g9YKQwLZCe3yYym/oS3Z2bsse/RwDTqZYT
+AN9ZIp8SjgqEC+HuCSYZm4VvMdaFFUQ/qdnRvx01FH1sjB2u6Dws4ClXwMkn+B4U
+U0STUo5iZIRh4x9BsXS1GQouy2ebUrs3JL7bPqNgCUkjrOPrfOjNCgHklkuZhAVB
+1YTrAO3NtaYppE2t6r97yELc6RyqcZr+BIyaRtH7i39nYV4bLF1/8HCPPYTXJ3rs
+Ssqh59WctlQM6yXadPtlPTzICFcQyeuKkOm1VXsLlSKlR/YwW7LJa/5L7eR7Tfln
+BnhbGEGmiKtrlLDBW77v9dy6WunLLvdf9RHcr28//6bSkEX02e/wIkYPemPiMOuD
+O/cR8Esp3pc4ro1/w5uYPru1eqEI08oi2Q3z4YF8NeC6gMlQ/FUsZENmbgKKqZ9y
+cD1ai29V2RKCsdEf3XvgBW0wIR/Ir0i5fBs6nQYM/TBe9Xa24TXpywQty8yj3xx6
+8UZEY2s8JtqxjpZzyYmj8+yfU2r6QzZ6cNtE9CGBpHKmzIlMTPiukJd7Asq8Lszl
+Xyzg4tiWVtCVLNRSVS4D
+=aIxj
 -----END PGP SIGNATURE-----
 
---LiQwW4YX+w4axhAx--
+--wRcdkz6hei1hwa3U--
