@@ -1,102 +1,111 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 08/10] devicetree: bindings: Document PM8921/8058 keypads
-Date: Thu,  2 Jan 2014 16:37:38 -0800
-Message-ID: <1388709460-19222-9-git-send-email-sboyd@codeaurora.org>
-References: <1388709460-19222-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1388709460-19222-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [RFC PATCH 2/3] arm64: dts: APM X-Gene PCIe device tree nodes
+Date: Thu, 2 Jan 2014 17:52:53 -0700
+Message-ID: <20140103005253.GB12098@obsidianresearch.com>
+References: <1387785725-24262-1-git-send-email-tinamdar@apm.com>
+ <1387785725-24262-3-git-send-email-tinamdar@apm.com>
+ <20131223174634.GD25089@obsidianresearch.com>
+ <CACoXjcnPvgDX3s8OywLHP6Tu2OrpNzM1Phx+s3RLmKDgu3t8gA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACoXjcnPvgDX3s8OywLHP6Tu2OrpNzM1Phx+s3RLmKDgu3t8gA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Masters <jcm@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the keypad device found on PM8921 and PM8058 PMICs.
+On Thu, Jan 02, 2014 at 01:56:51PM -0800, Tanmay Inamdar wrote:
+> On Mon, Dec 23, 2013 at 9:46 AM, Jason Gunthorpe
+> <jgunthorpe@obsidianresearch.com> wrote:
+> > On Mon, Dec 23, 2013 at 01:32:03PM +0530, Tanmay Inamdar wrote:
+> >> This patch adds the device tree nodes for APM X-Gene PCIe controller and
+> >> PCIe clock interface. Since X-Gene SOC supports maximum 5 ports, 5 dts nodes
+> >> are added.
+> >
+> > Can you include an lspci dump for PCI DT bindings please? It is
+> > impossible to review otherwise..
+> >
+> 
+> On the X-Gene evaluation platform, there is only one PCIe port
+> enabled. Here is the 'lspci' dump
 
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- .../bindings/input/qcom,pm8xxx-keypad.txt          | 72 ++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
+This is a bit hard to read withouth more context, but:
 
-diff --git a/Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt b/Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
-new file mode 100644
-index 000000000000..aa5a9c6cf512
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
-@@ -0,0 +1,72 @@
-+Qualcomm PM8xxx PMIC Keypad
+> # lspci -vvv
+> 00:00.0 Class 0604: Device 19aa:e008 (rev 04)
+>         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+
+This is an on-chip device? (19aa does not seem to be a VID I can find)
+
+Ideally this is the on-chip PCI-PCI bridge which represents the port.
+
+The problem I see is that your DT binding has a top level stanza per
+port.
+
+We *really* prefer to see a single stanza for all ports - but this
+requires the HW to be able to fit into the Linux resource assignment
+model - a single resource pool for all ports and standard PCI-PCI
+bridge config access to assign the resource to a port.
+
+If your HW can't do this (eg because the port aperture 0xe000000000 is
+hard wired) then the fall back is to place every port in a distinct
+domain, with a distinct DT node and have overlapping bus numbers
+and fixed windows. I don't see PCI domain support in your driver..
+
+There is some kind of an addressing problem because you've done this:
+
++static void xgene_pcie_fixup_bridge(struct pci_dev *dev)
++{
++	int i;
 +
-+PROPERTIES
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,pm8058-keypad"
-+		    "qcom,pm8921-keypad"
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: the first interrupt specifies the key sense interrupt
-+		    and the second interrupt specifies the key stuck interrupt.
-+		    The format of the specifier is defined by the binding
-+		    document describing the node's interrupt parent.
-+
-+- linux,keymap:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: the linux keymap. More information can be found in
-+		    input/matrix-keymap.txt.
-+
-+- keypad,num-rows:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: number of rows in the keymap. More information can be found
-+		    in input/matrix-keymap.txt.
-+
-+- keypad,num-columns:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: number of columns in the keymap. More information can be
-+		    found in input/matrix-keymap.txt.
-+
-+- debounce:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: time in microseconds that key must be pressed or release
-+		    for key sense interrupt to trigger.
-+
-+- scan-delay:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: time in microseconds to pause between successive scans
-+		    of the matrix array.
-+
-+- row-hold:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: time in nanoseconds to pause between scans of each row in
-+		    the matrix array.
-+
-+EXAMPLE
-+
-+	keypad {
-+		compatible = "qcom,pm8921-keypad";
-+		interrupt-parent = <&pmicintc>;
-+		interrupts = <74 1>, <75 1>;
-+		linux,keymap = <
-+			MATRIX_KEY(0, 0, KEY_VOLUMEUP)
-+			MATRIX_KEY(0, 1, KEY_VOLUMEDOWN)
-+			MATRIX_KEY(0, 2, KEY_CAMERA_FOCUS)
-+			MATRIX_KEY(0, 3, KEY_CAMERA)
-+			>;
-+		keypad,num-rows = <1>;
-+		keypad,num-columns = <5>;
-+		debounce = <15>;
-+		scan-delay = <32>;
-+		row-hold = <91500>;
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
++	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
++		dev->resource[i].start = dev->resource[i].end = 0;
++		dev->resource[i].flags = 0;
++	}
++}
++DECLARE_PCI_FIXUP_HEADER(XGENE_PCIE_VENDORID, XGENE_PCIE_BRIDGE_DEVICEID,
++			 xgene_pcie_fixup_bridge);
+
+Which is usually a sign that something is wonky with how the HW is
+being fit into the PCI core.
+
+> ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Latency: 0, Cache Line Size: 64 bytes
+>         Region 0: Memory at <ignored> (64-bit, prefetchable)
+>         Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
+>         I/O behind bridge: 0000f000-00000fff
+>         Memory behind bridge: 00c00000-00cfffff
+
+[..]
+ 
+> 01:00.0 Class 0200: Device 15b3:1003
+>         Region 0: Memory at e000c00000 (64-bit, non-prefetchable) [size=1M]
+>         Region 2: Memory at e000000000 (64-bit, prefetchable)
+>         [size=8M]
+
+Something funky is going on here too, the 64 bit address e000000000
+should be reflected in the 'memory behind bridge' above, not
+truncated.
+
+ranges = <0x02000000 0x0 0x00000000 0x90 0x00000000 0x0 0x10000000 /* mem*/
++				  0x01000000 0x0 0x80000000 0x90 0x80000000 0x0 0x00010000 /* io */
++				  0x00000000 0x0 0xd0000000 0x90 0xd0000000 0x0 0x00200000 /* cfg */
++				  0x00000000 0x0 0x79000000 0x00 0x79000000 0x0 0x00800000>; /* msi */
+
+Ranges has a defined meaning, MSI shouldn't be in ranges, and 'cfg' is
+only OK if the address encoding exactly matches the funky PCI-E extended
+configuration address format. You can move these to regs or other
+properties
+
+(MSI is tricky, I'm not aware of DT binding work for MSI :()
+
+Also, unrelated, can you please double check that your HW cannot
+generate 8 and 16 bit configuration write TLPs natively? The
+xgene_pcie_cfg_out8/16 hack is not desirable if it can be avoided.
+
+Regards,
+Jason
