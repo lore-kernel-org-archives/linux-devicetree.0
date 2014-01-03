@@ -1,58 +1,53 @@
-From: Archit Taneja <archit@ti.com>
-Subject: Re: [PATCH v5 0/2] DMM DT adaptation
-Date: Fri, 3 Jan 2014 18:04:59 +0530
-Message-ID: <52C6AE73.9020303@ti.com>
-References: <1379063679-4869-1-git-send-email-archit@ti.com> <1387274542-29645-1-git-send-email-archit@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1387274542-29645-1-git-send-email-archit@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, mark.rutland@arm.com
-Cc: robdclark@gmail.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] Documentation: net: fsl-fec.txt: Specify the phy reset active level
+Date: Fri,  3 Jan 2014 11:17:33 -0200
+Message-ID: <1388755053-2887-1-git-send-email-festevam@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hullo,
+From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-On Tuesday 17 December 2013 03:32 PM, Archit Taneja wrote:
-> The DMM/Tiler block can used by omapdrm to allocate frame buffers. With the
-> removal of address and irq data from the omap4 hwmods, the probe of DMM driver
-> fails and omapdrm isn't able to utilize the DMM hardware.
->
-> Add DMM bindings for OMAP4 and OMAP5 and DRA7x.
+Since commit 7a399e3a2e (fec: Do not assume that PHY reset is active low), we no
+longer assume that the PHY reset is active low.
 
-Can this be pulled for 3.14? I've incorporated comments from Mark and 
-other folks.
+Now we need to retrieve this information from the device tree instead, so update
+the binding documentation to make it clearer.
 
-Thanks,
-Archit
+Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/fsl-fec.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
->
-> Changes in v5:
-> - Use of_match_ptr() in the dmm driver.
-> - Add DT node for DRA7x as dra7.dtsi is now in mainline.
->
-> Changes in v4:
-> - Clean up documentation further.
->
-> Changes in v3:
-> - Fix mistakes in documentation and remove aliases for dmm nodes.
->
-> Changes in v2:
-> - No changes, split out into a separate series containing only DT related parts.
->
->
-> Archit Taneja (2):
->    arm: dts: omap4+: Add DMM bindings
->    drm: omap: Enable DT support for DMM
->
->   Documentation/devicetree/bindings/arm/omap/dmm.txt | 22 ++++++++++++++++++++++
->   arch/arm/boot/dts/dra7.dtsi                        |  7 +++++++
->   arch/arm/boot/dts/omap4.dtsi                       |  7 +++++++
->   arch/arm/boot/dts/omap5.dtsi                       |  7 +++++++
->   drivers/gpu/drm/omapdrm/omap_dmm_tiler.c           |  7 +++++++
->   5 files changed, 50 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/arm/omap/dmm.txt
->
+diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+index 845ff84..68010c3 100644
+--- a/Documentation/devicetree/bindings/net/fsl-fec.txt
++++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+@@ -10,7 +10,8 @@ Required properties:
+ 
+ Optional properties:
+ - local-mac-address : 6 bytes, mac address
+-- phy-reset-gpios : Should specify the gpio for phy reset
++- phy-reset-gpios : Should specify the gpio for the phy reset with the flag that
++indicates whether it is active low or active high.
+ - phy-reset-duration : Reset duration in milliseconds.  Should present
+   only if property "phy-reset-gpios" is available.  Missing the property
+   will have the duration be 1 millisecond.  Numbers greater than 1000 are
+@@ -24,7 +25,7 @@ ethernet@83fec000 {
+ 	reg = <0x83fec000 0x4000>;
+ 	interrupts = <87>;
+ 	phy-mode = "mii";
+-	phy-reset-gpios = <&gpio2 14 0>; /* GPIO2_14 */
++	phy-reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>; /* GPIO2_14 */
+ 	local-mac-address = [00 04 9F 01 1B B9];
+ 	phy-supply = <&reg_fec_supply>;
+ };
+-- 
+1.8.1.2
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
