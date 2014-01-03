@@ -1,32 +1,28 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH Resend] regulator: s5m8767: Update LDO index in s5m8767-regulator.txt
-Date: Fri,  3 Jan 2014 15:29:49 +0530
-Message-ID: <1388743189-6174-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: broonie@kernel.org, sachin.kamat@linaro.org, mark.rutland@arm.com
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH v2] gpio: Driver for SYSCON-based GPIOs
+Date: Fri, 3 Jan 2014 19:42:59 +0900
+Message-ID: <CAAVeFuKNhtyX1wKFKhjFg5yniewag3XYRFPCNiZ9Q7iLzZ+Jpg@mail.gmail.com>
+References: <1387307984-7693-1-git-send-email-shc_work@mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1387307984-7693-1-git-send-email-shc_work@mail.ru>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-LDO indices start from 1. Update the example accordingly.
+On Wed, Dec 18, 2013 at 4:19 AM, Alexander Shiyan <shc_work@mail.ru> wrote:
+> SYSCON driver was designed for using memory areas (registers)
+> that are used in several subsystems. There are systems (CPUs)
+> which use bits in one register for various purposes and thus
+> should be handled by various kernel subsystems. This driver
+> allows you to use the individual SYSCON bits as GPIOs.
+> ARM CLPS711X SYSFLG1 input lines has been added as first user
+> of this driver.
+>
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
- .../bindings/regulator/s5m8767-regulator.txt       |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looks good to me.
 
-diff --git a/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt b/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
-index d1660a90fc06..fc6b38f035bd 100644
---- a/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
-@@ -83,7 +83,7 @@ as per the datasheet of s5m8767.
- 
- 	- LDOn
- 		  - valid values for n are 1 to 28
--		  - Example: LDO0, LD01, LDO28
-+		  - Example: LDO1, LD02, LDO28
- 	- BUCKn
- 		  - valid values for n are 1 to 9.
- 		  - Example: BUCK1, BUCK2, BUCK9
--- 
-1.7.9.5
+Acked-by: Alexandre Courbot <acourbot@nvidia.com>
