@@ -1,51 +1,66 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] Documentation: net: fsl-fec.txt: Specify the phy reset active level
-Date: Fri,  3 Jan 2014 11:17:33 -0200
-Message-ID: <1388755053-2887-1-git-send-email-festevam@gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: [PATCH 01/10] Remove unused srcpos_warn() function
+Date: Sat,  4 Jan 2014 00:24:34 +1100
+Message-ID: <1388755483-27008-2-git-send-email-david@gibson.dropbear.id.au>
+References: <1388755483-27008-1-git-send-email-david@gibson.dropbear.id.au>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1388755483-27008-1-git-send-email-david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+This function has no users, and we can replace it more generally later.
 
-Since commit 7a399e3a2e (fec: Do not assume that PHY reset is active low), we no
-longer assume that the PHY reset is active low.
-
-Now we need to retrieve this information from the device tree instead, so update
-the binding documentation to make it clearer.
-
-Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 ---
- Documentation/devicetree/bindings/net/fsl-fec.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ srcpos.c | 17 -----------------
+ srcpos.h |  2 --
+ 2 files changed, 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-index 845ff84..68010c3 100644
---- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-@@ -10,7 +10,8 @@ Required properties:
+diff --git a/srcpos.c b/srcpos.c
+index 294568b..06ef06d 100644
+--- a/srcpos.c
++++ b/srcpos.c
+@@ -312,23 +312,6 @@ srcpos_error(struct srcpos *pos, char const *fmt, ...)
+ 	va_end(va);
+ }
  
- Optional properties:
- - local-mac-address : 6 bytes, mac address
--- phy-reset-gpios : Should specify the gpio for phy reset
-+- phy-reset-gpios : Should specify the gpio for the phy reset with the flag that
-+indicates whether it is active low or active high.
- - phy-reset-duration : Reset duration in milliseconds.  Should present
-   only if property "phy-reset-gpios" is available.  Missing the property
-   will have the duration be 1 millisecond.  Numbers greater than 1000 are
-@@ -24,7 +25,7 @@ ethernet@83fec000 {
- 	reg = <0x83fec000 0x4000>;
- 	interrupts = <87>;
- 	phy-mode = "mii";
--	phy-reset-gpios = <&gpio2 14 0>; /* GPIO2_14 */
-+	phy-reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>; /* GPIO2_14 */
- 	local-mac-address = [00 04 9F 01 1B B9];
- 	phy-supply = <&reg_fec_supply>;
- };
+-
+-void
+-srcpos_warn(struct srcpos *pos, char const *fmt, ...)
+-{
+-	const char *srcstr;
+-	va_list va;
+-	va_start(va, fmt);
+-
+-	srcstr = srcpos_string(pos);
+-
+-	fprintf(stderr, "Warning: %s ", srcstr);
+-	vfprintf(stderr, fmt, va);
+-	fprintf(stderr, "\n");
+-
+-	va_end(va);
+-}
+-
+ void srcpos_set_line(char *f, int l)
+ {
+ 	current_srcfile->name = f;
+diff --git a/srcpos.h b/srcpos.h
+index 57dfa0f..7f0eaea 100644
+--- a/srcpos.h
++++ b/srcpos.h
+@@ -111,8 +111,6 @@ extern void srcpos_verror(struct srcpos *pos, char const *, va_list va)
+      __attribute__((format(printf, 2, 0)));
+ extern void srcpos_error(struct srcpos *pos, char const *, ...)
+      __attribute__((format(printf, 2, 3)));
+-extern void srcpos_warn(struct srcpos *pos, char const *, ...)
+-     __attribute__((format(printf, 2, 3)));
+ 
+ extern void srcpos_set_line(char *f, int l);
+ 
 -- 
-1.8.1.2
+1.8.4.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
