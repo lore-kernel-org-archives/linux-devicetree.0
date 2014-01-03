@@ -1,111 +1,68 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [RFC PATCH 2/3] arm64: dts: APM X-Gene PCIe device tree nodes
-Date: Thu, 2 Jan 2014 17:52:53 -0700
-Message-ID: <20140103005253.GB12098@obsidianresearch.com>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com>
- <1387785725-24262-3-git-send-email-tinamdar@apm.com>
- <20131223174634.GD25089@obsidianresearch.com>
- <CACoXjcnPvgDX3s8OywLHP6Tu2OrpNzM1Phx+s3RLmKDgu3t8gA@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: DT include files (was: [GIT PULL 2/2] ARM: imx: device tree
+ changes for 3.14)
+Date: Fri, 3 Jan 2014 10:32:13 +0800
+Message-ID: <20140103023211.GA25079@S2101-09.ap.freescale.net>
+References: <20131231054427.GA22383@S2101-09.ap.freescale.net>
+ <20140102202108.GF19720@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACoXjcnPvgDX3s8OywLHP6Tu2OrpNzM1Phx+s3RLmKDgu3t8gA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Masters <jcm@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20140102202108.GF19720-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 02, 2014 at 01:56:51PM -0800, Tanmay Inamdar wrote:
-> On Mon, Dec 23, 2013 at 9:46 AM, Jason Gunthorpe
-> <jgunthorpe@obsidianresearch.com> wrote:
-> > On Mon, Dec 23, 2013 at 01:32:03PM +0530, Tanmay Inamdar wrote:
-> >> This patch adds the device tree nodes for APM X-Gene PCIe controller and
-> >> PCIe clock interface. Since X-Gene SOC supports maximum 5 ports, 5 dts nodes
-> >> are added.
-> >
-> > Can you include an lspci dump for PCI DT bindings please? It is
-> > impossible to review otherwise..
-> >
+Hi Olof,
+
+On Thu, Jan 02, 2014 at 12:21:08PM -0800, Olof Johansson wrote:
+> >  .../devicetree/bindings/vendor-prefixes.txt        |    3 +
+> >  arch/arm/boot/dts/imx25-pinfunc.h                  |  494 +++++++++++
+> >  arch/arm/boot/dts/imx25-pingrp.h                   |   81 ++
+> >  arch/arm/boot/dts/imx27-pinfunc.h                  |  526 +++++++++++
+> >  arch/arm/boot/dts/imx27-pingrp.h                   |  151 ++++
+> >  arch/arm/boot/dts/imx35-pingrp.h                   |  104 +++
+> >  arch/arm/boot/dts/imx50-pinfunc.h                  |  923 ++++++++++++++++++++
+> >  arch/arm/boot/dts/imx50-pingrp.h                   |  146 ++++
+> >  arch/arm/boot/dts/imx51-pingrp.h                   |  249 ++++++
+> >  arch/arm/boot/dts/imx53-pingrp.h                   |  352 ++++++++
+> >  arch/arm/boot/dts/imx6dl-pinfunc.h                 |    2 +
+> >  arch/arm/boot/dts/imx6q-pinfunc.h                  |    2 +
+> >  arch/arm/boot/dts/imx6qdl-pingrp.h                 |  532 +++++++++++
+> >  arch/arm/boot/dts/imx6sl-pingrp.h                  |  148 ++++
+> >  arch/arm/boot/dts/vf610-pingrp.h                   |  127 +++
 > 
-> On the X-Gene evaluation platform, there is only one PCIe port
-> enabled. Here is the 'lspci' dump
+> Hm, these don't quite use include files the way include files were
+> originally meant to be used -- initially the idea was to use them to
+> define mostly simple constants instead of full properties like this.
 
-This is a bit hard to read withouth more context, but:
+The DT macro support was introduced to improve the readability of device
+tree sources by replacing those magic numbers with readable macros.  I
+think the usage in imx pinctrl binding perfectly fits the purpose.  You
+can get details of the binding in
+Documentation/devicetree/bindings/pinctrl/fsl,imx-pinctrl.txt.
 
-> # lspci -vvv
-> 00:00.0 Class 0604: Device 19aa:e008 (rev 04)
->         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+> 
+> I'm not against the idea of using it this way, but I also want to make sure the
+> DT maintainers are OK with it. So I've cc:d them on this reply.
 
-This is an on-chip device? (19aa does not seem to be a VID I can find)
+This is not a new thing. It was firstly adopted for imx6q in v3.10
+release with commit e164153 (pinctrl: imx: move hard-coding data into
+device tree), which had been posted to devicetree list for sure.  We're
+just moving more i.MX SoCs to it.
 
-Ideally this is the on-chip PCI-PCI bridge which represents the port.
+> 
+> I'm also not crazy about the insanely long identifiers used here, but I guess
+> they correlate with some user manual tables?
 
-The problem I see is that your DT binding has a top level stanza per
-port.
+Yes, the identifiers follows the pad and function names from reference
+manual.
 
-We *really* prefer to see a single stanza for all ports - but this
-requires the HW to be able to fit into the Linux resource assignment
-model - a single resource pool for all ports and standard PCI-PCI
-bridge config access to assign the resource to a port.
+Shawn
 
-If your HW can't do this (eg because the port aperture 0xe000000000 is
-hard wired) then the fall back is to place every port in a distinct
-domain, with a distinct DT node and have overlapping bus numbers
-and fixed windows. I don't see PCI domain support in your driver..
-
-There is some kind of an addressing problem because you've done this:
-
-+static void xgene_pcie_fixup_bridge(struct pci_dev *dev)
-+{
-+	int i;
-+
-+	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
-+		dev->resource[i].start = dev->resource[i].end = 0;
-+		dev->resource[i].flags = 0;
-+	}
-+}
-+DECLARE_PCI_FIXUP_HEADER(XGENE_PCIE_VENDORID, XGENE_PCIE_BRIDGE_DEVICEID,
-+			 xgene_pcie_fixup_bridge);
-
-Which is usually a sign that something is wonky with how the HW is
-being fit into the PCI core.
-
-> ParErr+ Stepping- SERR+ FastB2B- DisINTx-
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Latency: 0, Cache Line Size: 64 bytes
->         Region 0: Memory at <ignored> (64-bit, prefetchable)
->         Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
->         I/O behind bridge: 0000f000-00000fff
->         Memory behind bridge: 00c00000-00cfffff
-
-[..]
- 
-> 01:00.0 Class 0200: Device 15b3:1003
->         Region 0: Memory at e000c00000 (64-bit, non-prefetchable) [size=1M]
->         Region 2: Memory at e000000000 (64-bit, prefetchable)
->         [size=8M]
-
-Something funky is going on here too, the 64 bit address e000000000
-should be reflected in the 'memory behind bridge' above, not
-truncated.
-
-ranges = <0x02000000 0x0 0x00000000 0x90 0x00000000 0x0 0x10000000 /* mem*/
-+				  0x01000000 0x0 0x80000000 0x90 0x80000000 0x0 0x00010000 /* io */
-+				  0x00000000 0x0 0xd0000000 0x90 0xd0000000 0x0 0x00200000 /* cfg */
-+				  0x00000000 0x0 0x79000000 0x00 0x79000000 0x0 0x00800000>; /* msi */
-
-Ranges has a defined meaning, MSI shouldn't be in ranges, and 'cfg' is
-only OK if the address encoding exactly matches the funky PCI-E extended
-configuration address format. You can move these to regs or other
-properties
-
-(MSI is tricky, I'm not aware of DT binding work for MSI :()
-
-Also, unrelated, can you please double check that your HW cannot
-generate 8 and 16 bit configuration write TLPs natively? The
-xgene_pcie_cfg_out8/16 hack is not desirable if it can be avoided.
-
-Regards,
-Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
