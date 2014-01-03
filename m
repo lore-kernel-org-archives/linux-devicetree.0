@@ -1,31 +1,31 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 10/10] devicetree: bindings: Document PM8921/8058 vibrators
-Date: Thu,  2 Jan 2014 16:37:40 -0800
-Message-ID: <1388709460-19222-11-git-send-email-sboyd@codeaurora.org>
+Subject: [PATCH v2 09/10] devicetree: bindings: Document PM8921/8058 power keys
+Date: Thu,  2 Jan 2014 16:37:39 -0800
+Message-ID: <1388709460-19222-10-git-send-email-sboyd@codeaurora.org>
 References: <1388709460-19222-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1388709460-19222-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the vibration device found on PM8921 and PM8058 PMICs.
+Document the power key found on PM8921 and PM8058 PMICs.
 
 Cc: <devicetree@vger.kernel.org>
 Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- .../devicetree/bindings/input/qcom,pm8xxx-vib.txt        | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.txt
+ .../bindings/input/qcom,pm8xxx-pwrkey.txt          | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-pwrkey.txt
 
-diff --git a/Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.txt b/Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.txt
+diff --git a/Documentation/devicetree/bindings/input/qcom,pm8xxx-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8xxx-pwrkey.txt
 new file mode 100644
-index 000000000000..dca1b8872cf1
+index 000000000000..e124d9f33632
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.txt
-@@ -0,0 +1,16 @@
-+Qualcomm PM8xxx PMIC Vibrator
++++ b/Documentation/devicetree/bindings/input/qcom,pm8xxx-pwrkey.txt
+@@ -0,0 +1,39 @@
++Qualcomm PM8xxx PMIC Power Key
 +
 +PROPERTIES
 +
@@ -33,13 +33,36 @@ index 000000000000..dca1b8872cf1
 +	Usage: required
 +	Value type: <string>
 +	Definition: must be one of:
-+		    "qcom,pm8058-vib"
-+		    "qcom,pm8921-vib"
++		    "qcom,pm8058-pwrkey"
++		    "qcom,pm8921-pwrkey"
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the first interrupt specifies the key release interrupt
++		    and the second interrupt specifies the key press interrupt.
++		    The format of the specifier is defined by the binding
++		    document describing the node's interrupt parent.
++
++- debounce:
++	Usage: optional
++	Value type: <u32>
++	Definition: time in microseconds that key must be pressed or release
++		    for state change interrupt to trigger.
++
++- pull-up:
++	Usage: optional
++	Value type: <empty>
++	Definition: presence of this property indicates that the KPDPWR_N pin
++		    should be configured for pull up.
 +
 +EXAMPLE
 +
-+	vibrator {
-+		compatible = "qcom,pm8058-vib";
++	pwrkey {
++		compatible = "qcom,pm8921-pwrkey";
++		interrupt-parent = <&pmicintc>;
++		interrupts = <50 1>, <51 1>;
++		debounce = <15625>;
++		pull-up;
 +	};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
