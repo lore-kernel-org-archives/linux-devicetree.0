@@ -1,109 +1,43 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH 3/3] dt-bindings: pci: xgene pcie device tree bindings
-Date: Fri, 3 Jan 2014 10:49:20 +0100
-Message-ID: <201401031049.20932.arnd@arndb.de>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com> <1387785725-24262-4-git-send-email-tinamdar@apm.com>
+From: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
+Subject: RE: [PATCH V3 2/2] cpufreq: imx6q: correct VDDSOC/PU voltage
+ scaling when cpufreq is changed
+Date: Fri, 3 Jan 2014 09:52:22 +0000
+Message-ID: <67c8e04574694cf59625e95fa1a65332@BY2PR03MB315.namprd03.prod.outlook.com>
+References: <1387402010-31749-1-git-send-email-b20788@freescale.com>
+ <1387402010-31749-2-git-send-email-b20788@freescale.com>
+ <20131218142536.GM6691@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387785725-24262-4-git-send-email-tinamdar-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20131218142536.GM6691@S2101-09.ap.freescale.net>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+Cc: "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 23 December 2013, Tanmay Inamdar wrote:
-> This patch adds the bindings for X-Gene PCIe driver. The driver resides
-> under 'drivers/pci/host/pcie-xgene.c' file.
-> 
-> Signed-off-by: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
-> ---
->  .../devicetree/bindings/pci/xgene-pcie.txt         |   43 ++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/xgene-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/xgene-pcie.txt b/Documentation/devicetree/bindings/pci/xgene-pcie.txt
-> new file mode 100644
-> index 0000000..d92da4f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/xgene-pcie.txt
-> @@ -0,0 +1,43 @@
-> +* AppliedMicro X-Gene PCIe interface
-> +
-> +Required properties:
-> +- status: Either "ok" or "disabled".
-> +- device_type: set to "pci"
-> +- compatible: should contain "xgene,pcie" to identify the core.
-> +- reg: base addresses and lengths of the pcie controller configuration
-> +	space register.
-> +- #address-cells: set to <3>
-> +- #size-cells: set to <2>
-> +- ranges: ranges for the PCI memory, I/O regions, config and MSI regions
-> +- #interrupt-cells: set to <1>
-> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> +	to define the mapping of the PCIe interface to interrupt
-> +	numbers.
-> +- clocks: from common clock binding: handle to pci clock.
-> +- clock-names: from common clock binding. Should be "pcieclk".
-> +
-
-Better use an anonymous clock?
-
-The driver also seems to use a phy that is not defined here.
-
-> +Example:
-> +
-> +SoC specific DT Entry:
-> +	pcie0: pcie@1f2b0000 {
-> +		status = "disabled";
-> +		device_type = "pci";
-> +		compatible = "xgene,pcie";
-> +		#interrupt-cells = <1>;
-> +		#size-cells = <2>;
-> +		#address-cells = <3>;
-> +		reg = < 0x00 0x1f2b0000 0x0 0x00010000>;
-> +		ranges = <0x02000000 0x0 0x00000000 0xe0 0x00000000 0x0 0x10000000 /* mem*/
-
-This is an awfully small memory space for a 64 bit machine. Is that a hardware bug you
-are working around? If not, please make it as large as you can to allow for arbitrary
-extension cards with large BARs, at least 4GB.
-
-Also, do you support no prefetchable memory?
-
-> +			  0x01000000 0x0 0x80000000 0xe0 0x80000000 0x0 0x00010000 /* io */
-
-I/O space at 0x80000000? That won't work with a lot of devices. Can you make it start
-at bus address 0?
-
-> +			  0x00000000 0x0 0xd0000000 0xe0 0xd0000000 0x0 0x00200000 /* cfg */
-
-config space is not normally in the ranges property, and I think you will need
-it in the pcie node itself as a 'reg' property so the code can access it.
-
-> +			  0x00000000 0x0 0x79000000 0x00 0x79000000 0x0 0x00800000>; /* msi */
-
-Same here. Also I suspect this is a separate irqchip that isn't actually part
-of the PCIe host. If they are separate devices, I'd strongly recommend modeling
-them as separate device-nodes in DT to make reuse easier.
-
-> +		interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> +		interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1>;
-
-Only one IRQ for all devices?
-
-> +		clocks = <&pcie0clk 0>;
-> +		clock-names = "pcieclk"
-> +	};
-> +
-> +Board specific DT Entry:
-> +	&pcie0 {
-> +		status = "ok";
-> +	};
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+UGluZy4uLg0KDQpCZXN0IFJlZ2FyZHMuDQpBbnNvbiBodWFuZyDpu4Tli4fmiY0NCsKgDQpGcmVl
+c2NhbGUgU2VtaWNvbmR1Y3RvciBTaGFuZ2hhaQ0K5LiK5rW35rWm5Lic5paw5Yy65Lqu5pmv6Lev
+MTky5Y+3QeW6pzLmpbwNCjIwMTIwMw0KVGVsOjAyMS0yODkzNzA1OA0KDQoNCj4tLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFNoYXduIEd1byBbbWFpbHRvOnNoYXduLmd1b0BsaW5h
+cm8ub3JnXQ0KPlNlbnQ6IFdlZG5lc2RheSwgRGVjZW1iZXIgMTgsIDIwMTMgMTA6MjYgUE0NCj5U
+bzogSHVhbmcgWW9uZ2NhaS1CMjA3ODgNCj5DYzogcmp3QHJqd3lzb2NraS5uZXQ7IHZpcmVzaC5r
+dW1hckBsaW5hcm8ub3JnOyBjcHVmcmVxQHZnZXIua2VybmVsLm9yZzsNCj5saW51eC1wbUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj5kZXZp
+Y2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMi8yXSBjcHVm
+cmVxOiBpbXg2cTogY29ycmVjdCBWRERTT0MvUFUgdm9sdGFnZSBzY2FsaW5nDQo+d2hlbiBjcHVm
+cmVxIGlzIGNoYW5nZWQNCj4NCj5PbiBXZWQsIERlYyAxOCwgMjAxMyBhdCAwNDoyNjo1MFBNIC0w
+NTAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4+IG9uIGkuTVg2USwgY3B1IGZyZXEgY2hhbmdlIG5l
+ZWQgdG8gZm9sbG93IGJlbG93IGZsb3dzOg0KPj4NCj4+IDEuIGVhY2ggc2V0cG9pbnQgaGFzIGRp
+ZmZlcmVudCBWRERBUk0sIFZERFNPQy9QVSB2b2x0YWdlLCBnZXQgdGhlIHNldHBvaW50DQo+PiAg
+ICB0YWJsZSBmcm9tIGR0czsNCj4+IDIuIHdoZW4gY3B1IGZyZXEgaXMgc2NhbGluZyB1cCwgbmVl
+ZCB0byBpbmNyZWFzZSBWRERTT0MvUFUgdm9sdGFnZSBiZWZvcmUNCj4+ICAgIFZEREFSTSwgaWYg
+VkREUFUgaXMgb2ZmLCBubyBuZWVkIHRvIGNoYW5nZSBpdDsgMy4gd2hlbiBjcHUgZnJlcSBpcw0K
+Pj4gc2NhbGluZyBkb3duLCBuZWVkIHRvIGRlY3JlYXNlIFZEREFSTSB2b2x0YWdlIGJlZm9yZQ0K
+Pj4gICAgVkREU09DL1BVLCBpZiBWRERQVSBpcyBvZmYsIG5vIG5lZWQgdG8gY2hhbmdlIGl0Ow0K
+Pj4NCj4+IG5vcm1hbGx5IGR0cyB3aWxsIHBhc3MgdmRkc29jL3B1IGZyZXEvdm9sdCBpbmZvIHRv
+IGtlcm5lbCwgaWYgbm90LA0KPj4gd2lsbCB1c2UgZml4ZWQgdmFsdWUgZm9yIHZkZHNvYy9wdSB2
+b2x0YWdlIHNldHRpbmcuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPGIyMDc4
+OEBmcmVlc2NhbGUuY29tPg0KPg0KPkFja2VkLWJ5OiBTaGF3biBHdW8gPHNoYXduLmd1b0BsaW5h
+cm8ub3JnPg0KDQo=
