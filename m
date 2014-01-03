@@ -1,71 +1,92 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] input: Add new sun4i-lradc-keys drivers
-Date: Thu, 2 Jan 2014 12:38:31 -0800
-Message-ID: <20140102203831.GA3239@core.coreip.homeip.net>
-References: <1388604610-20380-1-git-send-email-hdegoede@redhat.com>
- <20140101205603.GA1141@core.coreip.homeip.net>
- <52C5336B.9010903@redhat.com>
- <1700375.GaI3zFl6RI@phil>
- <52C56D79.1060506@redhat.com>
- <20140102202022.GK3144@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDP6N55ZUYDRBYX6S6LAKGQEI4ZGZYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140102202022.GK3144@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+From: Loc Ho <lho@apm.com>
+Subject: [PATCH v7 0/4] ata: Add APM X-Gene SoC SATA host controller support
+Date: Thu,  2 Jan 2014 17:22:15 -0700
+Message-ID: <1388708539-333-1-git-send-email-lho@apm.com>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 02, 2014 at 09:20:22PM +0100, Maxime Ripard wrote:
-> On Thu, Jan 02, 2014 at 02:45:29PM +0100, Hans de Goede wrote:
-> > >Also, instead of inventing yet another vendor-specific property, why not re-use
-> > >a button binding similar to gpio-keys like:
-> > >
-> > >        lradc: lradc@01c22800 {
-> > >                compatible = "allwinner,sun4i-lradc-keys";
-> > >                reg = <0x01c22800 0x100>;
-> > >                interrupts = <31>;
-> > >                allwinner,chan0-step = <200>;
-> > >
-> > >		#address-cells = <1>;
-> > >		#size-cells = <0>;
-> > >
-> > >		button@0 {
-> > >			reg = <0>; /* your channel index from above */
-> > >			linux,code = <115>; /* already used as dt-property */
-> > >		};
-> > >
-> > >		button@1 {
-> > >			reg = <1>;
-> > >			linux,code = <114>;
-> > >		};
-> > 
-> > Ugh no. Having a vendor specific property which is KISS certainly
-> > beats this, both wrt ease of writing dts files as well as wrt the
-> > dts parsing code in the driver.
-> 
-> I'd agree with Heiko here. This is pretty much the same construct
-> that's already in use in other input drivers, like gpio-keys.
-> 
-> This is also something that can really easily be made generic, since
-> this is something that is rather common.
+This patch adds support for the APM X-Gene SoC SATA host controller. In
+order for the host controller to work, the corresponding PHY driver
+musts also be available.
 
-Except that button definition from gpio-keys does not use 'reg' property
-but rather gpio. I'd rather we did not cram non-applicable attributes
-into that definition just to make it "reusable" like that.
+v7:
+ * Update the clock code by toggle the clock
+ * Update the DTS clock mask values due to the clock spilt between host and 
+   v5 of the PHY drivers
 
-I'd be OK with having similar (but not claiming to be the same) mappings
-though.
+v6:
+ * Update binding documentation
+ * Change select PHY_XGENE_SATA to PHY_XGENE
+ * Add ULL to constants
+ * Change indentation and comments
+ * Clean up the probe functions a bit more
+ * Remove xgene_ahci_remove function
+ * Add the flush register to DTS
+ * Remove the interrupt-parent from DTS
 
-Thanks.
+v5:
+ * Sync up to v3 of the PHY driver
+ * Remove MSLIM wrapper functions
+ * Change the memory shutdown loop to use usleep_range
+ * Use devm_ioremap_resource instead devm_ioremap
+ * Remove suspend/resume functions as not needed
 
--- 
-Dmitry
+v4:
+ * Remove the ID property in DT
+ * Remove the temporary PHY direct function call and use PHY function
+ * Change printk to pr_debug
+ * Move the IOB flush addresses into the DT
+ * Remove the parameters retrieval function as no longer needed
+ * Remove the header file as no longer needed
+ * Require v2 patch of the SATA PHY driver. Require slightly modification
+   in the Kconfig as it is moved to folder driver/phy and use Kconfig
+   PHY_XGENE_SATA instead SATA_XGENE_PHY.
+
+v3:
+ * Move out the SATA PHY to another driver
+ * Remove the clock-cells entry from DTS
+ * Remove debug wrapper
+ * Remove delay functions wrapper
+ * Clean up resource and IRQ query
+ * Remove query clock name
+ * Switch to use dma_set_mask/dma_coherent_mask
+ * Remove un-necessary devm_kfree
+ * Update GPL license header to v2
+ * Spilt up function xgene_ahci_hardreset
+ * Spilt up function xgene_ahci_probe
+ * Remove all reference of CONFIG_ARCH_MSLIM
+ * Clean up chip revision code
+
+v2:
+ * Clean up file sata_xgene.c with Lindent and etc
+ * Clean up file sata_xgene_serdes.c with Lindent and etc
+ * Add description to each patch
+
+v1:
+ * inital version
+
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Tuan Phan <tphan@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+Loc Ho (4):
+  ata: Export required functions by APM X-Gene SATA driver
+  Documentation: Add documentation for APM X-Gene SoC SATA host
+    controller DTS binding
+  ata: Add APM X-Gene SoC SATA host controller driver
+  arm64: Add APM X-Gene SoC SATA host controller DTS entries
+
+ .../devicetree/bindings/ata/apm-xgene.txt          |   68 ++
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   81 ++
+ drivers/ata/Kconfig                                |    8 +
+ drivers/ata/Makefile                               |    1 +
+ drivers/ata/ahci.h                                 |    9 +
+ drivers/ata/libahci.c                              |   16 +-
+ drivers/ata/sata_xgene.c                           | 1071 ++++++++++++++++++++
+ 7 files changed, 1248 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/apm-xgene.txt
+ create mode 100644 drivers/ata/sata_xgene.c
+
