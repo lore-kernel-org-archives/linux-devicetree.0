@@ -1,106 +1,48 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/4] input: Add new sun4i-lradc-keys drivers
-Date: Thu, 02 Jan 2014 23:36:33 +0100
-Message-ID: <52C5E9F1.9010700@redhat.com>
-References: <1388604610-20380-1-git-send-email-hdegoede@redhat.com> <20140101205603.GA1141@core.coreip.homeip.net> <52C5336B.9010903@redhat.com> <1700375.GaI3zFl6RI@phil> <52C56D79.1060506@redhat.com> <20140102202022.GK3144@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: commit e38c0a1f breaks powerpc boards with uli1575 chip
+Date: Thu, 2 Jan 2014 18:04:17 -0600
+Message-ID: <1388707457.11795.32.camel@snotra.buserror.net>
+References: <201312171135.38576@blacky.localdomain>
+	 <52B1EC15.5070606@gmail.com> <201312190842.02702@blacky.localdomain>
+	 <1388373200.4373.25.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBBWUS6LAKGQES6B2WBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140102202022.GK3144@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1388373200.4373.25.camel@pasglop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Dmitry Krivoschekov <dkrivoschokov@dev.rtsoft.ru>, Alexey Lugovskoy <lugovskoy@dev.rtsoft.ru>, Thierry Reding <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 2013-12-30 at 14:13 +1100, Benjamin Herrenschmidt wrote:
+> On Thu, 2013-12-19 at 08:42 +0400, Nikita Yushchenko wrote:
+> > No, this does not help.
+> > 
+> > I've dumped the actual content of 'range' and 'addr' at the failure
+> > point 
+> > (i.e. ar point that returns error with e38c0a1f but passes without 
+> > e38c0a1f ):
+> > 
+> > OF: default map, cp=0, s=10000, da=70
+> > range:  01 00 00 00 00 00 00 00 00 00 00 00
+> >  addr:  00 00 00 00 00 00 00 00 00 00 00 70
+> 
+> Something that has a #address-cells larger than 2, or more generally,
+> an address field that contains more than a single number, must have
+> a specific translation backend, like we have for PCI.
+> 
+> This is a bit annoying but originates from the original OFW stuff on
+> which this stuff is based where the bus node would provide the methods
+> for translation.
 
-On 01/02/2014 09:20 PM, Maxime Ripard wrote:
-> On Thu, Jan 02, 2014 at 02:45:29PM +0100, Hans de Goede wrote:
->>> Also, instead of inventing yet another vendor-specific property, why not re-use
->>> a button binding similar to gpio-keys like:
->>>
->>>         lradc: lradc@01c22800 {
->>>                 compatible = "allwinner,sun4i-lradc-keys";
->>>                 reg = <0x01c22800 0x100>;
->>>                 interrupts = <31>;
->>>                 allwinner,chan0-step = <200>;
->>>
->>> 		#address-cells = <1>;
->>> 		#size-cells = <0>;
->>>
->>> 		button@0 {
->>> 			reg = <0>; /* your channel index from above */
->>> 			linux,code = <115>; /* already used as dt-property */
->>> 		};
->>>
->>> 		button@1 {
->>> 			reg = <1>;
->>> 			linux,code = <114>;
->>> 		};
->>
->> Ugh no. Having a vendor specific property which is KISS certainly
->> beats this, both wrt ease of writing dts files as well as wrt the
->> dts parsing code in the driver.
->
-> I'd agree with Heiko here. This is pretty much the same construct
-> that's already in use in other input drivers, like gpio-keys.
+I can maybe see that for PCI which has a special encoding, but why is it
+always needed?  E.g. if Freescale localbus had a 64-bit offset instead
+of 32-bit, the child nodes would have 3 address cells, but
+straightforward use of ranges would bring it down to 2 for the final
+physical address.  Existing localbus nodes already have "an address
+field that contains more than a single number"; it's just a simple
+enough encoding that it works to treat it as if it were a single large
+number.
 
-In the gpio case there is a 1 on 1 relation between a single hw
-entity (the gpio-pin) and a single keycode. Here there is 1 hw entity
-which maps to an array of key-codes, certainly using an array rather
-then a much more complicated construct is the correct data-structure
-to represent this.
-
->
-> This is also something that can really easily be made generic, since
-> this is something that is rather common.
->
-> Speaking of which. I believe this should actually come in two
-> different drivers:
->    - The ADC driver itself, using IIO
->    - A generic button handler driver on top of IIO.
- >
- > The fact that on most board this adc is used for buttons doesn't make
- > any difference, it's actually a hardware designer choice, we should
- > support that choice, but we should also be able to use it just as an
- > ADC.
-
-No, this is not a generic adc, as mentioned in the commit msg, this
-adc is specifically designed to be used this way.
-
-The adc won't start sampling data, and won't generate any interrupts
-until a button is pressed. That is until the input voltage drops below
-2/3 of Vref, this is checked through a built-in analog comparator, which
-hooks into the control logic.
-
-It has button down and button up interrupts, and can detect long
-presses (unused) and generate a second type of down interrupt for those.
-
-This really is an input device, which happens to use an adc.
-
-> Carlo Caione already started to work on an IIO driver for the LRADC:
-> https://github.com/carlocaione/linux/tree/sunxi-lradc
-> maybe you can take over his work.
-
-That won't work because the adc won't sample if the input gets above
-2/3 of Vref. There may be some other mode which does not do that, but
-that is not clearly documented.
-
-Even if an IIO driver turns out to be doable, I strongly believe that
-having a separate input driver for this is best, since this device
-was designed to be used as such. Building input on top of IIO would
-mean polling the adc, while with my driver it actually generates
-button down / up interrupts without any polling being involved.
-
-And no boards I know of are using this as a generic analog input,
-where as many boards are using it as designed.
-
-Regards,
-
-Hans
+-Scott
