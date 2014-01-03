@@ -1,123 +1,58 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH v7 4/4] arm64: Add APM X-Gene SoC SATA host controller DTS entries
-Date: Thu,  2 Jan 2014 17:22:19 -0700
-Message-ID: <1388708539-333-5-git-send-email-lho@apm.com>
-References: <1388708539-333-1-git-send-email-lho@apm.com>
- <1388708539-333-2-git-send-email-lho@apm.com>
- <1388708539-333-3-git-send-email-lho@apm.com>
- <1388708539-333-4-git-send-email-lho@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1388708539-333-4-git-send-email-lho@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v2 00/10] Use regmap+devm+DT in pm8xxx input drivers
+Date: Thu,  2 Jan 2014 16:37:30 -0800
+Message-ID: <1388709460-19222-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Tuan Phan <tphan@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   81 ++++++++++++++++++++++++++++++++++++
- 1 files changed, 81 insertions(+), 0 deletions(-)
+These patches move the pm8xxx input drivers over to use devm_* APIs
+and regmap. This breaks the dependency of these drivers on the pm8xxx
+specific read/write calls and also simplifies the probe code a bit.
+Finally we add devicetree support to these drivers so they can be probed
+on the platforms that are supported upstream.
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index fd2b662..5b09797 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -218,6 +218,48 @@
- 				enable-offset = <0x0>;
- 				enable-mask = <0x06>;
- 			};
-+
-+			sata01clk: sata01clk@1f21c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "sata01clk";
-+				reg = <0x0 0x1f21c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata01clk";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x05>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x39>;
-+			};
-+
-+			sata23clk: sata23clk@1f22c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "sata23clk";
-+				reg = <0x0 0x1f22c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata23clk";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x05>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x39>;
-+			};
-+
-+			sata45clk: sata45clk@1f23c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "sata45clk";
-+				reg = <0x0 0x1f23c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata45clk";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x05>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x39>;
-+			};
- 		};
- 
- 		serial0: serial@1c020000 {
-@@ -266,5 +308,44 @@
- 			apm,tx-boost-gain = <2 3 3 2 3 3>;
- 			apm,tx-eye-tuning = <2 10 10 2 10 12>;
- 		};
-+
-+		sata1: sata@1a000000 {
-+			compatible = "apm,xgene-ahci-sgmii";
-+			reg = <0x0 0x1a000000 0x0 0x1000>,
-+			      <0x0 0x1f210000 0x0 0x10000>,
-+			      <0x0 0x1f2a0000 0x0 0x10000>,
-+			      <0x0 0x1c000200 0x0 0x100>;
-+			interrupts = <0x0 0x86 0x4>;
-+			status = "disabled";
-+			clocks = <&sata01clk 0>;
-+			phys = <&phy1 0>;
-+			phy-names = "sata-6g";
-+		};
-+
-+		sata2: sata@1a400000 {
-+			compatible = "apm,xgene-ahci-sgmii";
-+			reg = <0x0 0x1a400000 0x0 0x1000>,
-+			      <0x0 0x1f220000 0x0 0x10000>,
-+			      <0x0 0x1f2a0000 0x0 0x10000>,
-+			      <0x0 0x1c000200 0x0 0x100>;
-+			interrupts = <0x0 0x87 0x4>;
-+			status = "ok";
-+			clocks = <&sata23clk 0>;
-+			phys = <&phy2 0>;
-+			phy-names = "sata-6g";
-+		};
-+
-+		sata3: sata@1a800000 {
-+			compatible = "apm,xgene-ahci-pcie";
-+			reg = <0x0 0x1a800000 0x0 0x1000>,
-+			      <0x0 0x1f230000 0x0 0x10000>,
-+			      <0x0 0x1f2a0000 0x0 0x10000>,
-+			      <0x0 0x1c000200 0x0 0x100>;
-+			interrupts = <0x0 0x88 0x4>;
-+			status = "ok";
-+			clocks = <&sata45clk 0>;
-+			phys = <&phy3 0>;
-+			phy-names = "sata-6g";
-+		};
- 	};
- };
+There was no devm_request_any_context_irq() available, so I've added
+it here.
+
+Changes since v1:
+ * Picked up Dmitry's version of devm for pwrkey
+ * Added DT bindings and parsing patches
+ * Dropped patches picked up by Dmitry
+
+Dmitry Torokhov (1):
+  Input: pmic8xxx-pwrkey - switch to using managed resources
+
+Stephen Boyd (9):
+  genirq: Add devm_request_any_context_irq()
+  Input: pmic8xxx-keypad - Switch to using managed resources
+  Input: pmic8xxx-keypad - Migrate to regmap APIs
+  Input: pmic8xxx-pwrkey - Migrate to DT
+  Input: pm8xxx-vibrator - Add DT match table
+  Input: pmic8xxx-keypad - Migrate to DT
+  devicetree: bindings: Document PM8921/8058 keypads
+  devicetree: bindings: Document PM8921/8058 power keys
+  devicetree: bindings: Document PM8921/8058 vibrators
+
+ .../bindings/input/qcom,pm8xxx-keypad.txt          |  72 +++++
+ .../bindings/input/qcom,pm8xxx-pwrkey.txt          |  39 +++
+ .../devicetree/bindings/input/qcom,pm8xxx-vib.txt  |  16 ++
+ drivers/input/keyboard/pmic8xxx-keypad.c           | 291 ++++++++++-----------
+ drivers/input/misc/pm8xxx-vibrator.c               |   8 +
+ drivers/input/misc/pmic8xxx-pwrkey.c               | 107 ++++----
+ include/linux/input/pmic8xxx-keypad.h              |  52 ----
+ include/linux/input/pmic8xxx-pwrkey.h              |  31 ---
+ include/linux/interrupt.h                          |   5 +
+ kernel/irq/devres.c                                |  45 ++++
+ 10 files changed, 361 insertions(+), 305 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
+ create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-pwrkey.txt
+ create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.txt
+ delete mode 100644 include/linux/input/pmic8xxx-keypad.h
+ delete mode 100644 include/linux/input/pmic8xxx-pwrkey.h
+
 -- 
-1.5.5
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
