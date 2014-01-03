@@ -1,42 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 4/4] arm64: Add APM X-Gene SoC SATA host controller DTS entries
-Date: Fri, 3 Jan 2014 16:33:17 +0100
-Message-ID: <201401031633.18110.arnd@arndb.de>
-References: <1388708539-333-1-git-send-email-lho@apm.com> <1388708539-333-4-git-send-email-lho@apm.com> <1388708539-333-5-git-send-email-lho@apm.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 0/4] (Repost) Add reset GPIO support to the pca954x I2C
+ mux
+Date: Fri, 3 Jan 2014 16:42:47 +0100
+Message-ID: <20140103154247.GE7132@katana>
+References: <1385686285-23780-1-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1388708539-333-5-git-send-email-lho@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: olof@lixom.net, tj@kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lkTb+7nhmha7W+c3"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1385686285-23780-1-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 03 January 2014, Loc Ho wrote:
-> +                       sata23clk: sata23clk@1f22c000 {
-> +                               compatible = "apm,xgene-device-clock";
-> +                               #clock-cells = <1>;
-> +                               clocks = <&socplldiv2 0>;
-> +                               clock-names = "sata23clk";
 
-> +                       };
-> +
-> +                       sata45clk: sata45clk@1f23c000 {
-> +                               compatible = "apm,xgene-device-clock";
-> +                               #clock-cells = <1>;
-> +                               clocks = <&socplldiv2 0>;
-> +                               clock-names = "sata45clk";
+--lkTb+7nhmha7W+c3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Something is wrong here: You have two devices with the same "compatible"
-string but using different "clock-names" strings. The binding document
-lists this as an optional property with the description  "shall be
-the name of the device clock. If missing, use the device name", which
-doesn't seem to make any sense.
+On Fri, Nov 29, 2013 at 01:51:21AM +0100, Laurent Pinchart wrote:
+> Hello,
+>=20
+> This patch set adds DT support for a reset GPIO to the pca954x I2C mux. It
+> starts by two cleanup patches for the driver, adds missing DT bindings
+> documentation and finally adds support for the reset GPIO.
 
-Please fix the binding and the existing users of this, and don't introduce
-any more broken instances. Since each device clock is documented to
-have only one parent anyway, please just make it an anonymous clock.
+Applied series to for-next, thanks!
 
-	Arnd
+
+--lkTb+7nhmha7W+c3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSxtp3AAoJEBQN5MwUoCm2cxkP/j514/j5xEbt2spOV69epnpJ
+Cc3AalAJtpPYHkaG1YmAVRNSPbNvmZDqrSdCk2tkCpqdsr0b4PWBf01CDZoLdxFq
+kLAOPFfhCluqZoeKnBKHS75Pia1pN+IAwlxTeoLc6WctdRhjuOgLWpNqvj+Uikrd
+m8QTmlLOBPsYiNdzqZzSNUOx2JGkvA3vNQcPkt6oIu9R8MtLt2ytcWB+jYHrRQwM
+XtkYZyJRKDaQGaXSvJrufNl0tXUm2PAnScyTi1Ub6YDBjRlt8GCLCSnaISKkdS9k
+x5BjiUadozYErKkgEYSoffXXHu/Ii42RtBJwbLgLpSz5xTpnF/D7X+N75tzwJdpA
+hZzmqtDZ8ZxVHjHfsQ6+nnf5sjdRqReHg8CMeZ3syxZ+wf/k1HrZFiJdwlK2Ka2u
+Pgqx/5vt1bG2PQ1WGgnGzilqYnlcDbGtZEEyDmzEkL2RfIQ7qaga7FSKZ0BLekZi
+xCvx6df2EwPt8ffRW23I6YKMsMrBX2tBJAncmYMiDo1OZ1JmCEGZmHIMeDC7vUam
+Fh3egMFOmMeBP2iybz9sLaiugpmm123uu6XwRNM1pYXYn8apxx2H6oZZMYbDBLmF
+iyaZocbPJUHygfadFMjQ/kIEK5yMUDxPJxZzoUrFMa0VAfT/TnweKGDbxRDGYCe2
++Knj7O8qvr7cqAzAZ2W5
+=Vtvc
+-----END PGP SIGNATURE-----
+
+--lkTb+7nhmha7W+c3--
