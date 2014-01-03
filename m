@@ -1,55 +1,71 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH 1/1] clk: arm64: Fix the clock-names property for pcppll, socpll, and socplldiv2
-Date: Fri,  3 Jan 2014 14:23:20 -0700
-Message-ID: <1388784200-8498-1-git-send-email-lho@apm.com>
+From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Subject: Re: [PATCH 1/7] Make for_each_child_of_node() reference its args
+ when CONFIG_OF=n
+Date: Fri, 3 Jan 2014 14:30:48 -0800
+Message-ID: <20140103143048.ee945c557167755871f23c5f@linux-foundation.org>
+References: <20140103160723.8153.14334.stgit@warthog.procyon.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140103160723.8153.14334.stgit-S6HVgzuS8uM4Awkfq6JHfwNdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the clock-names property for pcppll, socpll, and socplldiv2
-as found by Arnd B. The clock-name property for qmlclk, ethclk, and eth8clk 
-will be fixed as part of the Ethernet/QM driver submission.
+> Subject: [PATCH 1/7] Make for_each_child_of_node() reference its args when CONFIG_OF=n
 
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm-storm.dtsi |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+Nit: Documentation/SubmittingPatches, section 15.  "subsystem: " is
+missing from all patche titles.
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index cd1e012..52ce601 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -118,7 +118,7 @@
- 				compatible = "apm,xgene-pcppll-clock";
- 				#clock-cells = <1>;
- 				clocks = <&refclk 0>;
--				clock-names = "pcppll";
-+				clock-names = "refclk";
- 				reg = <0x0 0x17000100 0x0 0x1000>;
- 				clock-output-names = "pcppll";
- 				type = <0>;
-@@ -128,7 +128,7 @@
- 				compatible = "apm,xgene-socpll-clock";
- 				#clock-cells = <1>;
- 				clocks = <&refclk 0>;
--				clock-names = "socpll";
-+				clock-names = "refclk";
- 				reg = <0x0 0x17000120 0x0 0x1000>;
- 				clock-output-names = "socpll";
- 				type = <1>;
-@@ -138,7 +138,7 @@
- 				compatible = "fixed-factor-clock";
- 				#clock-cells = <1>;
- 				clocks = <&socpll 0>;
--				clock-names = "socplldiv2";
-+				clock-names = "socpll";
- 				clock-mult = <1>;
- 				clock-div = <2>;
- 				clock-output-names = "socplldiv2";
--- 
-1.5.5
+On Fri, 03 Jan 2014 16:07:23 +0000 David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+
+> Make for_each_child_of_node() reference its args when CONFIG_OF=n to avoid
+> warnings like:
+> 
+> 	drivers/leds/leds-pwm.c:88:22: warning: unused variable 'node' [-Wunused-variable]
+> 	  struct device_node *node = pdev->dev.of_node;
+> 			      ^
+> ...
+>
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -377,8 +377,13 @@ static inline bool of_have_populated_dt(void)
+>  	return false;
+>  }
+>  
+> +/* Kill an unused variable warning on a device_node pointer */
+> +static inline void __of_use_dn(const struct device_node *np)
+> +{
+> +}
+> +
+>  #define for_each_child_of_node(parent, child) \
+> -	while (0)
+> +	while (__of_use_dn(parent), __of_use_dn(child), 0)
+>  
+>  #define for_each_available_child_of_node(parent, child) \
+>  	while (0)
+
+That's a bit ugly.  __maybe_unused fixes it appropriately but can't be
+placed into the macro.
+
+
+I wonder if we should instead generalise it to
+
+static inline void reference_var_to_squish_gcc_warning(const void *p)
+{
+}
+
+I guess not, until/unless we find other macros which need the same
+treatment.
+
+
+Yes, passing a var to an empty function suppresses the warning.  But is
+this intentional or a happy accident?  Future gcc's could quite
+legitimately be enhanced to detect that the arg is still unused and
+then we'd need to find a new way of suppressing the warning, if such
+exists.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
