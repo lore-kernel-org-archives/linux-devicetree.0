@@ -1,63 +1,51 @@
-From: kgene@kernel.org
-Subject: RE: [PATCH V4 1/6] clk: exynos-audss: convert to platform device
-Date: Sat, 04 Jan 2014 11:47:41 +0900
-Message-ID: <230001cf08f7$568ded80$03a9c880$@kernel.org>
-References: <1380046016-5811-1-git-send-email-abrestic@chromium.org>
- <20131127184145.16819.44300@quantum> <529BBB9E.40300@samsung.com>
- <1592382.OOUUI06mrc@amdc1227>
+From: Sebastian Reichel <sre@ring0.de>
+Subject: Re: [PATCHv4 0/2] twl4030-keypad DT binding
+Date: Sat, 4 Jan 2014 06:40:06 +0100
+Message-ID: <20140104054006.GA23424@earth.universe>
+References: <1383948866-32672-1-git-send-email-sre@debian.org>
+ <1385830416-12900-1-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="YZ5djTAD1cGYuMQK"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1592382.OOUUI06mrc@amdc1227>
-Content-language: ko
+Content-Disposition: inline
+In-Reply-To: <1385830416-12900-1-git-send-email-sre@debian.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: 'Tomasz Figa' <t.figa@samsung.com>, 'Mike Turquette' <mturquette@linaro.org>
-Cc: 'Andrew Bresticker' <abrestic@chromium.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, linux-arm-kernel@lists.infradead.org, 'Padmavathi Venna' <padma.v@samsung.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Tomasz Figa wrote:
-> 
-> Hi Kukjin, Mike,
-> 
-> On Monday 02 of December 2013 07:43:42 Kukjin Kim wrote:
-> > On 11/28/13 03:41, Mike Turquette wrote:
-> > > Quoting Padma Venkat (2013-11-25 22:29:44)
-> > >> Hi Mike and Kukjin,
-> > >>
-> > >> On Tue, Oct 8, 2013 at 10:23 PM, Andrew Bresticker
-> > >> <abrestic@chromium.org>  wrote:
-> > >>> Hi Mike and Kukjin,
-> > >>>
-> > >>> Any decisions regarding this patchset?  I believe all comments have
-> > >>> been addressed.
-> > >>>
-> > >>> Thanks,
-> > >>> Andrew
-> > >>
-> > >> Any decisions on this patchset. These can be applied directly on
-> > >> linux-samsung tree.
-> > >
-> > > For all of the clk parts:
-> > >
-> > > Acked-by: Mike Turquette<mturquette@linaro.org>
-> > >
-> > > I'm happy to take them in as part of a pull request.
-> > >
-> > OK, Mike, I will take this series into samsung tree and let me send a
-> > pull request for your clk tree to avoid useless merge conflicts.
-> 
-- some persons in Cc
 
-> Hmm, I can't find this series in any tree, so I guess it has been lost
-> in action.
-> 
-Oops, sorry about that :-(
+--YZ5djTAD1cGYuMQK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Should I take it through samsung-clk tree with your acks?
-> 
-Tomasz, yes please take this series with my ack.
+Dmitry,
 
-Thanks,
-Kukjin
+What's the status of this patch? Can you queue this for 3.14?
 
+-- Sebastian
+
+--YZ5djTAD1cGYuMQK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSx561AAoJENju1/PIO/qaHvAP/jkY4f0ynQ5Xy1zjZjER3wiR
+cFfgEUGE6QO+wSdGo4b2KiQVVC0aoIw503eCZ0R3DbmQX5vATuRNSPxY1IiCs3Va
+4AgPaswDzEhUUghAx1Qm3t/mwz40d+7IJ3k1ks4BPDVhL7BVFASha/nmYiLyydIj
+67RORdbtDiVmQbblW8+yNTebyiQracj98A3VvVW3OzUHdv8XYUvRO9pVvfp33lgS
+HxRpa8+tPxKMfy3OMyvBuYVm+dynyf/V1vdzXmur+ZAYAmvv2UzxbBoqC0X0UpoK
+mhPdvBg4Aj3QMgwR1WHURIrhEgT2fVvNuyNvp3FkI7dO6OxAzQq2gOFcRubyRxT4
+B3QKt6EYMyy8kzv7Dv3KKpR6MgILKkaBt0vKJrMV4CF8Ae/O5OeVxsle4fjpQ5FB
+CMgrAKksfqSxqNC1oH8KhSqniGcRvfsqxGuyORTwNAzUhYooDN5hBkJ/Yj/37XzG
+hYLTaQOy/4u+/Ka0FgsZsGDCAwGCQU4nAq6L3R5loJR+TkX850qGMS+HPW+rRDgi
+EabWG9TgNhGnlawRB0bIP6B+ulEfz2naM5p+SZSfh56HdTDlvdHbQCYIyLV4tSTi
+D2H7+X84I/vdxHvVEgWlo1C/H/kjiq0I2qiHK7USnKfMD72/rxKG4WM2OsIa6Vu8
+t6vYALX9CNua/X1Hhmhe
+=+Ctl
+-----END PGP SIGNATURE-----
+
+--YZ5djTAD1cGYuMQK--
