@@ -1,36 +1,53 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] ARM: sunxi: Add ahci-sunxi driver
- for the Allwinner SUNXi SoCs sata
-Date: Sat, 04 Jan 2014 22:47:08 +0100
-Message-ID: <3250214.yUrU0CPosZ@wuerfel>
-References: <1388826878-5602-1-git-send-email-hdegoede@redhat.com> <1388826878-5602-3-git-send-email-hdegoede@redhat.com> <4502242.kKUgLAVDcb@wuerfel>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] i2c: at91: document clock properties
+Date: Sat, 4 Jan 2014 23:11:16 +0100
+Message-ID: <20140104221116.GE3150@katana>
+References: <1387295644-7382-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBZMCUKLAKGQEVOLJSCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <4502242.kKUgLAVDcb@wuerfel>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="47eKBCiAZYFK5l32"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1387295644-7382-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 04 January 2014 22:39:50 Arnd Bergmann wrote:
-> > +Required properties:
-> > +- compatible : compatible list, contains "allwinner,sun4i-a10-ahci"
-> > +- reg                : <registers mapping>
-> > +- interrupts : <interrupt mapping for AHCI IRQ>
-> > +- clocks     : clocks for ACHI
-> > +- clock-names        : clock names for AHCI
-> 
-> The binding needs to specify the required names for the clocks.
 
-fwiw, the imx driver uses "ahb" and "sata_ref" as the clock names.
-I would strongly suggest using the same names here, and documenting
-them in the ahci binding as optional.
+--47eKBCiAZYFK5l32
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	Arnd
+On Tue, Dec 17, 2013 at 04:54:04PM +0100, Boris BREZILLON wrote:
+> Document the clock properties required by the at91 i2c bus driver.
+>=20
+> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+
+Applied to for-next, thanks!
+
+
+--47eKBCiAZYFK5l32
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSyIcEAAoJEBQN5MwUoCm2MiYP/1V8njd7H6MdkcZ6jWIWIAS1
+VAhxRR1c8Mymmzp067Or4hGkCH79H5Q9U2IZtbh85jGH144m/ihRnBNoh1+CwXfC
+HR8bC8753oRoXP0YZ+ONyebV8Jy+gNkpvam2SBOy+e+g5vRD9FAPEBaLyZp8fLuX
+Fu6IsRAe13uiO3+gsFFNk+m6zsgMb/gWk4xLfrZ4hT6dyLsbTxtUkya12Bfr5bFf
+DK0cXIhML8rQ1TSiWBxDGygpFnBOfT7Rq3mz2qHYCsc7BNlnTR0CuCFPI9wXAKm5
+n72Un0vsLLfaKGYjcCGmoQpmkqzviGJXCUbhCF7he7Q45DwxDwFipVCVCd8urc1o
+1hNTF5P/MYUIwIeBf/tSN22j2V8Z2hOSqLdbmwGK4hFxy8zYqkZn+7Bxr8bw4qPH
+7jGrMnqKHdFMPqOoa7J2qzgo+opUQspU5GeUhS8/9whAKvuzG/K5oOq2c4B+4R/U
+tYsosnPVsJp/+5DilPXM9S9AJss7xu+iop62p8PdZjj7BDj+APMbOQsBI1sctuSW
+0QBNa6+QoLNaDFaSompT0HI4M/GVk7phi2/6/efYkf9r94GBGXoMQSDSBJadpc6Z
+P0hEXbJvzFIm6Vj7PdmC2YkwOQJouFkCGhHiw9m59ZtIL0MRWaybrEKNrARENALa
+GOAK1FG3/AScYH02U6qa
+=7bbI
+-----END PGP SIGNATURE-----
+
+--47eKBCiAZYFK5l32--
