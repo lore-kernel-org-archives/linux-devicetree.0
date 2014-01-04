@@ -1,76 +1,104 @@
-From: Florian Meier <florian.meier@koalo.de>
-Subject: Re: [PATCHv9] dmaengine: Add support for BCM2835
-Date: Sat, 4 Jan 2014 16:27:57 +0100
-Message-ID: <CABDT8WzhpH2yX=HD9wsx+bN17Qp0hLX45-VMF0a3RAiwWx7F4Q@mail.gmail.com>
-References: <52C5A6A3.8000405@koalo.de>
-	<1964639.FVztRK0HBK@wuerfel>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] ARM: sunxi: Add ahci-sunxi driver
+ for the Allwinner SUNXi SoCs sata
+Date: Sat, 04 Jan 2014 22:39:50 +0100
+Message-ID: <4502242.kKUgLAVDcb@wuerfel>
+References: <1388826878-5602-1-git-send-email-hdegoede@redhat.com> <1388826878-5602-3-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1964639.FVztRK0HBK@wuerfel>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: devicetree <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Vinod Koul <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDEKVJM7XAHRBMH7UGLAKGQECBXKLSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1388826878-5602-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02.01.2014 19:03, Arnd Bergmann wrote:
-> On Thursday 02 January 2014 18:49:23 Florian Meier wrote:
->> Add support for DMA controller of BCM2835 as used in the Raspberry Pi.
->> Currently it only supports cyclic DMA.
->
-> Looks very nice. Just a few details I noticed:
->
->> +#if defined(CONFIG_OF)
->> +static const struct of_device_id bcm2835_dma_of_match[] = {
->> + { .compatible = "brcm,bcm2835-dma", },
->> + {},
->> +};
->> +MODULE_DEVICE_TABLE(of, bcm2835_dma_of_match);
->> +#endif
->
-> I doubt we are going to see non-DT versions of this driver, so the #ifdef
-> can just get removed here.
+On Saturday 04 January 2014 10:14:36 Hans de Goede wrote:
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-sunxi.txt b/Documentation/devicetree/bindings/ata/ahci-sunxi.txt
+> new file mode 100644
+> index 0000000..0792fa5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/ahci-sunxi.txt
+> @@ -0,0 +1,24 @@
+> +Allwinner SUNXI AHCI SATA Controller
+> +
+> +SATA nodes are defined to describe on-chip Serial ATA controllers.
+> +Each SATA controller should have its own node.
+> +
+> +Required properties:
+> +- compatible	: compatible list, contains "allwinner,sun4i-a10-ahci"
+> +- reg		: <registers mapping>
+> +- interrupts	: <interrupt mapping for AHCI IRQ>
+> +- clocks	: clocks for ACHI
+> +- clock-names	: clock names for AHCI
 
-As already explained in previous versions of this patch thread, there is
-a non-DT version in a downstream kernel and the more I make this patch
-incompatible with non-DT, the harder it gets to upstream the remaining
-stuff. I hope this is not something that blocks this driver from getting
-accepted.
+The binding needs to specify the required names for the clocks.
 
-> [...]
-> This can now be simplified using the dma_get_any_slave_channel() interface
-> taht Stephen Warren introduced.
-> [...]
-> dma_set_mask_and_coherent()
+> +Optional properties:
+> +- pwr-supply	: regulator to control the power supply GPIO
+> +
+> +Example:
+> +	ahci@01c18000 {
+> +		compatible = "allwinner,sun4i-a10-ahci";
+> +		reg = <0x01c18000 0x1000>;
+> +		interrupts = <0 56 1>;
+> +		clocks = <&ahb_gates 25>, <&pll6 0>;
+> +		clock-names = "ahb_sata", "pll6_sata";
 
-Sigh, the API is developing faster than I can keep track with updating
-this patch. I hope some day I will be faster....
-When Russell told me about the second one before, it hoped that I can
-avoid merging different trees on my own, but it seems that you want me
-to do that ;-)
+"pll6_sata" doesn't sound particularly generic. The name should
+reflect what the clock is used for, not what drives it.
 
->> + if (pdev->dev.of_node) {
->> + /* Device-tree DMA controller registration */
->> + rc = of_dma_controller_register(pdev->dev.of_node,
->> + bcm2835_dma_xlate, od);
->> + if (rc) {
->> + dev_err(&pdev->dev, "Failed to register DMA controller\n");
->> + goto err_no_dma;
->> + }
->> + }
->
-> If pdev->dev.of_node isn't set, you didn't get here, so the if() can be removed.
+Also, please send the binding as a separate patch with Cc to
+the devicetree-discuss mailing list.
 
-Why not? (In the case of non-DT initialization)
+> +
+> +static int sunxi_ahci_phy_init(struct device *dev, void __iomem *reg_base)
+> +{
+> +	u32 reg_val;
+> +	int timeout;
+> +
+> +	/* This magic is from the original code */
+> +	writel(0, reg_base + AHCI_RWCR);
+> +	mdelay(5);
 
-Greetings,
-Florian
+This function should probably be in a separate phy driver. I would
+very much hope that we can minimize the required code in an AHCI
+driver and move code from this new file into the ahci-platform
+driver. The clock, regulator and phy setup can all be optional
+properties of the generic driver, and then there shouldn't
+be much left that is sunxi specific.
+
+> +static int sunxi_ahci_susp(struct device *dev)
+> +{
+> +	struct ata_host *host = dev_get_drvdata(dev);
+> +	struct ahci_host_priv *hpriv = host->private_data;
+> +	struct sunxi_ahci *ahci = hpriv->plat_data;
+> +	int ret;
+> +
+> +	/*
+> +	 * AHCI spec rev1.1 section 8.3.3:
+> +	 * Software must disable interrupts prior to requesting a
+> +	 * transition of the HBA to D3 state.
+> +	 */
+> +	sunxi_clrbits(hpriv->mmio + HOST_CTL, HOST_IRQ_EN);
+> +
+> +	ret = ata_host_suspend(host, PMSG_SUSPEND);
+> +	if (ret)
+> +		return ret;
+> +
+> +	sunxi_ahci_disable_clks(ahci);
+> +
+> +	return 0;
+> +}
+
+The only thing in here that seems sunxi-specific is the irq disabling
+part. Can't you do this instead by calling disable_irq() and make
+the function completely generic?
+
+	Arnd
