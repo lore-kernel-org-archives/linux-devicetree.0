@@ -1,192 +1,310 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 4/4] ARM: sun7i: dts: Add ahci / sata support
-Date: Sat,  4 Jan 2014 10:14:38 +0100
-Message-ID: <1388826878-5602-5-git-send-email-hdegoede@redhat.com>
-References: <1388826878-5602-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: [PATCH v6 6/9] phy: Add support for S5PV210 to the Exynos USB 2.0 PHY driver
+Date: Sat, 04 Jan 2014 15:37:53 +0100
+Message-ID: <99213501.qYql54IFOy@flatron>
+References: <1387545857-9472-1-git-send-email-k.debski@samsung.com> <1387545857-9472-7-git-send-email-k.debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBFVCT6LAKGQECESCLCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1388826878-5602-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Oliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1387545857-9472-7-git-send-email-k.debski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kamil Debski <k.debski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, kishon@ti.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, stern@rowland.harvard.edu
 List-Id: devicetree@vger.kernel.org
 
-This patch adds sunxi sata support to A20 boards that have such a connector.
-Some boards also feature a regulator via a GPIO and support for this is also
-added.
+From: Mateusz Krawczuk <mat.krawczuk@gmail.com>
 
-Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Add support for the Samsung's S5PV210 SoC to the Exynos USB 2.0 PHY driver.
+
+Signed-off-by: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+[k.debski@samsung.com: cleanup and commit description]
+[k.debski@samsung.com: make changes accordingly to the mailing list
+comments]
+Signed-off-by: Kamil Debski <k.debski@samsung.com>
+[tomasz.figa@gmail.com: fix compilation issues and UPHYCLK register
+setup]
+Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
 ---
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts     | 27 +++++++++++++++++++++++++
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts      | 27 +++++++++++++++++++++++++
- arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 26 ++++++++++++++++++++++++
- arch/arm/boot/dts/sun7i-a20.dtsi                |  9 +++++++++
- 4 files changed, 89 insertions(+)
+ .../devicetree/bindings/phy/samsung-phy.txt        |   1 +
+ drivers/phy/Kconfig                                |  10 ++
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-s5pv210-usb2.c                     | 188 +++++++++++++++++++++
+ drivers/phy/phy-samsung-usb2.c                     |   6 +
+ drivers/phy/phy-samsung-usb2.h                     |   1 +
+ 6 files changed, 207 insertions(+)
+ create mode 100644 drivers/phy/phy-s5pv210-usb2.c
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index 48777cd..a26711c 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -28,7 +28,19 @@
- 			status = "okay";
- 		};
+Changes since v5:
+ - Fixed compilation issues.
+ - Fixed incorrect value written to UPHYCLK register.
+
+diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+index 39d52cc..eb40460 100644
+--- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
++++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+@@ -26,6 +26,7 @@ Samsung S5P/EXYNOS SoC series USB PHY
  
-+		sata: ahci@01c18000 {
-+			pwr-supply = <&reg_ahci_5v>;
-+			status = "okay";
-+		};
+ Required properties:
+ - compatible : should be one of the listed compatibles:
++	- "samsung,s5pv210-usb2-phy"
+ 	- "samsung,exynos4210-usb2-phy"
+ 	- "samsung,exynos4212-usb2-phy"
+ - reg : a list of registers used by phy driver
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index 55b49d1..8298d7c 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -61,6 +61,16 @@ config PHY_SAMSUNG_USB2
+ 	  particular SoCs has to be enabled in addition to this driver. Number
+ 	  and type of supported phys depends on the SoC.
+ 
++config PHY_S5PV210_USB2
++	bool "Support for S5PV210"
++	depends on PHY_SAMSUNG_USB2
++	depends on ARCH_S5PV210
++	help
++	  Enable USB PHY support for S5PV210. This option requires that Samsung
++	  USB 2.0 PHY driver is enabled and means that support for this
++	  particular SoC is compiled in the driver. In case of S5PV210 two phys
++	  are available - device and host.
 +
- 		pinctrl@01c20800 {
-+			ahci_pwr_pin_cubieboard2: ahci_pwr_pin@0 {
-+				allwinner,pins = "PB8";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
+ config PHY_EXYNOS4210_USB2
+ 	bool "Support for Exynos 4210"
+ 	depends on PHY_SAMSUNG_USB2
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index 9f4befd..fefc6c2 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -8,5 +8,6 @@ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+ obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+ obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+ obj-$(CONFIG_PHY_SAMSUNG_USB2)		+= phy-samsung-usb2.o
++obj-$(CONFIG_PHY_S5PV210_USB2)		+= phy-s5pv210-usb2.o
+ obj-$(CONFIG_PHY_EXYNOS4210_USB2)	+= phy-exynos4210-usb2.o
+ obj-$(CONFIG_PHY_EXYNOS4212_USB2)	+= phy-exynos4212-usb2.o
+diff --git a/drivers/phy/phy-s5pv210-usb2.c b/drivers/phy/phy-s5pv210-usb2.c
+new file mode 100644
+index 0000000..f96764c
+--- /dev/null
++++ b/drivers/phy/phy-s5pv210-usb2.c
+@@ -0,0 +1,188 @@
++/*
++ * Samsung SoC USB 1.1/2.0 PHY driver - S5PV210 support
++ *
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ * Authors: Kamil Debski <k.debski@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
 +
- 			mmc0_cd_pin_cubieboard2: mmc0_cd_pin@0 {
- 				allwinner,pins = "PH1";
- 				allwinner,function = "gpio_in";
-@@ -86,4 +98,19 @@
- 			gpios = <&pio 7 20 0>;
- 		};
- 	};
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/phy/phy.h>
++#include "phy-samsung-usb2.h"
 +
-+	regulators {
-+		compatible = "simple-bus";
-+		pinctrl-names = "default";
++/* Exynos USB PHY registers */
 +
-+		reg_ahci_5v: ahci-5v {
-+			compatible = "regulator-fixed";
-+			regulator-name = "ahci-5v";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			pinctrl-0 = <&ahci_pwr_pin_cubieboard2>;
-+			gpio = <&pio 1 8 0>;
-+			enable-active-high;
-+		};
++/* PHY power control */
++#define S5PV210_UPHYPWR			0x0
++
++#define S5PV210_UPHYPWR_PHY0_SUSPEND	BIT(0)
++#define S5PV210_UPHYPWR_PHY0_PWR	BIT(3)
++#define S5PV210_UPHYPWR_PHY0_OTG_PWR	BIT(4)
++#define S5PV210_UPHYPWR_PHY0	( \
++	S5PV210_UPHYPWR_PHY0_SUSPEND | \
++	S5PV210_UPHYPWR_PHY0_PWR | \
++	S5PV210_UPHYPWR_PHY0_OTG_PWR)
++
++#define S5PV210_UPHYPWR_PHY1_SUSPEND	BIT(6)
++#define S5PV210_UPHYPWR_PHY1_PWR	BIT(7)
++#define S5PV210_UPHYPWR_PHY1 ( \
++	S5PV210_UPHYPWR_PHY1_SUSPEND | \
++	S5PV210_UPHYPWR_PHY1_PWR)
++
++/* PHY clock control */
++#define S5PV210_UPHYCLK			0x4
++
++#define S5PV210_UPHYCLK_PHYFSEL_MASK	(0x3 << 0)
++#define S5PV210_UPHYCLK_PHYFSEL_48MHZ	(0x0 << 0)
++#define S5PV210_UPHYCLK_PHYFSEL_24MHZ	(0x3 << 0)
++#define S5PV210_UPHYCLK_PHYFSEL_12MHZ	(0x2 << 0)
++
++#define S5PV210_UPHYCLK_PHY0_ID_PULLUP	BIT(2)
++#define S5PV210_UPHYCLK_PHY0_COMMON_ON	BIT(4)
++#define S5PV210_UPHYCLK_PHY1_COMMON_ON	BIT(7)
++
++/* PHY reset control */
++#define S5PV210_UPHYRST			0x8
++
++#define S5PV210_URSTCON_PHY0		BIT(0)
++#define S5PV210_URSTCON_OTG_HLINK	BIT(1)
++#define S5PV210_URSTCON_OTG_PHYLINK	BIT(2)
++#define S5PV210_URSTCON_PHY1_ALL	BIT(3)
++#define S5PV210_URSTCON_HOST_LINK_ALL	BIT(4)
++
++/* Isolation, configured in the power management unit */
++#define S5PV210_USB_ISOL_OFFSET		0x680c
++#define S5PV210_USB_ISOL_DEVICE		BIT(0)
++#define S5PV210_USB_ISOL_HOST		BIT(1)
++
++
++enum s5pv210_phy_id {
++	S5PV210_DEVICE,
++	S5PV210_HOST,
++	S5PV210_NUM_PHYS,
++};
++
++/*
++ * s5pv210_rate_to_clk() converts the supplied clock rate to the value that
++ * can be written to the phy register.
++ */
++static int s5pv210_rate_to_clk(unsigned long rate, u32 *reg)
++{
++	switch (rate) {
++	case 12 * MHZ:
++		*reg = S5PV210_UPHYCLK_PHYFSEL_12MHZ;
++		break;
++	case 24 * MHZ:
++		*reg = S5PV210_UPHYCLK_PHYFSEL_24MHZ;
++		break;
++	case 48 * MHZ:
++		*reg = S5PV210_UPHYCLK_PHYFSEL_48MHZ;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static void s5pv210_isol(struct samsung_usb2_phy_instance *inst, bool on)
++{
++	struct samsung_usb2_phy_driver *drv = inst->drv;
++	u32 mask;
++
++	switch (inst->cfg->id) {
++	case S5PV210_DEVICE:
++		mask = S5PV210_USB_ISOL_DEVICE;
++		break;
++	case S5PV210_HOST:
++		mask = S5PV210_USB_ISOL_HOST;
++		break;
++	default:
++		return;
 +	};
- };
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index 2684f27..a5f3418 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -28,6 +28,11 @@
- 			status = "okay";
- 		};
- 
-+		sata: ahci@01c18000 {
-+			pwr-supply = <&reg_ahci_5v>;
-+			status = "okay";
-+		};
 +
- 		pinctrl@01c20800 {
- 			mmc0_cd_pin_cubietruck: mmc0_cd_pin@0 {
- 				allwinner,pins = "PH1";
-@@ -36,6 +41,13 @@
- 				allwinner,pull = <0>;
- 			};
- 
-+			ahci_pwr_pin_cubietruck: ahci_pwr_pin@0 {
-+				allwinner,pins = "PH12";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
++	regmap_update_bits(drv->reg_pmu, S5PV210_USB_ISOL_OFFSET,
++							mask, on ? 0 : mask);
++}
 +
- 			led_pins_cubietruck: led_pins@0 {
- 				allwinner,pins = "PH7", "PH11", "PH20", "PH21";
- 				allwinner,function = "gpio_out";
-@@ -84,4 +96,19 @@
- 			gpios = <&pio 7 7 0>;
- 		};
- 	};
++static void s5pv210_phy_pwr(struct samsung_usb2_phy_instance *inst, bool on)
++{
++	struct samsung_usb2_phy_driver *drv = inst->drv;
++	u32 rstbits = 0;
++	u32 phypwr = 0;
++	u32 rst;
++	u32 pwr;
 +
-+	regulators {
-+		compatible = "simple-bus";
-+		pinctrl-names = "default";
-+
-+		reg_ahci_5v: ahci-5v {
-+			compatible = "regulator-fixed";
-+			regulator-name = "ahci-5v";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			pinctrl-0 = <&ahci_pwr_pin_cubietruck>;
-+			gpio = <&pio 7 12 0>;
-+			enable-active-high;
-+		};
++	switch (inst->cfg->id) {
++	case S5PV210_DEVICE:
++		phypwr =	S5PV210_UPHYPWR_PHY0;
++		rstbits =	S5PV210_URSTCON_PHY0;
++		break;
++	case S5PV210_HOST:
++		phypwr =	S5PV210_UPHYPWR_PHY1;
++		rstbits =	S5PV210_URSTCON_PHY1_ALL |
++				S5PV210_URSTCON_HOST_LINK_ALL;
++		break;
 +	};
- };
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-index bf6f6c8..20b1000 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-@@ -37,7 +37,19 @@
- 			status = "okay";
- 		};
++
++	if (on) {
++		writel(inst->clk_reg_val, drv->reg_phy + S5PV210_UPHYCLK);
++
++		pwr = readl(drv->reg_phy + S5PV210_UPHYPWR);
++		pwr &= ~phypwr;
++		writel(pwr, drv->reg_phy + S5PV210_UPHYPWR);
++
++		rst = readl(drv->reg_phy + S5PV210_UPHYRST);
++		rst |= rstbits;
++		writel(rst, drv->reg_phy + S5PV210_UPHYRST);
++		udelay(10);
++		rst &= ~rstbits;
++		writel(rst, drv->reg_phy + S5PV210_UPHYRST);
++	} else {
++		pwr = readl(drv->reg_phy + S5PV210_UPHYPWR);
++		pwr |= phypwr;
++		writel(pwr, drv->reg_phy + S5PV210_UPHYPWR);
++	}
++}
++
++static int s5pv210_power_on(struct samsung_usb2_phy_instance *inst)
++{
++	s5pv210_isol(inst, 0);
++	s5pv210_phy_pwr(inst, 1);
++
++	return 0;
++}
++
++static int s5pv210_power_off(struct samsung_usb2_phy_instance *inst)
++{
++	s5pv210_phy_pwr(inst, 0);
++	s5pv210_isol(inst, 1);
++
++	return 0;
++}
++
++static const struct samsung_usb2_common_phy s5pv210_phys[S5PV210_NUM_PHYS] = {
++	[S5PV210_DEVICE] = {
++		.label		= "device",
++		.id		= S5PV210_DEVICE,
++		.rate_to_clk	= s5pv210_rate_to_clk,
++		.power_on	= s5pv210_power_on,
++		.power_off	= s5pv210_power_off,
++	},
++	[S5PV210_HOST] = {
++		.label		= "host",
++		.id		= S5PV210_HOST,
++		.rate_to_clk	= s5pv210_rate_to_clk,
++		.power_on	= s5pv210_power_on,
++		.power_off	= s5pv210_power_off,
++	},
++};
++
++const struct samsung_usb2_phy_config s5pv210_usb2_phy_config = {
++	.num_phys	= ARRAY_SIZE(s5pv210_phys),
++	.phys		= s5pv210_phys,
++};
+diff --git a/drivers/phy/phy-samsung-usb2.c b/drivers/phy/phy-samsung-usb2.c
+index 3c09e0e..464a626 100644
+--- a/drivers/phy/phy-samsung-usb2.c
++++ b/drivers/phy/phy-samsung-usb2.c
+@@ -95,6 +95,12 @@ static struct phy *samsung_usb2_phy_xlate(struct device *dev,
+ }
  
-+		sata: ahci@01c18000 {
-+			pwr-supply = <&reg_ahci_5v>;
-+			status = "okay";
-+		};
-+
- 		pinctrl@01c20800 {
-+			ahci_pwr_pin_olinuxinom: ahci_pwr_pin@0 {
-+				allwinner,pins = "PB8";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
- 			mmc0_cd_pin_olinuxinom: mmc0_cd_pin@0 {
- 				allwinner,pins = "PH1";
- 				allwinner,function = "gpio_in";
-@@ -116,4 +128,18 @@
- 			default-state = "on";
- 		};
- 	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+
-+		reg_ahci_5v: ahci-5v {
-+			compatible = "regulator-fixed";
-+			regulator-name = "ahci-5v";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			pinctrl-0 = <&ahci_pwr_pin_olinuxinom>;
-+			gpio = <&pio 1 8 0>;
-+			enable-active-high;
-+		};
-+	};
+ static const struct of_device_id samsung_usb2_phy_of_match[] = {
++#ifdef CONFIG_PHY_S5PV210_USB2
++	{
++		.compatible = "samsung,s5pv210-usb2-phy",
++		.data = &s5pv210_usb2_phy_config,
++	},
++#endif
+ #ifdef CONFIG_PHY_EXYNOS4210_USB2
+ 	{
+ 		.compatible = "samsung,exynos4210-usb2-phy",
+diff --git a/drivers/phy/phy-samsung-usb2.h b/drivers/phy/phy-samsung-usb2.h
+index ab89f91..5f5b240 100644
+--- a/drivers/phy/phy-samsung-usb2.h
++++ b/drivers/phy/phy-samsung-usb2.h
+@@ -61,6 +61,7 @@ struct samsung_usb2_phy_config {
+ 	bool has_mode_switch;
  };
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index c9c123a..3242a29 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -448,6 +448,15 @@
- 			};
- 		};
  
-+		sata: ahci@01c18000 {
-+			compatible = "allwinner,sun4i-a10-ahci";
-+			reg = <0x01c18000 0x1000>;
-+			interrupts = <0 56 1>;
-+			clocks = <&ahb_gates 25>, <&pll6 0>;
-+			clock-names = "ahb_sata", "pll6_sata";
-+			status = "disabled";
-+		};
-+
- 		timer@01c20c00 {
- 			compatible = "allwinner,sun4i-timer";
- 			reg = <0x01c20c00 0x90>;
++extern const struct samsung_usb2_phy_config s5pv210_usb2_phy_config;
+ extern const struct samsung_usb2_phy_config exynos4210_usb2_phy_config;
+ extern const struct samsung_usb2_phy_config exynos4212_usb2_phy_config;
+ #endif
 -- 
-1.8.4.2
+1.8.5.2
