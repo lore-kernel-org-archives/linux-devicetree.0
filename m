@@ -1,79 +1,294 @@
-From: Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH V2 0/4] misc: xgene: Add support for APM X-Gene SoC Queue
- Manager/Traffic Manager
-Date: Sun, 5 Jan 2014 12:52:05 -0800
-Message-ID: <CAN1v_PsE2mevK4-2D3MTevtwQF4XkaMzVGHpDZUoqR+a6uMUyg@mail.gmail.com>
-References: <1387594651-25771-1-git-send-email-rapatel@apm.com>
-	<201312212111.40576.arnd@arndb.de>
-	<CAPw-ZTnsu_EmOW3aZTVKAVjQsdi8qMy95y2ZcYxzgVrjGkirTA@mail.gmail.com>
-	<1441245.xPZLG2iNZ6@wuerfel>
-	<CAN1v_PtFz42crHW5=cUgw-fAnPn3rQht=o0t3nmjJRamYSLDMg@mail.gmail.com>
-	<20140105033848.GA22595@kroah.com>
-	<CAPw-ZT=noCwc+3o_762ewTcn2J3SjZ5u11V=Aa8RrZZf4DT5Yw@mail.gmail.com>
-	<20140105180122.GB980@kroah.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] ohci-platform: Add support for devicetree instantiation
+Date: Mon,  6 Jan 2014 00:04:39 +0100
+Message-ID: <1388963080-12544-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140105180122.GB980-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBEOKU6LAKGQEAE7W3EI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 5, 2014 at 10:01 AM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> On Sat, Jan 04, 2014 at 09:39:08PM -0800, Loc Ho wrote:
->> Hi,
->>
->> >> >> >> This patch adds support for APM X-Gene SoC Queue Manager/Traffic Manager.
->> >> >> >>  QMTM is required by APM X-Gene SoC Ethernet, PktDMA (XOR Engine) and
->> >> >> >>  Security Engine subsystems. All subsystems communicate with QMTM using
->> >> >> >>  messages which include information about the work to be performed and
->> >> >> >>  the location of associated data buffers.
->> >> >> >
->> >> >> > Please describe here what the purpose of the qmtm is, as this is not
->> >> >> > entirely clear from the code.
->> >> >> >
->> >> >> > In particular, please describe how this differs from a dmaengine driver
->> >> >> > and why it is not possible to extend the dma slave API to describe qmtm
->> >> >> > as a dma engine.
->> >> >> >
->> >> >> [Loc Ho]
->> >> >> If the QM driver implements the DMA API, what about the actual DMA
->> >> >> engine driver which interfaces with this QM driver. We would have DMA
->> >> >> client interfaces with the X-Gene DMA driver (not available yet) via
->> >> >> DMA API which in turn interfaces with this QM driver via DMA API.
->> >> >> Won't this be kind of awkward? Also, the QM only manage messages (or
->> >> >> descriptors) which are 32-bytes or 64-bytes. It doesn't actually do
->> >> >> any data transfer of various sizes.
->> >> >
->> >> > Please describe here what the purpose of the qmtm is, as this is not
->> >> > entirely clear from the code or from your reply.
->> >> >
->> >> > Greg was guessing that it's a bus controller, my best guess is a DMA
->> >> > engine. If it's something completely different, you have to let
->> >> > us know what it is so we can do a proper review rather than guessing.
->> >> >
->> >> > Please provide a link to the data sheet if you are unable to explain.
->> >>
->> >> Here is URL to a text document explaining role of QMTM device with CPU, Ethernet
->> >> subsystem.
->> >>
->> >> https://drive.google.com/file/d/0B28TgQZ3JLoRRGNnbjJoUGNHWW8/edit?usp=sharing
->> >
->> > There is nothing at this link :(
->>
->> I tried click on the txt file link from web site
->> http://www.spinics.net/lists/netdev/msg264628.html and don't see any
->> problem with accessing the txt file.
->
-> Now it's working :)
->
-> Anyway, as this is a .txt file, why wasn't it just sent in email, and
-> added to the patch series as a documentation file?
+Add support for ohci-platform instantiation from devicetree, including
+optionally getting clks and a phy from devicetree, and enabling / disabling
+those on power_on / off.
 
-Sure I will include the text documentation to an appropriate place in the
-Documentation directory in my next version of QMTM patch.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This should allow using ohci-platform from devicetree in various cases.
+Specifically after this commit it can be used for the ohci controller found
+on Allwinner sunxi SoCs.
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/usb/platform-ohci.txt      |  25 ++++
+ drivers/usb/host/ohci-platform.c                   | 146 ++++++++++++++++++---
+ 2 files changed, 151 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/platform-ohci.txt
+
+diff --git a/Documentation/devicetree/bindings/usb/platform-ohci.txt b/Documentation/devicetree/bindings/usb/platform-ohci.txt
+new file mode 100644
+index 0000000..6846f1c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/platform-ohci.txt
+@@ -0,0 +1,25 @@
++Generic Platform OHCI controller
++
++Required properties:
++ - compatible: Should be "platform-ohci"
++ - reg: Address range of the ohci registers.
++ - interrupts: Should contain the ohci interrupt.
++
++Optional properties:
++ - clocks: array of clocks
++ - clock-names: clock names "ahb" and/or "ohci"
++ - phys: phy
++ - phy-names: "usb_phy"
++
++Example:
++
++	ohci0: ohci@0x01c14400 {
++		compatible = "platform-ohci";
++		reg = <0x01c14400 0x100>;
++		interrupts = <0 64 4>;
++		clocks = <&ahb_gates 2>, <&usb_clk 6>;
++		clock-names = "ahb", "ohci";
++		phys = <&usbphy 1>;
++		phy-names = "usb_phy";
++		status = "disabled";
++	};
+diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+index f351ff5..b7abb44 100644
+--- a/drivers/usb/host/ohci-platform.c
++++ b/drivers/usb/host/ohci-platform.c
+@@ -14,11 +14,14 @@
+  * Licensed under the GNU/GPL. See COPYING for details.
+  */
+ 
++#include <linux/clk.h>
++#include <linux/dma-mapping.h>
+ #include <linux/hrtimer.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/err.h>
++#include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/usb/ohci_pdriver.h>
+ #include <linux/usb.h>
+@@ -28,6 +31,12 @@
+ 
+ #define DRIVER_DESC "OHCI generic platform driver"
+ 
++struct ohci_platform_priv {
++	struct clk *ahb_clk;
++	struct clk *ohci_clk;
++	struct phy *phy;
++};
++
+ static const char hcd_name[] = "ohci-platform";
+ 
+ static int ohci_platform_reset(struct usb_hcd *hcd)
+@@ -48,11 +57,79 @@ static int ohci_platform_reset(struct usb_hcd *hcd)
+ 	return ohci_setup(hcd);
+ }
+ 
++static int ohci_platform_power_on(struct platform_device *dev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(dev);
++	struct ohci_platform_priv *priv =
++		(struct ohci_platform_priv *)hcd_to_ohci(hcd)->priv;
++	int ret;
++
++	if (!IS_ERR(priv->ohci_clk)) {
++		ret = clk_prepare_enable(priv->ohci_clk);
++		if (ret)
++			return ret;
++	}
++
++	if (!IS_ERR(priv->ahb_clk)) {
++		ret = clk_prepare_enable(priv->ahb_clk);
++		if (ret)
++			goto err_disable_ohci_clk;
++	}
++
++	if (!IS_ERR(priv->phy)) {
++		ret = phy_init(priv->phy);
++		if (ret)
++			goto err_disable_ahb_clk;
++
++		ret = phy_power_on(priv->phy);
++		if (ret)
++			goto err_exit_phy;
++	}
++
++	return 0;
++
++err_exit_phy:
++	phy_exit(priv->phy);
++err_disable_ahb_clk:
++	if (!IS_ERR(priv->ahb_clk))
++		clk_disable_unprepare(priv->ahb_clk);
++err_disable_ohci_clk:
++	if (!IS_ERR(priv->ohci_clk))
++		clk_disable_unprepare(priv->ohci_clk);
++
++	return ret;
++}
++
++static void ohci_platform_power_off(struct platform_device *dev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(dev);
++	struct ohci_platform_priv *priv =
++		(struct ohci_platform_priv *)hcd_to_ohci(hcd)->priv;
++
++	if (!IS_ERR(priv->phy)) {
++		phy_power_off(priv->phy);
++		phy_exit(priv->phy);
++	}
++
++	if (!IS_ERR(priv->ahb_clk))
++		clk_disable_unprepare(priv->ahb_clk);
++
++	if (!IS_ERR(priv->ohci_clk))
++		clk_disable_unprepare(priv->ohci_clk);
++}
++
+ static struct hc_driver __read_mostly ohci_platform_hc_driver;
+ 
+ static const struct ohci_driver_overrides platform_overrides __initconst = {
+-	.product_desc =	"Generic Platform OHCI controller",
+-	.reset =	ohci_platform_reset,
++	.product_desc =		"Generic Platform OHCI controller",
++	.reset =		ohci_platform_reset,
++	.extra_priv_size =	sizeof(struct ohci_platform_priv),
++};
++
++static struct usb_ohci_pdata ohci_platform_defaults = {
++	.power_on =		ohci_platform_power_on,
++	.power_suspend =	ohci_platform_power_off,
++	.power_off =		ohci_platform_power_off,
+ };
+ 
+ static int ohci_platform_probe(struct platform_device *dev)
+@@ -60,12 +137,23 @@ static int ohci_platform_probe(struct platform_device *dev)
+ 	struct usb_hcd *hcd;
+ 	struct resource *res_mem;
+ 	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
+-	int irq;
+-	int err = -ENOMEM;
++	int irq, err;
+ 
++	/*
++	 * use reasonable defaults so platforms don't have to provide these.
++	 * with DT probing on ARM.
++	 */
+ 	if (!pdata) {
+-		WARN_ON(1);
+-		return -ENODEV;
++		pdata = dev->dev.platform_data = &ohci_platform_defaults;
++		/*
++		 * Right now device-tree probed devices don't get dma_mask set.
++		 * Since shared usb code relies on it, set it here for now.
++		 * Once we have dma capability bindings this can go away.
++		 */
++		err = dma_coerce_mask_and_coherent(&dev->dev,
++						   DMA_BIT_MASK(32));
++		if (err)
++			return err;
+ 	}
+ 
+ 	if (usb_disabled())
+@@ -83,17 +171,30 @@ static int ohci_platform_probe(struct platform_device *dev)
+ 		return -ENXIO;
+ 	}
+ 
++	hcd = usb_create_hcd(&ohci_platform_hc_driver, &dev->dev,
++			dev_name(&dev->dev));
++	if (!hcd)
++		return -ENOMEM;
++
++	if (pdata == &ohci_platform_defaults) {
++		struct ohci_platform_priv *priv = (struct ohci_platform_priv *)
++						  hcd_to_ohci(hcd)->priv;
++
++		priv->phy = devm_phy_get(&dev->dev, "usb_phy");
++		if (IS_ERR(priv->phy) && PTR_ERR(priv->phy) == -EPROBE_DEFER) {
++			err = -EPROBE_DEFER;
++			goto err_put_hcd;
++		}
++
++		priv->ohci_clk = devm_clk_get(&dev->dev, "ohci");
++		priv->ahb_clk = devm_clk_get(&dev->dev, "ahb");
++	}
++
++	platform_set_drvdata(dev, hcd);
+ 	if (pdata->power_on) {
+ 		err = pdata->power_on(dev);
+ 		if (err < 0)
+-			return err;
+-	}
+-
+-	hcd = usb_create_hcd(&ohci_platform_hc_driver, &dev->dev,
+-			dev_name(&dev->dev));
+-	if (!hcd) {
+-		err = -ENOMEM;
+-		goto err_power;
++			goto err_put_hcd;
+ 	}
+ 
+ 	hcd->rsrc_start = res_mem->start;
+@@ -102,21 +203,19 @@ static int ohci_platform_probe(struct platform_device *dev)
+ 	hcd->regs = devm_ioremap_resource(&dev->dev, res_mem);
+ 	if (IS_ERR(hcd->regs)) {
+ 		err = PTR_ERR(hcd->regs);
+-		goto err_put_hcd;
++		goto err_power;
+ 	}
+ 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+ 	if (err)
+-		goto err_put_hcd;
+-
+-	platform_set_drvdata(dev, hcd);
++		goto err_power;
+ 
+ 	return err;
+ 
+-err_put_hcd:
+-	usb_put_hcd(hcd);
+ err_power:
+ 	if (pdata->power_off)
+ 		pdata->power_off(dev);
++err_put_hcd:
++	usb_put_hcd(hcd);
+ 
+ 	return err;
+ }
+@@ -178,6 +277,12 @@ static int ohci_platform_resume(struct device *dev)
+ #define ohci_platform_resume	NULL
+ #endif /* CONFIG_PM */
+ 
++static const struct of_device_id ohci_platform_ids[] = {
++	{ .compatible = "platform-ohci", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ohci_platform_ids);
++
+ static const struct platform_device_id ohci_platform_table[] = {
+ 	{ "ohci-platform", 0 },
+ 	{ }
+@@ -198,6 +303,7 @@ static struct platform_driver ohci_platform_driver = {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "ohci-platform",
+ 		.pm	= &ohci_platform_pm_ops,
++		.of_match_table = ohci_platform_ids,
+ 	}
+ };
+ 
+-- 
+1.8.4.2
