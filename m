@@ -1,16 +1,14 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 0/4] misc: xgene: Add support for APM X-Gene SoC Queue
- Manager/Traffic Manager
-Date: Sun, 5 Jan 2014 19:11:12 +0100
-Message-ID: <201401051911.12349.arnd@arndb.de>
-References: <1387594651-25771-1-git-send-email-rapatel@apm.com>
- <1441245.xPZLG2iNZ6@wuerfel>
- <CAN1v_PtFz42crHW5=cUgw-fAnPn3rQht=o0t3nmjJRamYSLDMg@mail.gmail.com>
+Subject: Re: [PATCHv9] dmaengine: Add support for BCM2835
+Date: Sun, 5 Jan 2014 19:52:07 +0100
+Message-ID: <201401051952.07355.arnd@arndb.de>
+References: <52C5A6A3.8000405@koalo.de> <201401051506.03481.arnd@arndb.de>
+ <CABDT8WyUVbPu60qwMbAxKS=2m2akskybZQS3-+rehuUD+3oBXQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAN1v_PtFz42crHW5=cUgw-fAnPn3rQht=o0t3nmjJRamYSLDMg@mail.gmail.com>
+In-Reply-To: <CABDT8WyUVbPu60qwMbAxKS=2m2akskybZQS3-+rehuUD+3oBXQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,45 +18,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ravi Patel <rapatel@apm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Masters <jcm@redhat.com>, Greg KH <gregkh@linuxfoundation.org>, "patches@apm.com" <patches@apm.com>, linux-kernel@vger.kernel.org, Loc Ho <lho@apm.com>, netdev@vger.kernel.org, Keyur Chudgar <kchudgar@apm.com>, davem@davemloft.net, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Florian Meier <florian.meier@koalo.de>
+Cc: devicetree <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Vinod Koul <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 05 January 2014, Ravi Patel wrote:
-> On Sat, Dec 21, 2013 at 11:03 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Saturday 21 December 2013 17:00:51 Loc Ho wrote:
-> >> On Sat, Dec 21, 2013 at 12:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+On Sunday 05 January 2014, Florian Meier wrote:
+> On 05.01.2014 15:06, Arnd Bergmann wrote:
+> >>
+> >> Sigh, the API is developing faster than I can keep track with updating
+> >> this patch. I hope some day I will be faster....
+> >> When Russell told me about the second one before, it hoped that I can
+> >> avoid merging different trees on my own, but it seems that you want me
+> >> to do that ;-)
 > >
-> > Please describe here what the purpose of the qmtm is, as this is not
-> > entirely clear from the code or from your reply.
+> > The dma_get_any_slave_channel() change is probably my fault. I suggested
+> > both the initial dma_get_slave_channel() API and this one because the
+> > original approach turned out too complicated. If dma_set_mask_and_coherent().
 > >
-> > Greg was guessing that it's a bus controller, my best guess is a DMA
-> > engine. If it's something completely different, you have to let
-> > us know what it is so we can do a proper review rather than guessing.
-> >
-> > Please provide a link to the data sheet if you are unable to explain.
+> > I don't think you have to merge other trees, to get both APIs, they should
+> > already be part of the dma-slave tree that your patch would get merged
+> > into. If not, we can probably come up with a different solution. The
+> > dma_set_mask_and_coherent() suggestion is not as important as the
+> > dma_get_any_slave_channel() one, if you have to choose between them.
 > 
-> Here is URL to a text document explaining role of QMTM device with CPU, Ethernet
-> subsystem.
-> 
-> https://drive.google.com/file/d/0B28TgQZ3JLoRRGNnbjJoUGNHWW8/edit?usp=sharing
-> 
-> For simplicity, I have shown only Ethernet.
-> PktDMA and Security subsystem interfaces with QMTM in the same way as Ethernet.
-> 
+> Both changes are in the slave-dma tree, but I need patches from the
+> bcm2835 tree and the asoc tree, too. Although, it shouldn't be too
+> complicated to merge them, I hope.
 
-Thanks, that helps a lot. Please add this file to an appropriate place
-in the Documentation directory in the next version of your patches.
+Why do you need the bcm2835 and asoc changes? The addition of the
+dmaengine driver should be self-contained as far as I can tell,
+except that the audio driver won't work unless both are merged.
 
-There is still one central aspect that remains unclear to me, which is
-what the QMTM is actually good for, as opposed to how it gets used from
-the OS. In the text description, it sounds like the ethernet is the DMA
-master and performs DMA all by itself but from that it's not clear why
-a message to and from the QMTM is needed. From your drawing on the other
-hand, it seems like the QMTM is really the DMA master and performs the
-DMA on behalf of the ethernet device, which isn't connected to the
-coherent interface itself. If this is correct, it seems that QMTM is more
-like a DMA engine after all that should use the existing slave API to
-provide services to slave drivers.
+This wouldn't be considered a strict dependency since you are not
+breaking anything that used to work prior to the patches, and you
+don't create a kernel version that doesn't build. Note that this
+would be different if you had a dependency on a platform_data
+definition.
 
 	Arnd
