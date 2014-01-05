@@ -1,60 +1,90 @@
-From: Florian Meier <florian.meier@koalo.de>
-Subject: Re: [PATCHv9] dmaengine: Add support for BCM2835
-Date: Sun, 5 Jan 2014 20:05:10 +0100
-Message-ID: <CABDT8Wx-jRKQYS+pvPcy7OVBvy_qSkqZmvEMmagT7dFisKmpCQ@mail.gmail.com>
-References: <52C5A6A3.8000405@koalo.de> <201401051506.03481.arnd@arndb.de>
- <CABDT8WyUVbPu60qwMbAxKS=2m2akskybZQS3-+rehuUD+3oBXQ@mail.gmail.com>
- <201401051952.07355.arnd@arndb.de>
+From: Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH V2 0/4] misc: xgene: Add support for APM X-Gene SoC Queue
+ Manager/Traffic Manager
+Date: Sun, 5 Jan 2014 12:48:36 -0800
+Message-ID: <CAN1v_PsaAeDiLaiP7FfTHFbNRG=UHuom6-2L6NMwzyOOyB+5cA@mail.gmail.com>
+References: <1387594651-25771-1-git-send-email-rapatel@apm.com>
+	<1441245.xPZLG2iNZ6@wuerfel>
+	<CAN1v_PtFz42crHW5=cUgw-fAnPn3rQht=o0t3nmjJRamYSLDMg@mail.gmail.com>
+	<201401051911.12349.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <201401051952.07355.arnd@arndb.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Vinod Koul <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201401051911.12349.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05.01.2014 19:52, Arnd Bergmann wrote:
-> On Sunday 05 January 2014, Florian Meier wrote:
->> On 05.01.2014 15:06, Arnd Bergmann wrote:
->>>>
->>>> Sigh, the API is developing faster than I can keep track with updating
->>>> this patch. I hope some day I will be faster....
->>>> When Russell told me about the second one before, it hoped that I can
->>>> avoid merging different trees on my own, but it seems that you want me
->>>> to do that ;-)
->>>
->>> The dma_get_any_slave_channel() change is probably my fault. I suggested
->>> both the initial dma_get_slave_channel() API and this one because the
->>> original approach turned out too complicated. If dma_set_mask_and_coherent().
->>>
->>> I don't think you have to merge other trees, to get both APIs, they should
->>> already be part of the dma-slave tree that your patch would get merged
->>> into. If not, we can probably come up with a different solution. The
->>> dma_set_mask_and_coherent() suggestion is not as important as the
->>> dma_get_any_slave_channel() one, if you have to choose between them.
+On Sun, Jan 5, 2014 at 10:11 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Sunday 05 January 2014, Ravi Patel wrote:
+>> On Sat, Dec 21, 2013 at 11:03 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > On Saturday 21 December 2013 17:00:51 Loc Ho wrote:
+>> >> On Sat, Dec 21, 2013 at 12:11 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> >
+>> > Please describe here what the purpose of the qmtm is, as this is not
+>> > entirely clear from the code or from your reply.
+>> >
+>> > Greg was guessing that it's a bus controller, my best guess is a DMA
+>> > engine. If it's something completely different, you have to let
+>> > us know what it is so we can do a proper review rather than guessing.
+>> >
+>> > Please provide a link to the data sheet if you are unable to explain.
 >>
->> Both changes are in the slave-dma tree, but I need patches from the
->> bcm2835 tree and the asoc tree, too. Although, it shouldn't be too
->> complicated to merge them, I hope.
+>> Here is URL to a text document explaining role of QMTM device with CPU, Ethernet
+>> subsystem.
+>>
+>> https://drive.google.com/file/d/0B28TgQZ3JLoRRGNnbjJoUGNHWW8/edit?usp=sharing
+>>
+>> For simplicity, I have shown only Ethernet.
+>> PktDMA and Security subsystem interfaces with QMTM in the same way as Ethernet.
 >
-> Why do you need the bcm2835 and asoc changes? The addition of the
-> dmaengine driver should be self-contained as far as I can tell,
-> except that the audio driver won't work unless both are merged.
+> Thanks, that helps a lot. Please add this file to an appropriate place
+> in the Documentation directory in the next version of your patches.
 >
-> This wouldn't be considered a strict dependency since you are not
-> breaking anything that used to work prior to the patches, and you
-> don't create a kernel version that doesn't build. Note that this
-> would be different if you had a dependency on a platform_data
-> definition.
+> There is still one central aspect that remains unclear to me, which is
+> what the QMTM is actually good for, as opposed to how it gets used from
+> the OS.
 
-You are right! I just have to merge them for testing the driver.
+The document shows the run-time flow of messages between CPU, QMTM and Ethernet.
+QMTM is a centralized resource manager/driver which exports APIs to
+1. Initialize & allocate queue & pbn to the Ethernet, PktDMA and
+Security subsystem.
+2. Read queue state so that subsystems driver knows how much more work
+it can offload
+    to its subsystem.
+3. Apply QoS for subsystems on their queues.
+
+> In the text description, it sounds like the ethernet is the DMA
+> master and performs DMA all by itself but from that it's not clear why
+> a message to and from the QMTM is needed. From your drawing on the other
+> hand, it seems like the QMTM is really the DMA master and performs the
+> DMA on behalf of the ethernet device, which isn't connected to the
+> coherent interface itself. If this is correct, it seems that QMTM is more
+> like a DMA engine after all that should use the existing slave API to
+> provide services to slave drivers.
+
+Each subsystem defines their own format of work message.
+A message (or queue descriptor) has attribute fields (QMTM specific)
+which is common
+ for all subsystem work messages.
+The remaining fields of a message are specific to subsystem.
+QMTM device doesn't have any knowledge of these subsystem specific
+fields and the data
+operation which subsystem is going to perform using these fields.
+e.g.
+1. Ethernet work message includes data address & length which is used
+by Ethernet
+DMA engine for copying the data to/from its internal FIFO
+2. PktDMA work message includes multiple data addresses & lengths for
+doing scatter/gather,
+XOR operations and result data address/es to give back result to the
+CPU (driver)
+3. Security work message includes data address & length for doing
+encryption or decryption,
+the type of encryption or decryption and result data address to give
+back result to the CPU (driver)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
