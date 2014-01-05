@@ -1,74 +1,81 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH V2 0/4] misc: xgene: Add support for APM X-Gene SoC Queue
- Manager/Traffic Manager
-Date: Sat, 4 Jan 2014 21:39:08 -0800
-Message-ID: <CAPw-ZT=noCwc+3o_762ewTcn2J3SjZ5u11V=Aa8RrZZf4DT5Yw@mail.gmail.com>
-References: <1387594651-25771-1-git-send-email-rapatel@apm.com>
- <201312212111.40576.arnd@arndb.de>
- <CAPw-ZTnsu_EmOW3aZTVKAVjQsdi8qMy95y2ZcYxzgVrjGkirTA@mail.gmail.com>
- <1441245.xPZLG2iNZ6@wuerfel>
- <CAN1v_PtFz42crHW5=cUgw-fAnPn3rQht=o0t3nmjJRamYSLDMg@mail.gmail.com>
- <20140105033848.GA22595@kroah.com>
+From: Manish Badarkhe <badarkhe.manish@gmail.com>
+Subject: Re: [PATCH] mfd: max8997: Use "IS_ENABLED(CONFIG_OF)" for DT code.
+Date: Sun, 5 Jan 2014 13:40:42 +0530
+Message-ID: <CAKDJKT5cCebTV5F0uS_TBxjrJL4PGiUc68kiv51q0mnMjQC3HQ@mail.gmail.com>
+References: <1387734529-15622-1-git-send-email-badarkhe.manish@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140105033848.GA22595@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org, "patches@apm.com" <patches@apm.com>, linux-kernel@vger.kernel.org, Jon Masters <jcm@redhat.com>, Keyur Chudgar <kchudgar@apm.com>, davem@davemloft.net, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ravi Patel <rapatel@apm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1387734529-15622-1-git-send-email-badarkhe.manish@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: sameo@linux.intel.com, Lee Jones <lee.jones@linaro.org>, =?UTF-8?B?4KSu4KSo4KS/4KS3IOCkrOCkpuCksOCkluClhw==?= <badarkhe.manish@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Samuel,
 
->> >> >> This patch adds support for APM X-Gene SoC Queue Manager/Traffic Manager.
->> >> >>  QMTM is required by APM X-Gene SoC Ethernet, PktDMA (XOR Engine) and
->> >> >>  Security Engine subsystems. All subsystems communicate with QMTM using
->> >> >>  messages which include information about the work to be performed and
->> >> >>  the location of associated data buffers.
->> >> >
->> >> > Please describe here what the purpose of the qmtm is, as this is not
->> >> > entirely clear from the code.
->> >> >
->> >> > In particular, please describe how this differs from a dmaengine driver
->> >> > and why it is not possible to extend the dma slave API to describe qmtm
->> >> > as a dma engine.
->> >> >
->> >> [Loc Ho]
->> >> If the QM driver implements the DMA API, what about the actual DMA
->> >> engine driver which interfaces with this QM driver. We would have DMA
->> >> client interfaces with the X-Gene DMA driver (not available yet) via
->> >> DMA API which in turn interfaces with this QM driver via DMA API.
->> >> Won't this be kind of awkward? Also, the QM only manage messages (or
->> >> descriptors) which are 32-bytes or 64-bytes. It doesn't actually do
->> >> any data transfer of various sizes.
->> >
->> > Please describe here what the purpose of the qmtm is, as this is not
->> > entirely clear from the code or from your reply.
->> >
->> > Greg was guessing that it's a bus controller, my best guess is a DMA
->> > engine. If it's something completely different, you have to let
->> > us know what it is so we can do a proper review rather than guessing.
->> >
->> > Please provide a link to the data sheet if you are unable to explain.
->>
->> Here is URL to a text document explaining role of QMTM device with CPU, Ethernet
->> subsystem.
->>
->> https://drive.google.com/file/d/0B28TgQZ3JLoRRGNnbjJoUGNHWW8/edit?usp=sharing
+On Sun, Dec 22, 2013 at 11:18 PM, Manish Badarkhe
+<badarkhe.manish@gmail.com> wrote:
 >
-> There is nothing at this link :(
+> Instead of "#if define CONFIG_OF" use "IS_ENABLED(CONFIG_OF)"
+> option for DT code to avoid if-deffery in code.
+>
+> Signed-off-by: Manish Badarkhe <badarkhe.manish@gmail.com>
+> ---
+> :100644 100644 791aea3... be9a8b0... M  drivers/mfd/max8997.c
+>  drivers/mfd/max8997.c |   14 ++------------
+>  1 file changed, 2 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/mfd/max8997.c b/drivers/mfd/max8997.c
+> index 791aea3..be9a8b0 100644
+> --- a/drivers/mfd/max8997.c
+> +++ b/drivers/mfd/max8997.c
+> @@ -133,7 +133,6 @@ int max8997_update_reg(struct i2c_client *i2c, u8 reg, u8 val, u8 mask)
+>  }
+>  EXPORT_SYMBOL_GPL(max8997_update_reg);
+>
+> -#ifdef CONFIG_OF
+>  /*
+>   * Only the common platform data elements for max8997 are parsed here from the
+>   * device tree. Other sub-modules of max8997 such as pmic, rtc and others have
+> @@ -164,24 +163,15 @@ static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
+>
+>         return pd;
+>  }
+> -#else
+> -static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
+> -                                       struct device *dev)
+> -{
+> -       return 0;
+> -}
+> -#endif
+>
+>  static inline int max8997_i2c_get_driver_data(struct i2c_client *i2c,
+>                                                 const struct i2c_device_id *id)
+>  {
+> -#ifdef CONFIG_OF
+> -       if (i2c->dev.of_node) {
+> +       if (IS_ENABLED(CONFIG_OF) && i2c->dev.of_node) {
+>                 const struct of_device_id *match;
+>                 match = of_match_node(max8997_pmic_dt_match, i2c->dev.of_node);
+>                 return (int)match->data;
+>         }
+> -#endif
+>         return (int)id->driver_data;
+>  }
+>
+> @@ -203,7 +193,7 @@ static int max8997_i2c_probe(struct i2c_client *i2c,
+>         max8997->type = max8997_i2c_get_driver_data(i2c, id);
+>         max8997->irq = i2c->irq;
+>
+> -       if (max8997->dev->of_node) {
+> +       if (IS_ENABLED(CONFIG_OF) && max8997->dev->of_node) {
+>                 pdata = max8997_i2c_parse_dt_pdata(max8997->dev);
+>                 if (IS_ERR(pdata))
+>                         return PTR_ERR(pdata);
 
-I tried click on the txt file link from web site
-http://www.spinics.net/lists/netdev/msg264628.html and don't see any
-problem with accessing the txt file.
+Gentle ping.
+Please let me know, Are there any review comments on this patch?
 
--Loc
+Regards
+Manish Badarkhe
