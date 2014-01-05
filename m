@@ -1,74 +1,58 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH V2 0/4] misc: xgene: Add support for APM X-Gene SoC Queue
- Manager/Traffic Manager
-Date: Sat, 4 Jan 2014 19:38:48 -0800
-Message-ID: <20140105033848.GA22595@kroah.com>
-References: <1387594651-25771-1-git-send-email-rapatel@apm.com>
- <201312212111.40576.arnd@arndb.de>
- <CAPw-ZTnsu_EmOW3aZTVKAVjQsdi8qMy95y2ZcYxzgVrjGkirTA@mail.gmail.com>
- <1441245.xPZLG2iNZ6@wuerfel>
- <CAN1v_PtFz42crHW5=cUgw-fAnPn3rQht=o0t3nmjJRamYSLDMg@mail.gmail.com>
+From: Sebastian Reichel <sre@ring0.de>
+Subject: Re: [PATCHv4 0/2] twl4030-keypad DT binding
+Date: Sun, 5 Jan 2014 04:50:36 +0100
+Message-ID: <20140105035032.GB17291@earth.universe>
+References: <1383948866-32672-1-git-send-email-sre@debian.org>
+ <1385830416-12900-1-git-send-email-sre@debian.org>
+ <20140104054006.GA23424@earth.universe>
+ <20140104084901.GA1991@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAN1v_PtFz42crHW5=cUgw-fAnPn3rQht=o0t3nmjJRamYSLDMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
+In-Reply-To: <20140104084901.GA1991@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 04, 2014 at 03:59:46PM -0800, Ravi Patel wrote:
-> On Sat, Dec 21, 2013 at 11:03 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Saturday 21 December 2013 17:00:51 Loc Ho wrote:
-> >> On Sat, Dec 21, 2013 at 12:11 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> >> > On Saturday 21 December 2013, Ravi Patel wrote:
-> >> >> This patch adds support for APM X-Gene SoC Queue Manager/Traffic Manager.
-> >> >>  QMTM is required by APM X-Gene SoC Ethernet, PktDMA (XOR Engine) and
-> >> >>  Security Engine subsystems. All subsystems communicate with QMTM using
-> >> >>  messages which include information about the work to be performed and
-> >> >>  the location of associated data buffers.
-> >> >
-> >> > Please describe here what the purpose of the qmtm is, as this is not
-> >> > entirely clear from the code.
-> >> >
-> >> > In particular, please describe how this differs from a dmaengine driver
-> >> > and why it is not possible to extend the dma slave API to describe qmtm
-> >> > as a dma engine.
-> >> >
-> >> [Loc Ho]
-> >> If the QM driver implements the DMA API, what about the actual DMA
-> >> engine driver which interfaces with this QM driver. We would have DMA
-> >> client interfaces with the X-Gene DMA driver (not available yet) via
-> >> DMA API which in turn interfaces with this QM driver via DMA API.
-> >> Won't this be kind of awkward? Also, the QM only manage messages (or
-> >> descriptors) which are 32-bytes or 64-bytes. It doesn't actually do
-> >> any data transfer of various sizes.
-> >
-> > Please describe here what the purpose of the qmtm is, as this is not
-> > entirely clear from the code or from your reply.
-> >
-> > Greg was guessing that it's a bus controller, my best guess is a DMA
-> > engine. If it's something completely different, you have to let
-> > us know what it is so we can do a proper review rather than guessing.
-> >
-> > Please provide a link to the data sheet if you are unable to explain.
-> 
-> Here is URL to a text document explaining role of QMTM device with CPU, Ethernet
-> subsystem.
-> 
-> https://drive.google.com/file/d/0B28TgQZ3JLoRRGNnbjJoUGNHWW8/edit?usp=sharing
 
-There is nothing at this link :(
+--uZ3hkaAS1mZxFaxD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> PktDMA and Security subsystem interfaces with QMTM in the same way as Ethernet.
+On Sat, Jan 04, 2014 at 12:49:01AM -0800, Dmitry Torokhov wrote:
+> On Sat, Jan 04, 2014 at 06:40:06AM +0100, Sebastian Reichel wrote:
+> > What's the status of this patch? Can you queue this for 3.14?
+>=20
+> I just queued it.
 
-How does a "security" subsystem have anything to do with ethernet?
+Thanks.
 
-confused,
+-- Sebastian
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--uZ3hkaAS1mZxFaxD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSyNaIAAoJENju1/PIO/qaH6wQAIkdB/qxK25N42E4d38hOSoh
+wMecH85OVStbFMA4jyN9+KeY1egiHbLr9MPnvqW1YmBdjM4RPjsI6kUIlHKasPS6
+hUhMc0+BmJJmwuRD782JgM/7hkLgLCrdv/YBV7hbeMzoP9Tbh4D+/HS/8hjc4NIE
+18OZYLuqLFIIa1eEDgjcdQW/DpK1RLGgrotIFY7dCj2uJmWWMwWzYBNBl25fhq27
+PISzFRYhewXf0kjAE3UKJogfnutKV8pPjfUD+NU6GUpdJCMNfAlRSioxeBnU98+i
+LDk/STSdDmmga4pmpr+lsqORg6wX0xVQo+tRrpNBnk6QN2r+CJL0tlDhH0NeV82u
+e5Tgwgiaeyqc3YZP8P2vIlheF95Y5TZq1TaiZub9lzH2LvnNLlYAedqrw3eWDSjT
+UAkjPBPjZ7Z0s8RSoBk5JXqncRBsZXh9hO9oGq88rngjmrFoXfRnATp0n2Qp+dBK
+sg0grd990Dof4xPaKhcPjSEQ51d4dl6+HbUNYfEur9xMVhkDgi+3aLLnv4CduSkd
+UdGv6sWKcHjS0wbCI/D+LJEO7LopYrKekVMo63qXQALyjQ8CUkzEjUQaFbafSNxR
+h7LEGLr4LwjuoO27JNOn0RNGMLgl+fe2Yc9b3LUd7DAvevhTKoPT9cJjb3ItjOR8
+TIHdJn3XRxz4miBWWxWw
+=Ykwv
+-----END PGP SIGNATURE-----
+
+--uZ3hkaAS1mZxFaxD--
