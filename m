@@ -1,135 +1,49 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH 5/7] clk/samsung: add support for pll2550xx
-Date: Mon, 6 Jan 2014 17:06:50 +0530
-Message-ID: <CAPdUM4PZFK4fMSjJd-gpb4tb3khwWwaG5GeJR5yi_=RMn9EaQg@mail.gmail.com>
-References: <1386345391-23482-1-git-send-email-rahul.sharma@samsung.com>
-	<1386345391-23482-6-git-send-email-rahul.sharma@samsung.com>
-	<1450803.Oy1I8miDAj@amdc1227>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/1] Documentation: mfd: Fix LDO index in s2mps11.txt
+Date: Mon, 6 Jan 2014 11:42:30 +0000
+Message-ID: <20140106114230.GR23772@lee--X1>
+References: <1387877005-19035-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1450803.Oy1I8miDAj@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.ab@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, PANKAJ KUMAR DUBEY <pankaj.dubey@samsung.com>, Young-Gun Jang <yg1004.jang@samsung.com>, Arun Kumar <arun.kk@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1387877005-19035-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, robh+dt@kernel.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On Tue, 24 Dec 2013, Sachin Kamat wrote:
 
-On 19 December 2013 17:31, Tomasz Figa <t.figa@samsung.com> wrote:
-> Hi Pankaj, Rahul, Arun,
->
-> On Friday 06 of December 2013 21:26:29 Rahul Sharma wrote:
->> From: Pankaj Dubey <pankaj.dubey@samsung.com>
->>
->> exynos5260 use pll2520xx and it has different bitfields
->> for P,M,S values as compared to pll2550xx. Support for
->> pll2520xx is added here.
->>
->> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
->> ---
->>  drivers/clk/samsung/clk-pll.c |  107 +++++++++++++++++++++++++++++++++++++++++
->>  drivers/clk/samsung/clk-pll.h |    1 +
->>  2 files changed, 108 insertions(+)
->>
->> diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
->> index e8e8953..237a889 100644
->> --- a/drivers/clk/samsung/clk-pll.c
->> +++ b/drivers/clk/samsung/clk-pll.c
->> @@ -710,6 +710,107 @@ struct clk * __init samsung_clk_register_pll2550x(const char *name,
->>       return clk;
->>  }
->>
->> +/*
->> + * PLL2550xx Clock Type
->> + */
->> +
->> +/* Maximum lock time can be 270 * PDIV cycles */
->> +#define PLL2550XX_LOCK_FACTOR (270)
->> +
->> +#define PLL2550XX_MDIV_MASK          (0x3FF)
->> +#define PLL2550XX_PDIV_MASK          (0x3F)
->> +#define PLL2550XX_SDIV_MASK          (0x7)
->> +#define PLL2550XX_LOCK_STAT_MASK     (0x1)
->> +#define PLL2550XX_MDIV_SHIFT         (9)
->> +#define PLL2550XX_PDIV_SHIFT         (3)
->> +#define PLL2550XX_SDIV_SHIFT         (0)
->> +#define PLL2550XX_LOCK_STAT_SHIFT    (21)
->> +
->> +static unsigned long samsung_pll2550xx_recalc_rate(struct clk_hw *hw,
->> +                             unsigned long parent_rate)
->> +{
->> +     struct samsung_clk_pll *pll = to_clk_pll(hw);
->> +     u32 mdiv, pdiv, sdiv, pll_con;
->> +     u64 fvco = parent_rate;
->> +
->> +     pll_con = __raw_readl(pll->con_reg);
->> +     mdiv = (pll_con >> PLL2550XX_MDIV_SHIFT) & PLL2550XX_MDIV_MASK;
->> +     pdiv = (pll_con >> PLL2550XX_PDIV_SHIFT) & PLL2550XX_PDIV_MASK;
->> +     sdiv = (pll_con >> PLL2550XX_SDIV_SHIFT) & PLL2550XX_SDIV_MASK;
->> +
->> +     fvco *= mdiv;
->> +     do_div(fvco, (pdiv << sdiv));
->> +
->> +     return (unsigned long)fvco;
->> +}
->> +
->> +static inline bool samsung_pll2550xx_mp_change(u32 mdiv, u32 pdiv, u32 pll_con)
->> +{
->> +     if ((mdiv != ((pll_con >> PLL2550XX_MDIV_SHIFT) &
->> +                             PLL2550XX_MDIV_MASK)) ||
->> +             (pdiv != ((pll_con >> PLL2550XX_PDIV_SHIFT) &
->> +                             PLL2550XX_PDIV_MASK)))
->> +             return 1;
->> +     else
->> +             return 0;
->
-> This doesn't look too good. Can you make this consistent with
-> implementations of this helper for other PLLs, such as
-> samsung_pll35xx_mp_change()?
+> LDO indices start from 1. Fix the example appropriately.
+>=20
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/s2mps11.txt |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Docu=
+mentation/devicetree/bindings/mfd/s2mps11.txt
+> index 78a840d7510d..15ee89c3cc7b 100644
+> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> @@ -60,7 +60,7 @@ as per the datasheet of s2mps11.
+> =20
+>  	- LDOn
+>  		  - valid values for n are 1 to 38
+> -		  - Example: LDO0, LD01, LDO28
+> +		  - Example: LDO1, LD02, LDO28
+>  	- BUCKn
+>  		  - valid values for n are 1 to 10.
+>  		  - Example: BUCK1, BUCK2, BUCK9
 
-I have changed this in V2.
+You really do have too much time on your hands. ;)
 
->
->> +}
->> +
->> +static int samsung_pll2550xx_set_rate(struct clk_hw *hw, unsigned long drate,
->> +                                     unsigned long prate)
->> +{
->> +     struct samsung_clk_pll *pll = to_clk_pll(hw);
->> +     const struct samsung_pll_rate_table *rate;
->> +     u32 tmp;
->> +
->> +     /* Get required rate settings from table */
->> +     rate = samsung_get_pll_settings(pll, drate);
->> +     if (!rate) {
->> +             pr_err("%s: Invalid rate : %lu for pll clk %s\n", __func__,
->> +                     drate, __clk_get_name(hw->clk));
->> +             return -EINVAL;
->> +     }
->> +
->> +     tmp = __raw_readl(pll->con_reg);
->> +
->> +     if (!(samsung_pll2550xx_mp_change(rate->mdiv, rate->pdiv, tmp))) {
->> +             /* If only s change, change just s value only*/
->> +             tmp &= ~(PLL2550XX_SDIV_MASK << PLL2550XX_SDIV_SHIFT);
->> +             tmp |= rate->sdiv << PLL2550XX_SDIV_SHIFT;
->> +             __raw_writel(tmp, pll->con_reg);
->> +     } else {
->
-> Please make coding style of this function consistent with implementations
-> of this operation for other PLLs, such as samsung_pll35xx_set_rate().
->
-> Otherwise the patch looks fine.
+Applied, thanks.
 
-Ok.
-
-Regards,
-Rahul Sharma.
-
->
-> Best regards,
-> Tomasz
->
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
