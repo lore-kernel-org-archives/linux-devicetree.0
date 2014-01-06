@@ -1,80 +1,32 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v3 2/2] arm: dt: zynq: Add SDHCI nodes
-Date: Mon, 06 Jan 2014 12:18:27 +0100
-Message-ID: <52CA9103.6060803@monstr.eu>
-References: <1386007357-11956-1-git-send-email-soren.brinkmann@xilinx.com> <1386007357-11956-2-git-send-email-soren.brinkmann@xilinx.com> <529CE36C.4020707@monstr.eu>
-Reply-To: monstr@monstr.eu
+From: Kyungmin Park <kmpark@infradead.org>
+Subject: Re: [PATCH v7 3/3] mfd: max14577: Add device tree bindings document
+Date: Mon, 6 Jan 2014 20:26:30 +0900
+Message-ID: <CAH9JG2Wcip=5SEmkRBn9KzWajFmn9mQzKma23vk8F67bp9-AkQ@mail.gmail.com>
+References: <1386329534-14186-1-git-send-email-k.kozlowski@samsung.com>
+	<1386329534-14186-4-git-send-email-k.kozlowski@samsung.com>
+	<20140106104640.GK23772@lee--X1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="0w2N76OdxlLSISqPG4hw1IM9m0L9FhK0T"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <529CE36C.4020707@monstr.eu>
+In-Reply-To: <20140106104640.GK23772@lee--X1>
 Sender: linux-doc-owner@vger.kernel.org
-To: monstr@monstr.eu
-Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Mark Brown <broonie@kernel.org>, Rob Landley <rob@landley.net>, Marek Szyprowski <m.szyprowski@samsung.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---0w2N76OdxlLSISqPG4hw1IM9m0L9FhK0T
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 12/02/2013 08:45 PM, Michal Simek wrote:
-> On 12/02/2013 07:02 PM, Soren Brinkmann wrote:
->> Add nodes for the Arasan SDHCI controller to Zynq dts files.
+On Mon, Jan 6, 2014 at 7:46 PM, Lee Jones <lee.jones@linaro.org> wrote:
+>> Add document describing device tree bindings for MAX14577 MFD driver.
 >>
->> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 >> ---
->> v2:
->>  - update compatibilty string according to changes in 1/2 (append
->>    '-8.9a' IP version string)
->> ---
->>  arch/arm/boot/dts/zynq-7000.dtsi | 20 ++++++++++++++++++++
->>  arch/arm/boot/dts/zynq-zc702.dts |  4 ++++
->>  arch/arm/boot/dts/zynq-zc706.dts |  4 ++++
->>  arch/arm/boot/dts/zynq-zed.dts   |  4 ++++
->>  4 files changed, 32 insertions(+)
->=20
-> Chris: It is up to you if you want to take this through your tree
-> or just let me to take it through my tree. It is adding new nodes
-> to DTS file that's why it shouldn't be any problem to apply it
-> separately.
->=20
-> Anyway please let me know what you think.
-> If you want to add it to your tree here is my
->=20
-> Acked-by: Michal Simek <monstr@monstr.eu>
+>>  Documentation/devicetree/bindings/mfd/max14577.txt |   65 ++++++++++++++++++++
+>>  1 file changed, 65 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
+>
+> You still need a DT Ack before I can apply this.
 
-I have added this patch to my zynq/dt branch.
-We discussed this in other patch and these dt changes should go through
-arm-soc tree.
+Tomasz, can you ack it?
 
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---0w2N76OdxlLSISqPG4hw1IM9m0L9FhK0T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlLKkQMACgkQykllyylKDCGPEQCgk4jgaBt/TlnGXYrkIPIIHSWV
-qIgAoIyErAbINWkBamuZz+uXcXQIn/Lm
-=qSUk
------END PGP SIGNATURE-----
-
---0w2N76OdxlLSISqPG4hw1IM9m0L9FhK0T--
+Thank you,
+Kyungmin Park
