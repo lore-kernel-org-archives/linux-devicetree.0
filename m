@@ -1,53 +1,80 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
-Date: Mon, 6 Jan 2014 13:51:45 +0000
-Message-ID: <20140106135145.GD21906@e106331-lin.cambridge.arm.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
- <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
- <52C4D612.2090808@nvidia.com>
- <52C5A6CE.5060904@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52C5A6CE.5060904@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Matthew Longnecker <mlongnecker@nvidia.com>
-Cc: Wei Ni <wni@nvidia.com>, Eduardo Valentin <eduardo.valentin@ti.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 0/7] Xilinx Zynq SLCR changes
+Date: Mon,  6 Jan 2014 15:36:36 +0100
+Message-ID: <cover.1389018985.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-32302-1389019004-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, monstr@monstr.eu, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 02, 2014 at 05:50:06PM +0000, Matthew Longnecker wrote:
-> 
-> > I think the platform driver may set governor for the thermal zone,
-> > so how about to add a property named as "governor",
-> > and parse it to tzp->governor_name,
-> > something like:
-> >                  ret = of_property_read_string(child, "governor", &str);
-> >                  if (ret == 0)
-> >                          if (strlen(str) < THERMAL_NAME_LENGTH)
-> >                                  strcpy(tzp->governor_name, str);
-> >
-> > Thanks.
-> > Wei.
-> 
-> DT is supposed to describe the hardware, right? The governor isn't 
-> hardware -- it's a software control policy. On the other hand, that 
-> control policy must be tuned according to the behaviors of the platform 
-> hardware otherwise the system will be unstable.
-> 
-> Is it appropriate to be naming the governor in DT? If so, is it equally 
-> appropriate to describe any governor-specific parameters in DT (even 
-> though they are pure software constructs)?
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-The dt should be relatively static -- if the hardware doesn't change the
-dt shouldn't have to.
+--=_mimegpg-monstr-desktop-32302-1389019004-0001
 
-The governers are not static. We can introduce new ones and throw away
-old ones at any time. Tuning parameters can also change at any time.
+Hi,
 
-I'd prefer to not have governer details described in the dt, and the
-choice of governer and configuration of its tuning parameters should be
-made at runtime somehow.
+I have rebased and added together patches I have got from Steffen some time ago.
+Steffen: I kept there your SoB. Please let me know if there is any problem
+with it.
+
+The point of this series is to use slcr as system controller
+to be able to create other drivers like pinmux, etc.
+
+These patches are based on zynq/cleanup and zynq/dt branches merged
+together. (They are available in arm-soc git tree).
+Let me know if you want to add the branch somewhere.
+
+Arnd: We talked at KS about syscon early initialization which
+will be really helpful for this case. Has someone done any work
+around it?
 
 Thanks,
-Mark.
+Michal
+
+
+Michal Simek (4):
+  ARM: zynq: Split slcr in two parts
+  ARM: zynq: Map I/O memory on clkc init
+  ARM: zynq: Add and use zynq_slcr_read/write() helper functions
+  ARM: zynq: Introduce zynq_slcr_unlock()
+
+Steffen Trumtrar (3):
+  ARM: zynq: Move clock_init from slcr to common
+  ARM: zynq: Hang iomapped slcr address on device_node
+  ARM: zynq: Make zynq_slcr_base static
+
+ .../devicetree/bindings/clock/zynq-7000.txt        |  4 +-
+ arch/arm/boot/dts/zynq-7000.dtsi                   | 42 +++++-----
+ arch/arm/mach-zynq/Kconfig                         |  1 +
+ arch/arm/mach-zynq/common.c                        |  6 +-
+ arch/arm/mach-zynq/common.h                        |  2 +-
+ arch/arm/mach-zynq/slcr.c                          | 98 +++++++++++++++++++---
+ drivers/clk/zynq/clkc.c                            | 89 ++++++++++++++------
+ include/linux/clk/zynq.h                           |  2 +-
+ 8 files changed, 179 insertions(+), 65 deletions(-)
+
+--
+1.8.2.3
+
+
+--=_mimegpg-monstr-desktop-32302-1389019004-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlLKv3wACgkQykllyylKDCF1pwCeNySfIo9zcwe7IhHgi/cAf1IV
+ArsAniuWV3paqeg5k7jHrhSHmLocv5IU
+=ZFvb
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-32302-1389019004-0001--
