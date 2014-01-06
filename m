@@ -1,63 +1,45 @@
 From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: [PATCHv2 7/7] arm: dts: add thermal zones info on tmp102 for DRA7-EVM
-Date: Mon, 6 Jan 2014 08:36:51 -0400
-Message-ID: <1389011811-13004-8-git-send-email-eduardo.valentin@ti.com>
-References: <1389011811-13004-1-git-send-email-eduardo.valentin@ti.com>
+Subject: [PATCH 1/1] thermal: remove const flag from .ops of imx thermal
+Date: Mon, 6 Jan 2014 08:54:34 -0400
+Message-ID: <1389012874-13871-1-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1389011811-13004-1-git-send-email-eduardo.valentin@ti.com>
 Sender: linux-pm-owner@vger.kernel.org
 To: rui.zhang@intel.com
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add simple thermal zone on tmp102.
+As per previous changes on thermal framework API,
+registering a new thermal zone does not require
+a const thermal zone ops.
 
-Cc: Beno=C3=AEt Cousson <bcousson@baylibre.com>
+Thus, this patch removes the flag from imx thermal zone ops.
+
 Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Grant Likely <grant.likely@linaro.org>
 Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-pm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
 ---
- arch/arm/boot/dts/dra7-evm.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/thermal/imx_thermal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-ev=
-m.dts
-index 36e2c9e..1ea9c3d 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -95,6 +95,21 @@
- 	};
- };
-=20
-+&thermal_zones {
-+	pcb_thermal: pcb_thermal {
-+		polling-delay-passive =3D <250>; /* milliseconds */
-+		polling-delay =3D <1000>; /* milliseconds */
-+		thermal-sensors =3D <&tmp102>;
-+		trips {
-+			crit@80000 {
-+			temperature =3D <80000>;
-+				hysteresis =3D <1000>;
-+				type =3D "critical";
-+			};
-+		};
-+	};
-+};
-+
- &i2c1 {
- 	status =3D "okay";
- 	pinctrl-names =3D "default";
---=20
+diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+index 77a962f..43d2f77 100644
+--- a/drivers/thermal/imx_thermal.c
++++ b/drivers/thermal/imx_thermal.c
+@@ -284,7 +284,7 @@ static int imx_unbind(struct thermal_zone_device *tz,
+ 	return 0;
+ }
+ 
+-static const struct thermal_zone_device_ops imx_tz_ops = {
++static struct thermal_zone_device_ops imx_tz_ops = {
+ 	.bind = imx_bind,
+ 	.unbind = imx_unbind,
+ 	.get_temp = imx_get_temp,
+-- 
 1.8.2.1.342.gfa7285d
 
