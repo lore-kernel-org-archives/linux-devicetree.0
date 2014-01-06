@@ -1,87 +1,125 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when populating
- interrupts
-Date: Mon, 6 Jan 2014 23:41:40 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1401062340240.31394@utopia.booyaka.com>
-References: <20131123004334.GJ10023@atomide.com> <20131123010850.GN10023@atomide.com> <20131123015034.GP10023@atomide.com> <20131124212757.7D224C402A3@trevor.secretlab.ca> <alpine.DEB.2.02.1312100331460.32309@utopia.booyaka.com>
- <alpine.DEB.2.02.1312302209200.8869@utopia.booyaka.com> <CAL_Jsq+X5G94DUn-zFKQkhEy91cdjCyeciny+kDjr=V6EiBHfQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+X5G94DUn-zFKQkhEy91cdjCyeciny+kDjr=V6EiBHfQ@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: [PATCH RFC RFT 0/2] ARM: Kirkwood: Synology DT files
+Date: Tue,  7 Jan 2014 00:47:05 +0100
+Message-ID: <1389052027-16819-1-git-send-email-andrew@lunn.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony, Rob,
+This patchset adds support for a few different Kirkwood based Synology
+NAS boxes. I've taken the board file created by Ben Peddell and
+converted it into DT files.
 
-On Tue, 31 Dec 2013, Rob Herring wrote:
+Request for Comment:
 
-> On Mon, Dec 30, 2013 at 4:10 PM, Paul Walmsley <paul@pwsan.com> wrote:
-> > Hi Grant, Rob,
-> >
-> > On Tue, 10 Dec 2013, Paul Walmsley wrote:
-> >
-> >> On Sun, 24 Nov 2013, Grant Likely wrote:
-> >>
-> >> > On Fri, 22 Nov 2013 17:50:35 -0800, Tony Lindgren <tony@atomide.com> wrote:
-> >> > > * Tony Lindgren <tony@atomide.com> [131122 17:16]:
-> >> > > > * Tony Lindgren <tony@atomide.com> [131122 17:09]:
-> >> > > > > * Russell King - ARM Linux <linux@arm.linux.org.uk> [131122 16:56]:
-> >> > > > > > On Fri, Nov 22, 2013 at 04:43:35PM -0800, Tony Lindgren wrote:
-> >> > > > > > > +         /* See of_device_resource_notify for populating interrupts */
-> >> > > > > > > +         for (i = 0; i < num_irq; i++, res++) {
-> >> > > > > > > +                 res->flags = IORESOURCE_IRQ;
-> >> > > > > > > +                 res->start = -EPROBE_DEFER;
-> >> > > > > > > +                 res->end = -EPROBE_DEFER;
-> >> > > > > >
-> >> > > > > > NAK.  Definitely a bad idea to start introducing magic values other into
-> >> > > > > > resources.  Please don't do this.
-> >> > > > >
-> >> > > > > Do you have any better ideas on how to sort out this issue then?
-> >> > > >
-> >> > > > I guess we could allocate all the resources lazily here, I'll take a look
-> >> > > > at that.
-> >> > >
-> >> > > Here's a version that allocates the resources lazily with the notifier.
-> >> > > Seems to boot, need to play with it a bit more though to make sure we're
-> >> > > not overwriting resources for any legacy devices.
-> >> >
-> >> > Blurg. Using a notifier really feels like we don't have a good handle on
-> >> > a reasonable solution yet. Basically it means we're hooking into the
-> >> > driver core without /looking/ like we're hooking into the driver core. I
-> >> > don't think this is any better, but I don't have a better suggestion at
-> >> > the moment.   :-(
-> >>
-> >> Unfortunately this patch, or something that accomplishes the same results,
-> >> is somewhat high-priority for us on OMAP.  OMAP37xx got prematurely
-> >> converted to DT booting, and now dynamic power management is broken:
-> >>
-> >>     http://marc.info/?l=linux-arm-kernel&m=138658294830408&w=2
-> >>
-> >> Tony writes that this patch is one of the two patches needed to get things
-> >> working again:
-> >>
-> >>     http://marc.info/?l=linux-arm-kernel&m=138660942506846&w=2
-> >>
-> >> Is it possible to get this patch, or something similar, merged for
-> >> v3.13-rc?
-> >>
-> >> Once something like PM is broken, it's pretty easy for other broken
-> >> patches to make it into the tree, since it becomes very difficult to test
-> >> without turning into a maintainer denial-of-service attack.
-> >
-> > Ping.  Could you please provide some guidance here about what you'd need
-> > to get this solved for v3.13-rc?
-> 
-> I agree with doing the platform_get_irq modification and feel free to
-> add my ack. I'm going to be offline for the next week.
+Synology hardware design uses a number of sub-designs which get
+repeated across boards. Hence i have a lot of .dtsi files, 25 in
+total. I decided to place these into a subdirectory
+arch/arm/boot/dts/synology. Is this a good idea, or is it preferred to
+keep them alongside the .dts files?
 
-Thanks Rob!
+Request for Testing:
 
-Tony, would you consider sending this patch upstream for v3.13-rc along 
-with your 37xxevm fix patches?
+This patch adds support for around 30 different boards. Most .dts
+files support a couple of different models. I don't have any of this
+hardware. None of this is tested.
 
+Andrew Lunn (2):
+  Power: Reset: Generalize qnap-poweroff to with on Synology devices.
+  ARM: Kirkwood: Add support for many Synology NAS devices
 
-- Paul
+ arch/arm/boot/dts/Makefile                     |   15 ++++
+ arch/arm/boot/dts/kirkwood-ds109.dts           |   33 +++++++
+ arch/arm/boot/dts/kirkwood-ds110jv10.dts       |   33 +++++++
+ arch/arm/boot/dts/kirkwood-ds111.dts           |   33 +++++++
+ arch/arm/boot/dts/kirkwood-ds112.dts           |   34 +++++++
+ arch/arm/boot/dts/kirkwood-ds209.dts           |   33 +++++++
+ arch/arm/boot/dts/kirkwood-ds210.dts           |   35 ++++++++
+ arch/arm/boot/dts/kirkwood-ds212.dts           |   37 ++++++++
+ arch/arm/boot/dts/kirkwood-ds212j.dts          |   34 +++++++
+ arch/arm/boot/dts/kirkwood-ds409.dts           |   34 +++++++
+ arch/arm/boot/dts/kirkwood-ds409slim.dts       |   32 +++++++
+ arch/arm/boot/dts/kirkwood-ds411.dts           |   35 ++++++++
+ arch/arm/boot/dts/kirkwood-ds411j.dts          |   34 +++++++
+ arch/arm/boot/dts/kirkwood-ds411slim.dts       |   34 +++++++
+ arch/arm/boot/dts/kirkwood-rs212.dts           |   34 +++++++
+ arch/arm/boot/dts/kirkwood-rs409.dts           |   33 +++++++
+ arch/arm/boot/dts/kirkwood-rs411.dts           |   34 +++++++
+ arch/arm/boot/dts/synology/alarm-led-12.dtsi   |   28 ++++++
+ arch/arm/boot/dts/synology/common.dtsi         |  112 ++++++++++++++++++++++++
+ arch/arm/boot/dts/synology/ethernet-1.dtsi     |   15 ++++
+ arch/arm/boot/dts/synology/fan-alarm-18.dtsi   |   22 +++++
+ arch/arm/boot/dts/synology/fan-alarm-35-1.dtsi |   22 +++++
+ arch/arm/boot/dts/synology/fan-alarm-35-3.dtsi |   32 +++++++
+ arch/arm/boot/dts/synology/fan-gpios-15.dtsi   |   34 +++++++
+ arch/arm/boot/dts/synology/fan-gpios-32.dtsi   |   34 +++++++
+ arch/arm/boot/dts/synology/fan-speed-100.dtsi  |   20 +++++
+ arch/arm/boot/dts/synology/fan-speed-120.dtsi  |   20 +++++
+ arch/arm/boot/dts/synology/fan-speed-150.dtsi  |   20 +++++
+ arch/arm/boot/dts/synology/hdd-leds-20.dtsi    |   90 +++++++++++++++++++
+ arch/arm/boot/dts/synology/hdd-leds-21-1.dtsi  |   36 ++++++++
+ arch/arm/boot/dts/synology/hdd-leds-21-2.dtsi  |   52 +++++++++++
+ arch/arm/boot/dts/synology/hdd-leds-36.dtsi    |  103 ++++++++++++++++++++++
+ arch/arm/boot/dts/synology/hdd-leds-38.dtsi    |   52 +++++++++++
+ arch/arm/boot/dts/synology/hdd-power-29.dtsi   |   56 ++++++++++++
+ arch/arm/boot/dts/synology/hdd-power-30-1.dtsi |   40 +++++++++
+ arch/arm/boot/dts/synology/hdd-power-30-2.dtsi |   56 ++++++++++++
+ arch/arm/boot/dts/synology/hdd-power-30-4.dtsi |   89 +++++++++++++++++++
+ arch/arm/boot/dts/synology/hdd-power-31.dtsi   |   40 +++++++++
+ arch/arm/boot/dts/synology/hdd-power-34.dtsi   |   73 +++++++++++++++
+ arch/arm/boot/dts/synology/i2c-rtc-ricoh.dtsi  |   18 ++++
+ arch/arm/boot/dts/synology/i2c-rtc-seiko.dtsi  |   18 ++++
+ arch/arm/boot/dts/synology/pcie-2.dtsi         |   19 ++++
+ drivers/power/reset/qnap-poweroff.c            |   46 +++++++---
+ 43 files changed, 1694 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds109.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds110jv10.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds111.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds112.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds209.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds210.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds212.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds212j.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds409.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds409slim.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411j.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411slim.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs212.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs409.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs411.dts
+ create mode 100644 arch/arm/boot/dts/synology/alarm-led-12.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/common.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/ethernet-1.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-alarm-18.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-alarm-35-1.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-alarm-35-3.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-gpios-15.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-gpios-32.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-speed-100.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-speed-120.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-speed-150.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-leds-20.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-leds-21-1.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-leds-21-2.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-leds-36.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-leds-38.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-29.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-1.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-2.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-4.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-31.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-34.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/i2c-rtc-ricoh.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/i2c-rtc-seiko.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/pcie-2.dtsi
+
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
