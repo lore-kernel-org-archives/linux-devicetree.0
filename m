@@ -1,63 +1,87 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH] ARM: dts: omap3430-sdp: add dip switch information for
- MMC operation
-Date: Mon, 06 Jan 2014 23:43:23 +0100
-Message-ID: <52CB318B.4030603@baylibre.com>
-References: <1389047853-26375-1-git-send-email-nm@ti.com>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when populating
+ interrupts
+Date: Mon, 6 Jan 2014 23:41:40 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1401062340240.31394@utopia.booyaka.com>
+References: <20131123004334.GJ10023@atomide.com> <20131123010850.GN10023@atomide.com> <20131123015034.GP10023@atomide.com> <20131124212757.7D224C402A3@trevor.secretlab.ca> <alpine.DEB.2.02.1312100331460.32309@utopia.booyaka.com>
+ <alpine.DEB.2.02.1312302209200.8869@utopia.booyaka.com> <CAL_Jsq+X5G94DUn-zFKQkhEy91cdjCyeciny+kDjr=V6EiBHfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1389047853-26375-1-git-send-email-nm@ti.com>
+In-Reply-To: <CAL_Jsq+X5G94DUn-zFKQkhEy91cdjCyeciny+kDjr=V6EiBHfQ@mail.gmail.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nishanth,
+Hi Tony, Rob,
 
-On 06/01/2014 23:37, Nishanth Menon wrote:
-> MMC 8 bit mode operation depends on dip switch setting which is not
-> obvious - The current board file has this description. However, with
-> removal of the board file in the future, this information will be los=
-t
-> and has to be rediscovered.
+On Tue, 31 Dec 2013, Rob Herring wrote:
 
-Thanks for that. I've just applied it.
+> On Mon, Dec 30, 2013 at 4:10 PM, Paul Walmsley <paul@pwsan.com> wrote:
+> > Hi Grant, Rob,
+> >
+> > On Tue, 10 Dec 2013, Paul Walmsley wrote:
+> >
+> >> On Sun, 24 Nov 2013, Grant Likely wrote:
+> >>
+> >> > On Fri, 22 Nov 2013 17:50:35 -0800, Tony Lindgren <tony@atomide.com> wrote:
+> >> > > * Tony Lindgren <tony@atomide.com> [131122 17:16]:
+> >> > > > * Tony Lindgren <tony@atomide.com> [131122 17:09]:
+> >> > > > > * Russell King - ARM Linux <linux@arm.linux.org.uk> [131122 16:56]:
+> >> > > > > > On Fri, Nov 22, 2013 at 04:43:35PM -0800, Tony Lindgren wrote:
+> >> > > > > > > +         /* See of_device_resource_notify for populating interrupts */
+> >> > > > > > > +         for (i = 0; i < num_irq; i++, res++) {
+> >> > > > > > > +                 res->flags = IORESOURCE_IRQ;
+> >> > > > > > > +                 res->start = -EPROBE_DEFER;
+> >> > > > > > > +                 res->end = -EPROBE_DEFER;
+> >> > > > > >
+> >> > > > > > NAK.  Definitely a bad idea to start introducing magic values other into
+> >> > > > > > resources.  Please don't do this.
+> >> > > > >
+> >> > > > > Do you have any better ideas on how to sort out this issue then?
+> >> > > >
+> >> > > > I guess we could allocate all the resources lazily here, I'll take a look
+> >> > > > at that.
+> >> > >
+> >> > > Here's a version that allocates the resources lazily with the notifier.
+> >> > > Seems to boot, need to play with it a bit more though to make sure we're
+> >> > > not overwriting resources for any legacy devices.
+> >> >
+> >> > Blurg. Using a notifier really feels like we don't have a good handle on
+> >> > a reasonable solution yet. Basically it means we're hooking into the
+> >> > driver core without /looking/ like we're hooking into the driver core. I
+> >> > don't think this is any better, but I don't have a better suggestion at
+> >> > the moment.   :-(
+> >>
+> >> Unfortunately this patch, or something that accomplishes the same results,
+> >> is somewhat high-priority for us on OMAP.  OMAP37xx got prematurely
+> >> converted to DT booting, and now dynamic power management is broken:
+> >>
+> >>     http://marc.info/?l=linux-arm-kernel&m=138658294830408&w=2
+> >>
+> >> Tony writes that this patch is one of the two patches needed to get things
+> >> working again:
+> >>
+> >>     http://marc.info/?l=linux-arm-kernel&m=138660942506846&w=2
+> >>
+> >> Is it possible to get this patch, or something similar, merged for
+> >> v3.13-rc?
+> >>
+> >> Once something like PM is broken, it's pretty easy for other broken
+> >> patches to make it into the tree, since it becomes very difficult to test
+> >> without turning into a maintainer denial-of-service attack.
+> >
+> > Ping.  Could you please provide some guidance here about what you'd need
+> > to get this solved for v3.13-rc?
+> 
+> I agree with doing the platform_get_irq modification and feel free to
+> add my ack. I'm going to be offline for the next week.
 
-Regards,
-Benoit
+Thanks Rob!
+
+Tony, would you consider sending this patch upstream for v3.13-rc along 
+with your 37xxevm fix patches?
 
 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
->   arch/arm/boot/dts/omap3430-sdp.dts |    4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/o=
-map3430-sdp.dts
-> index 281914e..cd3d047 100644
-> --- a/arch/arm/boot/dts/omap3430-sdp.dts
-> +++ b/arch/arm/boot/dts/omap3430-sdp.dts
-> @@ -34,6 +34,10 @@
->   &mmc1 {
->   	vmmc-supply =3D <&vmmc1>;
->   	vmmc_aux-supply =3D <&vsim>;
-> +	/*
-> +	 * S6-3 must be in ON position for 8 bit mode to function
-> +	 * Else, use 4 bit mode
-> +	 */
->   	bus-width =3D <8>;
->   };
-
---=20
-Beno=EEt Cousson
-BayLibre
-Embedded Linux Technology Lab
-www.baylibre.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Paul
