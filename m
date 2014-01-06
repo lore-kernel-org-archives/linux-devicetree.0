@@ -1,33 +1,85 @@
 From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] Krait L1/L2 EDAC driver
-Date: Mon, 06 Jan 2014 14:09:48 -0800
-Message-ID: <52CB29AC.8070406@codeaurora.org>
-References: <1388434457-4194-1-git-send-email-sboyd@codeaurora.org> <20140104101901.GA4439@nazgul.tnic>
+Subject: Re: [PATCH v2 0/9] CPU enable method based SMP/hotplug + MSM conversion
+Date: Mon, 06 Jan 2014 14:19:11 -0800
+Message-ID: <52CB2BDF.9040208@codeaurora.org>
+References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140104101901.GA4439-K5JNixvcfoxupOikMc4+xw@public.gmane.org>
+In-Reply-To: <1387845593-10050-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Stepan Moskovchenko <stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/14 02:19, Borislav Petkov wrote:
-> On Mon, Dec 30, 2013 at 12:14:11PM -0800, Stephen Boyd wrote:
->> This patchset adds support for the Krait L1/L2 cache error detection
->> hardware. The first patch fixes a generic framework bug. The next
->> two patches lay the groundwork for this driver to be added by 
->> exporting percpu irq functions as well as adding the Krait l2 indirection
->> register code. The next two patches add the driver and the binding and 
->> the final patch hooks it all up by adding the device tree node.
->>
->> I'm not sure which tree this is supposed to go through. Ideally we could
->> send the first 3 plus the 5th one through an edac tree.
-> Sure, I can take a look at the drivers/edac/ changes but I'd need an ack
-> for the arch/arm/ stuff before/if I pick it up, i.e. patch 3.
+Ping? Can anyone take a look at the generic ARM and DT binding patches
+and provide acks/reviews? I'd like to send this through arm-soc via the
+MSM tree if possible.
 
-Ok great. Perhaps Russell King or Mark Rutland can ack the arch/arm patch.
+On 12/23/13 16:39, Stephen Boyd wrote:
+> This is a rework of patches sent a months back by Rohit[1].
+> The goal of these patches is to add support for SMP and (basic)
+> hotplug on MSM based SoCs. To get there, we add support for a
+> generic way to hook in SMP/hotplug support code based on DT. To
+> show how it's used, we convert the MSM8660 SMP support code over
+> to the new method. After that we add support for the rest of the
+> upstream MSM SoCs (note these patches are piled high on top of
+> Rohit's patches to add 8074 support to MSM[2] and my follow ups[3,4],
+> but this should only matter to the MSM maintainers).
+>
+> This is one of the last items of code that still requires us to have
+> a mach directory and a machine descriptor. We should be able to move
+> the hotplug/smp code out of mach directories if this approach is
+> accepted.
+>
+> Changes since v1:
+>  * Added pointers from cpu nodes to saw and acc nodes
+>  * Squashed nr_cpus removal into reorganization patch
+>  * Reworked bindings/documentation
+>  * Rebased onto v3.13-rc4
+>
+> [1] https://lkml.org/lkml/2013/8/1/770
+> [2] https://lkml.org/lkml/2013/10/17/520
+> [3] https://lkml.org/lkml/2013/10/18/406
+> [4] http://lkml.org/lkml/2013/10/28/501
+>  
+>
+> Rohit Vaswani (6):
+>   devicetree: bindings: Document Krait/Scorpion cpus and enable-method
+>   ARM: msm: Remove pen_release usage
+>   ARM: msm: Re-organize platsmp to make it extensible
+>   ARM: msm: Add SMP support for KPSSv1
+>   ARM: msm: Add SMP support for KPSSv2
+>   ARM: dts: msm: Add nodes necessary for SMP boot
+>
+> Stephen Boyd (3):
+>   devicetree: bindings: Document qcom,kpss-acc
+>   devicetree: bindings: Document qcom,saw2 node
+>   ARM: Introduce CPU_METHOD_OF_DECLARE() for cpu hotplug/smp
+>
+>  Documentation/devicetree/bindings/arm/cpus.txt     |  25 +-
+>  .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt  |  30 ++
+>  .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  35 ++
+>  arch/arm/boot/dts/qcom-msm8660-surf.dts            |  24 ++
+>  arch/arm/boot/dts/qcom-msm8960-cdp.dts             |  52 +++
+>  arch/arm/boot/dts/qcom-msm8974.dtsi                |  69 ++++
+>  arch/arm/include/asm/smp.h                         |   9 +
+>  arch/arm/kernel/devtree.c                          |  40 +++
+>  arch/arm/mach-msm/Makefile                         |   2 +-
+>  arch/arm/mach-msm/board-dt.c                       |  14 -
+>  arch/arm/mach-msm/common.h                         |   1 -
+>  arch/arm/mach-msm/headsmp.S                        |  39 ---
+>  arch/arm/mach-msm/hotplug.c                        |  31 +-
+>  arch/arm/mach-msm/platsmp.c                        | 371 ++++++++++++++++-----
+>  arch/arm/mach-msm/scm-boot.h                       |   8 +-
+>  include/asm-generic/vmlinux.lds.h                  |  10 +
+>  16 files changed, 595 insertions(+), 165 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+>  delete mode 100644 arch/arm/mach-msm/headsmp.S
+>
+
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
