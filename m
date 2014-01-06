@@ -1,12 +1,10 @@
 From: <dinguyen@altera.com>
-Subject: [RESEND PATCHv8 4/4] ARM: socfpga_defconfig: enable SD/MMC support
-Date: Mon, 6 Jan 2014 13:32:34 -0600
-Message-ID: <1389036754-7249-5-git-send-email-dinguyen@altera.com>
-References: <1389036754-7249-1-git-send-email-dinguyen@altera.com>
+Subject: [RESEND PATCHv8 0/4] socfpga: Enable SD/MMC support
+Date: Mon, 6 Jan 2014 13:32:30 -0600
+Message-ID: <1389036754-7249-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1389036754-7249-1-git-send-email-dinguyen@altera.com>
 Sender: linux-mmc-owner@vger.kernel.org
 To: dinh.linux@gmail.com, arnd@arndb.de, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, mturquette@linaro.org
 Cc: zhangfei.gao@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dinh Nguyen <dinguyen@altera.com>
@@ -14,31 +12,35 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dinh Nguyen <dinguyen@altera.com>
 
-Enables the dw_mmc driver for SOCFPGA.
+RESEND: Apologies, resending to all appropriate ml's.
 
-Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
----
-v8: none
-v7: none
-v6: none
-v5: Add dw_mmc driver into socfpga_defconfig
-v4: none
-v3: none
-v2: none
----
- arch/arm/configs/socfpga_defconfig |    2 ++
- 1 file changed, 2 insertions(+)
+Hi,
 
-diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
-index 4e1ce21..8fff96ba 100644
---- a/arch/arm/configs/socfpga_defconfig
-+++ b/arch/arm/configs/socfpga_defconfig
-@@ -82,3 +82,5 @@ CONFIG_DEBUG_INFO=y
- CONFIG_ENABLE_DEFAULT_TRACERS=y
- CONFIG_DEBUG_USER=y
- CONFIG_XZ_DEC=y
-+CONFIG_MMC=y
-+CONFIG_MMC_DW=y
+This is v8 of the patch series to enable SD/MMC on the SOCFPGA platform.
+
+V8 differences from v7:
+
+* For the sdmmc_clk's clk-phase binding property, use the actually degree
+for the clock's phase shift.
+
+Dinh Nguyen (4):
+  clk: socfpga: Add a clk-phase property to the "altr,socfpga-gate-clk"
+  dts: socfpga: Add support for SD/MMC on the SOCFPGA platform
+  mmc: dw_mmc-socfpga: Remove the SOCFPGA specific platform for dw_mmc
+  ARM: socfpga_defconfig: enable SD/MMC support
+
+ .../devicetree/bindings/clock/altr_socfpga.txt     |    5 +
+ arch/arm/boot/dts/socfpga.dtsi                     |   14 +-
+ arch/arm/boot/dts/socfpga_arria5.dtsi              |   11 ++
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi            |   11 ++
+ arch/arm/boot/dts/socfpga_vt.dts                   |   11 ++
+ arch/arm/configs/socfpga_defconfig                 |    2 +
+ drivers/clk/socfpga/clk-gate.c                     |   69 ++++++++++
+ drivers/mmc/host/Kconfig                           |    8 --
+ drivers/mmc/host/dw_mmc-socfpga.c                  |  138 --------------------
+ 9 files changed, 122 insertions(+), 147 deletions(-)
+ delete mode 100644 drivers/mmc/host/dw_mmc-socfpga.c
+
 -- 
 1.7.9.5
 
