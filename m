@@ -1,89 +1,107 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
-Date: Mon, 6 Jan 2014 10:54:39 -0400
-Message-ID: <52CAC3AF.9020401@ti.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com> <52C4D612.2090808@nvidia.com> <52C5A6CE.5060904@nvidia.com> <20140106135145.GD21906@e106331-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC PATCH v1 2/5] misc: tda8026: Add NXP TDA8026 PHY driver
+Date: Mon, 6 Jan 2014 15:30:33 +0000
+Message-ID: <20140106153033.GB24664@e106331-lin.cambridge.arm.com>
+References: <1389010062-17185-1-git-send-email-satish.patel@ti.com>
+ <1389010062-17185-3-git-send-email-satish.patel@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="HemHAM6TDENViXwlV0JfG3QCrj3ptvQ4w"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140106135145.GD21906@e106331-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Matthew Longnecker <mlongnecker@nvidia.com>, Wei Ni <wni@nvidia.com>, Eduardo Valentin <eduardo.valentin@ti.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1389010062-17185-3-git-send-email-satish.patel@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Satish Patel <satish.patel@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---HemHAM6TDENViXwlV0JfG3QCrj3ptvQ4w
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 06, 2014 at 12:07:39PM +0000, Satish Patel wrote:
+> TDA8026 is a SmartCard PHY from NXP.
+> 
+> The PHY interfaces with the main processor over the
+> I2C interface and acts as a slave device.
+> 
+> The driver also exposes the phy interface
+> (defined@include/linux/sc_phy.h) for SmartCard controller.
+> Controller uses this interface to communicate with smart card
+> inserted to the phy's slot.
+> 
+> Note: gpio irq is not validated as I do not have device with that.
+> I have validated interrupt with dedicated interrupt line on my device.
+> 
+> Signed-off-by: Maulik Mankad <maulik@ti.com>
+> Signed-off-by: Satish Patel <satish.patel@ti.com>
+> ---
+>  Documentation/devicetree/bindings/misc/tda8026.txt |   14 +
+>  drivers/misc/Kconfig                               |    7 +
+>  drivers/misc/Makefile                              |    1 +
+>  drivers/misc/tda8026.c                             | 1271 ++++++++++++++++++++
+>  4 files changed, 1293 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/misc/tda8026.txt
+>  create mode 100644 drivers/misc/tda8026.c
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/tda8026.txt b/Documentation/devicetree/bindings/misc/tda8026.txt
+> new file mode 100644
+> index 0000000..d3083bf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/tda8026.txt
+> @@ -0,0 +1,14 @@
+> +TDA8026 smart card slot interface
+> +
+> +Required properties:
+> +- compatible: nxp,tda8026
 
-On 06-01-2014 09:51, Mark Rutland wrote:
-> On Thu, Jan 02, 2014 at 05:50:06PM +0000, Matthew Longnecker wrote:
->>
->>> I think the platform driver may set governor for the thermal zone,
->>> so how about to add a property named as "governor",
->>> and parse it to tzp->governor_name,
->>> something like:
->>>                  ret =3D of_property_read_string(child, "governor", &=
-str);
->>>                  if (ret =3D=3D 0)
->>>                          if (strlen(str) < THERMAL_NAME_LENGTH)
->>>                                  strcpy(tzp->governor_name, str);
->>>
->>> Thanks.
->>> Wei.
->>
->> DT is supposed to describe the hardware, right? The governor isn't=20
->> hardware -- it's a software control policy. On the other hand, that=20
->> control policy must be tuned according to the behaviors of the platfor=
-m=20
->> hardware otherwise the system will be unstable.
->>
->> Is it appropriate to be naming the governor in DT? If so, is it equall=
-y=20
->> appropriate to describe any governor-specific parameters in DT (even=20
->> though they are pure software constructs)?
->=20
-> The dt should be relatively static -- if the hardware doesn't change th=
-e
-> dt shouldn't have to.
->=20
-> The governers are not static. We can introduce new ones and throw away
-> old ones at any time. Tuning parameters can also change at any time.
->=20
-> I'd prefer to not have governer details described in the dt, and the
-> choice of governer and configuration of its tuning parameters should be=
+Please quote strings:
 
-> made at runtime somehow.
+- compatible: should contain "nxp,tda8026"
 
-Agreed.
+> +- shutdown-gpio = GPIO pin mapping for SDWNN pin
+> +- reg = i2c interface address
 
->=20
-> Thanks,
-> Mark.
->=20
->=20
+It's probably worth mentioning at the start that this is an i2c device.
 
+[...]
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
+> +static int tda8026_parse_dt(struct device *dev, struct tda8026 *pdata)
+> +{
+> +       struct device_node *np = dev->of_node;
+> +       const struct of_device_id *match;
+> +       int ret = 0;
+> +
+> +       match = of_match_device(of_match_ptr(tda8026_id_table), dev);
+> +       if (!match)
+> +               return -EINVAL;
 
-Eduardo Valentin
+Why do this? The of_device_id table contains one entry with no
+additional data. If you just want to see if this was probed via DT,
+dev->of_node not being NULL would tell you that.
 
+Is this going to be used without DT anywhere?
 
---HemHAM6TDENViXwlV0JfG3QCrj3ptvQ4w
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+[...]
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+> +       if (pdata->irq == 0) {
+> +               /* look for the field irq-gpio in DT */
+> +               irq_gpio = of_get_named_gpio(np, "irq-gpio", 0);
+> +               if (!gpio_is_valid(irq_gpio)) {
+> +                       dev_err(dev, "Failed to get irq gpio,\n");
+> +                       return -EIO;
+> +               }
 
-iF4EAREIAAYFAlLKw68ACgkQCXcVR3XQvP0v5AD/U+wQ8Mvydjvc9EysY14REF44
-KKKk8WVNU19Isgnw22oA/j7sBLySG7jp7kbNwn1NF32olLyIT+0GD6Jicf3Igv31
-=L2Gl
------END PGP SIGNATURE-----
+This is horrible. If the gpio controller can act as an irq controller
+then it should be annotated as such, with #interrupt-cells, and you
+should just describe the interrupt. The smart card controller cares
+about having an interrupt line, not a GPIO.
 
---HemHAM6TDENViXwlV0JfG3QCrj3ptvQ4w--
+Additionally, this was not described in the binding.
+
+Thanks,
+Mark.
