@@ -1,55 +1,98 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/3] mfd: always assign of_node in mfd_add_device()
-Date: Mon, 06 Jan 2014 11:12:15 -0700
-Message-ID: <52CAF1FF.9090709@wwwdotorg.org>
-References: <1386626809-6251-1-git-send-email-swarren@wwwdotorg.org> <20131211092435.GC16780@lee--X1> <52B32C05.5010204@wwwdotorg.org> <20131220142530.GK3709@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131220142530.GK3709@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Loc Ho <lho@apm.com>
+Subject: [PATCH v8 2/4] Documentation: Add documentation for APM X-Gene SoC SATA host controller DTS binding
+Date: Mon,  6 Jan 2014 11:12:00 -0700
+Message-ID: <1389031922-4309-3-git-send-email-lho@apm.com>
+References: <1389031922-4309-1-git-send-email-lho@apm.com>
+ <1389031922-4309-2-git-send-email-lho@apm.com>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <1389031922-4309-2-git-send-email-lho@apm.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/20/2013 07:25 AM, Lee Jones wrote:
-> Hi Stephen,
-> 
-> Please let me know if this is suitable and I can keep your Ack.
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Tuan Phan <tphan@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+ .../devicetree/bindings/ata/apm-xgene.txt          |   68 ++++++++++++++++++++
+ 1 files changed, 68 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/apm-xgene.txt
 
-This patch doesn't seem to have made it into next-20140106. I assume
-that's just because of the holidays, not because it was forgotten?
+diff --git a/Documentation/devicetree/bindings/ata/apm-xgene.txt b/Documentation/devicetree/bindings/ata/apm-xgene.txt
+new file mode 100644
+index 0000000..3d1421a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/apm-xgene.txt
+@@ -0,0 +1,68 @@
++* APM X-Gene 6.0 Gb/s SATA host controller nodes
++
++SATA host controller nodes are defined to describe on-chip Serial ATA
++controllers. Each SATA controller (pair of ports) have its own node.
++
++Required properties:
++- compatible		: Shall be "apm,xgene-ahci-sgmii" if mux'ed with SGMII
++			  or "apm,xgene-ahci-pcie" if mux'ed with PCIe.
++- reg			: First memory resource shall be the AHCI memory
++			  resource.
++			  Second memory resource shall be the host controller
++			  memory resource.
++- interrupts		: Interrupt mapping for SATA host controller IRQ.
++- clocks		: Reference to the clock entry.
++- phys			: PHY reference with parameter 0.
++- phy-names		: Name of the PHY. Shall be "sata-6g".
++
++Optional properties:
++- status		: Shall be "ok" if enabled or "disabled" if disabled.
++			  Default is "ok".
++- interrupt-parent	: Interrupt controller.
++
++Example:
++		sataclk: sataclk {
++			compatible = "fixed-clock";
++			#clock-cells = <1>;
++			clock-frequency = <100000000>;
++			clock-output-names = "sataclk";
++		};
++
++		phy2: phy@1f22a000 {
++			compatible = "apm,xgene-phy";
++			reg = <0x0 0x1f22a000 0x0 0x100>,
++			      <0x0 0x1f22c000 0x0 0x100>;
++			#phy-cells = <1>;
++		};
++
++		phy3: phy@1f23a000 {
++			compatible = "apm,xgene-phy-ext";
++			reg = <0x0 0x1f23a000 0x0 0x100>,
++			      <0x0 0x1f23c000 0x0 0x100>,
++			      <0x0 0x1f2d0000 0x0 0x100>;
++			#phy-cells = <1>;
++		};
++
++		sata2: sata@1a400000 {
++			compatible = "apm,xgene-ahci-sgmii";
++			reg = <0x0 0x1a400000 0x0 0x1000>,
++			      <0x0 0x1f220000 0x0 0x10000>;
++			interrupt-parent = <&gic>;
++			interrupts = <0x0 0x87 0x4>;
++			status = "ok";
++			clocks = <&sataclk 0>;
++			phys = <&phy2 0>;
++			phy-names = "sata-6g";
++		};
++
++		sata3: sata@1a800000 {
++			compatible = "apm,xgene-ahci-pcie";
++			reg = <0x0 0x1a800000 0x0 0x1000>,
++			      <0x0 0x1f230000 0x0 0x10000>;
++			interrupt-parent = <&gic>;
++			interrupts = <0x0 0x88 0x4>;
++			status = "ok";
++			clocks = <&sataclk 0>;
++			phys = <&phy3 0>;
++			phy-names = "sata-6g";
++		};
+-- 
+1.5.5
 
-> ----
-> 
-> mfd: Revert "mfd: Always assign of_node in mfd_add_device()"
-> 
-> This reverts commit 68044bee13770918e0b28dd44aa98c889ec7558f.
-> 
-> We've had confirmed reports of this patch causing unforeseen issues
-> with existing MFD users. It has been agreed by the original author
-> and myself that reversion is the best solution.
-> 
-> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index 32e8d47..2676492 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -117,8 +117,6 @@ static int mfd_add_device(struct device *parent, int id,
->  			}
->  		}
->  	}
-> -	if (!pdev->dev.of_node)
-> -		pdev->dev.of_node = parent->of_node;
->  
->  	if (cell->pdata_size) {
->  		ret = platform_device_add_data(pdev,
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
