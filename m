@@ -1,68 +1,53 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] of: add vendor prefix for Mentor Graphics
-Date: Mon, 6 Jan 2014 18:30:00 +0000
-Message-ID: <20140106183000.GL24664@e106331-lin.cambridge.arm.com>
-References: <1387470351-4696-1-git-send-email-bigeasy@linutronix.de>
- <D53158FF-7BCF-4BA8-A589-B6365B4DA058@codeaurora.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: [PATCH 1/5] dt-bindings: document the s3c24xx software-reset register
+Date: Mon, 06 Jan 2014 19:37:45 +0100
+Message-ID: <2635551.Gy9A9uhyAA@phil>
+References: <3105326.uFdOVLyXH8@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <D53158FF-7BCF-4BA8-A589-B6365B4DA058@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, devicetree <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <3105326.uFdOVLyXH8@phil>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene.kim@samsung.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 20, 2013 at 05:26:02PM +0000, Kumar Gala wrote:
->=20
-> On Dec 19, 2013, at 10:25 AM, Sebastian Andrzej Siewior <bigeasy@linu=
-tronix.de> wrote:
->=20
-> > This prefix is currently used for the musb driver.
-> >=20
-> > Acked-by: Stephen Warren <swarren@nvidia.com>
-> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > ---
-> > Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> > 1 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt =
-b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > index 8c75d85..cb5c438 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > @@ -43,6 +43,7 @@ linux	Linux-specific binding
-> > lsi	LSI Corp. (LSI Logic)
-> > marvell	Marvell Technology Group Ltd.
-> > maxim	Maxim Integrated Products
-> > +mentor	Mentor Graphics
->=20
-> file like we should use =E2=80=98ment=E2=80=99, but not sure if we ar=
-e going away from ticker symbols or not.
+The S3C2412/S3C2413 as well as the S3C2443 and following contain a special
+register that restarts the system when written to. This adds a simple
+binding, so that it gets accessible on dt systems too.
 
-In general we've been heading towards full names rather than stock
-ticker symbols. It's far easier for a human to make an educated guess
-without searching.
+We distinguish between the two types (s3c2412, s3c2443) because the
+handling of the swrst register on the s3c2412 also needs to take care
+of a hardware glitch at reset time.
 
-I'm certainly happy with mentor as a vendor prefix.
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ .../devicetree/bindings/arm/samsung/s3c24xx-swrst.txt  |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/samsung/s3c24xx-swrst.txt
 
-Mark.
-
->=20
-> > microchip	Microchip Technology Inc.
-> > mosaixtech	Mosaix Technologies, Inc.
-> > national	National Semiconductor
-> > --=20
-> > 1.8.5.1
-> >=20
->=20
-> - k
->=20
-> --=20
-> Employee of Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, ho=
-sted by The Linux Foundation
->=20
->=20
+diff --git a/Documentation/devicetree/bindings/arm/samsung/s3c24xx-swrst.txt b/Documentation/devicetree/bindings/arm/samsung/s3c24xx-swrst.txt
+new file mode 100644
+index 0000000..c3cacf2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/samsung/s3c24xx-swrst.txt
+@@ -0,0 +1,16 @@
++SAMSUNG S3C24XX software-reset register
++
++Some SoCs of the series contain a special software-reset register
++to let the system restart.
++
++Properties:
++ - compatible : should be one of
++    "samsung,s3c2412-swrst" - for S3C2412, S3C2413
++    "samsung,s3c2443-swrst" - for S3C2416, S3C2443, S3C2450
++ - reg : offset and length of the register.
++
++Example:
++	swrst@4c000044 {
++		compatible = "samsung,s3c2443-swrst";
++		reg = <0x4c000044 0x4>;
++	};
+-- 
+1.7.10.4
