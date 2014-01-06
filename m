@@ -1,118 +1,31 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [RFC PATCH 1/3] pci: APM X-Gene PCIe controller driver
-Date: Mon, 06 Jan 2014 10:47:54 +0900
-Message-ID: <007401cf0a81$51429250$f3c7b6f0$%han@samsung.com>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com>
- <1387785725-24262-2-git-send-email-tinamdar@apm.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [BUG] v3.13-rc7: freescale fec_main bugs on boot
+Date: Mon, 6 Jan 2014 10:28:50 +0800
+Message-ID: <20140106022847.GB26128@S2101-09.ap.freescale.net>
+References: <20140105170448.GC27432@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <1387785725-24262-2-git-send-email-tinamdar@apm.com>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Tanmay Inamdar' <tinamdar@apm.com>
-Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, 'Grant Likely' <grant.likely@linaro.org>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Rob Landley' <rob@landley.net>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, 'Jon Masters' <jcm@redhat.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140105170448.GC27432@n2100.arm.linux.org.uk>
+Sender: netdev-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Fabio Estevam <fabio.estevam@freescale.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, December 23, 2013 5:02 PM, Tanmay Inamdar wrote:
+On Sun, Jan 05, 2014 at 05:04:48PM +0000, Russell King - ARM Linux wrote:
+> Second thing is this which was introduced by 7a399e3a2e05 between rc6
+> and rc7:
 > 
-> This patch adds the AppliedMicro X-gene SOC PCIe controller driver.
-> APM X-Gene PCIe controller supports maximum upto 8 lanes and
-> GEN3 speed. X-Gene has maximum 5 PCIe ports supported.
-
-(+cc Jason Gunthorpe, Arnd Bergmann)
-
-Hi Tanmay Inamdar,
-
-I added some minor comments. :-)
-
+> +       if (flags & OF_GPIO_ACTIVE_LOW)
+> +               port = GPIOF_OUT_INIT_LOW;
+> +       else
+> +               port = GPIOF_OUT_INIT_HIGH;
 > 
-> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
-> ---
->  drivers/pci/host/Kconfig      |    5 +
->  drivers/pci/host/Makefile     |    1 +
->  drivers/pci/host/pcie-xgene.c | 1017 +++++++++++++++++++++++++++++++++++++++++
+> -       gpio_set_value(phy_reset, 1);
+> +       gpio_set_value(phy_reset, !port);
 
-Would you change the file name to 'pci-xgene.c'?
-Now, all PCI host drivers are using the prefix 'pci-', not 'pcie-'.
+Fabio just sent a patch to revert it, and David has queued it.  Sorry
+for that I did not catch it.
 
-[.....]
-
-> +#include <linux/module.h>
-> +#include <linux/delay.h>
-> +#include <linux/pci.h>
-> +#include <linux/slab.h>
-> +#include <linux/memblock.h>
-> +#include <linux/io.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/clk-private.h>
-
-Would you re-order these headers alphabetically?
-It enhances the readability.
-
-[.....]
-
-> +static int xgene_pcie_parse_map_ranges(struct xgene_pcie_port *port)
-> +{
-> +	struct device_node *np = port->node;
-> +	struct of_pci_range range;
-> +	struct of_pci_range_parser parser;
-> +	struct device *dev = port->dev;
-> +	u32 cfg_map_done = 0;
-> +	int ret;
-> +
-> +	if (of_pci_range_parser_init(&parser, np)) {
-> +		dev_err(dev, "missing ranges property\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Get the I/O, memory, config ranges from DT */
-> +	for_each_of_pci_range(&parser, &range) {
-> +		struct resource *res = NULL;
-> +		u64 restype = range.flags & IORESOURCE_TYPE_BITS;
-> +		u64 end = range.cpu_addr + range.size - 1;
-> +		dev_dbg(port->dev, "0x%08x 0x%016llx..0x%016llx -> 0x%016llx\n",
-> +			range.flags, range.cpu_addr, end, range.pci_addr);
-> +
-> +		switch (restype) {
-> +		case IORESOURCE_IO:
-> +			res = &port->res[XGENE_IO];
-> +			of_pci_range_to_resource(&range, np, res);
-> +			xgene_pcie_setup_ob_reg(port->csr_base, OMR1BARL,
-> +						XGENE_IO, res);
-> +			break;
-> +		case IORESOURCE_MEM:
-> +			res = &port->res[XGENE_MEM];
-> +			of_pci_range_to_resource(&range, np, res);
-> +			xgene_pcie_setup_ob_reg(port->csr_base, OMR2BARL,
-> +						XGENE_MEM, res);
-> +			break;
-> +		case 0:
-> +			if (!cfg_map_done) {
-> +				/* config region */
-> +				if (port->type == PTYPE_ROOT_PORT) {
-> +					ret = xgene_pcie_map_cfg(port, &range);
-> +					if (ret)
-> +						return ret;
-> +				}
-> +				cfg_map_done = 1;
-> +			} else {
-> +				/* msi region */
-> +				res = &port->res[XGENE_MSI];
-> +				of_pci_range_to_resource(&range, np, res);
-
-As Jason Gunthorpe said, the DT 'range' property should not
-handle MSI. Please refer to other PCI host drivers such as
-pci-mvebu.c, pci-tegra.c and pcie-designware.c.
-
-Currently, 'struct msi_chip', ' struct irq_domain' are used 
-for implementing MSI feature.
-
-Best regards,
-Jingoo Han
+Shawn
