@@ -1,105 +1,52 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH 3/8] usb: doc: rename ci13xxx-imx.txt to ci-hdrc-imx.txt
-Date: Mon, 6 Jan 2014 10:10:40 +0800
-Message-ID: <1388974245-16504-4-git-send-email-peter.chen@freescale.com>
-References: <1388974245-16504-1-git-send-email-peter.chen@freescale.com>
+From: Yuvaraj Cd <yuvaraj.lkml@gmail.com>
+Subject: Re: [PATCH V2] i2c: s3c2410 : Add polling mode support
+Date: Mon, 6 Jan 2014 09:30:20 +0530
+Message-ID: <CA+NduCDr4am5+Vyr9NTAzFGjg_zRLjYVRTM2Bj0Wxd0VBEzCpw@mail.gmail.com>
+References: <1384168820-2986-1-git-send-email-yuvaraj.cd@samsung.com>
+	<20140103161012.GH7132@katana>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1388974245-16504-1-git-send-email-peter.chen@freescale.com>
+In-Reply-To: <20140103161012.GH7132@katana>
 Sender: linux-doc-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org, Peter Chen <peter.chen@freescale.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-doc@vger.kernel.org, "ks.giri@samsung.com" <ks.giri@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Vasanth Ananthan <vasanth.a@samsung.com>, Rob Herring <rob.herring@calxeda.com>, aditya.ps@samsung.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, ben-linux@fluff.org, Vasanth Ananthan <vasanthananthan@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-We have already renamed the file name, change doc name at this
-patch.
-
-Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Signed-off-by: Peter Chen <peter.chen@freescale.com>
----
- .../devicetree/bindings/usb/ci-hdrc-imx.txt        |   31 ++++++++++++++++++++
- .../devicetree/bindings/usb/ci13xxx-imx.txt        |   31 --------------------
- 2 files changed, 31 insertions(+), 31 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
- delete mode 100644 Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
-new file mode 100644
-index 0000000..b4b5b79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-imx.txt
-@@ -0,0 +1,31 @@
-+* Freescale i.MX ci13xxx usb controllers
-+
-+Required properties:
-+- compatible: Should be "fsl,imx27-usb"
-+- reg: Should contain registers location and length
-+- interrupts: Should contain controller interrupt
-+
-+Recommended properies:
-+- phy_type: the type of the phy connected to the core. Should be one
-+  of "utmi", "utmi_wide", "ulpi", "serial" or "hsic". Without this
-+  property the PORTSC register won't be touched
-+- dr_mode: One of "host", "peripheral" or "otg". Defaults to "otg"
-+
-+Optional properties:
-+- fsl,usbphy: phandler of usb phy that connects to the only one port
-+- fsl,usbmisc: phandler of non-core register device, with one argument
-+  that indicate usb controller index
-+- vbus-supply: regulator for vbus
-+- disable-over-current: disable over current detect
-+- external-vbus-divider: enables off-chip resistor divider for Vbus
-+
-+Examples:
-+usb@02184000 { /* USB OTG */
-+	compatible = "fsl,imx6q-usb", "fsl,imx27-usb";
-+	reg = <0x02184000 0x200>;
-+	interrupts = <0 43 0x04>;
-+	fsl,usbphy = <&usbphy1>;
-+	fsl,usbmisc = <&usbmisc 0>;
-+	disable-over-current;
-+	external-vbus-divider;
-+};
-diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-deleted file mode 100644
-index b4b5b79..0000000
---- a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--* Freescale i.MX ci13xxx usb controllers
--
--Required properties:
--- compatible: Should be "fsl,imx27-usb"
--- reg: Should contain registers location and length
--- interrupts: Should contain controller interrupt
--
--Recommended properies:
--- phy_type: the type of the phy connected to the core. Should be one
--  of "utmi", "utmi_wide", "ulpi", "serial" or "hsic". Without this
--  property the PORTSC register won't be touched
--- dr_mode: One of "host", "peripheral" or "otg". Defaults to "otg"
--
--Optional properties:
--- fsl,usbphy: phandler of usb phy that connects to the only one port
--- fsl,usbmisc: phandler of non-core register device, with one argument
--  that indicate usb controller index
--- vbus-supply: regulator for vbus
--- disable-over-current: disable over current detect
--- external-vbus-divider: enables off-chip resistor divider for Vbus
--
--Examples:
--usb@02184000 { /* USB OTG */
--	compatible = "fsl,imx6q-usb", "fsl,imx27-usb";
--	reg = <0x02184000 0x200>;
--	interrupts = <0 43 0x04>;
--	fsl,usbphy = <&usbphy1>;
--	fsl,usbmisc = <&usbmisc 0>;
--	disable-over-current;
--	external-vbus-divider;
--};
--- 
-1.7.8
-
-
+On Fri, Jan 3, 2014 at 9:40 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> Hi,
+>
+> On Mon, Nov 11, 2013 at 04:50:20PM +0530, Yuvaraj Kumar C D wrote:
+>> From: Vasanth Ananthan <vasanthananthan@gmail.com>
+>>
+>> This patch adds polling mode support for i2c-s3c2410 driver.The
+>> SATA PHY controller's CMU and TRSV block's are of I2C register
+>> map in exynos5250.These blocks can be configured using i2c.
+>>
+>> But i2c controller instance on which these block's sits lacks an
+>> interrupt line.Also the current i2c-s3c2410 driver is only interrupt
+>> driven, thus a polling mode support is required in the driver for
+>> supporting this controller. This patch adds this support to the driver.
+>>
+>> Changes from V1:
+>>       1.Changed the is_ack() to have even period b/w polls and
+>>         used usleep_range() instead of udelay().
+>
+> Mileages vary, but I'd like to see revision changes after the "---".
+>
+>>       ret = devm_request_irq(&pdev->dev, i2c->irq, s3c24xx_i2c_irq, 0,
+>> -                            dev_name(&pdev->dev), i2c);
+>> +                             dev_name(&pdev->dev), i2c);
+>
+> Unrelated change.
+>
+> Rest looks good, so I'll fix up the things for you and apply to
+> for-next, thanks!
+Thanks Wolfram.
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
