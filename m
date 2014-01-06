@@ -1,44 +1,33 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] ARM: tegra: Add efuse bindings
-Date: Mon, 06 Jan 2014 13:40:51 -0700
-Message-ID: <52CB14D3.2060904@wwwdotorg.org>
-References: <1387891931-9854-1-git-send-email-pdeschrijver@nvidia.com> <1387891931-9854-4-git-send-email-pdeschrijver@nvidia.com>
+From: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3] watchdog: GPIO-controlled watchdog
+Date: Mon, 6 Jan 2014 21:48:45 +0100
+Message-ID: <20140106204845.GA16713@spo001.leaseweb.com>
+References: <1385798072-3886-1-git-send-email-shc_work@mail.ru> <529B78DC.7070200@roeck-us.net> <1385924607.556195103@f310.i.mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387891931-9854-4-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1385924607.556195103-ufcwd1q191BsdVUOrk1QfQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/24/2013 06:32 AM, Peter De Schrijver wrote:
-> Add efuse bindings for Tegra20, Tegra30, Tegra114 and Tegra124.
+Hi Alexander,
 
-This patch doesn't add bindings, it adds nodes to device trees. Bindings
-are the schemas that dictate how the nodes are to be constructed, not
-the nodes themselves.
+> > > +	/* Disallow values lower than 2 and higher than 65535 ms */
+> > > +	if ((hw_margin < 2) || (hw_margin > 65535))
+> > 
+> > Unnecessary ( ).
+> 
+> This can be corrected during merge. Isn't it? Or you expect v4?
 
-On that topic, this series needs to create
-Documentation/devicetree/bindings/fuse/nvidia,tegra20-fuse.txt etc.
+Yes, can be corrected during merge window, so no v4 expected.
 
-> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+Kind regards,
+Wim.
 
-> +	efuse@7000f800 {
-...
-> +	};
-> +
->  	cpus {
-
-This node isn't sorted correctly. It should be between sdhci@700b0600
-and ahub@70300000, not after the ahub.
-
-> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-
-> +	efuse@7000F800 {
-
-"fuse" might be a better node name; "efuse" is presumably the name of
-the instance, not the type of object.
-
-Please use lower-case for hex constants; both here and in the reg property.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
