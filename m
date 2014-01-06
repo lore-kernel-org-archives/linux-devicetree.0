@@ -1,45 +1,53 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: [PATCH 1/1] thermal: remove const flag from .ops of imx thermal
-Date: Mon, 6 Jan 2014 08:54:34 -0400
-Message-ID: <1389012874-13871-1-git-send-email-eduardo.valentin@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
+Date: Mon, 6 Jan 2014 13:51:45 +0000
+Message-ID: <20140106135145.GD21906@e106331-lin.cambridge.arm.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
+ <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
+ <52C4D612.2090808@nvidia.com>
+ <52C5A6CE.5060904@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52C5A6CE.5060904@nvidia.com>
 Sender: linux-pm-owner@vger.kernel.org
-To: rui.zhang@intel.com
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Matthew Longnecker <mlongnecker@nvidia.com>
+Cc: Wei Ni <wni@nvidia.com>, Eduardo Valentin <eduardo.valentin@ti.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-As per previous changes on thermal framework API,
-registering a new thermal zone does not require
-a const thermal zone ops.
+On Thu, Jan 02, 2014 at 05:50:06PM +0000, Matthew Longnecker wrote:
+> 
+> > I think the platform driver may set governor for the thermal zone,
+> > so how about to add a property named as "governor",
+> > and parse it to tzp->governor_name,
+> > something like:
+> >                  ret = of_property_read_string(child, "governor", &str);
+> >                  if (ret == 0)
+> >                          if (strlen(str) < THERMAL_NAME_LENGTH)
+> >                                  strcpy(tzp->governor_name, str);
+> >
+> > Thanks.
+> > Wei.
+> 
+> DT is supposed to describe the hardware, right? The governor isn't 
+> hardware -- it's a software control policy. On the other hand, that 
+> control policy must be tuned according to the behaviors of the platform 
+> hardware otherwise the system will be unstable.
+> 
+> Is it appropriate to be naming the governor in DT? If so, is it equally 
+> appropriate to describe any governor-specific parameters in DT (even 
+> though they are pure software constructs)?
 
-Thus, this patch removes the flag from imx thermal zone ops.
+The dt should be relatively static -- if the hardware doesn't change the
+dt shouldn't have to.
 
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
----
- drivers/thermal/imx_thermal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The governers are not static. We can introduce new ones and throw away
+old ones at any time. Tuning parameters can also change at any time.
 
-diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-index 77a962f..43d2f77 100644
---- a/drivers/thermal/imx_thermal.c
-+++ b/drivers/thermal/imx_thermal.c
-@@ -284,7 +284,7 @@ static int imx_unbind(struct thermal_zone_device *tz,
- 	return 0;
- }
- 
--static const struct thermal_zone_device_ops imx_tz_ops = {
-+static struct thermal_zone_device_ops imx_tz_ops = {
- 	.bind = imx_bind,
- 	.unbind = imx_unbind,
- 	.get_temp = imx_get_temp,
--- 
-1.8.2.1.342.gfa7285d
+I'd prefer to not have governer details described in the dt, and the
+choice of governer and configuration of its tuning parameters should be
+made at runtime somehow.
 
+Thanks,
+Mark.
