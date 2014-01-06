@@ -1,91 +1,40 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/9] CPU enable method based SMP/hotplug + MSM conversion
-Date: Mon, 06 Jan 2014 14:19:11 -0800
-Message-ID: <52CB2BDF.9040208@codeaurora.org>
-References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH] ARM: dts: omap3430-sdp: add dip switch information for MMC operation
+Date: Mon, 6 Jan 2014 16:37:33 -0600
+Message-ID: <1389047853-26375-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387845593-10050-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Ping? Can anyone take a look at the generic ARM and DT binding patches
-and provide acks/reviews? I'd like to send this through arm-soc via the
-MSM tree if possible.
+MMC 8 bit mode operation depends on dip switch setting which is not
+obvious - The current board file has this description. However, with
+removal of the board file in the future, this information will be lost
+and has to be rediscovered.
 
-On 12/23/13 16:39, Stephen Boyd wrote:
-> This is a rework of patches sent a months back by Rohit[1].
-> The goal of these patches is to add support for SMP and (basic)
-> hotplug on MSM based SoCs. To get there, we add support for a
-> generic way to hook in SMP/hotplug support code based on DT. To
-> show how it's used, we convert the MSM8660 SMP support code over
-> to the new method. After that we add support for the rest of the
-> upstream MSM SoCs (note these patches are piled high on top of
-> Rohit's patches to add 8074 support to MSM[2] and my follow ups[3,4],
-> but this should only matter to the MSM maintainers).
->
-> This is one of the last items of code that still requires us to have
-> a mach directory and a machine descriptor. We should be able to move
-> the hotplug/smp code out of mach directories if this approach is
-> accepted.
->
-> Changes since v1:
->  * Added pointers from cpu nodes to saw and acc nodes
->  * Squashed nr_cpus removal into reorganization patch
->  * Reworked bindings/documentation
->  * Rebased onto v3.13-rc4
->
-> [1] https://lkml.org/lkml/2013/8/1/770
-> [2] https://lkml.org/lkml/2013/10/17/520
-> [3] https://lkml.org/lkml/2013/10/18/406
-> [4] http://lkml.org/lkml/2013/10/28/501
->  
->
-> Rohit Vaswani (6):
->   devicetree: bindings: Document Krait/Scorpion cpus and enable-method
->   ARM: msm: Remove pen_release usage
->   ARM: msm: Re-organize platsmp to make it extensible
->   ARM: msm: Add SMP support for KPSSv1
->   ARM: msm: Add SMP support for KPSSv2
->   ARM: dts: msm: Add nodes necessary for SMP boot
->
-> Stephen Boyd (3):
->   devicetree: bindings: Document qcom,kpss-acc
->   devicetree: bindings: Document qcom,saw2 node
->   ARM: Introduce CPU_METHOD_OF_DECLARE() for cpu hotplug/smp
->
->  Documentation/devicetree/bindings/arm/cpus.txt     |  25 +-
->  .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt  |  30 ++
->  .../devicetree/bindings/arm/msm/qcom,saw2.txt      |  35 ++
->  arch/arm/boot/dts/qcom-msm8660-surf.dts            |  24 ++
->  arch/arm/boot/dts/qcom-msm8960-cdp.dts             |  52 +++
->  arch/arm/boot/dts/qcom-msm8974.dtsi                |  69 ++++
->  arch/arm/include/asm/smp.h                         |   9 +
->  arch/arm/kernel/devtree.c                          |  40 +++
->  arch/arm/mach-msm/Makefile                         |   2 +-
->  arch/arm/mach-msm/board-dt.c                       |  14 -
->  arch/arm/mach-msm/common.h                         |   1 -
->  arch/arm/mach-msm/headsmp.S                        |  39 ---
->  arch/arm/mach-msm/hotplug.c                        |  31 +-
->  arch/arm/mach-msm/platsmp.c                        | 371 ++++++++++++++++-----
->  arch/arm/mach-msm/scm-boot.h                       |   8 +-
->  include/asm-generic/vmlinux.lds.h                  |  10 +
->  16 files changed, 595 insertions(+), 165 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
->  delete mode 100644 arch/arm/mach-msm/headsmp.S
->
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ arch/arm/boot/dts/omap3430-sdp.dts |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-
+diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
+index 281914e..cd3d047 100644
+--- a/arch/arm/boot/dts/omap3430-sdp.dts
++++ b/arch/arm/boot/dts/omap3430-sdp.dts
+@@ -34,6 +34,10 @@
+ &mmc1 {
+ 	vmmc-supply = <&vmmc1>;
+ 	vmmc_aux-supply = <&vsim>;
++	/*
++	 * S6-3 must be in ON position for 8 bit mode to function
++	 * Else, use 4 bit mode
++	 */
+ 	bus-width = <8>;
+ };
+ 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
