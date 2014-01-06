@@ -1,156 +1,39 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Mon, 6 Jan 2014 17:03:53 +0100
-Message-ID: <201401061703.53844.arnd@arndb.de>
-References: <1388963080-12544-1-git-send-email-hdegoede@redhat.com> <201401060816.02998.arnd@arndb.de> <52CA603B.3070203@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH] devicetree: macb: Document clock properties
+Date: Mon, 6 Jan 2014 08:10:03 -0800
+Message-ID: <031a1a70-93f4-42aa-b7d9-268e3e6624a6@CO9EHSMHS004.ehs.local>
+References: <1386972205-32733-1-git-send-email-soren.brinkmann@xilinx.com>
+ <52AECBFC.5000207@atmel.com>
+ <52B2CC2D.9070902@monstr.eu>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRB65HVOLAKGQEFZYMK3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52CA603B.3070203-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52B2CC2D.9070902@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 06 January 2014, Hans de Goede wrote:
-> On 01/06/2014 08:16 AM, Arnd Bergmann wrote:
-> > On Monday 06 January 2014, Hans de Goede wrote:
-> >> +Required properties:
-> >> + - compatible: Should be "platform-ohci"
-> >> + - reg: Address range of the ohci registers.
-> >> + - interrupts: Should contain the ohci interrupt.
-> >> +
-> >> +Optional properties:
-> >> + - clocks: array of clocks
-> >> + - clock-names: clock names "ahb" and/or "ohci"
-> >> + - phys: phy
-> >> + - phy-names: "usb_phy"
-> >
-> > Maybe just "usb"? It obviously is a phy, so that part of the name
-> > is a bit redundant. Actually, the "usb" part of the name also seems
-> > redundant. Is it possible to make it an anonymous phy reference
-> > without a phy-names property as we often do for clocks?
-> 
-> I'm not a big fan of anonymous references, IE currently the ahci-platform
-> driver is using an anonymous clk reference, but for sunxi (and ie imx too)
-> it needs to be extended to 2 clks, which means using names, while
-> keeping compatibility with the older anonymous using dts (and board)
-> files.
-> 
-> So I can agree to dropping the _phy, but I would like to keep the "usb"
-> name I realize the chances are slim of ever needing 2 phys but never
-> say never ...
+Hi,
 
-Ok, fair enough.
-
-> > Style-wise, I think I'd prefer not storing error values in the
-> > ohci_platform_priv struct, but rather using NULL pointers for
-> > when the clocks or phy references are unused.
-> 
-> This is a style I picked up from the mmc code, ie do a grep for
-> !IS_ERR in drivers/mmc/host/*.c, but I agree it is not the prettiest,
-> and on looking in other subsystems it is not common, so I'll convert
-> this to storing NULL on error to get the phy or clk.
-
-Ok, thanks.
-
-> >> @@ -83,17 +171,30 @@ static int ohci_platform_probe(struct platform_device *dev)
-> >>   		return -ENXIO;
-> >>   	}
+On Thu, Dec 19, 2013 at 11:36:29AM +0100, Michal Simek wrote:
+> On 12/16/2013 10:46 AM, Nicolas Ferre wrote:
+> > On 13/12/2013 23:03, Soren Brinkmann :
+> >> The macb driver uses the clock bindings. Document the required
+> >> properties, especially the driver specific clock-names.
 > >>
-> >> +	hcd = usb_create_hcd(&ohci_platform_hc_driver, &dev->dev,
-> >> +			dev_name(&dev->dev));
-> >> +	if (!hcd)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	if (pdata == &ohci_platform_defaults) {
-> >> +		struct ohci_platform_priv *priv = (struct ohci_platform_priv *)
-> >> +						  hcd_to_ohci(hcd)->priv;
-> >> +
-> >> +		priv->phy = devm_phy_get(&dev->dev, "usb_phy");
-> >> +		if (IS_ERR(priv->phy) && PTR_ERR(priv->phy) == -EPROBE_DEFER) {
-> >> +			err = -EPROBE_DEFER;
-> >> +			goto err_put_hcd;
-> >> +		}
-> >> +
-> >> +		priv->ohci_clk = devm_clk_get(&dev->dev, "ohci");
-> >> +		priv->ahb_clk = devm_clk_get(&dev->dev, "ahb");
-> >> +	}
-> >
-> > I think you have to check the clocks for -EPROBE_DEFER as well here, not
-> > just the PHY.
-> 
-> So far I've never seen clk_get return -EPROBE_DEFER, but I guess on some
-> platforms it can.
+> >> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> >=20
+> > Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+>=20
+> Has someone taken this patch?
+> If not, Rob can you please add it to your tree?
 
-Right. Most clock controllers tend to be initialized at early boot
-time, but some of them are on external PMICs that are only probed after
-i2c or some other subsystem is up.
+Since nobody responded to Michal's question and I also don't see this i=
+n
+next yet, I just wanted to check in on the status. Does anybody take
+this for 3.14?
 
-> > Otherwise you don't know the difference between "no clock
-> > provided", "error getting the clock reference" and "clock controller not
-> > initialized yet, try again".
-> 
-> I guess of these 3 we really only want to continue on "no clock provided",
-> so I think something like this (for both clks and the phy) would be best:
-> 
-> 		priv->ahb_clk = devm_clk_get(&dev->dev, "ahb");
-> 		if (IS_ERR(priv->ahb_clk)) {
-> 			err = PTR_ERR(priv->ahb_clk);
-> 			if (err != -EINVAL && err != -ENODATA)
-> 				goto err_put_hcd;
-> 			priv->ahb_clk = NULL; /* No clock provided */
-> 		}
-> 
-> To clarify -EINVAL will be returned when there is no clock-names, and
-> -ENODATA when the specified name is not found in clock-names.
-
-Ok, looks good.
-
-> >> @@ -178,6 +277,12 @@ static int ohci_platform_resume(struct device *dev)
-> >>   #define ohci_platform_resume	NULL
-> >>   #endif /* CONFIG_PM */
-> >>
-> >> +static const struct of_device_id ohci_platform_ids[] = {
-> >> +	{ .compatible = "platform-ohci", },
-> >> +	{ }
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, ohci_platform_ids);
-> >
-> > I never liked the "platform-*" naming for compatible properties, the
-> > name of the driver is just based on a linux implementation detail
-> > (the platform bus), which could change. How about just calling the
-> > generic one "ohci" or "usb-ohci"?
-> 
-> usb-ohci seems free but usb-ehci are already taken by
-> drivers/usb/host/ehci-ppc-of.c which is as the name implies pretty ppc
-> specific. And since ehci-platform.c can be build on ppc too, we could
-> end up with 2 drivers claiming the same compatibility string on ppc.
-> 
-> Also uhci-platform.c is already using platform-uhci, so using
-> ohci-platform and ehci-platform seems consistent and avoids the
-> conflict with drivers/usb/host/ehci-ppc-of.c
-
-Hmm, that file seems to do two things that ehci-platform doesn't:
-It handles big-endian controllers and it has special initialization
-for compatible="ibm,usb-ehci-440epx". It also uses a different way
-to get to the resources because the driver dates back to before the
-unification of platform_bus and of_platform_bus, but that can be
-trivially changed.
-
-I would hope that we can eventually merge the two drivers, and I'm
-guessing that we will sooner or later need the big-endian support on
-non-ppc machines anyway. The question is what to do about the 440epx
-hack. It may be small enough that we can just leave it as a quirk
-inside #ifdef CONFIG_PPC in the unified driver, or it may end up
-being shared with arm64 X-Gene, which seems to share a common
-ancestry with some of the ppc4xx socs.
-
-	Arnd
+	S=C3=B6ren
