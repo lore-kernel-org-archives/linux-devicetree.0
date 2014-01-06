@@ -1,14 +1,18 @@
 From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 0/7] Xilinx Zynq SLCR changes
-Date: Mon,  6 Jan 2014 15:36:36 +0100
-Message-ID: <cover.1389018985.git.michal.simek@xilinx.com>
+Subject: [PATCH 2/7] ARM: zynq: Split slcr in two parts
+Date: Mon,  6 Jan 2014 15:36:38 +0100
+Message-ID: <a350cc21baf4ab36c96b7f21e9507d6390b01de0.1389018985.git.michal.simek@xilinx.com>
+References: <cover.1389018985.git.michal.simek@xilinx.com>
 Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-32302-1389019004-0001";
+    boundary="=_mimegpg-monstr-desktop-32332-1389019031-0001";
     micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1389018985.git.michal.simek@xilinx.com>
+In-Reply-To: <cover.1389018985.git.michal.simek@xilinx.com>
+References: <cover.1389018985.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Mike Turquette <mturquette@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, monstr@monstr.eu, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>
+Cc: monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 This is a MIME GnuPG-signed message.  If you see this text, it means that
@@ -17,64 +21,137 @@ The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
 To open this message correctly you will need to install E-mail or Usenet
 software that supports modern Internet standards.
 
---=_mimegpg-monstr-desktop-32302-1389019004-0001
+--=_mimegpg-monstr-desktop-32332-1389019031-0001
 
-Hi,
+Split the slcr into an early part for unlocking and cpu starting
+and a later syscon driver.
+Also add "syscon" compatible property for slcr.
 
-I have rebased and added together patches I have got from Steffen some time ago.
-Steffen: I kept there your SoB. Please let me know if there is any problem
-with it.
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
+ arch/arm/boot/dts/zynq-7000.dtsi |  2 +-
+ arch/arm/mach-zynq/Kconfig       |  1 +
+ arch/arm/mach-zynq/common.c      |  4 +++-
+ arch/arm/mach-zynq/common.h      |  1 +
+ arch/arm/mach-zynq/slcr.c        | 20 ++++++++++++++++++++
+ 5 files changed, 26 insertions(+), 2 deletions(-)
 
-The point of this series is to use slcr as system controller
-to be able to create other drivers like pinmux, etc.
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 93d1980..81e5677 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -123,7 +123,7 @@
+ 		} ;
 
-These patches are based on zynq/cleanup and zynq/dt branches merged
-together. (They are available in arm-soc git tree).
-Let me know if you want to add the branch somewhere.
+ 		slcr: slcr@f8000000 {
+-			compatible = "xlnx,zynq-slcr";
++			compatible = "xlnx,zynq-slcr", "syscon";
+ 			reg = <0xF8000000 0x1000>;
 
-Arnd: We talked at KS about syscon early initialization which
-will be really helpful for this case. Has someone done any work
-around it?
+ 			clocks {
+diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig
+index 6b04260..323e505 100644
+--- a/arch/arm/mach-zynq/Kconfig
++++ b/arch/arm/mach-zynq/Kconfig
+@@ -14,5 +14,6 @@ config ARCH_ZYNQ
+ 	select SPARSE_IRQ
+ 	select CADENCE_TTC_TIMER
+ 	select ARM_GLOBAL_TIMER
++	select MFD_SYSCON
+ 	help
+ 	  Support for Xilinx Zynq ARM Cortex A9 Platform
+diff --git a/arch/arm/mach-zynq/common.c b/arch/arm/mach-zynq/common.c
+index bf6717f..38401cf 100644
+--- a/arch/arm/mach-zynq/common.c
++++ b/arch/arm/mach-zynq/common.c
+@@ -59,11 +59,13 @@ static void __init zynq_init_machine(void)
+ 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
 
-Thanks,
-Michal
+ 	platform_device_register(&zynq_cpuidle_device);
++
++	zynq_slcr_init();
+ }
 
+ static void __init zynq_timer_init(void)
+ {
+-	zynq_slcr_init();
++	zynq_early_slcr_init();
 
-Michal Simek (4):
-  ARM: zynq: Split slcr in two parts
-  ARM: zynq: Map I/O memory on clkc init
-  ARM: zynq: Add and use zynq_slcr_read/write() helper functions
-  ARM: zynq: Introduce zynq_slcr_unlock()
+ 	zynq_clock_init(zynq_slcr_base);
+ 	clocksource_of_init();
+diff --git a/arch/arm/mach-zynq/common.h b/arch/arm/mach-zynq/common.h
+index c22c92c..1548b85 100644
+--- a/arch/arm/mach-zynq/common.h
++++ b/arch/arm/mach-zynq/common.h
+@@ -20,6 +20,7 @@
+ void zynq_secondary_startup(void);
 
-Steffen Trumtrar (3):
-  ARM: zynq: Move clock_init from slcr to common
-  ARM: zynq: Hang iomapped slcr address on device_node
-  ARM: zynq: Make zynq_slcr_base static
+ extern int zynq_slcr_init(void);
++extern int zynq_early_slcr_init(void);
+ extern void zynq_slcr_system_reset(void);
+ extern void zynq_slcr_cpu_stop(int cpu);
+ extern void zynq_slcr_cpu_start(int cpu);
+diff --git a/arch/arm/mach-zynq/slcr.c b/arch/arm/mach-zynq/slcr.c
+index 59ad09f..9746de7 100644
+--- a/arch/arm/mach-zynq/slcr.c
++++ b/arch/arm/mach-zynq/slcr.c
+@@ -15,7 +15,9 @@
+  */
 
- .../devicetree/bindings/clock/zynq-7000.txt        |  4 +-
- arch/arm/boot/dts/zynq-7000.dtsi                   | 42 +++++-----
- arch/arm/mach-zynq/Kconfig                         |  1 +
- arch/arm/mach-zynq/common.c                        |  6 +-
- arch/arm/mach-zynq/common.h                        |  2 +-
- arch/arm/mach-zynq/slcr.c                          | 98 +++++++++++++++++++---
- drivers/clk/zynq/clkc.c                            | 89 ++++++++++++++------
- include/linux/clk/zynq.h                           |  2 +-
- 8 files changed, 179 insertions(+), 65 deletions(-)
+ #include <linux/io.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/of_address.h>
++#include <linux/regmap.h>
+ #include <linux/clk/zynq.h>
+ #include "common.h"
 
+@@ -30,6 +32,7 @@
+ #define SLCR_A9_CPU_RST			0x1
+
+ void __iomem *zynq_slcr_base;
++static struct regmap *zynq_slcr_regmap;
+
+ /**
+  * zynq_slcr_system_reset - Reset the entire system.
+@@ -87,6 +90,23 @@ void zynq_slcr_cpu_stop(int cpu)
+  */
+ int __init zynq_slcr_init(void)
+ {
++	zynq_slcr_regmap = syscon_regmap_lookup_by_compatible("xlnx,zynq-slcr");
++	if (IS_ERR(zynq_slcr_regmap)) {
++		pr_err("%s: failed to find zynq-slcr\n", __func__);
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++/**
++ * zynq_early_slcr_init
++ * Returns 0 on success, negative errno otherwise.
++ *
++ * Called very early during boot from platform code to unlock SLCR.
++ */
++int __init zynq_early_slcr_init(void)
++{
+ 	struct device_node *np;
+
+ 	np = of_find_compatible_node(NULL, NULL, "xlnx,zynq-slcr");
 --
 1.8.2.3
 
 
---=_mimegpg-monstr-desktop-32302-1389019004-0001
+--=_mimegpg-monstr-desktop-32332-1389019031-0001
 Content-Type: application/pgp-signature
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
 
-iEYEABECAAYFAlLKv3wACgkQykllyylKDCF1pwCeNySfIo9zcwe7IhHgi/cAf1IV
-ArsAniuWV3paqeg5k7jHrhSHmLocv5IU
-=ZFvb
+iEYEABECAAYFAlLKv5cACgkQykllyylKDCFACQCbBrxt5WE6fn3zLJkT+IkK1YAx
+qpkAn22chEv2kxCcgWq7O0E6T9Hq/S7g
+=XbOx
 -----END PGP SIGNATURE-----
 
---=_mimegpg-monstr-desktop-32302-1389019004-0001--
+--=_mimegpg-monstr-desktop-32332-1389019031-0001--
