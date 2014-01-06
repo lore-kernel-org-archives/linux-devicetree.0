@@ -1,55 +1,55 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] of: introduces helper to manage optional property
-Date: Mon, 6 Jan 2014 16:26:09 +0000
-Message-ID: <20140106162609.GG24664@e106331-lin.cambridge.arm.com>
-References: <1388035115-893-1-git-send-email-Li.Xiubo@freescale.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] pwm: Add CLPS711X PWM support
+Date: Mon, 6 Jan 2014 16:27:29 +0000
+Message-ID: <20140106162729.GH24664@e106331-lin.cambridge.arm.com>
+References: <1388547821-10029-1-git-send-email-shc_work@mail.ru>
+ <20140106161233.GB6721@ulmo.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1388035115-893-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140106161233.GB6721@ulmo.nvidia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Alexander Shiyan <shc_work@mail.ru>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 26, 2013 at 05:18:35AM +0000, Xiubo Li wrote:
-> Gets to know whether one optional property is present or not in one
-> device node. Returns true if the property is present, false otherwise.
+On Mon, Jan 06, 2014 at 04:12:35PM +0000, Thierry Reding wrote:
+> On Wed, Jan 01, 2014 at 07:43:41AM +0400, Alexander Shiyan wrote:
+> > Add a new driver for the PWM controllers on the CLPS711X platform
+> > based on the PWM framework.
 > 
-> There is one similar helper of_property_read_bool(), but it means that
-> the property is one boolen type. For many drivers, they need to know
-> whether one optional property is present or not firstly. Though many
-> other of_XX helper can do this before deal with it's real work, there
-> maybe other errors the driver need to deal with, and the errors maybe
-> the same with the property absent error. And this helper can make the
-> code briefer,more readable and easier to deal with.
+> I think you can drop the last part ("based on the PWM framework") of
+> that sentence. Perhaps a good idea would be to mention some of the
+> peculiarities of this controller (supports two channels, only 4 bits
+> specifying the duty-cycle, fixed period, ...).
 > 
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  include/linux/of.h | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+> > diff --git a/Documentation/devicetree/bindings/pwm/cirrus-clps711x-pwm.txt b/Documentation/devicetree/bindings/pwm/cirrus-clps711x-pwm.txt
+> > new file mode 100644
+> > index 0000000..4caf819
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/cirrus-clps711x-pwm.txt
+> > @@ -0,0 +1,16 @@
+> > +* Cirris Logic CLPS711X PWM controller
+> > +
+> > +Required properties:
+> > +- compatible: Should be "cirrus,clps711x-pwm".
+> > +- reg: Physical base address and length of the controller's registers.
+> > +- clocks: Phandle to the PWM source clock.
 > 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 276c546..0bd8cb9 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -601,6 +601,23 @@ static inline int of_property_read_u32(const struct device_node *np,
->  	return of_property_read_u32_array(np, propname, out_value, 1);
->  }
->  
-> +/**
-> + * of_property_optional - Find one optional property
+> "phandle"
 
-If we really do need something like this, it would be better named
-of_property_present (and can alias of_property_read_bool internally).
+plus clock-specifier.
 
-Is there a particular case this would make easier? Do you have a real
-example?
+> 
+> > +- #pwm-cells: Should be 1. See pwm.txt in this directory for a description of
+> > +  the cells format.
+> 
+> Perhaps in this case it would be easier to simply mention that the cell
+> specifies the index of the channel. pwm.txt isn't explicit about what a
+> specifier of size 1 looks like (although it is sort of implied).
+
+Yes please.
 
 Thanks,
 Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
