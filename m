@@ -1,86 +1,118 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 2/9] phy: core: Add devm_of_phy_get to phy-core
-Date: Mon, 6 Jan 2014 12:44:35 +0530
-Message-ID: <52CA57DB.9040405@ti.com>
-References: <1387545857-9472-1-git-send-email-k.debski@samsung.com> <1387545857-9472-3-git-send-email-k.debski@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] ohci-platform: Add support for devicetree
+ instantiation
+Date: Mon, 6 Jan 2014 08:16:02 +0100
+Message-ID: <201401060816.02998.arnd@arndb.de>
+References: <1388963080-12544-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1387545857-9472-3-git-send-email-k.debski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kamil Debski <k.debski@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, stern@rowland.harvard.edu
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1388963080-12544-1-git-send-email-hdegoede@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, linux-sunxi@googlegroups.com, Alan Stern <stern@rowland.harvard.edu>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 20 December 2013 06:54 PM, Kamil Debski wrote:
-> Adding devm_of_phy_get will allow to get phys by supplying a
-> pointer to the struct device_node instead of struct device.
->
-> Signed-off-by: Kamil Debski <k.debski@samsung.com>
-> ---
->   drivers/phy/phy-core.c  |   31 +++++++++++++++++++++++++++++++
->   include/linux/phy/phy.h |    2 ++
->   2 files changed, 33 insertions(+)
->
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index d6f8c34..0551cc3 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -450,6 +450,37 @@ struct phy *devm_phy_get(struct device *dev, const char *string)
->   EXPORT_SYMBOL_GPL(devm_phy_get);
->
->   /**
-> + * devm_of_phy_get() - lookup and obtain a reference to a phy.
-> + * @dev: device that requests this phy
-> + * @np: node containing the phy
-> + * @con_id: name of the phy from device's point of view
-> + *
-> + * Gets the phy using of_phy_get(), and associates a device with it using
-> + * devres. On driver detach, release function is invoked on the devres data,
-> + * then, devres data is freed.
-> + */
-> +struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
-> +			    const char *con_id)
+On Monday 06 January 2014, Hans de Goede wrote:
+> +Required properties:
+> + - compatible: Should be "platform-ohci"
+> + - reg: Address range of the ohci registers.
+> + - interrupts: Should contain the ohci interrupt.
+> +
+> +Optional properties:
+> + - clocks: array of clocks
+> + - clock-names: clock names "ahb" and/or "ohci"
+> + - phys: phy
+> + - phy-names: "usb_phy"
+
+Maybe just "usb"? It obviously is a phy, so that part of the name
+is a bit redundant. Actually, the "usb" part of the name also seems
+redundant. Is it possible to make it an anonymous phy reference
+without a phy-names property as we often do for clocks?
+
+> +static int ohci_platform_power_on(struct platform_device *dev)
 > +{
-> +	struct phy **ptr, *phy;
+> +	struct usb_hcd *hcd = platform_get_drvdata(dev);
+> +	struct ohci_platform_priv *priv =
+> +		(struct ohci_platform_priv *)hcd_to_ohci(hcd)->priv;
+> +	int ret;
 > +
-> +	ptr = devres_alloc(devm_phy_release, sizeof(*ptr), GFP_KERNEL);
-> +	if (!ptr)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	phy = of_phy_get(np, con_id);
-> +	if (!IS_ERR(phy)) {
-> +		*ptr = phy;
-> +		devres_add(dev, ptr);
-> +	} else {
-> +		devres_free(ptr);
+> +	if (!IS_ERR(priv->ohci_clk)) {
+> +		ret = clk_prepare_enable(priv->ohci_clk);
+> +		if (ret)
+> +			return ret;
 > +	}
 > +
-> +	return phy;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_of_phy_get);
+> +	if (!IS_ERR(priv->ahb_clk)) {
+> +		ret = clk_prepare_enable(priv->ahb_clk);
+> +		if (ret)
+> +			goto err_disable_ohci_clk;
+> +	}
 > +
-> +/**
->    * phy_create() - create a new phy
->    * @dev: device that is creating the new phy
->    * @ops: function pointers for performing phy operations
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> index bcb6274..864914c 100644
-> --- a/include/linux/phy/phy.h
-> +++ b/include/linux/phy/phy.h
-> @@ -129,6 +129,8 @@ int phy_power_on(struct phy *phy);
->   int phy_power_off(struct phy *phy);
->   struct phy *phy_get(struct device *dev, const char *string);
->   struct phy *devm_phy_get(struct device *dev, const char *string);
-> +struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
-> +			    const char *con_id);
+> +	if (!IS_ERR(priv->phy)) {
+> +		ret = phy_init(priv->phy);
+> +		if (ret)
+> +			goto err_disable_ahb_clk;
+> +
+> +		ret = phy_power_on(priv->phy);
+> +		if (ret)
+> +			goto err_exit_phy;
+> +	}
 
-stub for devm_of_phy_get also..
+Style-wise, I think I'd prefer not storing error values in the
+ohci_platform_priv struct, but rather using NULL pointers for
+when the clocks or phy references are unused.
 
-Thanks
-Kishon
->   void phy_put(struct phy *phy);
->   void devm_phy_put(struct device *dev, struct phy *phy);
->   struct phy *of_phy_get(struct device_node *np, const char *con_id);
->
+> @@ -83,17 +171,30 @@ static int ohci_platform_probe(struct platform_device *dev)
+>  		return -ENXIO;
+>  	}
+>  
+> +	hcd = usb_create_hcd(&ohci_platform_hc_driver, &dev->dev,
+> +			dev_name(&dev->dev));
+> +	if (!hcd)
+> +		return -ENOMEM;
+> +
+> +	if (pdata == &ohci_platform_defaults) {
+> +		struct ohci_platform_priv *priv = (struct ohci_platform_priv *)
+> +						  hcd_to_ohci(hcd)->priv;
+> +
+> +		priv->phy = devm_phy_get(&dev->dev, "usb_phy");
+> +		if (IS_ERR(priv->phy) && PTR_ERR(priv->phy) == -EPROBE_DEFER) {
+> +			err = -EPROBE_DEFER;
+> +			goto err_put_hcd;
+> +		}
+> +
+> +		priv->ohci_clk = devm_clk_get(&dev->dev, "ohci");
+> +		priv->ahb_clk = devm_clk_get(&dev->dev, "ahb");
+> +	}
+
+I think you have to check the clocks for -EPROBE_DEFER as well here, not
+just the PHY. Otherwise you don't know the difference between "no clock
+provided", "error getting the clock reference" and "clock controller not
+initialized yet, try again".
+
+> @@ -178,6 +277,12 @@ static int ohci_platform_resume(struct device *dev)
+>  #define ohci_platform_resume	NULL
+>  #endif /* CONFIG_PM */
+>  
+> +static const struct of_device_id ohci_platform_ids[] = {
+> +	{ .compatible = "platform-ohci", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ohci_platform_ids);
+
+I never liked the "platform-*" naming for compatible properties, the
+name of the driver is just based on a linux implementation detail
+(the platform bus), which could change. How about just calling the
+generic one "ohci" or "usb-ohci"?
+
+	Arnd
