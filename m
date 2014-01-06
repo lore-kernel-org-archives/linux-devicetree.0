@@ -1,89 +1,52 @@
-From: Satish Patel <satish.patel@ti.com>
-Subject: [RFC PATCH v1 5/5] ARM: dts: AM43xx-epos-evm: DT entries  for ti-usim
-Date: Mon, 6 Jan 2014 17:37:42 +0530
-Message-ID: <1389010062-17185-6-git-send-email-satish.patel@ti.com>
-References: <1389010062-17185-1-git-send-email-satish.patel@ti.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [PATCHv2 0/7] DRA7: DT thermal support
+Date: Mon, 6 Jan 2014 08:36:44 -0400
+Message-ID: <1389011811-13004-1-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389010062-17185-1-git-send-email-satish.patel@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: rob@landley.net, gregkh@linuxfoundation.org, arnd@arndb.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: rui.zhang@intel.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Board specific DT entries for TI's USIM - smart card controller of AM43xx
-platfrom.These entries are used by USIM driver for various configurations.
+Hello all,
 
-Shutdown line of NXP phy is maped to GPIO5. So enabling same to have support
-for NXP phy.
+Now that the basic thermal DT support is merged into Rui's tree,
+I am resending this series, which introduces the DT node entries
+for DRA7 thermal limits representation.
 
-Signed-off-by: Satish Patel <satish.patel@ti.com>
----
- arch/arm/boot/dts/am43x-epos-evm.dts |   30 ++++++++++++++++++++++++++++++
- 1 files changed, 30 insertions(+), 0 deletions(-)
+The series adds two thermal zones, to represent IVA and DSPEVE,
+respectively. It also adds the support to tmp102 and a corresponding
+pcb thermal zone.
 
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index f20559b..4ca3460 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -202,6 +202,17 @@
- 		>;
- 	};
- 
-+	usim0_default: usim0_default {
-+		pinctrl-single,pins = <
-+			/* USIM 0 */
-+			0x1B4 (SLEWCTRL_FAST | PULL_DISABLE | MUX_MODE8)		/* CLK0  */
-+			0x1B0 (SLEWCTRL_FAST | PULL_DISABLE | MUX_MODE8)		/* CLK1  */
-+			0x1B8 (SLEWCTRL_FAST | INPUT_EN | PULL_DISABLE | MUX_MODE8)	/* DATA0 */
-+			0x1BC (SLEWCTRL_FAST | INPUT_EN | PULL_DISABLE | MUX_MODE8)	/* DATA1 */
-+			0x1C8 (SLEWCTRL_FAST | INPUT_EN | PULL_UP | MUX_MODE8)		/* IRQn  */
-+			>;
-+		};
-+
- 	spi0_pins: pinmux_spi0_pins {
- 		pinctrl-single,pins = <
- 			0x150 (PIN_INPUT | MUX_MODE0)           /* spi0_clk.spi0_clk */
-@@ -328,6 +339,11 @@
- 	status = "okay";
- };
- 
-+&gpio5 {
-+	status = "okay";
-+};
-+
-+
- &dpi {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&dss_pinctrl>;
-@@ -478,6 +494,14 @@
- 	};
- };
- 
-+&usim0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usim0_default>;
-+	phy = <&tda8026>;
-+	phy-slots = <1>;
-+	status = "okay";
-+};
-+
- &i2c2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c2_pins>;
-@@ -490,6 +514,12 @@
- 		video-source = <&dpi>;
- 		data-lines = <24>;
- 	};
-+	tda8026: tda8026@48 {
-+		compatible = "nxp,tda8026";
-+		reg = <0x48>;
-+		shutdown-gpio = <&gpio5 19 GPIO_ACTIVE_HIGH>;   /* Bank5, pin19 */
-+		interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-+	};
- };
- 
- &spi0 {
+There are only cosmetic changes from v1. A couple of spaces and tabulations
+have been fixed, and minor changes in sentences present in commit log.
+One difference from V1 is the fact that now bandgap is introduced under
+OCP, which is also a minor diff.
+
+This patch series has been runtime tested on DRA7-evm.
+
+All best
+
+Eduardo Valentin (7):
+  arm: dts: add dra7 DSPEVE thermal data
+  arm: dts: add dra7 IVA thermal data
+  arm: dts: dra7: add bandgap entry
+  arm: dts: add cooling properties on dra7 cpu node
+  arm: dts: dra7: add thermal data
+  arm: dts: add tmp102 i2c sensor node on dra7-evm
+  arm: dts: add thermal zones info on tmp102 for DRA7-EVM
+
+ arch/arm/boot/dts/dra7-dspeve-thermal.dtsi | 28 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/dra7-evm.dts             | 22 ++++++++++++++++++++++
+ arch/arm/boot/dts/dra7-iva-thermal.dtsi    | 28 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/dra7.dtsi                | 26 ++++++++++++++++++++++++++
+ 4 files changed, 104 insertions(+)
+ create mode 100644 arch/arm/boot/dts/dra7-dspeve-thermal.dtsi
+ create mode 100644 arch/arm/boot/dts/dra7-iva-thermal.dtsi
+
 -- 
-1.7.1
+1.8.2.1.342.gfa7285d
+
