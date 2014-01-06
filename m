@@ -1,117 +1,81 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 3/3] ARM: shmobile: kzm9d: Use common clock framework
-Date: Mon, 6 Jan 2014 17:10:33 +0900
-Message-ID: <20140106081030.GR24653@verge.net.au>
-References: <20131008143403.c11f294c8a1701a2ab3bc5fd@ops.dti.ne.jp>
- <20131009034057.GO15065@verge.net.au>
- <CANqRtoQs+31mv0ZULOd3SGshkBkvp-kGoaVOSb10+Ncdp+WNXw@mail.gmail.com>
- <20131009065438.GA7220@verge.net.au>
- <CANqRtoSGFEjcBPDAtq3YCDbkiFCftyr8b=qniYqyMafng=zurw@mail.gmail.com>
- <20131009103915.GB17869@verge.net.au>
- <20131029044239.GC20432@verge.net.au>
- <20131202022549.GA12357@verge.net.au>
- <20131223064103.22761.77246@quantum>
- <20131223080034.GA26412@verge.net.au>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [PATCH] of: Add simple panel device tree binding
+Date: Mon, 6 Jan 2014 17:23:34 +0900
+Message-ID: <52CA6806.4070300@nvidia.com>
+References: <1385145714-3022-1-git-send-email-treding@nvidia.com>
+	<52A873DA.9070608@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131223080034.GA26412@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, takasi-y@ops.dti.ne.jp, SH-Linux <linux-sh@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <52A873DA.9070608@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 23, 2013 at 05:00:36PM +0900, Simon Horman wrote:
-> On Sun, Dec 22, 2013 at 10:41:03PM -0800, Mike Turquette wrote:
-> > Quoting Simon Horman (2013-12-01 18:25:51)
-> > > On Tue, Oct 29, 2013 at 01:42:41PM +0900, Simon Horman wrote:
-> > > > On Wed, Oct 09, 2013 at 07:39:18PM +0900, Simon Horman wrote:
-> > > > > On Wed, Oct 09, 2013 at 04:29:56PM +0900, Magnus Damm wrote:
-> > > > > > Hi Simon,
-> > > > > > 
-> > > > > > On Wed, Oct 9, 2013 at 3:54 PM, Simon Horman <horms@verge.net.au> wrote:
-> > > > > > > On Wed, Oct 09, 2013 at 01:59:46PM +0900, Magnus Damm wrote:
-> > > > > > >> Hi Simon,
-> > > > > > >>
-> > > > > > >> On Wed, Oct 9, 2013 at 12:40 PM, Simon Horman <horms@verge.net.au> wrote:
-> > > > > > >> > On Tue, Oct 08, 2013 at 02:34:03PM +0900, takasi-y@ops.dti.ne.jp wrote:
-> > > > > > >> >> Use common clock framework version of clock
-> > > > > > >> >>  drivers/clk/shmobile/clk-emev2.c
-> > > > > > >> >> instead of sh-clkfwk version
-> > > > > > >> >>  arch/arm/mach-shmobile/clock-emev2.c
-> > > > > > >> >> when it is configured as a part of multi-platform.
-> > > > > > >> >>
-> > > > > > >> >> Signed-off-by: Takashi Yoshii <takasi-y@ops.dti.ne.jp>
-> > > > > > >> >
-> > > > > > >> > Thanks.
-> > > > > > >> >
-> > > > > > >> > I plan to add this patch to a new topic branch,
-> > > > > > >> > topic/emev2-common-clock, in the renesas tree and
-> > > > > > >> > queue it up from there for inclusion in mainline
-> > > > > > >> > if/when the first patch of this series is accepted
-> > > > > > >> > by Mike Turquette.
-> > > > > > >>
-> > > > > > >> Thanks for picking up patches, Simon.
-> > > > > > >>
-> > > > > > >> I think you can simply merge this patch after the following series:
-> > > > > > >>
-> > > > > > >> [PATCH 00/05] ARM: shmobile: KZM9D Multiplatform update
-> > > > > > >
-> > > > > > > This is already queued up.
-> > > > > > 
-> > > > > > Yes, I know, thanks for that. I tried to explain the dependency in the
-> > > > > > 00/00 cover letter but I will try to be more clear next time!
-> > > > > > 
-> > > > > > >> There are no build time dependencies on patch 1 and 2 so this patch
-> > > > > > >> can be merged independently. Regarding run-time operation, the
-> > > > > > >> multiplatform series above makes KZM9D DT reference only build for
-> > > > > > >> multiplatform, and in such case CCF is required.
-> > > > > > >>
-> > > > > > >> So if you want to keep KZM9D DT reference working until Mike Turquette
-> > > > > > >> accepts the CCF bits, then I recommend you to wait with "[PATCH 00/05]
-> > > > > > >> ARM: shmobile: KZM9D Multiplatform update" until all EMEV2 CCF bits
-> > > > > > >> have been merged.
-> > > > > > >>
-> > > > > > >> Another way is to merge "[PATCH 00/05] ARM: shmobile: KZM9D
-> > > > > > >> Multiplatform update" before the EMEV2 CCF bits, but if so you may as
-> > > > > > >> well merge this patch as well IMO. This
-> > > > > > >> multiplatform-update-series-merge-before-CCF plan will result in
-> > > > > > >> untestable KZM9D DT reference until EMEV2 CCF is merged. Either way is
-> > > > > > >> fine with me.
-> > > > > > >
-> > > > > > > I am mainly concerned that the bindings may change before
-> > > > > > > they are finally merged. And I thought it would be nice to avoid
-> > > > > > > having to fix up the usage of the bindings if they change.
-> > > > > > 
-> > > > > > Sure, but the code in this patch looks like it simply starts DT CCF
-> > > > > > probing regardless of what the bindings look like. So I don't think
-> > > > > > you will have to worry about actual bindings detail.
-> > > > > > 
-> > > > > > > But I'm happy to just queue-up patches 2 and 3 of this series
-> > > > > > > now if you prefer.
-> > > > > > 
-> > > > > > Well, I meant patch 3 only. Patch 1 and 2 are tied together by dependencies. =)
-> > > > > 
-> > > > > Thanks, I understand now.
-> > > > > 
-> > > > > I'll queue-up 3/3.
-> > > > 
-> > > > Which I did.
-> > > > 
-> > > > Then some time passed...
-> > > > 
-> > > > Mike has accepted my pull-request for patch 1 of this series
-> > > > and accordingly I have queued-up this patch for v3.14.
-> > > > It should appear in the devel branch the next time that I push it.
-> > > 
-> > > I was mistaken. It was not queued up  for v3.14.
-> > > And still has not been queued up.
-> > > 
-> > > I have un-queued this patch accordingly.
-> > 
-> > I have pulled in the emev2 SMU clock support patch now.
-> 
-> Thanks
+On 12/11/2013 11:16 PM, Tomi Valkeinen wrote:
+> * PGP Signed by an unknown key
+>
+> On 2013-11-22 20:41, Thierry Reding wrote:
+>
+>> +Example:
+>> +
+>> +	panel: panel {
+>> +		compatible = "cptt,claa101wb01";
+>> +		ddc-i2c-bus = <&panelddc>;
+>> +
+>> +		power-supply = <&vdd_pnl_reg>;
+>> +		enable-gpios = <&gpio 90 0>;
+>> +
+>> +		backlight = <&backlight>;
+>> +	};
+>
+> I'm somewhat torn with this, as I agree with Thierry that it's correct
+> to have a panel database in the driver, but, on the other hand, it does
+> seem impractical.
+>
+> In my experience, there are lots of panels out there, and each board I
+> have has a different one. So, while just a gut feeling, we could end up
+> with lots of panel, each used only on one board.
+>
+> With a quick thought, things would work fine if we just added the
+> videomode data to the DT data, instead of a driver database, as Laurent
+> suggested.
+>
+> However... I don't think the panels are usually as simple as that. With
+> the panels I've worked with, the driver has to know things like:
+>
+> - Does the power supply need to be enabled before the enable gpio, and
+> if so, how long before? And the same for power off.
+>
+> - Does the video stream need to be enabled before the enable gpio, and
+> if so, how long before? And the same for power off.
+>
+> - Is the gpio enable, power down, or reset? If reset, what are the timings.
+>
+> Where will those be defined? This goes back to the power sequence stuff
+> again... (Was the power sequences series forgotten?)
 
-I have queued up kzm9d this patch again.
+Sorry for the very late reply - power sequences are forgotten for now, 
+but I don't mind reviving them if a clear use-case emerges. The main 
+point of power seqs (at least in my mind) was to be able to define them 
+in the DT to avoid things like the panel DB you mention. This idea has 
+been dismissed for good reasons, and anyway in the case of the panel it 
+is clear that this is not what we want to do.
+
+Now if we make a power sequences framework without DT support, we will 
+end up with something that would still require a panel database, and can 
+anyway be expressed by functions. The gain would be automated 
+error-handling, and reduced footprint for power sequences. Not sure 
+that's enough to justify resurrecting the power seqs.
+
+Alex.
