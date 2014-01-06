@@ -1,143 +1,55 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH v8 1/4] ata: Export required functions by APM X-Gene SATA driver
-Date: Mon,  6 Jan 2014 11:11:59 -0700
-Message-ID: <1389031922-4309-2-git-send-email-lho@apm.com>
-References: <1389031922-4309-1-git-send-email-lho@apm.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1389031922-4309-1-git-send-email-lho@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/3] mfd: always assign of_node in mfd_add_device()
+Date: Mon, 06 Jan 2014 11:12:15 -0700
+Message-ID: <52CAF1FF.9090709@wwwdotorg.org>
+References: <1386626809-6251-1-git-send-email-swarren@wwwdotorg.org> <20131211092435.GC16780@lee--X1> <52B32C05.5010204@wwwdotorg.org> <20131220142530.GK3709@lee--X1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131220142530.GK3709@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch exports functions required by APM X-Gene SoC SATA host
-controller driver to avoid duplication of code.
+On 12/20/2013 07:25 AM, Lee Jones wrote:
+> Hi Stephen,
+> 
+> Please let me know if this is suitable and I can keep your Ack.
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Tuan Phan <tphan@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- drivers/ata/ahci.h    |    9 +++++++++
- drivers/ata/libahci.c |   16 ++++++++++------
- 2 files changed, 19 insertions(+), 6 deletions(-)
+This patch doesn't seem to have made it into next-20140106. I assume
+that's just because of the holidays, not because it was forgotten?
 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 2289efd..8163b59 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -370,6 +370,15 @@ irqreturn_t ahci_thread_fn(int irq, void *dev_instance);
- void ahci_print_info(struct ata_host *host, const char *scc_s);
- int ahci_host_activate(struct ata_host *host, int irq, unsigned int n_msis);
- void ahci_error_handler(struct ata_port *ap);
-+void ahci_sw_activity(struct ata_link *link);
-+int ahci_scr_write(struct ata_link *link, unsigned int sc_reg, u32 val);
-+void ahci_error_intr(struct ata_port *ap, u32 irq_stat);
-+int ahci_exec_polled_cmd(struct ata_port *ap, int pmp,
-+			 struct ata_taskfile *tf, int is_cmd, u16 flags,
-+			 unsigned long timeout_msec);
-+void ahci_fill_cmd_slot(struct ahci_port_priv *pp, unsigned int tag,
-+                        u32 opts);
-+unsigned int ahci_fill_sg(struct ata_queued_cmd *qc, void *cmd_tbl);
- 
- static inline void __iomem *__ahci_port_base(struct ata_host *host,
- 					     unsigned int port_no)
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index c482f8c..1d24bf5 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -68,7 +68,6 @@ static ssize_t ahci_transmit_led_message(struct ata_port *ap, u32 state,
- 
- 
- static int ahci_scr_read(struct ata_link *link, unsigned int sc_reg, u32 *val);
--static int ahci_scr_write(struct ata_link *link, unsigned int sc_reg, u32 val);
- static unsigned int ahci_qc_issue(struct ata_queued_cmd *qc);
- static bool ahci_qc_fill_rtf(struct ata_queued_cmd *qc);
- static int ahci_port_start(struct ata_port *ap);
-@@ -553,7 +552,7 @@ static int ahci_scr_read(struct ata_link *link, unsigned int sc_reg, u32 *val)
- 	return -EINVAL;
- }
- 
--static int ahci_scr_write(struct ata_link *link, unsigned int sc_reg, u32 val)
-+int ahci_scr_write(struct ata_link *link, unsigned int sc_reg, u32 val)
- {
- 	void __iomem *port_mmio = ahci_port_base(link->ap);
- 	int offset = ahci_scr_offset(link->ap, sc_reg);
-@@ -564,6 +563,7 @@ static int ahci_scr_write(struct ata_link *link, unsigned int sc_reg, u32 val)
- 	}
- 	return -EINVAL;
- }
-+EXPORT_SYMBOL_GPL(ahci_scr_write);
- 
- void ahci_start_engine(struct ata_port *ap)
- {
-@@ -869,7 +869,7 @@ int ahci_reset_controller(struct ata_host *host)
- }
- EXPORT_SYMBOL_GPL(ahci_reset_controller);
- 
--static void ahci_sw_activity(struct ata_link *link)
-+void ahci_sw_activity(struct ata_link *link)
- {
- 	struct ata_port *ap = link->ap;
- 	struct ahci_port_priv *pp = ap->private_data;
-@@ -882,6 +882,7 @@ static void ahci_sw_activity(struct ata_link *link)
- 	if (!timer_pending(&emp->timer))
- 		mod_timer(&emp->timer, jiffies + msecs_to_jiffies(10));
- }
-+EXPORT_SYMBOL_GPL(ahci_sw_activity);
- 
- static void ahci_sw_activity_blink(unsigned long arg)
- {
-@@ -1239,7 +1240,7 @@ int ahci_kick_engine(struct ata_port *ap)
- }
- EXPORT_SYMBOL_GPL(ahci_kick_engine);
- 
--static int ahci_exec_polled_cmd(struct ata_port *ap, int pmp,
-+int ahci_exec_polled_cmd(struct ata_port *ap, int pmp,
- 				struct ata_taskfile *tf, int is_cmd, u16 flags,
- 				unsigned long timeout_msec)
- {
-@@ -1268,6 +1269,7 @@ static int ahci_exec_polled_cmd(struct ata_port *ap, int pmp,
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(ahci_exec_polled_cmd);
- 
- int ahci_do_softreset(struct ata_link *link, unsigned int *class,
- 		      int pmp, unsigned long deadline,
-@@ -1472,7 +1474,7 @@ static void ahci_postreset(struct ata_link *link, unsigned int *class)
- 	}
- }
- 
--static unsigned int ahci_fill_sg(struct ata_queued_cmd *qc, void *cmd_tbl)
-+unsigned int ahci_fill_sg(struct ata_queued_cmd *qc, void *cmd_tbl)
- {
- 	struct scatterlist *sg;
- 	struct ahci_sg *ahci_sg = cmd_tbl + AHCI_CMD_TBL_HDR_SZ;
-@@ -1494,6 +1496,7 @@ static unsigned int ahci_fill_sg(struct ata_queued_cmd *qc, void *cmd_tbl)
- 
- 	return si;
- }
-+EXPORT_SYMBOL_GPL(ahci_fill_sg);
- 
- static int ahci_pmp_qc_defer(struct ata_queued_cmd *qc)
- {
-@@ -1568,7 +1571,7 @@ static void ahci_fbs_dec_intr(struct ata_port *ap)
- 		dev_err(ap->host->dev, "failed to clear device error\n");
- }
- 
--static void ahci_error_intr(struct ata_port *ap, u32 irq_stat)
-+void ahci_error_intr(struct ata_port *ap, u32 irq_stat)
- {
- 	struct ahci_host_priv *hpriv = ap->host->private_data;
- 	struct ahci_port_priv *pp = ap->private_data;
-@@ -1678,6 +1681,7 @@ static void ahci_error_intr(struct ata_port *ap, u32 irq_stat)
- 	} else
- 		ata_port_abort(ap);
- }
-+EXPORT_SYMBOL_GPL(ahci_error_intr);
- 
- static void ahci_handle_port_interrupt(struct ata_port *ap,
- 				       void __iomem *port_mmio, u32 status)
--- 
-1.5.5
+> ----
+> 
+> mfd: Revert "mfd: Always assign of_node in mfd_add_device()"
+> 
+> This reverts commit 68044bee13770918e0b28dd44aa98c889ec7558f.
+> 
+> We've had confirmed reports of this patch causing unforeseen issues
+> with existing MFD users. It has been agreed by the original author
+> and myself that reversion is the best solution.
+> 
+> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index 32e8d47..2676492 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -117,8 +117,6 @@ static int mfd_add_device(struct device *parent, int id,
+>  			}
+>  		}
+>  	}
+> -	if (!pdev->dev.of_node)
+> -		pdev->dev.of_node = parent->of_node;
+>  
+>  	if (cell->pdata_size) {
+>  		ret = platform_device_add_data(pdev,
+> 
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
