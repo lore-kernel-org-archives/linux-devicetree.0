@@ -1,84 +1,52 @@
-From: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>
-Subject: Re: [RFC PATCH v1 2/5] misc: tda8026: Add NXP TDA8026 PHY driver
-Date: Tue, 7 Jan 2014 12:45:53 +0100
-Message-ID: <20140107114552.GA900@earth.universe>
-References: <1389010062-17185-1-git-send-email-satish.patel@ti.com>
- <1389010062-17185-3-git-send-email-satish.patel@ti.com>
- <20140106153033.GB24664@e106331-lin.cambridge.arm.com>
- <52CBA075.8080506@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] ARM: cache-l2x0: Parse properties from DT for PL310 cache controller
+Date: Tue, 07 Jan 2014 12:57:36 +0100
+Message-ID: <3479510.EFrgCqQWpu@wuerfel>
+References: <1389094888-24348-1-git-send-email-tushar.behera@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52CBA075.8080506-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1389094888-24348-1-git-send-email-tushar.behera@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tushar Behera <tushar.behera@linaro.org>
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 07 January 2014 17:11:28 Tushar Behera wrote:
+> Parsed auxiliary control properties for PL310 cache controller.
+> 
+> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+> ---
+> These properties are set for Exynos4 platform. If we can pass these properties
+> through device tree for Exynos4, then we can remove the hard-coded L2_AUX_VAL.
 
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 07, 2014 at 12:06:37PM +0530, Satish Patel wrote:
-> >> +       if (pdata->irq =3D=3D 0) {
-> >> +               /* look for the field irq-gpio in DT */
-> >> +               irq_gpio =3D of_get_named_gpio(np, "irq-gpio", 0);
-> >> +               if (!gpio_is_valid(irq_gpio)) {
-> >> +                       dev_err(dev, "Failed to get irq gpio,\n");
-> >> +                       return -EIO;
-> >> +               }
-> >=20
-> > This is horrible. If the gpio controller can act as an irq controller
->=20
-> No it's not true. Let me clarify the signal flow,
->=20
-> Pins =3D> GPIO =3D> GPIO BANK =3D> Interrupt controller =3D> CPU/MPU
+The explanation would be good to have in the actual changeset
+comment above the '---' line. Are all of them actually needed?
+You shouldn't havet o set the ones that are already turned on
+by the boot loader.
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+> index b513cb8..213546d 100644
+> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+> @@ -44,6 +44,16 @@ Optional properties:
+>  - cache-id-part: cache id part number to be used if it is not present
+>    on hardware
+>  - wt-override: If present then L2 is forced to Write through mode
+> +- arm,early-write: If present then BRSEP mode (early write response) is enabled.
+> +- arm,data-prefetch: If present then data prefetching is enabled.
+> +- arm,instruction-prefetch: If present then instruction prefetching is enabled.
+> +- arm,ns-interrupt-access: If present then interrupt mask and interrupt clear
+> +  registers can be read or modified in both secure or non-secure accesses.
+> +- arm,ns-lockdown: If present then non-secure accesses can write to lockdown
+> +  register.
+> +- arm,share-override: If present then shared attribute is ignored internally.
+> +- arm,full-line-of-zero: If present then 'full line of write zero' behaviour is
+> +  enabled.
 
-This is done automatically if you use the gpio controller as
-interrupt source (here with GPIO line 22 as example):
+Is it intentional that you have the "arm," prefix for the new ones, while
+it's not there for the existing ones? Should we drop it for consistency?
 
-device-tree-node {
-    interrupts-extended =3D <&gpio1 22>;
-};
-
-alternatively, but then the irqs from the normal irq controller
-can't be used:
-
-device-tree-node {
-    interrupt-parent =3D <&gpio1>;
-    interrupts =3D <22>;
-};
-
--- Sebastian
-
---Qxx1br4bt0+wmkIi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSy+jwAAoJENju1/PIO/qaOIoP/0tsaStyDB2S3j3R6eoEEiST
-rytQS559jkb5Q37AOXKuc+4+oNqkGj8y/26VppiefRZnKlYHQ8cesPs2USh0Xhkq
-agd43W6Oha7iPZajrbc0pmx7Wc/xq4vKHNJEQ8KiQLOLOm6zDAPDenTH3SUJoVzw
-Eq8ms/a0at/hAo8sLy+yH+ugaX9QeE9c9/QA9vx1wtkxfY4D/83PwjiRmUDoB1NS
-QE4Iaulf3/Vit4YdJWpj2BJhPiyhBmF3+xi2ePGJ5zIlT/nIABi4JxhhemSYcO5h
-14cFQnBpkG/rzekBav2vRL62f5QIagQOI1PhQ5Vz9qWTyftWW4ZEl6liJf9Sj3c0
-gcmxnk914WzNwK47smryCt5B/juAS+njSlVLbaiuNglUb3JVbzmG7M3X/d9XB15V
-ZNPvfyqy6juEKEjudXF1kcKAm9GGLXMCdrWDoVl4dbemC+eDP7U6C3581jOgTlNV
-o73nQd2SdWEPy3qBIebq4hqWCA45aSJXg4nu4s9M4d0cZvL1TYpAcciSYFOxpVSN
-r9Gao3vrWNhatA7R4mvuEwJXFkYFvxXjFXPVZJ0JQYUKoSeizg78qTlZLpfj+cv9
-NkLpqmYJ6W8Jkevex8EjDkUW2sCbAT9ErEsMs2Skbe+HXaGqNqhCJMcr9UkvEaM2
-07oTIH9E+Yq5sVVRm0aS
-=H4KI
------END PGP SIGNATURE-----
-
---Qxx1br4bt0+wmkIi--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
