@@ -1,242 +1,146 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv8] video: backlight: gpio-backlight: Add DT support.
-Date: Tue,  7 Jan 2014 11:02:53 +0100
-Message-ID: <1389088974-31465-1-git-send-email-denis@eukrea.com>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH v7 3/7] regulator: add pbias regulator support
+Date: Tue, 7 Jan 2014 15:39:29 +0530
+Message-ID: <52CBD259.90804@ti.com>
+References: <1387560955-6547-1-git-send-email-balajitk@ti.com> <1387560955-6547-4-git-send-email-balajitk@ti.com> <20140106181647.GJ24664@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20140106181647.GJ24664@e106331-lin.cambridge.arm.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "broonie@kernel.org" <broonie@kernel.org>, "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
-Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v7->v8:
-- The default-state was renamed to default-brightness-level.
-- default-brightness-level is now mandatory, like for backlight-pwm,
-  That way we avoid having to handle the case where it's not set,
-  which means that we would need not to set the gpio, but still
-  report a brightness value for sysfs, when not all gpio controllers ar=
-e
-  able to read the gpio value.
-- switched the default-brightness-level to boolean values (0 or 1) inst=
-ead
-  of using strings ("on", "off", "keep").
-- The documentation was updated accordingly.
-- The example in the documentation now uses the dts gpio defines.
-- The "backlight: gpio_backlight: Use a default state enum." patch was =
-then
-  dropped, becuase it is not necessary anymore.
+On Monday 06 January 2014 11:46 PM, Mark Rutland wrote:
+> On Fri, Dec 20, 2013 at 05:35:51PM +0000, Balaji T K wrote:
+>> pbias register controls internal power supply to sd card i/o pads
+>> in most OMAPs (OMAP2-5, DRA7).
+>> Control bits for selecting voltage level and
+>> enabling/disabling are in the same PBIAS register.
+>>
+>> Signed-off-by: Balaji T K <balajitk@ti.com>
+>> ---
+>>   .../bindings/regulator/pbias-regulator.txt         |   16 ++
+>>   drivers/regulator/Kconfig                          |    9 +
+>>   drivers/regulator/Makefile                         |    1 +
+>>   drivers/regulator/pbias-regulator.c                |  261 ++++++++++++++++++++
+>>   4 files changed, 287 insertions(+), 0 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/regulator/pbias-regulator.txt
+>>   create mode 100644 drivers/regulator/pbias-regulator.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/regulator/pbias-regulator.txt b/Documentation/devicetree/bindings/regulator/pbias-regulator.txt
+>> new file mode 100644
+>> index 0000000..359d3f9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/regulator/pbias-regulator.txt
+>> @@ -0,0 +1,16 @@
+>> +PBIAS internal regulator for SD card dual voltage i/o pads on OMAP SoCs.
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +  - "ti,pbias-omap" for OMAP2, OMAP3, OMAP4, OMAP5, DRA7
+>> +
+>> +Optional properties:
+>> +- Any optional property defined in bindings/regulator/regulator.txt
+>> +
+>> +Example:
+>> +
+>> +		pbias_regulator: pbias_regulator {
+>> +			regulator-name = "pbias_mmc_omap4";
+>> +			regulator-min-microvolt = <1800000>;
+>> +			regulator-max-microvolt = <3000000>;
+>> +	};
+>
+> This doesn't look like a full example. I don't see the required
+> compatible string.
+>
 
-ChangeLog v6->v7:
-- removed a compilation warning with the removal of the useless ret dec=
-laration.
+Thanks for pointing, I missed it, will add to example.
 
-ChangeLog v5->v6:
-- The default state handling was reworked:
-  - it's now called default-state, and looks like the gpio-leds default=
--state.
-  - it now has a "keep" option, like for the gpio-leds.
-  - that "keep" option is the default when the default-state property i=
-s not set.
-- The documentation was updated accordingly.
+> [...]
+>
+>> +static struct of_regulator_match pbias_matches[] = {
+>> +	{ .name = "pbias_mmc_omap2430", .driver_data = (void *)&pbias_mmc_omap2430},
+>> +	{ .name = "pbias_sim_omap3", .driver_data = (void *)&pbias_sim_omap3},
+>> +	{ .name = "pbias_mmc_omap4", .driver_data = (void *)&pbias_mmc_omap4},
+>> +	{ .name = "pbias_mmc_omap5", .driver_data = (void *)&pbias_mmc_omap5},
+>> +};
+>
+> These weren't documented.
 
-ChangeLog v4->v5:
-- The default-brightness property now defaults to 0 in the driver.
-- def_value int becomes a bool.
-- The check for the gpio validity has been reworked.
----
- .../bindings/video/backlight/gpio-backlight.txt    |   19 ++++++
- drivers/video/backlight/gpio_backlight.c           |   64 ++++++++++++=
-+++++---
- 2 files changed, 76 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/g=
-pio-backlight.txt
+Ok, will add it
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-bac=
-klight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-bac=
-klight.txt
-new file mode 100644
-index 0000000..d022add
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.=
-txt
-@@ -0,0 +1,19 @@
-+gpio-backlight bindings
-+
-+Required properties:
-+  - compatible: "gpio-backlight"
-+  - gpios: describes the gpio that is used for enabling/disabling the =
-backlight
-+    (see GPIO binding[0] for more details).
-+  - default-brightness-level: the default brightness level. Valid valu=
-es:
-+    - 0: off
-+    - 1: on
-+
-+[0]: Documentation/devicetree/bindings/gpio/gpio.txt
-+
-+Example:
-+
-+	backlight {
-+		compatible =3D "gpio-backlight";
-+		gpios =3D <&gpio3 4 GPIO_ACTIVE_HIGH>;
-+		default-brightness-level =3D <1>;
-+	};
-diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/b=
-acklight/gpio_backlight.c
-index 81fb127..829a5dd 100644
---- a/drivers/video/backlight/gpio_backlight.c
-+++ b/drivers/video/backlight/gpio_backlight.c
-@@ -13,6 +13,8 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_data/gpio_backlight.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-@@ -23,6 +25,7 @@ struct gpio_backlight {
-=20
- 	int gpio;
- 	int active;
-+	int def_value;
- };
-=20
- static int gpio_backlight_update_status(struct backlight_device *bl)
-@@ -60,6 +63,37 @@ static const struct backlight_ops gpio_backlight_ops=
- =3D {
- 	.check_fb	=3D gpio_backlight_check_fb,
- };
-=20
-+static int gpio_backlight_probe_dt(struct platform_device *pdev,
-+				   struct gpio_backlight *gbl)
-+{
-+	struct device_node *np =3D pdev->dev.of_node;
-+	enum of_gpio_flags gpio_flags;
-+	int ret;
-+
-+	gbl->fbdev =3D NULL;
-+	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
-+
-+	if (!gpio_is_valid(gbl->gpio)) {
-+		if (gbl->gpio !=3D -EPROBE_DEFER) {
-+			dev_err(&pdev->dev,
-+				"Error: The gpios parameter is missing or invalid.\n");
-+		}
-+		return gbl->gpio;
-+	}
-+
-+	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
-+
-+	ret =3D of_property_read_u32(np, "default-brightness-level",
-+				   &gbl->def_value);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev,
-+			"Error: The default-brightness-level parameter is missing or invali=
-d.\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int gpio_backlight_probe(struct platform_device *pdev)
- {
- 	struct gpio_backlight_platform_data *pdata =3D
-@@ -67,10 +101,12 @@ static int gpio_backlight_probe(struct platform_de=
-vice *pdev)
- 	struct backlight_properties props;
- 	struct backlight_device *bl;
- 	struct gpio_backlight *gbl;
-+	struct device_node *np =3D pdev->dev.of_node;
- 	int ret;
-=20
--	if (!pdata) {
--		dev_err(&pdev->dev, "failed to find platform data\n");
-+	if (!pdata && !np) {
-+		dev_err(&pdev->dev,
-+			"failed to find platform data or device tree node.\n");
- 		return -ENODEV;
- 	}
-=20
-@@ -79,14 +115,22 @@ static int gpio_backlight_probe(struct platform_de=
-vice *pdev)
- 		return -ENOMEM;
-=20
- 	gbl->dev =3D &pdev->dev;
--	gbl->fbdev =3D pdata->fbdev;
--	gbl->gpio =3D pdata->gpio;
--	gbl->active =3D pdata->active_low ? 0 : 1;
-+
-+	if (np) {
-+		ret =3D gpio_backlight_probe_dt(pdev, gbl);
-+		if (ret)
-+			return ret;
-+	} else {
-+		gbl->fbdev =3D pdata->fbdev;
-+		gbl->gpio =3D pdata->gpio;
-+		gbl->active =3D pdata->active_low ? 0 : 1;
-+		gbl->def_value =3D pdata->def_value;
-+	}
-=20
- 	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
- 				    (gbl->active ? GPIOF_INIT_LOW
- 						 : GPIOF_INIT_HIGH),
--				    pdata->name);
-+				    pdata ? pdata->name : "backlight");
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "unable to request GPIO\n");
- 		return ret;
-@@ -103,17 +147,23 @@ static int gpio_backlight_probe(struct platform_d=
-evice *pdev)
- 		return PTR_ERR(bl);
- 	}
-=20
--	bl->props.brightness =3D pdata->def_value;
-+	bl->props.brightness =3D gbl->def_value;
- 	backlight_update_status(bl);
-=20
- 	platform_set_drvdata(pdev, bl);
- 	return 0;
- }
-=20
-+static struct of_device_id gpio_backlight_of_match[] =3D {
-+	{ .compatible =3D "gpio-backlight" },
-+	{ /* sentinel */ }
-+};
-+
- static struct platform_driver gpio_backlight_driver =3D {
- 	.driver		=3D {
- 		.name		=3D "gpio-backlight",
- 		.owner		=3D THIS_MODULE,
-+		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
- 	},
- 	.probe		=3D gpio_backlight_probe,
- };
---=20
-1.7.9.5
+>
+> [...]
+>
+>> +static int pbias_regulator_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +	struct device_node *dev_node;
+>> +	struct pbias_regulator_data *drvdata;
+>> +	struct resource *res;
+>> +	struct regulator_config cfg = { };
+>> +	struct regmap *syscon;
+>> +	const struct pbias_reg_info *info;
+>> +	int ret = 0;
+>> +	int count, idx, data_idx = 0;
+>> +
+>> +	count = of_regulator_match(&pdev->dev, np, pbias_matches,
+>> +						PBIAS_NUM_REGS);
+>> +	if (count < 0)
+>> +		return count;
+>> +
+>> +	drvdata = devm_kzalloc(&pdev->dev, sizeof(struct pbias_regulator_data)
+>> +			       * count, GFP_KERNEL);
+>> +	if (drvdata == NULL) {
+>> +		dev_err(&pdev->dev, "Failed to allocate device data\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	dev_node = of_get_parent(np);
+>> +	if (!dev_node)
+>> +		return -ENODEV;
+>> +
+>> +	syscon = syscon_node_to_regmap(dev_node);
+>
+> If we're relying on a particular parent node, that _must_ be described
+> in the binding.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok
+>
+>> +	of_node_put(dev_node);
+>> +	if (IS_ERR(syscon))
+>> +		return PTR_ERR(syscon);
+>> +
+>> +	cfg.dev = &pdev->dev;
+>> +
+>> +	for (idx = 0; idx < PBIAS_NUM_REGS, data_idx < count; idx++) {
+>> +		if (!pbias_matches[idx].init_data ||
+>> +			!pbias_matches[idx].of_node)
+>> +			continue;
+>> +
+>> +		info = pbias_matches[idx].driver_data;
+>> +		if (!info)
+>> +			return -ENODEV;
+>> +
+>> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>
+> A reg entry was not mentioned in the binding.
+
+Ok, will add it
+
+>
+> Why is this inside the loop? It's grabbing the reg from the parent, not
+> each of the children it's walking over.
+>
+
+The reg property is same for each children and is needed for each regulator.
+It is for the case where a single register can control 2
+regulators as in OMAP3 (mmc and sim). In other SoCs, only one regulator
+of "ti,pbias-omap" compatible exists in the pbias register.
+
+> Thanks,
+> Mark.
+>
