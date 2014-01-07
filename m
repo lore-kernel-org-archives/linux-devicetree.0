@@ -1,40 +1,42 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 3/3] dt-bindings: pci: xgene pcie device tree bindings
-Date: Tue, 07 Jan 2014 16:44:30 +0100
-Message-ID: <4687115.Uo6IImEscY@wuerfel>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com> <CACoXjc=h8W=9jx4d2Y+F9hmgQsuMTgG4080jZGbtddv10OgtMA@mail.gmail.com> <201401071635.02006.arnd@arndb.de>
+From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] dts: socfpga: update L2 tag and data latency
+Date: Tue, 7 Jan 2014 09:43:15 -0600
+Message-ID: <1389109395-29530-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201401071635.02006.arnd@arndb.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Tanmay Inamdar <tinamdar@apm.com>, devicetree@vger.kernel.org, Jon Masters <jcm@redhat.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Landley <rob@landley.net>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 January 2014 16:35:01 Arnd Bergmann wrote:
-> > >> +SoC specific DT Entry:
-> > >> +     pcie0: pcie@1f2b0000 {
-> > >> +             status = "disabled";
-> > >> +             device_type = "pci";
-> > >> +             compatible = "xgene,pcie";
-> > >> +             #interrupt-cells = <1>;
-> > >> +             #size-cells = <2>;
-> > >> +             #address-cells = >;
-> > >> +             reg = < 0x00 0x1f2b0000 0x0 0x00010000>;
-> > >> +             ranges = <0x02000000 0x0 0x00000000 0xe0 0x00000000 0x0 0x10000000 /* mem*/
-> > >
-> > >
-> > > Also, do you support no prefetchable memory?
-> > 
-> > HW has either IO or Memory regions for mapping device's memory space.
-> > There is no separate prefetchable memory space.
-> 
-> Are you sure the memory is non-prefetchable then? I would have expected
-> 0x42000000 rather than 0x02000000, but I could be misremembering it.
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-Nevermind. I just checked and you are right: if you only have
-one memory range, it has to be non-prefetchable.
+Sets the appropriate L2-cache latencies for the SOCFPGA platform.
 
-	Arnd
+Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/socfpga.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 433bfbc..d04dd82 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -468,6 +468,8 @@
+ 			interrupts = <0 38 0x04>;
+ 			cache-unified;
+ 			cache-level = <2>;
++			arm,tag-latency = <1 1 1>;
++			arm,data-latency = <2 1 1>;
+ 		};
+ 
+ 		mmc: dwmmc0@ff704000 {
+-- 
+1.7.9.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
