@@ -1,77 +1,54 @@
-From: Sudeep Holla <Sudeep.Holla@arm.com>
-Subject: Re: [PATCH] ARM: cache-l2x0: Parse properties from DT for PL310 cache
- controller
-Date: Tue, 07 Jan 2014 16:43:27 +0000
-Message-ID: <52CC2EAF.7050800@arm.com>
-References: <1389094888-24348-1-git-send-email-tushar.behera@linaro.org> <4325123.pn10H18tk9@wuerfel> <52CC2381.2090905@arm.com> <6680044.VpT1oREkGO@wuerfel>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH Resend] regulator: s5m8767: Update LDO index in
+ s5m8767-regulator.txt
+Date: Tue, 7 Jan 2014 17:12:37 +0000
+Message-ID: <20140107171237.GC31886@sirena.org.uk>
+References: <1388743189-6174-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <6680044.VpT1oREkGO@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep.Holla@arm.com, Tushar Behera <tushar.behera@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="g4MOJUyJd2g+d7ZL"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1388743189-6174-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/01/14 16:12, Arnd Bergmann wrote:
-> On Tuesday 07 January 2014 15:55:45 Sudeep Holla wrote:
->> On 07/01/14 12:54, Arnd Bergmann wrote:
->>> On Tuesday 07 January 2014 12:41:42 Sudeep Holla wrote:
->>>> Hi Tushar,
->>>>
->>>> This has been discussed couple of times in past[1][2], and the opinion was not
->>>> to have these in DT as they are more configuration data than the actual hardware
->>>> description.
->>>
->>> How do you suggest we get rid of the magic constants in platform code then?
->>> I definitely don't want to keep the current state, and having configuration
->>> data in DT seems the lesser evil.
->>>
->>
->> I agree, but since these are more L2CC configuration than hardware description,
->> IMO chosen node is one option. However it's good to get opinion from DT guys.
-> 
-> I think one of the discussions we had during the Edinburgh kernel summit resulted
-> in being more relaxed towards configuration data in device nodes.
-> 
 
-Ok.
+--g4MOJUyJd2g+d7ZL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>> Are there some reasonable defaults that Linux could use independent of the
->>> platform and of what the boot loader defaults to?
->>>
->>
->> Most of these registers can't be programmed in Non-secure mode. So as mentioned
->> already in previous discussions it is better to avoid these settings in kernel.
->> It would be better if bootloader programs these settings even if Linux runs in
->> secure mode for simplicity.
-> 
-> Yes, that would be ideal, but I fear we have to live with the boot loaders that
-> are in existence already. Whether or not the registers can be programmed in
-> non-secure mode is certainly a piece of information that belongs into the DT
-> node, so we don't try to write them when we shouldn't. We could also have a
+On Fri, Jan 03, 2014 at 03:29:49PM +0530, Sachin Kamat wrote:
+> LDO indices start from 1. Update the example accordingly.
 
-But the main problem is that there is no way to detect the current mode (i.e.
-secure or non-secure). So it won't be of any help even if we can get these
-information from DT. It's better to assume Linux runs in non-secure mode and
-avoid using any registers with secure only access. Any attempt to such
-restricted access in non-secure mode results in error.
+Applied, thanks.
 
-> property that identifies whether the boot loader has in fact set up the cache
-> controller correctly or whether Linux has to do it. There should be no
-> argument about this being out of scope, since it describes a platform property
-> (presence of a sane boot loader) rather than the actual configuration.
-> 
-> If we decide to have such properties and we boot on a system where we can
-> and should change the settings, is there a way for Linux to know what the
-> settings are supposed to be other than reading them from a DT file or
-> from a per-platform default?
-> 
+--g4MOJUyJd2g+d7ZL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Yes I understand, but for above mentioned reason it's difficult.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-Regards,
-Sudeep
+iQIcBAEBAgAGBQJSzDWCAAoJELSic+t+oim9lQEQAJkLQRimPelxkrAHf6p3IGjd
+U/cbcORlRPB95+2yrE6of5VpesRxRl0w+D0iBR9r7NqiH6fM62RXpEAvGuwrAGEe
+PSjPGjK3EdNATcZF3r80UoosROnRV3SEFU1LrqqUx7/pxIteDtuvZJaG5XzinoUa
+8bBNgXBQIo8lU7MUflNkB/kv0rkYqywNXK7Fp+JB+GeLEWYQlDfVfEC2iEI8lRut
+fY9h1KypV2y6xarnoOQ4/laLbZPnLG59vxPXAP+jZhLkaaWyQhIZHmCBaJ962641
+5qbB8tpWP9aQ/5SvnjkqawqBuaeAJ95osZyRsNaBGSEbDaoeZgMKtbY2ZkLEf3Bq
+sUxXl2H74jSgR9gpUkNdW2VDpU2jw35ZuWKhwoE7nRexJ1w0I2mgzOKBQI7GKpiy
+3hOl9VCz8t/JzEjumymlvMC7u8J6hT18n0wjL8AevFZeXl7pAtPyqDy/DgoaqWu6
+pFxjHUovhvVEhmOtGO6RvYeeAkpEXVBHatDz9NV7SZ5NVTMBjjMf0S1+ujkeLNyu
+C4V9FZL3uWQdonm4Zj3Yh48hy9Qehw3YLeJEc8wznw0BaNQvB5QdXARYstwOP9yC
+S3VKle5Ojk2dLkzU2wsA1QZ4fT4fc4XblUD2eakTiXEJ5nAAs2WK/sAWYNxq29f0
+eoq4etvIuXDtRwD3VMVW
+=7ihP
+-----END PGP SIGNATURE-----
 
-
+--g4MOJUyJd2g+d7ZL--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
