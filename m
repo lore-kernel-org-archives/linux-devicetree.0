@@ -1,73 +1,76 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH v2 2/2] reset: Add GPIO support to reset controller
  framework
-Date: Tue, 07 Jan 2014 12:28:09 +0100
-Message-ID: <1389094089.4815.22.camel@pizza.hi.pengutronix.de>
+Date: Tue, 7 Jan 2014 12:40:55 +0100
+Message-ID: <20140107114055.GA10151@lukather>
 References: <1389030903-27684-1-git-send-email-p.zabel@pengutronix.de>
-	 <1389030903-27684-2-git-send-email-p.zabel@pengutronix.de>
-	 <20140106181422.GS3144@lukather>
-	 <1389088341.4815.9.camel@pizza.hi.pengutronix.de>
-	 <20140107111954.GA2849@lukather>
+ <1389030903-27684-2-git-send-email-p.zabel@pengutronix.de>
+ <20140106181422.GS3144@lukather>
+ <1389088341.4815.9.camel@pizza.hi.pengutronix.de>
+ <20140107111954.GA2849@lukather>
+ <1389094089.4815.22.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140107111954.GA2849@lukather>
+Content-Disposition: inline
+In-Reply-To: <1389094089.4815.22.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 07.01.2014, 12:19 +0100 schrieb Maxime Ripard:
-> Hi Philipp,
-> 
-> On Tue, Jan 07, 2014 at 10:52:21AM +0100, Philipp Zabel wrote:
-> > > > +	const char *gpio_con_id = "reset";
-> > > > +	struct reset_controller_dev *rcdev;
-> > > > +	struct reset_control *rstc;
-> > > > +	struct gpio_desc *gpiod;
-> > > > +	bool asserted = false;
-> > > > +	char scratch[48];
-> > > > +	int ret;
-> > > > +
-> > > > +	if (id) {
-> > > > +		snprintf(scratch, 48, "%s-reset-boot-asserted", id);
-> > > > +		assert_prop = scratch;
-> > > > +	}
-> > > > +
-> > > > +	asserted = of_property_read_bool(dev->of_node, assert_prop);
-> > > > +
-> > > > +	if (id) {
-> > > > +		snprintf(scratch, 48, "%s-reset", id);
-> > > > +		gpio_con_id = scratch;
-> > > > +	}
-> > > > +
-> > > > +	gpiod = gpiod_get(dev, gpio_con_id);
-> > > > +	if (IS_ERR(gpiod)) {
-> > > > +		dev_err(dev, "Failed to get GPIO reset: %ld\n", PTR_ERR(gpiod));
-> > > > +		return ERR_CAST(gpiod);
-> > > > +	}
-> > > > +
-> > > > +	ret = gpiod_direction_output(gpiod, asserted);
-> > > > +	if (ret < 0)
-> > > > +		goto err_put;
-> > > 
-> > > What happens if the GPIO is active low? I see no way in your binding
-> > > and driver to give that information, and that would change the
-> > > behaviour quite a bit.
-> > 
-> > I was under the (wrong) impression that gpiod_direction_output takes a
-> > logical value as gpiod_set_value does. Will fix that.
-> 
-> I don't think gpiod_set_value does either unfortunately.
 
-It does, and Alexandre (added to Cc:) suggested that
-gpiod_direction_output probably should, too.
-I'll send a patch.
+--OXfL5xGRrasGEqWY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-regards
-Philipp
+On Tue, Jan 07, 2014 at 12:28:09PM +0100, Philipp Zabel wrote:
+> Am Dienstag, den 07.01.2014, 12:19 +0100 schrieb Maxime Ripard:
+> > > I was under the (wrong) impression that gpiod_direction_output takes a
+> > > logical value as gpiod_set_value does. Will fix that.
+> >=20
+> > I don't think gpiod_set_value does either unfortunately.
+>=20
+> It does, and Alexandre (added to Cc:) suggested that
+> gpiod_direction_output probably should, too.  I'll send a patch.
 
+Ah, yes, I was looking at 3.12, and this has been changed in 3.13.
+
+Nevermind then.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--OXfL5xGRrasGEqWY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSy+fHAAoJEBx+YmzsjxAgELgP/AsYzEchUDwx/ATOu9B6oXMm
+pce2L0oi9OfMJ5p+arLVNFqQOfri3SUia59hm1nnh5JNUvhLRNgmaGsecLmg9BMp
+mBGIccVZa78zaDU5sOMGTEfJfgsANZG+BHCmY39+gASYsI2ury27InEGARjq+6AO
+ZNc76hv2KXQbmYr1aNercyn0/bfV8ohRqitMKZVO6Y0NeTLHk2Fit1yJbVlBGsqs
+z0zS5yT73YPXYl1cQVaXGahK+FOrZgkbiDvKscAQOtDsD+6/jYf1c4dprS8U6tDk
+nqIHCqcme8GI9pX3jTmiUBJsikeA5c3DO0VA54JcmaNMMhh2lQa52Hn8FymKuxiV
+DHEgYscywDv9maiDwmmGUi+e+lxqFQAPmA7Dp3okFUZPaVuoRd+d4XB7q/1f5Y0Y
+bVy0S0CujPEaJtvKwDW6i+CrJYmW9I6G/xQbvKo7rpFLh2y+XNwLrAGW60KQQdmP
+aR18u/VU5dnnoT5W1MaxzsimAgy6ej6XdDvkA92BXobQ7siEOumVN9Ffxv0/L+TF
+9gN2DZu7jtiHCOVcMA9szwqJ4uXkp5PgT87l07gcliFZZd9uKO1DroS7FOrr5Ixh
+8VP/SujAzE7MU01fwvUX7CdB6kGWWbI92j+iDtt9suy/+F5zDPtL94SbGG5nw0VL
+LuEjrZ6fxTzWOm7/c29x
+=ol9G
+-----END PGP SIGNATURE-----
+
+--OXfL5xGRrasGEqWY--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
