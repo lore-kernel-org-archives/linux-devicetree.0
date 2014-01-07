@@ -1,98 +1,86 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCHv3][ 2/2] ARM: dts: Add support for the cpuimx53 board
- from Eukrea and its baseboard.
-Date: Tue, 7 Jan 2014 20:56:00 +0800
-Message-ID: <20140107125558.GH12346@S2101-09.ap.freescale.net>
-References: <1389024968-20242-1-git-send-email-denis@eukrea.com>
- <1389024968-20242-2-git-send-email-denis@eukrea.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1389024968-20242-2-git-send-email-denis@eukrea.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Denis Carikli <denis@eukrea.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH V2 00/10] exynos: add basic support for exynos5260 SoC
+Date: Tue, 07 Jan 2014 18:28:58 +0530
+Message-ID: <1389099548-14649-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, kgene.kim@samsung.com, thomas.ab@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 06, 2014 at 05:16:08PM +0100, Denis Carikli wrote:
-> +&esdhc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_esdhc1 &pinctrl_esdhc1_cd>;
-> +	cd-gpios = <&gpio5 17 GPIO_ACTIVE_LOW>;
-> +	vqmmc-supply = <&reg_3p3v>;
-> +	vmmc-supply = <&reg_3p3v>;
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	imx53-eukrea {
-> +		pinctrl_esdhc1: esdhc1 {
+Add basic support for exynos5260 SoC.
 
-s/esdhc1/esdhc1grp
+This series is based on linux-next, Kukjin's for-next and
+Mike's clk-for-linus-3.13 branches.
 
-> +			fsl,pins = <MX53_ESDHC1_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_esdhc1_cd: esdhc1_cd {
-> +			fsl,pins = <MX53_PAD_DISP0_DAT23__GPIO5_17 0x80000000>;
-> +		};
+This patch is dependent on the following series from
+Tomasz Figa <t.figa@samsung.com>:
+http://www.spinics.net/lists/arm-kernel/msg280223.html
 
-Please merge above two nodes into one as below.
+V2:
+  1) Move suspend resume handling to Exynos5410 Clock file.
+  2) Removed Unused Macros and Condition checks for Exynos5260.
+  3) Add spin lock to clock provider context.
+  4) Add clock provider context for Exynos5410.
+  5) Uniform implementation for callbacks for PLL2550xx.
+  6) Split Exynos5260 clock file patch to bring it under 100 Kb limit.
+  7) Replace aclk/pclk/hclk gates with combined gates.
+  8) Remove CLK_IGNORE_UNUSED flag for gate clocks.
+  9) Split up DT patch into SoC and Board patch.
 
-	pinctrl_esdhc1: esdhc1grp {
-		fsl,pins = <
-			MX53_ESDHC1_PINGRP1
-			MX53_PAD_DISP0_DAT23__GPIO5_17 0x80000000 /* CD */
-		>;
-	};
+Pankaj Dubey (2):
+  ARM: EXYNOS: initial board support for exynos5260 SoC
+  clk/samsung: add support for pll2550xx
 
-> +
-> +		pinctrl_gpiokeys: gpiokeysgrp {
-> +			fsl,pins = <MX53_PAD_KEY_COL4__GPIO4_14 0x80000000>;
-> +		};
-> +
-> +		pinctrl_gpioled: gpioledgrp {
-> +			fsl,pins = <MX53_PAD_KEY_ROW4__GPIO4_15 0x80000000>;
-> +		};
-> +
-> +		pinctrl_uart1: uart1grp {
-> +			fsl,pins = <MX53_UART1_PINGRP2 MX53_UART1_PINGRP3>;
+Rahul Sharma (7):
+  clk/exynos5410: Move suspend/resume handling to SoC driver
+  clk/samsung: add support for multuple clock providers
+  clk/samsung: add support for pll2650xx
+  clk/exynos5260: add macros and documentation for exynos5260
+  clk/exynos5260: add clock file for exynos5260
+  ARM: dts: add dts files for exynos5260 SoC
+  ARM: dts: add dts files for xyref5260 board
 
-Please put two macros onto two lines.
+Young-Gun Jang (1):
+  pinctrl: exynos: add exynos5260 SoC specific data
 
-Shawn
+ .../devicetree/bindings/clock/exynos5260-clock.txt |  299 +++
+ .../bindings/pinctrl/samsung-pinctrl.txt           |    1 +
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/exynos5260-pinctrl.dtsi          |  572 ++++++
+ arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts    |  105 +
+ arch/arm/boot/dts/exynos5260.dtsi                  |  317 +++
+ arch/arm/mach-exynos/Kconfig                       |    9 +
+ arch/arm/mach-exynos/common.c                      |   19 +-
+ arch/arm/mach-exynos/include/mach/map.h            |    1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |    1 +
+ arch/arm/plat-samsung/include/plat/cpu.h           |    8 +
+ arch/arm/plat-samsung/include/plat/map-s5p.h       |    1 +
+ drivers/clk/samsung/Makefile                       |    1 +
+ drivers/clk/samsung/clk-exynos4.c                  |   47 +-
+ drivers/clk/samsung/clk-exynos5250.c               |   26 +-
+ drivers/clk/samsung/clk-exynos5260.c               | 2062 ++++++++++++++++++++
+ drivers/clk/samsung/clk-exynos5260.h               |  496 +++++
+ drivers/clk/samsung/clk-exynos5410.c               |   59 +-
+ drivers/clk/samsung/clk-exynos5420.c               |   24 +-
+ drivers/clk/samsung/clk-exynos5440.c               |   18 +-
+ drivers/clk/samsung/clk-pll.c                      |  223 ++-
+ drivers/clk/samsung/clk-pll.h                      |    3 +-
+ drivers/clk/samsung/clk-s3c64xx.c                  |   44 +-
+ drivers/clk/samsung/clk.c                          |  115 +-
+ drivers/clk/samsung/clk.h                          |   72 +-
+ drivers/pinctrl/pinctrl-exynos.c                   |   82 +
+ drivers/pinctrl/pinctrl-samsung.c                  |    2 +
+ drivers/pinctrl/pinctrl-samsung.h                  |    1 +
+ include/dt-bindings/clk/exynos5260-clk.h           |  234 +++
+ 29 files changed, 4684 insertions(+), 159 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/exynos5260-clock.txt
+ create mode 100644 arch/arm/boot/dts/exynos5260-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
+ create mode 100644 arch/arm/boot/dts/exynos5260.dtsi
+ create mode 100644 drivers/clk/samsung/clk-exynos5260.c
+ create mode 100644 drivers/clk/samsung/clk-exynos5260.h
+ create mode 100644 include/dt-bindings/clk/exynos5260-clk.h
 
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins = <MX53_UART2_PINGRP2>;
-> +		};
-> +	};
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	fsl,uart-has-rtscts;
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart2>;
-> +	fsl,uart-has-rtscts;
-> +	status = "okay";
-> +};
-> -- 
-> 1.7.9.5
-> 
+-- 
+1.7.9.5
