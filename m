@@ -1,61 +1,152 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6sl: add ocram driver support
-Date: Tue, 7 Jan 2014 21:53:34 +0800
-Message-ID: <20140107135332.GK12346@S2101-09.ap.freescale.net>
-References: <1389041857-18512-1-git-send-email-b20788@freescale.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] misc: fuse: Add efuse driver for Tegra
+Date: Tue, 7 Jan 2014 16:05:02 +0200
+Message-ID: <20140107140502.GE26588@tbergstrom-lnx.Nvidia.com>
+References: <1387891931-9854-1-git-send-email-pdeschrijver@nvidia.com>
+ <1387891931-9854-3-git-send-email-pdeschrijver@nvidia.com>
+ <52CB12D8.7000203@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1389041857-18512-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <52CB12D8.7000203-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Danny Huang <dahuang-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 06, 2014 at 03:57:37PM -0500, Anson Huang wrote:
-> Add ocram driver support on i.MX6SL.
-
-s/driver/device, both commit log and patch subject.
-
+On Mon, Jan 06, 2014 at 09:32:24PM +0100, Stephen Warren wrote:
+> On 12/24/2013 06:32 AM, Peter De Schrijver wrote:
+> > Implement fuse driver for Tegra20, Tegra30, Tegra114 and Tegra124.
 > 
-> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6sl.dtsi |    6 ++++++
->  1 file changed, 6 insertions(+)
+> > diff --git a/drivers/misc/fuse/Kconfig b/drivers/misc/fuse/Kconfig
 > 
-> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-> index b526118..575e222 100644
-> --- a/arch/arm/boot/dts/imx6sl.dtsi
-> +++ b/arch/arm/boot/dts/imx6sl.dtsi
-> @@ -532,6 +532,12 @@
->  				interrupts = <0 57 IRQ_TYPE_LEVEL_HIGH>;
->  			};
->  
-> +			ocram: sram@00900000 {
-> +				compatible = "mmio-sram";
-> +				reg = <0x00900000 0x20000>;
-> +				clocks = <&clks IMX6SL_CLK_OCRAM>;
-> +			};
-> +
-
-When a node is named in form of name@num, we should sort the node in num
-order.  That said, the node should be added before l2-cache@00a02000
-rather than here.
-
-I fixed them all up, and applied the patch.
-
-Shawn
-
->  			src: src@020d8000 {
->  				compatible = "fsl,imx6sl-src", "fsl,imx51-src";
->  				reg = <0x020d8000 0x4000>;
-> -- 
-> 1.7.9.5
+> > +config FUSE_TEGRA
+> > +	tristate "Tegra fuse supprt"
+> > +	depends on ARCH_TEGRA && SYSFS
 > 
+> Since (I think) the Tegra-specific APIs this uses are stubbed if they
+> can't build, perhaps this should depend on "|| COMPILE_TEST" too?
+> 
+> > +	help
+> > +	  This drivers provides read-only to the e-fuses in Tegra chips.
+> > +	  Parsing of the data is left to userspace.
+> > +
+> > +	  This driver can also be built as a module. If so, the module
+> > +	  will be called tegra_efuse.
+> > +endmenu
+> 
+> I'd expect a blank line before "endmenu" since there's one at the start
+> of the menu contents.
+> 
+> > diff --git a/drivers/misc/fuse/tegra/Makefile b/drivers/misc/fuse/tegra/Makefile
+> 
+> > +obj-y					+= fuse-tegra.o
+> > +obj-y					+= fuse-tegra30.o
+> > +obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= fuse-tegra20.o
+> > +obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= tegra20_speedo.o
+> > +obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= tegra30_speedo.o
+> > +obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= tegra114_speedo.o
+> > +obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= tegra124_speedo.o
+> 
+> > diff --git a/drivers/misc/fuse/tegra/fuse-tegra20.c b/drivers/misc/fuse/tegra/fuse-tegra20.c
+> 
+> > +static int fuse_size;
+> 
+> I don't think that's used.
+> 
+> > +static u32 tegra20_fuse_readl(const unsigned int offset)
+> ...
+> > +	ret = tegra_apb_readl_using_dma(fuse_phys + FUSE_BEGIN + offset, &val);
+> 
+> Shouldn't this use the generic tegra_apb_readl(), so that it works
+> irrespective of whether the Tegra20 APB DMA driver is available?
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+tegra_apb_readl() doesn't work reliably on Tegra20 for reading the fuses.
+So if the Tegra20 APB DMA, this driver should also be unavailable.
+
+> > +static const struct of_device_id tegra20_fuse_of_match[] = {
+> > +	{ .compatible = "nvidia,tegra20-efuse" },
+> > +}
+> > +
+> > +MODULE_DEVICE_TABLE(of, tegra20_fuse_of_match);
+> 
+> You'd typically omit that blank line.
+> 
+> > +static int tegra_fuse_probe(struct platform_device *pdev)
+> 
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	fuse_phys = res->start;
+> 
+> Don't you need to error-check res here?
+> 
+> > +	fuse_randomness();
+> 
+> If this is a driver, and particularly if this could be in a module, is
+> there any guarantee at all that fuse_randomness() gets called early
+> enough to be useful?>
+> 
+
+For a module this might be true yes... Should we disallow this making a
+module?
+
+> > +	platform_set_drvdata(pdev, NULL);
+> 
+> That seems pointless; if the drvdata isn't used, there's no need to set
+> it to anything in particular at all.
+> 
+> > +	if (tegra_fuse_sysfs(&pdev->dev, FUSE_SIZE, tegra20_fuse_readl,
+> > +			     &sku_info))
+> 
+> Here (and also for fuse_randomness()), there's no verb in the function
+> name. Perhaps use tegra_fuse_create_sysfs() and fuse_add_randomness().
+> It wouldn't hurt to be consistent and use a tegra20_ prefix on all the
+> function names too.
+> 
+> > diff --git a/drivers/misc/fuse/tegra/fuse-tegra30.c b/drivers/misc/fuse/tegra/fuse-tegra30.c
+> 
+> > +u32 tegra30_fuse_readl(const unsigned int offset)
+> 
+> > +	val = readl_relaxed(fuse_base + FUSE_BEGIN + offset);
+> 
+> If you aren't going to call tegra_apb_readl() here, I wonder if you
+> shouldn't rename tegra_apb_readl() as tegra20_apb_readl() to make it
+> obvious that the workaround isn't needed on all chips?
+> 
+> > +	clk_disable_unprepare(fuse_clk);
+> 
+> Doesn't the use of readl_**relaxed**() above mean that the
+> clk_disable_unprepare() could turn off the clock before the fuse read
+> had completed, and hence hang the system?
+> 
+
+Our clk_disable() has a barrier which should cover for this.
+
+> > +static int tegra_fuse_probe(struct platform_device *pdev)
+> 
+> > +	fuse_randomness();
+> 
+> Here, the same function name is used as in fuse-tegra20.c, which might
+> make debugging a bit more annoying.
+> 
+> > +MODULE_LICENSE("GPLv2");
+> 
+> s/GPLv2/GPL v2/ Perhaps the same in other files?
+> 
+> > diff --git a/drivers/misc/fuse/tegra/fuse.h b/drivers/misc/fuse/tegra/fuse.h
+> 
+> > +#ifdef CONFIG_ARCH_TEGRA_2x_SOC
+> > +void tegra20_init_speedo_data(struct tegra_sku_info *sku_info,
+> > +			      struct device *dev);
+> > +bool tegra20_spare_fuse(int bit);
+> > +#else
+> > +static inline void tegra20_init_speedo_data(struct tegra_sku_info *sku_info,
+> > +					    struct device *dev) {}
+> > +static inline bool tegra20_spare_fuse(int bit) {}
+> > +#endif
+> 
+> I suppose it doesn't hurt, but the Tegra20 functions don't need stubs
+> since they're only called from files that are only compiled for Tegra20.
+> But, I suppose it's fine to be consistent within this file and provide
+> stubs anyway.
