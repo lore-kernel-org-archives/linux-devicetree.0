@@ -1,42 +1,44 @@
-From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] dts: socfpga: update L2 tag and data latency
-Date: Tue, 7 Jan 2014 09:43:15 -0600
-Message-ID: <1389109395-29530-1-git-send-email-dinguyen@altera.com>
+From: Sudeep Holla <Sudeep.Holla@arm.com>
+Subject: Re: [PATCH] ARM: cache-l2x0: Parse properties from DT for PL310 cache
+ controller
+Date: Tue, 07 Jan 2014 15:55:45 +0000
+Message-ID: <52CC2381.2090905@arm.com>
+References: <1389094888-24348-1-git-send-email-tushar.behera@linaro.org> <52CBF606.5080209@arm.com> <4325123.pn10H18tk9@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <4325123.pn10H18tk9@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sudeep.Holla@arm.com, Tushar Behera <tushar.behera@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+On 07/01/14 12:54, Arnd Bergmann wrote:
+> On Tuesday 07 January 2014 12:41:42 Sudeep Holla wrote:
+>> Hi Tushar,
+>>
+>> This has been discussed couple of times in past[1][2], and the opinion was not
+>> to have these in DT as they are more configuration data than the actual hardware
+>> description.
+> 
+> How do you suggest we get rid of the magic constants in platform code then?
+> I definitely don't want to keep the current state, and having configuration
+> data in DT seems the lesser evil.
+> 
 
-Sets the appropriate L2-cache latencies for the SOCFPGA platform.
+I agree, but since these are more L2CC configuration than hardware description,
+IMO chosen node is one option. However it's good to get opinion from DT guys.
 
-Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/socfpga.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+> Are there some reasonable defaults that Linux could use independent of the
+> platform and of what the boot loader defaults to?
+> 
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 433bfbc..d04dd82 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -468,6 +468,8 @@
- 			interrupts = <0 38 0x04>;
- 			cache-unified;
- 			cache-level = <2>;
-+			arm,tag-latency = <1 1 1>;
-+			arm,data-latency = <2 1 1>;
- 		};
- 
- 		mmc: dwmmc0@ff704000 {
--- 
-1.7.9.5
+Most of these registers can't be programmed in Non-secure mode. So as mentioned
+already in previous discussions it is better to avoid these settings in kernel.
+It would be better if bootloader programs these settings even if Linux runs in
+secure mode for simplicity.
 
+Regards,
+Sudeep
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
