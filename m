@@ -1,70 +1,43 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: Re: [PATCH] ARM: cache-l2x0: Parse properties from DT for PL310 cache controller
-Date: Tue, 7 Jan 2014 17:40:56 +0530
-Message-ID: <CAHbNUh2Y5JPwAWojJE8Chd6fi5Hbk9c2+11FVBhOA-3Rgr5WpA@mail.gmail.com>
-References: <1389094888-24348-1-git-send-email-tushar.behera@linaro.org>
-	<3479510.EFrgCqQWpu@wuerfel>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 0/4] USB Host support for OMAP5 uEVM (for 3.14)
+Date: Tue, 7 Jan 2014 17:44:45 +0530
+Message-ID: <1389096889-22179-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <3479510.EFrgCqQWpu@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-doc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7 January 2014 17:27, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 07 January 2014 17:11:28 Tushar Behera wrote:
->> Parsed auxiliary control properties for PL310 cache controller.
->>
->> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
->> ---
->> These properties are set for Exynos4 platform. If we can pass these properties
->> through device tree for Exynos4, then we can remove the hard-coded L2_AUX_VAL.
->
->
-> The explanation would be good to have in the actual changeset
+Hi Benoit & Tony,
 
-Ok, I will add these explanation to comment section.
+This patchset brings up USB Host ports and Ethernet port on
+the OMAP5 uEVM board.
 
-> comment above the '---' line. Are all of them actually needed?
-> You shouldn't havet o set the ones that are already turned on
-> by the boot loader.
+It depends on the TI Clock DT conversion patches [1].
 
-These are the extra options that we used to pass in the kernel. For
-normal operation, I couldn't perceive any difference without these
-properties. The only reason for adding these properties was to be in
-sync with existing auxiliary control value.
+[1] - http://article.gmane.org/gmane.linux.ports.arm.kernel/289895
 
->>
->> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
->> index b513cb8..213546d 100644
->> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
->> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
->> @@ -44,6 +44,16 @@ Optional properties:
->>  - cache-id-part: cache id part number to be used if it is not present
->>    on hardware
->>  - wt-override: If present then L2 is forced to Write through mode
->> +- arm,early-write: If present then BRSEP mode (early write response) is enabled.
->> +- arm,data-prefetch: If present then data prefetching is enabled.
->> +- arm,instruction-prefetch: If present then instruction prefetching is enabled.
->> +- arm,ns-interrupt-access: If present then interrupt mask and interrupt clear
->> +  registers can be read or modified in both secure or non-secure accesses.
->> +- arm,ns-lockdown: If present then non-secure accesses can write to lockdown
->> +  register.
->> +- arm,share-override: If present then shared attribute is ignored internally.
->> +- arm,full-line-of-zero: If present then 'full line of write zero' behaviour is
->> +  enabled.
->
-> Is it intentional that you have the "arm," prefix for the new ones, while
-> it's not there for the existing ones? Should we drop it for consistency?
->
->         Arnd
+cheers,
+-roger
 
-No specific reasons for this. I was following "arm,data-latency"
-format. We can drop the "arm," prefix.
+Roger Quadros (4):
+  ARM: dts: OMAP5: Add 60MHz clock reference to USB Host module
+  ARM: dts: omap4-panda: Provide USB PHY clock
+  ARM: dts: omap5-uevm: Provide USB PHY clock
+  ARM: OMAP2+: Remove legacy_init_ehci_clk()
 
-Thanks for the review.
+ arch/arm/boot/dts/omap4-panda-common.dtsi |  8 ++------
+ arch/arm/boot/dts/omap5-uevm.dts          |  8 ++------
+ arch/arm/boot/dts/omap5.dtsi              |  2 ++
+ arch/arm/mach-omap2/pdata-quirks.c        | 16 ----------------
+ 4 files changed, 6 insertions(+), 28 deletions(-)
 
 -- 
-Tushar Behera
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
