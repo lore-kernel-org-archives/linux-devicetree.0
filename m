@@ -1,70 +1,66 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [RFC PATCH 3/3] dt-bindings: pci: xgene pcie device tree bindings
-Date: Tue, 7 Jan 2014 11:31:48 -0700
-Message-ID: <20140107183148.GD4227@obsidianresearch.com>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com>
- <201401031049.20932.arnd@arndb.de>
- <CACoXjc=h8W=9jx4d2Y+F9hmgQsuMTgG4080jZGbtddv10OgtMA@mail.gmail.com>
- <201401071635.02006.arnd@arndb.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: mcp23s08: Add irq functionality for i2c chips
+Date: Tue, 7 Jan 2014 19:50:47 +0100
+Message-ID: <CACRpkdYqLamX6P=0he2Swy=_io2u6SKjGHPNziMdDj2j+UR+Uw@mail.gmail.com>
+References: <1389103548-23458-1-git-send-email-larsi@wh2.tu-dresden.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201401071635.02006.arnd@arndb.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Tanmay Inamdar <tinamdar@apm.com>, devicetree@vger.kernel.org, Jon Masters <jcm@redhat.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Landley <rob@landley.net>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1389103548-23458-1-git-send-email-larsi@wh2.tu-dresden.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lars Poeschel <larsi@wh2.tu-dresden.de>
+Cc: Lars Poeschel <poeschel@lemonage.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 07, 2014 at 04:35:01PM +0100, Arnd Bergmann wrote:
+On Tue, Jan 7, 2014 at 3:05 PM, Lars Poeschel <larsi@wh2.tu-dresden.de> wrote:
 
-> > >> +                       0x00000000 0x0 0xd0000000 0xe0 0xd0000000 0x0 0x00200000 /* cfg */
-> > >
-> > > config space is not normally in the ranges property, and I think you will need
-> > > it in the pcie node itself as a 'reg' property so the code can access it.
-> > 
-> > pcie-designware.c does it that way. I just followed their implementation.
-> 
-> I don't remember what led to that, it still seems wrong and I can't
-> find anything in the PCI binding for host bridges telling their
-> config space this way.
+> From: Lars Poeschel <poeschel@lemonage.de>
+>
+> This adds interrupt functionality for i2c chips to the driver.
+> They can act as a interrupt-controller and generate interrupts, if
+> the inputs change.
+> This is tested on a mcp23017 chip.
+>
+> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+(...)
+>         u8                      addr;
+>
+>         u16                     cache[11];
+> +       u16                     irq_rise;
+> +       u16                     irq_fall;
+> +       int                     irq;
+>         /* lock protects the cached values */
+>         struct mutex            lock;
+> +       struct mutex            irq_lock;
+> +       struct irq_domain       *irq_domain;
 
-When we discussed the mvebu PCI driver (which is, so far, the most
-throughly discussed PCI binding) it was concluded that the config
-space ranges like the above was OK only if it exactly described the
-standard ECAM layout.
+(...)
+> +static int mcp23s08_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       struct mcp23s08 *mcp = container_of(chip, struct mcp23s08, chip);
+> +
+> +       return irq_create_mapping(mcp->irq_domain, offset);
 
-Idea being that standard/core code should be able to see that ranges,
-map the range and issue config accesses via the ECAM rules.
+We have recently established that the mapping shall not be created in
+gpio_to_irq().
+Instead call irq_create_mapping() for all valid IRQ lines in probe() and
+use irq_find_mapping() here.
 
-> > >> +             interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> > >> +             interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1>;
-> > >
-> > > Only one IRQ for all devices?
-> > 
-> > The node represents a port. I believe that Linux framework uses only
-> > one of the legacy IRQs per port. Rest all remain unused. Hence I
-> > removed them. Please correct me if I am wrong.
-> 
-> Any PCI device can normally have four interrupts (IntA through
-> IntD), which are traditionally separate pins on a PCI bus, but get
-> emulated on PCIe. While it's not common for any normal device to use
-> more than one IRQ, a bridge device will swizzle these (virtual) IRQ
-> lines, so a device behind the bridge actually gets a different host
-> IRQ.
+> +static struct irq_chip mcp23s08_irq_chip = {
+> +       .name = "gpio-mcp23xxx",
+> +       .irq_mask = mcp23s08_irq_mask,
+> +       .irq_unmask = mcp23s08_irq_unmask,
+> +       .irq_set_type = mcp23s08_irq_set_type,
+> +       .irq_bus_lock = mcp23s08_irq_bus_lock,
+> +       .irq_bus_sync_unlock = mcp23s08_irq_bus_unlock,
+> +};
 
-Agree, the binding should handle all four INTA,B,C,D assertions
-delivered to the port. 
+Add irq_startup() and irq_shutdown() hooks in accordance with something
+like this patch:
+http://marc.info/?l=linux-gpio&m=138571851304612&w=2
 
-If HW is able to decode the 4 ints into seperate Linux interrupt
-numbers then that should be described. If HW routes them all to a
-single number then interrupt-map-mask should be all 0.
+The important thing is that you call
+gpio_lock_as_irq()/gpio_unlock_as_irq()
 
-Arnd's point about swizzling effects the layout of the
-interrupt-map. When it is placed at the pcie-controller node level the
-map will incorporate one swizzle of the on-the-wire INTx messages. If
-the HW doesn't swizzle the INTx as the TLP passes through the bridge
-then it probably makes more sense to put the interrupt-map in the DT
-node of the bridge like mvebu does.
-
-Jason
+Yours,
+Linus Walleij
