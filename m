@@ -1,128 +1,155 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [RFC PATCH 1/3] pci: APM X-Gene PCIe controller driver
-Date: Mon, 6 Jan 2014 18:45:11 -0800
-Message-ID: <CACoXjcmqUixctokJ9COLWAsaDTUyVKk9vTAbW1hUhUdcgaj-kg@mail.gmail.com>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com>
-	<1387785725-24262-2-git-send-email-tinamdar@apm.com>
-	<007401cf0a81$51429250$f3c7b6f0$%han@samsung.com>
+From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
+Date: Tue, 7 Jan 2014 10:48:02 +0800
+Message-ID: <52CB6AE2.2090002@nvidia.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
+ <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
+ <52C299A8.4010108@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <007401cf0a81$51429250$f3c7b6f0$%han@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52C299A8.4010108-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 5, 2014 at 5:47 PM, Jingoo Han <jg1.han@samsung.com> wrote:
-> On Monday, December 23, 2013 5:02 PM, Tanmay Inamdar wrote:
+Hi, Eduardo
+Will you consider my comments :)
+
+Thanks.
+Wei.
+
+On 12/31/2013 06:17 PM, Wei Ni wrote:
+> On 11/13/2013 03:46 AM, Eduardo Valentin wrote:
+>> This patch introduces a device tree bindings for
+>> describing the hardware thermal behavior and limits.
+>> Also a parser to read and interpret the data and feed
+>> it in the thermal framework is presented.
 >>
->> This patch adds the AppliedMicro X-gene SOC PCIe controller driver.
->> APM X-Gene PCIe controller supports maximum upto 8 lanes and
->> GEN3 speed. X-Gene has maximum 5 PCIe ports supported.
->
-> (+cc Jason Gunthorpe, Arnd Bergmann)
->
-> Hi Tanmay Inamdar,
->
-> I added some minor comments. :-)
->
+>> This patch introduces a thermal data parser for device
+>> tree. The parsed data is used to build thermal zones
+>> and thermal binding parameters. The output data
+>> can then be used to deploy thermal policies.
 >>
->> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
->> ---
->>  drivers/pci/host/Kconfig      |    5 +
->>  drivers/pci/host/Makefile     |    1 +
->>  drivers/pci/host/pcie-xgene.c | 1017 +++++++++++++++++++++++++++++++++++++++++
->
-> Would you change the file name to 'pci-xgene.c'?
-> Now, all PCI host drivers are using the prefix 'pci-', not 'pcie-'.
-
-I guess designware is an exception. There is
-"drivers/pci/host/pcie-designware.c"
->
-> [.....]
->
->> +#include <linux/module.h>
->> +#include <linux/delay.h>
->> +#include <linux/pci.h>
->> +#include <linux/slab.h>
->> +#include <linux/memblock.h>
->> +#include <linux/io.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/of_pci.h>
->> +#include <linux/jiffies.h>
->> +#include <linux/clk-private.h>
->
-> Would you re-order these headers alphabetically?
-> It enhances the readability.
-
-ok.
-
->
-> [.....]
->
->> +static int xgene_pcie_parse_map_ranges(struct xgene_pcie_port *port)
+>> This patch adds also documentation regarding this
+>> API and how to define tree nodes to use
+>> this infrastructure.
+>>
+>> Note that, in order to be able to have control
+>> on the sensor registration on the DT thermal zone,
+>> it was required to allow changing the thermal zone
+>> .get_temp callback. For this reason, this patch
+>> also removes the 'const' modifier from the .ops
+>> field of thermal zone devices.
+>>
+>> ...
+>> +
+>> +static int of_thermal_get_trend(struct thermal_zone_device *tz, int trip,
+>> +				enum thermal_trend *trend)
 >> +{
->> +     struct device_node *np = port->node;
->> +     struct of_pci_range range;
->> +     struct of_pci_range_parser parser;
->> +     struct device *dev = port->dev;
->> +     u32 cfg_map_done = 0;
->> +     int ret;
+>> +	struct __thermal_zone *data = tz->devdata;
+>> +	long dev_trend;
+>> +	int r;
 >> +
->> +     if (of_pci_range_parser_init(&parser, np)) {
->> +             dev_err(dev, "missing ranges property\n");
->> +             return -EINVAL;
->> +     }
+>> +	if (!data->get_trend)
+>> +		return -EINVAL;
 >> +
->> +     /* Get the I/O, memory, config ranges from DT */
->> +     for_each_of_pci_range(&parser, &range) {
->> +             struct resource *res = NULL;
->> +             u64 restype = range.flags & IORESOURCE_TYPE_BITS;
->> +             u64 end = range.cpu_addr + range.size - 1;
->> +             dev_dbg(port->dev, "0x%08x 0x%016llx..0x%016llx -> 0x%016llx\n",
->> +                     range.flags, range.cpu_addr, end, range.pci_addr);
+>> +	r = data->get_trend(data->sensor_data, &dev_trend);
+> I think the ->get_trend should be defined as:
+> .get_trend(*dev, int, *long)
+> so that the "trip" can be passed into it, otherwise the "trip" can't be
+> used.
+> And the dev_trend should be returned as THERMAL_TREND_XXX directly.
+> because the THERM_TREND_xx is more than three states.
+> 
+> The code may be something like:
+> r = data->get_trend(data->sensor_data, trip, &dev_trend);
+> if (r)
+>     return r;
+> *trend = dev_trend;
+> return 0;
+>> +	if (r)
+>> +		return r;
 >> +
->> +             switch (restype) {
->> +             case IORESOURCE_IO:
->> +                     res = &port->res[XGENE_IO];
->> +                     of_pci_range_to_resource(&range, np, res);
->> +                     xgene_pcie_setup_ob_reg(port->csr_base, OMR1BARL,
->> +                                             XGENE_IO, res);
->> +                     break;
->> +             case IORESOURCE_MEM:
->> +                     res = &port->res[XGENE_MEM];
->> +                     of_pci_range_to_resource(&range, np, res);
->> +                     xgene_pcie_setup_ob_reg(port->csr_base, OMR2BARL,
->> +                                             XGENE_MEM, res);
->> +                     break;
->> +             case 0:
->> +                     if (!cfg_map_done) {
->> +                             /* config region */
->> +                             if (port->type == PTYPE_ROOT_PORT) {
->> +                                     ret = xgene_pcie_map_cfg(port, &range);
->> +                                     if (ret)
->> +                                             return ret;
->> +                             }
->> +                             cfg_map_done = 1;
->> +                     } else {
->> +                             /* msi region */
->> +                             res = &port->res[XGENE_MSI];
->> +                             of_pci_range_to_resource(&range, np, res);
->
-> As Jason Gunthorpe said, the DT 'range' property should not
-> handle MSI. Please refer to other PCI host drivers such as
-> pci-mvebu.c, pci-tegra.c and pcie-designware.c.
+>> +	/* TODO: These intervals might have some thresholds, but in core code */
+>> +	if (dev_trend > 0)
+>> +		*trend = THERMAL_TREND_RAISING;
+>> +	else if (dev_trend < 0)
+>> +		*trend = THERMAL_TREND_DROPPING;
+>> +	else
+>> +		*trend = THERMAL_TREND_STABLE;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> .....
+>> +
+>> +/***   sensor API   ***/
+>> +
+>> +static struct thermal_zone_device *
+>> +thermal_zone_of_add_sensor(struct device_node *zone,
+>> +			   struct device_node *sensor, void *data,
+>> +			   int (*get_temp)(void *, long *),
+>> +			   int (*get_trend)(void *, long *))
+>> +{
+>> +	struct thermal_zone_device *tzd;
+>> +	struct __thermal_zone *tz;
+>> +
+>> +	tzd = thermal_zone_get_zone_by_name(zone->name);
+> I think we could get the thermal zone by node,
+> something like:
+> thermal_zone_get_zone_by_node(zone);
+> so that it can get unique zone.
+> 
+> I think we can add a member "struct device_node *np" in the
+> thermal_zone_device,
+> and set it after you call thermal_zone_device_register successfully.
+> Then add following codes:
+> thermal_zone_get_zone_by_node(struct device_node *node)
+> {
+>         struct thermal_zone_device *pos = NULL, *ref = ERR_PTR(-ENODEV);
+>         bool found = false;
+> 
+>         if (!node)
+>                 return ERR_PTR(-EINVAL);
+> 
+>         mutex_lock(&thermal_list_lock);
+>         list_for_each_entry(pos, &thermal_tz_list, node)
+>                 if (node == pos->np) {
+>                         ref = pos;
+>                         found = true;
+>                         break;
+>                 }
+>         mutex_unlock(&thermal_list_lock);
+> 
+>         return ref;
+> }
+> 
+> Thanks.
+> Wei.
+>> +	if (IS_ERR(tzd))
+>> +		return ERR_PTR(-EPROBE_DEFER);
+>> +
+>> +	tz = tzd->devdata;
+>> +
+>> +	mutex_lock(&tzd->lock);
+>> +	tz->get_temp = get_temp;
+>> +	tz->get_trend = get_trend;
+>> +	tz->sensor_data = data;
+>> +
+>> +	tzd->ops->get_temp = of_thermal_get_temp;
+>> +	tzd->ops->get_trend = of_thermal_get_trend;
+>> +	mutex_unlock(&tzd->lock);
+>> +
+>> +	return tzd;
+>> +}
+>> +
+>>
+> 
 
-Right. I will remove MSI from ranges.
-
->
-> Currently, 'struct msi_chip', ' struct irq_domain' are used
-> for implementing MSI feature.
->
-> Best regards,
-> Jingoo Han
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
