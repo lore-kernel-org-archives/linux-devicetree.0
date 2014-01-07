@@ -1,137 +1,77 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCHv12 00/49] ARM: TI SoC clock DT conversion
-Date: Tue, 7 Jan 2014 10:36:17 -0600
-Message-ID: <52CC2D01.7010001@ti.com>
-References: <1387557274-22583-1-git-send-email-t-kristo@ti.com> <52CB72B3.6070709@ti.com>
+From: Sudeep Holla <Sudeep.Holla@arm.com>
+Subject: Re: [PATCH] ARM: cache-l2x0: Parse properties from DT for PL310 cache
+ controller
+Date: Tue, 07 Jan 2014 16:43:27 +0000
+Message-ID: <52CC2EAF.7050800@arm.com>
+References: <1389094888-24348-1-git-send-email-tushar.behera@linaro.org> <4325123.pn10H18tk9@wuerfel> <52CC2381.2090905@arm.com> <6680044.VpT1oREkGO@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52CB72B3.6070709@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <6680044.VpT1oREkGO@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sudeep.Holla@arm.com, Tushar Behera <tushar.behera@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 01/06/2014 09:21 PM, Nishanth Menon wrote:
-> Hi Tero,
-> On 12/20/2013 10:34 AM, Tero Kristo wrote:
->> Hopefully final post of this series. At least this is going to be the last
->> post this year as I will be going to x-mas vacation and won't be back before
->> Jan 2nd. This time I just sent the patches that have changes in them,
->> the missing ones are exactly the same as in v11.
+On 07/01/14 16:12, Arnd Bergmann wrote:
+> On Tuesday 07 January 2014 15:55:45 Sudeep Holla wrote:
+>> On 07/01/14 12:54, Arnd Bergmann wrote:
+>>> On Tuesday 07 January 2014 12:41:42 Sudeep Holla wrote:
+>>>> Hi Tushar,
+>>>>
+>>>> This has been discussed couple of times in past[1][2], and the opinion was not
+>>>> to have these in DT as they are more configuration data than the actual hardware
+>>>> description.
+>>>
+>>> How do you suggest we get rid of the magic constants in platform code then?
+>>> I definitely don't want to keep the current state, and having configuration
+>>> data in DT seems the lesser evil.
+>>>
 >>
+>> I agree, but since these are more L2CC configuration than hardware description,
+>> IMO chosen node is one option. However it's good to get opinion from DT guys.
 > 
-> There are still a few issues that I see
-> [...]
-> 
->> Branches available at https://github.com/t-kristo/linux-pm.git:
->> - branch: 3.13-rc4-dt-clks-v12 : contains everything, shall me merged last
->> - branch: 3.13-rc4-dt-clks-v12-for-mike : drivers/clk changes
->> - branch: 3.13-rc4-dt-clks-v11-for-benoit : DT data only (from v11, no changes)
-> 
-> For easy maintainer merging, you may want to make this as three branches:
-> 
-> 1. for-mike based on
-> git://git.linaro.org/people/mturquette/linux.git clk-next
-> 
-> 2. for-benoit based on
-> git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git
-> for_3.14/dts
-> 
-> 3. for-tony based on
-> git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git
-> omap-for-v3.14/board-removal or on a clean k.org tag
-> 
-> 4. A testing branch for the rest of us which consolidates all of these
-> together.
-> 
-> Testing with a rebase of 3.13-rc4-dt-clks-v12 to v3.13-rc7:
-> 
-> Here is my test platforms and logs (boot only - omap2plus_defconfig +
-> common_clk_debug - all boots to sd card based filesystem):
-> 
-> AM335x Family:
-> 
-> AM335x-EVMSK:
->         http://pastebin.mozilla.org/3955459
-> AM335x-EVM:
->         http://pastebin.mozilla.org/3955460
-> AM335x-BeagleBone Black:
->         http://pastebin.mozilla.org/3955476
-> 
-> OMAP3 family:
-> OMAP3430: SDP3430:
->         http://pastebin.mozilla.org/3955475
-> AM3517-evm: (requires a bootargs fix - remote board - no regressions seen)
->         http://pastebin.mozilla.org/3955461
-> AM3517-CraneBoard:
->         http://pastebin.mozilla.org/3955477
-> OMAP3630/DM3730 BeagleBoard-XM:
->         http://pastebin.mozilla.org/3955474
-> AM37xx-evm:
->         http://pastebin.mozilla.org/3955472
-> 
-> OMAP4 Family:
-> OMAP4460: PandaBoard-ES:
->         http://pastebin.mozilla.org/3955478
-> 	NOTE: trace_clk_div_ck seems orphan clock here?
-> 
-> OMAP5 Family:
-> OMAP5432: OMAP5uEVM:
->         http://pastebin.mozilla.org/3955479
-> 
-> DRA7 Family:
-> 
-> DRA7: DRA7-evm:
->         http://pastebin.mozilla.org/3955480
-
-one more missing test platform:
-
-AM43xx-epos platform: (needed a few out of tree patches to test on TI
-internal engineering samples):
-	http://pastebin.mozilla.org/3960056
-
-
-> 
-> 
-> Patch autoverification report: http://pastebin.mozilla.org/3955695
-> 
-> The following issues need fixes I suppose:
-> * CHECK: spinlock_t definition without comment
-> 	[PATCH 03/49] clk: divider: add support for registering divider
-> 	[PATCH 04/49] clk: mux: add support for registering mux clock from
-> 	[PATCH 05/49] clk: gate: add support for registering gate clock from
-> 
-> * [PATCH 23/49] CLK: TI: DRA7: Add APLL support
-> 	"parent_names = kzalloc(sizeof(char *) * init->num_parents, GFP_KERNEL);"
-> 	* kzalloc without check for NULL
-> 	* will also be good to add some kerneldoc documentation (same with
-> interface.c)
-> * WARNING: static const char * array should probably be static const
-> char * const
-> 	[PATCH 25/49] CLK: TI: add am33xx clock init file
-> 	[PATCH 27/49] CLK: TI: add omap3 clock init file
-> * [PATCH 40/49] ARM: OMAP2+: clock: use driver API instead of direct
-> 	adds a new kernel doc warning "Warning(arch/arm/mach-omap2/clock.c:
-> No description found for parameter 'clk'"
-> * [PATCH 44/49] ARM: OMAP2+: io: use new clock init API
-> 	introduces warning for
-> 		"arch/arm/mach-omap2/io.c: warning: symbol 'omap_clk_soc_init' was
-> not declared. Should it be static?"
-> 	which seems squashed with "[PATCH 45/49] ARM: OMAP4: remove old clock
-> data and link in new"
-> 	will be good to have it not appear in patch 44 itself.
-> 
-> 
-> Also pending is OMAP5 only build failure that Felipe reported and does
-> not seem fixed in V12 as well:
-> http://marc.info/?l=linux-arm-kernel&m=138757010619274&w=2
-> and
-> http://marc.info/?l=linux-arm-kernel&m=138755595914796&w=2
+> I think one of the discussions we had during the Edinburgh kernel summit resulted
+> in being more relaxed towards configuration data in device nodes.
 > 
 
+Ok.
 
--- 
+>>> Are there some reasonable defaults that Linux could use independent of the
+>>> platform and of what the boot loader defaults to?
+>>>
+>>
+>> Most of these registers can't be programmed in Non-secure mode. So as mentioned
+>> already in previous discussions it is better to avoid these settings in kernel.
+>> It would be better if bootloader programs these settings even if Linux runs in
+>> secure mode for simplicity.
+> 
+> Yes, that would be ideal, but I fear we have to live with the boot loaders that
+> are in existence already. Whether or not the registers can be programmed in
+> non-secure mode is certainly a piece of information that belongs into the DT
+> node, so we don't try to write them when we shouldn't. We could also have a
+
+But the main problem is that there is no way to detect the current mode (i.e.
+secure or non-secure). So it won't be of any help even if we can get these
+information from DT. It's better to assume Linux runs in non-secure mode and
+avoid using any registers with secure only access. Any attempt to such
+restricted access in non-secure mode results in error.
+
+> property that identifies whether the boot loader has in fact set up the cache
+> controller correctly or whether Linux has to do it. There should be no
+> argument about this being out of scope, since it describes a platform property
+> (presence of a sane boot loader) rather than the actual configuration.
+> 
+> If we decide to have such properties and we boot on a system where we can
+> and should change the settings, is there a way for Linux to know what the
+> settings are supposed to be other than reading them from a DT file or
+> from a per-platform default?
+> 
+
+Yes I understand, but for above mentioned reason it's difficult.
+
 Regards,
-Nishanth Menon
+Sudeep
+
+
