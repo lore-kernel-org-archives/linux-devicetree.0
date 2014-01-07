@@ -1,88 +1,30 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 3/3] dt-bindings: pci: xgene pcie device tree bindings
-Date: Tue, 7 Jan 2014 16:35:01 +0100
-Message-ID: <201401071635.02006.arnd@arndb.de>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com> <201401031049.20932.arnd@arndb.de> <CACoXjc=h8W=9jx4d2Y+F9hmgQsuMTgG4080jZGbtddv10OgtMA@mail.gmail.com>
+Subject: Re: [PATCHv10] dmaengine: Add support for BCM2835
+Date: Tue, 7 Jan 2014 16:37:02 +0100
+Message-ID: <201401071637.03135.arnd@arndb.de>
+References: <52CB0180.1040605@koalo.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACoXjc=h8W=9jx4d2Y+F9hmgQsuMTgG4080jZGbtddv10OgtMA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Masters <jcm@redhat.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52CB0180.1040605@koalo.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Meier <florian.meier@koalo.de>
+Cc: devicetree <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Vinod Koul <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 January 2014, Tanmay Inamdar wrote:
-> On Fri, Jan 3, 2014 at 1:49 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> +Required properties:
-> >> +- status: Either "ok" or "disabled".
-> >> +- device_type: set to "pci"
-> >> +- compatible: should contain "xgene,pcie" to identify the core.
-> >> +- reg: base addresses and lengths of the pcie controller configuration
-> >> +     space register.
-> >> +- #address-cells: set to <3>
-> >> +- #size-cells: set to <2>
-> >> +- ranges: ranges for the PCI memory, I/O regions, config and MSI regions
-> >> +- #interrupt-cells: set to <1>
-> >> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> >> +     to define the mapping of the PCIe interface to interrupt
-> >> +     numbers.
-> >> +- clocks: from common clock binding: handle to pci clock.
-> >> +- clock-names: from common clock binding. Should be "pcieclk".
-> >> +
-> >
-> > Better use an anonymous clock?
+On Monday 06 January 2014, Florian Meier wrote:
+> Add support for DMA controller of BCM2835 as used in the Raspberry Pi.
+> Currently it only supports cyclic DMA.
 > 
-> Sorry. Can you please elaborate?
+> Signed-off-by: Florian Meier <florian.meier@koalo.de>
 
-I mean drop the "clock-names" property.
-
-> >> +SoC specific DT Entry:
-> >> +     pcie0: pcie@1f2b0000 {
-> >> +             status = "disabled";
-> >> +             device_type = "pci";
-> >> +             compatible = "xgene,pcie";
-> >> +             #interrupt-cells = <1>;
-> >> +             #size-cells = <2>;
-> >> +             #address-cells = <3>;
-> >> +             reg = < 0x00 0x1f2b0000 0x0 0x00010000>;
-> >> +             ranges = <0x02000000 0x0 0x00000000 0xe0 0x00000000 0x0 0x10000000 /* mem*/
-> >
-> >
-> > Also, do you support no prefetchable memory?
-> 
-> HW has either IO or Memory regions for mapping device's memory space.
-> There is no separate prefetchable memory space.
-
-Are you sure the memory is non-prefetchable then? I would have expected
-0x42000000 rather than 0x02000000, but I could be misremembering it.
-
-> >
-> >> +                       0x00000000 0x0 0xd0000000 0xe0 0xd0000000 0x0 0x00200000 /* cfg */
-> >
-> > config space is not normally in the ranges property, and I think you will need
-> > it in the pcie node itself as a 'reg' property so the code can access it.
-> 
-> pcie-designware.c does it that way. I just followed their implementation.
-
-I don't remember what led to that, it still seems wrong and I can't find anything
-in the PCI binding for host bridges telling their config space this way.
-
-> >> +             interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> >> +             interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1>;
-> >
-> > Only one IRQ for all devices?
-> 
-> The node represents a port. I believe that Linux framework uses only
-> one of the legacy IRQs per port. Rest all remain unused. Hence I
-> removed them. Please correct me if I am wrong.
-
-Any PCI device can normally have four interrupts (IntA through IntD), which are
-traditionally separate pins on a PCI bus, but get emulated on PCIe. While it's
-not common for any normal device to use more than one IRQ, a bridge device
-will swizzle these (virtual) IRQ lines, so a device behind the bridge actually
-gets a different host IRQ.
-
-	Arnd
+Acked-by: Arnd Bergmann <arnd@arndb.de>
