@@ -1,40 +1,51 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: Re: [RESEND PATCHv8 3/4] mmc: dw_mmc-socfpga: Remove the SOCFPGA
- specific platform for dw_mmc
-Date: Tue, 7 Jan 2014 21:17:21 +0100
-Message-ID: <20140107201721.GK20094@book.gsilab.sittig.org>
-References: <1389036754-7249-1-git-send-email-dinguyen@altera.com>
- <1389036754-7249-4-git-send-email-dinguyen@altera.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] misc: fuse: Add efuse driver for Tegra
+Date: Tue, 07 Jan 2014 13:41:19 -0700
+Message-ID: <52CC666F.1010501@wwwdotorg.org>
+References: <1387891931-9854-1-git-send-email-pdeschrijver@nvidia.com> <1387891931-9854-3-git-send-email-pdeschrijver@nvidia.com> <52CB12D8.7000203@wwwdotorg.org> <20140107140502.GE26588@tbergstrom-lnx.Nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389036754-7249-4-git-send-email-dinguyen@altera.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dinguyen@altera.com
-Cc: dinh.linux@gmail.com, arnd@arndb.de, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, mturquette@linaro.org, zhangfei.gao@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140107140502.GE26588-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Danny Huang <dahuang-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 06, 2014 at 13:32 -0600, dinguyen@altera.com wrote:
+On 01/07/2014 07:05 AM, Peter De Schrijver wrote:
+> On Mon, Jan 06, 2014 at 09:32:24PM +0100, Stephen Warren wrote:
+>> On 12/24/2013 06:32 AM, Peter De Schrijver wrote:
+>>> Implement fuse driver for Tegra20, Tegra30, Tegra114 and Tegra124.
+
+>>> diff --git a/drivers/misc/fuse/tegra/fuse-tegra20.c b/drivers/misc/fuse/tegra/fuse-tegra20.c
+>>
+>>> +static int fuse_size;
+>>
+>> I don't think that's used.
+>>
+>>> +static u32 tegra20_fuse_readl(const unsigned int offset)
+>> ...
+>>> +	ret = tegra_apb_readl_using_dma(fuse_phys + FUSE_BEGIN + offset, &val);
+>>
+>> Shouldn't this use the generic tegra_apb_readl(), so that it works
+>> irrespective of whether the Tegra20 APB DMA driver is available?
+>
+> tegra_apb_readl() doesn't work reliably on Tegra20 for reading the fuses.
+> So if the Tegra20 APB DMA, this driver should also be unavailable.
+
+There's no "depends TEGRA20_APB_DMA" in the Kconfig. Perhaps
+ARCH_TEGRA_2x_SOC or FUSE_TEGRA should "select TEGRA20_APB_DMA"?
+
+>>> +static int tegra_fuse_probe(struct platform_device *pdev)
+>> ...
+>>> +	fuse_randomness();
+>>
+>> If this is a driver, and particularly if this could be in a module, is
+>> there any guarantee at all that fuse_randomness() gets called early
+>> enough to be useful?
 > 
-> ---
->  drivers/mmc/host/Kconfig          |    8 ---
->  drivers/mmc/host/dw_mmc-socfpga.c |  138 -------------------------------------
->  2 files changed, 146 deletions(-)
->  delete mode 100644 drivers/mmc/host/dw_mmc-socfpga.c
+> For a module this might be true yes... Should we disallow this making a
+> module?
 
-Isn't a Makefile affected when you remove a config option and the
-whole source file which depends on the option?  Running
-
-  git grep MMC_DW_SOCFPGA
-
-on v3.13-rc7-55-gef350bb7c5e0 suggests that
-drivers/mmc/host/Makefile needs an update as well.
-
-
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
+That would simplify things, I expect...
