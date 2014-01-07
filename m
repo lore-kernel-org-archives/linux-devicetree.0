@@ -1,82 +1,48 @@
-From: jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Subject: Re: charger-manager: Modify the way of checking battery's temperature
-Date: Tue, 07 Jan 2014 17:05:42 +0900
-Message-ID: <52CBB556.2090302@samsung.com>
-References: <20140107073951.GA17969@elgon.mountain>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 0/2] ARM: DTS: am335x-evmsk: Audio and MMC1 fix (for 3.13?)
+Date: Tue, 7 Jan 2014 10:15:04 +0200
+Message-ID: <52CBB788.9070404@ti.com>
+References: <1387790915-7217-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140107073951.GA17969-mgFCXtclrQlZLf2FXnZxJA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1387790915-7217-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, rogerq@ti.com, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On 2014=EB=85=84 01=EC=9B=94 07=EC=9D=BC 16:39, Dan Carpenter wrote:
+Hi Benoit,
 
-> Hello Jonghwa Lee,
+On 12/23/2013 11:28 AM, Peter Ujfalusi wrote:
+> Hi,
 >=20
-> The patch 5c49a6256bed: "charger-manager: Modify the way of checking
-> battery's temperature" from Dec 18, 2013, leads to the following
-> static checker warning:
+> The audio frequency has been incorrectly set in the DTS file which re=
+sults
+> incorrect playback frequency on EVM-SK.
 >=20
-> 	drivers/power/charger-manager.c:563 cm_get_battery_temperature()
-> 	warn: passing casted pointer 'temp' to 'thermal_zone_get_temp()' 32 =
-vs 64.
+> The SD card can not be used without the second patch on 3.13-rc5.
+
+Can you take a look at these and if it is possible send it for 3.13?
+
 >=20
-> drivers/power/charger-manager.c
->    554  static int cm_get_battery_temperature(struct charger_manager =
-*cm,
->    555                                          int *temp)
->    556  {
->    557          int ret;
->    558 =20
->    559          if (!cm->desc->measure_battery_temp)
->    560                  return -ENODEV;
->    561 =20
->    562  #ifdef CONFIG_THERMAL
->    563          ret =3D thermal_zone_get_temp(cm->tzd_batt, (unsigned=
- long *)temp);
->                                                           ^^^^^^^^^^^=
-^^^^^^^^^^^
-> This will corrupt memory on 64 bit systems.
+> Regards,
+> Peter
+> ---
+> Peter Ujfalusi (2):
+>   ARM: DTS: am335x-evmsk: Correct audio clock frequency
+>   ARM: dts: am335x-evmsk: Fix mmc1 support
 >=20
->    564          if (!ret)
->    565                  /* Calibrate temperature unit */
->    566                  *temp /=3D 100;
->    567  #else
->    568          ret =3D cm->fuel_gauge->get_property(cm->fuel_gauge,
->    569                                  POWER_SUPPLY_PROP_TEMP,
->    570                                  (union power_supply_propval *=
-)temp);
->                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^
-> This will corrupt memory as well.  Some of the callers pass an actual
-> 32 bit integer and not a 64 bit union.
->=20
->    571  #endif
->    572          return ret;
->    573  }
+>  arch/arm/boot/dts/am335x-evmsk.dts | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
 >=20
 
 
-Sorry, I carelessly used typecasting. I'll clean these up.
-Thanks for advice.
-
-Thanks,
-Jonghwa
-
-
-> regards,
-> dan carpenter
->=20
->=20
-
-
+--=20
+P=E9ter
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
