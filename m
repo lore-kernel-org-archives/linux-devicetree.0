@@ -1,122 +1,45 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v7 3/3] mfd: max14577: Add device tree bindings document
-Date: Tue, 07 Jan 2014 15:10:04 +0100
-Message-ID: <2536498.L12VSLryvi@amdc1227>
-References: <1386329534-14186-1-git-send-email-k.kozlowski@samsung.com>
- <1386329534-14186-4-git-send-email-k.kozlowski@samsung.com>
+From: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6sl: add ocram driver support
+Date: Tue, 7 Jan 2014 14:11:46 +0000
+Message-ID: <9F47F626-EAD4-41EA-B5BE-D9AC8DD3CC61@freescale.com>
+References: <1389041857-18512-1-git-send-email-b20788@freescale.com>,<20140107135332.GK12346@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1386329534-14186-4-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140107135332.GK12346-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Content-Language: zh-CN
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Friday 06 of December 2013 12:32:14 Krzysztof Kozlowski wrote:
-> Add document describing device tree bindings for MAX14577 MFD driver.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  Documentation/devicetree/bindings/mfd/max14577.txt |   65 ++++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
-> new file mode 100644
-> index 000000000000..0b2449aaf8bf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-> @@ -0,0 +1,65 @@
-> +Maxim MAX14577 Multi-Function Device
-> +
-> +MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
-> +Battery Charger and SFOUT LDO output for powering USB devices. It is
-> +interfaced to host controller using I2C.
-> +
-> +
-> +Required properties:
-> +- compatible : Must be "maxim,max14577".
-> +- reg : I2C slave address for the max14577 chip.
-
-If this chip has a predefined set of addresses it might be a good idea to
-list them here.
-
-> +- interrupts : IRQ line for the max14577 chip.
-> +- interrupt-parent :  The parent interrupt controller.
-> +
-> +
-> +Optional nodes:
-> +- max14577-muic :
-> +	Node used only by extcon consumers.
-
-Do you need a dedicated node to do this? If you don't need any additional
-data for MUIC cell, why couldn't the parent node be used to register the
-extcon provider?
-
-> +	Required properties:
-> +		- compatible : "maxim,max14577-muic"
-> +
-> +- regulators :
-> +	Required properties:
-> +		- compatible : "maxim,max14577-regulator"
-> +
-> +	May contain a sub-node per regulator from the list below. Each
-
-Is "May" the correct word? Wouldn't it be better to always have
-configuration specified for all regulators of the cell?
-
-> +	sub-node should contain the constraints and initialization information
-> +	for that regulator. See regulator.txt for a description of standard
-> +	properties for these sub-nodes.
-> +
-> +	List of valid regulator names: CHARGER, SAFEOUT.
-> +
-> +	The SAFEOUT is a fixed voltage regulator so there is no need to specify
-> +	voltages for it.
-> +
-> +
-> +Example:
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +max14577@25 {
-> +	compatible = "maxim,max14577";
-> +	reg = <0x25>;
-> +	interrupt-parent = <&gpx1>;
-> +	interrupts = <5 IRQ_TYPE_NONE>;
-> +
-> +	muic: max14577-muic {
-> +		compatible = "maxim,max14577-muic";
-> +	};
-> +
-> +	regulators {
-> +		compatible = "maxim,max14577-regulator";
-> +
-> +		safeout_reg: regulator@1 {
-> +			regulator-compatible = "SAFEOUT";
-> +			regulator-name = "SAFEOUT";
-> +		};
-> +		charger_reg: regulator@0 {
-> +			regulator-compatible = "CHARGER";
-> +			regulator-name = "CHARGER";
-> +			regulator-min-microamp = <90000>;
-> +			regulator-max-microamp = <950000>;
-> +			regulator-boot-on;
-> +		};
-> +	};
-> +};
-> 
-
-Now this patch creates a question whether we should keep the existing
-black-box MFD scheme, where the list of cells is determined by an array
-hardcoded inside the driver or rather we should completely move to DT
-based description where of_mfd_populate() could create all MFD cells
-using description from DT.
-
-Best regards,
-Tomasz
+R290IHRoZW0sIHRoYW5rcyENCg0KU2VudCBmcm9tIG15IGlQYWQNCg0K1NogMjAxNC0xLTejrDIx
+OjUyo6wiU2hhd24gR3VvIiA8c2hhd24uZ3VvQGxpbmFyby5vcmc+INC0tcCjug0KDQo+IE9uIE1v
+biwgSmFuIDA2LCAyMDE0IGF0IDAzOjU3OjM3UE0gLTA1MDAsIEFuc29uIEh1YW5nIHdyb3RlOg0K
+Pj4gQWRkIG9jcmFtIGRyaXZlciBzdXBwb3J0IG9uIGkuTVg2U0wuDQo+IA0KPiBzL2RyaXZlci9k
+ZXZpY2UsIGJvdGggY29tbWl0IGxvZyBhbmQgcGF0Y2ggc3ViamVjdC4NCj4gDQo+PiANCj4+IFNp
+Z25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxiMjA3ODhAZnJlZXNjYWxlLmNvbT4NCj4+IC0tLQ0K
+Pj4gYXJjaC9hcm0vYm9vdC9kdHMvaW14NnNsLmR0c2kgfCAgICA2ICsrKysrKw0KPj4gMSBmaWxl
+IGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQ0KPj4gDQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14NnNsLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2c2wuZHRzaQ0KPj4g
+aW5kZXggYjUyNjExOC4uNTc1ZTIyMiAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDZzbC5kdHNpDQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2c2wuZHRzaQ0KPj4g
+QEAgLTUzMiw2ICs1MzIsMTIgQEANCj4+ICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCA1
+NyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4+ICAgICAgICAgICAgfTsNCj4+IA0KPj4gKyAgICAg
+ICAgICAgIG9jcmFtOiBzcmFtQDAwOTAwMDAwIHsNCj4+ICsgICAgICAgICAgICAgICAgY29tcGF0
+aWJsZSA9ICJtbWlvLXNyYW0iOw0KPj4gKyAgICAgICAgICAgICAgICByZWcgPSA8MHgwMDkwMDAw
+MCAweDIwMDAwPjsNCj4+ICsgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbGtzIElNWDZTTF9D
+TEtfT0NSQU0+Ow0KPj4gKyAgICAgICAgICAgIH07DQo+PiArDQo+IA0KPiBXaGVuIGEgbm9kZSBp
+cyBuYW1lZCBpbiBmb3JtIG9mIG5hbWVAbnVtLCB3ZSBzaG91bGQgc29ydCB0aGUgbm9kZSBpbiBu
+dW0NCj4gb3JkZXIuICBUaGF0IHNhaWQsIHRoZSBub2RlIHNob3VsZCBiZSBhZGRlZCBiZWZvcmUg
+bDItY2FjaGVAMDBhMDIwMDANCj4gcmF0aGVyIHRoYW4gaGVyZS4NCj4gDQo+IEkgZml4ZWQgdGhl
+bSBhbGwgdXAsIGFuZCBhcHBsaWVkIHRoZSBwYXRjaC4NCj4gDQo+IFNoYXduDQo+IA0KPj4gICAg
+ICAgICAgICBzcmM6IHNyY0AwMjBkODAwMCB7DQo+PiAgICAgICAgICAgICAgICBjb21wYXRpYmxl
+ID0gImZzbCxpbXg2c2wtc3JjIiwgImZzbCxpbXg1MS1zcmMiOw0KPj4gICAgICAgICAgICAgICAg
+cmVnID0gPDB4MDIwZDgwMDAgMHg0MDAwPjsNCj4+IC0tIA0KPj4gMS43LjkuNQ0KPj4gDQo+PiAN
+Cj4gDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
