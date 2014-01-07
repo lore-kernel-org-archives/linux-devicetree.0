@@ -1,107 +1,76 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH V4 1/2] Phy: Exynos: Add Exynos5250 sata phy driver
-Date: Tue, 07 Jan 2014 15:22:58 +0100
-Message-ID: <2078358.4WniMksEuS@amdc1032>
-References: <1388408823-4963-1-git-send-email-yuvaraj.cd@samsung.com>
- <11600750.UKZ7EpemHS@amdc1032>
- <CAKuRcOJVQ9U_4rpUf-6+=nbO=UoNkkTU5ttmRqfWxi4_nh7fag@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7 3/3] mfd: max14577: Add device tree bindings document
+Date: Tue, 7 Jan 2014 14:35:38 +0000
+Message-ID: <20140107143538.GI31886@sirena.org.uk>
+References: <1386329534-14186-1-git-send-email-k.kozlowski@samsung.com>
+ <1386329534-14186-4-git-send-email-k.kozlowski@samsung.com>
+ <2536498.L12VSLryvi@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <CAKuRcOJVQ9U_4rpUf-6+=nbO=UoNkkTU5ttmRqfWxi4_nh7fag@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Girish K S <ks.giri@samsung.com>, Vasanth Ananthan <vasanth.a@samsung.com>, linux-ide@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lrBEqmOBc0oN5XAY"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2536498.L12VSLryvi@amdc1227>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Hi,
+--lrBEqmOBc0oN5XAY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thursday, January 02, 2014 07:03:23 PM Yuvaraj Kumar wrote:
-> On Tue, Dec 31, 2013 at 9:00 PM, Bartlomiej Zolnierkiewicz
-> <b.zolnierkie@samsung.com> wrote:
+On Tue, Jan 07, 2014 at 03:10:04PM +0100, Tomasz Figa wrote:
+> On Friday 06 of December 2013 12:32:14 Krzysztof Kozlowski wrote:
 
-> >> @@ -8,3 +8,4 @@ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)   += phy-exynos-mipi-video.o
-> >>  obj-$(CONFIG_PHY_MVEBU_SATA)         += phy-mvebu-sata.o
-> >>  obj-$(CONFIG_OMAP_USB2)                      += phy-omap-usb2.o
-> >>  obj-$(CONFIG_TWL4030_USB)            += phy-twl4030-usb.o
-> >> +obj-$(CONFIG_EXYNOS5250_SATA_PHY)    += sata_phy_exynos5250.o exynos5250_phy_i2c.o
-> >
-> > Will this compile/work without I2C support?
-> No.I missed this.It will not compile without I2C support.
-> How about  below change in drivers/phy/Kconfig ?
-> config EXYNOS5250_SATA_PHY
-> select I2C
-> select I2C_S3C2410
+> > +- regulators :
+> > +	Required properties:
+> > +		- compatible : "maxim,max14577-regulator"
 
-Fine with me.
+> > +	May contain a sub-node per regulator from the list below. Each
 
-> > CONFIG_EXYNOS5250_SATA_PHY doesn't require it currently.
-> I didnt get this. what it doesn't require?
+> Is "May" the correct word? Wouldn't it be better to always have
+> configuration specified for all regulators of the cell?
 
-It doesn't require I2C.  If you add above I2C selects it will be OK.
+It doesn't achieve anything to force people to include unused regulators
+in the DT - the node is only needed if the kernel needs to do something
+with the regulator.  This means that all the individual regulators end
+up being optional.  The set of=20
 
-> >> +struct i2c_driver sataphy_i2c_driver = {
-> >
-> > Keeping it global together with sataphy_attach_i2c_client() is not very
-> > nice.  I've talked with our local device tree guru (a.k.a. Tomasz Figa)
-> > about this and it may be that this i2c driver is not even necessary.
-> Can you elaborate more on this?
+> Now this patch creates a question whether we should keep the existing
+> black-box MFD scheme, where the list of cells is determined by an array
+> hardcoded inside the driver or rather we should completely move to DT
+> based description where of_mfd_populate() could create all MFD cells
+> using description from DT.
 
-The usage of the global i2c driver is not a proper solution.
+This has been discussed before.  The biggest issue is that the Linux
+idea of what cells it wants depends very much on whatever the current
+set of subsystems Linux has and the way we divide the hardware between
+them.  That's not a static thing, we're seeing flux with things like
+extcon and clk at the minute for example.
 
-i2c driver should register itself in the driver init function
-(which is not present currently) instead of being registered by
-the SATA PHY driver.
+--lrBEqmOBc0oN5XAY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The SATA PHY driver should find i2c client device using DT.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-sataphy_attach_i2c_client() should then be removed.
+iQIcBAEBAgAGBQJSzBC3AAoJELSic+t+oim9s3cP/25C3JqESaVlkDuHWLThM92K
+y3hWGf6kCYw8zgZC7afHzuyvIZOjSaaJeBpSEgAMe93QOf1LYkZwdEy9td8/mokm
+igJMe6tz1/3663ygfnc9r5aEcEiLQagrNXC2LNnCuBplPTN+ycYitmybUc6fq5Cn
+jl7FkqLBB5yTIPfXQmJ5F0RPqxadeTg4islfEois7OhwY18HRB5CwbkqkAm6FleG
+Qm4iMrel/T/6i3tavL5+17miOlvRWq1WBt6iKvoWUwxDWFFIGzlx101uqBUGc8/s
+VpaHbqMVLLnbAif4n4yJUo5BX1q2gZ1yBTxl7+2LrwH+GD6Of1oGlpMz7nxcKwR8
+o2Ul6A0Fa3aEYHLr7DfI16DHckLvzjZ7dtgXD3Kuiu60gPtNvAlD6sFZRUt2WDT8
+G+PWGnNL6UmwZnvFm17hbGg4CILhJ8k1A9At/ljMcUKgzlgjjrqTAzUPBzrPUYND
++y216tBfb6Ta9RdGknQTEvXyLaKOpIvo5uPz0iG8x1iPpQjz3QY0u/CSW35J9dpy
+SHcnmNENe1kBluggDrjfB30jHyN12fLdAlcRJcUOY0/M7iSSODDIdWYsahTXK6OY
+eGuHFIAmyo+2hj/lpg6vA52uKZLwJguRNzzxlUqgw0OIMFrlozORO/6H7cbTn9Kd
+EaDFrnq++cMcXze2vDI+
+=cpfS
+-----END PGP SIGNATURE-----
 
-> > If you manage to extract i2c adapter and address data from the device
-> > tree (using proper of_* methods) they can be used instead of i2c client
-> > data in the SATA PHY driver.
-> I think the above is true, if the complete SATA PHY controller sits on
-> the i2c adapter.
-> But in Exynos5250 case,only the few configurations ( CMU and TRSV
-> blocks ) SATA PHY
-> are done through I2C(channel 9). Correct me if i am wrong.
-
-Well, it shouldn't matter if all or only some of the configuration of
-the SATA PHY controller is done through i2c.
-
-Anyway, how about another idea -> adding a new phandle of i2c client
-device to SATA PHY DT entry and using DT in the SATA PHY driver to
-find i2c client device?
-
-i.e. "samsung,exynos-sataphy-i2c-phandle" property in SATA PHY
-controller DT entry can point at existing "sata-phy@38" sataphy i2c
-client DT entry (by adding new label to it, i.e. "sata_phy_i2c").
-
-Such new phandle can be used first to find the DT device node of i2c
-device (by using of_parse_phandle(), if it returns NULL the error
-should be returned) and then later to find proper i2c client device
-(by using of_find_i2c_device_by_node(), if it returns NULL deferred
-probing should be requested by returning -EPROBE_DEFER).
-
-i2c@121D0000 {
-	...
-	sata_phy_i2c: sata-phy@38 {
-		...
-	};
-	...
-};
-
-sata_phy: sata-phy@12170000 {
-	...
-	samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
-	...
-};
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
+--lrBEqmOBc0oN5XAY--
