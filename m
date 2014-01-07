@@ -1,219 +1,56 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [PATCH RESEND v2 07/12] ARM: exynos5420: create a DT header defining
- CLK IDs
-Date: Tue, 07 Jan 2014 15:47:35 +0100
-Message-ID: <1389106060-20291-8-git-send-email-a.hajda@samsung.com>
-References: <1389106060-20291-1-git-send-email-a.hajda@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1389106060-20291-1-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 1/4] ARM: dts: OMAP5: Add 60MHz clock reference to USB
+ Host module
+Date: Tue, 7 Jan 2014 16:13:38 +0100
+Message-ID: <201401071613.39245.arnd@arndb.de>
+References: <1389096889-22179-1-git-send-email-rogerq@ti.com>
+ <1389096889-22179-2-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1389096889-22179-2-git-send-email-rogerq@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, "moderated list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>
+Cc: devicetree@vger.kernel.org, tony@atomide.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch adds header file defining clock IDs.
-This allows to use macros instead of magic numbers in DT bindings.
+On Tuesday 07 January 2014, Roger Quadros wrote:
+> USB Host driver (drivers/mfd/omap-usb-host.c) expects the 60MHz
+> reference clock to be named "init_60m_fclk". Provide this
+> information.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  arch/arm/boot/dts/omap5.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index 2f12a47..e0ab379 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -765,6 +765,8 @@
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
+>                         ranges;
+> +                       clocks = <&l3init_60m_fclk>;
+> +                       clock-names = "init_60m_fclk";
+>  
+>                         usbhsohci: ohci@4a064800 {
+>                                 compatible = "ti,ohci-omap3", "usb-ohci";
 
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- include/dt-bindings/clock/exynos5420.h | 188 +++++++++++++++++++++++++++++++++
- 1 file changed, 188 insertions(+)
- create mode 100644 include/dt-bindings/clock/exynos5420.h
+The bindings/mfd/omap-usb-host.txt file doesn't document any clocks.
+Please create another patch to document the clock names in this binding
+before you start putting them into the dtsi file. So far the clock
+names are an implementation detail of Linux as they are not part
+of the binding, and with your patch it becomes part of the ABI.
 
-diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
-new file mode 100644
-index 0000000..5eefd88
---- /dev/null
-+++ b/include/dt-bindings/clock/exynos5420.h
-@@ -0,0 +1,188 @@
-+/*
-+ * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-+ * Author: Andrzej Haja <a.hajda@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * Device Tree binding constants for Exynos5420 clock controller.
-+*/
-+
-+#ifndef _DT_BINDINGS_CLOCK_EXYNOS_5420_H
-+#define _DT_BINDINGS_CLOCK_EXYNOS_5420_H
-+
-+/* core clocks */
-+#define CLK_FIN_PLL		1
-+#define CLK_FOUT_APLL		2
-+#define CLK_FOUT_CPLL		3
-+#define CLK_FOUT_DPLL		4
-+#define CLK_FOUT_EPLL		5
-+#define CLK_FOUT_RPLL		6
-+#define CLK_FOUT_IPLL		7
-+#define CLK_FOUT_SPLL		8
-+#define CLK_FOUT_VPLL		9
-+#define CLK_FOUT_MPLL		10
-+#define CLK_FOUT_BPLL		11
-+#define CLK_FOUT_KPLL		12
-+
-+/* gate for special clocks (sclk) */
-+#define CLK_SCLK_UART0		128
-+#define CLK_SCLK_UART1		129
-+#define CLK_SCLK_UART2		130
-+#define CLK_SCLK_UART3		131
-+#define CLK_SCLK_MMC0		132
-+#define CLK_SCLK_MMC1		133
-+#define CLK_SCLK_MMC2		134
-+#define CLK_SCLK_SPI0		135
-+#define CLK_SCLK_SPI1		136
-+#define CLK_SCLK_SPI2		137
-+#define CLK_SCLK_I2S1		138
-+#define CLK_SCLK_I2S2		139
-+#define CLK_SCLK_PCM1		140
-+#define CLK_SCLK_PCM2		141
-+#define CLK_SCLK_SPDIF		142
-+#define CLK_SCLK_HDMI		143
-+#define CLK_SCLK_PIXEL		144
-+#define CLK_SCLK_DP1		145
-+#define CLK_SCLK_MIPI1		146
-+#define CLK_SCLK_FIMD1		147
-+#define CLK_SCLK_MAUDIO0	148
-+#define CLK_SCLK_MAUPCM0	149
-+#define CLK_SCLK_USBD300	150
-+#define CLK_SCLK_USBD301	151
-+#define CLK_SCLK_USBPHY300	152
-+#define CLK_SCLK_USBPHY301	153
-+#define CLK_SCLK_UNIPRO		154
-+#define CLK_SCLK_PWM		155
-+#define CLK_SCLK_GSCL_WA	156
-+#define CLK_SCLK_GSCL_WB	157
-+#define CLK_SCLK_HDMIPHY	158
-+
-+/* gate clocks */
-+#define CLK_ACLK66_PERIC	256
-+#define CLK_UART0		257
-+#define CLK_UART1		258
-+#define CLK_UART2		259
-+#define CLK_UART3		260
-+#define CLK_I2C0		261
-+#define CLK_I2C1		262
-+#define CLK_I2C2		263
-+#define CLK_I2C3		264
-+#define CLK_I2C4		265
-+#define CLK_I2C5		266
-+#define CLK_I2C6		267
-+#define CLK_I2C7		268
-+#define CLK_I2C_HDMI		269
-+#define CLK_TSADC		270
-+#define CLK_SPI0		271
-+#define CLK_SPI1		272
-+#define CLK_SPI2		273
-+#define CLK_KEYIF		274
-+#define CLK_I2S1		275
-+#define CLK_I2S2		276
-+#define CLK_PCM1		277
-+#define CLK_PCM2		278
-+#define CLK_PWM			279
-+#define CLK_SPDIF		280
-+#define CLK_I2C8		281
-+#define CLK_I2C9		282
-+#define CLK_I2C10		283
-+#define CLK_ACLK66_PSGEN	300
-+#define CLK_CHIPID		301
-+#define CLK_SYSREG		302
-+#define CLK_TZPC0		303
-+#define CLK_TZPC1		304
-+#define CLK_TZPC2		305
-+#define CLK_TZPC3		306
-+#define CLK_TZPC4		307
-+#define CLK_TZPC5		308
-+#define CLK_TZPC6		309
-+#define CLK_TZPC7		310
-+#define CLK_TZPC8		311
-+#define CLK_TZPC9		312
-+#define CLK_HDMI_CEC		313
-+#define CLK_SECKEY		314
-+#define CLK_MCT			315
-+#define CLK_WDT			316
-+#define CLK_RTC			317
-+#define CLK_TMU			318
-+#define CLK_TMU_GPU		319
-+#define CLK_PCLK66_GPIO		330
-+#define CLK_ACLK200_FSYS2	350
-+#define CLK_MMC0		351
-+#define CLK_MMC1		352
-+#define CLK_MMC2		353
-+#define CLK_SROMC		354
-+#define CLK_UFS			355
-+#define CLK_ACLK200_FSYS	360
-+#define CLK_TSI			361
-+#define CLK_PDMA0		362
-+#define CLK_PDMA1		363
-+#define CLK_RTIC		364
-+#define CLK_USBH20		365
-+#define CLK_USBD300		366
-+#define CLK_USBD301		367
-+#define CLK_ACLK400_MSCL	380
-+#define CLK_MSCL0		381
-+#define CLK_MSCL1		382
-+#define CLK_MSCL2		383
-+#define CLK_SMMU_MSCL0		384
-+#define CLK_SMMU_MSCL1		385
-+#define CLK_SMMU_MSCL2		386
-+#define CLK_ACLK333		400
-+#define CLK_MFC			401
-+#define CLK_SMMU_MFCL		402
-+#define CLK_SMMU_MFCR		403
-+#define CLK_ACLK200_DISP1	410
-+#define CLK_DSIM1		411
-+#define CLK_DP1			412
-+#define CLK_HDMI		413
-+#define CLK_ACLK300_DISP1	420
-+#define CLK_FIMD1		421
-+#define CLK_SMMU_FIMD1		422
-+#define CLK_ACLK166		430
-+#define CLK_MIXER		431
-+#define CLK_ACLK266		440
-+#define CLK_ROTATOR		441
-+#define CLK_MDMA1		442
-+#define CLK_SMMU_ROTATOR	443
-+#define CLK_SMMU_MDMA1		444
-+#define CLK_ACLK300_JPEG	450
-+#define CLK_JPEG		451
-+#define CLK_JPEG2		452
-+#define CLK_SMMU_JPEG		453
-+#define CLK_ACLK300_GSCL	460
-+#define CLK_SMMU_GSCL0		461
-+#define CLK_SMMU_GSCL1		462
-+#define CLK_GSCL_WA		463
-+#define CLK_GSCL_WB		464
-+#define CLK_GSCL0		465
-+#define CLK_GSCL1		466
-+#define CLK_CLK_3AA		467
-+#define CLK_ACLK266_G2D		470
-+#define CLK_SSS			471
-+#define CLK_SLIM_SSS		472
-+#define CLK_MDMA0		473
-+#define CLK_ACLK333_G2D		480
-+#define CLK_G2D			481
-+#define CLK_ACLK333_432_GSCL	490
-+#define CLK_SMMU_3AA		491
-+#define CLK_SMMU_FIMCL0		492
-+#define CLK_SMMU_FIMCL1		493
-+#define CLK_SMMU_FIMCL3		494
-+#define CLK_FIMC_LITE3		495
-+#define CLK_ACLK_G3D		500
-+#define CLK_G3D			501
-+#define CLK_SMMU_MIXER		502
-+
-+/* mux clocks */
-+#define CLK_MOUT_HDMI		640
-+
-+/* divider clocks */
-+#define CLK_DOUT_PIXEL		768
-+
-+/* must be greater than maximal clock id */
-+#define CLK_NR_CLKS		769
-+
-+#endif /* _DT_BINDINGS_CLOCK_EXYNOS_5420_H */
--- 
-1.8.3.2
+	Arnd
