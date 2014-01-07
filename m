@@ -1,47 +1,52 @@
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V2 6/6] acpi: platform: add ACPI code for X-Gene reboot
- platform driver.
-Date: Tue,  7 Jan 2014 14:50:41 -0800
-Message-ID: <1389135041-16062-7-git-send-email-fkan@apm.com>
-References: <1389135041-16062-1-git-send-email-fkan@apm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V5 0/4] DRIVERS: IRQCHIP: Add support for crossbar IP
+Date: Tue, 7 Jan 2014 15:07:34 -0800
+Message-ID: <20140107230733.GD5074@atomide.com>
+References: <1386066445-28245-1-git-send-email-r.sricharan@ti.com>
+ <52B168A5.4010202@ti.com>
+ <52BBB614.5010707@ti.com>
+ <52BC6B16.80507@ti.com>
+ <52BD856E.7010609@ti.com>
+ <52C11284.2030500@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1389135041-16062-1-git-send-email-fkan@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc: Feng Kan <fkan@apm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52C11284.2030500@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, robherring2@gmail.com, tglx@linutronix.de, galak@codeaurora.org, rob.herring@calxeda.com, nm@ti.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Add ACPI code for X-Gene reboot platform driver.
+* Sricharan R <r.sricharan@ti.com> [131229 22:30]:
+> On Friday 27 December 2013 07:19 PM, Sricharan R wrote:
+> > On Thursday 26 December 2013 11:14 PM, Santosh Shilimkar wrote:
+> >> On Wednesday 25 December 2013 11:52 PM, Sricharan R wrote:
+> >>> On Wednesday 18 December 2013 02:49 PM, Sricharan R wrote:
+> >>>> I have addressed all the comments on this series, can this be merged now ?
+> >>>>
+> >>>   Ping..
+> >>>
+> >> Thomas has already given his reviewed-by tag so the patches can be
+> >> taken via arm-soc tree considering OMAP and GIC changes. Can you
+> >> create a branch with all these patches applied and send it
+> >> to Tony ?
+> >>
+> > Ok, i will send out a branch for this.
+> > 
+>  
+>  I have pushed the below branch
+> 
+> git://github.com/Sricharanti/sricharan.git
+> branch: crossbar
+> 
+> This is on top of Tony's linux-omap master branch
 
-Signed-off-by: Feng Kan <fkan@apm.com>
----
- drivers/acpi/acpi_platform.c |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+The linux-omap master branch cannot be used as a base as it
+contains tons of commit history not in mainline. So I'll
+manually applied these patches into omap-for-v3.14/crosbar
+branch.
 
-diff --git a/drivers/acpi/acpi_platform.c b/drivers/acpi/acpi_platform.c
-index dbfe49e..9fe1d4f 100644
---- a/drivers/acpi/acpi_platform.c
-+++ b/drivers/acpi/acpi_platform.c
-@@ -37,6 +37,9 @@ static const struct acpi_device_id acpi_platform_device_ids[] = {
- 	{ "INT33C8" },
- 	{ "80860F28" },
- 
-+	/* APM X-Gene */
-+	{ "APMC0D08" },
-+
- 	{ }
- };
- 
--- 
-1.7.6.1
+Regards,
+
+Tony
