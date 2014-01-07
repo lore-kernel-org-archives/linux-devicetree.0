@@ -1,84 +1,74 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH] drm/panel: Add support for Chungwa CLAA101WA01A panel
-Date: Tue,  7 Jan 2014 16:46:26 -0700
-Message-ID: <1389138386-4618-1-git-send-email-swarren@wwwdotorg.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V5 0/4] DRIVERS: IRQCHIP: Add support for crossbar IP
+Date: Tue, 7 Jan 2014 15:55:15 -0800
+Message-ID: <20140107235514.GG5074@atomide.com>
+References: <1386066445-28245-1-git-send-email-r.sricharan@ti.com>
+ <52B168A5.4010202@ti.com>
+ <52BBB614.5010707@ti.com>
+ <52BC6B16.80507@ti.com>
+ <52BD856E.7010609@ti.com>
+ <52C11284.2030500@ti.com>
+ <20140107230733.GD5074@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140107230733.GD5074-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [140107 15:10]:
+> * Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org> [131229 22:30]:
+> > On Friday 27 December 2013 07:19 PM, Sricharan R wrote:
+> > > On Thursday 26 December 2013 11:14 PM, Santosh Shilimkar wrote:
+> > >> On Wednesday 25 December 2013 11:52 PM, Sricharan R wrote:
+> > >>> On Wednesday 18 December 2013 02:49 PM, Sricharan R wrote:
+> > >>>> I have addressed all the comments on this series, can this be merged now ?
+> > >>>>
+> > >>>   Ping..
+> > >>>
+> > >> Thomas has already given his reviewed-by tag so the patches can be
+> > >> taken via arm-soc tree considering OMAP and GIC changes. Can you
+> > >> create a branch with all these patches applied and send it
+> > >> to Tony ?
+> > >>
+> > > Ok, i will send out a branch for this.
+> > > 
+> >  
+> >  I have pushed the below branch
+> > 
+> > git://github.com/Sricharanti/sricharan.git
+> > branch: crossbar
+> > 
+> > This is on top of Tony's linux-omap master branch
+> 
+> The linux-omap master branch cannot be used as a base as it
+> contains tons of commit history not in mainline. So I'll
+> manually applied these patches into omap-for-v3.14/crosbar
+> branch.
 
-The Chungwa CLAA101WA01A is a 10.1" 1366x768 panel, which can be
-supported by the simple panel driver.
+Oops, I noticed some errors on these:
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/panel/chunghwa,claa101wa01a.txt       |  7 ++++++
- drivers/gpu/drm/panel/panel-simple.c               | 25 ++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/panel/chunghwa,claa101wa01a.txt
+WARNING: drivers/built-in.o(.text+0xcd0): Section mismatch in reference from the function irqcrossbar_init() to the function .init.text:crossbar_of_init()
+The function irqcrossbar_init() references
+the function __init crossbar_of_init().
+This is often because irqcrossbar_init lacks a __init 
+annotation or the annotation of crossbar_of_init is wrong.
 
-diff --git a/Documentation/devicetree/bindings/panel/chunghwa,claa101wa01a.txt b/Documentation/devicetree/bindings/panel/chunghwa,claa101wa01a.txt
-new file mode 100644
-index 000000000000..f24614e4d5ec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/panel/chunghwa,claa101wa01a.txt
-@@ -0,0 +1,7 @@
-+Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "chunghwa,claa101wa01a"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index a2d5e3f1205e..d68a9635ab9e 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -316,6 +316,28 @@ static const struct panel_desc auo_b101aw03 = {
- 	},
- };
- 
-+static const struct drm_display_mode chungwa_claa101wa01a_mode = {
-+	.clock = 72070,
-+	.hdisplay = 1366,
-+	.hsync_start = 1366 + 58,
-+	.hsync_end = 1366 + 58 + 58,
-+	.htotal = 1366 + 58 + 58 + 58,
-+	.vdisplay = 768,
-+	.vsync_start = 768 + 4,
-+	.vsync_end = 768 + 4 + 4,
-+	.vtotal = 768 + 4 + 4 + 4,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc chungwa_claa101wa01a = {
-+	.modes = &chungwa_claa101wa01a_mode,
-+	.num_modes = 1,
-+	.size = {
-+		.width = 220,
-+		.height = 120,
-+	},
-+};
-+
- static const struct drm_display_mode chunghwa_claa101wb01_mode = {
- 	.clock = 69300,
- 	.hdisplay = 1366,
-@@ -365,6 +387,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "auo,b101aw03",
- 		.data = &auo_b101aw03,
- 	}, {
-+		.compatible = "chungwa,claa101wa01a",
-+		.data = &chungwa_claa101wa01a
-+	}, {
- 		.compatible = "chunghwa,claa101wb01",
- 		.data = &chunghwa_claa101wb01
- 	}, {
--- 
-1.8.1.5
+WARNING: drivers/built-in.o(.text+0xcdc): Section mismatch in reference from the function irqcrossbar_init() to the (unknown reference) .init.rodata:(unknown)
+The function irqcrossbar_init() references
+the (unknown reference) __initconst (unknown).
+This is often because irqcrossbar_init lacks a __initconst 
+annotation or the annotation of (unknown) is wrong.
 
+So I've dropped them for now. Care to fix up those errors and
+base your patches against let's say v3.13-rc5?
+
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
