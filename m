@@ -1,72 +1,114 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Tue, 07 Jan 2014 22:26:47 +0100
-Message-ID: <52CC7117.3010704@redhat.com>
-References: <Pine.LNX.4.44L0.1401061043240.1282-100000@iolanthe.rowland.org> <52CC6B8F.5000404@redhat.com> <4061478.AqT6BOpdOY@wuerfel>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 1/2] ARM: dts: Add omap specific pinctrl defines to
+ use padconf addresses
+Date: Tue, 7 Jan 2014 14:30:21 -0800
+Message-ID: <20140107223021.GA5074@atomide.com>
+References: <1387554677-21100-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <1387554677-21100-2-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBIXCWGLAKGQEM47C2VI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <4061478.AqT6BOpdOY@wuerfel>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1387554677-21100-2-git-send-email-laurent.pinchart@ideasonboard.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@debian.org>, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+* Laurent Pinchart <laurent.pinchart@ideasonboard.com> [131220 07:52]:
+> From: Tony Lindgren <tony@atomide.com>
+> +/*
+> + * Macros to allow using the absolute physical address instead of the
+> + * padconf registers instead of the offset from padconf base.
+> + */
+> +#define OMAP_IOPAD_OFFSET(pa, offset)	(((pa) & 0xffff) - (offset))
+> +
+> +#define OMAP2420_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x0030) (val)
+> +#define OMAP2430_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2030) (val)
+> +#define OMAP3_CORE1_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2030) (val)
+> +#define OMAP3_CORE2_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x25a0) (val)
 
-On 01/07/2014 10:16 PM, Arnd Bergmann wrote:
-> On Tuesday 07 January 2014 22:03:11 Hans de Goede wrote:
->>>> +
->>>> +Optional properties:
->>>> + - clocks: array of clocks
->>>> + - clock-names: clock names "ahb" and/or "ohci"
->>>
->>> Where does "ahb" come from, what does it mean, and how is it relevant
->>> to generic platforms?
->>
->> ahb is an ARM specific thing, so your right it does not belong in a
->> generic driver. I'll use clk1 and clk2 as names in my next version.
->
-> While AHB is a bus created by ARM Ltd, it's not actually specific
-> to the ARM architecture. My guess is that it is in fact used on 95%
-> of all SoCs, so I would leave it at that. For the other clock, I
-> think that's actually the bus clock for the USB interface, so I would
-> not call it "ohci" but rather just "usb" or "phy".
->
-> I think it's important to distinguish the names and not just use
-> "clk1" and "clk2", because the driver may actually want to access
-> a particular clock in some scenario.
+Sorry for the delay on these, I'm only now getting back to looking
+at all the emails since the holidays :)
 
-The idea here is to have a generic driver, if a driver needs to know
-about a specific clock, it will likely be another device specific
-driver and it can use its own dt-bindings and clock names. I believe
-that for a generic driver meant to cover common hardware configs,
-simply having X clks and then on power_on enabling clk1, then clk2,
-then clk3, etc. and on power off do the same in reverse other is
-a good approach.
+After looking at Nishant's omap3 pinctrl core2 patch, looks like we need
+to have separate OMAP3430_CORE2_IOPAD and OMAP3630_CORE2_IOPAD defines.
 
->
->>> What about platforms that use 3 clocks?
->>
->> Ah yes I see some platforms have 3 clocks, I'll also add a clk3.
->
-> I guess we should try to find at least one hardware data sheet
-> for an actual ohci implementation and look at what the clock
-> inputs are really called. A lot of the drivers seem to incorrectly
-> use the name for the clock signal inside of the soc, which tends
-> to be named after who provides it, not what it's used for.
-
-I don't know about data-sheets, but an example of a driver
-with 3 clocks is drivers/usb/host/ohci-at91.c fwiw it uses
-"uhpck", "hclk" and "usb_clk" as clk names.
+I've committed the following updated version of this patch into
+omap-for-v3.14/dt branch.
 
 Regards,
 
-Hans
+Tony
+
+8< ----------------------
+From: Tony Lindgren <tony@atomide.com>
+Date: Tue, 7 Jan 2014 14:01:38 -0800
+Subject: [PATCH] ARM: dts: Add omap specific pinctrl defines to use padconf addresses
+
+As we have one to three pinctrl-single instances for each SoC it is
+a bit confusing to configure the padconf register offset from the
+base of the padconf register base.
+
+Let's add macros that allow using the physical address of the
+padconf register directly, or in most cases, just the last 16-bits
+of the address as they are shown in the documentation.
+
+Note that most documentation shows two padconf registers for each
+32-bit address, so adding 2 to the documentation address is needed for
+the second padconf register as we treat them as 16-bit registers
+for omap3+.
+
+For example, omap36xx documentation shows sdmmc2_clk at 0x48002158,
+so we can just use the last 16-bits of that value:
+
+	pinctrl-single,pins = <
+		OMAP3_CORE1_IOPAD(0x2158, PIN_INPUT_PULLUP | MUX_MODE0)
+		...
+	>;
+
+And we don't need to separately calculate the offset from the 0x2030
+base:
+
+	pinctrl-single,pins = <
+		0x128 (PIN_INPUT_PULLUP | MUX_MODE0)
+		...
+	>;
+
+Naturally both ways of defining the registers can be used, and I'm
+not saying we should replace all the existing defines. But it may
+be handy to use these macros for new entries and when doing other
+related .dts file clean-up.
+
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+[tony@atomide.com: updated for 3430 vs 3630 core2 range]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+--- a/include/dt-bindings/pinctrl/omap.h
++++ b/include/dt-bindings/pinctrl/omap.h
+@@ -49,5 +49,25 @@
+ #define PIN_OFF_INPUT_PULLDOWN	(OFF_EN | OFF_PULL_EN)
+ #define PIN_OFF_WAKEUPENABLE	WAKEUP_EN
+ 
++/*
++ * Macros to allow using the absolute physical address instead of the
++ * padconf registers instead of the offset from padconf base.
++ */
++#define OMAP_IOPAD_OFFSET(pa, offset)	(((pa) & 0xffff) - (offset))
++
++#define OMAP2420_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x0030) (val)
++#define OMAP2430_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2030) (val)
++#define OMAP3_CORE1_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2030) (val)
++#define OMAP3430_CORE2_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x25d8) (val)
++#define OMAP3630_CORE2_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x25a0) (val)
++#define OMAP3_WKUP_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2a00) (val)
++#define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
++#define OMAP4_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x0040) (val)
++#define OMAP4_WKUP_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0xe040) (val)
++#define AM4372_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
++#define OMAP5_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2840) (val)
++#define OMAP5_WKUP_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0xc840) (val)
++#define DRA7XX_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x3400) (val)
++
+ #endif
+ 
