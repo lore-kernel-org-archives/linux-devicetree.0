@@ -1,83 +1,86 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [RFC PATCH 1/3] pci: APM X-Gene PCIe controller driver
-Date: Tue, 07 Jan 2014 12:31:46 +0900
-Message-ID: <001101cf0b58$fe73e730$fb5bb590$%han@samsung.com>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com>
- <1387785725-24262-2-git-send-email-tinamdar@apm.com>
- <007401cf0a81$51429250$f3c7b6f0$%han@samsung.com>
- <CACoXjcmqUixctokJ9COLWAsaDTUyVKk9vTAbW1hUhUdcgaj-kg@mail.gmail.com>
+From: Dongsheng Wang <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/2] powerpc/dts: fix lbc lack of error interrupt
+Date: Tue, 7 Jan 2014 14:26:42 +0800
+Message-ID: <1389076002-18674-1-git-send-email-dongsheng.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <CACoXjcmqUixctokJ9COLWAsaDTUyVKk9vTAbW1hUhUdcgaj-kg@mail.gmail.com>
-Content-language: ko
-Sender: linux-doc-owner@vger.kernel.org
-To: 'Tanmay Inamdar' <tinamdar@apm.com>
-Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, 'Grant Likely' <grant.likely@linaro.org>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Rob Landley' <rob@landley.net>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 'patches' <patches@apm.com>, 'Jon Masters' <jcm@redhat.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Jingoo Han' <jg1.han@samsung.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, January 07, 2014 11:45 AM, Tanmay Inamdar wrote:
-> On Sun, Jan 5, 2014 at 5:47 PM, Jingoo Han <jg1.han@samsung.com> wrote:
-> > On Monday, December 23, 2013 5:02 PM, Tanmay Inamdar wrote:
-> >>
-> >> This patch adds the AppliedMicro X-gene SOC PCIe controller driver.
-> >> APM X-Gene PCIe controller supports maximum upto 8 lanes and
-> >> GEN3 speed. X-Gene has maximum 5 PCIe ports supported.
-> >
-> > (+cc Jason Gunthorpe, Arnd Bergmann)
-> >
-> > Hi Tanmay Inamdar,
-> >
-> > I added some minor comments. :-)
-> >
-> >>
-> >> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
-> >> ---
-> >>  drivers/pci/host/Kconfig      |    5 +
-> >>  drivers/pci/host/Makefile     |    1 +
-> >>  drivers/pci/host/pcie-xgene.c | 1017 +++++++++++++++++++++++++++++++++++++++++
-> >
-> > Would you change the file name to 'pci-xgene.c'?
-> > Now, all PCI host drivers are using the prefix 'pci-', not 'pcie-'.
-> 
-> I guess designware is an exception. There is
-> "drivers/pci/host/pcie-designware.c"
+From: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-(+cc Thierry Reding, Pratyush Anand, Mohit KUMAR)
+P1020, P1021, P1022, P1023 when the lbc get error, the error
+interrupt will be triggered. The corresponding interrupt is
+internal IRQ0. So system have to process the lbc IRQ0 interrupt.
 
-Now, the current naming rule is "PCI-" prefix as below.
+The corresponding lbc general interrupt is internal IRQ3.
 
-  - Samsung Exynos: "pci"-exynos.c
-  - Freescale i.MX6: "pci"-imx6.c
-  - Marvell: pci-mvebu.c
-  - Nvidia Tegra: pci-tegra.c
-  - Renesas R-Car: pci-rcar-gen2.c
+Signed-off-by: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-According to the Thierry Reding's comment,
-"I think we should keep these sorted alphabetically. Also Tegra and
-Marvell are PCIe controllers but they still use the pci- prefix instead
-of pcie-. Perhaps it'd be good to keep consistency here? I initially
-chose pci- because from a software point of view it doesn't matter all
-that much whether it's PCI or PCIe and because the drivers are part of
-the PCI subsystem. However if Exynos now uses the pcie- prefix it makes
-it look like Tegra and Marvell are plain old PCI."
-(https://groups.google.com/forum/#!msg/linux.kernel/qtimJoNSc3w/_1aayHaG54YJ)
+diff --git a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
+index 68cc5e7..13f209f 100644
+--- a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
+@@ -36,7 +36,8 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <1>;
+ 	compatible = "fsl,p1020-elbc", "fsl,elbc", "simple-bus";
+-	interrupts = <19 2 0 0>;
++	interrupts = <19 2 0 0
++		      16 2 0 0>;
+ };
+ 
+ /* controller at 0x9000 */
+diff --git a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
+index adb82fd..cffc93e 100644
+--- a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
+@@ -36,7 +36,8 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <1>;
+ 	compatible = "fsl,p1021-elbc", "fsl,elbc", "simple-bus";
+-	interrupts = <19 2 0 0>;
++	interrupts = <19 2 0 0
++		      16 2 0 0>;
+ };
+ 
+ /* controller at 0x9000 */
+diff --git a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
+index e179803..979670d 100644
+--- a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
+@@ -40,7 +40,8 @@
+ 	 * pin muxing when the DIU is enabled.
+ 	 */
+ 	compatible = "fsl,p1022-elbc", "fsl,elbc";
+-	interrupts = <19 2 0 0>;
++	interrupts = <19 2 0 0
++		      16 2 0 0>;
+ };
+ 
+ /* controller at 0x9000 */
+diff --git a/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
+index f1105bf..f5f5043 100644
+--- a/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
+@@ -36,7 +36,8 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <1>;
+ 	compatible = "fsl,p1023-elbc", "fsl,elbc", "simple-bus";
+-	interrupts = <19 2 0 0>;
++	interrupts = <19 2 0 0
++		      16 2 0 0>;
+ };
+ 
+ /* controller at 0xa000 */
+-- 
+1.8.5
 
-However, "pcie-designware.c" is common layer driver for other
-SoC PCI host drivers that use Synopsys Designware PCI IP.
-Thus, currently it is shared by other SoC PCI host drivers
-such as pci-exynos.c, and pci-imx6.c. Also, ST PCI driver will
-use pcie-designware.c as common layer.
 
-Originally, "pci"-designware.c was used. However, Pratyush Anand
-suggested "pci"-designware.c can be renamed to "pcie"-designware.c,
-because Synopsys PCI IP and Synopsys PCI Express IP are different.
-So, currently "pcie"-designware.c is used.
-
-So, if there is no special reason, "pci-" prefix can be used.
-Thank you.
-
-Best regards,
-Jingoo Han
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
