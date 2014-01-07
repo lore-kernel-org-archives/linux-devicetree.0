@@ -1,40 +1,79 @@
-From: Tim Kryger <tim.kryger@linaro.org>
-Subject: Re: [PATCH v4 5/8] mmc: sdhci-bcm-kona: Add basic use of clocks
-Date: Tue, 7 Jan 2014 11:37:38 -0800
-Message-ID: <CAAYSxhoCrveHd5Wkc7Z0qzpGr41qG6-neYSSsuHQuC7AcuJmZQ@mail.gmail.com>
-References: <1386271244-3927-1-git-send-email-tim.kryger@linaro.org>
-	<1386271244-3927-6-git-send-email-tim.kryger@linaro.org>
-	<CAEPRUYrPXf7QNzput0bz_UPfytRy1eYgyOJYnH5v2v4DCEKSNA@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 4/6] devicetree: bindings: Document Krait L1/L2 EDAC
+Date: Tue, 7 Jan 2014 12:12:39 -0800
+Message-ID: <20140107201239.GD14405@codeaurora.org>
+References: <1388434457-4194-1-git-send-email-sboyd@codeaurora.org>
+ <1388434457-4194-5-git-send-email-sboyd@codeaurora.org>
+ <20140107105439.GC5906@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAEPRUYrPXf7QNzput0bz_UPfytRy1eYgyOJYnH5v2v4DCEKSNA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Christian Daudt <bcm@fixthebug.org>, Chris Ball <cjb@laptop.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Axel Lin <axel.lin@ingics.com>, Device Tree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linaro Patches List <patches@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140107105439.GC5906@e102568-lin.cambridge.arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 14, 2013 at 12:14 AM, Christian Daudt <bcm@fixthebug.org> wrote:
-> On Thu, Dec 5, 2013 at 11:20 AM, Tim Kryger <tim.kryger@linaro.org> wrote:
->> Enable the external clock needed by the host controller during the
->> probe and disable it during the remove.
->>
->> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
->> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
->> Reviewed-by: Matt Porter <matt.porter@linaro.org>
->
-> Reviewed-by: Christian Daudt <bcm@fixthebug.org>
->
-> Chris,
->  Are you ok with me pulling this patch along with the rest of the
-> patchset into the bcm tree?
->
->  Thanks,
->    csd
+On 01/07, Lorenzo Pieralisi wrote:
+> 
+> Not sure this binding (cache node) belongs in cpus.txt
+> 
+> I am working on defining cache bindings for ARM within the C-state
+> standardization effort:
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-December/215543.html
 
-Chris,
+Thanks I'll take a look.
 
-Can you please provide an answer to csd?
+> 
+> > +
+> > +	Description: Describes a cache in an ARM based system
+> > +
+> > +	- compatible
+> > +		Usage: required
+> > +		Value type: <string>
+> > +		Definition: shall contain at least "cache"
+> 
+> It is a bit vague, can't we just follow the ePAPR compatible definition ?
+> See posting above.
 
-Thanks,
-Tim Kryger
+Hm.. I thought this did follow the ePAPR spec. I see 'compatible,
+required, string, A standard property. The value shall include
+the string "cache".' Looks the same?
+
+And I see 'cache-level, required, u32, Specifies the level in the
+cache hierarchy. For example, a level 2 cache has a value of
+<2>.'
+
+> 
+> > +
+> > +	- cache-level
+> > +		Usage: required
+> > +		Value type: <u32>
+> > +		Definition: level in the cache heirachy
+> 
+> "hierarchy".
+
+Thanks.
+
+> I have a problem with the cache level definition, and in
+> particular the numbering, ie what the level number represents. If we
+> mean the cache level seen through the CLIDR and co., it is hard to use
+> it for shared caches since the level seen by different CPUs can actually
+> be different, or put it differently the level number might not be unique for
+> a shared cache. I need to think about a proper way to sort this out.
+> 
+
+Ok. I don't even use this property in my driver. All I really
+need is the phandle from cpus pointing to the L2 and the
+interrupts property in the L2 node.
+
+How do you want to proceed here? If your cache binding goes
+through I would just need to add the interrupts part. Or you
+could even add that part in the same patch, you could have my
+signed-off-by for that.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
