@@ -1,30 +1,98 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] ARM: cache-l2x0: Parse properties from DT for PL310 cache controller
-Date: Tue, 07 Jan 2014 13:54:55 +0100
-Message-ID: <4325123.pn10H18tk9@wuerfel>
-References: <1389094888-24348-1-git-send-email-tushar.behera@linaro.org> <52CBF606.5080209@arm.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCHv3][ 2/2] ARM: dts: Add support for the cpuimx53 board
+ from Eukrea and its baseboard.
+Date: Tue, 7 Jan 2014 20:56:00 +0800
+Message-ID: <20140107125558.GH12346@S2101-09.ap.freescale.net>
+References: <1389024968-20242-1-git-send-email-denis@eukrea.com>
+ <1389024968-20242-2-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52CBF606.5080209@arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sudeep Holla <Sudeep.Holla@arm.com>
-Cc: Tushar Behera <tushar.behera@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1389024968-20242-2-git-send-email-denis@eukrea.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Denis Carikli <denis@eukrea.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 January 2014 12:41:42 Sudeep Holla wrote:
-> Hi Tushar,
+On Mon, Jan 06, 2014 at 05:16:08PM +0100, Denis Carikli wrote:
+> +&esdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_esdhc1 &pinctrl_esdhc1_cd>;
+> +	cd-gpios = <&gpio5 17 GPIO_ACTIVE_LOW>;
+> +	vqmmc-supply = <&reg_3p3v>;
+> +	vmmc-supply = <&reg_3p3v>;
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +	imx53-eukrea {
+> +		pinctrl_esdhc1: esdhc1 {
+
+s/esdhc1/esdhc1grp
+
+> +			fsl,pins = <MX53_ESDHC1_PINGRP1>;
+> +		};
+> +
+> +		pinctrl_esdhc1_cd: esdhc1_cd {
+> +			fsl,pins = <MX53_PAD_DISP0_DAT23__GPIO5_17 0x80000000>;
+> +		};
+
+Please merge above two nodes into one as below.
+
+	pinctrl_esdhc1: esdhc1grp {
+		fsl,pins = <
+			MX53_ESDHC1_PINGRP1
+			MX53_PAD_DISP0_DAT23__GPIO5_17 0x80000000 /* CD */
+		>;
+	};
+
+> +
+> +		pinctrl_gpiokeys: gpiokeysgrp {
+> +			fsl,pins = <MX53_PAD_KEY_COL4__GPIO4_14 0x80000000>;
+> +		};
+> +
+> +		pinctrl_gpioled: gpioledgrp {
+> +			fsl,pins = <MX53_PAD_KEY_ROW4__GPIO4_15 0x80000000>;
+> +		};
+> +
+> +		pinctrl_uart1: uart1grp {
+> +			fsl,pins = <MX53_UART1_PINGRP2 MX53_UART1_PINGRP3>;
+
+Please put two macros onto two lines.
+
+Shawn
+
+> +		};
+> +
+> +		pinctrl_uart2: uart2grp {
+> +			fsl,pins = <MX53_UART2_PINGRP2>;
+> +		};
+> +	};
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	fsl,uart-has-rtscts;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	fsl,uart-has-rtscts;
+> +	status = "okay";
+> +};
+> -- 
+> 1.7.9.5
 > 
-> This has been discussed couple of times in past[1][2], and the opinion was not
-> to have these in DT as they are more configuration data than the actual hardware
-> description.
-
-How do you suggest we get rid of the magic constants in platform code then?
-I definitely don't want to keep the current state, and having configuration
-data in DT seems the lesser evil.
-
-Are there some reasonable defaults that Linux could use independent of the
-platform and of what the boot loader defaults to?
-
-	Arnd
