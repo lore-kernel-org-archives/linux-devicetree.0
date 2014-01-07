@@ -1,113 +1,59 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] gpio: mcp23s08: Add irq functionality for i2c chips
-Date: Tue, 7 Jan 2014 16:00:44 +0000
-Message-ID: <20140107160044.GE4180@e106331-lin.cambridge.arm.com>
-References: <1389103548-23458-1-git-send-email-larsi@wh2.tu-dresden.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] ARM: cache-l2x0: Parse properties from DT for PL310 cache controller
+Date: Tue, 07 Jan 2014 17:12:54 +0100
+Message-ID: <6680044.VpT1oREkGO@wuerfel>
+References: <1389094888-24348-1-git-send-email-tushar.behera@linaro.org> <4325123.pn10H18tk9@wuerfel> <52CC2381.2090905@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389103548-23458-1-git-send-email-larsi@wh2.tu-dresden.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lars Poeschel <larsi@wh2.tu-dresden.de>
-Cc: "poeschel@lemonage.de" <poeschel@lemonage.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "gnurou@gmail.com" <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52CC2381.2090905@arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sudeep Holla <Sudeep.Holla@arm.com>
+Cc: Tushar Behera <tushar.behera@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 07, 2014 at 02:05:48PM +0000, Lars Poeschel wrote:
-> From: Lars Poeschel <poeschel@lemonage.de>
+On Tuesday 07 January 2014 15:55:45 Sudeep Holla wrote:
+> On 07/01/14 12:54, Arnd Bergmann wrote:
+> > On Tuesday 07 January 2014 12:41:42 Sudeep Holla wrote:
+> >> Hi Tushar,
+> >>
+> >> This has been discussed couple of times in past[1][2], and the opinion was not
+> >> to have these in DT as they are more configuration data than the actual hardware
+> >> description.
+> > 
+> > How do you suggest we get rid of the magic constants in platform code then?
+> > I definitely don't want to keep the current state, and having configuration
+> > data in DT seems the lesser evil.
+> > 
 > 
-> This adds interrupt functionality for i2c chips to the driver.
-> They can act as a interrupt-controller and generate interrupts, if
-> the inputs change.
-> This is tested on a mcp23017 chip.
+> I agree, but since these are more L2CC configuration than hardware description,
+> IMO chosen node is one option. However it's good to get opinion from DT guys.
+
+I think one of the discussions we had during the Edinburgh kernel summit resulted
+in being more relaxed towards configuration data in device nodes.
+
+> > Are there some reasonable defaults that Linux could use independent of the
+> > platform and of what the boot loader defaults to?
+> > 
 > 
-> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
-> ---
->  .../devicetree/bindings/gpio/gpio-mcp23s08.txt     |  21 +-
->  drivers/gpio/Kconfig                               |   1 +
->  drivers/gpio/gpio-mcp23s08.c                       | 220 ++++++++++++++++++++-
->  3 files changed, 236 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-> index daa3017..b8376f3 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-> @@ -38,12 +38,31 @@ Required device specific properties (only for SPI chips):
->      removed.
->  - spi-max-frequency = The maximum frequency this chip is able to handle
->  
-> -Example I2C:
-> +Optional properties:
-> +- #interrupt-cells : Should be two.
-> +  - first cell is the pin number
-> +  - second cell is used to specify flags.
-> +- interrupt-controller: Marks the device node as a interrupt controller.
-> +NOTE: The interrupt functionality is only supported for i2c versions of the
-> +chips yet.
-> +
-> +Optional device specific properties:
-> +- microchip,irq-mirror: Sets the mirror flag in the IOCON register. This causes
-> +        devices with two interrupt outputs to always trigger both interrupt
-> +        outputs regardless where the interrupt happened.
-> +
+> Most of these registers can't be programmed in Non-secure mode. So as mentioned
+> already in previous discussions it is better to avoid these settings in kernel.
+> It would be better if bootloader programs these settings even if Linux runs in
+> secure mode for simplicity.
 
-When is this useful?
+Yes, that would be ideal, but I fear we have to live with the boot loaders that
+are in existence already. Whether or not the registers can be programmed in
+non-secure mode is certainly a piece of information that belongs into the DT
+node, so we don't try to write them when we shouldn't. We could also have a
+property that identifies whether the boot loader has in fact set up the cache
+controller correctly or whether Linux has to do it. There should be no
+argument about this being out of scope, since it describes a platform property
+(presence of a sane boot loader) rather than the actual configuration.
 
-When should it be set and when shouldin't it be?
+If we decide to have such properties and we boot on a system where we can
+and should change the settings, is there a way for Linux to know what the
+settings are supposed to be other than reading them from a DT file or
+from a per-platform default?
 
-[...]
-
-> @@ -432,13 +618,21 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
->  	/* verify MCP_IOCON.SEQOP = 0, so sequential reads work,
->  	 * and MCP_IOCON.HAEN = 1, so we work with all chips.
->  	 */
-> +
->  	status = mcp->ops->read(mcp, MCP_IOCON);
->  	if (status < 0)
->  		goto fail;
-> -	if ((status & IOCON_SEQOP) || !(status & IOCON_HAEN)) {
-> +
-> +	mirror = of_find_property(mcp->chip.of_node,
-> +				  "microchip,irq-mirror", NULL);
-
-Use of_property_read_bool.
-
-> +	if ((status & IOCON_SEQOP) || !(status & IOCON_HAEN) || mirror) {
->  		/* mcp23s17 has IOCON twice, make sure they are in sync */
->  		status &= ~(IOCON_SEQOP | (IOCON_SEQOP << 8));
->  		status |= IOCON_HAEN | (IOCON_HAEN << 8);
-> +		status &= ~(IOCON_INTPOL | (IOCON_INTPOL << 8));
-> +		if (mirror)
-> +			status |= IOCON_MIRROR | (IOCON_MIRROR << 8);
-> +
->  		status = mcp->ops->write(mcp, MCP_IOCON, status);
->  		if (status < 0)
->  			goto fail;
-> @@ -469,7 +663,17 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
->  			goto fail;
->  	}
->  
-> +	if (mcp->irq &&
-> +	    of_find_property(mcp->chip.of_node, "interrupt-controller", NULL)) {
-
-You could do so here too.
-
-In fact, doesn't the irq-mirror proeprty only make sense if this is an
-interrupt controller?
-
-[...]
-
-> @@ -583,6 +789,10 @@ static int mcp230xx_remove(struct i2c_client *client)
->  	if (status == 0)
->  		kfree(mcp);
->  
-> +	if (client->irq &&
-> +	    of_find_property(mcp->chip.of_node, "interrupt-controller", NULL))
-> +		mcp23s08_irq_teardown(mcp);
-
-Can you not cache the fact it's an interrupt controller?
-
-Parsing the DT in a teardown path is very odd.
-
-Thanks,
-Mark.
+	Arnd
