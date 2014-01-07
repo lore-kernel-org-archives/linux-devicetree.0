@@ -1,45 +1,107 @@
-From: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6sl: add ocram driver support
-Date: Tue, 7 Jan 2014 14:11:46 +0000
-Message-ID: <9F47F626-EAD4-41EA-B5BE-D9AC8DD3CC61@freescale.com>
-References: <1389041857-18512-1-git-send-email-b20788@freescale.com>,<20140107135332.GK12346@S2101-09.ap.freescale.net>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH V4 1/2] Phy: Exynos: Add Exynos5250 sata phy driver
+Date: Tue, 07 Jan 2014 15:22:58 +0100
+Message-ID: <2078358.4WniMksEuS@amdc1032>
+References: <1388408823-4963-1-git-send-email-yuvaraj.cd@samsung.com>
+ <11600750.UKZ7EpemHS@amdc1032>
+ <CAKuRcOJVQ9U_4rpUf-6+=nbO=UoNkkTU5ttmRqfWxi4_nh7fag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140107135332.GK12346-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Content-Language: zh-CN
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <CAKuRcOJVQ9U_4rpUf-6+=nbO=UoNkkTU5ttmRqfWxi4_nh7fag@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Girish K S <ks.giri@samsung.com>, Vasanth Ananthan <vasanth.a@samsung.com>, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-R290IHRoZW0sIHRoYW5rcyENCg0KU2VudCBmcm9tIG15IGlQYWQNCg0K1NogMjAxNC0xLTejrDIx
-OjUyo6wiU2hhd24gR3VvIiA8c2hhd24uZ3VvQGxpbmFyby5vcmc+INC0tcCjug0KDQo+IE9uIE1v
-biwgSmFuIDA2LCAyMDE0IGF0IDAzOjU3OjM3UE0gLTA1MDAsIEFuc29uIEh1YW5nIHdyb3RlOg0K
-Pj4gQWRkIG9jcmFtIGRyaXZlciBzdXBwb3J0IG9uIGkuTVg2U0wuDQo+IA0KPiBzL2RyaXZlci9k
-ZXZpY2UsIGJvdGggY29tbWl0IGxvZyBhbmQgcGF0Y2ggc3ViamVjdC4NCj4gDQo+PiANCj4+IFNp
-Z25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxiMjA3ODhAZnJlZXNjYWxlLmNvbT4NCj4+IC0tLQ0K
-Pj4gYXJjaC9hcm0vYm9vdC9kdHMvaW14NnNsLmR0c2kgfCAgICA2ICsrKysrKw0KPj4gMSBmaWxl
-IGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQ0KPj4gDQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NnNsLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2c2wuZHRzaQ0KPj4g
-aW5kZXggYjUyNjExOC4uNTc1ZTIyMiAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZzbC5kdHNpDQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2c2wuZHRzaQ0KPj4g
-QEAgLTUzMiw2ICs1MzIsMTIgQEANCj4+ICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCA1
-NyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4+ICAgICAgICAgICAgfTsNCj4+IA0KPj4gKyAgICAg
-ICAgICAgIG9jcmFtOiBzcmFtQDAwOTAwMDAwIHsNCj4+ICsgICAgICAgICAgICAgICAgY29tcGF0
-aWJsZSA9ICJtbWlvLXNyYW0iOw0KPj4gKyAgICAgICAgICAgICAgICByZWcgPSA8MHgwMDkwMDAw
-MCAweDIwMDAwPjsNCj4+ICsgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbGtzIElNWDZTTF9D
-TEtfT0NSQU0+Ow0KPj4gKyAgICAgICAgICAgIH07DQo+PiArDQo+IA0KPiBXaGVuIGEgbm9kZSBp
-cyBuYW1lZCBpbiBmb3JtIG9mIG5hbWVAbnVtLCB3ZSBzaG91bGQgc29ydCB0aGUgbm9kZSBpbiBu
-dW0NCj4gb3JkZXIuICBUaGF0IHNhaWQsIHRoZSBub2RlIHNob3VsZCBiZSBhZGRlZCBiZWZvcmUg
-bDItY2FjaGVAMDBhMDIwMDANCj4gcmF0aGVyIHRoYW4gaGVyZS4NCj4gDQo+IEkgZml4ZWQgdGhl
-bSBhbGwgdXAsIGFuZCBhcHBsaWVkIHRoZSBwYXRjaC4NCj4gDQo+IFNoYXduDQo+IA0KPj4gICAg
-ICAgICAgICBzcmM6IHNyY0AwMjBkODAwMCB7DQo+PiAgICAgICAgICAgICAgICBjb21wYXRpYmxl
-ID0gImZzbCxpbXg2c2wtc3JjIiwgImZzbCxpbXg1MS1zcmMiOw0KPj4gICAgICAgICAgICAgICAg
-cmVnID0gPDB4MDIwZDgwMDAgMHg0MDAwPjsNCj4+IC0tIA0KPj4gMS43LjkuNQ0KPj4gDQo+PiAN
-Cj4gDQo=
+
+Hi,
+
+On Thursday, January 02, 2014 07:03:23 PM Yuvaraj Kumar wrote:
+> On Tue, Dec 31, 2013 at 9:00 PM, Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com> wrote:
+
+> >> @@ -8,3 +8,4 @@ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)   += phy-exynos-mipi-video.o
+> >>  obj-$(CONFIG_PHY_MVEBU_SATA)         += phy-mvebu-sata.o
+> >>  obj-$(CONFIG_OMAP_USB2)                      += phy-omap-usb2.o
+> >>  obj-$(CONFIG_TWL4030_USB)            += phy-twl4030-usb.o
+> >> +obj-$(CONFIG_EXYNOS5250_SATA_PHY)    += sata_phy_exynos5250.o exynos5250_phy_i2c.o
+> >
+> > Will this compile/work without I2C support?
+> No.I missed this.It will not compile without I2C support.
+> How about  below change in drivers/phy/Kconfig ?
+> config EXYNOS5250_SATA_PHY
+> select I2C
+> select I2C_S3C2410
+
+Fine with me.
+
+> > CONFIG_EXYNOS5250_SATA_PHY doesn't require it currently.
+> I didnt get this. what it doesn't require?
+
+It doesn't require I2C.  If you add above I2C selects it will be OK.
+
+> >> +struct i2c_driver sataphy_i2c_driver = {
+> >
+> > Keeping it global together with sataphy_attach_i2c_client() is not very
+> > nice.  I've talked with our local device tree guru (a.k.a. Tomasz Figa)
+> > about this and it may be that this i2c driver is not even necessary.
+> Can you elaborate more on this?
+
+The usage of the global i2c driver is not a proper solution.
+
+i2c driver should register itself in the driver init function
+(which is not present currently) instead of being registered by
+the SATA PHY driver.
+
+The SATA PHY driver should find i2c client device using DT.
+
+sataphy_attach_i2c_client() should then be removed.
+
+> > If you manage to extract i2c adapter and address data from the device
+> > tree (using proper of_* methods) they can be used instead of i2c client
+> > data in the SATA PHY driver.
+> I think the above is true, if the complete SATA PHY controller sits on
+> the i2c adapter.
+> But in Exynos5250 case,only the few configurations ( CMU and TRSV
+> blocks ) SATA PHY
+> are done through I2C(channel 9). Correct me if i am wrong.
+
+Well, it shouldn't matter if all or only some of the configuration of
+the SATA PHY controller is done through i2c.
+
+Anyway, how about another idea -> adding a new phandle of i2c client
+device to SATA PHY DT entry and using DT in the SATA PHY driver to
+find i2c client device?
+
+i.e. "samsung,exynos-sataphy-i2c-phandle" property in SATA PHY
+controller DT entry can point at existing "sata-phy@38" sataphy i2c
+client DT entry (by adding new label to it, i.e. "sata_phy_i2c").
+
+Such new phandle can be used first to find the DT device node of i2c
+device (by using of_parse_phandle(), if it returns NULL the error
+should be returned) and then later to find proper i2c client device
+(by using of_find_i2c_device_by_node(), if it returns NULL deferred
+probing should be requested by returning -EPROBE_DEFER).
+
+i2c@121D0000 {
+	...
+	sata_phy_i2c: sata-phy@38 {
+		...
+	};
+	...
+};
+
+sata_phy: sata-phy@12170000 {
+	...
+	samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
+	...
+};
+
+Best regards,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
