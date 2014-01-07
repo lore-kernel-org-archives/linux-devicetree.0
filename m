@@ -1,74 +1,123 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: vf610: use the interrupt macros
-Date: Tue, 7 Jan 2014 15:52:19 +0800
-Message-ID: <20140107075217.GA27279@shlinux2.ap.freescale.net>
-References: <1387952367-6321-1-git-send-email-b32955@freescale.com>
- <20140106060429.GC27227@S2101-09.ap.freescale.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 1/3] pci: APM X-Gene PCIe controller driver
+Date: Tue, 7 Jan 2014 10:27:59 +0100
+Message-ID: <201401071028.00225.arnd@arndb.de>
+References: <1387785725-24262-1-git-send-email-tinamdar@apm.com> <201401031307.50312.arnd@arndb.de> <CACoXjck9KvQjB-8t3GYa95pZ6AwAyhyRKVg=5CYog_nFAfCiAQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140106060429.GC27227-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACoXjck9KvQjB-8t3GYa95pZ6AwAyhyRKVg=5CYog_nFAfCiAQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 06, 2014 at 02:04:33PM +0800, Shawn Guo wrote:
-> On Wed, Dec 25, 2013 at 02:19:27PM +0800, Huang Shijie wrote:
-> > This patch uses the IRQ_TYPE_LEVEL_HIGH/IRQ_TYPE_NONE to replace
-> > the hardcode.
-> > 
-> > Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/vf610.dtsi |   37 +++++++++++++++++++------------------
-> >  1 files changed, 19 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-> > index ef8a0ee..cd5bb86 100644
-> > --- a/arch/arm/boot/dts/vf610.dtsi
-> > +++ b/arch/arm/boot/dts/vf610.dtsi
-> > @@ -10,6 +10,7 @@
-> >  #include "skeleton.dtsi"
-> >  #include "vf610-pingrp.h"
-> >  #include <dt-bindings/clock/vf610-clock.h>
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> >  
-> >  / {
-> >  	aliases {
-> > @@ -90,7 +91,7 @@
-> >  			uart0: serial@40027000 {
-> >  				compatible = "fsl,vf610-lpuart";
-> >  				reg = <0x40027000 0x1000>;
-> > -				interrupts = <0 61 0x00>;
+On Tuesday 07 January 2014, Tanmay Inamdar wrote:
+> > Also, the implementation is wrong since the I/O port range already needs
+> > to be ioremapped in order for inb/outb to work. There is already a
+> > generic implementation of this in include/asm-generic/iomap.h, which
+> > correctly calls ioport_map. Make sure that arm64 uses this implementation
+> > and provides an ioport_map() function like
+> >
+> > static inline void __iomem *ioport_map(unsigned long port, unsigned int nr)
+> > {
+> >         return PCI_IOBASE + port;
+> > }
 > 
-> Why is it so special having a 0x00 IRQ trigger type?  Or is it just a
-> typo?  While we are at it, we should probably fix it if it's a typo.
-hi Jingchang:
-  i think it is a typo.
+> For X-Gene, IO regions are memory mapped IO regions. So I am not sure
+> if 'ioport_map'
+> would work.
 
-do you any idea about it?
+It should. In fact all ARM and ARM64 platforms I have seen (and most powerpc
+ones) have their IO region memory mapped. The way we handle this in Linux
+is to map the IO space to a fixed virtual address at the time the host
+controller is initialized, and all accesses to an IO port translate to
+a access in this virtual address. See the inb()/outb() implementation on
+arm and arm64, as well as the arm pci_ioremap_io() function for more
+details.
 
-thanks
-Huang Shijie	
+> >> +static void xgene_pcie_setup_lanes(struct xgene_pcie_port *port)
+> >> +{
+> >> +     void *csr_base = port->csr_base;
+> >> +     u32 val;
+> >> +
+> > ...
+> >> +static void xgene_pcie_setup_link(struct xgene_pcie_port *port)
+> >> +{
+> >> +     void *csr_base = port->csr_base;
+> >> +     u32 val;
+> >> +
+> >
+> > Don't these belong into the PHY driver? Can the setup be done in the
+> > firmware instead so we don't have to bother with it in Linux?
+> > Presumably you already need PCI support at boot time already if
+> > you want to boot from a PCI device.
 > 
-> Shawn
-> 
-> > +				interrupts = <0 61 IRQ_TYPE_NONE>;
-> >  				clocks = <&clks VF610_CLK_UART0>;
-> >  				clock-names = "ipg";
-> >  				status = "disabled";
-> > @@ -99,7 +100,7 @@
-> >  			uart1: serial@40028000 {
-> >  				compatible = "fsl,vf610-lpuart";
-> >  				reg = <0x40028000 0x1000>;
-> > -				interrupts = <0 62 0x04>;
-> > +				interrupts = <0 62 IRQ_TYPE_LEVEL_HIGH>;
-> >  				clocks = <&clks VF610_CLK_UART1>;
-> >  				clock-names = "ipg";
-> >  				status = "disabled";
+> They do look like phy setup functions but they are part of PCIe core
+> register space.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok.
+
+> >> +static void xgene_pcie_config_pims(void *csr_base, u32 addr,
+> >> +                                u64 pim, resource_size_t size)
+> >> +{
+> >> +     u32 val;
+> >> +
+> >> +     xgene_pcie_out32(csr_base + addr, lower_32_bits(pim));
+> >> +     val = upper_32_bits(pim) | EN_COHERENCY;
+> >> +     xgene_pcie_out32(csr_base + addr + 0x04, val);
+> >> +     xgene_pcie_out32(csr_base + addr + 0x08, 0x0);
+> >> +     xgene_pcie_out32(csr_base + addr + 0x0c, 0x0);
+> >> +     val = lower_32_bits(size);
+> >> +     xgene_pcie_out32(csr_base + addr + 0x10, val);
+> >> +     val = upper_32_bits(size);
+> >> +     xgene_pcie_out32(csr_base + addr + 0x14, val);
+> >> +}
+> >
+> > I suspect this is for programming the inbound translation window for
+> > DMA transactions (maybe add a comment?), and the second 64-bit word is
+> > for the bus-side address. Are you sure you want a translation starting
+> > at zero, rather than an identity-mapping like this?
+> 
+> Actually it is an unused sub-region. I will remove setting to 0. It
+> defaults to 0 anyways.
+
+Is it always an identity-mapping then?
+
+> >> +struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
+> >> +{
+> >> +     struct xgene_pcie_port *port = xgene_pcie_bus_to_port(bus);
+> >> +
+> >> +     return of_node_get(port->node);
+> >> +}
+> >
+> > Another pointless wrapper to remove.
+> 
+> If I remove this, then we get a failure while parsing irqs
+> "pci 0000:00:00.0: of_irq_parse_pci() failed with rc=-22"
+
+I mean it would be just as easy to open-code the function in the
+callers, and more readable.
+
+> >> +static int xgene_pcie_populate_inbound_regions(struct xgene_pcie_port *port)
+> >> +{
+> >> +     struct resource *msi_res = &port->res[XGENE_MSI];
+> >> +     phys_addr_t ddr_size = memblock_phys_mem_size();
+> >> +     phys_addr_t ddr_base = memblock_start_of_DRAM();
+> >
+> > This looks fragile. What about discontiguous memory? It's probably better to
+> > leave this setup to the firmware, which already has to do it.
+> 
+> Idea is to map whole RAM. The memory controller in X-Gene does not
+> allow holes or discontinuity in RAM.
+
+There might be holes in the memory map for other reasons, e.g. some part of
+memory could be reserved for use by a particular piece of software.
+There is actually a definition for a "dma-ranges" property that is normally
+use to communicate this information, i.e. which bus addresses for DMA
+translate into which parent bus (or memory) addresses. I think it would
+be more logical to use that property.
+
+	Arnd
