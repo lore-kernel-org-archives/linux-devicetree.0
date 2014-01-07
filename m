@@ -1,69 +1,91 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: Re: [PATCH v7 5/7] ARM: dts: add pbias dt node
-Date: Tue, 7 Jan 2014 15:48:15 +0530
-Message-ID: <52CBD467.6060909@ti.com>
-References: <1387560955-6547-1-git-send-email-balajitk@ti.com> <1387560955-6547-6-git-send-email-balajitk@ti.com> <20140106181928.GK24664@e106331-lin.cambridge.arm.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 04/10] net: stmmac: sunxi platfrom
+ extensions for GMAC in Allwinner A20 SoC's
+Date: Tue, 7 Jan 2014 18:24:55 +0800
+Message-ID: <CAGb2v67iSZOivEokrye7haQss06MvUaPCNGF=E+odasgzhoWFg@mail.gmail.com>
+References: <1386350983-13281-1-git-send-email-wens@csie.org>
+ <1386350983-13281-5-git-send-email-wens@csie.org> <52A5A52C.50605@st.com>
+ <CAGb2v67WiCaMpJEzA_X6o7uOu6i3w3FCEz7=N5HY0amQb01SZA@mail.gmail.com>
+ <52A72C6D.60100@st.com> <CAGb2v64qQvqJSicA6MTAxeh1sGjWY=Pk=vDq=9J3pTQW+wkXrA@mail.gmail.com>
+ <52A87A74.8040807@st.com> <20131212090415.GQ3651@lukather>
+ <CAGb2v655_83b76PTmgkDmNGCADWwTjTwW13sOgM5HFmCVkeu=w@mail.gmail.com>
+ <20131213103822.GX3651@lukather> <CAGb2v64Q1PSMw_nULBHMR5eOC44hWBPewchxE_4sO+4XN8_sDA@mail.gmail.com>
+ <52C5656A.4060402@st.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140106181928.GK24664@e106331-lin.cambridge.arm.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "broonie@kernel.org" <broonie@kernel.org>, "tony@atomide.com" <tony@atomide.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBDNMV6LAKGQETPFF6KY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <52C5656A.4060402-qxv4g6HH51o@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 06 January 2014 11:49 PM, Mark Rutland wrote:
-> On Fri, Dec 20, 2013 at 05:35:53PM +0000, Balaji T K wrote:
->> Add pbias regulator node as a child of system control
->> module - syscon.
->>
->> Signed-off-by: Balaji T K <balajitk@ti.com>
->> ---
->>   arch/arm/boot/dts/dra7.dtsi     |   18 ++++++++++++++++++
->>   arch/arm/boot/dts/omap2430.dtsi |   18 ++++++++++++++++++
->>   arch/arm/boot/dts/omap3.dtsi    |   18 ++++++++++++++++++
->>   arch/arm/boot/dts/omap4.dtsi    |   18 ++++++++++++++++++
->>   arch/arm/boot/dts/omap5.dtsi    |   18 ++++++++++++++++++
->>   5 files changed, 90 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index d0df4c4..4e68df1 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->> +++ b/arch/arm/boot/dts/dra7.dtsi
->> @@ -110,6 +110,23 @@
->>   			ti,hwmods = "counter_32k";
->>   		};
->>
->> +		dra7_ctrl_general: tisyscon@4a002e00 {
->> +			compatible = "ti,control-syscon", "syscon", "simple-bus";
->
-> Please, don't use simple-bus like that. The components below this node
-> depend on it. It is _NOT_ a simple bus. Make the ti,control-syscon
-> driver probe it's children.
+Hi,
 
-Hi Mark,
+On Thu, Jan 2, 2014 at 9:11 PM, srinivas kandagatla
+<srinivas.kandagatla-qxv4g6HH51o@public.gmane.org> wrote:
+> Hi Chen,
+>
+> On 24/12/13 03:27, Chen-Yu Tsai wrote:
+>> Srinivas,
+>>
+>> Let's keep platform data as of_data, so SoC compatibles can pass
+>> hardware feature flags for cores that don't support auto-detection.
+>
+> I understand your concern here, But making platform_data as of_data
+> would just open a wide door for other hacky stuff too. So other glue
+> drivers would just use this interface instead, ignoring standard
+> interfaces. Also there would be issues on who takes the priority if the
+> parameters are specified in multiple places.
+>
+>
+> Can't this field/s be one of the variable in the struct stmmac_of_data
+> rather than reusing platform data?
 
-Actually ti,control-syscon driver does not exist, so I can remove it,
-and simple-bus is needed for child creation.
+We (sunxi) need .has_gmac and .tx_coe.
+
+To be generic and usable to other SoCs, it seems like I would be
+adding most of the fields from platform data. But maybe future
+glue layers will only need the callbacks. I can not be sure.
+
+Also since snps,phy-addr should be deprecated, I am thinking of
+changing the default phy address to auto-detect, until
+Giuseppe merges his phy node support work.
+
+I will post a v2 series this week.
+
+>>
+>> We can adjust the callbacks as you suggested, and I added a .free
+>> to complement .setup. Driver private data and platform data are
+>> off limits to the callbacks. My version of the callbacks:
+>>
+>>         void (*fix_mac_speed)(void *priv, unsigned int speed);
+>>         void (*bus_setup)(void __iomem *ioaddr);
+>
+> In reply to your question in last email:
+> bus_setup this is something very specific to ST which configures the bus
+> parameters of AMBA-to-STBUS converter. This register falls inside the
+> memory map of stmmac.
+
+I see. IMHO it could be merged into .init?
 
 >
->> +			reg = <0x4a002e00 0x7c>;
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			ranges;
->> +			pbias_regulator: pbias_regulator {
->> +				compatible = "ti,pbias-omap";
->> +				reg = <0 0x4>;
->> +				pbias_mmc_reg: pbias_mmc_omap5 {
->> +					regulator-name = "pbias_mmc_omap5";
->> +					regulator-min-microvolt = <1800000>;
->> +					regulator-max-microvolt = <3000000>;
->> +				};
->> +			};
->> +		};
->> +
+>>         void *(*setup)(struct platform_device *pdev);
+>>         void (*free)(struct platform_device *pdev, void *priv);
+>>         int (*init)(struct platform_device *pdev, void *priv);
+>>         void (*exit)(struct platform_device *pdev, void *priv);
+>>
 >
-> Thanks,
-> Mark.
->
+> The callbacks to Ok to me, unless Peppe has more comments on this.
+
+Ok.
+
+
+Cheers
+ChenYu
