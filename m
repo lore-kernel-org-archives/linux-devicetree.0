@@ -1,101 +1,84 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: [PATCH] ARM: cache-l2x0: Parse properties from DT for PL310 cache controller
-Date: Tue,  7 Jan 2014 17:11:28 +0530
-Message-ID: <1389094888-24348-1-git-send-email-tushar.behera@linaro.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: linux@arm.linux.org.uk, arnd@arndb.de
+From: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>
+Subject: Re: [RFC PATCH v1 2/5] misc: tda8026: Add NXP TDA8026 PHY driver
+Date: Tue, 7 Jan 2014 12:45:53 +0100
+Message-ID: <20140107114552.GA900@earth.universe>
+References: <1389010062-17185-1-git-send-email-satish.patel@ti.com>
+ <1389010062-17185-3-git-send-email-satish.patel@ti.com>
+ <20140106153033.GB24664@e106331-lin.cambridge.arm.com>
+ <52CBA075.8080506@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52CBA075.8080506-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Parsed auxiliary control properties for PL310 cache controller.
 
-Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
----
-These properties are set for Exynos4 platform. If we can pass these properties
-through device tree for Exynos4, then we can remove the hard-coded L2_AUX_VAL.
+--Qxx1br4bt0+wmkIi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- Documentation/devicetree/bindings/arm/l2cc.txt |   10 ++++++++++
- arch/arm/include/asm/hardware/cache-l2x0.h     |    1 +
- arch/arm/mm/cache-l2x0.c                       |   25 ++++++++++++++++++++++++
- 3 files changed, 36 insertions(+)
+On Tue, Jan 07, 2014 at 12:06:37PM +0530, Satish Patel wrote:
+> >> +       if (pdata->irq =3D=3D 0) {
+> >> +               /* look for the field irq-gpio in DT */
+> >> +               irq_gpio =3D of_get_named_gpio(np, "irq-gpio", 0);
+> >> +               if (!gpio_is_valid(irq_gpio)) {
+> >> +                       dev_err(dev, "Failed to get irq gpio,\n");
+> >> +                       return -EIO;
+> >> +               }
+> >=20
+> > This is horrible. If the gpio controller can act as an irq controller
+>=20
+> No it's not true. Let me clarify the signal flow,
+>=20
+> Pins =3D> GPIO =3D> GPIO BANK =3D> Interrupt controller =3D> CPU/MPU
 
-diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-index b513cb8..213546d 100644
---- a/Documentation/devicetree/bindings/arm/l2cc.txt
-+++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-@@ -44,6 +44,16 @@ Optional properties:
- - cache-id-part: cache id part number to be used if it is not present
-   on hardware
- - wt-override: If present then L2 is forced to Write through mode
-+- arm,early-write: If present then BRSEP mode (early write response) is enabled.
-+- arm,data-prefetch: If present then data prefetching is enabled.
-+- arm,instruction-prefetch: If present then instruction prefetching is enabled.
-+- arm,ns-interrupt-access: If present then interrupt mask and interrupt clear
-+  registers can be read or modified in both secure or non-secure accesses.
-+- arm,ns-lockdown: If present then non-secure accesses can write to lockdown
-+  register.
-+- arm,share-override: If present then shared attribute is ignored internally.
-+- arm,full-line-of-zero: If present then 'full line of write zero' behaviour is
-+  enabled.
- 
- Example:
- 
-diff --git a/arch/arm/include/asm/hardware/cache-l2x0.h b/arch/arm/include/asm/hardware/cache-l2x0.h
-index 6795ff7..aefdec0 100644
---- a/arch/arm/include/asm/hardware/cache-l2x0.h
-+++ b/arch/arm/include/asm/hardware/cache-l2x0.h
-@@ -78,6 +78,7 @@
- #define L2X0_CACHE_ID_RTL_R3P2          0x8
- 
- #define L2X0_AUX_CTRL_MASK			0xc0000fff
-+#define L2X0_AUX_CTRL_FULL_LINE_OF_ZERO_SHIFT	0
- #define L2X0_AUX_CTRL_DATA_RD_LATENCY_SHIFT	0
- #define L2X0_AUX_CTRL_DATA_RD_LATENCY_MASK	0x7
- #define L2X0_AUX_CTRL_DATA_WR_LATENCY_SHIFT	3
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 7abde2c..03357f1 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -705,6 +705,7 @@ static void __init pl310_of_setup(const struct device_node *np,
- 	u32 data[3] = { 0, 0, 0 };
- 	u32 tag[3] = { 0, 0, 0 };
- 	u32 filter[2] = { 0, 0 };
-+	u32 val = 0;
- 
- 	of_property_read_u32_array(np, "arm,tag-latency", tag, ARRAY_SIZE(tag));
- 	if (tag[0] && tag[1] && tag[2])
-@@ -731,6 +732,30 @@ static void __init pl310_of_setup(const struct device_node *np,
- 		writel_relaxed((filter[0] & ~(SZ_1M - 1)) | L2X0_ADDR_FILTER_EN,
- 			       l2x0_base + L2X0_ADDR_FILTER_START);
- 	}
-+
-+	if (of_find_property(np, "arm,early-write", NULL))
-+		val |= BIT(L2X0_AUX_CTRL_EARLY_BRESP_SHIFT);
-+
-+	if (of_find_property(np, "arm,instruction-prefetch", NULL))
-+		val |= BIT(L2X0_AUX_CTRL_INSTR_PREFETCH_SHIFT);
-+
-+	if (of_find_property(np, "arm,data-prefetch", NULL))
-+		val |= BIT(L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT);
-+
-+	if (of_find_property(np, "arm,ns-interrupt-access", NULL))
-+		val |= BIT(L2X0_AUX_CTRL_NS_INT_CTRL_SHIFT);
-+
-+	if (of_find_property(np, "arm,ns-lockdown", NULL))
-+		val |= BIT(L2X0_AUX_CTRL_NS_LOCKDOWN_SHIFT);
-+
-+	if (of_find_property(np, "arm,share-override", NULL))
-+		val |= BIT(L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT);
-+
-+	if (of_find_property(np, "arm,full-line-of-zero", NULL))
-+		val |= BIT(L2X0_AUX_CTRL_FULL_LINE_OF_ZERO_SHIFT);
-+
-+	*aux_val |= val;
-+	*aux_mask &= ~val;
- }
- 
- static void __init pl310_save(void)
--- 
-1.7.9.5
+This is done automatically if you use the gpio controller as
+interrupt source (here with GPIO line 22 as example):
 
+device-tree-node {
+    interrupts-extended =3D <&gpio1 22>;
+};
+
+alternatively, but then the irqs from the normal irq controller
+can't be used:
+
+device-tree-node {
+    interrupt-parent =3D <&gpio1>;
+    interrupts =3D <22>;
+};
+
+-- Sebastian
+
+--Qxx1br4bt0+wmkIi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBCAAGBQJSy+jwAAoJENju1/PIO/qaOIoP/0tsaStyDB2S3j3R6eoEEiST
+rytQS559jkb5Q37AOXKuc+4+oNqkGj8y/26VppiefRZnKlYHQ8cesPs2USh0Xhkq
+agd43W6Oha7iPZajrbc0pmx7Wc/xq4vKHNJEQ8KiQLOLOm6zDAPDenTH3SUJoVzw
+Eq8ms/a0at/hAo8sLy+yH+ugaX9QeE9c9/QA9vx1wtkxfY4D/83PwjiRmUDoB1NS
+QE4Iaulf3/Vit4YdJWpj2BJhPiyhBmF3+xi2ePGJ5zIlT/nIABi4JxhhemSYcO5h
+14cFQnBpkG/rzekBav2vRL62f5QIagQOI1PhQ5Vz9qWTyftWW4ZEl6liJf9Sj3c0
+gcmxnk914WzNwK47smryCt5B/juAS+njSlVLbaiuNglUb3JVbzmG7M3X/d9XB15V
+ZNPvfyqy6juEKEjudXF1kcKAm9GGLXMCdrWDoVl4dbemC+eDP7U6C3581jOgTlNV
+o73nQd2SdWEPy3qBIebq4hqWCA45aSJXg4nu4s9M4d0cZvL1TYpAcciSYFOxpVSN
+r9Gao3vrWNhatA7R4mvuEwJXFkYFvxXjFXPVZJ0JQYUKoSeizg78qTlZLpfj+cv9
+NkLpqmYJ6W8Jkevex8EjDkUW2sCbAT9ErEsMs2Skbe+HXaGqNqhCJMcr9UkvEaM2
+07oTIH9E+Yq5sVVRm0aS
+=H4KI
+-----END PGP SIGNATURE-----
+
+--Qxx1br4bt0+wmkIi--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
