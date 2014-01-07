@@ -1,112 +1,95 @@
-From: Sherman Yin <syin@broadcom.com>
-Subject: Re: [PATCH v4 2/4] pinctrl: Add pinctrl binding for Broadcom Capri
- SoCs
-Date: Tue, 7 Jan 2014 12:45:54 -0800
-Message-ID: <52CC6782.4060309@broadcom.com>
-References: <1386787041-6035-1-git-send-email-syin@broadcom.com>	<1387592016-13740-1-git-send-email-syin@broadcom.com>	<1387592016-13740-3-git-send-email-syin@broadcom.com> <CACRpkdaAq15wKD900SqN1sQFLBATiuA3vNoua+KJGHU+gdCgqg@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] ohci-platform: Add support for
+ devicetree instantiation
+Date: Tue, 07 Jan 2014 22:01:58 +0100
+Message-ID: <52CC6B46.8060708@redhat.com>
+References: <1388963080-12544-1-git-send-email-hdegoede@redhat.com> <20140106154555.GC24664@e106331-lin.cambridge.arm.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaAq15wKD900SqN1sQFLBATiuA3vNoua+KJGHU+gdCgqg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBVOWWGLAKGQEMQWK3GA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140106154555.GC24664-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14-01-07 09:15 AM, Linus Walleij wrote:
-> On Sat, Dec 21, 2013 at 3:13 AM, Sherman Yin <syin@broadcom.com> wrote:
->> +Optional Properties (for standard pins):
+Hi,
+
+On 01/06/2014 04:45 PM, Mark Rutland wrote:
+> On Sun, Jan 05, 2014 at 11:04:39PM +0000, Hans de Goede wrote:
+>> Add support for ohci-platform instantiation from devicetree, including
+>> optionally getting clks and a phy from devicetree, and enabling / disabling
+>> those on power_on / off.
+>>
+>> This should allow using ohci-platform from devicetree in various cases.
+>> Specifically after this commit it can be used for the ohci controller found
+>> on Allwinner sunxi SoCs.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/usb/platform-ohci.txt      |  25 ++++
+>>   drivers/usb/host/ohci-platform.c                   | 146 ++++++++++++++++++---
+>>   2 files changed, 151 insertions(+), 20 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/usb/platform-ohci.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/platform-ohci.txt b/Documentation/devicetree/bindings/usb/platform-ohci.txt
+>> new file mode 100644
+>> index 0000000..6846f1c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/platform-ohci.txt
+>> @@ -0,0 +1,25 @@
+>> +Generic Platform OHCI controller
 >> +
->> +- function:                    String. Specifies the pin mux selection. Values
->> +                               must be one of: "alt1", "alt2", "alt3", "alt4"
->> +- input-schmitt-enable:                No arguments. Enable schmitt-trigger mode.
->> +- input-schmitt-disable:       No arguments. Disable schmitt-trigger mode.
->> +- bias-pull-up:                        No arguments. Pull up on pin.
->> +- bias-pull-down:              No arguments. Pull down on pin.
->> +- bias-disable:                        No arguments. Disable pin bias.
->> +- slew-rate:                   Integer. Meaning depends on configured pin mux:
->> +                               *_SCL or *_SDA:
->> +                                       0: Standard(100kbps)& Fast(400kbps) mode
->> +                                       1: Highspeed (3.4Mbps) mode
->> +                               IC_DM or IC_DP:
->> +                                       0: normal slew rate
->> +                                       1: fast slew rate
->> +                               Otherwise:
->> +                                       0: fast slew rate
->> +                                       1: normal slew rate
->> +- input-enable:                        No arguements. Enable input (does not affect
->> +                               output.)
->> +- input-disable:               No arguements. Disable input (does not affect
->> +                               output.)
->> +- drive-strength:              Integer. Drive strength in mA.  Valid values are
->> +                               2, 4, 6, 8, 10, 12, 14, 16 mA.
+>> +Required properties:
+>> + - compatible: Should be "platform-ohci"
 >
-> Also patch
-> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> Since you're adding generic properties.
+> To me, "platform-ohci" seems rather Linux-specific. Platform devices are
+> a Linux abstraction that don't correspond to any particular bus type in
+> reality.
+>
+> We have some "*-generic" bindings. A name of that form might be more
+> appropriate. Or we could choose an arbitrary OHCI implementation's
+> vendor,ochi string and everything else can declare compatibility with
+> that.
 
-Please note that I removed from this patchset the patch that you've 
-merged to your for-next branch already:
-
-https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-pinctrl.git/commit/?h=for-next&id=8ba3f4d00078e7a49c60c0bd6298f29402c3a0a0
-
-Is that what you wanted to see in pinctrl-bindings.txt, or is there 
-something else you want to see added to that txt file?  I didn't want to 
-add the description of slew-rate arguments there because this is 
-capri-specific.  I'm not quite sure what else to add.
+With the ehci patch I'll go for your suggestion to simply keep
+via,vt8500-ehci as compat string for it, without adding a new generic
+name. So for ohci I'll also go with the first platform to use it and
+thus "allwinner,sun4i-ohci"
 
 
->> +Optional Properties (for I2C pins):
+>
+>> + - reg: Address range of the ohci registers.
+>> + - interrupts: Should contain the ohci interrupt.
 >> +
->> +- function:                    String. Specifies the pin mux selection. Values
->> +                               must be one of: "alt1", "alt2", "alt3", "alt4"
->> +- bias-pull-up:                        Integer. Pull up strength in Ohm. There are 3
->> +                               pull-up resisitors (1.2k, 1.8k, 2.7k) available
->> +                               in parallel for I2C pins, so the valid values
->> +                               are: 568, 720, 831, 1080, 1200, 1800, 2700 Ohm.
+>> +Optional properties:
+>> + - clocks: array of clocks
+>> + - clock-names: clock names "ahb" and/or "ohci"
 >
-> Also patch
-> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-
-That doc already says bias-pull-up is specified in Ohm, and the specific 
-values are chip-specific, so I don't think they should be mentioned there.
-
->> +- bias-disable:                        No arguments. Disable pin bias.
->> +- slew-rate:                   Integer. Meaning depends on configured pin mux:
->> +                               *_SCL or *_SDA:
->> +                                       0: Standard(100kbps)& Fast(400kbps) mode
->> +                                       1: Highspeed (3.4Mbps) mode
->> +                               IC_DM or IC_DP:
->> +                                       0: normal slew rate
->> +                                       1: fast slew rate
->> +                               Otherwise:
->> +                                       0: fast slew rate
->> +                                       1: normal slew rate
+> A description of what the clocks are might be helpful.
 >
-> Hm that does not seem generic though, so let's not add this to the
-> generic bindings.
+> How about something like:
 >
->> +- input-enable:                        No arguements. Enable input (does not affect
->> +                               output.)
->> +- input-disable:               No arguements. Disable input (does not affect
->> +                               output.)
->> +
->> +Optional Properties (for HDMI pins):
->> +
->> +- function:                    String. Specifies the pin mux selection. Values
->> +                               must be one of: "alt1", "alt2", "alt3", "alt4"
->> +- slew-rate:                   Integer. Controls slew rate.
->> +                                       0: Standard(100kbps)& Fast(400kbps) mode
->> +                                       1: Highspeed (3.4Mbps) mode
+> - clocks: a list of phandle + clock specifier pairs, one for each entry
+>    in clock-names.
 >
-> Hmmmm slew rate is not specifiec in "bps" but rather in
-> something like volts per second. But maybe it's best to keep
-> this value driver-specific.
+> - clock-names: Should contain:
+>     * "ahb" - some description here.
+>     * "ohci" - some description here.
 
-Right, I think the slew-rates values are capri specific.
-
-Thanks for the review.
+As Alan pointed out by asking "what is ahb" these
+names are too platform specific (arm platform in this case),
+for a generic driver. So I'm going to call them clk1, clk2 and
+instead. It may seem a bit silly to use names at all in this
+case, but having names makes things a lot easier
+implementation wise.
 
 Regards,
-Sherman
+
+Hans
