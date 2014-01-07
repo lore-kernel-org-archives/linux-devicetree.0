@@ -1,67 +1,74 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] mfd: always assign of_node in mfd_add_device()
-Date: Tue, 7 Jan 2014 08:23:49 +0000
-Message-ID: <20140107082349.GC3182@lee--X1>
-References: <1386626809-6251-1-git-send-email-swarren@wwwdotorg.org>
- <20131211092435.GC16780@lee--X1>
- <52B32C05.5010204@wwwdotorg.org>
- <20131220142530.GK3709@lee--X1>
- <52CAF1FF.9090709@wwwdotorg.org>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: vf610: use the interrupt macros
+Date: Tue, 7 Jan 2014 15:52:19 +0800
+Message-ID: <20140107075217.GA27279@shlinux2.ap.freescale.net>
+References: <1387952367-6321-1-git-send-email-b32955@freescale.com>
+ <20140106060429.GC27227@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52CAF1FF.9090709-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20140106060429.GC27227-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> > Please let me know if this is suitable and I can keep your Ack.
->=20
-> This patch doesn't seem to have made it into next-20140106. I assume
-> that's just because of the holidays, not because it was forgotten?
+On Mon, Jan 06, 2014 at 02:04:33PM +0800, Shawn Guo wrote:
+> On Wed, Dec 25, 2013 at 02:19:27PM +0800, Huang Shijie wrote:
+> > This patch uses the IRQ_TYPE_LEVEL_HIGH/IRQ_TYPE_NONE to replace
+> > the hardcode.
+> > 
+> > Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/vf610.dtsi |   37 +++++++++++++++++++------------------
+> >  1 files changed, 19 insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
+> > index ef8a0ee..cd5bb86 100644
+> > --- a/arch/arm/boot/dts/vf610.dtsi
+> > +++ b/arch/arm/boot/dts/vf610.dtsi
+> > @@ -10,6 +10,7 @@
+> >  #include "skeleton.dtsi"
+> >  #include "vf610-pingrp.h"
+> >  #include <dt-bindings/clock/vf610-clock.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> >  
+> >  / {
+> >  	aliases {
+> > @@ -90,7 +91,7 @@
+> >  			uart0: serial@40027000 {
+> >  				compatible = "fsl,vf610-lpuart";
+> >  				reg = <0x40027000 0x1000>;
+> > -				interrupts = <0 61 0x00>;
+> 
+> Why is it so special having a 0x00 IRQ trigger type?  Or is it just a
+> typo?  While we are at it, we should probably fix it if it's a typo.
+hi Jingchang:
+  i think it is a typo.
 
-Right, it was pushed yesterday morning.
+do you any idea about it?
 
-> > ----
-> >=20
-> > mfd: Revert "mfd: Always assign of_node in mfd_add_device()"
-> >=20
-> > This reverts commit 68044bee13770918e0b28dd44aa98c889ec7558f.
-> >=20
-> > We've had confirmed reports of this patch causing unforeseen issues
-> > with existing MFD users. It has been agreed by the original author
-> > and myself that reversion is the best solution.
-> >=20
-> > Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >=20
-> > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> > index 32e8d47..2676492 100644
-> > --- a/drivers/mfd/mfd-core.c
-> > +++ b/drivers/mfd/mfd-core.c
-> > @@ -117,8 +117,6 @@ static int mfd_add_device(struct device *parent=
-, int id,
-> >  			}
-> >  		}
-> >  	}
-> > -	if (!pdev->dev.of_node)
-> > -		pdev->dev.of_node =3D parent->of_node;
-> > =20
-> >  	if (cell->pdata_size) {
-> >  		ret =3D platform_device_add_data(pdev,
-> >=20
->=20
+thanks
+Huang Shijie	
+> 
+> Shawn
+> 
+> > +				interrupts = <0 61 IRQ_TYPE_NONE>;
+> >  				clocks = <&clks VF610_CLK_UART0>;
+> >  				clock-names = "ipg";
+> >  				status = "disabled";
+> > @@ -99,7 +100,7 @@
+> >  			uart1: serial@40028000 {
+> >  				compatible = "fsl,vf610-lpuart";
+> >  				reg = <0x40028000 0x1000>;
+> > -				interrupts = <0 62 0x04>;
+> > +				interrupts = <0 62 IRQ_TYPE_LEVEL_HIGH>;
+> >  				clocks = <&clks VF610_CLK_UART1>;
+> >  				clock-names = "ipg";
+> >  				status = "disabled";
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
