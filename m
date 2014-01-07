@@ -1,79 +1,85 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 1/2] ARM: dts: Add omap specific pinctrl defines to
- use padconf addresses
-Date: Tue, 7 Jan 2014 15:33:12 -0800
-Message-ID: <20140107233312.GF5074@atomide.com>
-References: <1387554677-21100-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <1562680.iFW31kAxBU@avalon>
- <20140107232018.GE5074@atomide.com>
- <4726809.ZkNbraKLQU@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4726809.ZkNbraKLQU@avalon>
-Sender: linux-omap-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@debian.org>, Sakari Ailus <sakari.ailus@iki.fi>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] drm/panel: Add support for Chungwa CLAA101WA01A panel
+Date: Tue,  7 Jan 2014 16:46:26 -0700
+Message-ID: <1389138386-4618-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Laurent Pinchart <laurent.pinchart@ideasonboard.com> [140107 15:26]:
-> Hi Tony,
-> 
-> On Tuesday 07 January 2014 15:20:18 Tony Lindgren wrote:
-> > * Laurent Pinchart <laurent.pinchart@ideasonboard.com> [140107 15:10]:
-> > > On Tuesday 07 January 2014 14:30:21 Tony Lindgren wrote:
-> > > > * Laurent Pinchart <laurent.pinchart@ideasonboard.com> [131220 07:52]:
-> > > > > From: Tony Lindgren <tony@atomide.com>
-> > > > > +/*
-> > > > > + * Macros to allow using the absolute physical address instead of the
-> > > > > + * padconf registers instead of the offset from padconf base.
-> > > > > + */
-> > > > > +#define OMAP_IOPAD_OFFSET(pa, offset)	(((pa) & 0xffff) - (offset))
-> > > > > +
-> > > > > +#define OMAP2420_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x0030)
-> > > > > (val)
-> > > > > +#define OMAP2430_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2030)
-> > > > > (val)
-> > > > > +#define OMAP3_CORE1_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2030)
-> > > > > (val)
-> > > > > +#define OMAP3_CORE2_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x25a0)
-> > > > > (val)
-> > > > 
-> > > > Sorry for the delay on these, I'm only now getting back to looking
-> > > > at all the emails since the holidays :)
-> > > > 
-> > > > After looking at Nishant's omap3 pinctrl core2 patch, looks like we need
-> > > > to have separate OMAP3430_CORE2_IOPAD and OMAP3630_CORE2_IOPAD defines.
-> > > 
-> > > That was my first impression as well, but I think we actually don't need
-> > > to. The OMAP3430 just has no useful registers in the 0x25a0 - 0x25d7
-> > > area, so we can make the CORE2 macro span that for both 3430 and 3630.
-> > 
-> > Hmm well I already did it :)
-> 
-> Haven't you been taught that you should send patches for review before 
-> applying them ? ;-)
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Using the "trivial change to an earlier patch" clause here ;)
+The Chungwa CLAA101WA01A is a 10.1" 1366x768 panel, which can be
+supported by the simple panel driver.
+
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../bindings/panel/chunghwa,claa101wa01a.txt       |  7 ++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 25 ++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/panel/chunghwa,claa101wa01a.txt
+
+diff --git a/Documentation/devicetree/bindings/panel/chunghwa,claa101wa01a.txt b/Documentation/devicetree/bindings/panel/chunghwa,claa101wa01a.txt
+new file mode 100644
+index 000000000000..f24614e4d5ec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/chunghwa,claa101wa01a.txt
+@@ -0,0 +1,7 @@
++Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
++
++Required properties:
++- compatible: should be "chunghwa,claa101wa01a"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index a2d5e3f1205e..d68a9635ab9e 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -316,6 +316,28 @@ static const struct panel_desc auo_b101aw03 = {
+ 	},
+ };
  
-> > In general my gut feeling is along the lines what you're saying, I think the
-> > padconf registers are all there on all omap3 SoCs, but only some of the
-> > padconf registers are used depending on the SoC revision and package.
-> > 
-> > Anyways, it should not hurt to have the padconf registers defined the
-> > same way as the documentation has them, at least we may get some extra
-> > warnings if people try to configure unused registers for 3430.
-> 
-> As long as the bug is fixed in a reasonably clean way I'm fine with that. This 
-> seems to count as a reasonably clean way, so no complaint :-)
++static const struct drm_display_mode chungwa_claa101wa01a_mode = {
++	.clock = 72070,
++	.hdisplay = 1366,
++	.hsync_start = 1366 + 58,
++	.hsync_end = 1366 + 58 + 58,
++	.htotal = 1366 + 58 + 58 + 58,
++	.vdisplay = 768,
++	.vsync_start = 768 + 4,
++	.vsync_end = 768 + 4 + 4,
++	.vtotal = 768 + 4 + 4 + 4,
++	.vrefresh = 60,
++};
++
++static const struct panel_desc chungwa_claa101wa01a = {
++	.modes = &chungwa_claa101wa01a_mode,
++	.num_modes = 1,
++	.size = {
++		.width = 220,
++		.height = 120,
++	},
++};
++
+ static const struct drm_display_mode chunghwa_claa101wb01_mode = {
+ 	.clock = 69300,
+ 	.hdisplay = 1366,
+@@ -365,6 +387,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "auo,b101aw03",
+ 		.data = &auo_b101aw03,
+ 	}, {
++		.compatible = "chungwa,claa101wa01a",
++		.data = &chungwa_claa101wa01a
++	}, {
+ 		.compatible = "chunghwa,claa101wb01",
+ 		.data = &chunghwa_claa101wb01
+ 	}, {
+-- 
+1.8.1.5
 
-Thanks :)
-
-BTW, I'm queueing these for v3.14, hopefully everybody is fine
-with that as these changes are getting pretty intrusive for v3.13.
-If people really need these for v3.13, please yell.
-
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
