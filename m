@@ -1,41 +1,41 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: vf610: use the interrupt macros
-Date: Tue, 7 Jan 2014 21:25:55 +0800
-Message-ID: <20140107132553.GJ12346@S2101-09.ap.freescale.net>
-References: <1387952367-6321-1-git-send-email-b32955@freescale.com>
- <20140106060429.GC27227@S2101-09.ap.freescale.net>
- <20140107075217.GA27279@shlinux2.ap.freescale.net>
- <e1421f5854394a4797628684293397da@BL2PR03MB467.namprd03.prod.outlook.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 03/10] pinctrl: exynos: add exynos5260 SoC specific data
+Date: Tue, 07 Jan 2014 14:31:59 +0100
+Message-ID: <3846194.a18yHpXxuP@wuerfel>
+References: <1389099548-14649-1-git-send-email-rahul.sharma@samsung.com> <1389099548-14649-4-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e1421f5854394a4797628684293397da-AZ66ij2kwab4MB1ZSnT4iOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "shijie.huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shijie.huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1389099548-14649-4-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@linaro.org, kgene.kim@samsung.com, thomas.ab@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Young-Gun Jang <yg1004.jang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 07, 2014 at 09:39:09AM +0000, Jingchang Lu wrote:
-> > > > @@ -90,7 +91,7 @@
-> > > >  			uart0: serial@40027000 {
-> > > >  				compatible = "fsl,vf610-lpuart";
-> > > >  				reg = <0x40027000 0x1000>;
-> > > > -				interrupts = <0 61 0x00>;
-> > >
-> > > Why is it so special having a 0x00 IRQ trigger type?  Or is it just a
-> > > typo?  While we are at it, we should probably fix it if it's a typo.
-> > hi Jingchang:
-> >   i think it is a typo.
-> > 
-> > do you any idea about it?
->   Yes, it is a typo I made, please help fix it here.
+On Tuesday 07 January 2014 18:29:01 Rahul Sharma wrote:
+> From: Young-Gun Jang <yg1004.jang@samsung.com>
+> 
+> Add Samsung Exynos5260 SoC specific data to enable pinctrl
+> support for all platforms based on EXYNOS5260.
+> 
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Signed-off-by: Young-Gun Jang <yg1004.jang@samsung.com>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
 
-Okay.  I just fixed it up and applied the patch.
+On a similar note to the comment about the platform patch, I think
+it would be good to extend the DT binding in a way that allows
+you to describe the differences between the SoCs without having
+to change the driver every time a new model comes out.
 
-Shawn
+We still have to maintain backwards compatibility with the
+existing bindings I suppose, but I'd rather not see new ones
+added like this. I realize that there is a tradeoff between
+having too much information in DT when it is always fixed, and
+having too much hardcoded in the driver, and at some point there
+was a conscious decision to do it like this, but I fear the
+tradeoff has changed with the number of EXYNOS implementations
+that really only differ in their pin banks.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
