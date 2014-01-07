@@ -1,30 +1,40 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv10] dmaengine: Add support for BCM2835
-Date: Tue, 7 Jan 2014 16:37:02 +0100
-Message-ID: <201401071637.03135.arnd@arndb.de>
-References: <52CB0180.1040605@koalo.de>
+Subject: Re: [RFC PATCH 3/3] dt-bindings: pci: xgene pcie device tree bindings
+Date: Tue, 07 Jan 2014 16:44:30 +0100
+Message-ID: <4687115.Uo6IImEscY@wuerfel>
+References: <1387785725-24262-1-git-send-email-tinamdar@apm.com> <CACoXjc=h8W=9jx4d2Y+F9hmgQsuMTgG4080jZGbtddv10OgtMA@mail.gmail.com> <201401071635.02006.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52CB0180.1040605@koalo.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Meier <florian.meier@koalo.de>
-Cc: devicetree <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Vinod Koul <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, dmaengine <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <201401071635.02006.arnd@arndb.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Tanmay Inamdar <tinamdar@apm.com>, devicetree@vger.kernel.org, Jon Masters <jcm@redhat.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Landley <rob@landley.net>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 06 January 2014, Florian Meier wrote:
-> Add support for DMA controller of BCM2835 as used in the Raspberry Pi.
-> Currently it only supports cyclic DMA.
+On Tuesday 07 January 2014 16:35:01 Arnd Bergmann wrote:
+> > >> +SoC specific DT Entry:
+> > >> +     pcie0: pcie@1f2b0000 {
+> > >> +             status = "disabled";
+> > >> +             device_type = "pci";
+> > >> +             compatible = "xgene,pcie";
+> > >> +             #interrupt-cells = <1>;
+> > >> +             #size-cells = <2>;
+> > >> +             #address-cells = >;
+> > >> +             reg = < 0x00 0x1f2b0000 0x0 0x00010000>;
+> > >> +             ranges = <0x02000000 0x0 0x00000000 0xe0 0x00000000 0x0 0x10000000 /* mem*/
+> > >
+> > >
+> > > Also, do you support no prefetchable memory?
+> > 
+> > HW has either IO or Memory regions for mapping device's memory space.
+> > There is no separate prefetchable memory space.
 > 
-> Signed-off-by: Florian Meier <florian.meier@koalo.de>
+> Are you sure the memory is non-prefetchable then? I would have expected
+> 0x42000000 rather than 0x02000000, but I could be misremembering it.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Nevermind. I just checked and you are right: if you only have
+one memory range, it has to be non-prefetchable.
+
+	Arnd
