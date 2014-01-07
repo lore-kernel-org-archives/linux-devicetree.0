@@ -1,83 +1,86 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v4 4/6] devicetree: bindings: Document Krait L1/L2 EDAC
-Date: Tue, 7 Jan 2014 10:54:39 +0000
-Message-ID: <20140107105439.GC5906@e102568-lin.cambridge.arm.com>
-References: <1388434457-4194-1-git-send-email-sboyd@codeaurora.org>
- <1388434457-4194-5-git-send-email-sboyd@codeaurora.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v7 5/7] ARM: dts: add pbias dt node
+Date: Tue, 7 Jan 2014 10:57:38 +0000
+Message-ID: <20140107105738.GA4180@e106331-lin.cambridge.arm.com>
+References: <1387560955-6547-1-git-send-email-balajitk@ti.com>
+ <1387560955-6547-6-git-send-email-balajitk@ti.com>
+ <20140106181928.GK24664@e106331-lin.cambridge.arm.com>
+ <52CBD467.6060909@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1388434457-4194-5-git-send-email-sboyd@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <52CBD467.6060909@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "broonie@kernel.org" <broonie@kernel.org>, "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 30, 2013 at 08:14:15PM +0000, Stephen Boyd wrote:
-> The Krait L1/L2 error reporting device is made up of two
-> interrupts, one per-CPU interrupt for the L1 caches and one
-> interrupt for the L2 cache.
+On Tue, Jan 07, 2014 at 10:18:15AM +0000, Balaji T K wrote:
+> On Monday 06 January 2014 11:49 PM, Mark Rutland wrote:
+> > On Fri, Dec 20, 2013 at 05:35:53PM +0000, Balaji T K wrote:
+> >> Add pbias regulator node as a child of system control
+> >> module - syscon.
+> >>
+> >> Signed-off-by: Balaji T K <balajitk@ti.com>
+> >> ---
+> >>   arch/arm/boot/dts/dra7.dtsi     |   18 ++++++++++++++++++
+> >>   arch/arm/boot/dts/omap2430.dtsi |   18 ++++++++++++++++++
+> >>   arch/arm/boot/dts/omap3.dtsi    |   18 ++++++++++++++++++
+> >>   arch/arm/boot/dts/omap4.dtsi    |   18 ++++++++++++++++++
+> >>   arch/arm/boot/dts/omap5.dtsi    |   18 ++++++++++++++++++
+> >>   5 files changed, 90 insertions(+), 0 deletions(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> >> index d0df4c4..4e68df1 100644
+> >> --- a/arch/arm/boot/dts/dra7.dtsi
+> >> +++ b/arch/arm/boot/dts/dra7.dtsi
+> >> @@ -110,6 +110,23 @@
+> >>   			ti,hwmods = "counter_32k";
+> >>   		};
+> >>
+> >> +		dra7_ctrl_general: tisyscon@4a002e00 {
+> >> +			compatible = "ti,control-syscon", "syscon", "simple-bus";
+> >
+> > Please, don't use simple-bus like that. The components below this node
+> > depend on it. It is _NOT_ a simple bus. Make the ti,control-syscon
+> > driver probe it's children.
 > 
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 72 ++++++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
+> Hi Mark,
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 9130435..54de94b 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -191,6 +191,35 @@ nodes to be present and contain the properties described below.
->  			  property identifying a 64-bit zero-initialised
->  			  memory location.
->  
-> +	- interrupts
-> +		Usage: required for cpus with compatible string "qcom,krait".
-> +		Value type: <prop-encoded-array>
-> +		Definition: L1/CPU error interrupt
-> +
-> +	- next-level-cache
-> +		Usage: optional
-> +		Value type: <phandle>
-> +		Definition: phandle pointing to the next level cache
-> +
-> +- cache node
+> Actually ti,control-syscon driver does not exist, so I can remove it,
+> and simple-bus is needed for child creation.
 
-Not sure this binding (cache node) belongs in cpus.txt
+This still shows up as a syscon node, with a reg property, and syscon is
+not an extension of simple-bus.
 
-I am working on defining cache bindings for ARM within the C-state
-standardization effort:
+There are properties in the parent node that children depend on, and
+that makes me wary of describing it as a simple bus. I'd expect to be
+able to move child nodes out of a simple-bus if ranges provided an
+idmap, and I can't do that here.
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-December/215543.html
+Thanks,
+Mark.
 
-> +
-> +	Description: Describes a cache in an ARM based system
-> +
-> +	- compatible
-> +		Usage: required
-> +		Value type: <string>
-> +		Definition: shall contain at least "cache"
-
-It is a bit vague, can't we just follow the ePAPR compatible definition ?
-See posting above.
-
-> +
-> +	- cache-level
-> +		Usage: required
-> +		Value type: <u32>
-> +		Definition: level in the cache heirachy
-
-"hierarchy". I have a problem with the cache level definition, and in
-particular the numbering, ie what the level number represents. If we
-mean the cache level seen through the CLIDR and co., it is hard to use
-it for shared caches since the level seen by different CPUs can actually
-be different, or put it differently the level number might not be unique for
-a shared cache. I need to think about a proper way to sort this out.
-
-Lorenzo
+> 
+> >
+> >> +			reg = <0x4a002e00 0x7c>;
+> >> +			#address-cells = <1>;
+> >> +			#size-cells = <1>;
+> >> +			ranges;
+> >> +			pbias_regulator: pbias_regulator {
+> >> +				compatible = "ti,pbias-omap";
+> >> +				reg = <0 0x4>;
+> >> +				pbias_mmc_reg: pbias_mmc_omap5 {
+> >> +					regulator-name = "pbias_mmc_omap5";
+> >> +					regulator-min-microvolt = <1800000>;
+> >> +					regulator-max-microvolt = <3000000>;
+> >> +				};
+> >> +			};
+> >> +		};
+> >> +
+> >
+> > Thanks,
+> > Mark.
+> >
+> 
