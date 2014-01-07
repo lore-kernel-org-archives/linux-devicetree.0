@@ -1,41 +1,61 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 03/10] pinctrl: exynos: add exynos5260 SoC specific data
-Date: Tue, 07 Jan 2014 14:31:59 +0100
-Message-ID: <3846194.a18yHpXxuP@wuerfel>
-References: <1389099548-14649-1-git-send-email-rahul.sharma@samsung.com> <1389099548-14649-4-git-send-email-rahul.sharma@samsung.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6sl: add ocram driver support
+Date: Tue, 7 Jan 2014 21:53:34 +0800
+Message-ID: <20140107135332.GK12346@S2101-09.ap.freescale.net>
+References: <1389041857-18512-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1389099548-14649-4-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@linaro.org, kgene.kim@samsung.com, thomas.ab@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Young-Gun Jang <yg1004.jang@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1389041857-18512-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 January 2014 18:29:01 Rahul Sharma wrote:
-> From: Young-Gun Jang <yg1004.jang@samsung.com>
+On Mon, Jan 06, 2014 at 03:57:37PM -0500, Anson Huang wrote:
+> Add ocram driver support on i.MX6SL.
+
+s/driver/device, both commit log and patch subject.
+
 > 
-> Add Samsung Exynos5260 SoC specific data to enable pinctrl
-> support for all platforms based on EXYNOS5260.
+> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6sl.dtsi |    6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> Signed-off-by: Young-Gun Jang <yg1004.jang@samsung.com>
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+> index b526118..575e222 100644
+> --- a/arch/arm/boot/dts/imx6sl.dtsi
+> +++ b/arch/arm/boot/dts/imx6sl.dtsi
+> @@ -532,6 +532,12 @@
+>  				interrupts = <0 57 IRQ_TYPE_LEVEL_HIGH>;
+>  			};
+>  
+> +			ocram: sram@00900000 {
+> +				compatible = "mmio-sram";
+> +				reg = <0x00900000 0x20000>;
+> +				clocks = <&clks IMX6SL_CLK_OCRAM>;
+> +			};
+> +
 
-On a similar note to the comment about the platform patch, I think
-it would be good to extend the DT binding in a way that allows
-you to describe the differences between the SoCs without having
-to change the driver every time a new model comes out.
+When a node is named in form of name@num, we should sort the node in num
+order.  That said, the node should be added before l2-cache@00a02000
+rather than here.
 
-We still have to maintain backwards compatibility with the
-existing bindings I suppose, but I'd rather not see new ones
-added like this. I realize that there is a tradeoff between
-having too much information in DT when it is always fixed, and
-having too much hardcoded in the driver, and at some point there
-was a conscious decision to do it like this, but I fear the
-tradeoff has changed with the number of EXYNOS implementations
-that really only differ in their pin banks.
+I fixed them all up, and applied the patch.
 
-	Arnd
+Shawn
+
+>  			src: src@020d8000 {
+>  				compatible = "fsl,imx6sl-src", "fsl,imx51-src";
+>  				reg = <0x020d8000 0x4000>;
+> -- 
+> 1.7.9.5
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
