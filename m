@@ -1,66 +1,52 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: mcp23s08: Add irq functionality for i2c chips
-Date: Tue, 7 Jan 2014 19:50:47 +0100
-Message-ID: <CACRpkdYqLamX6P=0he2Swy=_io2u6SKjGHPNziMdDj2j+UR+Uw@mail.gmail.com>
-References: <1389103548-23458-1-git-send-email-larsi@wh2.tu-dresden.de>
+From: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [RESEND PATCH] ARM: dts: bcm28155-ap: Fix Card Detection GPIO
+Date: Tue, 7 Jan 2014 10:53:41 -0800
+Message-ID: <1389120821-12007-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1389103548-23458-1-git-send-email-larsi@wh2.tu-dresden.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lars Poeschel <larsi@wh2.tu-dresden.de>
-Cc: Lars Poeschel <poeschel@lemonage.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Arm Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 7, 2014 at 3:05 PM, Lars Poeschel <larsi@wh2.tu-dresden.de> wrote:
+The board schematic states that the "SD_CARD_DET_N gets pulled to GND
+when card is inserted" so the polarity has been updated to active low.
 
-> From: Lars Poeschel <poeschel@lemonage.de>
->
-> This adds interrupt functionality for i2c chips to the driver.
-> They can act as a interrupt-controller and generate interrupts, if
-> the inputs change.
-> This is tested on a mcp23017 chip.
->
-> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
-(...)
->         u8                      addr;
->
->         u16                     cache[11];
-> +       u16                     irq_rise;
-> +       u16                     irq_fall;
-> +       int                     irq;
->         /* lock protects the cached values */
->         struct mutex            lock;
-> +       struct mutex            irq_lock;
-> +       struct irq_domain       *irq_domain;
+Polarity is now specified with a GPIO define instead of a magic number.
 
-(...)
-> +static int mcp23s08_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
-> +{
-> +       struct mcp23s08 *mcp = container_of(chip, struct mcp23s08, chip);
-> +
-> +       return irq_create_mapping(mcp->irq_domain, offset);
+Signed-off-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm28155-ap.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-We have recently established that the mapping shall not be created in
-gpio_to_irq().
-Instead call irq_create_mapping() for all valid IRQ lines in probe() and
-use irq_find_mapping() here.
+diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
+index 08e47c2..27dd110 100644
+--- a/arch/arm/boot/dts/bcm28155-ap.dts
++++ b/arch/arm/boot/dts/bcm28155-ap.dts
+@@ -13,6 +13,8 @@
+ 
+ /dts-v1/;
+ 
++#include <dt-bindings/gpio/gpio.h>
++
+ #include "bcm11351.dtsi"
+ 
+ / {
+@@ -40,7 +42,7 @@
+ 
+ 	sdio4: sdio@3f1b0000 {
+ 		max-frequency = <48000000>;
+-		cd-gpios = <&gpio 14 0>;
++		cd-gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
+ 		status = "okay";
+ 	};
+ };
+-- 
+1.8.0.1
 
-> +static struct irq_chip mcp23s08_irq_chip = {
-> +       .name = "gpio-mcp23xxx",
-> +       .irq_mask = mcp23s08_irq_mask,
-> +       .irq_unmask = mcp23s08_irq_unmask,
-> +       .irq_set_type = mcp23s08_irq_set_type,
-> +       .irq_bus_lock = mcp23s08_irq_bus_lock,
-> +       .irq_bus_sync_unlock = mcp23s08_irq_bus_unlock,
-> +};
-
-Add irq_startup() and irq_shutdown() hooks in accordance with something
-like this patch:
-http://marc.info/?l=linux-gpio&m=138571851304612&w=2
-
-The important thing is that you call
-gpio_lock_as_irq()/gpio_unlock_as_irq()
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
