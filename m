@@ -1,123 +1,378 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 1/3] pci: APM X-Gene PCIe controller driver
-Date: Tue, 7 Jan 2014 10:27:59 +0100
-Message-ID: <201401071028.00225.arnd@arndb.de>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com> <201401031307.50312.arnd@arndb.de> <CACoXjck9KvQjB-8t3GYa95pZ6AwAyhyRKVg=5CYog_nFAfCiAQ@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH V4 1/2] Phy: Exynos: Add Exynos5250 sata phy driver
+Date: Tue, 7 Jan 2014 15:04:14 +0530
+Message-ID: <52CBCA16.3000203@ti.com>
+References: <1388408823-4963-1-git-send-email-yuvaraj.cd@samsung.com>	<1388408823-4963-2-git-send-email-yuvaraj.cd@samsung.com>	<52C2A113.507@ti.com>
+ <CAKuRcOLm0paFVs=O_U3ebQ4MgZ14Mhf9Eus3y3Xs+Rc0J-r__A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACoXjck9KvQjB-8t3GYa95pZ6AwAyhyRKVg=5CYog_nFAfCiAQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Masters <jcm@redhat.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAKuRcOLm0paFVs=O_U3ebQ4MgZ14Mhf9Eus3y3Xs+Rc0J-r__A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Girish K S <ks.giri@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Vasanth Ananthan <vasanth.a@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, sunil joshi <joshi@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Christoffer Dall <christoffer.dall@linaro.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 January 2014, Tanmay Inamdar wrote:
-> > Also, the implementation is wrong since the I/O port range already needs
-> > to be ioremapped in order for inb/outb to work. There is already a
-> > generic implementation of this in include/asm-generic/iomap.h, which
-> > correctly calls ioport_map. Make sure that arm64 uses this implementation
-> > and provides an ioport_map() function like
-> >
-> > static inline void __iomem *ioport_map(unsigned long port, unsigned int nr)
-> > {
-> >         return PCI_IOBASE + port;
-> > }
-> 
-> For X-Gene, IO regions are memory mapped IO regions. So I am not sure
-> if 'ioport_map'
-> would work.
+On Thursday 02 January 2014 07:13 PM, Yuvaraj Kumar wrote:
+> On Tue, Dec 31, 2013 at 4:18 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> Hi Yuvaraj,
+>>
+>>
+>> On Monday 30 December 2013 06:37 PM, Yuvaraj Kumar C D wrote:
+>>>
+>>> This patch adds the sata phy driver for Exynos5250.Exynos5250 sata
+>>> phy comprises of CMU and TRSV blocks which are of I2C register Map.
+>>> So this patch also adds a i2c client driver, which is used configure
+>>> the CMU and TRSV block of exynos5250 SATA PHY.
+>>>
+>>> This patch incorporates the generic phy framework to deal with sata
+>>> phy.
+>>>
+>>> This patch depends on the below patches
+>>>         [1].drivers: phy: add generic PHY framework
+>>>                 by Kishon Vijay Abraham I<kishon@ti.com>
+>>>         [2].ata: ahci_platform: Manage SATA PHY
+>>>                 by Roger Quadros <rogerq@ti.com>
+>>>
+>>> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+>>> Signed-off-by: Girish K S <ks.giri@samsung.com>
+>>> Signed-off-by: Vasanth Ananthan <vasanth.a@samsung.com>
+>>> ---
+>>> Changes from V3:
+>>>         1.Moved devm_phy_create before to devm_phy_provider_register.
+>>>
+>>> Changes from V2:
+>>>         1.Removed of_match_table
+>>>         2.Moved to syscon interface for PMU handling.
+>>>
+>>> Changes from V1:
+>>>         1.Adapted to latest version of Generic PHY framework
+>>>         2.Removed exynos_sata_i2c_remove function.
+>>>
+>>>
+>>>   drivers/phy/Kconfig               |   11 ++
+>>>   drivers/phy/Makefile              |    1 +
+>>>   drivers/phy/exynos5250_phy_i2c.c  |   44 ++++++++
+>>>   drivers/phy/sata_phy_exynos5250.c |  220
+>>> +++++++++++++++++++++++++++++++++++++
+>>>   drivers/phy/sata_phy_exynos5250.h |   35 ++++++
+>>>   5 files changed, 311 insertions(+)
+>>>   create mode 100644 drivers/phy/exynos5250_phy_i2c.c
+>>>   create mode 100644 drivers/phy/sata_phy_exynos5250.c
+>>>   create mode 100644 drivers/phy/sata_phy_exynos5250.h
+>>>
+>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>>> index d0611b8..6ea124d 100644
+>>> --- a/drivers/phy/Kconfig
+>>> +++ b/drivers/phy/Kconfig
+>>> @@ -57,4 +57,15 @@ config PHY_EXYNOS_DP_VIDEO
+>>>         help
+>>>           Support for Display Port PHY found on Samsung EXYNOS SoCs.
+>>>
+>>> +config EXYNOS5250_SATA_PHY
+>>> +       tristate "Exynos5250 Sata SerDes/PHY driver"
+>>> +       depends on SOC_EXYNOS5250
+>>> +       select GENERIC_PHY
+>>> +       select MFD_SYSCON if ARCH_EXYNOS5
+>>> +       help
+>>> +         Enable this to support SATA SerDes/Phy found on Samsung's
+>>> +         Exynos5250 based SoCs.This SerDes/Phy supports SATA 1.5 Gb/s,
+>>> +         SATA 3.0 Gb/s, SATA 6.0 Gb/s speeds.It supports one SATA host
+>>> +         port to accept one SATA device.
+>>> +
+>>>   endmenu
+>>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>>> index 4e4adc9..b73eb73 100644
+>>> --- a/drivers/phy/Makefile
+>>> +++ b/drivers/phy/Makefile
+>>> @@ -8,3 +8,4 @@ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)     +=
+>>> phy-exynos-mipi-video.o
+>>>   obj-$(CONFIG_PHY_MVEBU_SATA)          += phy-mvebu-sata.o
+>>>   obj-$(CONFIG_OMAP_USB2)                       += phy-omap-usb2.o
+>>>   obj-$(CONFIG_TWL4030_USB)             += phy-twl4030-usb.o
+>>> +obj-$(CONFIG_EXYNOS5250_SATA_PHY)      += sata_phy_exynos5250.o
+>>> exynos5250_phy_i2c.o
+>>> diff --git a/drivers/phy/exynos5250_phy_i2c.c
+>>> b/drivers/phy/exynos5250_phy_i2c.c
+>>> new file mode 100644
+>>> index 0000000..c0c1150
+>>> --- /dev/null
+>>> +++ b/drivers/phy/exynos5250_phy_i2c.c
+>>> @@ -0,0 +1,44 @@
+>>> +/*
+>>> + * Copyright (C) 2013 Samsung Electronics Co.Ltd
+>>> + * Author:
+>>> + *     Yuvaraj C D <yuvaraj.cd@samsung.com>
+>>> + *
+>>> + * This program is free software; you can redistribute  it and/or modify
+>>> it
+>>> + * under  the terms of  the GNU General  Public License as published by
+>>> the
+>>> + * Free Software Foundation;  either version 2 of the  License, or (at
+>>> your
+>>> + * option) any later version.
+>>> + *
+>>> + */
+>>> +
+>>> +#include <linux/i2c.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/module.h>
+>>> +#include "sata_phy_exynos5250.h"
+>>> +
+>>> +static int exynos_sata_i2c_probe(struct i2c_client *client,
+>>> +               const struct i2c_device_id *i2c_id)
+>>> +{
+>>> +       int ret = 0;
+>>> +       ret = sataphy_attach_i2c_client(client);
+>>> +       if (ret < 0)
+>>> +               return ret;
+>>> +
+>>> +       dev_info(&client->adapter->dev,
+>>> +               "attached %s into sataphy i2c adapter successfully\n",
+>>> +               client->name);
+>>> +
+>>> +       return ret;
+>>> +}
+>>> +
+>>> +static const struct i2c_device_id sataphy_i2c_device_match[] = {
+>>> +       { "exynos-sataphy-i2c", 0 },
+>>> +};
+>>> +
+>>> +struct i2c_driver sataphy_i2c_driver = {
+>>> +       .probe          = exynos_sata_i2c_probe,
+>>> +       .id_table       = sataphy_i2c_device_match,
+>>> +       .driver   = {
+>>> +               .name = "exynos-sataphy-i2c",
+>>> +               .owner = THIS_MODULE,
+>>> +               },
+>>> +};
+>>> diff --git a/drivers/phy/sata_phy_exynos5250.c
+>>> b/drivers/phy/sata_phy_exynos5250.c
+>>> new file mode 100644
+>>> index 0000000..0765863
+>>> --- /dev/null
+>>> +++ b/drivers/phy/sata_phy_exynos5250.c
+>>> @@ -0,0 +1,220 @@
+>>> +/*
+>>> + * Samsung SATA SerDes(PHY) driver
+>>> + *
+>>> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
+>>> + * Authors: Girish K S <ks.giri@samsung.com>
+>>> + *         Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +#include <linux/clk.h>
+>>> +#include <linux/delay.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/i2c.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/of_address.h>
+>>> +#include <linux/phy/phy.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/regmap.h>
+>>> +#include <linux/spinlock.h>
+>>> +#include <linux/mfd/syscon.h>
+>>> +#include "sata_phy_exynos5250.h"
+>>> +
+>>> +static struct i2c_client *phy_i2c_client;
+>>> +
+>>> +struct exynos_sata_phy {
+>>> +       struct phy *phy;
+>>> +       struct clk *phyclk;
+>>> +       void __iomem *regs;
+>>> +       void __iomem *pmureg;
+>>> +};
+>>> +
+>>> +static bool wait_for_reg_status(void __iomem *base, u32 reg, u32
+>>> checkbit,
+>>> +                               u32 status)
+>>> +{
+>>> +       unsigned long timeout = jiffies + usecs_to_jiffies(1000);
+>>> +       while (time_before(jiffies, timeout)) {
+>>> +               if ((readl(base + reg) & checkbit) == status)
+>>> +                       return true;
+>>> +       }
+>>> +       return false;
+>>> +}
+>>> +
+>>> +int sataphy_attach_i2c_client(struct i2c_client *sata_phy)
+>>> +{
+>>> +       if (!sata_phy)
+>>> +               return -EPROBE_DEFER;
+>>> +       else
+>>> +               phy_i2c_client = sata_phy;
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int exynos_sata_phy_power_on(struct phy *phy)
+>>> +{
+>>> +       struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
+>>> +
+>>> +       if (sata_phy->pmureg)
+>>> +               regmap_update_bits(sata_phy->pmureg,
+>>> SATAPHY_CONTROL_OFFSET,
+>>> +                       EXYNOS5_SATAPHY_PMU_ENABLE, EXYNOS_SATA_PHY_EN);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int exynos_sata_phy_power_off(struct phy *phy)
+>>> +{
+>>> +       struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
+>>> +
+>>> +       if (sata_phy->pmureg)
+>>> +               regmap_update_bits(sata_phy->pmureg,
+>>> SATAPHY_CONTROL_OFFSET,
+>>> +                       EXYNOS5_SATAPHY_PMU_ENABLE, ~EXYNOS_SATA_PHY_EN);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int exynos_sata_phy_init(struct phy *phy)
+>>> +{
+>>> +       u32 val = 0;
+>>> +       int ret = 0;
+>>> +       u8 buf[] = { 0x3A, 0x0B };
+>>> +       struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
+>>> +
+>>> +       if (sata_phy->pmureg)
+>>> +               regmap_update_bits(sata_phy->pmureg,
+>>> SATAPHY_CONTROL_OFFSET,
+>>> +                       EXYNOS5_SATAPHY_PMU_ENABLE, EXYNOS_SATA_PHY_EN);
+>>> +
+>>> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
+>>> +
+>>> +       val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
+>>> +       val |= 0xFF;
+>>> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
+>>> +
+>>> +       val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
+>>> +       val |= LINK_RESET;
+>>> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
+>>> +
+>>> +       val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
+>>> +       val |= RESET_CMN_RST_N;
+>>> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
+>>> +       val = readl(sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
+>>> +       val &= ~PHCTRLM_REF_RATE;
+>>> +       writel(val, sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
+>>> +
+>>> +       /* High speed enable for Gen3 */
+>>> +       val = readl(sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
+>>> +       val |= PHCTRLM_HIGH_SPEED;
+>>> +       writel(val, sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
+>>> +
+>>> +       val |= CTRL0_P0_PHY_CALIBRATED_SEL | CTRL0_P0_PHY_CALIBRATED;
+>>> +       writel(val, sata_phy->regs + EXYNOS5_SATA_CTRL0);
+>>> +
+>>> +       writel(0x2, sata_phy->regs + EXYNOS5_SATA_MODE0);
+>>> +
+>>> +       ret = i2c_master_send(phy_i2c_client, buf, sizeof(buf));
+>>> +       if (ret < 0)
+>>> +               return -ENXIO;
+>>> +
+>>> +       /* release cmu reset */
+>>> +       val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
+>>> +       val &= ~RESET_CMN_RST_N;
+>>> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
+>>> +
+>>> +       val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
+>>> +       val |= RESET_CMN_RST_N;
+>>> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
+>>> +
+>>> +       return (wait_for_reg_status(sata_phy->regs,
+>>> EXYNOS5_SATA_PHSATA_STATM,
+>>> +               PHSTATM_PLL_LOCKED, 1)) ? 0 : -EINVAL;
+>>> +
+>>> +}
+>>> +
+>>> +static struct phy_ops exynos_sata_phy_ops = {
+>>> +       .init           = exynos_sata_phy_init,
+>>> +       .power_on       = exynos_sata_phy_power_on,
+>>> +       .power_off      = exynos_sata_phy_power_off,
+>>> +       .owner          = THIS_MODULE,
+>>> +};
+>>> +
+>>> +static int exynos_sata_phy_probe(struct platform_device *pdev)
+>>> +{
+>>> +       struct exynos_sata_phy *sata;
+>>> +       struct device *dev = &pdev->dev;
+>>> +       struct resource *res;
+>>> +       struct phy_provider *phy_provider;
+>>> +       int ret = 0;
+>>> +
+>>> +       sata = devm_kzalloc(dev, sizeof(*sata), GFP_KERNEL);
+>>> +       if (!sata)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> +
+>>> +       sata->regs = devm_ioremap_resource(dev, res);
+>>> +       if (IS_ERR(sata->regs))
+>>> +               return PTR_ERR(sata->regs);
+>>> +
+>>> +       sata->pmureg = syscon_regmap_lookup_by_phandle(dev->of_node,
+>>> +                                       "samsung,syscon-phandle");
+>>> +       if (!sata->pmureg) {
+>>> +               dev_err(dev, "syscon regmap lookup failed.\n");
+>>> +               return PTR_ERR(sata->pmureg);
+>>> +       }
+>>> +       dev_set_drvdata(dev, sata);
+>>> +
+>>> +       if (i2c_add_driver(&sataphy_i2c_driver)) {
+>>> +               dev_err(dev, "failed to register sataphy i2c driver\n");
+>>> +               return -ENOENT;
+>>> +       }
+>>> +
+>>> +       sata->phyclk = devm_clk_get(dev, "sata_phyctrl");
+>>> +       if (IS_ERR(sata->phyclk)) {
+>>> +               dev_err(dev, "failed to get clk for PHY\n");
+>>> +               return PTR_ERR(sata->phyclk);
+>>> +       }
+>>> +
+>>> +       ret = clk_prepare_enable(sata->phyclk);
+>>> +       if (ret < 0) {
+>>> +               dev_err(dev, "failed to enable source clk\n");
+>>> +               return ret;
+>>> +       }
+>>> +
+>>> +       sata->phy = devm_phy_create(dev, &exynos_sata_phy_ops, NULL);
+>>> +       if (IS_ERR(sata->phy)) {
+>>> +               dev_err(dev, "failed to create PHY\n");
+>>> +               return PTR_ERR(sata->phy);
+>>> +       }
+>>> +
+>>> +       phy_provider = devm_of_phy_provider_register(dev,
+>>> +                                       of_phy_simple_xlate);
+>>> +       if (IS_ERR(phy_provider))
+>>> +               return PTR_ERR(phy_provider);
+>>> +
+>>> +       phy_set_drvdata(sata->phy, sata);
+>>
+>>
+>> huh.. phy_provider_register should be after phy_set_drvdata.
+> Sorry, I misunderstood.I will address this with the Bartlomiej
+> Zolnierkiewicz comments in the next version.
 
-It should. In fact all ARM and ARM64 platforms I have seen (and most powerpc
-ones) have their IO region memory mapped. The way we handle this in Linux
-is to map the IO space to a fixed virtual address at the time the host
-controller is initialized, and all accesses to an IO port translate to
-a access in this virtual address. See the inb()/outb() implementation on
-arm and arm64, as well as the arm pci_ioremap_io() function for more
-details.
+cool.. thanks.
 
-> >> +static void xgene_pcie_setup_lanes(struct xgene_pcie_port *port)
-> >> +{
-> >> +     void *csr_base = port->csr_base;
-> >> +     u32 val;
-> >> +
-> > ...
-> >> +static void xgene_pcie_setup_link(struct xgene_pcie_port *port)
-> >> +{
-> >> +     void *csr_base = port->csr_base;
-> >> +     u32 val;
-> >> +
-> >
-> > Don't these belong into the PHY driver? Can the setup be done in the
-> > firmware instead so we don't have to bother with it in Linux?
-> > Presumably you already need PCI support at boot time already if
-> > you want to boot from a PCI device.
-> 
-> They do look like phy setup functions but they are part of PCIe core
-> register space.
-
-Ok.
-
-> >> +static void xgene_pcie_config_pims(void *csr_base, u32 addr,
-> >> +                                u64 pim, resource_size_t size)
-> >> +{
-> >> +     u32 val;
-> >> +
-> >> +     xgene_pcie_out32(csr_base + addr, lower_32_bits(pim));
-> >> +     val = upper_32_bits(pim) | EN_COHERENCY;
-> >> +     xgene_pcie_out32(csr_base + addr + 0x04, val);
-> >> +     xgene_pcie_out32(csr_base + addr + 0x08, 0x0);
-> >> +     xgene_pcie_out32(csr_base + addr + 0x0c, 0x0);
-> >> +     val = lower_32_bits(size);
-> >> +     xgene_pcie_out32(csr_base + addr + 0x10, val);
-> >> +     val = upper_32_bits(size);
-> >> +     xgene_pcie_out32(csr_base + addr + 0x14, val);
-> >> +}
-> >
-> > I suspect this is for programming the inbound translation window for
-> > DMA transactions (maybe add a comment?), and the second 64-bit word is
-> > for the bus-side address. Are you sure you want a translation starting
-> > at zero, rather than an identity-mapping like this?
-> 
-> Actually it is an unused sub-region. I will remove setting to 0. It
-> defaults to 0 anyways.
-
-Is it always an identity-mapping then?
-
-> >> +struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
-> >> +{
-> >> +     struct xgene_pcie_port *port = xgene_pcie_bus_to_port(bus);
-> >> +
-> >> +     return of_node_get(port->node);
-> >> +}
-> >
-> > Another pointless wrapper to remove.
-> 
-> If I remove this, then we get a failure while parsing irqs
-> "pci 0000:00:00.0: of_irq_parse_pci() failed with rc=-22"
-
-I mean it would be just as easy to open-code the function in the
-callers, and more readable.
-
-> >> +static int xgene_pcie_populate_inbound_regions(struct xgene_pcie_port *port)
-> >> +{
-> >> +     struct resource *msi_res = &port->res[XGENE_MSI];
-> >> +     phys_addr_t ddr_size = memblock_phys_mem_size();
-> >> +     phys_addr_t ddr_base = memblock_start_of_DRAM();
-> >
-> > This looks fragile. What about discontiguous memory? It's probably better to
-> > leave this setup to the firmware, which already has to do it.
-> 
-> Idea is to map whole RAM. The memory controller in X-Gene does not
-> allow holes or discontinuity in RAM.
-
-There might be holes in the memory map for other reasons, e.g. some part of
-memory could be reserved for use by a particular piece of software.
-There is actually a definition for a "dma-ranges" property that is normally
-use to communicate this information, i.e. which bus addresses for DMA
-translate into which parent bus (or memory) addresses. I think it would
-be more logical to use that property.
-
-	Arnd
+-Kishon
+>>
+>> Cheers
+>> Kishon
