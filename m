@@ -1,77 +1,101 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] reset: Add GPIO support to reset controller
- framework
-Date: Tue, 7 Jan 2014 12:40:55 +0100
-Message-ID: <20140107114055.GA10151@lukather>
-References: <1389030903-27684-1-git-send-email-p.zabel@pengutronix.de>
- <1389030903-27684-2-git-send-email-p.zabel@pengutronix.de>
- <20140106181422.GS3144@lukather>
- <1389088341.4815.9.camel@pizza.hi.pengutronix.de>
- <20140107111954.GA2849@lukather>
- <1389094089.4815.22.camel@pizza.hi.pengutronix.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389094089.4815.22.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: [PATCH] ARM: cache-l2x0: Parse properties from DT for PL310 cache controller
+Date: Tue,  7 Jan 2014 17:11:28 +0530
+Message-ID: <1389094888-24348-1-git-send-email-tushar.behera@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: linux@arm.linux.org.uk, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
+Parsed auxiliary control properties for PL310 cache controller.
 
---OXfL5xGRrasGEqWY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+---
+These properties are set for Exynos4 platform. If we can pass these properties
+through device tree for Exynos4, then we can remove the hard-coded L2_AUX_VAL.
 
-On Tue, Jan 07, 2014 at 12:28:09PM +0100, Philipp Zabel wrote:
-> Am Dienstag, den 07.01.2014, 12:19 +0100 schrieb Maxime Ripard:
-> > > I was under the (wrong) impression that gpiod_direction_output takes a
-> > > logical value as gpiod_set_value does. Will fix that.
-> >=20
-> > I don't think gpiod_set_value does either unfortunately.
->=20
-> It does, and Alexandre (added to Cc:) suggested that
-> gpiod_direction_output probably should, too.  I'll send a patch.
+ Documentation/devicetree/bindings/arm/l2cc.txt |   10 ++++++++++
+ arch/arm/include/asm/hardware/cache-l2x0.h     |    1 +
+ arch/arm/mm/cache-l2x0.c                       |   25 ++++++++++++++++++++++++
+ 3 files changed, 36 insertions(+)
 
-Ah, yes, I was looking at 3.12, and this has been changed in 3.13.
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index b513cb8..213546d 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -44,6 +44,16 @@ Optional properties:
+ - cache-id-part: cache id part number to be used if it is not present
+   on hardware
+ - wt-override: If present then L2 is forced to Write through mode
++- arm,early-write: If present then BRSEP mode (early write response) is enabled.
++- arm,data-prefetch: If present then data prefetching is enabled.
++- arm,instruction-prefetch: If present then instruction prefetching is enabled.
++- arm,ns-interrupt-access: If present then interrupt mask and interrupt clear
++  registers can be read or modified in both secure or non-secure accesses.
++- arm,ns-lockdown: If present then non-secure accesses can write to lockdown
++  register.
++- arm,share-override: If present then shared attribute is ignored internally.
++- arm,full-line-of-zero: If present then 'full line of write zero' behaviour is
++  enabled.
+ 
+ Example:
+ 
+diff --git a/arch/arm/include/asm/hardware/cache-l2x0.h b/arch/arm/include/asm/hardware/cache-l2x0.h
+index 6795ff7..aefdec0 100644
+--- a/arch/arm/include/asm/hardware/cache-l2x0.h
++++ b/arch/arm/include/asm/hardware/cache-l2x0.h
+@@ -78,6 +78,7 @@
+ #define L2X0_CACHE_ID_RTL_R3P2          0x8
+ 
+ #define L2X0_AUX_CTRL_MASK			0xc0000fff
++#define L2X0_AUX_CTRL_FULL_LINE_OF_ZERO_SHIFT	0
+ #define L2X0_AUX_CTRL_DATA_RD_LATENCY_SHIFT	0
+ #define L2X0_AUX_CTRL_DATA_RD_LATENCY_MASK	0x7
+ #define L2X0_AUX_CTRL_DATA_WR_LATENCY_SHIFT	3
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index 7abde2c..03357f1 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -705,6 +705,7 @@ static void __init pl310_of_setup(const struct device_node *np,
+ 	u32 data[3] = { 0, 0, 0 };
+ 	u32 tag[3] = { 0, 0, 0 };
+ 	u32 filter[2] = { 0, 0 };
++	u32 val = 0;
+ 
+ 	of_property_read_u32_array(np, "arm,tag-latency", tag, ARRAY_SIZE(tag));
+ 	if (tag[0] && tag[1] && tag[2])
+@@ -731,6 +732,30 @@ static void __init pl310_of_setup(const struct device_node *np,
+ 		writel_relaxed((filter[0] & ~(SZ_1M - 1)) | L2X0_ADDR_FILTER_EN,
+ 			       l2x0_base + L2X0_ADDR_FILTER_START);
+ 	}
++
++	if (of_find_property(np, "arm,early-write", NULL))
++		val |= BIT(L2X0_AUX_CTRL_EARLY_BRESP_SHIFT);
++
++	if (of_find_property(np, "arm,instruction-prefetch", NULL))
++		val |= BIT(L2X0_AUX_CTRL_INSTR_PREFETCH_SHIFT);
++
++	if (of_find_property(np, "arm,data-prefetch", NULL))
++		val |= BIT(L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT);
++
++	if (of_find_property(np, "arm,ns-interrupt-access", NULL))
++		val |= BIT(L2X0_AUX_CTRL_NS_INT_CTRL_SHIFT);
++
++	if (of_find_property(np, "arm,ns-lockdown", NULL))
++		val |= BIT(L2X0_AUX_CTRL_NS_LOCKDOWN_SHIFT);
++
++	if (of_find_property(np, "arm,share-override", NULL))
++		val |= BIT(L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT);
++
++	if (of_find_property(np, "arm,full-line-of-zero", NULL))
++		val |= BIT(L2X0_AUX_CTRL_FULL_LINE_OF_ZERO_SHIFT);
++
++	*aux_val |= val;
++	*aux_mask &= ~val;
+ }
+ 
+ static void __init pl310_save(void)
+-- 
+1.7.9.5
 
-Nevermind then.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---OXfL5xGRrasGEqWY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSy+fHAAoJEBx+YmzsjxAgELgP/AsYzEchUDwx/ATOu9B6oXMm
-pce2L0oi9OfMJ5p+arLVNFqQOfri3SUia59hm1nnh5JNUvhLRNgmaGsecLmg9BMp
-mBGIccVZa78zaDU5sOMGTEfJfgsANZG+BHCmY39+gASYsI2ury27InEGARjq+6AO
-ZNc76hv2KXQbmYr1aNercyn0/bfV8ohRqitMKZVO6Y0NeTLHk2Fit1yJbVlBGsqs
-z0zS5yT73YPXYl1cQVaXGahK+FOrZgkbiDvKscAQOtDsD+6/jYf1c4dprS8U6tDk
-nqIHCqcme8GI9pX3jTmiUBJsikeA5c3DO0VA54JcmaNMMhh2lQa52Hn8FymKuxiV
-DHEgYscywDv9maiDwmmGUi+e+lxqFQAPmA7Dp3okFUZPaVuoRd+d4XB7q/1f5Y0Y
-bVy0S0CujPEaJtvKwDW6i+CrJYmW9I6G/xQbvKo7rpFLh2y+XNwLrAGW60KQQdmP
-aR18u/VU5dnnoT5W1MaxzsimAgy6ej6XdDvkA92BXobQ7siEOumVN9Ffxv0/L+TF
-9gN2DZu7jtiHCOVcMA9szwqJ4uXkp5PgT87l07gcliFZZd9uKO1DroS7FOrr5Ixh
-8VP/SujAzE7MU01fwvUX7CdB6kGWWbI92j+iDtt9suy/+F5zDPtL94SbGG5nw0VL
-LuEjrZ6fxTzWOm7/c29x
-=ol9G
------END PGP SIGNATURE-----
-
---OXfL5xGRrasGEqWY--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
