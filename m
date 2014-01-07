@@ -1,75 +1,70 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
-Date: Tue, 7 Jan 2014 12:02:48 +0000
-Message-ID: <20140107120248.GD4180@e106331-lin.cambridge.arm.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
- <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
- <52C4D612.2090808@nvidia.com>
- <52C5A6CE.5060904@nvidia.com>
- <20140106135145.GD21906@e106331-lin.cambridge.arm.com>
- <52CAC3AF.9020401@ti.com>
- <52CB69FA.9080903@nvidia.com>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: Re: [PATCH] ARM: cache-l2x0: Parse properties from DT for PL310 cache controller
+Date: Tue, 7 Jan 2014 17:40:56 +0530
+Message-ID: <CAHbNUh2Y5JPwAWojJE8Chd6fi5Hbk9c2+11FVBhOA-3Rgr5WpA@mail.gmail.com>
+References: <1389094888-24348-1-git-send-email-tushar.behera@linaro.org>
+	<3479510.EFrgCqQWpu@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52CB69FA.9080903@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Wei Ni <wni@nvidia.com>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Matthew Longnecker <MLongnecker@nvidia.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <3479510.EFrgCqQWpu@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-doc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 07, 2014 at 02:44:10AM +0000, Wei Ni wrote:
-> On 01/06/2014 10:54 PM, Eduardo Valentin wrote:
-> > * PGP Signed by an unknown key
-> > 
-> > On 06-01-2014 09:51, Mark Rutland wrote:
-> >> On Thu, Jan 02, 2014 at 05:50:06PM +0000, Matthew Longnecker wrote:
-> >>>
-> >>>> I think the platform driver may set governor for the thermal zone,
-> >>>> so how about to add a property named as "governor",
-> >>>> and parse it to tzp->governor_name,
-> >>>> something like:
-> >>>>                  ret = of_property_read_string(child, "governor", &str);
-> >>>>                  if (ret == 0)
-> >>>>                          if (strlen(str) < THERMAL_NAME_LENGTH)
-> >>>>                                  strcpy(tzp->governor_name, str);
-> >>>>
-> >>>> Thanks.
-> >>>> Wei.
-> >>>
-> >>> DT is supposed to describe the hardware, right? The governor isn't 
-> >>> hardware -- it's a software control policy. On the other hand, that 
-> >>> control policy must be tuned according to the behaviors of the platform 
-> >>> hardware otherwise the system will be unstable.
-> >>>
-> >>> Is it appropriate to be naming the governor in DT? If so, is it equally 
-> >>> appropriate to describe any governor-specific parameters in DT (even 
-> >>> though they are pure software constructs)?
-> >>
-> >> The dt should be relatively static -- if the hardware doesn't change the
-> >> dt shouldn't have to.
-> >>
-> >> The governers are not static. We can introduce new ones and throw away
-> >> old ones at any time. Tuning parameters can also change at any time.
-> >>
-> >> I'd prefer to not have governer details described in the dt, and the
-> >> choice of governer and configuration of its tuning parameters should be
-> >> made at runtime somehow.
-> >
-> > Agreed.
-> 
-> Yes, I think so, but the of-thermal driver handle the
-> thermal_zone_device_register, and pass the "tzp" without governor_name,
-> so the created thermal_zone's governor will be NULL, then it can't run
-> into the governor->throttle() if needed. And currently there have no
-> interface to support updating governor and configuration at runtime.
-> I think it's better to initialize the governor_name when register the
-> thermal zone device in the of-thermal driver.
+On 7 January 2014 17:27, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 07 January 2014 17:11:28 Tushar Behera wrote:
+>> Parsed auxiliary control properties for PL310 cache controller.
+>>
+>> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+>> ---
+>> These properties are set for Exynos4 platform. If we can pass these properties
+>> through device tree for Exynos4, then we can remove the hard-coded L2_AUX_VAL.
+>
+>
+> The explanation would be good to have in the actual changeset
 
-Initialising it in the driver doesn't mean it has to come from the
-device tree. That's still a run-time decision, even though it's made
-immediately after parsing the DT.
+Ok, I will add these explanation to comment section.
 
-Thanks,
-Mark.
+> comment above the '---' line. Are all of them actually needed?
+> You shouldn't havet o set the ones that are already turned on
+> by the boot loader.
+
+These are the extra options that we used to pass in the kernel. For
+normal operation, I couldn't perceive any difference without these
+properties. The only reason for adding these properties was to be in
+sync with existing auxiliary control value.
+
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+>> index b513cb8..213546d 100644
+>> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+>> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+>> @@ -44,6 +44,16 @@ Optional properties:
+>>  - cache-id-part: cache id part number to be used if it is not present
+>>    on hardware
+>>  - wt-override: If present then L2 is forced to Write through mode
+>> +- arm,early-write: If present then BRSEP mode (early write response) is enabled.
+>> +- arm,data-prefetch: If present then data prefetching is enabled.
+>> +- arm,instruction-prefetch: If present then instruction prefetching is enabled.
+>> +- arm,ns-interrupt-access: If present then interrupt mask and interrupt clear
+>> +  registers can be read or modified in both secure or non-secure accesses.
+>> +- arm,ns-lockdown: If present then non-secure accesses can write to lockdown
+>> +  register.
+>> +- arm,share-override: If present then shared attribute is ignored internally.
+>> +- arm,full-line-of-zero: If present then 'full line of write zero' behaviour is
+>> +  enabled.
+>
+> Is it intentional that you have the "arm," prefix for the new ones, while
+> it's not there for the existing ones? Should we drop it for consistency?
+>
+>         Arnd
+
+No specific reasons for this. I was following "arm,data-latency"
+format. We can drop the "arm," prefix.
+
+Thanks for the review.
+
+-- 
+Tushar Behera
