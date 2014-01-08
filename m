@@ -1,38 +1,56 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/3] mfd: Add support for S2MPA01 device
-Date: Wed, 8 Jan 2014 09:27:31 +0000
-Message-ID: <20140108092731.GF19974@lee--X1>
-References: <1389162390-4582-1-git-send-email-sachin.kamat@linaro.org>
- <20140108090208.GD19974@lee--X1>
- <CAK9yfHyDNfRcn4J6N5u=CbVHsRqCp5LSgUavsD1p7Gjp+m9dfQ@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: =?utf-8?B?562U5aSN?=
+	=?utf-8?Q?=3A?= [v7] clk: corenet: Adds the clock binding
+Date: Wed, 8 Jan 2014 09:30:46 +0000
+Message-ID: <20140108093046.GB6701@e106331-lin.cambridge.arm.com>
+References: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
+ <20140108002115.GA19801@home.buserror.net>
+ <375c32b2f4e34589ae336af61468a51b@BL2PR03MB115.namprd03.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAK9yfHyDNfRcn4J6N5u=CbVHsRqCp5LSgUavsD1p7Gjp+m9dfQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, Liam Girdwood <lgirdwood@gmail.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, Sangbeom Kim <sbkim73@samsung.com>, Patch Tracking <patches@linaro.org>
+In-Reply-To: <375c32b2f4e34589ae336af61468a51b-AZ66ij2kwaY2zE7nYf+DgeO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yuantian Tang <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> >> @@ -92,7 +93,7 @@ struct sec_platform_data {
-> >>       int                             buck3_default_idx;
-> >>       int                             buck4_default_idx;
-> >>
-> >> -     int                             buck_ramp_delay;
-> >> +     int                             buck_ramp_delay;
-> >
-> > What's this? Are you fixing (or breaking) white space here?
+On Wed, Jan 08, 2014 at 08:53:56AM +0000, Yuantian Tang wrote:
 >=20
-> I didn't get you. I have converted spaces to tabs here. See some prob=
-lem?
+> ________________________________________
+> =E5=8F=91=E4=BB=B6=E4=BA=BA: Wood Scott-B07421
+> =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: 2014=E5=B9=B41=E6=9C=888=E6=97=A5=
+ 8:21
+> =E6=94=B6=E4=BB=B6=E4=BA=BA: Tang Yuantian-B29983
+> =E6=8A=84=E9=80=81: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; =
+devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> =E4=B8=BB=E9=A2=98: Re: [v7] clk: corenet: Adds the clock binding
+>=20
+> On Wed, Nov 20, 2013 at 05:04:49PM +0800, tang yuantian wrote:
+> > +Recommended properties:
+> > +- ranges: Allows valid translation between child's address space a=
+nd
+> > +     parent's. Must be present if the device has sub-nodes.
+> > +- #address-cells: Specifies the number of cells used to represent
+> > +     physical base addresses.  Must be present if the device has
+> > +     sub-nodes and set to 1 if present
+> > +- #size-cells: Specifies the number of cells used to represent
+> > +     the size of an address. Must be present if the device has
+> > +     sub-nodes and set to 1 if present
+>=20
+> Why are we specifying #address-cells/#size-cells here?
+>=20
+> A: it has sub-nodes which have REG property, don't we need to=20
+> specify #address-cells/#size-cells?
 
-No problem. It was unclear in the patch, as white space changes do not
-show up in my mail client.
+If a node has a reg entry, its parent should have #size-cells and
+#address-cells to allow it to be parsed properly.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
