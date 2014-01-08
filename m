@@ -1,23 +1,54 @@
-From: Ian Molton <ian.molton@codethink.co.uk>
-Subject: Re: [PATCH 1/2] I2C: EMMA Mobile I2C master driver
-Date: Wed, 08 Jan 2014 10:33:37 +0000
-Message-ID: <52CD2981.6010503@codethink.co.uk>
-References: <1377688911-10911-1-git-send-email-ian.molton@codethink.co.uk> <1378226969-18722-1-git-send-email-ian.molton@codethink.co.uk> <1378226969-18722-2-git-send-email-ian.molton@codethink.co.uk> <20130905060429.GJ14960@verge.net.au> <20130925044503.GA24243@verge.net.au> <52A23916.40507@codethink.co.uk> <20131211020904.GK19992@verge.net.au> <20131211115908.GA2564@katana>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 1/5] mfd: omap-usb-host: Update DT clock binding
+ information
+Date: Wed, 08 Jan 2014 11:40:14 +0100
+Message-ID: <4840680.vVGZYBJBID@wuerfel>
+References: <1389161742-10533-1-git-send-email-rogerq@ti.com>
+ <4812867.NuB3hNkV9d@wuerfel> <52CD2807.9000200@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20131211115908.GA2564@katana>
-Sender: linux-sh-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Simon Horman <horms@verge.net.au>
-Cc: magnus.damm@gmail.com, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, ben.dooks@codethink.co.uk
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52CD2807.9000200@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, tony@atomide.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, "Kristo, Tero" <t-kristo@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/13 11:59, Wolfram Sang wrote:
-> No need to resend. I have it on my todo-list. Yet, by glimpsing at it I
-> found some issues which need a proper review for which I didn't have the
-> time so far. I hope to have it done by this week.
+On Wednesday 08 January 2014 15:57:19 Roger Quadros wrote:
+> It is a clock gate defined like so in the DT clock data
+> 
+> on OMAP4
+>         init_60m_fclk: init_60m_fclk {
+>                 #clock-cells = <0>;
+>                 compatible = "ti,divider-clock";
+>                 clocks = <&dpll_usb_m2_ck>;
+>                 reg = <0x0104>;
+>                 ti,dividers = <1>, <8>;
+>         };
+> 
+> on OMAP5
+>         l3init_60m_fclk: l3init_60m_fclk {
+>                 #clock-cells = <0>;
+>                 compatible = "ti,divider-clock";
+>                 clocks = <&dpll_usb_m2_ck>;
+>                 reg = <0x0104>;
+>                 ti,dividers = <1>, <8>;
+>         };
+> 
+> So you can see that it is the same thing with a different name.
 
-Ping :)
+Right, but init_60m_fclk is the name of the clock output of the
+divider here, which is /not/ what you should put in the "clock-names"
+property of the consumer. The clock input name should reflect what
+the clock is used for instead.
 
--Ian
+	Arnd
