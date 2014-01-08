@@ -1,46 +1,62 @@
-From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: [PATCH 2/2] dma: imx-sdma: Assign a default script number for ROM firmware cases
-Date: Wed, 8 Jan 2014 16:45:56 +0800
-Message-ID: <1389170756-22351-3-git-send-email-Guangyu.Chen@freescale.com>
-References: <1389170756-22351-1-git-send-email-Guangyu.Chen@freescale.com>
+From: Yuantian Tang <Yuantian.Tang@freescale.com>
+Subject: =?gb2312?B?tPC4tDogW3Y3XSBjbGs6IGNvcmVuZXQ6IEFkZHMgdGhlIGNsb2NrIGJpbmRp?=
+ =?gb2312?Q?ng?=
+Date: Wed, 8 Jan 2014 08:53:56 +0000
+Message-ID: <375c32b2f4e34589ae336af61468a51b@BL2PR03MB115.namprd03.prod.outlook.com>
+References: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>,
+ <20140108002115.GA19801@home.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389170756-22351-1-git-send-email-Guangyu.Chen@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com, kernel@pengutronix.de, shawn.guo@linaro.org, fabio.estevam@freescale.com
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20140108002115.GA19801@home.buserror.net>
+Content-Language: zh-CN
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-i.MX series have inner firmware in its ROM code: when SDMA isn't provided
-any firmware from Kernel or rootfs, the default inner ROM firmware will be
-activated. However the current driver doesn't assign any script number to
-this situation, and those platform running in this case would be broken.
-
-Thus this patch adds a default script number when no external firmware being
-loaded so that people would continue to be able to use basic scripts to run
-their platform without any firmware.
-
-Reported-by: Fabio Estevam <fabio.estevam@freescale.com>
-Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
----
- drivers/dma/imx-sdma.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 1522476..4e79183 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1252,6 +1252,10 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
- 	s32 *saddr_arr = (u32 *)sdma->script_addrs;
- 	int i;
- 
-+	/* use the default firmware in ROM if missing external firmware */
-+	if (!sdma->script_number)
-+		sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
-+
- 	for (i = 0; i < sdma->script_number; i++)
- 		if (addr_arr[i] > 0)
- 			saddr_arr[i] = addr_arr[i];
--- 
-1.8.4
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Kt6K8/sjLOiBXb29kIFNj
+b3R0LUIwNzQyMQq3osvNyrG85DogMjAxNMTqMdTCOMjVIDg6MjEKytW8/sjLOiBUYW5nIFl1YW50
+aWFuLUIyOTk4MwqzrcvNOiBnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnOyBtYXJrLnJ1dGxhbmRA
+YXJtLmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5v
+emxhYnMub3JnCtb3zOI6IFJlOiBbdjddIGNsazogY29yZW5ldDogQWRkcyB0aGUgY2xvY2sgYmlu
+ZGluZwoKT24gV2VkLCBOb3YgMjAsIDIwMTMgYXQgMDU6MDQ6NDlQTSArMDgwMCwgdGFuZyB5dWFu
+dGlhbiB3cm90ZToKPiArUmVjb21tZW5kZWQgcHJvcGVydGllczoKPiArLSByYW5nZXM6IEFsbG93
+cyB2YWxpZCB0cmFuc2xhdGlvbiBiZXR3ZWVuIGNoaWxkJ3MgYWRkcmVzcyBzcGFjZSBhbmQKPiAr
+ICAgICBwYXJlbnQncy4gTXVzdCBiZSBwcmVzZW50IGlmIHRoZSBkZXZpY2UgaGFzIHN1Yi1ub2Rl
+cy4KPiArLSAjYWRkcmVzcy1jZWxsczogU3BlY2lmaWVzIHRoZSBudW1iZXIgb2YgY2VsbHMgdXNl
+ZCB0byByZXByZXNlbnQKPiArICAgICBwaHlzaWNhbCBiYXNlIGFkZHJlc3Nlcy4gIE11c3QgYmUg
+cHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcwo+ICsgICAgIHN1Yi1ub2RlcyBhbmQgc2V0IHRvIDEg
+aWYgcHJlc2VudAo+ICstICNzaXplLWNlbGxzOiBTcGVjaWZpZXMgdGhlIG51bWJlciBvZiBjZWxs
+cyB1c2VkIHRvIHJlcHJlc2VudAo+ICsgICAgIHRoZSBzaXplIG9mIGFuIGFkZHJlc3MuIE11c3Qg
+YmUgcHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcwo+ICsgICAgIHN1Yi1ub2RlcyBhbmQgc2V0IHRv
+IDEgaWYgcHJlc2VudAoKV2h5IGFyZSB3ZSBzcGVjaWZ5aW5nICNhZGRyZXNzLWNlbGxzLyNzaXpl
+LWNlbGxzIGhlcmU/CgpBOiBpdCBoYXMgc3ViLW5vZGVzIHdoaWNoIGhhdmUgUkVHIHByb3BlcnR5
+LCBkb24ndCB3ZSBuZWVkIHRvIApzcGVjaWZ5ICNhZGRyZXNzLWNlbGxzLyNzaXplLWNlbGxzPwog
+Cj4gKzIuIENsb2NrIFByb3ZpZGVyL0NvbnN1bWVyIEJpbmRpbmcKPiArCj4gK01vc3Qgb2YgdGhl
+IGJpbmRpbmdzIGFyZSBmcm9tIHRoZSBjb21tb24gY2xvY2sgYmluZGluZ1sxXS4KPiArIFsxXSBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0
+Cj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGUgOiBTaG91bGQgaW5j
+bHVkZSBvbmUgb2YgdGhlIGZvbGxvd2luZzoKPiArICAgICAqICJmc2wscW9yaXEtY29yZS1wbGwt
+MS4wIiBmb3IgY29yZSBQTEwgY2xvY2tzICh2MS4wKQo+ICsgICAgKiAiZnNsLHFvcmlxLWNvcmUt
+cGxsLTIuMCIgZm9yIGNvcmUgUExMIGNsb2NrcyAodjIuMCkKPiArICAgICogImZzbCxxb3JpcS1j
+b3JlLW11eC0xLjAiIGZvciBjb3JlIG11eCBjbG9ja3MgKHYxLjApCj4gKyAgICAqICJmc2wscW9y
+aXEtY29yZS1tdXgtMi4wIiBmb3IgY29yZSBtdXggY2xvY2tzICh2Mi4wKQo+ICsgICAgICogImZz
+bCxxb3JpcS1zeXNjbGstMS4wIjogZm9yIGlucHV0IHN5c3RlbSBjbG9jayAodjEuMCkKPiArICAg
+ICAqICJmc2wscW9yaXEtc3lzY2xrLTIuMCI6IGZvciBpbnB1dCBzeXN0ZW0gY2xvY2sgKHYyLjAp
+CgpTb21lIG9mIHRob3NlIGxpbmVzIHVzZSB0YWJzIGFuZCBvdGhlcnMgc3BhY2VzIC0tIEkgY2Fu
+IGZpeCB3aGVuIGFwcGx5aW5nLgpBOiBzb3JyeSBmb3IgdGhpcyBhbmQgdGhhbmtzIGZvciBmaXhp
+bmcuCgpSZWdhcmRzLApZdWFudGlhbgoKLVNjb3R0Cl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMt
+ZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xp
+bnV4cHBjLWRldg==
