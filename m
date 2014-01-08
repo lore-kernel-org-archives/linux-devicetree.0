@@ -1,32 +1,40 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: OMAP2: fix interrupt number for rng
-Date: Tue, 7 Jan 2014 16:28:44 -0800
-Message-ID: <20140108002843.GI5074@atomide.com>
-References: <1387839579-58292-1-git-send-email-s-anna@ti.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 6/7] clk/samsung: add support for pll2650xx
+Date: Wed, 08 Jan 2014 01:37:27 +0100
+Message-ID: <3338407.XGYaxCsdnx@flatron>
+References: <1386345391-23482-1-git-send-email-rahul.sharma@samsung.com> <1419145.DZQg0ZkHVU@amdc1227> <CAPdUM4P9tE5ohtAb5heMRj3GGjdYrNYp5iX7u-uZySiaCikA7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387839579-58292-1-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAPdUM4P9tE5ohtAb5heMRj3GGjdYrNYp5iX7u-uZySiaCikA7Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <r.sh.open@gmail.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.ab@samsung.com>, sunil joshi <joshi@samsung.com>, PANKAJ KUMAR DUBEY <pankaj.dubey@samsung.com>, Young-Gun Jang <yg1004.jang@samsung.com>, Arun Kumar <arun.kk@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Suman Anna <s-anna@ti.com> [131223 15:01]:
-> The irq data for rng module defined in hwmod data previously
-> missed the OMAP_INTC_START relative offset, so the interrupt
-> number is probably misconfigured during the DT node addition
-> adjusting for this OMAP_INTC_START. Interrupt #36 is associated
-> with a watchdog timer, so fix the rng module's interrupt to the
-> appropriate interrupt #52.
+On Monday 06 of January 2014 17:14:48 Rahul Sharma wrote:
+> Hi Tomasz,
+> 
+> On 19 December 2013 17:15, Tomasz Figa <t.figa@samsung.com> wrote:
+> > Hi Rahul,
+> >
+> > On Friday 06 of December 2013 21:26:30 Rahul Sharma wrote:
+> >> Add support for pll2650xx in samsung pll file. This pll variant
+> >> is close to pll36xx but uses CON2 registers instead of CON1.
+> >
+> > If the ops are otherwise idential, why not reuse the ops for pll36xx
+> > and use CON1 or CON2 register conditionally based on pll->type field?
+> > (Just as it is already done for pll4600, 4650 and 4650c.)
+> >
+> 
+> I verified the difference and found that  pll2650xx is fairly
+> different in terms of
+> Bit Fields, Con2 register, and additional PLL config bits than pll36xx. Due to
+> this, I have to add lot of if-else code based on pll type which
+> doesn't looks clean.
 
-Hmm indeed as the .dtsi files were generated from the hwmod
-data. Are the other interrupts fixed earlier OK?
+Fair enough.
 
-With earlier I mean your commit 6d4c8830479444 (ARM: OMAP2+:
-hwmod_data: fix missing OMAP_INTC_START in irq data).
-
-Regards,
-
-Tony
+Best regards,
+Tomasz
