@@ -1,29 +1,81 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 0/2] ohci and ehci-platform clks, phy and dt support
-Date: Wed,  8 Jan 2014 17:30:06 +0100
-Message-ID: <1389198608-24339-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH 3/9] of: mtd: add NAND timings retrieval support
+Date: Wed, 8 Jan 2014 10:30:39 -0600
+Message-ID: <CAL_Jsq+PT9MzEpHwuiSU2oeqzzqajGdBKgdxCZ8S+9W2mPN+tA@mail.gmail.com>
+References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com>
+	<1389190924-26226-4-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBLX2WWLAKGQEOTZO6DI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1389190924-26226-4-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon@overkiz.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, dev@linux-sunxi.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mtd@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+On Wed, Jan 8, 2014 at 8:21 AM, Boris BREZILLON <b.brezillon@overkiz.com> wrote:
+> Add a function to retrieve NAND timings from a given DT node.
+>
+> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+> ---
+>  drivers/of/of_mtd.c    |   47 +++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_mtd.h |    9 +++++++++
+>  2 files changed, 56 insertions(+)
+>
+> diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
+> index a27ec94..52e07fd 100644
+> --- a/drivers/of/of_mtd.c
+> +++ b/drivers/of/of_mtd.c
+> @@ -83,3 +83,50 @@ bool of_get_nand_on_flash_bbt(struct device_node *np)
+>         return of_property_read_bool(np, "nand-on-flash-bbt");
+>  }
+>  EXPORT_SYMBOL_GPL(of_get_nand_on_flash_bbt);
+> +
+> +/**
+> + * of_get_nand_timings - Get nand timings for the given device_node
+> + * @np:        Pointer to the given device_node
+> + *
+> + * return 0 on success errno other wise
+> + */
+> +int of_get_nand_timings(struct device_node *np, struct nand_timings *timings)
+> +{
+> +       memset(timings, 0, sizeof(*timings));
+> +
+> +       of_property_read_u32(np, "tCLS-min", &timings->tCLS_min);
+> +       of_property_read_u32(np, "tCLH-min", &timings->tCLH_min);
+> +       of_property_read_u32(np, "tCS-min", &timings->tCS_min);
+> +       of_property_read_u32(np, "tCH-min", &timings->tCH_min);
+> +       of_property_read_u32(np, "tWP-min", &timings->tWP_min);
+> +       of_property_read_u32(np, "tALS-min", &timings->tALS_min);
+> +       of_property_read_u32(np, "tALH-min", &timings->tALH_min);
+> +       of_property_read_u32(np, "tDS-min", &timings->tDS_min);
+> +       of_property_read_u32(np, "tDH-min", &timings->tDH_min);
+> +       of_property_read_u32(np, "tWC-min", &timings->tWC_min);
+> +       of_property_read_u32(np, "tWH-min", &timings->tWH_min);
+> +       of_property_read_u32(np, "tR-max", &timings->tR_max);
+> +       of_property_read_u32(np, "tAR-min", &timings->tAR_min);
+> +       of_property_read_u32(np, "tCLR-min", &timings->tCLR_min);
+> +       of_property_read_u32(np, "tRR-min", &timings->tRR_min);
+> +       of_property_read_u32(np, "tRP-min", &timings->tRP_min);
+> +       of_property_read_u32(np, "tWB-max", &timings->tWB_max);
+> +       of_property_read_u32(np, "tRC-min", &timings->tRC_min);
+> +       of_property_read_u32(np, "tREA-max", &timings->tREA_max);
+> +       of_property_read_u32(np, "tRHZ-max", &timings->tRHZ_max);
+> +       of_property_read_u32(np, "tCHZ-max", &timings->tCHZ_max);
+> +       of_property_read_u32(np, "tRHOH-min", &timings->tRHOH_min);
+> +       of_property_read_u32(np, "tRLOH-min", &timings->tRLOH_min);
+> +       of_property_read_u32(np, "tCOH-min", &timings->tCOH_min);
+> +       of_property_read_u32(np, "tREH-min", &timings->tREH_min);
+> +       of_property_read_u32(np, "tWHR-min", &timings->tWHR_min);
+> +       of_property_read_u32(np, "tRHW-min", &timings->tRHW_min);
+> +       of_property_read_u32(np, "tIR-min", &timings->tIR_min);
+> +       of_property_read_u32(np, "tCR-min", &timings->tCR_min);
+> +       of_property_read_u32(np, "tADL-min", &timings->tADL_min);
+> +       of_property_read_u32(np, "tRST-max", &timings->tRST_max);
+> +       of_property_read_u32(np, "tWW-min", &timings->tWW_min);
 
-Here is v2 of my ohci and ehci-platform clks, phy and dt support patch-set.
+These all need to be documented. These apply to which compatible
+strings? They should also be suffixed with the unit the property is in
+(i.e. -ms, -us, -ns).
 
-Changes since v1:
--Various improvements to dt-bindings as suggested by various people
--Support up-to 3 clocks
-
-Regards,
-
-Hans
+Rob
