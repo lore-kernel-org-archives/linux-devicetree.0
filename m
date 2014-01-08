@@ -1,49 +1,44 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH RFC 2/3] ARM: kernel: add support for cpu cache
-	information
-Date: Wed, 8 Jan 2014 20:57:54 +0000
-Message-ID: <20140108205754.GN27432@n2100.arm.linux.org.uk>
-References: <1389209168-17189-1-git-send-email-sudeep.holla@arm.com> <1389209168-17189-3-git-send-email-sudeep.holla@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] driver-core: platform: Resolve DT interrupt references late
+Date: Wed, 08 Jan 2014 22:01:46 +0100
+Message-ID: <5253830.a53UI1vY1X@wuerfel>
+References: <20140108011957.GK5074@atomide.com> <14122609.M29raBct1E@wuerfel> <20140108202407.GA28442@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389209168-17189-3-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ashok Raj <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140108202407.GA28442@ulmo.nvidia.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 08, 2014 at 07:26:07PM +0000, Sudeep Holla wrote:
-> +#if __LINUX_ARM_ARCH__ < 7 /* pre ARMv7 */
-> +
-> +#define MAX_CACHE_LEVEL		1	/* Only 1 level supported */
-> +#define CTR_CTYPE_SHIFT		24
-> +#define CTR_CTYPE_MASK		(1 << CTR_CTYPE_SHIFT)
-> +
-> +static inline unsigned int get_ctr(void)
-> +{
-> +	unsigned int ctr;
-> +	asm volatile ("mrc p15, 0, %0, c0, c0, 1" : "=r" (ctr));
-> +	return ctr;
-> +}
-> +
-> +static enum cache_type get_cache_type(int level)
-> +{
-> +	if (level > MAX_CACHE_LEVEL)
-> +		return CACHE_TYPE_NOCACHE;
-> +	return get_ctr() & CTR_CTYPE_MASK ?
-> +		CACHE_TYPE_SEPARATE : CACHE_TYPE_UNIFIED;
+On Wednesday 08 January 2014 21:24:08 Thierry Reding wrote:
+> 
+> The problem with devres, or any other solution for that matter, is that
+> for the cases where we'd need something like this (that is, statically
+> allocated devices in board setup code) we don't have a fully initialized
+> struct device. We need at least device_initialize() to have been called
+> before devres can be used. Therefore we still need some sort of lookup
+> table that can be used to seed devres objects. Also devres will go away
+> completely when a driver is unloaded, so it'll have to be repopulated
+> everytime.
+> 
+> I don't think that would buy us much over a simple table lookup.
 
-So, what do we do for CPUs that don't implement the CTR?  Just return
-random rubbish based on decoding the CPU Identity register as if it
-were the cache type register?
+I would think we can come up with a way to add data to a device that
+ends up in devres by the time the device gets registered. The question
+is more whether you want a global table (or a set of global tables
+for that matter) or rather have all the data local to the devices
+you register. I generally prefer the latter.
 
--- 
-FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There is an interesting question about what subsystems you'd want to
+include in this mechanism. We have a growing number of subsystems
+that want data represented in DT (clock, regulator, dmaengine, reset,
+led, pwm, irq, iommu, ...), most of which don't have a 'struct resource'
+equivalent. We could either try to create something generic enough
+to easily cover all of them, or we declare that if you actually want
+to use all of them you should really use DT, and we make it hard to
+add another subsystem specific lookup mechanism.
+
+	Arnd
