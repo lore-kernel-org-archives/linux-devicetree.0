@@ -1,61 +1,60 @@
-From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Subject: [RFC PATCH 8/9] ARM: dt/sunxi: add NFC pinctrl pin definitions
-Date: Wed,  8 Jan 2014 15:22:03 +0100
-Message-ID: <1389190924-26226-9-git-send-email-b.brezillon@overkiz.com>
-References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389190924-26226-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 2/9] devicetree: bindings: Document qcom,kpss-acc
+Date: Wed, 8 Jan 2014 14:32:35 +0000
+Message-ID: <20140108143235.GA11753@e106331-lin.cambridge.arm.com>
+References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
+ <1387845593-10050-3-git-send-email-sboyd@codeaurora.org>
+ <20140108142541.GK6701@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140108142541.GK6701@e106331-lin.cambridge.arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Define the NAND pinctrl configs.
+On Wed, Jan 08, 2014 at 02:25:41PM +0000, Mark Rutland wrote:
+> On Tue, Dec 24, 2013 at 12:39:46AM +0000, Stephen Boyd wrote:
+> > The kpss acc binding describes the clock, reset, and power domain
+> > controller for a Krait CPU.
+> > 
+> > Cc: <devicetree@vger.kernel.org>
+> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> > ---
+> >  .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt  | 30 ++++++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
+> > new file mode 100644
+> > index 0000000..1333db9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
+> > @@ -0,0 +1,30 @@
+> > +Krait Processor Sub-system (KPSS) Application Clock Controller (ACC)
+> > +
+> > +The KPSS ACC provides clock, power domain, and reset control to a Krait CPU.
+> > +There is one ACC register region per CPU within the KPSS remapped region as
+> > +well as an alias register region that remaps accesses to the ACC associated
+> > +with the CPU accessing the region.
+> 
+> Is the mapping of ACC register to a specific processor well-defined? I
+> assume it's just in order of MPIDR.Aff0.
+> 
+> To maintain our collective sanity in the face of possible future
+> implementations, do you have an idea as to whether this might need to be
+> extended in future for multiple clusters / reordered IDs and so on?
+> 
+> I assume we'd just allocate a new compatible string if those get a
+> little crazy.
 
-Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20.dtsi |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Actually, I'm getting too hung-up on future-proofing. Assuming the
+mapping is well-defined for current implementations we can always add an
+additional property later if required.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index c00a577..34b1948 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -389,6 +389,30 @@
- 				allwinner,drive = <0>;
- 				allwinner,pull = <0>;
- 			};
-+
-+			nand_pins_a: nand_base0@0 {
-+				allwinner,pins = "PC0", "PC1", "PC2",
-+						"PC5", "PC8", "PC9", "PC10",
-+						"PC11", "PC12", "PC13", "PC14",
-+						"PC15", "PC16";
-+				allwinner,function = "nand0";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
-+			nand_cs0_pins_a: nand_cs@0 {
-+				allwinner,pins = "PC4";
-+				allwinner,function = "nand0";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
-+			nand_rb0_pins_a: nand_rb@0 {
-+				allwinner,pins = "PC6";
-+				allwinner,function = "nand0";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
- 		};
- 
- 		timer@01c20c00 {
--- 
-1.7.9.5
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
