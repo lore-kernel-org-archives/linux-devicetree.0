@@ -1,81 +1,75 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 3/9] devicetree: bindings: Document qcom,saw2 node
-Date: Wed, 8 Jan 2014 15:21:54 +0000
-Message-ID: <20140108152154.GE11753@e106331-lin.cambridge.arm.com>
-References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
- <1387845593-10050-4-git-send-email-sboyd@codeaurora.org>
- <20140108143626.GB11753@e106331-lin.cambridge.arm.com>
+From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: [RFC PATCH 9/9] ARM: sunxi/dt: enable NAND on
+ cubietruck board
+Date: Wed,  8 Jan 2014 16:28:11 +0100
+Message-ID: <1389194891-26771-1-git-send-email-b.brezillon@overkiz.com>
+References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140108143626.GB11753@e106331-lin.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDGNFFFRWEIBBNG5WWLAKGQEVFW2Z7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1389190924-26226-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 08, 2014 at 02:36:26PM +0000, Mark Rutland wrote:
-> On Tue, Dec 24, 2013 at 12:39:47AM +0000, Stephen Boyd wrote:
-> > The saw2 binding describes the SPM/AVS wrapper hardware used to
-> > control the regulator supplying voltage to the Krait CPUs.
-> > 
-> > Cc: <devicetree@vger.kernel.org>
-> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> > ---
-> >  .../devicetree/bindings/arm/msm/qcom,saw2.txt      | 35 ++++++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
-> > new file mode 100644
-> > index 0000000..1505fb8
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
-> > @@ -0,0 +1,35 @@
-> > +SPM AVS Wrapper 2 (SAW2)
-> > +
-> > +The SAW2 is a wrapper around the Subsystem Power Manager (SPM) and the
-> > +Adaptive Voltage Scaling (AVS) hardware. The SPM is a programmable
-> > +micro-controller that transitions a piece of hardware (like a processor or
-> > +subsystem) into and out of low power modes via a direct connection to
-> > +the PMIC. It can also be wired up to interact with other processors in the
-> > +system, notifying them when a low power state is entered or exited.
-> > +
-> > +PROPERTIES
-> > +
-> > +- compatible:
-> > +	Usage: required
-> > +	Value type: <string>
-> > +	Definition: shall contain "qcom,saw2". A more specific value should be
-> > +		    one of:
-> > +			 "qcom,saw2-v1"
-> > +			 "qcom,saw2-v1.1"
-> > +			 "qcom,saw2-v2"
-> > +			 "qcom,saw2-v2.1"
-> > +
-> > +- reg:
-> > +	Usage: required
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: the first element specifies the base address and size of
-> > +		    the register region. An optional second element specifies
-> > +		    the base address and size of the alias register region.
-> > +
-> > +
-> > +Example:
-> > +
-> > +	regulator@2099000 {
-> > +		compatible = "qcom,saw2";
-> > +		reg = <0x02099000 0x1000>, <0x02009000 0x1000>;
-> > +	};
-> 
-> I have the same general worry as with the ACC regarding the implicit
-> relationship between CPUs and the registers controlling them, but I
-> assume that's fine for current implementations, and the binding's so
-> simple there's nothing preventing future extension.
+Enable the NFC and describe the NAND flash connected to this controller.
 
-Having looked at the dts files I see each CPU has its own SAW phandle,
-so the above comments are irrelevant.
+Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts |   33 ++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-Thanks,
-Mark.
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+index 8a1009d..08ee7d3 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+@@ -18,7 +18,40 @@
+ 	model = "Cubietech Cubietruck";
+ 	compatible = "cubietech,cubietruck", "allwinner,sun7i-a20";
+ 
++	chosen {
++		bootargs = "console=ttyS0,115200 earlyprintk root=/dev/ram0 rootfstype=ext2 rw";
++	};
++
+ 	soc@01c00000 {
++		nfc: nand@01c03000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&nand_pins_a &nand_cs0_pins_a &nand_rb0_pins_a>;
++			status = "okay";
++
++			nand@0 {
++				reg = <0>;
++				allwinner,rb = <0>;
++				nand-ecc-mode = "soft_bch";
++
++				/* nand timings */
++				tCLS-min = <6>;
++				tCLH-min = <3>;
++				tCS-min = <20>;
++				tCH-min = <5>;
++				tWP-min = <8>;
++				tWH-min = <6>;
++				tALS-min = <6>;
++				tDS-min = <6>;
++				tDH-min = <2>;
++				tRR-min = <20>;
++				tALH-min = <3>;
++				tRP-min = <8>;
++				tREH-min = <6>;
++				tRC-min = <16>;
++				tWC-min = <16>;
++			};
++		};
++
+ 		pinctrl@01c20800 {
+ 			led_pins_cubietruck: led_pins@0 {
+ 				allwinner,pins = "PH7", "PH11", "PH20", "PH21";
+-- 
+1.7.9.5
