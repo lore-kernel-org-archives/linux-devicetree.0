@@ -1,59 +1,57 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 1/9] devicetree: bindings: Document Krait/Scorpion
- cpus and enable-method
-Date: Wed, 08 Jan 2014 15:21:49 -0800
-Message-ID: <52CDDD8D.5090100@codeaurora.org>
-References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org> <1387845593-10050-2-git-send-email-sboyd@codeaurora.org> <20140108142139.GJ6701@e106331-lin.cambridge.arm.com>
+From: Christian Daudt <bcm@fixthebug.org>
+Subject: Re: [RESEND PATCH] ARM: dts: bcm28155-ap: Fix Card Detection GPIO
+Date: Wed, 8 Jan 2014 15:38:49 -0800
+Message-ID: <CAEPRUYo0r5YcRTYdgSNLqedVV4D0bsor7USBoxRRpBXRs7wpbw@mail.gmail.com>
+References: <1389120821-12007-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140108142139.GJ6701@e106331-lin.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rohit Vaswani <rvaswani@codeaurora.org>, David Brown <davidb@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1389120821-12007-1-git-send-email-tim.kryger@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tim Kryger <tim.kryger@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Linux Arm Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/14 06:21, Mark Rutland wrote:
-> On Tue, Dec 24, 2013 at 12:39:45AM +0000, Stephen Boyd wrote:
->> From: Rohit Vaswani <rvaswani@codeaurora.org>
->>
->> Scorpion and Krait don't use the spin-table enable-method.
->> Instead they rely on mmio register accesses to enable power and
->> clocks to bring CPUs out of reset. Document their enable-methods.
->>
->> Cc: <devicetree@vger.kernel.org>
->> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
->> [sboyd: Split off into separate patch, renamed methods to
->> match compatible nodes]
->> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/arm/cpus.txt | 25 ++++++++++++++++++++++++-
->>  1 file changed, 24 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
->> index 9130435..333f4ae 100644
->> --- a/Documentation/devicetree/bindings/arm/cpus.txt
->> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
->> @@ -180,7 +180,11 @@ nodes to be present and contain the properties described below.
->>  			  be one of:
->>  			     "spin-table"
->>  			     "psci"
->> -			# On ARM 32-bit systems this property is optional.
->> +			# On ARM 32-bit systems this property is optional and
->> +			  can be one of:
->> +			    "qcom,gcc-msm8660"
->> +			    "qcom,kpss-acc-v1"
->> +			    "qcom,kpss-acc-v2"
-> It would be nice to document "psci" here as valid for 32-bit.
+On Tue, Jan 7, 2014 at 10:53 AM, Tim Kryger <tim.kryger@linaro.org> wrote:
+> The board schematic states that the "SD_CARD_DET_N gets pulled to GND
+> when card is inserted" so the polarity has been updated to active low.
 >
-> Currently the PSCI code doesn't inspect the enable-method and assumes it
-> if there's a psci node, but KVM tool and others set enable-method to
-> "psci", and if we change the way the PSCI code probes it will require
-> enable-method to be set for PSCI to work.
+> Polarity is now specified with a GPIO define instead of a magic number.
+>
+> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Matt Porter <matt.porter@linaro.org>
+> ---
+>  arch/arm/boot/dts/bcm28155-ap.dts | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
+> index 08e47c2..27dd110 100644
+> --- a/arch/arm/boot/dts/bcm28155-ap.dts
+> +++ b/arch/arm/boot/dts/bcm28155-ap.dts
+> @@ -13,6 +13,8 @@
+>
+>  /dts-v1/;
+>
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+>  #include "bcm11351.dtsi"
+>
+>  / {
+> @@ -40,7 +42,7 @@
+>
+>         sdio4: sdio@3f1b0000 {
+>                 max-frequency = <48000000>;
+> -               cd-gpios = <&gpio 14 0>;
+> +               cd-gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
+>                 status = "okay";
+>         };
+>  };
+> --
+> 1.8.0.1
+>
+Tim,
+ Does bcm11351-brt not also suffer from the same bug? If it does can
+you pls update the patch to also fix it?
 
-Sure. I'll squash it in if I resend, or send a follow-up patch later on.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+ Thanks,
+   csd
