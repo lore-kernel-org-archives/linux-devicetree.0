@@ -1,38 +1,57 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [RFC PATCH 3/9] of: mtd: add NAND timings retrieval support
-Date: Wed, 8 Jan 2014 11:34:18 -0700
-Message-ID: <20140108183418.GA12358@obsidianresearch.com>
-References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com>
- <1389190924-26226-4-git-send-email-b.brezillon@overkiz.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] dt: Document a compatible entry for MDIO ethernet Phys
+Date: Wed, 8 Jan 2014 12:37:03 -0600
+Message-ID: <CAL_JsqLpWSXd44ErAs=+xYS8ESaBSY6EJEneZFYqtbpfyM4iPQ@mail.gmail.com>
+References: <20131210193947.GU5429@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389190924-26226-4-git-send-email-b.brezillon@overkiz.com>
+In-Reply-To: <20131210193947.GU5429@obsidianresearch.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, dev@linux-sunxi.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 08, 2014 at 03:21:58PM +0100, Boris BREZILLON wrote:
+On Tue, Dec 10, 2013 at 1:39 PM, Jason Gunthorpe
+<jgunthorpe@obsidianresearch.com> wrote:
+> This describes a compatible entry of the form:
+>   ethernet-phy-idAAAA,BBBB
+> Which is modelled after the PCI structured compatible entry
+> (pciVVVV,DDDD.SSSS.ssss.RR)
+>
+> If present the OF core will be able to use this information to
+> directly create the correct phy without auto probing the bus.
+>
+> Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> ---
+>  Documentation/devicetree/bindings/net/phy.txt | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> Patch to parse this compatible string to follow if this binding is
+> acceptable.
 
-> +int of_get_nand_timings(struct device_node *np, struct nand_timings *timings)
-> +{
-> +	memset(timings, 0, sizeof(*timings));
-> +	of_property_read_u32(np, "tCLS-min", &timings->tCLS_min);
-> +	of_property_read_u32(np, "tCLH-min", &timings->tCLH_min);
-> +	of_property_read_u32(np, "tCS-min", &timings->tCS_min);
-[..]
+One minor comment below, otherwise:
 
-A while ago when discussing another controller it was pointed out
-these values are all auto-probable directly from the NAND via a ONFI
-defined GET FEATURE @0x01 query, and adding these timings to the DT
-was NAK'd..
+Acked-by: Rob Herring <robh@kernel.org>
 
-Basically you set the interface to the slowest ONFI timing mode, do
-the GET FEATURE to the NAND chip and then increase the interface speed
-to the highest mutually supported ONFI mode.
+> Please see
+>
+> http://www.spinics.net/lists/devicetree/msg13175.html
+>
+> For discussion and a conceptual parsing patch.
+>
+> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+> index 7cd18fb..d70b535 100644
+> --- a/Documentation/devicetree/bindings/net/phy.txt
+> +++ b/Documentation/devicetree/bindings/net/phy.txt
+> @@ -23,10 +23,18 @@ Optional Properties:
+>    assume clause 22. The compatible list may also contain other
+>    elements.
+>
+> +  If the phy's identifier is known then the list may contain an entry
+> +  of the form: "ethernet-phy-idAAAA,BBBB" where
 
-Is there some reason you need to encode this in the DT?
+I think this should be a period rather than a comma as we are not
+separating a vendor ID from product ID.
 
-Jason
+Rob
