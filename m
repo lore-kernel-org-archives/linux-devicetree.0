@@ -1,200 +1,119 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
-Date: Wed, 8 Jan 2014 12:16:07 +0800
-Message-ID: <52CCD107.8030106@nvidia.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
-	<1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
-	<52C299A8.4010108@nvidia.com>	<52CB6AE2.2090002@nvidia.com>
-	<52CBE237.7010309@ti.com>	<52CCC3CF.7000103@nvidia.com>
- <CAHqbYQvchi3QSgcitUtguFyOJtXhFt5OjcoiSDZnPg9ZyiN4cg@mail.gmail.com>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH V2 02/10] ARM: EXYNOS: initial board support for
+ exynos5260 SoC
+Date: Wed, 8 Jan 2014 11:02:04 +0530
+Message-ID: <CAPdUM4Mi1H4CHeT_wXo8DtuEYMBCANK4ewsYd5GnciRe5fvpfg@mail.gmail.com>
+References: <1389099548-14649-1-git-send-email-rahul.sharma@samsung.com>
+	<1389099548-14649-3-git-send-email-rahul.sharma@samsung.com>
+	<3255549.jEqQKz0UeP@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHqbYQvchi3QSgcitUtguFyOJtXhFt5OjcoiSDZnPg9ZyiN4cg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hu Yaohui <loki2441-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <3255549.jEqQKz0UeP@wuerfel>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.ab@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/2014 11:24 AM, Hu Yaohui wrote:
-> I am new here. How can I could not mail a new message to this mail list?
-> TIA
+Thanks Arnd,
 
-I use Thunderbird, it's a pretty good mail client :)
+On 7 January 2014 18:54, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 07 January 2014 18:29:00 Rahul Sharma wrote:
+>> From: Pankaj Dubey <pankaj.dubey@samsung.com>
+>>
+>> This patch add basic arch side support for exynos5260 SoC.
+>>
+>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+>> ---
+>> diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
+>> index 09e6898..e0c7108 100644
+>> --- a/arch/arm/mach-exynos/common.c
+>> +++ b/arch/arm/mach-exynos/common.c
+>> @@ -52,6 +52,7 @@ static const char name_exynos4210[] = "EXYNOS4210";
+>>  static const char name_exynos4212[] = "EXYNOS4212";
+>>  static const char name_exynos4412[] = "EXYNOS4412";
+>>  static const char name_exynos5250[] = "EXYNOS5250";
+>> +static const char name_exynos5260[] = "EXYNOS5260";
+>>  static const char name_exynos5410[] = "EXYNOS5410";
+>>  static const char name_exynos5420[] = "EXYNOS5420";
+>>  static const char name_exynos5440[] = "EXYNOS5440";
+>> @@ -92,6 +93,12 @@ static struct cpu_table cpu_ids[] __initdata = {
+>>               .init           = exynos_init,
+>>               .name           = name_exynos5410,
+>>       }, {
+>> +             .idcode         = EXYNOS5260_SOC_ID,
+>> +             .idmask         = EXYNOS5_SOC_MASK,
+>> +             .map_io         = exynos5_map_io,
+>> +             .init           = exynos_init,
+>> +             .name           = name_exynos5260,
+>> +     }, {
+>>               .idcode         = EXYNOS5420_SOC_ID,
+>>               .idmask         = EXYNOS5_SOC_MASK,
+>>               .map_io         = exynos5_map_io,
+>
+> I think we've seen enough of these. Please generalize it enough
+> so we won't need to add any more entries whenever a new SoC
+> comes up. It's probably fine for now to have to tell the difference
+> between EXYNOS4 and EXYNOS5, but not new chips within some family.
+>
+> According to rumors on the web, EXYNOS6 is going to be released
+> soon with a 64-bit CPU in it, and since we don't allow platform
+> specific code for arm64 like this any more, you should just
+> drop it for arm32 as well.
 
-> 
-> 
-> On Tue, Jan 7, 2014 at 10:19 PM, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-> <mailto:wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>> wrote:
-> 
->     On 01/07/2014 07:17 PM, Eduardo Valentin wrote:
->     > * PGP Signed by an unknown key
->     >
->     > On 06-01-2014 22:48, Wei Ni wrote:
->     >> Hi, Eduardo
->     >> Will you consider my comments :)
->     >
->     > By now Wei, it is better if you start a new thread, by sending a patch
->     > on top of it, as this thread has been already merged by Rui.
-> 
->     Ok, I will send it.
-> 
->     Thanks.
->     Wei.
->     >
->     >>
->     >> Thanks.
->     >> Wei.
->     >>
->     >> On 12/31/2013 06:17 PM, Wei Ni wrote:
->     >>> On 11/13/2013 03:46 AM, Eduardo Valentin wrote:
->     >>>> This patch introduces a device tree bindings for
->     >>>> describing the hardware thermal behavior and limits.
->     >>>> Also a parser to read and interpret the data and feed
->     >>>> it in the thermal framework is presented.
->     >>>>
->     >>>> This patch introduces a thermal data parser for device
->     >>>> tree. The parsed data is used to build thermal zones
->     >>>> and thermal binding parameters. The output data
->     >>>> can then be used to deploy thermal policies.
->     >>>>
->     >>>> This patch adds also documentation regarding this
->     >>>> API and how to define tree nodes to use
->     >>>> this infrastructure.
->     >>>>
->     >>>> Note that, in order to be able to have control
->     >>>> on the sensor registration on the DT thermal zone,
->     >>>> it was required to allow changing the thermal zone
->     >>>> .get_temp callback. For this reason, this patch
->     >>>> also removes the 'const' modifier from the .ops
->     >>>> field of thermal zone devices.
->     >>>>
->     >>>> ...
->     >>>> +
->     >>>> +static int of_thermal_get_trend(struct thermal_zone_device
->     *tz, int trip,
->     >>>> +                          enum thermal_trend *trend)
->     >>>> +{
->     >>>> +  struct __thermal_zone *data = tz->devdata;
->     >>>> +  long dev_trend;
->     >>>> +  int r;
->     >>>> +
->     >>>> +  if (!data->get_trend)
->     >>>> +          return -EINVAL;
->     >>>> +
->     >>>> +  r = data->get_trend(data->sensor_data, &dev_trend);
->     >>> I think the ->get_trend should be defined as:
->     >>> .get_trend(*dev, int, *long)
->     >>> so that the "trip" can be passed into it, otherwise the "trip"
->     can't be
->     >>> used.
->     >>> And the dev_trend should be returned as THERMAL_TREND_XXX directly.
->     >>> because the THERM_TREND_xx is more than three states.
->     >>>
->     >>> The code may be something like:
->     >>> r = data->get_trend(data->sensor_data, trip, &dev_trend);
->     >>> if (r)
->     >>>     return r;
->     >>> *trend = dev_trend;
->     >>> return 0;
->     >>>> +  if (r)
->     >>>> +          return r;
->     >>>> +
->     >>>> +  /* TODO: These intervals might have some thresholds, but in
->     core code */
->     >>>> +  if (dev_trend > 0)
->     >>>> +          *trend = THERMAL_TREND_RAISING;
->     >>>> +  else if (dev_trend < 0)
->     >>>> +          *trend = THERMAL_TREND_DROPPING;
->     >>>> +  else
->     >>>> +          *trend = THERMAL_TREND_STABLE;
->     >>>> +
->     >>>> +  return 0;
->     >>>> +}
->     >>>> +
->     >>>> .....
->     >>>> +
->     >>>> +/***   sensor API   ***/
->     >>>> +
->     >>>> +static struct thermal_zone_device *
->     >>>> +thermal_zone_of_add_sensor(struct device_node *zone,
->     >>>> +                     struct device_node *sensor, void *data,
->     >>>> +                     int (*get_temp)(void *, long *),
->     >>>> +                     int (*get_trend)(void *, long *))
->     >>>> +{
->     >>>> +  struct thermal_zone_device *tzd;
->     >>>> +  struct __thermal_zone *tz;
->     >>>> +
->     >>>> +  tzd = thermal_zone_get_zone_by_name(zone->name);
->     >>> I think we could get the thermal zone by node,
->     >>> something like:
->     >>> thermal_zone_get_zone_by_node(zone);
->     >>> so that it can get unique zone.
->     >>>
->     >>> I think we can add a member "struct device_node *np" in the
->     >>> thermal_zone_device,
->     >>> and set it after you call thermal_zone_device_register successfully.
->     >>> Then add following codes:
->     >>> thermal_zone_get_zone_by_node(struct device_node *node)
->     >>> {
->     >>>         struct thermal_zone_device *pos = NULL, *ref =
->     ERR_PTR(-ENODEV);
->     >>>         bool found = false;
->     >>>
->     >>>         if (!node)
->     >>>                 return ERR_PTR(-EINVAL);
->     >>>
->     >>>         mutex_lock(&thermal_list_lock);
->     >>>         list_for_each_entry(pos, &thermal_tz_list, node)
->     >>>                 if (node == pos->np) {
->     >>>                         ref = pos;
->     >>>                         found = true;
->     >>>                         break;
->     >>>                 }
->     >>>         mutex_unlock(&thermal_list_lock);
->     >>>
->     >>>         return ref;
->     >>> }
->     >>>
->     >>> Thanks.
->     >>> Wei.
->     >>>> +  if (IS_ERR(tzd))
->     >>>> +          return ERR_PTR(-EPROBE_DEFER);
->     >>>> +
->     >>>> +  tz = tzd->devdata;
->     >>>> +
->     >>>> +  mutex_lock(&tzd->lock);
->     >>>> +  tz->get_temp = get_temp;
->     >>>> +  tz->get_trend = get_trend;
->     >>>> +  tz->sensor_data = data;
->     >>>> +
->     >>>> +  tzd->ops->get_temp = of_thermal_get_temp;
->     >>>> +  tzd->ops->get_trend = of_thermal_get_trend;
->     >>>> +  mutex_unlock(&tzd->lock);
->     >>>> +
->     >>>> +  return tzd;
->     >>>> +}
->     >>>> +
->     >>>>
->     >>>
->     >>
->     >>
->     >>
->     >
->     >
-> 
->     --
->     To unsubscribe from this list: send the line "unsubscribe
->     linux-kernel" in
->     the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->     <mailto:majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
->     More majordomo info at  http://vger.kernel.org/majordomo-info.html
->     Please read the FAQ at  http://www.tux.org/lkml/
-> 
-> 
+I agree with you. Let me explore options to optimize this part of the
+code. I prefer
+to add code here (along with legacy ) to accept DT bindings for Exynos5 family
+SoCs and use them for Exynos5260. Next, I will migrate the rest of the existing
+platforms and get rid of existing platform code.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> @@ -279,6 +286,15 @@ static struct map_desc exynos5_iodesc[] __initdata = {
+>>       },
+>>  };
+>>
+>> +static struct map_desc exynos5260_iodesc[] __initdata = {
+>> +     {
+>> +             .virtual        = (unsigned long)S5P_VA_SYSRAM_NS,
+>> +             .pfn            = __phys_to_pfn(EXYNOS5260_PA_SYSRAM_NS),
+>> +             .length         = SZ_4K,
+>> +             .type           = MT_DEVICE,
+>> +     },
+>> +};
+>> +
+>>  void exynos4_restart(enum reboot_mode mode, const char *cmd)
+>>  {
+>>       __raw_writel(0x1, S5P_SWRESET);
+>
+> The only difference you have is the map descriptor, and that should
+> go away if you only add a proper DT binding for SYSRAM. Try to get
+> rid of the remaining map_desc entries while you're at it.
+>
+
+Ok. let me check this.
+
+>> diff --git a/arch/arm/plat-samsung/include/plat/map-s5p.h b/arch/arm/plat-samsung/include/plat/map-s5p.h
+>> index 31cac97..13c802b 100644
+>> --- a/arch/arm/plat-samsung/include/plat/map-s5p.h
+>> +++ b/arch/arm/plat-samsung/include/plat/map-s5p.h
+>> @@ -23,6 +23,7 @@
+>>
+>>  #define S5P_VA_SYSRAM                S3C_ADDR(0x02400000)
+>>  #define S5P_VA_SYSRAM_NS     S3C_ADDR(0x02410000)
+>> +
+>>  #define S5P_VA_DMC0          S3C_ADDR(0x02440000)
+>>  #define S5P_VA_DMC1          S3C_ADDR(0x02480000)
+>>  #define S5P_VA_SROMC         S3C_ADDR(0x024C0000)
+>>
+>
+> This hunk doesn't really belong in the patch at all.
+
+I will move it to correct patch.
+
+Regards,
+Rahul Sharma
+
+>
+>         Arnd
