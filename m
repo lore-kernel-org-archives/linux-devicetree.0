@@ -1,46 +1,94 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] ata: ahci_platform: Manage SATA PHY
-Date: Wed, 08 Jan 2014 11:05:07 +0100
-Message-ID: <6214646.nAF6lzWV79@wuerfel>
-References: <1389174428-31414-1-git-send-email-rogerq@ti.com> <1389174428-31414-3-git-send-email-rogerq@ti.com> <52CD2176.6050102@ti.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v4 4/6] devicetree: bindings: Document Krait L1/L2 EDAC
+Date: Wed, 8 Jan 2014 10:05:38 +0000
+Message-ID: <20140108100538.GA2927@e102568-lin.cambridge.arm.com>
+References: <1388434457-4194-1-git-send-email-sboyd@codeaurora.org>
+ <1388434457-4194-5-git-send-email-sboyd@codeaurora.org>
+ <20140107105439.GC5906@e102568-lin.cambridge.arm.com>
+ <20140107201239.GD14405@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52CD2176.6050102-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140107201239.GD14405@codeaurora.org>
+Content-Disposition: inline
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 January 2014 15:29:18 Kishon Vijay Abraham I wrote:
-> > +     hpriv->phy = devm_phy_get(dev, "sata-phy");
-> > +     if (IS_ERR(hpriv->phy)) {
-> > +             dev_dbg(dev, "can't get sata-phy\n");
-> > +             /* return only if -EPROBE_DEFER */
-> > +             if (PTR_ERR(hpriv->phy) == -EPROBE_DEFER) {
-> > +                     rc = -EPROBE_DEFER;
-> > +                     goto disable_unprepare_clk;
-> > +             }
-> > +     }
-
-This should probably check for all errors except "not present"
-rather than checking for -EPROBE_DEFER. We want to abort the
-probe function for deferred probe as well as the case where we
-a PHY was listed but isn't working properly.
-
-> > +     if (!IS_ERR(hpriv->phy)) {
-> > +             phy_init(hpriv->phy);
+On Tue, Jan 07, 2014 at 08:12:39PM +0000, Stephen Boyd wrote:
+> On 01/07, Lorenzo Pieralisi wrote:
+> > 
+> > Not sure this binding (cache node) belongs in cpus.txt
+> > 
+> > I am working on defining cache bindings for ARM within the C-state
+> > standardization effort:
+> > 
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2013-December/215543.html
 > 
-> Don't we have to check the return values of phy_init and phy_power_on? Is it
-> not needed because it is an optional phy?
+> Thanks I'll take a look.
+> 
+> > 
+> > > +
+> > > +	Description: Describes a cache in an ARM based system
+> > > +
+> > > +	- compatible
+> > > +		Usage: required
+> > > +		Value type: <string>
+> > > +		Definition: shall contain at least "cache"
+> > 
+> > It is a bit vague, can't we just follow the ePAPR compatible definition ?
+> > See posting above.
+> 
+> Hm.. I thought this did follow the ePAPR spec. I see 'compatible,
+> required, string, A standard property. The value shall include
+> the string "cache".' Looks the same?
 
-Right. I think we should set hpriv->phy to NULL if it's not there and
-then call the functions only if it's actually present but bail out on
-an error.
+Sorry, my bad, you are right.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> And I see 'cache-level, required, u32, Specifies the level in the
+> cache hierarchy. For example, a level 2 cache has a value of
+> <2>.'
+
+We need to define it properly for ARM, I am not sure we can use level
+as defined in CLIDR, I need to think more about this.
+
+> > 
+> > > +
+> > > +	- cache-level
+> > > +		Usage: required
+> > > +		Value type: <u32>
+> > > +		Definition: level in the cache heirachy
+> > 
+> > "hierarchy".
+> 
+> Thanks.
+> 
+> > I have a problem with the cache level definition, and in
+> > particular the numbering, ie what the level number represents. If we
+> > mean the cache level seen through the CLIDR and co., it is hard to use
+> > it for shared caches since the level seen by different CPUs can actually
+> > be different, or put it differently the level number might not be unique for
+> > a shared cache. I need to think about a proper way to sort this out.
+> > 
+> 
+> Ok. I don't even use this property in my driver. All I really
+> need is the phandle from cpus pointing to the L2 and the
+> interrupts property in the L2 node.
+> 
+> How do you want to proceed here? If your cache binding goes
+> through I would just need to add the interrupts part. Or you
+> could even add that part in the same patch, you could have my
+> signed-off-by for that.
+
+Ok, I will try to update the bindings with the interrupt part and copy
+you in, even though the level definition worries me a bit, it is an
+important property for power management and I need to find a proper
+solution before bindings can get accepted (basically the problem is:
+if different CPUs can see a cache at different levels as defined in the
+CLIDR we cannot describe a cache with a single cache level or put it
+differently, level can not represent the value in the CLIDR hence we
+need to describe it differently).
+
+Lorenzo
