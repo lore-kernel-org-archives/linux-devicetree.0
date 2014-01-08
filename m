@@ -1,44 +1,68 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] driver-core: platform: Resolve DT interrupt references late
-Date: Wed, 08 Jan 2014 22:01:46 +0100
-Message-ID: <5253830.a53UI1vY1X@wuerfel>
-References: <20140108011957.GK5074@atomide.com> <14122609.M29raBct1E@wuerfel> <20140108202407.GA28442@ulmo.nvidia.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH] dt: Document a compatible entry for MDIO ethernet Phys
+Date: Wed, 8 Jan 2014 14:16:10 -0700
+Message-ID: <20140108211610.GC12358@obsidianresearch.com>
+References: <20131210193947.GU5429@obsidianresearch.com>
+ <CAL_JsqLpWSXd44ErAs=+xYS8ESaBSY6EJEneZFYqtbpfyM4iPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140108202407.GA28442@ulmo.nvidia.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLpWSXd44ErAs=+xYS8ESaBSY6EJEneZFYqtbpfyM4iPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 January 2014 21:24:08 Thierry Reding wrote:
+On Wed, Jan 08, 2014 at 12:37:03PM -0600, Rob Herring wrote:
+
+> > Patch to parse this compatible string to follow if this binding is
+> > acceptable.
 > 
-> The problem with devres, or any other solution for that matter, is that
-> for the cases where we'd need something like this (that is, statically
-> allocated devices in board setup code) we don't have a fully initialized
-> struct device. We need at least device_initialize() to have been called
-> before devres can be used. Therefore we still need some sort of lookup
-> table that can be used to seed devres objects. Also devres will go away
-> completely when a driver is unloaded, so it'll have to be repopulated
-> everytime.
+> One minor comment below, otherwise:
 > 
-> I don't think that would buy us much over a simple table lookup.
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-I would think we can come up with a way to add data to a device that
-ends up in devres by the time the device gets registered. The question
-is more whether you want a global table (or a set of global tables
-for that matter) or rather have all the data local to the devices
-you register. I generally prefer the latter.
+K, I'll send a series hopefully in a few weeks after some travel.
+ 
+> > +  If the phy's identifier is known then the list may contain an entry
+> > +  of the form: "ethernet-phy-idAAAA,BBBB" where
+> 
+> I think this should be a period rather than a comma as we are not
+> separating a vendor ID from product ID.
 
-There is an interesting question about what subsystems you'd want to
-include in this mechanism. We have a growing number of subsystems
-that want data represented in DT (clock, regulator, dmaengine, reset,
-led, pwm, irq, iommu, ...), most of which don't have a 'struct resource'
-equivalent. We could either try to create something generic enough
-to easily cover all of them, or we declare that if you actually want
-to use all of them you should really use DT, and we make it hard to
-add another subsystem specific lookup mechanism.
+OK, that makes sense.
 
-	Arnd
+Inspecting further, the format of the 32 bit AAAABBBB is actually
+broken out into:
+  OUI[3:18] || OUI[19:24] || MODEL[5:0] || REV[3:0]
+
+So a possible choice with the 'vendor ID,product ID' split is:
+  ethernet-phyOOOOO,MM.R
+
+xlate is:
+
+AAAABBBB = ((OOOOO >> 6) << 16) |
+           ((OOOOO & 0x3f) << 10) |
+           (MM << 4) |
+      	   R
+
+Which doesn't textually match the register value, or any other
+phy ID constants in the kernel, however makes more sense from the
+'vendor ID,product ID' angle.
+
+Eg a Marvell 88E1310 would encode into the two options as:
+  ethernet-phy05043,29.0
+  ethernet-phy-id0141.0e90
+
+And the kernel has constants like this:
+include/linux/marvell_phy.h:#define MARVELL_PHY_ID_88E1318S 0x01410e90
+
+In light of this detail do you still like 'ethernet-phy-id0141.0e90' ?
+
+Thanks,
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
