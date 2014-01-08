@@ -1,56 +1,176 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Wed, 08 Jan 2014 17:00:53 +0100
-Message-ID: <52CD7635.8040102@redhat.com>
-References: <1388963080-12544-1-git-send-email-hdegoede@redhat.com> <201401060816.02998.arnd@arndb.de> <52CA603B.3070203@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] driver-core: platform: Resolve DT interrupt references
+ late
+Date: Wed, 8 Jan 2014 16:58:57 +0100
+Message-ID: <20140108155855.GA22984@ulmo.nvidia.com>
+References: <20140108011957.GK5074@atomide.com>
+ <4589157.TquA4Q59fC@wuerfel>
+ <20140108145525.GB21974@ulmo.nvidia.com>
+ <6734073.GzLvMSsKrR@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBQHMWWLAKGQE6J4UXUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52CA603B.3070203-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6734073.GzLvMSsKrR@wuerfel>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 01/06/2014 08:50 AM, Hans de Goede wrote:
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-<snip>
+On Wed, Jan 08, 2014 at 04:11:08PM +0100, Arnd Bergmann wrote:
+> On Wednesday 08 January 2014 15:55:27 Thierry Reding wrote:
+> > On Wed, Jan 08, 2014 at 02:41:19PM +0100, Arnd Bergmann wrote:
+> > > On Wednesday 08 January 2014 13:51:17 Thierry Reding wrote:
+[...]
+> > Actually I posted a round of patches quite a while back that did exactly
+> > this for interrupts. The changes were somewhat involved because it means
+> > propagating an error code from fairly deep down in the OF code back to
+> > the various higher-level helpers. If you're interested, the last version
+> > of that is here:
+> >=20
+> > 	https://lkml.org/lkml/2013/9/18/216
+> >=20
+> > Grant in particular seemed to be uncomfortable about how invasive the
+> > patch series is.
+>=20
+> Interesting. It seems like a worthwhile thing to do, but I can understand
+> Grant's reluctance.
 
->> Otherwise you don't know the difference between "no clock
->> provided", "error getting the clock reference" and "clock controller not
->> initialized yet, try again".
->
-> I guess of these 3 we really only want to continue on "no clock provided",
-> so I think something like this (for both clks and the phy) would be best:
->
->          priv->ahb_clk = devm_clk_get(&dev->dev, "ahb");
->          if (IS_ERR(priv->ahb_clk)) {
->              err = PTR_ERR(priv->ahb_clk);
->              if (err != -EINVAL && err != -ENODATA)
->                  goto err_put_hcd;
->              priv->ahb_clk = NULL; /* No clock provided */
->          }
->
-> To clarify -EINVAL will be returned when there is no clock-names, and
-> -ENODATA when the specified name is not found in clock-names.
+To be fair, Grant didn't say outright no. Given how easily this could
+turn into a regression nightmare I do understand the reluctance as well.
+Merging things piece by piece would make it somewhat less risky but at
+the same time makes it hard to keep at it.
 
-Ok, so I've got this wrong, if there is no clk by that name specified
-in dt -ENOENT will be returned. Actually -ENOENT is the only
-error clk_get and thus devm_clk_get will ever return.
+> > It stands to reason that if they push back on the IOMMU variant of what
+> > is essentially the same thing, they will push back on the IRQ variant as
+> > well. One alternative I proposed was to, just as you suggested earlier,
+> > move the code into platform_drv_probe() or rather a function called from
+> > it. That proposal never got any replies, though.
+> >=20
+> > 	https://lkml.org/lkml/2013/12/14/39
+>=20
+> I guess putting it into the platform_drv_probe function seems reasonable,
+> I would be more scared of the implications of a notifier based method.
 
-So it seems that clk_get currently is not properly passing along
-probe-deferral. To make things future proof I will add a probe
-deferral check to the next version of my patch.
+I fully agree. Of course if we decide against moving things into the
+core and in favour of a more generic API that drivers should use, then
+this issue goes away silently at least for resources that the driver
+needs to use explicitly (memory-mapped regions, interrupts, ...).
 
-Regards,
+The issue remains for IOMMU which is meant to be used transparently
+through the DMA API. Perhaps a good compromise would be to have some
+sort of generic helper that can be called to initialize IOMMU support
+for a particular device and support probe deferral on error. Something
+like this perhaps:
 
-Hans
+	int iommu_attach(struct device *dev);
+	int iommu_detach(struct device *dev);
+
+I still don't like very much how that needs to be done in each driver
+explicitly, but if we can't do it in the core, then the only other clean
+way to handle it would be to treat it like any other sort of resource
+and handle it explicitly. Perhaps handing out some sort of cookie would
+be preferable to just an error code?
+
+> > > We could then skip adding the resources at device creation time.
+> > > Is this something you already plan to do later, or is there a reason
+> > > it wouldn't work?
+> >=20
+> > The current thread here suggests that it would be preferable not to have
+> > any static allocations at all, but rather introduce a new API to resolve
+> > things at probe time if necessary. I think the idea was to have a set of
+> > functions like:
+> >=20
+> > 	int device_get_irq(struct device *dev, unsigned int num);
+> > 	struct resource *device_get_mem_region(struct device *dev,
+> > 					       unsigned int num);
+> >=20
+> > Or even possible the more generic:
+> >=20
+> > 	struct resource *device_get_resource(struct device *dev,
+> > 					     unsigned int type,
+> > 					     unsigned int num);
+> >=20
+> > If every driver used these functions, all resources could trivially be
+> > resolved at probe time. That solution is also the most invasive one of
+> > course, because it requires all existing drivers to be converted. At
+> > least the API would be all new and therefore the conversion could happen
+> > piecemeal.
+>=20
+> Right, that does sound nice, and has the added benefit of saving
+> some memory allocations. I'd prefer the less generic variant here,
+> but I haven't given it much thought.
+
+I do prefer the less generic ones as well. They seem to be more
+convenient to use.
+
+> > One downside of that approach is that, while it maps well to platform
+> > devices or generic devices that have some sort of firmware interface
+> > such as OF or ACPI, I don't see how it can be made to work with an I2C
+> > client that's registered from board setup code for example. Well, I
+> > suppose that problem could be solved by throwing another lookup table at
+> > it, just like we do for clocks, regulators, PWMs and GPIOs.
+>=20
+> Wouldn't you still be able to attach resources in the traditional
+> way for those, but use the same new interface to get at them?
+
+I wouldn't know how. For instance platform devices store the IRQ number
+within a struct resource of type IORESOURCE_IRQ, whereas I2C clients
+store them in the struct i2c_client's .irq field.
+
+So without actually introspecting the struct device (possibly using the
+=2Ebus field for example) and upcasting you won't know how to get at the
+resources. One possibility to remedy that would be to try and unify the
+resources within struct device. But that doesn't feel right.
+
+One other thing I had considered at one point was to extend the bus_type
+structure and give it a way to obtain resources in a bus-specific way,
+but that feel even more wrong.
+
+Perhaps I'm missing something obvious, though, and this is actually much
+more trivial to solve.
+
+> > The good thing about it would be more consistency between the various
+> > types of resources. Eventually I could imagine that we could even get
+> > rid of struct resource (or at least only use it for a single type of
+> > resource). But as I said, it'll take quite a bit of work to convert
+> > everything to that.
+>=20
+> struct resource is a structure with a long and complex history.
+> I'd certainly like to put some of it behind us and do something
+> that fits better into the 'struct device' concept which it
+> predates. I agree it would be a big effort though.
+
+I concur.
+
+Thierry
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSzXW/AAoJEN0jrNd/PrOhWdAP/AzzixYCr7xSk6Ml1my59uiv
+WmhfCP3mqKhSzvGJUp5kPs96bQkHbHWIV/7rNg1IFqTX+OXs1m3PPDu5sIEksn43
+WKyrTjm4Hp3LKR93OYedy/ElhyvOW+kt9UbU7TRkAu6E1M3K2Im5u5ANNPZiCt04
+3Tp8aWxzPfRyMZvh4UJRK8w6X9w2O0lQ7tsqWmWtF6KtLL2zgftIyZAKvesEMVyl
+hVoioGt9eZsiM5jBCE5mLPLUEIJSwHRVyqQIizMT2kGkDpmU+hstx7OsR5YPAQ2o
+exe3cnVhlFpGle95z0DBRhf6pF5N+sHX80EjFttM5MNxmYzIwXm5uVNykCMcDMsF
+zZ9wDn+1JDoPgJuMXpLhB34K1HL35nU7vcSBD0o1k4jKPiCxj6Tqy3PM5w+MADVf
+sJJVC4UZMFPiVvDt5A698QPHlRqwY1yzdALdIJDGxo9yBh/QJ6r3uEHbKSf8U9VL
+gyy0aT2Z1gf4bncSl7IZPk2QTRxz8ahFCDM68w7Rty6OihJSwXmgFs95hXzsMg6r
+FD41vtd9phbfMNKMRBw2ZONAE0SoRLRxxEguvpY41gvjF76P5aD3aJh24Gvfh0j+
+gihdoug2gLSemgpdPMRjSUMSnsuxZiQtkJrb0HkNaTHT+iVq9I05boeuAL2W6p5w
+3F3Q78U1vKKkR97CpFw0
+=2l2H
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
