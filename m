@@ -1,37 +1,61 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v2 0/8] clk: max77686: Clock provider implementation fixes
-Date: Wed, 08 Jan 2014 19:04:57 +0100
-Message-ID: <4160932.uvjJSNcuKL@amdc1227>
-References: <1386864441-19561-1-git-send-email-t.figa@samsung.com>
- <20140108171544.GC14575@lee--X1> <20140108175939.27803.30462@quantum>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/4] ASoC: fsl: Add VF610 simple audio card widgets
+ driver.
+Date: Wed, 8 Jan 2014 18:06:38 +0000
+Message-ID: <20140108180638.GS31886@sirena.org.uk>
+References: <1389164556-2728-1-git-send-email-Li.Xiubo@freescale.com>
+ <1389164556-2728-3-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20140108175939.27803.30462@quantum>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Sachin Kamat <sachin.kamat@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fxRVKzQA1vU7LXPu"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1389164556-2728-3-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, kuninori.morimoto.gx@renesas.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 of January 2014 09:59:39 Mike Turquette wrote:
-> Quoting Lee Jones (2014-01-08 09:15:44)
-> > > I believe Lee has already applied this one, but in future, to avoid such
-> > > confusion, if it's more convenient for you, I can send you any clock
-> > > series as pull requests.
-> > 
-> > Me? I haven't applied any clk patches.
-> 
-> I have taken patches 1-7 into clk-next just now.
 
-Thanks.
+--fxRVKzQA1vU7LXPu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I can take patch #8 as
-> well but it would probably be better to send it through arm-soc?
+On Wed, Jan 08, 2014 at 03:02:35PM +0800, Xiubo Li wrote:
+> This is the SGTL5000 codec based off-CODEC widgets supports.
+>=20
+> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> ---
+>  sound/soc/fsl/Kconfig                     | 25 ++++++++++++++++++
+>  sound/soc/fsl/Makefile                    |  3 +++
+>  sound/soc/fsl/snd-soc-simple-card-vf610.c | 44 +++++++++++++++++++++++++=
+++++++
 
-Hmm, patch 8 is trivial enough to not cause any merge conflicts, but since
-it's unlikely that any users depending on introduced changes will show up
-for 3.14 it shouldn't really matter which tree it goes through...
+If we're needing to add explict code for a simple audio card that seems
+to defeat the point of using the simple audio card - we may as well just
+have an explicit machine driver.
 
-Best regards,
-Tomasz
+--fxRVKzQA1vU7LXPu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSzZOqAAoJELSic+t+oim9AMEP+gOTno/3kRg86B9X/GutOMiZ
+tM3hIh61ss2mkgIIDrqrtwKEvNWUziaHF/Pb0fdf1mT2zASdc2iq18ziYgnijUUG
+9EK1RyEMmsWs7EDfXSDGw8W9rBvWd+GtGvnJzQfmA5WHpwLYbgJSjEYHU/MvZdGp
+T1ZedJ6hpW/Vud4FsM/2MV0DD/Z2+ioZAYzuasaiSGiBebSVYBa/FhNRaclSQfGh
+iD8j7xBSoVfW0bLHMq/KKe4GH6Lu+FF0KFgNoNuzDClpOBhHb/i9x7eHWKJSsfSU
+qwgD2t1/fFnjMZ1HhMlxvlUGJrjmP3ev+ZWZyzHI5lruHj0uEP9z8F9TGq3hubCg
+VsiLFPL1azTFa+8LzGNv+AlZodq6+gpl9xnXDps3FvyoxiXrzxwOme7nv4iByS1P
+1chJgFWyk7QYp671VhWUtAo9lJzSlwH4vn66tVWeCaZZO//MWUFaTVq9koH1y8Ek
+7bUKTpD2ZI5XnVULy0lLdkcQEF74E6OmOYW585OLG0qZ4NW2vH6PPBjQOnq/shpp
+yfOd/g0/J1yY/JltSMgTeH+a0NwBVXEauSfp97/QTrKplOj8dziH5/wUd9UKIdnO
+rR/VqAnIqnv/Ud6aYdPwUY3jL9gycjEVUlC9n3qUeekkUNrQO2Ndyv1IkRSZNPG8
+LhbDaGdmWSyhsmoqP2vN
+=XK6P
+-----END PGP SIGNATURE-----
+
+--fxRVKzQA1vU7LXPu--
