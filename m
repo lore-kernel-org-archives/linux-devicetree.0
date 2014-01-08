@@ -1,55 +1,32 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [v7] clk: corenet: Adds the clock binding
-Date: Tue, 7 Jan 2014 18:21:15 -0600
-Message-ID: <20140108002115.GA19801@home.buserror.net>
-References: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: OMAP2: fix interrupt number for rng
+Date: Tue, 7 Jan 2014 16:28:44 -0800
+Message-ID: <20140108002843.GI5074@atomide.com>
+References: <1387839579-58292-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: tang yuantian <Yuantian.Tang@freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <1387839579-58292-1-git-send-email-s-anna@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Benoit Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2013 at 05:04:49PM +0800, tang yuantian wrote:
-> +Recommended properties:
-> +- ranges: Allows valid translation between child's address space and
-> +	parent's. Must be present if the device has sub-nodes.
-> +- #address-cells: Specifies the number of cells used to represent
-> +	physical base addresses.  Must be present if the device has
-> +	sub-nodes and set to 1 if present
-> +- #size-cells: Specifies the number of cells used to represent
-> +	the size of an address. Must be present if the device has
-> +	sub-nodes and set to 1 if present
+* Suman Anna <s-anna@ti.com> [131223 15:01]:
+> The irq data for rng module defined in hwmod data previously
+> missed the OMAP_INTC_START relative offset, so the interrupt
+> number is probably misconfigured during the DT node addition
+> adjusting for this OMAP_INTC_START. Interrupt #36 is associated
+> with a watchdog timer, so fix the rng module's interrupt to the
+> appropriate interrupt #52.
 
-Why are we specifying #address-cells/#size-cells here?
+Hmm indeed as the .dtsi files were generated from the hwmod
+data. Are the other interrupts fixed earlier OK?
 
-> +2. Clock Provider/Consumer Binding
-> +
-> +Most of the bindings are from the common clock binding[1].
-> + [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible : Should include one of the following:
-> +	* "fsl,qoriq-core-pll-1.0" for core PLL clocks (v1.0)
-> +    * "fsl,qoriq-core-pll-2.0" for core PLL clocks (v2.0)
-> +    * "fsl,qoriq-core-mux-1.0" for core mux clocks (v1.0)
-> +    * "fsl,qoriq-core-mux-2.0" for core mux clocks (v2.0)
-> +	* "fsl,qoriq-sysclk-1.0": for input system clock (v1.0)
-> +	* "fsl,qoriq-sysclk-2.0": for input system clock (v2.0)
+With earlier I mean your commit 6d4c8830479444 (ARM: OMAP2+:
+hwmod_data: fix missing OMAP_INTC_START in irq data).
 
-Some of those lines use tabs and others spaces -- I can fix when applying.
+Regards,
 
--Scott
+Tony
