@@ -1,66 +1,86 @@
-From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH 3/9] of: mtd: add NAND timings retrieval support
-Date: Wed, 08 Jan 2014 20:00:02 +0100
-Message-ID: <52CDA032.3010804@overkiz.com>
-References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com> <1389190924-26226-4-git-send-email-b.brezillon@overkiz.com> <20140108183418.GA12358@obsidianresearch.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: Re: [PATCH v3 11/21] ARM: pxa: support ICP DAS LP-8x4x FPGA irq
+Date: Wed, 08 Jan 2014 23:01:01 +0400
+Message-ID: <1389207661.10754.42.camel@host5.omatika.ru>
+References: <1386901645-28895-1-git-send-email-ynvich@gmail.com>
+	 <1387309071-22382-1-git-send-email-ynvich@gmail.com>
+	 <1387309071-22382-12-git-send-email-ynvich@gmail.com>
+	 <CACRpkdaY7xpoeeUqBBqUS2swe6Y5gKt67VYNvNRrsbFhyU=ATw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDGNFFFRWEIBBXGAW2LAKGQERWVGOJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140108183418.GA12358-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaY7xpoeeUqBBqUS2swe6Y5gKt67VYNvNRrsbFhyU=ATw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Jason,
+On Thu, 2014-01-02 at 13:32 +0100, Linus Walleij wrote:
+> On Tue, Dec 17, 2013 at 8:37 PM, Sergei Ianovich <ynvich@gmail.com> wrote:
+> Usually combined GPIO+IRQ controllers are put into drivers/gpio but
+> this is a bit special as it seems to handle also non-GPIO-related IRQs
+> so let's get some input on this.
 
-Le 08/01/2014 19:34, Jason Gunthorpe a =E9crit :
-> On Wed, Jan 08, 2014 at 03:21:58PM +0100, Boris BREZILLON wrote:
->
->> +int of_get_nand_timings(struct device_node *np, struct nand_timings *ti=
-mings)
->> +{
->> +	memset(timings, 0, sizeof(*timings));
->> +	of_property_read_u32(np, "tCLS-min", &timings->tCLS_min);
->> +	of_property_read_u32(np, "tCLH-min", &timings->tCLH_min);
->> +	of_property_read_u32(np, "tCS-min", &timings->tCS_min);
-> [..]
->
-> A while ago when discussing another controller it was pointed out
-> these values are all auto-probable directly from the NAND via a ONFI
-> defined GET FEATURE @0x01 query, and adding these timings to the DT
-> was NAK'd..
->
-> Basically you set the interface to the slowest ONFI timing mode, do
-> the GET FEATURE to the NAND chip and then increase the interface speed
-> to the highest mutually supported ONFI mode.
+This one is a plain IRQ controller. It has simple input lines, not GPIO
+pins. The chip reports its status to upper level interrupt controller.
+The upper level controller is PXA GPIO in this case.
 
-> Is there some reason you need to encode this in the DT?
+(...)
 
-What if the NAND does not support the ONFI interface (and this is
-exactly the case for the NAND available on the cubietruck board:
-H27UCG8T2ATR).
+> > +static struct irq_chip lp8x4x_irq_chip = {
+> > +       .name                   = "FPGA",
+> > +       .irq_ack                = lp8x4x_mask_irq,
+> > +       .irq_mask               = lp8x4x_mask_irq,
+> > +       .irq_mask_ack           = lp8x4x_mask_irq,
+> > +       .irq_unmask             = lp8x4x_unmask_irq,
+> > +};
+> 
+> After you have added your state container you will have
+> a handle to your struct gpio_chip in the cookie passed to
+> as irqdata.
+> 
+> Then you need to mark the GPIO lines used for IRQs by
+> doing something similar to this patch in your startup()
+> and shutdown() callbacks:
+> http://marc.info/?l=linux-gpio&m=138547223832167&w=2
 
-But I'm glag to hear about this ONFI feature :).
-I'll add a function to retrieve these timings if the NAND support
-the ONFI interface.
+The chip requires no GPIO initialization. 
 
-Best Regards,
+(...)
 
-Boris
->
-> Jason
+> > +       iowrite8(0, base + EOI);
+> 
+> This looks dangerous, what are you doing here?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/groups/opt_out.
+This is done in kernel source which comes with the device. The
+controller won't work without this line.
+
+I cannot know for sure, as I don't have board datasheets or drawings. I
+suspect, this clears GPIO line which reports interrupts to the upper
+level controller.
+
+(...)
+
+> > +static int __init lp8x4x_irq_init(void)
+> > +{
+> > +       return platform_driver_register(&lp8x4x_irq_driver);
+> > +}
+> > +postcore_initcall(lp8x4x_irq_init);
+> 
+> Do you *have* to do it this early? I guess if it's used for
+> the UARTs then yes, but make a case for it...
+
+PXA isn't DT-only at the moment. As a result, it is impossible
+to use IRQCHIP_DECLARE(). So drivers for the on-CPU IRQs and GPIO-IRQs
+are loaded using postcore_initcall(). We need to have all irq domain
+drivers loaded prior to DT parsing in order to allow normal
+initialization of IRQ resources with DT. I'll update the commit message.
+
+The rest of review comment are implemented. The changes don't affect any
+other patches in the series. Should I repost the whole series?
+
+Or only this patch?
+
+Thanks.
+
