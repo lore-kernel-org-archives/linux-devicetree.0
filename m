@@ -1,80 +1,25 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 2/3] ata: ahci_platform: Manage SATA PHY
-Date: Wed, 8 Jan 2014 17:03:08 +0530
-Message-ID: <52CD3774.3060701@ti.com>
-References: <1389174428-31414-1-git-send-email-rogerq@ti.com> <1389174428-31414-3-git-send-email-rogerq@ti.com> <52CD2176.6050102@ti.com> <6214646.nAF6lzWV79@wuerfel> <52CD364F.4060104@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 1/5] mfd: omap-usb-host: Update DT clock binding information
+Date: Wed, 8 Jan 2014 12:35:40 +0100
+Message-ID: <201401081235.40927.arnd@arndb.de>
+References: <1389161742-10533-1-git-send-email-rogerq@ti.com> <3761842.HRY1CDBF4z@wuerfel> <52CD324D.3020701@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52CD364F.4060104@ti.com>
+In-Reply-To: <52CD324D.3020701@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: tj@kernel.org, sergei.shtylyov@cogentembedded.com, b.zolnierkie@samsung.com, hdegoede@redhat.com, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Balaji T K <balajitk@ti.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Roger Quadros <rogerq@ti.com>, Sebastian Reichel <sre@debian.org>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, tony@atomide.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, "Kristo, Tero" <t-kristo@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/2014 04:58 PM, Roger Quadros wrote:
-> On 01/08/2014 03:35 PM, Arnd Bergmann wrote:
->> On Wednesday 08 January 2014 15:29:18 Kishon Vijay Abraham I wrote:
->>>> +     hpriv->phy = devm_phy_get(dev, "sata-phy");
->>>> +     if (IS_ERR(hpriv->phy)) {
->>>> +             dev_dbg(dev, "can't get sata-phy\n");
->>>> +             /* return only if -EPROBE_DEFER */
->>>> +             if (PTR_ERR(hpriv->phy) == -EPROBE_DEFER) {
->>>> +                     rc = -EPROBE_DEFER;
->>>> +                     goto disable_unprepare_clk;
->>>> +             }
->>>> +     }
->>
->> This should probably check for all errors except "not present"
->> rather than checking for -EPROBE_DEFER. We want to abort the
->> probe function for deferred probe as well as the case where we
->> a PHY was listed but isn't working properly.
+On Wednesday 08 January 2014, Roger Quadros wrote:
+> OK. I'll update the binding information to reflect all the clocks.
 > 
-> OK.
-> 
->>
->>>> +     if (!IS_ERR(hpriv->phy)) {
->>>> +             phy_init(hpriv->phy);
->>>
->>> Don't we have to check the return values of phy_init and phy_power_on? Is it
->>> not needed because it is an optional phy?
->>
->> Right. I think we should set hpriv->phy to NULL if it's not there and
->> then call the functions only if it's actually present but bail out on
->> an error.
-> 
-> OK. How does this look?
-> 
-> hpriv->phy = devm_phy_get(dev, "sata-phy");
-> if (IS_ERR(hpriv->phy)) {
-> 	if (PTR_ERR(hpriv->phy) == -ENODEV)
-> 		goto continue;
+> But what about clk_get() vs of_clk_get_by_name() ?
 
-yikes :P
-		goto phyinit;
-> 
-> 	dev_err(dev, "couldn't get sata-phy\n");
-> 	rc = PTR_ERR(hpriv->phy);
-> 	goto disable_unprepare_clk;
-> }
-> 
-> continue:
-phyinit:
+I think the convention these days is to just use clk_get(), which calls
+of_clk_get_by_name() internally. Not sure if that's what you are asking.
 
-> 
-> if (!IS_ERR(hpriv->phy)) {
-> 	rc = phy_init(hpriv->phy);
-> 	if (rc)
-> 		goto disable_unprepare_clk;
-> 
-> 	rc = phy_power_on(hpriv->phy);
-> 	if (rc) {
-> 		phy_exit(hpriv->phy);
-> 		goto disable_unprepare_clk;
-> 	}
-> }
-> 
-> cheers,
-> -roger
-> 
+	Arnd
