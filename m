@@ -1,31 +1,44 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 0/8] clk: max77686: Clock provider implementation fixes
-Date: Wed, 8 Jan 2014 17:15:44 +0000
-Message-ID: <20140108171544.GC14575@lee--X1>
-References: <1386864441-19561-1-git-send-email-t.figa@samsung.com>
- <2890647.PEOApIOYyP@amdc1227>
- <20140108163138.27803.58310@quantum>
- <3008563.6S2kFjQKp9@amdc1227>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC 04/18] driver core & of: Mark of_nodes of added device as populated
+Date: Wed, 8 Jan 2014 11:28:01 -0600
+Message-ID: <CAL_JsqJGQFstgFu=tpho91C0iv4eH9XSCAVKfXXQO4Z+yD-0tw@mail.gmail.com>
+References: <1387815830-8794-1-git-send-email-pawel.moll@arm.com>
+	<1387815830-8794-5-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3008563.6S2kFjQKp9@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Sachin Kamat <sachin.kamat@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1387815830-8794-5-git-send-email-pawel.moll@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Samuel Ortiz <sameo@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Jon Medhurst <tixy@linaro.org>, "arm@kernel.org" <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> I believe Lee has already applied this one, but in future, to avoid s=
-uch
-> confusion, if it's more convenient for you, I can send you any clock
-> series as pull requests.
+On Mon, Dec 23, 2013 at 10:23 AM, Pawel Moll <pawel.moll@arm.com> wrote:
+> In "Device Tree powered" systems, platform devices are usually
+> massively populated with of_platform_populate() call, executed
+> at some level of initcalls, either by generic architecture
+> or by platform-specific code.
+>
+> There are situations though where certain devices must be
+> created (and bound with drivers) before all the others.
+> This presents small challenge in DT-driven systems, as
+> devices explicitly created in early code would be created
+> again by of_platform_populate().
 
-Me? I haven't applied any clk patches.
+Isn't this already at least partially solved with the aux data
+support? I'm guessing the difference here is how the early device is
+created.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> This patch tries to solve that issue in a generic way,
+> adding a "populated" flag which is set in the device_node
+> structure when a device is being created in the core.
+> Later, of_platform_populate() skips such nodes (and
+> its children) in a similar way to the non-available ones.
+
+Couldn't you store a struct device ptr in struct device_node instead?
+
+In any case I'd like to see this contained within the DT code. I don't
+see why the driver core needs to be modified for a DT specific
+problem.
+
+Rob
