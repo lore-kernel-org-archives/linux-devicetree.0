@@ -1,63 +1,58 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 2/9] devicetree: bindings: Document qcom,kpss-acc
-Date: Wed, 08 Jan 2014 15:02:39 -0800
-Message-ID: <52CDD90F.4040306@codeaurora.org>
-References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org> <1387845593-10050-3-git-send-email-sboyd@codeaurora.org> <20140108142541.GK6701@e106331-lin.cambridge.arm.com> <20140108143235.GA11753@e106331-lin.cambridge.arm.com>
+Subject: Re: [PATCH v2 1/9] devicetree: bindings: Document Krait/Scorpion
+ cpus and enable-method
+Date: Wed, 08 Jan 2014 15:21:49 -0800
+Message-ID: <52CDDD8D.5090100@codeaurora.org>
+References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org> <1387845593-10050-2-git-send-email-sboyd@codeaurora.org> <20140108142139.GJ6701@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140108143235.GA11753@e106331-lin.cambridge.arm.com>
+In-Reply-To: <20140108142139.GJ6701@e106331-lin.cambridge.arm.com>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rohit Vaswani <rvaswani@codeaurora.org>, David Brown <davidb@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/14 06:32, Mark Rutland wrote:
-> On Wed, Jan 08, 2014 at 02:25:41PM +0000, Mark Rutland wrote:
->> On Tue, Dec 24, 2013 at 12:39:46AM +0000, Stephen Boyd wrote:
->>> The kpss acc binding describes the clock, reset, and power domain
->>> controller for a Krait CPU.
->>>
->>> Cc: <devicetree@vger.kernel.org>
->>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
->>> ---
->>>  .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt  | 30 ++++++++++++++++++++++
->>>  1 file changed, 30 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
->>> new file mode 100644
->>> index 0000000..1333db9
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
->>> @@ -0,0 +1,30 @@
->>> +Krait Processor Sub-system (KPSS) Application Clock Controller (ACC)
->>> +
->>> +The KPSS ACC provides clock, power domain, and reset control to a Krait CPU.
->>> +There is one ACC register region per CPU within the KPSS remapped region as
->>> +well as an alias register region that remaps accesses to the ACC associated
->>> +with the CPU accessing the region.
->> Is the mapping of ACC register to a specific processor well-defined? I
->> assume it's just in order of MPIDR.Aff0.
+On 01/08/14 06:21, Mark Rutland wrote:
+> On Tue, Dec 24, 2013 at 12:39:45AM +0000, Stephen Boyd wrote:
+>> From: Rohit Vaswani <rvaswani@codeaurora.org>
 >>
->> To maintain our collective sanity in the face of possible future
->> implementations, do you have an idea as to whether this might need to be
->> extended in future for multiple clusters / reordered IDs and so on?
+>> Scorpion and Krait don't use the spin-table enable-method.
+>> Instead they rely on mmio register accesses to enable power and
+>> clocks to bring CPUs out of reset. Document their enable-methods.
 >>
->> I assume we'd just allocate a new compatible string if those get a
->> little crazy.
-> Actually, I'm getting too hung-up on future-proofing. Assuming the
-> mapping is well-defined for current implementations we can always add an
-> additional property later if required.
+>> Cc: <devicetree@vger.kernel.org>
+>> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
+>> [sboyd: Split off into separate patch, renamed methods to
+>> match compatible nodes]
+>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/cpus.txt | 25 ++++++++++++++++++++++++-
+>>  1 file changed, 24 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+>> index 9130435..333f4ae 100644
+>> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+>> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+>> @@ -180,7 +180,11 @@ nodes to be present and contain the properties described below.
+>>  			  be one of:
+>>  			     "spin-table"
+>>  			     "psci"
+>> -			# On ARM 32-bit systems this property is optional.
+>> +			# On ARM 32-bit systems this property is optional and
+>> +			  can be one of:
+>> +			    "qcom,gcc-msm8660"
+>> +			    "qcom,kpss-acc-v1"
+>> +			    "qcom,kpss-acc-v2"
+> It would be nice to document "psci" here as valid for 32-bit.
 >
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
->
->
+> Currently the PSCI code doesn't inspect the enable-method and assumes it
+> if there's a psci node, but KVM tool and others set enable-method to
+> "psci", and if we change the way the PSCI code probes it will require
+> enable-method to be set for PSCI to work.
 
-Thanks Mark. As far as I know it will always be a one to one
-relationship. I can't predict the future though so you're suggestion
-seems like a good escape plan if needed.
+Sure. I'll squash it in if I resend, or send a follow-up patch later on.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
