@@ -1,41 +1,40 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] ARM: tegra: Add efuse bindings
-Date: Wed, 08 Jan 2014 15:41:52 -0700
-Message-ID: <52CDD430.3010508@wwwdotorg.org>
-References: <1387891931-9854-1-git-send-email-pdeschrijver@nvidia.com> <1387891931-9854-4-git-send-email-pdeschrijver@nvidia.com> <52CB14D3.2060904@wwwdotorg.org> <20140108133951.GD1592@ulmo.nvidia.com> <52CD9DFB.9010007@wwwdotorg.org> <20140108200946.GE1298@ulmo.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140108200946.GE1298-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 6/7] devicetree: bindings: Document Krait performance monitor units (PMU)
+Date: Wed,  8 Jan 2014 14:59:43 -0800
+Message-ID: <1389221984-10973-7-git-send-email-sboyd@codeaurora.org>
+References: <1389221984-10973-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1389221984-10973-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/2014 01:09 PM, Thierry Reding wrote:
-> On Wed, Jan 08, 2014 at 11:50:35AM -0700, Stephen Warren wrote:
->> On 01/08/2014 06:39 AM, Thierry Reding wrote:
->>> On Mon, Jan 06, 2014 at 01:40:51PM -0700, Stephen Warren wrote:
->>>> On 12/24/2013 06:32 AM, Peter De Schrijver wrote:
->>> [...]
->>>>> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
->>>>
->>>>> +	efuse@7000F800 {
->>>>
->>>> "fuse" might be a better node name; "efuse" is presumably the name of
->>>> the instance, not the type of object.
->>>
->>> There's another occurrence I noticed recently where we haven't followed
->>> that rule. The PMIC node on Venice2 for instance is called as3722.
->>> Perhaps that should also be renamed.
->>
->> Yes, we should fix that. Care to send a patch?
-> 
-> Ugh... I've just been going through some of the other DTS files and see
-> that quite a lot of other places aren't following this rule either. The
-...
-> Perhaps it isn't worth fixing them all up after all?
+Document the Krait PMU compatible string.
 
-I guess that just means the patch will be a little bigger; it doesn't
-seem like that's a good reason not to fix the issue.
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/pmu.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+index 3e1e498fea96..ce7cccb99d87 100644
+--- a/Documentation/devicetree/bindings/arm/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/pmu.txt
+@@ -16,6 +16,7 @@ Required properties:
+ 	"arm,arm11mpcore-pmu"
+ 	"arm,arm1176-pmu"
+ 	"arm,arm1136-pmu"
++	"qcom,krait-pmu"
+ - interrupts : 1 combined interrupt or 1 per core.
+ 
+ Example:
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
