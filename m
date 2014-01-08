@@ -1,70 +1,73 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] lis3lv02d: update DT binding for use with Nokia N900
-Date: Wed, 8 Jan 2014 12:17:04 +0100
-Message-ID: <20140108111703.GA22852@earth.universe>
-References: <1386968094-24554-1-git-send-email-sre@debian.org>
- <52AB8ACB.6000101@tremplin-utc.net>
- <20131213225920.GA20534@earth.universe>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 2/3] ata: ahci_platform: Manage SATA PHY
+Date: Wed, 8 Jan 2014 16:58:15 +0530
+Message-ID: <52CD364F.4060104@ti.com>
+References: <1389174428-31414-1-git-send-email-rogerq@ti.com> <1389174428-31414-3-git-send-email-rogerq@ti.com> <52CD2176.6050102@ti.com> <6214646.nAF6lzWV79@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131213225920.GA20534-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: =?iso-8859-1?Q?=C9ric?= Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6214646.nAF6lzWV79@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: tj@kernel.org, sergei.shtylyov@cogentembedded.com, b.zolnierkie@samsung.com, hdegoede@redhat.com, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Balaji T K <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On 01/08/2014 03:35 PM, Arnd Bergmann wrote:
+> On Wednesday 08 January 2014 15:29:18 Kishon Vijay Abraham I wrote:
+>>> +     hpriv->phy = devm_phy_get(dev, "sata-phy");
+>>> +     if (IS_ERR(hpriv->phy)) {
+>>> +             dev_dbg(dev, "can't get sata-phy\n");
+>>> +             /* return only if -EPROBE_DEFER */
+>>> +             if (PTR_ERR(hpriv->phy) == -EPROBE_DEFER) {
+>>> +                     rc = -EPROBE_DEFER;
+>>> +                     goto disable_unprepare_clk;
+>>> +             }
+>>> +     }
+> 
+> This should probably check for all errors except "not present"
+> rather than checking for -EPROBE_DEFER. We want to abort the
+> probe function for deferred probe as well as the case where we
+> a PHY was listed but isn't working properly.
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK.
 
-Hi,
+> 
+>>> +     if (!IS_ERR(hpriv->phy)) {
+>>> +             phy_init(hpriv->phy);
+>>
+>> Don't we have to check the return values of phy_init and phy_power_on? Is it
+>> not needed because it is an optional phy?
+> 
+> Right. I think we should set hpriv->phy to NULL if it's not there and
+> then call the functions only if it's actually present but bail out on
+> an error.
 
-On Fri, Dec 13, 2013 at 11:59:20PM +0100, Sebastian Reichel wrote:
-> >  * Who wants to carry these patches? Can they all go via the
-> > devicetree branch? Or maybe Arnd or Greg would prefer to pick them
-> > via the misc driver branch? Both ways are fine for me...
->=20
-> I don't care, but it would be nice to see this in 3.14.
+OK. How does this look?
 
-mh looks like nobody feels responsible.
+hpriv->phy = devm_phy_get(dev, "sata-phy");
+if (IS_ERR(hpriv->phy)) {
+	if (PTR_ERR(hpriv->phy) == -ENODEV)
+		goto continue;
 
-I think the first patch should normally go through Grant's tree,
-whom I forgot to Cc in the patchset (sorry).
+	dev_err(dev, "couldn't get sata-phy\n");
+	rc = PTR_ERR(hpriv->phy);
+	goto disable_unprepare_clk;
+}
 
-The patches 3-4 can go the same way as the other updates for the
-driver, but should be merged after Grant's tree.
+continue:
 
--- Sebastian
+if (!IS_ERR(hpriv->phy)) {
+	rc = phy_init(hpriv->phy);
+	if (rc)
+		goto disable_unprepare_clk;
 
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+	rc = phy_power_on(hpriv->phy);
+	if (rc) {
+		phy_exit(hpriv->phy);
+		goto disable_unprepare_clk;
+	}
+}
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSzTOvAAoJENju1/PIO/qacggP/2J6Tj9DjHfBA6y99SsZyHAD
-dMFEFhFziVXhGUHxEAvojuNyNE2EPG2pAmVeFvQ2nKod7wyYrHE/h4jWP5jal1kc
-xA0Gz+9V8aEzKMgCwJStdV3/BGemmRe/3Vme4wJCEBOE6q4dEqTlXMnALzii4r7I
-TAMkxEZTEPzkIaFMY81U1maCLrmh2zV+SHgF2CzI/gK/sQb+P0DLas62kQRmsYZw
-U1ch6vcBFMMUvZjLyo9gKdqPdl0UcWNUQnbt/2oXj/GeM0HsC0tVGzspq0Al8C5s
-Zwf4PL3VW2pm4TKwkvYfws7uQ5tq8S8rwktNLmuJ5MHH8BAoItW7ukvbBqkzOR0U
-gesMjT6J3mmxQ8DMtm8LVlTw3YmnR5d+1ZBjEw0mKUVEnVsDDbpWD3Tf02kL/nL/
-a8WeSVyQuNm8ibAVVA77oVsOvQ82ED/B76AQyIRBEjOmjnjq4Wnu71s60PoypQFq
-xiVzIQ5pNmONxUvkANoPsoTfghXE5YHYkQIrPhXk8lfvvrjbtbfwHZeLj6L9CUIh
-yFNq6WUhOD2Qt+jJS625FFDcMmKQwymE2Ih94RwycWMm962PW5qkFCBoem/9U4FX
-7OfX2EHQqbCksL73V2ut8kURAl5S/Z/2OZ7qXO46iOz3ilb5fRRdOeINoYUy6HoH
-jaPUmflR0BpbIzOOp22x
-=XJMU
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
