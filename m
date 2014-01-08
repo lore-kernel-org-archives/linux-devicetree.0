@@ -1,255 +1,102 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH] gpio: add GPIO hogging mechanism
-Date: Wed, 8 Jan 2014 10:37:49 +0100
-Message-ID: <CACRpkdb=atfrW+Wqbi17a1KhstS7XHkutuXsM24gL2VPEri_cw@mail.gmail.com>
-References: <1387463671-1164-1-git-send-email-b.brezillon@overkiz.com>
-	<1387463671-1164-2-git-send-email-b.brezillon@overkiz.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 3/3] Documentation: mfd: Add binding document for
+ S2MPA01
+Date: Wed, 8 Jan 2014 09:41:04 +0000
+Message-ID: <20140108094104.GC6701@e106331-lin.cambridge.arm.com>
+References: <1389162390-4582-1-git-send-email-sachin.kamat@linaro.org>
+ <1389162390-4582-3-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1387463671-1164-2-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Rob Landley <rob@landley.net>, Alexandre Courbot <gnurou@gmail.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Ben Gamari <bgamari.foss@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1389162390-4582-3-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "sbkim73@samsung.com" <sbkim73@samsung.com>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2013 at 3:34 PM, Boris BREZILLON
-<b.brezillon@overkiz.com> wrote:
-
-> GPIO hogging is a way to request and configure specific GPIO without
-> explicitly requesting it in the device driver.
->
-> The request and configuration procedure is handled in the core device
-> driver code before the driver probe function is called.
-
-Why?
-
-Why can't these hogs be handled right after the gpio chip has been
-added in the end of the gpiochio_add() function?
-
-> +It might contain GPIO hog definitions. GPIO hogging is a mechanism providing
-> +automatic GPIO request and configuration before the device is passed to its
-> +driver probe function (the same mechanism is used for pinctrl pin config).
+On Wed, Jan 08, 2014 at 06:26:30AM +0000, Sachin Kamat wrote:
+> Added initial binding documentation for S2MPA01 MFD.
+> 
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   91 +++++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+> new file mode 100644
+> index 000000000000..ae750a28821b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+> @@ -0,0 +1,91 @@
 > +
-> +Each GPIO hog definition is represented as a child node of the GPIO controller.
+> +* Samsung S2MPA01 Voltage and Current Regulator
+> +
+> +The Samsung S2MPA01 is a multi-function device which includes high
+> +efficiency buck converters including Dual-Phase buck converter, various LDOs,
+> +and an RTC. It is interfaced to the host controller using an I2C interface.
+> +Each sub-block is addressed by the host system using different I2C slave
+> +addresses.
+> +
 > +Required properties:
-> +- gpio: store the gpio informations (id, flags, ...). Shall contain the
-> +  number of cells specified in its parent node (GPIO controller node).
-
-This property is alway plural "gpios".
-
-> +- hog-as-input or hog-as-output: a boolean property specifying the GPIO
-> +  direction.
-> +- hog-init-high or hog-init-low: a boolean property specifying the GPIO
-> +  value in case the GPIO is hogged as output.
-
-What about just having these three:
-
-hog-as-input
-hog-as-output-high
-hog-as-output-low
-
+> +- compatible: Should be "samsung,s2mpa01-pmic".
+> +- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
+> +
 > +Optional properties:
-> +- open-drain-line: GPIO is configured as an open drain pin.
-> +- open-source-line: GPIO is configured as an open source pin.
+> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
+> +  the interrupts from s2mpa01 are delivered to.
+> +- interrupts: Interrupt specifiers for interrupt sources.
 
-Can you not simply us the flags in the second cell for the gpios
-property for this, normally?
+That sounds a bit odd. How many interrupts might there be? What do they
+signal?
 
-> +- export-line or export-line-fixed: the GPIO is exported to userspace via
-> +  sysfs.
-
-Move this feature to a separate patch. It is much more controversial
-than the hog concept as such.
-
-> +- line-name: the GPIO label name.
-
-OK.
-
-> @@ -66,6 +95,19 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
->                 compatible = "fsl,qe-pario-bank-a", "fsl,qe-pario-bank";
->                 reg = <0x1400 0x18>;
->                 gpio-controller;
-> +               gpio-hogs = <&exported_gpio>;
 > +
-> +               line_a: line-a {
-> +                       gpio = <5 0>;
-> +                       hog-as-input;
-> +                       line-name = "line-a";
-> +               };
+> +Optional nodes:
+> +- regulators: The regulators of s2mpa01 that have to be instantiated should be
+> +included in a sub-node named 'regulators'. Regulator nodes included in this
+> +sub-node should be of the format as listed below.
 > +
-> +               exported_gpio: exported-gpio {
-> +                       gpio = <6 0>;
-> +                       hog-as-output;
-> +                       line-name = "exported-gpio";
-> +               };
-
-This looks pretty straight-forward to use, but need the DT maintainers
-to provide input on this.
-
->         };
->
->         qe_pio_e: gpio-controller@1460 {
-> @@ -75,6 +117,11 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
->                 gpio-controller;
->         };
->
-> +       pio_consumer {
-> +               gpio-hogs = <&line_a>;
-> +               gpio-hog-names = "my-line-a";
-> +       };
-
-No. No way. That is not what hogs is about. It is not to make consumers
-get their GPIOs grabbed automatically when probing. It is *only* about
-making it possible for the core to set up a few GPIO lines *not* belonging
-to any particular in-kernel device when probing the GPIO chip.
-
-For providing GPIOs to consumers, use the existing OF bindings and
-add code to the drivers to handle them. A device needs to keep track
-of its resources.
-
-In any case, such concepts would be a totally separate patch.
-
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-
-NAK on this, hogs shall be a GPIO-intrinsic.
-
-> @@ -142,6 +175,9 @@ int devm_gpio_request(struct device *dev, unsigned gpio, const char *label)
->         if (!dr)
->                 return -ENOMEM;
->
-> +       if (gpio_is_hogged(dev, gpio))
-> +               return 0;
-> +
->         rc = gpio_request(gpio, label);
->         if (rc) {
->                 devres_free(dr);
-> @@ -172,6 +208,9 @@ int devm_gpio_request_one(struct device *dev, unsigned gpio,
->         if (!dr)
->                 return -ENOMEM;
->
-> +       if (gpio_is_hogged(dev, gpio))
-> +               return 0;
+> +	regulator_name {
+> +		[standard regulator constraints....];
+> +	};
 > +
 
-This just makes it impossible to release these resources. Don't do this.
+Why not just say that the regulators node contains regulators in the
+usual format, with reference to the regulator binding?
 
-Hogs should be tied to a certain GPIO chip, get hogged when the
-chip is added and get removed when the chip is removed.
-
-> + * of_gpio_hog_count() - Count a GPIO hogs on a specific device node
-> + * @np:                device node to get GPIO from
-> + *
-> + * Returns the number of GPIO hogs requested by this device node.
-> + */
-> +int of_gpio_hog_count(struct device_node *np)
-> +{
-> +       int size;
+> + regulator-ramp-delay for BUCKs = [6250/12500(default)/25000/50000] uV/us
 > +
-> +       if (!of_get_property(np, "gpio-hogs", &size))
-> +               return 0;
+> + BUCK[1/2/3/4] supports disabling ramp delay on hardware, so explictly
+> + regulator-ramp-delay = <0> can be used for them to disable ramp delay.
+> + In the absence of the regulator-ramp-delay property, the default ramp
+> + delay will be used.
 > +
-> +       return size / sizeof(phandle);
-> +}
-> +EXPORT_SYMBOL(of_gpio_hog_count);
+> +NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
+> +for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
+> +Grouping of BUCKs sharing ramp rate setting is as follow : BUCK[1, 6],
+> +BUCK[2, 4], and BUCK[8, 9, 10]
 
-There is no reason to export this, it should be static, gpiolib-internal.
+It would probably be better to have a heading like "Properties for BUCK
+regulator nodes" for all of the above.
 
-> +EXPORT_SYMBOL(of_get_gpio_hog);
 
-Dito.
+> +
+> +The regulator constraints inside the regulator nodes use the standard regulator
+> +bindings which are documented elsewhere.
 
-> @@ -1214,6 +1216,17 @@ int gpiochip_add(struct gpio_chip *chip)
->
->         of_gpiochip_add(chip);
->
-> +       /* Instantiate missing GPIO hogs */
-> +       if (chip->dev->gpios) {
-> +               for (i = 0; i < chip->dev->gpios->ngpios; i++) {
-> +                       if (chip->dev->gpios->gpios[i])
-> +                               continue;
-> +                       desc = devm_gpiod_get_hog_index(chip->dev, i);
-> +                       if (!IS_ERR(desc))
-> +                               chip->dev->gpios->gpios[i] = desc;
-> +               }
-> +       }
+As mentioned above, state this at the beginning and point to the
+regulator bindings.
 
-This is the only thing you should be doing.
+> +
+> +The following are the names of the regulators that the s2mpa01 PMIC block
+> +supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
+> +as per the datasheet of s2mpa01.
 
-> @@ -2421,6 +2434,7 @@ struct gpio_desc *__must_check gpiod_get_index(struct device *dev,
->         struct gpio_desc *desc = NULL;
->         int status;
->         enum gpio_lookup_flags flags = 0;
-> +       int i;
->
->         dev_dbg(dev, "GPIO lookup for consumer %s\n", con_id);
->
-> @@ -2451,6 +2465,13 @@ struct gpio_desc *__must_check gpiod_get_index(struct device *dev,
->                 return desc;
->         }
->
-> +       if (dev->gpios) {
-> +               for (i = 0; i < dev->gpios->ngpios; i++) {
-> +                       if (dev->gpios->gpios[i] == desc)
-> +                               return desc;
-> +               }
-> +       }
+So these are what the nodes should be called? (rather than values for
+regulator-name).
 
-Don't do this. We already have explicit gpio resource management.
-Don't attempt to make it implicit.
+Otherwise this looks ok to me.
 
-> +EXPORT_SYMBOL_GPL(gpiod_get_hog_index);
-
-I don't understand this function at all.
-
-> +bool gpio_is_hogged(struct device *dev, unsigned gpio)
-> +{
-> +       return gpiod_is_hogged(dev, gpio_to_desc(gpio));
-> +}
-> +EXPORT_SYMBOL_GPL(gpio_is_hogged);
-
-This should not be exported.
-
-> +/**
-> + * gpio_hog_count - count number of GPIO hogs requested by a specific device
-> + * @dev:       GPIO consumer
-> + *
-> + * Return the number of GPIO hogs.
-> + */
-> +int gpio_hog_count(struct device *dev)
-> +{
-> +       /* Using device tree? */
-> +       if (IS_ENABLED(CONFIG_OF) && dev && dev->of_node)
-> +               return of_gpio_hog_count(dev->of_node);
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(gpio_hog_count);
-
-Get rid of this.
-
-> +++ b/include/linux/device.h
-> @@ -22,6 +22,7 @@
->  #include <linux/types.h>
->  #include <linux/mutex.h>
->  #include <linux/pinctrl/devinfo.h>
-> +#include <linux/gpio/devinfo.h>
->  #include <linux/pm.h>
->  #include <linux/atomic.h>
->  #include <linux/ratelimit.h>
-> @@ -744,6 +745,10 @@ struct device {
->         struct dev_pin_info     *pins;
->  #endif
->
-> +#ifdef CONFIG_GPIOLIB
-> +       struct dev_gpio_info    *gpios;
-> +#endif
-
-Don't do this.
-
-Overall it appears you try to make the device core grab all GPIOs automatically
-when devices are probed, this is not what GPIO hogs are about, and we already
-have a resource management model for GPIOs using the descriptors explicitly
-in the drivers, I see no reason to try to push that over to the device core.
-
-Yours,
-Linus Walleij
+Thanks,
+Mark.
