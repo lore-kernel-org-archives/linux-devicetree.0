@@ -1,98 +1,321 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] driver-core: platform: Resolve DT interrupt references late
-Date: Wed, 8 Jan 2014 17:25:17 +0100
-Message-ID: <201401081725.17876.arnd@arndb.de>
-References: <20140108011957.GK5074@atomide.com> <6734073.GzLvMSsKrR@wuerfel> <20140108155855.GA22984@ulmo.nvidia.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 2/2] ehci-platform: Add support for clks and
+ phy passed through devicetree
+Date: Wed,  8 Jan 2014 17:30:08 +0100
+Message-ID: <1389198608-24339-3-git-send-email-hdegoede@redhat.com>
+References: <1389198608-24339-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140108155855.GA22984-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBLX2WWLAKGQEOTZO6DI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1389198608-24339-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 January 2014, Thierry Reding wrote:
-> On Wed, Jan 08, 2014 at 04:11:08PM +0100, Arnd Bergmann wrote:
-> > On Wednesday 08 January 2014 15:55:27 Thierry Reding wrote:
-> > > It stands to reason that if they push back on the IOMMU variant of what
-> > > is essentially the same thing, they will push back on the IRQ variant as
-> > > well. One alternative I proposed was to, just as you suggested earlier,
-> > > move the code into platform_drv_probe() or rather a function called from
-> > > it. That proposal never got any replies, though.
-> > > 
-> > > 	https://lkml.org/lkml/2013/12/14/39
-> > 
-> > I guess putting it into the platform_drv_probe function seems reasonable,
-> > I would be more scared of the implications of a notifier based method.
-> 
-> I fully agree. Of course if we decide against moving things into the
-> core and in favour of a more generic API that drivers should use, then
-> this issue goes away silently at least for resources that the driver
-> needs to use explicitly (memory-mapped regions, interrupts, ...).
-> 
-> The issue remains for IOMMU which is meant to be used transparently
-> through the DMA API. Perhaps a good compromise would be to have some
-> sort of generic helper that can be called to initialize IOMMU support
-> for a particular device and support probe deferral on error. Something
-> like this perhaps:
-> 
-> 	int iommu_attach(struct device *dev);
-> 	int iommu_detach(struct device *dev);
-> 
-> I still don't like very much how that needs to be done in each driver
-> explicitly, but if we can't do it in the core, then the only other clean
-> way to handle it would be to treat it like any other sort of resource
-> and handle it explicitly. Perhaps handing out some sort of cookie would
-> be preferable to just an error code?
+Currently ehci-platform is only used in combination with devicetree when used
+with some via socs. By extending it to (optionally) get clks and a phy from
+devicetree, and enabling / disabling those on power_on / off, it can be used
+more generically. Specifically after this commit it can be used for the
+ehci controller on Allwinner sunxi SoCs.
 
-The more I think about the iommu case, the more I am convinced that it
-does belong into the core, in whatever form we can find. As far as I
-can tell from the little reliable information I have on the topic, I
-would assume that we can keep it in the DT probing code, as there won't
-be a need for multiple arbitrary IOMMUs with ACPI or with board files.
+Somehow we've ended up with 2 device-bindings documents for ehci-platform.c,
+this patch renames and updates one to platform-ehci.txt to reflect that this
+is a generic platform driver, and removes the other.
 
-> > > One downside of that approach is that, while it maps well to platform
-> > > devices or generic devices that have some sort of firmware interface
-> > > such as OF or ACPI, I don't see how it can be made to work with an I2C
-> > > client that's registered from board setup code for example. Well, I
-> > > suppose that problem could be solved by throwing another lookup table at
-> > > it, just like we do for clocks, regulators, PWMs and GPIOs.
-> > 
-> > Wouldn't you still be able to attach resources in the traditional
-> > way for those, but use the same new interface to get at them?
-> 
-> I wouldn't know how. For instance platform devices store the IRQ number
-> within a struct resource of type IORESOURCE_IRQ, whereas I2C clients
-> store them in the struct i2c_client's .irq field.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/usb/platform-ehci.txt      |  25 ++++
+ .../devicetree/bindings/usb/via,vt8500-ehci.txt    |  15 ---
+ .../devicetree/bindings/usb/vt8500-ehci.txt        |  12 --
+ drivers/usb/host/ehci-platform.c                   | 126 +++++++++++++++++----
+ 4 files changed, 131 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/platform-ehci.txt
+ delete mode 100644 Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt
+ delete mode 100644 Documentation/devicetree/bindings/usb/vt8500-ehci.txt
 
-Good point, I forgot about the special case for i2c_client->irq.
-I looked now and noticed that very few i2c devices actually use this
-field, but larger number uses platform_data, which has a similar
-problem.
-
-> So without actually introspecting the struct device (possibly using the
-> .bus field for example) and upcasting you won't know how to get at the
-> resources. One possibility to remedy that would be to try and unify the
-> resources within struct device. But that doesn't feel right.
-> 
-> One other thing I had considered at one point was to extend the bus_type
-> structure and give it a way to obtain resources in a bus-specific way,
-> but that feel even more wrong.
-> 
-> Perhaps I'm missing something obvious, though, and this is actually much
-> more trivial to solve.
-
-No trivial solution that I can see. I think we can deal with the case
-where platform code uses platform_device->resources, and everything else
-comes down to having multiple code branches in the driver, as we already
-have to deal with platform_data and DT properties describing stuff that
-doesn't fit in the resources.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/usb/platform-ehci.txt b/Documentation/devicetree/bindings/usb/platform-ehci.txt
+new file mode 100644
+index 0000000..56c478d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/platform-ehci.txt
+@@ -0,0 +1,25 @@
++Generic Platform EHCI controller
++
++Required properties:
++- compatible : "via,vt8500-ehci" or "wm,prizm-ehci"
++- reg : ehci controller register range (address and length)
++- interrupts : ehci controller interrupt
++
++Optional properties:
++- clocks : a list of phandle + clock specifier pairs, one for each entry
++   in clock-names.
++- clock-names : "clk0", "clk1", ...
++- phys : phy
++- phy-names : "phy0"
++
++Example:
++
++	ehci@d8007900 {
++		compatible = "via,vt8500-ehci";
++		reg = <0xd8007900 0x200>;
++		interrupts = <43>;
++		clocks = <&usb_clk 6>, <&ahb_gates 2>;
++		clock-names = "clk0", "clk1";
++		phys = <&usbphy 1>;
++		phy-names = "phy0";
++	};
+diff --git a/Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt b/Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt
+deleted file mode 100644
+index 17b3ad1..0000000
+--- a/Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt
++++ /dev/null
+@@ -1,15 +0,0 @@
+-VIA/Wondermedia VT8500 EHCI Controller
+------------------------------------------------------
+-
+-Required properties:
+-- compatible : "via,vt8500-ehci"
+-- reg : Should contain 1 register ranges(address and length)
+-- interrupts : ehci controller interrupt
+-
+-Example:
+-
+-	ehci@d8007900 {
+-		compatible = "via,vt8500-ehci";
+-		reg = <0xd8007900 0x200>;
+-		interrupts = <43>;
+-	};
+diff --git a/Documentation/devicetree/bindings/usb/vt8500-ehci.txt b/Documentation/devicetree/bindings/usb/vt8500-ehci.txt
+deleted file mode 100644
+index 5fb8fd6..0000000
+--- a/Documentation/devicetree/bindings/usb/vt8500-ehci.txt
++++ /dev/null
+@@ -1,12 +0,0 @@
+-VIA VT8500 and Wondermedia WM8xxx SoC USB controllers.
+-
+-Required properties:
+- - compatible: Should be "via,vt8500-ehci" or "wm,prizm-ehci".
+- - reg: Address range of the ehci registers. size should be 0x200
+- - interrupts: Should contain the ehci interrupt.
+-
+-usb: ehci@D8007100 {
+-	compatible = "wm,prizm-ehci", "usb-ehci";
+-	reg = <0xD8007100 0x200>;
+-	interrupts = <1>;
+-};
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index 7f30b71..ce76659 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -3,6 +3,7 @@
+  *
+  * Copyright 2007 Steven Brown <sbrown-aLUkz7fEuXBWk0Htik3J/w@public.gmane.org>
+  * Copyright 2010-2012 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
++ * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+  *
+  * Derived from the ohci-ssb driver
+  * Copyright 2007 Michael Buesch <m@bues.ch>
+@@ -18,6 +19,7 @@
+  *
+  * Licensed under the GNU/GPL. See COPYING for details.
+  */
++#include <linux/clk.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/err.h>
+ #include <linux/kernel.h>
+@@ -25,6 +27,7 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/usb.h>
+ #include <linux/usb/hcd.h>
+@@ -34,6 +37,12 @@
+ 
+ #define DRIVER_DESC "EHCI generic platform driver"
+ 
++#define EHCI_MAX_CLKS 3
++struct ehci_platform_priv {
++	struct clk *clks[EHCI_MAX_CLKS];
++	struct phy *phy;
++};
++
+ static const char hcd_name[] = "ehci-platform";
+ 
+ static int ehci_platform_reset(struct usb_hcd *hcd)
+@@ -64,28 +73,84 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
+ 	return 0;
+ }
+ 
++static int ehci_platform_power_on(struct platform_device *dev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(dev);
++	struct ehci_platform_priv *priv =
++		(struct ehci_platform_priv *)hcd_to_ehci(hcd)->priv;
++	int clk, ret;
++
++	for (clk = 0; priv->clks[clk] && clk < EHCI_MAX_CLKS; clk++) {
++		ret = clk_prepare_enable(priv->clks[clk]);
++		if (ret)
++			goto err_disable_clks;
++	}
++
++	if (priv->phy) {
++		ret = phy_init(priv->phy);
++		if (ret)
++			goto err_disable_clks;
++
++		ret = phy_power_on(priv->phy);
++		if (ret)
++			goto err_exit_phy;
++	}
++
++	return 0;
++
++err_exit_phy:
++	phy_exit(priv->phy);
++err_disable_clks:
++	while (--clk >= 0)
++		clk_disable_unprepare(priv->clks[clk]);
++
++	return ret;
++}
++
++static void ehci_platform_power_off(struct platform_device *dev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(dev);
++	struct ehci_platform_priv *priv =
++		(struct ehci_platform_priv *)hcd_to_ehci(hcd)->priv;
++	int clk;
++
++	if (priv->phy) {
++		phy_power_off(priv->phy);
++		phy_exit(priv->phy);
++	}
++
++	for (clk = EHCI_MAX_CLKS - 1; clk >= 0; clk--)
++		if (priv->clks[clk])
++			clk_disable_unprepare(priv->clks[clk]);
++}
++
+ static struct hc_driver __read_mostly ehci_platform_hc_driver;
+ 
+ static const struct ehci_driver_overrides platform_overrides __initconst = {
+-	.reset =	ehci_platform_reset,
++	.reset =		ehci_platform_reset,
++	.extra_priv_size =	sizeof(struct ehci_platform_priv),
+ };
+ 
+-static struct usb_ehci_pdata ehci_platform_defaults;
++static struct usb_ehci_pdata ehci_platform_defaults = {
++	.power_on =		ehci_platform_power_on,
++	.power_suspend =	ehci_platform_power_off,
++	.power_off =		ehci_platform_power_off,
++};
+ 
+ static int ehci_platform_probe(struct platform_device *dev)
+ {
+ 	struct usb_hcd *hcd;
+ 	struct resource *res_mem;
+ 	struct usb_ehci_pdata *pdata;
+-	int irq;
+-	int err;
++	int clk, irq, err;
++	char name[8];
+ 
+ 	if (usb_disabled())
+ 		return -ENODEV;
+ 
+ 	/*
+-	 * use reasonable defaults so platforms don't have to provide these.
+-	 * with DT probing on ARM, none of these are set.
++	 * Use reasonable defaults so platforms don't have to provide these
++	 * with DT probing on ARM.
+ 	 */
+ 	if (!dev_get_platdata(&dev->dev))
+ 		dev->dev.platform_data = &ehci_platform_defaults;
+@@ -107,17 +172,40 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 		return -ENXIO;
+ 	}
+ 
++	hcd = usb_create_hcd(&ehci_platform_hc_driver, &dev->dev,
++			     dev_name(&dev->dev));
++	if (!hcd)
++		return -ENOMEM;
++
++	if (pdata == &ehci_platform_defaults) {
++		struct ehci_platform_priv *priv = (struct ehci_platform_priv *)
++						  hcd_to_ehci(hcd)->priv;
++
++		priv->phy = devm_phy_get(&dev->dev, "phy0");
++		if (IS_ERR(priv->phy)) {
++			err = PTR_ERR(priv->phy);
++			if (err == -EPROBE_DEFER)
++				goto err_put_hcd;
++			priv->phy = NULL;
++		}
++
++		for (clk = 0; clk < EHCI_MAX_CLKS; clk++) {
++			snprintf(name, sizeof(name), "clk%d", clk);
++			priv->clks[clk] = devm_clk_get(&dev->dev, name);
++			if (IS_ERR(priv->clks[clk])) {
++				err = PTR_ERR(priv->clks[clk]);
++				if (err == -EPROBE_DEFER)
++					goto err_put_hcd;
++				priv->clks[clk] = NULL;
++			}
++		}
++	}
++
++	platform_set_drvdata(dev, hcd);
+ 	if (pdata->power_on) {
+ 		err = pdata->power_on(dev);
+ 		if (err < 0)
+-			return err;
+-	}
+-
+-	hcd = usb_create_hcd(&ehci_platform_hc_driver, &dev->dev,
+-			     dev_name(&dev->dev));
+-	if (!hcd) {
+-		err = -ENOMEM;
+-		goto err_power;
++			goto err_put_hcd;
+ 	}
+ 
+ 	hcd->rsrc_start = res_mem->start;
+@@ -126,21 +214,19 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 	hcd->regs = devm_ioremap_resource(&dev->dev, res_mem);
+ 	if (IS_ERR(hcd->regs)) {
+ 		err = PTR_ERR(hcd->regs);
+-		goto err_put_hcd;
++		goto err_power;
+ 	}
+ 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+ 	if (err)
+-		goto err_put_hcd;
+-
+-	platform_set_drvdata(dev, hcd);
++		goto err_power;
+ 
+ 	return err;
+ 
+-err_put_hcd:
+-	usb_put_hcd(hcd);
+ err_power:
+ 	if (pdata->power_off)
+ 		pdata->power_off(dev);
++err_put_hcd:
++	usb_put_hcd(hcd);
+ 
+ 	return err;
+ }
+-- 
+1.8.4.2
