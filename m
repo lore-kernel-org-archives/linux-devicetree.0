@@ -1,132 +1,36 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: Re: [PATCH V12 0/3] Add watchdog DT nodes and use syscon regmap
- interface to configure pmu registers
-Date: Wed, 8 Jan 2014 20:55:29 +0900
-Message-ID: <CAL1wa8diMjUpC73Fg0Ysw7QTZnATm=amzZ_DM8H0O5HOOTvPgA@mail.gmail.com>
-References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com> <CAL1wa8cRKHPLBCUe33zBiKB_iqotGp1ZgWtSsAAUxL2fzrcsdQ@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/2] Revert "ARM: dts: imx: use dual-fifo sdma script for ssi"
+Date: Wed, 8 Jan 2014 10:03:26 -0200
+Message-ID: <CAOMZO5BXssO2BaV01Hn6hWaEP+k8_Bp7NPUKDbJ8-yuG8Eo41Q@mail.gmail.com>
+References: <1389170756-22351-1-git-send-email-Guangyu.Chen@freescale.com>
+	<1389170756-22351-2-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAL1wa8cRKHPLBCUe33zBiKB_iqotGp1ZgWtSsAAUxL2fzrcsdQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "cpgs ." <cpgs@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Leela Krishna Amudala <l.krishna@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1389170756-22351-2-git-send-email-Guangyu.Chen@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <fabio.estevam@freescale.com>, dmaengine@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Wim Van Sebroeck,
+On Wed, Jan 8, 2014 at 6:45 AM, Nicolin Chen <Guangyu.Chen@freescale.com> wrote:
+> This reverts commit b1d27c79c8377df1880447375deffa3bb82c7bd3.
+>
+> Previously we switched the SSI scriprt to dual-fifo mode to reduce playback
+> underrun issue, which is only included by SDMA firmware version 2. However,
+> there are quite a lot people still using version 1 or default firmware in
+> the ROM code of SoC while these two kinds of firmwares do not support the
+> dual-fifo script and the audio function on their platform would be broken.
+>
+> Thus this patch provisionally reverts the dual-fifo script to the original
+> single fifo script to meet all kinds of users' requirements, including the
+> version 1/2 or inner ROM firmware.
+>
+> Reported-by: Fabio Estevam <fabio.estevam@freescale.com>
+> Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
 
-I believe that I addressed all the comments given by reviewers.
-So can you look into this series and take necessary action..?
+Thanks, Nicolin.
 
-Best Wishes,
-Leela Krishna.
+This fixes audio playback without additional SDMA firmware:
 
-On Wed, Dec 18, 2013 at 9:01 PM, Leela Krishna Amudala
-<l.krishna@samsung.com> wrote:
-> Hello Wim Van Sebroeck,
->
-> Can you kindly look into this series and take necessary action..?
->
-> Best Wishes,
-> Leela Krishna.
->
->
-> On Fri, Dec 6, 2013 at 2:47 PM, Leela Krishna Amudala
-> <l.krishna@samsung.com> wrote:
->> This patchset does the following things
->>         - Adds pmusysreg device node to exynos5.dtsi file
->>         - Adds watchdog DT nodes to Exynos5250 and 5420
->>         - Uses syscon regmap interface to configure pmu registers
->>           to mask/unmask enable/disable of watchdog.
->>
->> This patch set is rebased on Kgene's for-next branch and tested on SMDK5420
->>
->> changes since V11:
->>         - Added EXYNOS5 prefix to REG_OFFSET defines (suggested by Tomasz)
->>         - NEEDS_PMU_CONFIG => HAS_PMU_CONFIG (suggested by Olof, Guenter)
->>         - Move QUIRK_HAS_PMU_CONFIG check to s3c2410wdt_mask_and_disable_reset (suggested by Guenter)
->>
->> changes since V10:
->>         - followed coding style rules
->>         - removed duplicate error message suggested by Guenter Roeck <linux@roeck-us.net>
->>
->> changes since V9:
->>         - added descriptions to s3c2410_wdt_variant structure fields
->>         - moved calling s3c2410wdt_mask_and_disable_reset() function above s3c2410wdt_start() call in probe
->>         - put dev_err message back to s3c2410wdt_mask_and_disable_reset() function
->>           (suggested by Doug Anderson <dianders@chromium.org>)
->>
->> changes since V8:
->>         - modified the patch description for the below patch
->>           "watchdog: s3c2410_wdt: use syscon regmap interface to configure pmu register"
->>         - removed MODULE_ALIAS in watchdog driver
->>         - changed dev_warn to dev_err in one failure case handling (suggested by Guenter Roeck <linux@roeck-us.net>)
->>         - renamed variable name from pmu_config to drv_data
->>         - changed the compatible field description in documentation file
->>           (suggested by Tomasz Figa <t.figa@samsung.com>)
->>
->> changes since V7:
->>         - re-ordered the patches in the series
->>         - moved pmu_config_s3c2410 structure out of ifdef CONFIG_OF
->>           and limited only this structure to platform match table
->>         - renamed structure name from s3c_wdt_driver_ids to s3c2410_wdt_ids
->>         - removed exynos variants from platform match table
->>           (suggested by Tomasz Figa <t.figa@samsung.com>)
->>
->> changes since V6:
->>         - added SoC-specific compatible value to syscon node and documented it
->>         - given more patch description for below patch
->>           ARM: dts: update watchdog device nodes for Exynos5250 and Exynos5420
->>         - added platform_device_id array for watchdog devices
->>         - selected MFD_SYSCON in Kconfig entry for watchdog
->>
->> Changes since V5:
->>         - removed status property in DT nodes
->>         - changed the return type for the function s3c2410wdt_mask_and_disable_reset()
->>           and handled error cases
->>         - Handled to get driver data in non-DT cases
->>         - Addressed comments given by Tomasz Figa <t.figa@samsung.com>
->>
->> Changes since V4:
->>         - changed the node name from pmusysreg to syscon and node label from pmu_sys_reg to pmu_syscon
->>         - changed the property name from samsung,pmusysreg to samsung,syscon-phandle
->>         - used regmap_update_bits instead of remap_read/regmap_write
->>         - Addressed other comments given by Tomasz Figa <t.figa@samsung.com>
->>
->> Changes since V3:
->>         - changed the compatible strings for watchdog node
->>         - splitted up adding pmusysreg node and made it separate patch
->>         - Addressed comments given by Sachin Kamat <sachin.kamat@linaro.org>
->>
->> Changes since V2:
->>         - used syscon regmap interface to configure pmu registers in WDT driver
->>           (suggested by Tomasz Figa <t.figa@samsung.com>)
->>
->> Changes since V1:
->>         - Added new compatible string for Exynos5 SoCs
->>         - Introduced quirk mechanism to program PMU registers
->>         - Addressed comments given by Tomasz Figa <t.figa@samsung.com>
->>
->> Leela Krishna Amudala (3):
->>   ARM: dts: Add pmu sysreg node to exynos5250 and exynos5420 dtsi files
->>   watchdog: s3c2410_wdt: use syscon regmap interface to configure pmu
->>     register
->>   ARM: dts: update watchdog device nodes for Exynos5250 and Exynos5420
->>
->>  .../devicetree/bindings/arm/samsung/pmu.txt        |   15 ++
->>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   21 ++-
->>  arch/arm/boot/dts/exynos5.dtsi                     |    7 -
->>  arch/arm/boot/dts/exynos5250.dtsi                  |   11 +-
->>  arch/arm/boot/dts/exynos5420.dtsi                  |   14 ++
->>  drivers/watchdog/Kconfig                           |    1 +
->>  drivers/watchdog/s3c2410_wdt.c                     |  154 ++++++++++++++++++--
->>  7 files changed, 205 insertions(+), 18 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
->>
->> --
->> 1.7.10.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested-by: Fabio Estevam <fabio.estevam@freescale.com>
