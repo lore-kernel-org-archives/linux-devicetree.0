@@ -1,38 +1,71 @@
-From: "Anna, Suman" <s-anna@ti.com>
-Subject: Re: [PATCH] ARM: dts: OMAP2: fix interrupt number for rng
-Date: Wed, 8 Jan 2014 11:31:42 -0600
-Message-ID: <52CD8B7E.8000709@ti.com>
-References: <1387839579-58292-1-git-send-email-s-anna@ti.com> <20140108002843.GI5074@atomide.com>
+From: Kamil Debski <k.debski@samsung.com>
+Subject: RE: [PATCH RFC alternative ver 1] phy: Exynos 421x USB 2.0 PHY support
+Date: Wed, 08 Jan 2014 18:42:27 +0100
+Message-ID: <04db01cf0c99$00f79970$02e6cc50$%debski@samsung.com>
+References: <1387545857-9472-1-git-send-email-k.debski@samsung.com>
+ <1387545857-9472-11-git-send-email-k.debski@samsung.com>
+ <52CA845C.5080308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140108002843.GI5074@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <52CA845C.5080308@ti.com>
+Content-language: pl
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Kishon Vijay Abraham I' <kishon@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, stern@rowland.harvard.edu
 List-Id: devicetree@vger.kernel.org
 
-Tony,
+Hi Kishon,
 
-On 01/07/2014 06:28 PM, Tony Lindgren wrote:
-> * Suman Anna <s-anna@ti.com> [131223 15:01]:
->> The irq data for rng module defined in hwmod data previously
->> missed the OMAP_INTC_START relative offset, so the interrupt
->> number is probably misconfigured during the DT node addition
->> adjusting for this OMAP_INTC_START. Interrupt #36 is associated
->> with a watchdog timer, so fix the rng module's interrupt to the
->> appropriate interrupt #52.
->
-> Hmm indeed as the .dtsi files were generated from the hwmod
-> data. Are the other interrupts fixed earlier OK?
+Thank you for your review.
 
-GPMC DT nodes are already configured properly, the ISP MMU one needs 
-fixing. I left it out to be fixed as part of Florian's patch that 
-corrects the ISP MMU DT node. There is no IVA MMU DT node yet, and will 
-add the correct number when we add the DT node.
+> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
+> Sent: Monday, January 06, 2014 11:24 AM
+> 
+> Hi,
+> 
+> On Friday 20 December 2013 06:54 PM, Kamil Debski wrote:
+> > This the alternative version of the support for Exynos 421x USB 2.0
+> > PHY in the Generic PHY framework. In this version the support for
+> > Exynos
+> > 4210 and 4212 was joined into one file.
+> >
+> > Signed-off-by: Kamil Debski <k.debski@samsung.com>
+> > ---
+> > Hi,
+> >
+> > Me and Kishon were discussing for quite a long time the way how
+> Exynos
+> > 4 should be handled. I have decided to post the original patches and
+> > try to make an alternative version with support for Exynos 4210 and
+> > 4212 joined in one file. I have prepared two versions. The first one
+> > has 506 lines (vs
+> > 563 when two files are used). When doing the second version I was a
+> > little more aggresive in removing code. This was done at a cost of
+> > adding if's deciding which SoC version the driver is dealing with in
+> some internal functions.
+> > This resulted in a better number of removed lines - the second
+> version
+> > has only 452 lines (vs 563 original and 506 version 1).
+> 
+> Alright.. If the alternate approach doesn't give too much of advantage,
+> lets stick with the original one. I would recommend creating a
+> documentation (Documentation/phy/?) for the samsung PHY since that
+> actually creates a layer on top of generic PHY framework. That would
+> help while adding new samsung PHY drivers.
 
-regards
-Suman
+Ok, I will prepare an updated set of patches with the documentation
+added. Also I will fix other issues you pointed out in reply to other
+patches from this series.
 
+> 
+> Btw thank you for preparing alternate versions for your original
+> patches.
 
+No problem :)
+
+Best wishes,
+-- 
+Kamil Debski
+Samsung R&D Institute Poland
