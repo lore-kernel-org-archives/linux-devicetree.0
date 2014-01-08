@@ -1,68 +1,51 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH] dt: Document a compatible entry for MDIO ethernet Phys
-Date: Wed, 8 Jan 2014 14:16:10 -0700
-Message-ID: <20140108211610.GC12358@obsidianresearch.com>
-References: <20131210193947.GU5429@obsidianresearch.com>
- <CAL_JsqLpWSXd44ErAs=+xYS8ESaBSY6EJEneZFYqtbpfyM4iPQ@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 6/9] mtd: nand: add sunxi NFC dt bindings doc
+Date: Wed, 8 Jan 2014 22:28:55 +0100
+Message-ID: <201401082228.55807.arnd@arndb.de>
+References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com>
+ <1389190924-26226-7-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLpWSXd44ErAs=+xYS8ESaBSY6EJEneZFYqtbpfyM4iPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1389190924-26226-7-git-send-email-b.brezillon@overkiz.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, dev@linux-sunxi.org, linux-kernel@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>, linux-mtd@lists.infradead.org, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 08, 2014 at 12:37:03PM -0600, Rob Herring wrote:
+On Wednesday 08 January 2014, Boris BREZILLON wrote:
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+> @@ -0,0 +1,71 @@
+> +Allwinner NAND Flash Controller (NFC)
+> +
+> +Required properties:
+> +- compatible : "allwinner,sun4i-nfc".
+> +- reg : shall contain registers location and length for data and reg.
+> +- interrupts : shall define the NFC interrupt.
+> +- #address-cells: shall be set to 1. Encode the nand CS.
+> +- #size-cells : shall be set to 0.
+> +- clocks : shall reference NFC clocks.
+> +- clock-names : NFC internal clock names. Shall contain :
+> +    * "ahb_clk" : AHB gating clock
+> +    * "sclk" : NFC clock
+> +
 
-> > Patch to parse this compatible string to follow if this binding is
-> > acceptable.
-> 
-> One minor comment below, otherwise:
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+One small request: Can we try to avoid the "NFC" name here? I think it's
+too overloaded and people may confuse it with near-field communication,
+which I'm sure will be supported in sunxi based devices at some point.
 
-K, I'll send a series hopefully in a few weeks after some travel.
- 
-> > +  If the phy's identifier is known then the list may contain an entry
-> > +  of the form: "ethernet-phy-idAAAA,BBBB" where
-> 
-> I think this should be a period rather than a comma as we are not
-> separating a vendor ID from product ID.
+It doesn't hurt to also mention that the function block is called
+nfc, but I think references to it are better named "nand", which is
+less confusing.
 
-OK, that makes sense.
-
-Inspecting further, the format of the 32 bit AAAABBBB is actually
-broken out into:
-  OUI[3:18] || OUI[19:24] || MODEL[5:0] || REV[3:0]
-
-So a possible choice with the 'vendor ID,product ID' split is:
-  ethernet-phyOOOOO,MM.R
-
-xlate is:
-
-AAAABBBB = ((OOOOO >> 6) << 16) |
-           ((OOOOO & 0x3f) << 10) |
-           (MM << 4) |
-      	   R
-
-Which doesn't textually match the register value, or any other
-phy ID constants in the kernel, however makes more sense from the
-'vendor ID,product ID' angle.
-
-Eg a Marvell 88E1310 would encode into the two options as:
-  ethernet-phy05043,29.0
-  ethernet-phy-id0141.0e90
-
-And the kernel has constants like this:
-include/linux/marvell_phy.h:#define MARVELL_PHY_ID_88E1318S 0x01410e90
-
-In light of this detail do you still like 'ethernet-phy-id0141.0e90' ?
-
-Thanks,
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
