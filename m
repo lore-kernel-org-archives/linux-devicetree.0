@@ -1,142 +1,90 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] driver-core: platform: Resolve DT interrupt references late
-Date: Wed, 08 Jan 2014 16:11:08 +0100
-Message-ID: <6734073.GzLvMSsKrR@wuerfel>
-References: <20140108011957.GK5074@atomide.com> <4589157.TquA4Q59fC@wuerfel> <20140108145525.GB21974@ulmo.nvidia.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] drm/panel: Add support for Chungwa CLAA101WA01A panel
+Date: Wed, 8 Jan 2014 16:15:49 +0100
+Message-ID: <20140108151548.GD21974@ulmo.nvidia.com>
+References: <1389138386-4618-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140108145525.GB21974@ulmo.nvidia.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1590846161=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1389138386-4618-1-git-send-email-swarren@wwwdotorg.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Stephen Warren <swarren@nvidia.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 January 2014 15:55:27 Thierry Reding wrote:
-> On Wed, Jan 08, 2014 at 02:41:19PM +0100, Arnd Bergmann wrote:
-> > On Wednesday 08 January 2014 13:51:17 Thierry Reding wrote:
-> > I hope I read this thread correctly, sorry if I missed an important
-> > part. My idea was to add the code not in platform_get_irq() but add
-> > the resource in platform_drv_probe(), and just bail out with
-> > -EPROBE_DEFER there if necessary.
-> 
-> One of the reasons we can't do that just yet is that we don't actually
-> get back an accurate error code from the OF IRQ helpers. Therefore if we
-> want to support deferred probing we either have to return -EPROBE_DEFER
-> for all errors (which is a bad idea because some errors just can't be
-> resolved by deferral) or we change the OF IRQ functions to propagate the
-> error code properly so that we know exactly when -EPROBE_DEFER makes
-> sense (i.e. the IRQ domain for an interrupt-parent hasn't been
-> registered yet).
 
-I see.
+--===============1590846161==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bajzpZikUji1w+G9"
+Content-Disposition: inline
 
-> Actually I posted a round of patches quite a while back that did exactly
-> this for interrupts. The changes were somewhat involved because it means
-> propagating an error code from fairly deep down in the OF code back to
-> the various higher-level helpers. If you're interested, the last version
-> of that is here:
-> 
-> 	https://lkml.org/lkml/2013/9/18/216
-> 
-> Grant in particular seemed to be uncomfortable about how invasive the
-> patch series is.
 
-Interesting. It seems like a worthwhile thing to do, but I can understand
-Grant's reluctance.
+--bajzpZikUji1w+G9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> One problem with the IOMMU patches is that they've received some strong
-> pushback from both Greg and Grant, arguing that it doesn't belong in the
-> core. If you want to read up on that, here's a link to the latest
-> version:
-> 
-> 	https://lkml.org/lkml/2013/12/12/74
-> 
-> Some things had been discussed in earlier iterations of that series, but
-> this should give you the basic idea.
+On Tue, Jan 07, 2014 at 04:46:26PM -0700, Stephen Warren wrote:
+> From: Stephen Warren <swarren@nvidia.com>
+>=20
+> The Chungwa CLAA101WA01A is a 10.1" 1366x768 panel, which can be
+> supported by the simple panel driver.
+>=20
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> ---
+>  .../bindings/panel/chunghwa,claa101wa01a.txt       |  7 ++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 25 ++++++++++++++++=
+++++++
+>  2 files changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/chunghwa,claa=
+101wa01a.txt
 
-I'm skipping that discussion for now and stick with your summary
+I performed s/Chungwa/Chunghwa/ and s/chungwa/chunghwa/ (yes, it's
+horrible to spell that) on this patch and applied it.
 
-> It stands to reason that if they push back on the IOMMU variant of what
-> is essentially the same thing, they will push back on the IRQ variant as
-> well. One alternative I proposed was to, just as you suggested earlier,
-> move the code into platform_drv_probe() or rather a function called from
-> it. That proposal never got any replies, though.
-> 
-> 	https://lkml.org/lkml/2013/12/14/39
+Thanks,
+Thierry
 
-I guess putting it into the platform_drv_probe function seems reasonable,
-I would be more scared of the implications of a notifier based method.
+--bajzpZikUji1w+G9
+Content-Type: application/pgp-signature
 
-> > We could then skip adding the resources at device creation time.
-> > Is this something you already plan to do later, or is there a reason
-> > it wouldn't work?
-> 
-> The current thread here suggests that it would be preferable not to have
-> any static allocations at all, but rather introduce a new API to resolve
-> things at probe time if necessary. I think the idea was to have a set of
-> functions like:
-> 
-> 	int device_get_irq(struct device *dev, unsigned int num);
-> 	struct resource *device_get_mem_region(struct device *dev,
-> 					       unsigned int num);
-> 
-> Or even possible the more generic:
-> 
-> 	struct resource *device_get_resource(struct device *dev,
-> 					     unsigned int type,
-> 					     unsigned int num);
-> 
-> If every driver used these functions, all resources could trivially be
-> resolved at probe time. That solution is also the most invasive one of
-> course, because it requires all existing drivers to be converted. At
-> least the API would be all new and therefore the conversion could happen
-> piecemeal.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-Right, that does sound nice, and has the added benefit of saving
-some memory allocations. I'd prefer the less generic variant here,
-but I haven't given it much thought.
- 
-> One downside of that approach is that, while it maps well to platform
-> devices or generic devices that have some sort of firmware interface
-> such as OF or ACPI, I don't see how it can be made to work with an I2C
-> client that's registered from board setup code for example. Well, I
-> suppose that problem could be solved by throwing another lookup table at
-> it, just like we do for clocks, regulators, PWMs and GPIOs.
+iQIcBAEBAgAGBQJSzWukAAoJEN0jrNd/PrOhkZoQAKgY5ss8nwScGVlKx3pkFMbj
+mtOBO93MkGKi6yu6nnCPnsx7cuoZHDzdwVDMj247oR//PBQ8scgWdddLPLp4iumf
+jv7Rg9JBSMWIlHSfaGXK2o74s1EWf3VnGmfBHkxX5DYe1JKjNPXzR4qGPlx2Xz+0
+lUG2uPPSB9CBKcyyYWyXmEgxMvepDnpZUFDDk2iK7voRYSbf0qW4tQD8u+avuaYW
+B45FtiRyoAOBLg/n00A67fiU/hCocDnvUzZrzHOum2DkKjwWgZl+fj4AfE1Nb/Xg
+8PmX5r4c3auGxOsZCqZL94l08TFA5Sx0OhoqXTA9NnCJhNxO47Ug+QlkPQ2BFB2c
+Uz8/s1fTCodF0yBWNG+gmOfPBE9iATlmQGxPrAeuW5wyu8kGdync0lQu/QifJcrS
+APRNUkGqFTQcT8Biv68MjOCDfEH+hsLkKaQhwlleJ54K/+lDzKDg4JvlLssgIqn9
+w4WlvGhi8Y6Hh4FLfBaj1WKcF/g3FKTBLvURmCnrnxI8SFHABQpKmY6b+9j6vCRJ
++EHcXWgRdByjFvxvijExowcMeGNhTPP/IBqezmL0RqrRkm7/HSCy4YxUe+Snduzt
+r+J2gCSKTKC/OM55ORtqKsGus5RXVkRugwJn+skka1xsmIzX82KMsHwQPlvF4Vbm
+r6owObe4bt/1u7DAf2w/
+=AirR
+-----END PGP SIGNATURE-----
 
-Wouldn't you still be able to attach resources in the traditional
-way for those, but use the same new interface to get at them?
+--bajzpZikUji1w+G9--
 
-> The good thing about it would be more consistency between the various
-> types of resources. Eventually I could imagine that we could even get
-> rid of struct resource (or at least only use it for a single type of
-> resource). But as I said, it'll take quite a bit of work to convert
-> everything to that.
+--===============1590846161==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-struct resource is a structure with a long and complex history.
-I'd certainly like to put some of it behind us and do something
-that fits better into the 'struct device' concept which it
-predates. I agree it would be a big effort though.
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-> > In the meantime, I don't see anything with your patch, but it also
-> > wouldn't hurt to do it now if it solves all the problems.
-> 
-> Well, the commit message explicitly states that this is only a temporary
-> measure, mostly to fix a number of regressions on OMAP where things were
-> broken by the conversion to DT in 3.13. The same is probably true of
-> other boards as well.
-
-Right.
-
-> I'm willing to help fix things properly in the long run, but I think a
-> simple and low-risk patch like this would be worthwhile if it means that
-> a good many boards aren't broken in 3.13. Also given the history of the
-> above I can imagine that it will take more than the 3.14 cycle to get
-> this resolved satisfactorily, so at least for interrupts this would give
-> us a good stopgap solution in the meantime.
-
-Ok. Thanks so much for your detailed background information!
-
-	Arnd
+--===============1590846161==--
