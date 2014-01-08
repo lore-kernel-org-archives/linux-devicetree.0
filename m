@@ -1,119 +1,198 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 3/3] Documentation: mfd: Add binding document for S2MPA01
-Date: Wed,  8 Jan 2014 11:56:30 +0530
-Message-ID: <1389162390-4582-3-git-send-email-sachin.kamat@linaro.org>
-References: <1389162390-4582-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389162390-4582-1-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, lgirdwood@gmail.com, sameo@linux.intel.com, sbkim73@samsung.com, sachin.kamat@linaro.org, patches@linaro.org
+From: Hu Yaohui <loki2441@gmail.com>
+Subject: Re: [PATCHv9 02/20] thermal: introduce device tree
+	parser
+Date: Tue, 7 Jan 2014 22:24:56 -0500
+Message-ID: <CAHqbYQvchi3QSgcitUtguFyOJtXhFt5OjcoiSDZnPg9ZyiN4cg@mail.gmail.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
+	<1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
+	<52C299A8.4010108@nvidia.com> <52CB6AE2.2090002@nvidia.com>
+	<52CBE237.7010309@ti.com> <52CCC3CF.7000103@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <lm-sensors-bounces@lm-sensors.org>
+In-Reply-To: <52CCC3CF.7000103@nvidia.com>
+List-Unsubscribe: <http://lists.lm-sensors.org/mailman/options/lm-sensors>,
+	<mailto:lm-sensors-request@lm-sensors.org?subject=unsubscribe>
+List-Archive: <http://lists.lm-sensors.org/pipermail/lm-sensors/>
+List-Post: <mailto:lm-sensors@lm-sensors.org>
+List-Help: <mailto:lm-sensors-request@lm-sensors.org?subject=help>
+List-Subscribe: <http://lists.lm-sensors.org/mailman/listinfo/lm-sensors>,
+	<mailto:lm-sensors-request@lm-sensors.org?subject=subscribe>
+Sender: lm-sensors-bounces@lm-sensors.org
+Errors-To: lm-sensors-bounces@lm-sensors.org
+To: Wei Ni <wni@nvidia.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, Eduardo Valentin <eduardo.valentin@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Added initial binding documentation for S2MPA01 MFD.
+I am new here. How can I could not mail a new message to this mail list?
+TIA
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
- Documentation/devicetree/bindings/mfd/s2mpa01.txt |   91 +++++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
-new file mode 100644
-index 000000000000..ae750a28821b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
-@@ -0,0 +1,91 @@
-+
-+* Samsung S2MPA01 Voltage and Current Regulator
-+
-+The Samsung S2MPA01 is a multi-function device which includes high
-+efficiency buck converters including Dual-Phase buck converter, various LDOs,
-+and an RTC. It is interfaced to the host controller using an I2C interface.
-+Each sub-block is addressed by the host system using different I2C slave
-+addresses.
-+
-+Required properties:
-+- compatible: Should be "samsung,s2mpa01-pmic".
-+- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
-+
-+Optional properties:
-+- interrupt-parent: Specifies the phandle of the interrupt controller to which
-+  the interrupts from s2mpa01 are delivered to.
-+- interrupts: Interrupt specifiers for interrupt sources.
-+
-+Optional nodes:
-+- regulators: The regulators of s2mpa01 that have to be instantiated should be
-+included in a sub-node named 'regulators'. Regulator nodes included in this
-+sub-node should be of the format as listed below.
-+
-+	regulator_name {
-+		[standard regulator constraints....];
-+	};
-+
-+ regulator-ramp-delay for BUCKs = [6250/12500(default)/25000/50000] uV/us
-+
-+ BUCK[1/2/3/4] supports disabling ramp delay on hardware, so explictly
-+ regulator-ramp-delay = <0> can be used for them to disable ramp delay.
-+ In the absence of the regulator-ramp-delay property, the default ramp
-+ delay will be used.
-+
-+NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
-+for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
-+Grouping of BUCKs sharing ramp rate setting is as follow : BUCK[1, 6],
-+BUCK[2, 4], and BUCK[8, 9, 10]
-+
-+The regulator constraints inside the regulator nodes use the standard regulator
-+bindings which are documented elsewhere.
-+
-+The following are the names of the regulators that the s2mpa01 PMIC block
-+supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
-+as per the datasheet of s2mpa01.
-+
-+	- LDOn
-+		  - valid values for n are 1 to 26
-+		  - Example: LDO1, LD02, LDO26
-+	- BUCKn
-+		  - valid values for n are 1 to 10.
-+		  - Example: BUCK1, BUCK2, BUCK9
-+
-+Example:
-+
-+	s2mpa01_pmic@66 {
-+		compatible = "samsung,s2mpa01-pmic";
-+		reg = <0x66>;
-+
-+		regulators {
-+			ldo1_reg: LDO1 {
-+				regulator-name = "VDD_ALIVE";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+			};
-+
-+			ldo2_reg: LDO2 {
-+				regulator-name = "VDDQ_MMC2";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+			};
-+
-+			buck1_reg: BUCK1 {
-+				regulator-name = "vdd_mif";
-+				regulator-min-microvolt = <950000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			buck2_reg: BUCK2 {
-+				regulator-name = "vdd_arm";
-+				regulator-min-microvolt = <950000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-ramp-delay = <50000>;
-+			};
-+		};
-+	};
--- 
-1.7.9.5
+On Tue, Jan 7, 2014 at 10:19 PM, Wei Ni <wni@nvidia.com> wrote:
+
+> On 01/07/2014 07:17 PM, Eduardo Valentin wrote:
+> > * PGP Signed by an unknown key
+> >
+> > On 06-01-2014 22:48, Wei Ni wrote:
+> >> Hi, Eduardo
+> >> Will you consider my comments :)
+> >
+> > By now Wei, it is better if you start a new thread, by sending a patch
+> > on top of it, as this thread has been already merged by Rui.
+>
+> Ok, I will send it.
+>
+> Thanks.
+> Wei.
+> >
+> >>
+> >> Thanks.
+> >> Wei.
+> >>
+> >> On 12/31/2013 06:17 PM, Wei Ni wrote:
+> >>> On 11/13/2013 03:46 AM, Eduardo Valentin wrote:
+> >>>> This patch introduces a device tree bindings for
+> >>>> describing the hardware thermal behavior and limits.
+> >>>> Also a parser to read and interpret the data and feed
+> >>>> it in the thermal framework is presented.
+> >>>>
+> >>>> This patch introduces a thermal data parser for device
+> >>>> tree. The parsed data is used to build thermal zones
+> >>>> and thermal binding parameters. The output data
+> >>>> can then be used to deploy thermal policies.
+> >>>>
+> >>>> This patch adds also documentation regarding this
+> >>>> API and how to define tree nodes to use
+> >>>> this infrastructure.
+> >>>>
+> >>>> Note that, in order to be able to have control
+> >>>> on the sensor registration on the DT thermal zone,
+> >>>> it was required to allow changing the thermal zone
+> >>>> .get_temp callback. For this reason, this patch
+> >>>> also removes the 'const' modifier from the .ops
+> >>>> field of thermal zone devices.
+> >>>>
+> >>>> ...
+> >>>> +
+> >>>> +static int of_thermal_get_trend(struct thermal_zone_device *tz, int
+> trip,
+> >>>> +                          enum thermal_trend *trend)
+> >>>> +{
+> >>>> +  struct __thermal_zone *data = tz->devdata;
+> >>>> +  long dev_trend;
+> >>>> +  int r;
+> >>>> +
+> >>>> +  if (!data->get_trend)
+> >>>> +          return -EINVAL;
+> >>>> +
+> >>>> +  r = data->get_trend(data->sensor_data, &dev_trend);
+> >>> I think the ->get_trend should be defined as:
+> >>> .get_trend(*dev, int, *long)
+> >>> so that the "trip" can be passed into it, otherwise the "trip" can't be
+> >>> used.
+> >>> And the dev_trend should be returned as THERMAL_TREND_XXX directly.
+> >>> because the THERM_TREND_xx is more than three states.
+> >>>
+> >>> The code may be something like:
+> >>> r = data->get_trend(data->sensor_data, trip, &dev_trend);
+> >>> if (r)
+> >>>     return r;
+> >>> *trend = dev_trend;
+> >>> return 0;
+> >>>> +  if (r)
+> >>>> +          return r;
+> >>>> +
+> >>>> +  /* TODO: These intervals might have some thresholds, but in core
+> code */
+> >>>> +  if (dev_trend > 0)
+> >>>> +          *trend = THERMAL_TREND_RAISING;
+> >>>> +  else if (dev_trend < 0)
+> >>>> +          *trend = THERMAL_TREND_DROPPING;
+> >>>> +  else
+> >>>> +          *trend = THERMAL_TREND_STABLE;
+> >>>> +
+> >>>> +  return 0;
+> >>>> +}
+> >>>> +
+> >>>> .....
+> >>>> +
+> >>>> +/***   sensor API   ***/
+> >>>> +
+> >>>> +static struct thermal_zone_device *
+> >>>> +thermal_zone_of_add_sensor(struct device_node *zone,
+> >>>> +                     struct device_node *sensor, void *data,
+> >>>> +                     int (*get_temp)(void *, long *),
+> >>>> +                     int (*get_trend)(void *, long *))
+> >>>> +{
+> >>>> +  struct thermal_zone_device *tzd;
+> >>>> +  struct __thermal_zone *tz;
+> >>>> +
+> >>>> +  tzd = thermal_zone_get_zone_by_name(zone->name);
+> >>> I think we could get the thermal zone by node,
+> >>> something like:
+> >>> thermal_zone_get_zone_by_node(zone);
+> >>> so that it can get unique zone.
+> >>>
+> >>> I think we can add a member "struct device_node *np" in the
+> >>> thermal_zone_device,
+> >>> and set it after you call thermal_zone_device_register successfully.
+> >>> Then add following codes:
+> >>> thermal_zone_get_zone_by_node(struct device_node *node)
+> >>> {
+> >>>         struct thermal_zone_device *pos = NULL, *ref =
+> ERR_PTR(-ENODEV);
+> >>>         bool found = false;
+> >>>
+> >>>         if (!node)
+> >>>                 return ERR_PTR(-EINVAL);
+> >>>
+> >>>         mutex_lock(&thermal_list_lock);
+> >>>         list_for_each_entry(pos, &thermal_tz_list, node)
+> >>>                 if (node == pos->np) {
+> >>>                         ref = pos;
+> >>>                         found = true;
+> >>>                         break;
+> >>>                 }
+> >>>         mutex_unlock(&thermal_list_lock);
+> >>>
+> >>>         return ref;
+> >>> }
+> >>>
+> >>> Thanks.
+> >>> Wei.
+> >>>> +  if (IS_ERR(tzd))
+> >>>> +          return ERR_PTR(-EPROBE_DEFER);
+> >>>> +
+> >>>> +  tz = tzd->devdata;
+> >>>> +
+> >>>> +  mutex_lock(&tzd->lock);
+> >>>> +  tz->get_temp = get_temp;
+> >>>> +  tz->get_trend = get_trend;
+> >>>> +  tz->sensor_data = data;
+> >>>> +
+> >>>> +  tzd->ops->get_temp = of_thermal_get_temp;
+> >>>> +  tzd->ops->get_trend = of_thermal_get_trend;
+> >>>> +  mutex_unlock(&tzd->lock);
+> >>>> +
+> >>>> +  return tzd;
+> >>>> +}
+> >>>> +
+> >>>>
+> >>>
+> >>
+> >>
+> >>
+> >
+> >
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+>
+_______________________________________________
+lm-sensors mailing list
+lm-sensors@lm-sensors.org
+http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
