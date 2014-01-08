@@ -1,43 +1,41 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 0/8] clk: max77686: Clock provider implementation fixes
-Date: Wed, 08 Jan 2014 23:03:41 +0100
-Message-ID: <37553582.HRugZGVjUL@flatron>
-References: <1386864441-19561-1-git-send-email-t.figa@samsung.com> <4160932.uvjJSNcuKL@amdc1227> <20140108215432.27803.3120@quantum>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] ARM: tegra: Add efuse bindings
+Date: Wed, 08 Jan 2014 15:41:52 -0700
+Message-ID: <52CDD430.3010508@wwwdotorg.org>
+References: <1387891931-9854-1-git-send-email-pdeschrijver@nvidia.com> <1387891931-9854-4-git-send-email-pdeschrijver@nvidia.com> <52CB14D3.2060904@wwwdotorg.org> <20140108133951.GD1592@ulmo.nvidia.com> <52CD9DFB.9010007@wwwdotorg.org> <20140108200946.GE1298@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140108215432.27803.3120@quantum>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Sachin Kamat <sachin.kamat@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140108200946.GE1298-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 of January 2014 13:54:32 Mike Turquette wrote:
-> Quoting Tomasz Figa (2014-01-08 10:04:57)
-> > On Wednesday 08 of January 2014 09:59:39 Mike Turquette wrote:
-> > > Quoting Lee Jones (2014-01-08 09:15:44)
-> > > > > I believe Lee has already applied this one, but in future, to avoid such
-> > > > > confusion, if it's more convenient for you, I can send you any clock
-> > > > > series as pull requests.
-> > > > 
-> > > > Me? I haven't applied any clk patches.
-> > > 
-> > > I have taken patches 1-7 into clk-next just now.
-> > 
-> > Thanks.
-> > 
-> > > I can take patch #8 as
-> > > well but it would probably be better to send it through arm-soc?
-> > 
-> > Hmm, patch 8 is trivial enough to not cause any merge conflicts, but since
-> > it's unlikely that any users depending on introduced changes will show up
-> > for 3.14 it shouldn't really matter which tree it goes through...
+On 01/08/2014 01:09 PM, Thierry Reding wrote:
+> On Wed, Jan 08, 2014 at 11:50:35AM -0700, Stephen Warren wrote:
+>> On 01/08/2014 06:39 AM, Thierry Reding wrote:
+>>> On Mon, Jan 06, 2014 at 01:40:51PM -0700, Stephen Warren wrote:
+>>>> On 12/24/2013 06:32 AM, Peter De Schrijver wrote:
+>>> [...]
+>>>>> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+>>>>
+>>>>> +	efuse@7000F800 {
+>>>>
+>>>> "fuse" might be a better node name; "efuse" is presumably the name of
+>>>> the instance, not the type of object.
+>>>
+>>> There's another occurrence I noticed recently where we haven't followed
+>>> that rule. The PMIC node on Venice2 for instance is called as3722.
+>>> Perhaps that should also be renamed.
+>>
+>> Yes, we should fix that. Care to send a patch?
 > 
-> In the absence of any strong opinion on the topic I have taken patch #8
-> into clk-next for 3.14.
+> Ugh... I've just been going through some of the other DTS files and see
+> that quite a lot of other places aren't following this rule either. The
+...
+> Perhaps it isn't worth fixing them all up after all?
 
-Great, thanks.
-
-Best regards,
-Tomasz
+I guess that just means the patch will be a little bigger; it doesn't
+seem like that's a good reason not to fix the issue.
