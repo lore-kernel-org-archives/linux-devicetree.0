@@ -1,54 +1,95 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v3 0/7] Modernize pm8921 with irqdomains, regmap, DT
-Date: Wed,  8 Jan 2014 10:37:43 -0800
-Message-ID: <1389206270-3728-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Subject: [PATCH v3 7/7] devicetree: bindings: Document PM8921/8058 PMICs
+Date: Wed,  8 Jan 2014 10:37:50 -0800
+Message-ID: <1389206270-3728-8-git-send-email-sboyd@codeaurora.org>
+References: <1389206270-3728-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1389206270-3728-1-git-send-email-sboyd@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These patches lay the groundwork for converting the pm8921 sub-devices
-to devicetree as well as simplify the API by migrating the core code
-to use the regmap API instead of the custom pm8xxx read/write wrapper.
+PM8921 and PM8058 are PMICs found paired with MSM8960 and MSM8660
+devices respectively. They contain subdevices such as keypads,
+RTCs, regulators, clocks, etc.
 
-Changes since v2:
- * Picked up reviewed-by tags
- * Fixed irqdomain teardown in driver remove
- * No magical 256 constant
- * Renamed domain to irqdomain
- * Clarified kzalloc call
- * Pushed ssbi regmap helpers into header file
- * Fixed whitespace noise in patch 6
-
-Changes since v1:
- * First 3 cleanup patches dropped because they're applied upstream
- * New regmap read/write helpers
- * New patch for DT match table
- * New binding document
-
-Stephen Boyd (7):
-  mfd: Move pm8xxx-irq.c contents into only driver that uses it
-  mfd: pm8921: Update for genirq changes
-  mfd: pm8921: Migrate to irqdomains
-  mfd: ssbi: Add regmap read/write helpers
-  mfd: pm8921: Use ssbi regmap
-  mfd: pm8921: Add DT match table
-  devicetree: bindings: Document PM8921/8058 PMICs
-
- .../devicetree/bindings/mfd/qcom,pm8xxx.txt        |  63 +++
- drivers/mfd/Kconfig                                |  12 +-
- drivers/mfd/pm8921-core.c                          | 427 ++++++++++++++++++---
- drivers/mfd/pm8xxx-irq.c                           | 371 ------------------
- include/linux/mfd/pm8xxx/irq.h                     |  59 ---
- include/linux/mfd/pm8xxx/pm8921.h                  |  30 --
- include/linux/ssbi.h                               |  13 +
- 7 files changed, 451 insertions(+), 524 deletions(-)
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+---
+ .../devicetree/bindings/mfd/qcom,pm8xxx.txt        | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
- delete mode 100644 drivers/mfd/pm8xxx-irq.c
- delete mode 100644 include/linux/mfd/pm8xxx/irq.h
- delete mode 100644 include/linux/mfd/pm8xxx/pm8921.h
 
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+new file mode 100644
+index 000000000000..e3fe625ffd58
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+@@ -0,0 +1,63 @@
++Qualcomm PM8xxx PMIC multi-function devices
++
++PROPERTIES
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,pm8058"
++		    "qcom,pm8921"
++
++- #address-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 1
++
++- #size-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 0
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: specifies the interrupt that indicates a subdevice
++		    has generated an interrupt (summary interrupt). The
++		    format of the specifier is defined by the binding document
++		    describing the node's interrupt parent.
++
++- #interrupt-cells:
++	Usage: required
++	Value type : <u32>
++	Definition: must be 2. Specifies the number of cells needed to encode
++		    an interrupt source. The 1st cell contains the interrupt
++		    number. The 2nd cell is the trigger type and level flags
++		    encoded as follows:
++
++			1 = low-to-high edge triggered
++			2 = high-to-low edge triggered
++			4 = active high level-sensitive
++			8 = active low level-sensitive
++
++- interrupt-controller:
++	Usage: required
++	Value type: <empty>
++	Definition: identifies this node as an interrupt controller
++
++EXAMPLE
++
++	pmicintc: pmic@0 {
++		compatible = "qcom,pm8921";
++		interrupts = <104 8>;
++		#interrupt-cells = <2>;
++		interrupt-controller;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pwrkey {
++			compatible = "qcom,pm8921-pwrkey";
++			interrupt-parent = <&pmicintc>;
++			interrupts = <50 1>, <51 1>;
++		};
++	};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
