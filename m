@@ -1,90 +1,52 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] drm/panel: Add support for Chungwa CLAA101WA01A panel
-Date: Wed, 8 Jan 2014 16:15:49 +0100
-Message-ID: <20140108151548.GD21974@ulmo.nvidia.com>
-References: <1389138386-4618-1-git-send-email-swarren@wwwdotorg.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 0/9] CPU enable method based SMP/hotplug + MSM
+ conversion
+Date: Wed, 8 Jan 2014 15:20:49 +0000
+Message-ID: <20140108152049.GD11753@e106331-lin.cambridge.arm.com>
+References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
+ <52CB2BDF.9040208@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1590846161=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1389138386-4618-1-git-send-email-swarren@wwwdotorg.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Stephen Warren <swarren@nvidia.com>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52CB2BDF.9040208@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Stephen,
 
---===============1590846161==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bajzpZikUji1w+G9"
-Content-Disposition: inline
+On Mon, Jan 06, 2014 at 10:19:11PM +0000, Stephen Boyd wrote:
+> Ping? Can anyone take a look at the generic ARM and DT binding patches
+> and provide acks/reviews? I'd like to send this through arm-soc via the
+> MSM tree if possible.
 
+Apologies for the delay. It's taking a while to warm up after christmas.
 
---bajzpZikUji1w+G9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> On 12/23/13 16:39, Stephen Boyd wrote:
+> > This is a rework of patches sent a months back by Rohit[1].
+> > The goal of these patches is to add support for SMP and (basic)
+> > hotplug on MSM based SoCs. To get there, we add support for a
+> > generic way to hook in SMP/hotplug support code based on DT. To
+> > show how it's used, we convert the MSM8660 SMP support code over
+> > to the new method. After that we add support for the rest of the
+> > upstream MSM SoCs (note these patches are piled high on top of
+> > Rohit's patches to add 8074 support to MSM[2] and my follow ups[3,4],
+> > but this should only matter to the MSM maintainers).
+> >
+> > This is one of the last items of code that still requires us to have
+> > a mach directory and a machine descriptor. We should be able to move
+> > the hotplug/smp code out of mach directories if this approach is
+> > accepted.
 
-On Tue, Jan 07, 2014 at 04:46:26PM -0700, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
->=20
-> The Chungwa CLAA101WA01A is a 10.1" 1366x768 panel, which can be
-> supported by the simple panel driver.
->=20
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> ---
->  .../bindings/panel/chunghwa,claa101wa01a.txt       |  7 ++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 25 ++++++++++++++++=
-++++++
->  2 files changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/chunghwa,claa=
-101wa01a.txt
+Thanks for doing the rework. This looks really good to me now.
 
-I performed s/Chungwa/Chunghwa/ and s/chungwa/chunghwa/ (yes, it's
-horrible to spell that) on this patch and applied it.
+I'd gotten myself confused while reading the bindings, but having now
+had a look over the dts files my concerns were invalid.
 
-Thanks,
-Thierry
+Hopefully we can move more platforms to use enable-methods now :)
 
---bajzpZikUji1w+G9
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSzWukAAoJEN0jrNd/PrOhkZoQAKgY5ss8nwScGVlKx3pkFMbj
-mtOBO93MkGKi6yu6nnCPnsx7cuoZHDzdwVDMj247oR//PBQ8scgWdddLPLp4iumf
-jv7Rg9JBSMWIlHSfaGXK2o74s1EWf3VnGmfBHkxX5DYe1JKjNPXzR4qGPlx2Xz+0
-lUG2uPPSB9CBKcyyYWyXmEgxMvepDnpZUFDDk2iK7voRYSbf0qW4tQD8u+avuaYW
-B45FtiRyoAOBLg/n00A67fiU/hCocDnvUzZrzHOum2DkKjwWgZl+fj4AfE1Nb/Xg
-8PmX5r4c3auGxOsZCqZL94l08TFA5Sx0OhoqXTA9NnCJhNxO47Ug+QlkPQ2BFB2c
-Uz8/s1fTCodF0yBWNG+gmOfPBE9iATlmQGxPrAeuW5wyu8kGdync0lQu/QifJcrS
-APRNUkGqFTQcT8Biv68MjOCDfEH+hsLkKaQhwlleJ54K/+lDzKDg4JvlLssgIqn9
-w4WlvGhi8Y6Hh4FLfBaj1WKcF/g3FKTBLvURmCnrnxI8SFHABQpKmY6b+9j6vCRJ
-+EHcXWgRdByjFvxvijExowcMeGNhTPP/IBqezmL0RqrRkm7/HSCy4YxUe+Snduzt
-r+J2gCSKTKC/OM55ORtqKsGus5RXVkRugwJn+skka1xsmIzX82KMsHwQPlvF4Vbm
-r6owObe4bt/1u7DAf2w/
-=AirR
------END PGP SIGNATURE-----
-
---bajzpZikUji1w+G9--
-
---===============1590846161==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1590846161==--
+Cheers,
+Mark.
