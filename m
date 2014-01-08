@@ -1,87 +1,108 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCH v4 1/5] mfd: omap-usb-host: Update DT clock binding
- information
-Date: Wed, 8 Jan 2014 10:08:08 +0100
-Message-ID: <20140108090808.GB16313@earth.universe>
-References: <1389161742-10533-1-git-send-email-rogerq@ti.com>
- <1389161742-10533-2-git-send-email-rogerq@ti.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] mfd: Add support for S2MPA01 device
+Date: Wed, 8 Jan 2014 14:51:15 +0530
+Message-ID: <CAK9yfHyDNfRcn4J6N5u=CbVHsRqCp5LSgUavsD1p7Gjp+m9dfQ@mail.gmail.com>
+References: <1389162390-4582-1-git-send-email-sachin.kamat@linaro.org>
+	<20140108090208.GD19974@lee--X1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389161742-10533-2-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: bcousson@baylibre.com, tony@atomide.com, balbi@ti.com, arnd@arndb.de, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140108090208.GD19974@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lee,
 
---8GpibOaaTibBMecb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the review.
 
-On Wed, Jan 08, 2014 at 11:45:38AM +0530, Roger Quadros wrote:
-> diff --git a/Documentation/devicetree/bindings/mfd/omap-usb-host.txt b/Do=
-cumentation/devicetree/bindings/mfd/omap-usb-host.txt
-> index b381fa6..5635202 100644
-> --- a/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
-> +++ b/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
-> @@ -32,6 +32,10 @@ Optional properties:
->  - single-ulpi-bypass: Must be present if the controller contains a single
->    ULPI bypass control bit. e.g. OMAP3 silicon <=3D ES2.1
-> =20
-> +- clocks: phandle to 60MHz functional clock to the USB Host module.
-> +
-> +- clock-names: must be "init_60m_fclk"
-> +
->  Required properties if child node exists:
-> =20
->  - #address-cells: Must be 1
+On 8 January 2014 14:32, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Add the necessary entries required for S2MPA01 multi-function
+>> device. While at it also convert whitespaces to tabs in core.h.
+>>
+>> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  drivers/mfd/sec-core.c              |   39 +++++++
+>>  include/linux/mfd/samsung/core.h    |   16 ++-
+>>  include/linux/mfd/samsung/irq.h     |   50 +++++++++
+>>  include/linux/mfd/samsung/s2mpa01.h |  192 +++++++++++++++++++++++++++++++++++
+>>  4 files changed, 292 insertions(+), 5 deletions(-)
+>>  create mode 100644 include/linux/mfd/samsung/s2mpa01.h
+>>
+>> diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-core.c
+>> index a139798b8065..d2e890d50a36 100644
+>> --- a/drivers/mfd/sec-core.c
+>> +++ b/drivers/mfd/sec-core.c
+>> @@ -26,6 +26,7 @@
+>>  #include <linux/mfd/samsung/core.h>
+>>  #include <linux/mfd/samsung/irq.h>
+>>  #include <linux/mfd/samsung/rtc.h>
+>> +#include <linux/mfd/samsung/s2mpa01.h>
+>>  #include <linux/mfd/samsung/s2mps11.h>
+>>  #include <linux/mfd/samsung/s5m8763.h>
+>>  #include <linux/mfd/samsung/s5m8767.h>
+>> @@ -69,6 +70,13 @@ static const struct mfd_cell s2mps11_devs[] = {
+>>       }
+>>  };
+>>
+>> +static const struct mfd_cell s2mpa01_devs[] = {
+>> +     {
+>> +             .name = "s2mpa01-pmic",
+>> +     },
+>> +};
+>> +
+>> +
+>
+> Extra '/n' here.
 
-I have some questions:
+Right. Will remove it.
 
-What about the other clocks acquired in drivers/mfd/omap-usb-host.c? Should=
-n't
-all of those be provided by via the DT phandle?
+>
+>>  #ifdef CONFIG_OF
+>>  static struct of_device_id sec_dt_match[] = {
+>>       {       .compatible = "samsung,s5m8767-pmic",
+>> @@ -77,10 +85,25 @@ static struct of_device_id sec_dt_match[] = {
+>>       {       .compatible = "samsung,s2mps11-pmic",
+>>               .data = (void *)S2MPS11X,
+>>       },
+>> +     {       .compatible = "samsung,s2mpa01-pmic",
+>> +             .data = (void *)S2MPA01,
+>> +     },
+>
+> Can you use the same format at the rest of the file.
+>
+> I'm happy for you to fix the entire struct in this patch.
+>
+> Rest of the file uses overlapping format:
 
-Should the clk_get be changed to of_clk_get()/of_clk_get_by_name() in the
-driver? This would potentially remove the need of the init_60m_fclk name.
+Sure. I formatted it as per the current structure without noticing the others.
+Will change it.
 
-$ grep clk_get drivers/mfd/omap-usb-host.c
-    omap->ehci_logic_fck =3D clk_get(dev, "ehci_logic_fck");
-    omap->utmi_p1_gfclk =3D clk_get(dev, "utmi_p1_gfclk");
-    omap->utmi_p2_gfclk =3D clk_get(dev, "utmi_p2_gfclk");
-    omap->xclk60mhsp1_ck =3D clk_get(dev, "xclk60mhsp1_ck");
-    omap->xclk60mhsp2_ck =3D clk_get(dev, "xclk60mhsp2_ck");
-    omap->init_60m_fclk =3D clk_get(dev, "init_60m_fclk");
-    omap->utmi_clk[i] =3D clk_get(dev, clkname);
-    omap->hsic480m_clk[i] =3D clk_get(dev, clkname);
-    omap->hsic60m_clk[i] =3D clk_get(dev, clkname);
+>
+>         }, {
+>                 .compatible = "samsung,s2mpa01-pmic",
+>         },
+>
+>
+> <snip>
+>
+>> @@ -92,7 +93,7 @@ struct sec_platform_data {
+>>       int                             buck3_default_idx;
+>>       int                             buck4_default_idx;
+>>
+>> -     int                             buck_ramp_delay;
+>> +     int                             buck_ramp_delay;
+>
+> What's this? Are you fixing (or breaking) white space here?
 
--- Sebastian
+I didn't get you. I have converted spaces to tabs here. See some problem?
 
---8GpibOaaTibBMecb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSzRV4AAoJENju1/PIO/qaDfQP/iqaqgXj6esvJbBlNZwvtyUj
-LTUkqoR1fXs5ydxJ839KjVK4GiWKZbqGkwLzOBzuIPYXmVtI/HTC5JMEVqAO6hQV
-be1IBSBqFqS0+FETlJ/H9UcoX46ml2NllZg/eyFWBR8lPebAc0Gyqu9LSo0vk7A6
-nmjn1z5nC96MlPvmv9yk9k6cNyVicqMpQ5/8tji/onLAn+LJQ0PCxR6Tqa4BwK48
-d5a84NAL4TVIAFf3d5p6z+5+Dww+RzcqcuT5xoPIqbye7mFsyXaGzjdop44xLUYc
-vMmTnaycdtiaZ4aIznoLGyZRQKD+xQPrLYxM82Wbykw8lVjJLAU3kJVtKgs1FNAA
-iN+6SJ8k5EbZvkHfpeCKJJ5No8mRRtzGz2tCDma8+rIVr6lSFw4UQv0slxrTZA+c
-pf/r5Zn+KFu6fNtIistCSw+JYmlLCS16OvsmCN02LuvXP5WRKsPA+1FyDzZcgyRM
-BGy2RHigWIW2/Imky1PY7+KZCvkPXSEHD0tYOyLMSl9bzIVoya+14h2R2IAach4d
-+hrsbK3M1pcvrbw2DS0/uWzD2hFvB8D6972LX02VVvMz/NwJb5N4RODw4Gfe2usS
-+O600SA6YX693ySwRLYPxUk+1RnYLrRfwmfBdwqRqL+xfEpQ3O0d6I4cCV/TjlZ+
-9IDaDbRevvtZ1/c/WFNY
-=YwMn
------END PGP SIGNATURE-----
-
---8GpibOaaTibBMecb--
+-- 
+With warm regards,
+Sachin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
