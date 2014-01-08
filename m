@@ -1,55 +1,170 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] of/platform: Fix no irq domain found errors when
- populating interrupts
-Date: Tue, 7 Jan 2014 17:19:58 -0800
-Message-ID: <20140108011957.GK5074@atomide.com>
-References: <20131123004334.GJ10023@atomide.com>
- <20131123010850.GN10023@atomide.com>
- <20131123015034.GP10023@atomide.com>
- <20131124212757.7D224C402A3@trevor.secretlab.ca>
- <alpine.DEB.2.02.1312100331460.32309@utopia.booyaka.com>
- <alpine.DEB.2.02.1312302209200.8869@utopia.booyaka.com>
- <CAL_Jsq+X5G94DUn-zFKQkhEy91cdjCyeciny+kDjr=V6EiBHfQ@mail.gmail.com>
- <alpine.DEB.2.02.1401062340240.31394@utopia.booyaka.com>
+From: Wei Ni <wni@nvidia.com>
+Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
+Date: Wed, 8 Jan 2014 11:19:43 +0800
+Message-ID: <52CCC3CF.7000103@nvidia.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
+ <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
+ <52C299A8.4010108@nvidia.com> <52CB6AE2.2090002@nvidia.com>
+ <52CBE237.7010309@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1401062340240.31394@utopia.booyaka.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <52CBE237.7010309@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Paul Walmsley <paul@pwsan.com> [140106 15:43]:
-> On Tue, 31 Dec 2013, Rob Herring wrote:
-> > On Mon, Dec 30, 2013 at 4:10 PM, Paul Walmsley <paul@pwsan.com> wrote:
-> > > On Tue, 10 Dec 2013, Paul Walmsley wrote:
-> > >> Is it possible to get this patch, or something similar, merged for
-> > >> v3.13-rc?
-> > >>
-> > >> Once something like PM is broken, it's pretty easy for other broken
-> > >> patches to make it into the tree, since it becomes very difficult to test
-> > >> without turning into a maintainer denial-of-service attack.
-> > >
-> > > Ping.  Could you please provide some guidance here about what you'd need
-> > > to get this solved for v3.13-rc?
-> > 
-> > I agree with doing the platform_get_irq modification and feel free to
-> > add my ack. I'm going to be offline for the next week.
+On 01/07/2014 07:17 PM, Eduardo Valentin wrote:
+> * PGP Signed by an unknown key
 > 
-> Thanks Rob!
+> On 06-01-2014 22:48, Wei Ni wrote:
+>> Hi, Eduardo
+>> Will you consider my comments :)
 > 
-> Tony, would you consider sending this patch upstream for v3.13-rc along 
-> with your 37xxevm fix patches?
+> By now Wei, it is better if you start a new thread, by sending a patch
+> on top of it, as this thread has been already merged by Rui.
 
-Hmm I'd like to see a proper patch posted for platform_get_irq() by
-Thierry as that one is really his patch. And it also had a comment from
-Grant.
+Ok, I will send it.
 
-After that I can queue it if nobody else is picking it as I have a
-dependency to it.
+Thanks.
+Wei.
+> 
+>>
+>> Thanks.
+>> Wei.
+>>
+>> On 12/31/2013 06:17 PM, Wei Ni wrote:
+>>> On 11/13/2013 03:46 AM, Eduardo Valentin wrote:
+>>>> This patch introduces a device tree bindings for
+>>>> describing the hardware thermal behavior and limits.
+>>>> Also a parser to read and interpret the data and feed
+>>>> it in the thermal framework is presented.
+>>>>
+>>>> This patch introduces a thermal data parser for device
+>>>> tree. The parsed data is used to build thermal zones
+>>>> and thermal binding parameters. The output data
+>>>> can then be used to deploy thermal policies.
+>>>>
+>>>> This patch adds also documentation regarding this
+>>>> API and how to define tree nodes to use
+>>>> this infrastructure.
+>>>>
+>>>> Note that, in order to be able to have control
+>>>> on the sensor registration on the DT thermal zone,
+>>>> it was required to allow changing the thermal zone
+>>>> .get_temp callback. For this reason, this patch
+>>>> also removes the 'const' modifier from the .ops
+>>>> field of thermal zone devices.
+>>>>
+>>>> ...
+>>>> +
+>>>> +static int of_thermal_get_trend(struct thermal_zone_device *tz, int trip,
+>>>> +				enum thermal_trend *trend)
+>>>> +{
+>>>> +	struct __thermal_zone *data = tz->devdata;
+>>>> +	long dev_trend;
+>>>> +	int r;
+>>>> +
+>>>> +	if (!data->get_trend)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	r = data->get_trend(data->sensor_data, &dev_trend);
+>>> I think the ->get_trend should be defined as:
+>>> .get_trend(*dev, int, *long)
+>>> so that the "trip" can be passed into it, otherwise the "trip" can't be
+>>> used.
+>>> And the dev_trend should be returned as THERMAL_TREND_XXX directly.
+>>> because the THERM_TREND_xx is more than three states.
+>>>
+>>> The code may be something like:
+>>> r = data->get_trend(data->sensor_data, trip, &dev_trend);
+>>> if (r)
+>>>     return r;
+>>> *trend = dev_trend;
+>>> return 0;
+>>>> +	if (r)
+>>>> +		return r;
+>>>> +
+>>>> +	/* TODO: These intervals might have some thresholds, but in core code */
+>>>> +	if (dev_trend > 0)
+>>>> +		*trend = THERMAL_TREND_RAISING;
+>>>> +	else if (dev_trend < 0)
+>>>> +		*trend = THERMAL_TREND_DROPPING;
+>>>> +	else
+>>>> +		*trend = THERMAL_TREND_STABLE;
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> .....
+>>>> +
+>>>> +/***   sensor API   ***/
+>>>> +
+>>>> +static struct thermal_zone_device *
+>>>> +thermal_zone_of_add_sensor(struct device_node *zone,
+>>>> +			   struct device_node *sensor, void *data,
+>>>> +			   int (*get_temp)(void *, long *),
+>>>> +			   int (*get_trend)(void *, long *))
+>>>> +{
+>>>> +	struct thermal_zone_device *tzd;
+>>>> +	struct __thermal_zone *tz;
+>>>> +
+>>>> +	tzd = thermal_zone_get_zone_by_name(zone->name);
+>>> I think we could get the thermal zone by node,
+>>> something like:
+>>> thermal_zone_get_zone_by_node(zone);
+>>> so that it can get unique zone.
+>>>
+>>> I think we can add a member "struct device_node *np" in the
+>>> thermal_zone_device,
+>>> and set it after you call thermal_zone_device_register successfully.
+>>> Then add following codes:
+>>> thermal_zone_get_zone_by_node(struct device_node *node)
+>>> {
+>>>         struct thermal_zone_device *pos = NULL, *ref = ERR_PTR(-ENODEV);
+>>>         bool found = false;
+>>>
+>>>         if (!node)
+>>>                 return ERR_PTR(-EINVAL);
+>>>
+>>>         mutex_lock(&thermal_list_lock);
+>>>         list_for_each_entry(pos, &thermal_tz_list, node)
+>>>                 if (node == pos->np) {
+>>>                         ref = pos;
+>>>                         found = true;
+>>>                         break;
+>>>                 }
+>>>         mutex_unlock(&thermal_list_lock);
+>>>
+>>>         return ref;
+>>> }
+>>>
+>>> Thanks.
+>>> Wei.
+>>>> +	if (IS_ERR(tzd))
+>>>> +		return ERR_PTR(-EPROBE_DEFER);
+>>>> +
+>>>> +	tz = tzd->devdata;
+>>>> +
+>>>> +	mutex_lock(&tzd->lock);
+>>>> +	tz->get_temp = get_temp;
+>>>> +	tz->get_trend = get_trend;
+>>>> +	tz->sensor_data = data;
+>>>> +
+>>>> +	tzd->ops->get_temp = of_thermal_get_temp;
+>>>> +	tzd->ops->get_trend = of_thermal_get_trend;
+>>>> +	mutex_unlock(&tzd->lock);
+>>>> +
+>>>> +	return tzd;
+>>>> +}
+>>>> +
+>>>>
+>>>
+>>
+>>
+>>
+> 
+> 
 
-Regards,
-
-Tony
