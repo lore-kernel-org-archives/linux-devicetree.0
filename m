@@ -1,40 +1,42 @@
 From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 6/7] clk/samsung: add support for pll2650xx
-Date: Wed, 08 Jan 2014 01:37:27 +0100
-Message-ID: <3338407.XGYaxCsdnx@flatron>
-References: <1386345391-23482-1-git-send-email-rahul.sharma@samsung.com> <1419145.DZQg0ZkHVU@amdc1227> <CAPdUM4P9tE5ohtAb5heMRj3GGjdYrNYp5iX7u-uZySiaCikA7Q@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 01/12] ARM: exynos4: create a DT header defining CLK IDs
+Date: Wed, 08 Jan 2014 01:53:45 +0100
+Message-ID: <3865861.S9945P5El3@flatron>
+References: <1389106060-20291-1-git-send-email-a.hajda@samsung.com> <1389106060-20291-2-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAPdUM4P9tE5ohtAb5heMRj3GGjdYrNYp5iX7u-uZySiaCikA7Q@mail.gmail.com>
+In-Reply-To: <1389106060-20291-2-git-send-email-a.hajda@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <r.sh.open@gmail.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.ab@samsung.com>, sunil joshi <joshi@samsung.com>, PANKAJ KUMAR DUBEY <pankaj.dubey@samsung.com>, Young-Gun Jang <yg1004.jang@samsung.com>, Arun Kumar <arun.kk@samsung.com>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, "moderated list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 06 of January 2014 17:14:48 Rahul Sharma wrote:
-> Hi Tomasz,
+On Tuesday 07 of January 2014 15:47:29 Andrzej Hajda wrote:
+> The patch adds header file defining clock IDs.
+> This allows to use macros instead of magic numbers in DT bindings.
 > 
-> On 19 December 2013 17:15, Tomasz Figa <t.figa@samsung.com> wrote:
-> > Hi Rahul,
-> >
-> > On Friday 06 of December 2013 21:26:30 Rahul Sharma wrote:
-> >> Add support for pll2650xx in samsung pll file. This pll variant
-> >> is close to pll36xx but uses CON2 registers instead of CON1.
-> >
-> > If the ops are otherwise idential, why not reuse the ops for pll36xx
-> > and use CON1 or CON2 register conditionally based on pll->type field?
-> > (Just as it is already done for pll4600, 4650 and 4650c.)
-> >
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  include/dt-bindings/clock/exynos4.h | 244 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 244 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/exynos4.h
 > 
-> I verified the difference and found that  pll2650xx is fairly
-> different in terms of
-> Bit Fields, Con2 register, and additional PLL config bits than pll36xx. Due to
-> this, I have to add lot of if-else code based on pll type which
-> doesn't looks clean.
+> diff --git a/include/dt-bindings/clock/exynos4.h b/include/dt-bindings/clock/exynos4.h
+> new file mode 100644
+> index 0000000..75aff33
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/exynos4.h
+> @@ -0,0 +1,244 @@
+> +/*
+> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+> + * Author: Andrzej Haja <a.hajda@samsung.com>
+> + *
 
-Fair enough.
+Oops, seems like you made a typo in your name here. Let me fix this
+when applying. ;)
 
 Best regards,
 Tomasz
