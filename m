@@ -1,198 +1,64 @@
-From: Hu Yaohui <loki2441@gmail.com>
-Subject: Re: [PATCHv9 02/20] thermal: introduce device tree
-	parser
-Date: Tue, 7 Jan 2014 22:24:56 -0500
-Message-ID: <CAHqbYQvchi3QSgcitUtguFyOJtXhFt5OjcoiSDZnPg9ZyiN4cg@mail.gmail.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
-	<1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
-	<52C299A8.4010108@nvidia.com> <52CB6AE2.2090002@nvidia.com>
-	<52CBE237.7010309@ti.com> <52CCC3CF.7000103@nvidia.com>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] of: introduces helper to manage optional property
+Date: Wed, 8 Jan 2014 07:17:40 +0000
+Message-ID: <7c7409b69df54fcba6c0cbd9dacd1536@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1388035115-893-1-git-send-email-Li.Xiubo@freescale.com>
+ <20131226143851.GL8064@book.gsilab.sittig.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <lm-sensors-bounces@lm-sensors.org>
-In-Reply-To: <52CCC3CF.7000103@nvidia.com>
-List-Unsubscribe: <http://lists.lm-sensors.org/mailman/options/lm-sensors>,
-	<mailto:lm-sensors-request@lm-sensors.org?subject=unsubscribe>
-List-Archive: <http://lists.lm-sensors.org/pipermail/lm-sensors/>
-List-Post: <mailto:lm-sensors@lm-sensors.org>
-List-Help: <mailto:lm-sensors-request@lm-sensors.org?subject=help>
-List-Subscribe: <http://lists.lm-sensors.org/mailman/listinfo/lm-sensors>,
-	<mailto:lm-sensors-request@lm-sensors.org?subject=subscribe>
-Sender: lm-sensors-bounces@lm-sensors.org
-Errors-To: lm-sensors-bounces@lm-sensors.org
-To: Wei Ni <wni@nvidia.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, Eduardo Valentin <eduardo.valentin@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131226143851.GL8064-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I am new here. How can I could not mail a new message to this mail list?
-TIA
+
+> > @@ -601,6 +601,23 @@ static inline int of_property_read_u32(const struct
+> device_node *np,
+> >  	return of_property_read_u32_array(np, propname, out_value, 1);
+> >  }
+> >
+> > +/**
+> > + * of_property_optional - Find one optional property
+> > + * @np:		device node from which the property to be searched.
+> > + * @propname:	name of the optional property to be searched for.
+> > + *
+> > + * Get to know whether one optional property is present or not in a
+> > + * device node.
+> > + * Returns true if the property is present, false otherwise.
+> > + */
+> > +static inline bool of_property_optional(const struct device_node *np,
+> > +					 const char *propname)
+> > +{
+> > +	struct property *prop = of_find_property(np, propname, NULL);
+> > +
+> > +	return prop ? true : false;
+> > +}
+> > +
+> 
+> Exactly how is this different from of_property_read_bool()?
+> AFAICS it's identical!  You may be trying to solve the wrong
+> problem.
+> 
+> And I'm afraid that the routine's name you picked is even more
+> confusing.  The call site ("if (of_property_optional() ...") will
+> no longer reflect that it's evaluating a boolean condition.
+> Being an optional property and being boolean are two completely
+> different things.
+> 
+> 
+
+Yes, That's right.
+
+Thanks,
+Best Regards,
 
 
-On Tue, Jan 7, 2014 at 10:19 PM, Wei Ni <wni@nvidia.com> wrote:
 
-> On 01/07/2014 07:17 PM, Eduardo Valentin wrote:
-> > * PGP Signed by an unknown key
-> >
-> > On 06-01-2014 22:48, Wei Ni wrote:
-> >> Hi, Eduardo
-> >> Will you consider my comments :)
-> >
-> > By now Wei, it is better if you start a new thread, by sending a patch
-> > on top of it, as this thread has been already merged by Rui.
->
-> Ok, I will send it.
->
-> Thanks.
-> Wei.
-> >
-> >>
-> >> Thanks.
-> >> Wei.
-> >>
-> >> On 12/31/2013 06:17 PM, Wei Ni wrote:
-> >>> On 11/13/2013 03:46 AM, Eduardo Valentin wrote:
-> >>>> This patch introduces a device tree bindings for
-> >>>> describing the hardware thermal behavior and limits.
-> >>>> Also a parser to read and interpret the data and feed
-> >>>> it in the thermal framework is presented.
-> >>>>
-> >>>> This patch introduces a thermal data parser for device
-> >>>> tree. The parsed data is used to build thermal zones
-> >>>> and thermal binding parameters. The output data
-> >>>> can then be used to deploy thermal policies.
-> >>>>
-> >>>> This patch adds also documentation regarding this
-> >>>> API and how to define tree nodes to use
-> >>>> this infrastructure.
-> >>>>
-> >>>> Note that, in order to be able to have control
-> >>>> on the sensor registration on the DT thermal zone,
-> >>>> it was required to allow changing the thermal zone
-> >>>> .get_temp callback. For this reason, this patch
-> >>>> also removes the 'const' modifier from the .ops
-> >>>> field of thermal zone devices.
-> >>>>
-> >>>> ...
-> >>>> +
-> >>>> +static int of_thermal_get_trend(struct thermal_zone_device *tz, int
-> trip,
-> >>>> +                          enum thermal_trend *trend)
-> >>>> +{
-> >>>> +  struct __thermal_zone *data = tz->devdata;
-> >>>> +  long dev_trend;
-> >>>> +  int r;
-> >>>> +
-> >>>> +  if (!data->get_trend)
-> >>>> +          return -EINVAL;
-> >>>> +
-> >>>> +  r = data->get_trend(data->sensor_data, &dev_trend);
-> >>> I think the ->get_trend should be defined as:
-> >>> .get_trend(*dev, int, *long)
-> >>> so that the "trip" can be passed into it, otherwise the "trip" can't be
-> >>> used.
-> >>> And the dev_trend should be returned as THERMAL_TREND_XXX directly.
-> >>> because the THERM_TREND_xx is more than three states.
-> >>>
-> >>> The code may be something like:
-> >>> r = data->get_trend(data->sensor_data, trip, &dev_trend);
-> >>> if (r)
-> >>>     return r;
-> >>> *trend = dev_trend;
-> >>> return 0;
-> >>>> +  if (r)
-> >>>> +          return r;
-> >>>> +
-> >>>> +  /* TODO: These intervals might have some thresholds, but in core
-> code */
-> >>>> +  if (dev_trend > 0)
-> >>>> +          *trend = THERMAL_TREND_RAISING;
-> >>>> +  else if (dev_trend < 0)
-> >>>> +          *trend = THERMAL_TREND_DROPPING;
-> >>>> +  else
-> >>>> +          *trend = THERMAL_TREND_STABLE;
-> >>>> +
-> >>>> +  return 0;
-> >>>> +}
-> >>>> +
-> >>>> .....
-> >>>> +
-> >>>> +/***   sensor API   ***/
-> >>>> +
-> >>>> +static struct thermal_zone_device *
-> >>>> +thermal_zone_of_add_sensor(struct device_node *zone,
-> >>>> +                     struct device_node *sensor, void *data,
-> >>>> +                     int (*get_temp)(void *, long *),
-> >>>> +                     int (*get_trend)(void *, long *))
-> >>>> +{
-> >>>> +  struct thermal_zone_device *tzd;
-> >>>> +  struct __thermal_zone *tz;
-> >>>> +
-> >>>> +  tzd = thermal_zone_get_zone_by_name(zone->name);
-> >>> I think we could get the thermal zone by node,
-> >>> something like:
-> >>> thermal_zone_get_zone_by_node(zone);
-> >>> so that it can get unique zone.
-> >>>
-> >>> I think we can add a member "struct device_node *np" in the
-> >>> thermal_zone_device,
-> >>> and set it after you call thermal_zone_device_register successfully.
-> >>> Then add following codes:
-> >>> thermal_zone_get_zone_by_node(struct device_node *node)
-> >>> {
-> >>>         struct thermal_zone_device *pos = NULL, *ref =
-> ERR_PTR(-ENODEV);
-> >>>         bool found = false;
-> >>>
-> >>>         if (!node)
-> >>>                 return ERR_PTR(-EINVAL);
-> >>>
-> >>>         mutex_lock(&thermal_list_lock);
-> >>>         list_for_each_entry(pos, &thermal_tz_list, node)
-> >>>                 if (node == pos->np) {
-> >>>                         ref = pos;
-> >>>                         found = true;
-> >>>                         break;
-> >>>                 }
-> >>>         mutex_unlock(&thermal_list_lock);
-> >>>
-> >>>         return ref;
-> >>> }
-> >>>
-> >>> Thanks.
-> >>> Wei.
-> >>>> +  if (IS_ERR(tzd))
-> >>>> +          return ERR_PTR(-EPROBE_DEFER);
-> >>>> +
-> >>>> +  tz = tzd->devdata;
-> >>>> +
-> >>>> +  mutex_lock(&tzd->lock);
-> >>>> +  tz->get_temp = get_temp;
-> >>>> +  tz->get_trend = get_trend;
-> >>>> +  tz->sensor_data = data;
-> >>>> +
-> >>>> +  tzd->ops->get_temp = of_thermal_get_temp;
-> >>>> +  tzd->ops->get_trend = of_thermal_get_trend;
-> >>>> +  mutex_unlock(&tzd->lock);
-> >>>> +
-> >>>> +  return tzd;
-> >>>> +}
-> >>>> +
-> >>>>
-> >>>
-> >>
-> >>
-> >>
-> >
-> >
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
->
-_______________________________________________
-lm-sensors mailing list
-lm-sensors@lm-sensors.org
-http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
