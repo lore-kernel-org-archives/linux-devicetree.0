@@ -1,76 +1,65 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v3 3/3] ata: ahci_platform: runtime resume the device before use
-Date: Wed, 8 Jan 2014 15:17:08 +0530
-Message-ID: <1389174428-31414-4-git-send-email-rogerq@ti.com>
-References: <1389174428-31414-1-git-send-email-rogerq@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 1/5] mfd: omap-usb-host: Update DT clock binding
+ information
+Date: Wed, 8 Jan 2014 09:56:52 +0000
+Message-ID: <20140108095652.GD6701@e106331-lin.cambridge.arm.com>
+References: <1389161742-10533-1-git-send-email-rogerq@ti.com>
+ <1389161742-10533-2-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389174428-31414-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tj@kernel.org
-Cc: sergei.shtylyov@cogentembedded.com, kishon@ti.com, b.zolnierkie@samsung.com, hdegoede@redhat.com, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>, Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1389161742-10533-2-git-send-email-rogerq@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On OMAP platforms the device needs to be runtime resumed before
-it can be accessed. The OMAP HWMOD framework takes care of
-enabling the module and its resources based on the
-device's runtime PM state.
+On Wed, Jan 08, 2014 at 06:15:38AM +0000, Roger Quadros wrote:
+> The omap-usb-host driver expects the 60MHz functional clock
+> of the USB host module to be named as "init_60m_fclk".
+> Add this information in the DT binding document.
+> 
+> CC: Lee Jones <lee.jones@linaro.org>
+> CC: Samuel Ortiz <sameo@linux.intel.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/omap-usb-host.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/omap-usb-host.txt b/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
+> index b381fa6..5635202 100644
+> --- a/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
+> +++ b/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
+> @@ -32,6 +32,10 @@ Optional properties:
+>  - single-ulpi-bypass: Must be present if the controller contains a single
+>    ULPI bypass control bit. e.g. OMAP3 silicon <= ES2.1
+>  
+> +- clocks: phandle to 60MHz functional clock to the USB Host module.
+> +
+> +- clock-names: must be "init_60m_fclk"
+> +
 
-In this patch we runtime resume during .probe() and runtime suspend
-during .remove() (i.e. ahci_host_stop()).
+Nit: clocks aren't just phandles, there's a clock-specifier too.
 
-We also update the runtime PM state during .resume().
+Also, it would be nicer if clocks was defined in terms of clock-names,
+as it makes the relationship between clocks and clock-names clear, and
+makes it easier to extend the list in future. Something like:
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Balaji T K <balajitk@ti.com>
----
- drivers/ata/ahci_platform.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+- clocks: a list of phandles + clock-specifiers, one for each entry in
+  clock-names
 
-diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-index f61093b..04c4ac2 100644
---- a/drivers/ata/ahci_platform.c
-+++ b/drivers/ata/ahci_platform.c
-@@ -23,6 +23,7 @@
- #include <linux/platform_device.h>
- #include <linux/libata.h>
- #include <linux/ahci_platform.h>
-+#include <linux/pm_runtime.h>
- #include "ahci.h"
- 
- static void ahci_host_stop(struct ata_host *host);
-@@ -142,6 +143,9 @@ static int ahci_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	pm_runtime_enable(dev);
-+	pm_runtime_get_sync(dev);
-+
- 	hpriv->phy = devm_phy_get(dev, "sata-phy");
- 	if (IS_ERR(hpriv->phy)) {
- 		dev_dbg(dev, "can't get sata-phy\n");
-@@ -269,6 +273,9 @@ static void ahci_host_stop(struct ata_host *host)
- 		clk_disable_unprepare(hpriv->clk);
- 		clk_put(hpriv->clk);
- 	}
-+
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
- }
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -340,6 +347,11 @@ static int ahci_resume(struct device *dev)
- 
- 	ata_host_resume(host);
- 
-+	/* We resumed so update PM runtime state */
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
- 	return 0;
- 
- disable_unprepare_clk:
--- 
-1.8.3.2
+- clock-names: should include:
+  * "init_60m_fclk" - the 60MHz functional clock to the USB host module.
+
+Thanks,
+Mark.
