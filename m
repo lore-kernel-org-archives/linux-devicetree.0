@@ -1,63 +1,299 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] ARM: tegra: Add efuse bindings
-Date: Wed, 8 Jan 2014 14:39:52 +0100
-Message-ID: <20140108133951.GD1592@ulmo.nvidia.com>
-References: <1387891931-9854-1-git-send-email-pdeschrijver@nvidia.com>
- <1387891931-9854-4-git-send-email-pdeschrijver@nvidia.com>
- <52CB14D3.2060904@wwwdotorg.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6] usb: gadget: Add UDC driver for Aeroflex Gaisler
+ GRUSBDC
+Date: Wed, 8 Jan 2014 13:43:47 +0000
+Message-ID: <20140108134347.GI6701@e106331-lin.cambridge.arm.com>
+References: <1387830349-12241-1-git-send-email-andreas@gaisler.com>
+ <20140106162218.GF24664@e106331-lin.cambridge.arm.com>
+ <52CD5138.1040601@gaisler.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1sNVjLsmu1MXqwQ/"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52CB14D3.2060904-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <52CD5138.1040601-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org" <software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jan 08, 2014 at 01:23:04PM +0000, Andreas Larsson wrote:
+> On 2014-01-06 17:22, Mark Rutland wrote:
+> > Hi,
+> >
+> > Apologies for the late reply, I wasn't able to access my mail much over
+> > the Christmas break.
+> 
+> The patch is already applied to both the next branch of Felipe Balbi's 
+> usb/next branch and merged from there into Greg Kroah-Hartman's 
+> usb/usb-next branch, so it might be too late for including in the 
+> initial patch.
+> 
+> I'll be happy to send a patch series to improve things as indicated 
+> inline below. There are no functional bugs running on SPARC which is the 
+> ordinary environment for this core, so adding patches to do these 
+> improvements should work fine.
+> 
+> >
+> > On Mon, Dec 23, 2013 at 08:25:49PM +0000, Andreas Larsson wrote:
+> >> This adds an UDC driver for GRUSBDC USB Device Controller cores available in the
+> >> GRLIB VHDL IP core library. The driver only supports DMA mode.
+> >>
+> >> Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+> >> ---
+> >>
+> >> Differences since v1:
+> >> - Use hexprint for debug printoutes instead of homemade equivalent
+> >> - Use the dev_* printk variants over the board
+> >> - Get rid of unnecessary casts and includes
+> >> - Use USB_STATE_NOTATTACHED instead of USB_STATE_ATTACHED for clarity
+> >> - Get rid of commented out VERBOSE_DEBUG definition
+> >> - Do not devm-allocate any requests
+> >> - Get rid of unnecessary resqueduling of the workqueue handler
+> >> - Make sure that gadget setup function is called with interrupts disabled
+> >> Differences since v2:
+> >> - Fixed an error printout
+> >> - Got rid of the work queue in favor of threaded interrupts
+> >> Differences since v3:
+> >> - Disable interrupts when locking spinlocks instead of using
+> >>    local_irq_save deeper within critical section
+> >> Differences since v4:
+> >> - Set quirk_ep_out_aligned_size
+> >> - Use usb_ep_set_maxpacket_limit
+> >> - Add devicetree documentation
+> >> Differences since v5:
+> >> - Declare unexpected spin_unlock and spin_lock for sparse
+> >> - Fix a bad comment
+> >> - Use ACCESS_ONCE instead of gr_read32 when checking for update of dma descriptor
+> >>
+> >>   Documentation/devicetree/bindings/usb/gr-udc.txt |   28 +
+> >>   drivers/usb/gadget/Kconfig                       |    7 +
+> >>   drivers/usb/gadget/Makefile                      |    1 +
+> >>   drivers/usb/gadget/gr_udc.c                      | 2242 ++++++++++++++++++++++
+> >>   drivers/usb/gadget/gr_udc.h                      |  220 +++
+> >>   5 files changed, 2498 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/usb/gr-udc.txt
+> >>   create mode 100644 drivers/usb/gadget/gr_udc.c
+> >>   create mode 100644 drivers/usb/gadget/gr_udc.h
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/usb/gr-udc.txt b/Documentation/devicetree/bindings/usb/gr-udc.txt
+> >> new file mode 100644
+> >> index 0000000..0c5118f
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/usb/gr-udc.txt
+> >> @@ -0,0 +1,28 @@
+> >> +USB Peripheral Controller driver for Aeroflex Gaisler GRUSBDC.
+> >> +
+> >> +The GRUSBDC USB Device Controller core is available in the GRLIB VHDL
+> >> +IP core library.
+> >> +
+> >> +Note: In the ordinary environment for the core, a Leon SPARC system,
+> >> +these properties are built from information in the AMBA plug&play.
+> >> +
+> >> +Required properties:
+> >> +
+> >> +- name : Should be "GAISLER_USBDC" or "01_021"
+> >
+> > What's this for?
+> >
+> > Why is this not matched using a compatible string?
+> >
+> > What does "01_021" mean?
+> 
+> Regarding using name, this is standard for SPARC. The names in the
+> device tree originates from the PROM.
+> 
+> The name field is the actually the first field checked for a match in
+> of_match_node, followed by type then compatible. See
+> http://lxr.free-electrons.com/source/drivers/of/base.c?v=3.12#L723
+> 
+> Examples can be found among others in:
+> - drivers/watchdog/riowd.c
+> - drivers/watchdog/cpwd.c
+> - drivers/mtd/maps/sun_uflash.c
+> - drivers/input/misc/sparcspkr.c
+> - drivers/input/serio/i8042-sparcio.h
+> - drivers/hwmon/ultra45_env.c
+> 
+> As for the "01_021", the LEON SPARC systems uses a plug&play to identify
+> different IP cores in the system. When the PROM is unaware of the name
+> of a certain core, the name field presented from the PROM will be on
+> this form. This is standard handling for LEON SPARC drivers.
+> Examples of this can be found in:
+> - drivers/gpio/gpio-grgpio.c
+> - drivers/usb/host/uhci-grlib.c
+> - drivers/usb/host/ehci-grlib.c
+> - drivers/video/grvga.c
+> - drivers/net/can/grcan.c
+> - drivers/net/ethernet/aeroflex/greth.c
+> - drivers/tty/serial/apbuart.c
+> - drivers/gpio/gpio-grgpio.c
 
---1sNVjLsmu1MXqwQ/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK. Sorry for the confusion there.
 
-On Mon, Jan 06, 2014 at 01:40:51PM -0700, Stephen Warren wrote:
-> On 12/24/2013 06:32 AM, Peter De Schrijver wrote:
-[...]
-> > diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20=
-=2Edtsi
->=20
-> > +	efuse@7000F800 {
->=20
-> "fuse" might be a better node name; "efuse" is presumably the name of
-> the instance, not the type of object.
+> 
+> 
+> >> +
+> >> +- reg : Address and length of the register set for the device
+> >> +
+> >> +- interrupts : Interrupt numbers for this device
+> >
+> > How many, and what do they correspond to?
+> 
+> I'll add text on that
+> 
+> >
+> >> +
+> >> +Optional properties:
+> >> +
+> >> +- epobufsizes : An array of buffer sizes for OUT endpoints. If the property is
+> >> +       not present, or for endpoints outside of the array, 1024 is assumed by
+> >> +       the driver.
+> >> +
+> >> +- epibufsizes : An array of buffer sizes for IN endpoints. If the property is
+> >> +       not present, or for endpoints outside of the array, 1024 is assumed by
+> >> +       the driver.
+> >
+> > These names are rather opaque. Something like {input,output}-buf-lens
+> > would be far clearer.
+> 
+> Unless Felipe wants to merge with the original patch I don't think it is 
+> a good idea to have the property name change from one version of the 
+> driver to another - especially if the change does not makes it into 
+> 3.14. There are no dts files for SPARC.
 
-There's another occurrence I noticed recently where we haven't followed
-that rule. The PMIC node on Venice2 for instance is called as3722.
-Perhaps that should also be renamed.
+Given this is already out there, let's leave it as-is.
 
-Thierry
+> 
+> 
+> >
+> > How many entries are expected?
+> 
+> I'll add text on that.
+> 
+> > A specific driver should have no relevance to the binding. Just say "if
+> > not 1024".
+> 
+> Sure!
+> 
+> > [...]
+> >
+> >> +/* Must be called with dev->lock held */
+> >> +static int gr_udc_init(struct gr_udc *dev)
+> >> +{
+> >> +       struct device_node *np = dev->dev->of_node;
+> >> +       u32 epctrl_val;
+> >> +       u32 dmactrl_val;
+> >> +       int i;
+> >> +       int ret = 0;
+> >> +       u32 *bufsizes;
+> >> +       u32 bufsize;
+> >> +       int len;
+> >> +
+> >> +       gr_set_address(dev, 0);
+> >> +
+> >> +       INIT_LIST_HEAD(&dev->gadget.ep_list);
+> >> +       dev->gadget.speed = USB_SPEED_UNKNOWN;
+> >> +       dev->gadget.ep0 = &dev->epi[0].ep;
+> >> +
+> >> +       INIT_LIST_HEAD(&dev->ep_list);
+> >> +       gr_set_ep0state(dev, GR_EP0_DISCONNECT);
+> >> +
+> >> +       bufsizes = (u32 *)of_get_property(np, "epobufsizes", &len);
+> >
+> > of_get_property gives you the raw property value bye string, which is
+> > _not_ a u32 pointer -- it's not necessarily the same endianness as the
+> > kernel. Please use an appropriate accessor.
+> 
+> Sure, it makes for better looking code in general as well.
+> 
+> >
+> >> +       len /= sizeof(u32);
+> >> +       for (i = 0; i < dev->nepo; i++) {
+> >> +               bufsize = (bufsizes && i < len) ? bufsizes[i] : 1024;
+> >
+> > You can use of_property_read_u32_index within the loop for this:
+> >
+> >                  if (of_property_read_u32_index(np, "epobufsizes", &bufsize)
+> >                          bufsize = 1024;
+> >
+> >> +               ret = gr_ep_init(dev, i, 0, bufsize);
+> >> +               if (ret)
+> >> +                       return ret;
+> >> +       }
+> >> +
+> >> +       bufsizes = (u32 *)of_get_property(np, "epibufsizes", &len);
+> >> +       len /= sizeof(u32);
+> >> +       for (i = 0; i < dev->nepi; i++) {
+> >> +               bufsize = (bufsizes && i < len) ? bufsizes[i] : 1024;
+> >
+> > Likewise here.
+> >
+> > [...]
+> >
+> >> +static int gr_probe(struct platform_device *ofdev)
+> >> +{
+> >> +       struct gr_udc *dev;
+> >> +       struct resource *res;
+> >> +       struct gr_regs __iomem *regs;
+> >> +       int retval;
+> >> +       u32 status;
+> >> +
+> >> +       dev = devm_kzalloc(&ofdev->dev, sizeof(*dev), GFP_KERNEL);
+> >> +       if (!dev)
+> >> +               return -ENOMEM;
+> >> +       dev->dev = &ofdev->dev;
+> >> +
+> >> +       res = platform_get_resource(ofdev, IORESOURCE_MEM, 0);
+> >> +       regs = devm_ioremap_resource(dev->dev, res);
+> >> +       if (IS_ERR(regs))
+> >> +               return PTR_ERR(regs);
+> >> +
+> >> +       dev->irq = irq_of_parse_and_map(dev->dev->of_node, 0);
+> >> +       if (!dev->irq) {
+> >> +               dev_err(dev->dev, "No irq found\n");
+> >> +               return -ENODEV;
+> >> +       }
+> >
+> > The platform_device probing code will have parsed and mapped the irq
+> > already. You can use platform_get_irq(ofdev->dev, 0) here.
+> 
+> Sure
+> 
+> > Also, naming the platform_device ofdev is confusing. It has nothing to
+> > do with OF, and the more common pdev name would be far clearer.
+> 
+> Sure
+> 
+> >> +
+> >> +       /* Some core configurations has separate irqs for IN and OUT events */
+> >> +       dev->irqi = irq_of_parse_and_map(dev->dev->of_node, 1);
+> >> +       if (dev->irqi) {
+> >> +               dev->irqo = irq_of_parse_and_map(dev->dev->of_node, 2);
+> >> +               if (!dev->irqo) {
+> >> +                       dev_err(dev->dev, "Found irqi but not irqo\n");
+> >> +                       return -ENODEV;
+> >> +               }
+> >> +       }
+> >
+> > Likewise here you can use platform_get_irq.
+> >
+> > [...]
+> >
+> >> +static struct of_device_id gr_match[] = {
+> >> +       {.name = "GAISLER_USBDC"},
+> >> +       {.name = "01_021"},
+> >> +       {},
+> >
+> > This seems extremely odd to me. I think a compatible string would be far
+> > preferable.
+> 
+> As explained above it is the standard method of matching for SPARC.
 
---1sNVjLsmu1MXqwQ/
-Content-Type: application/pgp-signature
+Ok.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSzVUnAAoJEN0jrNd/PrOh2IUP/0HmJ+zy8f/2KJjdWlr0482w
-QNMB6eOD3oYxRgXyxjAtQTqb2RHASLLvSRdLKz8mz+/0ZP9is7ufOYJtin4VnDki
-8N5mqGuRtkk/XDLWPdqWbJT42h3SrGq7yC3tvG11cnNuw/jrZGrmPyfWn3e/sUFw
-jY24rUqPg6oI1XnVNn2BGsI0URellhGxHFtKrmYkmHIpBCUa1XrU5OoAsmXAwAl0
-/OgshcxI3J6IQ2R0ClQydmlI83Lfz1D+BixyH4G3pxl5MKkg9I/josOkWZv5InRW
-9IaS6KpEpoouAuoRDoA0XGXLt/c2pE583DiTs3cFUON7b2o5ECpiyK/D+LlipsrG
-cgr6q39iZrQPP3iH1Dz35HrTBa3ZHktTGB7ZJrAoZ8G0dTbanvaeBlAgVj99YMnA
-Zuvw4iAXlxxV4T6Vl9tkeAn2UXrPT5UQhN4bnH3VMQDlgHeHO5MNENUJCj2OpVuv
-Wud7TICgJAGOICBF61jSWaUAUR4Az9kFA5Q5V0sCpwM3qrdQJQydLnoJ8/qhpWyG
-9FRpSehrRyh6Ua/8/xvdJOMXt+CItXs3GozgYCpbT27XLhL62A9CKGcNq7HJDGjv
-xCexfDB8HYGYiSAmEs3xAT99SxfpzqNHPWXbkl4lXOhJi4Y1nkycL9NFTaNPSxug
-OigsMWOU/MGKAHXHF9xT
-=l8Z3
------END PGP SIGNATURE-----
-
---1sNVjLsmu1MXqwQ/--
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
