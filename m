@@ -1,115 +1,58 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] pwm: Add CLPS711X PWM support
-Date: Wed, 8 Jan 2014 14:34:23 +0100
-Message-ID: <20140108133422.GB1592@ulmo.nvidia.com>
-References: <1388547821-10029-1-git-send-email-shc_work@mail.ru>
- <20140106161233.GB6721@ulmo.nvidia.com>
- <1389025853.275494031@f414.i.mail.ru>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] driver-core: platform: Resolve DT interrupt references
+ late
+Date: Wed, 08 Jan 2014 14:41:19 +0100
+Message-ID: <4589157.TquA4Q59fC@wuerfel>
+References: <20140108011957.GK5074@atomide.com>
+ <1389185477-507-1-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eJnRUKwClWJh1Khz"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389025853.275494031@f414.i.mail.ru>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1389185477-507-1-git-send-email-treding@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 08 January 2014 13:51:17 Thierry Reding wrote:
+> When devices are probed from the device tree, any interrupts that they
+> reference are resolved at device creation time. This causes problems if
+> the interrupt provider hasn't been registered yet at that time, which
+> results in the interrupt being set to 0.
 
---eJnRUKwClWJh1Khz
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for looking at this problem, it has bothered a lot of people
+for a long time. I'm sorry I wasn't there for the discussion in November,
+but when it came up before, I suggested a different solution that
+apparently didn't get implemented.
 
-On Mon, Jan 06, 2014 at 08:30:53PM +0400, Alexander Shiyan wrote:
-> Hello.
->=20
-> =D0=9F=D0=BE=D0=BD=D0=B5=D0=B4=D0=B5=D0=BB=D1=8C=D0=BD=D0=B8=D0=BA,  6 =
-=D1=8F=D0=BD=D0=B2=D0=B0=D1=80=D1=8F 2014, 17:12 +01:00 =D0=BE=D1=82 Thierr=
-y Reding <thierry.reding@gmail.com>:
-> > On Wed, Jan 01, 2014 at 07:43:41AM +0400, Alexander Shiyan wrote:
-> > > Add a new driver for the PWM controllers on the CLPS711X platform
-> > > based on the PWM framework.
-> ...
-> > 	static inline to_clps711x(struct pwm_chip *chip)
-> > 	{
-> > 		return container_of(chip, struct clps711x_chip, chip);
-> > 	}
-> >=20
-> > > +	unsigned int period, freq =3D clk_get_rate(priv->clk);
-> > > +
-> > > +	if (!freq)
-> > > +		return -EINVAL;
-> > > +
-> > > +	/* Calculate and store constant period value */
-> > > +	period =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC, freq);
-> > > +	pwm_set_period(pwm, period);
-> > > +	pwm_set_chip_data(pwm, (void *)(uintptr_t)period);
-> >=20
-> > Why store this in chip data again if it can be retrieved directly from
-> > the PWM device using pwm_get_period()?
->=20
-> This is used for compare this value in pwm_config().
-> pwm_set_period() potentially can be called from any other place and set
-> illegal value for us, but we should calculate duty ratio with our (proper=
-) frequency.
-> Is not it?
+> Note that this patch is the easy way out to fix a large part of the
+> problems for now. A more proper solution for the long term would be to
+> transition drivers to an API that always resolves resources of any kind
+> (not only interrupts) at probe time.
+> 
+> For some background and discussion on possible solutions, see:
+> 
+> 	https://lkml.org/lkml/2013/11/22/520
 
-Well, that same argument holds for pwm_set_chip_data(). Nothing should
-be calling pwm_set_period() from any other place.
+I hope I read this thread correctly, sorry if I missed an important
+part. My idea was to add the code not in platform_get_irq() but add
+the resource in platform_drv_probe(), and just bail out with
+-EPROBE_DEFER there if necessary.
 
-> > > +static int clps711x_pwm_enable(struct pwm_chip *chip, struct pwm_dev=
-ice *pwm)
-> > > +{
-> > > +	/* Do nothing */
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void clps711x_pwm_disable(struct pwm_chip *chip, struct pwm_d=
-evice *pwm)
-> > > +{
-> > > +	/* Do nothing */
-> > > +}
-> >=20
-> > I think it would be better if this would set the duty field to 0 to stop
-> > any potential toggling of the PWM signal. .enable() can later restore
-> > the proper value.
-> >=20
-> > The reason for this is that pwm_disable() is supposed to stop the PWM
-> > output from toggling and if you simply ignore it you don't conform to
-> > the API specification.
->=20
-> I agree for pwm_disable(), but which value should be restored by pwm_enab=
-le()?
-> I think we should keep pwm_enable() as is, i.e. we enable PWM with existi=
-ng value.
+We could then skip adding the resources at device creation time.
+Is this something you already plan to do later, or is there a reason
+it wouldn't work?
 
-Yes, pwm_enable() should restore the previous setting. You should be
-able to do that by querying the PWM device using pwm_get_duty_cycle()
-and reprogram the channel using that value.
+In the meantime, I don't see anything with your patch, but it also
+wouldn't hurt to do it now if it solves all the problems.
 
-Thierry
-
---eJnRUKwClWJh1Khz
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSzVPeAAoJEN0jrNd/PrOhE8wP+gIetX/5vGqW2KLCg/znacL0
-kc37yU+HOBKbHtK3aTVuCTvNwc1Ava+rv5wy02cwkRNE1fTSFCmcy8g+F4wYSHOS
-RJIMuw+p+2Uy5dHD1ftayxzOtGPnm2+PZCW1eoxdkT3w2YlwPJLMDRvC30DkR8tZ
-6M4zGsRO5HgHSxZWTh0LqGEUW7VD+S5+ivtqYEExalNUUZ7ax2B+kHxA3ovZzrVV
-vBCJGFeJkinMDb13Tj06w/9zGrQVJf6036A7qdYoOwUIOkGyKE+EjYAkYjV+M2Ua
-6/qoi3SaMrM/qPQJj1KA7ErPHZTpZiBreWlTeI4T967BlUCtNRiQhTOXR9mogU2h
-FkfkVRVKhzQg50aNlaGeObv8WHn/Rdya89GYdXf2nWJfrFlB0NI9h26kAyXjv7Ui
-OWYmtAelZ2w2z9c3PAWBYeKYLw3CSOZ/Opk7Pwobvis26ZX/WopPnQ5NtVTSDSK1
-Uym8EzjM0xlvhi9WJfQwBFT3obX6TNb8+n8rYEthB7pnLmLPGrT39msWJatygvRy
-K94CsMdPLw5zy1uOSqETLYj9h0X1Jna9M/6GESWIWqaCJA9voOCjbaGkZ5ZbjZsH
-u1zqOS1hHLDygKOMwP8ni4J4IHPUJyVnpMZUMeHFJljto3qqyuLdJsYUwmK+H2JT
-ej8MAwq4hJ/Qzu3ME8PI
-=Aqeg
------END PGP SIGNATURE-----
-
---eJnRUKwClWJh1Khz--
+	Arnd
