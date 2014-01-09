@@ -1,58 +1,75 @@
-From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: Re: [PATCH] ARM: imx6q: Add missing esai_ahb clock to current clock
- tree
-Date: Thu, 9 Jan 2014 15:51:07 +0800
-Message-ID: <20140109075106.GB14809@MrMyself>
-References: <1389236699-10387-1-git-send-email-Guangyu.Chen@freescale.com>
- <20140109035810.GB21717@S2101-09.ap.freescale.net>
- <20140109034940.GA14480@MrMyself>
- <20140109065740.GD21717@S2101-09.ap.freescale.net>
- <20140109074137.GA14809@MrMyself>
- <20140109075827.GP6750@pengutronix.de>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v5 3/4] [media] exynos-scaler: Add m2m functionality for
+ the SCALER driver
+Date: Thu, 09 Jan 2014 09:31:25 +0100
+Message-ID: <2693737.HeuDsQMSy5@amdc1032>
+References: <1389238094-19386-1-git-send-email-shaik.ameer@samsung.com>
+ <1389238094-19386-4-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140109075827.GP6750@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>, kernel@pengutronix.de, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, rob@landley.net
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1389238094-19386-4-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, s.nawrocki@samsung.com, posciak@google.com, hverkuil@xs4all.nl, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 09, 2014 at 08:58:28AM +0100, Sascha Hauer wrote:
-> On Thu, Jan 09, 2014 at 03:41:38PM +0800, Nicolin Chen wrote:
-> > On Thu, Jan 09, 2014 at 02:57:42PM +0800, Shawn Guo wrote:
-> > > On Thu, Jan 09, 2014 at 11:49:41AM +0800, Nicolin Chen wrote:
-> > > > On Thu, Jan 09, 2014 at 11:58:12AM +0800, Shawn Guo wrote:
-> > > > > >  static struct clk *clk[clk_max];
-> > > > > > @@ -355,6 +355,7 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
-> > > > > >  	clk[ecspi5]       = imx_clk_gate2("ecspi5",        "ecspi_root",        base + 0x6c, 8);
-> > > > > >  	clk[enet]         = imx_clk_gate2("enet",          "ipg",               base + 0x6c, 10);
-> > > > > >  	clk[esai]         = imx_clk_gate2("esai",          "esai_podf",         base + 0x6c, 16);
-> > > > > > +	clk[esai_ahb]     = imx_clk_gate2("esai_ahb",      "ahb",               base + 0x6c, 16);
-> > > > > 
-> > > > > Hmm, having two clocks operating on the same gate bit will get us
-> > > > > problem in clock disabling.  Clock enabling is fine, since either
-> > > > > one who calls clk_enable() first will just set the gate bit.  But in
-> > > > > case that clk_enable() is called on both clocks, and then when either
-> > > > > clock calls clk_disable(), the gate bit will be cleared and thus breaks
-> > > > > the other one that might still be in use.
-> > > > 
-> > > > Understood. But how could we handle this situation? The only way I can figure
-> > > > out is to make sure the driver open/close them at the same time, it's not a
-> > > > perfect way though.
-> > > 
-> > > Hmm, we generally leave the gate bit to the clock used to access
-> > > register, because usually it's the first one to be on and the last one
-> > > to be off.
-> > 
-> > Then we should attach CLK_IGNORE_UNUSED to clk[esai] since clk[esai_ahb] is
-> > the clock used to access memory, shouldn't we?
+
+Hi,
+
+On Thursday, January 09, 2014 08:58:13 AM Shaik Ameer Basha wrote:
+> This patch adds the Makefile and memory to memory (m2m) interface
+> functionality for the SCALER driver.
 > 
-> Please wait for Mikes input or let's look how a proper solution can look
-> like. I've already seen the case that a single bit controls multiple
-> clocks. Hacking around this issue each time is not a solution.
+> [arun.kk@samsung.com: fix compilation issues]
+> 
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  drivers/media/platform/Kconfig                    |    8 +
+>  drivers/media/platform/Makefile                   |    1 +
+>  drivers/media/platform/exynos-scaler/Makefile     |    3 +
+>  drivers/media/platform/exynos-scaler/scaler-m2m.c |  788 +++++++++++++++++++++
 
-Okay.
+It would be cleaner to add Kconfig + Makefiles in the same patch
+that adds core functionality (patch #2) and then switch the order of
+patch #2 and patch #3.
 
-Thank you, Sascha.
- 
+>  4 files changed, 800 insertions(+)
+>  create mode 100644 drivers/media/platform/exynos-scaler/Makefile
+>  create mode 100644 drivers/media/platform/exynos-scaler/scaler-m2m.c
+> 
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index b2a4403..aec5b80 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -196,6 +196,14 @@ config VIDEO_SAMSUNG_EXYNOS_GSC
+>  	help
+>  	  This is a v4l2 driver for Samsung EXYNOS5 SoC G-Scaler.
+>  
+> +config VIDEO_SAMSUNG_EXYNOS_SCALER
+> +	tristate "Samsung Exynos SCALER driver"
+> +	depends on OF && VIDEO_DEV && VIDEO_V4L2 && ARCH_EXYNOS5
+
+Please check for EXYNOS5410 and EXYNOS5420 explicitly instead
+of checking just for ARCH_EXYNOS5.
+
+Also this config option doesn't need to depend on OF since
+the whole EXYNOS support is OF only now.
+
+> +	select VIDEOBUF2_DMA_CONTIG
+> +	select V4L2_MEM2MEM_DEV
+> +	help
+> +	  This is a v4l2 driver for Samsung EXYNOS5410/5420 SoC SCALER.
+> +
+>  config VIDEO_SH_VEU
+>  	tristate "SuperH VEU mem2mem video processing driver"
+>  	depends on VIDEO_DEV && VIDEO_V4L2 && HAS_DMA
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
