@@ -1,38 +1,77 @@
-From: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RFC 1/3] drivers: base: support cpu cache information
- interface to userspace via sysfs
-Date: Thu, 09 Jan 2014 19:07:47 +0000
-Message-ID: <52CEF383.3070405@arm.com>
-References: <1389209168-17189-1-git-send-email-sudeep.holla@arm.com> <1389209168-17189-2-git-send-email-sudeep.holla@arm.com> <20140108202826.GF8417@kroah.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ohci-platform: Add support for
+ devicetree instantiation
+Date: Thu, 09 Jan 2014 23:14:30 +0300
+Message-ID: <52CF0326.1090407@cogentembedded.com>
+References: <1389290226-6971-1-git-send-email-hdegoede@redhat.com> <1389290226-6971-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140108202826.GF8417-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Sudeep.Holla-5wv7dgnIgG8@public.gmane.org, "x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ashok Raj <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBC6MFNV32EFRBE7KXOLAKGQEZDO7V4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1389290226-6971-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/01/14 20:28, Greg Kroah-Hartman wrote:
-> On Wed, Jan 08, 2014 at 07:26:06PM +0000, Sudeep Holla wrote:
->> From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> +#define define_one_ro(_name) \
->> +static struct cache_attr _name = \
->> +	__ATTR(_name, 0444, show_##_name, NULL)
-> 
-> In the future, we do have __ATTR_RO(), which should be used instead.
-> You should never use __ATTR() on it's own, if at all possible.  I'm
-> sweeping the tree for all usages and fixing them slowly up over time.
-> 
+Hello.
 
-Understood, will fix it.
+On 01/09/2014 08:57 PM, Hans de Goede wrote:
 
-Regards,
-Sudeep
+> Add support for ohci-platform instantiation from devicetree, including
+> optionally getting clks and a phy from devicetree, and enabling / disabling
+> those on power_on / off.
 
+> This should allow using ohci-platform from devicetree in various cases.
+> Specifically after this commit it can be used for the ohci controller found
+> on Allwinner sunxi SoCs.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>   .../devicetree/bindings/usb/mmio-ohci.txt          |  22 +++
+>   drivers/usb/host/ohci-platform.c                   | 150 ++++++++++++++++++---
+>   2 files changed, 152 insertions(+), 20 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/usb/mmio-ohci.txt
+
+> diff --git a/Documentation/devicetree/bindings/usb/mmio-ohci.txt b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
+> new file mode 100644
+> index 0000000..9c776ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
+> @@ -0,0 +1,22 @@
+> +Generic MMIO OHCI controller
+
+    OHCI controller always uses MMIO, and likewise EHCI. You don't need to 
+specifically mention it.
+
+> +
+> +Required properties:
+> +- compatible : "mmio-ohci"
+
+    Likewise, it's not a good name. Why not call it "platform-ohci"?
+
+> +- reg : ohci controller register range (address and length)
+> +- interrupts : ohci controller interrupt
+> +
+> +Optional properties:
+> +- clocks : a list of phandle + clock specifier pairs
+> +- phys : phandle + phy specifier pair
+> +- phy-names : "usb"
+> +
+> +Example:
+> +
+> +	ohci0: ohci@0x01c14400 {
+> +		compatible = "mmio-ohci";
+> +		reg = <0x01c14400 0x100>;
+> +		interrupts = <64>;
+> +		clocks = <&usb_clk 6>, <&ahb_gates 2>;
+> +		phys = <&usbphy 1>;
+> +		phy-names = "usb";
+> +	};
+
+WBR, Sergei
