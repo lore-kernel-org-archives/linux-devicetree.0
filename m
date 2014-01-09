@@ -1,54 +1,59 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH RFC RFT 0/2] ARM: Kirkwood: Synology DT files
-Date: Thu, 9 Jan 2014 17:55:57 +0100
-Message-ID: <20140109165557.GB9681@lunn.ch>
-References: <1389052027-16819-1-git-send-email-andrew@lunn.ch>
- <52CE312B.3060108@killerwolves.net>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv9][ 1/3] ARM i.MX35: build in pinctrl support.
+Date: Thu,  9 Jan 2014 18:15:14 +0100
+Message-ID: <1389287716-12802-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52CE312B.3060108-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 09, 2014 at 03:18:35PM +1000, Ben Peddell wrote:
-> On 07/01/14 09:47, Andrew Lunn wrote:
-> > Request for Testing:
-> > 
-> > This patch adds support for around 30 different boards. Most .dts
-> > files support a couple of different models. I don't have any of this
-> > hardware. None of this is tested.
-> 
-> Tested by Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org> (specifically kirkwood-ds210.dts on DS211j)
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ChangeLog v8->v9:
+- patch refreshed when applying it.
 
-Hi Ben
+ChangeLog v7->v8:
+- The addition of the imx35 pinctrl driver selection in Kconfig that wa=
+s in the
+  patch adding the devicetree support for the imx35 was moved here.
+---
+ arch/arm/mach-imx/Kconfig |    2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks for testing. I will fix the gpo and send a v2 sometime. I
-should also check if there are any more gpo's i have as gpio's.
- 
-> To get running on the stock bootloader, I needed to extend the 
-> initramfs to fill the entire rd.gz flash partition, configure the 
-> kernel to use the dtb appended to it, configure it to ignore the 
-> information passed to it by the bootloader, and add the following 
-> nodes to the dts:
-> 
-> /chosen {
-> 	linux,initrd-start = <0x800040>;
-> 	linux,initrd-end   = <0x940000>;
-> };
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index b0c6eb3..2586eab 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -125,6 +125,8 @@ config SOC_IMX35
+ 	select CPU_V6K
+ 	select HAVE_EPIT
+ 	select MXC_AVIC
++	select PINCTRL
++	select PINCTRL_IMX35
+ 	select SMP_ON_UP if SMP
+ 	select PINCTRL
+=20
+--=20
+1.7.9.5
 
-Do you know why these initrd properties are needed?  There is only one
-other board in mainline that requires this. I also wonder what
-implications this has. u-boot has the capability of reading the initrd
-from disc to RAM and passing its location to the kernel. By hard
-coding these values, are we blocking that?
-
-Thanks
-	Andrew
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
