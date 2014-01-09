@@ -1,109 +1,74 @@
-From: Thomas Abraham <ta.omasab@gmail.com>
-Subject: [PATCH 6/6] arm: dts: add cpu nodes for Exynos4210 SoC
-Date: Thu,  9 Jan 2014 21:29:25 +0530
-Message-ID: <1389283165-17708-7-git-send-email-thomas.ab@samsung.com>
-References: <1389283165-17708-1-git-send-email-thomas.ab@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1389283165-17708-1-git-send-email-thomas.ab@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: cpufreq@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, kgene.kim@samsung.com, shawn.guo@linaro.org, viresh.kumar@linaro.org
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v3] ARM: davinci: aemif: get rid of davinci-nand driver
+ dependency on aemif
+Date: Thu, 9 Jan 2014 08:33:05 -0800
+Message-ID: <20140109163305.GC28655@norris-Latitude-E6410>
+References: <1386267092-18615-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <52B18C44.2000305@ti.com> <52B1915A.7060309@ti.com>
+ <52BC1BB8.2070007@ti.com> <52CE7C44.1000803@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <52CE7C44.1000803@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, Rob Landley <rob@landley.net>, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-mtd@lists.infradead.org, "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add CPU nodes for Exynos4210 SoC and also properties required by the
-cpufreq-cpu0 driver.
+On Thu, Jan 09, 2014 at 04:09:00PM +0530, Sekhar Nori wrote:
+> On Thursday 26 December 2013 05:36 PM, ivan.khoronzhuk wrote:
+> > On 12/18/2013 02:13 PM, Sekhar Nori wrote:
+> >> On Wednesday 18 December 2013 05:21 PM, ivan.khoronzhuk wrote:
+> >>> Hi, Sekhar
+> >>>
+> >>> This patch is based on "Reuse davinci-nand driver for Keystone arch"
+> >>> series.
+> >>> The series has passed review at https://lkml.org/lkml/2013/12/17/241
+> >>> and can be found at http://git.infradead.org/l2-mtd.git
+> >>>
+> >>> This patch can be still applied on top of the series without conflicts.
+> >>>
+> >>> Can you please pick up the $subject patch if you are OK with it?
+> >>
+> >> I have no problems with the patch and can pick it too, but need ack from
+> >> MTD maintainer (David) as it touches drivers/mtd/ too.
+> >>
+> >> David,
+> >>
+> >> If you do not have the patch, we can resend it.
+> >>
+> >> Thanks,
+> >> Sekhar
+> >>
+> > 
+> > Hi Brian,
+> > 
+> > Do you agree if this patch will go through Davinci tree?
+> > 
+> > This is the last one we need to reuse Davinci Nand driver for Keystone.
+> 
+> Since we never got an ack from MTD folks, I am going and go ahead and
+> try pushing this through ARM-SoC regardless. I will CC the MTD
+> maintainers on the pull request so any objections could even be posted
+> there.
 
-Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
----
- arch/arm/boot/dts/exynos4210-origen.dts         |    6 ++++++
- arch/arm/boot/dts/exynos4210-trats.dts          |    6 ++++++
- arch/arm/boot/dts/exynos4210-universal_c210.dts |    6 ++++++
- arch/arm/boot/dts/exynos4210.dtsi               |   22 ++++++++++++++++++++++
- 4 files changed, 40 insertions(+), 0 deletions(-)
+Sorry, I've been a little busy / out for vacation. The MTD parts look OK
+to me. Feel free to take it in your tree.
 
-diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
-index 2aa13cb..afecd8f 100644
---- a/arch/arm/boot/dts/exynos4210-origen.dts
-+++ b/arch/arm/boot/dts/exynos4210-origen.dts
-@@ -32,6 +32,12 @@
- 		bootargs ="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC2,115200 init=/linuxrc";
- 	};
- 
-+	cpus {
-+		cpu: cpu@0 {
-+			cpu0-supply = <&buck1_reg>;
-+		};
-+	};
-+
- 	regulators {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
-index 63cc571..25487d7 100644
---- a/arch/arm/boot/dts/exynos4210-trats.dts
-+++ b/arch/arm/boot/dts/exynos4210-trats.dts
-@@ -30,6 +30,12 @@
- 		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rootwait earlyprintk panic=5";
- 	};
- 
-+	cpus {
-+		cpu: cpu@0 {
-+			cpu0-supply = <&varm_breg>;
-+		};
-+	};
-+
- 	regulators {
- 		compatible = "simple-bus";
- 
-diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-index d2e3f5f..74d5a70 100644
---- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
-+++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-@@ -28,6 +28,12 @@
- 		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1";
- 	};
- 
-+	cpus {
-+		cpu: cpu@0 {
-+			cpu0-supply = <&vdd_arm_reg>;
-+		};
-+	};
-+
- 	mct@10050000 {
- 		compatible = "none";
- 	};
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index 48ecd7a..3db2da8 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -36,6 +36,28 @@
- 		reg = <0x10023CA0 0x20>;
- 	};
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0>;
-+			clocks = <&clock 12>;
-+			clock-names = "cpu";
-+
-+			operating-points = <
-+				200000	950000
-+				400000	975000
-+				500000	975000
-+				800000	1075000
-+				1000000	1150000
-+				1200000	1250000
-+			>;
-+			safe-opp-index = <3>;
-+		};
-+	};
-+
- 	gic: interrupt-controller@10490000 {
- 		cpu-offset = <0x8000>;
- 	};
--- 
-1.6.6.rc2
+Acked-by: Brian Norris <computersforpeace@gmail.com>
+
+Brian
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
