@@ -1,63 +1,65 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] watchdog: davinci: rename platform driver to davinci-wdt
-Date: Thu, 9 Jan 2014 16:42:43 +0530
-Message-ID: <52CE842B.3080500@ti.com>
-References: <1385559113-4354-1-git-send-email-ivan.khoronzhuk@ti.com> <5295FB0E.4070406@ti.com> <52961665.3060309@roeck-us.net> <5296DCD6.3030002@ti.com> <52973E40.4060400@roeck-us.net> <52984CE8.50803@ti.com> <52CE7F3F.1000201@ti.com> <20140109110852.GA4898@spo001.leaseweb.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v4 2/3] ata: ahci_platform: Manage SATA PHY
+Date: Thu, 09 Jan 2014 15:20:09 +0400
+Message-ID: <52CE85E9.7040703@cogentembedded.com>
+References: <1389264962-22858-1-git-send-email-rogerq@ti.com> <1389264962-22858-3-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140109110852.GA4898-1F/o1hAF34+bEvaWgpTR7kEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1389264962-22858-3-git-send-email-rogerq@ti.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, tj@kernel.org
+Cc: kishon@ti.com, b.zolnierkie@samsung.com, hdegoede@redhat.com, arnd@arndb.de, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Balaji T K <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 January 2014 04:38 PM, Wim Van Sebroeck wrote:
-> Hi Sekhar,
-> 
->> On Friday 29 November 2013 01:44 PM, Sekhar Nori wrote:
->>> Wim,
->>>
->>> On Thursday 28 November 2013 06:29 PM, Guenter Roeck wrote:
->>>> On 11/27/2013 10:04 PM, Sekhar Nori wrote:
->>>>> On Wednesday 27 November 2013 09:27 PM, Guenter Roeck wrote:
->>>>>> On 11/27/2013 06:00 AM, Sekhar Nori wrote:
->>>>>>> On Wednesday 27 November 2013 07:01 PM, Ivan Khoronzhuk wrote:
->>>>>>>> As we switch to use the watchdog core which permits more than one
->>>>>>>> active watchdog in the system, rename platform driver to
->>>>>>>> "davinci-wdt" to be identifiable.
->>>>>>>>
->>>>>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
->>>>>>>
->>>>>>> Looks good to me. Since bulk of this patch touches mach-davinci, I
->>>>>>> would
->>>>>>> like to take this through my tree to avoid conflicts with other
->>>>>>> mach-davinci patches I accept.
->>>>>>>
->>>>>>
->>>>>> Good idea, and makes sense.
->>>>>
->>>>> Added to v3.14/soc with your Reviewed-by
->>>>>
->>>>
->>>> You should get an Ack from Wim.
->>>
->>> Can you please provide your ack? I will add it to the existing commit.
->>
->> I never received an ack from Wim, but I am going to send this for
->> merging through ARM-SoC anyway. I will keep Wim copied on the pull
->> request so he knows.
-> 
-> This has my Ack. No issue with getting this through the ARM-SoC tree but bear in mind that there are allready other davinci pateches in the linux-watchdog-next tree+.
+On 09-01-2014 14:56, Roger Quadros wrote:
 
-Okay. I will add you ack (I just applied my signed tag, grr).
-I did a test merge of this patch with today's linux-next and see no
-conflicts.
+> From: Balaji T K <balajitk@ti.com>
 
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Some platforms have a PHY hooked up to the
+> SATA controller. The PHY needs to be initialized
+> and powered up for SATA to work. We do that
+> using the PHY framework.
+
+> [Roger Q] Cleaned up.
+
+> CC: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Balaji T K <balajitk@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+[...]
+
+> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+> index d5ced13..b476642 100644
+> --- a/drivers/ata/ahci_platform.c
+> +++ b/drivers/ata/ahci_platform.c
+> @@ -142,6 +142,39 @@ static int ahci_probe(struct platform_device *pdev)
+>   		}
+>   	}
+>
+> +	hpriv->phy = devm_phy_get(dev, "sata-phy");
+> +	if (IS_ERR(hpriv->phy)) {
+> +		rc = PTR_ERR(hpriv->phy);
+> +		switch (rc) {
+> +		case -ENODEV:
+> +		case -ENOSYS:
+> +			/* continue normally */
+> +			hpriv->phy = NULL;
+> +			break;
+> +
+> +		case -EPROBE_DEFER:
+> +			goto disable_unprepare_clk;
+> +			break;
+
+    Well, well, *break* after *goto*? :-)
+
+> +
+> +		default:
+> +			dev_err(dev, "couldn't get sata-phy\n");
+> +			goto disable_unprepare_clk;
+> +			break;
+
+    Again?
+
+WBR, Sergei
+
