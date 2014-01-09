@@ -1,116 +1,106 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
-Date: Thu, 9 Jan 2014 12:43:36 -0600
-Message-ID: <20140109184335.GN2417@saruman.home>
-References: <1389276051-1326-1-git-send-email-t-kristo@ti.com>
- <20140109172217.GH2417@saruman.home>
- <20140109184059.GM2417@saruman.home>
-Reply-To: balbi@ti.com
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] ASoC: fsl_esai: Add ESAI CPU DAI driver
+Date: Thu, 9 Jan 2014 18:44:53 +0000
+Message-ID: <20140109184453.GP12858@sirena.org.uk>
+References: <1389265078-16256-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0750115615047707189=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140109184059.GM2417@saruman.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: nm@ti.com, devicetree@vger.kernel.org, paul@pwsan.com, mturquette@linaro.org, tony@atomide.com, rnayak@ti.com, Tero Kristo <t-kristo@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============4765765071980023580=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1389265078-16256-1-git-send-email-Guangyu.Chen@freescale.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, shawn.guo@linaro.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tiwai@suse.de, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, timur@tabi.org, lgirdwood@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
---===============0750115615047707189==
+
+--===============4765765071980023580==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WYfJCIN5rqlfy3K0"
+	protocol="application/pgp-signature"; boundary="iq/fWD14IMVFWBCD"
 Content-Disposition: inline
 
---WYfJCIN5rqlfy3K0
+
+--iq/fWD14IMVFWBCD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 09, 2014 at 12:40:59PM -0600, Felipe Balbi wrote:
-> Hi,
->=20
-> On Thu, Jan 09, 2014 at 11:22:17AM -0600, Felipe Balbi wrote:
-> > > Changes compared to previous version:
-> > > - Dropped any changes to generic clock drivers, as it seems impossible
-> > >   to agree anything in short term, this means the patch set shrank in
-> > >   size from 49 patches to 40 (first 9 patches were dropped).
-> > > - Copy pasted implementation for clk-divider and clk-mux from drivers=
-/clk
-> > >   to drivers/clk/ti, and made the modifications needed to the TI vers=
-ion
-> > >   of the clock drivers only (based on discussions with Mike, this is =
-fine)
-> > > - Changed name of clk_ll_ops to ti_clk_ll_ops so that this doesn't co=
-nflict
-> > >   with any generic implementation we might have at some point, migrat=
-ing
-> > >   this to the generic version should be easy enough also.
-> > > - Fixed trace_clk_div_div_ck for omap4, this node was broken in previ=
-ous
-> > >   versions and resulted into an orphan clock node
-> > > - Fixed compile problem for omap5 only build reported by Felipe
-> > > - Fixed a couple of sparse warnings
-> > > - changed the mach-omap2/clock.c to use readl_relaxed / writel_relaxed
-> > >   instead of __raw_readl / __raw_writel
-> >=20
-> > just caught a build breakage. .config attached
->=20
-> forgot to give you build errors found, they're here:
-> http://hastebin.com/jibuyuyoto.vbs
->=20
-> Also, just caught another build breakage:
->=20
-> http://hastebin.com/reravalupe.vbs
->=20
-> .config attached
+On Thu, Jan 09, 2014 at 06:57:58PM +0800, Nicolin Chen wrote:
 
-hmm, quite a few configs are failing, seems like have DRA7xx without
-OMAP4 or OMAP5 breaks builds.
+> +/**
+> + * This function configures the ratio between MCLK (HCK) and BCLK (SCK)
+> + * (For DAI Master Mode only)
+> + *
+> + * Note: Machine driver should calculate the ratio to call this function.
+> + * 	 Only effective after calling set_dai_sysclk() to set HCK direction.
+> + */
+> +static int fsl_esai_set_bclk_ratio(struct snd_soc_dai *dai, unsigned int ratio)
 
---=20
-balbi
+Why does the machine driver have to do this by hand, being able to
+override is fine but having sensible defaults is easier?  Or does it
+actually do that and the comment just needs updating?
 
---WYfJCIN5rqlfy3K0
+> +	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_esai_component,
+> +					      &fsl_esai_dai, 1);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register DAI: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = imx_pcm_dma_init(pdev);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "failed to init imx pcm dma: %d\n", ret);
+> +
+> +	/* Reset ESAI unit */
+> +	regmap_write(esai_priv->regmap, REG_ESAI_ECR, ESAI_ECR_ERST);
+> +
+> +	/*
+> +	 * We need to enable ESAI so as to access some of its registers.
+> +	 * Otherwise, we would fail to dump regmap from user space.
+> +	 */
+> +	regmap_write(esai_priv->regmap, REG_ESAI_ECR, ESAI_ECR_ESAIEN);
+
+I would expect to see the hardware initialisation before we start
+registering with the core otherwise the core might start trying to run
+prior to the hardware being initialised.
+
+Otherwise this looks good.
+
+--iq/fWD14IMVFWBCD
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSzu3XAAoJEIaOsuA1yqREvF8P/22zdB/Bmpwbz9AWsg37yoDy
-OBhxLJUOKEZku/eek4qdTzEhDrFwSOLBd1ubkNk7S0FgpMf9xx605zSRIlL0/rBv
-5lL4fXrcAkBNvjawzAaG6S85C+LKrV4xy2mbDwR71fjoMK4chuknjCsvfCQ8P7C0
-7ML9REK9AC77/vxoD2YtJKDJLLM/UCBlCiDqI0z5DGFlAc2mWIOUOp8VbtJ7pEWD
-5OXFe9th9T4+EPI/VMZGvQ3xT5rMH1x7T4f58S3YWKp4TuBVZGJWrxqmmCeqsqnu
-Ls/q67z28l9hqBSDxEUI8O8eXBeCjgq4oqSYO5QWohBua3BP6yUzkEPSuJIyLnIO
-SxXaLUYYT5gcU9kbrgYJrx7oTwY0DpnINO5MpD97Qho80iZHkkFmcFLv23a1ft/5
-qTEwU7EgXwqwsFI+tzZFN8KFOmuI8Kci6kcRxZYS9lzqb+3pCzRpZ8Yufz5aovOa
-sgiPz4gGdYLCTPpPQjnxNQop1qrriDOns8i2KiRkCdhp3jBvjLwql9fslRWf2GPL
-ZehTwx4RbrTNXnrkKcXYPgLZT6jWrfVtnUcFwMkqE3MQuJz69qWYFAC3FT5T853r
-VP0hgq7mQNPLNGOlMMQWhEdCC+1JR4Q7laD+2yvPvImjMpUqknwMSf71azF+GahT
-aMD1yshFgdx886cpNr3l
-=byWs
+iQIcBAEBAgAGBQJSzu4iAAoJELSic+t+oim9DfcP/AzCOkPoLdopNt/3TZ3iqGKU
+Wx65nKrMmAquGqHyMGnGmdOXGs7w8RGp549sgu2Su3GgaIAOPvpipgLncIDRQBsi
+yM5QFrb9dG0DOhXhen64tF0/e+qdPLr1ux7hvv+8URxw6vnrLOU3w0fO8emAtzzE
+E5zOdO/ON6XYKCgVgJZg9Ctu3nEO4spl0TIEFlXPsurDN+O6CjFqJpbfRsScjDA1
+4Yl77NwMfk+3giDdPnXx5v6WZDVyt4FtxrEbMfnM1UPbLwer3xSEtWic3UKvx8Oy
+D1pHdHkbR7HXjY8GxODvTgsqvvk+jp9w+DiXuj6UD0rQWvyGXdAhJBt/Y6Imp+f/
+0zA6LtQbRj+EBDAiQpMU8CgwzAENgBfiX/6ZEMShu1qBOFbXfEbvVGyVH81pJ+1c
+zljl1BM4BAxc3hyaSJG1MnuF/ro7Qk4l+wzD/+HxyS19qrq/wjm9HWPFyxB7GBrC
+/10U78uGugU0PJ/1HarT7XukrB4a/pqLMFHMHTSYlhmdpfr5rvkTBu4RNK0jVETf
+EedHp81IwJU0NbGO4VFwrVauhvJv2IH4zxlQ4cPc6Wty28z8WMnYtax//bU5JiAU
+RBUoR6ubVoQ8T/20iDhLqMYBufHFMiuoCW7TJ+AlL5/nDVuqfHRst5gVHn/iJgfv
+SLcLY9/PKf7IgVNoqKqJ
+=JoHQ
 -----END PGP SIGNATURE-----
 
---WYfJCIN5rqlfy3K0--
+--iq/fWD14IMVFWBCD--
 
-
---===============0750115615047707189==
+--===============4765765071980023580==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============0750115615047707189==--
+--===============4765765071980023580==--
