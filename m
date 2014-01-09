@@ -1,85 +1,54 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] ARM: tegra: Add efuse bindings
-Date: Thu, 9 Jan 2014 13:40:38 +0100
-Message-ID: <20140109124038.GB23668@ulmo.nvidia.com>
-References: <1387891931-9854-1-git-send-email-pdeschrijver@nvidia.com>
- <1387891931-9854-4-git-send-email-pdeschrijver@nvidia.com>
- <52CB14D3.2060904@wwwdotorg.org>
- <20140108133951.GD1592@ulmo.nvidia.com>
- <52CD9DFB.9010007@wwwdotorg.org>
- <20140108200946.GE1298@ulmo.nvidia.com>
- <52CDD430.3010508@wwwdotorg.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] regulator: Add support for S2MPA01 regulator
+Date: Thu, 9 Jan 2014 12:50:48 +0000
+Message-ID: <20140109125048.GJ31886@sirena.org.uk>
+References: <1389266554-23463-1-git-send-email-sachin.kamat@linaro.org>
+ <1389266554-23463-2-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0ntfKIWw70PvrIHh"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="pyIQ5ck9LIpY32br"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52CDD430.3010508-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1389266554-23463-2-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---0ntfKIWw70PvrIHh
+--pyIQ5ck9LIpY32br
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 08, 2014 at 03:41:52PM -0700, Stephen Warren wrote:
-> On 01/08/2014 01:09 PM, Thierry Reding wrote:
-> > On Wed, Jan 08, 2014 at 11:50:35AM -0700, Stephen Warren wrote:
-> >> On 01/08/2014 06:39 AM, Thierry Reding wrote:
-> >>> On Mon, Jan 06, 2014 at 01:40:51PM -0700, Stephen Warren wrote:
-> >>>> On 12/24/2013 06:32 AM, Peter De Schrijver wrote:
-> >>> [...]
-> >>>>> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/teg=
-ra20.dtsi
-> >>>>
-> >>>>> +	efuse@7000F800 {
-> >>>>
-> >>>> "fuse" might be a better node name; "efuse" is presumably the name of
-> >>>> the instance, not the type of object.
-> >>>
-> >>> There's another occurrence I noticed recently where we haven't follow=
-ed
-> >>> that rule. The PMIC node on Venice2 for instance is called as3722.
-> >>> Perhaps that should also be renamed.
-> >>
-> >> Yes, we should fix that. Care to send a patch?
-> >=20
-> > Ugh... I've just been going through some of the other DTS files and see
-> > that quite a lot of other places aren't following this rule either. The
-> ...
-> > Perhaps it isn't worth fixing them all up after all?
->=20
-> I guess that just means the patch will be a little bigger; it doesn't
-> seem like that's a good reason not to fix the issue.
+On Thu, Jan 09, 2014 at 04:52:33PM +0530, Sachin Kamat wrote:
+> Add support for S2MPA01 voltage and current regulator.
 
-Alright, I'll make a pass over all the DTS files that we have and try to
-restore some consistency.
+Acked-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Thierry
-
---0ntfKIWw70PvrIHh
-Content-Type: application/pgp-signature
+--pyIQ5ck9LIpY32br
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSzpjGAAoJEN0jrNd/PrOhpU0P/2hPagTNIdn5CfVOh3iJDzw+
-WwKGcW/6iMPnUw6tfylAVL64PHhiTYaevV0YXuTfuWRDBatRkiPJ3JZbdCSB6fGn
-AnWsuBEgvBfCT/r7UAw3MaBB+Iz8wHJg6abAOCRf6l183+AKGa2H0q60ieq0pwo3
-fymgVQVbW5gAlenv9FCVx92Dn5RLRn+fekxYFM5PjpMOEgx8mD8KciEMDzLq/zZK
-mg84+/tv0ntPHBqKSQDj1XMTzYf/6tzOMWG6kJeuekz3ujVjQGox4TSaGsWnsbx1
-6H7BuoGb/EHOth5g9w+UdfjqMr5NwoTwqixNzokFEG0edha8S2Fb6xB88EfqT1ss
-kfB4qnSEv8DKR8KT67UUWeiSVihHh7xfUSMDjKpa/MU9iL3tzc1dseegz4qjC+fQ
-OlQ3FJL3jaYLTZYGPpPW5itx4dCbQYscAEPgVeMgZ60IEyjj6ZJc+4KTw8eVH0yN
-UpZVmO27alH3SP9ySdSxAa+RdIc8Y7nZ+Kpa3/Occk/q6hhcbjAMXHE7Zy6dB+rK
-L/9ZnK+Oo2Wu9NOvFxdvN3wt4aMojOcZuMD3JDwldMPdimc4sasxXwsImmjLK0UW
-xfjSSD+vd8rQv7ZJTMOUAad7jDkzRmLI5xX7v1ypa6IDO5Jlr5vxT4p5/qWfDvoB
-rbSL/yOshgH3tqbIlnK5
-=6YsJ
+iQIcBAEBAgAGBQJSzpslAAoJELSic+t+oim9i+kP/1uzbxSHWpRZO1lutBEMsEFt
+mFTX4ky4Sopaogke2MoAReDMjsqq+xUsoBmWwRTJaNnlG/Kq3NjYrOsDaNVHEWyp
+VifsihRQ+LV1uS+Rzl/10t9iQG2/OBEehq5u9DCo4e/2Z94GDfzmps4MEsYq7WdH
+hVM+Ei5DgNT7sq4N5D8Mqlk3fyzIqkm5lqv7DUXeAmQc1w2DFO+3VyaGQ/FIrU74
+a5fmi2xut9Jw3tkksLZF8xE44VlcX/ZQi00njYyvd/2tGJB9ZvRjNPIikZrmTb1Z
+d8wzL8lX0Af6lLlNB2iB19BWzf8EjbdDYyARJcPBZECzgXJJbVlbK8M1VWszOJzy
+ykwOiScWvdVs2IS5S6/wNxPOnC53ePpkbv1XFataJi31CDH9teDY/PeK4bqUBylV
+p0H6YuxEctVk7B7vH43kCppa7gWB5nxwjkIZm7d5UnGp6lJfoCocIz014fkmPE0S
+sJ696wTXjtl4QrXc8IzNnsfdD6nVGScZCHa8qSF5ZcxqyMicLIYKtuIftCmqdZkl
+Akz9c5IL0j+DR7qhGg4iw+fGYq0cFggny9POfU4mI5F2ve6GlysPdfYtxgqdzgPE
+6CERZDJuEnU/A3g0JHgMYvF5zTH63uR32nzXZ3c+0JPBXwMzig0xYkpfjq0CGtWl
+tzMm/nZ7hMq1lvBIjOVu
+=il29
 -----END PGP SIGNATURE-----
 
---0ntfKIWw70PvrIHh--
+--pyIQ5ck9LIpY32br--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
