@@ -1,44 +1,120 @@
-From: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: imx6q: Add missing esai_ahb clock to current clock
- tree
-Date: Thu, 9 Jan 2014 11:49:41 +0800
-Message-ID: <20140109034940.GA14480@MrMyself>
-References: <1389236699-10387-1-git-send-email-Guangyu.Chen@freescale.com>
- <20140109035810.GB21717@S2101-09.ap.freescale.net>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 3/3] Documentation: mfd: Add binding document for S2MPA01
+Date: Thu, 9 Jan 2014 10:17:00 +0530
+Message-ID: <CAK9yfHxvjacrqodCw+_WuGN1egg2==wwk7BdAL4JD8iJ1Sa7qA@mail.gmail.com>
+References: <1389162390-4582-1-git-send-email-sachin.kamat@linaro.org>
+	<1389162390-4582-3-git-send-email-sachin.kamat@linaro.org>
+	<20140108094104.GC6701@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140109035810.GB21717-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140108094104.GC6701@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "sbkim73@samsung.com" <sbkim73@samsung.com>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 09, 2014 at 11:58:12AM +0800, Shawn Guo wrote:
-> >  static struct clk *clk[clk_max];
-> > @@ -355,6 +355,7 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
-> >  	clk[ecspi5]       = imx_clk_gate2("ecspi5",        "ecspi_root",        base + 0x6c, 8);
-> >  	clk[enet]         = imx_clk_gate2("enet",          "ipg",               base + 0x6c, 10);
-> >  	clk[esai]         = imx_clk_gate2("esai",          "esai_podf",         base + 0x6c, 16);
-> > +	clk[esai_ahb]     = imx_clk_gate2("esai_ahb",      "ahb",               base + 0x6c, 16);
-> 
-> Hmm, having two clocks operating on the same gate bit will get us
-> problem in clock disabling.  Clock enabling is fine, since either
-> one who calls clk_enable() first will just set the gate bit.  But in
-> case that clk_enable() is called on both clocks, and then when either
-> clock calls clk_disable(), the gate bit will be cleared and thus breaks
-> the other one that might still be in use.
+On 8 January 2014 15:11, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Wed, Jan 08, 2014 at 06:26:30AM +0000, Sachin Kamat wrote:
+>> Added initial binding documentation for S2MPA01 MFD.
+>>
+>> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+>> ---
+>>  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   91 +++++++++++++++++++++
+>>  1 file changed, 91 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+>> new file mode 100644
+>> index 000000000000..ae750a28821b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+>> @@ -0,0 +1,91 @@
+>> +
+>> +* Samsung S2MPA01 Voltage and Current Regulator
+>> +
+>> +The Samsung S2MPA01 is a multi-function device which includes high
+>> +efficiency buck converters including Dual-Phase buck converter, various LDOs,
+>> +and an RTC. It is interfaced to the host controller using an I2C interface.
+>> +Each sub-block is addressed by the host system using different I2C slave
+>> +addresses.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "samsung,s2mpa01-pmic".
+>> +- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
+>> +
+>> +Optional properties:
+>> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
+>> +  the interrupts from s2mpa01 are delivered to.
+>> +- interrupts: Interrupt specifiers for interrupt sources.
+>
+> That sounds a bit odd. How many interrupts might there be? What do they
+> signal?
 
-Understood. But how could we handle this situation? The only way I can figure
-out is to make sure the driver open/close them at the same time, it's not a
-perfect way though.
+Actually there is only one interrupt line for sending interrupts to
+the AP for conditons like sudden
+voltage drop, etc. I will make the above sentence singular.
 
-Nicolin
+>> +
+>> +Optional nodes:
+>> +- regulators: The regulators of s2mpa01 that have to be instantiated should be
+>> +included in a sub-node named 'regulators'. Regulator nodes included in this
+>> +sub-node should be of the format as listed below.
+>> +
+>> +     regulator_name {
+>> +             [standard regulator constraints....];
+>> +     };
+>> +
+>
+> Why not just say that the regulators node contains regulators in the
+> usual format, with reference to the regulator binding?
 
+OK. I will update this (as also suggested by your later comment).
 
+>
+>> + regulator-ramp-delay for BUCKs = [6250/12500(default)/25000/50000] uV/us
+>> +
+>> + BUCK[1/2/3/4] supports disabling ramp delay on hardware, so explictly
+>> + regulator-ramp-delay = <0> can be used for them to disable ramp delay.
+>> + In the absence of the regulator-ramp-delay property, the default ramp
+>> + delay will be used.
+>> +
+>> +NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
+>> +for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
+>> +Grouping of BUCKs sharing ramp rate setting is as follow : BUCK[1, 6],
+>> +BUCK[2, 4], and BUCK[8, 9, 10]
+>
+> It would probably be better to have a heading like "Properties for BUCK
+> regulator nodes" for all of the above.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK.
+
+>
+>> +
+>> +The regulator constraints inside the regulator nodes use the standard regulator
+>> +bindings which are documented elsewhere.
+>
+> As mentioned above, state this at the beginning and point to the
+> regulator bindings.
+
+OK.
+
+>> +
+>> +The following are the names of the regulators that the s2mpa01 PMIC block
+>> +supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
+>> +as per the datasheet of s2mpa01.
+>
+> So these are what the nodes should be called? (rather than values for
+> regulator-name).
+
+Yes. That is the convention followed here.
+
+>
+> Otherwise this looks ok to me.
+>
+
+Thanks for reviewing.
+
+-- 
+With warm regards,
+Sachin
