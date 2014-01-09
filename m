@@ -1,55 +1,105 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4 4/6] devicetree: bindings: Document Krait L1/L2 EDAC
-Date: Thu, 09 Jan 2014 12:52:21 -0800
-Message-ID: <52CF0C05.1080308@codeaurora.org>
-References: <1388434457-4194-1-git-send-email-sboyd@codeaurora.org> <1388434457-4194-5-git-send-email-sboyd@codeaurora.org> <20140107105439.GC5906@e102568-lin.cambridge.arm.com> <20140107201239.GD14405@codeaurora.org> <20140108100538.GA2927@e102568-lin.cambridge.arm.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: =?UTF-8?Q?=E7=AD=94=E5=A4=8D=3A?= [v7] clk: corenet: Adds the
+ clock binding
+Date: Thu, 9 Jan 2014 15:19:28 -0600
+Message-ID: <1389302368.14390.33.camel@snotra.buserror.net>
+References: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
+ <20140108002115.GA19801@home.buserror.net>
+ <375c32b2f4e34589ae336af61468a51b@BL2PR03MB115.namprd03.prod.outlook.com>
+ <20140108093046.GB6701@e106331-lin.cambridge.arm.com>
+ <1389206619.25654.9.camel@snotra.buserror.net>
+ <e15511a79a9d4446a826da8d9ceec229@BL2PR03MB115.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140108100538.GA2927@e102568-lin.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <e15511a79a9d4446a826da8d9ceec229@BL2PR03MB115.namprd03.prod.outlook.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Tang Yuantian-B29983 <Yuantian.Tang@freescale.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/14 02:05, Lorenzo Pieralisi wrote:
-> On Tue, Jan 07, 2014 at 08:12:39PM +0000, Stephen Boyd wrote:
->> On 01/07, Lorenzo Pieralisi wrote:
->>
->>> I have a problem with the cache level definition, and in
->>> particular the numbering, ie what the level number represents. If we
->>> mean the cache level seen through the CLIDR and co., it is hard to use
->>> it for shared caches since the level seen by different CPUs can actually
->>> be different, or put it differently the level number might not be unique for
->>> a shared cache. I need to think about a proper way to sort this out.
->>>
->> Ok. I don't even use this property in my driver. All I really
->> need is the phandle from cpus pointing to the L2 and the
->> interrupts property in the L2 node.
->>
->> How do you want to proceed here? If your cache binding goes
->> through I would just need to add the interrupts part. Or you
->> could even add that part in the same patch, you could have my
->> signed-off-by for that.
-> Ok, I will try to update the bindings with the interrupt part and copy
-> you in, even though the level definition worries me a bit, it is an
-> important property for power management and I need to find a proper
-> solution before bindings can get accepted (basically the problem is:
-> if different CPUs can see a cache at different levels as defined in the
-> CLIDR we cannot describe a cache with a single cache level or put it
-> differently, level can not represent the value in the CLIDR hence we
-> need to describe it differently).
-
-Ok. I've dropped the cache part from this patch. I left the example as
-is minus the cache-level attribute.
-
-Understanding how the cache-level value would be used might help. I
-wonder if the cache-level can just be a number that describes the
-largest value that the cache could be assigned. Then if you have
-different CPUs seeing different levels of cache they can traverse from
-their CPU node to the cache and count how many phandles they went through.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+T24gV2VkLCAyMDE0LTAxLTA4IGF0IDIwOjU3IC0wNjAwLCBUYW5nIFl1YW50aWFuLUIyOTk4MyB3
+cm90ZToKPiBUaGFua3MgZm9yIHlvdSByZXZpZXcuCj4gU2VlIG15IHJlc3BvbnNlIGlubGluZS4K
+PiAKPiBUaGFua3MsCj4gWXVhbnRpYW4KPiAKPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+Cj4gPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQo+ID4gU2VudDogMjAxNOW5tDHmnIg55pelIOaY
+n+acn+WbmyAyOjQ0Cj4gPiBUbzogTWFyayBSdXRsYW5kCj4gPiBDYzogVGFuZyBZdWFudGlhbi1C
+Mjk5ODM7IGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7Cj4gPiBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKPiA+IFN1YmplY3Q6IFJlOiDn
+rZTlpI06IFt2N10gY2xrOiBjb3JlbmV0OiBBZGRzIHRoZSBjbG9jayBiaW5kaW5nCj4gPiAKPiA+
+IE9uIFdlZCwgMjAxNC0wMS0wOCBhdCAwOTozMCArMDAwMCwgTWFyayBSdXRsYW5kIHdyb3RlOgo+
+ID4gPiBPbiBXZWQsIEphbiAwOCwgMjAxNCBhdCAwODo1Mzo1NkFNICswMDAwLCBZdWFudGlhbiBU
+YW5nIHdyb3RlOgo+ID4gPiA+Cj4gPiA+ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwo+ID4gPiA+IOWPkeS7tuS6ujogV29vZCBTY290dC1CMDc0MjEKPiA+ID4gPiDl
+j5HpgIHml7bpl7Q6IDIwMTTlubQx5pyIOOaXpSA4OjIxCj4gPiA+ID4g5pS25Lu25Lq6OiBUYW5n
+IFl1YW50aWFuLUIyOTk4Mwo+ID4gPiA+IOaKhOmAgTogZ2FsYWtAa2VybmVsLmNyYXNoaW5nLm9y
+ZzsgbWFyay5ydXRsYW5kQGFybS5jb207Cj4gPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCj4gPiA+ID4g5Li76aKYOiBSZTogW3Y3
+XSBjbGs6IGNvcmVuZXQ6IEFkZHMgdGhlIGNsb2NrIGJpbmRpbmcKPiA+ID4gPgo+ID4gPiA+IE9u
+IFdlZCwgTm92IDIwLCAyMDEzIGF0IDA1OjA0OjQ5UE0gKzA4MDAsIHRhbmcgeXVhbnRpYW4gd3Jv
+dGU6Cj4gPiA+ID4gPiArUmVjb21tZW5kZWQgcHJvcGVydGllczoKPiA+ID4gPiA+ICstIHJhbmdl
+czogQWxsb3dzIHZhbGlkIHRyYW5zbGF0aW9uIGJldHdlZW4gY2hpbGQncyBhZGRyZXNzIHNwYWNl
+Cj4gPiBhbmQKPiA+ID4gPiA+ICsgICAgIHBhcmVudCdzLiBNdXN0IGJlIHByZXNlbnQgaWYgdGhl
+IGRldmljZSBoYXMgc3ViLW5vZGVzLgo+ID4gPiA+ID4gKy0gI2FkZHJlc3MtY2VsbHM6IFNwZWNp
+ZmllcyB0aGUgbnVtYmVyIG9mIGNlbGxzIHVzZWQgdG8gcmVwcmVzZW50Cj4gPiA+ID4gPiArICAg
+ICBwaHlzaWNhbCBiYXNlIGFkZHJlc3Nlcy4gIE11c3QgYmUgcHJlc2VudCBpZiB0aGUgZGV2aWNl
+IGhhcwo+ID4gPiA+ID4gKyAgICAgc3ViLW5vZGVzIGFuZCBzZXQgdG8gMSBpZiBwcmVzZW50Cj4g
+PiA+ID4gPiArLSAjc2l6ZS1jZWxsczogU3BlY2lmaWVzIHRoZSBudW1iZXIgb2YgY2VsbHMgdXNl
+ZCB0byByZXByZXNlbnQKPiA+ID4gPiA+ICsgICAgIHRoZSBzaXplIG9mIGFuIGFkZHJlc3MuIE11
+c3QgYmUgcHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcwo+ID4gPiA+ID4gKyAgICAgc3ViLW5vZGVz
+IGFuZCBzZXQgdG8gMSBpZiBwcmVzZW50Cj4gPiA+ID4KPiA+ID4gPiBXaHkgYXJlIHdlIHNwZWNp
+ZnlpbmcgI2FkZHJlc3MtY2VsbHMvI3NpemUtY2VsbHMgaGVyZT8KPiA+ID4gPgo+ID4gPiA+IEE6
+IGl0IGhhcyBzdWItbm9kZXMgd2hpY2ggaGF2ZSBSRUcgcHJvcGVydHksIGRvbid0IHdlIG5lZWQg
+dG8KPiA+ID4gPiBzcGVjaWZ5ICNhZGRyZXNzLWNlbGxzLyNzaXplLWNlbGxzPwo+ID4gPgo+ID4g
+PiBJZiBhIG5vZGUgaGFzIGEgcmVnIGVudHJ5LCBpdHMgcGFyZW50IHNob3VsZCBoYXZlICNzaXpl
+LWNlbGxzIGFuZAo+ID4gPiAjYWRkcmVzcy1jZWxscyB0byBhbGxvdyBpdCB0byBiZSBwYXJzZWQg
+cHJvcGVybHkuCj4gPiAKPiA+IFllcywgYnV0IHdoeSBkbyB3ZSBuZWVkIHRvIHNwZWNpZnkgaW4g
+dGhpcyBiaW5kaW5nIGhvdyBtYW55IGNlbGxzIHRoZXJlCj4gPiB3aWxsIGJlLCBlc3BlY2lhbGx5
+IHNpbmNlIHRoaXMgYmluZGluZyBvbmx5IGFkZHJlc3NlcyB0aGUgY2xvY2sgcHJvdmlkZXIKPiA+
+IGFzcGVjdCBvZiB0aGUgY2xvY2tnZW4gbm9kZXMgKGUuZy4gaXQgZG9lc24ndCBkZXNjcmliZSB0
+aGUgcmVnKT8gIE9yCj4gPiByYXRoZXIsIGl0J3MgcGFydGlhbGx5IGRlc2NyaWJpbmcgdGhlIG5v
+bi1jbG9jayBhc3BlY3QsIGFuZCBkb2Vzbid0Cj4gPiBhZGRyZXNzIHRoZSBjbG9jayBhc3BlY3Qg
+YXQgYWxsIEFGQUlDVC4KPiA+IAo+IEZpcnN0IG9mIGFsbCwgdGhleSBhcmUgbm90ICJSZXF1aXJl
+ZCBwcm9wZXJ0aWVzIiwgdGhleSBhcmUgb3B0aW9uYWwuCj4gSWYgcHJlc2VudCwgd2Ugc2hvdWxk
+IGdpdmUgdGhlbSBhIHZhbHVlIG9mIDEuCgpXaHkgZG9lcyBpdCBtYXR0ZXIsIHNvIGxvbmcgYXMg
+dGhlIHZhbHVlcyB0cmFuc2xhdGUgcHJvcGVybHk/ICBJdCdzIG5vdAphcyBpZiB5b3UncmUgZGVm
+aW5pbmcgYSBzcGVjaWFsIHJlZyBmb3JtYXQuICBJdCdzIG5vdCB0aGF0IGJpZyBvZiBhCmRlYWws
+IGJ1dCBpdCBzZWVtcyB1bm5lY2Vzc2FyeS4KCj4gVGhlbiwgeWVzLCB0aGlzIGJpbmRpbmcgZGVz
+Y3JpYmVzIGNsb2NrZ2VuIG5vZGUgd2hpY2ggaXMgIkNMT0NLIEJMT0NLIi4KClNvcnJ5LCBJIG1p
+c3NlZCB3aGVyZSAicmVnIiB3YXMgZG9jdW1lbnRlZCBkdWUgdG8gdGhlCnJlcXVpcmVkL3JlY29t
+bWVuZGVkIHNwbGl0LgoKPiA+IFdoZXJlIGRvZXMgdGhlIGFjdHVhbCBpbnB1dCBjbG9jayBmcmVx
+dWVuY3kgZ28/ICBVLUJvb3QgcHV0cyBpdCBpbiB0aGUKPiA+IGNsb2NrZ2VuIG5vZGUgaXRzZWxm
+IGFzIGNsb2NrLWZyZXF1ZW5jeSwgYnV0IHRoYXQgaXNuJ3QgZGVzY3JpYmVkIGluIHRoZQo+ID4g
+YmluZGluZy4gIEhvdyBkb2VzIHRoYXQgcmVsYXRlIHRvIHRoZSBzeXNjbGsgbm9kZT8gIElmICJm
+c2wscW9yaXEtc3lzY2xrLQo+ID4gMS4wIiBpcyBzdXBwb3NlZCB0byBpbmRpY2F0ZSB0aGF0IGNs
+b2NrLWZyZXF1ZW5jeSBjYW4gYmUgZm91bmQgaW4gdGhlCj4gPiBwYXJlbnQgbm9kZSwgdGhhdCBp
+c24ndCBzcGVjaWZpZWQgYnkgdGhlIGJpbmRpbmcsIG5vciBpcyBjbG9jay1mcmVxdWVuY3kKPiA+
+IHNob3duIGluIHRoZSBleGFtcGxlLgo+ID4gCj4gY2xvY2stZnJlcXVlbmN5IGlzIGEgd2lyZWQg
+cHJvcGVydHkuCgpEbyB5b3UgbWVhbiAid2VpcmQiPwoKPiBJdCBpcyBpbiBjbG9ja2dlbiBub2Rl
+IHJpZ2h0IG5vdy4KPiBCdXQgaXQgc2hvdWxkIGJlIHBsYWNlZCBzb21ld2hlcmUgaW4gY2xvY2sg
+bm9kZXMuCgpJZiB3ZSB3ZXJlIGRvaW5nIHRoaXMgZnJvbSBzY3JhdGNoLCB5ZXMsIGJ1dCB0aGVy
+ZSdzIGV4aXN0aW5nIFUtQm9vdApjb2RlIHRoYXQgd2Ugd2FudCB0byBiZSBjb21wYXRpYmxlIHdp
+dGguCgo+IElmIEkgZGVzY3JpYmUgaGVyZSwgSSB3b3VsZCBiZSBhc2tlZCB3aHkgaXQgaXMgcmVs
+YXRlZCB0byBjbG9ja2dlbiBub2RlPwoKVGhhdCdzIG5vdCBhIGdvb2QgcmVhc29uIHRvIGxlYXZl
+IGl0IHVuZG9jdW1lbnRlZC4KCj4gPiBXaGF0IGlzIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gImZz
+bCxxb3JpcS1zeXNjbGstMS4wIiBhbmQgImZzbCxxb3JpcS0KPiA+IHN5c2Nsay0yLjAiPyAgSG93
+IGRvZXMgdGhlIGNvbmNlcHQgb2YgYSBmaXhlZCBpbnB1dCBjbG9jayBjaGFuZ2U/Cj4gPgo+IFRl
+Y2huaWNhbGx5LCB0aGVyZSBpcyBubyBkaWZmZXJlbmNlIGJldHdlZW4gKnN5c2Nsay0xLjAgYW5k
+ICotMi4wLCBqdXN0IGxpa2UKPiBDbG9ja2dlbi0yLjAgYW5kIDEuMC4gTmFtaW5nIGxpa2UgdGhp
+cyBqdXN0IHRvIGluZGljYXRlIHRoZXkgYmVsb25nIHRvIGNoYXNzaXMgMi4wIAo+IGFuZCAxLjAg
+cmVzcGVjdGl2ZWx5LgoKSSBndWVzcyBpdCdzIE9LIGlmIGl0IGVuY291cmFnZXMgcGVvcGxlIHRv
+IGNvbnNpZGVyIHN3aXRjaGluZyB0byB0aGUKc3RhbmRhcmQgZml4ZWQtY2xvY2sgZm9yIGZ1dHVy
+ZSBjaGFzc2lzLgoKU28gdGhlIG9ubHkgdGhpbmcgdGhhdCByZWFsbHkgbmVlZHMgdG8gYmUgZml4
+ZWQgaXMgdGhlIG1pc3NpbmcKY2xvY2stZnJlcXVlbmN5IGRvY3VtZW50YXRpb24uCgotU2NvdHQK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBw
+Yy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
+bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
