@@ -1,57 +1,48 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 2/3] ata: ahci_platform: Manage SATA PHY
-Date: Thu, 9 Jan 2014 11:56:02 +0530
-Message-ID: <52CE40FA.5070605@ti.com>
-References: <1389174428-31414-1-git-send-email-rogerq@ti.com> <6214646.nAF6lzWV79@wuerfel> <52CD364F.4060104@ti.com> <5878159.3LjUeZKdYB@wuerfel>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: imx6q: Add missing esai_ahb clock to current clock
+ tree
+Date: Thu, 9 Jan 2014 14:57:42 +0800
+Message-ID: <20140109065740.GD21717@S2101-09.ap.freescale.net>
+References: <1389236699-10387-1-git-send-email-Guangyu.Chen@freescale.com>
+ <20140109035810.GB21717@S2101-09.ap.freescale.net>
+ <20140109034940.GA14480@MrMyself>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <5878159.3LjUeZKdYB@wuerfel>
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, tj@kernel.org, sergei.shtylyov@cogentembedded.com, b.zolnierkie@samsung.com, hdegoede@redhat.com, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140109034940.GA14480@MrMyself>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/2014 05:16 PM, Arnd Bergmann wrote:
-> On Wednesday 08 January 2014 16:58:15 Roger Quadros wrote:
->> hpriv->phy = devm_phy_get(dev, "sata-phy");
->> if (IS_ERR(hpriv->phy)) {
->>         if (PTR_ERR(hpriv->phy) == -ENODEV)
->>                 goto continue;
->>
->>         dev_err(dev, "couldn't get sata-phy\n");
->>         rc = PTR_ERR(hpriv->phy);
->>         goto disable_unprepare_clk;
->> }
->>
->> continue:
->>
->> if (!IS_ERR(hpriv->phy)) {
->>         rc = phy_init(hpriv->phy);
->>         if (rc)
->>                 goto disable_unprepare_clk;
->>
->>         rc = phy_power_on(hpriv->phy);
->>         if (rc) {
->>                 phy_exit(hpriv->phy);
->>                 goto disable_unprepare_clk;
->>         }
->> }
+On Thu, Jan 09, 2014 at 11:49:41AM +0800, Nicolin Chen wrote:
+> On Thu, Jan 09, 2014 at 11:58:12AM +0800, Shawn Guo wrote:
+> > >  static struct clk *clk[clk_max];
+> > > @@ -355,6 +355,7 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
+> > >  	clk[ecspi5]       = imx_clk_gate2("ecspi5",        "ecspi_root",        base + 0x6c, 8);
+> > >  	clk[enet]         = imx_clk_gate2("enet",          "ipg",               base + 0x6c, 10);
+> > >  	clk[esai]         = imx_clk_gate2("esai",          "esai_podf",         base + 0x6c, 16);
+> > > +	clk[esai_ahb]     = imx_clk_gate2("esai_ahb",      "ahb",               base + 0x6c, 16);
+> > 
+> > Hmm, having two clocks operating on the same gate bit will get us
+> > problem in clock disabling.  Clock enabling is fine, since either
+> > one who calls clk_enable() first will just set the gate bit.  But in
+> > case that clk_enable() is called on both clocks, and then when either
+> > clock calls clk_disable(), the gate bit will be cleared and thus breaks
+> > the other one that might still be in use.
 > 
-> As I said, I'd prefer to set hpriv->phy to NULL in case of -ENODEV,
-> but functionally it seems right (with the fixup from your other mail).
-> 
+> Understood. But how could we handle this situation? The only way I can figure
+> out is to make sure the driver open/close them at the same time, it's not a
+> perfect way though.
 
-Why do you prefer setting hpriv->phy to NULL instead of using IS_ERR() check
-before hpriv->phy is used?
-The latter seems to be the norm at least among clock framework users.
+Hmm, we generally leave the gate bit to the clock used to access
+register, because usually it's the first one to be on and the last one
+to be off.
 
-> One more comment: you shouldn't print an error message before
-> returning -EPROBE_DEFER, so if you want to keep that message,
-> you have to check for that return value after all.
->
-Right.
+Shawn
 
-cheers,
--roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
