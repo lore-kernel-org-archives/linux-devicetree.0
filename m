@@ -1,184 +1,61 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv8 2/2] dma: Add Freescale eDMA engine driver support
-Date: Thu, 9 Jan 2014 11:42:34 +0100
-Message-ID: <201401091142.35226.arnd@arndb.de>
-References: <1388645544-5596-1-git-send-email-b35083@freescale.com> <5890639.zaOC7MRE09@wuerfel> <4efd24a1219547cbbf0ce8ec66d762e5@BL2PR03MB467.namprd03.prod.outlook.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH] watchdog: davinci: rename platform driver to davinci-wdt
+Date: Thu, 9 Jan 2014 16:21:43 +0530
+Message-ID: <52CE7F3F.1000201@ti.com>
+References: <1385559113-4354-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <5295FB0E.4070406@ti.com> <52961665.3060309@roeck-us.net>
+ <5296DCD6.3030002@ti.com> <52973E40.4060400@roeck-us.net>
+ <52984CE8.50803@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4efd24a1219547cbbf0ce8ec66d762e5-AZ66ij2kwab4MB1ZSnT4iOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52984CE8.50803@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: wim@iguana.be
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 January 2014, Jingchang Lu wrote:
-> > > > +sai2: sai@40031000 {
-> > > > +	compatible = "fsl,vf610-sai";
-> > > > +	reg = <0x40031000 0x1000>;
-> > > > +	interrupts = <0 86 0x04>;
-> > > > +	clocks = <&clks VF610_CLK_SAI2>;
-> > > > +	clock-names = "sai";
-> > > > +	dma-names = "tx", "rx";
-> > > > +	dmas = <&edma0 VF610_EDMA_DMAMUX0 VF610_EDMA0_MUX0_SAI2_TX>,
-> > > > +		<&edma0 VF610_EDMA_DMAMUX0 VF610_EDMA0_MUX0_SAI2_RX>;
-> > > > +	status = "disabled";
-> > > > +};
-> > 
-> > It seems wrong to have macros defined like VF610_EDMA0_MUX0_SAI2_TX,
-> > in particular in the example. These should just be literal numbers.
-> [Lu Jingchang-b35083] 
-> This eDMA engineer requires two specifiers, one is a mux group id, the other is a request source id.
-> The VF610_EDMA0_MUX0_SAI2_TX is sai's tx dma request source id, it is defined as a literal number.
-> There are totally more than 100 request source id, I have them macros defined to make it referenced
-> easily and clearly, just like some clock binding done.
-> The macros are defined in include/dt-bindings/dma/vf610-edma.h.
+On Friday 29 November 2013 01:44 PM, Sekhar Nori wrote:
+> Wim,
+> 
+> On Thursday 28 November 2013 06:29 PM, Guenter Roeck wrote:
+>> On 11/27/2013 10:04 PM, Sekhar Nori wrote:
+>>> On Wednesday 27 November 2013 09:27 PM, Guenter Roeck wrote:
+>>>> On 11/27/2013 06:00 AM, Sekhar Nori wrote:
+>>>>> On Wednesday 27 November 2013 07:01 PM, Ivan Khoronzhuk wrote:
+>>>>>> As we switch to use the watchdog core which permits more than one
+>>>>>> active watchdog in the system, rename platform driver to
+>>>>>> "davinci-wdt" to be identifiable.
+>>>>>>
+>>>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>>>>
+>>>>> Looks good to me. Since bulk of this patch touches mach-davinci, I
+>>>>> would
+>>>>> like to take this through my tree to avoid conflicts with other
+>>>>> mach-davinci patches I accept.
+>>>>>
+>>>>
+>>>> Good idea, and makes sense.
+>>>
+>>> Added to v3.14/soc with your Reviewed-by
+>>>
+>>
+>> You should get an Ack from Wim.
+> 
+> Can you please provide your ack? I will add it to the existing commit.
 
-The clock bindings are special because the macros there tend to be made
-up for controllers that just have a bunch of clocks at random register
-locations.
+I never received an ack from Wim, but I am going to send this for
+merging through ARM-SoC anyway. I will keep Wim copied on the pull
+request so he knows.
 
-This is not the case for DMA bindings (or some of the more regular clock
-controllers), so there is absolutely no reason to define those macros
-in a header file, it just adds artificial dependencies between the
-driver, SoC support and the binding.
-
-If the numbers are the same as the ones provided in the data sheet,
-just use the numbers and remove the macros.
-
-> > > > +/*
-> > > > + * copying of ARM read{b,w,l) and write{b,w,l) macro definations
-> > > > + * except for doing default swap of cpu_to_le32, the bytes swap
-> > > > + * is done depending on eDMA controller's endian defination,
-> > > > + * which may be big-endian or little-endian.
-> > > > + */
-> > > > +static inline u16 edma_readw(void __iomem *addr)
-> > > > +{
-> > > > +	u16 __v = (__force u16) __raw_readw(addr);
-> > > > +
-> > > > +	__iormb();
-> > > > +	return __v;
-> > > > +}
-> > 
-> > The comment doesn't seem to match the implementation: You don't
-> > actually do swaps here at all, which means this will fail when
-> > your kernel is running in big-endian mode. Just use the regular
-> > readw() etc, or use ioread16/ioread16be depending on the flag,
-> > and get rid of your EDMA_SWAP macros.
-> > 
-> > No need to come up with your own scheme when the problem has
-> > been solved already elsewhere.
-> The working scenario for this device is, the cpu running in little-endian mode,
-> While the eDMA module running in little- or big-endian mode. This device is currently
-> running on ARM architecture only, and I notice that ARM's little-endian readl/writel
-> treats all value as little-endian. This is not matching our scenario here. So I removed
-> the default cpu_to_le32() in the readl(), and put it in EDMA_SWAP32() to satisfy the
-> required.
-
-You are right, your code is actually correct on all combinations
-of big-endian and little-endian ARM CPUs. However, I would argue that
-it's unusual style, and not portable to other architectures (e.g. arm64)
-because the definition of readl() is highly architecture dependent.
-It would also be problematic if the arm definition has to change
-in some form and this driver is overlooked.
-
-I would still recommend doing an implementation like
-
-static inline u16 edma_readw(struct fsl_edma_engine *edma, u16 val, unsigned long offset)
-{
-	if (edma->big_endian)
-		iowrite16be(val, edma->membase + offset);
-	else
-		iowrite16(val, edma->membase + offset);
-}
-
-
-This would simplify the callers that now can replace
-
-        cur_addr = EDMA_SWAP32(fsl_chan->edma, edma_readl(addr + EDMA_TCD_SADDR(ch)));
-
-with 
-
-	cur_addr = edma_readl(fsl_chan->edma, EDMA_TCD_SADDR(ch));
-
-which IMHO is much easier to read. For accessing muxbase, you
-don't have to use your own version, because all accesses are
-single-byte.
-
-BTW, I noticed that fsl_edma_set_tcd_params() is calling edma_writew()
-and edma_writel() without an endian-swap, so I assume it is still
-broken on big-endian CPUs, and likely also on big-endian eDMA engines.
-
-> > > > +static irqreturn_t fsl_edma_irq_handler(int irq, void *dev_id)
-> > > > +{
-> > > > +	if (fsl_edma_tx_handler(irq, dev_id) == IRQ_HANDLED)
-> > > > +		return IRQ_HANDLED;
-> > > > +
-> > > > +	return fsl_edma_err_handler(irq, dev_id);
-> > > > +}
-> > 
-> > Does this do the right thing if both completion and error are
-> > signalled at the same time? It seems you'd miss the error interrupt.
-> I think the error would occur rarely, so if the transmission irq entered,
-> it will return directly after handling. If there is really an error occur,
-> the interrupt will be raised again without transmission interrupt flag, then
-> the irq handler would execute fsl_edma_err_handler() function.
-
-Ah, so the error interrupt is level triggered? That's ok then.
-
-> > > > +static bool fsl_edma_filter_fn(struct dma_chan *chan, void *mux)
-> > > > +{
-> > > > +	 return (chan->chan_id / DMAMUX_NR) == (u32)mux;
-> > > > +}
-> > > > +
-> > > > +static struct dma_chan *fsl_edma_xlate(struct of_phandle_args
-> > *dma_spec,
-> > > > +		struct of_dma *ofdma)
-> > > > +{
-> > > > +	struct dma_chan *chan;
-> > > > +	dma_cap_mask_t mask;
-> > > > +
-> > > > +	if (dma_spec->args_count != 2)
-> > > > +		return NULL;
-> > > > +
-> > > > +	dma_cap_zero(mask);
-> > > > +	dma_cap_set(DMA_SLAVE, mask);
-> > > > +	dma_cap_set(DMA_CYCLIC, mask);
-> > > > +	chan = dma_request_channel(mask, fsl_edma_filter_fn, (void
-> > > > *)dma_spec->args[0]);
-> > > > +	if (chan)
-> > > > +		fsl_edma_chan_mux(to_fsl_edma_chan(chan), dma_spec->args[1],
-> > > > true);
-> > > > +	return chan;
-> > > > +}
-> > 
-> > Please remove the filter function now and use dma_get_slave_chan
-> > with the correct channel as an argument. No need to walk all
-> > available channels in the system and introduce bugs by not
-> > ignoring other dma engines.
->
-> The dma slave request can only be allocated to channel of particular channels group indicated by
-> the mux group id specifier. and the second specifier is the request id, not the channel number,
-> so to use the dma_get_slave_chan, I would find the channel for this request by walking all the
-> available channels manually.
-
-Ah, I missed that you only check the mux number, not the channel number.
-
-The current version however is buggy because you don't check that you
-are actually looking at the right eDMA instance, or an eDMA at all, rather
-than some other random dma engine that may be connected to an external
-bus.
-
-It is possible to fix that, but I suspect that would involve more
-complex code than finding an appropriate channel first and then
-calling dma_get_slave_chan() on that.
-I would suggest keeping a list of channels per dmamux and walking that
-list until you find one that succeeds in dma_get_slave_chan().
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
