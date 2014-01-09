@@ -1,74 +1,34 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v3] ARM: davinci: aemif: get rid of davinci-nand driver
- dependency on aemif
-Date: Thu, 9 Jan 2014 08:33:05 -0800
-Message-ID: <20140109163305.GC28655@norris-Latitude-E6410>
-References: <1386267092-18615-1-git-send-email-ivan.khoronzhuk@ti.com>
- <52B18C44.2000305@ti.com> <52B1915A.7060309@ti.com>
- <52BC1BB8.2070007@ti.com> <52CE7C44.1000803@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <52CE7C44.1000803@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, Rob Landley <rob@landley.net>, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-mtd@lists.infradead.org, "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/3] power_supply: modelgauge_battery: Add Maxim ModelGauge ICs gauge
+Date: Thu,  9 Jan 2014 20:49:02 +0400
+Message-ID: <1389286145-15375-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mk7.kang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 09, 2014 at 04:09:00PM +0530, Sekhar Nori wrote:
-> On Thursday 26 December 2013 05:36 PM, ivan.khoronzhuk wrote:
-> > On 12/18/2013 02:13 PM, Sekhar Nori wrote:
-> >> On Wednesday 18 December 2013 05:21 PM, ivan.khoronzhuk wrote:
-> >>> Hi, Sekhar
-> >>>
-> >>> This patch is based on "Reuse davinci-nand driver for Keystone arch"
-> >>> series.
-> >>> The series has passed review at https://lkml.org/lkml/2013/12/17/241
-> >>> and can be found at http://git.infradead.org/l2-mtd.git
-> >>>
-> >>> This patch can be still applied on top of the series without conflicts.
-> >>>
-> >>> Can you please pick up the $subject patch if you are OK with it?
-> >>
-> >> I have no problems with the patch and can pick it too, but need ack from
-> >> MTD maintainer (David) as it touches drivers/mtd/ too.
-> >>
-> >> David,
-> >>
-> >> If you do not have the patch, we can resend it.
-> >>
-> >> Thanks,
-> >> Sekhar
-> >>
-> > 
-> > Hi Brian,
-> > 
-> > Do you agree if this patch will go through Davinci tree?
-> > 
-> > This is the last one we need to reuse Davinci Nand driver for Keystone.
-> 
-> Since we never got an ack from MTD folks, I am going and go ahead and
-> try pushing this through ARM-SoC regardless. I will CC the MTD
-> maintainers on the pull request so any objections could even be posted
-> there.
+Hello.
 
-Sorry, I've been a little busy / out for vacation. The MTD parts look OK
-to me. Feel free to take it in your tree.
+This adds the folowing:
+- Maxim ModelGauge ICs gauge driver for MAX17040/41/43/44/48/49/58/59 chips
+- Document DT bindings
+- Remove superseded Maxim MAX17040 gauge driver
 
-Acked-by: Brian Norris <computersforpeace@gmail.com>
+Vladimir Barinov (3):
+ [1/3] power_supply: modelgauge_battery: Maxim ModelGauge ICs gauge
+ [2/3] dt: Document ModelGauge gauge bindings
+ [3/3] power_supply: modelgauge_battery: Remove Maxim MAX17040 gauge
 
-Brian
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+---
+ Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt |   82 
+ drivers/power/Kconfig                                                 |   16 
+ drivers/power/Makefile                                                |    2 
+ drivers/power/max17040_battery.c                                      |  297 ---
+ drivers/power/modelgauge_battery.c                                    |  875 ++++++++++
+ include/linux/platform_data/battery-modelgauge.h                      |   44 
+ 6 files changed, 1010 insertions(+), 306 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
