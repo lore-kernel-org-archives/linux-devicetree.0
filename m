@@ -1,66 +1,134 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v5 9/9] ARM: OMAP2+: Remove legacy_init_ehci_clk()
-Date: Thu, 9 Jan 2014 17:38:23 +0530
-Message-ID: <1389269303-30465-10-git-send-email-rogerq@ti.com>
-References: <1389269303-30465-1-git-send-email-rogerq@ti.com>
+From: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] video: mmp: add device tree support
+Date: Thu, 9 Jan 2014 20:09:09 +0800
+Message-ID: <52CE9165.7050002@marvell.com>
+References: <1389244394-10779-1-git-send-email-zzhu3@marvell.com> <20140109073158.GM6750@pengutronix.de> <000301cf0d0e$91f29090$b5d7b1b0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1389269303-30465-1-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com
-Cc: balbi@ti.com, arnd@arndb.de, sre@debian.org, mark.rutland@arm.com, m.paolino@virtualopensystems.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <000301cf0d0e$91f29090$b5d7b1b0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Sascha Hauer' <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Tomi Valkeinen' <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, 'Jean-Christophe Plagniol-Villard' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Haojian Zhuang' <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guoqing Li <ligq-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The necessary clock phandle for the EHCI clock is now provided
-via device tree so we no longer need this legacy method.
+Sascha/Jingoo,
+Thank you for your review!
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/mach-omap2/pdata-quirks.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+On 01/09/2014 03:43 PM, Jingoo Han wrote:
+> On Thursday, January 09, 2014 4:32 PM, Sascha Hauer wrote:
+>> On Thu, Jan 09, 2014 at 01:13:14PM +0800, Zhou Zhu wrote:
+>>> add device tree support for mmp fb/controller
+>>> the description at Documentation/devicetree/bindings/fb/mmp-disp.txt
+>>>
+>>> Signed-off-by: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/fb/mmp-disp.txt |   71 ++++++++++++
+>>>   drivers/video/mmp/fb/mmpfb.c                      |   71 ++++++++----
+>>>   drivers/video/mmp/hw/mmp_ctrl.c                   |  120 ++++++++++++++++-----
+>>>   3 files changed, 217 insertions(+), 45 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/fb/mmp-disp.txt
+>>>
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 39f020c..6a4e2d1 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -26,20 +26,6 @@ struct pdata_init {
- 	void (*fn)(void);
- };
- 
--/*
-- * Create alias for USB host PHY clock.
-- * Remove this when clock phandle can be provided via DT
-- */
--static void __init __used legacy_init_ehci_clk(char *clkname)
--{
--	int ret;
--
--	ret = clk_add_alias("main_clk", NULL, clkname, NULL);
--	if (ret)
--		pr_err("%s:Failed to add main_clk alias to %s :%d\n",
--		       __func__, clkname, ret);
--}
--
- #if IS_ENABLED(CONFIG_WL12XX)
- 
- static struct wl12xx_platform_data wl12xx __initdata;
-@@ -105,7 +91,6 @@ static void __init omap4_sdp_legacy_init(void)
- static void __init omap4_panda_legacy_init(void)
- {
- 	omap4_panda_display_init_of();
--	legacy_init_ehci_clk("auxclk3_ck");
- 	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 53);
- }
- #endif
-@@ -113,7 +98,6 @@ static void __init omap4_panda_legacy_init(void)
- #ifdef CONFIG_SOC_OMAP5
- static void __init omap5_uevm_legacy_init(void)
- {
--	legacy_init_ehci_clk("auxclk1_ck");
- }
- #endif
- 
+[...]
+
+>> +fb: fb {
+>> +	compatible = "marvell,mmp-fb";
+>
+> This compatible should have the specific SoC name in it, not just
+> 'mmp'. Otherwise you can't properly distinguish between this version and
+> future versions of the mmp core.
+>
+We are using a same display IP for all mmp serial SoCs, and there would 
+be inside register to get version. So I am planning put same compatible 
+here for all SoCs using this IP.
+Would it be ok if I update compatible to "marvell,mmpdcx-fb"? "mmpdcx" 
+is the IP name.
+
+ >
+ >> +	marvell,fb-name = "mmp_fb";
+ >> +	marvell,path-name = "mmp_pnpath";
+ >
+ > You're not going to use this string to reference to another node, do
+ > you? We have phandles for this.
+ >
+I will update it in v2.
+
+ >> +	marvell,overlay-id = <0>;
+ >> +	marvell,dmafetch-id = <1>;
+ >> +	marvell,default-pixfmt = <0x108>;
+ >> +};
+ >> +
+ >> +disp: disp@d420b000 {
+ >> +	compatible = "marvell,mmp-disp";
+ >> +	reg = <0xd420b000 0x1fc>;
+ >> +	interrupts = <0 41 0x4>;
+ >> +	marvell,disp-name = "mmp_disp";
+ >> +	marvell,path-num = <1>;
+ >> +	marvell,clk-name = "LCDCIHCLK";
+ >
+ > Don't pass clk names like this. We have a documented clock binding, use
+ > it.
+ >
+The patches to add dt support in common clk in our platforms are not 
+upstreamed yet. As there's only one clock in this device, could I remove 
+clock name related codes and direct use: devm_clk_get(dev, NULL)?
+
+>
+>>
+>>> +#ifdef CONFIG_OF
+>>> +	struct device_node *np;
+>>> +#else
+>>>   	struct mmp_buffer_driver_mach_info *mi;
+>>> +#endif
+>>>   	struct fb_info *info = 0;
+>>>   	struct mmpfb_info *fbi = 0;
+>>> -	int ret, modes_num;
+>>> -
+>>> -	mi = pdev->dev.platform_data;
+>>> -	if (mi == NULL) {
+>>> -		dev_err(&pdev->dev, "no platform data defined\n");
+>>> -		return -EINVAL;
+>>> -	}
+>>> +	int ret = -EINVAL, modes_num;
+>>> +	int overlay_id, dmafetch_id;
+>>> +	const char *path_name;
+>>>
+>>>   	/* initialize fb */
+>>>   	info = framebuffer_alloc(sizeof(struct mmpfb_info), &pdev->dev);
+>>>   	if (info == NULL)
+>>>   		return -ENOMEM;
+>>>   	fbi = info->par;
+>>> -	if (!fbi) {
+>>> -		ret = -EINVAL;
+>>> +	if (!fbi)
+>>> +		goto failed;
+>>> +
+>>> +#ifdef CONFIG_OF
+>>
+>> Just because your kernel build does have CONFIG_OF enabled doesn't mean
+>> it's actually started with a devicetree. You need to make a runtime
+>> decision, not compile time.
+>
+> Yes, right.
+> As Sascha Hauer said, you need to make a runtime decision,
+> instead of compile time. Please keep the same binary for
+> both cases (CONFIG_OF is 'enabled' and 'disabled').
+>
+> For example,
+>
+> 	if (pdev->dev.of_node) {
+> 		// DT code
+> 	} else {
+> 		// Non-DT code
+> 	}
+>
+Thank you for your suggestion. I will update the code to dynamic in v2.
+
 -- 
-1.8.3.2
-
+Thanks, -Zhou
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
