@@ -1,106 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] ASoC: fsl_esai: Add ESAI CPU DAI driver
-Date: Thu, 9 Jan 2014 18:44:53 +0000
-Message-ID: <20140109184453.GP12858@sirena.org.uk>
-References: <1389265078-16256-1-git-send-email-Guangyu.Chen@freescale.com>
+From: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RFC 1/3] drivers: base: support cpu cache information
+ interface to userspace via sysfs
+Date: Thu, 09 Jan 2014 19:07:39 +0000
+Message-ID: <52CEF37B.9010401@arm.com>
+References: <1389209168-17189-1-git-send-email-sudeep.holla@arm.com> <1389209168-17189-2-git-send-email-sudeep.holla@arm.com> <20140108202613.GD8417@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4765765071980023580=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1389265078-16256-1-git-send-email-Guangyu.Chen@freescale.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Nicolin Chen <Guangyu.Chen@freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, shawn.guo@linaro.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tiwai@suse.de, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, timur@tabi.org, lgirdwood@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140108202613.GD8417-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Sudeep.Holla-5wv7dgnIgG8@public.gmane.org, "x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ashok Raj <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 08/01/14 20:26, Greg Kroah-Hartman wrote:
+> On Wed, Jan 08, 2014 at 07:26:06PM +0000, Sudeep Holla wrote:
+>> From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>>
+>> This patch adds initial support for providing processor cache information
+>> to userspace through sysfs interface. This is based on x86 implementation
+>> and hence the interface is intended to be fully compatible.
+>>
+>> A per-cpu array of cache information maintained is used mainly for
+>> sysfs-related book keeping.
+>>
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  drivers/base/Makefile     |   2 +-
+>>  drivers/base/cacheinfo.c  | 296 ++++++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/cacheinfo.h |  43 +++++++
+>>  3 files changed, 340 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/base/cacheinfo.c
+>>  create mode 100644 include/linux/cacheinfo.h
+> 
+> You are creating sysfs files, yet you didn't add Documentation/ABI/
+> information, which is required.  Please fix that.
+> 
+Ah, I overlooked it. But I am not creating any new sysfs files in this series.
+I am just trying to unify duplicated code in various architectures.
 
---===============4765765071980023580==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="iq/fWD14IMVFWBCD"
-Content-Disposition: inline
+Since these sysfs files are already created in:
+1. arch/ia64/kernel/topology.c
+2. arch/powerpc/kernel/cacheinfo.c
+3. arch/s390/kernel/cache.c
+4. arch/x86/kernel/cpu/intel_cacheinfo.c and
+also already used by user-space tools like `lscpu` I assumed it's already
+documented.
 
+I will add it in next version.
 
---iq/fWD14IMVFWBCD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Regards,
+Sudeep
 
-On Thu, Jan 09, 2014 at 06:57:58PM +0800, Nicolin Chen wrote:
-
-> +/**
-> + * This function configures the ratio between MCLK (HCK) and BCLK (SCK)
-> + * (For DAI Master Mode only)
-> + *
-> + * Note: Machine driver should calculate the ratio to call this function.
-> + * 	 Only effective after calling set_dai_sysclk() to set HCK direction.
-> + */
-> +static int fsl_esai_set_bclk_ratio(struct snd_soc_dai *dai, unsigned int ratio)
-
-Why does the machine driver have to do this by hand, being able to
-override is fine but having sensible defaults is easier?  Or does it
-actually do that and the comment just needs updating?
-
-> +	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_esai_component,
-> +					      &fsl_esai_dai, 1);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register DAI: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = imx_pcm_dma_init(pdev);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "failed to init imx pcm dma: %d\n", ret);
-> +
-> +	/* Reset ESAI unit */
-> +	regmap_write(esai_priv->regmap, REG_ESAI_ECR, ESAI_ECR_ERST);
-> +
-> +	/*
-> +	 * We need to enable ESAI so as to access some of its registers.
-> +	 * Otherwise, we would fail to dump regmap from user space.
-> +	 */
-> +	regmap_write(esai_priv->regmap, REG_ESAI_ECR, ESAI_ECR_ESAIEN);
-
-I would expect to see the hardware initialisation before we start
-registering with the core otherwise the core might start trying to run
-prior to the hardware being initialised.
-
-Otherwise this looks good.
-
---iq/fWD14IMVFWBCD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSzu4iAAoJELSic+t+oim9DfcP/AzCOkPoLdopNt/3TZ3iqGKU
-Wx65nKrMmAquGqHyMGnGmdOXGs7w8RGp549sgu2Su3GgaIAOPvpipgLncIDRQBsi
-yM5QFrb9dG0DOhXhen64tF0/e+qdPLr1ux7hvv+8URxw6vnrLOU3w0fO8emAtzzE
-E5zOdO/ON6XYKCgVgJZg9Ctu3nEO4spl0TIEFlXPsurDN+O6CjFqJpbfRsScjDA1
-4Yl77NwMfk+3giDdPnXx5v6WZDVyt4FtxrEbMfnM1UPbLwer3xSEtWic3UKvx8Oy
-D1pHdHkbR7HXjY8GxODvTgsqvvk+jp9w+DiXuj6UD0rQWvyGXdAhJBt/Y6Imp+f/
-0zA6LtQbRj+EBDAiQpMU8CgwzAENgBfiX/6ZEMShu1qBOFbXfEbvVGyVH81pJ+1c
-zljl1BM4BAxc3hyaSJG1MnuF/ro7Qk4l+wzD/+HxyS19qrq/wjm9HWPFyxB7GBrC
-/10U78uGugU0PJ/1HarT7XukrB4a/pqLMFHMHTSYlhmdpfr5rvkTBu4RNK0jVETf
-EedHp81IwJU0NbGO4VFwrVauhvJv2IH4zxlQ4cPc6Wty28z8WMnYtax//bU5JiAU
-RBUoR6ubVoQ8T/20iDhLqMYBufHFMiuoCW7TJ+AlL5/nDVuqfHRst5gVHn/iJgfv
-SLcLY9/PKf7IgVNoqKqJ
-=JoHQ
------END PGP SIGNATURE-----
-
---iq/fWD14IMVFWBCD--
-
---===============4765765071980023580==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============4765765071980023580==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
