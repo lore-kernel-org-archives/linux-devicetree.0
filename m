@@ -1,111 +1,55 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Thu, 9 Jan 2014 15:36:29 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1401091446310.1493-100000@iolanthe.rowland.org>
-References: <1389290226-6971-2-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 4/6] devicetree: bindings: Document Krait L1/L2 EDAC
+Date: Thu, 09 Jan 2014 12:52:21 -0800
+Message-ID: <52CF0C05.1080308@codeaurora.org>
+References: <1388434457-4194-1-git-send-email-sboyd@codeaurora.org> <1388434457-4194-5-git-send-email-sboyd@codeaurora.org> <20140107105439.GC5906@e102568-lin.cambridge.arm.com> <20140107201239.GD14405@codeaurora.org> <20140108100538.GA2927@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD6LRVPZ6YGRBTUQXSLAKGQEDROW5QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1389290226-6971-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140108100538.GA2927@e102568-lin.cambridge.arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 9 Jan 2014, Hans de Goede wrote:
+On 01/08/14 02:05, Lorenzo Pieralisi wrote:
+> On Tue, Jan 07, 2014 at 08:12:39PM +0000, Stephen Boyd wrote:
+>> On 01/07, Lorenzo Pieralisi wrote:
+>>
+>>> I have a problem with the cache level definition, and in
+>>> particular the numbering, ie what the level number represents. If we
+>>> mean the cache level seen through the CLIDR and co., it is hard to use
+>>> it for shared caches since the level seen by different CPUs can actually
+>>> be different, or put it differently the level number might not be unique for
+>>> a shared cache. I need to think about a proper way to sort this out.
+>>>
+>> Ok. I don't even use this property in my driver. All I really
+>> need is the phandle from cpus pointing to the L2 and the
+>> interrupts property in the L2 node.
+>>
+>> How do you want to proceed here? If your cache binding goes
+>> through I would just need to add the interrupts part. Or you
+>> could even add that part in the same patch, you could have my
+>> signed-off-by for that.
+> Ok, I will try to update the bindings with the interrupt part and copy
+> you in, even though the level definition worries me a bit, it is an
+> important property for power management and I need to find a proper
+> solution before bindings can get accepted (basically the problem is:
+> if different CPUs can see a cache at different levels as defined in the
+> CLIDR we cannot describe a cache with a single cache level or put it
+> differently, level can not represent the value in the CLIDR hence we
+> need to describe it differently).
 
-> Add support for ohci-platform instantiation from devicetree, including
-> optionally getting clks and a phy from devicetree, and enabling / disabling
-> those on power_on / off.
-> 
-> This should allow using ohci-platform from devicetree in various cases.
-> Specifically after this commit it can be used for the ohci controller found
-> on Allwinner sunxi SoCs.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Ok. I've dropped the cache part from this patch. I left the example as
+is minus the cache-level attribute.
 
-Looking pretty good.  Still a couple of things to address...
+Understanding how the cache-level value would be used might help. I
+wonder if the cache-level can just be a number that describes the
+largest value that the cache could be assigned. Then if you have
+different CPUs seeing different levels of cache they can traverse from
+their CPU node to the cache and count how many phandles they went through.
 
-> +static struct usb_ohci_pdata ohci_platform_defaults = {
-> +	.power_on =		ohci_platform_power_on,
-> +	.power_suspend =	ohci_platform_power_off,
-> +	.power_off =		ohci_platform_power_off,
->  };
-
-I wonder if these routines couldn't be shared with non-DT setups.  We
-could add an array of 3 struct clk pointers to the usb_ohci_pdata
-structure.  Then if any of them are set, store these routines in the
-power_* pointers.  (And likewise for ehci-platform.)  Something to
-consider for a future patch...
-
-> @@ -60,12 +128,24 @@ static int ohci_platform_probe(struct platform_device *dev)
->  	struct usb_hcd *hcd;
->  	struct resource *res_mem;
->  	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
-> -	int irq;
-> -	int err = -ENOMEM;
-> +	struct ohci_platform_priv *priv;
-> +	int clk, irq, err;
->  
-> +	/*
-> +	 * Use reasonable defaults so platforms don't have to provide these
-> +	 * with DT probing on ARM.
-> +	 */
->  	if (!pdata) {
-> -		WARN_ON(1);
-> -		return -ENODEV;
-> +		pdata = dev->dev.platform_data = &ohci_platform_defaults;
-
-This has a subtle bug.  Consider what will happen if ohci-platform is 
-loaded, then unloaded and loaded again.
-
-The existing ehci-platform driver has this same bug.  I definitely 
-remember discussing at once or twice in the past, but evidently it has 
-never been fixed.
-
-> +		/*
-> +		 * Right now device-tree probed devices don't get dma_mask set.
-> +		 * Since shared usb code relies on it, set it here for now.
-> +		 * Once we have dma capability bindings this can go away.
-> +		 */
-> +		err = dma_coerce_mask_and_coherent(&dev->dev,
-> +						   DMA_BIT_MASK(32));
-> +		if (err)
-> +			return err;
-
-The ehci-platform driver does this even when platform data is present.  
-I guess you should do the same thing here (and lose the comment).
-
-(Also, I dislike this alignment of the continuation line.  IMO it's a 
-bad idea to match up with some particular element of the preceding 
-line.  The style used in most of the USB stack is to indent 
-continuation lines by two tab stops.)
-
->  	}
->  
->  	if (usb_disabled())
-
-This test belongs at the start of the function.  It is more fundamental 
-than the stuff you inserted.
-
-> @@ -83,17 +163,39 @@ static int ohci_platform_probe(struct platform_device *dev)
->  		return -ENXIO;
->  	}
->  
-> +	hcd = usb_create_hcd(&ohci_platform_hc_driver, &dev->dev,
-> +			dev_name(&dev->dev));
-> +	if (!hcd)
-> +		return -ENOMEM;
-> +
-> +	priv = (struct ohci_platform_priv *)hcd_to_ohci(hcd)->priv;
-
-Please define an inline routine or a macro for this messy computation.
-
-Alan Stern
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
