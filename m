@@ -1,186 +1,85 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv8 2/2] dma: Add Freescale eDMA engine driver support
-Date: Thu, 09 Jan 2014 13:19:13 +0100
-Message-ID: <3667418.IelkNxAYvi@wuerfel>
-References: <1388645544-5596-1-git-send-email-b35083@freescale.com>
- <201401091142.35226.arnd@arndb.de>
- <dde6cf78c07b40f29ac711fc27fe903c@BL2PR03MB467.namprd03.prod.outlook.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] ARM: tegra: Add efuse bindings
+Date: Thu, 9 Jan 2014 13:40:38 +0100
+Message-ID: <20140109124038.GB23668@ulmo.nvidia.com>
+References: <1387891931-9854-1-git-send-email-pdeschrijver@nvidia.com>
+ <1387891931-9854-4-git-send-email-pdeschrijver@nvidia.com>
+ <52CB14D3.2060904@wwwdotorg.org>
+ <20140108133951.GD1592@ulmo.nvidia.com>
+ <52CD9DFB.9010007@wwwdotorg.org>
+ <20140108200946.GE1298@ulmo.nvidia.com>
+ <52CDD430.3010508@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <dde6cf78c07b40f29ac711fc27fe903c@BL2PR03MB467.namprd03.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jingchang Lu <jingchang.lu@freescale.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0ntfKIWw70PvrIHh"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52CDD430.3010508-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 January 2014 11:44:46 Jingchang Lu wrote:
-> > 
-> > On Thursday 09 January 2014, Jingchang Lu wrote:
-> > > > > > +sai2: sai@40031000 {
-> > > > > > +	compatible = "fsl,vf610-sai";
-> > > > > > +	reg = <0x40031000 0x1000>;
-> > > > > > +	interrupts = <0 86 0x04>;
-> > > > > > +	clocks = <&clks VF610_CLK_SAI2>;
-> > > > > > +	clock-names = "sai";
-> > > > > > +	dma-names = "tx", "rx";
-> > > > > > +	dmas = <&edma0 VF610_EDMA_DMAMUX0 VF610_EDMA0_MUX0_SAI2_TX>,
-> > > > > > +		<&edma0 VF610_EDMA_DMAMUX0 VF610_EDMA0_MUX0_SAI2_RX>;
-> > > > > > +	status = "disabled";
-> > > > > > +};
-> > > >
-> > > > It seems wrong to have macros defined like VF610_EDMA0_MUX0_SAI2_TX,
-> > > > in particular in the example. These should just be literal numbers.
-> > > [Lu Jingchang-b35083]
-> > > This eDMA engineer requires two specifiers, one is a mux group id, the
-> > other is a request source id.
-> > > The VF610_EDMA0_MUX0_SAI2_TX is sai's tx dma request source id, it is
-> > defined as a literal number.
-> > > There are totally more than 100 request source id, I have them macros
-> > defined to make it referenced
-> > > easily and clearly, just like some clock binding done.
-> > > The macros are defined in include/dt-bindings/dma/vf610-edma.h.
-> > 
-> > The clock bindings are special because the macros there tend to be made
-> > up for controllers that just have a bunch of clocks at random register
-> > locations.
-> > 
-> > This is not the case for DMA bindings (or some of the more regular clock
-> > controllers), so there is absolutely no reason to define those macros
-> > in a header file, it just adds artificial dependencies between the
-> > driver, SoC support and the binding.
-> > 
-> > If the numbers are the same as the ones provided in the data sheet,
-> > just use the numbers and remove the macros.
->
-> Yes, the request source id is defined in the data sheet.
-> each eDMA controller has two muxes, some SoCs have two eDMA controllers
-> while others have only one. The 1st eDMA's muxes are named mux0 and mux1,
-> while the 2nd eDMA controller's muxes are named MUX2 and MUX3 in the datasheet,
-> and I index them in each eDMA controller from 0 in the driver to handle them commonly.
 
-Right. I don't object to the use of the macros for the muxes, that seems
-fine and appropriate given your description.
+--0ntfKIWw70PvrIHh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I defines the macro tending to give the info from the macro name, such as
-> for the VF610_EDMA0_MUX0_SAI2_TX request source, implying the eDMA engine id 0,
-> and the mux id should be 0. While VF610_EDMA1_MUX1_FTM0_CH0 implying eDMA engine id 1,
-> mux 1. The request sources are shared between the two eDMA controller but need the user
-> to select one manually when reference.
+On Wed, Jan 08, 2014 at 03:41:52PM -0700, Stephen Warren wrote:
+> On 01/08/2014 01:09 PM, Thierry Reding wrote:
+> > On Wed, Jan 08, 2014 at 11:50:35AM -0700, Stephen Warren wrote:
+> >> On 01/08/2014 06:39 AM, Thierry Reding wrote:
+> >>> On Mon, Jan 06, 2014 at 01:40:51PM -0700, Stephen Warren wrote:
+> >>>> On 12/24/2013 06:32 AM, Peter De Schrijver wrote:
+> >>> [...]
+> >>>>> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/teg=
+ra20.dtsi
+> >>>>
+> >>>>> +	efuse@7000F800 {
+> >>>>
+> >>>> "fuse" might be a better node name; "efuse" is presumably the name of
+> >>>> the instance, not the type of object.
+> >>>
+> >>> There's another occurrence I noticed recently where we haven't follow=
+ed
+> >>> that rule. The PMIC node on Venice2 for instance is called as3722.
+> >>> Perhaps that should also be renamed.
+> >>
+> >> Yes, we should fix that. Care to send a patch?
+> >=20
+> > Ugh... I've just been going through some of the other DTS files and see
+> > that quite a lot of other places aren't following this rule either. The
+> ...
+> > Perhaps it isn't worth fixing them all up after all?
+>=20
+> I guess that just means the patch will be a little bigger; it doesn't
+> seem like that's a good reason not to fix the issue.
 
-Note that the dma binding allows you to actually specify both engines
-in this case. A slave device can have
+Alright, I'll make a pass over all the DTS files that we have and try to
+restore some consistency.
 
-	dma-names = "rx", "rx", "tx", "tx";
-	dmas = <&edma0 0 12> <&edma1 0 12> <&edma0 0 13> <&edma1 0 13>;
+Thierry
 
-and the requesting a channel from the slave driver will find
-the first available one. In theory we could have some load-balancing
-as well, but that has not been implemented.
+--0ntfKIWw70PvrIHh
+Content-Type: application/pgp-signature
 
-> > You are right, your code is actually correct on all combinations
-> > of big-endian and little-endian ARM CPUs. However, I would argue that
-> > it's unusual style, and not portable to other architectures (e.g. arm64)
-> > because the definition of readl() is highly architecture dependent.
-> > It would also be problematic if the arm definition has to change
-> > in some form and this driver is overlooked.
-> [Lu Jingchang-b35083] 
-> Yes, these definitions are highly depending on the arm32 arch. This device is only
-> integrated in our arm32 SoCs currently, so I have only considered arm32.
-> In arm32, it seems that the ioread32 and readl are the same in arm32,
-> I will try your recommendation below to simplify the caller.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-Ok, thanks. I generally insist on writing drivers in a portable way
-if possible because they can serve as examples to other people, and
-hardware often gets reused on other parts. I would expect that it's
-possible that freescale eventually creates powerpc or arm64 devices
-with the same edma controller, even if you are not currently aware
-of any such products.
+iQIcBAEBAgAGBQJSzpjGAAoJEN0jrNd/PrOhpU0P/2hPagTNIdn5CfVOh3iJDzw+
+WwKGcW/6iMPnUw6tfylAVL64PHhiTYaevV0YXuTfuWRDBatRkiPJ3JZbdCSB6fGn
+AnWsuBEgvBfCT/r7UAw3MaBB+Iz8wHJg6abAOCRf6l183+AKGa2H0q60ieq0pwo3
+fymgVQVbW5gAlenv9FCVx92Dn5RLRn+fekxYFM5PjpMOEgx8mD8KciEMDzLq/zZK
+mg84+/tv0ntPHBqKSQDj1XMTzYf/6tzOMWG6kJeuekz3ujVjQGox4TSaGsWnsbx1
+6H7BuoGb/EHOth5g9w+UdfjqMr5NwoTwqixNzokFEG0edha8S2Fb6xB88EfqT1ss
+kfB4qnSEv8DKR8KT67UUWeiSVihHh7xfUSMDjKpa/MU9iL3tzc1dseegz4qjC+fQ
+OlQ3FJL3jaYLTZYGPpPW5itx4dCbQYscAEPgVeMgZ60IEyjj6ZJc+4KTw8eVH0yN
+UpZVmO27alH3SP9ySdSxAa+RdIc8Y7nZ+Kpa3/Occk/q6hhcbjAMXHE7Zy6dB+rK
+L/9ZnK+Oo2Wu9NOvFxdvN3wt4aMojOcZuMD3JDwldMPdimc4sasxXwsImmjLK0UW
+xfjSSD+vd8rQv7ZJTMOUAad7jDkzRmLI5xX7v1ypa6IDO5Jlr5vxT4p5/qWfDvoB
+rbSL/yOshgH3tqbIlnK5
+=6YsJ
+-----END PGP SIGNATURE-----
 
-> > BTW, I noticed that fsl_edma_set_tcd_params() is calling edma_writew()
-> > and edma_writel() without an endian-swap, so I assume it is still
-> > broken on big-endian CPUs, and likely also on big-endian eDMA engines.
-> The values written in fsl_edma_set_tcd_params() are pre-swapped in fill_tcd_params().
-> The eDMA support hardware SGs, but the eDMA engine's sg format is required the same as
-> the eDMA Controller's endian, so the SGs in memory to be loaded automatically by the eDMA 
-> engine also required swapped properly. So they should be swapped specifically here.
-
-Ah, I see now. I had noticed that before but then forgotten about it.
-
-> > > > > > +static bool fsl_edma_filter_fn(struct dma_chan *chan, void *mux)
-> > > > > > +{
-> > > > > > +	 return (chan->chan_id / DMAMUX_NR) == (u32)mux;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static struct dma_chan *fsl_edma_xlate(struct of_phandle_args
-> > > > *dma_spec,
-> > > > > > +		struct of_dma *ofdma)
-> > > > > > +{
-> > > > > > +	struct dma_chan *chan;
-> > > > > > +	dma_cap_mask_t mask;
-> > > > > > +
-> > > > > > +	if (dma_spec->args_count != 2)
-> > > > > > +		return NULL;
-> > > > > > +
-> > > > > > +	dma_cap_zero(mask);
-> > > > > > +	dma_cap_set(DMA_SLAVE, mask);
-> > > > > > +	dma_cap_set(DMA_CYCLIC, mask);
-> > > > > > +	chan = dma_request_channel(mask, fsl_edma_filter_fn, (void
-> > > > > > *)dma_spec->args[0]);
-> > > > > > +	if (chan)
-> > > > > > +		fsl_edma_chan_mux(to_fsl_edma_chan(chan), dma_spec-
-> > >args[1],
-> > > > > > true);
-> > > > > > +	return chan;
-> > > > > > +}
-> > > >
-> > > > Please remove the filter function now and use dma_get_slave_chan
-> > > > with the correct channel as an argument. No need to walk all
-> > > > available channels in the system and introduce bugs by not
-> > > > ignoring other dma engines.
-> > >
-> > > The dma slave request can only be allocated to channel of particular
-> > channels group indicated by
-> > > the mux group id specifier. and the second specifier is the request id,
-> > not the channel number,
-> > > so to use the dma_get_slave_chan, I would find the channel for this
-> > request by walking all the
-> > > available channels manually.
-> > 
-> > Ah, I missed that you only check the mux number, not the channel number.
-> > 
-> > The current version however is buggy because you don't check that you
-> > are actually looking at the right eDMA instance, or an eDMA at all,
-> > rather
-> > than some other random dma engine that may be connected to an external
-> > bus.
-> > 
-> > It is possible to fix that, but I suspect that would involve more
-> > complex code than finding an appropriate channel first and then
-> > calling dma_get_slave_chan() on that.
-> > I would suggest keeping a list of channels per dmamux and walking that
-> > list until you find one that succeeds in dma_get_slave_chan().
-> The binding in DTS is to the eDMA engine, and the binding indicates the eDMA node
-> (by <&edma0 ...>), the dma engine framework would find the proper eDMA engine device
-> referenced in dts. This driver only supports dts reference, so I think the dma engine
-> framework could guarantee the eDMA instance properly in of_dma_find_controller().
-
-The problem is that dma_request_channel() does not get a reference to the
-eDMA node here. It is a generic API function that returns the first
-channel out of the global list of dma_chan structure that is unused
-and gets a positive return code from the filter function. If you have
-two edma instances in the system, you have a 50% chance to get a channel
-that belongs to the other instance. 
-
-The dma_get_slave_chan() interface was introduced to avoid this problem.
-
-	Arnd
+--0ntfKIWw70PvrIHh--
