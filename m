@@ -1,52 +1,81 @@
-From: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Subject: [PATCH v5 4/4] [media] exynos-scaler: Add DT bindings for SCALER driver
-Date: Thu,  9 Jan 2014 08:58:14 +0530
-Message-ID: <1389238094-19386-5-git-send-email-shaik.ameer@samsung.com>
-References: <1389238094-19386-1-git-send-email-shaik.ameer@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1389238094-19386-1-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: s.nawrocki@samsung.com, posciak@google.com, hverkuil@xs4all.nl, shaik.ameer@samsung.com, m.chehab@samsung.com
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: imx6q: Add missing esai_ahb clock to current clock
+ tree
+Date: Thu, 9 Jan 2014 11:58:12 +0800
+Message-ID: <20140109035810.GB21717@S2101-09.ap.freescale.net>
+References: <1389236699-10387-1-git-send-email-Guangyu.Chen@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1389236699-10387-1-git-send-email-Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DT binding documentation for the
-Exynos5420/5410 based SCALER device driver.
+On Thu, Jan 09, 2014 at 11:04:59AM +0800, Nicolin Chen wrote:
+> esai_ahb clock is derived from ahb and used to provide ESAI the capability of
+> register accessing and FSYS clock source for I2S clocks dividing. Although the
+> gate of this esai_ahb is duplicated with esai clock -- the baud clock, yet
+> considering about the differences of their clock rates, it's quite essential
+> to patch this missing clock.
+> 
+> Signed-off-by: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/clock/imx6q-clock.txt | 1 +
+>  arch/arm/mach-imx/clk-imx6q.c                           | 3 ++-
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> index 6aab72b..90ec91f 100644
+> --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> @@ -220,6 +220,7 @@ clocks and IDs.
+>  	lvds2_sel		205
+>  	lvds1_gate		206
+>  	lvds2_gate		207
+> +	esai_ahb		208
+>  
+>  Examples:
+>  
+> diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
+> index af2e582..20215b9 100644
+> --- a/arch/arm/mach-imx/clk-imx6q.c
+> +++ b/arch/arm/mach-imx/clk-imx6q.c
+> @@ -107,7 +107,7 @@ enum mx6q_clks {
+>  	sata_ref, sata_ref_100m, pcie_ref, pcie_ref_125m, enet_ref, usbphy1_gate,
+>  	usbphy2_gate, pll4_post_div, pll5_post_div, pll5_video_div, eim_slow,
+>  	spdif, cko2_sel, cko2_podf, cko2, cko, vdoa, pll4_audio_div,
+> -	lvds1_sel, lvds2_sel, lvds1_gate, lvds2_gate, clk_max
+> +	lvds1_sel, lvds2_sel, lvds1_gate, lvds2_gate, esai_ahb, clk_max
+>  };
+>  
+>  static struct clk *clk[clk_max];
+> @@ -355,6 +355,7 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
+>  	clk[ecspi5]       = imx_clk_gate2("ecspi5",        "ecspi_root",        base + 0x6c, 8);
+>  	clk[enet]         = imx_clk_gate2("enet",          "ipg",               base + 0x6c, 10);
+>  	clk[esai]         = imx_clk_gate2("esai",          "esai_podf",         base + 0x6c, 16);
+> +	clk[esai_ahb]     = imx_clk_gate2("esai_ahb",      "ahb",               base + 0x6c, 16);
 
-Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- .../devicetree/bindings/media/exynos5-scaler.txt   |   22 ++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/exynos5-scaler.txt
+Hmm, having two clocks operating on the same gate bit will get us
+problem in clock disabling.  Clock enabling is fine, since either
+one who calls clk_enable() first will just set the gate bit.  But in
+case that clk_enable() is called on both clocks, and then when either
+clock calls clk_disable(), the gate bit will be cleared and thus breaks
+the other one that might still be in use.
 
-diff --git a/Documentation/devicetree/bindings/media/exynos5-scaler.txt b/Documentation/devicetree/bindings/media/exynos5-scaler.txt
-new file mode 100644
-index 0000000..9328e7d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/exynos5-scaler.txt
-@@ -0,0 +1,22 @@
-+* Samsung Exynos5 SCALER device
-+
-+SCALER is used for scaling, blending, color fill and color space
-+conversion on EXYNOS[5420/5410] SoCs.
-+
-+Required properties:
-+- compatible: should be "samsung,exynos5420-scaler" or
-+			"samsung,exynos5410-scaler"
-+- reg: should contain SCALER physical address location and length
-+- interrupts: should contain SCALER interrupt number
-+- clocks: should contain the SCALER clock specifier, from the
-+			common clock bindings
-+- clock-names: should be "scaler"
-+
-+Example:
-+	scaler_0: scaler@12800000 {
-+		compatible = "samsung,exynos5420-scaler";
-+		reg = <0x12800000 0x1000>;
-+		interrupts = <0 220 0>;
-+		clocks = <&clock 381>;
-+		clock-names = "scaler";
-+	};
--- 
-1.7.9.5
+Shawn
+
+>  	clk[gpt_ipg]      = imx_clk_gate2("gpt_ipg",       "ipg",               base + 0x6c, 20);
+>  	clk[gpt_ipg_per]  = imx_clk_gate2("gpt_ipg_per",   "ipg_per",           base + 0x6c, 22);
+>  	if (cpu_is_imx6dl())
+> -- 
+> 1.8.4
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
