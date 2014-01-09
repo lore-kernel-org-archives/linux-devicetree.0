@@ -1,190 +1,186 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v5 2/9] mfd: omap-usb-host: Get clocks based on hardware revision
-Date: Thu, 9 Jan 2014 17:38:16 +0530
-Message-ID: <1389269303-30465-3-git-send-email-rogerq@ti.com>
-References: <1389269303-30465-1-git-send-email-rogerq@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv8 2/2] dma: Add Freescale eDMA engine driver support
+Date: Thu, 09 Jan 2014 13:19:13 +0100
+Message-ID: <3667418.IelkNxAYvi@wuerfel>
+References: <1388645544-5596-1-git-send-email-b35083@freescale.com>
+ <201401091142.35226.arnd@arndb.de>
+ <dde6cf78c07b40f29ac711fc27fe903c@BL2PR03MB467.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389269303-30465-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, m.paolino-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <dde6cf78c07b40f29ac711fc27fe903c@BL2PR03MB467.namprd03.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jingchang Lu <jingchang.lu@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Not all revisions have all the clocks so get the necessary clocks
-based on hardware revision.
+On Thursday 09 January 2014 11:44:46 Jingchang Lu wrote:
+> > 
+> > On Thursday 09 January 2014, Jingchang Lu wrote:
+> > > > > > +sai2: sai@40031000 {
+> > > > > > +	compatible = "fsl,vf610-sai";
+> > > > > > +	reg = <0x40031000 0x1000>;
+> > > > > > +	interrupts = <0 86 0x04>;
+> > > > > > +	clocks = <&clks VF610_CLK_SAI2>;
+> > > > > > +	clock-names = "sai";
+> > > > > > +	dma-names = "tx", "rx";
+> > > > > > +	dmas = <&edma0 VF610_EDMA_DMAMUX0 VF610_EDMA0_MUX0_SAI2_TX>,
+> > > > > > +		<&edma0 VF610_EDMA_DMAMUX0 VF610_EDMA0_MUX0_SAI2_RX>;
+> > > > > > +	status = "disabled";
+> > > > > > +};
+> > > >
+> > > > It seems wrong to have macros defined like VF610_EDMA0_MUX0_SAI2_TX,
+> > > > in particular in the example. These should just be literal numbers.
+> > > [Lu Jingchang-b35083]
+> > > This eDMA engineer requires two specifiers, one is a mux group id, the
+> > other is a request source id.
+> > > The VF610_EDMA0_MUX0_SAI2_TX is sai's tx dma request source id, it is
+> > defined as a literal number.
+> > > There are totally more than 100 request source id, I have them macros
+> > defined to make it referenced
+> > > easily and clearly, just like some clock binding done.
+> > > The macros are defined in include/dt-bindings/dma/vf610-edma.h.
+> > 
+> > The clock bindings are special because the macros there tend to be made
+> > up for controllers that just have a bunch of clocks at random register
+> > locations.
+> > 
+> > This is not the case for DMA bindings (or some of the more regular clock
+> > controllers), so there is absolutely no reason to define those macros
+> > in a header file, it just adds artificial dependencies between the
+> > driver, SoC support and the binding.
+> > 
+> > If the numbers are the same as the ones provided in the data sheet,
+> > just use the numbers and remove the macros.
+>
+> Yes, the request source id is defined in the data sheet.
+> each eDMA controller has two muxes, some SoCs have two eDMA controllers
+> while others have only one. The 1st eDMA's muxes are named mux0 and mux1,
+> while the 2nd eDMA controller's muxes are named MUX2 and MUX3 in the datasheet,
+> and I index them in each eDMA controller from 0 in the driver to handle them commonly.
 
-This should avoid un-necessary clk_get failure messages that were
-observed earlier.
+Right. I don't object to the use of the macros for the muxes, that seems
+fine and appropriate given your description.
 
-Be more strict and always fail on clk_get() error.
+> I defines the macro tending to give the info from the macro name, such as
+> for the VF610_EDMA0_MUX0_SAI2_TX request source, implying the eDMA engine id 0,
+> and the mux id should be 0. While VF610_EDMA1_MUX1_FTM0_CH0 implying eDMA engine id 1,
+> mux 1. The request sources are shared between the two eDMA controller but need the user
+> to select one manually when reference.
 
-CC: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-CC: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
----
- drivers/mfd/omap-usb-host.c | 93 +++++++++++++++++++++++++++++++--------------
- 1 file changed, 64 insertions(+), 29 deletions(-)
+Note that the dma binding allows you to actually specify both engines
+in this case. A slave device can have
 
-diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
-index 1c9bca2..7202cc6 100644
---- a/drivers/mfd/omap-usb-host.c
-+++ b/drivers/mfd/omap-usb-host.c
-@@ -92,7 +92,6 @@
- #define is_ehci_tll_mode(x)	(x == OMAP_EHCI_PORT_MODE_TLL)
- #define is_ehci_hsic_mode(x)	(x == OMAP_EHCI_PORT_MODE_HSIC)
- 
--
- struct usbhs_hcd_omap {
- 	int				nports;
- 	struct clk			**utmi_clk;
-@@ -665,22 +664,41 @@ static int usbhs_omap_probe(struct platform_device *pdev)
- 		goto err_mem;
- 	}
- 
--	need_logic_fck = false;
-+	/* Set all clocks as invalid to begin with */
-+	omap->ehci_logic_fck = omap->init_60m_fclk = ERR_PTR(-EINVAL);
-+	omap->utmi_p1_gfclk = omap->utmi_p2_gfclk = ERR_PTR(-EINVAL);
-+	omap->xclk60mhsp1_ck = omap->xclk60mhsp2_ck = ERR_PTR(-EINVAL);
-+
- 	for (i = 0; i < omap->nports; i++) {
--		if (is_ehci_phy_mode(i) || is_ehci_tll_mode(i) ||
--			is_ehci_hsic_mode(i))
--				need_logic_fck |= true;
-+		omap->utmi_clk[i] = ERR_PTR(-EINVAL);
-+		omap->hsic480m_clk[i] = ERR_PTR(-EINVAL);
-+		omap->hsic60m_clk[i] = ERR_PTR(-EINVAL);
- 	}
- 
--	omap->ehci_logic_fck = ERR_PTR(-EINVAL);
--	if (need_logic_fck) {
--		omap->ehci_logic_fck = devm_clk_get(dev, "ehci_logic_fck");
--		if (IS_ERR(omap->ehci_logic_fck)) {
--			ret = PTR_ERR(omap->ehci_logic_fck);
--			dev_dbg(dev, "ehci_logic_fck failed:%d\n", ret);
-+	/* for OMAP3 i.e. USBHS REV1 */
-+	if (omap->usbhs_rev == OMAP_USBHS_REV1) {
-+		need_logic_fck = false;
-+		for (i = 0; i < omap->nports; i++) {
-+			if (is_ehci_phy_mode(pdata->port_mode[i]) ||
-+			    is_ehci_tll_mode(pdata->port_mode[i]) ||
-+			    is_ehci_hsic_mode(pdata->port_mode[i]))
-+
-+				need_logic_fck |= true;
-+		}
-+
-+		if (need_logic_fck) {
-+			omap->ehci_logic_fck = clk_get(dev, "usbhost_120m_fck");
-+			if (IS_ERR(omap->ehci_logic_fck)) {
-+				ret = PTR_ERR(omap->ehci_logic_fck);
-+				dev_err(dev, "usbhost_120m_fck failed:%d\n",
-+					ret);
-+				goto err_mem;
-+			}
- 		}
-+		goto initialize;
- 	}
- 
-+	/* for OMAP4+ i.e. USBHS REV2+ */
- 	omap->utmi_p1_gfclk = devm_clk_get(dev, "utmi_p1_gfclk");
- 	if (IS_ERR(omap->utmi_p1_gfclk)) {
- 		ret = PTR_ERR(omap->utmi_p1_gfclk);
-@@ -728,54 +746,71 @@ static int usbhs_omap_probe(struct platform_device *pdev)
- 		 * them
- 		 */
- 		omap->utmi_clk[i] = devm_clk_get(dev, clkname);
--		if (IS_ERR(omap->utmi_clk[i]))
--			dev_dbg(dev, "Failed to get clock : %s : %ld\n",
--				clkname, PTR_ERR(omap->utmi_clk[i]));
-+		if (IS_ERR(omap->utmi_clk[i])) {
-+			ret = PTR_ERR(omap->utmi_clk[i]);
-+			dev_err(dev, "Failed to get clock : %s : %d\n",
-+				clkname, ret);
-+			goto err_mem;
-+		}
- 
- 		snprintf(clkname, sizeof(clkname),
- 				"usb_host_hs_hsic480m_p%d_clk", i + 1);
- 		omap->hsic480m_clk[i] = devm_clk_get(dev, clkname);
--		if (IS_ERR(omap->hsic480m_clk[i]))
--			dev_dbg(dev, "Failed to get clock : %s : %ld\n",
--				clkname, PTR_ERR(omap->hsic480m_clk[i]));
-+		if (IS_ERR(omap->hsic480m_clk[i])) {
-+			ret = PTR_ERR(omap->hsic480m_clk[i]);
-+			dev_err(dev, "Failed to get clock : %s : %d\n",
-+				clkname, ret);
-+			goto err_mem;
-+		}
- 
- 		snprintf(clkname, sizeof(clkname),
- 				"usb_host_hs_hsic60m_p%d_clk", i + 1);
- 		omap->hsic60m_clk[i] = devm_clk_get(dev, clkname);
--		if (IS_ERR(omap->hsic60m_clk[i]))
--			dev_dbg(dev, "Failed to get clock : %s : %ld\n",
--				clkname, PTR_ERR(omap->hsic60m_clk[i]));
-+		if (IS_ERR(omap->hsic60m_clk[i])) {
-+			ret = PTR_ERR(omap->hsic60m_clk[i]);
-+			dev_err(dev, "Failed to get clock : %s : %d\n",
-+				clkname, ret);
-+			goto err_mem;
-+		}
- 	}
- 
- 	if (is_ehci_phy_mode(pdata->port_mode[0])) {
--		/* for OMAP3, clk_set_parent fails */
- 		ret = clk_set_parent(omap->utmi_p1_gfclk,
- 					omap->xclk60mhsp1_ck);
--		if (ret != 0)
--			dev_dbg(dev, "xclk60mhsp1_ck set parent failed: %d\n",
-+		if (ret != 0) {
-+			dev_err(dev, "xclk60mhsp1_ck set parent failed: %d\n",
- 					ret);
-+			goto err_mem;
-+		}
- 	} else if (is_ehci_tll_mode(pdata->port_mode[0])) {
- 		ret = clk_set_parent(omap->utmi_p1_gfclk,
- 					omap->init_60m_fclk);
--		if (ret != 0)
--			dev_dbg(dev, "P0 init_60m_fclk set parent failed: %d\n",
-+		if (ret != 0) {
-+			dev_err(dev, "P0 init_60m_fclk set parent failed: %d\n",
- 					ret);
-+			goto err_mem;
-+		}
- 	}
- 
- 	if (is_ehci_phy_mode(pdata->port_mode[1])) {
- 		ret = clk_set_parent(omap->utmi_p2_gfclk,
- 					omap->xclk60mhsp2_ck);
--		if (ret != 0)
--			dev_dbg(dev, "xclk60mhsp2_ck set parent failed: %d\n",
-+		if (ret != 0) {
-+			dev_err(dev, "xclk60mhsp2_ck set parent failed: %d\n",
- 					ret);
-+			goto err_mem;
-+		}
- 	} else if (is_ehci_tll_mode(pdata->port_mode[1])) {
- 		ret = clk_set_parent(omap->utmi_p2_gfclk,
- 						omap->init_60m_fclk);
--		if (ret != 0)
--			dev_dbg(dev, "P1 init_60m_fclk set parent failed: %d\n",
-+		if (ret != 0) {
-+			dev_err(dev, "P1 init_60m_fclk set parent failed: %d\n",
- 					ret);
-+			goto err_mem;
-+		}
- 	}
- 
-+initialize:
- 	omap_usbhs_init(dev);
- 
- 	if (dev->of_node) {
--- 
-1.8.3.2
+	dma-names = "rx", "rx", "tx", "tx";
+	dmas = <&edma0 0 12> <&edma1 0 12> <&edma0 0 13> <&edma1 0 13>;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+and the requesting a channel from the slave driver will find
+the first available one. In theory we could have some load-balancing
+as well, but that has not been implemented.
+
+> > You are right, your code is actually correct on all combinations
+> > of big-endian and little-endian ARM CPUs. However, I would argue that
+> > it's unusual style, and not portable to other architectures (e.g. arm64)
+> > because the definition of readl() is highly architecture dependent.
+> > It would also be problematic if the arm definition has to change
+> > in some form and this driver is overlooked.
+> [Lu Jingchang-b35083] 
+> Yes, these definitions are highly depending on the arm32 arch. This device is only
+> integrated in our arm32 SoCs currently, so I have only considered arm32.
+> In arm32, it seems that the ioread32 and readl are the same in arm32,
+> I will try your recommendation below to simplify the caller.
+
+Ok, thanks. I generally insist on writing drivers in a portable way
+if possible because they can serve as examples to other people, and
+hardware often gets reused on other parts. I would expect that it's
+possible that freescale eventually creates powerpc or arm64 devices
+with the same edma controller, even if you are not currently aware
+of any such products.
+
+> > BTW, I noticed that fsl_edma_set_tcd_params() is calling edma_writew()
+> > and edma_writel() without an endian-swap, so I assume it is still
+> > broken on big-endian CPUs, and likely also on big-endian eDMA engines.
+> The values written in fsl_edma_set_tcd_params() are pre-swapped in fill_tcd_params().
+> The eDMA support hardware SGs, but the eDMA engine's sg format is required the same as
+> the eDMA Controller's endian, so the SGs in memory to be loaded automatically by the eDMA 
+> engine also required swapped properly. So they should be swapped specifically here.
+
+Ah, I see now. I had noticed that before but then forgotten about it.
+
+> > > > > > +static bool fsl_edma_filter_fn(struct dma_chan *chan, void *mux)
+> > > > > > +{
+> > > > > > +	 return (chan->chan_id / DMAMUX_NR) == (u32)mux;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static struct dma_chan *fsl_edma_xlate(struct of_phandle_args
+> > > > *dma_spec,
+> > > > > > +		struct of_dma *ofdma)
+> > > > > > +{
+> > > > > > +	struct dma_chan *chan;
+> > > > > > +	dma_cap_mask_t mask;
+> > > > > > +
+> > > > > > +	if (dma_spec->args_count != 2)
+> > > > > > +		return NULL;
+> > > > > > +
+> > > > > > +	dma_cap_zero(mask);
+> > > > > > +	dma_cap_set(DMA_SLAVE, mask);
+> > > > > > +	dma_cap_set(DMA_CYCLIC, mask);
+> > > > > > +	chan = dma_request_channel(mask, fsl_edma_filter_fn, (void
+> > > > > > *)dma_spec->args[0]);
+> > > > > > +	if (chan)
+> > > > > > +		fsl_edma_chan_mux(to_fsl_edma_chan(chan), dma_spec-
+> > >args[1],
+> > > > > > true);
+> > > > > > +	return chan;
+> > > > > > +}
+> > > >
+> > > > Please remove the filter function now and use dma_get_slave_chan
+> > > > with the correct channel as an argument. No need to walk all
+> > > > available channels in the system and introduce bugs by not
+> > > > ignoring other dma engines.
+> > >
+> > > The dma slave request can only be allocated to channel of particular
+> > channels group indicated by
+> > > the mux group id specifier. and the second specifier is the request id,
+> > not the channel number,
+> > > so to use the dma_get_slave_chan, I would find the channel for this
+> > request by walking all the
+> > > available channels manually.
+> > 
+> > Ah, I missed that you only check the mux number, not the channel number.
+> > 
+> > The current version however is buggy because you don't check that you
+> > are actually looking at the right eDMA instance, or an eDMA at all,
+> > rather
+> > than some other random dma engine that may be connected to an external
+> > bus.
+> > 
+> > It is possible to fix that, but I suspect that would involve more
+> > complex code than finding an appropriate channel first and then
+> > calling dma_get_slave_chan() on that.
+> > I would suggest keeping a list of channels per dmamux and walking that
+> > list until you find one that succeeds in dma_get_slave_chan().
+> The binding in DTS is to the eDMA engine, and the binding indicates the eDMA node
+> (by <&edma0 ...>), the dma engine framework would find the proper eDMA engine device
+> referenced in dts. This driver only supports dts reference, so I think the dma engine
+> framework could guarantee the eDMA instance properly in of_dma_find_controller().
+
+The problem is that dma_request_channel() does not get a reference to the
+eDMA node here. It is a generic API function that returns the first
+channel out of the global list of dma_chan structure that is unused
+and gets a positive return code from the filter function. If you have
+two edma instances in the system, you have a 50% chance to get a channel
+that belongs to the other instance. 
+
+The dma_get_slave_chan() interface was introduced to avoid this problem.
+
+	Arnd
