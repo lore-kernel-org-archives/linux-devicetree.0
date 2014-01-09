@@ -1,105 +1,76 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: =?UTF-8?Q?=E7=AD=94=E5=A4=8D=3A?= [v7] clk: corenet: Adds the
- clock binding
-Date: Thu, 9 Jan 2014 15:19:28 -0600
-Message-ID: <1389302368.14390.33.camel@snotra.buserror.net>
-References: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
- <20140108002115.GA19801@home.buserror.net>
- <375c32b2f4e34589ae336af61468a51b@BL2PR03MB115.namprd03.prod.outlook.com>
- <20140108093046.GB6701@e106331-lin.cambridge.arm.com>
- <1389206619.25654.9.camel@snotra.buserror.net>
- <e15511a79a9d4446a826da8d9ceec229@BL2PR03MB115.namprd03.prod.outlook.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko.stuebner@bqreaders.com>
+Subject: [PATCH 1/3] dt-bindings: bindings for zforce touchscreens
+Date: Thu, 09 Jan 2014 22:21 +0100
+Message-ID: <27790911.Z86OudpR5q@phil>
+References: <2587208.XYbbI8xJiH@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <e15511a79a9d4446a826da8d9ceec229@BL2PR03MB115.namprd03.prod.outlook.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Tang Yuantian-B29983 <Yuantian.Tang@freescale.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <2587208.XYbbI8xJiH@phil>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Henrik Rydberg <rydberg@euromail.se>, linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE0LTAxLTA4IGF0IDIwOjU3IC0wNjAwLCBUYW5nIFl1YW50aWFuLUIyOTk4MyB3
-cm90ZToKPiBUaGFua3MgZm9yIHlvdSByZXZpZXcuCj4gU2VlIG15IHJlc3BvbnNlIGlubGluZS4K
-PiAKPiBUaGFua3MsCj4gWXVhbnRpYW4KPiAKPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
-Cj4gPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQo+ID4gU2VudDogMjAxNOW5tDHmnIg55pelIOaY
-n+acn+WbmyAyOjQ0Cj4gPiBUbzogTWFyayBSdXRsYW5kCj4gPiBDYzogVGFuZyBZdWFudGlhbi1C
-Mjk5ODM7IGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7Cj4gPiBkZXZpY2V0cmVlQHZnZXIua2Vy
-bmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKPiA+IFN1YmplY3Q6IFJlOiDn
-rZTlpI06IFt2N10gY2xrOiBjb3JlbmV0OiBBZGRzIHRoZSBjbG9jayBiaW5kaW5nCj4gPiAKPiA+
-IE9uIFdlZCwgMjAxNC0wMS0wOCBhdCAwOTozMCArMDAwMCwgTWFyayBSdXRsYW5kIHdyb3RlOgo+
-ID4gPiBPbiBXZWQsIEphbiAwOCwgMjAxNCBhdCAwODo1Mzo1NkFNICswMDAwLCBZdWFudGlhbiBU
-YW5nIHdyb3RlOgo+ID4gPiA+Cj4gPiA+ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwo+ID4gPiA+IOWPkeS7tuS6ujogV29vZCBTY290dC1CMDc0MjEKPiA+ID4gPiDl
-j5HpgIHml7bpl7Q6IDIwMTTlubQx5pyIOOaXpSA4OjIxCj4gPiA+ID4g5pS25Lu25Lq6OiBUYW5n
-IFl1YW50aWFuLUIyOTk4Mwo+ID4gPiA+IOaKhOmAgTogZ2FsYWtAa2VybmVsLmNyYXNoaW5nLm9y
-ZzsgbWFyay5ydXRsYW5kQGFybS5jb207Cj4gPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCj4gPiA+ID4g5Li76aKYOiBSZTogW3Y3
-XSBjbGs6IGNvcmVuZXQ6IEFkZHMgdGhlIGNsb2NrIGJpbmRpbmcKPiA+ID4gPgo+ID4gPiA+IE9u
-IFdlZCwgTm92IDIwLCAyMDEzIGF0IDA1OjA0OjQ5UE0gKzA4MDAsIHRhbmcgeXVhbnRpYW4gd3Jv
-dGU6Cj4gPiA+ID4gPiArUmVjb21tZW5kZWQgcHJvcGVydGllczoKPiA+ID4gPiA+ICstIHJhbmdl
-czogQWxsb3dzIHZhbGlkIHRyYW5zbGF0aW9uIGJldHdlZW4gY2hpbGQncyBhZGRyZXNzIHNwYWNl
-Cj4gPiBhbmQKPiA+ID4gPiA+ICsgICAgIHBhcmVudCdzLiBNdXN0IGJlIHByZXNlbnQgaWYgdGhl
-IGRldmljZSBoYXMgc3ViLW5vZGVzLgo+ID4gPiA+ID4gKy0gI2FkZHJlc3MtY2VsbHM6IFNwZWNp
-ZmllcyB0aGUgbnVtYmVyIG9mIGNlbGxzIHVzZWQgdG8gcmVwcmVzZW50Cj4gPiA+ID4gPiArICAg
-ICBwaHlzaWNhbCBiYXNlIGFkZHJlc3Nlcy4gIE11c3QgYmUgcHJlc2VudCBpZiB0aGUgZGV2aWNl
-IGhhcwo+ID4gPiA+ID4gKyAgICAgc3ViLW5vZGVzIGFuZCBzZXQgdG8gMSBpZiBwcmVzZW50Cj4g
-PiA+ID4gPiArLSAjc2l6ZS1jZWxsczogU3BlY2lmaWVzIHRoZSBudW1iZXIgb2YgY2VsbHMgdXNl
-ZCB0byByZXByZXNlbnQKPiA+ID4gPiA+ICsgICAgIHRoZSBzaXplIG9mIGFuIGFkZHJlc3MuIE11
-c3QgYmUgcHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcwo+ID4gPiA+ID4gKyAgICAgc3ViLW5vZGVz
-IGFuZCBzZXQgdG8gMSBpZiBwcmVzZW50Cj4gPiA+ID4KPiA+ID4gPiBXaHkgYXJlIHdlIHNwZWNp
-ZnlpbmcgI2FkZHJlc3MtY2VsbHMvI3NpemUtY2VsbHMgaGVyZT8KPiA+ID4gPgo+ID4gPiA+IEE6
-IGl0IGhhcyBzdWItbm9kZXMgd2hpY2ggaGF2ZSBSRUcgcHJvcGVydHksIGRvbid0IHdlIG5lZWQg
-dG8KPiA+ID4gPiBzcGVjaWZ5ICNhZGRyZXNzLWNlbGxzLyNzaXplLWNlbGxzPwo+ID4gPgo+ID4g
-PiBJZiBhIG5vZGUgaGFzIGEgcmVnIGVudHJ5LCBpdHMgcGFyZW50IHNob3VsZCBoYXZlICNzaXpl
-LWNlbGxzIGFuZAo+ID4gPiAjYWRkcmVzcy1jZWxscyB0byBhbGxvdyBpdCB0byBiZSBwYXJzZWQg
-cHJvcGVybHkuCj4gPiAKPiA+IFllcywgYnV0IHdoeSBkbyB3ZSBuZWVkIHRvIHNwZWNpZnkgaW4g
-dGhpcyBiaW5kaW5nIGhvdyBtYW55IGNlbGxzIHRoZXJlCj4gPiB3aWxsIGJlLCBlc3BlY2lhbGx5
-IHNpbmNlIHRoaXMgYmluZGluZyBvbmx5IGFkZHJlc3NlcyB0aGUgY2xvY2sgcHJvdmlkZXIKPiA+
-IGFzcGVjdCBvZiB0aGUgY2xvY2tnZW4gbm9kZXMgKGUuZy4gaXQgZG9lc24ndCBkZXNjcmliZSB0
-aGUgcmVnKT8gIE9yCj4gPiByYXRoZXIsIGl0J3MgcGFydGlhbGx5IGRlc2NyaWJpbmcgdGhlIG5v
-bi1jbG9jayBhc3BlY3QsIGFuZCBkb2Vzbid0Cj4gPiBhZGRyZXNzIHRoZSBjbG9jayBhc3BlY3Qg
-YXQgYWxsIEFGQUlDVC4KPiA+IAo+IEZpcnN0IG9mIGFsbCwgdGhleSBhcmUgbm90ICJSZXF1aXJl
-ZCBwcm9wZXJ0aWVzIiwgdGhleSBhcmUgb3B0aW9uYWwuCj4gSWYgcHJlc2VudCwgd2Ugc2hvdWxk
-IGdpdmUgdGhlbSBhIHZhbHVlIG9mIDEuCgpXaHkgZG9lcyBpdCBtYXR0ZXIsIHNvIGxvbmcgYXMg
-dGhlIHZhbHVlcyB0cmFuc2xhdGUgcHJvcGVybHk/ICBJdCdzIG5vdAphcyBpZiB5b3UncmUgZGVm
-aW5pbmcgYSBzcGVjaWFsIHJlZyBmb3JtYXQuICBJdCdzIG5vdCB0aGF0IGJpZyBvZiBhCmRlYWws
-IGJ1dCBpdCBzZWVtcyB1bm5lY2Vzc2FyeS4KCj4gVGhlbiwgeWVzLCB0aGlzIGJpbmRpbmcgZGVz
-Y3JpYmVzIGNsb2NrZ2VuIG5vZGUgd2hpY2ggaXMgIkNMT0NLIEJMT0NLIi4KClNvcnJ5LCBJIG1p
-c3NlZCB3aGVyZSAicmVnIiB3YXMgZG9jdW1lbnRlZCBkdWUgdG8gdGhlCnJlcXVpcmVkL3JlY29t
-bWVuZGVkIHNwbGl0LgoKPiA+IFdoZXJlIGRvZXMgdGhlIGFjdHVhbCBpbnB1dCBjbG9jayBmcmVx
-dWVuY3kgZ28/ICBVLUJvb3QgcHV0cyBpdCBpbiB0aGUKPiA+IGNsb2NrZ2VuIG5vZGUgaXRzZWxm
-IGFzIGNsb2NrLWZyZXF1ZW5jeSwgYnV0IHRoYXQgaXNuJ3QgZGVzY3JpYmVkIGluIHRoZQo+ID4g
-YmluZGluZy4gIEhvdyBkb2VzIHRoYXQgcmVsYXRlIHRvIHRoZSBzeXNjbGsgbm9kZT8gIElmICJm
-c2wscW9yaXEtc3lzY2xrLQo+ID4gMS4wIiBpcyBzdXBwb3NlZCB0byBpbmRpY2F0ZSB0aGF0IGNs
-b2NrLWZyZXF1ZW5jeSBjYW4gYmUgZm91bmQgaW4gdGhlCj4gPiBwYXJlbnQgbm9kZSwgdGhhdCBp
-c24ndCBzcGVjaWZpZWQgYnkgdGhlIGJpbmRpbmcsIG5vciBpcyBjbG9jay1mcmVxdWVuY3kKPiA+
-IHNob3duIGluIHRoZSBleGFtcGxlLgo+ID4gCj4gY2xvY2stZnJlcXVlbmN5IGlzIGEgd2lyZWQg
-cHJvcGVydHkuCgpEbyB5b3UgbWVhbiAid2VpcmQiPwoKPiBJdCBpcyBpbiBjbG9ja2dlbiBub2Rl
-IHJpZ2h0IG5vdy4KPiBCdXQgaXQgc2hvdWxkIGJlIHBsYWNlZCBzb21ld2hlcmUgaW4gY2xvY2sg
-bm9kZXMuCgpJZiB3ZSB3ZXJlIGRvaW5nIHRoaXMgZnJvbSBzY3JhdGNoLCB5ZXMsIGJ1dCB0aGVy
-ZSdzIGV4aXN0aW5nIFUtQm9vdApjb2RlIHRoYXQgd2Ugd2FudCB0byBiZSBjb21wYXRpYmxlIHdp
-dGguCgo+IElmIEkgZGVzY3JpYmUgaGVyZSwgSSB3b3VsZCBiZSBhc2tlZCB3aHkgaXQgaXMgcmVs
-YXRlZCB0byBjbG9ja2dlbiBub2RlPwoKVGhhdCdzIG5vdCBhIGdvb2QgcmVhc29uIHRvIGxlYXZl
-IGl0IHVuZG9jdW1lbnRlZC4KCj4gPiBXaGF0IGlzIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gImZz
-bCxxb3JpcS1zeXNjbGstMS4wIiBhbmQgImZzbCxxb3JpcS0KPiA+IHN5c2Nsay0yLjAiPyAgSG93
-IGRvZXMgdGhlIGNvbmNlcHQgb2YgYSBmaXhlZCBpbnB1dCBjbG9jayBjaGFuZ2U/Cj4gPgo+IFRl
-Y2huaWNhbGx5LCB0aGVyZSBpcyBubyBkaWZmZXJlbmNlIGJldHdlZW4gKnN5c2Nsay0xLjAgYW5k
-ICotMi4wLCBqdXN0IGxpa2UKPiBDbG9ja2dlbi0yLjAgYW5kIDEuMC4gTmFtaW5nIGxpa2UgdGhp
-cyBqdXN0IHRvIGluZGljYXRlIHRoZXkgYmVsb25nIHRvIGNoYXNzaXMgMi4wIAo+IGFuZCAxLjAg
-cmVzcGVjdGl2ZWx5LgoKSSBndWVzcyBpdCdzIE9LIGlmIGl0IGVuY291cmFnZXMgcGVvcGxlIHRv
-IGNvbnNpZGVyIHN3aXRjaGluZyB0byB0aGUKc3RhbmRhcmQgZml4ZWQtY2xvY2sgZm9yIGZ1dHVy
-ZSBjaGFzc2lzLgoKU28gdGhlIG9ubHkgdGhpbmcgdGhhdCByZWFsbHkgbmVlZHMgdG8gYmUgZml4
-ZWQgaXMgdGhlIG1pc3NpbmcKY2xvY2stZnJlcXVlbmN5IGRvY3VtZW50YXRpb24uCgotU2NvdHQK
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBw
-Yy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
-bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+Binding documentation for Neonode zForce infrared touchscreens.
+
+Signed-off-by: Heiko Stuebner <heiko.stuebner@bqreaders.com>
+---
+ .../bindings/input/touchscreen/zforce_ts.txt       |   30 ++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 2 files changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt
+new file mode 100644
+index 0000000..2f25cd2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt
+@@ -0,0 +1,30 @@
++* Neonode infrared touchscreen controller
++
++Required properties:
++- compatible: must be "neonode,zforce"
++- reg: I2C address of the chip
++- interrupts: interrupt to which the chip is connected
++- gpios: gpios the chip is connected to
++  first one is the interrupt gpio and second one the reset gpio
++- x-size: horizontal resolution of touchscreen
++- y-size: vertical resolution of touchscreen
++
++Example:
++
++	i2c@00000000 {
++		/* ... */
++
++		zforce_ts@50 {
++			compatible = "neonode,zforce";
++			reg = <0x50>;
++			interrupts = <2 0>;
++
++			gpios = <&gpio5 6 0>, /* INT */
++				<&gpio5 9 0>; /* RST */
++
++			x-size = <800>;
++			y-size = <600>;
++		};
++
++		/* ... */
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index b458760..e0b15b4 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -53,6 +53,7 @@ maxim	Maxim Integrated Products
+ microchip	Microchip Technology Inc.
+ mosaixtech	Mosaix Technologies, Inc.
+ national	National Semiconductor
++neonode		Neonode Inc.
+ nintendo	Nintendo
+ nvidia	NVIDIA
+ nxp	NXP Semiconductors
+-- 
+1.7.10.4
+
+
