@@ -1,75 +1,94 @@
-From: Ben Peddell <klightspeed@killerwolves.net>
-Subject: Re: [PATCH RFC RFT 2/2] ARM: Kirkwood: Add support for many Synology
- NAS devices
-Date: Thu, 09 Jan 2014 12:05:14 +1000
-Message-ID: <52CE03DA.3000007@killerwolves.net>
-References: <1389052027-16819-1-git-send-email-andrew@lunn.ch>
- <1389052027-16819-3-git-send-email-andrew@lunn.ch>
+From: Yuantian Tang <Yuantian.Tang@freescale.com>
+Subject: =?utf-8?B?UkU6IOetlOWkjTogW3Y3XSBjbGs6IGNvcmVuZXQ6IEFkZHMgdGhlIGNsb2Nr?=
+ =?utf-8?Q?_binding?=
+Date: Thu, 9 Jan 2014 02:57:32 +0000
+Message-ID: <e15511a79a9d4446a826da8d9ceec229@BL2PR03MB115.namprd03.prod.outlook.com>
+References: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
+ <20140108002115.GA19801@home.buserror.net>
+ <375c32b2f4e34589ae336af61468a51b@BL2PR03MB115.namprd03.prod.outlook.com>
+ <20140108093046.GB6701@e106331-lin.cambridge.arm.com>
+ <1389206619.25654.9.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1389052027-16819-3-git-send-email-andrew@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>
-Cc: devicetree@vger.kernel.org, linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1389206619.25654.9.camel@snotra.buserror.net>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/01/14 09:47, Andrew Lunn wrote:
-> Add device tree fragments and files to support many of the kirkwood
-> based Synology NAS devices. This is a translation of the board setup
-> file maintained by Ben Peddell <klightspeed@killerwolves.net>
-
-[snip]
-
-> diff --git a/arch/arm/boot/dts/synology/fan-gpios-32.dtsi b/arch/arm/boot/dts/synology/fan-gpios-32.dtsi
-> new file mode 100644
-> index 000000000000..aea1a0dce906
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/synology/fan-gpios-32.dtsi
-> @@ -0,0 +1,34 @@
-> +/*
-> + * Andrew Lunn <andrew@lunn.ch>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +/ {
-> +	ocp@f1000000 {
-> +		pinctrl: pinctrl@10000 {
-> +
-> +			pmx_fan_32: pmx-fan-32 {
-> +				marvell,pins = "mpp32";
-> +				marvell,function = "gpio";
-> +			};
-> +			pmx_fan_33: pmx-fan-33 {
-> +				marvell,pins = "mpp33";
-> +				marvell,function = "gpio";
-
-This should be "gpo"
-
-> +			};
-> +			pmx_fan_34: pmx-fan-34 {
-> +				marvell,pins = "mpp34";
-> +				marvell,function = "gpio";
-> +			};
-> +		};
-> +	};
-> +	gpio_fan {
-> +		pinctrl-0 = <&pmx_fan_32 &pmx_fan_33 &pmx_fan_34>;
-> +		pinctrl-names = "default";
-> +		gpios = <&gpio1 0 GPIO_ACTIVE_HIGH
-> +			 &gpio1 1 GPIO_ACTIVE_HIGH
-> +			 &gpio1 2 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
+VGhhbmtzIGZvciB5b3UgcmV2aWV3Lg0KU2VlIG15IHJlc3BvbnNlIGlubGluZS4NCg0KVGhhbmtz
+LA0KWXVhbnRpYW4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29k
+IFNjb3R0LUIwNzQyMQ0KPiBTZW50OiAyMDE05bm0MeaciDnml6Ug5pif5pyf5ZubIDI6NDQNCj4g
+VG86IE1hcmsgUnV0bGFuZA0KPiBDYzogVGFuZyBZdWFudGlhbi1CMjk5ODM7IGdhbGFrQGtlcm5l
+bC5jcmFzaGluZy5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1k
+ZXZAbGlzdHMub3psYWJzLm9yZw0KPiBTdWJqZWN0OiBSZTog562U5aSNOiBbdjddIGNsazogY29y
+ZW5ldDogQWRkcyB0aGUgY2xvY2sgYmluZGluZw0KPiANCj4gT24gV2VkLCAyMDE0LTAxLTA4IGF0
+IDA5OjMwICswMDAwLCBNYXJrIFJ1dGxhbmQgd3JvdGU6DQo+ID4gT24gV2VkLCBKYW4gMDgsIDIw
+MTQgYXQgMDg6NTM6NTZBTSArMDAwMCwgWXVhbnRpYW4gVGFuZyB3cm90ZToNCj4gPiA+DQo+ID4g
+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4gPiDlj5Hku7bk
+uro6IFdvb2QgU2NvdHQtQjA3NDIxDQo+ID4gPiDlj5HpgIHml7bpl7Q6IDIwMTTlubQx5pyIOOaX
+pSA4OjIxDQo+ID4gPiDmlLbku7bkuro6IFRhbmcgWXVhbnRpYW4tQjI5OTgzDQo+ID4gPiDmioTp
+gIE6IGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+
+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
+b3JnDQo+ID4gPiDkuLvpopg6IFJlOiBbdjddIGNsazogY29yZW5ldDogQWRkcyB0aGUgY2xvY2sg
+YmluZGluZw0KPiA+ID4NCj4gPiA+IE9uIFdlZCwgTm92IDIwLCAyMDEzIGF0IDA1OjA0OjQ5UE0g
+KzA4MDAsIHRhbmcgeXVhbnRpYW4gd3JvdGU6DQo+ID4gPiA+ICtSZWNvbW1lbmRlZCBwcm9wZXJ0
+aWVzOg0KPiA+ID4gPiArLSByYW5nZXM6IEFsbG93cyB2YWxpZCB0cmFuc2xhdGlvbiBiZXR3ZWVu
+IGNoaWxkJ3MgYWRkcmVzcyBzcGFjZQ0KPiBhbmQNCj4gPiA+ID4gKyAgICAgcGFyZW50J3MuIE11
+c3QgYmUgcHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcyBzdWItbm9kZXMuDQo+ID4gPiA+ICstICNh
+ZGRyZXNzLWNlbGxzOiBTcGVjaWZpZXMgdGhlIG51bWJlciBvZiBjZWxscyB1c2VkIHRvIHJlcHJl
+c2VudA0KPiA+ID4gPiArICAgICBwaHlzaWNhbCBiYXNlIGFkZHJlc3Nlcy4gIE11c3QgYmUgcHJl
+c2VudCBpZiB0aGUgZGV2aWNlIGhhcw0KPiA+ID4gPiArICAgICBzdWItbm9kZXMgYW5kIHNldCB0
+byAxIGlmIHByZXNlbnQNCj4gPiA+ID4gKy0gI3NpemUtY2VsbHM6IFNwZWNpZmllcyB0aGUgbnVt
+YmVyIG9mIGNlbGxzIHVzZWQgdG8gcmVwcmVzZW50DQo+ID4gPiA+ICsgICAgIHRoZSBzaXplIG9m
+IGFuIGFkZHJlc3MuIE11c3QgYmUgcHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcw0KPiA+ID4gPiAr
+ICAgICBzdWItbm9kZXMgYW5kIHNldCB0byAxIGlmIHByZXNlbnQNCj4gPiA+DQo+ID4gPiBXaHkg
+YXJlIHdlIHNwZWNpZnlpbmcgI2FkZHJlc3MtY2VsbHMvI3NpemUtY2VsbHMgaGVyZT8NCj4gPiA+
+DQo+ID4gPiBBOiBpdCBoYXMgc3ViLW5vZGVzIHdoaWNoIGhhdmUgUkVHIHByb3BlcnR5LCBkb24n
+dCB3ZSBuZWVkIHRvDQo+ID4gPiBzcGVjaWZ5ICNhZGRyZXNzLWNlbGxzLyNzaXplLWNlbGxzPw0K
+PiA+DQo+ID4gSWYgYSBub2RlIGhhcyBhIHJlZyBlbnRyeSwgaXRzIHBhcmVudCBzaG91bGQgaGF2
+ZSAjc2l6ZS1jZWxscyBhbmQNCj4gPiAjYWRkcmVzcy1jZWxscyB0byBhbGxvdyBpdCB0byBiZSBw
+YXJzZWQgcHJvcGVybHkuDQo+IA0KPiBZZXMsIGJ1dCB3aHkgZG8gd2UgbmVlZCB0byBzcGVjaWZ5
+IGluIHRoaXMgYmluZGluZyBob3cgbWFueSBjZWxscyB0aGVyZQ0KPiB3aWxsIGJlLCBlc3BlY2lh
+bGx5IHNpbmNlIHRoaXMgYmluZGluZyBvbmx5IGFkZHJlc3NlcyB0aGUgY2xvY2sgcHJvdmlkZXIN
+Cj4gYXNwZWN0IG9mIHRoZSBjbG9ja2dlbiBub2RlcyAoZS5nLiBpdCBkb2Vzbid0IGRlc2NyaWJl
+IHRoZSByZWcpPyAgT3INCj4gcmF0aGVyLCBpdCdzIHBhcnRpYWxseSBkZXNjcmliaW5nIHRoZSBu
+b24tY2xvY2sgYXNwZWN0LCBhbmQgZG9lc24ndA0KPiBhZGRyZXNzIHRoZSBjbG9jayBhc3BlY3Qg
+YXQgYWxsIEFGQUlDVC4NCj4gDQpGaXJzdCBvZiBhbGwsIHRoZXkgYXJlIG5vdCAiUmVxdWlyZWQg
+cHJvcGVydGllcyIsIHRoZXkgYXJlIG9wdGlvbmFsLg0KSWYgcHJlc2VudCwgd2Ugc2hvdWxkIGdp
+dmUgdGhlbSBhIHZhbHVlIG9mIDEuDQpUaGVuLCB5ZXMsIHRoaXMgYmluZGluZyBkZXNjcmliZXMg
+Y2xvY2tnZW4gbm9kZSB3aGljaCBpcyAiQ0xPQ0sgQkxPQ0siLg0KSXQgc2hvdWxkIHRha2UgY2Fy
+ZSBvZiBpdHMgc3ViLW5vZGVzIHdoaWNoIGFyZSBjbG9jayBub2RlcyB0byBiZSBwYXJzZWQgcHJv
+cGVybHkuDQoNCj4gV2hlcmUgZG9lcyB0aGUgYWN0dWFsIGlucHV0IGNsb2NrIGZyZXF1ZW5jeSBn
+bz8gIFUtQm9vdCBwdXRzIGl0IGluIHRoZQ0KPiBjbG9ja2dlbiBub2RlIGl0c2VsZiBhcyBjbG9j
+ay1mcmVxdWVuY3ksIGJ1dCB0aGF0IGlzbid0IGRlc2NyaWJlZCBpbiB0aGUNCj4gYmluZGluZy4g
+IEhvdyBkb2VzIHRoYXQgcmVsYXRlIHRvIHRoZSBzeXNjbGsgbm9kZT8gIElmICJmc2wscW9yaXEt
+c3lzY2xrLQ0KPiAxLjAiIGlzIHN1cHBvc2VkIHRvIGluZGljYXRlIHRoYXQgY2xvY2stZnJlcXVl
+bmN5IGNhbiBiZSBmb3VuZCBpbiB0aGUNCj4gcGFyZW50IG5vZGUsIHRoYXQgaXNuJ3Qgc3BlY2lm
+aWVkIGJ5IHRoZSBiaW5kaW5nLCBub3IgaXMgY2xvY2stZnJlcXVlbmN5DQo+IHNob3duIGluIHRo
+ZSBleGFtcGxlLg0KPiANCmNsb2NrLWZyZXF1ZW5jeSBpcyBhIHdpcmVkIHByb3BlcnR5LiBJdCBp
+cyBpbiBjbG9ja2dlbiBub2RlIHJpZ2h0IG5vdy4NCkJ1dCBpdCBzaG91bGQgYmUgcGxhY2VkIHNv
+bWV3aGVyZSBpbiBjbG9jayBub2Rlcy4NCklmIEkgZGVzY3JpYmUgaGVyZSwgSSB3b3VsZCBiZSBh
+c2tlZCB3aHkgaXQgaXMgcmVsYXRlZCB0byBjbG9ja2dlbiBub2RlPw0KSWYgeW91IHRoaW5rIHNo
+b3dpbmcgaXQgdXAgaXMgT0ssIEkgbGlrZSB0byBkbyBpdC4NCiANCj4gV2hhdCBpcyB0aGUgZGlm
+ZmVyZW5jZSBiZXR3ZWVuICJmc2wscW9yaXEtc3lzY2xrLTEuMCIgYW5kICJmc2wscW9yaXEtDQo+
+IHN5c2Nsay0yLjAiPyAgSG93IGRvZXMgdGhlIGNvbmNlcHQgb2YgYSBmaXhlZCBpbnB1dCBjbG9j
+ayBjaGFuZ2U/DQo+DQpUZWNobmljYWxseSwgdGhlcmUgaXMgbm8gZGlmZmVyZW5jZSBiZXR3ZWVu
+ICpzeXNjbGstMS4wIGFuZCAqLTIuMCwganVzdCBsaWtlDQpDbG9ja2dlbi0yLjAgYW5kIDEuMC4g
+TmFtaW5nIGxpa2UgdGhpcyBqdXN0IHRvIGluZGljYXRlIHRoZXkgYmVsb25nIHRvIGNoYXNzaXMg
+Mi4wIA0KYW5kIDEuMCByZXNwZWN0aXZlbHkuDQoNClJlZ2FyZHMsDQpZdWFudGlhbg0KIA0KPiAt
+U2NvdHQNCj4gDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
+cmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
