@@ -1,101 +1,123 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ehci-platform: Add support for clks
- and phy passed through devicetree
-Date: Thu, 09 Jan 2014 14:26:30 +0100
-Message-ID: <52CEA386.6060103@redhat.com>
-References: <1389198608-24339-1-git-send-email-hdegoede@redhat.com> <1389198608-24339-3-git-send-email-hdegoede@redhat.com> <20140108181632.GG2941@lukather>
+Subject: Re: [PATCH v2 1/2] ohci-platform: Add support for
+ devicetree instantiation
+Date: Thu, 09 Jan 2014 14:32:28 +0100
+Message-ID: <52CEA4EC.5010007@redhat.com>
+References: <1389198608-24339-1-git-send-email-hdegoede@redhat.com> <1389198608-24339-2-git-send-email-hdegoede@redhat.com> <CAGVrzcbsvm1MLj0U=jSZRRsorz6XLEoNTv4vhseL4Oq06FDz=A@mail.gmail.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBEWHXKLAKGQE5Q76HJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140108181632.GG2941@lukather>
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB46JXKLAKGQEUG5OIHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGVrzcbsvm1MLj0U=jSZRRsorz6XLEoNTv4vhseL4Oq06FDz=A@mail.gmail.com>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 01/08/2014 07:16 PM, Maxime Ripard wrote:
-> On Wed, Jan 08, 2014 at 05:30:08PM +0100, Hans de Goede wrote:
->> Currently ehci-platform is only used in combination with devicetree when used
->> with some via socs. By extending it to (optionally) get clks and a phy from
->> devicetree, and enabling / disabling those on power_on / off, it can be used
->> more generically. Specifically after this commit it can be used for the
->> ehci controller on Allwinner sunxi SoCs.
+On 01/08/2014 09:36 PM, Florian Fainelli wrote:
+> Hello,
+>
+> 2014/1/8 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
+>> Add support for ohci-platform instantiation from devicetree, including
+>> optionally getting clks and a phy from devicetree, and enabling / disabling
+>> those on power_on / off.
 >>
->> Somehow we've ended up with 2 device-bindings documents for ehci-platform.c,
->> this patch renames and updates one to platform-ehci.txt to reflect that this
->> is a generic platform driver, and removes the other.
+>> This should allow using ohci-platform from devicetree in various cases.
+>> Specifically after this commit it can be used for the ohci controller found
+>> on Allwinner sunxi SoCs.
 >>
 >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 >> ---
->>   .../devicetree/bindings/usb/platform-ehci.txt      |  25 ++++
->>   .../devicetree/bindings/usb/via,vt8500-ehci.txt    |  15 ---
->>   .../devicetree/bindings/usb/vt8500-ehci.txt        |  12 --
->>   drivers/usb/host/ehci-platform.c                   | 126 +++++++++++++++++----
->>   4 files changed, 131 insertions(+), 47 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/usb/platform-ehci.txt
->>   delete mode 100644 Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt
->>   delete mode 100644 Documentation/devicetree/bindings/usb/vt8500-ehci.txt
+>>   .../devicetree/bindings/usb/platform-ohci.txt      |  25 ++++
+>>   drivers/usb/host/ohci-platform.c                   | 148 ++++++++++++++++++---
+>>   2 files changed, 153 insertions(+), 20 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/usb/platform-ohci.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/usb/platform-ehci.txt b/Documentation/devicetree/bindings/usb/platform-ehci.txt
+>> diff --git a/Documentation/devicetree/bindings/usb/platform-ohci.txt b/Documentation/devicetree/bindings/usb/platform-ohci.txt
 >> new file mode 100644
->> index 0000000..56c478d
+>> index 0000000..44bfa57
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/platform-ehci.txt
->> @@ -0,0 +1,25 @@
->> +Generic Platform EHCI controller
->> +
->> +Required properties:
->> +- compatible : "via,vt8500-ehci" or "wm,prizm-ehci"
->> +- reg : ehci controller register range (address and length)
->> +- interrupts : ehci controller interrupt
->> +
->> +Optional properties:
->> +- clocks : a list of phandle + clock specifier pairs, one for each entry
->> +   in clock-names.
->> +- clock-names : "clk0", "clk1", ...
->> +- phys : phy
->> +- phy-names : "phy0"
->> +
->> +Example:
->> +
->> +	ehci@d8007900 {
->> +		compatible = "via,vt8500-ehci";
->> +		reg = <0xd8007900 0x200>;
->> +		interrupts = <43>;
->> +		clocks = <&usb_clk 6>, <&ahb_gates 2>;
->> +		clock-names = "clk0", "clk1";
+>> +++ b/Documentation/devicetree/bindings/usb/platform-ohci.txt
 >
-> I'm really not convinced by this either. It prevents you from doing
-> anything useful out of these clocks, and the only thing you can
-> actually do with it is calling clk_get, and that's pretty much it.
+> ohci-mmio might be a better name than platform maybe?
+
+We already have platform-uhci too, and this matches the name of
+the .c file so that people can actually correlate the 2.
+
 >
-> What if you some platform needs to adjust the rate of one of the two?
+> [snip]
+>
+>> +static int ohci_platform_power_on(struct platform_device *dev)
+>> +{
+>> +       struct usb_hcd *hcd = platform_get_drvdata(dev);
+>> +       struct ohci_platform_priv *priv =
+>> +               (struct ohci_platform_priv *)hcd_to_ohci(hcd)->priv;
+>> +       int clk, ret;
+>> +
+>> +       for (clk = 0; priv->clks[clk] && clk < OHCI_MAX_CLKS; clk++) {
+>> +               ret = clk_prepare_enable(priv->clks[clk]);
+>> +               if (ret)
+>> +                       goto err_disable_clks;
+>> +       }
+>
+> Do we really need to cap this to OHCI_MAX_CLKS, the next driver which
+> has 4 clocks will have to bump this, so maybe a linked-list would be
+> best?
 
-Then it needs its own driver. This is intended as a binding for a
-*generic* driver, which is meant to cover simple straight forward
-non-pci ohci cases. For more complex cases a separate driver will
-need to be written.
+I can make OHCI_MAX_CLKS 4 or 8 if that makes you happy, other then
+that I greatly prefer to keep this KISS. Devices with 3 clks are already
+quite rare, so its not like we're going to need to bump this every other
+week a linked list where a simple array suffices is just overkill and
+unnecessarily complicates things.
 
-I must say I'm becoming a bit unhappy with how the reviews of devicetree
-bindings are being done. In one case it is not generic enough (ahci-sunxi).
+>
+>> +
+>> +       if (priv->phy) {
+>> +               ret = phy_init(priv->phy);
+>> +               if (ret)
+>> +                       goto err_disable_clks;
+>> +
+>> +               ret = phy_power_on(priv->phy);
+>> +               if (ret)
+>> +                       goto err_exit_phy;
+>> +       }
+>
+> Although I do value the idea of having DT probing for ohci-platform,
+> ehci-platform et al, I am not sure if this really belongs in the
+> generic OHCI platform driver, or if we should rather have small glue
+> drivers which register the ohci-platform driver and which provides all
+> the platform-specific power_on, power_off, suspend callbacks to the
+> ohci platform driver? Such glue driver would be the one which gets
+> probed based off a specific compatible string a
 
-If I then try to make it more generic in a case where that can actually
-be done as the hardware is pretty straight forward, it is not specific enough.
-You can simply not have both!
+This can already be done by having a platform driver with its own
+compatible string providing platform data with the hooks. The whole idea
+here is to avoid having to write such a glue driver for every other soc,
+so cover the common simple case, and use glue drivers for more complicated
+scenarios.
 
-> Or wants to cut one but not the other for any reason?
+> At first glance it does look like this covers 80% of the existing OHCI
+> drivers out there, so this is good. We might also want to support
+> clock pointers provided via platform_data so we can remove ohci-at91,
+> ohci-ep93xx, ohci-spear and friends in the future.
 
-This is another example of non generic behavior, requiring a separate
-(small using the existing ohci core) platform glue driver, like the *19* we
-already have.
+Lets first get the generic devicetree support merged as is, if after
+that people want to extend it, so that (more) existing ohci drivers can
+be removed, they are very much welcome to do so. Preferably people
+with access to the hardware, so that they can actually test the changes.
+
+> ohci-ppc-of could also probably be removed once we add quirks and
+> endian properties parsing to ohci-platform?
+
+Add-on patches extending my initial work are welcome. Again probably
+best done by people who actually have access to the relevant hw.
 
 Regards,
 
