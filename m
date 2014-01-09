@@ -1,68 +1,31 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v5 4/4] [media] exynos-scaler: Add DT bindings for SCALER
- driver
-Date: Thu, 09 Jan 2014 10:20:07 +0100
-Message-ID: <2542868.mVreZlxTcT@amdc1032>
-References: <1389238094-19386-1-git-send-email-shaik.ameer@samsung.com>
- <1389238094-19386-5-git-send-email-shaik.ameer@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 6/9] mtd: nand: add sunxi NFC dt bindings doc
+Date: Thu, 9 Jan 2014 11:00:57 +0100
+Message-ID: <201401091100.58174.arnd@arndb.de>
+References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com> <201401082228.55807.arnd@arndb.de> <52CE5E5A.6050209@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1389238094-19386-5-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, s.nawrocki@samsung.com, posciak@google.com, hverkuil@xs4all.nl, m.chehab@samsung.com
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52CE5E5A.6050209@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: boris brezillon <b.brezillon@overkiz.com>
+Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, dev@linux-sunxi.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-
-On Thursday, January 09, 2014 08:58:14 AM Shaik Ameer Basha wrote:
-> This patch adds the DT binding documentation for the
-> Exynos5420/5410 based SCALER device driver.
+On Thursday 09 January 2014, boris brezillon wrote:
+> Sure, I'll remove references to the NFC acronym:
+>   - change compatible string to "allwinner,sun4i-nand"
+>   - avoid NFC references in the doc
+>   - rename the driver into sunxi-nand.c (formerly sunxi_nfc.c)
 > 
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  .../devicetree/bindings/media/exynos5-scaler.txt   |   22 ++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/exynos5-scaler.txt
+> Do you see any other references to this acronym ?
 > 
-> diff --git a/Documentation/devicetree/bindings/media/exynos5-scaler.txt b/Documentation/devicetree/bindings/media/exynos5-scaler.txt
-> new file mode 100644
-> index 0000000..9328e7d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/exynos5-scaler.txt
-> @@ -0,0 +1,22 @@
-> +* Samsung Exynos5 SCALER device
-> +
-> +SCALER is used for scaling, blending, color fill and color space
-> +conversion on EXYNOS[5420/5410] SoCs.
-> +
-> +Required properties:
-> +- compatible: should be "samsung,exynos5420-scaler" or
-> +			"samsung,exynos5410-scaler"
-> +- reg: should contain SCALER physical address location and length
-> +- interrupts: should contain SCALER interrupt number
-> +- clocks: should contain the SCALER clock specifier, from the
-> +			common clock bindings
-> +- clock-names: should be "scaler"
-> +
-> +Example:
-> +	scaler_0: scaler@12800000 {
-> +		compatible = "samsung,exynos5420-scaler";
-> +		reg = <0x12800000 0x1000>;
-> +		interrupts = <0 220 0>;
-> +		clocks = <&clock 381>;
-> +		clock-names = "scaler";
-> +	};
 
-Your patchset adds support for EXYNOS5 SCALER but doesn't add any real
-users of it yet.  Could you please explain why?
+Those are the important ones, thanks!
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Regarding the binding, I would mention nfc once there to help people
+that happen to look for that.
+
+	Arnd
