@@ -1,120 +1,58 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 3/3] Documentation: mfd: Add binding document for S2MPA01
-Date: Thu, 9 Jan 2014 10:17:00 +0530
-Message-ID: <CAK9yfHxvjacrqodCw+_WuGN1egg2==wwk7BdAL4JD8iJ1Sa7qA@mail.gmail.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] regulator: Add support for S2MPA01 regulator
+Date: Thu, 9 Jan 2014 10:39:34 +0530
+Message-ID: <CAK9yfHwZN93T=Cs0jZ=ce6PBnjoFM6OcpC2cT1TCZVjHLBEJ=Q@mail.gmail.com>
 References: <1389162390-4582-1-git-send-email-sachin.kamat@linaro.org>
-	<1389162390-4582-3-git-send-email-sachin.kamat@linaro.org>
-	<20140108094104.GC6701@e106331-lin.cambridge.arm.com>
+	<1389162390-4582-2-git-send-email-sachin.kamat@linaro.org>
+	<20140108123002.GY31886@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140108094104.GC6701@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "sbkim73@samsung.com" <sbkim73@samsung.com>, "patches@linaro.org" <patches@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140108123002.GY31886-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8 January 2014 15:11, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Wed, Jan 08, 2014 at 06:26:30AM +0000, Sachin Kamat wrote:
->> Added initial binding documentation for S2MPA01 MFD.
->>
->> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   91 +++++++++++++++++++++
->>  1 file changed, 91 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
->> new file mode 100644
->> index 000000000000..ae750a28821b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
->> @@ -0,0 +1,91 @@
->> +
->> +* Samsung S2MPA01 Voltage and Current Regulator
->> +
->> +The Samsung S2MPA01 is a multi-function device which includes high
->> +efficiency buck converters including Dual-Phase buck converter, various LDOs,
->> +and an RTC. It is interfaced to the host controller using an I2C interface.
->> +Each sub-block is addressed by the host system using different I2C slave
->> +addresses.
->> +
->> +Required properties:
->> +- compatible: Should be "samsung,s2mpa01-pmic".
->> +- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
->> +
->> +Optional properties:
->> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
->> +  the interrupts from s2mpa01 are delivered to.
->> +- interrupts: Interrupt specifiers for interrupt sources.
->
-> That sounds a bit odd. How many interrupts might there be? What do they
-> signal?
-
-Actually there is only one interrupt line for sending interrupts to
-the AP for conditons like sudden
-voltage drop, etc. I will make the above sentence singular.
-
->> +
->> +Optional nodes:
->> +- regulators: The regulators of s2mpa01 that have to be instantiated should be
->> +included in a sub-node named 'regulators'. Regulator nodes included in this
->> +sub-node should be of the format as listed below.
->> +
->> +     regulator_name {
->> +             [standard regulator constraints....];
->> +     };
->> +
->
-> Why not just say that the regulators node contains regulators in the
-> usual format, with reference to the regulator binding?
-
-OK. I will update this (as also suggested by your later comment).
-
->
->> + regulator-ramp-delay for BUCKs = [6250/12500(default)/25000/50000] uV/us
->> +
->> + BUCK[1/2/3/4] supports disabling ramp delay on hardware, so explictly
->> + regulator-ramp-delay = <0> can be used for them to disable ramp delay.
->> + In the absence of the regulator-ramp-delay property, the default ramp
->> + delay will be used.
->> +
->> +NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
->> +for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
->> +Grouping of BUCKs sharing ramp rate setting is as follow : BUCK[1, 6],
->> +BUCK[2, 4], and BUCK[8, 9, 10]
->
-> It would probably be better to have a heading like "Properties for BUCK
-> regulator nodes" for all of the above.
-
-OK.
-
->
->> +
->> +The regulator constraints inside the regulator nodes use the standard regulator
->> +bindings which are documented elsewhere.
->
-> As mentioned above, state this at the beginning and point to the
-> regulator bindings.
-
-OK.
-
->> +
->> +The following are the names of the regulators that the s2mpa01 PMIC block
->> +supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
->> +as per the datasheet of s2mpa01.
->
-> So these are what the nodes should be called? (rather than values for
-> regulator-name).
-
-Yes. That is the convention followed here.
-
->
-> Otherwise this looks ok to me.
->
+Hi Mark,
 
 Thanks for reviewing.
+
+On 8 January 2014 18:00, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Jan 08, 2014 at 11:56:29AM +0530, Sachin Kamat wrote:
+>
+>> +     if (!iodev->dev->of_node) {
+>> +             if (pdata) {
+>> +                     goto common_reg;
+>> +             } else {
+>> +                     dev_err(pdev->dev.parent,
+>> +                             "Platform data or DT node not supplied\n");
+>> +                     return -ENODEV;
+>> +             }
+>> +     }
+>
+> The driver shouldn't need these to probe, it should be able to start in
+> read only mode with no configuration.
+
+OK.
+
+>
+>> +static int __init s2mpa01_pmic_init(void)
+>> +{
+>> +     return platform_driver_register(&s2mpa01_pmic_driver);
+>> +}
+>> +subsys_initcall(s2mpa01_pmic_init);
+>
+> module_platform_driver().
+
+Just a small doubt here. Wouldn't changing this from subsys init to module init
+cause problems to devices like mmc which would want the regulators available
+(where they are not already enabled by the boot loader)?
 
 -- 
 With warm regards,
 Sachin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
