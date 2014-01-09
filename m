@@ -1,86 +1,53 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Fri, 10 Jan 2014 00:08:01 +0300
-Message-ID: <52CF0FB1.1010109@cogentembedded.com>
-References: <1389290226-6971-1-git-send-email-hdegoede@redhat.com> <1389290226-6971-2-git-send-email-hdegoede@redhat.com> <52CF0326.1090407@cogentembedded.com> <52CEFCFE.7080308@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH RFC 2/3] ARM: kernel: add support for cpu cache
+	information
+Date: Thu, 9 Jan 2014 20:08:01 +0000
+Message-ID: <20140109200801.GF27432@n2100.arm.linux.org.uk>
+References: <1389209168-17189-1-git-send-email-sudeep.holla@arm.com> <1389209168-17189-3-git-send-email-sudeep.holla@arm.com> <20140108205754.GN27432@n2100.arm.linux.org.uk> <52CEF9E7.4070706@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBC6MFNV32EFRBHMDXSLAKGQEMMUSGPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52CEFCFE.7080308-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52CEF9E7.4070706@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <Sudeep.Holla@arm.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ashok Raj <ashok.raj@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/09/2014 10:48 PM, Hans de Goede wrote:
-> Hi,
->
-> On 01/09/2014 09:14 PM, Sergei Shtylyov wrote:
->> Hello.
->>
->> On 01/09/2014 08:57 PM, Hans de Goede wrote:
->>
->>> Add support for ohci-platform instantiation from devicetree, including
->>> optionally getting clks and a phy from devicetree, and enabling / disabling
->>> those on power_on / off.
->>
->>> This should allow using ohci-platform from devicetree in various cases.
->>> Specifically after this commit it can be used for the ohci controller found
->>> on Allwinner sunxi SoCs.
->>
->>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>   .../devicetree/bindings/usb/mmio-ohci.txt          |  22 +++
->>>   drivers/usb/host/ohci-platform.c                   | 150
->>> ++++++++++++++++++---
->>>   2 files changed, 152 insertions(+), 20 deletions(-)
->>>   create mode 100644 Documentation/devicetree/bindings/usb/mmio-ohci.txt
->>
->>> diff --git a/Documentation/devicetree/bindings/usb/mmio-ohci.txt
->>> b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
->>> new file mode 100644
->>> index 0000000..9c776ed
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
->>> @@ -0,0 +1,22 @@
->>> +Generic MMIO OHCI controller
+On Thu, Jan 09, 2014 at 07:35:03PM +0000, Sudeep Holla wrote:
+> I assume you referring to some particular CPUs which don't implement this.
+> I could not find it as optional or IMPLEMENTATION defined in ARM ARM.
+> I might be missing to find it or there may be exceptions.
+> Can you please provide more information on that ?
 
->>     OHCI controller always uses MMIO, and likewise EHCI. You don't need to
->> specifically mention it.
+This is where _not_ relying on the most up to date ARM architecture
+reference manual, but instead referring back to the ARM architecture
+manual revision appropriate to the architecture is a far better plan.
 
-> Right, I'm only using it here because it is also used in the compatible string.
+For example, DDI0100E, Part B, 2.3.2:
 
-    Please drop it.
+| 2.3.2 Cache Type register
+| If present, the Cache Type register supplies the following details about
+| the cache:
 
->>> +
->>> +Required properties:
->>> +- compatible : "mmio-ohci"
+Note the "if present" - it's a fact that not all ARMv4 CPUs support this
+register.  2.3 also tells you how to detect when these registers are
+implemented:
 
->>     Likewise, it's not a good name. Why not call it "platform-ohci"?
+| ID registers other than the main ID register are defined so that when
+| implemented, their value cannot be equal to that of the main ID register.
+| Software can therefore determine whether they exist by reading both
+| the main ID register and the desired register and comparing their values.
+| If the two values are not equal, the desired register exists.
 
-> Because, as you would have known had you read the entire thread, people objected
-> against exactly that name because the "platform" bus thing is a Linux invention,
-> and other operating systems don't use the platform nomenclature for non pci
-> busses.
+I can go back further to one of the initial revisions of the ARM ARM,
+but that's a paper copy.
 
-    I wonder where were all those people when "xhci-platform" compatible got 
-adopted in drivers/usb/host/xhci-plat.c? :-P
+I can also refer you to DDI0087E (ARM720T) section 4.3 - this is an
+ARMv4T CPU, and it has no cache type register.  StrongARM is another
+example where the CTR is not implemented.
 
-    Anyway, I want to suggest "usb-[eo]hci" of which "usb-ehci" binding has 
-even already documented in Documentation/devicetree/bindings/usb/usb-ehci.txt.
-Both these "compatible" values are used as backups in the multiple described 
-bindings of the platform-specific [EO]HCI controllers. I really don't see why 
-you should invent anything new (and so poorly named).
-
-> Regards,
-
-> Hans
-
-WBR, Sergei
+-- 
+FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
+in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
+Estimate before purchase was "up to 13.2Mbit".
