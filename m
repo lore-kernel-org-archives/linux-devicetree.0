@@ -1,78 +1,59 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: [PATCH v8 7/7] mmc: omap_hsmmc: remove pbias workaround
-Date: Thu, 9 Jan 2014 20:21:02 +0530
-Message-ID: <1389279062-32291-8-git-send-email-balajitk@ti.com>
-References: <1387560955-6547-1-git-send-email-balajitk@ti.com>
- <1389279062-32291-1-git-send-email-balajitk@ti.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] ARM: imx6q: Add missing esai_ahb clock to current clock
+ tree
+Date: Thu, 9 Jan 2014 15:57:53 +0100
+Message-ID: <20140109145753.GV20094@book.gsilab.sittig.org>
+References: <1389236699-10387-1-git-send-email-Guangyu.Chen@freescale.com>
+ <20140109075525.GO6750@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1389279062-32291-1-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, broonie@kernel.org, tony@atomide.com
-Cc: mark.rutland@arm.com, Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140109075525.GO6750-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-remove pbias workaround
+On Thu, Jan 09, 2014 at 08:55 +0100, Sascha Hauer wrote:
+> 
+> [ ... ]
+> 
+> We have the situation here that a single bit controls two clocks. As
+> Shawn mentioned just using two gates on the same bit doesn't work
+> properly. Do we need a new basic clock type or expand the common gate
+> code somehow?
+> This situation happens from time to time and I haven't seen a solution
+> for this.
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
----
- drivers/mmc/host/omap_hsmmc.c |   20 +-------------------
- 1 files changed, 1 insertions(+), 19 deletions(-)
+You may want to lookup the following message:
 
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 0a390f8..0f0aa5d 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -170,7 +170,6 @@ struct omap_hsmmc_host {
- 	struct	regulator	*vcc_aux;
- 	struct	regulator	*pbias;
- 	bool			pbias_enabled;
--	int			pbias_disable;
- 	void	__iomem		*base;
- 	resource_size_t		mapbase;
- 	spinlock_t		irq_lock; /* Prevent races with irq handler */
-@@ -267,13 +266,6 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
- 	 */
- 	if (!host->vcc)
- 		return 0;
--	/*
--	 * With DT, never turn OFF the regulator for MMC1. This is because
--	 * the pbias cell programming support is still missing when
--	 * booting with Device tree
--	 */
--	if (host->pbias_disable && !vdd)
--		return 0;
- 
- 	if (mmc_slot(host).before_set_reg)
- 		mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
-@@ -1541,13 +1533,7 @@ static void omap_hsmmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 		 * of external transceiver; but they all handle 1.8V.
- 		 */
- 		if ((OMAP_HSMMC_READ(host->base, HCTL) & SDVSDET) &&
--			(ios->vdd == DUAL_VOLT_OCR_BIT) &&
--			/*
--			 * With pbias cell programming missing, this
--			 * can't be allowed on MMC1 when booting with device
--			 * tree.
--			 */
--			!host->pbias_disable) {
-+			(ios->vdd == DUAL_VOLT_OCR_BIT)) {
- 				/*
- 				 * The mmc_select_voltage fn of the core does
- 				 * not seem to set the power_mode to
-@@ -1880,10 +1866,6 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
- 
- 	omap_hsmmc_context_save(host);
- 
--	/* This can be removed once we support PBIAS with DT */
--	if (host->dev->of_node && res->start == 0x4809c000)
--		host->pbias_disable = 1;
--
- 	host->dbclk = clk_get(&pdev->dev, "mmchsdb_fck");
- 	/*
- 	 * MMC can still work without debounce clock.
+  Date: Tue, 23 Jul 2013 15:14:06 +0200
+  From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+  To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>,
+	  Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>,
+	  linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+  Cc: [ ... ]
+  Subject: Re: [PATCH v3 17/31] clk: mpc512x: introduce COMMON_CLK for MPC512x
+
+  http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/185687.html
+
+The specific situation was for MS-CAN on PowerPC, but it inspired
+my outlining an approach to "shared clock gates".  See an example
+implementation towards the end of the message with both the
+clk-gate.c extension, as well as rather generic example use.
+
+My approach turned out to not be needed, but it might serve as a
+starting point for you.  You'd have to add support for static
+declaration though, but this should be straight forward.
+
+
+virtually yours
+Gerhard Sittig
 -- 
-1.7.5.4
-
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
