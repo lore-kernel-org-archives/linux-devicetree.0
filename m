@@ -1,124 +1,58 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Thu, 09 Jan 2014 14:32:28 +0100
-Message-ID: <52CEA4EC.5010007@redhat.com>
-References: <1389198608-24339-1-git-send-email-hdegoede@redhat.com> <1389198608-24339-2-git-send-email-hdegoede@redhat.com> <CAGVrzcbsvm1MLj0U=jSZRRsorz6XLEoNTv4vhseL4Oq06FDz=A@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
+Date: Thu, 9 Jan 2014 16:00:11 +0200
+Message-ID: <1389276051-1326-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRB46JXKLAKGQEUG5OIHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGVrzcbsvm1MLj0U=jSZRRsorz6XLEoNTv4vhseL4Oq06FDz=A@mail.gmail.com>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 01/08/2014 09:36 PM, Florian Fainelli wrote:
-> Hello,
->
-> 2014/1/8 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
->> Add support for ohci-platform instantiation from devicetree, including
->> optionally getting clks and a phy from devicetree, and enabling / disabling
->> those on power_on / off.
->>
->> This should allow using ohci-platform from devicetree in various cases.
->> Specifically after this commit it can be used for the ohci controller found
->> on Allwinner sunxi SoCs.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>   .../devicetree/bindings/usb/platform-ohci.txt      |  25 ++++
->>   drivers/usb/host/ohci-platform.c                   | 148 ++++++++++++++++++---
->>   2 files changed, 153 insertions(+), 20 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/usb/platform-ohci.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/platform-ohci.txt b/Documentation/devicetree/bindings/usb/platform-ohci.txt
->> new file mode 100644
->> index 0000000..44bfa57
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/platform-ohci.txt
->
-> ohci-mmio might be a better name than platform maybe?
+So, bad luck number release for this, as v12 wasn't sufficient still.
 
-We already have platform-uhci too, and this matches the name of
-the .c file so that people can actually correlate the 2.
+Changes compared to previous version:
+- Dropped any changes to generic clock drivers, as it seems impossible
+  to agree anything in short term, this means the patch set shrank in
+  size from 49 patches to 40 (first 9 patches were dropped).
+- Copy pasted implementation for clk-divider and clk-mux from drivers/clk
+  to drivers/clk/ti, and made the modifications needed to the TI version
+  of the clock drivers only (based on discussions with Mike, this is fine)
+- Changed name of clk_ll_ops to ti_clk_ll_ops so that this doesn't conflict
+  with any generic implementation we might have at some point, migrating
+  this to the generic version should be easy enough also.
+- Fixed trace_clk_div_div_ck for omap4, this node was broken in previous
+  versions and resulted into an orphan clock node
+- Fixed compile problem for omap5 only build reported by Felipe
+- Fixed a couple of sparse warnings
+- changed the mach-omap2/clock.c to use readl_relaxed / writel_relaxed
+  instead of __raw_readl / __raw_writel
 
->
-> [snip]
->
->> +static int ohci_platform_power_on(struct platform_device *dev)
->> +{
->> +       struct usb_hcd *hcd = platform_get_drvdata(dev);
->> +       struct ohci_platform_priv *priv =
->> +               (struct ohci_platform_priv *)hcd_to_ohci(hcd)->priv;
->> +       int clk, ret;
->> +
->> +       for (clk = 0; priv->clks[clk] && clk < OHCI_MAX_CLKS; clk++) {
->> +               ret = clk_prepare_enable(priv->clks[clk]);
->> +               if (ret)
->> +                       goto err_disable_clks;
->> +       }
->
-> Do we really need to cap this to OHCI_MAX_CLKS, the next driver which
-> has 4 clocks will have to bump this, so maybe a linked-list would be
-> best?
+Testing done:
+- omap3-beagle: boot / suspend-resume (RET) / suspend-resume (OFF)
+- omap4-panda-es: boot / suspend-resume (RET)
+- omap5-uevm: boot
+- am335x-bone: boot
+- dra7-evm: boot
 
-I can make OHCI_MAX_CLKS 4 or 8 if that makes you happy, other then
-that I greatly prefer to keep this KISS. Devices with 3 clks are already
-quite rare, so its not like we're going to need to bump this every other
-week a linked list where a simple array suffices is just overkill and
-unnecessarily complicates things.
+Maintainer friendly branches also available:
 
->
->> +
->> +       if (priv->phy) {
->> +               ret = phy_init(priv->phy);
->> +               if (ret)
->> +                       goto err_disable_clks;
->> +
->> +               ret = phy_power_on(priv->phy);
->> +               if (ret)
->> +                       goto err_exit_phy;
->> +       }
->
-> Although I do value the idea of having DT probing for ohci-platform,
-> ehci-platform et al, I am not sure if this really belongs in the
-> generic OHCI platform driver, or if we should rather have small glue
-> drivers which register the ohci-platform driver and which provides all
-> the platform-specific power_on, power_off, suspend callbacks to the
-> ohci platform driver? Such glue driver would be the one which gets
-> probed based off a specific compatible string a
+tree: https://github.com/t-kristo/linux-pm.git
 
-This can already be done by having a platform driver with its own
-compatible string providing platform data with the hooks. The whole idea
-here is to avoid having to write such a glue driver for every other soc,
-so cover the common simple case, and use glue drivers for more complicated
-scenarios.
+clk driver only (Mike): clk-next-dt-clks-v13
+DTS data only (Benoit): dts_for_3.14-dt-clks-v13
+full-branch (Tony/Paul): 3.13-rc7-dt-clks-v13
 
-> At first glance it does look like this covers 80% of the existing OHCI
-> drivers out there, so this is good. We might also want to support
-> clock pointers provided via platform_data so we can remove ohci-at91,
-> ohci-ep93xx, ohci-spear and friends in the future.
-
-Lets first get the generic devicetree support merged as is, if after
-that people want to extend it, so that (more) existing ohci drivers can
-be removed, they are very much welcome to do so. Preferably people
-with access to the hardware, so that they can actually test the changes.
-
-> ohci-ppc-of could also probably be removed once we add quirks and
-> endian properties parsing to ohci-platform?
-
-Add-on patches extending my initial work are welcome. Again probably
-best done by people who actually have access to the relevant hw.
-
-Regards,
-
-Hans
+-Tero
