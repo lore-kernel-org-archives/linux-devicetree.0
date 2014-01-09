@@ -1,39 +1,130 @@
-From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Subject: Re: [PATCH RFC RFT 0/2] ARM: Kirkwood: Synology DT files
-Date: Thu, 09 Jan 2014 15:18:35 +1000
-Message-ID: <52CE312B.3060108@killerwolves.net>
-References: <1389052027-16819-1-git-send-email-andrew@lunn.ch>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5 3/9] phy: Add new Exynos USB 2.0 PHY driver
+Date: Thu, 9 Jan 2014 10:57:31 +0530
+Message-ID: <52CE3343.3020902@ti.com>
+References: <1387545857-9472-1-git-send-email-k.debski@samsung.com> <1387545857-9472-4-git-send-email-k.debski@samsung.com> <52CA818A.4090403@ti.com> <04dc01cf0c9a$f37c24d0$da746e70$%debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389052027-16819-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <04dc01cf0c9a$f37c24d0$da746e70$%debski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kamil Debski <k.debski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de, stern@rowland.harvard.edu
 List-Id: devicetree@vger.kernel.org
 
-On 07/01/14 09:47, Andrew Lunn wrote:
-> Request for Testing:
+Hi,
+
+On Wednesday 08 January 2014 11:26 PM, Kamil Debski wrote:
+> Hi,
 > 
-> This patch adds support for around 30 different boards. Most .dts
-> files support a couple of different models. I don't have any of this
-> hardware. None of this is tested.
+>> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
+>> Sent: Monday, January 06, 2014 11:12 AM
+>>
+>> Hi,
+>>
+>> On Friday 20 December 2013 06:54 PM, Kamil Debski wrote:
+>>> Add a new driver for the Exynos USB 2.0 PHY. The new driver uses the
+>>> generic PHY framework. The driver includes support for the Exynos
+>> 4x10
+>>> and 4x12 SoC families.
+>>>
+>>> Signed-off-by: Kamil Debski <k.debski@samsung.com>
+>>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>> ---
+>>>   .../devicetree/bindings/phy/samsung-phy.txt        |   55 ++++
+>>>   drivers/phy/Kconfig                                |   29 ++
+>>>   drivers/phy/Makefile                               |    3 +
+>>>   drivers/phy/phy-exynos4210-usb2.c                  |  257
+>> ++++++++++++++++
+>>>   drivers/phy/phy-exynos4212-usb2.c                  |  306
+>> ++++++++++++++++++++
+>>>   drivers/phy/phy-samsung-usb2.c                     |  226
+>> +++++++++++++++
+>>>   drivers/phy/phy-samsung-usb2.h                     |   67 +++++
+>>>   7 files changed, 943 insertions(+)
+>>>   create mode 100644 drivers/phy/phy-exynos4210-usb2.c
+>>>   create mode 100644 drivers/phy/phy-exynos4212-usb2.c
+>>>   create mode 100644 drivers/phy/phy-samsung-usb2.c
+>>>   create mode 100644 drivers/phy/phy-samsung-usb2.h
+>>>
+>> .
+>> .
+>> <snip>
+>> .
+>> .
+>>
+>>> diff --git a/drivers/phy/phy-samsung-usb2.h
+>>> b/drivers/phy/phy-samsung-usb2.h new file mode 100644 index
+>>> 0000000..ab89f91
+>>> --- /dev/null
+>>> +++ b/drivers/phy/phy-samsung-usb2.h
+>>> @@ -0,0 +1,67 @@
+>>> +/*
+>>> + * Samsung SoC USB 1.1/2.0 PHY driver
+>>> + *
+>>> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
+>>> + * Author: Kamil Debski <k.debski@samsung.com>
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or
+>>> +modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +#ifndef _PHY_EXYNOS_USB2_H
+>>> +#define _PHY_EXYNOS_USB2_H
+>>> +
+>>> +#include <linux/clk.h>
+>>> +#include <linux/phy/phy.h>
+>>> +#include <linux/device.h>
+>>> +#include <linux/regmap.h>
+>>> +#include <linux/spinlock.h>
+>>> +
+>>> +#define KHZ 1000
+>>> +#define MHZ (KHZ * KHZ)
+>>> +
+>>> +struct samsung_usb2_phy_driver;
+>>> +struct samsung_usb2_phy_instance;
+>>> +struct samsung_usb2_phy_config;
+>>> +
+>>> +struct samsung_usb2_phy_instance {
+>>> +	const struct samsung_usb2_common_phy *cfg;
+>>> +	struct clk *clk;
+>>> +	struct phy *phy;
+>>> +	struct samsung_usb2_phy_driver *drv;
+>>> +	unsigned long rate;
+>>> +	u32 clk_reg_val;
+>>> +	bool enabled;
+>>> +};
+>>> +
+>>> +struct samsung_usb2_phy_driver {
+>>> +	const struct samsung_usb2_phy_config *cfg;
+>>> +	struct clk *clk;
+>>> +	struct device *dev;
+>>> +	void __iomem *reg_phy;
+>>> +	struct regmap *reg_pmu;
+>>> +	struct regmap *reg_sys;
+>>> +	spinlock_t lock;
+>>> +	struct samsung_usb2_phy_instance instances[0];
+>>
+>> I think having instances as array here would allocate more space while
+>> allocating 'samsung_usb2_phy_driver' in 'samsung_usb2_phy_probe'.
+>>
+> 
+> I am not sure if I understand you correctly here. Maybe I will explain
+> what I intended to write. An array with size 0 at the end of a structure
+> takes no space in the structure. The benefit of using it is that after
+> the structure one can allocate a number of the array elements and
+> address them easily. Another option would be placing pointer in the
+> samsung_usb2_phy_instance and allocate memory separately, but this would
+> involve two allocations and a pointer would be always present in the 
+> structure.
 
-Tested by Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org> (specifically kirkwood-ds210.dts on DS211j)
+Al-right.. makes sense.
 
-To get running on the stock bootloader, I needed to extend the 
-initramfs to fill the entire rd.gz flash partition, configure the 
-kernel to use the dtb appended to it, configure it to ignore the 
-information passed to it by the bootloader, and add the following 
-nodes to the dts:
-
-/chosen {
-	linux,initrd-start = <0x800040>;
-	linux,initrd-end   = <0x940000>;
-};
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
+> 
+> Best wishes,
+> 
