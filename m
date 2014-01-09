@@ -1,58 +1,42 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: [PATCH 2/6] usb: gadget: gr_udc: Expand devicetree documentation
-Date: Thu,  9 Jan 2014 11:54:14 +0100
-Message-ID: <1389264858-32664-3-git-send-email-andreas@gaisler.com>
+From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 6/6] usb: gadget: gr_udc: Return error code when trying to set ep.maxpacket > ep.maxpacket_limit
+Date: Thu,  9 Jan 2014 11:54:18 +0100
+Message-ID: <1389264858-32664-7-git-send-email-andreas@gaisler.com>
 References: <1389264858-32664-1-git-send-email-andreas@gaisler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389264858-32664-1-git-send-email-andreas@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, software@gaisler.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1389264858-32664-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Provide more information on the two different interrupt cases and more
-information of endpoint buffer sizes. Suggested by Mark Rutland.
+Make gr_ep_enable fail properly when a call requests a larger ep.maxpacket than
+ep.maxpacket_limit.
 
-Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/gr-udc.txt |   22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ drivers/usb/gadget/gr_udc.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/gr-udc.txt b/Documentation/devicetree/bindings/usb/gr-udc.txt
-index 0c5118f..e944522 100644
---- a/Documentation/devicetree/bindings/usb/gr-udc.txt
-+++ b/Documentation/devicetree/bindings/usb/gr-udc.txt
-@@ -12,17 +12,23 @@ Required properties:
+diff --git a/drivers/usb/gadget/gr_udc.c b/drivers/usb/gadget/gr_udc.c
+index 55757fc..5423391 100644
+--- a/drivers/usb/gadget/gr_udc.c
++++ b/drivers/usb/gadget/gr_udc.c
+@@ -1548,6 +1548,10 @@ static int gr_ep_enable(struct usb_ep *_ep,
+ 	} else if (max == 0) {
+ 		dev_err(dev->dev, "Max payload cannot be set to 0\n");
+ 		return -EINVAL;
++	} else if (max > ep->ep.maxpacket_limit) {
++		dev_err(dev->dev, "Requested max payload %d > limit %d\n",
++			max, ep->ep.maxpacket_limit);
++		return -EINVAL;
+ 	}
  
- - reg : Address and length of the register set for the device
- 
--- interrupts : Interrupt numbers for this device
-+- interrupts : Interrupt numbers for this device. Either one interrupt number
-+	for all interrupts, or one for status related interrupts, one for IN
-+	endpoint related interrupts and one for OUT endpoint related interrupts.
- 
- Optional properties:
- 
--- epobufsizes : An array of buffer sizes for OUT endpoints. If the property is
--	not present, or for endpoints outside of the array, 1024 is assumed by
--	the driver.
--
--- epibufsizes : An array of buffer sizes for IN endpoints. If the property is
--	not present, or for endpoints outside of the array, 1024 is assumed by
--	the driver.
-+- epobufsizes : Array of buffer sizes for OUT endpoints when they differ
-+	from the default size of 1024. The array is indexed by the OUT endpoint
-+	number. If the property is present it typically contains one entry for
-+	each OUT endpoint of the core. Fewer entries overrides the default sizes
-+	only for as many endpoints as the array contains.
-+
-+- epibufsizes : Array of buffer sizes for IN endpoints when they differ
-+	from the default size of 1024. The array is indexed by the IN endpoint
-+	number. If the property is present it typically contains one entry for
-+	each IN endpoint of the core. Fewer entries overrides the default sizes
-+	only for as many endpoints as the array contains.
- 
- For further information look in the documentation for the GLIB IP core library:
- http://www.gaisler.com/products/grlib/grip.pdf
+ 	spin_lock(&ep->dev->lock);
 -- 
 1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
