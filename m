@@ -1,95 +1,71 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v8 1/7] mmc: omap_hsmmc: use devm_regulator API
-Date: Thu, 9 Jan 2014 09:18:44 -0600
-Message-ID: <20140109151844.GB2417@saruman.home>
-References: <1387560955-6547-1-git-send-email-balajitk@ti.com>
- <1389279062-32291-1-git-send-email-balajitk@ti.com>
- <1389279062-32291-2-git-send-email-balajitk@ti.com>
-Reply-To: <balbi@ti.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ehci-platform: Add support for clks
+ and phy passed through devicetree
+Date: Thu, 9 Jan 2014 10:47:51 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1401091043380.1493-100000@iolanthe.rowland.org>
+References: <52CEA386.6060103@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="b5gNqxB1S1yM7hjW"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389279062-32291-2-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, broonie@kernel.org, tony@atomide.com, mark.rutland@arm.com
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBD6LRVPZ6YGRBKEJXOLAKGQE7ENUETI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52CEA386.6060103-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---b5gNqxB1S1yM7hjW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 9 Jan 2014, Hans de Goede wrote:
 
-Hi,
+> >> +Optional properties:
+> >> +- clocks : a list of phandle + clock specifier pairs, one for each entry
+> >> +   in clock-names.
+> >> +- clock-names : "clk0", "clk1", ...
+> >> +- phys : phy
+> >> +- phy-names : "phy0"
+> >> +
+> >> +Example:
+> >> +
+> >> +	ehci@d8007900 {
+> >> +		compatible = "via,vt8500-ehci";
+> >> +		reg = <0xd8007900 0x200>;
+> >> +		interrupts = <43>;
+> >> +		clocks = <&usb_clk 6>, <&ahb_gates 2>;
+> >> +		clock-names = "clk0", "clk1";
+> >
+> > I'm really not convinced by this either. It prevents you from doing
+> > anything useful out of these clocks, and the only thing you can
+> > actually do with it is calling clk_get, and that's pretty much it.
+> >
+> > What if you some platform needs to adjust the rate of one of the two?
+> 
+> Then it needs its own driver. This is intended as a binding for a
+> *generic* driver, which is meant to cover simple straight forward
+> non-pci ohci cases. For more complex cases a separate driver will
+> need to be written.
+> 
+> I must say I'm becoming a bit unhappy with how the reviews of devicetree
+> bindings are being done. In one case it is not generic enough (ahci-sunxi).
+> 
+> If I then try to make it more generic in a case where that can actually
+> be done as the hardware is pretty straight forward, it is not specific enough.
+> You can simply not have both!
+> 
+> > Or wants to cut one but not the other for any reason?
+> 
+> This is another example of non generic behavior, requiring a separate
+> (small using the existing ohci core) platform glue driver, like the *19* we
+> already have.
 
-On Thu, Jan 09, 2014 at 08:20:56PM +0530, Balaji T K wrote:
-> Use devm_regulator API, while at it use
-> devm_regulator_get_optional for optional vmmc_aux supply
->=20
-> Signed-off-by: Balaji T K <balajitk@ti.com>
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> ---
->  drivers/mmc/host/omap_hsmmc.c |    6 ++----
->  1 files changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index dbd32ad..1eb4350 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -316,7 +316,7 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host =
-*host)
->  	struct regulator *reg;
->  	int ocr_value =3D 0;
-> =20
-> -	reg =3D regulator_get(host->dev, "vmmc");
-> +	reg =3D devm_regulator_get(host->dev, "vmmc");
->  	if (IS_ERR(reg)) {
->  		dev_err(host->dev, "vmmc regulator missing\n");
->  		return PTR_ERR(reg);
-> @@ -336,7 +336,7 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host =
-*host)
->  		}
-> =20
->  		/* Allow an aux regulator */
-> -		reg =3D regulator_get(host->dev, "vmmc_aux");
-> +		reg =3D devm_regulator_get_optional(host->dev, "vmmc_aux");
->  		host->vcc_aux =3D IS_ERR(reg) ? NULL : reg;
-> =20
->  		/* For eMMC do not power off when not in sleep state */
-> @@ -366,8 +366,6 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host =
-*host)
-> =20
->  static void omap_hsmmc_reg_put(struct omap_hsmmc_host *host)
+Would DT allow ehci-platform.c to access the clocks by their index in
+the array, rather than by name?  After all, you don't really care about
+the names at all, since the driver knows nothing about the clocks' 
+functions.
 
-since this function does nothing now, you could pretty much remove it
-and move set_power assignment to ->remove() directly. No strong feelings
-though.
+The same is true of the phy entry.
 
---=20
-balbi
-
---b5gNqxB1S1yM7hjW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSzr3UAAoJEIaOsuA1yqREx9MQAIQnh+MUCUUoX01fRIVr+MlT
-DNW9f0eIJpMWK3MhASSgGXQlwUxEzU3i9MkaIMU8Z0XZnE+Q45s5g0DDrKUoQbl+
-OYd3SoeJ7SfrspqOtJ5y+steNzO8rsVBL3dnBaFuV+jYbR6bKcir+7OiB8gIJAc4
-OqqoaDj6XL5XKnY7TOgnzHETW+TrHLcun3EMSZu0TaV2coOvE9yOD4Z/2lnxcftO
-zJ9uRV6wn8ymSuJ246v3pHnO0Wg/ucFBn5ZpM6zMNxi5zTzFFvxRBWupoTNZMsv+
-H3s6PSiacPukCL3aLsUl83F1gbPljhNesIy4WVmYWgY6AE4jfoPLH4SV6bMwwrlY
-yQ0axGpt8KiHK6JGxT4amz2G79a0H3zz/DZatXzb/VwwCVMl/bFu/6ZaioEFEwMP
-pHONj7iIuIuUGUVkthdri0zjPF8HNqGgGWaclh+FmtIXaQ1OCLWaT26sQiIajiXy
-uHWR5hYQEqPwe6fVdsDAfYaieDc5Mr7OWqj50dFfNqDYuo0eZ4XV9ZPGUj+sb26P
-ku2exs6YdVi0KW0+BH7SlSSB6pnojb3z9OZFjJNRvOkFbq1Nz9IWEWNesnKeEpQY
-eotO6VbmKe4rJB9aJjyGnW8Lg5Yn6nV3zAXRSE1zZP1rsUiuLtfqEzDTXvwigFBT
-RvtfXM3T7KektEV71EtZ
-=Yl1l
------END PGP SIGNATURE-----
-
---b5gNqxB1S1yM7hjW--
+Alan Stern
