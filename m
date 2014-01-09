@@ -1,410 +1,254 @@
-From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3.1 11/21] ARM: pxa: support ICP DAS LP-8x4x FPGA irq
-Date: Fri, 10 Jan 2014 03:07:32 +0400
-Message-ID: <1389308855-32588-1-git-send-email-ynvich@gmail.com>
-References: <1387309071-22382-12-git-send-email-ynvich@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387309071-22382-12-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
+Date: Thu, 9 Jan 2014 17:15:53 -0600
+Message-ID: <20140109231513.GA11648@saruman.home>
+References: <1389276051-1326-1-git-send-email-t-kristo@ti.com>
+ <52CF12FB.6000602@ti.com>
+Reply-To: <balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52CF12FB.6000602@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-ICP DAS LP-8x4x contains FPGA chip. The chip functions as an interrupt
-source providing 16 additional interrupts among other things. The
-interrupt lines are muxed to a GPIO pin of a 2nd level PXA-GPIO
-interrupt controller. GPIO pins of the 2nd level controller are in turn
-muxed to a CPU interrupt line.
+--dTy3Mrz/UPE2dbVg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Until pxa is completely converted to device tree, it is impossible
-to use IRQCHIP_DECLARE() and the irqdomain needs to added manually.
-Drivers for the on-CPU IRQs and GPIO-IRQs are loaded using
-postcore_initcall(). We need to have all irq domain drivers loaded prior
-to DT parsing in order to allow normal initialization of IRQ resources
-with DT.
+Hi,
 
-Signed-off-by: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-CC: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-   v3..v3.1
-   fixes according to Linus Walleij review comments:
-   * update commit message
-   * use state container instead of global variables
-   * get hardware irq nums from irq_data, don't calculate them
-   * use BIT() macro
-   * add defines for system irq register masks
-   * replace cycle control variable with break
-   * use better names for resource variables
-   * add a linear domain instead of a legacy one
-   * use irq_create_mapping() instead of irq_alloc_desc()
+On Thu, Jan 09, 2014 at 03:22:03PM -0600, Nishanth Menon wrote:
+> > So, bad luck number release for this, as v12 wasn't sufficient still.
+> >=20
+> > Changes compared to previous version:
+> > - Dropped any changes to generic clock drivers, as it seems impossible
+> >   to agree anything in short term, this means the patch set shrank in
+> >   size from 49 patches to 40 (first 9 patches were dropped).
+> > - Copy pasted implementation for clk-divider and clk-mux from drivers/c=
+lk
+> >   to drivers/clk/ti, and made the modifications needed to the TI version
+> >   of the clock drivers only (based on discussions with Mike, this is fi=
+ne)
+> > - Changed name of clk_ll_ops to ti_clk_ll_ops so that this doesn't conf=
+lict
+> >   with any generic implementation we might have at some point, migrating
+> >   this to the generic version should be easy enough also.
+> > - Fixed trace_clk_div_div_ck for omap4, this node was broken in previous
+> >   versions and resulted into an orphan clock node
+> > - Fixed compile problem for omap5 only build reported by Felipe
+> > - Fixed a couple of sparse warnings
+> > - changed the mach-omap2/clock.c to use readl_relaxed / writel_relaxed
+> >   instead of __raw_readl / __raw_writel
+> >=20
+> > Testing done:
+> > - omap3-beagle: boot / suspend-resume (RET) / suspend-resume (OFF)
+> > - omap4-panda-es: boot / suspend-resume (RET)
+> > - omap5-uevm: boot
+> > - am335x-bone: boot
+> > - dra7-evm: boot
+> >=20
+> > Maintainer friendly branches also available:
+> >=20
+> > tree: https://github.com/t-kristo/linux-pm.git
+> >=20
+> > clk driver only (Mike): clk-next-dt-clks-v13
+> > DTS data only (Benoit): dts_for_3.14-dt-clks-v13
+> > full-branch (Tony/Paul): 3.13-rc7-dt-clks-v13
+> >=20
+> > -Tero
+> >=20
+>=20
+> Maintainer branches conflicts (using 3.13-rc7-dt-clks-v13):
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> Conflict resolution during rebase to maintainer's -14 branches:
+>=20
+> 1. (trivial) Against mike's clk-next dbdf6ff Merge branch
+> 'clk-next-unregister' into clk-next
+>=20
+> Could not apply 2edf7ad... CLK: TI: add DT alias clock registration
+> mechanism
+> conflict drivers/clk/Makefile (trivial fix)
+>=20
+> 2. (manual, but changes are easy) Against Tony's omap-for-v3.14/be
+> fc6ca98 ARM: OMAP: debug-leds: raw read and write endian fix
+>=20
+> ARM: OMAP2+: clock: use driver API instead of direct memory read/write
+>=20
+> conflicts with be changes on Tony's be branch.
+> commit 80f304dd2360cf5d50953c4eb4e902536f6a1263
+>     ARM: OMAP2+: raw read and write endian fix
+>=20
+> Conflict:
+> arch/arm/mach-omap2/clkt_clksel.c
+> arch/arm/mach-omap2/clkt_dpll.c
+> arch/arm/mach-omap2/clkt_iclk.c
+> arch/arm/mach-omap2/clock.c
+> arch/arm/mach-omap2/clock36xx.c
+> arch/arm/mach-omap2/dpll3xxx.c
+> arch/arm/mach-omap2/dpll44xx.c
+>=20
+> Both change raw_readls -> should now be just clk api instead which
+> already does readl_relaxed etc.. If Tony feels like, then we should
+> probably post a branch based on 'be' branch for easy merge.
+>=20
+> 3. I could not detect any merge conflict against Benoit's queued up
+> series (but maybe he has'nt pushed everything to remote tree)..
+>=20
+>=20
+> Patch verification report:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+> Report: http://pastebin.mozilla.org/3976492
+>=20
+>=20
+> * sparse warning added in [PATCH 06/40] CLK: ti: add support for ti
+> divider-clock, [PATCH 10/40] clk: ti: add support for basic mux clock
+> +drivers/clk/ti/divider.c: warning: context imbalance in
+> 'ti_clk_divider_set_rate' - different lock contexts for basic block
+> +drivers/clk/ti/mux.c: warning: context imbalance in
+> 'ti_clk_mux_set_parent' - different lock contexts for basic block
+>=20
+> * checkpatch warning [PATCH 16/40] CLK: TI: add am33xx clock init
+> file, [PATCH 18/40] CLK: TI: add omap3 clock init file
+> WARNING: static const char * array should probably be static const
+> char * const
+>=20
+>=20
+> Boot reports:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> - previous orphan clocks seem solved.
+> - All available platforms seem to boot fine and no regression could be
+> seen on initial view
+>=20
+> OMAP2430:
+>   1. SDP2430
+>     before: http://pastebin.mozilla.org/3976359
+>     after: http://pastebin.mozilla.org/3976467
+>=20
+> AM335x:
+>   2. am335x-evm
+>     before: http://pastebin.mozilla.org/3976284
+>     after: http://pastebin.mozilla.org/3976374
+>   3. am335x-sk
+>     before: http://pastebin.mozilla.org/3976295
+>     after: http://pastebin.mozilla.org/3976375
+>   4. BeagleBone Black:
+>     before: http://pastebin.mozilla.org/3976321
+>     after: http://pastebin.mozilla.org/3976441
+>=20
+> AM3517:
+>   5. am3517-evm
+>     before: http://pastebin.mozilla.org/3976297
+>     after: http://pastebin.mozilla.org/3976397
+>   6. craneboard
+>     before: http://pastebin.mozilla.org/3976322
+>     after: http://pastebin.mozilla.org/3976452
+>=20
+> OMAP3430:
+>   7. ldp
+>     before: http://pastebin.mozilla.org/3976356
+>     after: http://pastebin.mozilla.org/3976455
+>   8. sdp3430
+>     before: http://pastebin.mozilla.org/3976360
+>     after: http://pastebin.mozilla.org/3976468
+>=20
+> OMAP3630/DM3730:
+>   9. am37x-evm
+>     before: http://pastebin.mozilla.org/3976300
+>     after: http://pastebin.mozilla.org/3976398
+>   10. beagle-XM
+>     before: http://pastebin.mozilla.org/3976319
+>     after: http://pastebin.mozilla.org/3976440
+>=20
+> OMAP4430:
+>   11. SDP4430
+>     before: http://pastebin.mozilla.org/3976361
+>     after: http://pastebin.mozilla.org/3976470
+>=20
+> OMAP4460:
+>   12. PandaBoard-ES
+>     before: http://pastebin.mozilla.org/3976358
+>     after: http://pastebin.mozilla.org/3976456
+>=20
+> OMAP5432:
+>   13. OMAP5uEVM
+>     before: http://pastebin.mozilla.org/3976362 (no boot)
+>     after: http://pastebin.mozilla.org/3976471 (boot)
+>=20
+> DRA7:
+>   14. dra7evm
+>     before: http://pastebin.mozilla.org/3976354 (no boot)
+>     after: http://pastebin.mozilla.org/3976453 (boot)
+>=20
+> AM437x:
+>   15. am43xx-epos + out-of-tree patches for engineering samples
+>     before: http://pastebin.mozilla.org/3976306 (no boot)
+>     after: http://pastebin.mozilla.org/3976399 (boot)
 
-   v2..v3
-   * no changes (except number 09/16 -> 11/21)
+to add here, I ran 70 different randconfigs, all seeds are available on
+pastebin (took RMK's 4430sdp seed as a starting point):
 
-   v0..v2
-   * extract irqchip and move to drivers/irqchip/
-   * use device tree
-   * use devm helpers where possible
+am33xx-only.config	http://pastebin.com/nVA3xSwb
+am43xx-only.config	http://pastebin.com/RbUdKuUh
+dra7xx-only.config	http://pastebin.com/ribnaSzS
+omap2-only.config	http://pastebin.com/QPUG0wqe
+omap3-only.config	http://pastebin.com/B8ctX8yM
+omap4-only.config	http://pastebin.com/3D8NAExm
+omap5-only.config	http://pastebin.com/3mtQN38Z
 
- .../bindings/interrupt-controller/irq-lp8x4x.txt   |  49 +++++
- arch/arm/boot/dts/pxa27x-lp8x4x.dts                |  10 +
- drivers/irqchip/Kconfig                            |   5 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-lp8x4x.c                       | 238 +++++++++++++++++++++
- 5 files changed, 303 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/irq-lp8x4x.txt
- create mode 100644 drivers/irqchip/irq-lp8x4x.c
+Had a total of 16 failing builds, all .configs were also published on
+pastebin:
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/irq-lp8x4x.txt b/Documentation/devicetree/bindings/interrupt-controller/irq-lp8x4x.txt
-new file mode 100644
-index 0000000..c8940d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/irq-lp8x4x.txt
-@@ -0,0 +1,49 @@
-+ICP DAS LP-8x4x FPGA Interrupt Controller
-+
-+ICP DAS LP-8x4x contains FPGA chip. The chip functions as a interrupt
-+source providing 16 additional interrupts among other things.
-+
-+Required properties:
-+- compatible : should be "icpdas,irq-lp8x4x"
-+
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+
-+- interrupt-controller : identifies the node as an interrupt controller
-+
-+- #interrupt-cells : should be 1
-+
-+- interrupts : should provide interrupt
-+
-+- interrupt-parent : should provide a link to interrupt controller either
-+		     explicitly and implicitly from a parent node
-+
-+Example:
-+
-+	fpga: fpga@17000006 {
-+		compatible = "icpdas,irq-lp8x4x";
-+		reg = <0x17000006 0x16>;
-+		interrupt-parent = <&gpio>;
-+		interrupts = <3 IRQ_TYPE_EDGE_RISING>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		status = "okay";
-+	};
-+
-+	uart@17009050 {
-+		compatible = "icpdas,uart-lp8x4x";
-+		reg = <0x17009050 0x10
-+		       0x17009030 0x02>;
-+		interrupt-parent = <&fpga>;
-+		interrupts = <13>;
-+		status = "okay";
-+	};
-+
-+	uart@17009060 {
-+		compatible = "icpdas,uart-lp8x4x";
-+		reg = <0x17009060 0x10
-+		       0x17009032 0x02>;
-+		interrupt-parent = <&fpga>;
-+		interrupts = <14>;
-+		status = "okay";
-+	};
-diff --git a/arch/arm/boot/dts/pxa27x-lp8x4x.dts b/arch/arm/boot/dts/pxa27x-lp8x4x.dts
-index 07856e0..78dfd2e 100644
---- a/arch/arm/boot/dts/pxa27x-lp8x4x.dts
-+++ b/arch/arm/boot/dts/pxa27x-lp8x4x.dts
-@@ -167,6 +167,16 @@
- 				reg = <0xa000 0x1000
- 				       0x901e 0x1>;
- 			};
-+
-+			fpgairq: irq@9006 {
-+				compatible = "icpdas,irq-lp8x4x";
-+				reg = <0x9006 0x16>;
-+				interrupt-parent = <&gpio>;
-+				interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
-+				#interrupt-cells = <1>;
-+				interrupt-controller;
-+				status = "okay";
-+			};
- 		};
- 	};
- };
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 3792a1a..7e22729 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -35,6 +35,11 @@ config IMGPDC_IRQ
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN
- 
-+config LP8X4X_IRQ
-+	bool
-+	depends on OF
-+	select IRQ_DOMAIN
-+
- config ORION_IRQCHIP
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index c60b901..8a28927 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -22,3 +22,4 @@ obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
- obj-$(CONFIG_VERSATILE_FPGA_IRQ)	+= irq-versatile-fpga.o
- obj-$(CONFIG_ARCH_VT8500)		+= irq-vt8500.o
- obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
-+obj-$(CONFIG_LP8X4X_IRQ)		+= irq-lp8x4x.o
-diff --git a/drivers/irqchip/irq-lp8x4x.c b/drivers/irqchip/irq-lp8x4x.c
-new file mode 100644
-index 0000000..61dfbed
---- /dev/null
-+++ b/drivers/irqchip/irq-lp8x4x.c
-@@ -0,0 +1,238 @@
-+/*
-+ *  linux/drivers/irqchip/irq-lp8x4x.c
-+ *
-+ *  Support for ICP DAS LP-8x4x FPGA irq
-+ *  Copyright (C) 2013 Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License version 2 as
-+ *  published by the Free Software Foundation or any later version.
-+ */
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#define EOI			0x00000000
-+#define INSINT			0x00000002
-+#define ENSYSINT		0x00000004
-+#define PRIMINT			0x00000006
-+#define PRIMINT_MASK		0xe0
-+#define SECOINT			0x00000008
-+#define SECOINT_MASK		0x1f
-+#define ENRISEINT		0x0000000A
-+#define CLRRISEINT		0x0000000C
-+#define ENHILVINT		0x0000000E
-+#define CLRHILVINT		0x00000010
-+#define ENFALLINT		0x00000012
-+#define CLRFALLINT		0x00000014
-+#define IRQ_MEM_SIZE		0x00000016
-+#define LP8X4X_NUM_IRQ_DEFAULT	16
-+
-+struct lp8x4x_irq_data {
-+	void			*base;
-+	struct irq_domain	*domain;
-+	unsigned long		num_irq;
-+	unsigned char		irq_sys_enabled;
-+	unsigned char		irq_high_enabled;
-+};
-+
-+static void lp8x4x_mask_irq(struct irq_data *d)
-+{
-+	unsigned mask;
-+	unsigned long irq = d->hwirq;
-+	struct lp8x4x_irq_data *host = irq_data_get_irq_chip_data(d);
-+
-+	if (!host) {
-+		pr_err("lp8x4x: missing host data for irq %i\n", d->irq);
-+		return;
-+	}
-+
-+	if (irq >= host->num_irq) {
-+		pr_err("lp8x4x: wrong irq handler for irq %i\n", d->irq);
-+		return;
-+	}
-+
-+	if (irq < 8) {
-+		host->irq_high_enabled &= ~BIT(irq);
-+
-+		mask = ioread8(host->base + ENHILVINT);
-+		mask &= ~BIT(irq);
-+		iowrite8(mask, host->base + ENHILVINT);
-+	} else {
-+		irq -= 8;
-+		host->irq_sys_enabled &= ~BIT(irq);
-+
-+		mask = ioread8(host->base + ENSYSINT);
-+		mask &= ~BIT(irq);
-+		iowrite8(mask, host->base + ENSYSINT);
-+	}
-+}
-+
-+static void lp8x4x_unmask_irq(struct irq_data *d)
-+{
-+	unsigned mask;
-+	unsigned long irq = d->hwirq;
-+	struct lp8x4x_irq_data *host = irq_data_get_irq_chip_data(d);
-+
-+	if (!host) {
-+		pr_err("lp8x4x: missing host data for irq %i\n", d->irq);
-+		return;
-+	}
-+
-+	if (irq >= host->num_irq) {
-+		pr_err("lp8x4x: wrong irq handler for irq %i\n", d->irq);
-+		return;
-+	}
-+
-+	if (irq < 8) {
-+		host->irq_high_enabled |= BIT(irq);
-+		mask = ioread8(host->base + CLRHILVINT);
-+		mask |= BIT(irq);
-+		iowrite8(mask, host->base + CLRHILVINT);
-+
-+		mask = ioread8(host->base + ENHILVINT);
-+		mask |= BIT(irq);
-+		iowrite8(mask, host->base + ENHILVINT);
-+	} else {
-+		irq -= 8;
-+		host->irq_sys_enabled |= BIT(irq);
-+
-+		mask = ioread8(host->base + SECOINT);
-+		mask |= BIT(irq);
-+		iowrite8(mask, host->base + SECOINT);
-+
-+		mask = ioread8(host->base + ENSYSINT);
-+		mask |= BIT(irq);
-+		iowrite8(mask, host->base + ENSYSINT);
-+	}
-+}
-+
-+static struct irq_chip lp8x4x_irq_chip = {
-+	.name			= "FPGA",
-+	.irq_ack		= lp8x4x_mask_irq,
-+	.irq_mask		= lp8x4x_mask_irq,
-+	.irq_mask_ack		= lp8x4x_mask_irq,
-+	.irq_unmask		= lp8x4x_unmask_irq,
-+};
-+
-+static void lp8x4x_irq_handler(unsigned int irq, struct irq_desc *desc)
-+{
-+	int n;
-+	unsigned long mask;
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct lp8x4x_irq_data *host = irq_desc_get_handler_data(desc);
-+
-+	if (!host)
-+		return;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	for (;;) {
-+		mask = ioread8(host->base + CLRHILVINT) & 0xff;
-+		mask |= (ioread8(host->base + SECOINT) & SECOINT_MASK) << 8;
-+		mask |= (ioread8(host->base + PRIMINT) & PRIMINT_MASK) << 8;
-+		mask &= host->irq_high_enabled | (host->irq_sys_enabled << 8);
-+		if (mask == 0)
-+			break;
-+		for_each_set_bit(n, &mask, BITS_PER_LONG)
-+			generic_handle_irq(irq_find_mapping(host->domain, n));
-+	}
-+
-+	iowrite8(0, host->base + EOI);
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static int lp8x4x_irq_domain_map(struct irq_domain *d, unsigned int irq,
-+				 irq_hw_number_t hw)
-+{
-+	struct lp8x4x_irq_data *host = d->host_data;
-+	int err;
-+
-+	err = irq_set_chip_data(irq, host);
-+	if (err < 0)
-+		return err;
-+
-+	irq_set_chip_and_handler(irq, &lp8x4x_irq_chip, handle_level_irq);
-+	set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
-+	return 0;
-+}
-+
-+const struct irq_domain_ops lp8x4x_irq_domain_ops = {
-+	.map	= lp8x4x_irq_domain_map,
-+	.xlate	= irq_domain_xlate_onecell,
-+};
-+
-+static struct of_device_id lp8x4x_irq_dt_ids[] = {
-+	{ .compatible = "icpdas,irq-lp8x4x", },
-+	{}
-+};
-+
-+static int lp8x4x_irq_probe(struct platform_device *pdev)
-+{
-+	struct resource *res_mem, *res_irq;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct lp8x4x_irq_data *host;
-+	int i, err;
-+
-+	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	res_irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	if (!res_mem || !res_irq || resource_size(res_mem) < IRQ_MEM_SIZE)
-+		return -ENODEV;
-+
-+	host = devm_kzalloc(&pdev->dev, sizeof(*host), GFP_KERNEL);
-+	if (!host)
-+		return -ENODEV;
-+
-+	host->num_irq = LP8X4X_NUM_IRQ_DEFAULT;
-+	host->base = devm_ioremap_resource(&pdev->dev, res_mem);
-+	if (!host->base) {
-+		dev_err(&pdev->dev, "Failed to ioremap %p\n", host->base);
-+		return -EFAULT;
-+	}
-+
-+	host->domain = irq_domain_add_linear(np, host->num_irq,
-+				       &lp8x4x_irq_domain_ops, host);
-+	if (!host->domain) {
-+		dev_err(&pdev->dev, "Failed to add IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < host->num_irq; i++) {
-+		err = irq_create_mapping(host->domain, i);
-+		if (err < 0)
-+			dev_err(&pdev->dev, "Failed to map IRQ %i\n", i);
-+	}
-+
-+	/* Initialize chip registers */
-+	iowrite8(0, host->base + CLRRISEINT);
-+	iowrite8(0, host->base + ENRISEINT);
-+	iowrite8(0, host->base + CLRFALLINT);
-+	iowrite8(0, host->base + ENFALLINT);
-+	iowrite8(0, host->base + CLRHILVINT);
-+	iowrite8(0, host->base + ENHILVINT);
-+	iowrite8(0, host->base + ENSYSINT);
-+	iowrite8(0, host->base + SECOINT);
-+
-+	irq_set_handler_data(res_irq->start, host);
-+	irq_set_chained_handler(res_irq->start, lp8x4x_irq_handler);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver lp8x4x_irq_driver = {
-+	.probe		= lp8x4x_irq_probe,
-+	.driver		= {
-+		.name	= "irq-lp8x4x",
-+		.of_match_table = lp8x4x_irq_dt_ids,
-+	},
-+};
-+
-+static int __init lp8x4x_irq_init(void)
-+{
-+	return platform_driver_register(&lp8x4x_irq_driver);
-+}
-+postcore_initcall(lp8x4x_irq_init);
--- 
-1.8.4.2
+config-am33xx-only.config-1	http://pastebin.com/5xhXZpev
+config-am33xx-only.config-2	http://pastebin.com/NsrruJcQ
+config-am33xx-only.config-3	http://pastebin.com/CGbB3qb8
+config-am33xx-only.config-4	http://pastebin.com/86cu0uZ1
+config-am43xx-only.config-1	http://pastebin.com/MCBCAd4X
+config-am43xx-only.config-3	http://pastebin.com/hVpCgwSn
+config-am43xx-only.config-4	http://pastebin.com/8SXAKHed
+config-am43xx-only.config-6	http://pastebin.com/59riPMfw
+config-am43xx-only.config-8	http://pastebin.com/03bt2VEZ
+config-am43xx-only.config-9	http://pastebin.com/tePGwtWA
+config-am43xx-only.config-10	http://pastebin.com/nrtXPqrF
+config-omap2-only.config-2	http://pastebin.com/AKyvMqQU
+config-omap2-only.config-4	http://paste.debian.net/75329
+config-omap2-only.config-5	http://paste.debian.net/75330/
+config-omap2-only.config-7	http://paste.debian.net/75332/
+config-omap2-only.config-10	http://paste.debian.net/75333/
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Failing configs all build fine on v3.13-rc7 except for
+config-omap2-only.config-10, which fails due to a broken staging driver.
+
+--=20
+balbi
+
+--dTy3Mrz/UPE2dbVg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSzy2pAAoJEIaOsuA1yqREUbYP/jgKq9di0s47M5YX9auVDYee
+9sJPev6v6DCBuksQGrCkDKjTi3zePGu+X72LKa1VzUcTfa7aeCYeKv/gOlF1rLR6
+uamX/upCoJwXgtYbxtoR0w1qZGKG3TCJ+NSKNihBGk7UhPsVRTvwAWKjAIDAoDKK
+moT7kez8aQZiBOam0TJsvoDunHY2kJG006gOGKnTkioImHGqLKe3z4Id4NtQNSrZ
+J1dCO2QetWdgfg5SfP/lA/D8obF012sG/7eQcwSG43znjHAKAI06Osy68160YFHl
+Hrx1H35Dw3GyaCzDfcssCr9cmZnW/6dDspvVaSVrog0ESq91t9b58f6zjr6Ww0kE
+Xq/IUF6ZoEdV+vx2EYeanTrgsAlzrR+lYMu+jKydthmxvpvxfEMndLt2U3w7whDc
+3akqUtoGbvmLcGNgrlZ8wShgu4r6wsowSXFMfDFPkwYKRTdkOXGWHjcWHaRo45+U
+Aqf/dloRH2LiM+O2JM9tCi2aydIu4EKvpX8psPkxwqXOJ5esmDRtsZQL/NLSV6xD
+d+F1Tu/Mwg4Z0knlzlKofoobkc6AKIwH8jh43Nc2pa7/RDLR8oVqCRt6Umw7i3TJ
+9HlFqM088tQK0h9P9ZQWUvwRMB8x87tYqXPU1s5iJ/+diLl7pERgBJwpRZfZyZJ5
+tN6UCaAS+EZRrELT9B9m
+=3p1i
+-----END PGP SIGNATURE-----
+
+--dTy3Mrz/UPE2dbVg--
