@@ -1,61 +1,61 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] watchdog: davinci: rename platform driver to davinci-wdt
-Date: Thu, 9 Jan 2014 16:21:43 +0530
-Message-ID: <52CE7F3F.1000201@ti.com>
-References: <1385559113-4354-1-git-send-email-ivan.khoronzhuk@ti.com>
- <5295FB0E.4070406@ti.com> <52961665.3060309@roeck-us.net>
- <5296DCD6.3030002@ti.com> <52973E40.4060400@roeck-us.net>
- <52984CE8.50803@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52984CE8.50803@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: wim@iguana.be
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux-watchdog@vger.kernel.org, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Guenter Roeck <linux@roeck-us.net>
+From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 3/6] usb: gadget: gr_udc: Use platform_get_irq instead of irq_of_parse_and_map
+Date: Thu,  9 Jan 2014 11:54:15 +0100
+Message-ID: <1389264858-32664-4-git-send-email-andreas@gaisler.com>
+References: <1389264858-32664-1-git-send-email-andreas@gaisler.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1389264858-32664-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 29 November 2013 01:44 PM, Sekhar Nori wrote:
-> Wim,
-> 
-> On Thursday 28 November 2013 06:29 PM, Guenter Roeck wrote:
->> On 11/27/2013 10:04 PM, Sekhar Nori wrote:
->>> On Wednesday 27 November 2013 09:27 PM, Guenter Roeck wrote:
->>>> On 11/27/2013 06:00 AM, Sekhar Nori wrote:
->>>>> On Wednesday 27 November 2013 07:01 PM, Ivan Khoronzhuk wrote:
->>>>>> As we switch to use the watchdog core which permits more than one
->>>>>> active watchdog in the system, rename platform driver to
->>>>>> "davinci-wdt" to be identifiable.
->>>>>>
->>>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>>>>
->>>>> Looks good to me. Since bulk of this patch touches mach-davinci, I
->>>>> would
->>>>> like to take this through my tree to avoid conflicts with other
->>>>> mach-davinci patches I accept.
->>>>>
->>>>
->>>> Good idea, and makes sense.
->>>
->>> Added to v3.14/soc with your Reviewed-by
->>>
->>
->> You should get an Ack from Wim.
-> 
-> Can you please provide your ack? I will add it to the existing commit.
+Use platform_get_irq as no mapping needs to be done. No functional difference
+for SPARC which is the typical environment for the driver though. Suggested by
+Mark Rutland.
 
-I never received an ack from Wim, but I am going to send this for
-merging through ARM-SoC anyway. I will keep Wim copied on the pull
-request so he knows.
+Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/usb/gadget/gr_udc.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-Thanks,
-Sekhar
+diff --git a/drivers/usb/gadget/gr_udc.c b/drivers/usb/gadget/gr_udc.c
+index e66dcf0..e471db3 100644
+--- a/drivers/usb/gadget/gr_udc.c
++++ b/drivers/usb/gadget/gr_udc.c
+@@ -2114,20 +2114,22 @@ static int gr_probe(struct platform_device *pdev)
+ 	if (IS_ERR(regs))
+ 		return PTR_ERR(regs);
+ 
+-	dev->irq = irq_of_parse_and_map(dev->dev->of_node, 0);
+-	if (!dev->irq) {
++	dev->irq = platform_get_irq(pdev, 0);
++	if (dev->irq <= 0) {
+ 		dev_err(dev->dev, "No irq found\n");
+ 		return -ENODEV;
+ 	}
+ 
+ 	/* Some core configurations has separate irqs for IN and OUT events */
+-	dev->irqi = irq_of_parse_and_map(dev->dev->of_node, 1);
+-	if (dev->irqi) {
+-		dev->irqo = irq_of_parse_and_map(dev->dev->of_node, 2);
+-		if (!dev->irqo) {
++	dev->irqi = platform_get_irq(pdev, 1);
++	if (dev->irqi > 0) {
++		dev->irqo = platform_get_irq(pdev, 2);
++		if (dev->irqo <= 0) {
+ 			dev_err(dev->dev, "Found irqi but not irqo\n");
+ 			return -ENODEV;
+ 		}
++	} else {
++		dev->irqi = 0;
+ 	}
+ 
+ 	dev->gadget.name = driver_name;
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
