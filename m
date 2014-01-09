@@ -1,52 +1,41 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Thu, 09 Jan 2014 19:07:16 +0100
-Message-ID: <4432391.5QkdBVBQQi@wuerfel>
-References: <1389290226-6971-1-git-send-email-hdegoede@redhat.com> <1389290226-6971-2-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 6/7] devicetree: bindings: Document Krait performance
+ monitor units (PMU)
+Date: Thu, 9 Jan 2014 18:14:05 +0000
+Message-ID: <20140109181404.GJ17838@mudshark.cambridge.arm.com>
+References: <1389221984-10973-1-git-send-email-sboyd@codeaurora.org>
+ <1389221984-10973-7-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBXGKXOLAKGQEW3QF7RY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1389290226-6971-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1389221984-10973-7-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 January 2014 18:57:05 Hans de Goede wrote:
-> +       if (pdata == &ohci_platform_defaults && dev->dev.of_node) {
-> +               priv->phy = devm_phy_get(&dev->dev, "usb");
-> +               if (IS_ERR(priv->phy)) {
-> +                       err = PTR_ERR(priv->phy);
-> +                       if (err == -EPROBE_DEFER)
-> +                               goto err_put_hcd;
-> +                       priv->phy = NULL;
-> +               }
-> +
-> +               for (clk = 0; clk < OHCI_MAX_CLKS; clk++) {
-> +                       priv->clks[clk] = of_clk_get(dev->dev.of_node, clk);
-> +                       if (IS_ERR(priv->clks[clk])) {
-> +                               err = PTR_ERR(priv->clks[clk]);
-> +                               if (err == -EPROBE_DEFER)
-> +                                       goto err_put_clks;
-> +                               priv->clks[clk] = NULL;
-> +                               break;
-> +                       }
-> +               }
-> +       }
+On Wed, Jan 08, 2014 at 10:59:43PM +0000, Stephen Boyd wrote:
+> Document the Krait PMU compatible string.
+> 
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/pmu.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+> index 3e1e498fea96..ce7cccb99d87 100644
+> --- a/Documentation/devicetree/bindings/arm/pmu.txt
+> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
+> @@ -16,6 +16,7 @@ Required properties:
+>  	"arm,arm11mpcore-pmu"
+>  	"arm,arm1176-pmu"
+>  	"arm,arm1136-pmu"
+> +	"qcom,krait-pmu"
+>  - interrupts : 1 combined interrupt or 1 per core.
 
-Ah, very nice! This way it will actually work to replace a number
-of older drivers that require a specific clock name.
+Might be worth updating the part about interrupts too, given that you've
+added PPI support.
 
-I still think we should change the phy subsystem to allow the
-same, that would make it more consistent here, and avoid the
-need for coming up with a number of bogus phy names for random
-drivers that can only ever have one phy.
-
-	Arnd
+Will
