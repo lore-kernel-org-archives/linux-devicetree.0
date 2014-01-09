@@ -1,58 +1,82 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] ARM: imx6q: Add missing esai_ahb clock to current clock
- tree
-Date: Thu, 9 Jan 2014 08:55:26 +0100
-Message-ID: <20140109075525.GO6750@pengutronix.de>
-References: <1389236699-10387-1-git-send-email-Guangyu.Chen@freescale.com>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv8 RFC] pwm: Add Freescale FTM PWM driver support
+Date: Thu, 9 Jan 2014 07:57:44 +0000
+Message-ID: <ced2022399cf4ceb9833c269842b04e2@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1388726661-3391-1-git-send-email-Li.Xiubo@freescale.com>
+ <87lhyqa0rn.fsf@nbsps.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1389236699-10387-1-git-send-email-Guangyu.Chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolin Chen <Guangyu.Chen@freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, rob@landley.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kernel@pengutronix.de, galak@codeaurora.org, mturquette@linaro.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <87lhyqa0rn.fsf@nbsps.com>
+Content-Language: en-US
+Sender: linux-pwm-owner@vger.kernel.org
+To: Bill Pringlemeir <bpringlemeir@nbsps.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Huan Wang <Huan.Wang@freescale.com>, Jingchang Lu <jingchang.lu@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-[Added Mike Turquette to Cc]
 
-On Thu, Jan 09, 2014 at 11:04:59AM +0800, Nicolin Chen wrote:
-> esai_ahb clock is derived from ahb and used to provide ESAI the capability of
-> register accessing and FSYS clock source for I2S clocks dividing. Although the
-> gate of this esai_ahb is duplicated with esai clock -- the baud clock, yet
-> considering about the differences of their clock rates, it's quite essential
-> to patch this missing clock.
+> > +static unsigned long fsl_pwm_calculate_period_cycles(struct fsl_pwm_chip
+> *fpc,
+> > +						     unsigned long period_ns,
+> > +						     enum fsl_pwm_clk index)
+> > +{
+> > +	bool bg = fpc->big_endian;
+> > +	int ret;
+> > +
+> > +	fpc->counter_clk_select = FTM_SC_CLK(bg, index);
+> 
+> Yes, this is the spirit of what I was suggesting.  The code is much less
+> efficient/bigger on the Vybrid with this run-time detection; but this is
+> more efficient/smaller than previous versions.  I think that 'bg' can be
+> a compiler '#define' base on the configured SOC-systems.  Ie, if the
+> kernel config only has 'Vybrid' or only 'LayerScape', then 'bg' can be a
+> hard coded value.  The compiler will produce much better code in these
+> cases.
+> 
+> Also, maybe 'distro' people may want to make a 'hand-held' (Debian) or a
+> 'router' (OpenWRT) distribution and they would only pick either 'Vybrid'
+> or 'LayerScape'.  However, if someone wants an 'every ARM under the
+> sun', then the code still works.  So, I think that the code is better
+> setup for a subsequent patch set like this (or at least just a good).
+> 
+> Especially, the stuff on the I/O swapping in the 'readl()' and
+> 'writel()' is no longer needed; I think you can use the same function
+> for both SOCs.
+> 
+> > +#define __FTM_SWAP32(v) ((u32)(\
+> > +	(((u32)(v) & (u32)0x000000ffUL) << 24) |\
+> > +	(((u32)(v) & (u32)0x0000ff00UL) <<  8) |\
+> > +	(((u32)(v) & (u32)0x00ff0000UL) >>  8) |\
+> > +	(((u32)(v) & (u32)0xff000000UL) >> 24)))
+> > +#define FTM_SWAP32(b, v)	(b ? __FTM_SWAP32(v) : v)
+> 
+> I think that there are macros that you could use here.  For instance,
+> '#include <linux/swab.h>' (powerpc and arm) has some assembler macros
+> that are quite fast for swapping.  If the kernel config has ARCH >= 6
+> for ARM, then the very fast 'rev' instruction is used.  If not, then a
+> generic version is used as you have coded.  The PowerPC (another
+> possible future ARCH for QorIQ/Layerscape SOC?) always has inline
+> assembler macros.
+> 
+> So,
+> 
+> + #include <linux/swab.h>
+> ...
+> + #define FTM_SWAP32(b, v)	(b ? __swab32(v) : v)
+> 
+> might be better.
 > 
 
-[...]
+Yes.
 
->  static struct clk *clk[clk_max];
-> @@ -355,6 +355,7 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
->  	clk[ecspi5]       = imx_clk_gate2("ecspi5",        "ecspi_root",        base + 0x6c, 8);
->  	clk[enet]         = imx_clk_gate2("enet",          "ipg",               base + 0x6c, 10);
->  	clk[esai]         = imx_clk_gate2("esai",          "esai_podf",         base + 0x6c, 16);
-> +	clk[esai_ahb]     = imx_clk_gate2("esai_ahb",      "ahb",               base + 0x6c, 16);
+I have removed the big-endian support temporarily, and will send followed
+patches about this.
 
-We have the situation here that a single bit controls two clocks. As
-Shawn mentioned just using two gates on the same bit doesn't work
-properly. Do we need a new basic clock type or expand the common gate
-code somehow?
-This situation happens from time to time and I haven't seen a solution
-for this.
+ 
+Thanks,
 
-Sascha
+--
+Best Regards,
+Xiubo
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
