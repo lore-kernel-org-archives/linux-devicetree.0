@@ -1,382 +1,133 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: [PATCH V5 1/2] PHY: Exynos: Add Exynos5250 SATA PHY driver
-Date: Thu,  9 Jan 2014 15:36:44 +0530
-Message-ID: <1389262005-30399-2-git-send-email-yuvaraj.cd@samsung.com>
-References: <1389262005-30399-1-git-send-email-yuvaraj.cd@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389262005-30399-1-git-send-email-yuvaraj.cd@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: mark.rutland@arm.com, jg1.han@samsung.com, b.zolnierkie@samsung.com, joshi@samsung.com, t.figa@samsung.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, grant.likely@linaro.org, christoffer.dall@linaro.org, linux-ide@vger.kernel.org, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Girish K S <ks.giri@samsung.com>, Vasanth Ananthan <vasanth.a@samsung.com>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv8 2/2] dma: Add Freescale eDMA engine driver support
+Date: Thu, 9 Jan 2014 10:17:04 +0000
+Message-ID: <4efd24a1219547cbbf0ce8ec66d762e5@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1388645544-5596-1-git-send-email-b35083@freescale.com>
+ <1388645544-5596-3-git-send-email-b35083@freescale.com>
+ <5e626cf3587f4a0eb325dd7032b8b60a@BL2PR03MB467.namprd03.prod.outlook.com>
+ <5890639.zaOC7MRE09@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5890639.zaOC7MRE09@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the SATA PHY driver for Exynos5250.Exynos5250 SATA
-PHY comprises of CMU and TRSV blocks which are of I2C register Map.
-So this patch also adds a i2c client driver, which is used configure
-the CMU and TRSV block of exynos5250 SATA PHY.
-
-This patch incorporates the generic PHY framework to deal with SATA
-PHY.
-
-This patch depends on the below patches
-	[1].drivers: phy: add generic PHY framework
-		by Kishon Vijay Abraham I<kishon@ti.com>
-	[2].ata: ahci_platform: Manage SATA PHY
-		by Roger Quadros <rogerq@ti.com>
-
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
-Signed-off-by: Girish K S <ks.giri@samsung.com>
-Signed-off-by: Vasanth Ananthan <vasanth.a@samsung.com>
----
-Changes from V4:
-	1.Made Exynos5250 SATA PHY driver by default selects
-	CONFIG_I2C and CONFIG_I2C_S3C2410, as SATA PHY driver
-	depends on I2C.
-	2.struct i2c_driver sataphy_i2c_driver made static which
-	was earlier global type.
-	3.Renamed the files to phy-exynos5250-sata.c and 
-	phy-exynos5250-sata-i2c.c and CONFIG_EXYNOS5250_SATA_PHY
-	to CONFIG_PHY_EXYNOS5250_SATA. 
-
-Changes from V3:
-	1.Moved devm_phy_create before to devm_phy_provider_register.
-
-Changes from V2:
-	1.Removed of_match_table
-	2.Moved to syscon interface for PMU handling.
-
-Changes from V1:
-	1.Adapted to latest version of Generic PHY framework
-	2.Removed exynos_sata_i2c_remove function.
-
- drivers/phy/Kconfig                   |   13 ++
- drivers/phy/Makefile                  |    1 +
- drivers/phy/phy-exynos5250-sata-i2c.c |   40 ++++++
- drivers/phy/phy-exynos5250-sata.c     |  238 +++++++++++++++++++++++++++++++++
- 4 files changed, 292 insertions(+)
- create mode 100644 drivers/phy/phy-exynos5250-sata-i2c.c
- create mode 100644 drivers/phy/phy-exynos5250-sata.c
-
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index d0611b8..de1c165 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -57,4 +57,17 @@ config PHY_EXYNOS_DP_VIDEO
- 	help
- 	  Support for Display Port PHY found on Samsung EXYNOS SoCs.
- 
-+config PHY_EXYNOS5250_SATA
-+	tristate "Exynos5250 Sata SerDes/PHY driver"
-+	depends on SOC_EXYNOS5250
-+	select GENERIC_PHY
-+	select I2C
-+	select I2C_S3C2410
-+	select MFD_SYSCON
-+	help
-+	  Enable this to support SATA SerDes/Phy found on Samsung's
-+	  Exynos5250 based SoCs.This SerDes/Phy supports SATA 1.5 Gb/s,
-+	  SATA 3.0 Gb/s, SATA 6.0 Gb/s speeds.It supports one SATA host
-+	  port to accept one SATA device.
-+
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 4e4adc9..8ccf8c3 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -8,3 +8,4 @@ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
- obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
- obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
- obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
-+obj-$(CONFIG_PHY_EXYNOS5250_SATA)	+= phy-exynos5250-sata.o phy-exynos5250-sata-i2c.o
-diff --git a/drivers/phy/phy-exynos5250-sata-i2c.c b/drivers/phy/phy-exynos5250-sata-i2c.c
-new file mode 100644
-index 0000000..83bd6ee
---- /dev/null
-+++ b/drivers/phy/phy-exynos5250-sata-i2c.c
-@@ -0,0 +1,40 @@
-+/*
-+ * Copyright (C) 2013 Samsung Electronics Co.Ltd
-+ * Author:
-+ *	Yuvaraj C D <yuvaraj.cd@samsung.com>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ *
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+
-+static int exynos_sata_i2c_probe(struct i2c_client *client,
-+		const struct i2c_device_id *i2c_id)
-+{
-+	return 0;
-+}
-+
-+static const struct i2c_device_id sataphy_i2c_device_match[] = {
-+	{ "exynos-sataphy-i2c", 0 },
-+};
-+
-+static struct i2c_driver sataphy_i2c_driver = {
-+	.probe		= exynos_sata_i2c_probe,
-+	.id_table	= sataphy_i2c_device_match,
-+	.driver   = {
-+		.name = "exynos-sataphy-i2c",
-+		.owner = THIS_MODULE,
-+		},
-+};
-+
-+static int __init exynos5250_phy_i2c_init(void)
-+{
-+	return i2c_add_driver(&sataphy_i2c_driver);
-+}
-+module_init(exynos5250_phy_i2c_init);
-diff --git a/drivers/phy/phy-exynos5250-sata.c b/drivers/phy/phy-exynos5250-sata.c
-new file mode 100644
-index 0000000..ac464c0
---- /dev/null
-+++ b/drivers/phy/phy-exynos5250-sata.c
-@@ -0,0 +1,238 @@
-+/*
-+ * Samsung SATA SerDes(PHY) driver
-+ *
-+ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-+ * Authors: Girish K S <ks.giri@samsung.com>
-+ *         Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/spinlock.h>
-+#include <linux/mfd/syscon.h>
-+
-+#define EXYNOS5_SATA_RESET		0x4
-+#define RESET_CMN_RST_N			(1 << 1)
-+#define LINK_RESET			0xF0000
-+#define EXYNOS5_SATA_MODE0		0x10
-+#define EXYNOS5_SATAPHY_PMU_ENABLE	(1 << 0)
-+#define SATA_SPD_GEN3			(2 << 0)
-+#define EXYNOS5_SATA_CTRL0		0x14
-+#define CTRL0_P0_PHY_CALIBRATED_SEL	(1 << 9)
-+#define CTRL0_P0_PHY_CALIBRATED		(1 << 8)
-+#define EXYNOS5_SATA_PHSATA_CTRLM	0xE0
-+#define PHCTRLM_REF_RATE		(1 << 1)
-+#define PHCTRLM_HIGH_SPEED		(1 << 0)
-+#define EXYNOS5_SATA_PHSATA_STATM	0xF0
-+#define PHSTATM_PLL_LOCKED		(1 << 0)
-+#define EXYNOS_SATA_PHY_EN		(1 << 0)
-+#define SATAPHY_CONTROL_OFFSET		0x0724
-+
-+struct exynos_sata_phy {
-+	struct phy *phy;
-+	struct clk *phyclk;
-+	void __iomem *regs;
-+	void __iomem *pmureg;
-+	struct i2c_client *client;
-+};
-+
-+static bool wait_for_reg_status(void __iomem *base, u32 reg, u32 checkbit,
-+				u32 status)
-+{
-+	unsigned long timeout = jiffies + usecs_to_jiffies(1000);
-+
-+	while (time_before(jiffies, timeout)) {
-+		if ((readl(base + reg) & checkbit) == status)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static int exynos_sata_phy_power_on(struct phy *phy)
-+{
-+	struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
-+
-+	regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
-+			EXYNOS5_SATAPHY_PMU_ENABLE, EXYNOS_SATA_PHY_EN);
-+
-+	return 0;
-+}
-+
-+static int exynos_sata_phy_power_off(struct phy *phy)
-+{
-+	struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
-+
-+	regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
-+			EXYNOS5_SATAPHY_PMU_ENABLE, ~EXYNOS_SATA_PHY_EN);
-+
-+	return 0;
-+}
-+
-+static int exynos_sata_phy_init(struct phy *phy)
-+{
-+	u32 val = 0;
-+	int ret = 0;
-+	u8 buf[] = { 0x3A, 0x0B };
-+	struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
-+
-+	regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
-+			EXYNOS5_SATAPHY_PMU_ENABLE, EXYNOS_SATA_PHY_EN);
-+
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-+	val |= 0xFF;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-+	val |= LINK_RESET;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-+	val |= RESET_CMN_RST_N;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-+	val &= ~PHCTRLM_REF_RATE;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-+
-+	/* High speed enable for Gen3 */
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-+	val |= PHCTRLM_HIGH_SPEED;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-+
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_CTRL0);
-+	val |= CTRL0_P0_PHY_CALIBRATED_SEL | CTRL0_P0_PHY_CALIBRATED;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_CTRL0);
-+
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_MODE0);
-+	val |= SATA_SPD_GEN3;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_MODE0);
-+
-+	ret = i2c_master_send(sata_phy->client, buf, sizeof(buf));
-+	if (ret < 0)
-+		return -ENXIO;
-+
-+	/* release cmu reset */
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-+	val &= ~RESET_CMN_RST_N;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+
-+	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-+	val |= RESET_CMN_RST_N;
-+	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-+
-+	return (wait_for_reg_status(sata_phy->regs, EXYNOS5_SATA_PHSATA_STATM,
-+		PHSTATM_PLL_LOCKED, 1)) ? 0 : -EINVAL;
-+
-+}
-+
-+static struct phy_ops exynos_sata_phy_ops = {
-+	.init		= exynos_sata_phy_init,
-+	.power_on	= exynos_sata_phy_power_on,
-+	.power_off	= exynos_sata_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int exynos_sata_phy_probe(struct platform_device *pdev)
-+{
-+	struct exynos_sata_phy *sata_phy;
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	struct phy_provider *phy_provider;
-+	struct device_node *node;
-+	int ret = 0;
-+
-+	sata_phy = devm_kzalloc(dev, sizeof(*sata_phy), GFP_KERNEL);
-+	if (!sata_phy)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+
-+	sata_phy->regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(sata_phy->regs))
-+		return PTR_ERR(sata_phy->regs);
-+
-+	sata_phy->pmureg = syscon_regmap_lookup_by_phandle(dev->of_node,
-+					"samsung,syscon-phandle");
-+	if (!sata_phy->pmureg) {
-+		dev_err(dev, "syscon regmap lookup failed.\n");
-+		return PTR_ERR(sata_phy->pmureg);
-+	}
-+
-+	node = of_parse_phandle(dev->of_node,
-+			"samsung,exynos-sataphy-i2c-phandle", 0);
-+	if (!node)
-+		return -ENODEV;
-+
-+	sata_phy->client = of_find_i2c_device_by_node(node);
-+	if (!sata_phy->client)
-+		return -EPROBE_DEFER;
-+
-+	dev_set_drvdata(dev, sata_phy);
-+
-+	sata_phy->phyclk = devm_clk_get(dev, "sata_phyctrl");
-+	if (IS_ERR(sata_phy->phyclk)) {
-+		dev_err(dev, "failed to get clk for PHY\n");
-+		return PTR_ERR(sata_phy->phyclk);
-+	}
-+
-+	ret = clk_prepare_enable(sata_phy->phyclk);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable source clk\n");
-+		return ret;
-+	}
-+
-+	sata_phy->phy = devm_phy_create(dev, &exynos_sata_phy_ops, NULL);
-+	if (IS_ERR(sata_phy->phy)) {
-+		clk_disable_unprepare(sata_phy->phyclk);
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(sata_phy->phy);
-+	}
-+
-+	phy_set_drvdata(sata_phy->phy, sata_phy);
-+
-+	phy_provider = devm_of_phy_provider_register(dev,
-+					of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider)) {
-+		clk_disable_unprepare(sata_phy->phyclk);
-+		return PTR_ERR(phy_provider);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id exynos_sata_phy_of_match[] = {
-+	{ .compatible = "samsung,exynos5250-sata-phy" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, exynos_sata_phy_of_match);
-+
-+static struct platform_driver exynos_sata_phy_driver = {
-+	.probe	= exynos_sata_phy_probe,
-+	.driver = {
-+		.of_match_table	= exynos_sata_phy_of_match,
-+		.name  = "samsung,sata-phy",
-+		.owner = THIS_MODULE,
-+	}
-+};
-+module_platform_driver(exynos_sata_phy_driver);
-+
-+MODULE_DESCRIPTION("Samsung SerDes PHY driver");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("ks.giri <ks.giri@samsung.com>");
-+MODULE_AUTHOR("Yuvaraj C D <yuvaraj.cd@samsung.com>");
--- 
-1.7.9.5
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBcm5kIEJlcmdtYW5uIFttYWls
+dG86YXJuZEBhcm5kYi5kZV0NCj4gU2VudDogV2VkbmVzZGF5LCBKYW51YXJ5IDA4LCAyMDE0IDY6
+NTQgUE0NCj4gVG86IEx1IEppbmdjaGFuZy1CMzUwODMNCj4gQ2M6IHZpbm9kLmtvdWxAaW50ZWwu
+Y29tOyBkYW4uai53aWxsaWFtc0BpbnRlbC5jb207IHNoYXduLmd1b0BsaW5hcm8ub3JnOw0KPiBw
+YXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzd2FycmVuQHd3d2RvdG9y
+Zy5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0h2OCAyLzJdIGRtYTogQWRkIEZyZWVzY2FsZSBlRE1BIGVuZ2luZSBk
+cml2ZXIgc3VwcG9ydA0KPiANCj4gT24gV2VkbmVzZGF5IDA4IEphbnVhcnkgMjAxNCAxMDoyNDoz
+OCBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+IA0KPiA+ID4gKy0gY2xvY2tzIDogUGhhbmRsZSBvZiB0
+aGUgRE1BIGNoYW5uZWwgZ3JvdXAgYmxvY2sgY2xvY2sgb2YgdGhlIGVETUENCj4gPiA+IG1vZHVs
+ZQ0KPiA+ID4gKy0gY2xvY2stbmFtZXMgOiBUaGUgY2hhbm5lbCBncm91cCBibG9jayBjbG9jayBu
+YW1lcw0KPiANCj4gVHVybiB0aGVzZSBhcm91bmQgYW5kIGZpcnN0IGRlZmluZSB0aGUgcmVxdWly
+ZWQgbmFtZXMsIHRoZW4gc3RhdGUNCj4gdGhhdCAnY2xvY2tzJyBzaG91bGQgY29udGFpbiBub25l
+IGNsb2NrIHNwZWNpZmllciBmb3IgZWFjaCBjbG9jaw0KPiBuYW1lLg0KSSB3aWxsIHR1cm4gdGhl
+bSBhcm91bmQsIHRoYW5rcy4NCg0KPiANCj4gPiA+ICtzYWkyOiBzYWlANDAwMzEwMDAgew0KPiA+
+ID4gKwljb21wYXRpYmxlID0gImZzbCx2ZjYxMC1zYWkiOw0KPiA+ID4gKwlyZWcgPSA8MHg0MDAz
+MTAwMCAweDEwMDA+Ow0KPiA+ID4gKwlpbnRlcnJ1cHRzID0gPDAgODYgMHgwND47DQo+ID4gPiAr
+CWNsb2NrcyA9IDwmY2xrcyBWRjYxMF9DTEtfU0FJMj47DQo+ID4gPiArCWNsb2NrLW5hbWVzID0g
+InNhaSI7DQo+ID4gPiArCWRtYS1uYW1lcyA9ICJ0eCIsICJyeCI7DQo+ID4gPiArCWRtYXMgPSA8
+JmVkbWEwIFZGNjEwX0VETUFfRE1BTVVYMCBWRjYxMF9FRE1BMF9NVVgwX1NBSTJfVFg+LA0KPiA+
+ID4gKwkJPCZlZG1hMCBWRjYxMF9FRE1BX0RNQU1VWDAgVkY2MTBfRURNQTBfTVVYMF9TQUkyX1JY
+PjsNCj4gPiA+ICsJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiA+ICt9Ow0KPiANCj4gSXQgc2Vl
+bXMgd3JvbmcgdG8gaGF2ZSBtYWNyb3MgZGVmaW5lZCBsaWtlIFZGNjEwX0VETUEwX01VWDBfU0FJ
+Ml9UWCwNCj4gaW4gcGFydGljdWxhciBpbiB0aGUgZXhhbXBsZS4gVGhlc2Ugc2hvdWxkIGp1c3Qg
+YmUgbGl0ZXJhbCBudW1iZXJzLg0KW0x1IEppbmdjaGFuZy1iMzUwODNdIA0KVGhpcyBlRE1BIGVu
+Z2luZWVyIHJlcXVpcmVzIHR3byBzcGVjaWZpZXJzLCBvbmUgaXMgYSBtdXggZ3JvdXAgaWQsIHRo
+ZSBvdGhlciBpcyBhIHJlcXVlc3Qgc291cmNlIGlkLg0KVGhlIFZGNjEwX0VETUEwX01VWDBfU0FJ
+Ml9UWCBpcyBzYWkncyB0eCBkbWEgcmVxdWVzdCBzb3VyY2UgaWQsIGl0IGlzIGRlZmluZWQgYXMg
+YSBsaXRlcmFsIG51bWJlci4NClRoZXJlIGFyZSB0b3RhbGx5IG1vcmUgdGhhbiAxMDAgcmVxdWVz
+dCBzb3VyY2UgaWQsIEkgaGF2ZSB0aGVtIG1hY3JvcyBkZWZpbmVkIHRvIG1ha2UgaXQgcmVmZXJl
+bmNlZA0KZWFzaWx5IGFuZCBjbGVhcmx5LCBqdXN0IGxpa2Ugc29tZSBjbG9jayBiaW5kaW5nIGRv
+bmUuDQpUaGUgbWFjcm9zIGFyZSBkZWZpbmVkIGluIGluY2x1ZGUvZHQtYmluZGluZ3MvZG1hL3Zm
+NjEwLWVkbWEuaC4NClRoYW5rcy4NCg0KPiANCj4gSXQncyBvayB0byBoYXZlIG1hY3JvcyBmb3Ig
+dGhlIFZGNjEwX0VETUFfRE1BTVVYMCwgYnV0IEkgc3VzcGVjdA0KPiB0aGF0IHRoZSBwb3NzaWJs
+ZSB2YWx1ZXMgYXJlIGp1c3QgJzAnIGFuZCAnMScsIHdoaWNoIG1lYW5zIGEgbGl0ZXJhbA0KPiB3
+b3VsZCBiZSBqdXN0IGFzIGVhc3kgaGVyZS4NCj4gDQo+ID4gPiArc3RydWN0IGZzbF9lZG1hX2h3
+X3RjZCB7DQo+ID4gPiArCXUzMglzYWRkcjsNCj4gPiA+ICsJdTE2CXNvZmY7DQo+ID4gPiArCXUx
+NglhdHRyOw0KPiA+ID4gKwl1MzIJbmJ5dGVzOw0KPiA+ID4gKwl1MzIJc2xhc3Q7DQo+ID4gPiAr
+CXUzMglkYWRkcjsNCj4gPiA+ICsJdTE2CWRvZmY7DQo+ID4gPiArCXUxNgljaXRlcjsNCj4gPiA+
+ICsJdTMyCWRsYXN0X3NnYTsNCj4gPiA+ICsJdTE2CWNzcjsNCj4gPiA+ICsJdTE2CWJpdGVyOw0K
+PiA+ID4gK30gX19wYWNrZWQ7DQo+IA0KPiBUaGUgc3RydWN0dXJlIGlzIHBhY2tlZCBhbHJlYWR5
+LCBhbmQgbWFya2luZyBpdCBfX3BhY2tlZA0KPiB3aWxsIGp1c3QgbWVhbiB0aGF0IHRoZSBjb21w
+aWxlciBjYW4ndCBhY2Nlc3MgdGhlIG1lbWJlcnMNCj4gYXRvbWljYWxseS4gUGxlYXNlIHJlbW92
+ZSB0aGUgX19wYWNrZWQga2V5d29yZC4NCk9rLCBJIHdpbGwgcmVtb3ZlIGl0LCB0aGFua3MuDQoN
+Cj4gDQo+ID4gPiArLyogYnl0ZXMgc3dhcHBpbmcgYWNjb3JkaW5nIHRvIGVETUEgY29udHJvbGxl
+cidzIGVuZGlhbiAqLw0KPiA+ID4gKyNkZWZpbmUgRURNQV9TV0FQMTYoZSwgdikJKF9fZm9yY2Ug
+dTE2KShlLT5iaWdfZW5kaWFuID8NCj4gPiA+IGNwdV90b19iZTE2KHYpIDogY3B1X3RvX2xlMTYo
+dikpDQo+ID4gPiArI2RlZmluZSBFRE1BX1NXQVAzMihlLCB2KQkoX19mb3JjZSB1MzIpKGUtPmJp
+Z19lbmRpYW4gPw0KPiA+ID4gY3B1X3RvX2JlMzIodikgOiBjcHVfdG9fbGUzMih2KSkNCj4gDQo+
+IE1heWJlIHVzZSBpbmxpbmUgZnVuY3Rpb25zIGZvciB0aGVzZT8NCj4gDQo+ID4gPiArLyoNCj4g
+PiA+ICsgKiBjb3B5aW5nIG9mIEFSTSByZWFke2IsdyxsKSBhbmQgd3JpdGV7Yix3LGwpIG1hY3Jv
+IGRlZmluYXRpb25zDQo+ID4gPiArICogZXhjZXB0IGZvciBkb2luZyBkZWZhdWx0IHN3YXAgb2Yg
+Y3B1X3RvX2xlMzIsIHRoZSBieXRlcyBzd2FwDQo+ID4gPiArICogaXMgZG9uZSBkZXBlbmRpbmcg
+b24gZURNQSBjb250cm9sbGVyJ3MgZW5kaWFuIGRlZmluYXRpb24sDQo+ID4gPiArICogd2hpY2gg
+bWF5IGJlIGJpZy1lbmRpYW4gb3IgbGl0dGxlLWVuZGlhbi4NCj4gPiA+ICsgKi8NCj4gPiA+ICtz
+dGF0aWMgaW5saW5lIHUxNiBlZG1hX3JlYWR3KHZvaWQgX19pb21lbSAqYWRkcikNCj4gPiA+ICt7
+DQo+ID4gPiArCXUxNiBfX3YgPSAoX19mb3JjZSB1MTYpIF9fcmF3X3JlYWR3KGFkZHIpOw0KPiA+
+ID4gKw0KPiA+ID4gKwlfX2lvcm1iKCk7DQo+ID4gPiArCXJldHVybiBfX3Y7DQo+ID4gPiArfQ0K
+PiANCj4gVGhlIGNvbW1lbnQgZG9lc24ndCBzZWVtIHRvIG1hdGNoIHRoZSBpbXBsZW1lbnRhdGlv
+bjogWW91IGRvbid0DQo+IGFjdHVhbGx5IGRvIHN3YXBzIGhlcmUgYXQgYWxsLCB3aGljaCBtZWFu
+cyB0aGlzIHdpbGwgZmFpbCB3aGVuDQo+IHlvdXIga2VybmVsIGlzIHJ1bm5pbmcgaW4gYmlnLWVu
+ZGlhbiBtb2RlLiBKdXN0IHVzZSB0aGUgcmVndWxhcg0KPiByZWFkdygpIGV0Yywgb3IgdXNlIGlv
+cmVhZDE2L2lvcmVhZDE2YmUgZGVwZW5kaW5nIG9uIHRoZSBmbGFnLA0KPiBhbmQgZ2V0IHJpZCBv
+ZiB5b3VyIEVETUFfU1dBUCBtYWNyb3MuDQo+IA0KPiBObyBuZWVkIHRvIGNvbWUgdXAgd2l0aCB5
+b3VyIG93biBzY2hlbWUgd2hlbiB0aGUgcHJvYmxlbSBoYXMNCj4gYmVlbiBzb2x2ZWQgYWxyZWFk
+eSBlbHNld2hlcmUuDQpUaGUgd29ya2luZyBzY2VuYXJpbyBmb3IgdGhpcyBkZXZpY2UgaXMsIHRo
+ZSBjcHUgcnVubmluZyBpbiBsaXR0bGUtZW5kaWFuIG1vZGUsDQpXaGlsZSB0aGUgZURNQSBtb2R1
+bGUgcnVubmluZyBpbiBsaXR0bGUtIG9yIGJpZy1lbmRpYW4gbW9kZS4gVGhpcyBkZXZpY2UgaXMg
+Y3VycmVudGx5DQpydW5uaW5nIG9uIEFSTSBhcmNoaXRlY3R1cmUgb25seSwgYW5kIEkgbm90aWNl
+IHRoYXQgQVJNJ3MgbGl0dGxlLWVuZGlhbiByZWFkbC93cml0ZWwNCnRyZWF0cyBhbGwgdmFsdWUg
+YXMgbGl0dGxlLWVuZGlhbi4gVGhpcyBpcyBub3QgbWF0Y2hpbmcgb3VyIHNjZW5hcmlvIGhlcmUu
+IFNvIEkgcmVtb3ZlZA0KdGhlIGRlZmF1bHQgY3B1X3RvX2xlMzIoKSBpbiB0aGUgcmVhZGwoKSwg
+YW5kIHB1dCBpdCBpbiBFRE1BX1NXQVAzMigpIHRvIHNhdGlzZnkgdGhlDQpyZXF1aXJlZC4NClRo
+YW5rcy4NCg0KPiANCj4gPiA+ICtzdGF0aWMgaXJxcmV0dXJuX3QgZnNsX2VkbWFfaXJxX2hhbmRs
+ZXIoaW50IGlycSwgdm9pZCAqZGV2X2lkKQ0KPiA+ID4gK3sNCj4gPiA+ICsJaWYgKGZzbF9lZG1h
+X3R4X2hhbmRsZXIoaXJxLCBkZXZfaWQpID09IElSUV9IQU5ETEVEKQ0KPiA+ID4gKwkJcmV0dXJu
+IElSUV9IQU5ETEVEOw0KPiA+ID4gKw0KPiA+ID4gKwlyZXR1cm4gZnNsX2VkbWFfZXJyX2hhbmRs
+ZXIoaXJxLCBkZXZfaWQpOw0KPiA+ID4gK30NCj4gDQo+IERvZXMgdGhpcyBkbyB0aGUgcmlnaHQg
+dGhpbmcgaWYgYm90aCBjb21wbGV0aW9uIGFuZCBlcnJvciBhcmUNCj4gc2lnbmFsbGVkIGF0IHRo
+ZSBzYW1lIHRpbWU/IEl0IHNlZW1zIHlvdSdkIG1pc3MgdGhlIGVycm9yIGludGVycnVwdC4NCkkg
+dGhpbmsgdGhlIGVycm9yIHdvdWxkIG9jY3VyIHJhcmVseSwgc28gaWYgdGhlIHRyYW5zbWlzc2lv
+biBpcnEgZW50ZXJlZCwNCml0IHdpbGwgcmV0dXJuIGRpcmVjdGx5IGFmdGVyIGhhbmRsaW5nLiBJ
+ZiB0aGVyZSBpcyByZWFsbHkgYW4gZXJyb3Igb2NjdXIsDQp0aGUgaW50ZXJydXB0IHdpbGwgYmUg
+cmFpc2VkIGFnYWluIHdpdGhvdXQgdHJhbnNtaXNzaW9uIGludGVycnVwdCBmbGFnLCB0aGVuDQp0
+aGUgaXJxIGhhbmRsZXIgd291bGQgZXhlY3V0ZSBmc2xfZWRtYV9lcnJfaGFuZGxlcigpIGZ1bmN0
+aW9uLg0KVGhhbmtzLg0KDQo+IA0KPiA+ID4gK3N0YXRpYyBib29sIGZzbF9lZG1hX2ZpbHRlcl9m
+bihzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4sIHZvaWQgKm11eCkNCj4gPiA+ICt7DQo+ID4gPiArCSBy
+ZXR1cm4gKGNoYW4tPmNoYW5faWQgLyBETUFNVVhfTlIpID09ICh1MzIpbXV4Ow0KPiA+ID4gK30N
+Cj4gPiA+ICsNCj4gPiA+ICtzdGF0aWMgc3RydWN0IGRtYV9jaGFuICpmc2xfZWRtYV94bGF0ZShz
+dHJ1Y3Qgb2ZfcGhhbmRsZV9hcmdzDQo+ICpkbWFfc3BlYywNCj4gPiA+ICsJCXN0cnVjdCBvZl9k
+bWEgKm9mZG1hKQ0KPiA+ID4gK3sNCj4gPiA+ICsJc3RydWN0IGRtYV9jaGFuICpjaGFuOw0KPiA+
+ID4gKwlkbWFfY2FwX21hc2tfdCBtYXNrOw0KPiA+ID4gKw0KPiA+ID4gKwlpZiAoZG1hX3NwZWMt
+PmFyZ3NfY291bnQgIT0gMikNCj4gPiA+ICsJCXJldHVybiBOVUxMOw0KPiA+ID4gKw0KPiA+ID4g
+KwlkbWFfY2FwX3plcm8obWFzayk7DQo+ID4gPiArCWRtYV9jYXBfc2V0KERNQV9TTEFWRSwgbWFz
+ayk7DQo+ID4gPiArCWRtYV9jYXBfc2V0KERNQV9DWUNMSUMsIG1hc2spOw0KPiA+ID4gKwljaGFu
+ID0gZG1hX3JlcXVlc3RfY2hhbm5lbChtYXNrLCBmc2xfZWRtYV9maWx0ZXJfZm4sICh2b2lkDQo+
+ID4gPiAqKWRtYV9zcGVjLT5hcmdzWzBdKTsNCj4gPiA+ICsJaWYgKGNoYW4pDQo+ID4gPiArCQlm
+c2xfZWRtYV9jaGFuX211eCh0b19mc2xfZWRtYV9jaGFuKGNoYW4pLCBkbWFfc3BlYy0+YXJnc1sx
+XSwNCj4gPiA+IHRydWUpOw0KPiA+ID4gKwlyZXR1cm4gY2hhbjsNCj4gPiA+ICt9DQo+IA0KPiBQ
+bGVhc2UgcmVtb3ZlIHRoZSBmaWx0ZXIgZnVuY3Rpb24gbm93IGFuZCB1c2UgZG1hX2dldF9zbGF2
+ZV9jaGFuDQo+IHdpdGggdGhlIGNvcnJlY3QgY2hhbm5lbCBhcyBhbiBhcmd1bWVudC4gTm8gbmVl
+ZCB0byB3YWxrIGFsbA0KPiBhdmFpbGFibGUgY2hhbm5lbHMgaW4gdGhlIHN5c3RlbSBhbmQgaW50
+cm9kdWNlIGJ1Z3MgYnkgbm90DQo+IGlnbm9yaW5nIG90aGVyIGRtYSBlbmdpbmVzLg0KVGhlIGRt
+YSBzbGF2ZSByZXF1ZXN0IGNhbiBvbmx5IGJlIGFsbG9jYXRlZCB0byBjaGFubmVsIG9mIHBhcnRp
+Y3VsYXIgY2hhbm5lbHMgZ3JvdXAgaW5kaWNhdGVkIGJ5DQp0aGUgbXV4IGdyb3VwIGlkIHNwZWNp
+Zmllci4gYW5kIHRoZSBzZWNvbmQgc3BlY2lmaWVyIGlzIHRoZSByZXF1ZXN0IGlkLCBub3QgdGhl
+IGNoYW5uZWwgbnVtYmVyLA0Kc28gdG8gdXNlIHRoZSBkbWFfZ2V0X3NsYXZlX2NoYW4sIEkgd291
+bGQgZmluZCB0aGUgY2hhbm5lbCBmb3IgdGhpcyByZXF1ZXN0IGJ5IHdhbGtpbmcgYWxsIHRoZQ0K
+YXZhaWxhYmxlIGNoYW5uZWxzIG1hbnVhbGx5Lg0KVGhhbmtzIQ0KDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
