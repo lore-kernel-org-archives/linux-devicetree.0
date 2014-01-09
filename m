@@ -1,54 +1,51 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v8 3/7] regulator: add pbias regulator support
-Date: Thu, 9 Jan 2014 17:27:08 +0000
-Message-ID: <20140109172708.GF12858@sirena.org.uk>
-References: <1387560955-6547-1-git-send-email-balajitk@ti.com>
- <1389279062-32291-1-git-send-email-balajitk@ti.com>
- <1389279062-32291-4-git-send-email-balajitk@ti.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [RFC PATCH 3/9] of: mtd: add NAND timings retrieval support
+Date: Thu, 9 Jan 2014 10:35:05 -0700
+Message-ID: <20140109173505.GB8899@obsidianresearch.com>
+References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com>
+ <1389190924-26226-4-git-send-email-b.brezillon@overkiz.com>
+ <20140108183418.GA12358@obsidianresearch.com>
+ <52CDA032.3010804@overkiz.com>
+ <20140108191339.GB12358@obsidianresearch.com>
+ <52CE5F82.6070802@overkiz.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yRA+Bmk8aPhU85Qt"
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCWOL4E62AORBWV3XOLAKGQEWHSGQQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52CE5F82.6070802-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1389279062-32291-4-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, tony@atomide.com, mark.rutland@arm.com
+To: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 09, 2014 at 09:36:18AM +0100, boris brezillon wrote:
 
---yRA+Bmk8aPhU85Qt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> >You might want to check if you can boil down the DT timings from the
+> >huge list to just an ONFI mode number..
+> 
+> Sure, but the sunxi driver needs at least 19 of them...
 
-On Thu, Jan 09, 2014 at 08:20:58PM +0530, Balaji T K wrote:
-> pbias register controls internal power supply to sd card i/o pads
-> in most OMAPs (OMAP2-5, DRA7).
-> Control bits for selecting voltage level and
-> enabling/disabling are in the same PBIAS register.
+So does mvebu's NAND driver..
 
-Acked-by: Mark Brown <broonie@linaro.org>
+What I ment was you could have a
 
---yRA+Bmk8aPhU85Qt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+  onfi,nand-timing-mode = 0
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+in the DT. Each of the modes defines all ~19 parameters, higher modes
+are faster.
 
-iQIcBAEBAgAGBQJSztvpAAoJELSic+t+oim9tOUP/2o1yIzavcRzvOLn3MKQqBhD
-rvAA1z4Vni7rlSksAYn6ed8OjNJY9YGGzfql/Rj/253gjzeahmKW9nd3b1LuspDJ
-JxjzChNbID0RCFI+rAuoerQkiAzyk2/nSrycQPnklHdPWBqQx5b+9FBEU+m9HYqs
-BLWF61w+iF3pU0np94JV5Lq5m+hAKUQGzks25QuFnmtRoDHKDLZpHWGoVFUSJhCb
-6xjOVlv6qhaY3/GaCPv2D8CGlpbOc2pQGwXnoneFP2H5HHBPiieUJET3dpFqIQ6o
-FvOSzSS3MGzhRegXUdgQoniJa+iyElTjvBzMTRRUJ5ISMuG8fgk3Nxn9bt3mf0JI
-dsEUyKhudiYF/dvf9aVvSJ6+tzA8ccZF/6wa7foet8nXvfbmKU8d3p36nnkKuabY
-4nTcq/GWnr/4MAZ+9ELjzVmT8lbhlKHTCQnWqPXogisyMpOYyMHQMNPrmw3mHGwy
-4gLDB+wudfBH666gWgiMULrmymFz6Q1MfD4o5q5Tes4GwxGWSasEzdmepoac3bMx
-9reu0T8TCDKRBiiVO2CbEzqeDaAlsTgGjgU5fUojd8aNc+uEuV+MmjEWCYZSaPJ8
-uH1Okvq9P37MyoV1wlv7lE/V/WpEki3yY0SKyy00oimIV24F9x3ya+8vT1RRlrMC
-XNS0CaIdFprRMcLBmSwq
-=rg6u
------END PGP SIGNATURE-----
+Pick a mode value that fits all the parameters of the connected
+non-ONFI flash.
 
---yRA+Bmk8aPhU85Qt--
+This would be instead of defining each parameter
+individually.. Provide some helpers to convert from a onfi mode number
+to all the onfi defined timing parameters so that drivers can
+configure the HW..
+
+Jason
