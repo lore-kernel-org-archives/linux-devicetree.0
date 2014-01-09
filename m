@@ -1,70 +1,87 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Thu, 09 Jan 2014 20:48:14 +0100
-Message-ID: <52CEFCFE.7080308@redhat.com>
-References: <1389290226-6971-1-git-send-email-hdegoede@redhat.com> <1389290226-6971-2-git-send-email-hdegoede@redhat.com> <52CF0326.1090407@cogentembedded.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCH v2 1/2] ARM: dts: Add omap specific pinctrl defines to
+ use padconf addresses
+Date: Thu, 09 Jan 2014 20:51:34 +0100
+Message-ID: <52CEFDC6.4010408@epfl.ch>
+References: <1387554677-21100-1-git-send-email-laurent.pinchart@ideasonboard.com> <1387554677-21100-2-git-send-email-laurent.pinchart@ideasonboard.com> <20140107223021.GA5074@atomide.com> <1562680.iFW31kAxBU@avalon> <20140107232018.GE5074@atomide.com>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBB72XOLAKGQEJY2M6ZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52CF0326.1090407-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140107232018.GE5074@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@debian.org>, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Tony,
 
-On 01/09/2014 09:14 PM, Sergei Shtylyov wrote:
-> Hello.
->
-> On 01/09/2014 08:57 PM, Hans de Goede wrote:
->
->> Add support for ohci-platform instantiation from devicetree, including
->> optionally getting clks and a phy from devicetree, and enabling / disabling
->> those on power_on / off.
->
->> This should allow using ohci-platform from devicetree in various cases.
->> Specifically after this commit it can be used for the ohci controller found
->> on Allwinner sunxi SoCs.
->
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>   .../devicetree/bindings/usb/mmio-ohci.txt          |  22 +++
->>   drivers/usb/host/ohci-platform.c                   | 150 ++++++++++++++++++---
->>   2 files changed, 152 insertions(+), 20 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/usb/mmio-ohci.txt
->
->> diff --git a/Documentation/devicetree/bindings/usb/mmio-ohci.txt b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
->> new file mode 100644
->> index 0000000..9c776ed
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
->> @@ -0,0 +1,22 @@
->> +Generic MMIO OHCI controller
->
->     OHCI controller always uses MMIO, and likewise EHCI. You don't need to specifically mention it.
+On 01/08/2014 12:20 AM, Tony Lindgren wrote:
+> * Laurent Pinchart <laurent.pinchart@ideasonboard.com> [140107 15:10]:
+>> Hi Tony,
+>>
+>> On Tuesday 07 January 2014 14:30:21 Tony Lindgren wrote:
+>>> * Laurent Pinchart <laurent.pinchart@ideasonboard.com> [131220 07:52]:
+>>>> From: Tony Lindgren <tony@atomide.com>
+>>>> +/*
+>>>> + * Macros to allow using the absolute physical address instead of the
+>>>> + * padconf registers instead of the offset from padconf base.
+>>>> + */
+>>>> +#define OMAP_IOPAD_OFFSET(pa, offset)	(((pa) & 0xffff) - (offset))
+>>>> +
+>>>> +#define OMAP2420_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x0030)
+>>>> (val)
+>>>> +#define OMAP2430_CORE_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2030)
+>>>> (val)
+>>>> +#define OMAP3_CORE1_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x2030) (val)
+>>>> +#define OMAP3_CORE2_IOPAD(pa, val)	OMAP_IOPAD_OFFSET((pa), 0x25a0) (val)
+>>>
+>>> Sorry for the delay on these, I'm only now getting back to looking
+>>> at all the emails since the holidays :)
+>>>
+>>> After looking at Nishant's omap3 pinctrl core2 patch, looks like we need
+>>> to have separate OMAP3430_CORE2_IOPAD and OMAP3630_CORE2_IOPAD defines.
+>>
+>> That was my first impression as well, but I think we actually don't need to. 
+>> The OMAP3430 just has no useful registers in the 0x25a0 - 0x25d7 area, so we 
+>> can make the CORE2 macro span that for both 3430 and 3630.
+> 
+> Hmm well I already did it :) In general my gut feeling is along the lines
+> what you're saying, I think the padconf registers are all there on all
+> omap3 SoCs, but only some of the padconf registers are used depending on
+> the SoC revision and package.
+> 
+> Anyways, it should not hurt to have the padconf registers defined the
+> same way as the documentation has them, at least we may get some extra
+> warnings if people try to configure unused registers for 3430.
+>  
 
-Right, I'm only using it here because it is also used in the compatible string.
+I can see one downside to this approach; if you update the revision of
+your processor from omap34xx to omap36xx, and if you are using pins from
+the overlapping range [0x25d8; 0x25fc], you will have to update all the
+macros, instead of simply updating the #include statement.
 
->
->> +
->> +Required properties:
->> +- compatible : "mmio-ohci"
->
->     Likewise, it's not a good name. Why not call it "platform-ohci"?
+Let me introduce a real-life example. I am using Overo products. The
+processor board must be stacked onto an expansion board. I currently
+have only one include file for the processor board (omap3-overo.dtsi).
+But in reality, Gumstix is currently selling 14 models, with
+pin-compatible processors (omap35x3, dm3730, am3703) [1].
 
-Because, as you would have known had you read the entire thread, people objected
-against exactly that name because the "platform" bus thing is a Linux invention,
-and other operating systems don't use the platform nomenclature for non pci
-busses.
+So I #include omap34xx.dtsi (to be compatible with the omap35x3 models).
+The range [0x25d8; 0x25fc] defines a number of used features (hsusb2,
+gpios). To update to newer versions, I have to change the #include, but
+also all the OMAP3430_CORE2_IOPAD() macros spread across the expansion
+boards (omap3-tobi + future expansion boards, see my series from today).
+Even if the newer models do not use the omap36xx-specific features.
+
+Obviously, I currently do not have a straightforward way to support all
+the models/revisions with one single file. But if a solution is found in
+the future, it will be far easier if the expansions boards do not depend
+on the exact processor with such macros.
 
 Regards,
 
-Hans
+Florian
+
+[1] https://store.gumstix.com/index.php/category/33/
