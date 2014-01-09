@@ -1,138 +1,270 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH v2 12/28] drm/i2c: tda998x: add DT support
-Date: Thu, 9 Jan 2014 12:03:24 +0100
-Message-ID: <20140109120324.4e2c8aca@armhf>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v2 13/28] drm/i2c: tda998x: use irq for connection status
+ and EDID read
+Date: Thu, 9 Jan 2014 12:04:12 +0100
+Message-ID: <20140109120412.7697d23c@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIERUIHN1cHBvcnQgdG8gdGhlIHRkYTk5OHguCgpBcyBhIHNpZGUgZWZm
-ZWN0LCBub3csIHRoZSBhdWRpbyBzYW1wbGUgcmF0ZSBpcyBhbHdheXMgNDhrSHogYW5kIHRoZQph
-dWRpbyBjbG9jayBpcyBhbHdheXMgc2V0LgoKU2lnbmVkLW9mZi1ieTogSmVhbi1GcmFuY29pcyBN
-b2luZSA8bW9pbmVqZkBmcmVlLmZyPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9p
-MmMvdGRhOTk4eC50eHQgfCAxNiArKysrKysKIGRyaXZlcnMvZ3B1L2RybS9pMmMvdGRhOTk4eF9k
-cnYuYyAgICAgICAgICAgfCA2NiArKysrKysrKysrKysrKysrLS0tLS0tCiAyIGZpbGUgY2hhbmdl
-ZCwgNjYgaW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pMmMvdGRhOTk4eC50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2kyYy90ZGE5OTh4LnR4dApuZXcgZmlsZSBt
-b2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5mMDczMzllMQotLS0gL2Rldi9udWxsCisrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vaTJjL3RkYTk5OHgudHh0CkBAIC0w
-LDAgKzEsMTYgQEAKK0RldmljZS1UcmVlIGJpbmRpbmdzIGZvciB0aGUgTlhQIFREQTk5OHggSERN
-SSB0cmFuc21pdHRlcgorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOworICAtIGNvbXBhdGlibGU6IG11
-c3QgYmUgIm54cCx0ZGE5OTh4IgorCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorICAtIHZpZGVvLXBv
-cnRzOiAyNCBiaXRzIHZhbHVlIC0gZGVmYXVsdDogPDB4MjMwMTQ1PgorCitFeGFtcGxlOgorCisJ
-dGRhOTk4eDogaGRtaS1lbmNvZGVyIHsKKwkJY29tcGF0aWJsZSA9ICJueHAsdGRhOTk4eCI7CisJ
-CXJlZyA9IDwweDcwPjsKKwkJcGluY3RybC0wID0gPCZwbXhfY2FtZXJhPjsKKwkJcGluY3RybC1u
-YW1lcyA9ICJkZWZhdWx0IjsKKwl9OwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2kyYy90
-ZGE5OTh4X2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL2kyYy90ZGE5OTh4X2Rydi5jCmluZGV4IDJi
-YTAzNTUuLmI4NzgwMmYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9pMmMvdGRhOTk4eF9k
-cnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vaTJjL3RkYTk5OHhfZHJ2LmMKQEAgLTI4LDE3ICsy
-OCwyMiBAQAogCiAjZGVmaW5lIERCRyhmbXQsIC4uLikgRFJNX0RFQlVHKGZtdCJcbiIsICMjX19W
-QV9BUkdTX18pCiAKKyNkZWZpbmUgQVVESU9fU0FNUExFIDQ4CQkvKiA0OCBrSHogKi8KKwogc3Ry
-dWN0IHRkYTk5OHhfcHJpdiB7CiAJc3RydWN0IGkyY19jbGllbnQgKmNlYzsKIAlzdHJ1Y3QgaTJj
-X2NsaWVudCAqaGRtaTsKIAl1aW50MTZfdCByZXY7CiAJdWludDhfdCBjdXJyZW50X3BhZ2U7Ci0J
-aW50IGRwbXM7CisJdTggZHBtczsKIAlib29sIGlzX2hkbWlfc2luazsKIAl1OCB2aXBfY250cmxf
-MDsKIAl1OCB2aXBfY250cmxfMTsKIAl1OCB2aXBfY250cmxfMjsKLQlzdHJ1Y3QgdGRhOTk4eF9l
-bmNvZGVyX3BhcmFtcyBwYXJhbXM7CisKKwl1OCBhdWRpb190eXBlOwkJLyogYXVkaW8gdHlwZSAq
-LworCXU4IGF1ZGlvX2ZyYW1lWzZdOworCXUzMiBhdWRpb19wb3J0OwogfTsKIAogI2RlZmluZSB0
-b190ZGE5OTh4X3ByaXYoeCkgICgoc3RydWN0IHRkYTk5OHhfcHJpdiAqKXRvX2VuY29kZXJfc2xh
-dmUoeCktPnNsYXZlX3ByaXYpCkBAIC01MzksNyArNTQ0LDcgQEAgdGRhOTk4eF93cml0ZV9pZihz
-dHJ1Y3QgdGRhOTk4eF9wcml2ICpwcml2LCB1aW50OF90IGJpdCwgdWludDE2X3QgYWRkciwKIH0K
-IAogc3RhdGljIHZvaWQKLXRkYTk5OHhfd3JpdGVfYWlmKHN0cnVjdCB0ZGE5OTh4X3ByaXYgKnBy
-aXYsIHN0cnVjdCB0ZGE5OTh4X2VuY29kZXJfcGFyYW1zICpwKQordGRhOTk4eF93cml0ZV9haWYo
-c3RydWN0IHRkYTk5OHhfcHJpdiAqcHJpdikKIHsKIAl1OCBidWZbUEIoSERNSV9BVURJT19JTkZP
-RlJBTUVfU0laRSkgKyAxXTsKIApAQCAtNTQ3LDEwICs1NTIsMTAgQEAgdGRhOTk4eF93cml0ZV9h
-aWYoc3RydWN0IHRkYTk5OHhfcHJpdiAqcHJpdiwgc3RydWN0IHRkYTk5OHhfZW5jb2Rlcl9wYXJh
-bXMgKnApCiAJYnVmW0hCKDApXSA9IEhETUlfSU5GT0ZSQU1FX1RZUEVfQVVESU87CiAJYnVmW0hC
-KDEpXSA9IDB4MDE7CiAJYnVmW0hCKDIpXSA9IEhETUlfQVVESU9fSU5GT0ZSQU1FX1NJWkU7Ci0J
-YnVmW1BCKDEpXSA9IHAtPmF1ZGlvX2ZyYW1lWzFdICYgMHgwNzsgLyogQ0MgKi8KLQlidWZbUEIo
-MildID0gcC0+YXVkaW9fZnJhbWVbMl0gJiAweDFjOyAvKiBTRiAqLwotCWJ1ZltQQig0KV0gPSBw
-LT5hdWRpb19mcmFtZVs0XTsKLQlidWZbUEIoNSldID0gcC0+YXVkaW9fZnJhbWVbNV0gJiAweGY4
-OyAvKiBETV9JTkggKyBMU1YgKi8KKwlidWZbUEIoMSldID0gcHJpdi0+YXVkaW9fZnJhbWVbMV0g
-JiAweDA3OyAvKiBDQyAqLworCWJ1ZltQQigyKV0gPSBwcml2LT5hdWRpb19mcmFtZVsyXSAmIDB4
-MWM7IC8qIFNGICovCisJYnVmW1BCKDQpXSA9IHByaXYtPmF1ZGlvX2ZyYW1lWzRdOworCWJ1ZltQ
-Qig1KV0gPSBwcml2LT5hdWRpb19mcmFtZVs1XSAmIDB4Zjg7IC8qIERNX0lOSCArIExTViAqLwog
-CiAJdGRhOTk4eF93cml0ZV9pZihwcml2LCBESVBfSUZfRkxBR1NfSUY0LCBSRUdfSUY0X0hCMCwg
-YnVmLAogCQkJIHNpemVvZihidWYpKTsKQEAgLTU4NiwxNyArNTkxLDE3IEBAIHN0YXRpYyB2b2lk
-IHRkYTk5OHhfYXVkaW9fbXV0ZShzdHJ1Y3QgdGRhOTk4eF9wcml2ICpwcml2LCBib29sIG9uKQog
-CiBzdGF0aWMgdm9pZAogdGRhOTk4eF9jb25maWd1cmVfYXVkaW8oc3RydWN0IHRkYTk5OHhfcHJp
-diAqcHJpdiwKLQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUsIHN0cnVjdCB0ZGE5OTh4
-X2VuY29kZXJfcGFyYW1zICpwKQorCQlzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSkKIHsK
-IAl1aW50OF90IGJ1Zls2XSwgY2xrc2VsX2FpcCwgY2xrc2VsX2ZzLCBjYV9pMnMsIGN0c19uLCBh
-ZGl2OwogCXVpbnQzMl90IG47CiAKIAkvKiBFbmFibGUgYXVkaW8gcG9ydHMgKi8KLQlyZWdfd3Jp
-dGUocHJpdiwgUkVHX0VOQV9BUCwgcC0+YXVkaW9fY2ZnKTsKLQlyZWdfd3JpdGUocHJpdiwgUkVH
-X0VOQV9BQ0xLLCBwLT5hdWRpb19jbGtfY2ZnKTsKKwlyZWdfd3JpdGUocHJpdiwgUkVHX0VOQV9B
-UCwgcHJpdi0+YXVkaW9fcG9ydCk7CisJcmVnX3dyaXRlKHByaXYsIFJFR19FTkFfQUNMSywgMHgw
-MSk7CS8qIGVuYWJsZSBjbG9jayAqLwogCiAJLyogU2V0IGF1ZGlvIGlucHV0IHNvdXJjZSAqLwot
-CXN3aXRjaCAocC0+YXVkaW9fZm9ybWF0KSB7CisJc3dpdGNoIChwcml2LT5hdWRpb190eXBlKSB7
-CiAJY2FzZSBBRk1UX1NQRElGOgogCQlyZWdfd3JpdGUocHJpdiwgUkVHX01VWF9BUCwgMHg0MCk7
-CiAJCWNsa3NlbF9haXAgPSBBSVBfQ0xLU0VMX0FJUCgwKTsKQEAgLTY0NCw3ICs2NDksNyBAQCB0
-ZGE5OTh4X2NvbmZpZ3VyZV9hdWRpbyhzdHJ1Y3QgdGRhOTk4eF9wcml2ICpwcml2LAogCSAqIFRo
-aXMgaXMgdGhlIGFwcHJveGltYXRlIHZhbHVlIG9mIE4sIHdoaWNoIGhhcHBlbnMgdG8gYmUKIAkg
-KiB0aGUgcmVjb21tZW5kZWQgdmFsdWVzIGZvciBub24tY29oZXJlbnQgY2xvY2tzLgogCSAqLwot
-CW4gPSAxMjggKiBwLT5hdWRpb19zYW1wbGVfcmF0ZSAvIDEwMDA7CisJbiA9IDEyOCAqIEFVRElP
-X1NBTVBMRTsJCS8qIGFjcl9uID0gMTI4ICogc2FtcGxlX3JhdGUgLyAxMDAwICovCiAKIAkvKiBX
-cml0ZSB0aGUgQ1RTIGFuZCBOIHZhbHVlcyAqLwogCWJ1ZlswXSA9IDB4NDQ7CkBAIC02NzQsNyAr
-Njc5LDcgQEAgdGRhOTk4eF9jb25maWd1cmVfYXVkaW8oc3RydWN0IHRkYTk5OHhfcHJpdiAqcHJp
-diwKIAl0ZGE5OTh4X2F1ZGlvX211dGUocHJpdiwgZmFsc2UpOwogCiAJLyogV3JpdGUgdGhlIGF1
-ZGlvIGluZm9ybWF0aW9uIHBhY2tldCAqLwotCXRkYTk5OHhfd3JpdGVfYWlmKHByaXYsIHApOwor
-CXRkYTk5OHhfd3JpdGVfYWlmKHByaXYpOwogfQogCiAvKiBEUk0gZW5jb2RlciBmdW5jdGlvbnMg
-Ki8KQEAgLTY5OCw3ICs3MDMsMTMgQEAgdGRhOTk4eF9lbmNvZGVyX3NldF9jb25maWcoc3RydWN0
-IGRybV9lbmNvZGVyICplbmNvZGVyLCB2b2lkICpwYXJhbXMpCiAJCQkgICAgVklQX0NOVFJMXzJf
-U1dBUF9GKHAtPnN3YXBfZikgfAogCQkJICAgIChwLT5taXJyX2YgPyBWSVBfQ05UUkxfMl9NSVJS
-X0YgOiAwKTsKIAotCXByaXYtPnBhcmFtcyA9ICpwOworCW1lbWNweShwcml2LT5hdWRpb19mcmFt
-ZSwgcC0+YXVkaW9fZnJhbWUsCisJCQlzaXplb2YgcHJpdi0+YXVkaW9fZnJhbWUpOworCisJaWYg
-KHAtPmF1ZGlvX2NmZykgeworCQlwcml2LT5hdWRpb19wb3J0ID0gcC0+YXVkaW9fY2ZnOworCQlw
-cml2LT5hdWRpb190eXBlID0gcC0+YXVkaW9fZm9ybWF0OworCX0KIH0KIAogc3RhdGljIHZvaWQK
-QEAgLTk0Nyw4ICs5NTgsOCBAQCB0ZGE5OTh4X2VuY29kZXJfbW9kZV9zZXQoc3RydWN0IGRybV9l
-bmNvZGVyICplbmNvZGVyLAogCiAJCXRkYTk5OHhfd3JpdGVfYXZpKHByaXYsIG1vZGUpOwogCi0J
-CWlmIChwcml2LT5wYXJhbXMuYXVkaW9fY2ZnKQotCQkJdGRhOTk4eF9jb25maWd1cmVfYXVkaW8o
-cHJpdiwgbW9kZSwgJnByaXYtPnBhcmFtcyk7CisJCWlmIChwcml2LT5hdWRpb190eXBlKQorCQkJ
-dGRhOTk4eF9jb25maWd1cmVfYXVkaW8ocHJpdiwgbW9kZSk7CiAJfQogfQogCkBAIC0xMTU3LDYg
-KzExNjgsOCBAQCB0ZGE5OTh4X2VuY29kZXJfaW5pdChzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50
-LAogCQkgICAgc3RydWN0IGRybV9lbmNvZGVyX3NsYXZlICplbmNvZGVyX3NsYXZlKQogewogCXN0
-cnVjdCB0ZGE5OTh4X3ByaXYgKnByaXY7CisJc3RydWN0IGRldmljZV9ub2RlICpucCA9IGNsaWVu
-dC0+ZGV2Lm9mX25vZGU7CisJdTMyIHZpZGVvOwogCWludCByZXQ7CiAKIAlwcml2ID0ga3phbGxv
-YyhzaXplb2YoKnByaXYpLCBHRlBfS0VSTkVMKTsKQEAgLTExNjYsNiArMTE3OSw3IEBAIHRkYTk5
-OHhfZW5jb2Rlcl9pbml0KHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsCiAJcHJpdi0+dmlwX2Nu
-dHJsXzAgPSBWSVBfQ05UUkxfMF9TV0FQX0EoMikgfCBWSVBfQ05UUkxfMF9TV0FQX0IoMyk7CiAJ
-cHJpdi0+dmlwX2NudHJsXzEgPSBWSVBfQ05UUkxfMV9TV0FQX0MoMCkgfCBWSVBfQ05UUkxfMV9T
-V0FQX0QoMSk7CiAJcHJpdi0+dmlwX2NudHJsXzIgPSBWSVBfQ05UUkxfMl9TV0FQX0UoNCkgfCBW
-SVBfQ05UUkxfMl9TV0FQX0YoNSk7CisJcHJpdi0+YXVkaW9fZnJhbWVbMV0gPSAxOwkJLyogY2hh
-bm5lbHMgLSAxICovCiAKIAlwcml2LT5jdXJyZW50X3BhZ2UgPSAweGZmOwogCXByaXYtPmhkbWkg
-PSBjbGllbnQ7CkBAIC0xMjI1LDYgKzEyMzksMTcgQEAgdGRhOTk4eF9lbmNvZGVyX2luaXQoc3Ry
-dWN0IGkyY19jbGllbnQgKmNsaWVudCwKIAljZWNfd3JpdGUocHJpdiwgUkVHX0NFQ19GUk9fSU1f
-Q0xLX0NUUkwsCiAJCQlDRUNfRlJPX0lNX0NMS19DVFJMX0dIT1NUX0RJUyB8IENFQ19GUk9fSU1f
-Q0xLX0NUUkxfSU1DTEtfU0VMKTsKIAorCWlmICghbnApCisJCXJldHVybiAwOwkJLyogbm9uLURU
-ICovCisKKwkvKiBnZXQgdGhlIG9wdGlvbmFsIHZpZGVvIHByb3BlcnRpZXMgKi8KKwlyZXQgPSBv
-Zl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgInZpZGVvLXBvcnRzIiwgJnZpZGVvKTsKKwlpZiAocmV0
-ID09IDApIHsKKwkJcHJpdi0+dmlwX2NudHJsXzAgPSB2aWRlbyA+PiAxNjsKKwkJcHJpdi0+dmlw
-X2NudHJsXzEgPSB2aWRlbyA+PiA4OworCQlwcml2LT52aXBfY250cmxfMiA9IHZpZGVvOworCX0K
-KwogCXJldHVybiAwOwogCiBmYWlsOgpAQCAtMTIzOSw2ICsxMjY0LDE0IEBAIGZhaWw6CiAJcmV0
-dXJuIC1FTlhJTzsKIH0KIAorI2lmZGVmIENPTkZJR19PRgorc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgdGRhOTk4eF9kdF9pZHNbXSA9IHsKKwl7IC5jb21wYXRpYmxlID0gIm54cCx0
-ZGE5OTh4IiwgfSwKKwl7IH0KK307CitNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCB0ZGE5OTh4X2R0
-X2lkcyk7CisjZW5kaWYKKwogc3RhdGljIHN0cnVjdCBpMmNfZGV2aWNlX2lkIHRkYTk5OHhfaWRz
-W10gPSB7CiAJeyAidGRhOTk4eCIsIDAgfSwKIAl7IH0KQEAgLTEyNTEsNiArMTI4NCw3IEBAIHN0
-YXRpYyBzdHJ1Y3QgZHJtX2kyY19lbmNvZGVyX2RyaXZlciB0ZGE5OTh4X2RyaXZlciA9IHsKIAkJ
-LnJlbW92ZSA9IHRkYTk5OHhfcmVtb3ZlLAogCQkuZHJpdmVyID0gewogCQkJLm5hbWUgPSAidGRh
-OTk4eCIsCisJCQkub2ZfbWF0Y2hfdGFibGUgPSBvZl9tYXRjaF9wdHIodGRhOTk4eF9kdF9pZHMp
-LAogCQl9LAogCQkuaWRfdGFibGUgPSB0ZGE5OTh4X2lkcywKIAl9LAotLSAKS2VuIGFyIGMnaGVu
-dGHDsQl8CSAgICAgICoqIEJyZWl6aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9t
-b2luZWpmLmZyZWUuZnIvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+This patch adds the optional treatment of the tda998x IRQ.
+
+The interrupt function is used to know the display connection status
+without polling and to speedup reading the EDID.
+
+Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+---
+ drivers/gpu/drm/i2c/tda998x_drv.c            | 116 +++++++++++++++++++=
+--
+ .../devicetree/bindings/drm/i2c/tda998x.txt  |   3 +++
+ 2 file changed, 108 insertions(+), 11 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Do=
+cumentation/devicetree/bindings/drm/i2c/tda998x.txt
+index f07339e1..83d7880 100644
+--- a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
++++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+@@ -4,6 +4,7 @@ Required properties;
+   - compatible: must be "nxp,tda998x"
+=20
+ Optional properties:
++  - interrupts: interrupt number for HDMI exchanges - default: by poll=
+ing
+   - video-ports: 24 bits value - default: <0x230145>
+=20
+ Example:
+@@ -11,6 +12,8 @@ Example:
+ 	tda998x: hdmi-encoder {
+ 		compatible =3D "nxp,tda998x";
+ 		reg =3D <0x70>;
++		interrupt-parent =3D <&gpio0>;
++		interrupts =3D <27 2>;		/* falling edge */
+ 		pinctrl-0 =3D <&pmx_camera>;
+ 		pinctrl-names =3D "default";
+ 	};
+diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/td=
+a998x_drv.c
+index b87802f..2187d63 100644
+--- a/drivers/gpu/drm/i2c/tda998x_drv.c
++++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+@@ -19,6 +19,7 @@
+=20
+ #include <linux/hdmi.h>
+ #include <linux/module.h>
++#include <linux/of_irq.h>
+=20
+ #include <drm/drmP.h>
+ #include <drm/drm_crtc_helper.h>
+@@ -44,6 +45,11 @@ struct tda998x_priv {
+ 	u8 audio_type;		/* audio type */
+ 	u8 audio_frame[6];
+ 	u32 audio_port;
++
++	int int_irq;
++	wait_queue_head_t wq_edid;
++	volatile int wq_edid_wait;
++	struct drm_encoder *encoder;
+ };
+=20
+ #define to_tda998x_priv(x)  ((struct tda998x_priv *)to_encoder_slave(x=
+)->slave_priv)
+@@ -310,11 +316,16 @@ struct tda998x_priv {
+=20
+ /* CEC registers: (not paged)
+  */
++#define REG_CEC_INTSTATUS         0xee                /* read */
++# define CEC_INTSTATUS_CEC        (1 << 0)
++# define CEC_INTSTATUS_HDMI       (1 << 1)
+ #define REG_CEC_FRO_IM_CLK_CTRL   0xfb                /* read/write */
+ # define CEC_FRO_IM_CLK_CTRL_GHOST_DIS (1 << 7)
+ # define CEC_FRO_IM_CLK_CTRL_ENA_OTP   (1 << 6)
+ # define CEC_FRO_IM_CLK_CTRL_IMCLK_SEL (1 << 1)
+ # define CEC_FRO_IM_CLK_CTRL_FRO_DIV   (1 << 0)
++#define REG_CEC_RXSHPDINTENA      0xfc                /* read/write */
++#define REG_CEC_RXSHPDINT         0xfd                /* read */
+ #define REG_CEC_RXSHPDLEV         0xfe                /* read */
+ # define CEC_RXSHPDLEV_RXSENS     (1 << 0)
+ # define CEC_RXSHPDLEV_HPD        (1 << 1)
+@@ -520,6 +531,34 @@ tda998x_reset(struct tda998x_priv *priv)
+ 	reg_write(priv, REG_MUX_VP_VIP_OUT, 0x24);
+ }
+=20
++/*
++ * only 2 interrupts may occur: screen plug/unplug and EDID read
++ */
++static irqreturn_t tda998x_irq_thread(int irq, void *data)
++{
++	struct tda998x_priv *priv =3D data;
++	u8 sta, cec, lvl, flag0, flag1, flag2;
++
++	if (!priv)
++		return IRQ_HANDLED;
++	sta =3D cec_read(priv, REG_CEC_INTSTATUS);
++	cec =3D cec_read(priv, REG_CEC_RXSHPDINT);
++	lvl =3D cec_read(priv, REG_CEC_RXSHPDLEV);
++	flag0 =3D reg_read(priv, REG_INT_FLAGS_0);
++	flag1 =3D reg_read(priv, REG_INT_FLAGS_1);
++	flag2 =3D reg_read(priv, REG_INT_FLAGS_2);
++	DRM_DEBUG("tda irq sta %02x cec %02x lvl %02x f0 %02x f1 %02x f2 %02x=
+\n",
++			sta, cec, lvl, flag0, flag1, flag2);
++	if ((flag2 & INT_FLAGS_2_EDID_BLK_RD) && priv->wq_edid_wait) {
++		priv->wq_edid_wait =3D 0;
++		wake_up(&priv->wq_edid);
++	} else if (cec !=3D 0) {			/* level change */
++		if (priv->encoder && priv->encoder->dev)
++			drm_helper_hpd_irq_event(priv->encoder->dev);
++	}
++	return IRQ_HANDLED;
++}
++
+ static uint8_t tda998x_cksum(uint8_t *buf, size_t bytes)
+ {
+ 	uint8_t sum =3D 0;
+@@ -982,7 +1021,8 @@ read_edid_block(struct drm_encoder *encoder, uint8=
+_t *buf, int blk)
+ 	int ret, i;
+=20
+ 	/* enable EDID read irq: */
+-	reg_set(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
++	if (blk =3D=3D 0)
++		reg_set(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
+=20
+ 	offset =3D (blk & 1) ? 128 : 0;
+ 	segptr =3D blk / 2;
+@@ -999,17 +1039,30 @@ read_edid_block(struct drm_encoder *encoder, uin=
+t8_t *buf, int blk)
+ 	reg_write(priv, REG_EDID_CTRL, 0x0);
+=20
+ 	/* wait for block read to complete: */
+-	for (i =3D 100; i > 0; i--) {
+-		ret =3D reg_read(priv, REG_INT_FLAGS_2);
+-		if (ret < 0)
+-			return ret;
+-		if (ret & INT_FLAGS_2_EDID_BLK_RD)
+-			break;
+-		msleep(1);
++	if (priv->int_irq !=3D NO_IRQ) {
++		priv->wq_edid_wait =3D 1;
++		i =3D wait_event_timeout(priv->wq_edid,
++					!priv->wq_edid_wait,
++					msecs_to_jiffies(100));
++		if (i < 0) {
++			dev_err(encoder->dev->dev, "read edid wait err %d\n", i);
++			return i;
++		}
++	} else {
++		for (i =3D 10; i > 0; i--) {
++			msleep(10);
++			ret =3D reg_read(priv, REG_INT_FLAGS_2);
++			if (ret < 0)
++				return ret;
++			if (ret & INT_FLAGS_2_EDID_BLK_RD)
++				break;
++		}
+ 	}
+=20
+-	if (i =3D=3D 0)
++	if (i =3D=3D 0) {
++		dev_err(encoder->dev->dev, "read edid timeout\n");
+ 		return -ETIMEDOUT;
++	}
+=20
+ 	ret =3D reg_read_range(priv, REG_EDID_DATA_0, buf, EDID_LENGTH);
+ 	if (ret !=3D EDID_LENGTH) {
+@@ -1018,8 +1071,6 @@ read_edid_block(struct drm_encoder *encoder, uint=
+8_t *buf, int blk)
+ 		return ret;
+ 	}
+=20
+-	reg_clear(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
+-
+ 	return 0;
+ }
+=20
+@@ -1109,7 +1160,14 @@ static int
+ tda998x_encoder_create_resources(struct drm_encoder *encoder,
+ 				struct drm_connector *connector)
+ {
++	struct tda998x_priv *priv =3D to_tda998x_priv(encoder);
++
+ 	DBG("");
++	if (priv->int_irq !=3D NO_IRQ)
++		connector->polled =3D DRM_CONNECTOR_POLL_HPD;
++	else
++		connector->polled =3D DRM_CONNECTOR_POLL_CONNECT |
++			DRM_CONNECTOR_POLL_DISCONNECT;
+ 	return 0;
+ }
+=20
+@@ -1128,6 +1186,8 @@ tda998x_encoder_destroy(struct drm_encoder *encod=
+er)
+ {
+ 	struct tda998x_priv *priv =3D to_tda998x_priv(encoder);
+ 	drm_i2c_encoder_destroy(encoder);
++	if (priv->int_irq !=3D NO_IRQ)
++		free_irq(priv->int_irq, priv);
+ 	if (priv->cec)
+ 		i2c_unregister_device(priv->cec);
+ 	kfree(priv);
+@@ -1186,6 +1246,7 @@ tda998x_encoder_init(struct i2c_client *client,
+ 	priv->cec =3D i2c_new_dummy(client->adapter, 0x34);
+ 	if (!priv->cec)
+ 		return -ENODEV;
++	priv->encoder =3D &encoder_slave->base;
+ 	priv->dpms =3D DRM_MODE_DPMS_OFF;
+=20
+ 	encoder_slave->slave_priv =3D priv;
+@@ -1250,6 +1311,39 @@ tda998x_encoder_init(struct i2c_client *client,
+ 		priv->vip_cntrl_2 =3D video;
+ 	}
+=20
++	/* install the optional HDMI connect IRQ */
++	priv->int_irq =3D irq_of_parse_and_map(np, 0);
++	if (priv->int_irq < 0)
++		priv->int_irq =3D NO_IRQ;
++	if (priv->int_irq !=3D NO_IRQ) {
++
++		/* init read EDID waitqueue */
++		init_waitqueue_head(&priv->wq_edid);
++/*		priv->wq_edid_wait =3D 0;	*/
++
++		/* clear pending interrupts */
++		reg_read(priv, REG_INT_FLAGS_0);
++		reg_read(priv, REG_INT_FLAGS_1);
++		reg_read(priv, REG_INT_FLAGS_2);
++
++		ret =3D request_threaded_irq(priv->int_irq, NULL,
++					   tda998x_irq_thread,
++					   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
++					   "tda998x-int", priv);
++		if (ret) {
++			dev_err(&client->dev, "failed to request IRQ#%u: %d\n",
++				priv->int_irq, ret);
++			goto fail;
++		}
++
++		/* enable HPD irq */
++		cec_write(priv, REG_CEC_RXSHPDINTENA,
++				CEC_RXSHPDLEV_HPD | CEC_RXSHPDLEV_RXSENS);
++
++		/* treat the first irq if any */
++		msleep(10);
++	}
++
+ 	return 0;
+=20
+ fail:
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
