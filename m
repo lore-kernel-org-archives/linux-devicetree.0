@@ -1,42 +1,56 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: RE: [PATCH 3/4] ASoC: fsl: Add VF610 simple audio card widgets
- driver.
-Date: Thu, 9 Jan 2014 07:43:42 +0000
-Message-ID: <3ebbe152f0a94858a24a97f6251e5715@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1389164556-2728-1-git-send-email-Li.Xiubo@freescale.com>
- <1389164556-2728-3-git-send-email-Li.Xiubo@freescale.com>
- <20140108180638.GS31886@sirena.org.uk>
+From: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] ARM: imx6q: Add missing esai_ahb clock to current clock
+ tree
+Date: Thu, 9 Jan 2014 15:41:38 +0800
+Message-ID: <20140109074137.GA14809@MrMyself>
+References: <1389236699-10387-1-git-send-email-Guangyu.Chen@freescale.com>
+ <20140109035810.GB21717@S2101-09.ap.freescale.net>
+ <20140109034940.GA14480@MrMyself>
+ <20140109065740.GD21717@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140108180638.GS31886@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.de" <tiwai@suse.de>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140109065740.GD21717-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-> > This is the SGTL5000 codec based off-CODEC widgets supports.
-> >
-> > Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
-> > ---
-> >  sound/soc/fsl/Kconfig                     | 25 ++++++++++++++++++
-> >  sound/soc/fsl/Makefile                    |  3 +++
-> >  sound/soc/fsl/snd-soc-simple-card-vf610.c | 44
-> +++++++++++++++++++++++++++++++
+On Thu, Jan 09, 2014 at 02:57:42PM +0800, Shawn Guo wrote:
+> On Thu, Jan 09, 2014 at 11:49:41AM +0800, Nicolin Chen wrote:
+> > On Thu, Jan 09, 2014 at 11:58:12AM +0800, Shawn Guo wrote:
+> > > >  static struct clk *clk[clk_max];
+> > > > @@ -355,6 +355,7 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
+> > > >  	clk[ecspi5]       = imx_clk_gate2("ecspi5",        "ecspi_root",        base + 0x6c, 8);
+> > > >  	clk[enet]         = imx_clk_gate2("enet",          "ipg",               base + 0x6c, 10);
+> > > >  	clk[esai]         = imx_clk_gate2("esai",          "esai_podf",         base + 0x6c, 16);
+> > > > +	clk[esai_ahb]     = imx_clk_gate2("esai_ahb",      "ahb",               base + 0x6c, 16);
+> > > 
+> > > Hmm, having two clocks operating on the same gate bit will get us
+> > > problem in clock disabling.  Clock enabling is fine, since either
+> > > one who calls clk_enable() first will just set the gate bit.  But in
+> > > case that clk_enable() is called on both clocks, and then when either
+> > > clock calls clk_disable(), the gate bit will be cleared and thus breaks
+> > > the other one that might still be in use.
+> > 
+> > Understood. But how could we handle this situation? The only way I can figure
+> > out is to make sure the driver open/close them at the same time, it's not a
+> > perfect way though.
 > 
-> If we're needing to add explict code for a simple audio card that seems
-> to defeat the point of using the simple audio card - we may as well just
-> have an explicit machine driver.
->
+> Hmm, we generally leave the gate bit to the clock used to access
+> register, because usually it's the first one to be on and the last one
+> to be off.
 
-IMHO, the simple audio card driver could fulfil most of machine driver's work. 
-And will make some machine driver simpler and eaiser to code.
+Then we should attach CLK_IGNORE_UNUSED to clk[esai] since clk[esai_ahb] is
+the clock used to access memory, shouldn't we?
 
-Thanks,
+Thank you.
+Nicolin
+
+
 
 --
-Best Regards,
-Xiubo 
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
