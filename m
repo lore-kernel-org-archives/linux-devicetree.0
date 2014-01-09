@@ -1,94 +1,68 @@
-From: Yuantian Tang <Yuantian.Tang@freescale.com>
-Subject: =?utf-8?B?UkU6IOetlOWkjTogW3Y3XSBjbGs6IGNvcmVuZXQ6IEFkZHMgdGhlIGNsb2Nr?=
- =?utf-8?Q?_binding?=
-Date: Thu, 9 Jan 2014 02:57:32 +0000
-Message-ID: <e15511a79a9d4446a826da8d9ceec229@BL2PR03MB115.namprd03.prod.outlook.com>
-References: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
- <20140108002115.GA19801@home.buserror.net>
- <375c32b2f4e34589ae336af61468a51b@BL2PR03MB115.namprd03.prod.outlook.com>
- <20140108093046.GB6701@e106331-lin.cambridge.arm.com>
- <1389206619.25654.9.camel@snotra.buserror.net>
+From: Nicolin Chen <Guangyu.Chen@freescale.com>
+Subject: [PATCH] ARM: imx6q: Add missing esai_ahb clock to current clock tree
+Date: Thu, 9 Jan 2014 11:04:59 +0800
+Message-ID: <1389236699-10387-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1389206619.25654.9.camel@snotra.buserror.net>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, rob@landley.net, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmtzIGZvciB5b3UgcmV2aWV3Lg0KU2VlIG15IHJlc3BvbnNlIGlubGluZS4NCg0KVGhhbmtz
-LA0KWXVhbnRpYW4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29k
-IFNjb3R0LUIwNzQyMQ0KPiBTZW50OiAyMDE05bm0MeaciDnml6Ug5pif5pyf5ZubIDI6NDQNCj4g
-VG86IE1hcmsgUnV0bGFuZA0KPiBDYzogVGFuZyBZdWFudGlhbi1CMjk5ODM7IGdhbGFrQGtlcm5l
-bC5jcmFzaGluZy5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1k
-ZXZAbGlzdHMub3psYWJzLm9yZw0KPiBTdWJqZWN0OiBSZTog562U5aSNOiBbdjddIGNsazogY29y
-ZW5ldDogQWRkcyB0aGUgY2xvY2sgYmluZGluZw0KPiANCj4gT24gV2VkLCAyMDE0LTAxLTA4IGF0
-IDA5OjMwICswMDAwLCBNYXJrIFJ1dGxhbmQgd3JvdGU6DQo+ID4gT24gV2VkLCBKYW4gMDgsIDIw
-MTQgYXQgMDg6NTM6NTZBTSArMDAwMCwgWXVhbnRpYW4gVGFuZyB3cm90ZToNCj4gPiA+DQo+ID4g
-PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4gPiDlj5Hku7bk
-uro6IFdvb2QgU2NvdHQtQjA3NDIxDQo+ID4gPiDlj5HpgIHml7bpl7Q6IDIwMTTlubQx5pyIOOaX
-pSA4OjIxDQo+ID4gPiDmlLbku7bkuro6IFRhbmcgWXVhbnRpYW4tQjI5OTgzDQo+ID4gPiDmioTp
-gIE6IGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+
-ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
-b3JnDQo+ID4gPiDkuLvpopg6IFJlOiBbdjddIGNsazogY29yZW5ldDogQWRkcyB0aGUgY2xvY2sg
-YmluZGluZw0KPiA+ID4NCj4gPiA+IE9uIFdlZCwgTm92IDIwLCAyMDEzIGF0IDA1OjA0OjQ5UE0g
-KzA4MDAsIHRhbmcgeXVhbnRpYW4gd3JvdGU6DQo+ID4gPiA+ICtSZWNvbW1lbmRlZCBwcm9wZXJ0
-aWVzOg0KPiA+ID4gPiArLSByYW5nZXM6IEFsbG93cyB2YWxpZCB0cmFuc2xhdGlvbiBiZXR3ZWVu
-IGNoaWxkJ3MgYWRkcmVzcyBzcGFjZQ0KPiBhbmQNCj4gPiA+ID4gKyAgICAgcGFyZW50J3MuIE11
-c3QgYmUgcHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcyBzdWItbm9kZXMuDQo+ID4gPiA+ICstICNh
-ZGRyZXNzLWNlbGxzOiBTcGVjaWZpZXMgdGhlIG51bWJlciBvZiBjZWxscyB1c2VkIHRvIHJlcHJl
-c2VudA0KPiA+ID4gPiArICAgICBwaHlzaWNhbCBiYXNlIGFkZHJlc3Nlcy4gIE11c3QgYmUgcHJl
-c2VudCBpZiB0aGUgZGV2aWNlIGhhcw0KPiA+ID4gPiArICAgICBzdWItbm9kZXMgYW5kIHNldCB0
-byAxIGlmIHByZXNlbnQNCj4gPiA+ID4gKy0gI3NpemUtY2VsbHM6IFNwZWNpZmllcyB0aGUgbnVt
-YmVyIG9mIGNlbGxzIHVzZWQgdG8gcmVwcmVzZW50DQo+ID4gPiA+ICsgICAgIHRoZSBzaXplIG9m
-IGFuIGFkZHJlc3MuIE11c3QgYmUgcHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcw0KPiA+ID4gPiAr
-ICAgICBzdWItbm9kZXMgYW5kIHNldCB0byAxIGlmIHByZXNlbnQNCj4gPiA+DQo+ID4gPiBXaHkg
-YXJlIHdlIHNwZWNpZnlpbmcgI2FkZHJlc3MtY2VsbHMvI3NpemUtY2VsbHMgaGVyZT8NCj4gPiA+
-DQo+ID4gPiBBOiBpdCBoYXMgc3ViLW5vZGVzIHdoaWNoIGhhdmUgUkVHIHByb3BlcnR5LCBkb24n
-dCB3ZSBuZWVkIHRvDQo+ID4gPiBzcGVjaWZ5ICNhZGRyZXNzLWNlbGxzLyNzaXplLWNlbGxzPw0K
-PiA+DQo+ID4gSWYgYSBub2RlIGhhcyBhIHJlZyBlbnRyeSwgaXRzIHBhcmVudCBzaG91bGQgaGF2
-ZSAjc2l6ZS1jZWxscyBhbmQNCj4gPiAjYWRkcmVzcy1jZWxscyB0byBhbGxvdyBpdCB0byBiZSBw
-YXJzZWQgcHJvcGVybHkuDQo+IA0KPiBZZXMsIGJ1dCB3aHkgZG8gd2UgbmVlZCB0byBzcGVjaWZ5
-IGluIHRoaXMgYmluZGluZyBob3cgbWFueSBjZWxscyB0aGVyZQ0KPiB3aWxsIGJlLCBlc3BlY2lh
-bGx5IHNpbmNlIHRoaXMgYmluZGluZyBvbmx5IGFkZHJlc3NlcyB0aGUgY2xvY2sgcHJvdmlkZXIN
-Cj4gYXNwZWN0IG9mIHRoZSBjbG9ja2dlbiBub2RlcyAoZS5nLiBpdCBkb2Vzbid0IGRlc2NyaWJl
-IHRoZSByZWcpPyAgT3INCj4gcmF0aGVyLCBpdCdzIHBhcnRpYWxseSBkZXNjcmliaW5nIHRoZSBu
-b24tY2xvY2sgYXNwZWN0LCBhbmQgZG9lc24ndA0KPiBhZGRyZXNzIHRoZSBjbG9jayBhc3BlY3Qg
-YXQgYWxsIEFGQUlDVC4NCj4gDQpGaXJzdCBvZiBhbGwsIHRoZXkgYXJlIG5vdCAiUmVxdWlyZWQg
-cHJvcGVydGllcyIsIHRoZXkgYXJlIG9wdGlvbmFsLg0KSWYgcHJlc2VudCwgd2Ugc2hvdWxkIGdp
-dmUgdGhlbSBhIHZhbHVlIG9mIDEuDQpUaGVuLCB5ZXMsIHRoaXMgYmluZGluZyBkZXNjcmliZXMg
-Y2xvY2tnZW4gbm9kZSB3aGljaCBpcyAiQ0xPQ0sgQkxPQ0siLg0KSXQgc2hvdWxkIHRha2UgY2Fy
-ZSBvZiBpdHMgc3ViLW5vZGVzIHdoaWNoIGFyZSBjbG9jayBub2RlcyB0byBiZSBwYXJzZWQgcHJv
-cGVybHkuDQoNCj4gV2hlcmUgZG9lcyB0aGUgYWN0dWFsIGlucHV0IGNsb2NrIGZyZXF1ZW5jeSBn
-bz8gIFUtQm9vdCBwdXRzIGl0IGluIHRoZQ0KPiBjbG9ja2dlbiBub2RlIGl0c2VsZiBhcyBjbG9j
-ay1mcmVxdWVuY3ksIGJ1dCB0aGF0IGlzbid0IGRlc2NyaWJlZCBpbiB0aGUNCj4gYmluZGluZy4g
-IEhvdyBkb2VzIHRoYXQgcmVsYXRlIHRvIHRoZSBzeXNjbGsgbm9kZT8gIElmICJmc2wscW9yaXEt
-c3lzY2xrLQ0KPiAxLjAiIGlzIHN1cHBvc2VkIHRvIGluZGljYXRlIHRoYXQgY2xvY2stZnJlcXVl
-bmN5IGNhbiBiZSBmb3VuZCBpbiB0aGUNCj4gcGFyZW50IG5vZGUsIHRoYXQgaXNuJ3Qgc3BlY2lm
-aWVkIGJ5IHRoZSBiaW5kaW5nLCBub3IgaXMgY2xvY2stZnJlcXVlbmN5DQo+IHNob3duIGluIHRo
-ZSBleGFtcGxlLg0KPiANCmNsb2NrLWZyZXF1ZW5jeSBpcyBhIHdpcmVkIHByb3BlcnR5LiBJdCBp
-cyBpbiBjbG9ja2dlbiBub2RlIHJpZ2h0IG5vdy4NCkJ1dCBpdCBzaG91bGQgYmUgcGxhY2VkIHNv
-bWV3aGVyZSBpbiBjbG9jayBub2Rlcy4NCklmIEkgZGVzY3JpYmUgaGVyZSwgSSB3b3VsZCBiZSBh
-c2tlZCB3aHkgaXQgaXMgcmVsYXRlZCB0byBjbG9ja2dlbiBub2RlPw0KSWYgeW91IHRoaW5rIHNo
-b3dpbmcgaXQgdXAgaXMgT0ssIEkgbGlrZSB0byBkbyBpdC4NCiANCj4gV2hhdCBpcyB0aGUgZGlm
-ZmVyZW5jZSBiZXR3ZWVuICJmc2wscW9yaXEtc3lzY2xrLTEuMCIgYW5kICJmc2wscW9yaXEtDQo+
-IHN5c2Nsay0yLjAiPyAgSG93IGRvZXMgdGhlIGNvbmNlcHQgb2YgYSBmaXhlZCBpbnB1dCBjbG9j
-ayBjaGFuZ2U/DQo+DQpUZWNobmljYWxseSwgdGhlcmUgaXMgbm8gZGlmZmVyZW5jZSBiZXR3ZWVu
-ICpzeXNjbGstMS4wIGFuZCAqLTIuMCwganVzdCBsaWtlDQpDbG9ja2dlbi0yLjAgYW5kIDEuMC4g
-TmFtaW5nIGxpa2UgdGhpcyBqdXN0IHRvIGluZGljYXRlIHRoZXkgYmVsb25nIHRvIGNoYXNzaXMg
-Mi4wIA0KYW5kIDEuMCByZXNwZWN0aXZlbHkuDQoNClJlZ2FyZHMsDQpZdWFudGlhbg0KIA0KPiAt
-U2NvdHQNCj4gDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
-cmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+esai_ahb clock is derived from ahb and used to provide ESAI the capability of
+register accessing and FSYS clock source for I2S clocks dividing. Although the
+gate of this esai_ahb is duplicated with esai clock -- the baud clock, yet
+considering about the differences of their clock rates, it's quite essential
+to patch this missing clock.
+
+Signed-off-by: Nicolin Chen <Guangyu.Chen@freescale.com>
+---
+ Documentation/devicetree/bindings/clock/imx6q-clock.txt | 1 +
+ arch/arm/mach-imx/clk-imx6q.c                           | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+index 6aab72b..90ec91f 100644
+--- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
++++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+@@ -220,6 +220,7 @@ clocks and IDs.
+ 	lvds2_sel		205
+ 	lvds1_gate		206
+ 	lvds2_gate		207
++	esai_ahb		208
+ 
+ Examples:
+ 
+diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
+index af2e582..20215b9 100644
+--- a/arch/arm/mach-imx/clk-imx6q.c
++++ b/arch/arm/mach-imx/clk-imx6q.c
+@@ -107,7 +107,7 @@ enum mx6q_clks {
+ 	sata_ref, sata_ref_100m, pcie_ref, pcie_ref_125m, enet_ref, usbphy1_gate,
+ 	usbphy2_gate, pll4_post_div, pll5_post_div, pll5_video_div, eim_slow,
+ 	spdif, cko2_sel, cko2_podf, cko2, cko, vdoa, pll4_audio_div,
+-	lvds1_sel, lvds2_sel, lvds1_gate, lvds2_gate, clk_max
++	lvds1_sel, lvds2_sel, lvds1_gate, lvds2_gate, esai_ahb, clk_max
+ };
+ 
+ static struct clk *clk[clk_max];
+@@ -355,6 +355,7 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
+ 	clk[ecspi5]       = imx_clk_gate2("ecspi5",        "ecspi_root",        base + 0x6c, 8);
+ 	clk[enet]         = imx_clk_gate2("enet",          "ipg",               base + 0x6c, 10);
+ 	clk[esai]         = imx_clk_gate2("esai",          "esai_podf",         base + 0x6c, 16);
++	clk[esai_ahb]     = imx_clk_gate2("esai_ahb",      "ahb",               base + 0x6c, 16);
+ 	clk[gpt_ipg]      = imx_clk_gate2("gpt_ipg",       "ipg",               base + 0x6c, 20);
+ 	clk[gpt_ipg_per]  = imx_clk_gate2("gpt_ipg_per",   "ipg_per",           base + 0x6c, 22);
+ 	if (cpu_is_imx6dl())
+-- 
+1.8.4
