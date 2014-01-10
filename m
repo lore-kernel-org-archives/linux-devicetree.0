@@ -1,185 +1,128 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V6] kbuild: dtbs_install: new make target
-Date: Fri, 10 Jan 2014 13:29:23 -0500
-Message-ID: <20140110182923.GM19878@titan.lakedaemon.net>
-References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
- <1385942188-21831-1-git-send-email-jason@lakedaemon.net>
+Subject: Re: [PATCH V2] dt: bindings: submitting patches and ABI documents
+Date: Fri, 10 Jan 2014 13:30:17 -0500
+Message-ID: <20140110183017.GN19878@titan.lakedaemon.net>
+References: <1383759120-21571-1-git-send-email-jason@lakedaemon.net>
+ <1387299580-9100-1-git-send-email-jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1385942188-21831-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <1387299580-9100-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Grant,
 
-On Sun, Dec 01, 2013 at 11:56:28PM +0000, Jason Cooper wrote:
-> Unlike other build products in the Linux kernel, there is no 'make
-> *install' mechanism to put devicetree blobs in a standard place.
-> 
-> This patch is an attempt to fix this problem.  Akin to 'make install',
-> this creates a new make target, dtbs_install.  The script that gets
-> called defers to a distribution or user supplied installdtbs binary,
-> if found in the system.  Otherwise, the default action is to install the
-> built dtbs into
-> 
->   /lib/devicetrees/${kernel_version}/${dts_filename}.dtb
-> 
-> This is done to keep dtbs from different kernel versions separate until
-> things have settled down.  Once the dtbs are stable, and not so strongly
-> linked to the kernel version, the devicetree files will most likely move
-> to their own repo.  Users will need to upgrade install scripts at that
-> time.
-> 
-> /lib has been selected over /boot since /boot is often a FAT filesystem
-> and a majority of the dts filenames are longer than 8+3.
-> 
+On Tue, Dec 17, 2013 at 04:59:40PM +0000, Jason Cooper wrote:
 > Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 > ---
+> Changes from RFC:
+>  - incorporated Grant's language
+>  - split patches/ABI into two documents
+> 
+>  Documentation/devicetree/bindings/ABI.txt          | 39 ++++++++++++++++++++++
+>  .../devicetree/bindings/submitting-patches.txt     | 35 +++++++++++++++++++
+>  2 files changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ABI.txt
+>  create mode 100644 Documentation/devicetree/bindings/submitting-patches.txt
 
-Is this good to go?
+Are there any updates I should make to this?
 
 thx,
 
 Jason.
 
-> Note: Stephen, I haven't added your Ack because I wanted to make sure you were
-> Ok with the change to /lib in light of /boot partitions formatted to FAT
-> 
-> changes since v5:
->  - move make target back to arch/arm/Makefile (gcl)
->  - change default install location to /lib from /boot (FAT) (ojn,jac)
-> 
-> changes since v4:
->  - move make target from arch/arm/Makefile to Makefile (swarren)
->  - change default install location to /boot/devicetrees/$KERNVER (swarren/gcl)
->  - add INSTALL_DTBS_PATH for changing build root (jac)
-> 
-> changes since v3:
->  - drop renaming files to ${compat}.dtb (rmk/swarren)
->  - move installdtbs.sh to ./scripts/ (gcl)
-> 
-> changes since v2:
->  - use fdtget instead of a modified dtc to get the board compat string
-> 
-> changes since v1:
->  - added this patch
-> 
->  Makefile               | 12 +++++++++++-
->  arch/arm/Makefile      | 10 ++++++++++
->  scripts/installdtbs.sh | 33 +++++++++++++++++++++++++++++++++
->  3 files changed, 54 insertions(+), 1 deletion(-)
->  create mode 100644 scripts/installdtbs.sh
-> 
-> diff --git a/Makefile b/Makefile
-> index c0c2d58e3998..240e0d52b126 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -339,6 +339,7 @@ OBJDUMP		= $(CROSS_COMPILE)objdump
->  AWK		= awk
->  GENKSYMS	= scripts/genksyms/genksyms
->  INSTALLKERNEL  := installkernel
-> +INSTALLDTBS    := installdtbs
->  DEPMOD		= /sbin/depmod
->  PERL		= perl
->  CHECK		= sparse
-> @@ -391,7 +392,7 @@ KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(S
->  export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
->  export ARCH SRCARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC
->  export CPP AR NM STRIP OBJCOPY OBJDUMP
-> -export MAKE AWK GENKSYMS INSTALLKERNEL PERL UTS_MACHINE
-> +export MAKE AWK GENKSYMS INSTALLKERNEL INSTALLDTBS PERL UTS_MACHINE
->  export HOSTCXX HOSTCXXFLAGS LDFLAGS_MODULE CHECK CHECKFLAGS
->  
->  export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS LDFLAGS
-> @@ -704,6 +705,15 @@ export KBUILD_IMAGE ?= vmlinux
->  export	INSTALL_PATH ?= /boot
->  
->  #
-> +# INSTALL_DTBS_PATH specifies a prefix for relocations required by build roots.
-> +# Like INSTALL_MOD_PATH, it isn't defined in the Makefile, but can be passed as
-> +# an argument if needed.
-> +#
-> +
-> +DTBBOOT = $(INSTALL_DTBS_PATH)/lib/devicetrees/$(KERNELRELEASE)
-> +export DTBBOOT
-> +
-> +#
->  # INSTALL_MOD_PATH specifies a prefix to MODLIB for module directory
->  # relocations required by build roots.  This is not defined in the
->  # makefile but the argument can be passed to make if needed.
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index c99b1086d83d..400a3a7ee899 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -314,6 +314,12 @@ PHONY += dtbs
->  dtbs: scripts
->  	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) dtbs
->  
-> +PHONY += dtbs_install
-> +
-> +dtbs_install: dtbs
-> +	$(CONFIG_SHELL) $(srctree)/scripts/installdtbs.sh $(KERNELRELEASE) \
-> +	"$(DTBBOOT)" "$(srctree)"
-> +
->  # We use MRPROPER_FILES and CLEAN_FILES now
->  archclean:
->  	$(Q)$(MAKE) $(clean)=$(boot)
-> @@ -331,6 +337,10 @@ define archhelp
->    echo  '  bootpImage    - Combined zImage and initial RAM disk'
->    echo  '                  (supply initrd image via make variable INITRD=<path>)'
->    echo  '* dtbs          - Build device tree blobs for enabled boards'
-> +  echo  '  dtbs_install  - Install dtbs'
-> +  echo  '                  Install using (your) ~/bin/$(INSTALLDTBS) or'
-> +  echo  '                  (distribution) /sbin/$(INSTALLDTBS) or'
-> +  echo  '                  install to $(DTBBOOT)'
->    echo  '  install       - Install uncompressed kernel'
->    echo  '  zinstall      - Install compressed kernel'
->    echo  '  uinstall      - Install U-Boot wrapped compressed kernel'
-> diff --git a/scripts/installdtbs.sh b/scripts/installdtbs.sh
+> diff --git a/Documentation/devicetree/bindings/ABI.txt b/Documentation/devicetree/bindings/ABI.txt
 > new file mode 100644
-> index 000000000000..11027f00c3a4
+> index 000000000000..d25f8d379680
 > --- /dev/null
-> +++ b/scripts/installdtbs.sh
-> @@ -0,0 +1,33 @@
-> +#!/bin/sh
-> +#
-> +# This file is subject to the terms and conditions of the GNU General Public
-> +# License.  See the file "COPYING" in the main directory of this archive
-> +# for more details.
-> +#
-> +# Copyright (C) 1995 by Linus Torvalds
-> +#
-> +# Adapted from code in arch/i386/boot/Makefile by H. Peter Anvin
-> +#
-> +# Further adapted from arch/x86/boot/install.sh by Jason Cooper
-> +#
-> +# "make dtbs_install" script
-> +#
-> +# Arguments:
-> +#   $1 - kernel version
-> +#   $2 - default install path (blank if root directory)
-> +#   $3 - directory containing dtbs
-> +#
+> +++ b/Documentation/devicetree/bindings/ABI.txt
+> @@ -0,0 +1,39 @@
 > +
-> +# User may have a custom install script
+> +  Devicetree (DT) ABI
 > +
-> +if [ -x ~/bin/${INSTALLDTBS} ]; then exec ~/bin/${INSTALLDTBS} "$@"; fi
-> +if [ -x /sbin/${INSTALLDTBS} ]; then exec /sbin/${INSTALLDTBS} "$@"; fi
+> +I. Regarding stable bindings/ABI, we quote from the 2013 ARM mini-summit
+> +   summary document:
 > +
-> +# Default install
-> +[ -d "$2" ] && rm -rf "$2"
+> +     "That still leaves the question of, what does a stable binding look
+> +     like?  Certainly a stable binding means that a newer kernel will not
+> +     break on an older device tree, but that doesn't mean the binding is
+> +     frozen for all time. Grant said there are ways to change bindings that
+> +     don't result in breakage. For instance, if a new property is added,
+> +     then default to the previous behaviour if it is missing. If a binding
+> +     truly needs an incompatible change, then change the compatible string
+> +     at the same time.  The driver can bind against both the old and the
+> +     new. These guidelines aren't new, but they desperately need to be
+> +     documented."
 > +
-> +mkdir -p "$2"
+> +II.  General binding rules
 > +
-> +for dtb in `find "$3" -name "*.dtb"`; do
-> +	cp "$dtb" "$2/${dtb##*/}"
-> +done
+> +  1) Maintainers, don't let perfect be the enemy of good.  Don't hold up a
+> +     binding because it isn't perfect.
+> +
+> +  2) Use specific compatible strings so that if we need to add a feature (DMA)
+> +     in the future, we can create a new compatible string.  See I.
+> +
+> +  3) Bindings can be augmented, but the driver shouldn't break when given
+> +     the old binding. ie. add additional properties, but don't change the
+> +     meaning of an existing property. For drivers, default to the original
+> +     behaviour when a newly added property is missing.
+> +
+> +  4) Don't submit bindings for staging or unstable.  That will be decided by
+> +     the devicetree maintainers *after* discussion on the mailinglist.
+> +
+> +III. Notes
+> +
+> +  1) This document is intended as a general familiarization with the process as
+> +     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
+> +     devicetree maintainers overrules this document.  In that situation, a patch
+> +     updating this document would be appreciated.
+> diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
+> new file mode 100644
+> index 000000000000..5672cb46681d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/submitting-patches.txt
+> @@ -0,0 +1,35 @@
+> +
+> +  Submitting devicetree (DT) binding patches
+> +
+> +I. For patch submitters
+> +
+> +  0) Normal patch submission rules from Documentation/SubmittingPatches
+> +     applies.
+> +
+> +  1) The Documentation/ portion of the patch should be a separate patch.
+> +
+> +  2) Submit the entire series to the devicetree mailinglist at
+> +
+> +       devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +
+> +II. For kernel maintainers
+> +
+> +  1) If you aren't comfortable reviewing a given binding, reply to it and ask
+> +     the devicetree maintainers for guidance.  This will help them prioritize
+> +     which ones to review and which ones are ok to let go.
+> +
+> +  2) For driver (not subsystem) bindings: If you are comfortable with the
+> +     binding, and it hasn't received an Acked-by from the devicetree
+> +     maintainers after a few weeks, go ahead and take it.
+> +
+> +  3) For a series going though multiple trees, the binding patch should be
+> +     kept with the driver using the binding.
+> +
+> +III. Notes
+> +
+> +  0) Please see ...bindings/ABI.txt for details regarding devicetree ABI.
+> +
+> +  1) This document is intended as a general familiarization with the process as
+> +     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
+> +     devicetree maintainers overrules this document.  In that situation, a patch
+> +     updating this document would be appreciated.
 > -- 
-> 1.8.4.4
+> 1.8.5.1
 > 
 > --
 > To unsubscribe from this list: send the line "unsubscribe devicetree" in
