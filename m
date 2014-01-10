@@ -1,135 +1,51 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 2/3] ata: ahci_platform: Manage SATA PHY
-Date: Fri, 10 Jan 2014 19:55:03 +0530
-Message-ID: <52D002BF.7010807@ti.com>
-References: <1389264962-22858-1-git-send-email-rogerq@ti.com> <1389264962-22858-3-git-send-email-rogerq@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 2/9] mfd: omap-usb-host: Get clocks based on hardware
+ revision
+Date: Fri, 10 Jan 2014 14:26:40 +0000
+Message-ID: <20140110142640.GA32035@lee--X1>
+References: <1389269303-30465-1-git-send-email-rogerq@ti.com>
+ <1389269303-30465-3-git-send-email-rogerq@ti.com>
+ <20140110102251.GH28141@lee--X1>
+ <201401101513.40470.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1389264962-22858-3-git-send-email-rogerq@ti.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, tj@kernel.org
-Cc: sergei.shtylyov@cogentembedded.com, b.zolnierkie@samsung.com, hdegoede@redhat.com, arnd@arndb.de, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201401101513.40470.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Roger Quadros <rogerq@ti.com>, bcousson@baylibre.com, tony@atomide.com, balbi@ti.com, sre@debian.org, mark.rutland@arm.com, m.paolino@virtualopensystems.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 January 2014 04:26 PM, Roger Quadros wrote:
-> From: Balaji T K <balajitk@ti.com>
-> 
-> Some platforms have a PHY hooked up to the
-> SATA controller. The PHY needs to be initialized
-> and powered up for SATA to work. We do that
-> using the PHY framework.
-> 
-> [Roger Q] Cleaned up.
-> 
-> CC: Tejun Heo <tj@kernel.org>
-> Signed-off-by: Balaji T K <balajitk@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
+On Fri, 10 Jan 2014, Arnd Bergmann wrote:
 
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/ata/ahci.h          |  2 ++
->  drivers/ata/ahci_platform.c | 46 ++++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 47 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-> index 2289efd..f9bbada 100644
-> --- a/drivers/ata/ahci.h
-> +++ b/drivers/ata/ahci.h
-> @@ -37,6 +37,7 @@
->  
->  #include <linux/clk.h>
->  #include <linux/libata.h>
-> +#include <linux/phy/phy.h>
->  
->  /* Enclosure Management Control */
->  #define EM_CTRL_MSG_TYPE              0x000f0000
-> @@ -322,6 +323,7 @@ struct ahci_host_priv {
->  	u32			em_buf_sz;	/* EM buffer size in byte */
->  	u32			em_msg_type;	/* EM message type */
->  	struct clk		*clk;		/* Only for platforms supporting clk */
-> +	struct phy		*phy;		/* If platform uses phy */
->  	void			*plat_data;	/* Other platform data */
->  };
->  
-> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-> index d5ced13..b476642 100644
-> --- a/drivers/ata/ahci_platform.c
-> +++ b/drivers/ata/ahci_platform.c
-> @@ -142,6 +142,39 @@ static int ahci_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	hpriv->phy = devm_phy_get(dev, "sata-phy");
-> +	if (IS_ERR(hpriv->phy)) {
-> +		rc = PTR_ERR(hpriv->phy);
-> +		switch (rc) {
-> +		case -ENODEV:
-> +		case -ENOSYS:
-> +			/* continue normally */
-> +			hpriv->phy = NULL;
-> +			break;
-> +
-> +		case -EPROBE_DEFER:
-> +			goto disable_unprepare_clk;
-> +			break;
-> +
-> +		default:
-> +			dev_err(dev, "couldn't get sata-phy\n");
-> +			goto disable_unprepare_clk;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (hpriv->phy) {
-> +		rc = phy_init(hpriv->phy);
-> +		if (rc)
-> +			goto disable_unprepare_clk;
-> +
-> +		rc = phy_power_on(hpriv->phy);
-> +		if (rc) {
-> +			phy_exit(hpriv->phy);
-> +			goto disable_unprepare_clk;
-> +		}
-> +	}
-> +
->  	/*
->  	 * Some platforms might need to prepare for mmio region access,
->  	 * which could be done in the following init call. So, the mmio
-> @@ -151,7 +184,7 @@ static int ahci_probe(struct platform_device *pdev)
->  	if (pdata && pdata->init) {
->  		rc = pdata->init(dev, hpriv->mmio);
->  		if (rc)
-> -			goto disable_unprepare_clk;
-> +			goto disable_phy;
->  	}
->  
->  	ahci_save_initial_config(dev, hpriv,
-> @@ -221,6 +254,12 @@ static int ahci_probe(struct platform_device *pdev)
->  pdata_exit:
->  	if (pdata && pdata->exit)
->  		pdata->exit(dev);
-> +disable_phy:
-> +	if (hpriv->phy) {
-> +		phy_power_off(hpriv->phy);
-> +		phy_exit(hpriv->phy);
-> +	}
-> +
->  disable_unprepare_clk:
->  	if (!IS_ERR(hpriv->clk))
->  		clk_disable_unprepare(hpriv->clk);
-> @@ -239,6 +278,11 @@ static void ahci_host_stop(struct ata_host *host)
->  	if (pdata && pdata->exit)
->  		pdata->exit(dev);
->  
-> +	if (hpriv->phy) {
-> +		phy_power_off(hpriv->phy);
-> +		phy_exit(hpriv->phy);
-> +	}
-> +
->  	if (!IS_ERR(hpriv->clk)) {
->  		clk_disable_unprepare(hpriv->clk);
->  		clk_put(hpriv->clk);
-> 
+> On Friday 10 January 2014, Lee Jones wrote:
+> > > =20
+> > > -     need_logic_fck =3D false;
+> > > +     /* Set all clocks as invalid to begin with */
+> > > +     omap->ehci_logic_fck =3D omap->init_60m_fclk =3D ERR_PTR(-E=
+INVAL);
+> > > +     omap->utmi_p1_gfclk =3D omap->utmi_p2_gfclk =3D ERR_PTR(-EI=
+NVAL);
+> > > +     omap->xclk60mhsp1_ck =3D omap->xclk60mhsp2_ck =3D ERR_PTR(-=
+EINVAL);
+> >=20
+> > I don't think this is the correct error code.
+> >=20
+> > -EINVAL means 'invalid parameter'.
+> >=20
+> > You probably want -ENODEV or -ENOSYS ('function not implemented'
+> > probably isn't ideal either tbh, but you get the idea). Perhaps you
+> > can set them as NULL and check for IS_ERR_OR_NULL() instead?
+>=20
+> I think ENODEV is ok here, I'd much prefer this over IS_ERR_OR_NULL()=
+=2E
 
+Sounds good to me.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
