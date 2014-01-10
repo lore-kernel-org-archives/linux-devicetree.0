@@ -1,58 +1,49 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH 5/6] arm: exynos4-dt: statically add platform device for
- cpufreq-cpu0 platform driver
-Date: Fri, 10 Jan 2014 11:23:41 +0100
-Message-ID: <20140110112341.64049da3@amdc2363>
-References: <1389283165-17708-1-git-send-email-thomas.ab@samsung.com>
- <1389283165-17708-6-git-send-email-thomas.ab@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/3] mfd: Add support for S2MPA01 device
+Date: Fri, 10 Jan 2014 10:25:14 +0000
+Message-ID: <20140110102514.GI28141@lee--X1>
+References: <1389266554-23463-1-git-send-email-sachin.kamat@linaro.org>
+ <20140110100342.GC28141@lee--X1>
+ <CAK9yfHx2peeKT1Z6RELp6BzSPY7Srt3x_ves=tenRGmJrsRE7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-reply-to: <1389283165-17708-6-git-send-email-thomas.ab@samsung.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Thomas Abraham <ta.omasab@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, cpufreq@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, t.figa@samsung.com, kgene.kim@samsung.com, viresh.kumar@linaro.org, shawn.guo@linaro.org, thomas.ab@samsung.com, Lukasz Majewski <l.majewski@majess.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAK9yfHx2peeKT1Z6RELp6BzSPY7Srt3x_ves=tenRGmJrsRE7Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Patch Tracking <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On Fri, 10 Jan 2014, Sachin Kamat wrote:
 
-> In order to use the cpufreq-cpu0 driver on Exynos4 based platforms,
-> statically add the platform device for cpufreq-cpu0 platform driver.
-> 
-> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-> ---
->  arch/arm/mach-exynos/mach-exynos4-dt.c |    6 ++++++
->  1 files changed, 6 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c
-> b/arch/arm/mach-exynos/mach-exynos4-dt.c index d3e54b7..8b8ad41 100644
-> --- a/arch/arm/mach-exynos/mach-exynos4-dt.c
-> +++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
-> @@ -19,11 +19,17 @@
->  
->  #include "common.h"
->  
-> +static struct platform_device cpufreq_device = {
-> +	.name		= "cpufreq-cpu0",
-> +	.id		= -1,
-> +};
-> +
->  static void __init exynos4_dt_machine_init(void)
->  {
->  	exynos_cpuidle_init();
->  	exynos_cpufreq_init();
->  
-> +	platform_device_register(&cpufreq_device);
->  	of_platform_populate(NULL, of_default_bus_match_table, NULL,
-> NULL); }
->  
+> On 10 January 2014 15:33, Lee Jones <lee.jones@linaro.org> wrote:
+> >> Add the necessary entries required for S2MPA01 multi-function
+> >> device. While at it also convert whitespaces to tabs in core.h.
+> >>
+> >> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> >> ---
+> >> * Fixed nits pointed out by Lee.
+> >> ---
+> >>  drivers/mfd/sec-core.c              |   45 +++++++-
+> >>  include/linux/mfd/samsung/core.h    |   16 ++-
+> >>  include/linux/mfd/samsung/irq.h     |   50 +++++++++
+> >>  include/linux/mfd/samsung/s2mpa01.h |  192 ++++++++++++++++++++++=
++++++++++++++
+> >>  4 files changed, 295 insertions(+), 8 deletions(-)
+> >>  create mode 100644 include/linux/mfd/samsung/s2mpa01.h
+> >
+> > Acked-by: Lee Jones <lee.jones@linaro.org>
+>=20
+> Thanks Lee.
+> Btw, how do you plan to handle these patches? Mark has already ack'd
+> the regulator patch.
 
-Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
+I will take them once we received the Device Tree Ack.
 
--- 
-Best regards,
-
-Lukasz Majewski
-
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
