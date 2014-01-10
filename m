@@ -1,74 +1,58 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 2/9] mfd: omap-usb-host: Get clocks based on hardware
- revision
-Date: Fri, 10 Jan 2014 10:22:51 +0000
-Message-ID: <20140110102251.GH28141@lee--X1>
-References: <1389269303-30465-1-git-send-email-rogerq@ti.com>
- <1389269303-30465-3-git-send-email-rogerq@ti.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH 5/6] arm: exynos4-dt: statically add platform device for
+ cpufreq-cpu0 platform driver
+Date: Fri, 10 Jan 2014 11:23:41 +0100
+Message-ID: <20140110112341.64049da3@amdc2363>
+References: <1389283165-17708-1-git-send-email-thomas.ab@samsung.com>
+ <1389283165-17708-6-git-send-email-thomas.ab@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389269303-30465-3-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: bcousson@baylibre.com, tony@atomide.com, balbi@ti.com, arnd@arndb.de, sre@debian.org, mark.rutland@arm.com, m.paolino@virtualopensystems.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-reply-to: <1389283165-17708-6-git-send-email-thomas.ab@samsung.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Thomas Abraham <ta.omasab@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, cpufreq@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, t.figa@samsung.com, kgene.kim@samsung.com, viresh.kumar@linaro.org, shawn.guo@linaro.org, thomas.ab@samsung.com, Lukasz Majewski <l.majewski@majess.pl>
 List-Id: devicetree@vger.kernel.org
 
-> Not all revisions have all the clocks so get the necessary clocks
-> based on hardware revision.
->=20
-> This should avoid un-necessary clk_get failure messages that were
-> observed earlier.
->=20
-> Be more strict and always fail on clk_get() error.
->=20
-> CC: Lee Jones <lee.jones@linaro.org>
-> CC: Samuel Ortiz <sameo@linux.intel.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
+Hi Thomas,
+
+> In order to use the cpufreq-cpu0 driver on Exynos4 based platforms,
+> statically add the platform device for cpufreq-cpu0 platform driver.
+> 
+> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
 > ---
->  drivers/mfd/omap-usb-host.c | 93 +++++++++++++++++++++++++++++++----=
-----------
->  1 file changed, 64 insertions(+), 29 deletions(-)
->=20
-> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.=
-c
-> index 1c9bca2..7202cc6 100644
-> --- a/drivers/mfd/omap-usb-host.c
-> +++ b/drivers/mfd/omap-usb-host.c
-> @@ -92,7 +92,6 @@
->  #define is_ehci_tll_mode(x)	(x =3D=3D OMAP_EHCI_PORT_MODE_TLL)
->  #define is_ehci_hsic_mode(x)	(x =3D=3D OMAP_EHCI_PORT_MODE_HSIC)
-> =20
-> -
+>  arch/arm/mach-exynos/mach-exynos4-dt.c |    6 ++++++
+>  1 files changed, 6 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c
+> b/arch/arm/mach-exynos/mach-exynos4-dt.c index d3e54b7..8b8ad41 100644
+> --- a/arch/arm/mach-exynos/mach-exynos4-dt.c
+> +++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
+> @@ -19,11 +19,17 @@
+>  
+>  #include "common.h"
+>  
+> +static struct platform_device cpufreq_device = {
+> +	.name		= "cpufreq-cpu0",
+> +	.id		= -1,
+> +};
+> +
+>  static void __init exynos4_dt_machine_init(void)
+>  {
+>  	exynos_cpuidle_init();
+>  	exynos_cpufreq_init();
+>  
+> +	platform_device_register(&cpufreq_device);
+>  	of_platform_populate(NULL, of_default_bus_match_table, NULL,
+> NULL); }
+>  
 
-Sneaky! ;)
+Reviewed-by: Lukasz Majewski <l.majewski@samsung.com>
 
->  struct usbhs_hcd_omap {
->  	int				nports;
->  	struct clk			**utmi_clk;
-> @@ -665,22 +664,41 @@ static int usbhs_omap_probe(struct platform_dev=
-ice *pdev)
->  		goto err_mem;
->  	}
-> =20
-> -	need_logic_fck =3D false;
-> +	/* Set all clocks as invalid to begin with */
-> +	omap->ehci_logic_fck =3D omap->init_60m_fclk =3D ERR_PTR(-EINVAL);
-> +	omap->utmi_p1_gfclk =3D omap->utmi_p2_gfclk =3D ERR_PTR(-EINVAL);
-> +	omap->xclk60mhsp1_ck =3D omap->xclk60mhsp2_ck =3D ERR_PTR(-EINVAL);
+-- 
+Best regards,
 
-I don't think this is the correct error code.
+Lukasz Majewski
 
--EINVAL means 'invalid parameter'.
-
-You probably want -ENODEV or -ENOSYS ('function not implemented'
-probably isn't ideal either tbh, but you get the idea). Perhaps you
-can set them as NULL and check for IS_ERR_OR_NULL() instead?
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
