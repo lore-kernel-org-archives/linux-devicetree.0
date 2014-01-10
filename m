@@ -1,146 +1,84 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/3] power_supply: modelgauge_battery: Maxim ModelGauge
- ICs gauge
-Date: Fri, 10 Jan 2014 11:11:30 +0000
-Message-ID: <20140110111130.GD6798@e106331-lin.cambridge.arm.com>
-References: <1389286145-15375-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1389286145-15375-2-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] Documentation: Add GPIO reset binding to reset
+ binding documentation
+Date: Fri, 10 Jan 2014 12:25:36 +0100
+Message-ID: <1389353136.5854.13.camel@pizza.hi.pengutronix.de>
+References: <1389179464-11963-1-git-send-email-p.zabel@pengutronix.de>
+	 <201401081708.26679.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389286145-15375-2-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: "anton@enomsg.org" <anton@enomsg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mk7.kang@samsung.com" <mk7.kang@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201401081708.26679.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 09, 2014 at 04:49:03PM +0000, Vladimir Barinov wrote:
-> Add Maxim ModelGauge ICs gauge driver for MAX17040/41/43/44/48/49/58/59 chips
+Hi Arnd,
+
+Am Mittwoch, den 08.01.2014, 17:08 +0100 schrieb Arnd Bergmann:
+> On Wednesday 08 January 2014, Philipp Zabel wrote:
+> > += GPIO Reset consumers =
+> > +
+> > +For the common case of reset lines controlled by GPIOs, the GPIO binding
+> > +documented in devicetree/bindings/gpio/gpio.txt should be used:
+> > +
+> > +Required properties:
+> > +reset-gpios or         Reset GPIO using standard GPIO bindings,
+> > +<name>-reset-gpios:    optionally named to specify the reset line
+> > +
+> > +Optional properties:
+> > +reset-boot-asserted or         Boolean. If set, the corresponding reset is
+> > +<name>-reset-boot-asserted:    initially asserted and should be kept that way
+> > +                               until released by the driver.
 > 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> I don't get this one. Why would you use a different reset binding for the case
+> where the reset line is connected to the gpio controller rather than a
+> specialized reset controller?
 > 
-> ---
->  drivers/power/Kconfig                            |    8
->  drivers/power/Makefile                           |    1
->  drivers/power/modelgauge_battery.c               |  875 +++++++++++++++++++++++
->  include/linux/platform_data/battery-modelgauge.h |   44 +
->  4 files changed, 928 insertions(+)
+> I was expecting to see the definition of a generic reset controller that
+> in turn uses gpio lines, like
+> 
+> 
+>         reset { 
+>                 compatible = "gpio-reset";
+>                 /* provides three reset lines through these GPIOs */
+>                 gpios = <&gpioA 1 &gpioB 7 <gpioD 17>;
+>                 #reset-cells = <1>;
+>         };
+> 
+>         foo {
+>                 ...
+>                 resets = <&reset 0>; /* uses first reset line of the gpio-reset controller */
+>         };
 
-[...]
+That is what I initially proposed...
 
-> +static struct modelgauge_platform_data *modelgauge_parse_dt(struct device *dev)
-> +{
-> +       struct device_node *np = dev->of_node;
-> +       struct modelgauge_platform_data *pdata;
-> +       struct property *prop;
-> +
-> +       if (!of_get_property(np, "maxim,empty_alert_threshold", NULL) &&
-> +           !of_get_property(np, "maxim,soc_change_alert", NULL) &&
-> +           !of_get_property(np, "maxim,hibernate_threshold", NULL) &&
-> +           !of_get_property(np, "maxim,active_threshold", NULL) &&
-> +           !of_get_property(np, "maxim,undervoltage", NULL) &&
-> +           !of_get_property(np, "maxim,overvoltage", NULL) &&
-> +           !of_get_property(np, "maxim,resetvoltage", NULL))
-> +               return NULL;
+> I realize it would be a little more verbose, but it also seems more
+> regular and wouldn't stand out from the rest of the reset interfaces.
 
-These were described as optional in the binding. It wasn't clear that to
-have one you need the others. It would be nice for that to be clarified
-in the binding.
+... but it can also be argued that GPIO resets shouldn't stand out from
+other GPIOs.
 
-> +
-> +       pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +       if (!pdata)
-> +               return NULL;
-> +
-> +       of_property_read_u8(np, "maxim,empty_alert_threshold",
-> +                           &pdata->empty_alert_threshold);
-> +       pdata->soc_change_alert =
-> +                       of_property_read_bool(np, "maxim,soc_change_alert");
+Mark Rutland spoke out against having a 'GPIO reset device' node in the
+device tree:
 
-As mentioned in my comments on the binding document, I don't think this
-property is necessary at all.
+http://comments.gmane.org/gmane.linux.drivers.devicetree/41596
 
-> +       of_property_read_u8(np, "maxim,hibernate_threshold",
-> +                           &pdata->hibernate_threshold);
-> +       of_property_read_u8(np, "maxim,active_threshold",
-> +                           &pdata->active_threshold);
-> +       of_property_read_u16(np, "maxim,undervoltage", &pdata->undervoltage);
-> +       of_property_read_u16(np, "maxim,overvoltage", &pdata->overvoltage);
-> +       of_property_read_u16(np, "maxim,resetvoltage", &pdata->resetvoltage);
-> +
-> +       prop = of_find_property(np, "maxim,ocvtest", NULL);
+and I see his point. Using different bindings for reset controller IPs
+and for single GPIOs better describes the actual hardware and it is less
+Linux specific: it still allows an OS without gpio-reset framework to
+let each driver handle the GPIO itself.
 
-Here you seem to be using of_find_property to check if a property is
-present, but earlier you used of_get_property for this purpose. It would
-be nice if one or the other were used consistently.
+Also Stephen Warren pointed out that we'll have to support the existing
+GPIO bindings anyway: in the meantime there are a lot of GPIO resets in
+various device trees that use the GPIO bindings.
 
-> +       if (prop) {
-> +               pdata->model = devm_kzalloc(dev, sizeof(*pdata->model),
-> +                                           GFP_KERNEL);
-> +               if (!pdata->model)
-> +                       return NULL;
-> +
-> +               of_property_read_u8(np, "maxim,empty_adjustment",
-> +                                   &pdata->model->empty_adjustment);
-> +               of_property_read_u8(np, "maxim,full_adjustment",
-> +                                   &pdata->model->full_adjustment);
-> +               of_property_read_u8(np, "maxim,rcomp0",
-> +                                   &pdata->model->rcomp0);
-> +               prop = of_find_property(np, "maxim,temp_co_up", NULL);
-> +               if (prop)
-> +                       pdata->model->temp_co_up = be32_to_cpup(prop->value);
+regards
+Philipp
 
-Use of_property_read_u32. If it can't read the property it won't
-modify the pointer it's been handed, and it handles the endianness
-conversion.
-
-You seem to be happy to use of_property_read_u{8,16}, so I don't
-understand why you are treating 32-bit differently.
-
-> +               prop = of_find_property(np, "maxim,temp_co_down", NULL);
-> +               if (prop)
-> +                       pdata->model->temp_co_down = be32_to_cpup(prop->value);
-
-Likewise.
-
-> +               of_property_read_u16(np, "maxim,ocvtest",
-> +                                    &pdata->model->ocvtest);
-
-While you've checked that this property was present earlier, you don't
-know it's size. You might want to check the return value of
-of_property_read_u16 (and you might want to do so for other accessors
-too).
-
-> +               of_property_read_u8(np, "maxim,soc_check_a",
-> +                                   &pdata->model->soc_check_a);
-> +               of_property_read_u8(np, "maxim,soc_check_b",
-> +                                   &pdata->model->soc_check_b);
-> +               of_property_read_u8(np, "maxim,bits",
-> +                                   &pdata->model->bits);
-> +               of_property_read_u16(np, "maxim,rcomp_seg",
-> +                                    &pdata->model->rcomp_seg);
-> +       }
-> +
-> +       prop = of_find_property(np, "maxim,model_data", NULL);
-> +       if (prop && prop->length == MODELGAUGE_TABLE_SIZE) {
-> +               pdata->model->model_data = devm_kzalloc(dev,
-> +                                                       MODELGAUGE_TABLE_SIZE,
-> +                                                       GFP_KERNEL);
-> +               if (!pdata->model->model_data)
-> +                       return NULL;
-> +
-> +               of_property_read_u8_array(np, "maxim,model_data",
-> +                                         pdata->model->model_data,
-> +                                         MODELGAUGE_TABLE_SIZE);
-> +       }
-
-It's probably worth printing a warning or error if this isn't the size
-you expect (perhaps failing to probe).
-
-> +
-> +       return pdata;
-> +}
-
-Thanks,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
