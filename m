@@ -1,48 +1,109 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCHv9 1/4] clk: socfpga: Add a clk-phase property to the "altr,socfpga-gate-clk"
-Date: Fri, 10 Jan 2014 15:26:05 -0600
-Message-ID: <52D0656D.6010307@gmail.com>
-References: <1389303079-19808-1-git-send-email-dinguyen@altera.com> <003501cf0e06$9c194c50$d44be4f0$%jun@samsung.com> <1389369111.13556.29.camel@linux-builds1> <201401102000.25484.arnd@arndb.de>
+From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: socfpga: DTS updates for stmmac driver
+Date: Fri, 10 Jan 2014 15:46:30 -0600
+Message-ID: <52D06A36.8070605@gmail.com>
+References: <1389372599-14180-1-git-send-email-vbridgers2013@gmail.com> <20140110200009.GD371@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201401102000.25484.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@altera.com>
-Cc: Seungwon Jeon <tgih.jun@samsung.com>, cjb@laptop.org, jh80.chung@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, mturquette@linaro.org, zhangfei.gao@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140110200009.GD371-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Vince Bridgers <vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
 
-On 1/10/14 1:00 PM, Arnd Bergmann wrote:
-> On Friday 10 January 2014, Dinh Nguyen wrote:
->>>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->>>> index f936476..e776512 100644
->>>> --- a/arch/arm/boot/dts/socfpga.dtsi
->>>> +++ b/arch/arm/boot/dts/socfpga.dtsi
->>>> @@ -413,6 +413,7 @@
->>>>                                             compatible = "altr,socfpga-gate-clk";
->>>>                                             clocks = <&f2s_periph_ref_clk>, <&main_nand_sdmmc_clk>,
->>>> <&per_nand_mmc_clk>;
->>>>                                             clk-gate = <0xa0 8>;
->>>> +                                           clk-phase = <0 135>;
->>> Can clk-phase be applicable commonly for various board?
->>> Isn't specific timing values?
->> No, the clock-phase does not change for various board. It is a
->> SoC-specific property.
-> I'm curious about this: If the setting is fixed per soc, why is it even
-> configurable, rather than hardwired to the correct setting, or set up
-> by the boot loader?
-Yes, I guess it can be hardwired, but currently it is not and the values
-all default
-to 0. The bootloader does set it up, but only when the system is booting
-from
-the SD/MMC source. When booting from other flash medium(i.e. NAND,
-QSPI), these SD/MMC settings are not set, so they must be set by the OS
-if SD/MMC is to work correctly.
+On 1/10/14 2:00 PM, Steffen Trumtrar wrote:
+> Hi!
+>
+> On Fri, Jan 10, 2014 at 10:49:59AM -0600, Vince Bridgers wrote:
+>> This change adds a parameter for the Synopsys 10/100/1000
+>> stmmac Ethernet driver to configure the maximum MTU supported
+>> by the EMAC instance. Synopsys allows the FIFO sizes to
+>> be configured when the cores are built for a particular
+>> device, but do not provide a way for the driver to read
+>> information from the device about the maximum MTU size
+>> supported as limited by the device's FIFO size.
+>>
+>> This patch has been tested with changes being submitted
+>> seperately for the Synopsys 10/100/1000 stmmac driver.
+>>
+>> Signed-off-by: Vince Bridgers <vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/net/stmmac.txt |    5 +++++
+>>  arch/arm/boot/dts/socfpga_cyclone5.dtsi          |   19 +++++++++++++++++++
+>>  2 files changed, 24 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+>> index eba0e5e..7db314e 100644
+>> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+>> @@ -30,6 +30,10 @@ Required properties:
+>>  
+>>  Optional properties:
+>>  - mac-address: 6 bytes, mac address
+>> +- snps,max-mtu:		Maximum MTU permitted. This parameter is useful since
+>> +			different implementations of the Synopsys MAC may have
+>> +			different FIFO sizes depending on the selections
+>> +			made in Synopsys Core Consultant.
+>>  
+>>  Examples:
+>>  
+>> @@ -40,5 +44,6 @@ Examples:
+>>  		interrupts = <24 23>;
+>>  		interrupt-names = "macirq", "eth_wake_irq";
+>>  		mac-address = [000000000000]; /* Filled in by U-Boot */
+>> +		snps,max-mtu = <3800>;
+>>  		phy-mode = "gmii";
+>>  	};
+>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+>> index a8716f6..b6b39dd 100644
+>> --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+>> @@ -63,3 +63,22 @@
+>>  		};
+>>  	};
+>>  };
+>> +
+>> +&gmac1 {
+>> +	phy-mode = "rgmii";
+>> +	snps,phy-addr = <0xffffffff>; /* probe for phy addr */
+>> +
+>> +	rxd0-skew-ps = <0>;
+>> +	rxd0-skew-ps = <0>;
+>> +	rxd1-skew-ps = <0>;
+>> +	rxd2-skew-ps = <0>;
+>> +	rxd3-skew-ps = <0>;
+>> +	txen-skew-ps = <0>;
+>> +	txc-skew-ps = <2600>;
+>> +	rxdv-skew-ps = <0>;
+>> +	rxc-skew-ps = <2000>;
+> This all seems to be unrelated to the patch description and there isn't even
+> any binding documentatation (or is that in another patch ?).
+The documentation for all of these properties are located in
+micrel-ksz9021.txt.
+But that's a moot point since this entry should be removed from this
+patch anyways.
+
+Also, this patch was not sent to any of the DTS bindings maintainers.
 
 Dinh
+> Additionally these don't seem to be properties that apply to all cyclone5 based
+> boards, so they don't belong here.
 >
-> 	Arnd
+>> +	snps,max-mtu = <3800>;
+>> +	altr,sysmgr-phy-mask = <0xC>;
+>> +	status = "okay";
+>                   ^^^^
+> At least this is only valid for boards that use gmac1.
+> Put this in a boardspecific DT.
+>
+> Regards,
+> Steffen
+>
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
