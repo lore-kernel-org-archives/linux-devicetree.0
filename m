@@ -1,7 +1,7 @@
 From: Vince Bridgers <vbridgers2013@gmail.com>
-Subject: [PATCH net-next 1/2] ARM: dts: socfpga: DTS updates for stmmac driver
-Date: Fri, 10 Jan 2014 17:47:47 -0600
-Message-ID: <1389397669-10929-2-git-send-email-vbridgers2013@gmail.com>
+Subject: [PATCH net-next 1/2] dts: Add a binding for Synopsys emac max-mtu
+Date: Fri, 10 Jan 2014 17:47:48 -0600
+Message-ID: <1389397669-10929-3-git-send-email-vbridgers2013@gmail.com>
 References: <1389397669-10929-1-git-send-email-vbridgers2013@gmail.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1389397669-10929-1-git-send-email-vbridgers2013@gmail.com>
@@ -17,9 +17,6 @@ be configured when the cores are built for a particular
 device, but do not provide a way for the driver to read
 information from the device about the maximum MTU size
 supported as limited by the device's FIFO size.
-
-This patch has been tested with changes being submitted
-seperately for the Synopsys 10/100/1000 stmmac driver.
 
 Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
 ---
