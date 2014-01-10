@@ -1,126 +1,74 @@
-From: Kyungmin Park <kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt: Document ModelGauge gauge bindings
-Date: Fri, 10 Jan 2014 10:00:17 +0900
-Message-ID: <CAH9JG2XC0mhXMPJc7DzJCE9B+CZnHhczCAQbMWd4QRkXeD2kfg@mail.gmail.com>
-References: <1389286145-15375-1-git-send-email-vladimir.barinov@cogentembedded.com>
-	<1389286145-15375-3-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Subject: Re: [PATCH RFC RFT 0/2] ARM: Kirkwood: Synology DT files
+Date: Fri, 10 Jan 2014 11:01:06 +1000
+Message-ID: <52CF4652.3030207@killerwolves.net>
+References: <1389052027-16819-1-git-send-email-andrew@lunn.ch> <52CE312B.3060108@killerwolves.net> <20140109165557.GB9681@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389286145-15375-3-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20140109165557.GB9681-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mk7.kang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 10, 2014 at 1:49 AM, Vladimir Barinov
-<vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> These bindings can be used to register Maxim ModelGauge ICs fuel gauge
-> (MAX17040/41/43/44/48/49/58/59)
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->
-> ---
->  Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt |   82 ++++++++++
->  1 file changed, 82 insertions(+)
->
-> Index: battery-2.6/Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt
-> ===================================================================
-> --- /dev/null   1970-01-01 00:00:00.000000000 +0000
-> +++ battery-2.6/Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt   2014-01-09 15:09:38.035138887 +0400
-> @@ -0,0 +1,82 @@
-> +modelgauge_battery
-> +~~~~~~~~~~~~~~~~~~
-> +
-> +Required properties:
-> + - compatible          : should contain one of the following:
-> +                         - "maxim,max17040" for MAX17040
-> +                         - "maxim,max17041" for MAX17041
-> +                         - "maxim,max17043" for MAX17043
-> +                         - "maxim,max17044" for MAX17044
-> +                         - "maxim,max17048" for MAX17048
-> +                         - "maxim,max17049" for MAX17049
-> +                         - "maxim,max17058" for MAX17058
-> +                         - "maxim,max17059" for MAX17059
-> +
-> +Optional properties:
-> + - maxim,empty_alert_threshold : Capacity threshold where an interrupt is
-> +                                 generated on the ALRT pin;
-> +
-> + - soc_change_alert            : /* alert for 1% soc change */
-> + - hibernate_threshold         : Hibernate threshold (crate), where IC
-> +                                 enters hibernate mode
-> + - active_threshold            : Active threshold (mV), where IC exits
-> +                                 hibernate mode
-> + - undervoltage                        : Voltage (mV), when IC alerts while battery
-> +                                 voltage less then undervoltage
-> + - overvoltage                 : Voltage (mV), when IC alerts while battery
-> +                                 voltage greater then overvoltage
-> + - maxim,resetvoltage          : Voltage threshold (mV) below which the IC
-> +                                 resets itself. Used to detect battery removal
-> +                                 and reinsertion;
-> + - maxim,empty_adjustment      : Capacity charge empty design value;
-> + - maxim,full_adjustment       : Capacity charge full design value;
-> + - maxim,rcomp0                        : ModelGauge RCOMP parameter, used for
-> +                                 temperature compensation;
-> + - maxim,temp_co_up            : ModelGauge TempCoUp parameter, used for
-> +                                 temperature compensation;
-> + - maxim,temp_co_down          : ModelGauge TempCoDown parameter, used for
-> +                                 temperature compensation;
-> + - maxim,ocvtest               : ModelGauge OCVTest parameter, used for
-> +                                 verification of Custom Model calibration data
-> +                                 loaded into IC RAM;
-> + - maxim,soc_check_a           : ModelGauge SOCCheckA parameter, used for
-> +                                 verification of Custom Model calibration data
-> +                                 loaded into IC RAM;
-> + - maxim,soc_check_b           : ModelGauge SOCCheckB parameter, used for
-> +                                 verification of Custom Model calibration data
-> +                                 loaded into IC RAM;
-> + - maxim,bits                  : ModelGauge Bits parameter, used as
-> +                                 scaling parameter in Custom Model algorithm;
-> + - maxim,model_data            : ModelGauge ModelData data,
-> +                                 Custom Model calibration data.
-Dose it open to vendor? we're using this chip. we don't need to setup
-it at all. most of property except "rcomp" doesn't used.
+On Thu, Jan 09, 2014 at 05:55:57PM +0100, Andrew Lunn wrote:
+> On Thu, Jan 09, 2014 at 03:18:35PM +1000, Ben Peddell wrote:
+>> On 07/01/14 09:47, Andrew Lunn wrote:
+>>> Request for Testing:
+>>>
+>>> This patch adds support for around 30 different boards. Most .dts
+>>> files support a couple of different models. I don't have any of this
+>>> hardware. None of this is tested.
+>>
+>> Tested by Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org> (specifically kirkwood-ds210.dts on DS211j)
+> 
+> Hi Ben
+> 
+> Thanks for testing. I will fix the gpo and send a v2 sometime. I
+> should also check if there are any more gpo's i have as gpio's.
 
-Thank you,
-Kyungmin Park
-> +
-> +Example:
-> +
-> +modelgauge@36 {
-> +       compatible = "maxim,max17058";
-> +       reg = <0x36>;
-> +       interrupt-parent = <&msmgpio>;
-> +       interrupts = <107 0x2>;
-> +
-> +       maxim,empty_alert_threshold = /bits/ 8 <15>;
-> +       maxim,resetvoltage = /bits/ 16 <0>;
-> +       maxim,empty_adjustment = /bits/ 8 <0>;
-> +       maxim,full_adjustment = /bits/ 8 <100>;
-> +       maxim,rcomp0 = /bits/ 8 <175>;
-> +       maxim,temp_co_up = <(-1100)>;
-> +       maxim,temp_co_down = <(-4000)>;
-> +       maxim,ocvtest = /bits/ 16 <56144>;
-> +       maxim,soc_check_a = /bits/ 8 <241>;
-> +       maxim,soc_check_b = /bits/ 8 <243>;
-> +       maxim,bits = /bits/ 8 <19>;
-> +
-> +       maxim,model_data = /bits/ 8 <
-> +               0x9B 0x70 0xAB 0x30 0xB5 0xA0 0xB9 0xD0
-> +               0xBB 0xA0 0xBC 0x00 0xBC 0xB0 0xBD 0x00
-> +               0xBD 0x60 0xBE 0x40 0xBF 0x40 0xC1 0xF0
-> +               0xC5 0x60 0xC8 0xA0 0xCD 0x00 0xD1 0x50
-> +               0x00 0xE0 0x01 0x80 0x18 0x60 0x1C 0x20
-> +               0x54 0x00 0x6A 0xC0 0x79 0x20 0x65 0xC0
-> +               0x0B 0xE0 0x2A 0xC0 0x1D 0x00 0x17 0xE0
-> +               0x15 0xE0 0x11 0xE0 0x11 0x00 0x11 0x00>;
-> +};
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+There are only a few pins that are GPOs - from 
+marvell,kirkwood-pinctrl.txt, they are 
+1, 2, 3, 5, 7, 10, 18, 19 and 33.
+
+>  
+>> To get running on the stock bootloader, I needed to extend the 
+>> initramfs to fill the entire rd.gz flash partition, configure the 
+>> kernel to use the dtb appended to it, configure it to ignore the 
+>> information passed to it by the bootloader, and add the following 
+>> nodes to the dts:
+>>
+>> /chosen {
+>> 	linux,initrd-start = <0x800040>;
+>> 	linux,initrd-end   = <0x940000>;
+>> };
+> 
+> Do you know why these initrd properties are needed?  There is only one
+> other board in mainline that requires this. I also wonder what
+> implications this has. u-boot has the capability of reading the initrd
+> from disc to RAM and passing its location to the kernel. By hard
+> coding these values, are we blocking that?
+
+The stock Marvell bootloader is a little broken as it passes the kernel
+the _source_ address of the initrd rather than the _load_ address.
+Thus the bootloader passes the address 0xf8280040 rather than the address
+0x00800040.
+
+It appears the initrd address in the devicetree structure (which is 
+filled in from what is passed by the bootloader when 
+CONFIG_ARM_ATAG_DTB_COMPAT is set) is processed _after_ the address in 
+the initrd= kernel parameter is processed.
+
+Rather than putting the initrd address into the DTS, it would probably be
+better to have the person compiling the kernel configure it with e.g.:
+
+CONFIG_CMDLINE="initrd=0x00800040,0x0013FFC0 earlyprintk panic=5"
+CONFIG_CMDLINE_EXTEND=y
+CONFIG_ARM_APPENDED_DTB=y
+CONFIG_ARM_ATAG_DTB_COMPAT=n
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
