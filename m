@@ -1,83 +1,90 @@
-From: Vince Bridgers <vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: socfpga: DTS updates for stmmac driver
-Date: Fri, 10 Jan 2014 10:49:59 -0600
-Message-ID: <1389372599-14180-1-git-send-email-vbridgers2013@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH v7 5/7] ARM: dts: add pbias dt node
+Date: Fri, 10 Jan 2014 22:30:39 +0530
+Message-ID: <52D02737.6060609@ti.com>
+References: <1387560955-6547-1-git-send-email-balajitk@ti.com> <1387560955-6547-6-git-send-email-balajitk@ti.com> <20140106181928.GK24664@e106331-lin.cambridge.arm.com> <52CBD467.6060909@ti.com> <20140107105738.GA4180@e106331-lin.cambridge.arm.com> <52CBF1CF.4040706@ti.com> <52CD6602.7040603@ti.com> <20140110113234.GA25741@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20140110113234.GA25741@e106331-lin.cambridge.arm.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "broonie@kernel.org" <broonie@kernel.org>, "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-This change adds a parameter for the Synopsys 10/100/1000
-stmmac Ethernet driver to configure the maximum MTU supported
-by the EMAC instance. Synopsys allows the FIFO sizes to
-be configured when the cores are built for a particular
-device, but do not provide a way for the driver to read
-information from the device about the maximum MTU size
-supported as limited by the device's FIFO size.
+On Friday 10 January 2014 05:02 PM, Mark Rutland wrote:
+> On Wed, Jan 08, 2014 at 02:51:46PM +0000, Balaji T K wrote:
+>> On Tuesday 07 January 2014 05:53 PM, Balaji T K wrote:
+>>> On Tuesday 07 January 2014 04:27 PM, Mark Rutland wrote:
+>>>> On Tue, Jan 07, 2014 at 10:18:15AM +0000, Balaji T K wrote:
+>>>>> On Monday 06 January 2014 11:49 PM, Mark Rutland wrote:
+>>>>>> On Fri, Dec 20, 2013 at 05:35:53PM +0000, Balaji T K wrote:
+>>>>>>> Add pbias regulator node as a child of system control
+>>>>>>> module - syscon.
+>>>>>>>
+>>>>>>> Signed-off-by: Balaji T K <balajitk@ti.com>
+>>>>>>> ---
+>>>>>>>     arch/arm/boot/dts/dra7.dtsi     |   18 ++++++++++++++++++
+>>>>>>>     arch/arm/boot/dts/omap2430.dtsi |   18 ++++++++++++++++++
+>>>>>>>     arch/arm/boot/dts/omap3.dtsi    |   18 ++++++++++++++++++
+>>>>>>>     arch/arm/boot/dts/omap4.dtsi    |   18 ++++++++++++++++++
+>>>>>>>     arch/arm/boot/dts/omap5.dtsi    |   18 ++++++++++++++++++
+>>>>>>>     5 files changed, 90 insertions(+), 0 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>>>>>>> index d0df4c4..4e68df1 100644
+>>>>>>> --- a/arch/arm/boot/dts/dra7.dtsi
+>>>>>>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>>>>>>> @@ -110,6 +110,23 @@
+>>>>>>>                 ti,hwmods = "counter_32k";
+>>>>>>>             };
+>>>>>>>
+>>>>>>> +        dra7_ctrl_general: tisyscon@4a002e00 {
+>>>>>>> +            compatible = "ti,control-syscon", "syscon", "simple-bus";
+>>>>>>
+>>>>>> Please, don't use simple-bus like that. The components below this node
+>>>>>> depend on it. It is _NOT_ a simple bus. Make the ti,control-syscon
+>>>>>> driver probe it's children.
+>>>>>
+>>>>> Hi Mark,
+>>>>>
+>>>>> Actually ti,control-syscon driver does not exist, so I can remove it,
+>>>>> and simple-bus is needed for child creation.
+>>>>
+>>>> This still shows up as a syscon node, with a reg property, and syscon is
+>>>> not an extension of simple-bus.
+>>>>
+>>>> There are properties in the parent node that children depend on, and
+>>>> that makes me wary of describing it as a simple bus. I'd expect to be
+>>>> able to move child nodes out of a simple-bus if ranges provided an
+>>>> idmap, and I can't do that here.
+>>>>
+>>> Hi Mark,
+>>>
+>>> Not sure if I am understanding here, can you please add more info.
+>
+> A node's compatible string list describes the set of devices (or rather
+> descriptions of devices) with which it is compatible. The list goes from
+> most specific to least specific. The idea is that an OS reads through
+> the list until it finds a string it knows how to handle, then treats the
+> node as that.
+>
+> Ignoring "ti,control-syscon", the node has both "syscon" and
+> "simple-bus". Given you expect the OS to recognise "syscon", you should
+> _not_ expect it to also treat the node as "simple-bus". Doing so is an
+> abuse of the property and current Linux implementation details.
+>
+> The "syscon" binding is not a more specific version of "simple-bus".
+> They imply completely different things.
+>
+> Either make a ti,control-syscon driver that probes the child nodes, or
+> move the child nodes out and give them a phandle to the
+> dra7_ctrl_general node that they can parse. I'd prefer the latter as
+> relies on fewer topology details, is as easy to implement as your
+> current parent node parsing, and is easier to extend in future.
+>
 
-This patch has been tested with changes being submitted
-seperately for the Synopsys 10/100/1000 stmmac driver.
+Thanks Mark,
+phandle to syscon is fine for me.
 
-Signed-off-by: Vince Bridgers <vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/net/stmmac.txt |    5 +++++
- arch/arm/boot/dts/socfpga_cyclone5.dtsi          |   19 +++++++++++++++++++
- 2 files changed, 24 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index eba0e5e..7db314e 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -30,6 +30,10 @@ Required properties:
- 
- Optional properties:
- - mac-address: 6 bytes, mac address
-+- snps,max-mtu:		Maximum MTU permitted. This parameter is useful since
-+			different implementations of the Synopsys MAC may have
-+			different FIFO sizes depending on the selections
-+			made in Synopsys Core Consultant.
- 
- Examples:
- 
-@@ -40,5 +44,6 @@ Examples:
- 		interrupts = <24 23>;
- 		interrupt-names = "macirq", "eth_wake_irq";
- 		mac-address = [000000000000]; /* Filled in by U-Boot */
-+		snps,max-mtu = <3800>;
- 		phy-mode = "gmii";
- 	};
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-index a8716f6..b6b39dd 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-+++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-@@ -63,3 +63,22 @@
- 		};
- 	};
- };
-+
-+&gmac1 {
-+	phy-mode = "rgmii";
-+	snps,phy-addr = <0xffffffff>; /* probe for phy addr */
-+
-+	rxd0-skew-ps = <0>;
-+	rxd0-skew-ps = <0>;
-+	rxd1-skew-ps = <0>;
-+	rxd2-skew-ps = <0>;
-+	rxd3-skew-ps = <0>;
-+	txen-skew-ps = <0>;
-+	txc-skew-ps = <2600>;
-+	rxdv-skew-ps = <0>;
-+	rxc-skew-ps = <2000>;
-+	snps,max-mtu = <3800>;
-+	altr,sysmgr-phy-mask = <0xC>;
-+	status = "okay";
-+};
-+
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
