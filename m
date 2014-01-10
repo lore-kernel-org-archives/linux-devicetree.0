@@ -1,88 +1,97 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] ASoC: fsl_esai: Add ESAI CPU DAI driver
-Date: Fri, 10 Jan 2014 13:26:42 +0000
-Message-ID: <20140110132642.GM29039@sirena.org.uk>
-References: <1389265078-16256-1-git-send-email-Guangyu.Chen@freescale.com>
- <20140109184453.GP12858@sirena.org.uk>
- <20140110023252.GA16467@MrMyself>
- <20140110023537.GB16467@MrMyself>
- <20140110120439.GG29039@sirena.org.uk>
- <20140110130338.GA17392@MrMyself>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: DT include files
+Date: Fri, 10 Jan 2014 14:28:29 +0100
+Message-ID: <52CFF57D.8060808@samsung.com>
+References: <20131231054427.GA22383@S2101-09.ap.freescale.net>
+ <20140102202108.GF19720@quad.lixom.net>
+ <20140103023211.GA25079@S2101-09.ap.freescale.net>
+ <CAOesGMheei8YgzfRp9pmQ0rT9zhJ2_hF56j5Y+jLSy5TadPZ-g@mail.gmail.com>
+ <20140103030455.GB25079@S2101-09.ap.freescale.net>
+ <CAOesGMihX-pLva-aBCHJ6TYfsN57MzRWiYFTnfKCXOKeja0uUg@mail.gmail.com>
+ <20140104011056.GA3282@S2101-09.ap.freescale.net>
+ <20140110024124.GA6844@S2101-09.ap.freescale.net>
+ <CAOesGMh3HBCYut2hfub3svrJT5JJzoWq8mU=VU0grZbg-JqqbA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="x38akuY2VS0PywU3"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140110130338.GA17392@MrMyself>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nicolin Chen <Guangyu.Chen@freescale.com>
-Cc: timur@tabi.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, shawn.guo@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAOesGMh3HBCYut2hfub3svrJT5JJzoWq8mU=VU0grZbg-JqqbA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---x38akuY2VS0PywU3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10.01.2014 03:41, Olof Johansson wrote:
+> On Thu, Jan 9, 2014 at 6:41 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Sat, Jan 04, 2014 at 09:10:58AM +0800, Shawn Guo wrote:
+>>> On Fri, Jan 03, 2014 at 11:29:35AM -0800, Olof Johansson wrote:
+>>>> On Thu, Jan 2, 2014 at 7:04 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>> On Thu, Jan 02, 2014 at 06:41:30PM -0800, Olof Johansson wrote:
+>>>>>> Ok, then it's probably just the location of the header files that
+>>>>>> should be adjusted. Other subsystems have placed them under
+>>>>>> include/dt-bindings/<subsystem>, so that's likely a better place for
+>>>>>> these as well, don't you think?
+>>>>>
+>>>>> I had a little discussion with DT people when the headers were firstly
+>>>>> created.  These pinctrl headers are a little different from the headers
+>>>>> in include/dt-bindings/<subsystem>.  The latter are used by both kernel
+>>>>> and device tree sources, while the pinctrl headers are used by device
+>>>>> tree sources only, so I chose to put them just in the same folder as
+>>>>> dts files.  And DT people are fine with my take.
+>>>>
+>>>> Since you don't provide references to this I had to go searching for
+>>>> it. All I find is some discussion from 8 months ago, and quite a bit
+>>>> of that seems to have been about changing bindings, and some about the
+>>>> preprocessor behavior. Also, the patches seem to have been too big to
+>>>> make it out on the lists.
+>>>>
+>>>> I'd like a fresh look from DT people on this just to make sure no
+>>>> opinions have changed -- lots of things have changed in the last 8
+>>>> months w.r.t. DT.
+>>>
+>>> Indeed, it's been quite a long time.  Let me restate my point.  The
+>>> include/dt-bindings is introduced as a folder to hold headers that are
+>>> referenced by both kernel and DTS.  That's why we create the folder in
+>>> the kernel include folder and have arch/arm/boot/dts/include/dt-bindings
+>>> being a symbol link to it.  All the headers in there need to be
+>>> duplicated between kernel and DTS tree, when we move DTS files into
+>>> a separated repository.  Putting DTS local headers into the folder is
+>>> absolutely unnecessary, and will only confuse people and bother
+>>> ourselves when moving DTS files out of kernel tree.
+>>
+>> Just a gentle ping to ensure we do not get the pull request lost.  Or do
+>> you have any further comment?
+>
+> Still waiting on DT maintainers to chime in.
 
-On Fri, Jan 10, 2014 at 09:03:39PM +0800, Nicolin Chen wrote:
-> On Fri, Jan 10, 2014 at 12:04:39PM +0000, Mark Brown wrote:
+I'm not officially a DT maintainer, but let me share my thoughts on this.
 
-> > This is about what I'd expect but then surely the next step is for the
-> > driver to choose a defualt BCLK ratio - that's how most drivers work,
-> > they try to generate the exact rate that is needed to clock the data.
+So what options we have for this:
 
-> Does that mean I should call set_bclk() once in the startup() when !active
-> to set a default bit clock rate to suit a common sample rate like 44100Hz?
-> I'm a bit confused if so. Because the driver would call set_bclk() any way
-> in the hw_params().
+  1) include/dt-bindings - this directory is designed to contain headers
+     that define the ABI between firmware and kernel code, in other
+     words - DT bindings.
 
-Right, any choice here needs to be deferred to hw_params() as you say.
+  2) arch/*/boot/dts - we already have files that can be included by
+     other files in this directory, i.e. *.dtsi. Some are used to
+     implement hierarchies of devices (e.g. s3c64xx.dtsi), but some are
+     purely used as headers (s3c64xx-pinctrl.dtsi).
 
-> But your suggestion just reminds me of the slave mode in SSI driver as
-> default mode. And I should patch ESAI to slave mode for default as well,
-> shouldn't I?
+  3) include/dts? - I'm not sure if this have any benefits, but I'm
+     listing it since it's one of the ideas that came to my mind.
 
-master/slave selection is kind of orthogonal here - the two bits of
-information that are normally needed are the MCLK to use (and its rate)
-and the sample rate/format (which give you the BCLK that is needed).
-Normally it's then possible to caculate a divider which generates BCLK
-=66rom MCLK.  Overriding is normally only needed if there are additional
-constraints on BCLK due to something like limitations in one of the
-devices or sample rates for the opposite direction if the BCLK is shared
-but LRCLK isn't.
+Now 2) seems to be already used and doesn't seem to generate any 
+problems, so I'm all for it. Still, there is one more issue. For files 
+to be included merely by DTS files and so limited by DTS+CPP syntax, I 
+don't think it's too good idea to call them *.h. Let's stay with *.dtsi, 
+since that's the file extension supposed to be used for files that can 
+be included from device tree sources.
 
-> > Are the bit clock shared between playback and capture?
-
-> Only shared in synchronous mode and totally individual in asynchronous mo=
-de.
-> Each of them can have their own HCK(MCLK) from different sources and deri=
-ve
-> their own SCK(BCLK).
-
-OK, so in asynchronous mode there should be a good chance of a a default
-choice working since it won't restrict the other direction.
-
---x38akuY2VS0PywU3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSz/UPAAoJELSic+t+oim9+M8QAImXq8LRXn58WvYsyM3+jGlV
-2FuqBmOjiDlEyiNIha5E+X5tkBM6ZY7mULBBMx1EV+cJZm4ZiIdpWIyZANp+wv2w
-O0+woCXXQ41D+FAdpBE+qVN1HmuESwEkUqufCC2E8aiFEy29mNg3O181fFF25Cbm
-0hr26w+9oJDLEDGN2nVCR568ooBuaCF0yY0xhzCZSb/+8eMJUZUTqbjntCLZ07pQ
-oCiMQ/JosR9UE4DPOvrqaH/3bssf9GO0fI9VeCTjJk9JFyARIXI1D8m1knYMs47U
-5g8xM8VxrBJaoFzv6m7xyCMniHhJwfgCrEkhdp4+vpUUeR1yoXMJ6yVP9QEbZV8j
-ScBmE9IoM7PVYCmw2LYNlgtmT+x27trB81JzHxKe60ZXOhmXhDKS+vwq0rqW3SQA
-pnvt12qjTAaju88wmyANNPACOgMMr7g+uYiVplFCQmjFPUalEz/3FveyHrnaocwt
-WCqDo0stNUyT74pq3YW7DEsWFJFZp8v9B870Xe5DoKeQ3RdaoH2ukF8W/Y61/7uw
-BnsA4ZZLFj15roFcJZG7NdvvdRUwdABAdNEu8qxUZ1wzARaX9CsoTfxhGZfVPbfT
-DvBZO+CV5zQDKaFBKRS/UY9EuporY5Crx3G3xi0HUEqjzNGgk5cuF5X8G4La/q5t
-uiETXXSvhw9g+hGdsBGY
-=W7uy
------END PGP SIGNATURE-----
-
---x38akuY2VS0PywU3--
+Best regards,
+Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
