@@ -1,83 +1,288 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2] gpio: mcp23s08: Add irq functionality for i2c chips
-Date: Fri, 10 Jan 2014 16:08:36 +0100
-Message-ID: <20140110150836.GZ20094@book.gsilab.sittig.org>
-References: <1389363750-25989-1-git-send-email-larsi@wh2.tu-dresden.de>
+From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Subject: Re: [PATCH RFC RFT 0/2] ARM: Kirkwood: Synology DT files
+Date: Sat, 11 Jan 2014 01:10:02 +1000
+Message-ID: <52D00D4A.6040707@killerwolves.net>
+References: <1389052027-16819-1-git-send-email-andrew@lunn.ch> <52CE312B.3060108@killerwolves.net> <20140109165557.GB9681@lunn.ch> <52CF4652.3030207@killerwolves.net> <20140110112846.GG27432@n2100.arm.linux.org.uk> <52CFFF07.5080806@killerwolves.net> <20140110142548.GG9681@lunn.ch> <52D005E1.6000308@killerwolves.net> <20140110144346.GH9681@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389363750-25989-1-git-send-email-larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>
+In-Reply-To: <20140110144346.GH9681-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>
-Cc: poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 10, 2014 at 15:22 +0100, Lars Poeschel wrote:
-> 
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-> @@ -38,12 +38,37 @@ Required device specific properties (only for SPI chips):
->      removed.
->  - spi-max-frequency = The maximum frequency this chip is able to handle
->  
-> -Example I2C:
-> +Optional properties:
-> +- #interrupt-cells : Should be two.
-> +  - first cell is the pin number
-> +  - second cell is used to specify flags.
-> +- interrupt-controller: Marks the device node as a interrupt controller.
-> +NOTE: The interrupt functionality is only supported for i2c versions of the
-> +chips yet.
+On 11/01/14 00:43, Andrew Lunn wrote:
+> On Sat, Jan 11, 2014 at 12:38:25AM +1000, Ben Peddell wrote:
+>> On 11/01/14 00:25, Andrew Lunn wrote:
+>>> On Sat, Jan 11, 2014 at 12:09:11AM +1000, Ben Peddell wrote:
+>>>> On 10/01/14 21:28, Russell King - ARM Linux wrote:
+>>>>> On Fri, Jan 10, 2014 at 11:01:06AM +1000, Ben Peddell wrote:
+>>>>>> It appears the initrd address in the devicetree structure (which=
+ is=20
+>>>>>> filled in from what is passed by the bootloader when=20
+>>>>>> CONFIG_ARM_ATAG_DTB_COMPAT is set) is processed _after_ the addr=
+ess in=20
+>>>>>> the initrd=3D kernel parameter is processed.
+>>>>>
+>>>>> That's wrong.  Kernel parameters should always override what's pa=
+ssed by
+>>>>> boot loaders etc.
+>>>>
+>>>> In that case, what I saw was a bug - note that this only occurs wh=
+en
+>>>> DeviceTree is enabled:
+>>>>
+>>>>
+>>>>          __  __                      _ _
+>>>>         |  \/  | __ _ _ ____   _____| | |
+>>>>         | |\/| |/ _` | '__\ \ / / _ \ | |
+>>>>         | |  | | (_| | |   \ V /  __/ | |
+>>>>         |_|  |_|\__,_|_|    \_/ \___|_|_|
+>>>>  _   _     ____              _
+>>>> | | | |   | __ )  ___   ___ | |_
+>>>> | | | |___|  _ \ / _ \ / _ \| __|
+>>>> | |_| |___| |_) | (_) | (_) | |_
+>>>>  \___/    |____/ \___/ \___/ \__|  ** LOADER **
+>>>>  ** MARVELL BOARD: Synology Disk Station LE
+>>>>
+>>>> U-Boot 1.1.4 (Jul  6 2010 - 19:26:08) Marvell version: 3.4.4
+>>>>
+>>>> U-Boot code: 00600000 -> 0067FFF0  BSS: -> 0068B43C
+>>>>
+>>>> Soc: 88F6281 A1 (DDR2)
+>>>> CPU running @ 1200Mhz L2 running @ 480Mhz
+>>>> SysClock =3D 400Mhz , TClock =3D 200Mhz
+>>>>
+>>>> DRAM CAS Latency =3D 6 tRP =3D 6 tRAS =3D 18 tRCD=3D6
+>>>> DRAM CS[0] base 0x00000000   size 128MB
+>>>> DRAM Total size 128MB  16bit width
+>>>> [4096kB@f8000000] Flash:  4 MB
+>>>> Addresses 8M - 0M are saved for the U-Boot usage.
+>>>> Mem malloc Initialization (8M - 7M): Done
+>>>> Using default environment
+>>>>
+>>>>
+>>>> CPU : Marvell Feroceon (Rev 1)
+>>>>
+>>>> Streaming disabled
+>>>> Write allocate disabled
+>>>>
+>>>> Module 1 is AUDIO
+>>>>
+>>>> USB 0: host mode
+>>>>
+>>>> Synology Model: DS211j
+>>>> Fan Status: Good
+>>>>
+>>>> Net:   egiga0 [PRIME]
+>>>> Hit any key to stop autoboot:  0
+>>>> Marvell>> setenv ipaddr 192.168.200.62
+>>>> Marvell>> setenv serverip 192.168.200.16
+>>>> Marvell>> tftp 0x01000000 uImage-3.13-rc7-ds211j-git-fdt
+>>>> Using egiga0 device
+>>>> TFTP from server 192.168.200.16; our IP address is 192.168.200.62
+>>>> Filename 'uImage-3.13-rc7-ds211j-git-fdt'.
+>>>> Load address: 0x1000000
+>>>> Loading: #########################################################=
+########
+>>>>          #########################################################=
+########
+>>>>          #########################################################=
+########
+>>>>          #########################################################=
+########
+>>>>          #########################################################=
+########
+>>>>          #########################################################
+>>>> done
+>>>
+>>> So here you load the kernel into RAM at 0x0100 0000.
+>>>
+>>>
+>>>> Bytes transferred =3D 1954736 (1dd3b0 hex)
+>>>> Marvell>> setenv bootargs console=3DttyS0,115200 ip=3Doff initrd=3D=
+0x00800040,0x0013FFC0 root=3D/dev/md0 rw syno_hw_version=3DDS211j ihd_n=
+um=3D2 netif_num=3D1 earlyprintk
+>>>
+>>> I don't see you loading the initrd into RAM at 0x0080 0000.
+>>
+>> See below
+>>
+>>>
+>>>> Marvell>> bootm 0x01000000 0xf8280000
+>>>
+>>> And here you tell it the initrd is at 0xf8280000.
+>>
+>> This is because I am using the initrd in flash.
+>>
+>>>
+>>>> ## Booting image at 01000000 ...
+>>>> Bad Magic Number
+>>>> Marvell>> tftp 0x01000000 uImage-3.13-rc7-ds211j-git-fdt
+>>>> Using egiga0 device
+>>>> TFTP from server 192.168.200.16; our IP address is 192.168.200.62
+>>>> Filename 'uImage-3.13-rc7-ds211j-git-fdt'.
+>>>> Load address: 0x1000000
+>>>> Loading: #########################################################=
+########
+>>>>          #########################################################=
+########
+>>>>          #########################################################=
+########
+>>>>          #########################################################=
+########
+>>>>          #########################################################=
+########
+>>>>          #########################################################
+>>>> done
+>>>> Bytes transferred =3D 1954800 (1dd3f0 hex)
+>>>> Marvell>> bootm 0x01000000 0xf8280000
+>>>> ## Booting image at 01000000 ...
+>>>>    Image Name:   linux-3.13-rc7-ds211j+
+>>>>    Image Type:   ARM Linux Kernel Image (uncompressed)
+>>>>    Data Size:    1954736 Bytes =3D  1.9 MB
+>>>>    Load Address: 00008000
+>>>>    Entry Point:  00008000
+>>>>    Verifying Checksum ... OK
+>>>> OK
+>>>> ## Loading Ramdisk Image at f8280000 ...
+>>>>    Image Name:   altair-boot
+>>>>    Image Type:   ARM Linux RAMDisk Image (unknown compression)
+>>>>    Data Size:    1022268 Bytes =3D 998.3 kB
+>>>>    Load Address: 00800000
+>>>>    Entry Point:  00800000
+>>>>    Verifying Checksum ... OK
+>>
+>> Here the bootloader copies the initrd to 0x00800040, yet passes
+>> 0xf8280040 to the kernel.
+>=20
+> But does it pass 0xf8280040 because you used:
+>=20
+> bootm 0x01000000 0xf8280000
+>=20
+> What happens if you use
+>=20
+> bootm 0x01000000 0x00800000
 
-Is this "IRQ feature for I2C chips only" limitation specific to
-the hardware or an implementation detail of the Linux driver?  I
-could not determine this from either the binding text nor the
-driver source.
+=3D=3D=3D Boot without loading ramdisk from TFTP =3D=3D=3D
 
-If it's just the status of the Linux driver, then it should not
-be in the binding document.  If it's a limitation of the
-hardware, then it's appropriate in the binding but I suggest to
-adjust the text to avoid the next person to ask the same
-question. :)
+Marvell>> setenv ipaddr 192.168.200.62
+Marvell>> setenv serverip 192.168.200.16
+Marvell>> tftp 0x01000000 uImage-3.13-rc7-ds211j-git-fdt
+Using egiga0 device
+TFTP from server 192.168.200.16; our IP address is 192.168.200.62
+=46ilename 'uImage-3.13-rc7-ds211j-git-fdt'.
+Load address: 0x1000000
+Loading: ##############################################################=
+###
+         ##############################################################=
+###
+         ##############################################################=
+###
+         ##############################################################=
+###
+         ##############################################################=
+###
+         #############################################################
+done
+Bytes transferred =3D 1973892 (1e1e84 hex)
+Marvell>> bootm 0x01000000 0x00800000
+## Booting image at 01000000 ...
+   Image Name:   linux-3.13-rc7-ds211j+
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    1973828 Bytes =3D  1.9 MB
+   Load Address: 00008000
+   Entry Point:  00008000
+   Verifying Checksum ... OK
+OK
+## Loading Ramdisk Image at 00800000 ...
+Bad Magic Number
+Bad Header C=E2=96=92=E2=96=92
 
+=3D=3D=3D End of boot =3D=3D=3D
 
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -697,6 +697,7 @@ config GPIO_MCP23S08
->  	  SPI/I2C driver for Microchip MCP23S08/MCP23S17/MCP23008/MCP23017
->  	  I/O expanders.
->  	  This provides a GPIO interface supporting inputs and outputs.
-> +	  The I2C versions of the chips can be used as interrupt-controller.
->  
->  config GPIO_MC33880
->  	tristate "Freescale MC33880 high-side/low-side switch"
-> diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
-> index 2deb0c5..1346ea6 100644
-> --- a/drivers/gpio/gpio-mcp23s08.c
-> +++ b/drivers/gpio/gpio-mcp23s08.c
-> @@ -1,5 +1,10 @@
->  /*
-> - * MCP23S08 SPI/GPIO gpio expander driver
-> + * MCP23S08 SPI/I2C GPIO gpio expander driver
-> + *
-> + * The inputs and outputs of the mcp23s08, mcp23s17, mcp23008 and mcp23017 are
-> + * supported.
-> + * For the I2C versions of the chips (mcp23008 and mcp23017) generation of
-> + * interrupts is also supported.
->   */
+Note below that I have set the following options:
 
-Adjust these as well to reflect whether it's hardware or software
-which limits the feature.
+CONFIG_CMDLINE=3D"initrd=3D0x00800040,0x0013FFC0 earlyprintk panic=3D5"
+CONFIG_CMDLINE_EXTEND=3Dy
+CONFIG_ARM_APPENDED_DTB=3Dy
+CONFIG_ARM_ATAG_DTB_COMPAT=3Dn
 
+=3D=3D=3D Boot with loading ramdisk from TFTP with CONFIG_CMDLINE =3D=3D=
+=3D
 
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+Marvell>> setenv ipaddr 192.168.200.62
+Marvell>> setenv serverip 192.168.200.16
+Marvell>> tftp 0x01000000 uImage-3.13-rc7-ds211j-git-fdt
+Using egiga0 device
+TFTP from server 192.168.200.16; our IP address is 192.168.200.62
+=46ilename 'uImage-3.13-rc7-ds211j-git-fdt'.
+Load address: 0x1000000
+Loading: ##############################################################=
+###
+         ##############################################################=
+###
+         ##############################################################=
+###
+         ##############################################################=
+###
+         ##############################################################=
+###
+         #############################################################
+done
+Bytes transferred =3D 1973892 (1e1e84 hex)
+Marvell>> tftp 0x00800000 initramfs-20140109
+Using egiga0 device
+TFTP from server 192.168.200.16; our IP address is 192.168.200.62
+=46ilename 'initramfs-20140109'.
+Load address: 0x800000
+Loading: ##############################################################=
+###
+         ##############################################################=
+###
+         ##############################################################=
+###
+         ##############################################################
+done
+Bytes transferred =3D 1310720 (140000 hex)
+Marvell>> bootm 0x01000000 0x00800000
+## Booting image at 01000000 ...
+   Image Name:   linux-3.13-rc7-ds211j+
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    1973828 Bytes =3D  1.9 MB
+   Load Address: 00008000
+   Entry Point:  00008000
+   Verifying Checksum ... OK
+OK
+## Loading Ramdisk Image at 00800000 ...
+   Image Name:   altair-boot
+   Image Type:   ARM Linux RAMDisk Image (unknown compression)
+   Data Size:    1310656 Bytes =3D  1.2 MB
+   Load Address: 00800000
+   Entry Point:  00800000
+   Verifying Checksum ... OK
+
+Starting kernel ...
+
+Uncompressing Linux... done, booting the kernel.
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 3.13.0-rc7-ds211j+ (klightspeed@lurch) (gc=
+c version 4.8.2 (Gentoo 4.8.2 p1.3, pie-0.5.8) ) #1 Fri Jan 10 14:03:45=
+ EST 2014
+[    0.000000] CPU: Feroceon 88FR131 [56251311] revision 1 (ARMv5TE), c=
+r=3D00053977
+[    0.000000] CPU: VIVT data cache, VIVT instruction cache
+[    0.000000] Machine model: Synology DS210 v10, v20, v30, DS211j
+[    0.000000] Memory policy: Data cache writeback
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  =
+Total pages: 32512
+[    0.000000] Kernel command line: console=3DttyS0,115200n8
+=2E..
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
