@@ -1,78 +1,162 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts:  add <dt-bindings/> symlink
-Date: Fri, 10 Jan 2014 11:54:32 +0100
-Message-ID: <20140110115432.21fb03af@ipc1.ka-ro>
-References: <1389346197-5127-1-git-send-email-pankaj.dubey@samsung.com>
-	<20140110102226.63f5bf30@ipc1.ka-ro>
-	<52CFCFA1.4080405@samsung.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt: Document ModelGauge gauge bindings
+Date: Fri, 10 Jan 2014 10:56:21 +0000
+Message-ID: <20140110105621.GC6798@e106331-lin.cambridge.arm.com>
+References: <1389286145-15375-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1389286145-15375-3-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52CFCFA1.4080405-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1389286145-15375-3-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: "anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org" <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mk7.kang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <mk7.kang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jan 09, 2014 at 04:49:04PM +0000, Vladimir Barinov wrote:
+> These bindings can be used to register Maxim ModelGauge ICs fuel gauge
+> (MAX17040/41/43/44/48/49/58/59)
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> ---
+>  Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt |   82 ++++++++++
+>  1 file changed, 82 insertions(+)
+> 
+> Index: battery-2.6/Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt
+> ===================================================================
+> --- /dev/null	1970-01-01 00:00:00.000000000 +0000
+> +++ battery-2.6/Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt	2014-01-09 15:09:38.035138887 +0400
+> @@ -0,0 +1,82 @@
+> +modelgauge_battery
+> +~~~~~~~~~~~~~~~~~~
+> +
+> +Required properties:
+> + - compatible		: should contain one of the following:
+> +			  - "maxim,max17040" for MAX17040
+> +			  - "maxim,max17041" for MAX17041
+> +			  - "maxim,max17043" for MAX17043
+> +			  - "maxim,max17044" for MAX17044
+> +			  - "maxim,max17048" for MAX17048
+> +			  - "maxim,max17049" for MAX17049
+> +			  - "maxim,max17058" for MAX17058
+> +			  - "maxim,max17059" for MAX17059
+> +
+> +Optional properties:
+> + - maxim,empty_alert_threshold	: Capacity threshold where an interrupt is
+> +				  generated on the ALRT pin;
 
-Pankaj Dubey wrote:
-> On 01/10/2014 06:22 PM, Lothar Wa=C3=9Fmann wrote:
-> > Hi,
-> >
-> > Pankaj Dubey wrote:
-> >> Add symlink to include/dt-bindings from arch/arm64/boot/dts/includ=
-e/ to
-> >> match the ones in ARM architectures so that preprocessed device
-> >> tree files can include various useful constant definitions.
-> >>
-> >> See commit c58299a (kbuild: create an "include chroot" for DT bind=
-ings)
-> >> merged in v3.10-rc1 for details.
-> >>
-> >> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> ---
-> >>   arch/arm64/boot/dts/include/dt-bindings |    1 +
-> >>   1 file changed, 1 insertion(+)
-> >>   create mode 120000 arch/arm64/boot/dts/include/dt-bindings
-> >>
-> >> diff --git a/arch/arm64/boot/dts/include/dt-bindings b/arch/arm64/=
-boot/dts/include/dt-bindings
-> >> new file mode 120000
-> >> index 0000000..08c00e4
-> >> --- /dev/null
-> >> +++ b/arch/arm64/boot/dts/include/dt-bindings
-> >> @@ -0,0 +1 @@
-> >> +../../../../../include/dt-bindings
-> >> \ No newline at end of file
-> > ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> I just created symlink file to "include/dt-bindings", and when create=
-d=20
-> patch it is showing this line
-> at the end of patch. I do not have much idea why this came in patch? =
-But=20
-> when I checked similar patches
-> it looks like it is required.
->
-I noticed after sending the email, that the file in question was
-actually only a symlink. The message seems to be a 'feature' of
-'patch' when dealing with symlinks.
+s/_/-/ in proeprty names please.
 
+Why is this property in the dt at all?
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
+Surely the driver can choose the value it wants.
 
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+The driver can choose a sensible value, surely?
 
-www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
-___________________________________________________________
+> +
+> + - soc_change_alert		: /* alert for 1% soc change */
+
+Likewise, surely the driver should decide if it wants this?
+
+> + - hibernate_threshold		: Hibernate threshold (crate), where IC
+> +				  enters hibernate mode
+> + - active_threshold		: Active threshold (mV), where IC exits
+> +				  hibernate mode
+> + - undervoltage			: Voltage (mV), when IC alerts while battery
+> +				  voltage less then undervoltage
+> + - overvoltage			: Voltage (mV), when IC alerts while battery
+> +				  voltage greater then overvoltage
+> + - maxim,resetvoltage		: Voltage threshold (mV) below which the IC
+> +				  resets itself. Used to detect battery removal
+> +				  and reinsertion;
+
+Could you elaborate on what these are for. How variable are these
+between batteries?
+
+> + - maxim,empty_adjustment	: Capacity charge empty design value;
+> + - maxim,full_adjustment	: Capacity charge full design value;
+
+These names are a bit odd.
+
+How about maxim,charge-empty and maxim,charge-full (perhaps
+maxim,charge-empty-design).
+
+> + - maxim,rcomp0			: ModelGauge RCOMP parameter, used for
+> +				  temperature compensation;
+> + - maxim,temp_co_up		: ModelGauge TempCoUp parameter, used for
+> +				  temperature compensation;
+> + - maxim,temp_co_down		: ModelGauge TempCoDown parameter, used for
+> +				  temperature compensation;
+> + - maxim,ocvtest		: ModelGauge OCVTest parameter, used for
+> +				  verification of Custom Model calibration data
+> +				  loaded into IC RAM;
+> + - maxim,soc_check_a		: ModelGauge SOCCheckA parameter, used for
+> +				  verification of Custom Model calibration data
+> +				  loaded into IC RAM;
+> + - maxim,soc_check_b		: ModelGauge SOCCheckB parameter, used for
+> +				  verification of Custom Model calibration data
+> +				  loaded into IC RAM;
+> + - maxim,bits			: ModelGauge Bits parameter, used as
+> +				  scaling parameter in Custom Model algorithm;
+> + - maxim,model_data		: ModelGauge ModelData data,
+> +				  Custom Model calibration data.
+
+I have no idea what these properties mean, so I can't comment on them as
+they are other than to say this looks a bit low-level. Are there any
+docs?
+
+> +
+> +Example:
+> +
+> +modelgauge@36 {
+> +	compatible = "maxim,max17058";
+> +	reg = <0x36>;
+> +	interrupt-parent = <&msmgpio>;
+> +	interrupts = <107 0x2>;
+
+This portion of the example looks fine.
+
+> +
+> +	maxim,empty_alert_threshold = /bits/ 8 <15>;
+> +	maxim,resetvoltage = /bits/ 16 <0>;
+> +	maxim,empty_adjustment = /bits/ 8 <0>;
+> +	maxim,full_adjustment = /bits/ 8 <100>;
+> +	maxim,rcomp0 = /bits/ 8 <175>;
+
+You did not describe that any of these were 8-bit values in the binding.
+
+> +	maxim,temp_co_up = <(-1100)>;
+> +	maxim,temp_co_down = <(-4000)>;
+
+These weren't described as signed.
+
+> +	maxim,ocvtest = /bits/ 16 <56144>;
+> +	maxim,soc_check_a = /bits/ 8 <241>;
+> +	maxim,soc_check_b = /bits/ 8 <243>;
+> +	maxim,bits = /bits/ 8 <19>;
+
+These weren't described as 8-bit either.
+
+> +
+> +	maxim,model_data = /bits/ 8 <
+> +		0x9B 0x70 0xAB 0x30 0xB5 0xA0 0xB9 0xD0
+> +		0xBB 0xA0 0xBC 0x00 0xBC 0xB0 0xBD 0x00
+> +		0xBD 0x60 0xBE 0x40 0xBF 0x40 0xC1 0xF0
+> +		0xC5 0x60 0xC8 0xA0 0xCD 0x00 0xD1 0x50
+> +		0x00 0xE0 0x01 0x80 0x18 0x60 0x1C 0x20
+> +		0x54 0x00 0x6A 0xC0 0x79 0x20 0x65 0xC0
+> +		0x0B 0xE0 0x2A 0xC0 0x1D 0x00 0x17 0xE0
+> +		0x15 0xE0 0x11 0xE0 0x11 0x00 0x11 0x00>;
+> +};
+
+This looks scary.
+
+Thanks,
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
