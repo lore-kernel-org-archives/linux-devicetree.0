@@ -1,120 +1,94 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCHv9 1/2] video: backlight: gpio-backlight: Add DT support.
-Date: Fri, 10 Jan 2014 16:30:00 +0100
-Message-ID: <20140110163000.64dbeba9@ipc1.ka-ro>
-References: <1389366444-29449-1-git-send-email-denis@eukrea.com>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH v2] gpio: mcp23s08: Add irq functionality for i2c chips
+Date: Fri, 10 Jan 2014 16:29:36 +0100
+Message-ID: <29565656.1ncixD0qYE@lem-wkst-02>
+References: <1389363750-25989-1-git-send-email-larsi@wh2.tu-dresden.de> <20140110150836.GZ20094@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1389366444-29449-1-git-send-email-denis@eukrea.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Denis Carikli <denis@eukrea.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, linux-gpio@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Thierry Reding <thierry.reding@gmail.com>, Eric =?UTF-8?B?QsOpbmFyZA==?= <eric@eukrea.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140110150836.GZ20094@book.gsilab.sittig.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gerhard Sittig <gsi@denx.de>
+Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, robh+dt@kernel.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, galak@codeaurora.org, gnurou@gmail.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Friday 10 January 2014 16:08:36, Gerhard Sittig wrote:
+> On Fri, Jan 10, 2014 at 15:22 +0100, Lars Poeschel wrote:
+> > --- a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+> > +++ b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+> > 
+> > @@ -38,12 +38,37 @@ Required device specific properties (only for SPI 
+chips):
+> >      removed.
+> >  
+> >  - spi-max-frequency = The maximum frequency this chip is able to handle
+> > 
+> > -Example I2C:
+> > +Optional properties:
+> > +- #interrupt-cells : Should be two.
+> > +  - first cell is the pin number
+> > +  - second cell is used to specify flags.
+> > +- interrupt-controller: Marks the device node as a interrupt controller.
+> > +NOTE: The interrupt functionality is only supported for i2c versions of
+> > the +chips yet.
+> 
+> Is this "IRQ feature for I2C chips only" limitation specific to
+> the hardware or an implementation detail of the Linux driver?  I
+> could not determine this from either the binding text nor the
+> driver source.
 
-Denis Carikli wrote:
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> Cc: Jingoo Han <jg1.han@samsung.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: devicetree@vger.kernel.org
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Shawn Guo <shawn.guo@linaro.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
-> Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Eric B=C3=A9nard <eric@eukrea.com>
-> Signed-off-by: Denis Carikli <denis@eukrea.com>
-> ---
-> ChangeLog v8->v9:
-> - Added Shawn Guo in the Cc list.
-> - The default-brightness-level is now a boolean default-on property,
->   the gpio is only touched if the gpio-backlight driver instance prob=
-es.
-> - The code and documentation was updated accordingly.
->=20
-> ChangeLog v7->v8:
-> - The default-state was renamed to default-brightness-level.
-> - default-brightness-level is now mandatory, like for backlight-pwm,
->   That way we avoid having to handle the case where it's not set,
->   which means that we would need not to set the gpio, but still
->   report a brightness value for sysfs, when not all gpio controllers =
-are
->   able to read the gpio value.
-> - switched the default-brightness-level to boolean values (0 or 1) in=
-stead
->   of using strings ("on", "off", "keep").
-> - The documentation was updated accordingly.
-> - The example in the documentation now uses the dts gpio defines.
-> - The "backlight: gpio_backlight: Use a default state enum." patch wa=
-s then
->   dropped, becuase it is not necessary anymore.
->=20
-> ChangeLog v6->v7:
-> - removed a compilation warning with the removal of the useless ret d=
-eclaration.
->=20
-> ChangeLog v5->v6:
-> - The default state handling was reworked:
->   - it's now called default-state, and looks like the gpio-leds defau=
-lt-state.
->   - it now has a "keep" option, like for the gpio-leds.
->   - that "keep" option is the default when the default-state property=
- is not set.
-> - The documentation was updated accordingly.
->=20
-> ChangeLog v4->v5:
-> - The default-brightness property now defaults to 0 in the driver.
-> - def_value int becomes a bool.
-> - The check for the gpio validity has been reworked.
-> ---
->  .../bindings/video/backlight/gpio-backlight.txt    |   19 +++++++
->  drivers/video/backlight/gpio_backlight.c           |   60 ++++++++++=
-+++++++---
->  2 files changed, 72 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/video/backlight=
-/gpio-backlight.txt
->=20
-[...]
-> +static struct of_device_id gpio_backlight_of_match[] =3D {
-> +	{ .compatible =3D "gpio-backlight" },
-> +	{ /* sentinel */ }
-> +};
-> +
->  static struct platform_driver gpio_backlight_driver =3D {
->  	.driver		=3D {
->  		.name		=3D "gpio-backlight",
->  		.owner		=3D THIS_MODULE,
-> +		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
->
-useless use of of_match_ptr().
-This would make sense, if the gpio_backlight_of_match struct was
-conditionally compiled in depending on CONFIG_OF.
-Since you unconditionally provide it you can use
-&gpio_backlight_of_match directly.
+Ok, you're right. My description is not 100% clear about this. I will update 
+this. It is currently an implementation detail of the linux driver. According 
+to the datasheet the spi chips should also be able to do the interrupts.
 
+> If it's just the status of the Linux driver, then it should not
+> be in the binding document.  If it's a limitation of the
+> hardware, then it's appropriate in the binding but I suggest to
+> adjust the text to avoid the next person to ask the same
+> question. :)
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
+I do not agree. I remember a rule that every binding has to be documented, so 
+this should be documented, but you are right: The description has to be a bit 
+more clear about this beeing a (current) limitation of the driver.
+I will update this and do a v3, but I will wait a bit for further comments.
 
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+> > --- a/drivers/gpio/Kconfig
+> > +++ b/drivers/gpio/Kconfig
+> > @@ -697,6 +697,7 @@ config GPIO_MCP23S08
+> > 
+> >  	  SPI/I2C driver for Microchip MCP23S08/MCP23S17/MCP23008/MCP23017
+> >  	  I/O expanders.
+> >  	  This provides a GPIO interface supporting inputs and outputs.
+> > 
+> > +	  The I2C versions of the chips can be used as interrupt-controller.
+> > 
+> >  config GPIO_MC33880
+> >  
+> >  	tristate "Freescale MC33880 high-side/low-side switch"
+> > 
+> > diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
+> > index 2deb0c5..1346ea6 100644
+> > --- a/drivers/gpio/gpio-mcp23s08.c
+> > +++ b/drivers/gpio/gpio-mcp23s08.c
+> > @@ -1,5 +1,10 @@
+> > 
+> >  /*
+> > 
+> > - * MCP23S08 SPI/GPIO gpio expander driver
+> > + * MCP23S08 SPI/I2C GPIO gpio expander driver
+> > + *
+> > + * The inputs and outputs of the mcp23s08, mcp23s17, mcp23008 and
+> > mcp23017 are + * supported.
+> > + * For the I2C versions of the chips (mcp23008 and mcp23017) generation
+> > of
+> > + * interrupts is also supported.
+> > 
+> >   */
+> 
+> Adjust these as well to reflect whether it's hardware or software
+> which limits the feature.
 
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes,I will do that too.
+
+Lars
