@@ -1,244 +1,83 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv9 1/2] video: backlight: gpio-backlight: Add DT support.
-Date: Fri, 10 Jan 2014 16:07:23 +0100
-Message-ID: <1389366444-29449-1-git-send-email-denis@eukrea.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2] gpio: mcp23s08: Add irq functionality for i2c chips
+Date: Fri, 10 Jan 2014 16:08:36 +0100
+Message-ID: <20140110150836.GZ20094@book.gsilab.sittig.org>
+References: <1389363750-25989-1-git-send-email-larsi@wh2.tu-dresden.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1389363750-25989-1-git-send-email-larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+To: Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>
+Cc: poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
-Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v8->v9:
-- Added Shawn Guo in the Cc list.
-- The default-brightness-level is now a boolean default-on property,
-  the gpio is only touched if the gpio-backlight driver instance probes=
-=2E
-- The code and documentation was updated accordingly.
+On Fri, Jan 10, 2014 at 15:22 +0100, Lars Poeschel wrote:
+> 
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+> @@ -38,12 +38,37 @@ Required device specific properties (only for SPI chips):
+>      removed.
+>  - spi-max-frequency = The maximum frequency this chip is able to handle
+>  
+> -Example I2C:
+> +Optional properties:
+> +- #interrupt-cells : Should be two.
+> +  - first cell is the pin number
+> +  - second cell is used to specify flags.
+> +- interrupt-controller: Marks the device node as a interrupt controller.
+> +NOTE: The interrupt functionality is only supported for i2c versions of the
+> +chips yet.
 
-ChangeLog v7->v8:
-- The default-state was renamed to default-brightness-level.
-- default-brightness-level is now mandatory, like for backlight-pwm,
-  That way we avoid having to handle the case where it's not set,
-  which means that we would need not to set the gpio, but still
-  report a brightness value for sysfs, when not all gpio controllers ar=
-e
-  able to read the gpio value.
-- switched the default-brightness-level to boolean values (0 or 1) inst=
-ead
-  of using strings ("on", "off", "keep").
-- The documentation was updated accordingly.
-- The example in the documentation now uses the dts gpio defines.
-- The "backlight: gpio_backlight: Use a default state enum." patch was =
-then
-  dropped, becuase it is not necessary anymore.
+Is this "IRQ feature for I2C chips only" limitation specific to
+the hardware or an implementation detail of the Linux driver?  I
+could not determine this from either the binding text nor the
+driver source.
 
-ChangeLog v6->v7:
-- removed a compilation warning with the removal of the useless ret dec=
-laration.
+If it's just the status of the Linux driver, then it should not
+be in the binding document.  If it's a limitation of the
+hardware, then it's appropriate in the binding but I suggest to
+adjust the text to avoid the next person to ask the same
+question. :)
 
-ChangeLog v5->v6:
-- The default state handling was reworked:
-  - it's now called default-state, and looks like the gpio-leds default=
--state.
-  - it now has a "keep" option, like for the gpio-leds.
-  - that "keep" option is the default when the default-state property i=
-s not set.
-- The documentation was updated accordingly.
 
-ChangeLog v4->v5:
-- The default-brightness property now defaults to 0 in the driver.
-- def_value int becomes a bool.
-- The check for the gpio validity has been reworked.
----
- .../bindings/video/backlight/gpio-backlight.txt    |   19 +++++++
- drivers/video/backlight/gpio_backlight.c           |   60 ++++++++++++=
-+++++---
- 2 files changed, 72 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/g=
-pio-backlight.txt
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -697,6 +697,7 @@ config GPIO_MCP23S08
+>  	  SPI/I2C driver for Microchip MCP23S08/MCP23S17/MCP23008/MCP23017
+>  	  I/O expanders.
+>  	  This provides a GPIO interface supporting inputs and outputs.
+> +	  The I2C versions of the chips can be used as interrupt-controller.
+>  
+>  config GPIO_MC33880
+>  	tristate "Freescale MC33880 high-side/low-side switch"
+> diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
+> index 2deb0c5..1346ea6 100644
+> --- a/drivers/gpio/gpio-mcp23s08.c
+> +++ b/drivers/gpio/gpio-mcp23s08.c
+> @@ -1,5 +1,10 @@
+>  /*
+> - * MCP23S08 SPI/GPIO gpio expander driver
+> + * MCP23S08 SPI/I2C GPIO gpio expander driver
+> + *
+> + * The inputs and outputs of the mcp23s08, mcp23s17, mcp23008 and mcp23017 are
+> + * supported.
+> + * For the I2C versions of the chips (mcp23008 and mcp23017) generation of
+> + * interrupts is also supported.
+>   */
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-bac=
-klight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-bac=
-klight.txt
-new file mode 100644
-index 0000000..a923193
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.=
-txt
-@@ -0,0 +1,19 @@
-+gpio-backlight bindings
-+
-+Required properties:
-+  - compatible: "gpio-backlight"
-+  - gpios: describes the gpio that is used for enabling/disabling the =
-backlight
-+    (see GPIO binding[0] for more details).
-+
-+Optional properties:
-+  - default-on: enable the backlight at boot.
-+
-+[0]: Documentation/devicetree/bindings/gpio/gpio.txt
-+
-+Example:
-+
-+	backlight {
-+		compatible =3D "gpio-backlight";
-+		gpios =3D <&gpio3 4 GPIO_ACTIVE_HIGH>;
-+		default-on;
-+	};
-diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/b=
-acklight/gpio_backlight.c
-index 81fb127..05f84f1 100644
---- a/drivers/video/backlight/gpio_backlight.c
-+++ b/drivers/video/backlight/gpio_backlight.c
-@@ -13,6 +13,8 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_data/gpio_backlight.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-@@ -23,6 +25,7 @@ struct gpio_backlight {
-=20
- 	int gpio;
- 	int active;
-+	int def_value;
- };
-=20
- static int gpio_backlight_update_status(struct backlight_device *bl)
-@@ -60,6 +63,33 @@ static const struct backlight_ops gpio_backlight_ops=
- =3D {
- 	.check_fb	=3D gpio_backlight_check_fb,
- };
-=20
-+static int gpio_backlight_probe_dt(struct platform_device *pdev,
-+				   struct gpio_backlight *gbl)
-+{
-+	struct device_node *np =3D pdev->dev.of_node;
-+	enum of_gpio_flags gpio_flags;
-+	bool default_on =3D false;
-+
-+	gbl->fbdev =3D NULL;
-+	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
-+
-+	if (!gpio_is_valid(gbl->gpio)) {
-+		if (gbl->gpio !=3D -EPROBE_DEFER) {
-+			dev_err(&pdev->dev,
-+				"Error: The gpios parameter is missing or invalid.\n");
-+		}
-+		return gbl->gpio;
-+	}
-+
-+	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
-+
-+	default_on =3D of_property_read_bool(np, "default-on");
-+
-+	gbl->def_value =3D default_on;
-+
-+	return 0;
-+}
-+
- static int gpio_backlight_probe(struct platform_device *pdev)
- {
- 	struct gpio_backlight_platform_data *pdata =3D
-@@ -67,10 +97,12 @@ static int gpio_backlight_probe(struct platform_dev=
-ice *pdev)
- 	struct backlight_properties props;
- 	struct backlight_device *bl;
- 	struct gpio_backlight *gbl;
-+	struct device_node *np =3D pdev->dev.of_node;
- 	int ret;
-=20
--	if (!pdata) {
--		dev_err(&pdev->dev, "failed to find platform data\n");
-+	if (!pdata && !np) {
-+		dev_err(&pdev->dev,
-+			"failed to find platform data or device tree node.\n");
- 		return -ENODEV;
- 	}
-=20
-@@ -79,14 +111,22 @@ static int gpio_backlight_probe(struct platform_de=
-vice *pdev)
- 		return -ENOMEM;
-=20
- 	gbl->dev =3D &pdev->dev;
--	gbl->fbdev =3D pdata->fbdev;
--	gbl->gpio =3D pdata->gpio;
--	gbl->active =3D pdata->active_low ? 0 : 1;
-+
-+	if (np) {
-+		ret =3D gpio_backlight_probe_dt(pdev, gbl);
-+		if (ret)
-+			return ret;
-+	} else {
-+		gbl->fbdev =3D pdata->fbdev;
-+		gbl->gpio =3D pdata->gpio;
-+		gbl->active =3D pdata->active_low ? 0 : 1;
-+		gbl->def_value =3D pdata->def_value;
-+	}
-=20
- 	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
- 				    (gbl->active ? GPIOF_INIT_LOW
- 						 : GPIOF_INIT_HIGH),
--				    pdata->name);
-+				    pdata ? pdata->name : "backlight");
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "unable to request GPIO\n");
- 		return ret;
-@@ -103,17 +143,23 @@ static int gpio_backlight_probe(struct platform_d=
-evice *pdev)
- 		return PTR_ERR(bl);
- 	}
-=20
--	bl->props.brightness =3D pdata->def_value;
-+	bl->props.brightness =3D gbl->def_value;
- 	backlight_update_status(bl);
-=20
- 	platform_set_drvdata(pdev, bl);
- 	return 0;
- }
-=20
-+static struct of_device_id gpio_backlight_of_match[] =3D {
-+	{ .compatible =3D "gpio-backlight" },
-+	{ /* sentinel */ }
-+};
-+
- static struct platform_driver gpio_backlight_driver =3D {
- 	.driver		=3D {
- 		.name		=3D "gpio-backlight",
- 		.owner		=3D THIS_MODULE,
-+		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
- 	},
- 	.probe		=3D gpio_backlight_probe,
- };
---=20
-1.7.9.5
+Adjust these as well to reflect whether it's hardware or software
+which limits the feature.
 
+
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
