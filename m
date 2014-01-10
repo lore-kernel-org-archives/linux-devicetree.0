@@ -1,76 +1,70 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: [PATCH V6 0/2] Exynos5250 SATA Support
-Date: Fri, 10 Jan 2014 12:30:05 +0530
-Message-ID: <1389337208-11325-1-git-send-email-yuvaraj.cd@samsung.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v3] ARM: davinci: aemif: get rid of davinci-nand driver
+ dependency on aemif
+Date: Fri, 10 Jan 2014 12:45:00 +0530
+Message-ID: <52CF9DF4.8000607@ti.com>
+References: <1386267092-18615-1-git-send-email-ivan.khoronzhuk@ti.com> <52B18C44.2000305@ti.com> <52B1915A.7060309@ti.com> <52BC1BB8.2070007@ti.com> <52CE7C44.1000803@ti.com> <20140109163305.GC28655@norris-Latitude-E6410>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140109163305.GC28655@norris-Latitude-E6410>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: mark.rutland@arm.com, jg1.han@samsung.com, b.zolnierkie@samsung.com, joshi@samsung.com, t.figa@samsung.com, swarren@wwwdotorg.org, grant.likely@linaro.org, christoffer.dall@linaro.org, linux-ide@vger.kernel.org, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: "ivan.khoronzhuk" <ivan.khoronzhuk@ti.com>, David Woodhouse <dwmw2@infradead.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux@arm.linux.org.uk, mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@kernel.crashing.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-This patch series enable the SATA support on Exynos5250 based boards.
-It incorporates the generic phy framework to deal with sata phy.
+On Thursday 09 January 2014 10:03 PM, Brian Norris wrote:
+> On Thu, Jan 09, 2014 at 04:09:00PM +0530, Sekhar Nori wrote:
+>> On Thursday 26 December 2013 05:36 PM, ivan.khoronzhuk wrote:
+>>> On 12/18/2013 02:13 PM, Sekhar Nori wrote:
+>>>> On Wednesday 18 December 2013 05:21 PM, ivan.khoronzhuk wrote:
+>>>>> Hi, Sekhar
+>>>>>
+>>>>> This patch is based on "Reuse davinci-nand driver for Keystone arch"
+>>>>> series.
+>>>>> The series has passed review at https://lkml.org/lkml/2013/12/17/241
+>>>>> and can be found at http://git.infradead.org/l2-mtd.git
+>>>>>
+>>>>> This patch can be still applied on top of the series without conflicts.
+>>>>>
+>>>>> Can you please pick up the $subject patch if you are OK with it?
+>>>>
+>>>> I have no problems with the patch and can pick it too, but need ack from
+>>>> MTD maintainer (David) as it touches drivers/mtd/ too.
+>>>>
+>>>> David,
+>>>>
+>>>> If you do not have the patch, we can resend it.
+>>>>
+>>>> Thanks,
+>>>> Sekhar
+>>>>
+>>>
+>>> Hi Brian,
+>>>
+>>> Do you agree if this patch will go through Davinci tree?
+>>>
+>>> This is the last one we need to reuse Davinci Nand driver for Keystone.
+>>
+>> Since we never got an ack from MTD folks, I am going and go ahead and
+>> try pushing this through ARM-SoC regardless. I will CC the MTD
+>> maintainers on the pull request so any objections could even be posted
+>> there.
+> 
+> Sorry, I've been a little busy / out for vacation. The MTD parts look OK
+> to me. Feel free to take it in your tree.
+> 
+> Acked-by: Brian Norris <computersforpeace@gmail.com>
 
-This patch depends on the below patches
-	[1]. drivers: phy: add generic PHY framework
-		by Kishon Vijay Abraham I<kishon@ti.com>
-	[2]. ata: ahci_platform: Manage SATA PHY
-		by Roger Quadros <rogerq@ti.com>
-	[3].ARM: dts: Add pmu sysreg node to exynos5250 and
-		exynos5420 dtsi files
-		by Leela Krishna Amudala <l.krishna@samsung.com>
-	[4]. i2c: s3c2410 : Add polling mode support
-		by Vasanth Ananthan <vasanth.a@samsung.com>
+Actually the NAND portion conflicts with some of the changes from Ivan
+you took recently. I think it will be better if you take this patch too
+with my ack. For me to take it through ARM-SoC, I need an immutable
+branch from you - with commits same as what you will eventually be
+sending to Linus, based on which I can send a pull request.
 
-Changes from V5:
-	1.Rebased on latest generic PHY framework for-next tree.
-	2.Minor nits such as indentations.
+In any case, there is a v4 needed to fix a build and checkpatch error I
+just noticed. I will send it out soon.
 
-Changes from V4:
-	1.Made Exynos5250 SATA PHY driver by default selects
-	CONFIG_I2C and CONFIG_I2C_S3C2410, as SATA PHY driver
-	depends on I2C.
-	2.Used the new phandle "sata_phy_i2c" in the DT entry. 
-	3.struct i2c_driver sataphy_i2c_driver made static which
-	was earlier global type. 
-
-Changes from V3:
-	1.Moved the devicetree binding documentation
-	from /bindings/ata/ to bindings/phy/ .
-	2.Moved devm_phy_create call before to 
-	the devm_phy_provider_register. 
-
-Changes from V2:
-	1.Removed of_match_table
-	2.Moved to syscon interface for PMU handling.
-
-Changes from V1:
-	1. Dropped the patch 
-	ahci: exynos: add ahci sata support on Exynos platform
-
-	2.Adapt to latest generic PHY framework available in 
-	git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git next
-
-
-
-Yuvaraj Kumar C D (2):
-  PHY: Exynos: Add Exynos5250 SATA PHY driver
-  ARM: dts: Enable ahci sata and sata phy
-
- .../devicetree/bindings/ata/exynos-sata-phy.txt    |   14 --
- .../devicetree/bindings/ata/exynos-sata.txt        |   25 +-
- .../devicetree/bindings/phy/samsung-phy.txt        |   36 +++
- arch/arm/boot/dts/exynos5250-arndale.dts           |   11 +
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |    8 +-
- arch/arm/boot/dts/exynos5250.dtsi                  |   17 +-
- drivers/phy/Kconfig                                |   13 ++
- drivers/phy/Makefile                               |    1 +
- drivers/phy/phy-exynos5250-sata-i2c.c              |   40 ++++
- drivers/phy/phy-exynos5250-sata.c                  |  238 ++++++++++++++++++++
- 10 files changed, 370 insertions(+), 33 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
- create mode 100644 drivers/phy/phy-exynos5250-sata-i2c.c
- create mode 100644 drivers/phy/phy-exynos5250-sata.c
-
--- 
-1.7.9.5
+Thanks,
+Sekhar
