@@ -1,361 +1,244 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH V6 1/2] PHY: Exynos: Add Exynos5250 SATA PHY driver
-Date: Fri, 10 Jan 2014 16:05:23 +0100
-Message-ID: <52D00C33.4060305@samsung.com>
-References: <1389337208-11325-1-git-send-email-yuvaraj.cd@samsung.com>
- <1389337208-11325-2-git-send-email-yuvaraj.cd@samsung.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv9 1/2] video: backlight: gpio-backlight: Add DT support.
+Date: Fri, 10 Jan 2014 16:07:23 +0100
+Message-ID: <1389366444-29449-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1389337208-11325-2-git-send-email-yuvaraj.cd@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, kishon@ti.com, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
-Cc: mark.rutland@arm.com, jg1.han@samsung.com, b.zolnierkie@samsung.com, joshi@samsung.com, swarren@wwwdotorg.org, grant.likely@linaro.org, christoffer.dall@linaro.org, linux-ide@vger.kernel.org, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Girish K S <ks.giri@samsung.com>, Vasanth Ananthan <vasanth.a@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yuvaraj,
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ChangeLog v8->v9:
+- Added Shawn Guo in the Cc list.
+- The default-brightness-level is now a boolean default-on property,
+  the gpio is only touched if the gpio-backlight driver instance probes=
+=2E
+- The code and documentation was updated accordingly.
 
-In general this version looks pretty good, but I have some questions inline.
+ChangeLog v7->v8:
+- The default-state was renamed to default-brightness-level.
+- default-brightness-level is now mandatory, like for backlight-pwm,
+  That way we avoid having to handle the case where it's not set,
+  which means that we would need not to set the gpio, but still
+  report a brightness value for sysfs, when not all gpio controllers ar=
+e
+  able to read the gpio value.
+- switched the default-brightness-level to boolean values (0 or 1) inst=
+ead
+  of using strings ("on", "off", "keep").
+- The documentation was updated accordingly.
+- The example in the documentation now uses the dts gpio defines.
+- The "backlight: gpio_backlight: Use a default state enum." patch was =
+then
+  dropped, becuase it is not necessary anymore.
 
-On 10.01.2014 08:00, Yuvaraj Kumar C D wrote:
-[snip]
-> diff --git a/drivers/phy/phy-exynos5250-sata-i2c.c b/drivers/phy/phy-exynos5250-sata-i2c.c
-> new file mode 100644
-> index 0000000..206e337
-> --- /dev/null
-> +++ b/drivers/phy/phy-exynos5250-sata-i2c.c
-> @@ -0,0 +1,40 @@
-> +/*
-> + * Copyright (C) 2013 Samsung Electronics Co.Ltd
-> + * Author:
-> + *	Yuvaraj C D <yuvaraj.cd@samsung.com>
-> + *
-> + * This program is free software; you can redistribute  it and/or modify it
-> + * under  the terms of  the GNU General  Public License as published by the
-> + * Free Software Foundation;  either version 2 of the  License, or (at your
-> + * option) any later version.
-> + *
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +
-> +static int exynos_sata_i2c_probe(struct i2c_client *client,
-> +		const struct i2c_device_id *i2c_id)
-> +{
-> +	return 0;
-> +}
-> +
-> +static const struct i2c_device_id sataphy_i2c_device_match[] = {
-> +	{ "exynos-sataphy-i2c", 0 },
-> +};
-> +
-> +static struct i2c_driver sataphy_i2c_driver = {
-> +	.probe		= exynos_sata_i2c_probe,
-> +	.id_table	= sataphy_i2c_device_match,
-> +	.driver   = {
-> +		.name = "exynos-sataphy-i2c",
-> +		.owner = THIS_MODULE,
-> +	},
-> +};
-> +
-> +static int __init exynos5250_phy_i2c_init(void)
-> +{
-> +	return i2c_add_driver(&sataphy_i2c_driver);
-> +}
-> +module_init(exynos5250_phy_i2c_init);
+ChangeLog v6->v7:
+- removed a compilation warning with the removal of the useless ret dec=
+laration.
 
-Hmm, is this driver even necessary now?
+ChangeLog v5->v6:
+- The default state handling was reworked:
+  - it's now called default-state, and looks like the gpio-leds default=
+-state.
+  - it now has a "keep" option, like for the gpio-leds.
+  - that "keep" option is the default when the default-state property i=
+s not set.
+- The documentation was updated accordingly.
 
-Wolfram, would it be possible to use an i2c_client without a driver 
-bound to it?
+ChangeLog v4->v5:
+- The default-brightness property now defaults to 0 in the driver.
+- def_value int becomes a bool.
+- The check for the gpio validity has been reworked.
+---
+ .../bindings/video/backlight/gpio-backlight.txt    |   19 +++++++
+ drivers/video/backlight/gpio_backlight.c           |   60 ++++++++++++=
++++++---
+ 2 files changed, 72 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/g=
+pio-backlight.txt
 
-> diff --git a/drivers/phy/phy-exynos5250-sata.c b/drivers/phy/phy-exynos5250-sata.c
-> new file mode 100644
-> index 0000000..6e5ff8d
-> --- /dev/null
-> +++ b/drivers/phy/phy-exynos5250-sata.c
-> @@ -0,0 +1,238 @@
-> +/*
-> + * Samsung SATA SerDes(PHY) driver
-> + *
-> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-> + * Authors: Girish K S <ks.giri@samsung.com>
-> + *         Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/i2c.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/mfd/syscon.h>
-> +
-> +#define EXYNOS5_SATA_RESET		0x4
-> +#define RESET_CMN_RST_N			(1 << 1)
-> +#define LINK_RESET			0xF0000
+diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-bac=
+klight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-bac=
+klight.txt
+new file mode 100644
+index 0000000..a923193
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.=
+txt
+@@ -0,0 +1,19 @@
++gpio-backlight bindings
++
++Required properties:
++  - compatible: "gpio-backlight"
++  - gpios: describes the gpio that is used for enabling/disabling the =
+backlight
++    (see GPIO binding[0] for more details).
++
++Optional properties:
++  - default-on: enable the backlight at boot.
++
++[0]: Documentation/devicetree/bindings/gpio/gpio.txt
++
++Example:
++
++	backlight {
++		compatible =3D "gpio-backlight";
++		gpios =3D <&gpio3 4 GPIO_ACTIVE_HIGH>;
++		default-on;
++	};
+diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/b=
+acklight/gpio_backlight.c
+index 81fb127..05f84f1 100644
+--- a/drivers/video/backlight/gpio_backlight.c
++++ b/drivers/video/backlight/gpio_backlight.c
+@@ -13,6 +13,8 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/platform_data/gpio_backlight.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+@@ -23,6 +25,7 @@ struct gpio_backlight {
+=20
+ 	int gpio;
+ 	int active;
++	int def_value;
+ };
+=20
+ static int gpio_backlight_update_status(struct backlight_device *bl)
+@@ -60,6 +63,33 @@ static const struct backlight_ops gpio_backlight_ops=
+ =3D {
+ 	.check_fb	=3D gpio_backlight_check_fb,
+ };
+=20
++static int gpio_backlight_probe_dt(struct platform_device *pdev,
++				   struct gpio_backlight *gbl)
++{
++	struct device_node *np =3D pdev->dev.of_node;
++	enum of_gpio_flags gpio_flags;
++	bool default_on =3D false;
++
++	gbl->fbdev =3D NULL;
++	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
++
++	if (!gpio_is_valid(gbl->gpio)) {
++		if (gbl->gpio !=3D -EPROBE_DEFER) {
++			dev_err(&pdev->dev,
++				"Error: The gpios parameter is missing or invalid.\n");
++		}
++		return gbl->gpio;
++	}
++
++	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
++
++	default_on =3D of_property_read_bool(np, "default-on");
++
++	gbl->def_value =3D default_on;
++
++	return 0;
++}
++
+ static int gpio_backlight_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_backlight_platform_data *pdata =3D
+@@ -67,10 +97,12 @@ static int gpio_backlight_probe(struct platform_dev=
+ice *pdev)
+ 	struct backlight_properties props;
+ 	struct backlight_device *bl;
+ 	struct gpio_backlight *gbl;
++	struct device_node *np =3D pdev->dev.of_node;
+ 	int ret;
+=20
+-	if (!pdata) {
+-		dev_err(&pdev->dev, "failed to find platform data\n");
++	if (!pdata && !np) {
++		dev_err(&pdev->dev,
++			"failed to find platform data or device tree node.\n");
+ 		return -ENODEV;
+ 	}
+=20
+@@ -79,14 +111,22 @@ static int gpio_backlight_probe(struct platform_de=
+vice *pdev)
+ 		return -ENOMEM;
+=20
+ 	gbl->dev =3D &pdev->dev;
+-	gbl->fbdev =3D pdata->fbdev;
+-	gbl->gpio =3D pdata->gpio;
+-	gbl->active =3D pdata->active_low ? 0 : 1;
++
++	if (np) {
++		ret =3D gpio_backlight_probe_dt(pdev, gbl);
++		if (ret)
++			return ret;
++	} else {
++		gbl->fbdev =3D pdata->fbdev;
++		gbl->gpio =3D pdata->gpio;
++		gbl->active =3D pdata->active_low ? 0 : 1;
++		gbl->def_value =3D pdata->def_value;
++	}
+=20
+ 	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
+ 				    (gbl->active ? GPIOF_INIT_LOW
+ 						 : GPIOF_INIT_HIGH),
+-				    pdata->name);
++				    pdata ? pdata->name : "backlight");
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "unable to request GPIO\n");
+ 		return ret;
+@@ -103,17 +143,23 @@ static int gpio_backlight_probe(struct platform_d=
+evice *pdev)
+ 		return PTR_ERR(bl);
+ 	}
+=20
+-	bl->props.brightness =3D pdata->def_value;
++	bl->props.brightness =3D gbl->def_value;
+ 	backlight_update_status(bl);
+=20
+ 	platform_set_drvdata(pdev, bl);
+ 	return 0;
+ }
+=20
++static struct of_device_id gpio_backlight_of_match[] =3D {
++	{ .compatible =3D "gpio-backlight" },
++	{ /* sentinel */ }
++};
++
+ static struct platform_driver gpio_backlight_driver =3D {
+ 	.driver		=3D {
+ 		.name		=3D "gpio-backlight",
+ 		.owner		=3D THIS_MODULE,
++		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
+ 	},
+ 	.probe		=3D gpio_backlight_probe,
+ };
+--=20
+1.7.9.5
 
-nit: Lowercase is preferred in hexadecimal notation.
-+ all other occurrences in this file.
-
-> +#define EXYNOS5_SATA_MODE0		0x10
-> +#define EXYNOS5_SATAPHY_PMU_ENABLE	(1 << 0)
-> +#define SATA_SPD_GEN3			(2 << 0)
-> +#define EXYNOS5_SATA_CTRL0		0x14
-> +#define CTRL0_P0_PHY_CALIBRATED_SEL	(1 << 9)
-> +#define CTRL0_P0_PHY_CALIBRATED		(1 << 8)
-> +#define EXYNOS5_SATA_PHSATA_CTRLM	0xE0
-> +#define PHCTRLM_REF_RATE		(1 << 1)
-> +#define PHCTRLM_HIGH_SPEED		(1 << 0)
-> +#define EXYNOS5_SATA_PHSATA_STATM	0xF0
-> +#define PHSTATM_PLL_LOCKED		(1 << 0)
-> +#define EXYNOS_SATA_PHY_EN		(1 << 0)
-> +#define SATAPHY_CONTROL_OFFSET		0x0724
-> +
-> +struct exynos_sata_phy {
-> +	struct phy *phy;
-> +	struct clk *phyclk;
-> +	void __iomem *regs;
-> +	void __iomem *pmureg;
-> +	struct i2c_client *client;
-> +};
-> +
-> +static bool wait_for_reg_status(void __iomem *base, u32 reg, u32 checkbit,
-> +				u32 status)
-> +{
-> +	unsigned long timeout = jiffies + usecs_to_jiffies(1000);
-
-nit: It would be better to define the timeout using a macro to not use 
-magic numbers.
-
-> +
-> +	while (time_before(jiffies, timeout)) {
-> +		if ((readl(base + reg) & checkbit) == status)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static int exynos_sata_phy_power_on(struct phy *phy)
-> +{
-> +	struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
-> +
-> +	regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
-> +			EXYNOS5_SATAPHY_PMU_ENABLE, EXYNOS_SATA_PHY_EN);
-
-regmap_update_bits can return an error. Wouldn't it be better to return 
-it as return value of this function instead of returning 0 all the time? 
-As a side effect, this would make the function smaller by two lines.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int exynos_sata_phy_power_off(struct phy *phy)
-> +{
-> +	struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
-> +
-> +	regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
-> +			EXYNOS5_SATAPHY_PMU_ENABLE, ~EXYNOS_SATA_PHY_EN);
-
-Same here.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int exynos_sata_phy_init(struct phy *phy)
-> +{
-> +	u32 val = 0;
-> +	int ret = 0;
-> +	u8 buf[] = { 0x3A, 0x0B };
-> +	struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
-> +
-> +	regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
-> +			EXYNOS5_SATAPHY_PMU_ENABLE, EXYNOS_SATA_PHY_EN);
-
-regmap_update_bits returns an error code.
-
-> +
-> +	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-> +
-> +	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-> +	val |= 0xFF;
-> +	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-> +
-> +	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-> +	val |= LINK_RESET;
-> +	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-> +
-> +	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-> +	val |= RESET_CMN_RST_N;
-> +	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-> +
-> +	val = readl(sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-> +	val &= ~PHCTRLM_REF_RATE;
-> +	writel(val, sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-> +
-> +	/* High speed enable for Gen3 */
-> +	val = readl(sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-> +	val |= PHCTRLM_HIGH_SPEED;
-> +	writel(val, sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
-> +
-> +	val = readl(sata_phy->regs + EXYNOS5_SATA_CTRL0);
-> +	val |= CTRL0_P0_PHY_CALIBRATED_SEL | CTRL0_P0_PHY_CALIBRATED;
-> +	writel(val, sata_phy->regs + EXYNOS5_SATA_CTRL0);
-> +
-> +	val = readl(sata_phy->regs + EXYNOS5_SATA_MODE0);
-> +	val |= SATA_SPD_GEN3;
-> +	writel(val, sata_phy->regs + EXYNOS5_SATA_MODE0);
-> +
-> +	ret = i2c_master_send(sata_phy->client, buf, sizeof(buf));
-> +	if (ret < 0)
-> +		return -ENXIO;
-
-Wouldn't it be better to return the same error code as i2c_master_send 
-returned?
-
-> +
-> +	/* release cmu reset */
-> +	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-> +	val &= ~RESET_CMN_RST_N;
-> +	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-> +
-> +	val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
-> +	val |= RESET_CMN_RST_N;
-> +	writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
-> +
-> +	return (wait_for_reg_status(sata_phy->regs, EXYNOS5_SATA_PHSATA_STATM,
-> +		PHSTATM_PLL_LOCKED, 1)) ? 0 : -EINVAL;
-> +
-
-nit: Stray blank line.
-
-Also it might be more readable after making wait_for_reg_status() return 
-an integer error code (0 and e.g. -EFAULT) and rewriting the last line to:
-
-	ret = wait_for_reg_status(sata_phy->regs, 		
-					EXYNOS5_SATA_PHSATA_STATM,
-					PHSTATM_PLL_LOCKED, 1);
-	if (ret < 0)
-		dev_err(&sata_phy->client->dev,
-			"PHY PLL locking failed\n");
-
-	return ret;
-
-By the way, isn't this initialization really needed whenever the PHY is 
-powered on?
-
-> +}
-> +
-> +static struct phy_ops exynos_sata_phy_ops = {
-> +	.init		= exynos_sata_phy_init,
-> +	.power_on	= exynos_sata_phy_power_on,
-> +	.power_off	= exynos_sata_phy_power_off,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static int exynos_sata_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct exynos_sata_phy *sata_phy;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	struct phy_provider *phy_provider;
-> +	struct device_node *node;
-> +	int ret = 0;
-> +
-> +	sata_phy = devm_kzalloc(dev, sizeof(*sata_phy), GFP_KERNEL);
-> +	if (!sata_phy)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +	sata_phy->regs = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(sata_phy->regs))
-> +		return PTR_ERR(sata_phy->regs);
-> +
-> +	sata_phy->pmureg = syscon_regmap_lookup_by_phandle(dev->of_node,
-> +					"samsung,syscon-phandle");
-
-pmureg is defined as (void __iomem *) in struct exynos_sata_phy, but 
-syscon_regmap_lookup_by_phandle() returns (struct regmap *). Moreover it 
-does not return NULL on error, but rather ERR_PTR(). Please correct this.
-
-> +	if (!sata_phy->pmureg) {
-> +		dev_err(dev, "syscon regmap lookup failed.\n");
-> +		return PTR_ERR(sata_phy->pmureg);
-> +	}
-> +
-> +	node = of_parse_phandle(dev->of_node,
-> +			"samsung,exynos-sataphy-i2c-phandle", 0);
-> +	if (!node)
-> +		return -ENODEV;
-
-An error here means that a required DT property was not specified or was 
-specified incorrectly. IMHO -EINVAL would be better here.
-
-> +
-> +	sata_phy->client = of_find_i2c_device_by_node(node);
-> +	if (!sata_phy->client)
-> +		return -EPROBE_DEFER;
-> +
-> +	dev_set_drvdata(dev, sata_phy);
-> +
-> +	sata_phy->phyclk = devm_clk_get(dev, "sata_phyctrl");
-> +	if (IS_ERR(sata_phy->phyclk)) {
-> +		dev_err(dev, "failed to get clk for PHY\n");
-> +		return PTR_ERR(sata_phy->phyclk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(sata_phy->phyclk);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to enable source clk\n");
-> +		return ret;
-> +	}
-> +
-> +	sata_phy->phy = devm_phy_create(dev, &exynos_sata_phy_ops, NULL);
-> +	if (IS_ERR(sata_phy->phy)) {
-> +		clk_disable_unprepare(sata_phy->phyclk);
-> +		dev_err(dev, "failed to create PHY\n");
-> +		return PTR_ERR(sata_phy->phy);
-> +	}
-> +
-> +	phy_set_drvdata(sata_phy->phy, sata_phy);
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev,
-> +					of_phy_simple_xlate);
-> +	if (IS_ERR(phy_provider)) {
-> +		clk_disable_unprepare(sata_phy->phyclk);
-> +		return PTR_ERR(phy_provider);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id exynos_sata_phy_of_match[] = {
-> +	{ .compatible = "samsung,exynos5250-sata-phy" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, exynos_sata_phy_of_match);
-> +
-> +static struct platform_driver exynos_sata_phy_driver = {
-> +	.probe	= exynos_sata_phy_probe,
-
-If this driver can be compiled as module, don't you also need remove?
-
-Best regards,
-Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
