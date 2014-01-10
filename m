@@ -1,40 +1,110 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: Re: Re: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250
- and exynos5420 dtsi files
-Date: Fri, 10 Jan 2014 07:55:39 +0000 (GMT)
-Message-ID: <3783504.439671389340538922.JavaMail.weblogic@epv6ml10>
-Reply-To: l.krishna@samsung.com
+From: 'Sascha Hauer' <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] video: mmp: add device tree support
+Date: Fri, 10 Jan 2014 10:07:40 +0100
+Message-ID: <20140110090739.GZ6750@pengutronix.de>
+References: <1389244394-10779-1-git-send-email-zzhu3@marvell.com>
+ <20140109073158.GM6750@pengutronix.de>
+ <000301cf0d0e$91f29090$b5d7b1b0$%han@samsung.com>
+ <52CE9165.7050002@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: base64
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-MIME-version: 1.0
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "dianders@chromium.org" <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "cpgs ." <cpgs@samsung.com>, "linux@roeck-us.net" <linux@roeck-us.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52CE9165.7050002-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Tomi Valkeinen' <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, 'Jean-Christophe Plagniol-Villard' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Haojian Zhuang' <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guoqing Li <ligq-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgV2ltLA0KSSByZWJhc2VkIHRoaXMgcGF0Y2ggc2VyaWVzIG9uIEt1a2ppbidzIGZvci1uZXh0
-IGJyYW5jaC4NClRoYXQgaXMgdGhlIHJlYXNvbiBmb3IgbWlzc2luZyB0aGlzIGNvbnRleHQgY29k
-ZSBpbiB0aGUgcGF0Y2guDQoNCkFzIHRoaXMgaXMgYSBkdHMgZmlsZSBjaGFuZ2UgYW5kIGlmIEt1
-a2ppbiBhY2NlcHRzIHRvIG1lcmdlIHRoaXMgcGF0Y2gNCmludG8geW91ciAibGludXgtd2F0Y2hk
-b2ctbmV4dCIgdHJlZSB5b3UgY2FuIHJlYmFzZSBhbmQgYXBwbHkgaXQuDQoNCkJlc3QgV2lzaGVz
-LA0KTGVlbGEgS3Jpc2huYS4NCg0KLS0tLS0tLSBPcmlnaW5hbCBNZXNzYWdlIC0tLS0tLS0NClNl
-bmRlciA6IFdpbSBWYW4gU2Vicm9lY2s8d2ltQGlndWFuYS5iZT4NCkRhdGUgOiBKYW4gMTAsIDIw
-MTQgMTM6MTEgKEdNVCswNTozMCkNClRpdGxlIDogUmU6IFtQQVRDSCBWMTIgMS8zXSBBUk06IGR0
-czogQWRkIHBtdSBzeXNyZWcgbm9kZSB0byBleHlub3M1MjUwIGFuZCBleHlub3M1NDIwIGR0c2kg
-ZmlsZXMNCg0KSGkgTGVlbGEsDQoNCj4gVGhpcyBwYXRjaCBhZGRzIHBtdXN5c3JlZyBub2RlIHRv
-IGV4eW5vczUyNTAgYW5kIGV4eW5vczU0MjAgZHRzaSBmaWxlcyB0bw0KPiBoYW5kbGUgUE1VIHJl
-Z2lzdGVyIGFjY2Vzc2VzIGluIGEgY2VudHJhbGl6ZWQgd2F5IHVzaW5nIHN5c2NvbiBkcml2ZXIN
-Cj4gDQo+IFNpZ25lZC1vZmYtYnk6IExlZWxhIEtyaXNobmEgQW11ZGFsYSANCj4gUmV2aWV3ZWQt
-Ynk6IFRvbWFzeiBGaWdhIA0KPiBSZXZpZXdlZC1ieTogRG91ZyBBbmRlcnNvbiANCj4gVGVzdGVk
-LWJ5OiBEb3VnIEFuZGVyc29uIA0KPiAtLS0NCi4uLg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvZXh5bm9zNTQyMC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMC5k
-dHNpDQo+IGluZGV4IGIxZmEzMzQuLmNkNDdkYjAgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL2V4eW5vczU0MjAuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1
-NDIwLmR0c2kNCj4gQEAgLTQwMiw0ICs0MDIsOSBAQA0KPiAgIGNsb2NrLW5hbWVzID0gImdzY2wi
-Ow0KPiAgIHNhbXN1bmcscG93ZXItZG9tYWluID0gPCZnc2NfcGQ+Ow0KPiAgIH07DQoNCkkgY2Fu
-J3QgYWRkIHRoaXMgcGF0Y2ggc2luY2UgdGhlcmUgaXMgbm8gImdzY2wiIGluIHRoZSBjdXJyZW50
-IGxpbnV4LXRyZWUuDQpJcyB0aGlzIGRlcGVuZGluZyBvbiBhbm90aGVyIHBhdGNoIG9yIGFyZSB3
-ZSBnb2luZyB0byBmaXggdGhpcyBpbiBhbm90aGVyIHdheT8NCg0KS2luZCByZWdhcmRzLA0KV2lt
-Lg0KDQoNCg0KDQoNCkJlc3QgV2lzaGVzLA0KTGVlbGEgS3Jpc2huYS4=
+On Thu, Jan 09, 2014 at 08:09:09PM +0800, Zhou Zhu wrote:
+> Sascha/Jingoo,
+> Thank you for your review!
+> 
+> On 01/09/2014 03:43 PM, Jingoo Han wrote:
+> >On Thursday, January 09, 2014 4:32 PM, Sascha Hauer wrote:
+> >>On Thu, Jan 09, 2014 at 01:13:14PM +0800, Zhou Zhu wrote:
+> >>>add device tree support for mmp fb/controller
+> >>>the description at Documentation/devicetree/bindings/fb/mmp-disp.txt
+> >>>
+> >>>Signed-off-by: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> >>>---
+> >>>  Documentation/devicetree/bindings/fb/mmp-disp.txt |   71 ++++++++++++
+> >>>  drivers/video/mmp/fb/mmpfb.c                      |   71 ++++++++----
+> >>>  drivers/video/mmp/hw/mmp_ctrl.c                   |  120 ++++++++++++++++-----
+> >>>  3 files changed, 217 insertions(+), 45 deletions(-)
+> >>>  create mode 100644 Documentation/devicetree/bindings/fb/mmp-disp.txt
+> >>>
+> 
+> [...]
+> 
+> >>+fb: fb {
+> >>+	compatible = "marvell,mmp-fb";
+> >
+> >This compatible should have the specific SoC name in it, not just
+> >'mmp'. Otherwise you can't properly distinguish between this version and
+> >future versions of the mmp core.
+> >
+> We are using a same display IP for all mmp serial SoCs, and there
+> would be inside register to get version. So I am planning put same
+> compatible here for all SoCs using this IP.
+> Would it be ok if I update compatible to "marvell,mmpdcx-fb"?
+> "mmpdcx" is the IP name.
+
+Using the SoC name is really good practice. This way you can add SoC
+specific data to the compatible entry in the driver. Most bindings I've
+seen which bind to some more generic string tend to add some additional
+properties to the binding like marvell,has-new-feature or
+marvell,needs-workaround-for-xy which you don't need at all if you bind
+to the specific SoC in the first place.
+
+If you insist on a generic binding you can still do a
+
+	compatible = "marvell,soc-xy-fb", "marvell,mmp-fb";
+
+This way you at least have the SoC information around (even in old
+devicetrees) should you need it in the future.
+
+BTW I've seen often enough that the version register is at a different
+location on newer generations which makes it pretty useless.
+
+> >> +	interrupts = <0 41 0x4>;
+> >> +	marvell,disp-name = "mmp_disp";
+> >> +	marvell,path-num = <1>;
+> >> +	marvell,clk-name = "LCDCIHCLK";
+> >
+> > Don't pass clk names like this. We have a documented clock binding, use
+> > it.
+> >
+> The patches to add dt support in common clk in our platforms are not
+> upstreamed yet. As there's only one clock in this device, could I
+> remove clock name related codes and direct use: devm_clk_get(dev,
+> NULL)?
+
+The clock name is defined by the device you are implementing, *not*
+the name of the clock in the SoC. So if you have:
+
+                                     ----------------------
+   ---------  LCDCIHCLK             |            MMP       |
+  | OSC/PLL |-----------------------|>pixclk               |
+  ----------                        |                      |
+                                     ----------------------
+
+
+You have to do clk_get(dev, "pixclk") because you want to get the
+clock associated to the pixclk input. Doing clk_get(dev, "LCDCIHCLK")
+is wrong because that may change in future SoCs.
+If you do this correctly there is no need to put the clk name into the
+devicetree. You only have to put the information "which clk is connected
+to the pixclk input of the MMP" into the devicetree.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
