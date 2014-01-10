@@ -1,57 +1,146 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 3/7] ARM: perf_event: Add basic support for Krait CPU PMUs
-Date: Fri, 10 Jan 2014 11:01:14 +0000
-Message-ID: <20140110110114.GC10455@mudshark.cambridge.arm.com>
-References: <1389221984-10973-1-git-send-email-sboyd@codeaurora.org>
- <1389221984-10973-4-git-send-email-sboyd@codeaurora.org>
- <20140109110440.GC17838@mudshark.cambridge.arm.com>
- <52CEFF18.2070501@codeaurora.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/3] power_supply: modelgauge_battery: Maxim ModelGauge
+ ICs gauge
+Date: Fri, 10 Jan 2014 11:11:30 +0000
+Message-ID: <20140110111130.GD6798@e106331-lin.cambridge.arm.com>
+References: <1389286145-15375-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1389286145-15375-2-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52CEFF18.2070501@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: mark.rutland@arm.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Neil Leeder <nleeder@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1389286145-15375-2-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: "anton@enomsg.org" <anton@enomsg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mk7.kang@samsung.com" <mk7.kang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 09, 2014 at 07:57:12PM +0000, Stephen Boyd wrote:
-> (Adding DT reviewers)
+On Thu, Jan 09, 2014 at 04:49:03PM +0000, Vladimir Barinov wrote:
+> Add Maxim ModelGauge ICs gauge driver for MAX17040/41/43/44/48/49/58/59 chips
 > 
-> On 01/09/14 03:04, Will Deacon wrote:
-> > On Wed, Jan 08, 2014 at 10:59:40PM +0000, Stephen Boyd wrote:
-> >
-> >> +static int krait_pmu_init(struct arm_pmu *cpu_pmu)
-> >> +{
-> >> +	u32 id = read_cpuid_id() & 0xffffff00;
-> >> +
-> >> +	armv7pmu_init(cpu_pmu);
-> >> +	cpu_pmu->name		= "ARMv7 Krait";
-> >> +	/* Some early versions of Krait don't support PC write events */
-> >> +	if (id == 0x511f0400 || id == 0x510f0600)
-> >> +		cpu_pmu->map_event	= krait_map_event_no_branch;
-> > Hmm, I'd really rather this information came via the DT. In fact, you could
-> > just drop the branch event from your main map_event_function and keep things
-> > simple. It depends how badly you want to advertise it in perf list :)
-> >
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 > 
-> Not every version of Krait is missing support for this event, so I'd
-> like to keep it so things like perf stat show branch counts. How about I
-> add a bool property to the pmu node indicating that this PMU is missing
-> support for the PC write events? Something like "no-pc-write"?
+> ---
+>  drivers/power/Kconfig                            |    8
+>  drivers/power/Makefile                           |    1
+>  drivers/power/modelgauge_battery.c               |  875 +++++++++++++++++++++++
+>  include/linux/platform_data/battery-modelgauge.h |   44 +
+>  4 files changed, 928 insertions(+)
 
-Perhaps, although I think it should be qualcomm-specific, so something like
-"qcom,krait-no-pc-write"? Again, I'd be glad to hear something from a DT
-reviewer on this.
+[...]
 
-Will
+> +static struct modelgauge_platform_data *modelgauge_parse_dt(struct device *dev)
+> +{
+> +       struct device_node *np = dev->of_node;
+> +       struct modelgauge_platform_data *pdata;
+> +       struct property *prop;
+> +
+> +       if (!of_get_property(np, "maxim,empty_alert_threshold", NULL) &&
+> +           !of_get_property(np, "maxim,soc_change_alert", NULL) &&
+> +           !of_get_property(np, "maxim,hibernate_threshold", NULL) &&
+> +           !of_get_property(np, "maxim,active_threshold", NULL) &&
+> +           !of_get_property(np, "maxim,undervoltage", NULL) &&
+> +           !of_get_property(np, "maxim,overvoltage", NULL) &&
+> +           !of_get_property(np, "maxim,resetvoltage", NULL))
+> +               return NULL;
+
+These were described as optional in the binding. It wasn't clear that to
+have one you need the others. It would be nice for that to be clarified
+in the binding.
+
+> +
+> +       pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +       if (!pdata)
+> +               return NULL;
+> +
+> +       of_property_read_u8(np, "maxim,empty_alert_threshold",
+> +                           &pdata->empty_alert_threshold);
+> +       pdata->soc_change_alert =
+> +                       of_property_read_bool(np, "maxim,soc_change_alert");
+
+As mentioned in my comments on the binding document, I don't think this
+property is necessary at all.
+
+> +       of_property_read_u8(np, "maxim,hibernate_threshold",
+> +                           &pdata->hibernate_threshold);
+> +       of_property_read_u8(np, "maxim,active_threshold",
+> +                           &pdata->active_threshold);
+> +       of_property_read_u16(np, "maxim,undervoltage", &pdata->undervoltage);
+> +       of_property_read_u16(np, "maxim,overvoltage", &pdata->overvoltage);
+> +       of_property_read_u16(np, "maxim,resetvoltage", &pdata->resetvoltage);
+> +
+> +       prop = of_find_property(np, "maxim,ocvtest", NULL);
+
+Here you seem to be using of_find_property to check if a property is
+present, but earlier you used of_get_property for this purpose. It would
+be nice if one or the other were used consistently.
+
+> +       if (prop) {
+> +               pdata->model = devm_kzalloc(dev, sizeof(*pdata->model),
+> +                                           GFP_KERNEL);
+> +               if (!pdata->model)
+> +                       return NULL;
+> +
+> +               of_property_read_u8(np, "maxim,empty_adjustment",
+> +                                   &pdata->model->empty_adjustment);
+> +               of_property_read_u8(np, "maxim,full_adjustment",
+> +                                   &pdata->model->full_adjustment);
+> +               of_property_read_u8(np, "maxim,rcomp0",
+> +                                   &pdata->model->rcomp0);
+> +               prop = of_find_property(np, "maxim,temp_co_up", NULL);
+> +               if (prop)
+> +                       pdata->model->temp_co_up = be32_to_cpup(prop->value);
+
+Use of_property_read_u32. If it can't read the property it won't
+modify the pointer it's been handed, and it handles the endianness
+conversion.
+
+You seem to be happy to use of_property_read_u{8,16}, so I don't
+understand why you are treating 32-bit differently.
+
+> +               prop = of_find_property(np, "maxim,temp_co_down", NULL);
+> +               if (prop)
+> +                       pdata->model->temp_co_down = be32_to_cpup(prop->value);
+
+Likewise.
+
+> +               of_property_read_u16(np, "maxim,ocvtest",
+> +                                    &pdata->model->ocvtest);
+
+While you've checked that this property was present earlier, you don't
+know it's size. You might want to check the return value of
+of_property_read_u16 (and you might want to do so for other accessors
+too).
+
+> +               of_property_read_u8(np, "maxim,soc_check_a",
+> +                                   &pdata->model->soc_check_a);
+> +               of_property_read_u8(np, "maxim,soc_check_b",
+> +                                   &pdata->model->soc_check_b);
+> +               of_property_read_u8(np, "maxim,bits",
+> +                                   &pdata->model->bits);
+> +               of_property_read_u16(np, "maxim,rcomp_seg",
+> +                                    &pdata->model->rcomp_seg);
+> +       }
+> +
+> +       prop = of_find_property(np, "maxim,model_data", NULL);
+> +       if (prop && prop->length == MODELGAUGE_TABLE_SIZE) {
+> +               pdata->model->model_data = devm_kzalloc(dev,
+> +                                                       MODELGAUGE_TABLE_SIZE,
+> +                                                       GFP_KERNEL);
+> +               if (!pdata->model->model_data)
+> +                       return NULL;
+> +
+> +               of_property_read_u8_array(np, "maxim,model_data",
+> +                                         pdata->model->model_data,
+> +                                         MODELGAUGE_TABLE_SIZE);
+> +       }
+
+It's probably worth printing a warning or error if this isn't the size
+you expect (perhaps failing to probe).
+
+> +
+> +       return pdata;
+> +}
+
+Thanks,
+Mark.
