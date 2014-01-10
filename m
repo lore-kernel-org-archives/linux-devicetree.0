@@ -1,133 +1,68 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: DT include files
-Date: Fri, 10 Jan 2014 09:30:32 -0600
-Message-ID: <CAL_JsqKHr6v+6kNXrAdnzH0gpoFCPAjPSnX8iBDgRSMh9JgxvA@mail.gmail.com>
-References: <20131231054427.GA22383@S2101-09.ap.freescale.net>
-	<20140102202108.GF19720@quad.lixom.net>
-	<20140103023211.GA25079@S2101-09.ap.freescale.net>
-	<CAOesGMheei8YgzfRp9pmQ0rT9zhJ2_hF56j5Y+jLSy5TadPZ-g@mail.gmail.com>
-	<20140103030455.GB25079@S2101-09.ap.freescale.net>
-	<CAOesGMihX-pLva-aBCHJ6TYfsN57MzRWiYFTnfKCXOKeja0uUg@mail.gmail.com>
-	<20140104011056.GA3282@S2101-09.ap.freescale.net>
-	<20140110024124.GA6844@S2101-09.ap.freescale.net>
-	<CAOesGMh3HBCYut2hfub3svrJT5JJzoWq8mU=VU0grZbg-JqqbA@mail.gmail.com>
-	<52CFF57D.8060808@samsung.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv10][ 1/3] ARM i.MX35: build in pinctrl support.
+Date: Fri, 10 Jan 2014 16:40:39 +0100
+Message-ID: <1389368441-26310-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52CFF57D.8060808-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 10, 2014 at 7:28 AM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hi,
->
-> On 10.01.2014 03:41, Olof Johansson wrote:
->>
->> On Thu, Jan 9, 2014 at 6:41 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>
->>> On Sat, Jan 04, 2014 at 09:10:58AM +0800, Shawn Guo wrote:
->>>>
->>>> On Fri, Jan 03, 2014 at 11:29:35AM -0800, Olof Johansson wrote:
->>>>>
->>>>> On Thu, Jan 2, 2014 at 7:04 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>>>
->>>>>> On Thu, Jan 02, 2014 at 06:41:30PM -0800, Olof Johansson wrote:
->>>>>>>
->>>>>>> Ok, then it's probably just the location of the header files that
->>>>>>> should be adjusted. Other subsystems have placed them under
->>>>>>> include/dt-bindings/<subsystem>, so that's likely a better place for
->>>>>>> these as well, don't you think?
->>>>>>
->>>>>>
->>>>>> I had a little discussion with DT people when the headers were firstly
->>>>>> created.  These pinctrl headers are a little different from the
->>>>>> headers
->>>>>> in include/dt-bindings/<subsystem>.  The latter are used by both
->>>>>> kernel
->>>>>> and device tree sources, while the pinctrl headers are used by device
->>>>>> tree sources only, so I chose to put them just in the same folder as
->>>>>> dts files.  And DT people are fine with my take.
->>>>>
->>>>>
->>>>> Since you don't provide references to this I had to go searching for
->>>>> it. All I find is some discussion from 8 months ago, and quite a bit
->>>>> of that seems to have been about changing bindings, and some about the
->>>>> preprocessor behavior. Also, the patches seem to have been too big to
->>>>> make it out on the lists.
->>>>>
->>>>> I'd like a fresh look from DT people on this just to make sure no
->>>>> opinions have changed -- lots of things have changed in the last 8
->>>>> months w.r.t. DT.
->>>>
->>>>
->>>> Indeed, it's been quite a long time.  Let me restate my point.  The
->>>> include/dt-bindings is introduced as a folder to hold headers that are
->>>> referenced by both kernel and DTS.  That's why we create the folder in
->>>> the kernel include folder and have arch/arm/boot/dts/include/dt-bindings
->>>> being a symbol link to it.  All the headers in there need to be
->>>> duplicated between kernel and DTS tree, when we move DTS files into
->>>> a separated repository.  Putting DTS local headers into the folder is
->>>> absolutely unnecessary, and will only confuse people and bother
->>>> ourselves when moving DTS files out of kernel tree.
->>>
->>>
->>> Just a gentle ping to ensure we do not get the pull request lost.  Or do
->>> you have any further comment?
->>
->>
->> Still waiting on DT maintainers to chime in.
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ChangeLog v9->v10:
+- Added Fabio Estevam to the Cc list.
+- Removed the duplicated PINCTRL Kconfig selection for the I.MX35,
+  the remaining PINCTRL Kconfig selection is now ordered alphabetically=
+=2E
 
-It helps (slightly) to be copied directly.
+ChangeLog v8->v9:
+- patch refreshed when applying it.
 
-> I'm not officially a DT maintainer, but let me share my thoughts on this.
+ChangeLog v7->v8:
+- The addition of the imx35 pinctrl driver selection in Kconfig that wa=
+s in the
+  patch adding the devicetree support for the imx35 was moved here.
+---
+ arch/arm/mach-imx/Kconfig |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-We can fix that... :)
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index b0c6eb3..7778b16c 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -125,8 +125,9 @@ config SOC_IMX35
+ 	select CPU_V6K
+ 	select HAVE_EPIT
+ 	select MXC_AVIC
+-	select SMP_ON_UP if SMP
+ 	select PINCTRL
++	select PINCTRL_IMX35
++	select SMP_ON_UP if SMP
+=20
+ config SOC_IMX5
+ 	bool
+--=20
+1.7.9.5
 
-> So what options we have for this:
->
->  1) include/dt-bindings - this directory is designed to contain headers
->     that define the ABI between firmware and kernel code, in other
->     words - DT bindings.
->
->  2) arch/*/boot/dts - we already have files that can be included by
->     other files in this directory, i.e. *.dtsi. Some are used to
->     implement hierarchies of devices (e.g. s3c64xx.dtsi), but some are
->     purely used as headers (s3c64xx-pinctrl.dtsi).
->
->  3) include/dts? - I'm not sure if this have any benefits, but I'm
->     listing it since it's one of the ideas that came to my mind.
->
-> Now 2) seems to be already used and doesn't seem to generate any problems,
-> so I'm all for it. Still, there is one more issue. For files to be included
-> merely by DTS files and so limited by DTS+CPP syntax, I don't think it's too
-> good idea to call them *.h. Let's stay with *.dtsi, since that's the file
-> extension supposed to be used for files that can be included from device
-> tree sources.
-
-I think having 1 and 2 is the right way. Minimizing the number of
-shared headers between dts and the kernel is a good thing.
-
-As for *.h vs. *.dtsi naming, if the include is only pre-processor
-defines, then I think using .h is the right way. Otherwise, if there
-is any dts syntax, then .dtsi is the right name. It looks to me like
-this style has been followed in both the imx and s3c64xx cases.
-
-On a side note, I'm not really a fan of this pattern:
-
-#define FOO1 1 2 3
-
-#define BAR FOO1 FOO2 FOO3
-
-While it definitely simplifies the dts files, it would never be used
-in C and obfuscates what the actual property size is. Reading a dts
-file, I would naturally assume the define was a single value while in
-fact it could expand to a very large property size.
-
-Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
