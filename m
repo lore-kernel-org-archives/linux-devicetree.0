@@ -1,49 +1,48 @@
-From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: Re: [PATCH v2] ASoC: fsl_esai: Add ESAI CPU DAI driver
-Date: Sat, 11 Jan 2014 00:45:44 +0800
-Message-ID: <20140110164543.GB17609@MrMyself>
-References: <1389265078-16256-1-git-send-email-Guangyu.Chen@freescale.com>
- <20140109184453.GP12858@sirena.org.uk>
- <20140110023252.GA16467@MrMyself>
- <20140110023537.GB16467@MrMyself>
- <20140110120439.GG29039@sirena.org.uk>
- <20140110130338.GA17392@MrMyself>
- <20140110132642.GM29039@sirena.org.uk>
- <20140110154824.GA17609@MrMyself>
- <20140110165229.GP29039@sirena.org.uk>
+From: Balaji T K <balajitk@ti.com>
+Subject: [PATCH v9 0/7] mmc: omap_hsmmc: pbias dt and cleanup
+Date: Fri, 10 Jan 2014 23:00:41 +0530
+Message-ID: <1389375049-5248-1-git-send-email-balajitk@ti.com>
+References: <1389279062-32291-1-git-send-email-balajitk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140110165229.GP29039@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: timur@tabi.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, shawn.guo@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1389279062-32291-1-git-send-email-balajitk@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, broonie@kernel.org, tony@atomide.com
+Cc: mark.rutland@arm.com, Balaji T K <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 10, 2014 at 04:52:29PM +0000, Mark Brown wrote:
-> On Fri, Jan 10, 2014 at 11:48:25PM +0800, Nicolin Chen wrote:
-> 
-> > I think I start to understand the point here: If a user only needs to playback
-> > the default case - 44.1KHz for example, the driver can just configure all the
-> > dividers once at the beginning, not every time, so that we can save further
-> > register overriding operation or even complicated clock selection and divisor
-> > calculation, which obviously makes the procedure clean and reduces the system
-> > loading even if it might be just in a slight level.
-> 
-> > Is this the reason, or maybe one of the reasons, to the defaults providing?
-> 
-> The main thing is that if the DAI driver does it then it's less code in
-> the machine drivers using it - what tends to happen otherwise is that
-> quite a few machine drivers end up replicating the same logic.  Hardware
-> designers tend to do a lot of cut'n'paste with these things so even if
-> the CODEC is different the clocking is often very similar.
+Few cleanups to reduce code indent,
+Add pbias_regulator support and adapt omap_hsmmc to use pbias regulator
+to configure required voltage on mmc1 pad(SD card) i/o rails on OMAP SoCs.
 
-Point taken. And it also depends on how common the defaults would be.
-I think I should try to figure out a comparably generic template for
-the clock selection and its rate settings here and also check other
-redundant places.
+v9 changes:
+remove simple-bus, add phandle for syscon in dt node
 
-I learned another lesson today. Thank you indeed.
-Nicolin
+Balaji T K (7):
+  mmc: omap_hsmmc: use devm_regulator API
+  mmc: omap_hsmmc: handle vcc and vcc_aux independently
+  regulator: add pbias regulator support
+  mmc: omap_hsmmc: adapt hsmmc to use pbias regulator
+  ARM: dts: add pbias dt node
+  ARM: OMAP: enable SYSCON and REGULATOR_PBIAS in omap2plus_defconfig
+  mmc: omap_hsmmc: remove pbias workaround
+
+ .../bindings/regulator/pbias-regulator.txt         |   27 ++
+ arch/arm/boot/dts/dra7.dtsi                        |   17 ++
+ arch/arm/boot/dts/omap2430.dtsi                    |   17 ++
+ arch/arm/boot/dts/omap3.dtsi                       |   17 ++
+ arch/arm/boot/dts/omap4.dtsi                       |   17 ++
+ arch/arm/boot/dts/omap5.dtsi                       |   17 ++
+ arch/arm/configs/omap2plus_defconfig               |    2 +
+ drivers/mmc/host/omap_hsmmc.c                      |  113 +++++----
+ drivers/regulator/Kconfig                          |    9 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/pbias-regulator.c                |  255 ++++++++++++++++++++
+ 11 files changed, 443 insertions(+), 49 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/pbias-regulator.txt
+ create mode 100644 drivers/regulator/pbias-regulator.c
+
+-- 
+1.7.5.4
 
