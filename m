@@ -1,92 +1,213 @@
-From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Subject: Re: [PATCH RFC RFT 0/2] ARM: Kirkwood: Synology DT files
-Date: Sat, 11 Jan 2014 01:48:21 +1000
-Message-ID: <52D01645.3060103@killerwolves.net>
-References: <1389052027-16819-1-git-send-email-andrew@lunn.ch> <52CE312B.3060108@killerwolves.net> <20140109165557.GB9681@lunn.ch> <52CF4652.3030207@killerwolves.net> <20140110112846.GG27432@n2100.arm.linux.org.uk> <52CFFF07.5080806@killerwolves.net> <20140110142548.GG9681@lunn.ch> <20140110145841.GF15937@n2100.arm.linux.org.uk>
+From: Dinh Nguyen <dinguyen@altera.com>
+Subject: RE: [PATCHv9 1/4] clk: socfpga: Add a clk-phase property to the
+ "altr,socfpga-gate-clk"
+Date: Fri, 10 Jan 2014 09:51:51 -0600
+Message-ID: <1389369111.13556.29.camel@linux-builds1>
+References: <1389303079-19808-1-git-send-email-dinguyen@altera.com>
+	 <1389303079-19808-2-git-send-email-dinguyen@altera.com>
+	 <003501cf0e06$9c194c50$d44be4f0$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140110145841.GF15937-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <003501cf0e06$9c194c50$d44be4f0$%jun@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>
+Cc: dinh.linux@gmail.com, arnd@arndb.de, cjb@laptop.org, jh80.chung@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, mturquette@linaro.org, zhangfei.gao@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/14 00:58, Russell King - ARM Linux wrote:
-> On Fri, Jan 10, 2014 at 03:25:48PM +0100, Andrew Lunn wrote:
->> On Sat, Jan 11, 2014 at 12:09:11AM +1000, Ben Peddell wrote:
->>> Bytes transferred = 1954736 (1dd3b0 hex)
->>> Marvell>> setenv bootargs console=ttyS0,115200 ip=off initrd=0x00800040,0x0013FFC0 root=/dev/md0 rw syno_hw_version=DS211j ihd_num=2 netif_num=1 earlyprintk
->>
->> I don't see you loading the initrd into RAM at 0x0080 0000.
+Hi Seungwong,
+
+On Fri, 2014-01-10 at 22:19 +0900, Seungwon Jeon wrote:
+> Hi Dinh,
 > 
-> However, the kernel _is_ being told that the initrd is at 0x00800040.
+> On Fri, January 10, 2014, Dinh Nguyen wrote:
+> > From: Dinh Nguyen <dinguyen@altera.com>
+> > 
+> > The clk-phase property is used to represent the 2 clock phase values that is
+> > needed for the SD/MMC driver. Add a prepare function to the clk_ops, that will
+> > use the syscon driver to set sdmmc_clk's phase shift that is located in the
+> > system manager.
+> > 
+> > Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+> > Acked-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> > ---
+> > v9: none
+> > v8: Use degrees in the clk-phase binding property
+> > v7: Add dts property to represent the clk phase of the sdmmc_clk. Add a
+> >     prepare function to the gate clk that will toggle clock phase setting.
+> >     Remove the "altr,socfpga-sdmmc-sdr-clk" clock type.
+> > v6: Add a new clock type "altr,socfpga-sdmmc-sdr-clk" that will be used to
+> >     set the phase shift settings.
+> > v5: Use the "snps,dw-mshc" binding
+> > v4: Use the sdmmc_clk prepare function to set the phase shift settings
+> > v3: Not use the syscon driver because as of 3.13-rc1, the syscon driver is
+> >     loaded after the clock driver.
+> > v2: Use the syscon driver
+> > ---
+> >  .../devicetree/bindings/clock/altr_socfpga.txt     |    5 ++
+> >  arch/arm/boot/dts/socfpga.dtsi                     |    1 +
+> >  drivers/clk/socfpga/clk-gate.c                     |   68 ++++++++++++++++++++
+> >  3 files changed, 74 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/altr_socfpga.txt
+> > b/Documentation/devicetree/bindings/clock/altr_socfpga.txt
+> > index 0045433..5dfd145 100644
+> > --- a/Documentation/devicetree/bindings/clock/altr_socfpga.txt
+> > +++ b/Documentation/devicetree/bindings/clock/altr_socfpga.txt
+> > @@ -23,3 +23,8 @@ Optional properties:
+> >          and the bit index.
+> >  - div-reg : For "socfpga-gate-clk", div-reg contains the divider register, bit shift,
+> >          and width.
+> > +- clk-phase : For the sdmmc_clk, contains the value of the clock phase that controls
+> > +	the SDMMC CIU clock. The first value is the clk_sample(smpsel), and the second
+> > +	value is the cclk_in_drv(drvsel). The clk-phase is used to enable the correct
+> > +	hold/delay times that is needed for the SD/MMC CIU clock. The values of both
+> > +	can be 0-315 degrees, in 45 degree increments.
+> > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> > index f936476..e776512 100644
+> > --- a/arch/arm/boot/dts/socfpga.dtsi
+> > +++ b/arch/arm/boot/dts/socfpga.dtsi
+> > @@ -413,6 +413,7 @@
+> >  						compatible = "altr,socfpga-gate-clk";
+> >  						clocks = <&f2s_periph_ref_clk>, <&main_nand_sdmmc_clk>,
+> > <&per_nand_mmc_clk>;
+> >  						clk-gate = <0xa0 8>;
+> > +						clk-phase = <0 135>;
 > 
->>> Uncompressing Linux... done, booting the kernel.
->>> [    0.000000] Booting Linux on physical CPU 0x0
->>> [    0.000000] Linux version 3.13.0-rc7-ds211j+ (root@lurch) (gcc version 4.8.2 (Gentoo 4.8.2 p1.3, pie-0.5.8) ) #2 Thu Jan 9 08:52:24 EST 2014
->>> [    0.000000] CPU: Feroceon 88FR131 [56251311] revision 1 (ARMv5TE), cr=00053977
->>> [    0.000000] CPU: VIVT data cache, VIVT instruction cache
->>> [    0.000000] Machine model: Synology DS210 v10, v20, v30, DS211j
->>> [    0.000000] bootconsole [earlycon0] enabled
->>> [    0.000000] INITRD: 0xf8280040+0x000f993c is not a memory region - disabling initrd
->>
->> The kernel is correct. There is no RAM here. That is in the IOMEM
->> space.
+> Can clk-phase be applicable commonly for various board?
+> Isn't specific timing values?
+
+No, the clock-phase does not change for various board. It is a
+SoC-specific property.
+
+Thanks,
+Dinh
 > 
-> But here the kernel has ignored the command line parameter and instead
-> used the one passed via DT.  That is not correct - command line parameters
-> must always override ATAGs or DT.
+> Thanks,
+> Seungwon Jeon
+> >  					};
+> > 
+> >  					nand_x_clk: nand_x_clk {
+> > diff --git a/drivers/clk/socfpga/clk-gate.c b/drivers/clk/socfpga/clk-gate.c
+> > index 4efcf4e..501d513 100644
+> > --- a/drivers/clk/socfpga/clk-gate.c
+> > +++ b/drivers/clk/socfpga/clk-gate.c
+> > @@ -19,7 +19,9 @@
+> >  #include <linux/clkdev.h>
+> >  #include <linux/clk-provider.h>
+> >  #include <linux/io.h>
+> > +#include <linux/mfd/syscon.h>
+> >  #include <linux/of.h>
+> > +#include <linux/regmap.h>
+> > 
+> >  #include "clk.h"
+> > 
+> > @@ -35,6 +37,11 @@
+> > 
+> >  #define to_socfpga_gate_clk(p) container_of(p, struct socfpga_gate_clk, hw.hw)
+> > 
+> > +/* SDMMC Group for System Manager defines */
+> > +#define SYSMGR_SDMMCGRP_CTRL_OFFSET    0x108
+> > +#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel) \
+> > +	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
+> > +
+> >  static u8 socfpga_clk_get_parent(struct clk_hw *hwclk)
+> >  {
+> >  	u32 l4_src;
+> > @@ -115,7 +122,61 @@ static unsigned long socfpga_clk_recalc_rate(struct clk_hw *hwclk,
+> >  	return parent_rate / div;
+> >  }
+> > 
+> > +static int socfpga_clk_prepare(struct clk_hw *hwclk)
+> > +{
+> > +	struct socfpga_gate_clk *socfpgaclk = to_socfpga_gate_clk(hwclk);
+> > +	struct regmap *sys_mgr_base_addr;
+> > +	int i;
+> > +	u32 hs_timing;
+> > +	u32 clk_phase[2];
+> > +
+> > +	if (socfpgaclk->clk_phase[0] || socfpgaclk->clk_phase[1]) {
+> > +		sys_mgr_base_addr = syscon_regmap_lookup_by_compatible("altr,sys-mgr");
+> > +		if (IS_ERR(sys_mgr_base_addr)) {
+> > +			pr_err("%s: failed to find altr,sys-mgr regmap!\n", __func__);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		for (i = 0; i < 2; i++) {
+> > +			switch (socfpgaclk->clk_phase[i]) {
+> > +			case 0:
+> > +				clk_phase[i] = 0;
+> > +				break;
+> > +			case 45:
+> > +				clk_phase[i] = 1;
+> > +				break;
+> > +			case 90:
+> > +				clk_phase[i] = 2;
+> > +				break;
+> > +			case 135:
+> > +				clk_phase[i] = 3;
+> > +				break;
+> > +			case 180:
+> > +				clk_phase[i] = 4;
+> > +				break;
+> > +			case 225:
+> > +				clk_phase[i] = 5;
+> > +				break;
+> > +			case 270:
+> > +				clk_phase[i] = 6;
+> > +				break;
+> > +			case 315:
+> > +				clk_phase[i] = 7;
+> > +				break;
+> > +			default:
+> > +				clk_phase[i] = 0;
+> > +				break;
+> > +			}
+> > +		}
+> > +		hs_timing = SYSMGR_SDMMC_CTRL_SET(clk_phase[0], clk_phase[1]);
+> > +		regmap_write(sys_mgr_base_addr, SYSMGR_SDMMCGRP_CTRL_OFFSET,
+> > +			hs_timing);
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> >  static struct clk_ops gateclk_ops = {
+> > +	.prepare = socfpga_clk_prepare,
+> >  	.recalc_rate = socfpga_clk_recalc_rate,
+> >  	.get_parent = socfpga_clk_get_parent,
+> >  	.set_parent = socfpga_clk_set_parent,
+> > @@ -126,6 +187,7 @@ static void __init __socfpga_gate_init(struct device_node *node,
+> >  {
+> >  	u32 clk_gate[2];
+> >  	u32 div_reg[3];
+> > +	u32 clk_phase[2];
+> >  	u32 fixed_div;
+> >  	struct clk *clk;
+> >  	struct socfpga_gate_clk *socfpga_clk;
+> > @@ -166,6 +228,12 @@ static void __init __socfpga_gate_init(struct device_node *node,
+> >  		socfpga_clk->div_reg = 0;
+> >  	}
+> > 
+> > +	rc = of_property_read_u32_array(node, "clk-phase", clk_phase, 2);
+> > +	if (!rc) {
+> > +		socfpga_clk->clk_phase[0] = clk_phase[0];
+> > +		socfpga_clk->clk_phase[1] = clk_phase[1];
+> > +	}
+> > +
+> >  	of_property_read_string(node, "clock-output-names", &clk_name);
+> > 
+> >  	init.name = clk_name;
+> > --
+> > 1.7.9.5
+> > 
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
-> (That's irrespective of whether what's actually being asked of the kernel
-> is correct or not - the principle here applies that command line parameters
-> override, and in this case they aren't.)
+> 
 
 
-Uncompressing Linux... done, booting the kernel.
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 3.13.0-rc7-ds211j+ (klightspeed@lurch) (gcc version 4.8.2 (Gentoo 4.8.2 p1.3, pie-0.5.8) ) #4 Sat Jan 11 01:20:05 EST 2014
-[    0.000000] CPU: Feroceon 88FR131 [56251311] revision 1 (ARMv5TE), cr=00053977
-[    0.000000] CPU: VIVT data cache, VIVT instruction cache
-[    0.000000] FDT initrd_start=0xf8280040  initrd_end=0xf83c0000
-[    0.000000] Machine model: Synology DS210 v10, v20, v30, DS211j
-[    0.000000] bootconsole [earlycon0] enabled
-[    0.000000] Kernel Parameter initrd=0x00800040,0x0013ffc0
-[    0.000000] INITRD: 0xf8280040+0x0013ffc0 is not a memory region - disabling initrd
-...
-[    1.316624] Trying to unpack rootfs image as initramfs...
-[    1.322097] Unable to handle kernel paging request at virtual address b8280040
 
-
-First, FDT fills in initrd_start and initrd_end:
-
---- start drivers/of/fdt.c line 704 early_init_dt_check_for_initrd() ---
-        initrd_start = (unsigned long)__va(start);
-        initrd_end = (unsigned long)__va(end);
-        initrd_below_start_ok = 1;
---- end ---
-
-Then the initrd parameter is parsed into phys_initrd_start and phys_initrd_size:
-
---- start arch/arm/mm/init.c line 52 early_initrd() ---
-                phys_initrd_start = start;
-                phys_initrd_size = size;
---- end ---
-
-phys_initrd_start and phys_initrd_size is then overwritten from initrd_start and initrd_end:
-
---- start arch/arm/mm/init.c line 351 arm_memblock_init() ---
-        /* FDT scan will populate initrd_start */
-        if (initrd_start) {
-                phys_initrd_start = __virt_to_phys(initrd_start);
-                phys_initrd_size = initrd_end - initrd_start;
-        }
---- end ---
-
-initrd_start and initrd_end are still set, and so unpack_to_rootfs() tries to access it.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
