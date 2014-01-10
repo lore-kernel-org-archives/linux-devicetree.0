@@ -1,53 +1,50 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCHv5][ 1/5] fbdev: Add the lacking FB_SYNC_* for matching
-	the DISPLAY_FLAGS_*
-Date: Fri, 10 Jan 2014 12:46:53 +0000
-Message-ID: <20140110124653.GA15937@n2100.arm.linux.org.uk>
-References: <1383915693-9422-1-git-send-email-denis@eukrea.com> <52CFE994.8070701@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3] ASoC: fsl_esai: Add ESAI CPU DAI driver
+Date: Fri, 10 Jan 2014 12:52:31 +0000
+Message-ID: <20140110125231.GK29039@sirena.org.uk>
+References: <1389347646-20432-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VJJoKLVEFXdmHQwR"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52CFE994.8070701-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1389347646-20432-1-git-send-email-Guangyu.Chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: timur@tabi.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, shawn.guo@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 10, 2014 at 02:37:40PM +0200, Tomi Valkeinen wrote:
-> I don't think this is better than the previous version where
-> FB_SYNC_DE_HIGH_ACT and FB_SYNC_PIXDAT_HIGH_ACT were in
-> include/uapi/linux/fb.h. Now those flag defines are not visible to the
-> userspace, but the actual flags are still visible from the var->sync field.
-> 
-> It's true what Russell replied to the previous version, that the
-> userspace has no idea how to handle those new flags. But then again, for
-> LCDs, the userspace has no idea how to handle, say, hsync polarity either.
-> 
-> In any case, splitting the FB_SYNC_ defines into uapi and
-> kernel-internal header files, but still giving the kernel-internal
-> values to userspace is surely wrong.
 
-The difference between the sync states and these other flags is that
-the sync states are part of the mode definition - as per the CEA-861
-documentation.
+--VJJoKLVEFXdmHQwR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-However, that does not extend to LCD panels, which generally need to
-have one set of timings, with the various control signals at certain
-polarities - and those control signal polarities are a property of
-the panel itself, not of the displayed mode.  So, if you know that
-you have LCD panel X, and it needs control signals with a certain
-polarity, that is how you configure the hardware _irrespective_ of
-what userspace says that the sync states should be.
+On Fri, Jan 10, 2014 at 05:54:06PM +0800, Nicolin Chen wrote:
+> This patch implements a device-tree-only CPU DAI driver for Freescale ESAI
+> controller that supports:
 
-The sync states specified by userspace should of course be used for
-the sync pulses being sent to a VGA display or HDMI sink.
+Applied, thanks.
 
--- 
-FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--VJJoKLVEFXdmHQwR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSz+0LAAoJELSic+t+oim91akP/2mtB/1hNpiDcevh1qECfDrT
+EbvzZIEfN5bJQCjSsA1j4uv/2wz7u3teazfK1SmQHcBv7IF6McpQktdZD5KaP0LO
+sXmV3o6qCfm7ZflKt2fjU2CtnVO1/PFwxfdNhxG+BZ7n8IqwW7EF/Oyvg0a8FAbx
+jI9wxpur/hnqBbQGCi+g/NZ5RFouoH9EJ6W2YnSuCqMT/h/ifTX2gjf0GLlDJ/ip
+Q0fqFfwZPaxFJzUQrEHl7THfEr9MkZswgD6eY8a/bw9Nb5R3a6d1TsToFipco6Zl
+XedQyIBU33hgbq/l471+YH3RtNNQW2PTYP75+Aj1glQxxY0n1MplF7A06obKnBpe
+f9m2WD+6j1fVX0nQVsLXpdN5mcKTk1H0NumOWqi+CQpk9ZYivupXNoKDdq8pk+bX
+DRaQ0yGuheuPCr9BSnK20c1PRnPRwgpaqBfhbd4vZHiuIZFH+TMFz2q2w6IXnE4z
+NDuLj2oAy6BNGb0hCK9FVXXmHnGCKdXaugVoWkp8EG47D2DI2D4sU2Cx1Y/kzbot
+U54pvApJaKaADtFyAm2Z0t1GzCN1TgmAsJa4K1J/tF3S7/0IrD49XzGGQtPB5QP5
+3ZvYG9iemHZoEfJiPzhQQZRCHCO6WCEuLgqFRMk3p75ZAx3FYxdv3XCRH6FMgR11
+JA6UEdXSAb+Gl9OMKVLX
+=yaEU
+-----END PGP SIGNATURE-----
+
+--VJJoKLVEFXdmHQwR--
