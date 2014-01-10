@@ -1,83 +1,31 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] Documentation: Add GPIO reset binding to reset
- binding documentation
-Date: Fri, 10 Jan 2014 12:25:36 +0100
-Message-ID: <1389353136.5854.13.camel@pizza.hi.pengutronix.de>
-References: <1389179464-11963-1-git-send-email-p.zabel@pengutronix.de>
-	 <201401081708.26679.arnd@arndb.de>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH RFC RFT 0/2] ARM: Kirkwood: Synology DT files
+Date: Fri, 10 Jan 2014 11:28:46 +0000
+Message-ID: <20140110112846.GG27432@n2100.arm.linux.org.uk>
+References: <1389052027-16819-1-git-send-email-andrew@lunn.ch> <52CE312B.3060108@killerwolves.net> <20140109165557.GB9681@lunn.ch> <52CF4652.3030207@killerwolves.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201401081708.26679.arnd-r2nGTMty4D4@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52CF4652.3030207-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+To: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Fri, Jan 10, 2014 at 11:01:06AM +1000, Ben Peddell wrote:
+> It appears the initrd address in the devicetree structure (which is 
+> filled in from what is passed by the bootloader when 
+> CONFIG_ARM_ATAG_DTB_COMPAT is set) is processed _after_ the address in 
+> the initrd= kernel parameter is processed.
 
-Am Mittwoch, den 08.01.2014, 17:08 +0100 schrieb Arnd Bergmann:
-> On Wednesday 08 January 2014, Philipp Zabel wrote:
-> > += GPIO Reset consumers =
-> > +
-> > +For the common case of reset lines controlled by GPIOs, the GPIO binding
-> > +documented in devicetree/bindings/gpio/gpio.txt should be used:
-> > +
-> > +Required properties:
-> > +reset-gpios or         Reset GPIO using standard GPIO bindings,
-> > +<name>-reset-gpios:    optionally named to specify the reset line
-> > +
-> > +Optional properties:
-> > +reset-boot-asserted or         Boolean. If set, the corresponding reset is
-> > +<name>-reset-boot-asserted:    initially asserted and should be kept that way
-> > +                               until released by the driver.
-> 
-> I don't get this one. Why would you use a different reset binding for the case
-> where the reset line is connected to the gpio controller rather than a
-> specialized reset controller?
-> 
-> I was expecting to see the definition of a generic reset controller that
-> in turn uses gpio lines, like
-> 
-> 
->         reset { 
->                 compatible = "gpio-reset";
->                 /* provides three reset lines through these GPIOs */
->                 gpios = <&gpioA 1 &gpioB 7 <gpioD 17>;
->                 #reset-cells = <1>;
->         };
-> 
->         foo {
->                 ...
->                 resets = <&reset 0>; /* uses first reset line of the gpio-reset controller */
->         };
+That's wrong.  Kernel parameters should always override what's passed by
+boot loaders etc.
 
-That is what I initially proposed...
-
-> I realize it would be a little more verbose, but it also seems more
-> regular and wouldn't stand out from the rest of the reset interfaces.
-
-... but it can also be argued that GPIO resets shouldn't stand out from
-other GPIOs.
-
-Mark Rutland spoke out against having a 'GPIO reset device' node in the
-device tree:
-
-http://comments.gmane.org/gmane.linux.drivers.devicetree/41596
-
-and I see his point. Using different bindings for reset controller IPs
-and for single GPIOs better describes the actual hardware and it is less
-Linux specific: it still allows an OS without gpio-reset framework to
-let each driver handle the GPIO itself.
-
-Also Stephen Warren pointed out that we'll have to support the existing
-GPIO bindings anyway: in the meantime there are a lot of GPIO resets in
-various device trees that use the GPIO bindings.
-
-regards
-Philipp
-
+-- 
+FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
+in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
+Estimate before purchase was "up to 13.2Mbit".
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
