@@ -1,102 +1,140 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] ASoC: fsl_esai: Add ESAI CPU DAI driver
-Date: Fri, 10 Jan 2014 12:04:39 +0000
-Message-ID: <20140110120439.GG29039@sirena.org.uk>
-References: <1389265078-16256-1-git-send-email-Guangyu.Chen@freescale.com>
- <20140109184453.GP12858@sirena.org.uk>
- <20140110023252.GA16467@MrMyself> <20140110023537.GB16467@MrMyself>
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: Re: [PATCH 6/6] arm: dts: add cpu nodes for Exynos4210 SoC
+Date: Fri, 10 Jan 2014 17:36:00 +0530
+Message-ID: <CAJuA9ag47f3gHmnXmJHOg+rUhG9O8XsmuLcECXA-cczJjJmSTA@mail.gmail.com>
+References: <1389283165-17708-1-git-send-email-thomas.ab@samsung.com>
+	<1389283165-17708-7-git-send-email-thomas.ab@samsung.com>
+	<20140110113218.423bc6e0@amdc2363>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3664362037257745689=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20140110023537.GB16467@MrMyself>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Nicolin Chen <Guangyu.Chen@freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, shawn.guo@linaro.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tiwai@suse.de, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, timur@tabi.org, lgirdwood@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <20140110113218.423bc6e0@amdc2363>
+Sender: cpufreq-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, cpufreq@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t.figa@samsung.com, kgene.kim@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, thomas.ab@samsung.com, Lukasz Majewski <l.majewski@majess.pl>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lukasz,
 
---===============3664362037257745689==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fCcDWlUEdh43YKr8"
-Content-Disposition: inline
+On Fri, Jan 10, 2014 at 4:02 PM, Lukasz Majewski <l.majewski@samsung.com> wrote:
+> Hi Thomas,
+>
+>> Add CPU nodes for Exynos4210 SoC and also properties required by the
+>> cpufreq-cpu0 driver.
+>>
+>> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos4210-origen.dts         |    6 ++++++
+>>  arch/arm/boot/dts/exynos4210-trats.dts          |    6 ++++++
+>>  arch/arm/boot/dts/exynos4210-universal_c210.dts |    6 ++++++
+>>  arch/arm/boot/dts/exynos4210.dtsi               |   22
+>> ++++++++++++++++++++++ 4 files changed, 40 insertions(+), 0
+>> deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4210-origen.dts
+>> b/arch/arm/boot/dts/exynos4210-origen.dts index 2aa13cb..afecd8f
+>> 100644 --- a/arch/arm/boot/dts/exynos4210-origen.dts
+>> +++ b/arch/arm/boot/dts/exynos4210-origen.dts
+>> @@ -32,6 +32,12 @@
+>>               bootargs ="root=/dev/ram0 rw ramdisk=8192
+>> initrd=0x41000000,8M console=ttySAC2,115200 init=/linuxrc"; };
+>>
+>> +     cpus {
+>> +             cpu: cpu@0 {
+>> +                     cpu0-supply = <&buck1_reg>;
+>> +             };
+>> +     };
+>> +
+>>       regulators {
+>>               compatible = "simple-bus";
+>>               #address-cells = <1>;
+>> diff --git a/arch/arm/boot/dts/exynos4210-trats.dts
+>> b/arch/arm/boot/dts/exynos4210-trats.dts index 63cc571..25487d7 100644
+>> --- a/arch/arm/boot/dts/exynos4210-trats.dts
+>> +++ b/arch/arm/boot/dts/exynos4210-trats.dts
+>> @@ -30,6 +30,12 @@
+>>               bootargs = "console=ttySAC2,115200N8
+>> root=/dev/mmcblk0p5 rootwait earlyprintk panic=5"; };
+>>
+>> +     cpus {
+>> +             cpu: cpu@0 {
+>> +                     cpu0-supply = <&varm_breg>;
+>> +             };
+>> +     };
+>> +
+>>       regulators {
+>>               compatible = "simple-bus";
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts
+>> b/arch/arm/boot/dts/exynos4210-universal_c210.dts index
+>> d2e3f5f..74d5a70 100644 ---
+>> a/arch/arm/boot/dts/exynos4210-universal_c210.dts +++
+>> b/arch/arm/boot/dts/exynos4210-universal_c210.dts @@ -28,6 +28,12 @@
+>>               bootargs = "console=ttySAC2,115200N8
+>> root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1"; };
+>>
+>> +     cpus {
+>> +             cpu: cpu@0 {
+>> +                     cpu0-supply = <&vdd_arm_reg>;
+>> +             };
+>> +     };
+>> +
+>>       mct@10050000 {
+>>               compatible = "none";
+>>       };
+>> diff --git a/arch/arm/boot/dts/exynos4210.dtsi
+>> b/arch/arm/boot/dts/exynos4210.dtsi index 48ecd7a..3db2da8 100644
+>> --- a/arch/arm/boot/dts/exynos4210.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4210.dtsi
+>> @@ -36,6 +36,28 @@
+>>               reg = <0x10023CA0 0x20>;
+>>       };
+>>
+>> +     cpus {
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             cpu: cpu@0 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "arm,cortex-a9";
+>> +                     reg = <0>;
+>> +                     clocks = <&clock 12>;
+>> +                     clock-names = "cpu";
+>> +
+>> +                     operating-points = <
+>> +                             200000  950000
+>> +                             400000  975000
+>> +                             500000  975000
+>> +                             800000  1075000
+>> +                             1000000 1150000
+>> +                             1200000 1250000
+>> +                     >;
+>
+> On the ./arch/arm/boot/dts/highbank.dts the oop's order is decreasing.
+>
+> That shouldn't be a problem for the cpufreq core, however in my opinion
+> we shall stick to one convention.
 
+There are other platforms like the OMAP which use increasing order but
+the decreasing order seems to be the most prevalent. I will change the
+order in the next version of this patch series.
 
---fCcDWlUEdh43YKr8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks,
+Thomas.
 
-On Fri, Jan 10, 2014 at 10:35:39AM +0800, Nicolin Chen wrote:
-
-> Resent this because of losing attached file.
-
-I don't think your previous mail got sent at all, or at least it must've
-been caught by spam filters here...
-
-> On Fri, Jan 10, 2014 at 10:32:52AM +0800, Nicolin Chen wrote:
-> > On Thu, Jan 09, 2014 at 06:44:53PM +0000, Mark Brown wrote:
-
-> > > Why does the machine driver have to do this by hand, being able to
-> > > override is fine but having sensible defaults is easier?  Or does it
-> > > actually do that and the comment just needs updating?
-
-> > The divider part of ESAI is pretty complicated due to caring about three
-> > configure bits - ETO, ETI, HCKD. (I've attached a diagram to this mail.)
-> > So setting sysclk() alone is not enough to take care all the configurations.
-> > That's why I designed these two interfaces at the first place. And it should
-> > be hard to find a default situation.
-
-Why is the machine driver going to be able to come up with a sensible
-configuration then?  It's OK to support overriding the configuration
-where needed, my concern is about providing a default.
-
-> > But there is one approach to omit this calling for machine driver is to do
-> > the set_bclk_ratio() at this CPU DAI driver. And this might be a good idea
-> > because we can then separate the settings between PLAYBACK and CAPTURE, even
-> > though we might then need to check the Master or Slave state to apply the
-> > settings accordingly.
-
-This is about what I'd expect but then surely the next step is for the
-driver to choose a defualt BCLK ratio - that's how most drivers work,
-they try to generate the exact rate that is needed to clock the data.
-Are the bit clock shared between playback and capture?
-
---fCcDWlUEdh43YKr8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSz+HUAAoJELSic+t+oim9oDYP/1b4VUYEQq2BGjz+hdjrx5XW
-Tv90KklVlfXZBxkMbusrvB04uuZiHTUipz7tVsSxK4hE56Ye5M5DUavS8cUeoOqU
-Lp4x0RbXGVLPncnX3Af7HXUg3Z7qXUrO+3lnX4nrll7pJJvggN0Uud7YYGvjxNZt
-rm0Wh78h272Oyb4ECdUtQivX6csLqj40E3KIiZfJ/GUmh2ji07GXNwbcr4Be6Twf
-bwE81FfgB1tJ0GZdl1emQTS/h7F8YQgEo72S0G5wY/XfXys+mECrfdtxXvVeLtVv
-Uzd3VPPVKsnYE4ZO0sSsgG7DpJP3pjQWah5xOZ7Vrg/vQreB7Ucdfvs8FhZvJO9l
-nSrGXKUwACAIsO/oedvJCaQ2zcFTGC9foGsuSNH/xaCKITdtA7RfwIJCiGf0vtF9
-i0qO48wkMf+KABaWYbuVX5EZehWoZj9rrrb1j+LZNVKx5UhIKnscls9CmIiSPLEw
-EwarmZ7AOovRTIgJWx6LyhXGiJzcfatugeKQVTkNFgruhlvNAfv49J5ZySBhvKI6
-zwmk8OLkUszFzDbwAoyJYh7JsTQsA6u1KL4O2pQ2CTdp7tmrm7GaBX//4uNydgl6
-NuVwIuHSrpl4thC9YpofAWo3bHF22zPZ8SGpLDbMQsYj809WwRWm2x71ItBPV7uT
-EXyp1eDAIpXyx0Jepi3S
-=vciL
------END PGP SIGNATURE-----
-
---fCcDWlUEdh43YKr8--
-
---===============3664362037257745689==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3664362037257745689==--
+>
+>> +                     safe-opp-index = <3>;
+>> +             };
+>> +     };
+>> +
+>>       gic: interrupt-controller@10490000 {
+>>               cpu-offset = <0x8000>;
+>>       };
+>
+>
+>
+> --
+> Best regards,
+>
+> Lukasz Majewski
+>
+> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
