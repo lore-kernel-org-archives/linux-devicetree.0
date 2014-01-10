@@ -1,192 +1,238 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv8 2/2] dma: Add Freescale eDMA engine driver support
-Date: Fri, 10 Jan 2014 06:17:47 +0000
-Message-ID: <e63e37fe47464165a235894207a34b60@BLUPR03MB472.namprd03.prod.outlook.com>
-References: <1388645544-5596-1-git-send-email-b35083@freescale.com>
- <201401091142.35226.arnd@arndb.de>
- <dde6cf78c07b40f29ac711fc27fe903c@BL2PR03MB467.namprd03.prod.outlook.com>
- <3667418.IelkNxAYvi@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3667418.IelkNxAYvi@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
+Subject: [PATCH V6 2/2] ARM: dts: Enable ahci sata and sata phy
+Date: Fri, 10 Jan 2014 12:30:07 +0530
+Message-ID: <1389337208-11325-3-git-send-email-yuvaraj.cd@samsung.com>
+References: <1389337208-11325-1-git-send-email-yuvaraj.cd@samsung.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1389337208-11325-1-git-send-email-yuvaraj.cd@samsung.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: kishon@ti.com, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: mark.rutland@arm.com, jg1.han@samsung.com, b.zolnierkie@samsung.com, joshi@samsung.com, t.figa@samsung.com, swarren@wwwdotorg.org, grant.likely@linaro.org, christoffer.dall@linaro.org, linux-ide@vger.kernel.org, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBcm5kIEJlcmdtYW5uIFttYWls
-dG86YXJuZEBhcm5kYi5kZV0NCj4gU2VudDogVGh1cnNkYXksIEphbnVhcnkgMDksIDIwMTQgODox
-OSBQTQ0KPiBUbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPiBDYzogdmlub2Qua291bEBpbnRlbC5j
-b207IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgc2hhd24uZ3VvQGxpbmFyby5vcmc7DQo+IHBh
-d2VsLm1vbGxAYXJtLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IHN3YXJyZW5Ad3d3ZG90b3Jn
-Lm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSHY4IDIvMl0gZG1hOiBBZGQgRnJlZXNjYWxlIGVETUEgZW5naW5lIGRy
-aXZlciBzdXBwb3J0DQo+IA0KPiBPbiBUaHVyc2RheSAwOSBKYW51YXJ5IDIwMTQgMTE6NDQ6NDYg
-SmluZ2NoYW5nIEx1IHdyb3RlOg0KPiA+ID4NCj4gPiA+IE9uIFRodXJzZGF5IDA5IEphbnVhcnkg
-MjAxNCwgSmluZ2NoYW5nIEx1IHdyb3RlOg0KPiA+ID4gPiA+ID4gPiArc2FpMjogc2FpQDQwMDMx
-MDAwIHsNCj4gPiA+ID4gPiA+ID4gKwljb21wYXRpYmxlID0gImZzbCx2ZjYxMC1zYWkiOw0KPiA+
-ID4gPiA+ID4gPiArCXJlZyA9IDwweDQwMDMxMDAwIDB4MTAwMD47DQo+ID4gPiA+ID4gPiA+ICsJ
-aW50ZXJydXB0cyA9IDwwIDg2IDB4MDQ+Ow0KPiA+ID4gPiA+ID4gPiArCWNsb2NrcyA9IDwmY2xr
-cyBWRjYxMF9DTEtfU0FJMj47DQo+ID4gPiA+ID4gPiA+ICsJY2xvY2stbmFtZXMgPSAic2FpIjsN
-Cj4gPiA+ID4gPiA+ID4gKwlkbWEtbmFtZXMgPSAidHgiLCAicngiOw0KPiA+ID4gPiA+ID4gPiAr
-CWRtYXMgPSA8JmVkbWEwIFZGNjEwX0VETUFfRE1BTVVYMA0KPiBWRjYxMF9FRE1BMF9NVVgwX1NB
-STJfVFg+LA0KPiA+ID4gPiA+ID4gPiArCQk8JmVkbWEwIFZGNjEwX0VETUFfRE1BTVVYMA0KPiBW
-RjYxMF9FRE1BMF9NVVgwX1NBSTJfUlg+Ow0KPiA+ID4gPiA+ID4gPiArCXN0YXR1cyA9ICJkaXNh
-YmxlZCI7DQo+ID4gPiA+ID4gPiA+ICt9Ow0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gSXQgc2VlbXMg
-d3JvbmcgdG8gaGF2ZSBtYWNyb3MgZGVmaW5lZCBsaWtlDQo+IFZGNjEwX0VETUEwX01VWDBfU0FJ
-Ml9UWCwNCj4gPiA+ID4gPiBpbiBwYXJ0aWN1bGFyIGluIHRoZSBleGFtcGxlLiBUaGVzZSBzaG91
-bGQganVzdCBiZSBsaXRlcmFsDQo+IG51bWJlcnMuDQo+ID4gPiA+IFtMdSBKaW5nY2hhbmctYjM1
-MDgzXQ0KPiA+ID4gPiBUaGlzIGVETUEgZW5naW5lZXIgcmVxdWlyZXMgdHdvIHNwZWNpZmllcnMs
-IG9uZSBpcyBhIG11eCBncm91cCBpZCwNCj4gdGhlDQo+ID4gPiBvdGhlciBpcyBhIHJlcXVlc3Qg
-c291cmNlIGlkLg0KPiA+ID4gPiBUaGUgVkY2MTBfRURNQTBfTVVYMF9TQUkyX1RYIGlzIHNhaSdz
-IHR4IGRtYSByZXF1ZXN0IHNvdXJjZSBpZCwgaXQNCj4gaXMNCj4gPiA+IGRlZmluZWQgYXMgYSBs
-aXRlcmFsIG51bWJlci4NCj4gPiA+ID4gVGhlcmUgYXJlIHRvdGFsbHkgbW9yZSB0aGFuIDEwMCBy
-ZXF1ZXN0IHNvdXJjZSBpZCwgSSBoYXZlIHRoZW0NCj4gbWFjcm9zDQo+ID4gPiBkZWZpbmVkIHRv
-IG1ha2UgaXQgcmVmZXJlbmNlZA0KPiA+ID4gPiBlYXNpbHkgYW5kIGNsZWFybHksIGp1c3QgbGlr
-ZSBzb21lIGNsb2NrIGJpbmRpbmcgZG9uZS4NCj4gPiA+ID4gVGhlIG1hY3JvcyBhcmUgZGVmaW5l
-ZCBpbiBpbmNsdWRlL2R0LWJpbmRpbmdzL2RtYS92ZjYxMC1lZG1hLmguDQo+ID4gPg0KPiA+ID4g
-VGhlIGNsb2NrIGJpbmRpbmdzIGFyZSBzcGVjaWFsIGJlY2F1c2UgdGhlIG1hY3JvcyB0aGVyZSB0
-ZW5kIHRvIGJlDQo+IG1hZGUNCj4gPiA+IHVwIGZvciBjb250cm9sbGVycyB0aGF0IGp1c3QgaGF2
-ZSBhIGJ1bmNoIG9mIGNsb2NrcyBhdCByYW5kb20NCj4gcmVnaXN0ZXINCj4gPiA+IGxvY2F0aW9u
-cy4NCj4gPiA+DQo+ID4gPiBUaGlzIGlzIG5vdCB0aGUgY2FzZSBmb3IgRE1BIGJpbmRpbmdzIChv
-ciBzb21lIG9mIHRoZSBtb3JlIHJlZ3VsYXINCj4gY2xvY2sNCj4gPiA+IGNvbnRyb2xsZXJzKSwg
-c28gdGhlcmUgaXMgYWJzb2x1dGVseSBubyByZWFzb24gdG8gZGVmaW5lIHRob3NlIG1hY3Jvcw0K
-PiA+ID4gaW4gYSBoZWFkZXIgZmlsZSwgaXQganVzdCBhZGRzIGFydGlmaWNpYWwgZGVwZW5kZW5j
-aWVzIGJldHdlZW4gdGhlDQo+ID4gPiBkcml2ZXIsIFNvQyBzdXBwb3J0IGFuZCB0aGUgYmluZGlu
-Zy4NCj4gPiA+DQo+ID4gPiBJZiB0aGUgbnVtYmVycyBhcmUgdGhlIHNhbWUgYXMgdGhlIG9uZXMg
-cHJvdmlkZWQgaW4gdGhlIGRhdGEgc2hlZXQsDQo+ID4gPiBqdXN0IHVzZSB0aGUgbnVtYmVycyBh
-bmQgcmVtb3ZlIHRoZSBtYWNyb3MuDQo+ID4NCj4gPiBZZXMsIHRoZSByZXF1ZXN0IHNvdXJjZSBp
-ZCBpcyBkZWZpbmVkIGluIHRoZSBkYXRhIHNoZWV0Lg0KPiA+IGVhY2ggZURNQSBjb250cm9sbGVy
-IGhhcyB0d28gbXV4ZXMsIHNvbWUgU29DcyBoYXZlIHR3byBlRE1BIGNvbnRyb2xsZXJzDQo+ID4g
-d2hpbGUgb3RoZXJzIGhhdmUgb25seSBvbmUuIFRoZSAxc3QgZURNQSdzIG11eGVzIGFyZSBuYW1l
-ZCBtdXgwIGFuZA0KPiBtdXgxLA0KPiA+IHdoaWxlIHRoZSAybmQgZURNQSBjb250cm9sbGVyJ3Mg
-bXV4ZXMgYXJlIG5hbWVkIE1VWDIgYW5kIE1VWDMgaW4gdGhlDQo+IGRhdGFzaGVldCwNCj4gPiBh
-bmQgSSBpbmRleCB0aGVtIGluIGVhY2ggZURNQSBjb250cm9sbGVyIGZyb20gMCBpbiB0aGUgZHJp
-dmVyIHRvIGhhbmRsZQ0KPiB0aGVtIGNvbW1vbmx5Lg0KPiANCj4gUmlnaHQuIEkgZG9uJ3Qgb2Jq
-ZWN0IHRvIHRoZSB1c2Ugb2YgdGhlIG1hY3JvcyBmb3IgdGhlIG11eGVzLCB0aGF0IHNlZW1zDQo+
-IGZpbmUgYW5kIGFwcHJvcHJpYXRlIGdpdmVuIHlvdXIgZGVzY3JpcHRpb24uDQo+IA0KPiA+IEkg
-ZGVmaW5lcyB0aGUgbWFjcm8gdGVuZGluZyB0byBnaXZlIHRoZSBpbmZvIGZyb20gdGhlIG1hY3Jv
-IG5hbWUsIHN1Y2gNCj4gYXMNCj4gPiBmb3IgdGhlIFZGNjEwX0VETUEwX01VWDBfU0FJMl9UWCBy
-ZXF1ZXN0IHNvdXJjZSwgaW1wbHlpbmcgdGhlIGVETUENCj4gZW5naW5lIGlkIDAsDQo+ID4gYW5k
-IHRoZSBtdXggaWQgc2hvdWxkIGJlIDAuIFdoaWxlIFZGNjEwX0VETUExX01VWDFfRlRNMF9DSDAg
-aW1wbHlpbmcNCj4gZURNQSBlbmdpbmUgaWQgMSwNCj4gPiBtdXggMS4gVGhlIHJlcXVlc3Qgc291
-cmNlcyBhcmUgc2hhcmVkIGJldHdlZW4gdGhlIHR3byBlRE1BIGNvbnRyb2xsZXINCj4gYnV0IG5l
-ZWQgdGhlIHVzZXINCj4gPiB0byBzZWxlY3Qgb25lIG1hbnVhbGx5IHdoZW4gcmVmZXJlbmNlLg0K
-PiANCj4gTm90ZSB0aGF0IHRoZSBkbWEgYmluZGluZyBhbGxvd3MgeW91IHRvIGFjdHVhbGx5IHNw
-ZWNpZnkgYm90aCBlbmdpbmVzDQo+IGluIHRoaXMgY2FzZS4gQSBzbGF2ZSBkZXZpY2UgY2FuIGhh
-dmUNCj4gDQo+IAlkbWEtbmFtZXMgPSAicngiLCAicngiLCAidHgiLCAidHgiOw0KPiAJZG1hcyA9
-IDwmZWRtYTAgMCAxMj4gPCZlZG1hMSAwIDEyPiA8JmVkbWEwIDAgMTM+IDwmZWRtYTEgMCAxMz47
-DQo+IA0KPiBhbmQgdGhlIHJlcXVlc3RpbmcgYSBjaGFubmVsIGZyb20gdGhlIHNsYXZlIGRyaXZl
-ciB3aWxsIGZpbmQNCj4gdGhlIGZpcnN0IGF2YWlsYWJsZSBvbmUuIEluIHRoZW9yeSB3ZSBjb3Vs
-ZCBoYXZlIHNvbWUgbG9hZC1iYWxhbmNpbmcNCj4gYXMgd2VsbCwgYnV0IHRoYXQgaGFzIG5vdCBi
-ZWVuIGltcGxlbWVudGVkLg0KW0x1IEppbmdjaGFuZy1iMzUwODNdIA0KWWVzLCB0aGUgc2xhdmUg
-Y2FuIHNwZWNpZnkgbWl4ZWQgZG1hIGNoYW5uZWwgYW5kIHRoZSBlRE1BIGRyaXZlciBjYW4gYWxs
-b2NhdGUNCmNoYW5uZWxzIHRvIGl0IHByb3Blcmx5LiBCdXQganVzdCBhcyB5b3Ugc2FpZCwgdGhl
-IGRyaXZlciBkb2Vzbid0IGltcGxlbWVudA0KbG9hZC1iYWxhbmNlaW5nIGJldHdlZW4gZURNQSBj
-b250cm9sbGVyLCB0aGlzIG5lZWQgdGhlIHVzZXIgdG8gYmFsYW5jZSB0aGVtDQppbiBkdHMgYW5k
-IHNsYXZlIGRyaXZlciBtYW51YWxseS4gQW5kIG9uIG91ciBMUy0xIFNvQywgdGhlcmUgaXMgb25s
-eSBvbmUgZURNQQ0KY29udHJvbGxlci4NCkZvciB0aGUgc2xhdmUgcmVxdWVzdCBpZCBtYWNyb3Mg
-ZGVmaW5pdGlvbnMsIEkgdGhpbmsgdGhlaXIgcmVzZXJ2YXRpb24gY291bGQNCmRpcmVjdCBlYXNl
-IHRoZSBjb21iaW5hdGlvbiBvZiB0aGUgY29udHJvbGxlciwgdGhlIG11eCwgYW5kIHRoZSByZXF1
-ZXN0IGluIGR0cy4NClRoYW5rcy4NCg0KPiANCj4gPiA+IFlvdSBhcmUgcmlnaHQsIHlvdXIgY29k
-ZSBpcyBhY3R1YWxseSBjb3JyZWN0IG9uIGFsbCBjb21iaW5hdGlvbnMNCj4gPiA+IG9mIGJpZy1l
-bmRpYW4gYW5kIGxpdHRsZS1lbmRpYW4gQVJNIENQVXMuIEhvd2V2ZXIsIEkgd291bGQgYXJndWUg
-dGhhdA0KPiA+ID4gaXQncyB1bnVzdWFsIHN0eWxlLCBhbmQgbm90IHBvcnRhYmxlIHRvIG90aGVy
-IGFyY2hpdGVjdHVyZXMgKGUuZy4NCj4gYXJtNjQpDQo+ID4gPiBiZWNhdXNlIHRoZSBkZWZpbml0
-aW9uIG9mIHJlYWRsKCkgaXMgaGlnaGx5IGFyY2hpdGVjdHVyZSBkZXBlbmRlbnQuDQo+ID4gPiBJ
-dCB3b3VsZCBhbHNvIGJlIHByb2JsZW1hdGljIGlmIHRoZSBhcm0gZGVmaW5pdGlvbiBoYXMgdG8g
-Y2hhbmdlDQo+ID4gPiBpbiBzb21lIGZvcm0gYW5kIHRoaXMgZHJpdmVyIGlzIG92ZXJsb29rZWQu
-DQo+ID4gW0x1IEppbmdjaGFuZy1iMzUwODNdDQo+ID4gWWVzLCB0aGVzZSBkZWZpbml0aW9ucyBh
-cmUgaGlnaGx5IGRlcGVuZGluZyBvbiB0aGUgYXJtMzIgYXJjaC4gVGhpcw0KPiBkZXZpY2UgaXMg
-b25seQ0KPiA+IGludGVncmF0ZWQgaW4gb3VyIGFybTMyIFNvQ3MgY3VycmVudGx5LCBzbyBJIGhh
-dmUgb25seSBjb25zaWRlcmVkIGFybTMyLg0KPiA+IEluIGFybTMyLCBpdCBzZWVtcyB0aGF0IHRo
-ZSBpb3JlYWQzMiBhbmQgcmVhZGwgYXJlIHRoZSBzYW1lIGluIGFybTMyLA0KPiA+IEkgd2lsbCB0
-cnkgeW91ciByZWNvbW1lbmRhdGlvbiBiZWxvdyB0byBzaW1wbGlmeSB0aGUgY2FsbGVyLg0KPiAN
-Cj4gT2ssIHRoYW5rcy4gSSBnZW5lcmFsbHkgaW5zaXN0IG9uIHdyaXRpbmcgZHJpdmVycyBpbiBh
-IHBvcnRhYmxlIHdheQ0KPiBpZiBwb3NzaWJsZSBiZWNhdXNlIHRoZXkgY2FuIHNlcnZlIGFzIGV4
-YW1wbGVzIHRvIG90aGVyIHBlb3BsZSwgYW5kDQo+IGhhcmR3YXJlIG9mdGVuIGdldHMgcmV1c2Vk
-IG9uIG90aGVyIHBhcnRzLiBJIHdvdWxkIGV4cGVjdCB0aGF0IGl0J3MNCj4gcG9zc2libGUgdGhh
-dCBmcmVlc2NhbGUgZXZlbnR1YWxseSBjcmVhdGVzIHBvd2VycGMgb3IgYXJtNjQgZGV2aWNlcw0K
-PiB3aXRoIHRoZSBzYW1lIGVkbWEgY29udHJvbGxlciwgZXZlbiBpZiB5b3UgYXJlIG5vdCBjdXJy
-ZW50bHkgYXdhcmUNCj4gb2YgYW55IHN1Y2ggcHJvZHVjdHMuDQo+IA0KPiA+ID4gQlRXLCBJIG5v
-dGljZWQgdGhhdCBmc2xfZWRtYV9zZXRfdGNkX3BhcmFtcygpIGlzIGNhbGxpbmcgZWRtYV93cml0
-ZXcoKQ0KPiA+ID4gYW5kIGVkbWFfd3JpdGVsKCkgd2l0aG91dCBhbiBlbmRpYW4tc3dhcCwgc28g
-SSBhc3N1bWUgaXQgaXMgc3RpbGwNCj4gPiA+IGJyb2tlbiBvbiBiaWctZW5kaWFuIENQVXMsIGFu
-ZCBsaWtlbHkgYWxzbyBvbiBiaWctZW5kaWFuIGVETUEgZW5naW5lcy4NCj4gPiBUaGUgdmFsdWVz
-IHdyaXR0ZW4gaW4gZnNsX2VkbWFfc2V0X3RjZF9wYXJhbXMoKSBhcmUgcHJlLXN3YXBwZWQgaW4N
-Cj4gZmlsbF90Y2RfcGFyYW1zKCkuDQo+ID4gVGhlIGVETUEgc3VwcG9ydCBoYXJkd2FyZSBTR3Ms
-IGJ1dCB0aGUgZURNQSBlbmdpbmUncyBzZyBmb3JtYXQgaXMNCj4gcmVxdWlyZWQgdGhlIHNhbWUg
-YXMNCj4gPiB0aGUgZURNQSBDb250cm9sbGVyJ3MgZW5kaWFuLCBzbyB0aGUgU0dzIGluIG1lbW9y
-eSB0byBiZSBsb2FkZWQNCj4gYXV0b21hdGljYWxseSBieSB0aGUgZURNQQ0KPiA+IGVuZ2luZSBh
-bHNvIHJlcXVpcmVkIHN3YXBwZWQgcHJvcGVybHkuIFNvIHRoZXkgc2hvdWxkIGJlIHN3YXBwZWQN
-Cj4gc3BlY2lmaWNhbGx5IGhlcmUuDQo+IA0KPiBBaCwgSSBzZWUgbm93LiBJIGhhZCBub3RpY2Vk
-IHRoYXQgYmVmb3JlIGJ1dCB0aGVuIGZvcmdvdHRlbiBhYm91dCBpdC4NCj4gDQo+ID4gPiA+ID4g
-PiA+ICtzdGF0aWMgYm9vbCBmc2xfZWRtYV9maWx0ZXJfZm4oc3RydWN0IGRtYV9jaGFuICpjaGFu
-LCB2b2lkDQo+ICptdXgpDQo+ID4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gPiA+ICsJIHJldHVy
-biAoY2hhbi0+Y2hhbl9pZCAvIERNQU1VWF9OUikgPT0gKHUzMiltdXg7DQo+ID4gPiA+ID4gPiA+
-ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gK3N0YXRpYyBzdHJ1Y3QgZG1hX2No
-YW4gKmZzbF9lZG1hX3hsYXRlKHN0cnVjdA0KPiBvZl9waGFuZGxlX2FyZ3MNCj4gPiA+ID4gPiAq
-ZG1hX3NwZWMsDQo+ID4gPiA+ID4gPiA+ICsJCXN0cnVjdCBvZl9kbWEgKm9mZG1hKQ0KPiA+ID4g
-PiA+ID4gPiArew0KPiA+ID4gPiA+ID4gPiArCXN0cnVjdCBkbWFfY2hhbiAqY2hhbjsNCj4gPiA+
-ID4gPiA+ID4gKwlkbWFfY2FwX21hc2tfdCBtYXNrOw0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+
-ID4gPiA+ICsJaWYgKGRtYV9zcGVjLT5hcmdzX2NvdW50ICE9IDIpDQo+ID4gPiA+ID4gPiA+ICsJ
-CXJldHVybiBOVUxMOw0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICsJZG1hX2NhcF96
-ZXJvKG1hc2spOw0KPiA+ID4gPiA+ID4gPiArCWRtYV9jYXBfc2V0KERNQV9TTEFWRSwgbWFzayk7
-DQo+ID4gPiA+ID4gPiA+ICsJZG1hX2NhcF9zZXQoRE1BX0NZQ0xJQywgbWFzayk7DQo+ID4gPiA+
-ID4gPiA+ICsJY2hhbiA9IGRtYV9yZXF1ZXN0X2NoYW5uZWwobWFzaywgZnNsX2VkbWFfZmlsdGVy
-X2ZuLA0KPiAodm9pZA0KPiA+ID4gPiA+ID4gPiAqKWRtYV9zcGVjLT5hcmdzWzBdKTsNCj4gPiA+
-ID4gPiA+ID4gKwlpZiAoY2hhbikNCj4gPiA+ID4gPiA+ID4gKwkJZnNsX2VkbWFfY2hhbl9tdXgo
-dG9fZnNsX2VkbWFfY2hhbihjaGFuKSwNCj4gZG1hX3NwZWMtDQo+ID4gPiA+YXJnc1sxXSwNCj4g
-PiA+ID4gPiA+ID4gdHJ1ZSk7DQo+ID4gPiA+ID4gPiA+ICsJcmV0dXJuIGNoYW47DQo+ID4gPiA+
-ID4gPiA+ICt9DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBQbGVhc2UgcmVtb3ZlIHRoZSBmaWx0ZXIg
-ZnVuY3Rpb24gbm93IGFuZCB1c2UgZG1hX2dldF9zbGF2ZV9jaGFuDQo+ID4gPiA+ID4gd2l0aCB0
-aGUgY29ycmVjdCBjaGFubmVsIGFzIGFuIGFyZ3VtZW50LiBObyBuZWVkIHRvIHdhbGsgYWxsDQo+
-ID4gPiA+ID4gYXZhaWxhYmxlIGNoYW5uZWxzIGluIHRoZSBzeXN0ZW0gYW5kIGludHJvZHVjZSBi
-dWdzIGJ5IG5vdA0KPiA+ID4gPiA+IGlnbm9yaW5nIG90aGVyIGRtYSBlbmdpbmVzLg0KPiA+ID4g
-Pg0KPiA+ID4gPiBUaGUgZG1hIHNsYXZlIHJlcXVlc3QgY2FuIG9ubHkgYmUgYWxsb2NhdGVkIHRv
-IGNoYW5uZWwgb2YNCj4gcGFydGljdWxhcg0KPiA+ID4gY2hhbm5lbHMgZ3JvdXAgaW5kaWNhdGVk
-IGJ5DQo+ID4gPiA+IHRoZSBtdXggZ3JvdXAgaWQgc3BlY2lmaWVyLiBhbmQgdGhlIHNlY29uZCBz
-cGVjaWZpZXIgaXMgdGhlIHJlcXVlc3QNCj4gaWQsDQo+ID4gPiBub3QgdGhlIGNoYW5uZWwgbnVt
-YmVyLA0KPiA+ID4gPiBzbyB0byB1c2UgdGhlIGRtYV9nZXRfc2xhdmVfY2hhbiwgSSB3b3VsZCBm
-aW5kIHRoZSBjaGFubmVsIGZvciB0aGlzDQo+ID4gPiByZXF1ZXN0IGJ5IHdhbGtpbmcgYWxsIHRo
-ZQ0KPiA+ID4gPiBhdmFpbGFibGUgY2hhbm5lbHMgbWFudWFsbHkuDQo+ID4gPg0KPiA+ID4gQWgs
-IEkgbWlzc2VkIHRoYXQgeW91IG9ubHkgY2hlY2sgdGhlIG11eCBudW1iZXIsIG5vdCB0aGUgY2hh
-bm5lbA0KPiBudW1iZXIuDQo+ID4gPg0KPiA+ID4gVGhlIGN1cnJlbnQgdmVyc2lvbiBob3dldmVy
-IGlzIGJ1Z2d5IGJlY2F1c2UgeW91IGRvbid0IGNoZWNrIHRoYXQgeW91DQo+ID4gPiBhcmUgYWN0
-dWFsbHkgbG9va2luZyBhdCB0aGUgcmlnaHQgZURNQSBpbnN0YW5jZSwgb3IgYW4gZURNQSBhdCBh
-bGwsDQo+ID4gPiByYXRoZXINCj4gPiA+IHRoYW4gc29tZSBvdGhlciByYW5kb20gZG1hIGVuZ2lu
-ZSB0aGF0IG1heSBiZSBjb25uZWN0ZWQgdG8gYW4NCj4gZXh0ZXJuYWwNCj4gPiA+IGJ1cy4NCj4g
-PiA+DQo+ID4gPiBJdCBpcyBwb3NzaWJsZSB0byBmaXggdGhhdCwgYnV0IEkgc3VzcGVjdCB0aGF0
-IHdvdWxkIGludm9sdmUgbW9yZQ0KPiA+ID4gY29tcGxleCBjb2RlIHRoYW4gZmluZGluZyBhbiBh
-cHByb3ByaWF0ZSBjaGFubmVsIGZpcnN0IGFuZCB0aGVuDQo+ID4gPiBjYWxsaW5nIGRtYV9nZXRf
-c2xhdmVfY2hhbigpIG9uIHRoYXQuDQo+ID4gPiBJIHdvdWxkIHN1Z2dlc3Qga2VlcGluZyBhIGxp
-c3Qgb2YgY2hhbm5lbHMgcGVyIGRtYW11eCBhbmQgd2Fsa2luZw0KPiB0aGF0DQo+ID4gPiBsaXN0
-IHVudGlsIHlvdSBmaW5kIG9uZSB0aGF0IHN1Y2NlZWRzIGluIGRtYV9nZXRfc2xhdmVfY2hhbigp
-Lg0KPiA+IFRoZSBiaW5kaW5nIGluIERUUyBpcyB0byB0aGUgZURNQSBlbmdpbmUsIGFuZCB0aGUg
-YmluZGluZyBpbmRpY2F0ZXMgdGhlDQo+IGVETUEgbm9kZQ0KPiA+IChieSA8JmVkbWEwIC4uLj4p
-LCB0aGUgZG1hIGVuZ2luZSBmcmFtZXdvcmsgd291bGQgZmluZCB0aGUgcHJvcGVyIGVETUENCj4g
-ZW5naW5lIGRldmljZQ0KPiA+IHJlZmVyZW5jZWQgaW4gZHRzLiBUaGlzIGRyaXZlciBvbmx5IHN1
-cHBvcnRzIGR0cyByZWZlcmVuY2UsIHNvIEkgdGhpbmsNCj4gdGhlIGRtYSBlbmdpbmUNCj4gPiBm
-cmFtZXdvcmsgY291bGQgZ3VhcmFudGVlIHRoZSBlRE1BIGluc3RhbmNlIHByb3Blcmx5IGluDQo+
-IG9mX2RtYV9maW5kX2NvbnRyb2xsZXIoKS4NCj4gDQo+IFRoZSBwcm9ibGVtIGlzIHRoYXQgZG1h
-X3JlcXVlc3RfY2hhbm5lbCgpIGRvZXMgbm90IGdldCBhIHJlZmVyZW5jZSB0byB0aGUNCj4gZURN
-QSBub2RlIGhlcmUuIEl0IGlzIGEgZ2VuZXJpYyBBUEkgZnVuY3Rpb24gdGhhdCByZXR1cm5zIHRo
-ZSBmaXJzdA0KPiBjaGFubmVsIG91dCBvZiB0aGUgZ2xvYmFsIGxpc3Qgb2YgZG1hX2NoYW4gc3Ry
-dWN0dXJlIHRoYXQgaXMgdW51c2VkDQo+IGFuZCBnZXRzIGEgcG9zaXRpdmUgcmV0dXJuIGNvZGUg
-ZnJvbSB0aGUgZmlsdGVyIGZ1bmN0aW9uLiBJZiB5b3UgaGF2ZQ0KPiB0d28gZWRtYSBpbnN0YW5j
-ZXMgaW4gdGhlIHN5c3RlbSwgeW91IGhhdmUgYSA1MCUgY2hhbmNlIHRvIGdldCBhIGNoYW5uZWwN
-Cj4gdGhhdCBiZWxvbmdzIHRvIHRoZSBvdGhlciBpbnN0YW5jZS4NCj4gDQo+IFRoZSBkbWFfZ2V0
-X3NsYXZlX2NoYW4oKSBpbnRlcmZhY2Ugd2FzIGludHJvZHVjZWQgdG8gYXZvaWQgdGhpcyBwcm9i
-bGVtLg0KWWVzLCB0aGUgcHVibGljIGRtYV9yZXF1ZXN0X2NoYW5uZWwoKSB3aWxsIGl0ZXJhdGUg
-YWxsIGRtYSBlbmdpbmUgZGV2aWNlcw0Kd2hlbiBiZWluZyBjYWxsZWQuIGJ1dCBldmVuIEkgc2Vs
-ZWN0IGRtYV9nZXRfc2xhdmVfY2hhbigpIGhlcmUsIHRoZSBkcml2ZXINCnN0aWxsIGNvdWxkbid0
-IHByZXZlbnQgb3RoZXJzIGZyb20gY2FsbGluZyBpdCB0byByZXF1ZXN0IGEgY2hhbm5lbCBleHBs
-aWNpdGx5Lg0KVGhhbmtzIQ0KDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch adds dt entry for ahci sata controller and its
+corresponding phy controller.phy node has been added w.r.t
+new generic phy framework.
+
+Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+---
+Changes since V4:
+	1.Used the new phandle "sata_phy_i2c" in the DT entry. 
+	2.Updated binding document.
+
+Changes since V3:
+	1.Moved the binding info to the /bindings/phy/
+
+Changes since V2:
+	1.Used syscon interface to PMU handling.
+	2.Changed "sata-phy-i2c" to "exynos-sataphy-i2c".
+
+Changes since V1:
+	1.Minor changes to node name convention.
+	2.Updated binding document.
+
+ .../devicetree/bindings/ata/exynos-sata-phy.txt    |   14 --------
+ .../devicetree/bindings/ata/exynos-sata.txt        |   25 +++++++++-----
+ .../devicetree/bindings/phy/samsung-phy.txt        |   36 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   11 ++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    8 ++---
+ arch/arm/boot/dts/exynos5250.dtsi                  |   17 ++++++---
+ 6 files changed, 78 insertions(+), 33 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
+
+diff --git a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
+deleted file mode 100644
+index 37824fa..0000000
+--- a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
++++ /dev/null
+@@ -1,14 +0,0 @@
+-* Samsung SATA PHY Controller
+-
+-SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
+-Each SATA PHY controller should have its own node.
+-
+-Required properties:
+-- compatible        : compatible list, contains "samsung,exynos5-sata-phy"
+-- reg               : <registers mapping>
+-
+-Example:
+-        sata@ffe07000 {
+-                compatible = "samsung,exynos5-sata-phy";
+-                reg = <0xffe07000 0x1000>;
+-        };
+diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt b/Documentation/devicetree/bindings/ata/exynos-sata.txt
+index 0849f10..b2adb1f 100644
+--- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
++++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
+@@ -4,14 +4,21 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
+ Each SATA controller should have its own node.
+ 
+ Required properties:
+-- compatible        : compatible list, contains "samsung,exynos5-sata"
+-- interrupts        : <interrupt mapping for SATA IRQ>
+-- reg               : <registers mapping>
+-- samsung,sata-freq : <frequency in MHz>
++- compatible		: compatible list, contains "samsung,exynos5-sata"
++- interrupts		: <interrupt mapping for SATA IRQ>
++- reg			: <registers mapping>
++- samsung,sata-freq	: <frequency in MHz>
++- phys			: as mentioned in phy-bindings.txt
++- phy-names		: as mentioned in phy-bindings.txt
+ 
+ Example:
+-        sata@ffe08000 {
+-                compatible = "samsung,exynos5-sata";
+-                reg = <0xffe08000 0x1000>;
+-                interrupts = <115>;
+-        };
++	sata@122f0000 {
++		compatible = "snps,dwc-ahci";
++		samsung,sata-freq = <66>;
++		reg = <0x122f0000 0x1ff>;
++		interrupts = <0 115 0>;
++		clocks = <&clock 277>, <&clock 143>;
++		clock-names = "sata", "sclk_sata";
++		phys = <&sata_phy>;
++		phy-names = "sata-phy";
++	};
+diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+index c0fccaa..a937f75 100644
+--- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
++++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+@@ -20,3 +20,39 @@ Required properties:
+ - compatible : should be "samsung,exynos5250-dp-video-phy";
+ - reg : offset and length of the Display Port PHY register set;
+ - #phy-cells : from the generic PHY bindings, must be 0;
++
++Samsung SATA PHY Controller
++---------------------------
++
++SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
++Each SATA PHY controller should have its own node.
++
++Required properties:
++- compatible        : compatible list, contains "samsung,exynos5250-sata-phy"
++- reg : offset and length of the SATA PHY register set;
++- #phy-cells : from the generic phy bindings;
++
++Example:
++	sata_phy: sata-phy@12170000 {
++		compatible = "samsung,exynos5250-sata-phy";
++		reg = <0x12170000 0x1ff>;
++		clocks = <&clock 287>;
++		clock-names = "sata_phyctrl";
++		#phy-cells = <0>;
++		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
++		samsung,syscon-phandle = <&pmu_syscon>;
++	};
++
++Device-Tree bindings for sataphy i2c client driver
++--------------------------------------------------
++
++Required properties:
++compatible: Should be "samsung,exynos-sataphy-i2c"
++- reg: I2C address of the sataphy i2c device.
++
++Example:
++
++	sata_phy_i2c:sata-phy@38 {
++		compatible = "samsung,exynos-sataphy-i2c";
++		reg = <0x38>;
++	};
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index b42e658..d9c9eaf 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -370,6 +370,17 @@
+ 		};
+ 	};
+ 
++	i2c@121D0000 {
++		samsung,i2c-sda-delay = <100>;
++		samsung,i2c-max-bus-freq = <40000>;
++		samsung,i2c-slave-addr = <0x38>;
++
++		sata_phy_i2c:sata-phy@38 {
++			compatible = "samsung,exynos-sataphy-i2c";
++			reg = <0x38>;
++		};
++	};
++
+ 	mmc_0: mmc@12200000 {
+ 		status = "okay";
+ 		num-slots = <1>;
+diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+index 3e69837..e52eed8 100644
+--- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
++++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+@@ -96,16 +96,12 @@
+ 		samsung,i2c-slave-addr = <0x38>;
+ 		status = "okay";
+ 
+-		sata-phy {
+-			compatible = "samsung,sata-phy";
++		sata_phy_i2c:sata-phy@38 {
++			compatible = "samsung,exynos-sataphy-i2c";
+ 			reg = <0x38>;
+ 		};
+ 	};
+ 
+-	sata@122F0000 {
+-		samsung,sata-freq = <66>;
+-	};
+-
+ 	i2c@12C80000 {
+ 		samsung,i2c-sda-delay = <100>;
+ 		samsung,i2c-max-bus-freq = <66000>;
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index dbb4a47..550d59e 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -46,6 +46,7 @@
+ 		i2c6 = &i2c_6;
+ 		i2c7 = &i2c_7;
+ 		i2c8 = &i2c_8;
++		i2c9 = &i2c_9;
+ 		pinctrl0 = &pinctrl_0;
+ 		pinctrl1 = &pinctrl_1;
+ 		pinctrl2 = &pinctrl_2;
+@@ -231,16 +232,24 @@
+ 	};
+ 
+ 	sata@122F0000 {
+-		compatible = "samsung,exynos5-sata-ahci";
++		compatible = "snps,dwc-ahci";
++		samsung,sata-freq = <66>;
+ 		reg = <0x122F0000 0x1ff>;
+ 		interrupts = <0 115 0>;
+ 		clocks = <&clock 277>, <&clock 143>;
+ 		clock-names = "sata", "sclk_sata";
++		phys = <&sata_phy>;
++		phy-names = "sata-phy";
+ 	};
+ 
+-	sata-phy@12170000 {
+-		compatible = "samsung,exynos5-sata-phy";
++	sata_phy: sata-phy@12170000 {
++		compatible = "samsung,exynos5250-sata-phy";
+ 		reg = <0x12170000 0x1ff>;
++		clocks = <&clock 287>;
++		clock-names = "sata_phyctrl";
++		#phy-cells = <0>;
++		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
++		samsung,syscon-phandle = <&pmu_syscon>;
+ 	};
+ 
+ 	i2c_0: i2c@12C60000 {
+@@ -358,7 +367,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	i2c@121D0000 {
++	i2c_9: i2c@121D0000 {
+                 compatible = "samsung,exynos5-sata-phy-i2c";
+                 reg = <0x121D0000 0x100>;
+                 #address-cells = <1>;
+-- 
+1.7.9.5
+
