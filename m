@@ -1,111 +1,66 @@
-From: Yuantian Tang <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: =?utf-8?B?UkU6IOetlOWkjTogW3Y3XSBjbGs6IGNvcmVuZXQ6IEFkZHMgdGhlIGNsb2Nr?=
- =?utf-8?Q?_binding?=
-Date: Fri, 10 Jan 2014 02:38:14 +0000
-Message-ID: <113a64f56876498ca32a6f050d174eb8@BL2PR03MB115.namprd03.prod.outlook.com>
-References: <1384938289-24713-1-git-send-email-Yuantian.Tang@freescale.com>
-	 <20140108002115.GA19801@home.buserror.net>
-	 <375c32b2f4e34589ae336af61468a51b@BL2PR03MB115.namprd03.prod.outlook.com>
-	 <20140108093046.GB6701@e106331-lin.cambridge.arm.com>
-	 <1389206619.25654.9.camel@snotra.buserror.net>
-	 <e15511a79a9d4446a826da8d9ceec229@BL2PR03MB115.namprd03.prod.outlook.com>
- <1389302368.14390.33.camel@snotra.buserror.net>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: DT include files (was: [GIT PULL 2/2] ARM: imx: device tree
+ changes for 3.14)
+Date: Fri, 10 Jan 2014 10:41:29 +0800
+Message-ID: <20140110024124.GA6844@S2101-09.ap.freescale.net>
+References: <20131231054427.GA22383@S2101-09.ap.freescale.net>
+ <20140102202108.GF19720@quad.lixom.net>
+ <20140103023211.GA25079@S2101-09.ap.freescale.net>
+ <CAOesGMheei8YgzfRp9pmQ0rT9zhJ2_hF56j5Y+jLSy5TadPZ-g@mail.gmail.com>
+ <20140103030455.GB25079@S2101-09.ap.freescale.net>
+ <CAOesGMihX-pLva-aBCHJ6TYfsN57MzRWiYFTnfKCXOKeja0uUg@mail.gmail.com>
+ <20140104011056.GA3282@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389302368.14390.33.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20140104011056.GA3282-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmtzIGZvciB5b3VyIHJldmlldy4gSSB3aWxsIHNlbmQgbmV4dCB2ZXJzaW9uIG9mIHBhdGNo
-Lg0KDQpUaGFua3MsDQpZdWFudGlhbg0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
-Cj4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gU2VudDogMjAxNOW5tDHmnIgxMOaXpSDmmJ/m
-nJ/kupQgNToxOQ0KPiBUbzogVGFuZyBZdWFudGlhbi1CMjk5ODMNCj4gQ2M6IE1hcmsgUnV0bGFu
-ZDsgZ2FsYWtAa2VybmVsLmNyYXNoaW5nLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQo+IFN1YmplY3Q6IFJlOiDnrZTlpI06
-IFt2N10gY2xrOiBjb3JlbmV0OiBBZGRzIHRoZSBjbG9jayBiaW5kaW5nDQo+IA0KPiBPbiBXZWQs
-IDIwMTQtMDEtMDggYXQgMjA6NTcgLTA2MDAsIFRhbmcgWXVhbnRpYW4tQjI5OTgzIHdyb3RlOg0K
-PiA+IFRoYW5rcyBmb3IgeW91IHJldmlldy4NCj4gPiBTZWUgbXkgcmVzcG9uc2UgaW5saW5lLg0K
-PiA+DQo+ID4gVGhhbmtzLA0KPiA+IFl1YW50aWFuDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiA+ID4gU2VudDog
-MjAxNOW5tDHmnIg55pelIOaYn+acn+WbmyAyOjQ0DQo+ID4gPiBUbzogTWFyayBSdXRsYW5kDQo+
-ID4gPiBDYzogVGFuZyBZdWFudGlhbi1CMjk5ODM7IGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7
-DQo+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96
-bGFicy5vcmcNCj4gPiA+IFN1YmplY3Q6IFJlOiDnrZTlpI06IFt2N10gY2xrOiBjb3JlbmV0OiBB
-ZGRzIHRoZSBjbG9jayBiaW5kaW5nDQo+ID4gPg0KPiA+ID4gT24gV2VkLCAyMDE0LTAxLTA4IGF0
-IDA5OjMwICswMDAwLCBNYXJrIFJ1dGxhbmQgd3JvdGU6DQo+ID4gPiA+IE9uIFdlZCwgSmFuIDA4
-LCAyMDE0IGF0IDA4OjUzOjU2QU0gKzAwMDAsIFl1YW50aWFuIFRhbmcgd3JvdGU6DQo+ID4gPiA+
-ID4NCj4gPiA+ID4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+
-ID4gPiA+ID4g5Y+R5Lu25Lq6OiBXb29kIFNjb3R0LUIwNzQyMQ0KPiA+ID4gPiA+IOWPkemAgeaX
-tumXtDogMjAxNOW5tDHmnIg45pelIDg6MjENCj4gPiA+ID4gPiDmlLbku7bkuro6IFRhbmcgWXVh
-bnRpYW4tQjI5OTgzDQo+ID4gPiA+ID4g5oqE6YCBOiBnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3Jn
-OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gPiA+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gPiA+ID4gPiDkuLvpopg6IFJl
-OiBbdjddIGNsazogY29yZW5ldDogQWRkcyB0aGUgY2xvY2sgYmluZGluZw0KPiA+ID4gPiA+DQo+
-ID4gPiA+ID4gT24gV2VkLCBOb3YgMjAsIDIwMTMgYXQgMDU6MDQ6NDlQTSArMDgwMCwgdGFuZyB5
-dWFudGlhbiB3cm90ZToNCj4gPiA+ID4gPiA+ICtSZWNvbW1lbmRlZCBwcm9wZXJ0aWVzOg0KPiA+
-ID4gPiA+ID4gKy0gcmFuZ2VzOiBBbGxvd3MgdmFsaWQgdHJhbnNsYXRpb24gYmV0d2VlbiBjaGls
-ZCdzIGFkZHJlc3MNCj4gPiA+ID4gPiA+ICtzcGFjZQ0KPiA+ID4gYW5kDQo+ID4gPiA+ID4gPiAr
-ICAgICBwYXJlbnQncy4gTXVzdCBiZSBwcmVzZW50IGlmIHRoZSBkZXZpY2UgaGFzIHN1Yi1ub2Rl
-cy4NCj4gPiA+ID4gPiA+ICstICNhZGRyZXNzLWNlbGxzOiBTcGVjaWZpZXMgdGhlIG51bWJlciBv
-ZiBjZWxscyB1c2VkIHRvDQo+IHJlcHJlc2VudA0KPiA+ID4gPiA+ID4gKyAgICAgcGh5c2ljYWwg
-YmFzZSBhZGRyZXNzZXMuICBNdXN0IGJlIHByZXNlbnQgaWYgdGhlIGRldmljZQ0KPiBoYXMNCj4g
-PiA+ID4gPiA+ICsgICAgIHN1Yi1ub2RlcyBhbmQgc2V0IHRvIDEgaWYgcHJlc2VudA0KPiA+ID4g
-PiA+ID4gKy0gI3NpemUtY2VsbHM6IFNwZWNpZmllcyB0aGUgbnVtYmVyIG9mIGNlbGxzIHVzZWQg
-dG8gcmVwcmVzZW50DQo+ID4gPiA+ID4gPiArICAgICB0aGUgc2l6ZSBvZiBhbiBhZGRyZXNzLiBN
-dXN0IGJlIHByZXNlbnQgaWYgdGhlIGRldmljZSBoYXMNCj4gPiA+ID4gPiA+ICsgICAgIHN1Yi1u
-b2RlcyBhbmQgc2V0IHRvIDEgaWYgcHJlc2VudA0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gV2h5IGFy
-ZSB3ZSBzcGVjaWZ5aW5nICNhZGRyZXNzLWNlbGxzLyNzaXplLWNlbGxzIGhlcmU/DQo+ID4gPiA+
-ID4NCj4gPiA+ID4gPiBBOiBpdCBoYXMgc3ViLW5vZGVzIHdoaWNoIGhhdmUgUkVHIHByb3BlcnR5
-LCBkb24ndCB3ZSBuZWVkIHRvDQo+ID4gPiA+ID4gc3BlY2lmeSAjYWRkcmVzcy1jZWxscy8jc2l6
-ZS1jZWxscz8NCj4gPiA+ID4NCj4gPiA+ID4gSWYgYSBub2RlIGhhcyBhIHJlZyBlbnRyeSwgaXRz
-IHBhcmVudCBzaG91bGQgaGF2ZSAjc2l6ZS1jZWxscyBhbmQNCj4gPiA+ID4gI2FkZHJlc3MtY2Vs
-bHMgdG8gYWxsb3cgaXQgdG8gYmUgcGFyc2VkIHByb3Blcmx5Lg0KPiA+ID4NCj4gPiA+IFllcywg
-YnV0IHdoeSBkbyB3ZSBuZWVkIHRvIHNwZWNpZnkgaW4gdGhpcyBiaW5kaW5nIGhvdyBtYW55IGNl
-bGxzDQo+ID4gPiB0aGVyZSB3aWxsIGJlLCBlc3BlY2lhbGx5IHNpbmNlIHRoaXMgYmluZGluZyBv
-bmx5IGFkZHJlc3NlcyB0aGUNCj4gPiA+IGNsb2NrIHByb3ZpZGVyIGFzcGVjdCBvZiB0aGUgY2xv
-Y2tnZW4gbm9kZXMgKGUuZy4gaXQgZG9lc24ndA0KPiA+ID4gZGVzY3JpYmUgdGhlIHJlZyk/ICBP
-ciByYXRoZXIsIGl0J3MgcGFydGlhbGx5IGRlc2NyaWJpbmcgdGhlDQo+ID4gPiBub24tY2xvY2sg
-YXNwZWN0LCBhbmQgZG9lc24ndCBhZGRyZXNzIHRoZSBjbG9jayBhc3BlY3QgYXQgYWxsIEFGQUlD
-VC4NCj4gPiA+DQo+ID4gRmlyc3Qgb2YgYWxsLCB0aGV5IGFyZSBub3QgIlJlcXVpcmVkIHByb3Bl
-cnRpZXMiLCB0aGV5IGFyZSBvcHRpb25hbC4NCj4gPiBJZiBwcmVzZW50LCB3ZSBzaG91bGQgZ2l2
-ZSB0aGVtIGEgdmFsdWUgb2YgMS4NCj4gDQo+IFdoeSBkb2VzIGl0IG1hdHRlciwgc28gbG9uZyBh
-cyB0aGUgdmFsdWVzIHRyYW5zbGF0ZSBwcm9wZXJseT8gIEl0J3Mgbm90DQo+IGFzIGlmIHlvdSdy
-ZSBkZWZpbmluZyBhIHNwZWNpYWwgcmVnIGZvcm1hdC4gIEl0J3Mgbm90IHRoYXQgYmlnIG9mIGEg
-ZGVhbCwNCj4gYnV0IGl0IHNlZW1zIHVubmVjZXNzYXJ5Lg0KPiANCj4gPiBUaGVuLCB5ZXMsIHRo
-aXMgYmluZGluZyBkZXNjcmliZXMgY2xvY2tnZW4gbm9kZSB3aGljaCBpcyAiQ0xPQ0sgQkxPQ0si
-Lg0KPiANCj4gU29ycnksIEkgbWlzc2VkIHdoZXJlICJyZWciIHdhcyBkb2N1bWVudGVkIGR1ZSB0
-byB0aGUNCj4gcmVxdWlyZWQvcmVjb21tZW5kZWQgc3BsaXQuDQo+IA0KPiA+ID4gV2hlcmUgZG9l
-cyB0aGUgYWN0dWFsIGlucHV0IGNsb2NrIGZyZXF1ZW5jeSBnbz8gIFUtQm9vdCBwdXRzIGl0IGlu
-DQo+ID4gPiB0aGUgY2xvY2tnZW4gbm9kZSBpdHNlbGYgYXMgY2xvY2stZnJlcXVlbmN5LCBidXQg
-dGhhdCBpc24ndA0KPiA+ID4gZGVzY3JpYmVkIGluIHRoZSBiaW5kaW5nLiAgSG93IGRvZXMgdGhh
-dCByZWxhdGUgdG8gdGhlIHN5c2NsayBub2RlPw0KPiA+ID4gSWYgImZzbCxxb3JpcS1zeXNjbGst
-IDEuMCIgaXMgc3VwcG9zZWQgdG8gaW5kaWNhdGUgdGhhdA0KPiA+ID4gY2xvY2stZnJlcXVlbmN5
-IGNhbiBiZSBmb3VuZCBpbiB0aGUgcGFyZW50IG5vZGUsIHRoYXQgaXNuJ3QNCj4gPiA+IHNwZWNp
-ZmllZCBieSB0aGUgYmluZGluZywgbm9yIGlzIGNsb2NrLWZyZXF1ZW5jeSBzaG93biBpbiB0aGUg
-ZXhhbXBsZS4NCj4gPiA+DQo+ID4gY2xvY2stZnJlcXVlbmN5IGlzIGEgd2lyZWQgcHJvcGVydHku
-DQo+IA0KPiBEbyB5b3UgbWVhbiAid2VpcmQiPw0KPiANCj4gPiBJdCBpcyBpbiBjbG9ja2dlbiBu
-b2RlIHJpZ2h0IG5vdy4NCj4gPiBCdXQgaXQgc2hvdWxkIGJlIHBsYWNlZCBzb21ld2hlcmUgaW4g
-Y2xvY2sgbm9kZXMuDQo+IA0KPiBJZiB3ZSB3ZXJlIGRvaW5nIHRoaXMgZnJvbSBzY3JhdGNoLCB5
-ZXMsIGJ1dCB0aGVyZSdzIGV4aXN0aW5nIFUtQm9vdCBjb2RlDQo+IHRoYXQgd2Ugd2FudCB0byBi
-ZSBjb21wYXRpYmxlIHdpdGguDQo+IA0KPiA+IElmIEkgZGVzY3JpYmUgaGVyZSwgSSB3b3VsZCBi
-ZSBhc2tlZCB3aHkgaXQgaXMgcmVsYXRlZCB0byBjbG9ja2dlbiBub2RlPw0KPiANCj4gVGhhdCdz
-IG5vdCBhIGdvb2QgcmVhc29uIHRvIGxlYXZlIGl0IHVuZG9jdW1lbnRlZC4NCj4gDQo+ID4gPiBX
-aGF0IGlzIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gImZzbCxxb3JpcS1zeXNjbGstMS4wIiBhbmQN
-Cj4gPiA+ICJmc2wscW9yaXEtIHN5c2Nsay0yLjAiPyAgSG93IGRvZXMgdGhlIGNvbmNlcHQgb2Yg
-YSBmaXhlZCBpbnB1dCBjbG9jaw0KPiBjaGFuZ2U/DQo+ID4gPg0KPiA+IFRlY2huaWNhbGx5LCB0
-aGVyZSBpcyBubyBkaWZmZXJlbmNlIGJldHdlZW4gKnN5c2Nsay0xLjAgYW5kICotMi4wLA0KPiA+
-IGp1c3QgbGlrZQ0KPiA+IENsb2NrZ2VuLTIuMCBhbmQgMS4wLiBOYW1pbmcgbGlrZSB0aGlzIGp1
-c3QgdG8gaW5kaWNhdGUgdGhleSBiZWxvbmcgdG8NCj4gPiBjaGFzc2lzIDIuMCBhbmQgMS4wIHJl
-c3BlY3RpdmVseS4NCj4gDQo+IEkgZ3Vlc3MgaXQncyBPSyBpZiBpdCBlbmNvdXJhZ2VzIHBlb3Bs
-ZSB0byBjb25zaWRlciBzd2l0Y2hpbmcgdG8gdGhlDQo+IHN0YW5kYXJkIGZpeGVkLWNsb2NrIGZv
-ciBmdXR1cmUgY2hhc3Npcy4NCj4gDQo+IFNvIHRoZSBvbmx5IHRoaW5nIHRoYXQgcmVhbGx5IG5l
-ZWRzIHRvIGJlIGZpeGVkIGlzIHRoZSBtaXNzaW5nIGNsb2NrLQ0KPiBmcmVxdWVuY3kgZG9jdW1l
-bnRhdGlvbi4NCj4gDQo+IC1TY290dA0KPiANCg0K
+On Sat, Jan 04, 2014 at 09:10:58AM +0800, Shawn Guo wrote:
+> On Fri, Jan 03, 2014 at 11:29:35AM -0800, Olof Johansson wrote:
+> > On Thu, Jan 2, 2014 at 7:04 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > > On Thu, Jan 02, 2014 at 06:41:30PM -0800, Olof Johansson wrote:
+> > >> Ok, then it's probably just the location of the header files that
+> > >> should be adjusted. Other subsystems have placed them under
+> > >> include/dt-bindings/<subsystem>, so that's likely a better place for
+> > >> these as well, don't you think?
+> > >
+> > > I had a little discussion with DT people when the headers were firstly
+> > > created.  These pinctrl headers are a little different from the headers
+> > > in include/dt-bindings/<subsystem>.  The latter are used by both kernel
+> > > and device tree sources, while the pinctrl headers are used by device
+> > > tree sources only, so I chose to put them just in the same folder as
+> > > dts files.  And DT people are fine with my take.
+> > 
+> > Since you don't provide references to this I had to go searching for
+> > it. All I find is some discussion from 8 months ago, and quite a bit
+> > of that seems to have been about changing bindings, and some about the
+> > preprocessor behavior. Also, the patches seem to have been too big to
+> > make it out on the lists.
+> > 
+> > I'd like a fresh look from DT people on this just to make sure no
+> > opinions have changed -- lots of things have changed in the last 8
+> > months w.r.t. DT.
+> 
+> Indeed, it's been quite a long time.  Let me restate my point.  The
+> include/dt-bindings is introduced as a folder to hold headers that are
+> referenced by both kernel and DTS.  That's why we create the folder in
+> the kernel include folder and have arch/arm/boot/dts/include/dt-bindings
+> being a symbol link to it.  All the headers in there need to be
+> duplicated between kernel and DTS tree, when we move DTS files into
+> a separated repository.  Putting DTS local headers into the folder is
+> absolutely unnecessary, and will only confuse people and bother
+> ourselves when moving DTS files out of kernel tree.
+
+Just a gentle ping to ensure we do not get the pull request lost.  Or do
+you have any further comment?
+
+Shawn
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
