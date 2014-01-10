@@ -1,110 +1,145 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 5/7] ARM: dts: add pbias dt node
-Date: Fri, 10 Jan 2014 11:32:34 +0000
-Message-ID: <20140110113234.GA25741@e106331-lin.cambridge.arm.com>
-References: <1387560955-6547-1-git-send-email-balajitk@ti.com>
- <1387560955-6547-6-git-send-email-balajitk@ti.com>
- <20140106181928.GK24664@e106331-lin.cambridge.arm.com>
- <52CBD467.6060909@ti.com>
- <20140107105738.GA4180@e106331-lin.cambridge.arm.com>
- <52CBF1CF.4040706@ti.com>
- <52CD6602.7040603@ti.com>
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: Re: [PATCH 0/6] cpufreq: use cpufreq-cpu0 driver for exynos4210 based platforms
+Date: Fri, 10 Jan 2014 17:29:34 +0530
+Message-ID: <CAJuA9ahCc7b=209Tmh-O_cx2aEhPY+s_TjHHnjGk1x3duE-P1g@mail.gmail.com>
+References: <1389283165-17708-1-git-send-email-thomas.ab@samsung.com>
+	<20140110113240.797381e6@amdc2363>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52CD6602.7040603@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "broonie@kernel.org" <broonie@kernel.org>, "tony@atomide.com" <tony@atomide.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140110113240.797381e6@amdc2363>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: cpufreq@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, kgene.kim@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, thomas.ab@samsung.com, Lukasz Majewski <l.majewski@majess.pl>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 08, 2014 at 02:51:46PM +0000, Balaji T K wrote:
-> On Tuesday 07 January 2014 05:53 PM, Balaji T K wrote:
-> > On Tuesday 07 January 2014 04:27 PM, Mark Rutland wrote:
-> >> On Tue, Jan 07, 2014 at 10:18:15AM +0000, Balaji T K wrote:
-> >>> On Monday 06 January 2014 11:49 PM, Mark Rutland wrote:
-> >>>> On Fri, Dec 20, 2013 at 05:35:53PM +0000, Balaji T K wrote:
-> >>>>> Add pbias regulator node as a child of system control
-> >>>>> module - syscon.
-> >>>>>
-> >>>>> Signed-off-by: Balaji T K <balajitk@ti.com>
-> >>>>> ---
-> >>>>>    arch/arm/boot/dts/dra7.dtsi     |   18 ++++++++++++++++++
-> >>>>>    arch/arm/boot/dts/omap2430.dtsi |   18 ++++++++++++++++++
-> >>>>>    arch/arm/boot/dts/omap3.dtsi    |   18 ++++++++++++++++++
-> >>>>>    arch/arm/boot/dts/omap4.dtsi    |   18 ++++++++++++++++++
-> >>>>>    arch/arm/boot/dts/omap5.dtsi    |   18 ++++++++++++++++++
-> >>>>>    5 files changed, 90 insertions(+), 0 deletions(-)
-> >>>>>
-> >>>>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> >>>>> index d0df4c4..4e68df1 100644
-> >>>>> --- a/arch/arm/boot/dts/dra7.dtsi
-> >>>>> +++ b/arch/arm/boot/dts/dra7.dtsi
-> >>>>> @@ -110,6 +110,23 @@
-> >>>>>                ti,hwmods = "counter_32k";
-> >>>>>            };
-> >>>>>
-> >>>>> +        dra7_ctrl_general: tisyscon@4a002e00 {
-> >>>>> +            compatible = "ti,control-syscon", "syscon", "simple-bus";
-> >>>>
-> >>>> Please, don't use simple-bus like that. The components below this node
-> >>>> depend on it. It is _NOT_ a simple bus. Make the ti,control-syscon
-> >>>> driver probe it's children.
-> >>>
-> >>> Hi Mark,
-> >>>
-> >>> Actually ti,control-syscon driver does not exist, so I can remove it,
-> >>> and simple-bus is needed for child creation.
-> >>
-> >> This still shows up as a syscon node, with a reg property, and syscon is
-> >> not an extension of simple-bus.
-> >>
-> >> There are properties in the parent node that children depend on, and
-> >> that makes me wary of describing it as a simple bus. I'd expect to be
-> >> able to move child nodes out of a simple-bus if ranges provided an
-> >> idmap, and I can't do that here.
-> >>
-> > Hi Mark,
-> >
-> > Not sure if I am understanding here, can you please add more info.
+Hi Lukasz,
 
-A node's compatible string list describes the set of devices (or rather
-descriptions of devices) with which it is compatible. The list goes from
-most specific to least specific. The idea is that an OS reads through
-the list until it finds a string it knows how to handle, then treats the
-node as that.
+On Fri, Jan 10, 2014 at 4:02 PM, Lukasz Majewski <l.majewski@samsung.com> wrote:
+> Hi Thomas,
+>
+> I've investigated the topic for a while, so if you don't mind I will
+> share my thoughts :-)
 
-Ignoring "ti,control-syscon", the node has both "syscon" and
-"simple-bus". Given you expect the OS to recognise "syscon", you should
-_not_ expect it to also treat the node as "simple-bus". Doing so is an
-abuse of the property and current Linux implementation details.
+Sure. Thanks for having a look at this patch series.
 
-The "syscon" binding is not a more specific version of "simple-bus".
-They imply completely different things.
+>
+>> The patch series removes the use of Exynos4210 specific cpufreq driver
+>> and enables to use the cpufreq-cpu0 driver for Exynos4210 based
+>> platforms. This is being done for few reasons.
+>>
+>> (a) The Exynos4210 cpufreq driver reads/writes clock controller
+>> registers bypassing the Exynos4 CCF driver which is sort of
+>> problematic.
+>
+> Also other, already supported devices suffer from it. Namely -
+> Exynos4x12 and Exynos5250.
+>
 
-Either make a ti,control-syscon driver that probes the child nodes, or
-move the child nodes out and give them a phandle to the
-dra7_ctrl_general node that they can parse. I'd prefer the latter as
-relies on fewer topology details, is as easy to implement as your
-current parent node parsing, and is easier to extend in future.
+Right, I did check the cpufreq driver of these SoCs.
 
-> >
-> Hi Mark,
-> 
->  From Documentation/devicetree/bindings.. , I could get below info about simple-bus
-> - "simple-bus" compatible value (to ensure creation of the children)
-> 	compatible = "simple-bus";
+> That's why the solution shall be as generic as possible to also work
+> with those two SoCs.
 
-That's from the vexpress binding description of the smb node?
-
-In that case, the smb node _is_ a simple-bus. It has no nonstandard
-properties, and the child nodes aren't reading arbitrary properties out
-of the smb node.
-
-There the simple-bus is used to remap addresses of child nodes via
-ranges. It does represent a simple bus, and that's all the OS is
-expected to know.
+The approach taken here is to encapsulate the source of the CPU domain
+clock in a single logical clock. The implementation of this logical
+clock can vary for different Exynos SoCs but the interface to register
+and use this clock is common for all Exynos SoCs. If the changes in
+the cpufreq-cpu0 driver are accepted, the combination of cpufreq-cpu0
+and the logical clock representing the CPU clock is sufficient to
+provide a generic solution for Exynos4x12 and Exynos5250 SoCs.
 
 Thanks,
-Mark.
+Thomas.
+
+>
+>> (b) Removes the need for having clock controller
+>> register definitions in the cpufreq driver and also removes the need
+>> for statically io-remapping clock controller address space (helps in
+>> moving towards multiplatform kernel).
+>>
+>> In order to use cpufreq-cpu0 driver and provide fast cpu clock
+>> switching during dvfs operations, the following apporach has been
+>> used.
+>>
+>> (a) A new CPU clock provider type has been introduced in Samsung's CCF
+>>     support. This clock provider type can be a compostion of multiple
+>>     clock blocks such as mux, dividers and gates. Typically, in Exynos
+>>     platforms, there are multiple clock blocks in between the output
+>>     of the APLL and the CPU clock domain output. Representing these
+>>     mutiple clock blocks within a opaque CPU clock provider type helps
+>>     in reducing the time taken to perform a CPU clock frequency change
+>>     operation, which is generally required during DVFS operations.
+>>     This approach was suggested by Arnd Bergmann <arnd@arndb.de>
+>> during LCE-2013.
+>>
+>> (b) A new optional safe operating point property has been introduced
+>>     in the cpufreq-cpu0 driver binding. On some platforms such as the
+>>     Samsung Exynos, a change in CPU frequency requires a change in the
+>>     PLL output that drives the CPU clock. A change in PLL output
+>>     requires the PLL output be turned off, which implies that the CPU
+>>     (and other components in the CPU clock domain) be supplied with
+>>     an alternate clock source during the time the PLL output is
+>> changed.
+>>
+>>     The clock speed of this alternate clock source could be higher
+>>     than the clock speed of the PLL at the time of switching over to
+>>     the alternate clock source. This temporary increase in clock speed
+>>     of the CPU clock domain implies that the blocks within the CPU
+>>     clock domain should also be supplied with an appropriate voltage
+>>     supply level as required to drive the CPU clock domain components
+>>     at the speed of the alternative clock source. This temporary
+>>     voltage level required during switching of CPU clock speed is
+>>     called safe voltage level. And the cpufreq-cpu0 driver has been
+>>     modified to setup the safe voltage levels during the changes
+>>     in CPU clock speed.
+>>
+>> (c) The CPU clock supply as been restructured as
+>>     [ Output of APLL -> Opaque CPU clock provider -> CPU clock output
+>> ] And with the changes in (a) and (b) above, the cpufreq-cpu0 driver
+>>     can now be used and can remove the use of Exynos4210 specific
+>>     cpufreq driver.
+>>
+>> This approach is currently tried on Exynos4210 only. The same approach
+>> can be adopted for other Exynos SoCs as well. This patch series is
+>> based on linux-next master branch.
+>>
+>> Thomas Abraham (6):
+>>   cpufreq: cpufreq-cpu0: allow optional safe voltage during frequency
+>> transitions clk: samsung: add infrastructure to register CPU clocks
+>>   clk: samsung: register cpu clock provider for exynos4210 SoC
+>>   cpufreq: exynos: remove Exynos4210 specific cpufreq driver support
+>>   arm: exynos4-dt: statically add platform device for cpufreq-cpu0
+>> platform driver arm: dts: add cpu nodes for Exynos4210 SoC
+>>
+>>  .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   |    5 +
+>>  arch/arm/boot/dts/exynos4210-origen.dts            |    6 +
+>>  arch/arm/boot/dts/exynos4210-trats.dts             |    6 +
+>>  arch/arm/boot/dts/exynos4210-universal_c210.dts    |    6 +
+>>  arch/arm/boot/dts/exynos4210.dtsi                  |   22 +++
+>>  arch/arm/mach-exynos/mach-exynos4-dt.c             |    6 +
+>>  drivers/clk/samsung/clk-exynos4.c                  |   96
+>> ++++++++++++- drivers/clk/samsung/clk.c                          |
+>> 71 +++++++++ drivers/clk/samsung/clk.h                          |
+>> 37 +++++- drivers/cpufreq/Kconfig.arm                        |   11 --
+>>  drivers/cpufreq/Makefile                           |    1 -
+>>  drivers/cpufreq/cpufreq-cpu0.c                     |   49 ++++++-
+>>  drivers/cpufreq/exynos-cpufreq.c                   |    4 +-
+>>  drivers/cpufreq/exynos-cpufreq.h                   |    8 -
+>>  drivers/cpufreq/exynos4210-cpufreq.c               |  157
+>> -------------------- 15 files changed, 301 insertions(+), 184
+>> deletions(-) delete mode 100644 drivers/cpufreq/exynos4210-cpufreq.c
+>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe cpufreq" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>
+> --
+> Best regards,
+>
+> Lukasz Majewski
+>
+> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
