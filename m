@@ -1,61 +1,36 @@
-From: Vince Bridgers <vbridgers2013@gmail.com>
-Subject: Re: [PATCH net-next 1/2] ARM: dts: socfpga: DTS updates for stmmac driver
-Date: Fri, 10 Jan 2014 17:58:06 -0600
-Message-ID: <CAOwfj2P7GEz8RKMRrD619EthXR_kK6N9QqKaRZXG5N6pESCv9g@mail.gmail.com>
-References: <1389397669-10929-1-git-send-email-vbridgers2013@gmail.com>
-	<1389397669-10929-2-git-send-email-vbridgers2013@gmail.com>
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+Subject: Re: [PATCH v4 0/2] ohci and ehci-platform clks, phy and dt support
+Date: Sat, 11 Jan 2014 00:45:58 +0100
+Message-ID: <874n5b1jux.fsf@nemi.mork.no>
+References: <1389393980-21183-1-git-send-email-hdegoede@redhat.com>
+ <52D0875B.9040102@cogentembedded.com> <52D0799B.3030401@redhat.com>
+ <878uun1llt.fsf@nemi.mork.no> <52D08E2A.4080703@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1389397669-10929-2-git-send-email-vbridgers2013@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc: Giuseppe CAVALLARO <peppe.cavallaro@st.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@altera.com, Rayagond Kokatanur <rayagond@vayavyalabs.com>, Vince Bridgers <vbridgers2013@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52D08E2A.4080703@cogentembedded.com> (Sergei Shtylyov's message
+ of "Sat, 11 Jan 2014 03:19:54 +0300")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-sunxi@googlegroups.com, Alan Stern <stern@rowland.harvard.edu>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Please disregard, sorry for the noise.
-
-
-
-On Fri, Jan 10, 2014 at 5:47 PM, Vince Bridgers <vbridgers2013@gmail.com> wrote:
-> This change adds a parameter for the Synopsys 10/100/1000
-> stmmac Ethernet driver to configure the maximum MTU supported
-> by the EMAC instance. Synopsys allows the FIFO sizes to
-> be configured when the cores are built for a particular
-> device, but do not provide a way for the driver to read
-> information from the device about the maximum MTU size
-> supported as limited by the device's FIFO size.
->
-> This patch has been tested with changes being submitted
-> seperately for the Synopsys 10/100/1000 stmmac driver.
->
-> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
-> ---
->  Documentation/devicetree/bindings/net/stmmac.txt |    5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-> index eba0e5e..7db314e 100644
-> --- a/Documentation/devicetree/bindings/net/stmmac.txt
-> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> @@ -30,6 +30,10 @@ Required properties:
->
->  Optional properties:
->  - mac-address: 6 bytes, mac address
-> +- snps,max-mtu:                Maximum MTU permitted. This parameter is useful since
-> +                       different implementations of the Synopsys MAC may have
-> +                       different FIFO sizes depending on the selections
-> +                       made in Synopsys Core Consultant.
->
->  Examples:
->
-> @@ -40,5 +44,6 @@ Examples:
->                 interrupts = <24 23>;
->                 interrupt-names = "macirq", "eth_wake_irq";
->                 mac-address = [000000000000]; /* Filled in by U-Boot */
-> +               snps,max-mtu = <3800>;
->                 phy-mode = "gmii";
->         };
-> --
-> 1.7.9.5
->
+U2VyZ2VpIFNodHlseW92IDxzZXJnZWkuc2h0eWx5b3ZAY29nZW50ZW1iZWRkZWQuY29tPiB3cml0
+ZXM6Cgo+PiBGV0lXIEkgYWdyZWUgd2l0aCB5b3VyIGRlY2lzaW9uIC0gbm90IHRoYXQgSSB0aGlu
+ayB0aGF0IG1hdHRlcnMgdG8KPj4gYW55b25lIDotKQo+Cj4gICAgSXQgbWF0dGVycyBhdCBsZWFz
+dCB0byBtZSwgcG90ZW50aWFsIHVzZXIgb2YgdGhpcyBzdHVmZi4KClNvcnJ5IGZvciBub3QgYmVp
+bmcgY2xlYXIgYWJvdXQgd2hhdCAidGhhdCIgd2FzIHJlZmVycmluZyB0by4KCldoYXQgSSBtZWFu
+dCB0byBzYXkgd2FzOiAibm90IHRoYXQgSSB0aGluayAqbXkgb3BpbmlvbiBvbiB0aGUgc3ViamVj
+dCoKbWF0dGVycyB0byBhbnlvbmUuIgoKCkJqw7hybgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
