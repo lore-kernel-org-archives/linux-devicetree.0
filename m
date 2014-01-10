@@ -1,162 +1,57 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt: Document ModelGauge gauge bindings
-Date: Fri, 10 Jan 2014 10:56:21 +0000
-Message-ID: <20140110105621.GC6798@e106331-lin.cambridge.arm.com>
-References: <1389286145-15375-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1389286145-15375-3-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 3/7] ARM: perf_event: Add basic support for Krait CPU PMUs
+Date: Fri, 10 Jan 2014 11:01:14 +0000
+Message-ID: <20140110110114.GC10455@mudshark.cambridge.arm.com>
+References: <1389221984-10973-1-git-send-email-sboyd@codeaurora.org>
+ <1389221984-10973-4-git-send-email-sboyd@codeaurora.org>
+ <20140109110440.GC17838@mudshark.cambridge.arm.com>
+ <52CEFF18.2070501@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1389286145-15375-3-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: "anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org" <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mk7.kang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <mk7.kang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <52CEFF18.2070501@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: mark.rutland@arm.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ashwin Chaugule <ashwinc@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Neil Leeder <nleeder@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 09, 2014 at 04:49:04PM +0000, Vladimir Barinov wrote:
-> These bindings can be used to register Maxim ModelGauge ICs fuel gauge
-> (MAX17040/41/43/44/48/49/58/59)
+On Thu, Jan 09, 2014 at 07:57:12PM +0000, Stephen Boyd wrote:
+> (Adding DT reviewers)
 > 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> On 01/09/14 03:04, Will Deacon wrote:
+> > On Wed, Jan 08, 2014 at 10:59:40PM +0000, Stephen Boyd wrote:
+> >
+> >> +static int krait_pmu_init(struct arm_pmu *cpu_pmu)
+> >> +{
+> >> +	u32 id = read_cpuid_id() & 0xffffff00;
+> >> +
+> >> +	armv7pmu_init(cpu_pmu);
+> >> +	cpu_pmu->name		= "ARMv7 Krait";
+> >> +	/* Some early versions of Krait don't support PC write events */
+> >> +	if (id == 0x511f0400 || id == 0x510f0600)
+> >> +		cpu_pmu->map_event	= krait_map_event_no_branch;
+> > Hmm, I'd really rather this information came via the DT. In fact, you could
+> > just drop the branch event from your main map_event_function and keep things
+> > simple. It depends how badly you want to advertise it in perf list :)
+> >
 > 
-> ---
->  Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt |   82 ++++++++++
->  1 file changed, 82 insertions(+)
-> 
-> Index: battery-2.6/Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt
-> ===================================================================
-> --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-> +++ battery-2.6/Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt	2014-01-09 15:09:38.035138887 +0400
-> @@ -0,0 +1,82 @@
-> +modelgauge_battery
-> +~~~~~~~~~~~~~~~~~~
-> +
-> +Required properties:
-> + - compatible		: should contain one of the following:
-> +			  - "maxim,max17040" for MAX17040
-> +			  - "maxim,max17041" for MAX17041
-> +			  - "maxim,max17043" for MAX17043
-> +			  - "maxim,max17044" for MAX17044
-> +			  - "maxim,max17048" for MAX17048
-> +			  - "maxim,max17049" for MAX17049
-> +			  - "maxim,max17058" for MAX17058
-> +			  - "maxim,max17059" for MAX17059
-> +
-> +Optional properties:
-> + - maxim,empty_alert_threshold	: Capacity threshold where an interrupt is
-> +				  generated on the ALRT pin;
+> Not every version of Krait is missing support for this event, so I'd
+> like to keep it so things like perf stat show branch counts. How about I
+> add a bool property to the pmu node indicating that this PMU is missing
+> support for the PC write events? Something like "no-pc-write"?
 
-s/_/-/ in proeprty names please.
+Perhaps, although I think it should be qualcomm-specific, so something like
+"qcom,krait-no-pc-write"? Again, I'd be glad to hear something from a DT
+reviewer on this.
 
-Why is this property in the dt at all?
-
-Surely the driver can choose the value it wants.
-
-The driver can choose a sensible value, surely?
-
-> +
-> + - soc_change_alert		: /* alert for 1% soc change */
-
-Likewise, surely the driver should decide if it wants this?
-
-> + - hibernate_threshold		: Hibernate threshold (crate), where IC
-> +				  enters hibernate mode
-> + - active_threshold		: Active threshold (mV), where IC exits
-> +				  hibernate mode
-> + - undervoltage			: Voltage (mV), when IC alerts while battery
-> +				  voltage less then undervoltage
-> + - overvoltage			: Voltage (mV), when IC alerts while battery
-> +				  voltage greater then overvoltage
-> + - maxim,resetvoltage		: Voltage threshold (mV) below which the IC
-> +				  resets itself. Used to detect battery removal
-> +				  and reinsertion;
-
-Could you elaborate on what these are for. How variable are these
-between batteries?
-
-> + - maxim,empty_adjustment	: Capacity charge empty design value;
-> + - maxim,full_adjustment	: Capacity charge full design value;
-
-These names are a bit odd.
-
-How about maxim,charge-empty and maxim,charge-full (perhaps
-maxim,charge-empty-design).
-
-> + - maxim,rcomp0			: ModelGauge RCOMP parameter, used for
-> +				  temperature compensation;
-> + - maxim,temp_co_up		: ModelGauge TempCoUp parameter, used for
-> +				  temperature compensation;
-> + - maxim,temp_co_down		: ModelGauge TempCoDown parameter, used for
-> +				  temperature compensation;
-> + - maxim,ocvtest		: ModelGauge OCVTest parameter, used for
-> +				  verification of Custom Model calibration data
-> +				  loaded into IC RAM;
-> + - maxim,soc_check_a		: ModelGauge SOCCheckA parameter, used for
-> +				  verification of Custom Model calibration data
-> +				  loaded into IC RAM;
-> + - maxim,soc_check_b		: ModelGauge SOCCheckB parameter, used for
-> +				  verification of Custom Model calibration data
-> +				  loaded into IC RAM;
-> + - maxim,bits			: ModelGauge Bits parameter, used as
-> +				  scaling parameter in Custom Model algorithm;
-> + - maxim,model_data		: ModelGauge ModelData data,
-> +				  Custom Model calibration data.
-
-I have no idea what these properties mean, so I can't comment on them as
-they are other than to say this looks a bit low-level. Are there any
-docs?
-
-> +
-> +Example:
-> +
-> +modelgauge@36 {
-> +	compatible = "maxim,max17058";
-> +	reg = <0x36>;
-> +	interrupt-parent = <&msmgpio>;
-> +	interrupts = <107 0x2>;
-
-This portion of the example looks fine.
-
-> +
-> +	maxim,empty_alert_threshold = /bits/ 8 <15>;
-> +	maxim,resetvoltage = /bits/ 16 <0>;
-> +	maxim,empty_adjustment = /bits/ 8 <0>;
-> +	maxim,full_adjustment = /bits/ 8 <100>;
-> +	maxim,rcomp0 = /bits/ 8 <175>;
-
-You did not describe that any of these were 8-bit values in the binding.
-
-> +	maxim,temp_co_up = <(-1100)>;
-> +	maxim,temp_co_down = <(-4000)>;
-
-These weren't described as signed.
-
-> +	maxim,ocvtest = /bits/ 16 <56144>;
-> +	maxim,soc_check_a = /bits/ 8 <241>;
-> +	maxim,soc_check_b = /bits/ 8 <243>;
-> +	maxim,bits = /bits/ 8 <19>;
-
-These weren't described as 8-bit either.
-
-> +
-> +	maxim,model_data = /bits/ 8 <
-> +		0x9B 0x70 0xAB 0x30 0xB5 0xA0 0xB9 0xD0
-> +		0xBB 0xA0 0xBC 0x00 0xBC 0xB0 0xBD 0x00
-> +		0xBD 0x60 0xBE 0x40 0xBF 0x40 0xC1 0xF0
-> +		0xC5 0x60 0xC8 0xA0 0xCD 0x00 0xD1 0x50
-> +		0x00 0xE0 0x01 0x80 0x18 0x60 0x1C 0x20
-> +		0x54 0x00 0x6A 0xC0 0x79 0x20 0x65 0xC0
-> +		0x0B 0xE0 0x2A 0xC0 0x1D 0x00 0x17 0xE0
-> +		0x15 0xE0 0x11 0xE0 0x11 0x00 0x11 0x00>;
-> +};
-
-This looks scary.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will
