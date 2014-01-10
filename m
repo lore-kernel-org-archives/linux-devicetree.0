@@ -1,65 +1,92 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] i2c: mv64xxx: Document the newly introduced
- Armada XP A0 compatible
-Date: Fri, 10 Jan 2014 16:55:26 -0500
-Message-ID: <20140110215526.GB19878@titan.lakedaemon.net>
-References: <1389193589-18485-1-git-send-email-gregory.clement@free-electrons.com>
- <1389193589-18485-5-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389193589-18485-5-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [PATCHv2] dt: binding documentation for bq2415x charger
+Date: Fri, 10 Jan 2014 23:34:46 +0100
+Message-ID: <1389393286-15263-1-git-send-email-sre@debian.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, pavel-+ZI9xUNit7I@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Gregory,
+Add devicetree binding documentation for bq2415x charger.
 
-On Wed, Jan 08, 2014 at 04:06:29PM +0100, Gregory CLEMENT wrote:
-> The first variants of Armada XP SoCs (A0 stepping) have issues related
-> to the i2c controller which prevent to use the offload mechanism and
-> ead to a kernel hang during boot.
+Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+---
+Hi,
 
-I'll fixup s/ead/lead/ here.
+This is the second version of the bq2415x binding documentation. The
+only changes since PATCHv1 are a rewording of the property descriptions
+as requested by Pavel Machek.
 
-> 
-> The commit introduces a new the compatible string
-> marvell,mv78230-a0-i2c for the i2c controller.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
-> index 82e8f6f17179..9410ed72ec45 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
-> @@ -5,7 +5,7 @@ Required properties :
->  
->   - reg             : Offset and length of the register set for the device
->   - compatible      : Should be "marvell,mv64xxx-i2c" or "allwinner,sun4i-i2c"
-> -                     or "marvell,mv78230-i2c"
-> +                     or "marvell,mv78230-i2c" or "marvell,mv78230-a0-i2c"
+I narrowed down the CCs for this patch, since there were no comments on
+PATCHv1 from omap or DT binding guys and Anton has applied the driver changes
+already. This patch is intended for 3.14, so that it gets merged together
+with the driver changes.
 
-If it's ok with you Gregory, I'll amend this hunk as follows:
+-- Sebastian
+---
+ .../devicetree/bindings/power/bq2415x.txt          | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/bq2415x.txt
 
-			or "marvell,mv78230-i2c" or "marvell,mv78230-a0-i2c"
-			Only use "marvell,mv78230-a0-i2c" for a very
-			rare, initial version of the SoC which had
-			broken offload support.  Linux auto-detects this
-			and sets it appropriately.
+diff --git a/Documentation/devicetree/bindings/power/bq2415x.txt b/Documentation/devicetree/bindings/power/bq2415x.txt
+new file mode 100644
+index 0000000..64f4a7f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/bq2415x.txt
+@@ -0,0 +1,48 @@
++Binding for TI bq2415x Li-Ion Charger
++
++Required properties:
++- compatible: Should contain one of the following:
++ * "ti,bq24150"
++ * "ti,bq24150"
++ * "ti,bq24150a"
++ * "ti,bq24151"
++ * "ti,bq24151a"
++ * "ti,bq24152"
++ * "ti,bq24153"
++ * "ti,bq24153a"
++ * "ti,bq24155"
++ * "ti,bq24156"
++ * "ti,bq24156a"
++ * "ti,bq24158"
++- reg:			   integer, i2c address of the device.
++- ti,current-limit:	   integer, initial maximum current charger can pull
++			   from power supply in mA.
++- ti,weak-battery-voltage: integer, weak battery voltage threshold in mV.
++			   The chip will use slow precharge if battery voltage
++			   is below this value.
++- ti,battery-regulation-voltage: integer, maximum charging voltage in mV.
++- ti,charge-current:	   integer, maximum charging current in mA.
++- ti,termination-current:  integer, charge will be terminated when current in
++			   constant-voltage phase drops below this value (in
++			   mA), charge is terminated.
++- ti,resistor-sense:	   integer, value of sensing resistor in milliohm.
++
++Optional properties:
++- ti,usb-charger-detection: phandle to usb charger detection device.
++			    (required for auto mode)
++
++Example from Nokia N900:
++
++bq24150a {
++	compatible = "ti,bq24150a";
++	reg = <0x6b>;
++
++	ti,current-limit = <100>;
++	ti,weak-battery-voltage = <3400>;
++	ti,battery-regulation-voltage = <4200>;
++	ti,charge-current = <650>;
++	ti,termination-current = <100>;
++	ti,resistor-sense = <68>;
++
++	ti,usb-charger-detection = <&isp1704>;
++};
+-- 
+1.8.5.2
 
-thx,
-
-Jason.
-
->   - interrupts      : The interrupt number
->  
->  Optional properties :
-> -- 
-> 1.8.1.2
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
