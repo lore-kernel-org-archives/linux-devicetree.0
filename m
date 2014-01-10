@@ -1,68 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] ASoC: fsl_esai: Add ESAI CPU DAI driver
-Date: Fri, 10 Jan 2014 16:52:29 +0000
-Message-ID: <20140110165229.GP29039@sirena.org.uk>
-References: <1389265078-16256-1-git-send-email-Guangyu.Chen@freescale.com>
- <20140109184453.GP12858@sirena.org.uk>
- <20140110023252.GA16467@MrMyself>
- <20140110023537.GB16467@MrMyself>
- <20140110120439.GG29039@sirena.org.uk>
- <20140110130338.GA17392@MrMyself>
- <20140110132642.GM29039@sirena.org.uk>
- <20140110154824.GA17609@MrMyself>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vzUQzca511KWT6Hk"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140110154824.GA17609@MrMyself>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nicolin Chen <Guangyu.Chen@freescale.com>
-Cc: timur@tabi.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, shawn.guo@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+From: Vince Bridgers <vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: socfpga: DTS updates for stmmac driver
+Date: Fri, 10 Jan 2014 10:49:59 -0600
+Message-ID: <1389372599-14180-1-git-send-email-vbridgers2013@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This change adds a parameter for the Synopsys 10/100/1000
+stmmac Ethernet driver to configure the maximum MTU supported
+by the EMAC instance. Synopsys allows the FIFO sizes to
+be configured when the cores are built for a particular
+device, but do not provide a way for the driver to read
+information from the device about the maximum MTU size
+supported as limited by the device's FIFO size.
 
---vzUQzca511KWT6Hk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch has been tested with changes being submitted
+seperately for the Synopsys 10/100/1000 stmmac driver.
 
-On Fri, Jan 10, 2014 at 11:48:25PM +0800, Nicolin Chen wrote:
+Signed-off-by: Vince Bridgers <vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/stmmac.txt |    5 +++++
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi          |   19 +++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-> I think I start to understand the point here: If a user only needs to playback
-> the default case - 44.1KHz for example, the driver can just configure all the
-> dividers once at the beginning, not every time, so that we can save further
-> register overriding operation or even complicated clock selection and divisor
-> calculation, which obviously makes the procedure clean and reduces the system
-> loading even if it might be just in a slight level.
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+index eba0e5e..7db314e 100644
+--- a/Documentation/devicetree/bindings/net/stmmac.txt
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -30,6 +30,10 @@ Required properties:
+ 
+ Optional properties:
+ - mac-address: 6 bytes, mac address
++- snps,max-mtu:		Maximum MTU permitted. This parameter is useful since
++			different implementations of the Synopsys MAC may have
++			different FIFO sizes depending on the selections
++			made in Synopsys Core Consultant.
+ 
+ Examples:
+ 
+@@ -40,5 +44,6 @@ Examples:
+ 		interrupts = <24 23>;
+ 		interrupt-names = "macirq", "eth_wake_irq";
+ 		mac-address = [000000000000]; /* Filled in by U-Boot */
++		snps,max-mtu = <3800>;
+ 		phy-mode = "gmii";
+ 	};
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+index a8716f6..b6b39dd 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
++++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+@@ -63,3 +63,22 @@
+ 		};
+ 	};
+ };
++
++&gmac1 {
++	phy-mode = "rgmii";
++	snps,phy-addr = <0xffffffff>; /* probe for phy addr */
++
++	rxd0-skew-ps = <0>;
++	rxd0-skew-ps = <0>;
++	rxd1-skew-ps = <0>;
++	rxd2-skew-ps = <0>;
++	rxd3-skew-ps = <0>;
++	txen-skew-ps = <0>;
++	txc-skew-ps = <2600>;
++	rxdv-skew-ps = <0>;
++	rxc-skew-ps = <2000>;
++	snps,max-mtu = <3800>;
++	altr,sysmgr-phy-mask = <0xC>;
++	status = "okay";
++};
++
+-- 
+1.7.9.5
 
-> Is this the reason, or maybe one of the reasons, to the defaults providing?
-
-The main thing is that if the DAI driver does it then it's less code in
-the machine drivers using it - what tends to happen otherwise is that
-quite a few machine drivers end up replicating the same logic.  Hardware
-designers tend to do a lot of cut'n'paste with these things so even if
-the CODEC is different the clocking is often very similar.
-
---vzUQzca511KWT6Hk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS0CVKAAoJELSic+t+oim99IQP/08MHspLPF61FZWnYD7c/ocz
-umRR6MfesK+5hChKTM5MjqKhRbORurpimLy3SQgiFHuoJXHUWkDWOFyU7ARsirm4
-SE93me6Ug7ARPdKtfdLJpH7xxgBsdV9YvbsZMfilEAjjLCa3UbZt7ZeDDBlOYMVE
-AbWOoGFjPrmvAMn5vNIUGZ2whqp9GEEzWCjrcFb2PRWNr8CCiJF+u23bX0CT/17B
-kxXqagbocugD3Rqjpo7EVZhaDlh8B/MARkGbnqTp53DpxRJl8xlSuM2GuyV7njhZ
-qedOxwUu7prtwID2HvF+xhj2cQstZaA0IXRutEoe2wj0cVBx0btGz/FHPcw85aou
-EQburgwdP2e63AcC8m2JcGGZ5y5QLQqMktxwgOr9RNTZj7ksL399KKpsLRiM2ABH
-z6gisop7cFr4BHl2H11V8W6telUgNq/TVIYAYfKASZ/3ei8BdPrT8cDm8NCShzBy
-aRgmxb6f2rfBwIl1xXlNYV3vP1iWhICO0TzHDKxCQ+hl1cSKB0b6Lez6OmmHzUN3
-o86Hz/pfcxzRY6BdwwINgEqdiSyi0YJ91DQ8uvuISSLUVvOqx4ZwB9Mw4mhprAhV
-Ezpp0kEIGQuL7OhcPrjSGyJP8SeNjWMsFzZFtO3YbtPdcuw/gFIKzHvTfBL5xNbJ
-MBAW15HInlDLOVdc5Yga
-=SwMh
------END PGP SIGNATURE-----
-
---vzUQzca511KWT6Hk--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
