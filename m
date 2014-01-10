@@ -1,49 +1,44 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv9 1/4] clk: socfpga: Add a clk-phase property to the "altr,
- socfpga-gate-clk"
-Date: Fri, 10 Jan 2014 20:00:25 +0100
-Message-ID: <201401102000.25484.arnd@arndb.de>
-References: <1389303079-19808-1-git-send-email-dinguyen@altera.com>
- <003501cf0e06$9c194c50$d44be4f0$%jun@samsung.com>
- <1389369111.13556.29.camel@linux-builds1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1389369111.13556.29.camel@linux-builds1>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dinh Nguyen <dinguyen@altera.com>
-Cc: devicetree@vger.kernel.org, dinh.linux@gmail.com, heiko@sntech.de, bzhao@marvell.com, Seungwon Jeon <tgih.jun@samsung.com>, linux-mmc@vger.kernel.org, dianders@chromium.org, jh80.chung@samsung.com, alim.akhtar@samsung.com, zhangfei.gao@linaro.org, mturquette@linaro.org, cjb@laptop.org, linux-arm-kernel@lists.infradead.org
+From: Andy Gross <agross@codeaurora.org>
+Subject: [PATCH v2 0/2] Add Qualcomm BAM dmaengine driver
+Date: Fri, 10 Jan 2014 13:07:52 -0600
+Message-ID: <1389380874-22753-1-git-send-email-agross@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 10 January 2014, Dinh Nguyen wrote:
-> > > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> > > index f936476..e776512 100644
-> > > --- a/arch/arm/boot/dts/socfpga.dtsi
-> > > +++ b/arch/arm/boot/dts/socfpga.dtsi
-> > > @@ -413,6 +413,7 @@
-> > >                                             compatible = "altr,socfpga-gate-clk";
-> > >                                             clocks = <&f2s_periph_ref_clk>, <&main_nand_sdmmc_clk>,
-> > > <&per_nand_mmc_clk>;
-> > >                                             clk-gate = <0xa0 8>;
-> > > +                                           clk-phase = <0 135>;
-> > 
-> > Can clk-phase be applicable commonly for various board?
-> > Isn't specific timing values?
-> 
-> No, the clock-phase does not change for various board. It is a
-> SoC-specific property.
+This patch set introduces the dmaengine driver for the Qualcomm Bus Access
+Manager (BAM) DMA controller present on MSM 8x74 devices.  A number of the
+on-chip devices have their own BAM DMA controller and use it to move data
+between system memory and peripherals or between two peripherals.
 
-I'm curious about this: If the setting is fixed per soc, why is it even
-configurable, rather than hardwired to the correct setting, or set up
-by the boot loader?
+The initial version of this driver will only support slave DMA operations
+between system memory and peripherals.
 
-	Arnd
+Changes from v1:
+        - Converted driver to use virt-dma
+        - Reworked probe function per review comments
+        - tx_status function now computes and returns residuals
+        - Removed proprietary slave config.  Removed associated include file.
+        - Renamed files to reflect vendor name instead of specific device
+	- Converted to use (readl|writel)_relaxed w/ appropriate barriers
+	- Removed unions in favor of standard types.
+
+Andy Gross (2):
+  dmaengine: add Qualcomm BAM dma driver
+  dmaengine: qcom_bam_dma: Add device tree binding
+
+ .../devicetree/bindings/dma/qcom_bam_dma.txt       |  52 ++
+ drivers/dma/Kconfig                                |   9 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/qcom_bam_dma.c                         | 843 +++++++++++++++++++++
+ drivers/dma/qcom_bam_dma.h                         | 268 +++++++
+ 5 files changed, 1173 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+ create mode 100644 drivers/dma/qcom_bam_dma.c
+ create mode 100644 drivers/dma/qcom_bam_dma.h
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
