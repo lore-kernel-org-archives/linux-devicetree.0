@@ -1,125 +1,76 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH 0/6] cpufreq: use cpufreq-cpu0 driver for exynos4210 based
- platforms
-Date: Fri, 10 Jan 2014 11:32:40 +0100
-Message-ID: <20140110113240.797381e6@amdc2363>
-References: <1389283165-17708-1-git-send-email-thomas.ab@samsung.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v4 4/6] devicetree: bindings: Document Krait L1/L2 EDAC
+Date: Fri, 10 Jan 2014 10:54:51 +0000
+Message-ID: <20140110105451.GB1086@e102568-lin.cambridge.arm.com>
+References: <1388434457-4194-1-git-send-email-sboyd@codeaurora.org>
+ <1388434457-4194-5-git-send-email-sboyd@codeaurora.org>
+ <20140107105439.GC5906@e102568-lin.cambridge.arm.com>
+ <20140107201239.GD14405@codeaurora.org>
+ <20140108100538.GA2927@e102568-lin.cambridge.arm.com>
+ <52CF0C05.1080308@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-reply-to: <1389283165-17708-1-git-send-email-thomas.ab@samsung.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Thomas Abraham <ta.omasab@gmail.com>
-Cc: cpufreq@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, kgene.kim@samsung.com, viresh.kumar@linaro.org, shawn.guo@linaro.org, thomas.ab@samsung.com, Lukasz Majewski <l.majewski@majess.pl>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <52CF0C05.1080308@codeaurora.org>
+Content-Disposition: inline
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On Thu, Jan 09, 2014 at 08:52:21PM +0000, Stephen Boyd wrote:
+> On 01/08/14 02:05, Lorenzo Pieralisi wrote:
+> > On Tue, Jan 07, 2014 at 08:12:39PM +0000, Stephen Boyd wrote:
+> >> On 01/07, Lorenzo Pieralisi wrote:
+> >>
+> >>> I have a problem with the cache level definition, and in
+> >>> particular the numbering, ie what the level number represents. If we
+> >>> mean the cache level seen through the CLIDR and co., it is hard to use
+> >>> it for shared caches since the level seen by different CPUs can actually
+> >>> be different, or put it differently the level number might not be unique for
+> >>> a shared cache. I need to think about a proper way to sort this out.
+> >>>
+> >> Ok. I don't even use this property in my driver. All I really
+> >> need is the phandle from cpus pointing to the L2 and the
+> >> interrupts property in the L2 node.
+> >>
+> >> How do you want to proceed here? If your cache binding goes
+> >> through I would just need to add the interrupts part. Or you
+> >> could even add that part in the same patch, you could have my
+> >> signed-off-by for that.
+> > Ok, I will try to update the bindings with the interrupt part and copy
+> > you in, even though the level definition worries me a bit, it is an
+> > important property for power management and I need to find a proper
+> > solution before bindings can get accepted (basically the problem is:
+> > if different CPUs can see a cache at different levels as defined in the
+> > CLIDR we cannot describe a cache with a single cache level or put it
+> > differently, level can not represent the value in the CLIDR hence we
+> > need to describe it differently).
+> 
+> Ok. I've dropped the cache part from this patch. I left the example as
+> is minus the cache-level attribute.
+> 
+> Understanding how the cache-level value would be used might help. I
+> wonder if the cache-level can just be a number that describes the
+> largest value that the cache could be assigned. Then if you have
+> different CPUs seeing different levels of cache they can traverse from
+> their CPU node to the cache and count how many phandles they went through.
 
-I've investigated the topic for a while, so if you don't mind I will
-share my thoughts :-)
+Yes, that's one of the solutions I envisaged, and likely to be the one
+that I will put forward since it requires almost no changes. If we go that way
+cache-level becomes pretty useless though (which might be a good thing) and I
+do not like the implicit cache level obtained by counting phandles.
+Another option would be making cache-level a list and add a property
+"cache-level-affinity" as 1:1 map list of phandles to cpu-map node to define for
+each CPU the level at which that cache is mapped, somthing like the bindings
+described here for IRQ affinity:
 
-> The patch series removes the use of Exynos4210 specific cpufreq driver
-> and enables to use the cpufreq-cpu0 driver for Exynos4210 based
-> platforms. This is being done for few reasons.
-> 
-> (a) The Exynos4210 cpufreq driver reads/writes clock controller
-> registers bypassing the Exynos4 CCF driver which is sort of
-> problematic.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/162466.html
 
-Also other, already supported devices suffer from it. Namely -
-Exynos4x12 and Exynos5250.
+I would say I tend to prefer the latter option, since I do not like relying
+on unwritten rules (implicit level numbering implied by phandle traversal) but
+I am open to suggestions.
 
-That's why the solution shall be as generic as possible to also work
-with those two SoCs.
-
-> (b) Removes the need for having clock controller
-> register definitions in the cpufreq driver and also removes the need
-> for statically io-remapping clock controller address space (helps in
-> moving towards multiplatform kernel).
-> 
-> In order to use cpufreq-cpu0 driver and provide fast cpu clock
-> switching during dvfs operations, the following apporach has been
-> used.
-> 
-> (a) A new CPU clock provider type has been introduced in Samsung's CCF
->     support. This clock provider type can be a compostion of multiple
->     clock blocks such as mux, dividers and gates. Typically, in Exynos
->     platforms, there are multiple clock blocks in between the output
->     of the APLL and the CPU clock domain output. Representing these
->     mutiple clock blocks within a opaque CPU clock provider type helps
->     in reducing the time taken to perform a CPU clock frequency change
->     operation, which is generally required during DVFS operations.
->     This approach was suggested by Arnd Bergmann <arnd@arndb.de>
-> during LCE-2013.
-> 
-> (b) A new optional safe operating point property has been introduced
->     in the cpufreq-cpu0 driver binding. On some platforms such as the
->     Samsung Exynos, a change in CPU frequency requires a change in the
->     PLL output that drives the CPU clock. A change in PLL output
->     requires the PLL output be turned off, which implies that the CPU
->     (and other components in the CPU clock domain) be supplied with
->     an alternate clock source during the time the PLL output is
-> changed.
-> 
->     The clock speed of this alternate clock source could be higher
->     than the clock speed of the PLL at the time of switching over to
->     the alternate clock source. This temporary increase in clock speed
->     of the CPU clock domain implies that the blocks within the CPU
->     clock domain should also be supplied with an appropriate voltage
->     supply level as required to drive the CPU clock domain components
->     at the speed of the alternative clock source. This temporary
->     voltage level required during switching of CPU clock speed is
->     called safe voltage level. And the cpufreq-cpu0 driver has been
->     modified to setup the safe voltage levels during the changes
->     in CPU clock speed.
-> 
-> (c) The CPU clock supply as been restructured as
->     [ Output of APLL -> Opaque CPU clock provider -> CPU clock output
-> ] And with the changes in (a) and (b) above, the cpufreq-cpu0 driver
->     can now be used and can remove the use of Exynos4210 specific
->     cpufreq driver.
-> 
-> This approach is currently tried on Exynos4210 only. The same approach
-> can be adopted for other Exynos SoCs as well. This patch series is
-> based on linux-next master branch.
-> 
-> Thomas Abraham (6):
->   cpufreq: cpufreq-cpu0: allow optional safe voltage during frequency
-> transitions clk: samsung: add infrastructure to register CPU clocks
->   clk: samsung: register cpu clock provider for exynos4210 SoC
->   cpufreq: exynos: remove Exynos4210 specific cpufreq driver support
->   arm: exynos4-dt: statically add platform device for cpufreq-cpu0
-> platform driver arm: dts: add cpu nodes for Exynos4210 SoC
-> 
->  .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   |    5 +
->  arch/arm/boot/dts/exynos4210-origen.dts            |    6 +
->  arch/arm/boot/dts/exynos4210-trats.dts             |    6 +
->  arch/arm/boot/dts/exynos4210-universal_c210.dts    |    6 +
->  arch/arm/boot/dts/exynos4210.dtsi                  |   22 +++
->  arch/arm/mach-exynos/mach-exynos4-dt.c             |    6 +
->  drivers/clk/samsung/clk-exynos4.c                  |   96
-> ++++++++++++- drivers/clk/samsung/clk.c                          |
-> 71 +++++++++ drivers/clk/samsung/clk.h                          |
-> 37 +++++- drivers/cpufreq/Kconfig.arm                        |   11 --
->  drivers/cpufreq/Makefile                           |    1 -
->  drivers/cpufreq/cpufreq-cpu0.c                     |   49 ++++++-
->  drivers/cpufreq/exynos-cpufreq.c                   |    4 +-
->  drivers/cpufreq/exynos-cpufreq.h                   |    8 -
->  drivers/cpufreq/exynos4210-cpufreq.c               |  157
-> -------------------- 15 files changed, 301 insertions(+), 184
-> deletions(-) delete mode 100644 drivers/cpufreq/exynos4210-cpufreq.c
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe cpufreq" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
--- 
-Best regards,
-
-Lukasz Majewski
-
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+Thanks,
+Lorenzo
