@@ -1,69 +1,145 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] ohci and ehci-platform clks, phy and
- dt support
-Date: Sat, 11 Jan 2014 00:24:18 +0100
-Message-ID: <52D08122.606@redhat.com>
-References: <1389393980-21183-1-git-send-email-hdegoede@redhat.com> <52D0875B.9040102@cogentembedded.com> <52D0799B.3030401@redhat.com> <52D08BF8.9090709@cogentembedded.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2] dt: bindings: submitting patches and ABI documents
+Date: Sat, 11 Jan 2014 00:34:04 +0100
+Message-ID: <463132841.Hj9gX6Huk9@flatron>
+References: <1383759120-21571-1-git-send-email-jason@lakedaemon.net> <1387299580-9100-1-git-send-email-jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBJ4CYKLAKGQESYGH4JA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52D08BF8.9090709-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1387299580-9100-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Jason,
 
-On 01/11/2014 01:10 AM, Sergei Shtylyov wrote:
-> On 01/11/2014 01:52 AM, Hans de Goede wrote:
->
->>>> Here is v4 of my ohci and ehci-platform clks, phy and dt support patch-set,
->>>> this version should be 100% ready for merging upstream.
->
->>>     I see you've decided to completely ignore my opinion. NAK, FWIW.
->
->> I'm sorry but the whole prefix thing has become a thing of -ETOOMUCHBIKESHEDDING,
->> everyone except you seems to be fine with mmio
->
->     Everyone being couple of people reading this thread? Of which only one being familiar with the real [EO]HCI hardware? :-)
+Overall these are very nice and useful documents, but I have some minor
+comments inline.
 
-You are aware that I've worked on qemu's USB emulation for 3 years full-time,
-including things like making the ehci emulation Windows XP compatible and
-many other hcd emulation fixes?
+On Tuesday 17 of December 2013 16:59:40 Jason Cooper wrote:
+> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> ---
+> Changes from RFC:
+>  - incorporated Grant's language
+>  - split patches/ABI into two documents
+> 
+>  Documentation/devicetree/bindings/ABI.txt          | 39 ++++++++++++++++++++++
+>  .../devicetree/bindings/submitting-patches.txt     | 35 +++++++++++++++++++
+>  2 files changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ABI.txt
+>  create mode 100644 Documentation/devicetree/bindings/submitting-patches.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/ABI.txt b/Documentation/devicetree/bindings/ABI.txt
+> new file mode 100644
+> index 000000000000..d25f8d379680
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ABI.txt
+> @@ -0,0 +1,39 @@
+> +
+> +  Devicetree (DT) ABI
+> +
+> +I. Regarding stable bindings/ABI, we quote from the 2013 ARM mini-summit
+> +   summary document:
+> +
+> +     "That still leaves the question of, what does a stable binding look
+> +     like?  Certainly a stable binding means that a newer kernel will not
+> +     break on an older device tree, but that doesn't mean the binding is
+> +     frozen for all time. Grant said there are ways to change bindings that
+> +     don't result in breakage. For instance, if a new property is added,
+> +     then default to the previous behaviour if it is missing. If a binding
+> +     truly needs an incompatible change, then change the compatible string
+> +     at the same time.  The driver can bind against both the old and the
+> +     new. These guidelines aren't new, but they desperately need to be
+> +     documented."
 
-And Alan Stern's credentials speak for themselves.
+I'm not sure if my memory isn't playing tricks on me, but I think more
+than that has been said. I believe we have decided that, if really
+necessary, bindings can be marked as unstable, but they need to become
+stable after some period of time (3 months?), otherwise they are dropped.
+Also, the marking is supposed to be done by explicitly stating in
+documentation that such binding is unstable.
 
-Comments like this do not really help to get your own comments taken serious.
+Also it might be a good idea to state (even if it's quite obvious) that
+standard kernel release processes apply to bindings, so they become
+really stable after release of first stable kernel where relevant
+documentation is included. This means that the binding can be heavily
+changed in -rc releases, if there is such need.
 
->     The name is just plain stupid if you want to know my real opinion.
+> +
+> +II.  General binding rules
+> +
+> +  1) Maintainers, don't let perfect be the enemy of good.  Don't hold up a
+> +     binding because it isn't perfect.
+> +
+> +  2) Use specific compatible strings so that if we need to add a feature (DMA)
+> +     in the future, we can create a new compatible string.  See I.
+> +
+> +  3) Bindings can be augmented, but the driver shouldn't break when given
+> +     the old binding. ie. add additional properties, but don't change the
+> +     meaning of an existing property. For drivers, default to the original
+> +     behaviour when a newly added property is missing.
+> +
+> +  4) Don't submit bindings for staging or unstable.  That will be decided by
+> +     the devicetree maintainers *after* discussion on the mailinglist.
+> +
+> +III. Notes
+> +
+> +  1) This document is intended as a general familiarization with the process as
+> +     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
+> +     devicetree maintainers overrules this document.  In that situation, a patch
+> +     updating this document would be appreciated.
+> diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
+> new file mode 100644
+> index 000000000000..5672cb46681d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/submitting-patches.txt
+> @@ -0,0 +1,35 @@
+> +
+> +  Submitting devicetree (DT) binding patches
+> +
+> +I. For patch submitters
+> +
+> +  0) Normal patch submission rules from Documentation/SubmittingPatches
+> +     applies.
+> +
+> +  1) The Documentation/ portion of the patch should be a separate patch.
+> +
+> +  2) Submit the entire series to the devicetree mailinglist at
+> +
+> +       devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +
+> +II. For kernel maintainers
+> +
+> +  1) If you aren't comfortable reviewing a given binding, reply to it and ask
+> +     the devicetree maintainers for guidance.  This will help them prioritize
+> +     which ones to review and which ones are ok to let go.
+> +
+> +  2) For driver (not subsystem) bindings: If you are comfortable with the
+> +     binding, and it hasn't received an Acked-by from the devicetree
+> +     maintainers after a few weeks, go ahead and take it.
 
-Your opinion has been noted, but so far your entire objection seems to be
-you not liking the name and now calling it stupid, while there have been
-actually *technical* arguments against the other prefixes.
+Even though the general rules of patch submission apply and pinging
+maintainers is a part of them, it might be a good idea to do a last
+minute ping as a warning for DT maintainers to give them one more day
+to look at patches that they could have missed.
 
-> And you've posted v3 with this name used first only what, 1.5 days ago?
->
->> and and one point in time we
->> need to make a decision and move forward.
->
->     I see the first version of your patches posted on January 6th, today is 11th (just starting here). You must be in a very big hurry to get this merged, I see. :-)
+> +
+> +  3) For a series going though multiple trees, the binding patch should be
+> +     kept with the driver using the binding.
 
-This is not about being in a hurry, this is about not wanting to waste
-time on what is quickly turning into pure bike-shedding.
+Also a note about trivial bindings might be added, because there is a lot
+of such showing up constantly. With trivial I mean a compatible string
+and a set of some generic properties, such as reg, interrupts, etc.,
+without any special device-specific magic. I'm not sure if there is
+a need to wait for DT maintainers to act, if subsystem maintainer can
+identify such binding as trivial.
 
->     Serious changes like this are not really done at such pace. Only the stuff that someone else has to painfully fix up later... :-(
+Best regards,
+Tomasz
 
-If you're suggestion that the mmio- prefix will cause breakage later now
-is your time to actually make an actual technical argument. "just plain
-stupid" does not help to get your comments taken serious.
-
-Regards,
-
-Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
