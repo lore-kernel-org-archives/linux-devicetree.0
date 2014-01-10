@@ -1,91 +1,120 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Fri, 10 Jan 2014 10:29:27 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1401101025401.1399-100000@iolanthe.rowland.org>
-References: <52CFC7DC.3010406@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCHv9 1/2] video: backlight: gpio-backlight: Add DT support.
+Date: Fri, 10 Jan 2014 16:30:00 +0100
+Message-ID: <20140110163000.64dbeba9@ipc1.ka-ro>
+References: <1389366444-29449-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD6LRVPZ6YGRBWFDYCLAKGQELSUWWPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52CFC7DC.3010406-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1389366444-29449-1-git-send-email-denis@eukrea.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Denis Carikli <denis@eukrea.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, linux-gpio@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Thierry Reding <thierry.reding@gmail.com>, Eric =?UTF-8?B?QsOpbmFyZA==?= <eric@eukrea.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 10 Jan 2014, Hans de Goede wrote:
+Hi,
 
-> >> +static struct usb_ohci_pdata ohci_platform_defaults = {
-> >> +	.power_on =		ohci_platform_power_on,
-> >> +	.power_suspend =	ohci_platform_power_off,
-> >> +	.power_off =		ohci_platform_power_off,
-> >>   };
-> >
-> > I wonder if these routines couldn't be shared with non-DT setups.  We
-> > could add an array of 3 struct clk pointers to the usb_ohci_pdata
-> > structure.  Then if any of them are set, store these routines in the
-> > power_* pointers.  (And likewise for ehci-platform.)  Something to
-> > consider for a future patch...
-> 
-> I don't like automatically setting the power_ platform_data members much.
+Denis Carikli wrote:
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> Cc: Jingoo Han <jg1.han@samsung.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
+> Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Eric B=C3=A9nard <eric@eukrea.com>
+> Signed-off-by: Denis Carikli <denis@eukrea.com>
+> ---
+> ChangeLog v8->v9:
+> - Added Shawn Guo in the Cc list.
+> - The default-brightness-level is now a boolean default-on property,
+>   the gpio is only touched if the gpio-backlight driver instance prob=
+es.
+> - The code and documentation was updated accordingly.
+>=20
+> ChangeLog v7->v8:
+> - The default-state was renamed to default-brightness-level.
+> - default-brightness-level is now mandatory, like for backlight-pwm,
+>   That way we avoid having to handle the case where it's not set,
+>   which means that we would need not to set the gpio, but still
+>   report a brightness value for sysfs, when not all gpio controllers =
+are
+>   able to read the gpio value.
+> - switched the default-brightness-level to boolean values (0 or 1) in=
+stead
+>   of using strings ("on", "off", "keep").
+> - The documentation was updated accordingly.
+> - The example in the documentation now uses the dts gpio defines.
+> - The "backlight: gpio_backlight: Use a default state enum." patch wa=
+s then
+>   dropped, becuase it is not necessary anymore.
+>=20
+> ChangeLog v6->v7:
+> - removed a compilation warning with the removal of the useless ret d=
+eclaration.
+>=20
+> ChangeLog v5->v6:
+> - The default state handling was reworked:
+>   - it's now called default-state, and looks like the gpio-leds defau=
+lt-state.
+>   - it now has a "keep" option, like for the gpio-leds.
+>   - that "keep" option is the default when the default-state property=
+ is not set.
+> - The documentation was updated accordingly.
+>=20
+> ChangeLog v4->v5:
+> - The default-brightness property now defaults to 0 in the driver.
+> - def_value int becomes a bool.
+> - The check for the gpio validity has been reworked.
+> ---
+>  .../bindings/video/backlight/gpio-backlight.txt    |   19 +++++++
+>  drivers/video/backlight/gpio_backlight.c           |   60 ++++++++++=
++++++++---
+>  2 files changed, 72 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/video/backlight=
+/gpio-backlight.txt
+>=20
+[...]
+> +static struct of_device_id gpio_backlight_of_match[] =3D {
+> +	{ .compatible =3D "gpio-backlight" },
+> +	{ /* sentinel */ }
+> +};
+> +
+>  static struct platform_driver gpio_backlight_driver =3D {
+>  	.driver		=3D {
+>  		.name		=3D "gpio-backlight",
+>  		.owner		=3D THIS_MODULE,
+> +		.of_match_table =3D of_match_ptr(gpio_backlight_of_match),
+>
+useless use of of_match_ptr().
+This would make sense, if the gpio_backlight_of_match struct was
+conditionally compiled in depending on CONFIG_OF.
+Since you unconditionally provide it you can use
+&gpio_backlight_of_match directly.
 
-Me either.
 
-> But I've already been thinking about moving the clks member to platform_data,
-> and simply exporting ohci_platform_power_* so that other drivers can use them
-> and put them in the platform_data members themselves. That is indeed something
-> for another patch though.
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
 
-It would require building ohci-platform into the kernel instead of 
-making it a separate module.  That shouldn't matter much for 
-embedded/SoC systems, though.  It seems like a good approach.
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
 
-> >>   	if (!pdata) {
-> >> -		WARN_ON(1);
-> >> -		return -ENODEV;
-> >> +		pdata = dev->dev.platform_data = &ohci_platform_defaults;
-> >
-> > This has a subtle bug.  Consider what will happen if ohci-platform is
-> > loaded, then unloaded and loaded again.
-> 
-> Right, so we need to add a "dev->dev.platform_data == &ohci_platform_defaults"
-> check on remove an then set platform_data to NULL, good point, will fix in the
-> next version.
-
-Exactly.
-
-> > The existing ehci-platform driver has this same bug.  I definitely
-> > remember discussing at once or twice in the past, but evidently it has
-> > never been fixed.
-> 
-> If you agree with the above fix I'll also throw it into the next revision
-> of the ehci patch.
-
-Thank you.
-
-> Before I do a v4, one question:
-> 
-> Ma Haijun does not like the use of OHCI_MAX_CLKS:
-> 
->  >> +#define OHCI_MAX_CLKS 3
->  >
->  > I still recommend using of_count_phandle_with_args(np, "clocks",
->  > "#clock-cells") to determine the number of clocks or the existence of clocks
->  > property (-ENOENT)
-> 
-> His suggestion would mean dynamically allocating the clks array and having
-> clks_count variable. I still think this is a bit overkill, but I can do that for
-> v4 if you want, so what do you prefer ?
-
-Space isn't a big consideration, because we're not likely to see a 
-system with more a few controllers.  I say keep it simple.  If someone 
-comes up with a controller using more than 3 clocks, we can change to 
-dynamic allocation then.
-
-Alan Stern
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
