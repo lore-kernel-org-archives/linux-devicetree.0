@@ -1,288 +1,91 @@
-From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Subject: Re: [PATCH RFC RFT 0/2] ARM: Kirkwood: Synology DT files
-Date: Sat, 11 Jan 2014 01:10:02 +1000
-Message-ID: <52D00D4A.6040707@killerwolves.net>
-References: <1389052027-16819-1-git-send-email-andrew@lunn.ch> <52CE312B.3060108@killerwolves.net> <20140109165557.GB9681@lunn.ch> <52CF4652.3030207@killerwolves.net> <20140110112846.GG27432@n2100.arm.linux.org.uk> <52CFFF07.5080806@killerwolves.net> <20140110142548.GG9681@lunn.ch> <52D005E1.6000308@killerwolves.net> <20140110144346.GH9681@lunn.ch>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ohci-platform: Add support for
+ devicetree instantiation
+Date: Fri, 10 Jan 2014 10:29:27 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1401101025401.1399-100000@iolanthe.rowland.org>
+References: <52CFC7DC.3010406@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140110144346.GH9681-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBD6LRVPZ6YGRBWFDYCLAKGQELSUWWPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52CFC7DC.3010406-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/14 00:43, Andrew Lunn wrote:
-> On Sat, Jan 11, 2014 at 12:38:25AM +1000, Ben Peddell wrote:
->> On 11/01/14 00:25, Andrew Lunn wrote:
->>> On Sat, Jan 11, 2014 at 12:09:11AM +1000, Ben Peddell wrote:
->>>> On 10/01/14 21:28, Russell King - ARM Linux wrote:
->>>>> On Fri, Jan 10, 2014 at 11:01:06AM +1000, Ben Peddell wrote:
->>>>>> It appears the initrd address in the devicetree structure (which=
- is=20
->>>>>> filled in from what is passed by the bootloader when=20
->>>>>> CONFIG_ARM_ATAG_DTB_COMPAT is set) is processed _after_ the addr=
-ess in=20
->>>>>> the initrd=3D kernel parameter is processed.
->>>>>
->>>>> That's wrong.  Kernel parameters should always override what's pa=
-ssed by
->>>>> boot loaders etc.
->>>>
->>>> In that case, what I saw was a bug - note that this only occurs wh=
-en
->>>> DeviceTree is enabled:
->>>>
->>>>
->>>>          __  __                      _ _
->>>>         |  \/  | __ _ _ ____   _____| | |
->>>>         | |\/| |/ _` | '__\ \ / / _ \ | |
->>>>         | |  | | (_| | |   \ V /  __/ | |
->>>>         |_|  |_|\__,_|_|    \_/ \___|_|_|
->>>>  _   _     ____              _
->>>> | | | |   | __ )  ___   ___ | |_
->>>> | | | |___|  _ \ / _ \ / _ \| __|
->>>> | |_| |___| |_) | (_) | (_) | |_
->>>>  \___/    |____/ \___/ \___/ \__|  ** LOADER **
->>>>  ** MARVELL BOARD: Synology Disk Station LE
->>>>
->>>> U-Boot 1.1.4 (Jul  6 2010 - 19:26:08) Marvell version: 3.4.4
->>>>
->>>> U-Boot code: 00600000 -> 0067FFF0  BSS: -> 0068B43C
->>>>
->>>> Soc: 88F6281 A1 (DDR2)
->>>> CPU running @ 1200Mhz L2 running @ 480Mhz
->>>> SysClock =3D 400Mhz , TClock =3D 200Mhz
->>>>
->>>> DRAM CAS Latency =3D 6 tRP =3D 6 tRAS =3D 18 tRCD=3D6
->>>> DRAM CS[0] base 0x00000000   size 128MB
->>>> DRAM Total size 128MB  16bit width
->>>> [4096kB@f8000000] Flash:  4 MB
->>>> Addresses 8M - 0M are saved for the U-Boot usage.
->>>> Mem malloc Initialization (8M - 7M): Done
->>>> Using default environment
->>>>
->>>>
->>>> CPU : Marvell Feroceon (Rev 1)
->>>>
->>>> Streaming disabled
->>>> Write allocate disabled
->>>>
->>>> Module 1 is AUDIO
->>>>
->>>> USB 0: host mode
->>>>
->>>> Synology Model: DS211j
->>>> Fan Status: Good
->>>>
->>>> Net:   egiga0 [PRIME]
->>>> Hit any key to stop autoboot:  0
->>>> Marvell>> setenv ipaddr 192.168.200.62
->>>> Marvell>> setenv serverip 192.168.200.16
->>>> Marvell>> tftp 0x01000000 uImage-3.13-rc7-ds211j-git-fdt
->>>> Using egiga0 device
->>>> TFTP from server 192.168.200.16; our IP address is 192.168.200.62
->>>> Filename 'uImage-3.13-rc7-ds211j-git-fdt'.
->>>> Load address: 0x1000000
->>>> Loading: #########################################################=
-########
->>>>          #########################################################=
-########
->>>>          #########################################################=
-########
->>>>          #########################################################=
-########
->>>>          #########################################################=
-########
->>>>          #########################################################
->>>> done
->>>
->>> So here you load the kernel into RAM at 0x0100 0000.
->>>
->>>
->>>> Bytes transferred =3D 1954736 (1dd3b0 hex)
->>>> Marvell>> setenv bootargs console=3DttyS0,115200 ip=3Doff initrd=3D=
-0x00800040,0x0013FFC0 root=3D/dev/md0 rw syno_hw_version=3DDS211j ihd_n=
-um=3D2 netif_num=3D1 earlyprintk
->>>
->>> I don't see you loading the initrd into RAM at 0x0080 0000.
->>
->> See below
->>
->>>
->>>> Marvell>> bootm 0x01000000 0xf8280000
->>>
->>> And here you tell it the initrd is at 0xf8280000.
->>
->> This is because I am using the initrd in flash.
->>
->>>
->>>> ## Booting image at 01000000 ...
->>>> Bad Magic Number
->>>> Marvell>> tftp 0x01000000 uImage-3.13-rc7-ds211j-git-fdt
->>>> Using egiga0 device
->>>> TFTP from server 192.168.200.16; our IP address is 192.168.200.62
->>>> Filename 'uImage-3.13-rc7-ds211j-git-fdt'.
->>>> Load address: 0x1000000
->>>> Loading: #########################################################=
-########
->>>>          #########################################################=
-########
->>>>          #########################################################=
-########
->>>>          #########################################################=
-########
->>>>          #########################################################=
-########
->>>>          #########################################################
->>>> done
->>>> Bytes transferred =3D 1954800 (1dd3f0 hex)
->>>> Marvell>> bootm 0x01000000 0xf8280000
->>>> ## Booting image at 01000000 ...
->>>>    Image Name:   linux-3.13-rc7-ds211j+
->>>>    Image Type:   ARM Linux Kernel Image (uncompressed)
->>>>    Data Size:    1954736 Bytes =3D  1.9 MB
->>>>    Load Address: 00008000
->>>>    Entry Point:  00008000
->>>>    Verifying Checksum ... OK
->>>> OK
->>>> ## Loading Ramdisk Image at f8280000 ...
->>>>    Image Name:   altair-boot
->>>>    Image Type:   ARM Linux RAMDisk Image (unknown compression)
->>>>    Data Size:    1022268 Bytes =3D 998.3 kB
->>>>    Load Address: 00800000
->>>>    Entry Point:  00800000
->>>>    Verifying Checksum ... OK
->>
->> Here the bootloader copies the initrd to 0x00800040, yet passes
->> 0xf8280040 to the kernel.
->=20
-> But does it pass 0xf8280040 because you used:
->=20
-> bootm 0x01000000 0xf8280000
->=20
-> What happens if you use
->=20
-> bootm 0x01000000 0x00800000
+On Fri, 10 Jan 2014, Hans de Goede wrote:
 
-=3D=3D=3D Boot without loading ramdisk from TFTP =3D=3D=3D
+> >> +static struct usb_ohci_pdata ohci_platform_defaults = {
+> >> +	.power_on =		ohci_platform_power_on,
+> >> +	.power_suspend =	ohci_platform_power_off,
+> >> +	.power_off =		ohci_platform_power_off,
+> >>   };
+> >
+> > I wonder if these routines couldn't be shared with non-DT setups.  We
+> > could add an array of 3 struct clk pointers to the usb_ohci_pdata
+> > structure.  Then if any of them are set, store these routines in the
+> > power_* pointers.  (And likewise for ehci-platform.)  Something to
+> > consider for a future patch...
+> 
+> I don't like automatically setting the power_ platform_data members much.
 
-Marvell>> setenv ipaddr 192.168.200.62
-Marvell>> setenv serverip 192.168.200.16
-Marvell>> tftp 0x01000000 uImage-3.13-rc7-ds211j-git-fdt
-Using egiga0 device
-TFTP from server 192.168.200.16; our IP address is 192.168.200.62
-=46ilename 'uImage-3.13-rc7-ds211j-git-fdt'.
-Load address: 0x1000000
-Loading: ##############################################################=
-###
-         ##############################################################=
-###
-         ##############################################################=
-###
-         ##############################################################=
-###
-         ##############################################################=
-###
-         #############################################################
-done
-Bytes transferred =3D 1973892 (1e1e84 hex)
-Marvell>> bootm 0x01000000 0x00800000
-## Booting image at 01000000 ...
-   Image Name:   linux-3.13-rc7-ds211j+
-   Image Type:   ARM Linux Kernel Image (uncompressed)
-   Data Size:    1973828 Bytes =3D  1.9 MB
-   Load Address: 00008000
-   Entry Point:  00008000
-   Verifying Checksum ... OK
-OK
-## Loading Ramdisk Image at 00800000 ...
-Bad Magic Number
-Bad Header C=E2=96=92=E2=96=92
+Me either.
 
-=3D=3D=3D End of boot =3D=3D=3D
+> But I've already been thinking about moving the clks member to platform_data,
+> and simply exporting ohci_platform_power_* so that other drivers can use them
+> and put them in the platform_data members themselves. That is indeed something
+> for another patch though.
 
-Note below that I have set the following options:
+It would require building ohci-platform into the kernel instead of 
+making it a separate module.  That shouldn't matter much for 
+embedded/SoC systems, though.  It seems like a good approach.
 
-CONFIG_CMDLINE=3D"initrd=3D0x00800040,0x0013FFC0 earlyprintk panic=3D5"
-CONFIG_CMDLINE_EXTEND=3Dy
-CONFIG_ARM_APPENDED_DTB=3Dy
-CONFIG_ARM_ATAG_DTB_COMPAT=3Dn
+> >>   	if (!pdata) {
+> >> -		WARN_ON(1);
+> >> -		return -ENODEV;
+> >> +		pdata = dev->dev.platform_data = &ohci_platform_defaults;
+> >
+> > This has a subtle bug.  Consider what will happen if ohci-platform is
+> > loaded, then unloaded and loaded again.
+> 
+> Right, so we need to add a "dev->dev.platform_data == &ohci_platform_defaults"
+> check on remove an then set platform_data to NULL, good point, will fix in the
+> next version.
 
-=3D=3D=3D Boot with loading ramdisk from TFTP with CONFIG_CMDLINE =3D=3D=
-=3D
+Exactly.
 
-Marvell>> setenv ipaddr 192.168.200.62
-Marvell>> setenv serverip 192.168.200.16
-Marvell>> tftp 0x01000000 uImage-3.13-rc7-ds211j-git-fdt
-Using egiga0 device
-TFTP from server 192.168.200.16; our IP address is 192.168.200.62
-=46ilename 'uImage-3.13-rc7-ds211j-git-fdt'.
-Load address: 0x1000000
-Loading: ##############################################################=
-###
-         ##############################################################=
-###
-         ##############################################################=
-###
-         ##############################################################=
-###
-         ##############################################################=
-###
-         #############################################################
-done
-Bytes transferred =3D 1973892 (1e1e84 hex)
-Marvell>> tftp 0x00800000 initramfs-20140109
-Using egiga0 device
-TFTP from server 192.168.200.16; our IP address is 192.168.200.62
-=46ilename 'initramfs-20140109'.
-Load address: 0x800000
-Loading: ##############################################################=
-###
-         ##############################################################=
-###
-         ##############################################################=
-###
-         ##############################################################
-done
-Bytes transferred =3D 1310720 (140000 hex)
-Marvell>> bootm 0x01000000 0x00800000
-## Booting image at 01000000 ...
-   Image Name:   linux-3.13-rc7-ds211j+
-   Image Type:   ARM Linux Kernel Image (uncompressed)
-   Data Size:    1973828 Bytes =3D  1.9 MB
-   Load Address: 00008000
-   Entry Point:  00008000
-   Verifying Checksum ... OK
-OK
-## Loading Ramdisk Image at 00800000 ...
-   Image Name:   altair-boot
-   Image Type:   ARM Linux RAMDisk Image (unknown compression)
-   Data Size:    1310656 Bytes =3D  1.2 MB
-   Load Address: 00800000
-   Entry Point:  00800000
-   Verifying Checksum ... OK
+> > The existing ehci-platform driver has this same bug.  I definitely
+> > remember discussing at once or twice in the past, but evidently it has
+> > never been fixed.
+> 
+> If you agree with the above fix I'll also throw it into the next revision
+> of the ehci patch.
 
-Starting kernel ...
+Thank you.
 
-Uncompressing Linux... done, booting the kernel.
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 3.13.0-rc7-ds211j+ (klightspeed@lurch) (gc=
-c version 4.8.2 (Gentoo 4.8.2 p1.3, pie-0.5.8) ) #1 Fri Jan 10 14:03:45=
- EST 2014
-[    0.000000] CPU: Feroceon 88FR131 [56251311] revision 1 (ARMv5TE), c=
-r=3D00053977
-[    0.000000] CPU: VIVT data cache, VIVT instruction cache
-[    0.000000] Machine model: Synology DS210 v10, v20, v30, DS211j
-[    0.000000] Memory policy: Data cache writeback
-[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  =
-Total pages: 32512
-[    0.000000] Kernel command line: console=3DttyS0,115200n8
-=2E..
+> Before I do a v4, one question:
+> 
+> Ma Haijun does not like the use of OHCI_MAX_CLKS:
+> 
+>  >> +#define OHCI_MAX_CLKS 3
+>  >
+>  > I still recommend using of_count_phandle_with_args(np, "clocks",
+>  > "#clock-cells") to determine the number of clocks or the existence of clocks
+>  > property (-ENOENT)
+> 
+> His suggestion would mean dynamically allocating the clks array and having
+> clks_count variable. I still think this is a bit overkill, but I can do that for
+> v4 if you want, so what do you prefer ?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Space isn't a big consideration, because we're not likely to see a 
+system with more a few controllers.  I say keep it simple.  If someone 
+comes up with a controller using more than 3 clocks, we can change to 
+dynamic allocation then.
+
+Alan Stern
