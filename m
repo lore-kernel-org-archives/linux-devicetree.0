@@ -1,133 +1,147 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V2] dt: bindings: submitting patches and ABI documents
-Date: Fri, 10 Jan 2014 13:30:17 -0500
-Message-ID: <20140110183017.GN19878@titan.lakedaemon.net>
-References: <1383759120-21571-1-git-send-email-jason@lakedaemon.net>
- <1387299580-9100-1-git-send-email-jason@lakedaemon.net>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: DT include files
+Date: Fri, 10 Jan 2014 10:37:01 -0800
+Message-ID: <CAOesGMhP5t=QHj7TdDY9Nq+=WHeQXv1V0n9TGmmEnqSG9SaFKg@mail.gmail.com>
+References: <20131231054427.GA22383@S2101-09.ap.freescale.net>
+	<20140102202108.GF19720@quad.lixom.net>
+	<20140103023211.GA25079@S2101-09.ap.freescale.net>
+	<CAOesGMheei8YgzfRp9pmQ0rT9zhJ2_hF56j5Y+jLSy5TadPZ-g@mail.gmail.com>
+	<20140103030455.GB25079@S2101-09.ap.freescale.net>
+	<CAOesGMihX-pLva-aBCHJ6TYfsN57MzRWiYFTnfKCXOKeja0uUg@mail.gmail.com>
+	<20140104011056.GA3282@S2101-09.ap.freescale.net>
+	<20140110024124.GA6844@S2101-09.ap.freescale.net>
+	<CAOesGMh3HBCYut2hfub3svrJT5JJzoWq8mU=VU0grZbg-JqqbA@mail.gmail.com>
+	<52CFF57D.8060808@samsung.com>
+	<CAL_JsqKHr6v+6kNXrAdnzH0gpoFCPAjPSnX8iBDgRSMh9JgxvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1387299580-9100-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <CAL_JsqKHr6v+6kNXrAdnzH0gpoFCPAjPSnX8iBDgRSMh9JgxvA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+On Fri, Jan 10, 2014 at 7:30 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Jan 10, 2014 at 7:28 AM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On 10.01.2014 03:41, Olof Johansson wrote:
+>>>
+>>> On Thu, Jan 9, 2014 at 6:41 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>
+>>>> On Sat, Jan 04, 2014 at 09:10:58AM +0800, Shawn Guo wrote:
+>>>>>
+>>>>> On Fri, Jan 03, 2014 at 11:29:35AM -0800, Olof Johansson wrote:
+>>>>>>
+>>>>>> On Thu, Jan 2, 2014 at 7:04 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>>>>
+>>>>>>> On Thu, Jan 02, 2014 at 06:41:30PM -0800, Olof Johansson wrote:
+>>>>>>>>
+>>>>>>>> Ok, then it's probably just the location of the header files that
+>>>>>>>> should be adjusted. Other subsystems have placed them under
+>>>>>>>> include/dt-bindings/<subsystem>, so that's likely a better place for
+>>>>>>>> these as well, don't you think?
+>>>>>>>
+>>>>>>>
+>>>>>>> I had a little discussion with DT people when the headers were firstly
+>>>>>>> created.  These pinctrl headers are a little different from the
+>>>>>>> headers
+>>>>>>> in include/dt-bindings/<subsystem>.  The latter are used by both
+>>>>>>> kernel
+>>>>>>> and device tree sources, while the pinctrl headers are used by device
+>>>>>>> tree sources only, so I chose to put them just in the same folder as
+>>>>>>> dts files.  And DT people are fine with my take.
+>>>>>>
+>>>>>>
+>>>>>> Since you don't provide references to this I had to go searching for
+>>>>>> it. All I find is some discussion from 8 months ago, and quite a bit
+>>>>>> of that seems to have been about changing bindings, and some about the
+>>>>>> preprocessor behavior. Also, the patches seem to have been too big to
+>>>>>> make it out on the lists.
+>>>>>>
+>>>>>> I'd like a fresh look from DT people on this just to make sure no
+>>>>>> opinions have changed -- lots of things have changed in the last 8
+>>>>>> months w.r.t. DT.
+>>>>>
+>>>>>
+>>>>> Indeed, it's been quite a long time.  Let me restate my point.  The
+>>>>> include/dt-bindings is introduced as a folder to hold headers that are
+>>>>> referenced by both kernel and DTS.  That's why we create the folder in
+>>>>> the kernel include folder and have arch/arm/boot/dts/include/dt-bindings
+>>>>> being a symbol link to it.  All the headers in there need to be
+>>>>> duplicated between kernel and DTS tree, when we move DTS files into
+>>>>> a separated repository.  Putting DTS local headers into the folder is
+>>>>> absolutely unnecessary, and will only confuse people and bother
+>>>>> ourselves when moving DTS files out of kernel tree.
+>>>>
+>>>>
+>>>> Just a gentle ping to ensure we do not get the pull request lost.  Or do
+>>>> you have any further comment?
+>>>
+>>>
+>>> Still waiting on DT maintainers to chime in.
+>
+> It helps (slightly) to be copied directly.
 
-On Tue, Dec 17, 2013 at 04:59:40PM +0000, Jason Cooper wrote:
-> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> ---
-> Changes from RFC:
->  - incorporated Grant's language
->  - split patches/ABI into two documents
-> 
->  Documentation/devicetree/bindings/ABI.txt          | 39 ++++++++++++++++++++++
->  .../devicetree/bindings/submitting-patches.txt     | 35 +++++++++++++++++++
->  2 files changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ABI.txt
->  create mode 100644 Documentation/devicetree/bindings/submitting-patches.txt
+I should have copied you on some of the thread, but this was also
+right around when your calxeda address was going away so I might have
+missed you.
 
-Are there any updates I should make to this?
+>
+>> I'm not officially a DT maintainer, but let me share my thoughts on this.
+>
+> We can fix that... :)
+>
+>> So what options we have for this:
+>>
+>>  1) include/dt-bindings - this directory is designed to contain headers
+>>     that define the ABI between firmware and kernel code, in other
+>>     words - DT bindings.
+>>
+>>  2) arch/*/boot/dts - we already have files that can be included by
+>>     other files in this directory, i.e. *.dtsi. Some are used to
+>>     implement hierarchies of devices (e.g. s3c64xx.dtsi), but some are
+>>     purely used as headers (s3c64xx-pinctrl.dtsi).
+>>
+>>  3) include/dts? - I'm not sure if this have any benefits, but I'm
+>>     listing it since it's one of the ideas that came to my mind.
+>>
+>> Now 2) seems to be already used and doesn't seem to generate any problems,
+>> so I'm all for it. Still, there is one more issue. For files to be included
+>> merely by DTS files and so limited by DTS+CPP syntax, I don't think it's too
+>> good idea to call them *.h. Let's stay with *.dtsi, since that's the file
+>> extension supposed to be used for files that can be included from device
+>> tree sources.
+>
+> I think having 1 and 2 is the right way. Minimizing the number of
+> shared headers between dts and the kernel is a good thing.
+>
+> As for *.h vs. *.dtsi naming, if the include is only pre-processor
+> defines, then I think using .h is the right way. Otherwise, if there
+> is any dts syntax, then .dtsi is the right name. It looks to me like
+> this style has been followed in both the imx and s3c64xx cases.
 
-thx,
+I'm mostly reacting to the use of .h for something that isn't C
+preprocessing. Since dtc/dts has their own namespace for everything
+else, it seems appropriate to have something unique. But this is
+pretty far up bikeshed alley.
 
-Jason.
+> On a side note, I'm not really a fan of this pattern:
+>
+> #define FOO1 1 2 3
+>
+> #define BAR FOO1 FOO2 FOO3
+>
+> While it definitely simplifies the dts files, it would never be used
+> in C and obfuscates what the actual property size is. Reading a dts
+> file, I would naturally assume the define was a single value while in
+> fact it could expand to a very large property size.
 
-> diff --git a/Documentation/devicetree/bindings/ABI.txt b/Documentation/devicetree/bindings/ABI.txt
-> new file mode 100644
-> index 000000000000..d25f8d379680
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ABI.txt
-> @@ -0,0 +1,39 @@
-> +
-> +  Devicetree (DT) ABI
-> +
-> +I. Regarding stable bindings/ABI, we quote from the 2013 ARM mini-summit
-> +   summary document:
-> +
-> +     "That still leaves the question of, what does a stable binding look
-> +     like?  Certainly a stable binding means that a newer kernel will not
-> +     break on an older device tree, but that doesn't mean the binding is
-> +     frozen for all time. Grant said there are ways to change bindings that
-> +     don't result in breakage. For instance, if a new property is added,
-> +     then default to the previous behaviour if it is missing. If a binding
-> +     truly needs an incompatible change, then change the compatible string
-> +     at the same time.  The driver can bind against both the old and the
-> +     new. These guidelines aren't new, but they desperately need to be
-> +     documented."
-> +
-> +II.  General binding rules
-> +
-> +  1) Maintainers, don't let perfect be the enemy of good.  Don't hold up a
-> +     binding because it isn't perfect.
-> +
-> +  2) Use specific compatible strings so that if we need to add a feature (DMA)
-> +     in the future, we can create a new compatible string.  See I.
-> +
-> +  3) Bindings can be augmented, but the driver shouldn't break when given
-> +     the old binding. ie. add additional properties, but don't change the
-> +     meaning of an existing property. For drivers, default to the original
-> +     behaviour when a newly added property is missing.
-> +
-> +  4) Don't submit bindings for staging or unstable.  That will be decided by
-> +     the devicetree maintainers *after* discussion on the mailinglist.
-> +
-> +III. Notes
-> +
-> +  1) This document is intended as a general familiarization with the process as
-> +     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
-> +     devicetree maintainers overrules this document.  In that situation, a patch
-> +     updating this document would be appreciated.
-> diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
-> new file mode 100644
-> index 000000000000..5672cb46681d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/submitting-patches.txt
-> @@ -0,0 +1,35 @@
-> +
-> +  Submitting devicetree (DT) binding patches
-> +
-> +I. For patch submitters
-> +
-> +  0) Normal patch submission rules from Documentation/SubmittingPatches
-> +     applies.
-> +
-> +  1) The Documentation/ portion of the patch should be a separate patch.
-> +
-> +  2) Submit the entire series to the devicetree mailinglist at
-> +
-> +       devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +
-> +II. For kernel maintainers
-> +
-> +  1) If you aren't comfortable reviewing a given binding, reply to it and ask
-> +     the devicetree maintainers for guidance.  This will help them prioritize
-> +     which ones to review and which ones are ok to let go.
-> +
-> +  2) For driver (not subsystem) bindings: If you are comfortable with the
-> +     binding, and it hasn't received an Acked-by from the devicetree
-> +     maintainers after a few weeks, go ahead and take it.
-> +
-> +  3) For a series going though multiple trees, the binding patch should be
-> +     kept with the driver using the binding.
-> +
-> +III. Notes
-> +
-> +  0) Please see ...bindings/ABI.txt for details regarding devicetree ABI.
-> +
-> +  1) This document is intended as a general familiarization with the process as
-> +     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
-> +     devicetree maintainers overrules this document.  In that situation, a patch
-> +     updating this document would be appreciated.
-> -- 
-> 1.8.5.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hmm. Shawn?
+
+
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
