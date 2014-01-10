@@ -1,130 +1,191 @@
-From: Michael Trimarchi <michael@amarulasolutions.com>
-Subject: Re: [PATCH v9 4/7] mmc: omap_hsmmc: adapt hsmmc to use pbias regulator
-Date: Fri, 10 Jan 2014 19:21:55 +0100
-Message-ID: <CAOf5uwkVsPA4_kuf4G0JBB9ewb1=HGD5vGMr9pttKuWmAzF1VQ@mail.gmail.com>
-References: <1389279062-32291-1-git-send-email-balajitk@ti.com>
-	<1389375049-5248-1-git-send-email-balajitk@ti.com>
-	<1389375049-5248-5-git-send-email-balajitk@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH V6] kbuild: dtbs_install: new make target
+Date: Fri, 10 Jan 2014 13:29:23 -0500
+Message-ID: <20140110182923.GM19878@titan.lakedaemon.net>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net>
+ <1385942188-21831-1-git-send-email-jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1389375049-5248-5-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Benoit Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>, mark.rutland@arm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1385942188-21831-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Grant,
 
-On Fri, Jan 10, 2014 at 6:30 PM, Balaji T K <balajitk@ti.com> wrote:
-> In DT case, PBAIS registers are programmed via regulator,
-> use regulator APIs to control PBIAS.
->
-> Signed-off-by: Balaji T K <balajitk@ti.com>
+On Sun, Dec 01, 2013 at 11:56:28PM +0000, Jason Cooper wrote:
+> Unlike other build products in the Linux kernel, there is no 'make
+> *install' mechanism to put devicetree blobs in a standard place.
+> 
+> This patch is an attempt to fix this problem.  Akin to 'make install',
+> this creates a new make target, dtbs_install.  The script that gets
+> called defers to a distribution or user supplied installdtbs binary,
+> if found in the system.  Otherwise, the default action is to install the
+> built dtbs into
+> 
+>   /lib/devicetrees/${kernel_version}/${dts_filename}.dtb
+> 
+> This is done to keep dtbs from different kernel versions separate until
+> things have settled down.  Once the dtbs are stable, and not so strongly
+> linked to the kernel version, the devicetree files will most likely move
+> to their own repo.  Users will need to upgrade install scripts at that
+> time.
+> 
+> /lib has been selected over /boot since /boot is often a FAT filesystem
+> and a majority of the dts filenames are longer than 8+3.
+> 
+> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 > ---
->  drivers/mmc/host/omap_hsmmc.c |   39 +++++++++++++++++++++++++++++++++++++++
->  1 files changed, 39 insertions(+), 0 deletions(-)
->
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index 342be25..0a390f8 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -126,6 +126,10 @@
->  #define OMAP_MMC_MAX_CLOCK     52000000
->  #define DRIVER_NAME            "omap_hsmmc"
->
-> +#define VDD_1V8                        1800000         /* 180000 uV */
-> +#define VDD_3V0                        3000000         /* 300000 uV */
-> +#define VDD_165_195            (ffs(MMC_VDD_165_195) - 1)
-> +
->  /*
->   * One controller can have multiple slots, like on some omap boards using
->   * omap.c controller driver. Luckily this is not currently done on any known
-> @@ -164,6 +168,8 @@ struct omap_hsmmc_host {
->          */
->         struct  regulator       *vcc;
->         struct  regulator       *vcc_aux;
-> +       struct  regulator       *pbias;
-> +       bool                    pbias_enabled;
->         int                     pbias_disable;
->         void    __iomem         *base;
->         resource_size_t         mapbase;
-> @@ -272,6 +278,15 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
->         if (mmc_slot(host).before_set_reg)
->                 mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
->
-> +       if (host->pbias) {
-> +               if (host->pbias_enabled == 1) {
-> +                       ret = regulator_disable(host->pbias);
-> +                       if (!ret)
-> +                               host->pbias_enabled = 0;
-> +               }
-> +               regulator_set_voltage(host->pbias, VDD_3V0, VDD_3V0);
-> +       }
-> +
->         /*
->          * Assume Vcc regulator is used only to power the card ... OMAP
->          * VDDS is used to power the pins, optionally with a transceiver to
-> @@ -306,9 +321,29 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
->                 }
->         }
->
-> +       if (host->pbias) {
-> +               if (vdd <= VDD_165_195)
-> +                       ret = regulator_set_voltage(host->pbias, VDD_1V8,
-> +                                                               VDD_1V8);
-> +               else
-> +                       ret = regulator_set_voltage(host->pbias, VDD_3V0,
-> +                                                               VDD_3V0);
-> +               if (ret < 0)
-> +                       goto error_set_power;
-> +
-> +               if (host->pbias_enabled == 0) {
-> +                       ret = regulator_enable(host->pbias);
-> +                       if (!ret) {
-> +                               host->pbias_enabled = 1;
-> +                               goto error_set_power;
 
-why you a goto to error_set_power if the regulator enable was a succes?
-and if pbias_enabled is used for verify if is already enabled. Is the
-same to use
-regulator_is_enabled?
+Is this good to go?
 
-Michael
+thx,
 
-> +                       }
-> +               }
-> +       }
+Jason.
+
+> Note: Stephen, I haven't added your Ack because I wanted to make sure you were
+> Ok with the change to /lib in light of /boot partitions formatted to FAT
+> 
+> changes since v5:
+>  - move make target back to arch/arm/Makefile (gcl)
+>  - change default install location to /lib from /boot (FAT) (ojn,jac)
+> 
+> changes since v4:
+>  - move make target from arch/arm/Makefile to Makefile (swarren)
+>  - change default install location to /boot/devicetrees/$KERNVER (swarren/gcl)
+>  - add INSTALL_DTBS_PATH for changing build root (jac)
+> 
+> changes since v3:
+>  - drop renaming files to ${compat}.dtb (rmk/swarren)
+>  - move installdtbs.sh to ./scripts/ (gcl)
+> 
+> changes since v2:
+>  - use fdtget instead of a modified dtc to get the board compat string
+> 
+> changes since v1:
+>  - added this patch
+> 
+>  Makefile               | 12 +++++++++++-
+>  arch/arm/Makefile      | 10 ++++++++++
+>  scripts/installdtbs.sh | 33 +++++++++++++++++++++++++++++++++
+>  3 files changed, 54 insertions(+), 1 deletion(-)
+>  create mode 100644 scripts/installdtbs.sh
+> 
+> diff --git a/Makefile b/Makefile
+> index c0c2d58e3998..240e0d52b126 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -339,6 +339,7 @@ OBJDUMP		= $(CROSS_COMPILE)objdump
+>  AWK		= awk
+>  GENKSYMS	= scripts/genksyms/genksyms
+>  INSTALLKERNEL  := installkernel
+> +INSTALLDTBS    := installdtbs
+>  DEPMOD		= /sbin/depmod
+>  PERL		= perl
+>  CHECK		= sparse
+> @@ -391,7 +392,7 @@ KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(S
+>  export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
+>  export ARCH SRCARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC
+>  export CPP AR NM STRIP OBJCOPY OBJDUMP
+> -export MAKE AWK GENKSYMS INSTALLKERNEL PERL UTS_MACHINE
+> +export MAKE AWK GENKSYMS INSTALLKERNEL INSTALLDTBS PERL UTS_MACHINE
+>  export HOSTCXX HOSTCXXFLAGS LDFLAGS_MODULE CHECK CHECKFLAGS
+>  
+>  export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS LDFLAGS
+> @@ -704,6 +705,15 @@ export KBUILD_IMAGE ?= vmlinux
+>  export	INSTALL_PATH ?= /boot
+>  
+>  #
+> +# INSTALL_DTBS_PATH specifies a prefix for relocations required by build roots.
+> +# Like INSTALL_MOD_PATH, it isn't defined in the Makefile, but can be passed as
+> +# an argument if needed.
+> +#
 > +
->         if (mmc_slot(host).after_set_reg)
->                 mmc_slot(host).after_set_reg(dev, slot, power_on, vdd);
->
-> +error_set_power:
->         return ret;
->  }
->
-> @@ -342,6 +377,9 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
->         reg = devm_regulator_get_optional(host->dev, "vmmc_aux");
->         host->vcc_aux = IS_ERR(reg) ? NULL : reg;
->
-> +       reg = devm_regulator_get_optional(host->dev, "pbias");
-> +       host->pbias = IS_ERR(reg) ? NULL : reg;
+> +DTBBOOT = $(INSTALL_DTBS_PATH)/lib/devicetrees/$(KERNELRELEASE)
+> +export DTBBOOT
 > +
->         /* For eMMC do not power off when not in sleep state */
->         if (mmc_slot(host).no_regulator_off_init)
->                 return 0;
-> @@ -1808,6 +1846,7 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->         host->base      = ioremap(host->mapbase, SZ_4K);
->         host->power_mode = MMC_POWER_OFF;
->         host->next_data.cookie = 1;
-> +       host->pbias_enabled = 0;
->
->         platform_set_drvdata(pdev, host);
->
+> +#
+>  # INSTALL_MOD_PATH specifies a prefix to MODLIB for module directory
+>  # relocations required by build roots.  This is not defined in the
+>  # makefile but the argument can be passed to make if needed.
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index c99b1086d83d..400a3a7ee899 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -314,6 +314,12 @@ PHONY += dtbs
+>  dtbs: scripts
+>  	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) dtbs
+>  
+> +PHONY += dtbs_install
+> +
+> +dtbs_install: dtbs
+> +	$(CONFIG_SHELL) $(srctree)/scripts/installdtbs.sh $(KERNELRELEASE) \
+> +	"$(DTBBOOT)" "$(srctree)"
+> +
+>  # We use MRPROPER_FILES and CLEAN_FILES now
+>  archclean:
+>  	$(Q)$(MAKE) $(clean)=$(boot)
+> @@ -331,6 +337,10 @@ define archhelp
+>    echo  '  bootpImage    - Combined zImage and initial RAM disk'
+>    echo  '                  (supply initrd image via make variable INITRD=<path>)'
+>    echo  '* dtbs          - Build device tree blobs for enabled boards'
+> +  echo  '  dtbs_install  - Install dtbs'
+> +  echo  '                  Install using (your) ~/bin/$(INSTALLDTBS) or'
+> +  echo  '                  (distribution) /sbin/$(INSTALLDTBS) or'
+> +  echo  '                  install to $(DTBBOOT)'
+>    echo  '  install       - Install uncompressed kernel'
+>    echo  '  zinstall      - Install compressed kernel'
+>    echo  '  uinstall      - Install U-Boot wrapped compressed kernel'
+> diff --git a/scripts/installdtbs.sh b/scripts/installdtbs.sh
+> new file mode 100644
+> index 000000000000..11027f00c3a4
+> --- /dev/null
+> +++ b/scripts/installdtbs.sh
+> @@ -0,0 +1,33 @@
+> +#!/bin/sh
+> +#
+> +# This file is subject to the terms and conditions of the GNU General Public
+> +# License.  See the file "COPYING" in the main directory of this archive
+> +# for more details.
+> +#
+> +# Copyright (C) 1995 by Linus Torvalds
+> +#
+> +# Adapted from code in arch/i386/boot/Makefile by H. Peter Anvin
+> +#
+> +# Further adapted from arch/x86/boot/install.sh by Jason Cooper
+> +#
+> +# "make dtbs_install" script
+> +#
+> +# Arguments:
+> +#   $1 - kernel version
+> +#   $2 - default install path (blank if root directory)
+> +#   $3 - directory containing dtbs
+> +#
+> +
+> +# User may have a custom install script
+> +
+> +if [ -x ~/bin/${INSTALLDTBS} ]; then exec ~/bin/${INSTALLDTBS} "$@"; fi
+> +if [ -x /sbin/${INSTALLDTBS} ]; then exec /sbin/${INSTALLDTBS} "$@"; fi
+> +
+> +# Default install
+> +[ -d "$2" ] && rm -rf "$2"
+> +
+> +mkdir -p "$2"
+> +
+> +for dtb in `find "$3" -name "*.dtb"`; do
+> +	cp "$dtb" "$2/${dtb##*/}"
+> +done
+> -- 
+> 1.8.4.4
+> 
 > --
-> 1.7.5.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
