@@ -1,60 +1,88 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts:  add <dt-bindings/> symlink
-Date: Fri, 10 Jan 2014 10:22:26 +0100
-Message-ID: <20140110102226.63f5bf30@ipc1.ka-ro>
-References: <1389346197-5127-1-git-send-email-pankaj.dubey@samsung.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH v3 1/2] ohci-platform: Add support for
+ devicetree instantiation
+Date: Fri, 10 Jan 2014 10:47:20 +0100
+Message-ID: <52CFC1A8.4010505@redhat.com>
+References: <1389290226-6971-1-git-send-email-hdegoede@redhat.com> <1389290226-6971-2-git-send-email-hdegoede@redhat.com> <52CF0326.1090407@cogentembedded.com> <52CEFCFE.7080308@redhat.com> <52CF0FB1.1010109@cogentembedded.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389346197-5127-1-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBOEDX6LAKGQE7RXPCHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52CF0FB1.1010109-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-Pankaj Dubey wrote:
-> Add symlink to include/dt-bindings from arch/arm64/boot/dts/include/ =
-to
-> match the ones in ARM architectures so that preprocessed device
-> tree files can include various useful constant definitions.
->=20
-> See commit c58299a (kbuild: create an "include chroot" for DT binding=
-s)
-> merged in v3.10-rc1 for details.
->=20
-> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/include/dt-bindings |    1 +
->  1 file changed, 1 insertion(+)
->  create mode 120000 arch/arm64/boot/dts/include/dt-bindings
->=20
-> diff --git a/arch/arm64/boot/dts/include/dt-bindings b/arch/arm64/boo=
-t/dts/include/dt-bindings
-> new file mode 120000
-> index 0000000..08c00e4
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/include/dt-bindings
-> @@ -0,0 +1 @@
-> +../../../../../include/dt-bindings
-> \ No newline at end of file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+On 01/09/2014 10:08 PM, Sergei Shtylyov wrote:
+> On 01/09/2014 10:48 PM, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 01/09/2014 09:14 PM, Sergei Shtylyov wrote:
+>>> Hello.
+>>>
+>>> On 01/09/2014 08:57 PM, Hans de Goede wrote:
+>>>
+>>>> Add support for ohci-platform instantiation from devicetree, including
+>>>> optionally getting clks and a phy from devicetree, and enabling / disabling
+>>>> those on power_on / off.
+>>>
+>>>> This should allow using ohci-platform from devicetree in various cases.
+>>>> Specifically after this commit it can be used for the ohci controller found
+>>>> on Allwinner sunxi SoCs.
+>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>   .../devicetree/bindings/usb/mmio-ohci.txt          |  22 +++
+>>>>   drivers/usb/host/ohci-platform.c                   | 150
+>>>> ++++++++++++++++++---
+>>>>   2 files changed, 152 insertions(+), 20 deletions(-)
+>>>>   create mode 100644 Documentation/devicetree/bindings/usb/mmio-ohci.txt
+>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/mmio-ohci.txt
+>>>> b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
+>>>> new file mode 100644
+>>>> index 0000000..9c776ed
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
+>>>> @@ -0,0 +1,22 @@
+>>>> +Generic MMIO OHCI controller
+>
+>>>     OHCI controller always uses MMIO, and likewise EHCI. You don't need to
+>>> specifically mention it.
+>
+>> Right, I'm only using it here because it is also used in the compatible string.
+>
+>     Please drop it.
+>
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible : "mmio-ohci"
+>
+>>>     Likewise, it's not a good name. Why not call it "platform-ohci"?
+>
+>> Because, as you would have known had you read the entire thread, people objected
+>> against exactly that name because the "platform" bus thing is a Linux invention,
+>> and other operating systems don't use the platform nomenclature for non pci
+>> busses.
+>
+>     I wonder where were all those people when "xhci-platform" compatible got adopted in drivers/usb/host/xhci-plat.c? :-P
+>
+>     Anyway, I want to suggest "usb-[eo]hci" of which "usb-ehci" binding has even already documented in Documentation/devicetree/bindings/usb/usb-ehci.txt.
+> Both these "compatible" values are used as backups in the multiple described bindings of the platform-specific [EO]HCI controllers. I really don't see why you should invent anything new (and so poorly named).
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
+This too has already been discussed, again please read the entire thread including review of earlier versions of the patch.
 
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+We cannot usb usb-ehci, because the existing usb-ehci compatible string is not used for a generic usb controller, but
+for a ppc specific one which needs model specific setup, see the driver currently implementing compatible = usb-ehci.
 
-www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
-___________________________________________________________
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Hans
