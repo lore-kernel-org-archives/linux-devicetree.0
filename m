@@ -1,52 +1,69 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH RFC 00/10] Generic Device Tree based power domain look-up
-Date: Sat, 11 Jan 2014 20:52:17 +0100
-Message-ID: <1743034.81eWccWixG@flatron>
-References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] ARM: Kirkwood: Add DT description of QNAP 419
+Date: Sat, 11 Jan 2014 22:04:43 +0100
+Message-ID: <20140111210443.GT9681@lunn.ch>
+References: <1389048557-16364-1-git-send-email-andrew@lunn.ch>
+ <1389174517.12612.87.camel@kazak.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1389174517.12612.87.camel@kazak.uk.xensource.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Ian Campbell <ijc@hellion.org.uk>, devicetree@vger.kernel.org, linux-input@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux ARM <linux-arm-kernel@lists.infradead.org>, tbm@cyrius.com
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 11 of January 2014 20:42:42 Tomasz Figa wrote:
-> Up till now there was no single generic method to bind devices to their
-> power domains using Device Tree. Each platform has been doing this using
-> its own way, example of which are Exynos power domain bindings [1] and
-> look-up code [2].
-> 
-> This series is intended to change this and provide generic DT bindings for
-> power domain specification and generic code performing look-up of power
-> domains and binding them to devices.
-> 
-> Patches 1, 2, 3 are not directly related to this series, but they are
-> dependencies of further patches making mach-s3c64xx a user of introduced
-> code. Patch 4 is the most important part of this series, as it's the one
-> introducing $subject. Further patches are fixing and adding two users,
-> mach-exynos (removing the legacy code) and mach-s3c64xx (no DT support for
-> power domains before). Last two patches are adding display support for
-> Mini6410 board, including a node for display controller (FIMD) which is
-> a power domain consumer.
-> 
-> Successfully tested on S3C6410-based Mini6410 board.
-> 
+On Wed, Jan 08, 2014 at 09:48:37AM +0000, Ian Campbell wrote:
+> On Mon, 2014-01-06 at 23:49 +0100, Andrew Lunn wrote:
 
-I left the references for the end of this cover letter and finally forgot
-about them. Please accept my apologies ;).
+Hi Ian
 
-[1] Documentation/devicetree/bindings/arm/exynos/power_domain.txt
-[2] arch/arm/mach-exynos/pm_domains.c
+I added in the devicetree list and the input list and added my
+thoughts below.
+ 
+> The other issue I spotted is
+> that /dev/input/by-path/platform-gpio-keys-event has
+> become /dev/input/by-path/platform-gpio_keys.3-event. Is it considered
+> valid for a by-path name to change? In particular the 3 here is
+> apparently the node depth in the DTB, which doesn't make much logical
+> sense as a "path" in this context I don't think (I expect it to be some
+> sort of path through the hardware buses, perhaps my expectation is
+> wrong?).
 
-Also it might be good to mention that I was heavily inspired by
-implementation of clock providers in Common Clock Framework in case of
-provider registration and look-up and also by my Exynos power domain
-implementation (now removed by this series ;)) in case of code binding
-devices to power domains.
+The ts41x-setup.c board file creates the gpio keys platform device
+using the following structure:
 
-Best regards,
-Tomasz
+static struct platform_device qnap_ts41x_button_device = {
+        .name           = "gpio-keys",
+        .id             = -1,
+        .num_resources  = 0,
+        .dev            = {
+                .platform_data  = &qnap_ts41x_button_data,
+        }
+};
 
+The id of -1 causes platform_device_add() to set the device name to
+plain "gpio-keys".
+
+When using DT, the device name is created by the function
+of_device_make_bus_id(). It has the following comment:
+
+ * This routine will first try using either the dcr-reg or the reg property
+ * value to derive a unique name.  As a last resort it will use the node
+ * name followed by a unique number.
+
+Since the gpio_keys node does not have a reg properties, it gets a
+unique number appended to it. We end up with the device name
+"gpio_keys.3"
+
+So as it stands, it does not appear i can make the DT system use the
+same device name as a board system.
+
+But i'm also a little bit concerned by the "unique number" and this
+ending up in /dev/input/by-path/platform-gpio_keys.3-event. Is this
+path supposed to be stable? This unique number is not stable. An
+unwitting change to the DT could cause its value to change. Do we need
+to make it stable?
+
+   Andrew
