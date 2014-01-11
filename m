@@ -1,45 +1,58 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v8 3/4] ata: Add APM X-Gene SoC SATA host controller
- driver
-Date: Sat, 11 Jan 2014 14:31:04 -0500
-Message-ID: <20140111193104.GD3257@mtj.dyndns.org>
-References: <1389031922-4309-1-git-send-email-lho@apm.com>
- <1389031922-4309-2-git-send-email-lho@apm.com>
- <1389031922-4309-3-git-send-email-lho@apm.com>
- <1389031922-4309-4-git-send-email-lho@apm.com>
- <52D052F9.8050703@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52D052F9.8050703@redhat.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: David Milburn <dmilburn@redhat.com>
-Cc: Loc Ho <lho@apm.com>, olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: [PATCH RFC 07/10] ARM: s3c64xx: dt: Enable SoC-level power management
+Date: Sat, 11 Jan 2014 20:42:49 +0100
+Message-ID: <1389469372-17199-8-git-send-email-tomasz.figa@gmail.com>
+References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello, David.
+This patch adds call to s3c64xx_pm_init() from init_machine() callback
+of mach-s3c64xx-dt to enable SoC-level power management features, such
+as power domain management and sleep support.
 
-On Fri, Jan 10, 2014 at 02:07:21PM -0600, David Milburn wrote:
-> Tejun, to avoid some of the interrupt handling code duplication, would
-> it better to have a AHCI_HFLAG_FLUSH and then change
-> 
-> this driver to set flush
-> 
-> hpriv->hpriv.flush = (void *) xgene_ahci_iob_flush;
-> 
-> and then standard code flush when necessary
-> 
-> ahci_handle_port_interrupt
-> 
->        /* board-specific flush before servicing completed cmds */
->        if (hpriv-> flags & AHCI_HFLAG_FLUSH)
->                hpriv->flush(hpriv);
+Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+---
+ arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-And this would be the only spot that this would be necessary?  If so,
-why not just wrap the interrupt handler?
-
-Thanks.
-
+diff --git a/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c b/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
+index 2fddf38..45a4ddc 100644
+--- a/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
++++ b/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
+@@ -15,6 +15,7 @@
+ #include <asm/system_misc.h>
+ 
+ #include <plat/cpu.h>
++#include <plat/pm.h>
+ #include <plat/watchdog-reset.h>
+ 
+ #include <mach/map.h>
+@@ -49,9 +50,15 @@ static void __init s3c64xx_dt_map_io(void)
+ static void __init s3c64xx_dt_init_machine(void)
+ {
+ 	samsung_wdt_reset_of_init();
++	s3c64xx_pm_init();
+ 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+ }
+ 
++static void __init s3c64xx_dt_init_late(void)
++{
++	s3c64xx_pm_late_initcall();
++}
++
+ static void s3c64xx_dt_restart(enum reboot_mode mode, const char *cmd)
+ {
+ 	if (mode != REBOOT_SOFT)
+@@ -72,5 +79,6 @@ DT_MACHINE_START(S3C6400_DT, "Samsung S3C64xx (Flattened Device Tree)")
+ 	.dt_compat	= s3c64xx_dt_compat,
+ 	.map_io		= s3c64xx_dt_map_io,
+ 	.init_machine	= s3c64xx_dt_init_machine,
++	.init_late	= s3c64xx_dt_init_late,
+ 	.restart        = s3c64xx_dt_restart,
+ MACHINE_END
 -- 
-tejun
+1.8.5.2
