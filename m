@@ -1,88 +1,59 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCHv3] dt: binding documentation for bq2415x charger
-Date: Sat, 11 Jan 2014 01:47:48 +0100
-Message-ID: <1389401268-15069-1-git-send-email-sre@debian.org>
-References: <1389393286-15263-1-git-send-email-sre@debian.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389393286-15263-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+From: Feng Kan <fkan@apm.com>
+Subject: Re: [PATCH V2 1/6] Documentation: add dts binding for X-Gene reboot
+ dts node.
+Date: Fri, 10 Jan 2014 17:11:53 -0800
+Message-ID: <CAL85gmCEk3c1qbo978qHssrz0toxbCT3LiTinX5ZZcwg-Q-FnA@mail.gmail.com>
+References: <1389135041-16062-1-git-send-email-fkan@apm.com>
+	<1389135041-16062-2-git-send-email-fkan@apm.com>
+	<20140108100549.GE6701@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20140108100549.GE6701@e106331-lin.cambridge.arm.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding documentation for bq2415x charger.
+On Wed, Jan 8, 2014 at 2:05 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Tue, Jan 07, 2014 at 10:50:36PM +0000, Feng Kan wrote:
+>> Add X-Gene reboot device tree node documentation.
+>>
+>> Signed-off-by: Feng Kan <fkan@apm.com>
+>> ---
+>>  .../devicetree/bindings/arm64/xgene/reboot.txt     |   10 ++++++++++
+>>  1 files changed, 10 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm64/xgene/reboot.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm64/xgene/reboot.txt b/Documentation/devicetree/bindings/arm64/xgene/reboot.txt
+>> new file mode 100644
+>> index 0000000..51d23c1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm64/xgene/reboot.txt
+>> @@ -0,0 +1,10 @@
+>> +Reboot property to control system reboot on storm platforms:
+>> +
+>> +The register attribute contain the address of the reset register.
+>
+> Required properties:
+>
+> - compatible: should contain "apm,xgene-reboot"
+>
+> - reg: the base address and size of the reset register.
+>
+>> +
+>> +Example:
+>> +
+>> +     reboot@0 {
+>> +             compatible = "apm,xgene-reboot";
+>> +             reg = <0x0 0x17000014 0x0 0x4>;
+>> +     };
+>
+> Given this seems to be a 64-bit address, the unit address should
+> preferably be 0,17000014 rather than just 0.
 
-Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
----
-Hi,
-
-It's me again :) Here's another update, which fixes a sentence reported by
-Pavel. I also added his Acked-by.
-
--- Sebastian
----
- .../devicetree/bindings/power/bq2415x.txt          | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/bq2415x.txt
-
-diff --git a/Documentation/devicetree/bindings/power/bq2415x.txt b/Documentation/devicetree/bindings/power/bq2415x.txt
-new file mode 100644
-index 0000000..d0327f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/bq2415x.txt
-@@ -0,0 +1,47 @@
-+Binding for TI bq2415x Li-Ion Charger
-+
-+Required properties:
-+- compatible: Should contain one of the following:
-+ * "ti,bq24150"
-+ * "ti,bq24150"
-+ * "ti,bq24150a"
-+ * "ti,bq24151"
-+ * "ti,bq24151a"
-+ * "ti,bq24152"
-+ * "ti,bq24153"
-+ * "ti,bq24153a"
-+ * "ti,bq24155"
-+ * "ti,bq24156"
-+ * "ti,bq24156a"
-+ * "ti,bq24158"
-+- reg:			   integer, i2c address of the device.
-+- ti,current-limit:	   integer, initial maximum current charger can pull
-+			   from power supply in mA.
-+- ti,weak-battery-voltage: integer, weak battery voltage threshold in mV.
-+			   The chip will use slow precharge if battery voltage
-+			   is below this value.
-+- ti,battery-regulation-voltage: integer, maximum charging voltage in mV.
-+- ti,charge-current:	   integer, maximum charging current in mA.
-+- ti,termination-current:  integer, charge will be terminated when current in
-+			   constant-voltage phase drops below this value (in mA).
-+- ti,resistor-sense:	   integer, value of sensing resistor in milliohm.
-+
-+Optional properties:
-+- ti,usb-charger-detection: phandle to usb charger detection device.
-+			    (required for auto mode)
-+
-+Example from Nokia N900:
-+
-+bq24150a {
-+	compatible = "ti,bq24150a";
-+	reg = <0x6b>;
-+
-+	ti,current-limit = <100>;
-+	ti,weak-battery-voltage = <3400>;
-+	ti,battery-regulation-voltage = <4200>;
-+	ti,charge-current = <650>;
-+	ti,termination-current = <100>;
-+	ti,resistor-sense = <68>;
-+
-+	ti,usb-charger-detection = <&isp1704>;
-+};
--- 
-1.8.5.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+FKAN: Mark, can I keep this as it is to be consistent with the reset
+of the file?
+>
+> Thanks,
+> Mark.
