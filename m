@@ -1,118 +1,58 @@
-From: Tony Prisk <linux@prisktech.co.nz>
-Subject: Re: [PATCH v4 1/2] ohci-platform: Add support for devicetree
- instantiation
-Date: Sat, 11 Jan 2014 21:37:40 +1300
-Message-ID: <52D102D4.4090302@prisktech.co.nz>
-References: <1389393980-21183-1-git-send-email-hdegoede@redhat.com>
- <1389393980-21183-2-git-send-email-hdegoede@redhat.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
+Date: Sat, 11 Jan 2014 11:54:45 +0200
+Message-ID: <52D114E5.7060503@ti.com>
+References: <1389276051-1326-1-git-send-email-t-kristo@ti.com> <20140109222322.7168.74522@quantum> <20140110185305.GN31323@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1389393980-21183-2-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>, Alan Stern <stern@rowland.harvard.edu>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com, linux-usb <linux-usb@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140110185305.GN31323@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Mike Turquette <mturquette@linaro.org>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/14 11:46, Hans de Goede wrote:
-> Add support for ohci-platform instantiation from devicetree, including
-> optionally getting clks and a phy from devicetree, and enabling / disabling
-> those on power_on / off.
+On 01/10/2014 08:53 PM, Tony Lindgren wrote:
+> * Mike Turquette <mturquette@linaro.org> [140109 14:25]:
+>> Quoting Tero Kristo (2014-01-09 06:00:11)
+>>> Hi,
+>>>
+>>> So, bad luck number release for this, as v12 wasn't sufficient still.
+>>>
+>>> Changes compared to previous version:
+>>> - Dropped any changes to generic clock drivers, as it seems impossible
+>>>    to agree anything in short term, this means the patch set shrank in
+>>>    size from 49 patches to 40 (first 9 patches were dropped).
+>>> - Copy pasted implementation for clk-divider and clk-mux from drivers/clk
+>>>    to drivers/clk/ti, and made the modifications needed to the TI version
+>>>    of the clock drivers only (based on discussions with Mike, this is fine)
+>>> - Changed name of clk_ll_ops to ti_clk_ll_ops so that this doesn't conflict
+>>>    with any generic implementation we might have at some point, migrating
+>>>    this to the generic version should be easy enough also.
+>>> - Fixed trace_clk_div_div_ck for omap4, this node was broken in previous
+>>>    versions and resulted into an orphan clock node
+>>> - Fixed compile problem for omap5 only build reported by Felipe
+>>> - Fixed a couple of sparse warnings
+>>> - changed the mach-omap2/clock.c to use readl_relaxed / writel_relaxed
+>>>    instead of __raw_readl / __raw_writel
+>>
+>> Hi Tero,
+>>
+>> This approach takes care of all of my concerns with this series. Thanks
+>> for your long suffering patience on it.
+>>
+>> It seems some build errors are cropping up, so once those are fixed then
+>> I'll be happy to merge clk-next-dt-clks-v13 into clk-next for 3.14.
 >
-> This should allow using ohci-platform from devicetree in various cases.
-> Specifically after this commit it can be used for the ohci controller found
-> on Allwinner sunxi SoCs.
+> I'm fine with Mike merging these all via the clock tree assuming no more
+> pending comments. For the patches changed from the last time around,
+> please feel free to add:
 >
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->   .../devicetree/bindings/usb/mmio-ohci.txt          |  22 +++
->   drivers/usb/host/ohci-platform.c                   | 164 ++++++++++++++++++---
->   2 files changed, 162 insertions(+), 24 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/usb/mmio-ohci.txt
->
-> diff --git a/Documentation/devicetree/bindings/usb/mmio-ohci.txt b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
-> new file mode 100644
-> index 0000000..9c776ed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
-> @@ -0,0 +1,22 @@
-> +Generic MMIO OHCI controller
-> +
-> +Required properties:
-> +- compatible : "mmio-ohci"
-> +- reg : ohci controller register range (address and length)
-> +- interrupts : ohci controller interrupt
-> +
-> +Optional properties:
-> +- clocks : a list of phandle + clock specifier pairs
-> +- phys : phandle + phy specifier pair
-> +- phy-names : "usb"
-> +
-> +Example:
-> +
-> +	ohci0: ohci@0x01c14400 {
-> +		compatible = "mmio-ohci";
-> +		reg = <0x01c14400 0x100>;
-> +		interrupts = <64>;
-> +		clocks = <&usb_clk 6>, <&ahb_gates 2>;
-> +		phys = <&usbphy 1>;
-> +		phy-names = "usb";
-> +	};
->
-> ... <snip> ....
->
-> @@ -83,17 +156,40 @@ static int ohci_platform_probe(struct platform_device *dev)
->   		return -ENXIO;
->   	}
->   
-> +	hcd = usb_create_hcd(&ohci_platform_hc_driver, &dev->dev,
-> +			dev_name(&dev->dev));
-> +	if (!hcd)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(dev, hcd);
-> +	dev->dev.platform_data = pdata;
-> +	priv = hcd_to_ohci_priv(hcd);
-> +
-> +	if (pdata == &ohci_platform_defaults && dev->dev.of_node) {
-> +		priv->phy = devm_phy_get(&dev->dev, "usb");
-> +		if (IS_ERR(priv->phy)) {
-> +			err = PTR_ERR(priv->phy);
-> +			if (err == -EPROBE_DEFER)
-> +				goto err_put_hcd;
-> +			priv->phy = NULL;
-> +		}
-> +
-> +		for (clk = 0; clk < OHCI_MAX_CLKS; clk++) {
-> +			priv->clks[clk] = of_clk_get(dev->dev.of_node, clk);
-> +			if (IS_ERR(priv->clks[clk])) {
-> +				err = PTR_ERR(priv->clks[clk]);
-> +				if (err == -EPROBE_DEFER)
-> +					goto err_put_clks;
-> +				priv->clks[clk] = NULL;
-> +				break;
-> +			}
-> +		}
-> +	}
->
+> Acked-by: Tony Lindgren <tony@atomide.com>
 
-Given that you have limited the clock parsing to OHCI_MAX_CLKS, there 
-should be some kind of warning/error message if the DT contains more 
-than OHCI_MAX_CLKS - otherwise you have silent failures when the clocks 
-aren't configured.
+How about the dts data patches? Should these also go via Mike's tree? 
+Otherwise we will have boot failures until the dts patches are merged.
 
-There is also no note in the binding to indicate this limitation and you 
-shouldn't expect people writing DT files to go digging through the 
-source to check for this.
+-Tero
 
-Regards
-Tony P
