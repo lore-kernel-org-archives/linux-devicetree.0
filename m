@@ -1,44 +1,46 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] ohci and ehci-platform clks, phy and
- dt support
-Date: Sat, 11 Jan 2014 17:30:24 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1401111728150.16586-100000@netrider.rowland.org>
-References: <52D0799B.3030401@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD6LRVPZ6YGRBAMMY6LAKGQEQQNLDIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52D0799B.3030401-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Subject: [PATCH] ARM: Fix incorrect FDT initrd parameter override
+Date: Sat, 11 Jan 2014 10:03:58 +1000
+Message-ID: <0a923e$51mtvt@icp-osb-irony-out9.iinet.net.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 10 Jan 2014, Hans de Goede wrote:
+Commit 65939301acdb (arm: set initrd_start/initrd_end for fdt scan)
+caused the FDT initrd_start and initrd_end to override the
+phys_initrd_start and phys_initrd_size set by the initrd= kernel
+parameter.  With this patch initrd_start and initrd_end will be
+overridden if phys_initrd_start and phys_initrd_size are set by the
+kernel initrd= parameter.
 
-> Hi,
-> 
-> On 01/11/2014 12:50 AM, Sergei Shtylyov wrote:
-> > Hello.
-> >
-> > On 01/11/2014 01:46 AM, Hans de Goede wrote:
-> >
-> >> Here is v4 of my ohci and ehci-platform clks, phy and dt support patch-set,
-> >> this version should be 100% ready for merging upstream.
-> >
-> >     I see you've decided to completely ignore my opinion. NAK, FWIW.
-> 
-> I'm sorry but the whole prefix thing has become a thing of -ETOOMUCHBIKESHEDDING,
-> everyone except you seems to be fine with mmio and and one point in time we
-> need to make a decision and move forward.
+Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+---
+ arch/arm/mm/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-If this isn't beating a dead horse...  Maybe everyone can agree on a
-name like ohci-generic or generic-ohci.  That seems like a pretty good
-description of the hardware that the platform driver can handle.
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index 1f7b19a..819c539 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -345,10 +345,11 @@ void __init arm_memblock_init(struct meminfo *mi,
+ #endif
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 	/* FDT scan will populate initrd_start */
+-	if (initrd_start) {
++	if (initrd_start && !phys_initrd_size) {
+ 		phys_initrd_start = __virt_to_phys(initrd_start);
+ 		phys_initrd_size = initrd_end - initrd_start;
+ 	}
++	initrd_start = initrd_end = 0;
+ 	if (phys_initrd_size &&
+ 	    !memblock_is_region_memory(phys_initrd_start, phys_initrd_size)) {
+ 		pr_err("INITRD: 0x%08llx+0x%08lx is not a memory region - disabling initrd\n",
+-- 
+1.8.3.2
 
-Alan Stern
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
