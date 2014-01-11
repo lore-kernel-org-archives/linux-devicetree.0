@@ -1,50 +1,47 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 2/4] Phy: Add a PHY driver for Marvell MVEBU SATA PHY.
-Date: Sat, 11 Jan 2014 16:42:43 +0530
-Message-ID: <52D1272B.7050601@ti.com>
-References: <20131219194237.GC22725@htj.dyndns.org> <1388078742-6726-1-git-send-email-andrew@lunn.ch> <1388078742-6726-3-git-send-email-andrew@lunn.ch> <52BDABD2.9080701@ti.com> <20140110193130.GS19878@titan.lakedaemon.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 3/3] dt-bindings: pci: xgene pcie device tree bindings
+Date: Sat, 11 Jan 2014 14:06:52 +0100
+Message-ID: <201401111406.52935.arnd@arndb.de>
+References: <1387785725-24262-1-git-send-email-tinamdar@apm.com> <201401071635.02006.arnd@arndb.de> <CACoXjckkovQdB5Pk3Tn4uGkm5+HuEfWYb6E1MiUOPpuZ2b7qNA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140110193130.GS19878@titan.lakedaemon.net>
-Sender: linux-ide-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>, tj@kernel.org, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACoXjckkovQdB5Pk3Tn4uGkm5+HuEfWYb6E1MiUOPpuZ2b7qNA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+On Saturday 11 January 2014, Tanmay Inamdar wrote:
+> On Tue, Jan 7, 2014 at 7:35 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Tuesday 07 January 2014, Tanmay Inamdar wrote:
+> >> On Fri, Jan 3, 2014 at 1:49 AM, Arnd Bergmann <arnd@arndb.de> wrote:
 
-On Saturday 11 January 2014 01:01 AM, Jason Cooper wrote:
-> On Fri, Dec 27, 2013 at 10:03:22PM +0530, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On Thursday 26 December 2013 10:55 PM, Andrew Lunn wrote:
->>> Kirkwood and Dove can turn the SATA phy on and off. Add a PHY driver
->>> to control this.
->>>
->>> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
->>> ---
->>> v1->v2:
->>> Use #defines instead of magic values
->>> select GENERIC_PHY in Kconfig.
->>>
->>> v3->v4
->>>
->>> Register phy_provider as the last step.
->>
->> The previous version is already sent to be merged. We can have the
->> new change merged in the rc cycle.
->
-> Kishon,
->
-> Looking at the patch dependencies, we'd like to keep the sata change in
-> the same branch as the phy changes.  Would you mind picking that one up
-> and placing it in the same branch as the ones you already took?  I have
+> >> >
+> >> > Better use an anonymous clock?
+> >>
+> >> Sorry. Can you please elaborate?
+> >
+> > I mean drop the "clock-names" property.
+> >
+> Did you mean clock-names in pcie-clock node or pcie node? I can drop
+> clock-names from pcie clock node. However if I drop clock-names from
+> pcie node, then clk_get call from pcie host driver would result in
+> failure. Right?
 
-PHY changes go in Greg's tree and he generally closes it ~2 weeks before 
-the start of merge window. So it's too late to go in PHY tree for this 
-merge window. Sorry.
+I meant drop it from the pcie node, and change the clk_get call
+to pass NULL instead of the name, which will get the handle for
+the only clock provided. You only need clock-names if you have
+more than one clock in the device node and want to identify them.
 
-Thanks
-Kishon
+The pcie-clock node should not have a "clock-names" property at
+all, unless it has a "clocks" property as well and refers to
+its clock parent with it.
+
+I already noticed in another review that the xgene clocks get this
+part wrong and that should be fixed for all those clock provides,
+but it's unrelated to what I was talking about here.
+
+	Arnd
