@@ -1,99 +1,66 @@
-From: Zoltan HERPAI <wigyori@uid0.hu>
-Subject: [PATCH] ARM: sun4i: dt: Add basic board support for LinkSprite pcDuino
-Date: Sat, 11 Jan 2014 16:54:52 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1401111509430.13932@trabant.deployis.eu>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: at91: document ADC clock properties
+Date: Sat, 11 Jan 2014 16:29:09 +0000
+Message-ID: <52D17155.8070009@kernel.org>
+References: <1387296973-7779-1-git-send-email-b.brezillon@overkiz.com> <52B316A9.1060407@atmel.com> <52B729FD.7020507@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: maxime.ripard@free-electrons.com
-Cc: hdegoede@redhat.com, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52B729FD.7020507-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch will add a basic board support DT for the
-LinkSprite pcDuino.
 
-Signed-off-by: Zoltan HERPAI <wigyori@uid0.hu>
----
-  arch/arm/boot/dts/Makefile              |    1 +
-  arch/arm/boot/dts/sun4i-a10-pcduino.dts |   48 +++++++++++++++++++++++++++++++
-  2 files changed, 49 insertions(+), 0 deletions(-)
-  create mode 100644 arch/arm/boot/dts/sun4i-a10-pcduino.dts
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b663ed7..a2e3620 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -253,6 +253,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += \
-  	sun4i-a10-cubieboard.dtb \
-  	sun4i-a10-mini-xplus.dtb \
-  	sun4i-a10-hackberry.dtb \
-+	sun4i-a10-pcduino.dtb \
-  	sun5i-a10s-olinuxino-micro.dtb \
-  	sun5i-a13-olinuxino.dtb \
-  	sun5i-a13-olinuxino-micro.dtb \
-diff --git a/arch/arm/boot/dts/sun4i-a10-pcduino.dts b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-new file mode 100644
-index 0000000..752f002
---- /dev/null
-+++ b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-@@ -0,0 +1,48 @@
-+/*
-+ * Copyright 2014 Zoltan HERPAI
-+ * Zoltan HERPAI <wigyori@uid0.hu>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+/include/ "sun4i-a10.dtsi"
-+
-+/ {
-+	model = "LinkSprite pcDuino";
-+	compatible = "pcduino,a10-pcduino", "allwinner,sun4i-a10";
-+
-+	soc@01c00000 {
-+		emac: ethernet@01c0b000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&emac_pins_a>;
-+			phy = <&phy1>;
-+			status = "okay";
-+		};
-+
-+		mdio@01c0b080 {
-+			status = "okay";
-+
-+			phy1: ethernet-phy@1 {
-+				reg = <1>;
-+			};
-+		};
-+
-+		uart0: serial@01c28000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart0_pins_a>;
-+			status = "okay";
-+		};
-+
-+		i2c0: i2c@01c2ac00 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pins_a>;
-+			status = "okay";
-+		};
-+	};
-+};
--- 
-1.7.0.4
+On 22/12/13 18:05, Jonathan Cameron wrote:
+> On 12/19/13 15:54, Nicolas Ferre wrote:
+>> On 17/12/2013 17:16, Boris BREZILLON :
+>>> Document the clock properties required by the at91 ADC driver.
+>>>
+>>> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Looks fine to me.  I'm just waiting on an ack from a device tree maintainer
+> (or the 3 weeks to pass so I can pick it up anyway ;)
+That's near enough 3 weeks (one day short) so applied to the togreg branch of iio.git.
+Thanks
+>
+>>
+>>> ---
+>>>   .../devicetree/bindings/arm/atmel-adc.txt          |    5 +++++
+>>>   1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/atmel-adc.txt b/Documentation/devicetree/bindings/arm/atmel-adc.txt
+>>> index d106146..9a1175b 100644
+>>> --- a/Documentation/devicetree/bindings/arm/atmel-adc.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/atmel-adc.txt
+>>> @@ -5,6 +5,9 @@ Required properties:
+>>>       <chip> can be "at91sam9260", "at91sam9g45" or "at91sam9x5"
+>>>     - reg: Should contain ADC registers location and length
+>>>     - interrupts: Should contain the IRQ line for the ADC
+>>> +  - clock-names: tuple listing input clock names.
+>>> +	Required elements: "adc_clk", "adc_op_clk".
+>>> +  - clocks: phandles to input clocks.
+>>>     - atmel,adc-channels-used: Bitmask of the channels muxed and enable for this
+>>>       device
+>>>     - atmel,adc-startup-time: Startup Time of the ADC in microseconds as
+>>> @@ -44,6 +47,8 @@ adc0: adc@fffb0000 {
+>>>   	compatible = "atmel,at91sam9260-adc";
+>>>   	reg = <0xfffb0000 0x100>;
+>>>   	interrupts = <20 4>;
+>>> +	clocks = <&adc_clk>, <&adc_op_clk>;
+>>> +	clock-names = "adc_clk", "adc_op_clk";
+>>>   	atmel,adc-channel-base = <0x30>;
+>>>   	atmel,adc-channels-used = <0xff>;
+>>>   	atmel,adc-drdy-mask = <0x10000>;
+>>>
+>>
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
