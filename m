@@ -1,67 +1,49 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next 1/2] dts: Add a binding for Synopsys emac max-mtu
-Date: Fri, 10 Jan 2014 16:31:27 -0800
-Message-ID: <CAGVrzcZcnKyP1HVZMWDTAC-+Z7oWiLHqx6SSHAWGO2WVcXGjrA@mail.gmail.com>
-References: <1389397669-10929-1-git-send-email-vbridgers2013@gmail.com> <1389397669-10929-3-git-send-email-vbridgers2013@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1389397669-10929-3-git-send-email-vbridgers2013@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Vince Bridgers <vbridgers2013@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, robh+dt@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@altera.com, Rayagond Kokatanur <rayagond@vayavyalabs.com>
+From: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Subject: (unknown)
+Date: Fri, 10 Jan 2014 19:37:02 -0500
+Message-ID: <0a923e$51jae5@icp-osb-irony-out9.iinet.net.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014/1/10 Vince Bridgers <vbridgers2013@gmail.com>:
-> This change adds a parameter for the Synopsys 10/100/1000
-> stmmac Ethernet driver to configure the maximum MTU supported
-> by the EMAC instance. Synopsys allows the FIFO sizes to
-> be configured when the cores are built for a particular
-> device, but do not provide a way for the driver to read
-> information from the device about the maximum MTU size
-> supported as limited by the device's FIFO size.
->
-> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
-> ---
->  Documentation/devicetree/bindings/net/stmmac.txt |    5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-> index eba0e5e..7db314e 100644
-> --- a/Documentation/devicetree/bindings/net/stmmac.txt
-> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> @@ -30,6 +30,10 @@ Required properties:
->
->  Optional properties:
->  - mac-address: 6 bytes, mac address
-> +- snps,max-mtu:                Maximum MTU permitted. This parameter is useful since
-> +                       different implementations of the Synopsys MAC may have
-> +                       different FIFO sizes depending on the selections
-> +                       made in Synopsys Core Consultant.
+>From f3b6db2e9607c22d1a7e16de9c4872539f4d786c Mon Sep 17 00:00:00 2001
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Date: Sat, 11 Jan 2014 10:03:58 +1000
+Subject: [PATCH] ARM: parameter initrd must override FDT initrd
 
-ePAPR v1.1 defines "max-frame-size" as being "Specifies maximum packet
-length in bytes that the physical interface can send and receive.", I
-would recommend you use that instead of this custom property.
+The initrd_start and initrd_end as set by FDT was overriding
+the phys_initrd_start and phys_initrd_size set by the initrd=
+kernel parameter.  This patch will ignore the initrd_start
+and initrd_end set earlier if phys_initrd_start and
+phys_initrd_size (as set by the initrd= parameter) are set.
 
->
->  Examples:
->
-> @@ -40,5 +44,6 @@ Examples:
->                 interrupts = <24 23>;
->                 interrupt-names = "macirq", "eth_wake_irq";
->                 mac-address = [000000000000]; /* Filled in by U-Boot */
-> +               snps,max-mtu = <3800>;
->                 phy-mode = "gmii";
->         };
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+---
+ arch/arm/mm/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-
-
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index 1f7b19a..819c539 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -345,10 +345,11 @@ void __init arm_memblock_init(struct meminfo *mi,
+ #endif
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 	/* FDT scan will populate initrd_start */
+-	if (initrd_start) {
++	if (initrd_start && !phys_initrd_size) {
+ 		phys_initrd_start = __virt_to_phys(initrd_start);
+ 		phys_initrd_size = initrd_end - initrd_start;
+ 	}
++	initrd_start = initrd_end = 0;
+ 	if (phys_initrd_size &&
+ 	    !memblock_is_region_memory(phys_initrd_start, phys_initrd_size)) {
+ 		pr_err("INITRD: 0x%08llx+0x%08lx is not a memory region - disabling initrd\n",
 -- 
-Florian
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
