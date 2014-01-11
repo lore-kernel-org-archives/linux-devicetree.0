@@ -1,71 +1,152 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
-Date: Sat, 11 Jan 2014 17:35:23 +0100
-Message-ID: <CAGhQ9Vz8i2EEG+GgFwXFj3vgeV_Eg0dDfRvKn-XRRVBjwJkDXQ@mail.gmail.com>
-References: <1389276051-1326-1-git-send-email-t-kristo@ti.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v2 12/28] drm/i2c: tda998x: add DT support
+Date: Sat, 11 Jan 2014 17:35:37 +0000
+Message-ID: <20140111173536.GY15937@n2100.arm.linux.org.uk>
+References: <20140109120324.4e2c8aca@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1389276051-1326-1-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140109120324.4e2c8aca@armhf>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9 January 2014 15:00, Tero Kristo <t-kristo@ti.com> wrote:
-> Hi,
->
-> So, bad luck number release for this, as v12 wasn't sufficient still.
->
-> Changes compared to previous version:
-> - Dropped any changes to generic clock drivers, as it seems impossible
->   to agree anything in short term, this means the patch set shrank in
->   size from 49 patches to 40 (first 9 patches were dropped).
-> - Copy pasted implementation for clk-divider and clk-mux from drivers/clk
->   to drivers/clk/ti, and made the modifications needed to the TI version
->   of the clock drivers only (based on discussions with Mike, this is fine)
-> - Changed name of clk_ll_ops to ti_clk_ll_ops so that this doesn't conflict
->   with any generic implementation we might have at some point, migrating
->   this to the generic version should be easy enough also.
-> - Fixed trace_clk_div_div_ck for omap4, this node was broken in previous
->   versions and resulted into an orphan clock node
-> - Fixed compile problem for omap5 only build reported by Felipe
-> - Fixed a couple of sparse warnings
-> - changed the mach-omap2/clock.c to use readl_relaxed / writel_relaxed
->   instead of __raw_readl / __raw_writel
->
-> Testing done:
-> - omap3-beagle: boot / suspend-resume (RET) / suspend-resume (OFF)
-> - omap4-panda-es: boot / suspend-resume (RET)
-> - omap5-uevm: boot
-> - am335x-bone: boot
-> - dra7-evm: boot
->
-> Maintainer friendly branches also available:
->
-> tree: https://github.com/t-kristo/linux-pm.git
->
-> clk driver only (Mike): clk-next-dt-clks-v13
-> DTS data only (Benoit): dts_for_3.14-dt-clks-v13
-> full-branch (Tony/Paul): 3.13-rc7-dt-clks-v13
+On Thu, Jan 09, 2014 at 12:03:24PM +0100, Jean-Francois Moine wrote:
+> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
+> index 2ba0355..b87802f 100644
+> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
+> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+> @@ -28,17 +28,22 @@
+>  
+>  #define DBG(fmt, ...) DRM_DEBUG(fmt"\n", ##__VA_ARGS__)
+>  
+> +#define AUDIO_SAMPLE 48		/* 48 kHz */
 
-I tested 3.13-rc7-dt-clks-v13 on top of a next branch I am working on
-with a OMAP4460 and it's working fine.
+Horrid definition.  It says nothing about it's units, and given that
+things like 44.1kHz are common place, should _not_ be kHz.
 
-A couple of things I noticed in the boot log:
-[ 0.000000] ti_dt_clocks_register: failed to lookup clock node bandgap_fclk
-[ 0.000000] smp_twd: clock not found -2
+> +
+>  struct tda998x_priv {
+>  	struct i2c_client *cec;
+>  	struct i2c_client *hdmi;
+>  	uint16_t rev;
+>  	uint8_t current_page;
+> -	int dpms;
+> +	u8 dpms;
 
-I am get the bandgap_fclk clock lookup fail since it doesn't exist on
-4460 and I guess the bandgap_ts_fclk clock will fail the same way on
-4430. So maybe you need to differentiate between 4460 and 4430 in
-clk-44xx.c to get rid of this warning.
+A 'dpms' is defined in the DRM interfaces as an 'int' and should remain
+as such.
 
-As for the smp_twd clock I assume we can add "clocks =
-<&mpu_periphclk>" to local-timer@48240600 in omap4.dtsi to get rid of
-the warning. I can cook up a patch here if it is the right thing to
-do.
-I think the smp_twd warning existed before I applied this patch set.
+> @@ -586,17 +591,17 @@ static void tda998x_audio_mute(struct tda998x_priv *priv, bool on)
+>  
+>  static void
+>  tda998x_configure_audio(struct tda998x_priv *priv,
+> -		struct drm_display_mode *mode, struct tda998x_encoder_params *p)
+> +		struct drm_display_mode *mode)
+>  {
+>  	uint8_t buf[6], clksel_aip, clksel_fs, ca_i2s, cts_n, adiv;
+>  	uint32_t n;
+>  
+>  	/* Enable audio ports */
+> -	reg_write(priv, REG_ENA_AP, p->audio_cfg);
+> -	reg_write(priv, REG_ENA_ACLK, p->audio_clk_cfg);
+> +	reg_write(priv, REG_ENA_AP, priv->audio_port);
+> +	reg_write(priv, REG_ENA_ACLK, 0x01);	/* enable clock */
 
-regards
-Joachim Eastwood
+This is a change of configuration for SPDIF.  SPDIF _can_ have an external
+clock, or the TDA998x can recover the clock itself.  Enabling the clock
+unconditionally is probably the wrong thing to do.
+
+>  
+>  	/* Set audio input source */
+> -	switch (p->audio_format) {
+> +	switch (priv->audio_type) {
+>  	case AFMT_SPDIF:
+>  		reg_write(priv, REG_MUX_AP, 0x40);
+>  		clksel_aip = AIP_CLKSEL_AIP(0);
+> @@ -644,7 +649,7 @@ tda998x_configure_audio(struct tda998x_priv *priv,
+>  	 * This is the approximate value of N, which happens to be
+>  	 * the recommended values for non-coherent clocks.
+>  	 */
+> -	n = 128 * p->audio_sample_rate / 1000;
+> +	n = 128 * AUDIO_SAMPLE;		/* acr_n = 128 * sample_rate / 1000 */
+
+If you keep the sample rate in Hz, you don't need the comment.
+
+>  
+>  	/* Write the CTS and N values */
+>  	buf[0] = 0x44;
+> @@ -674,7 +679,7 @@ tda998x_configure_audio(struct tda998x_priv *priv,
+>  	tda998x_audio_mute(priv, false);
+>  
+>  	/* Write the audio information packet */
+> -	tda998x_write_aif(priv, p);
+> +	tda998x_write_aif(priv);
+>  }
+>  
+>  /* DRM encoder functions */
+> @@ -698,7 +703,13 @@ tda998x_encoder_set_config(struct drm_encoder *encoder, void *params)
+>  			    VIP_CNTRL_2_SWAP_F(p->swap_f) |
+>  			    (p->mirr_f ? VIP_CNTRL_2_MIRR_F : 0);
+>  
+> -	priv->params = *p;
+> +	memcpy(priv->audio_frame, p->audio_frame,
+> +			sizeof priv->audio_frame);
+> +
+> +	if (p->audio_cfg) {
+> +		priv->audio_port = p->audio_cfg;
+> +		priv->audio_type = p->audio_format;
+> +	}
+
+Does this really make things better?
+
+> @@ -1157,6 +1168,8 @@ tda998x_encoder_init(struct i2c_client *client,
+>  		    struct drm_encoder_slave *encoder_slave)
+>  {
+>  	struct tda998x_priv *priv;
+> +	struct device_node *np = client->dev.of_node;
+> +	u32 video;
+>  	int ret;
+>  
+>  	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> @@ -1166,6 +1179,7 @@ tda998x_encoder_init(struct i2c_client *client,
+>  	priv->vip_cntrl_0 = VIP_CNTRL_0_SWAP_A(2) | VIP_CNTRL_0_SWAP_B(3);
+>  	priv->vip_cntrl_1 = VIP_CNTRL_1_SWAP_C(0) | VIP_CNTRL_1_SWAP_D(1);
+>  	priv->vip_cntrl_2 = VIP_CNTRL_2_SWAP_E(4) | VIP_CNTRL_2_SWAP_F(5);
+> +	priv->audio_frame[1] = 1;		/* channels - 1 */
+>  
+>  	priv->current_page = 0xff;
+>  	priv->hdmi = client;
+> @@ -1225,6 +1239,17 @@ tda998x_encoder_init(struct i2c_client *client,
+>  	cec_write(priv, REG_CEC_FRO_IM_CLK_CTRL,
+>  			CEC_FRO_IM_CLK_CTRL_GHOST_DIS | CEC_FRO_IM_CLK_CTRL_IMCLK_SEL);
+>  
+> +	if (!np)
+> +		return 0;		/* non-DT */
+> +
+> +	/* get the optional video properties */
+> +	ret = of_property_read_u32(np, "video-ports", &video);
+> +	if (ret == 0) {
+> +		priv->vip_cntrl_0 = video >> 16;
+> +		priv->vip_cntrl_1 = video >> 8;
+> +		priv->vip_cntrl_2 = video;
+> +	}
+
+The creation of new DT bindings requires that the bindings are documented
+in Documentation/devicetree/bindings, and this is done as a separate patch
+to be submitted to the device tree maintainers for review, and this must
+be reviewed before the corresponding DT code can be accepted into the
+kernel.  Please create such a patch and submit it for their review.
+
+Thanks.
+
+-- 
+FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
+in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
+Estimate before purchase was "up to 13.2Mbit".
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
