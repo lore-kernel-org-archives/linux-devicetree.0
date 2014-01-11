@@ -1,95 +1,51 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [RFC PATCH 3/3] dt-bindings: pci: xgene pcie device tree bindings
-Date: Fri, 10 Jan 2014 16:12:34 -0800
-Message-ID: <CACoXjckkovQdB5Pk3Tn4uGkm5+HuEfWYb6E1MiUOPpuZ2b7qNA@mail.gmail.com>
-References: <1387785725-24262-1-git-send-email-tinamdar@apm.com>
-	<201401031049.20932.arnd@arndb.de>
-	<CACoXjc=h8W=9jx4d2Y+F9hmgQsuMTgG4080jZGbtddv10OgtMA@mail.gmail.com>
-	<201401071635.02006.arnd@arndb.de>
+From: klightspeed@killerwolves.net
+Subject: [PATCH] ARM: parameter initrd must override FDT initrd
+Date: Sat, 11 Jan 2014 10:03:58 +1000
+Message-ID: <2b2c04$57762f@icp-osb-irony-out4.iinet.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201401071635.02006.arnd@arndb.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Masters <jcm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, klightspeed@killerwolves.net
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 7, 2014 at 7:35 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 07 January 2014, Tanmay Inamdar wrote:
->> On Fri, Jan 3, 2014 at 1:49 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->> >> +Required properties:
->> >> +- status: Either "ok" or "disabled".
->> >> +- device_type: set to "pci"
->> >> +- compatible: should contain "xgene,pcie" to identify the core.
->> >> +- reg: base addresses and lengths of the pcie controller configuration
->> >> +     space register.
->> >> +- #address-cells: set to <3>
->> >> +- #size-cells: set to <2>
->> >> +- ranges: ranges for the PCI memory, I/O regions, config and MSI regions
->> >> +- #interrupt-cells: set to <1>
->> >> +- interrupt-map-mask and interrupt-map: standard PCI properties
->> >> +     to define the mapping of the PCIe interface to interrupt
->> >> +     numbers.
->> >> +- clocks: from common clock binding: handle to pci clock.
->> >> +- clock-names: from common clock binding. Should be "pcieclk".
->> >> +
->> >
->> > Better use an anonymous clock?
->>
->> Sorry. Can you please elaborate?
->
-> I mean drop the "clock-names" property.
->
-Did you mean clock-names in pcie-clock node or pcie node? I can drop
-clock-names from pcie clock node. However if I drop clock-names from
-pcie node, then clk_get call from pcie host driver would result in
-failure. Right?
+The initrd_start and initrd_end as set by FDT was overriding
+the phys_initrd_start and phys_initrd_size set by the initrd=
+kernel parameter.  This patch will ignore the initrd_start
+and initrd_end set earlier if phys_initrd_start and
+phys_initrd_size (as set by the initrd= parameter) are set.
 
->> >> +SoC specific DT Entry:
->> >> +     pcie0: pcie@1f2b0000 {
->> >> +             status = "disabled";
->> >> +             device_type = "pci";
->> >> +             compatible = "xgene,pcie";
->> >> +             #interrupt-cells = <1>;
->> >> +             #size-cells = <2>;
->> >> +             #address-cells = <3>;
->> >> +             reg = < 0x00 0x1f2b0000 0x0 0x00010000>;
->> >> +             ranges = <0x02000000 0x0 0x00000000 0xe0 0x00000000 0x0 0x10000000 /* mem*/
->> >
->> >
->> > Also, do you support no prefetchable memory?
->>
->> HW has either IO or Memory regions for mapping device's memory space.
->> There is no separate prefetchable memory space.
->
-> Are you sure the memory is non-prefetchable then? I would have expected
-> 0x42000000 rather than 0x02000000, but I could be misremembering it.
->
->> >
->> >> +                       0x00000000 0x0 0xd0000000 0xe0 0xd0000000 0x0 0x00200000 /* cfg */
->> >
->> > config space is not normally in the ranges property, and I think you will need
->> > it in the pcie node itself as a 'reg' property so the code can access it.
->>
->> pcie-designware.c does it that way. I just followed their implementation.
->
-> I don't remember what led to that, it still seems wrong and I can't find anything
-> in the PCI binding for host bridges telling their config space this way.
->
->> >> +             interrupt-map-mask = <0x0 0x0 0x0 0x7>;
->> >> +             interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1>;
->> >
->> > Only one IRQ for all devices?
->>
->> The node represents a port. I believe that Linux framework uses only
->> one of the legacy IRQs per port. Rest all remain unused. Hence I
->> removed them. Please correct me if I am wrong.
->
-> Any PCI device can normally have four interrupts (IntA through IntD), which are
-> traditionally separate pins on a PCI bus, but get emulated on PCIe. While it's
-> not common for any normal device to use more than one IRQ, a bridge device
-> will swizzle these (virtual) IRQ lines, so a device behind the bridge actually
-> gets a different host IRQ.
->
->         Arnd
+Signed-off-by: Ben Peddell <klightspeed@killerwolves.net>
+---
+ arch/arm/mm/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index 1f7b19a..819c539 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -345,10 +345,11 @@ void __init arm_memblock_init(struct meminfo *mi,
+ #endif
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 	/* FDT scan will populate initrd_start */
+-	if (initrd_start) {
++	if (initrd_start && !phys_initrd_size) {
+ 		phys_initrd_start = __virt_to_phys(initrd_start);
+ 		phys_initrd_size = initrd_end - initrd_start;
+ 	}
++	initrd_start = initrd_end = 0;
+ 	if (phys_initrd_size &&
+ 	    !memblock_is_region_memory(phys_initrd_start, phys_initrd_size)) {
+ 		pr_err("INITRD: 0x%08llx+0x%08lx is not a memory region - disabling initrd\n",
+-- 
+1.8.3.2
