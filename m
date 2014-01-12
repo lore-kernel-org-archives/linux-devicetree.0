@@ -1,11 +1,11 @@
 From: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
-Subject: [PATCH] ARM: Fix incorrect FDT initrd parameter override
-Date: Sat, 11 Jan 2014 10:03:58 +1000
-Message-ID: <0a923e$51mtvt@icp-osb-irony-out9.iinet.net.au>
+Subject: [PATCH REPOST] ARM: Fix incorrect FDT initrd parameter override
+Date: Sun, 12 Jan 2014 10:20:00 +1000
+Message-ID: <deeb5f$5527t1@icp-osb-irony-out2.iinet.net.au>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Commit 65939301acdb (arm: set initrd_start/initrd_end for fdt scan)
