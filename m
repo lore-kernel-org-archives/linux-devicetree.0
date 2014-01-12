@@ -1,77 +1,44 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: DT include files
-Date: Sun, 12 Jan 2014 11:25:22 +0800
-Message-ID: <20140112032516.GA23525@S2101-09.ap.freescale.net>
-References: <20140103023211.GA25079@S2101-09.ap.freescale.net>
- <CAOesGMhP5t=QHj7TdDY9Nq+=WHeQXv1V0n9TGmmEnqSG9SaFKg@mail.gmail.com>
- <20140111031214.GK21717@S2101-09.ap.freescale.net>
- <201401111415.29395.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <201401111415.29395.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <t.figa@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, "arm@kernel.org" <arm@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v8 3/4] ata: Add APM X-Gene SoC SATA host controller driver
+Date: Sat, 11 Jan 2014 19:58:04 -0800
+Message-ID: <6EB44142-06DA-4C9D-8999-CFA9EE30E03D@apm.com>
+References: <1389031922-4309-1-git-send-email-lho@apm.com> <1389031922-4309-2-git-send-email-lho@apm.com> <1389031922-4309-3-git-send-email-lho@apm.com> <1389031922-4309-4-git-send-email-lho@apm.com> <52D052F9.8050703@redhat.com> <20140111193104.GD3257@mtj.dyndns.org>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20140111193104.GD3257@mtj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: David Milburn <dmilburn@redhat.com>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 11, 2014 at 02:15:28PM +0100, Arnd Bergmann wrote:
-> On Saturday 11 January 2014, Shawn Guo wrote:
-> > While I agree such macro usage should be avoided or limited, it really
-> > helps IMX pinctrl case to improve the readability and make the handwriting
-> > of these pinctrl entries less error prone.  Isn't it the whole point of
-> > introducing macro support for DTC?
+Hi,
+
+> On Jan 11, 2014, at 11:31 AM, Tejun Heo <tj@kernel.org> wrote:
 > 
-> The macros are useful for all cases where the binding defines an
-> arbitrary number space, e.g. for the interrupt flags or when a
-> clock or pin controller provides a set of pins/clocks that don't
-> already have a number assigned to them. In this case, the header
-> file can be shared between the dts and kernel source files to ensure
-> that they are talking about the same things.
+> Hello, David.
 > 
-> However, I don't like to see uses of such macros where the definition
-> is done to match a hardware constant (bit number, register index, etc),
-> like in the recently posted eDMA driver case. Here the macro /reduces/
-> readability of the dts source IMHO, because you cannot easily check
-> the dts file against the data sheet without cross-referencing the
-> header file as well.
+>> On Fri, Jan 10, 2014 at 02:07:21PM -0600, David Milburn wrote:
+>> Tejun, to avoid some of the interrupt handling code duplication, would
+>> it better to have a AHCI_HFLAG_FLUSH and then change
+>> 
+>> this driver to set flush
+>> 
+>> hpriv->hpriv.flush = (void *) xgene_ahci_iob_flush;
+>> 
+>> and then standard code flush when necessary
+>> 
+>> ahci_handle_port_interrupt
+>> 
+>>       /* board-specific flush before servicing completed cmds */
+>>       if (hpriv-> flags & AHCI_HFLAG_FLUSH)
+>>               hpriv->flush(hpriv);
+> 
+> And this would be the only spot that this would be necessary?  If so,
+> why not just wrap the interrupt handler?
 
-I agree with you that we shouldn't use macros for IP block resources
-like irq number and dma channel.  Once we code these SoC specific
-data/number in <soc>.dtsi, all that board level dts files need to do
-is to include <soc>.dtsi, nothing else.  However, pinctrl data is a
-different case.  Which pin is in use, which mux option is selected for
-the pin, how the pin should be configured, all these are board specific.
-So these pinctrl configuration should be defined by individual board
-level dts file rather than <soc>.dtsi.
+The flush has to occurred immediately after reading the CI register. It can not wrap around the isr routine and issue the flush after or before the library ahci isr routine.
 
-Let's say the mux option SPDIF_OUT of pin GPIO_17 is used on a few board
-designs, hummingboard, nitrogen6x and wandboard.  If we do not use
-macro, every author of these board dts files need to look into reference
-manual to find out the following numbers
-
- - The mux register offset of pin GPIO_17
- - The select input register offset of pin GPIO_17
- - The config register offset of pin GPIO_17
- - The value of SPDIF_OUT mux option for GPIO_17
- - The select input value of SPDIF_OUT mux option for GPIO_17
-
-, and then code these numbers in their <board>.dts by hand.  It's
-boring and error prone.  As a comparison, we generate these numbers
-from reference manual database using a tool and define a macro
-MX6QDL_PAD_GPIO_17__SPDIF_OUT for these numbers.  The authors only need
-to find out this macro from imx6q-pinfunc.dtsi and fill it into his dts.
-Isn't the macro use here helping to ease everyone's life and make the
-coding less error prone, since the macro is generated from database?
-
-Shawn
+-Loc
