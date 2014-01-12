@@ -1,125 +1,80 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Sun, 12 Jan 2014 10:17:19 +0100
-Message-ID: <52D25D9F.9020104@redhat.com>
-References: <1389393980-21183-1-git-send-email-hdegoede@redhat.com> <1389393980-21183-2-git-send-email-hdegoede@redhat.com> <52D102D4.4090302@prisktech.co.nz>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBJF3ZGLAKGQEAMZDNGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52D102D4.4090302-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: [PATCH 9/9] ARM: shmobile: koelsch: Add QSPI nodes
+Date: Sun, 12 Jan 2014 12:13:42 +0100
+Message-ID: <1389525222-3482-10-git-send-email-geert@linux-m68k.org>
+References: <1389525222-3482-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1389525222-3482-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 
-Thanks for the review. Note I did my best to ensure my patches
-would not break vt8500 support, but if you could run some tests
-with them that would be great.
+Add pinctrl and SPI devices for QSPI on Koelsch.
+Add Spansion s25fl512s SPI FLASH and MTD partitions.
 
-On 01/11/2014 09:37 AM, Tony Prisk wrote:
-> On 11/01/14 11:46, Hans de Goede wrote:
->> Add support for ohci-platform instantiation from devicetree, including
->> optionally getting clks and a phy from devicetree, and enabling / disabling
->> those on power_on / off.
->>
->> This should allow using ohci-platform from devicetree in various cases.
->> Specifically after this commit it can be used for the ohci controller found
->> on Allwinner sunxi SoCs.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>   .../devicetree/bindings/usb/mmio-ohci.txt          |  22 +++
->>   drivers/usb/host/ohci-platform.c                   | 164 ++++++++++++++++++---
->>   2 files changed, 162 insertions(+), 24 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/usb/mmio-ohci.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/mmio-ohci.txt b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
->> new file mode 100644
->> index 0000000..9c776ed
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/mmio-ohci.txt
->> @@ -0,0 +1,22 @@
->> +Generic MMIO OHCI controller
->> +
->> +Required properties:
->> +- compatible : "mmio-ohci"
->> +- reg : ohci controller register range (address and length)
->> +- interrupts : ohci controller interrupt
->> +
->> +Optional properties:
->> +- clocks : a list of phandle + clock specifier pairs
->> +- phys : phandle + phy specifier pair
->> +- phy-names : "usb"
->> +
->> +Example:
->> +
->> +    ohci0: ohci@0x01c14400 {
->> +        compatible = "mmio-ohci";
->> +        reg = <0x01c14400 0x100>;
->> +        interrupts = <64>;
->> +        clocks = <&usb_clk 6>, <&ahb_gates 2>;
->> +        phys = <&usbphy 1>;
->> +        phy-names = "usb";
->> +    };
->>
->> ... <snip> ....
->>
->> @@ -83,17 +156,40 @@ static int ohci_platform_probe(struct platform_device *dev)
->>           return -ENXIO;
->>       }
->> +    hcd = usb_create_hcd(&ohci_platform_hc_driver, &dev->dev,
->> +            dev_name(&dev->dev));
->> +    if (!hcd)
->> +        return -ENOMEM;
->> +
->> +    platform_set_drvdata(dev, hcd);
->> +    dev->dev.platform_data = pdata;
->> +    priv = hcd_to_ohci_priv(hcd);
->> +
->> +    if (pdata == &ohci_platform_defaults && dev->dev.of_node) {
->> +        priv->phy = devm_phy_get(&dev->dev, "usb");
->> +        if (IS_ERR(priv->phy)) {
->> +            err = PTR_ERR(priv->phy);
->> +            if (err == -EPROBE_DEFER)
->> +                goto err_put_hcd;
->> +            priv->phy = NULL;
->> +        }
->> +
->> +        for (clk = 0; clk < OHCI_MAX_CLKS; clk++) {
->> +            priv->clks[clk] = of_clk_get(dev->dev.of_node, clk);
->> +            if (IS_ERR(priv->clks[clk])) {
->> +                err = PTR_ERR(priv->clks[clk]);
->> +                if (err == -EPROBE_DEFER)
->> +                    goto err_put_clks;
->> +                priv->clks[clk] = NULL;
->> +                break;
->> +            }
->> +        }
->> +    }
->>
->
-> Given that you have limited the clock parsing to OHCI_MAX_CLKS, there should be some kind of warning/error message if the DT contains more than OHCI_MAX_CLKS - otherwise you have silent failures when the clocks aren't configured.
+Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+---
+ arch/arm/boot/dts/r8a7791-koelsch.dts |   36 +++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-Adding such a test would be non trivial, and is just not worth it IMHO. There is one special case of a controller with 3 clocks,
-all others have 0-2 clocks, there are 0 known controllers with > 3 clocks. And if one shows up then the person writing the
-dts will figure this out quickly enough, and using old kernels with newer dts files has never been a supported scenario.
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+index d5e42b396ef7..885b61e09638 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -123,6 +123,11 @@
+ 		renesas,groups = "scif1_data_d";
+ 		renesas,function = "scif1";
+ 	};
++
++	qspi_pins: spi {
++		renesas,groups = "qspi_ctrl", "qspi_data4";
++		renesas,function = "qspi";
++	};
+ };
+ 
+ &scif0 {
+@@ -138,3 +143,34 @@
+ 
+ 	status = "okay";
+ };
++
++&spi {
++	pinctrl-0 = <&qspi_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++
++	flash: flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl512s";
++		reg = <0>;
++		spi-max-frequency = <30000000>;
++		m25p,fast-read;
++
++		partition@0 {
++			label = "loader";
++			reg = <0x00000000 0x00080000>;
++			read-only;
++		};
++		partition@80000 {
++			label = "bootenv";
++			reg = <0x00080000 0x00080000>;
++			read-only;
++		};
++		partition@100000 {
++			label = "data";
++			reg = <0x00100000 0x03f00000>;
++		};
++	};
++};
+-- 
+1.7.9.5
 
-> There is also no note in the binding to indicate this limitation and you shouldn't expect people writing DT files to go digging through the source to check for this.
-
-I've been told by several people that dt-binding documentation should never contain implementation details, since it
-is supposed to be platform agnostic, etc. So people writing dts files who need to know implementation details, are
-actually expected to look into the implementation. And in my experience with re-using some existing drivers for
-other SoC's, that is exactly what one always ends up doing.
-
-Regards,
-
-Hans
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
