@@ -1,42 +1,58 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC 06/10] ARM: s3c64xx: pm: Add device tree based power
- domain instantiation
-Date: Sun, 12 Jan 2014 20:34:10 +0100
-Message-ID: <52D2EE32.5060709@gmail.com>
-References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com> <1389469372-17199-7-git-send-email-tomasz.figa@gmail.com> <20140112192910.GW29039@sirena.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: DT include files
+Date: Sun, 12 Jan 2014 21:21:19 +0100
+Message-ID: <201401122121.20084.arnd@arndb.de>
+References: <20140103023211.GA25079@S2101-09.ap.freescale.net>
+ <201401111415.29395.arnd@arndb.de>
+ <20140112032516.GA23525@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140112192910.GW29039-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140112032516.GA23525@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <t.figa@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, "arm@kernel.org" <arm@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12.01.2014 20:29, Mark Brown wrote:
-> On Sat, Jan 11, 2014 at 08:42:48PM +0100, Tomasz Figa wrote:
->
->> This patch adds support for registering power domains of S3C64xx SoCs
->> and binding devices to them using device tree.
->
->> +#ifdef CONFIG_OF
->> +static struct of_device_id s3c64xx_pd_matches[] = {
->> +	{ .compatible = "samsung,s3c6400-clock", },
->> +	{ .compatible = "samsung,s3c6410-clock", },
->> +	{ },
->>   };
->
-> Looks like a rebasing issue?  Otherwise this looks nice.
+On Sunday 12 January 2014, Shawn Guo wrote:
+> Let's say the mux option SPDIF_OUT of pin GPIO_17 is used on a few board
+> designs, hummingboard, nitrogen6x and wandboard.  If we do not use
+> macro, every author of these board dts files need to look into reference
+> manual to find out the following numbers
+> 
+>  - The mux register offset of pin GPIO_17
+>  - The select input register offset of pin GPIO_17
+>  - The config register offset of pin GPIO_17
+>  - The value of SPDIF_OUT mux option for GPIO_17
+>  - The select input value of SPDIF_OUT mux option for GPIO_17
+> 
+> , and then code these numbers in their <board>.dts by hand.  It's
+> boring and error prone.  As a comparison, we generate these numbers
+> from reference manual database using a tool and define a macro
+> MX6QDL_PAD_GPIO_17__SPDIF_OUT for these numbers.  The authors only need
+> to find out this macro from imx6q-pinfunc.dtsi and fill it into his dts.
+> Isn't the macro use here helping to ease everyone's life and make the
+> coding less error prone, since the macro is generated from database?
 
-Hmm, what's the problem here? Maybe I'm just blind, but I fail to see 
-anything wrong (except that the array should be const...).
+I was under the impression that the generic pinctrl binding was designed
+in a way to let you assign labels to each possible (reasonable)
+configuration so you didn't have get to this level of detail at the
+driver. I'm also surprised that you have to know multiple constants
+(mux register, input register, config register offsets) to select a
+particular pin. I would have expected that you could have one constant
+from which the driver is able to compute the other ones.
 
-Thanks for reviewing this.
+If you actually need the complexity that you describe in the board files,
+the macros don't seem worse than the alternative, I would just be happier
+if the pinctrl driver binding could do without them.
 
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
