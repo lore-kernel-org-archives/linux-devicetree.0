@@ -1,36 +1,33 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH v2 13/28] drm/i2c: tda998x: use irq for connection
-	status and EDID read
-Date: Sun, 12 Jan 2014 19:51:13 +0100
-Message-ID: <20140112195113.316d0c98@armhf>
-References: <20140109120412.7697d23c@armhf>
-	<20140111181432.GB15937@n2100.arm.linux.org.uk>
-	<52D18EE9.5030305@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH RFC 01/10] ARM: s3c64xx: pm: Use name field of
+ generic_pm_domain
+Date: Sun, 12 Jan 2014 19:53:37 +0100
+Message-ID: <20140112185337.GA6810@amd.pavel.ucw.cz>
+References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
+ <1389469372-17199-2-git-send-email-tomasz.figa@gmail.com>
+ <20140112114717.GA31318@amd.pavel.ucw.cz>
+ <52D287B1.3090106@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <52D18EE9.5030305@gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52D287B1.3090106@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCAxMSBKYW4gMjAxNCAxOTozNToyMSArMDEwMApTZWJhc3RpYW4gSGVzc2VsYmFydGgg
-PHNlYmFzdGlhbi5oZXNzZWxiYXJ0aEBnbWFpbC5jb20+IHdyb3RlOgoKPiBBdCBsZWFzdCBmb3Ig
-dGhlIERUIHBhcnQsIEknZCBzdWdnZXN0IHRvIG5vdCBhc2sgZm9yIGludGVycnVwdCBkaXJlY3Rs
-eQo+IGJ1dCB1c2UgYSBwcm9wZXIgZ3Bpb3MgcHJvcGVydHkuIFRoZSBjYW4gb2YgY291cnNlIGJl
-IGNvbnZlcnRlZCB0bwo+IHByaXYtPmludF9pcnEgaW4gc29tZSB0ZGE5OTh4X2R0X3Byb2JlLgoK
-TWF5IHlvdSBnaXZlIG1lIG1vcmUgaW5mb3JtYXRpb24/CgotLSAKS2VuIGFyIGMnaGVudGHDsQl8
-CSAgICAgICoqIEJyZWl6aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpm
-LmZyZWUuZnIvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi!
+
+> >Could we get some more descriptive names for the domains?
+> 
+> They are listed like this in user's manual, e.g. DOMAIN_F, DOMAIN_I,
+> DOMAIN_G, etc.
+
+I guessed so. So the manual sucks. Would it be feasible to get it more
+descriptive (like "Domain_G (GPU)")?
+
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
