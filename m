@@ -1,101 +1,120 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
-Date: Mon, 13 Jan 2014 17:49:19 +0200
-Message-ID: <52D40AFF.9000308@ti.com>
-References: <1389276051-1326-1-git-send-email-t-kristo@ti.com>
- <CAGhQ9Vz8i2EEG+GgFwXFj3vgeV_Eg0dDfRvKn-XRRVBjwJkDXQ@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] ohci and ehci-platform clks, phy and
+ dt support
+Date: Mon, 13 Jan 2014 16:54:42 +0100
+Message-ID: <52D40C42.2050408@redhat.com>
+References: <Pine.LNX.4.44L0.1401111728150.16586-100000@netrider.rowland.org> <52D2064B.3010103@prisktech.co.nz> <52D292DA.8010709@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGhQ9Vz8i2EEG+GgFwXFj3vgeV_Eg0dDfRvKn-XRRVBjwJkDXQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joachim Eastwood <manabian@gmail.com>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, paul@pwsan.com, mturquette@linaro.org, Tony Lindgren <tony@atomide.com>, rnayak@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBUUY2CLAKGQEXVLNHDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52D292DA.8010709-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/2014 06:35 PM, Joachim Eastwood wrote:
-> On 9 January 2014 15:00, Tero Kristo <t-kristo@ti.com> wrote:
->> Hi,
->>
->> So, bad luck number release for this, as v12 wasn't sufficient still.
->>
->> Changes compared to previous version:
->> - Dropped any changes to generic clock drivers, as it seems impossible
->>    to agree anything in short term, this means the patch set shrank in
->>    size from 49 patches to 40 (first 9 patches were dropped).
->> - Copy pasted implementation for clk-divider and clk-mux from drivers/clk
->>    to drivers/clk/ti, and made the modifications needed to the TI version
->>    of the clock drivers only (based on discussions with Mike, this is fine)
->> - Changed name of clk_ll_ops to ti_clk_ll_ops so that this doesn't conflict
->>    with any generic implementation we might have at some point, migrating
->>    this to the generic version should be easy enough also.
->> - Fixed trace_clk_div_div_ck for omap4, this node was broken in previous
->>    versions and resulted into an orphan clock node
->> - Fixed compile problem for omap5 only build reported by Felipe
->> - Fixed a couple of sparse warnings
->> - changed the mach-omap2/clock.c to use readl_relaxed / writel_relaxed
->>    instead of __raw_readl / __raw_writel
->>
->> Testing done:
->> - omap3-beagle: boot / suspend-resume (RET) / suspend-resume (OFF)
->> - omap4-panda-es: boot / suspend-resume (RET)
->> - omap5-uevm: boot
->> - am335x-bone: boot
->> - dra7-evm: boot
->>
->> Maintainer friendly branches also available:
->>
->> tree: https://github.com/t-kristo/linux-pm.git
->>
->> clk driver only (Mike): clk-next-dt-clks-v13
->> DTS data only (Benoit): dts_for_3.14-dt-clks-v13
->> full-branch (Tony/Paul): 3.13-rc7-dt-clks-v13
->
-> I tested 3.13-rc7-dt-clks-v13 on top of a next branch I am working on
-> with a OMAP4460 and it's working fine.
->
-> A couple of things I noticed in the boot log:
-> [ 0.000000] ti_dt_clocks_register: failed to lookup clock node bandgap_fclk
-> [ 0.000000] smp_twd: clock not found -2
->
-> I am get the bandgap_fclk clock lookup fail since it doesn't exist on
-> 4460 and I guess the bandgap_ts_fclk clock will fail the same way on
-> 4430. So maybe you need to differentiate between 4460 and 4430 in
-> clk-44xx.c to get rid of this warning.
+Hi,
 
-Yeah thats true. I was kind of lazy with the omap4 clk file (these are 
-supposed to be temporary anyway until we can get rid of the clock 
-aliases through proper driver DT mappings), and didn't separate omap4430 
-vs omap4460 there. If this print needs to go away, we need to do this 
-similarly to what was done with different omap3 versions (the clock data 
-delta is much more larger there), but the additional code needed for 
-this was rather large for the minimal impact... we would need separate 
-board files, separate io.c setups, and logic within the clk-44xx.c file 
-itself.
+On 01/12/2014 02:04 PM, Tomasz Figa wrote:
+> Hi,
+>
+> [Cc'ing DT maintainers directly]
+>
 
-Just to re-phrase it, this doesn't impact functionality, the resultant 
-clock nodes etc. are exactly the same before-and-after this set, the 
-kernel just tries to register one additional clock alias which it can't 
-find and prints the single line out.
+<snip>
 
--Tero
+>>> Alan Stern Wrote:
+>> I prefer the -generic option, although generic- is equally fine - Having
+>> said that, I don't really care if it's called mmio either (although this
+>> does seem less 'descriptive').
+
+I can do a v5 changing the compatible string to generix-Xhci, if that will
+put an end to all this discussion, then again, there may be a better way, see
+below.
 
 >
-> As for the smp_twd clock I assume we can add "clocks =
-> <&mpu_periphclk>" to local-timer@48240600 in omap4.dtsi to get rid of
-> the warning. I can cook up a patch here if it is the right thing to
-> do.
-> I think the smp_twd warning existed before I applied this patch set.
+> Grepping over existing dts files, I can find several occurrences of "usb-ehci" compatible string:
 >
-> regards
-> Joachim Eastwood
+> at91sam9g45.dtsi:                       compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
+> at91sam9x5.dtsi:                        compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
+> omap3.dtsi:                             compatible = "ti,ehci-omap", "usb-ehci";
+> omap4.dtsi:                             compatible = "ti,ehci-omap", "usb-ehci";
+> omap5.dtsi:                             compatible = "ti,ehci-omap", "usb-ehci";
+> sama5d3.dtsi:                   compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
+> spear13xx.dtsi:                 compatible = "st,spear600-ehci", "usb-ehci";
+> spear13xx.dtsi:                 compatible = "st,spear600-ehci", "usb-ehci";
+> spear3xx.dtsi:                  compatible = "st,spear600-ehci", "usb-ehci";
+> spear600.dtsi:                  compatible = "st,spear600-ehci", "usb-ehci";
+> spear600.dtsi:                  compatible = "st,spear600-ehci", "usb-ehci";
+> tegra114.dtsi:          compatible = "nvidia,tegra30-ehci", "usb-ehci";
+> tegra114.dtsi:          compatible = "nvidia,tegra30-ehci", "usb-ehci";
+> tegra20.dtsi:           compatible = "nvidia,tegra20-ehci", "usb-ehci";
+> tegra20.dtsi:           compatible = "nvidia,tegra20-ehci", "usb-ehci";
+> tegra20.dtsi:           compatible = "nvidia,tegra20-ehci", "usb-ehci";
+> tegra30.dtsi:           compatible = "nvidia,tegra30-ehci", "usb-ehci";
+> tegra30.dtsi:           compatible = "nvidia,tegra30-ehci", "usb-ehci";
+> tegra30.dtsi:           compatible = "nvidia,tegra30-ehci", "usb-ehci";
 >
+> Same for "usb-ohci":
+>
+> arch/arm/boot/dts/at91rm9200.dtsi:                      compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+> arch/arm/boot/dts/at91sam9260.dtsi:                     compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+> arch/arm/boot/dts/at91sam9263.dtsi:                     compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+> arch/arm/boot/dts/at91sam9g45.dtsi:                     compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+> arch/arm/boot/dts/at91sam9n12.dtsi:                     compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+> arch/arm/boot/dts/at91sam9x5.dtsi:                      compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+> arch/arm/boot/dts/lpc32xx.dtsi:                 compatible = "nxp,ohci-nxp", "usb-ohci";
+> arch/arm/boot/dts/omap3.dtsi:                           compatible = "ti,ohci-omap3", "usb-ohci";
+> arch/arm/boot/dts/omap4.dtsi:                           compatible = "ti,ohci-omap3", "usb-ohci";
+> arch/arm/boot/dts/omap5.dtsi:                           compatible = "ti,ohci-omap3", "usb-ohci";
+> arch/arm/boot/dts/sama5d3.dtsi:                 compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+> arch/arm/boot/dts/spear13xx.dtsi:                       compatible = "st,spear600-ohci", "usb-ohci";
+> arch/arm/boot/dts/spear13xx.dtsi:                       compatible = "st,spear600-ohci", "usb-ohci";
+> arch/arm/boot/dts/spear3xx.dtsi:                        compatible = "st,spear600-ohci", "usb-ohci";
+> arch/arm/boot/dts/spear3xx.dtsi:                        compatible = "st,spear600-ohci", "usb-ohci";
+> arch/arm/boot/dts/spear600.dtsi:                        compatible = "st,spear600-ohci", "usb-ohci";
+> arch/arm/boot/dts/spear600.dtsi:                        compatible = "st,spear600-ohci", "usb-ohci";
+>
+> For "usb-ehci" there is even a documentation file [1], while "usb-ohci" seems to be undocumented.
+>
+> [1] Documentation/devicetree/bindings/usb/usb-ehci.txt
+>
+> Aren't they both something that should be accounted for in this series?
+
+I agree that usb-Xhci would be the best compatible strings to use.
+
+The problem with usb-ehci is that there already is a ppc specific driver binding to that
+compatible string, doing various ppc specific controller initialization.
+
+Thinking more about this, there is one possible solution though, the ehci-ppc-of.c is
+guarded in Kconfig with:
+
+         depends on PPC_OF
+
+If we add an inverted check to the Kconfig option for platform-ehci.c, ie:
+
+config USB_EHCI_HCD_PLATFORM
+         tristate "Generic EHCI driver for a platform device"
+	depends on !PPC_OF
+
+Then we can be certain that we don't end up with 2 drivers claiming the
+usb-ehci compatible on ppc platforms. I've done some quick research
+and it seems that ehci-platform.c is only used on arm and mips devices, so
+excluding its use on ppc should not be an issue.
+
+Then later on someone, who has the actual hardware to test, can merge the
+ppc specific quirk handling into ehci-platform,c and ehci-ppc-of.c can go
+away entirely.
+
+Alan, if you agree this is the best way forward, I'll do a v5 with the proposed
+changes.
+
+Regards,
+
+Hans
