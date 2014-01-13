@@ -1,7 +1,7 @@
 From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V4 4/6] ARM: imx: add suspend in ocram support on i.mx6dl
-Date: Mon, 13 Jan 2014 19:53:49 +0800
-Message-ID: <1389614031-7253-4-git-send-email-b20788@freescale.com>
+Subject: [PATCH V4 6/6] ARM: imx: add suspend in ocram support on i.mx6sl
+Date: Mon, 13 Jan 2014 19:53:51 +0800
+Message-ID: <1389614031-7253-6-git-send-email-b20788@freescale.com>
 References: <1389614031-7253-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,50 +12,178 @@ To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX6DL's suspend in ocram function is derived from i.MX6Q,
+i.MX6SL's suspend in ocram function is derived from i.MX6Q,
 the only difference is the offset of DDR IO pins. It can
-lower the DDR IO power from ~26mA@1.5V to ~15mA@1.5V,
-measured on i.MX6Q/DL SabreSD board, R25.
+lower the DDR IO power from ~10mA@1.2V to ~1mA@1.2V,
+measured on i.MX6SL EVK board, SH5.
 
 Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- arch/arm/mach-imx/pm-imx6q.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm/mach-imx/Makefile       |    2 +-
+ arch/arm/mach-imx/pm-imx6q.c     |   12 +++++++
+ arch/arm/mach-imx/suspend-imx6.S |   74 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 87 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+index 3d96a45..f2df89f 100644
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -105,7 +105,7 @@ ifeq ($(CONFIG_PM),y)
+ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7-a
+ obj-$(CONFIG_SOC_IMX6Q) += pm-imx6q.o headsmp.o suspend-imx6.o
+ # i.MX6SL reuses i.MX6Q code
+-obj-$(CONFIG_SOC_IMX6SL) += pm-imx6q.o headsmp.o
++obj-$(CONFIG_SOC_IMX6SL) += pm-imx6q.o headsmp.o suspend-imx6.o
+ endif
+ 
+ # i.MX5 based machines
 diff --git a/arch/arm/mach-imx/pm-imx6q.c b/arch/arm/mach-imx/pm-imx6q.c
-index 42ac301..826bf8a 100644
+index 826bf8a..175b229 100644
 --- a/arch/arm/mach-imx/pm-imx6q.c
 +++ b/arch/arm/mach-imx/pm-imx6q.c
-@@ -100,6 +100,18 @@ static const u32 imx6q_mmdc_io_dsm_offset[] __initconst = {
+@@ -112,6 +112,14 @@ static const u32 imx6dl_mmdc_io_dsm_offset[] __initconst = {
  	0x74c			    /* GPR_ADDS */
  };
  
-+static const u32 imx6dl_mmdc_io_dsm_offset[] __initconst = {
-+	0x470, 0x474, 0x478, 0x47c, /* DQM0 ~ DQM3 */
-+	0x480, 0x484, 0x488, 0x48c, /* DQM4 ~ DQM7 */
-+	0x464, 0x490, 0x4ac, 0x4b0, /* CAS, RAS, SDCLK_0, SDCLK_1 */
-+	0x4bc, 0x4c0, 0x4c4, 0x4c8, /* DRAM_SDQS0 ~ DRAM_SDQS3 */
-+	0x4cc, 0x4d0, 0x4d4, 0x4d8, /* DRAM_SDQS4 ~ DRAM_SDQS7 */
-+	0x764, 0x770, 0x778, 0x77c, /* GPR_B0DS ~ GPR_B3DS */
-+	0x780, 0x784, 0x78c, 0x748, /* GPR_B4DS ~ GPR_B7DS */
-+	0x4b4, 0x4b8, 0x750, 0x760, /* SODT0, SODT1, DDRMODE_CTL, DDRMODE */
-+	0x74c			    /* GPR_ADDS */
++static const u32 imx6sl_mmdc_io_dsm_offset[] __initconst = {
++	0x30c, 0x310, 0x314, 0x318, /* DQM0 ~ DQM3 */
++	0x5c4, 0x5cc, 0x5d4, 0x5d8, /* GPR_B0DS ~ GPR_B3DS */
++	0x300, 0x31c, 0x338, 0x5ac, /* CAS, RAS, SDCLK_0, GPR_ADDS */
++	0x33c, 0x340, 0x5b0, 0x5c0, /* SODT0, SODT1, DDRMODE_CTL, DDRMODE */
++	0x330, 0x334, 0x320,	    /* SDCKE0, SDCKE1, RESET */
 +};
 +
  /*
   * This structure is for passing necessary data for low level ocram
   * suspend code(arch/arm/mach-imx/suspend-imx6.S), if this struct
-@@ -413,6 +425,10 @@ static int __init imx6q_ocram_suspend_init(void)
- 		pm_info->cpu_type = MXC_CPU_IMX6Q;
- 		pm_info->mmdc_io_num = ARRAY_SIZE(imx6q_mmdc_io_dsm_offset);
- 		mmdc_offset_array = imx6q_mmdc_io_dsm_offset;
-+	} else if (cpu_is_imx6dl()) {
-+		pm_info->cpu_type = MXC_CPU_IMX6DL;
-+		pm_info->mmdc_io_num = ARRAY_SIZE(imx6dl_mmdc_io_dsm_offset);
-+		mmdc_offset_array = imx6dl_mmdc_io_dsm_offset;
+@@ -429,6 +437,10 @@ static int __init imx6q_ocram_suspend_init(void)
+ 		pm_info->cpu_type = MXC_CPU_IMX6DL;
+ 		pm_info->mmdc_io_num = ARRAY_SIZE(imx6dl_mmdc_io_dsm_offset);
+ 		mmdc_offset_array = imx6dl_mmdc_io_dsm_offset;
++	} else if (cpu_is_imx6sl()) {
++		pm_info->cpu_type = MXC_CPU_IMX6SL;
++		pm_info->mmdc_io_num = ARRAY_SIZE(imx6sl_mmdc_io_dsm_offset);
++		mmdc_offset_array = imx6sl_mmdc_io_dsm_offset;
  	}
  
  	if (!mmdc_offset_array) {
+diff --git a/arch/arm/mach-imx/suspend-imx6.S b/arch/arm/mach-imx/suspend-imx6.S
+index 0800033..bc0d566 100644
+--- a/arch/arm/mach-imx/suspend-imx6.S
++++ b/arch/arm/mach-imx/suspend-imx6.S
+@@ -64,6 +64,7 @@
+ #define MX6Q_SRC_GPR1	0x20
+ #define MX6Q_SRC_GPR2	0x24
+ #define MX6Q_MMDC_MAPSR	0x404
++#define MX6Q_MMDC_MPDGCTRL0	0x83c
+ #define MX6Q_GPC_IMR1	0x08
+ #define MX6Q_GPC_IMR2	0x0c
+ #define MX6Q_GPC_IMR3	0x10
+@@ -140,10 +141,15 @@ poll_dvfs_set_1:
+ 	ands	r7, r7, #(1 << 25)
+ 	beq	poll_dvfs_set_1
+ 
++	ldr	r10, [r0, #PM_INFO_CPU_TYPE_OFFSET]
+ 	ldr	r11, [r0, #PM_INFO_MX6Q_IOMUXC_V_OFFSET]
+ 	ldr	r6, =0x0
+ 	ldr	r7, [r0, #PM_INFO_MMDC_IO_NUM_OFFSET]
+ 	ldr	r8, =PM_INFO_MMDC_IO_VAL_OFFSET
++	/* i.MX6SL's last 3 IOs need special setting */
++	cmp 	r10, #MXC_CPU_IMX6SL
++	bne	set_mmdc_io_lpm
++	sub	r7, r7, #0x3
+ set_mmdc_io_lpm:
+ 	ldr	r9, [r0, r8]
+ 	str	r6, [r11, r9]
+@@ -152,6 +158,20 @@ set_mmdc_io_lpm:
+ 	cmp     r7, #0x0
+ 	bne	set_mmdc_io_lpm
+ 
++	cmp 	r10, #MXC_CPU_IMX6SL
++	bne	set_mmdc_io_lpm_done
++	ldr	r6, =0x1000
++	ldr	r9, [r0, r8]
++	str	r6, [r11, r9]
++	add	r8, r8, #0x8
++	ldr	r9, [r0, r8]
++	str	r6, [r11, r9]
++	add	r8, r8, #0x8
++	ldr	r6, =0x80000
++	ldr	r9, [r0, r8]
++	str	r6, [r11, r9]
++set_mmdc_io_lpm_done:
++
+ 	/*
+ 	 * mask all GPC interrupts before
+ 	 * enabling the RBC counters to
+@@ -236,6 +256,33 @@ restore_mmdc_io:
+ 	cmp     r6, #0x0
+ 	bne	restore_mmdc_io
+ 
++	ldr	r6, [r0, #PM_INFO_CPU_TYPE_OFFSET]
++	cmp 	r6, #MXC_CPU_IMX6SL
++	bne	restore_mmdc_io_done
++
++	ldr	r11, [r0, #PM_INFO_MX6Q_MMDC_V_OFFSET]
++	/* reset read FIFO, RST_RD_FIFO */
++	ldr	r7, =MX6Q_MMDC_MPDGCTRL0
++	ldr	r6, [r11, r7]
++	orr     r6, r6, #(1 << 31)
++	str	r6, [r11, r7]
++fifo_reset1_wait:
++	ldr	r6, [r11, r7]
++	and	r6, r6, #(1 << 31)
++	cmp	r6, #0
++	bne	fifo_reset1_wait
++
++	/* reset FIFO a second time */
++	ldr	r6, [r11, r7]
++	orr     r6, r6, #(1 << 31)
++	str	r6, [r11, r7]
++fifo_reset2_wait:
++	ldr	r6, [r11, r7]
++	and	r6, r6, #(1 << 31)
++	cmp	r6, #0
++	bne	fifo_reset2_wait
++restore_mmdc_io_done:
++
+ 	ldr	r11, [r0, #PM_INFO_MX6Q_MMDC_V_OFFSET]
+ 	/* let DDR out of self-refresh. */
+ 	ldr	r7, [r11, #MX6Q_MMDC_MAPSR]
+@@ -285,6 +332,33 @@ dsm_restore_mmdc_io:
+ 	cmp     r6, #0x0
+ 	bne	dsm_restore_mmdc_io
+ 
++	ldr	r6, [r0, #PM_INFO_CPU_TYPE_OFFSET]
++	cmp 	r6, #MXC_CPU_IMX6SL
++	bne	dsm_restore_mmdc_io_done
++
++	ldr	r11, [r0, #PM_INFO_MX6Q_MMDC_P_OFFSET]
++	/* reset read FIFO, RST_RD_FIFO */
++	ldr	r7, =MX6Q_MMDC_MPDGCTRL0
++	ldr	r6, [r11, r7]
++	orr     r6, r6, #(1 << 31)
++	str	r6, [r11, r7]
++dsm_fifo_reset1_wait:
++	ldr	r6, [r11, r7]
++	and	r6, r6, #(1 << 31)
++	cmp	r6, #0
++	bne	dsm_fifo_reset1_wait
++
++	/* reset FIFO a second time */
++	ldr	r6, [r11, r7]
++	orr     r6, r6, #(1 << 31)
++	str	r6, [r11, r7]
++dsm_fifo_reset2_wait:
++	ldr	r6, [r11, r7]
++	and	r6, r6, #(1 << 31)
++	cmp	r6, #0
++	bne	dsm_fifo_reset2_wait
++dsm_restore_mmdc_io_done:
++
+ 	ldr	r11, [r0, #PM_INFO_MX6Q_MMDC_P_OFFSET]
+ 	/* let DDR out of self-refresh */
+ 	ldr	r7, [r11, #MX6Q_MMDC_MAPSR]
 -- 
 1.7.9.5
 
