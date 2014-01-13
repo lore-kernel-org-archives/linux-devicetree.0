@@ -1,29 +1,54 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 1/5] ARM: imx: add suspend in ocram support on i.mx6q
-Date: Mon, 13 Jan 2014 16:09:25 +0800
-Message-ID: <20140113080923.GR23525@S2101-09.ap.freescale.net>
-References: <1389592718-9999-1-git-send-email-b20788@freescale.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Mon, 13 Jan 2014 16:30:51 +0800
+Message-ID: <52D3A43B.4030909@linaro.org>
+References: <1389278112-7099-1-git-send-email-zhangfei.gao@linaro.org> <1389278112-7099-3-git-send-email-zhangfei.gao@linaro.org> <003601cf0e09$5fb07c90$1f1175b0$%jun@samsung.com> <52CFFFDA.8050108@linaro.org> <001501cf1004$7b1f34b0$715d9e10$%jun@samsung.com> <52D3515B.7040008@linaro.org> <001c01cf1020$e3e1aed0$aba50c70$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389592718-9999-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=EUC-KR
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <001c01cf1020$e3e1aed0$aba50c70$%jun@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>, 'Chris Ball' <cjb@laptop.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'Mike Turquette' <mturquette@linaro.org>, 'Rob Herring' <robherring2@gmail.com>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Kumar Gala' <galak@codeaurora.org>, 'Haojian Zhuang' <haojian.zhuang@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, 'Zhigang Wang' <brooke.wangzhigang@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2014 at 01:58:34PM +0800, Anson Huang wrote:
-> +			pm_info->mmdc_io_val[i][1] =
-> +				readl_relaxed(*(&pm_info->iomuxc_base.vbase) +
+Dear Seungwon
 
-*(&pm_info->iomuxc_base.vbase) is just pm_info->iomuxc_base.vbase
+On 01/13/2014 01:32 PM, Seungwon Jeon wrote:
+>>>>>> +static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>>>>>> +{
+>>>>>> +	struct dw_mci_k3_priv_data *priv = host->priv;
+>>>>>> +	u32 rate = priv->clk_table[ios->timing];
+>>>>>
 
-Shawn
+>>
+>> The function mmc_clk_determine_rate() will need the info which
+>> controller it is, what's the init clock rate, what's the max clock rate,
+>> and what's the limitation, which may be different as different soc, and
+>> can not be hardcoded.
+>> The limitation may in HS200 and SDR104 mode.
+>>
+>> The plan is only input init rate and max rate instead of the table,
+>> while others directly use ios->clock, only if the the limitation resolved.
+> 
+> Handling mmc clock for hi3620 is in drivers/clk/hisilicon/clk-hi3620.c, right?
+> Currently only hi3620 has been introduced.
+> If hi3620's host has a limitation, clk-hi3620.c can handle clock range(init, max) for source clock enough.
+> I feel like clock table is redundant.
+> Ok. It's just my suggestion.  But I still point dependency of mode index number.
+> K3's clock table refers and depends mode definition value from include/linux/mmc/host.h
+> If new mode is added or modified, it should be considered and also may make complicated.
+> 
 
-> +				imx6q_mmdc_io_dsm_offset[i]);
+Looks like you dislike the clk_table very much :)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Double checked with the silicon guy, currently it is said the limitation
+in HS200 and SDR104 can be replaced by the max_rate, so clk_table can be
+replaced with ios->clock directly, though they have concern it is not so
+convinent when removing clk_table in case limitation rate is not equal
+to max_rate again in future.
+
+Will update accordingly, thanks for the suggestion.
+
+Thanks
