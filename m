@@ -1,119 +1,134 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH 2/2] mmc: dw_mmc: k3: remove clk_table
-Date: Mon, 13 Jan 2014 17:14:29 +0800
-Message-ID: <1389604469-8064-3-git-send-email-zhangfei.gao@linaro.org>
-References: <1389604469-8064-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1389604469-8064-1-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, brooke.wangzhigang@huawei.com
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] Documentation: mfd: Add binding document for S2MPA01
+Date: Mon, 13 Jan 2014 14:58:50 +0530
+Message-ID: <CAK9yfHw0voTw3t4P1rXRddu_JuvPFjCnD-6TSpA7ygTZqS=57w@mail.gmail.com>
+References: <1389266554-23463-1-git-send-email-sachin.kamat@linaro.org>
+	<1389266554-23463-3-git-send-email-sachin.kamat@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1389266554-23463-3-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove clk_table and directly use ios->clock as clock source rate.
-Abstract init clock rate and max clock limitation in clk.c
+Hi Mark,
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   14 -------
- drivers/mmc/host/dw_mmc-k3.c                       |   41 +-------------------
- 2 files changed, 2 insertions(+), 53 deletions(-)
+On 9 January 2014 16:52, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Added initial binding documentation for S2MPA01 MFD.
+>
+> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> * Re-organised as suggested by Mark Rutland.
+> ---
+>  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   86 +++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+> new file mode 100644
+> index 000000000000..70879b92b24b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+> @@ -0,0 +1,86 @@
+> +
+> +* Samsung S2MPA01 Voltage and Current Regulator
+> +
+> +The Samsung S2MPA01 is a multi-function device which includes high
+> +efficiency buck converters including Dual-Phase buck converter, various LDOs,
+> +and an RTC. It is interfaced to the host controller using an I2C interface.
+> +Each sub-block is addressed by the host system using different I2C slave
+> +addresses.
+> +
+> +Required properties:
+> +- compatible: Should be "samsung,s2mpa01-pmic".
+> +- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
+> +
+> +Optional properties:
+> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
+> +  the interrupts from s2mpa01 are delivered to.
+> +- interrupts: Interrupt specifier for interrupt source (connected to SoC).
+> +
+> +Optional nodes:
+> +- regulators: The regulators of s2mpa01 that have to be instantiated should be
+> +  included in a sub-node named 'regulators'. Regulator nodes and constraints
+> +  included in this sub-node use the standard regulator bindings which are
+> +  documented elsewhere.
+> +
+> +Properties for BUCK regulator nodes:
+> + regulator-ramp-delay for BUCKs = [6250/12500(default)/25000/50000] uV/us
+> +
+> + BUCK[1/2/3/4] supports disabling ramp delay on hardware, so explictly
+> + regulator-ramp-delay = <0> can be used for them to disable ramp delay.
+> + In the absence of the regulator-ramp-delay property, the default ramp
+> + delay will be used.
+> +
+> +  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
+> +  for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
+> +  Grouping of BUCKs sharing ramp rate setting is as follow : BUCK[1, 6],
+> +  BUCK[2, 4], and BUCK[8, 9, 10]
+> +
+> +The following are the names of the regulators that the s2mpa01 PMIC block
+> +supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
+> +as per the datasheet of s2mpa01.
+> +
+> +       - LDOn
+> +                 - valid values for n are 1 to 26
+> +                 - Example: LDO1, LD02, LDO26
+> +       - BUCKn
+> +                 - valid values for n are 1 to 10.
+> +                 - Example: BUCK1, BUCK2, BUCK9
+> +
+> +Example:
+> +
+> +       s2mpa01_pmic@66 {
+> +               compatible = "samsung,s2mpa01-pmic";
+> +               reg = <0x66>;
+> +
+> +               regulators {
+> +                       ldo1_reg: LDO1 {
+> +                               regulator-name = "VDD_ALIVE";
+> +                               regulator-min-microvolt = <1000000>;
+> +                               regulator-max-microvolt = <1000000>;
+> +                       };
+> +
+> +                       ldo2_reg: LDO2 {
+> +                               regulator-name = "VDDQ_MMC2";
+> +                               regulator-min-microvolt = <2800000>;
+> +                               regulator-max-microvolt = <2800000>;
+> +                               regulator-always-on;
+> +                       };
+> +
+> +                       buck1_reg: BUCK1 {
+> +                               regulator-name = "vdd_mif";
+> +                               regulator-min-microvolt = <950000>;
+> +                               regulator-max-microvolt = <1350000>;
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                       };
+> +
+> +                       buck2_reg: BUCK2 {
+> +                               regulator-name = "vdd_arm";
+> +                               regulator-min-microvolt = <950000>;
+> +                               regulator-max-microvolt = <1350000>;
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-ramp-delay = <50000>;
+> +                       };
+> +               };
+> +       };
+> --
+> 1.7.9.5
+>
 
-diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-index d7e2d7f159bb..b8653ea97957 100644
---- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-@@ -14,18 +14,6 @@ Required Properties:
- * compatible: should be one of the following.
-   - "hisilicon,hi4511-dw-mshc": for controllers with hi4511 specific extentions.
- 
--* clock-freq-table: should be the frequency (in Hz) array of the ciu clock
--	in each	supported mode.
--	0. CIU clock rate in Hz for DS mode
--	1. CIU clock rate in Hz for MMC HS mode
--	2. CIU clock rate in Hz for SD HS mode
--	3. CIU clock rate in Hz for SDR12 mode
--	4. CIU clock rate in Hz for SDR25 mode
--	5. CIU clock rate in Hz for SDR50 mode
--	6. CIU clock rate in Hz for SDR104 mode
--	7. CIU clock rate in Hz for DDR50 mode
--	8. CIU clock rate in Hz for HS200 mode
--
- Example:
- 
- 	/* for Hi3620 */
-@@ -39,8 +27,6 @@ Example:
- 		#size-cells = <0>;
- 		clocks = <&mmc_clock HI3620_SD_CIUCLK>, <&clock HI3620_DDRC_PER_CLK>;
- 		clock-names = "ciu", "biu";
--		clock-freq-table =
--		<25000000 0 50000000 25000000 50000000 100000000 0 50000000>;
- 	};
- 
- 	/* Board portion */
-diff --git a/drivers/mmc/host/dw_mmc-k3.c b/drivers/mmc/host/dw_mmc-k3.c
-index 68e5e428e8f6..84e1a670f8c7 100644
---- a/drivers/mmc/host/dw_mmc-k3.c
-+++ b/drivers/mmc/host/dw_mmc-k3.c
-@@ -18,56 +18,19 @@
- #include "dw_mmc.h"
- #include "dw_mmc-pltfm.h"
- 
--#define MAX_NUMS	10
--struct dw_mci_k3_priv_data {
--	u32	clk_table[MAX_NUMS];
--};
--
- static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
- {
--	struct dw_mci_k3_priv_data *priv = host->priv;
--	u32 rate = priv->clk_table[ios->timing];
- 	int ret;
- 
--	if (!rate) {
--		dev_warn(host->dev,
--			"no specified rate in timing %u\n", ios->timing);
--		return;
--	}
--
--	ret = clk_set_rate(host->ciu_clk, rate);
-+	ret = clk_set_rate(host->ciu_clk, ios->clock);
- 	if (ret)
--		dev_warn(host->dev, "failed to set clock rate %uHz\n", rate);
-+		dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
- 
- 	host->bus_hz = clk_get_rate(host->ciu_clk);
- }
- 
--static int dw_mci_k3_parse_dt(struct dw_mci *host)
--{
--	struct dw_mci_k3_priv_data *priv;
--	struct device_node *node = host->dev->of_node;
--	struct property *prop;
--	const __be32 *cur;
--	u32 val, num = 0;
--
--	priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
--	if (!priv) {
--		dev_err(host->dev, "mem alloc failed for private data\n");
--		return -ENOMEM;
--	}
--	host->priv = priv;
--
--	of_property_for_each_u32(node, "clock-freq-table", prop, cur, val) {
--		if (num >= MAX_NUMS)
--			break;
--		priv->clk_table[num++] = val;
--	}
--	return 0;
--}
--
- static const struct dw_mci_drv_data k3_drv_data = {
- 	.set_ios		= dw_mci_k3_set_ios,
--	.parse_dt		= dw_mci_k3_parse_dt,
- };
- 
- static const struct of_device_id dw_mci_k3_match[] = {
+Please ack this patch so that it can go via the MFD tree along with
+the other 2 patches in this series.
+
 -- 
-1.7.9.5
-
+With warm regards,
+Sachin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
