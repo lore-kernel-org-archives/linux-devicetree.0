@@ -1,77 +1,84 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 1/6] Documentation: add dts binding for X-Gene reboot dts node.
-Date: Mon, 13 Jan 2014 16:19:34 +0100
-Message-ID: <201401131619.35030.arnd@arndb.de>
-References: <1389135041-16062-1-git-send-email-fkan@apm.com> <6073715.cGydpIHKD1@wuerfel> <CAL85gmA5Ob+kp-+5seO-wcB8tx4jyiOeFMyCsZWFBLdX09nZDg@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH] ARM: Fix incorrect FDT initrd parameter override
+Date: Mon, 13 Jan 2014 10:28:51 -0500
+Message-ID: <20140113152851.GF19878@titan.lakedaemon.net>
+References: <0a923e$51mtvt@icp-osb-irony-out9.iinet.net.au>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAL85gmA5Ob+kp-+5seO-wcB8tx4jyiOeFMyCsZWFBLdX09nZDg@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Feng Kan <fkan@apm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <0a923e$51mtvt-73Sy8+Y76rVS+6ppBSHQ0E7lPHS7TK7L7bdBIQen8uI@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 January 2014, Feng Kan wrote:
-> On Wed, Jan 8, 2014 at 2:08 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Wednesday 08 January 2014 10:05:50 Mark Rutland wrote:
-> >> > +
-> >> > +Example:
-> >> > +
-> >> > +     reboot@0 {
-> >> > +             compatible = "apm,xgene-reboot";
-> >> > +             reg = <0x0 0x17000014 0x0 0x4>;
-> >> > +     };
-> >>
-> >> Given this seems to be a 64-bit address, the unit address should
-> >> preferably be 0,17000014 rather than just 0.
-> >
-> > I also wonder about the size and location of the register.
-> > Are you sure the device is just a single 4-byte register at offset
-> > 0x14, rather than a complex device that happens to contain the
-> > reset register?
+Ben,
+
+Thanks for the patch.  A few comments below.
+
+On Sat, Jan 11, 2014 at 10:03:58AM +1000, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org wrote:
+> Commit 65939301acdb (arm: set initrd_start/initrd_end for fdt scan)
+
+Thanks for including this.  We have a new tag we are using now to
+incorporate this information to be included after your SoB.  I've added
+it below.
+
+> caused the FDT initrd_start and initrd_end to override the
+> phys_initrd_start and phys_initrd_size set by the initrd= kernel
+> parameter.  With this patch initrd_start and initrd_end will be
+> overridden if phys_initrd_start and phys_initrd_size are set by the
+> kernel initrd= parameter.
 > 
-> FKAN: this is a single 4 byte register when clicked perform the system
-> reset of the platform.
+> Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Fixes: 65939301acdb (arm: set initrd_start/initrd_end for fdt scan)
 
-That is not what I was asking about.
+This commit was only introduced in v3.13-rc1 so we shouldn't need the
+stable tag.  Unless v3.13 drops before Russell gets a chance to merge
+it.
 
-The problem with your binding is that it doesn't seem to describe
-the hardware structure at all, but rather try to invent devices
-because of how it's convenient for how you write the Linux drivers.
+> ---
+>  arch/arm/mm/init.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> index 1f7b19a..819c539 100644
+> --- a/arch/arm/mm/init.c
+> +++ b/arch/arm/mm/init.c
+> @@ -345,10 +345,11 @@ void __init arm_memblock_init(struct meminfo *mi,
+>  #endif
+>  #ifdef CONFIG_BLK_DEV_INITRD
+>  	/* FDT scan will populate initrd_start */
+> -	if (initrd_start) {
+> +	if (initrd_start && !phys_initrd_size) {
+>  		phys_initrd_start = __virt_to_phys(initrd_start);
+>  		phys_initrd_size = initrd_end - initrd_start;
+>  	}
+> +	initrd_start = initrd_end = 0;
 
-This is never a good idea and it will become a problem once you
-try to port a different operating system, or when the structure
-of the Linux drivers changes. Remember that in Linux we can freely
-reorganize our code as requirements change, but the bindings have
-to remain stable to allow running new kernels with an older device
-tree that may be shipped with the firmware.
+This line shouldn't be necessary.  Both are reset in the following hunk
+below your change:
 
-(Side note: if you end up doing an ACPI driver for this after all,
-the problem is even worse because it's basically impossible to update
-the ACPI tables in field, while with DT you can at least override
-them in the firmware if something goes really wrong.)
+if (phys_initrd_size) {
+	memblock_reserve(phys_initrd_start, phys_initrd_size);
 
-On most SoCs I've seen, the system reset registers are part of
-some on-chip device, most likely one of
-- A SoC-specific system control register set containing various
-  global registers that may be of interest to other parts of the
-  kernel.
-- A watchdog timer device that will reset the system after a crash,
-  or when explicit requested by the OS
-- A dedicated reset controller that has registers for individually
-  resetting a number of subsystems of the SoC, or all at once in
-  case of system reboot.
-- an interface to an external or integrated power management IC
-  that controls voltages and/or clock frequencies provided to
-  the SoC and other parts of the system.
+	/* Now convert initrd to virtual addresses */
+	initrd_start = __phys_to_virt(phys_initrd_start);
+	initrd_end = initrd_start + phys_initrd_size;
+}
 
-In each of those cases, we already have a subsystem that is supposed
-to handle the entire register set and provide a system reset method
-as one of the things it does. Given that your register is at offset
-0x14 from the start of a larger MMIO range, I strongly suspect
-that the same is true here.
+With the above line removed,
 
-	Arnd
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+
+Please add this patch to Russell's patch tracker found at
+
+http://www.arm.linux.org.uk/developer/patches/
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
