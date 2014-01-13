@@ -1,50 +1,281 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: DT include files
-Date: Mon, 13 Jan 2014 09:48:43 -0700
-Message-ID: <52D418EB.1040605@wwwdotorg.org>
-References: <20140102202108.GF19720@quad.lixom.net> <20140103023211.GA25079@S2101-09.ap.freescale.net> <CAOesGMheei8YgzfRp9pmQ0rT9zhJ2_hF56j5Y+jLSy5TadPZ-g@mail.gmail.com> <20140103030455.GB25079@S2101-09.ap.freescale.net> <CAOesGMihX-pLva-aBCHJ6TYfsN57MzRWiYFTnfKCXOKeja0uUg@mail.gmail.com> <20140104011056.GA3282@S2101-09.ap.freescale.net> <20140110024124.GA6844@S2101-09.ap.freescale.net> <CAOesGMh3HBCYut2hfub3svrJT5JJzoWq8mU=VU0grZbg-JqqbA@mail.gmail.com> <52CFF57D.8060808@samsung.com> <CAL_JsqKHr6v+6kNXrAdnzH0gpoFCPAjPSnX8iBDgRSMh9JgxvA@mail.gmail.com> <20140110170319.GC20094@book.gsilab.sittig.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH v4] gpio: Driver for SYSCON-based GPIOs
+Date: Mon, 13 Jan 2014 20:56:43 +0400
+Message-ID: <1389632203-22806-1-git-send-email-shc_work@mail.ru>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140110170319.GC20094-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/10/2014 10:03 AM, Gerhard Sittig wrote:
-> On Fri, Jan 10, 2014 at 09:30 -0600, Rob Herring wrote:
->>
->> As for *.h vs. *.dtsi naming, if the include is only pre-processor
->> defines, then I think using .h is the right way. Otherwise, if there
->> is any dts syntax, then .dtsi is the right name. It looks to me like
->> this style has been followed in both the imx and s3c64xx cases.
->>
->> On a side note, I'm not really a fan of this pattern:
->>
->> #define FOO1 1 2 3
->>
->> #define BAR FOO1 FOO2 FOO3
->>
->> While it definitely simplifies the dts files, it would never be used
->> in C and obfuscates what the actual property size is. Reading a dts
->> file, I would naturally assume the define was a single value while in
->> fact it could expand to a very large property size.
-> 
-> For more complex yet tedious repetitive cases like GPIO banks and
-> pins I've seen #define directives which introduce "functions"
-> (macros with parameters).  They appear to be rather useful, can
-> reflect very well the essence of the information, don't
-> necessarily pretend to be single values, but still may hide how
-> many cells they expand to.  For example:
-> 
->   arch/arm/boot/dts/tegra30-cardhu.dtsi:
->     interrupts = <TEGRA_GPIO(L, 0) IRQ_TYPE_LEVEL_HIGH>;
+SYSCON driver was designed for using memory areas (registers)
+that are used in several subsystems. There are systems (CPUs)
+which use bits in one register for various purposes and thus
+should be handled by various kernel subsystems. This driver
+allows you to use the individual SYSCON bits as GPIOs.
+ARM CLPS711X SYSFLG1 input lines has been added as first user
+of this driver.
 
-I'm not sure I entirely understand your point, but for the record, both
-TEGRA_GPIO() and IRQ_TYPE_LEVEL_HIGH expand to a single cell, as I would
-expect (almost?) any DT macro to do.
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+---
+ .../devicetree/bindings/gpio/gpio-syscon.txt       |  19 +++
+ drivers/gpio/Kconfig                               |   6 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-syscon.c                         | 187 +++++++++++++++++++++
+ 4 files changed, 213 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-syscon.txt
+ create mode 100644 drivers/gpio/gpio-syscon.c
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-syscon.txt b/Documentation/devicetree/bindings/gpio/gpio-syscon.txt
+new file mode 100644
+index 0000000..cad764a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-syscon.txt
+@@ -0,0 +1,19 @@
++* SYSCON-based GPIO driver
++
++Required properties:
++- compatible: Should contain one of the following:
++  - "cirrus,clps711x-mctrl": For ARM CLPS711X SYSFLG1 MCTRL GPIOs.
++- syscon: phandle to syscon device node.
++- gpio-controller: Marks the device node as a gpio controller.
++- #gpio-cells: Should be two. The first cell is the pin number and
++  the second cell is used to specify the gpio polarity:
++    0 = Active high,
++    1 = Active low.
++
++Example:
++	sysgpio: sysgpio {
++		compatible = "cirrus,clps711x-mctrl";
++		syscon = <&syscon1>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 8c0df49..1f34bdc 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -275,6 +275,12 @@ config GPIO_STA2X11
+ 	  Say yes here to support the STA2x11/ConneXt GPIO device.
+ 	  The GPIO module has 128 GPIO pins with alternate functions.
+ 
++config GPIO_SYSCON
++	tristate "GPIO based on SYSCON"
++	depends on MFD_SYSCON && OF
++	help
++	  Say yes here to support GPIO functionality though SYSCON driver.
++
+ config GPIO_TS5500
+ 	tristate "TS-5500 DIO blocks and compatibles"
+ 	help
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 5d50179..8ae6d47 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -76,6 +76,7 @@ obj-$(CONFIG_GPIO_STA2X11)	+= gpio-sta2x11.o
+ obj-$(CONFIG_GPIO_STMPE)	+= gpio-stmpe.o
+ obj-$(CONFIG_GPIO_STP_XWAY)	+= gpio-stp-xway.o
+ obj-$(CONFIG_GPIO_SX150X)	+= gpio-sx150x.o
++obj-$(CONFIG_GPIO_SYSCON)	+= gpio-syscon.o
+ obj-$(CONFIG_GPIO_TB10X)	+= gpio-tb10x.o
+ obj-$(CONFIG_GPIO_TC3589X)	+= gpio-tc3589x.o
+ obj-$(CONFIG_ARCH_TEGRA)	+= gpio-tegra.o
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+new file mode 100644
+index 0000000..9f6f0f8
+--- /dev/null
++++ b/drivers/gpio/gpio-syscon.c
+@@ -0,0 +1,187 @@
++/*
++ *  SYSCON GPIO driver
++ *
++ *  Copyright (C) 2014 Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/err.h>
++#include <linux/gpio.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++
++#define GPIO_SYSCON_FEAT_IN	BIT(0)
++#define GPIO_SYSCON_FEAT_OUT	BIT(1)
++#define GPIO_SYSCON_FEAT_DIR	BIT(2)
++
++/* SYSCON driver is designed to use 32-bit wide registers */
++#define SYSCON_REG_SIZE		(4)
++#define SYSCON_REG_BITS		(SYSCON_REG_SIZE * 8)
++
++/**
++ * struct syscon_gpio_data - Configuration for the device.
++ * flags:		Set of GPIO_SYSCON_FEAT_ flags:
++ *			GPIO_SYSCON_FEAT_IN:	GPIOs supports input,
++ *			GPIO_SYSCON_FEAT_OUT:	GPIOs supports output,
++ *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction.
++ * bit_count:		Number of bits used as GPIOs.
++ * dat_bit_offset:	Offset (in bits) to the first GPIO bit.
++ * dir_bit_offset:	Optional offset (in bits) to the first bit to switch
++ *			GPIO direction (Used with GPIO_SYSCON_FEAT_DIR flag).
++ */
++
++struct syscon_gpio_data {
++	unsigned int	flags;
++	unsigned int	bit_count;
++	unsigned int	dat_bit_offset;
++	unsigned int	dir_bit_offset;
++};
++
++struct syscon_gpio_priv {
++	struct gpio_chip		chip;
++	struct regmap			*syscon;
++	const struct syscon_gpio_data	*data;
++};
++
++static inline struct syscon_gpio_priv *to_syscon_gpio(struct gpio_chip *chip)
++{
++	return container_of(chip, struct syscon_gpio_priv, chip);
++}
++
++static int syscon_gpio_get(struct gpio_chip *chip, unsigned offset)
++{
++	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
++	unsigned int val, offs = priv->data->dat_bit_offset + offset;
++	int ret;
++
++	ret = regmap_read(priv->syscon,
++			  (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE, &val);
++	if (ret)
++		return ret;
++
++	return !!(val & BIT(offs % SYSCON_REG_BITS));
++}
++
++static void syscon_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
++{
++	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
++	unsigned int offs = priv->data->dat_bit_offset + offset;
++
++	regmap_update_bits(priv->syscon,
++			   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
++			   BIT(offs % SYSCON_REG_BITS),
++			   val ? BIT(offs % SYSCON_REG_BITS) : 0);
++}
++
++static int syscon_gpio_dir_in(struct gpio_chip *chip, unsigned offset)
++{
++	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
++
++	if (priv->data->flags & GPIO_SYSCON_FEAT_DIR) {
++		unsigned int offs = priv->data->dir_bit_offset + offset;
++
++		regmap_update_bits(priv->syscon,
++				   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
++				   BIT(offs % SYSCON_REG_BITS), 0);
++	}
++
++	return 0;
++}
++
++static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
++{
++	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
++
++	if (priv->data->flags & GPIO_SYSCON_FEAT_DIR) {
++		unsigned int offs = priv->data->dir_bit_offset + offset;
++
++		regmap_update_bits(priv->syscon,
++				   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
++				   BIT(offs % SYSCON_REG_BITS),
++				   BIT(offs % SYSCON_REG_BITS));
++	}
++
++	syscon_gpio_set(chip, offset, val);
++
++	return 0;
++}
++
++static const struct syscon_gpio_data clps711x_mctrl_gpio = {
++	/* ARM CLPS711X SYSFLG1 Bits 8-10 */
++	.flags		= GPIO_SYSCON_FEAT_IN,
++	.bit_count	= 3,
++	.dat_bit_offset	= 0x40 * 8 + 8,
++};
++
++static const struct of_device_id syscon_gpio_ids[] = {
++	{
++		.compatible	= "cirrus,clps711x-mctrl",
++		.data		= &clps711x_mctrl_gpio,
++	},
++	{ }
++};
++MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
++
++static int syscon_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	const struct of_device_id *of_id = of_match_device(syscon_gpio_ids, dev);
++	struct syscon_gpio_priv *priv;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->syscon = syscon_regmap_lookup_by_phandle(dev->of_node, "syscon");
++	if (IS_ERR(priv->syscon))
++		return PTR_ERR(priv->syscon);
++
++	priv->data = of_id->data;
++
++	priv->chip.dev = dev;
++	priv->chip.owner = THIS_MODULE;
++	priv->chip.label = dev_name(dev);
++	priv->chip.base = -1;
++	priv->chip.ngpio = priv->data->bit_count;
++	priv->chip.get = syscon_gpio_get;
++	if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
++		priv->chip.direction_input = syscon_gpio_dir_in;
++	if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
++		priv->chip.set = syscon_gpio_set;
++		priv->chip.direction_output = syscon_gpio_dir_out;
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	return gpiochip_add(&priv->chip);
++}
++
++static int syscon_gpio_remove(struct platform_device *pdev)
++{
++	struct syscon_gpio_priv *priv = platform_get_drvdata(pdev);
++
++	return gpiochip_remove(&priv->chip);
++}
++
++static struct platform_driver syscon_gpio_driver = {
++	.driver	= {
++		.name		= "gpio-syscon",
++		.owner		= THIS_MODULE,
++		.of_match_table	= syscon_gpio_ids,
++	},
++	.probe	= syscon_gpio_probe,
++	.remove	= syscon_gpio_remove,
++};
++module_platform_driver(syscon_gpio_driver);
++
++MODULE_AUTHOR("Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>");
++MODULE_DESCRIPTION("SYSCON GPIO driver");
++MODULE_LICENSE("GPL");
+-- 
+1.8.3.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
