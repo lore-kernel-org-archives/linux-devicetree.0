@@ -1,35 +1,62 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v3 1/2] mmc: arasan: Add driver for Arasan SDHCI
-Date: Mon, 13 Jan 2014 09:14:40 -0800
-Message-ID: <e2dfd9c0-ed36-4400-8dc4-58a14a318242@CO9EHSMHS006.ehs.local>
-References: <1386007357-11956-1-git-send-email-soren.brinkmann@xilinx.com>
- <861u0ddqhj.fsf@void.printf.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv2 5/6] ASoC: fsl: Add VF610 simple audio card widgets
+ driver.
+Date: Mon, 13 Jan 2014 17:16:14 +0000
+Message-ID: <20140113171614.GD29039@sirena.org.uk>
+References: <1389592438-13761-1-git-send-email-Li.Xiubo@freescale.com>
+ <1389592438-13761-6-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Nachn7RqbTHiMSEX"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <861u0ddqhj.fsf@void.printf.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Ball <chris@printf.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-mmc@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1389592438-13761-6-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBKYW4gMTIsIDIwMTQgYXQgMDY6MDY6MzJQTSArMDAwMCwgQ2hyaXMgQmFsbCB3cm90
-ZToKPiBIaSBTb3JlbiwKPiAKPiBPbiBNb24sIERlYyAwMiAyMDEzLCBTb3JlbiBCcmlua21hbm4g
-d3JvdGU6Cj4gPiBBZGQgYSBkcml2ZXIgZm9yIEFyYXNhbidzIFNESENJIGNvbnRyb2xsZXIgY29y
-ZS4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBTb3JlbiBCcmlua21hbm4gPHNvcmVuLmJyaW5rbWFu
-bkB4aWxpbnguY29tPgo+ID4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4
-ZWRhLmNvbT4gW2JpbmRpbmddCj4gCj4gVGhhbmtzLCBwdXNoZWQgcGF0Y2ggMS8yIHRvIG1tYy1u
-ZXh0IGZvciAzLjE0LgoKVGhhbmsgeW91LgoKCVPDtnJlbgoKCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+--Nachn7RqbTHiMSEX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jan 13, 2014 at 01:53:57PM +0800, Xiubo Li wrote:
+> This is the SGTL5000 codec based off-CODEC widgets supports.
+>=20
+> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> ---
+>  sound/soc/fsl/Kconfig                     | 25 ++++++++++++++++++
+>  sound/soc/fsl/Makefile                    |  3 +++
+>  sound/soc/fsl/snd-soc-simple-card-vf610.c | 43 +++++++++++++++++++++++++=
+++++++
+
+My previous comment on this still stands - if we're adding an explicit
+machine driver for a simple card that defeats the point of having simple
+card in the first place, the system may as well just have a normal
+machine driver.
+
+--Nachn7RqbTHiMSEX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS1B9bAAoJELSic+t+oim9BnsP+wSGqvNOGzs9e3yopJTBMgWl
+LVsDpWD4M0WtqTw8Q3N3MWZLPAmU49mxTN2xhoWojNRjICPZI+jvO1jdEuatz/78
+lx5kne81YU+oG8yCCEBDXT449nMKQWR/dfC3ZB+KJCYuJ8SECgzJwDd5hOSXc0Lx
+983olXCsgUQcUmDKGGcbwhWDv+82x2GsabWJ/8idyWtLogKl9OQYJeIAbFS3nqWP
+BOlXfXJ0061M3LAPWU58MRYLZoW+Jq3ikcg07b90DPBkzzZcHR2RG98J/CiE7dMh
+Id9Gp7PEB/kAkmV1qRcKoQ1uz0a80RkvVhoRN+QmVi4bEK8G9hndUcc/GQKroxrK
+DuUOq8/B56LOPU7LqbusXSeD4uvL837y6e/SMX/3slGZ8LvDVEt41CKcyEsdHsMe
+CXnOEwUcb0kwi/flKU6VhCUlHyjpJ2aRMV9apqyogLmUlPOXqS//6wiKcbIIZ6mJ
+jo1kfap/Y+EynWsTUNSKGOWxNO3TwBgb+P6pmdr552gAdLl4gE0tuzRGEYB2Opvj
+mutDNP05V8mWkieyujpIcyR2IPEZOILJP0lzlkqRNAaHYea3z5CWUT8Gie32Uk06
+KLouAozxHfo1dVSDNsCv46NF5FScneAnKLmyAQkNKISD7un8mNLrqPtrLl0ylYET
+U5+22Y/ZoKQfKj/oo9u0
+=4Lox
+-----END PGP SIGNATURE-----
+
+--Nachn7RqbTHiMSEX--
